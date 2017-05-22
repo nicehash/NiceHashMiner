@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_Main));
             this.buttonStartMining = new System.Windows.Forms.Button();
             this.textBoxBTCAddress = new System.Windows.Forms.TextBox();
             this.labelServiceLocation = new System.Windows.Forms.Label();
@@ -41,20 +40,14 @@
             this.toolStripStatusLabelBTCDayText = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelBTCDayValue = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelBalanceText = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabelBalanceBTCValue = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabelBalanceBTCCode = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelBalanceDollarText = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabelBalanceDollarValue = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripStatusLabel10 = new System.Windows.Forms.ToolStripStatusLabel();
             this.linkLabelCheckStats = new System.Windows.Forms.LinkLabel();
             this.labelWorkerName = new System.Windows.Forms.Label();
             this.textBoxWorkerName = new System.Windows.Forms.TextBox();
-            this.linkLabelVisitUs = new System.Windows.Forms.LinkLabel();
             this.buttonStopMining = new System.Windows.Forms.Button();
             this.buttonBenchmark = new System.Windows.Forms.Button();
             this.buttonSettings = new System.Windows.Forms.Button();
-            this.buttonHelp = new System.Windows.Forms.Button();
-            this.linkLabelChooseBTCWallet = new System.Windows.Forms.LinkLabel();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.labelDemoMode = new System.Windows.Forms.Label();
             this.flowLayoutPanelRates = new System.Windows.Forms.FlowLayoutPanel();
@@ -124,84 +117,58 @@
             this.toolStripStatusLabelBTCDayText,
             this.toolStripStatusLabelBTCDayValue,
             this.toolStripStatusLabelBalanceText,
-            this.toolStripStatusLabelBalanceBTCValue,
-            this.toolStripStatusLabelBalanceBTCCode,
             this.toolStripStatusLabelBalanceDollarText,
-            this.toolStripStatusLabelBalanceDollarValue,
-            this.toolStripStatusLabel10});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 266);
+            this.toolStripStatusLabelBalanceDollarValue});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 269);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(565, 25);
+            this.statusStrip1.Size = new System.Drawing.Size(565, 22);
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabelGlobalRateText
             // 
             this.toolStripStatusLabelGlobalRateText.Name = "toolStripStatusLabelGlobalRateText";
-            this.toolStripStatusLabelGlobalRateText.Size = new System.Drawing.Size(67, 20);
-            this.toolStripStatusLabelGlobalRateText.Text = "Global rate:";
+            this.toolStripStatusLabelGlobalRateText.Size = new System.Drawing.Size(47, 17);
+            this.toolStripStatusLabelGlobalRateText.Text = "Bitcoin Price:";
             // 
             // toolStripStatusLabelGlobalRateValue
             // 
             this.toolStripStatusLabelGlobalRateValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabelGlobalRateValue.Name = "toolStripStatusLabelGlobalRateValue";
-            this.toolStripStatusLabelGlobalRateValue.Size = new System.Drawing.Size(73, 20);
-            this.toolStripStatusLabelGlobalRateValue.Text = "0.00000000";
+            this.toolStripStatusLabelGlobalRateValue.Size = new System.Drawing.Size(38, 17);
+            this.toolStripStatusLabelGlobalRateValue.Text = "$0.00";
             // 
             // toolStripStatusLabelBTCDayText
             // 
             this.toolStripStatusLabelBTCDayText.Name = "toolStripStatusLabelBTCDayText";
-            this.toolStripStatusLabelBTCDayText.Size = new System.Drawing.Size(52, 20);
-            this.toolStripStatusLabelBTCDayText.Text = "BTC/Day";
+            this.toolStripStatusLabelBTCDayText.Size = new System.Drawing.Size(39, 17);
+            this.toolStripStatusLabelBTCDayText.Text = "Daily Profit:";
             // 
             // toolStripStatusLabelBTCDayValue
             // 
             this.toolStripStatusLabelBTCDayValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabelBTCDayValue.Name = "toolStripStatusLabelBTCDayValue";
-            this.toolStripStatusLabelBTCDayValue.Size = new System.Drawing.Size(31, 20);
-            this.toolStripStatusLabelBTCDayValue.Text = "0.00";
+            this.toolStripStatusLabelBTCDayValue.Size = new System.Drawing.Size(38, 17);
+            this.toolStripStatusLabelBTCDayValue.Text = "$0.00";
             // 
             // toolStripStatusLabelBalanceText
             // 
             this.toolStripStatusLabelBalanceText.Name = "toolStripStatusLabelBalanceText";
-            this.toolStripStatusLabelBalanceText.Size = new System.Drawing.Size(97, 20);
-            this.toolStripStatusLabelBalanceText.Text = "$/Day     Balance:";
-            // 
-            // toolStripStatusLabelBalanceBTCValue
-            // 
-            this.toolStripStatusLabelBalanceBTCValue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.toolStripStatusLabelBalanceBTCValue.Name = "toolStripStatusLabelBalanceBTCValue";
-            this.toolStripStatusLabelBalanceBTCValue.Size = new System.Drawing.Size(73, 20);
-            this.toolStripStatusLabelBalanceBTCValue.Text = "0.00000000";
-            // 
-            // toolStripStatusLabelBalanceBTCCode
-            // 
-            this.toolStripStatusLabelBalanceBTCCode.Name = "toolStripStatusLabelBalanceBTCCode";
-            this.toolStripStatusLabelBalanceBTCCode.Size = new System.Drawing.Size(27, 20);
-            this.toolStripStatusLabelBalanceBTCCode.Text = "BTC";
+            this.toolStripStatusLabelBalanceText.Size = new System.Drawing.Size(51, 17);
+            this.toolStripStatusLabelBalanceText.Text = "Balance:";
             // 
             // toolStripStatusLabelBalanceDollarText
             // 
             this.toolStripStatusLabelBalanceDollarText.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.toolStripStatusLabelBalanceDollarText.Name = "toolStripStatusLabelBalanceDollarText";
-            this.toolStripStatusLabelBalanceDollarText.Size = new System.Drawing.Size(31, 20);
+            this.toolStripStatusLabelBalanceDollarText.Size = new System.Drawing.Size(31, 17);
             this.toolStripStatusLabelBalanceDollarText.Text = "0.00";
             // 
             // toolStripStatusLabelBalanceDollarValue
             // 
             this.toolStripStatusLabelBalanceDollarValue.Name = "toolStripStatusLabelBalanceDollarValue";
-            this.toolStripStatusLabelBalanceDollarValue.Size = new System.Drawing.Size(16, 20);
-            this.toolStripStatusLabelBalanceDollarValue.Text = "$ ";
-            // 
-            // toolStripStatusLabel10
-            // 
-            this.toolStripStatusLabel10.Image = global::NiceHashMiner.Properties.Resources.NHM_Cash_Register_Bitcoin_transparent;
-            this.toolStripStatusLabel10.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripStatusLabel10.Name = "toolStripStatusLabel10";
-            this.toolStripStatusLabel10.Size = new System.Drawing.Size(35, 20);
-            this.toolStripStatusLabel10.Click += new System.EventHandler(this.toolStripStatusLabel10_Click);
-            this.toolStripStatusLabel10.MouseLeave += new System.EventHandler(this.toolStripStatusLabel10_MouseLeave);
-            this.toolStripStatusLabel10.MouseHover += new System.EventHandler(this.toolStripStatusLabel10_MouseHover);
+            this.toolStripStatusLabelBalanceDollarValue.Size = new System.Drawing.Size(0, 17);
+            this.toolStripStatusLabelBalanceDollarValue.Text = null;
             // 
             // linkLabelCheckStats
             // 
@@ -230,17 +197,6 @@
             this.textBoxWorkerName.Size = new System.Drawing.Size(60, 20);
             this.textBoxWorkerName.TabIndex = 2;
             this.textBoxWorkerName.Leave += new System.EventHandler(this.textBoxCheckBoxMain_Leave);
-            // 
-            // linkLabelVisitUs
-            // 
-            this.linkLabelVisitUs.AutoSize = true;
-            this.linkLabelVisitUs.Location = new System.Drawing.Point(270, 9);
-            this.linkLabelVisitUs.Name = "linkLabelVisitUs";
-            this.linkLabelVisitUs.Size = new System.Drawing.Size(150, 13);
-            this.linkLabelVisitUs.TabIndex = 8;
-            this.linkLabelVisitUs.TabStop = true;
-            this.linkLabelVisitUs.Text = "Visit us @ www.nicehash.com";
-            this.linkLabelVisitUs.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelVisitUs_LinkClicked);
             // 
             // buttonStopMining
             // 
@@ -272,32 +228,6 @@
             this.buttonSettings.Text = "S&ettings";
             this.buttonSettings.UseVisualStyleBackColor = true;
             this.buttonSettings.Click += new System.EventHandler(this.buttonSettings_Click);
-            // 
-            // buttonHelp
-            // 
-            this.buttonHelp.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.buttonHelp.FlatAppearance.BorderSize = 0;
-            this.buttonHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonHelp.Image = global::NiceHashMiner.Properties.Resources.NHM_help_50px;
-            this.buttonHelp.Location = new System.Drawing.Point(489, 0);
-            this.buttonHelp.Name = "buttonHelp";
-            this.buttonHelp.Size = new System.Drawing.Size(52, 60);
-            this.buttonHelp.TabIndex = 11;
-            this.buttonHelp.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
-            this.buttonHelp.UseMnemonic = false;
-            this.buttonHelp.UseVisualStyleBackColor = true;
-            this.buttonHelp.Click += new System.EventHandler(this.buttonHelp_Click);
-            // 
-            // linkLabelChooseBTCWallet
-            // 
-            this.linkLabelChooseBTCWallet.AutoSize = true;
-            this.linkLabelChooseBTCWallet.Location = new System.Drawing.Point(179, 68);
-            this.linkLabelChooseBTCWallet.Name = "linkLabelChooseBTCWallet";
-            this.linkLabelChooseBTCWallet.Size = new System.Drawing.Size(165, 13);
-            this.linkLabelChooseBTCWallet.TabIndex = 10;
-            this.linkLabelChooseBTCWallet.TabStop = true;
-            this.linkLabelChooseBTCWallet.Text = "Help me choose my Bitcoin wallet";
-            this.linkLabelChooseBTCWallet.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelChooseBTCWallet_LinkClicked);
             // 
             // notifyIcon1
             // 
@@ -369,12 +299,9 @@
             this.Controls.Add(this.devicesListViewEnableControl1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.labelDemoMode);
-            this.Controls.Add(this.linkLabelChooseBTCWallet);
-            this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.buttonSettings);
             this.Controls.Add(this.buttonBenchmark);
             this.Controls.Add(this.buttonStopMining);
-            this.Controls.Add(this.linkLabelVisitUs);
             this.Controls.Add(this.labelWorkerName);
             this.Controls.Add(this.textBoxWorkerName);
             this.Controls.Add(this.linkLabelCheckStats);
@@ -386,7 +313,6 @@
             this.Controls.Add(this.buttonStartMining);
             this.Enabled = false;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(581, 330);
             this.Name = "Form_Main";
@@ -414,9 +340,6 @@
         private System.Windows.Forms.Label labelWorkerName;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGlobalRateValue;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceText;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceBTCValue;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceBTCCode;
-        private System.Windows.Forms.LinkLabel linkLabelVisitUs;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelGlobalRateText;
         private System.Windows.Forms.Button buttonStopMining;
         private System.Windows.Forms.Button buttonBenchmark;
@@ -425,13 +348,10 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceDollarText;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabelBalanceDollarValue;
         private System.Windows.Forms.Button buttonSettings;
-        private System.Windows.Forms.Button buttonHelp;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel10;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.TextBox textBoxBTCAddress;
         private System.Windows.Forms.ComboBox comboBoxLocation;
         private System.Windows.Forms.TextBox textBoxWorkerName;
-        private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
         private System.Windows.Forms.Label labelDemoMode;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
         private System.Windows.Forms.GroupBox groupBox1;

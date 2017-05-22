@@ -74,7 +74,7 @@
             this.labelBTCRateValue.Name = "labelBTCRateValue";
             this.labelBTCRateValue.Size = new System.Drawing.Size(112, 13);
             this.labelBTCRateValue.TabIndex = 105;
-            this.labelBTCRateValue.Text = "0.00000000 BTC/Day";
+            this.labelBTCRateValue.Text = "0.00000000";
             // 
             // labelBTCRateIndicator
             // 
