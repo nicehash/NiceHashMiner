@@ -9,6 +9,7 @@ namespace NiceHashMiner.Enums {
     /// </summary>
     public enum MinerBaseType {
         NONE = 0,
+        ewbf,
         cpuminer,
         ccminer,
         sgminer,

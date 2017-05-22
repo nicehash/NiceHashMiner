@@ -38,7 +38,8 @@ namespace NiceHashMiner.Enums
         //CryptoNight = 22,
         //Lbry = 23,
         //Equihash = 24,
-        //Pascal = 25
+        //Pascal = 25,
+        //Sia = 27
         // UNUSED START
         Scrypt_UNUSED = 0,
         SHA256_UNUSED = 1,
@@ -72,7 +73,8 @@ namespace NiceHashMiner.Enums
         Lbry = 23,
         Equihash = 24,
         Pascal = 25,
-        X11Gost = 26
+        X11Gost = 26,
+        Sia = 27
         #endregion // NiceHashAPI
     }
 }

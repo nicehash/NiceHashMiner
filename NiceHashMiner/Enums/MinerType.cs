@@ -20,6 +20,8 @@ namespace NiceHashMiner.Enums {
         ClaymoreCryptoNight,
         OptiminerZcash,
         excavator,
+        ewbf,
+        ccminer_sia,
         ClaymoreDual,
         END
     }

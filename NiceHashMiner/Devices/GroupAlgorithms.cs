@@ -122,6 +122,13 @@ namespace NiceHashMiner.Devices {
                             unstable_algo.Enabled = false;
                         }
                     }
+                    if (algoSettings.ContainsKey(MinerBaseType.ewbf))
+                    {
+                        foreach (var unstable_algo in algoSettings[MinerBaseType.ewbf])
+                        {
+                            unstable_algo.Enabled = false;
+                        }
+                    }
 
                     // This is not needed anymore after excavator v1.1.4a
                     //if (device.IsSM50() && algoSettings.ContainsKey(MinerBaseType.excavator)) {
@@ -210,7 +217,8 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Decred, "decred"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight, "cryptonight"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lbry, "lbry"),
-                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib")
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib"),
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia")
                         }
                     },
                     { MinerBaseType.ccminer_alexis,
@@ -232,6 +240,11 @@ namespace NiceHashMiner.Devices {
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.excavator, AlgorithmType.Equihash, "equihash"),
                             new Algorithm(MinerBaseType.excavator, AlgorithmType.Pascal, "pascal")
+                        }
+                    },
+                    { MinerBaseType.ewbf,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.ewbf, AlgorithmType.Equihash, "equihash"),
                         }
                     },
                     { MinerBaseType.experimental,
@@ -262,7 +275,8 @@ namespace NiceHashMiner.Devices {
                     });
                     ToRemoveMinerTypes.AddRange(new MinerBaseType[] {
                         MinerBaseType.eqm,
-                        MinerBaseType.excavator
+                        MinerBaseType.excavator,
+                        MinerBaseType.ewbf
                     });
                 }
                 if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType) {
@@ -273,6 +287,8 @@ namespace NiceHashMiner.Devices {
                         AlgorithmType.X11Gost
                     });
                 }
+
+
 
                 // filter unused
                 var finalRet = FilterMinerAlgos(ret, ToRemoveAlgoTypes, new List<MinerBaseType>() { MinerBaseType.ccminer });

@@ -82,6 +82,8 @@
     <Compile Include="Algorithm.cs" />
     <Compile Include="ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
+    <Compile Include="Miners\ewbf.cs" />
+    <Compile Include="Miners\sia.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
