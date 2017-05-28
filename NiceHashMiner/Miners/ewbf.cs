@@ -44,12 +44,11 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string url, string btcAdress, string worker)
         {
-            LastCommandLine = "--server equihash.eu.nicehash.com --user " + btcAdress + "." + worker + " --pass x --port 3357 --api 127.0.0.1:" + APIPort;
+            LastCommandLine = "--server " + url.Split(':')[0] + " --user " + btcAdress + "." + worker + " --pass x --port " + url.Split(':')[1] + " --api 0.0.0.0:" + APIPort + ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA); 
             ProcessHandle = _Start();
         }
-       
-        // benchmark stuff
 
+        // benchmark stuff
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             string ret = " -a " + this.MiningSetup.MinerName + " -b " + time + " " + GetDevicesCommandString();

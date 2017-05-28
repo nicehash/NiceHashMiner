@@ -21,7 +21,6 @@ namespace NiceHashMiner.Enums {
         OptiminerZcash,
         excavator,
         ewbf,
-        ccminer_sia,
         ClaymoreDual,
         END
     }

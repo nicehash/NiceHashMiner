@@ -186,25 +186,12 @@ namespace NiceHashMiner.Miners.Parsing {
                 MinerType.ewbf,
                 new List<MinerOption>() {
                     // parameters differ according to algorithm
-                    //new MinerOption("parameter1", "-c1", "-c1", "0", MinerOptionFlagType.MultiParam, " "),
-                    //new MinerOption("parameter2", "-c2", "-c2", "0", MinerOptionFlagType.MultiParam, " "),
-                    //new MinerOption("debug_param", "-f", "-f", "", MinerOptionFlagType.SingleParam, " "),
-                    // Overclocking not supported from NHM
-                    //new MinerOption("Overclocking_os", "-os", "-os", "", MinerOptionFlagType.MultiParam, " "),
-                    //new MinerOption("Overclocking_od", "-od", "-od", "2", MinerOptionFlagType.MultiParam, " "),
-                },
-                new List<MinerOption>()
-            ),
-            new MinerOptionPackage(
-                MinerType.ccminer_sia,
-                new List<MinerOption>() {
-                    // parameters differ according to algorithm
-                    //new MinerOption("parameter1", "-c1", "-c1", "0", MinerOptionFlagType.MultiParam, " "),
-                    //new MinerOption("parameter2", "-c2", "-c2", "0", MinerOptionFlagType.MultiParam, " "),
-                    //new MinerOption("debug_param", "-f", "-f", "", MinerOptionFlagType.SingleParam, " "),
-                    // Overclocking not supported from NHM
-                    //new MinerOption("Overclocking_os", "-os", "-os", "", MinerOptionFlagType.MultiParam, " "),
-                    //new MinerOption("Overclocking_od", "-od", "-od", "2", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("fee", "--fee", "--fee", "0", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("templimit", "--templimit", "--templimit", "90", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("tempunits", "--tempunits", "--tempunits", "C", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("solver", "--solver", "--solver", "0", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("powercalc", "--pec", "--pec", null, MinerOptionFlagType.Uni, " "),
+                    new MinerOption("eexit", "--eexit", "--eexit", null, MinerOptionFlagType.Uni, " "),
                 },
                 new List<MinerOption>()
             ),
