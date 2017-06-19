@@ -21,6 +21,7 @@ namespace NiceHashMiner.Enums {
         XmrStackCPU,
         ccminer_alexis,
         experimental,
+        EWBF,
         END
     }
 }

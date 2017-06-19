@@ -267,6 +267,9 @@ namespace NiceHashMiner.Miners.Parsing {
             if (MinerBaseType.excavator == minerBaseType) {
                 return MinerType.excavator;
             }
+            if (MinerBaseType.EWBF == minerBaseType) {
+                return MinerType.EWBF;
+            }
 
             return MinerType.NONE;
         }

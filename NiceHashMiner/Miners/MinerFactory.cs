@@ -57,6 +57,8 @@ namespace NiceHashMiner.Miners {
                     return new ccminer();
                 case MinerBaseType.experimental:
                     return CreateExperimental(deviceType, algorithmType);
+                case MinerBaseType.EWBF:
+                    return new EWBF();
             }
             return null;
         }

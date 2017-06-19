@@ -239,6 +239,11 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.excavator, AlgorithmType.Pascal, "pascal")
                         }
                     },
+                    { MinerBaseType.EWBF,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.EWBF, AlgorithmType.Equihash, "")
+                        }
+                    },
                     { MinerBaseType.experimental,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.experimental, AlgorithmType.NeoScrypt, "neoscrypt")
@@ -276,7 +281,8 @@ namespace NiceHashMiner.Devices {
                     });
                     ToRemoveMinerTypes.AddRange(new MinerBaseType[] {
                         MinerBaseType.eqm,
-                        MinerBaseType.excavator
+                        MinerBaseType.excavator,
+                        MinerBaseType.EWBF
                     });
                 }
                 if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType) {
