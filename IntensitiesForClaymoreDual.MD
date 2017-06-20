@@ -1,6 +1,6 @@
 These are established values for "sweetspots" of `-dcri` values for ClaymoreDual. The `-dcri` value adjusts how hard the miner works on the second coin, which can potentially eat into the Eth hashrate. For bigger cards like a 1080 Ti there is generally a lot of room to increase dcri without lowering Eth
 
-These values can fluctuate based on the paying rates of Eth and the secondary coins, so it is best to try out for yourself.
+These values are rough and can fluctuate based on the paying rates of Eth and the secondary coins, so it is best to try out for yourself.
 
 The default value is `-dcri 30` which is usually a good value for cards similar to 290/390/480/580. Instructions on how to adjust yourself at the end.
 
@@ -9,6 +9,8 @@ The default value is `-dcri 30` which is usually a good value for cards similar 
 | Card            | Secondary Coin | `-dcri` | Eth Hashrate (MH/s) | Secondary Hashrate (MH/s) |
 |:----------------|:---------------|--------:|--------------------:|--------------------------:|
 |1080 Ti          |Sia             | 150     | 30.5                | 1550                      |
+|          |Lbry            | 80     | 30                | 60                      |
+|          |Pascal             | 90     | 32                | 950                      |
 
 ### AMD
 
