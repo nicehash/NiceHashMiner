@@ -1,3 +1,35 @@
+# New NiceHashMiner
+
+While the official devs work on NiceHashMiner 2.0, I'm adding some things to the original 1.7.5.13 version to keep it up do date. 
+
+Usage of this version is exactly like the vanilla version.
+
+### Changes  
+
+* Added NVIDIA support for ClaymoreDual miner. ClaymoreDual mines Ethereum and one of four secondary coins simultaneously, which can improve profits by a large margin.
+
+* Added SiaCoin support for ClaymoreDual on both AMD and NVIDIA. SC is usually the most profitable dual mining type.
+
+* Added [instructions on how to set ClaymoreDual intensity](https://github.com/DillonN/NiceHashMiner/blob/new/IntensitiesForClaymoreDual.MD). Dual intensity decides how much effort is put into Ethereum or the secondary coin.
+
+* Added EWBF miner for NVIDIA. Mines Equihash at around 20% higher hashrates than Excavator (and doesn't cause Windows to crawl). Benchmarking to come soon.
+
+* Added Blake2s support for NVIDIA through ccminer. New Algorithm for NiceHash.
+
+* Updated ClaymoreDual to 9.5.
+
+### Planned changes
+
+* Benchmarking for EWBF.
+
+* HTTP API that can control the miner program remotely.
+
+* iOS/Android/UWP app to interact with HTTP API.
+
+* Further updates to miners/algorithms as they come along.
+
+Original readme:
+
 # NiceHash Miner
 
 - [Introduction](#introduction)
