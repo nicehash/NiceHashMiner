@@ -2,6 +2,7 @@
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMiner.Configs;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -42,8 +43,15 @@ namespace NiceHashMiner.Miners
         }
 
         public override void Start(string url, string btcAdress, string worker) {
-            LastCommandLine = GetDevicesCommandString() + "--server " + url.Split(':')[0] + " --user " + btcAdress + "." + worker + " --pass x --port " + url.Split(':')[1] + " --api 0.0.0.0:" + APIPort;
+            LastCommandLine = GetStartCommand(url, btcAdress, worker);
             ProcessHandle = _Start();
+        }
+
+        private string GetStartCommand(string url, string btcAddress, string worker) {
+            return GetDevicesCommandString() 
+                + "--server " + url.Split(':')[0] 
+                + " --user " + btcAddress + "." + worker + " --pass x --port " 
+                + url.Split(':')[1] + " --api 127.0.0.1:" + APIPort;
         }
 
         protected override string GetDevicesCommandString() {
@@ -61,7 +69,8 @@ namespace NiceHashMiner.Miners
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            string ret = " -b " + time + " --server equihash.eu.nicehash.com --port 3357 --user 39nV4iyAiW1JAjRqH1jRMwjaKy7TWqneiz --pass x" + " " + GetDevicesCommandString();
+            string server = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+            string ret = " -b " + +time + GetStartCommand(server, Globals.DemoUser, ConfigManager.GeneralConfig.WorkerName.Trim());
             return ret;
         }
 
