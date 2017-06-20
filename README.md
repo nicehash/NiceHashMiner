@@ -30,6 +30,8 @@ Bitcoin donations are always appreciated! 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
 
 * Further updates to miners/algorithms as they come along.
 
+Note that the project has been upgraded to Visual Studio 2017. This shouldn't be a problem for those running Windows 10 but if you run into problems with dll's missing open an issue and I'll help.
+
 Original readme:
 
 # NiceHash Miner
