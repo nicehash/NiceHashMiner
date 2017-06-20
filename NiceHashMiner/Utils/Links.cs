@@ -4,14 +4,14 @@ using System.Text;
 
 namespace NiceHashMiner {
     public static class Links {
-        public static string VisitURL = "https://www.nicehash.com?utm_source=NHM";
+        public static string VisitURL = "https://github.com/DillonN/NiceHashMiner";
         // add version
         public static string VisitURLNew = "https://github.com/DillonN/NiceHashMiner/releases/tag/";
         public static string GitHubAPI = "https://api.github.com/";
         // add btc adress as parameter
         public static string CheckStats = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=miners&addr=";
         // help and faq
-        public static string NHM_Help = "https://github.com/DillonN/NiceHashMiner";
+        public static string NHM_Help = "https://github.com/DillonN/NiceHashMiner/issues";
         // faq
         public static string NHM_BTC_Wallet_Faq = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=faq#faqs15";
         public static string NHM_Paying_Faq = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=faq#faqs6";
