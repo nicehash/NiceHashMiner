@@ -28,7 +28,7 @@ Bitcoin donations are always appreciated! 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
 
 * Further updates to miners/algorithms as they come along.
 
-Note that the project has been upgraded to Visual Studio 2017. This shouldn't be a problem for those running Windows 10 but if you run into problems with dll's missing open an issue and I'll help.
+This is only tested on the newest version of Windows 10. I've tried to consider older versions, but if you run into any problems open an issue with the error and I'll be happy to help.
 
 Original readme:
 
