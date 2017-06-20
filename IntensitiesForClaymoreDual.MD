@@ -10,7 +10,8 @@ The default value is `-dcri 30`. Instructions on how to adjust yourself at the e
 |:----------------|:---------------|--------:|--------------------:|--------------------------:|
 |1080 Ti          |Sia             | 150     | 30.5                | 1550                      |
 
-###AMD
+### AMD
+
 | Card            | Secondary Coin | `-dcri` | Eth Hashrate (MH/s) | Secondary Hashrate (MH/s) |
 |:----------------|:---------------|--------:|--------------------:|--------------------------:|
 |Fury X           |SIA             | 40      | 30.5                | 1200                      |
