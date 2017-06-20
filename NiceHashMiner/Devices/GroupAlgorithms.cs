@@ -215,7 +215,8 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight, "cryptonight"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lbry, "lbry"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib"),
-                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s")
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s"),
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia")
                         }
                     },
                     { MinerBaseType.ccminer_alexis,
