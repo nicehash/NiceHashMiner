@@ -14,15 +14,13 @@ Bitcoin donations are always appreciated! 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
 
 * Added [instructions on how to set ClaymoreDual intensity](https://github.com/DillonN/NiceHashMiner/blob/new/IntensitiesForClaymoreDual.MD). Dual intensity decides how much effort is put into Ethereum or the secondary coin.
 
-* Added EWBF miner for NVIDIA. Mines Equihash at around 20% higher hashrates than Excavator (and doesn't cause Windows to crawl). Benchmarking to come soon.
+* Added EWBF miner for NVIDIA. Mines Equihash at around 20% higher hashrates than Excavator (and doesn't cause Windows to crawl). 
 
 * Added Blake2s support for NVIDIA through ccminer. New Algorithm for NiceHash.
 
 * Updated ClaymoreDual to 9.5.
 
 ### Planned changes
-
-* Benchmarking for EWBF.
 
 * HTTP API that can control the miner program remotely.
 
