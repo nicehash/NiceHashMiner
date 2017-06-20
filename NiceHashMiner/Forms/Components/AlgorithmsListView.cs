@@ -218,6 +218,7 @@ namespace NiceHashMiner.Forms.Components {
                     var algorithm = lvi.Tag as Algorithm;
                     if (algorithm != null) {
                         algorithm.BenchmarkSpeed = 0;
+                        algorithm.SecondaryBenchmarkSpeed = 0;
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
                         // update benchmark status data
                         if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
