@@ -4,6 +4,8 @@ While the official devs work on NiceHashMiner 2.0, I'm adding some things to the
 
 Usage of this version is exactly like the vanilla version.
 
+Bitcoin donations are always appreciated! 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
+
 ### Changes  
 
 * Added NVIDIA support for ClaymoreDual miner. ClaymoreDual mines Ethereum and one of four secondary coins simultaneously, which can improve profits by a large margin.
