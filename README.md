@@ -6,7 +6,9 @@ While the official devs work on NiceHashMiner 2.0, I'm adding some things to the
 
 Usage of this version is exactly like the vanilla version.
 
-Bitcoin donations are always appreciated! 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
+Bitcoin donations are always appreciated! I'm just a student doing this part time 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
+
+If you run into any issues open an [Issue](https://github.com/DillonN/NiceHashMiner/issues) and I'll help as soon as I can
 
 ### Changes  
 
@@ -23,6 +25,8 @@ Bitcoin donations are always appreciated! 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
 * Updated ClaymoreDual to 9.5.
 
 * Added Sia mining for NVIDIA through ccminer with benchmark support.
+
+* There is now a [Wiki](https://github.com/DillonN/NiceHashMiner/wiki)
 
 * Bug fixes including
 
