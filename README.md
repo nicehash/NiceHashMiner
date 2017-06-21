@@ -2,9 +2,13 @@
 
 While the official devs work on NiceHashMiner 2.0, I'm adding some things to the original 1.7.5.13 version to keep it up do date. 
 
+**This is an unofficial fork of the original NHM repo and I am not affiliated with Nicehash**. That being said I will try to support it as best I can, and it works with your NiceHash wallet the same way the original does.
+
 Usage of this version is exactly like the vanilla version.
 
-Bitcoin donations are always appreciated! 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
+Bitcoin donations are always appreciated! I'm just a student doing this part time 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
+
+If you run into any issues open an [Issue](https://github.com/DillonN/NiceHashMiner/issues) and I'll help as soon as I can
 
 ### Changes  
 
@@ -12,7 +16,7 @@ Bitcoin donations are always appreciated! 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
 
 * Added SiaCoin support for ClaymoreDual on both AMD and NVIDIA. SC is usually the most profitable dual mining type.
 
-* Added [instructions on how to set ClaymoreDual intensity](https://github.com/DillonN/NiceHashMiner/blob/new/IntensitiesForClaymoreDual.MD). Dual intensity decides how much effort is put into Ethereum or the secondary coin.
+* Added [instructions on how to set ClaymoreDual intensity](https://github.com/DillonN/NiceHashMiner/wiki/Tweaking-ClaymoreDual-intensity). Dual intensity decides how much effort is put into Ethereum or the secondary coin.
 
 * Added EWBF miner for NVIDIA with benchmark support. Mines Equihash at around 20% higher hashrates than Excavator (and doesn't cause Windows to crawl). 
 
@@ -22,7 +26,13 @@ Bitcoin donations are always appreciated! 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
 
 * Added Sia mining for NVIDIA through ccminer with benchmark support.
 
-* Bug fixes
+* There is now a [Wiki](https://github.com/DillonN/NiceHashMiner/wiki)
+
+* Bug fixes including
+
+  * Clipping on miner status display when using dual algos
+  
+  * Dual speeds not cleared when using the right-click menu option
 
 ### Planned changes
 
