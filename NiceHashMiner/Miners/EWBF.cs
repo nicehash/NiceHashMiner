@@ -9,6 +9,9 @@ using System.Globalization;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
+using System.Diagnostics;
+using System.IO;
 
 namespace NiceHashMiner.Miners
 {
@@ -36,6 +39,13 @@ namespace NiceHashMiner.Miners
             public object error { get; set; }
             public List<Result> result { get; set; }
         }
+
+        private int benchmarkTimeWait = 2 * 45;
+        private const string LOOK_FOR_START = "total speed: ";
+        int benchmark_read_count = 0;
+        double benchmark_sum = 0.0d;
+        const string LOOK_FOR_END = "sol/s";
+        const double DevFee = 2.0;
 
         public EWBF() : base("ewbf") {
             ConectionType = NHMConectionType.NONE;
@@ -67,39 +77,170 @@ namespace NiceHashMiner.Miners
         }
 
         // benchmark stuff
+        private bool IsActiveProcess(int pid) {
+            try {
+                return Process.GetProcessById(pid) != null;
+            } catch {
+                return false;
+            }
+        }
+        protected void KillMinerBase(string exeName) {
+            foreach (Process process in Process.GetProcessesByName(exeName)) {
+                try { process.Kill(); } catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+            }
+        }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+            CleanAllOldLogs();
+
             string server = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
-            string ret = " -b " + +time + GetStartCommand(server, Globals.DemoUser, ConfigManager.GeneralConfig.WorkerName.Trim());
+            string ret = " --log 2 --logfile benchmark_log.txt" + GetStartCommand(server, Globals.DemoUser, ConfigManager.GeneralConfig.WorkerName.Trim());
+            benchmarkTimeWait = time * 2;
             return ret;
         }
 
-        const string TOTAL_MES = "Total speed:";
-        protected override bool BenchmarkParseLine(string outdata) {
+        protected override void BenchmarkThreadRoutine(object CommandLine) {
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
-            if (outdata.Contains(TOTAL_MES)) {
-                try {
-                    int speedStart = outdata.IndexOf(TOTAL_MES);
-                    string speed = outdata.Substring(speedStart, outdata.Length - speedStart).Replace(TOTAL_MES, "");
-                    var splitSrs = speed.Trim().Split(' ');
-                    if (splitSrs.Length >= 2) {
-                        string speedStr = splitSrs[0];
-                        string postfixStr = splitSrs[1];
-                        double spd = Double.Parse(speedStr, CultureInfo.InvariantCulture);
-                        if (postfixStr.Contains("kSols/s"))
-                            spd *= 1000;
-                        else if (postfixStr.Contains("MSols/s"))
-                            spd *= 1000000;
-                        else if (postfixStr.Contains("GSols/s"))
-                            spd *= 1000000000;
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
 
-                        BenchmarkAlgorithm.BenchmarkSpeed = spd;
-                        return true;
+            try {
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                Helpers.ConsolePrint(MinerTAG(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
+                BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
+                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 2);
+                Stopwatch _benchmarkTimer = new Stopwatch();
+                _benchmarkTimer.Reset();
+                _benchmarkTimer.Start();
+                //BenchmarkThreadRoutineStartSettup();
+                // wait a little longer then the benchmark routine if exit false throw
+                //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
+                //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
+                // don't use wait for it breaks everything
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                bool keepRunning = true;
+                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id)) {
+                    //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
+                    //BenchmarkOutputErrorDataReceivedImpl(outdata);
+                    // terminate process situations
+                    if (_benchmarkTimer.Elapsed.TotalSeconds >= (benchmarkTimeWait + 2)
+                        || BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null) {
+
+                        string imageName = MinerExeName.Replace(".exe", "");
+                        // maybe will have to KILL process
+                        KillMinerBase(imageName);
+                        if (BenchmarkSignalTimedout) {
+                            throw new Exception("Benchmark timedout");
+                        }
+                        if (BenchmarkException != null) {
+                            throw BenchmarkException;
+                        }
+                        if (BenchmarkSignalQuit) {
+                            throw new Exception("Termined by user request");
+                        }
+                        if (BenchmarkSignalFinnished) {
+                            break;
+                        }
+                        keepRunning = false;
+                        break;
+                    } else {
+                        // wait a second reduce CPU load
+                        Thread.Sleep(1000);
                     }
-                } catch {
+
                 }
+            } catch (Exception ex) {
+                BenchmarkThreadRoutineCatch(ex);
+            } finally {
+                BenchmarkAlgorithm.BenchmarkSpeed = 0;
+                // find latest log file
+                string latestLogFile = "";
+                var dirInfo = new DirectoryInfo(this.WorkingDirectory);
+                foreach (var file in dirInfo.GetFiles("*_log.txt")) {
+                    latestLogFile = file.Name;
+                    break;
+                }
+                Thread.Sleep(1000);  // Wait for miner to let go of log
+                // read file log
+                if (File.Exists(WorkingDirectory + latestLogFile)) {
+                    var lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
+                    var addBenchLines = bench_lines.Count == 0;
+                    foreach (var line in lines) {
+                        if (line != null) {
+                            bench_lines.Add(line);
+                            string lineLowered = line.ToLower();
+                            if (lineLowered.Contains(LOOK_FOR_START)) {
+                                benchmark_sum += getNumber(lineLowered);
+                                ++benchmark_read_count;
+                            }
+                        }
+                    }
+                    if (benchmark_read_count > 0) {
+                        BenchmarkAlgorithm.BenchmarkSpeed = benchmark_sum / benchmark_read_count;
+                    }
+                }
+                BenchmarkThreadRoutineFinish();
             }
+        }
+
+        protected void CleanAllOldLogs() {
+            // clean old logs
+            try {
+                var dirInfo = new DirectoryInfo(this.WorkingDirectory);
+                var deleteContains = "_log.txt";
+                if (dirInfo != null && dirInfo.Exists) {
+                    foreach (FileInfo file in dirInfo.GetFiles()) {
+                        if (file.Name.Contains(deleteContains)) {
+                            file.Delete();
+                        }
+                    }
+                }
+            } catch { }
+        }
+
+        // stub benchmarks read from file
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
+            CheckOutdata(outdata);
+        }
+
+        protected override bool BenchmarkParseLine(string outdata) {
+            Helpers.ConsolePrint("BENCHMARK", outdata);
             return false;
+        }
+
+        protected double getNumber(string outdata) {
+            return getNumber(outdata, LOOK_FOR_START, LOOK_FOR_END);
+        }
+
+        protected double getNumber(string outdata, string LOOK_FOR_START, string LOOK_FOR_END) {
+            try {
+                double mult = 1;
+                int speedStart = outdata.IndexOf(LOOK_FOR_START);
+                string speed = outdata.Substring(speedStart, outdata.Length - speedStart);
+                speed = speed.Replace(LOOK_FOR_START, "");
+                speed = speed.Substring(0, speed.IndexOf(LOOK_FOR_END));
+
+                if (speed.Contains("k")) {
+                    mult = 1000;
+                    speed = speed.Replace("k", "");
+                } else if (speed.Contains("m")) {
+                    mult = 1000000;
+                    speed = speed.Replace("m", "");
+                }
+                //Helpers.ConsolePrint("speed", speed);
+                speed = speed.Trim();
+                return (Double.Parse(speed, CultureInfo.InvariantCulture) * mult) * (1.0 - DevFee * 0.01);
+            } catch (Exception ex) {
+                Helpers.ConsolePrint("getNumber", ex.Message + " | args => " + outdata + " | " + LOOK_FOR_END + " | " + LOOK_FOR_START);
+            }
+            return 0;
         }
 
         public override APIData GetSummary() {
@@ -139,12 +280,6 @@ namespace NiceHashMiner.Miners
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 60 * 1000 * 5; // 5 minute max, whole waiting time 75seconds
-        }
-
-        // benchmark stuff
-
-        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
-            CheckOutdata(outdata);
         }
     }
 }
