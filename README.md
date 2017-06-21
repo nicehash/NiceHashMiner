@@ -34,11 +34,15 @@ If you run into any issues open an [Issue](https://github.com/DillonN/NiceHashMi
   
   * Dual speeds not cleared when using the right-click menu option
 
+  * Disallow spaces inside workernames
+
 ### Planned changes
 
 * HTTP API that can control the miner program remotely.
 
 * iOS/Android/UWP app to interact with HTTP API.
+
+* Benchmarking of different `-dcri` values for ClaymoreDual
 
 * Further updates to miners/algorithms as they come along.
 
