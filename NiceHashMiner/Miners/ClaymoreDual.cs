@@ -112,7 +112,7 @@ namespace NiceHashMiner.Miners {
                 benchmarkTimeWait = time;
                 return ret + "  -benchmark 1";
             } else {
-                benchmarkTimeWait = Math.Min(120, time);  // dual seems to stop mining after this time if redirect output is true
+                benchmarkTimeWait = Math.Max(60, Math.Min(120, time*3));  // dual seems to stop mining after this time if redirect output is true
                 return ret;  // benchmark 1 does not output secondary speeds
             }
         }
