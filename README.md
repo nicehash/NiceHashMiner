@@ -10,7 +10,7 @@ Bitcoin donations are always appreciated! I'm just a student doing this part tim
 
 If you run into any issues open an [Issue](https://github.com/DillonN/NiceHashMiner/issues) and I'll help as soon as I can
 
-### Changes  
+## Changes  
 
 * Added NVIDIA support for ClaymoreDual miner. ClaymoreDual mines Ethereum and one of four secondary coins simultaneously, which can improve profits by a large margin.
 
@@ -36,13 +36,19 @@ If you run into any issues open an [Issue](https://github.com/DillonN/NiceHashMi
 
   * Disallow spaces inside workernames
 
-### Planned changes
+## Planned changes
+
+### Soon
 
 * HTTP API that can control the miner program remotely.
+
+### A little further out
 
 * iOS/Android/UWP app to interact with HTTP API.
 
 * Benchmarking of different `-dcri` values for ClaymoreDual
+
+* Autoupdater
 
 * Further updates to miners/algorithms as they come along.
 
