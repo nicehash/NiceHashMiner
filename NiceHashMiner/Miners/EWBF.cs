@@ -95,7 +95,7 @@ namespace NiceHashMiner.Miners
 
             string server = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             string ret = " --log 2 --logfile benchmark_log.txt" + GetStartCommand(server, Globals.DemoUser, ConfigManager.GeneralConfig.WorkerName.Trim());
-            benchmarkTimeWait = time * 2;
+            benchmarkTimeWait = Math.Max(time * 3, 90);  // EWBF takes a long time to get started
             return ret;
         }
 
@@ -167,10 +167,28 @@ namespace NiceHashMiner.Miners
                     latestLogFile = file.Name;
                     break;
                 }
-                Thread.Sleep(1000);  // Wait for miner to let go of log
                 // read file log
                 if (File.Exists(WorkingDirectory + latestLogFile)) {
-                    var lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
+                    var lines = new string[0];
+                    var read = false;
+                    var iteration = 0;
+                    while (!read) {
+                        if (iteration < 10) {
+                            try {
+                                lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
+                                read = true;
+                                Helpers.ConsolePrint("EWBF", "Successfully read log after " + iteration.ToString() + " iterations");
+                            } catch (Exception ex) {
+                                Helpers.ConsolePrint("EWBF", ex.Message);
+                                Thread.Sleep(1000);
+                            }
+                            iteration++;
+                        } else {
+                            read = true;  // Give up after 10s
+                            Helpers.ConsolePrint("EWBF", "Gave up on iteration " + iteration.ToString());
+                        }
+                    }
+
                     var addBenchLines = bench_lines.Count == 0;
                     foreach (var line in lines) {
                         if (line != null) {
