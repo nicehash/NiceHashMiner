@@ -498,7 +498,7 @@ namespace NiceHashMiner.Forms {
                 } else {
                     __CPUBenchmarkStatus = null;
                 }
-                if (_currentAlgorithm.MinerBaseType == MinerBaseType.ClaymoreAMD && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash && _currentAlgorithm.ExtraLaunchParameters != null && !_currentAlgorithm.ExtraLaunchParameters.Contains("-asm")) {
+                if (_currentAlgorithm.MinerBaseType == MinerBaseType.Claymore && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash && _currentAlgorithm.ExtraLaunchParameters != null && !_currentAlgorithm.ExtraLaunchParameters.Contains("-asm")) {
                     __ClaymoreZcashStatus = new ClaymoreZcashStatus(_currentAlgorithm.ExtraLaunchParameters);
                     _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetTestExtraParams();
                 } else {
@@ -597,7 +597,7 @@ namespace NiceHashMiner.Forms {
                     }
                 }
 
-                if (__ClaymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.ClaymoreAMD && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash) {
+                if (__ClaymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.Claymore && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash) {
                     if (__ClaymoreZcashStatus.HasTest()) {
                         _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
                         rebenchSame = true;

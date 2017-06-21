@@ -15,7 +15,7 @@ namespace NiceHashMiner.Enums {
         nheqminer,
         eqm,
         ethminer,
-        ClaymoreAMD,
+        Claymore,
         OptiminerAMD,
         excavator,
         XmrStackCPU,

@@ -49,8 +49,8 @@ namespace NiceHashMiner.Devices {
                             }
                         }
                         // non sgminer optimizations
-                        if (algoSettings.ContainsKey(MinerBaseType.ClaymoreAMD)) {
-                            var ClaymoreAlgos = algoSettings[MinerBaseType.ClaymoreAMD];
+                        if (algoSettings.ContainsKey(MinerBaseType.Claymore)) {
+                            var ClaymoreAlgos = algoSettings[MinerBaseType.Claymore];
                             int CryptoNight_Index = ClaymoreAlgos.FindIndex((el) => el.NiceHashID == AlgorithmType.CryptoNight);
                             if (CryptoNight_Index > -1) {
                                 //string regex_a_3 = "[5|6][0-9][0-9][0-9]";
@@ -97,8 +97,8 @@ namespace NiceHashMiner.Devices {
                                     }
                                 }
                             }
-                            if (algoSettings.ContainsKey(MinerBaseType.ClaymoreAMD)) {
-                                foreach (var algo in algoSettings[MinerBaseType.ClaymoreAMD]) {
+                            if (algoSettings.ContainsKey(MinerBaseType.Claymore)) {
+                                foreach (var algo in algoSettings[MinerBaseType.Claymore]) {
                                     if (algo.NiceHashID == AlgorithmType.CryptoNight) {
                                         algo.Enabled = false;
                                     }
@@ -184,15 +184,15 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "sibcoin-mod") { ExtraLaunchParameters = DefaultParam + "--intensity 16 -w 64 -g 2" }
                         }
                     },
-                    { MinerBaseType.ClaymoreAMD,
+                    { MinerBaseType.Claymore,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.CryptoNight, "cryptonight"),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.Equihash, "equihash"),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, ""),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.CryptoNight, "cryptonight"),
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.Equihash, "equihash"),
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal),
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
                         }
                     },
                     { MinerBaseType.OptiminerAMD,
@@ -250,13 +250,13 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.experimental, AlgorithmType.NeoScrypt, "neoscrypt")
                         }
                     },
-                    { MinerBaseType.ClaymoreAMD,
+                    { MinerBaseType.Claymore,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, ""),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal),
-                            new Algorithm(MinerBaseType.ClaymoreAMD, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal),
+                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
                         }
                     },
                 };
@@ -294,7 +294,7 @@ namespace NiceHashMiner.Devices {
                         AlgorithmType.X11Gost
                     });
                     ToRemoveMinerTypes.AddRange(new MinerBaseType[] {
-                        MinerBaseType.ClaymoreAMD
+                        MinerBaseType.Claymore
                     });
                 }
 

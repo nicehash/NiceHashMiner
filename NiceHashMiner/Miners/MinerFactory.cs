@@ -45,7 +45,7 @@ namespace NiceHashMiner.Miners {
                     return new nheqminer();
                 case MinerBaseType.ethminer:
                     return CreateEthminer(deviceType);
-                case MinerBaseType.ClaymoreAMD:
+                case MinerBaseType.Claymore:
                     return CreateClaymore(algorithmType, secondaryAlgorithmType);
                 case MinerBaseType.OptiminerAMD:
                     return new OptiminerZcashMiner();

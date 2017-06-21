@@ -226,7 +226,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 }
                 return MinerType.ccminer;
             }
-            if (MinerBaseType.ClaymoreAMD == minerBaseType) {
+            if (MinerBaseType.Claymore == minerBaseType) {
                 if (AlgorithmType.CryptoNight == algorithmType) {
                     return MinerType.ClaymoreCryptoNight;
                 }

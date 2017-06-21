@@ -72,7 +72,7 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.nheqminer;
                 case MinerBaseType.ethminer:
                     return Data.ethminer;
-                case MinerBaseType.ClaymoreAMD:
+                case MinerBaseType.Claymore:
                     return AMD_GROUP.ClaymorePath(algoType);
                 case MinerBaseType.OptiminerAMD:
                     return Data.OptiminerZcashMiner;
