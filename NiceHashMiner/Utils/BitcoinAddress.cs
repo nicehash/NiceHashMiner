@@ -28,7 +28,7 @@ namespace NiceHashMiner
 
         public static bool ValidateWorkerName(string workername)
         {
-            if (workername.Length > 7 || !isAlphaNumeric(workername))
+            if (workername.Length > 7 || !isAlphaNumeric(workername) || workername.Contains(" "))
                 return false;
 
             return true;
