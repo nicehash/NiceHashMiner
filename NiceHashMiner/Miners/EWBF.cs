@@ -54,6 +54,16 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string url, string btcAdress, string worker) {
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
+            var vcp = "msvcp120.dll";
+            var vcpPath = WorkingDirectory + vcp;
+            if (!File.Exists(vcpPath)) {
+                try {
+                    File.Copy(vcp, vcpPath, true);
+                    Helpers.ConsolePrint(MinerTAG(), String.Format("Copy from {0} to {1} done", vcp, vcpPath));
+                } catch (Exception e) {
+                    Helpers.ConsolePrint(MinerTAG(), "Copy msvcp.dll failed: " + e.Message);
+                }
+            }
             ProcessHandle = _Start();
         }
 
