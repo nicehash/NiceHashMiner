@@ -52,6 +52,12 @@ If you run into any issues open an [Issue](https://github.com/DillonN/NiceHashMi
 
 * Further updates to miners/algorithms as they come along.
 
+## Credits
+
+* @GTANAdam for original implementation of EWBF miner
+
+* NiceHash devs for original NiceHashMiner
+
 This is only tested on the newest version of Windows 10. I've tried to consider older versions, but if you run into any problems open an issue with the error and I'll be happy to help.
 
 Original readme:
