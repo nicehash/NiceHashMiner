@@ -15,12 +15,12 @@ using NiceHashMiner.Devices;
 namespace NiceHashMiner.Utils {
     public static class MinersDownloadManager {
         public static DownloadSetup StandardDlSetup = new DownloadSetup(
-            "https://github.com/DillonN/NiceHashMiner/releases/download/1.7.5.17/bin_1_7_5_17.zip",
+            "http://github.com/DillonN/NiceHashMiner/releases/download/1.7.5.17/bin_1_7_5_17.zip",
             "bins.zip",
             "bin");
 
         public static DownloadSetup ThirdPartyDlSetup = new DownloadSetup(
-            "https://github.com/DillonN/NiceHashMiner/releases/download/1.7.5.14-Extra/bin_3rdparty_1_7_5_14.zip",
+            "http://github.com/DillonN/NiceHashMiner/releases/download/1.7.5.14-Extra/bin_3rdparty_1_7_5_14.zip",
             "bins_3rdparty.zip",
             "bin_3rdparty");
     }
