@@ -410,7 +410,7 @@ namespace NiceHashMiner.Miners {
 
         private AlgorithmType GetMinerPairAlgorithmType(List<MiningPair> miningPairs) {
             if (miningPairs.Count > 0) {
-                return miningPairs[0].Algorithm.NiceHashID;
+                return miningPairs[0].Algorithm.DualNiceHashID();
             }
             return AlgorithmType.NONE;
         }
