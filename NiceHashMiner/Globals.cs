@@ -50,5 +50,13 @@ namespace NiceHashMiner {
             }
             return "";
         }
+
+        public static string GetBitcoinUser() {
+            if (BitcoinAddress.ValidateBitcoinAddress((Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim()))) {
+                return Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim();
+            } else {
+                return DemoUser;
+            }
+        }
     }
 }
