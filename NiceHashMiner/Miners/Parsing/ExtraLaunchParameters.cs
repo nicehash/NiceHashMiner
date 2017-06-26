@@ -239,12 +239,13 @@ namespace NiceHashMiner.Miners.Parsing {
                 MinerType.EWBF,
                 new List<MinerOption>() {
                     // parameters differ according to algorithm
-                    new MinerOption("fee", "--fee", "--fee", "0", MinerOptionFlagType.SingleParam, " "),
-                    new MinerOption("templimit", "--templimit", "--templimit", "90", MinerOptionFlagType.SingleParam, " "),
-                    new MinerOption("tempunits", "--tempunits", "--tempunits", "C", MinerOptionFlagType.SingleParam, " "),
-                    new MinerOption("solver", "--solver", "--solver", "0", MinerOptionFlagType.SingleParam, " "),
-                    new MinerOption("powercalc", "--pec", "--pec", null, MinerOptionFlagType.Uni, " "),
-                    new MinerOption("eexit", "--eexit", "--eexit", null, MinerOptionFlagType.Uni, " "),
+                    new MinerOption("EWBF_fee", "--fee", "--fee", "0", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("EWBF_templimit", "--templimit", "--templimit", "90", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("EWBF_tempunits", "--tempunits", "--tempunits", "C", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("EWBF_eexit", "--eexit", "--eexit", null, MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("EWBF_solver", "--solver", "--solver", "0", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("EWBF_intensity", "--intensity", "--intensity", "64", MinerOptionFlagType.MultiParam, " "),
+                    new MinerOption("EWBF_powercalc", "--pec", "--pec", null, MinerOptionFlagType.Uni, " "),
                 },
                 new List<MinerOption>()
             ),
