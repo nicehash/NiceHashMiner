@@ -152,8 +152,8 @@ namespace NiceHashMiner.Miners {
                 var id = mPair.Device.ID;
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
                     Helpers.ConsolePrint("ClaymoreDualIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
+                    id += amdDeviceCount;
                 }
-                id += amdDeviceCount;
                 ids.Add(id.ToString());
             }
             deviceStringCommand += StringHelper.Join("", ids);
