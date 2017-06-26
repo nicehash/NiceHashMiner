@@ -30,15 +30,14 @@ namespace NiceHashMiner.Miners {
         }
 
         protected override string GetStartCommandStringPart(string url, string username) {
-            return " --cuda"
-                + " "
+            return " "
                 + ExtraLaunchParametersParser.ParseForMiningSetup(
                                                     MiningSetup,
                                                     DeviceType.NVIDIA)
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":x " 
                 + " --api-port " + APIPort.ToString()
-                + " --cuda-devices ";
+                + PlatformCommand();
         }
 
         protected override string GetBenchmarkCommandStringPart(Algorithm algorithm) {
@@ -47,7 +46,17 @@ namespace NiceHashMiner.Miners {
                 + ExtraLaunchParametersParser.ParseForMiningSetup(
                                                     MiningSetup,
                                                     DeviceType.NVIDIA)
-                + " --cuda --cuda-devices ";
+                + PlatformCommand();
+        }
+
+        private string PlatformCommand() {
+            var platform = " --cuda --cuda-devices ";
+            foreach (var pair in MiningSetup.MiningPairs) {
+                if (pair.CurrentExtraLaunchParameters.Contains("--opencl")) {
+                    platform = " --opencl --opencl-platform 1 --opencl-devices ";
+                }
+            }
+            return platform;
         }
 
     }
