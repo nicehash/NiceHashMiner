@@ -547,7 +547,7 @@ namespace NiceHashMiner.Devices
                 }
             }
 
-            static List<OpenCLDevice> amdGpus = new List<OpenCLDevice>();
+            public readonly static List<OpenCLDevice> amdGpus = new List<OpenCLDevice>();
             static class AMD {
                 static public void QueryAMD() {
                     const int AMD_VENDOR_ID = 1002;
