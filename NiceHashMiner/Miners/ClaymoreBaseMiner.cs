@@ -4,6 +4,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMiner.Net20_backport;
+using NiceHashMiner.Devices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -142,11 +143,18 @@ namespace NiceHashMiner.Miners {
 
 
         protected override string GetDevicesCommandString() {
+            int amdDeviceCount = ComputeDeviceManager.Query.amdGpus.Count;
+            Helpers.ConsolePrint("ClaymoreDualIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
             string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string deviceStringCommand = " -di ";
             List<string> ids = new List<string>();
             foreach (var mPair in MiningSetup.MiningPairs) {
-                ids.Add(mPair.Device.ID.ToString());
+                var id = mPair.Device.ID;
+                if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
+                    Helpers.ConsolePrint("ClaymoreDualIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
+                    id += amdDeviceCount;
+                }
+                ids.Add(id.ToString());
             }
             deviceStringCommand += StringHelper.Join("", ids);
 

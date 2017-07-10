@@ -31,6 +31,8 @@ namespace NiceHashMiner.Miners {
                     return "lbc";
                 case AlgorithmType.Pascal:
                     return "pasc";
+                case AlgorithmType.Sia:
+                    return "sc";
             }
             return "";
         }
@@ -61,6 +63,7 @@ namespace NiceHashMiner.Miners {
                         }
                         if (pair.CurrentExtraLaunchParameters.Contains("Siacoin")) {
                             dual = AlgorithmType.Sia;
+                            coinP = " -dcoin sc";
                         }
                         if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))  {
                             dual = AlgorithmType.Lbry;
@@ -79,7 +82,7 @@ namespace NiceHashMiner.Miners {
                 }
             } else {
                 string urlSecond = Globals.GetLocationURL(SecondaryAlgorithmType, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
-                dualModeParams = String.Format(" -dcoin {0} -dpool {1} -dwal {2}", SecondaryShortName(), urlSecond, username);
+                dualModeParams = String.Format(" -dcoin {0} -dpool {1} -dwal {2} -dpsw x", SecondaryShortName(), urlSecond, username);
             }
 
             return " "
@@ -104,13 +107,13 @@ namespace NiceHashMiner.Miners {
             // network stub
             string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             // demo for benchmark
-            string ret = GetStartCommand(url, Globals.DemoUser, ConfigManager.GeneralConfig.WorkerName.Trim());
+            string ret = GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
             // local benhcmark
             if (!IsDual()) {
                 benchmarkTimeWait = time;
                 return ret + "  -benchmark 1";
             } else {
-                benchmarkTimeWait = Math.Max(120, time);  // dual seems to stop mining after this time if redirect output is true
+                benchmarkTimeWait = Math.Max(60, Math.Min(120, time*3));  // dual seems to stop mining after this time if redirect output is true
                 return ret;  // benchmark 1 does not output secondary speeds
             }
         }

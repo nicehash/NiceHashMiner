@@ -42,7 +42,9 @@ namespace NiceHashMiner {
             { AlgorithmType.Lbry ,                          GHs },
             { AlgorithmType.Equihash ,                      1 }, // Sols /s
             { AlgorithmType.Pascal ,                        GHs }, 
-            { AlgorithmType.X11Gost ,                       MHs }, 
+            { AlgorithmType.X11Gost ,                       MHs },
+            { AlgorithmType.Sia ,                           GHs },
+            { AlgorithmType.Blake2s ,                       GHs }
         };
 
         public static double GetFormatedSpeed(double speed, AlgorithmType type) {

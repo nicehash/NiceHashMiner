@@ -256,7 +256,7 @@ namespace NiceHashMiner.Devices
             if (use3rdParty == Use3rdPartyMiners.YES) {
                 return this.AlgorithmSettings;
             }
-            var third_party_miners = new List<MinerBaseType>() { MinerBaseType.ClaymoreAMD, MinerBaseType.OptiminerAMD };
+            var third_party_miners = new List<MinerBaseType>() { MinerBaseType.Claymore, MinerBaseType.OptiminerAMD };
 
             return this.AlgorithmSettings.FindAll((a) => third_party_miners.IndexOf(a.MinerBaseType) == -1);
         }

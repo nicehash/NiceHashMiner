@@ -38,7 +38,7 @@ namespace NiceHashMiner.Utils {
 @"\ccminer_x11gost\cudart32_80.dll",
 @"\ccminer_x11gost\cudart64_80.dll",
 @"\ccminer_x11gost\msvcp120.dll",
-@"\ccminer_x11gost\msvcr120.dll",
+@"\ccminer_x11gost\msvcr120.dll",@"\ccminer_klaust\ccminer.exe",
 @"\ethminer\cudart64_80.dll",
 @"\ethminer\ethminer.exe",
 @"\ethminer\libcurl.dll",

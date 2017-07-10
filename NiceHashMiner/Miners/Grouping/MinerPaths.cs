@@ -26,6 +26,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string ccminer_tpruvot = _bin + @"\ccminer_tpruvot\ccminer.exe";
             public const string ccminer_cryptonight = _bin + @"\ccminer_cryptonight\ccminer.exe";
             public const string ccminer_x11gost = _bin + @"\ccminer_x11gost\ccminer.exe";
+            public const string ccminer_klaust = _bin + @"\ccminer_klaust\ccminer.exe";
 
             /// <summary>
             /// ethminers
@@ -51,6 +52,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string ClaymoreCryptoNightMiner = _bin_3rdparty + @"\claymore_cryptonight\NsGpuCNMiner.exe";
             public const string OptiminerZcashMiner = _bin_3rdparty + @"\optiminer_zcash_win\Optiminer.exe";
             public const string ClaymoreDual = _bin_3rdparty + @"\claymore_dual\EthDcrMiner64.exe";
+            public const string EWBF = _bin_3rdparty + @"\ewbf\miner.exe";
         }
 
         // NEW START
@@ -70,7 +72,7 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.nheqminer;
                 case MinerBaseType.ethminer:
                     return Data.ethminer;
-                case MinerBaseType.ClaymoreAMD:
+                case MinerBaseType.Claymore:
                     return AMD_GROUP.ClaymorePath(algoType);
                 case MinerBaseType.OptiminerAMD:
                     return Data.OptiminerZcashMiner;
@@ -82,6 +84,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return NVIDIA_GROUPS.ccminer_unstable_path(algoType, devGroupType);
                 case MinerBaseType.experimental:
                     return EXPERIMENTAL.GetPath(algoType, devGroupType);
+                case MinerBaseType.EWBF:
+                    return Data.EWBF;
             }
             return Data.NONE;
         }
@@ -135,14 +139,22 @@ namespace NiceHashMiner.Miners.Grouping
                 if (AlgorithmType.NeoScrypt == algorithmType) {
                     return Data.ccminer_neoscrypt;
                 }
-                if (AlgorithmType.Lyra2RE == algorithmType || AlgorithmType.Lyra2REv2 == algorithmType) {
+                if (AlgorithmType.Lyra2RE == algorithmType 
+                    || AlgorithmType.Lyra2REv2 == algorithmType 
+                    || AlgorithmType.Nist5 == algorithmType) {
                     return Data.ccminer_nanashi;
                 }
                 if (AlgorithmType.CryptoNight == algorithmType) {
                     return Data.ccminer_cryptonight;
                 }
-                if (AlgorithmType.Lbry == algorithmType || AlgorithmType.X11Gost == algorithmType) {
+                if (AlgorithmType.Lbry == algorithmType 
+                    || AlgorithmType.X11Gost == algorithmType 
+                    || AlgorithmType.Blake2s == algorithmType 
+                    || AlgorithmType.Nist5 == algorithmType) {
                     return Data.ccminer_tpruvot;
+                }
+                if (AlgorithmType.Sia == algorithmType) {
+                    return Data.ccminer_klaust;
                 }
 
                 return Data.ccminer_sp;

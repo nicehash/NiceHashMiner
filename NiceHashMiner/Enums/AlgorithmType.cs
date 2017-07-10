@@ -11,6 +11,7 @@ namespace NiceHashMiner.Enums
     public enum AlgorithmType : int
     {
         // dual algos for grouping
+        DaggerSia = -6,
         DaggerDecred = -5,
         DaggerLbry = -4,
         DaggerPascal = -3,
@@ -24,7 +25,7 @@ namespace NiceHashMiner.Enums
         //X13 = 4,
         //Keccak = 5,
         //X15 = 6,
-        //Nist5 = 7,
+        Nist5 = 7,
         //NeoScrypt = 8,
         //Lyra2RE = 9,
         //WhirlpoolX = 10,
@@ -77,7 +78,8 @@ namespace NiceHashMiner.Enums
         Equihash = 24,
         Pascal = 25,
         X11Gost = 26,
-        Sia = 27
+        Sia = 27,
+        Blake2s = 28
         #endregion // NiceHashAPI
     }
 }

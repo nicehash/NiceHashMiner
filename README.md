@@ -1,3 +1,67 @@
+# New NiceHashMiner
+
+While the official devs work on NiceHashMiner 2.0, I'm adding some things to the original 1.7.5.13 version to keep it up do date. 
+
+**This is an unofficial fork of the original NHM repo and I am not affiliated with Nicehash**. That being said I will try to support it as best I can, and it works with your NiceHash wallet the same way the original does.
+
+Usage of this version is exactly like the vanilla version.
+
+Bitcoin donations are always appreciated! I'm just a student doing this part time 3EsSZgWVBBJMY2DxQxLFJpvDomiiGAn5Co
+
+If you run into any issues open an [Issue](https://github.com/DillonN/NiceHashMiner/issues) and I'll help as soon as I can
+
+## Changes  
+
+* Added NVIDIA support for ClaymoreDual miner. ClaymoreDual mines Ethereum and one of four secondary coins simultaneously, which can improve profits by a large margin.
+
+* Added SiaCoin support for ClaymoreDual on both AMD and NVIDIA. SC is usually the most profitable dual mining type.
+
+* Added [instructions on how to set ClaymoreDual intensity](https://github.com/DillonN/NiceHashMiner/wiki/Tweaking-ClaymoreDual-intensity). Dual intensity decides how much effort is put into Ethereum or the secondary coin.
+
+* Added EWBF miner for NVIDIA with benchmark support. Mines Equihash at around 20% higher hashrates than Excavator (and doesn't cause Windows to crawl). 
+
+* Added Blake2s support for NVIDIA through ccminer. New Algorithm for NiceHash.
+
+* Updated ClaymoreDual to 9.5.
+
+* Added Sia mining for NVIDIA through ccminer with benchmark support.
+
+* There is now a [Wiki](https://github.com/DillonN/NiceHashMiner/wiki)
+
+* Bug fixes including
+
+  * Clipping on miner status display when using dual algos
+  
+  * Dual speeds not cleared when using the right-click menu option
+
+  * Disallow spaces inside workernames
+
+## Planned changes
+
+### Soon
+
+* HTTP API that can control the miner program remotely.
+
+### A little further out
+
+* iOS/Android/UWP app to interact with HTTP API.
+
+* Benchmarking of different `-dcri` values for ClaymoreDual
+
+* Autoupdater
+
+* Further updates to miners/algorithms as they come along.
+
+## Credits
+
+* @GTANAdam for original implementation of EWBF miner
+
+* NiceHash devs for original NiceHashMiner
+
+This is only tested on the newest version of Windows 10. I've tried to consider older versions, but if you run into any problems open an issue with the error and I'll be happy to help.
+
+Original readme:
+
 # NiceHash Miner
 
 - [Introduction](#introduction)

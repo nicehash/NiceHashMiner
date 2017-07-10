@@ -111,7 +111,7 @@ namespace NiceHashMiner
             labelBitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
             labelWorkerName.Text = International.GetText("WorkerName") + ":";
 
-            linkLabelVisitUs.Text = International.GetText("Form_Main_visit_us");
+            linkLabelVisitUs.Text = "View on GitHub";// International.GetText("Form_Main_visit_us");
             linkLabelCheckStats.Text = International.GetText("Form_Main_check_stats");
             linkLabelChooseBTCWallet.Text = International.GetText("Form_Main_choose_bitcoin_wallet");
 

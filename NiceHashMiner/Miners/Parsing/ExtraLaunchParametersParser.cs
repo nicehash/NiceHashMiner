@@ -145,17 +145,17 @@ namespace NiceHashMiner.Miners.Parsing {
                 foreach (var option in options) {
                     if (!isOptionDefaults[option.Type] || isOptionExist[option.Type] || useIfDefaults) { // if options all default ignore
                         if(option.FlagType == MinerOptionFlagType.Uni) {
-                        // uni params if one exist use or all must exist?
-                        bool isOptionInUse = false;
-                        foreach (var pair in MiningPairs) {
-                            if (cdevOptions[pair.Device.UUID][option.Type] != null) {
-                                isOptionInUse = true;
-                                break;
+                            // uni params if one exist use or all must exist?
+                            bool isOptionInUse = false;
+                            foreach (var pair in MiningPairs) {
+                                if (cdevOptions[pair.Device.UUID][option.Type] != null) {
+                                    isOptionInUse = true;
+                                    break;
+                                }
                             }
-                        }
-                        if (isOptionInUse) {
-                            retVal += String.Format(" {0}", option.LongName);
-                        }
+                            if (isOptionInUse) {
+                                retVal += String.Format(" {0}", option.LongName);
+                            }
                         } else if(option.FlagType == MinerOptionFlagType.MultiParam) {
                             List<string> values = new List<string>();
                             foreach (var pair in MiningPairs) {
@@ -226,7 +226,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 }
                 return MinerType.ccminer;
             }
-            if (MinerBaseType.ClaymoreAMD == minerBaseType) {
+            if (MinerBaseType.Claymore == minerBaseType) {
                 if (AlgorithmType.CryptoNight == algorithmType) {
                     return MinerType.ClaymoreCryptoNight;
                 }
@@ -266,6 +266,9 @@ namespace NiceHashMiner.Miners.Parsing {
             }
             if (MinerBaseType.excavator == minerBaseType) {
                 return MinerType.excavator;
+            }
+            if (MinerBaseType.EWBF == minerBaseType) {
+                return MinerType.EWBF;
             }
 
             return MinerType.NONE;
