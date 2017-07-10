@@ -83,12 +83,6 @@ namespace NiceHashMiner
         {
             public string version;
         }
-
-        class github_version
-        {
-            public string tag_name;
-            public string target_commitish;
-        }
 #pragma warning restore 649
 
 
@@ -173,16 +167,14 @@ namespace NiceHashMiner
 
         public static string GetVersion(string worker)
         {
-            string url = Links.GitHubAPI + "repos/DillonN/NiceHashMiner/releases";
-            string r1 = GetGitHubAPIData(url);
+            string r1 = GetNiceHashAPIData(Links.NHM_API_version, worker);
             if (r1 == null) return null;
 
-            github_version[] nhjson;
+            nicehashminer_version nhjson;
             try
             {
-                nhjson = JsonConvert.DeserializeObject<github_version[]>(r1, Globals.JsonSettings);
-                var latest = Array.Find(nhjson, (n) => n.target_commitish == "new");
-                return latest.tag_name;
+                nhjson = JsonConvert.DeserializeObject<nicehashminer_version>(r1, Globals.JsonSettings);
+                return nhjson.version;
             }
             catch
             {
@@ -217,30 +209,6 @@ namespace NiceHashMiner
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("NICEHASH", ex.Message);
-                return null;
-            }
-
-            return ResponseFromServer;
-        }
-
-        public static string GetGitHubAPIData(string URL) {
-            string ResponseFromServer;
-            try {
-                HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(URL);
-                WR.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
-                WR.Timeout = 30 * 1000;
-                WebResponse Response = WR.GetResponse();
-                Stream SS = Response.GetResponseStream();
-                SS.ReadTimeout = 20 * 1000;
-                StreamReader Reader = new StreamReader(SS);
-                ResponseFromServer = Reader.ReadToEnd();
-                if (ResponseFromServer.Length == 0 || (ResponseFromServer[0] != '{' && ResponseFromServer[0] != '[')) 
-                    throw new Exception("Not JSON!");
-                Reader.Close();
-                Response.Close();
-            }
-            catch (Exception ex) {
-                Helpers.ConsolePrint("GITHUB", ex.Message);
                 return null;
             }
 

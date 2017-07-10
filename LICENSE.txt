@@ -1,4 +1,4 @@
-This license only applies to new commits made by me post-fork:
+This license only applies to commits made in DillonN fork (commits between 1ca00e5 and da1de1c)
 
 Copyright 2017 Newell Labs
 
