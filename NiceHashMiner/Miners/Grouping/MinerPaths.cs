@@ -139,13 +139,18 @@ namespace NiceHashMiner.Miners.Grouping
                 if (AlgorithmType.NeoScrypt == algorithmType) {
                     return Data.ccminer_neoscrypt;
                 }
-                if (AlgorithmType.Lyra2RE == algorithmType || AlgorithmType.Lyra2REv2 == algorithmType) {
+                if (AlgorithmType.Lyra2RE == algorithmType 
+                    || AlgorithmType.Lyra2REv2 == algorithmType 
+                    || AlgorithmType.Nist5 == algorithmType) {
                     return Data.ccminer_nanashi;
                 }
                 if (AlgorithmType.CryptoNight == algorithmType) {
                     return Data.ccminer_cryptonight;
                 }
-                if (AlgorithmType.Lbry == algorithmType || AlgorithmType.X11Gost == algorithmType || AlgorithmType.Blake2s == algorithmType) {
+                if (AlgorithmType.Lbry == algorithmType 
+                    || AlgorithmType.X11Gost == algorithmType 
+                    || AlgorithmType.Blake2s == algorithmType 
+                    || AlgorithmType.Nist5 == algorithmType) {
                     return Data.ccminer_tpruvot;
                 }
                 if (AlgorithmType.Sia == algorithmType) {

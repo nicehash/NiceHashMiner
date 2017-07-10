@@ -25,7 +25,7 @@ namespace NiceHashMiner.Enums
         //X13 = 4,
         //Keccak = 5,
         //X15 = 6,
-        //Nist5 = 7,
+        Nist5 = 7,
         //NeoScrypt = 8,
         //Lyra2RE = 9,
         //WhirlpoolX = 10,
