@@ -366,6 +366,7 @@
     <Content Include="Resources\info_black_18.png" />
     <Content Include="Resources\info_black_36.png" />
     <Content Include="Resources\logo.ico" />
+    <Content Include="Resources\NHM_logo_big_light.png" />
     <None Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
     <Content Include="Resources\NHM_help_50px.png" />
   </ItemGroup>

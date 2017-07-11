@@ -110,8 +110,7 @@ namespace NiceHashMiner
             labelServiceLocation.Text = International.GetText("Service_Location") + ":";
             labelBitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
             labelWorkerName.Text = International.GetText("WorkerName") + ":";
-
-            linkLabelVisitUs.Text = "View on GitHub";// International.GetText("Form_Main_visit_us");
+            
             linkLabelCheckStats.Text = International.GetText("Form_Main_check_stats");
             linkLabelChooseBTCWallet.Text = International.GetText("Form_Main_choose_bitcoin_wallet");
 
@@ -614,7 +613,7 @@ namespace NiceHashMiner
 
             if (ret < 0)
             {
-                linkLabelVisitUs.Text = String.Format(International.GetText("Form_Main_new_version_released"), ver);
+                //linkLabelVisitUs.Text = String.Format(International.GetText("Form_Main_new_version_released"), ver);
                 VisitURL = Links.VisitURLNew + ver;
             }
         }

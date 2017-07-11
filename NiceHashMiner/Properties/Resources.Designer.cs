@@ -109,5 +109,15 @@ namespace NiceHashMiner.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap NHM_logo_big_light {
+            get {
+                object obj = ResourceManager.GetObject("NHM_logo_big_light", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }
