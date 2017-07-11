@@ -379,7 +379,7 @@ namespace NiceHashMiner
 
             // no bots please
             if (ConfigManager.GeneralConfigHwidLoadFromFile() && !ConfigManager.GeneralConfigHwidOK()) {
-                var result = MessageBox.Show("NiceHash Miner has detected change of hardware ID. If you did not download and install NiceHash Miner, your computer may be compromised. In that case, we suggest you to install an antivirus program or reinstall your Windows.\r\n\r\nContinue with NiceHash Miner?",
+                var result = MessageBox.Show("NiceHash Miner Legacy has detected change of hardware ID. If you did not download and install NiceHash Miner Legacy, your computer may be compromised. In that case, we suggest you to install an antivirus program or reinstall your Windows.\r\n\r\nContinue with NiceHash Miner Legacy?",
                     //International.GetText("Form_Main_msgbox_anti_botnet_msgbox"),
                     International.GetText("Warning_with_Exclamation"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);

@@ -331,7 +331,7 @@
             this.labelDemoMode.Name = "labelDemoMode";
             this.labelDemoMode.Size = new System.Drawing.Size(601, 35);
             this.labelDemoMode.TabIndex = 100;
-            this.labelDemoMode.Text = "NiceHash Miner is running in DEMO mode!";
+            this.labelDemoMode.Text = "NiceHash Miner Legacy is running in DEMO mode!";
             this.labelDemoMode.Visible = false;
             // 
             // flowLayoutPanelRates
@@ -414,7 +414,7 @@
             this.MinimumSize = new System.Drawing.Size(860, 478);
             this.Name = "Form_Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "NiceHash Miner";
+            this.Text = "NiceHash Miner Legacy";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Shown += new System.EventHandler(this.Form_Main_Shown);
             this.Resize += new System.EventHandler(this.Form1_Resize);

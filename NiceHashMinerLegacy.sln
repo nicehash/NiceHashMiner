@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMiner", "NiceHashMiner\NiceHashMiner.csproj", "{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLegacy", "NiceHashMiner\NiceHashMinerLegacy.csproj", "{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0E9D874E-5354-465E-9EC3-F7A35C268A8A} = {0E9D874E-5354-465E-9EC3-F7A35C268A8A}
 		{23C94F99-F466-4CBE-90B7-71B450DD7BF1} = {23C94F99-F466-4CBE-90B7-71B450DD7BF1}

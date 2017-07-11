@@ -38,7 +38,7 @@
             this.label_Instruction.Name = "label_Instruction";
             this.label_Instruction.Size = new System.Drawing.Size(231, 13);
             this.label_Instruction.TabIndex = 0;
-            this.label_Instruction.Text = "Choose a default language for NiceHash Miner:";
+            this.label_Instruction.Text = "Choose a default language for NiceHash Miner Legacy:";
             // 
             // comboBox_Languages
             // 
@@ -99,7 +99,7 @@
             this.MinimizeBox = false;
             this.Name = "Form_ChooseLanguage";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "NiceHash Miner EULA  / Choose Language";
+            this.Text = "NiceHash Miner Legacy EULA  / Choose Language";
             this.ResumeLayout(false);
             this.PerformLayout();
 
