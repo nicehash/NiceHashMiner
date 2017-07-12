@@ -392,6 +392,7 @@
             this.linkLabelNewVersion.Name = "linkLabelNewVersion";
             this.linkLabelNewVersion.Size = new System.Drawing.Size(0, 20);
             this.linkLabelNewVersion.TabIndex = 110;
+            this.linkLabelNewVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelNewVersion_LinkClicked);
             // 
             // Form_Main
             // 
