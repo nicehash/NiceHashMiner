@@ -239,7 +239,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 MinerType.EWBF,
                 new List<MinerOption>() {
                     // parameters differ according to algorithm
-                    new MinerOption("EWBF_fee", "--fee", "--fee", "2", MinerOptionFlagType.SingleParam, " "),
+                    new MinerOption("EWBF_fee", "--fee", "--fee", "0", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("EWBF_templimit", "--templimit", "--templimit", "90", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("EWBF_tempunits", "--tempunits", "--tempunits", "C", MinerOptionFlagType.SingleParam, " "),
                     new MinerOption("EWBF_eexit", "--eexit", "--eexit", null, MinerOptionFlagType.SingleParam, " "),

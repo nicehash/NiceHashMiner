@@ -68,10 +68,14 @@ namespace NiceHashMiner.Miners
         }
 
         private string GetStartCommand(string url, string btcAddress, string worker) {
-            return GetDevicesCommandString() 
-                + " --server " + url.Split(':')[0] 
-                + " --user " + btcAddress + "." + worker + " --pass x --port " 
+            var ret = GetDevicesCommandString()
+                + " --server " + url.Split(':')[0]
+                + " --user " + btcAddress + "." + worker + " --pass x --port "
                 + url.Split(':')[1] + " --api 127.0.0.1:" + APIPort;
+            if (!ret.Contains("--fee")) {
+                ret += " --fee 0";
+            }
+            return ret;
         }
 
         protected override string GetDevicesCommandString() {
