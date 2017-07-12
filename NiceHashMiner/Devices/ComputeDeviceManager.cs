@@ -213,6 +213,17 @@ namespace NiceHashMiner.Devices
                                                           International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
                                                           MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
+
+                // no devices found
+                if (showWarning && Avaliable.AllAvaliableDevices.Count <= 0) {
+                    DialogResult result = MessageBox.Show(International.GetText("Compute_Device_Query_Manager_No_Devices"),
+                                                          International.GetText("Compute_Device_Query_Manager_No_Devices_Title"),
+                                                          MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                    if (result == System.Windows.Forms.DialogResult.OK) {
+                        System.Diagnostics.Process.Start(Links.NHM_NoDev_Help);
+                    }
+                }
+
                 // get GPUs RAM sum
                 // bytes
                 Avaliable.NVIDIA_RAM_SUM = 0;

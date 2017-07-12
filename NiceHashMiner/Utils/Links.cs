@@ -11,6 +11,7 @@ namespace NiceHashMiner {
         public static string CheckStats = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=miners&addr=";
         // help and faq
         public static string NHM_Help = "https://github.com/nicehash/NiceHashMinerLegacy/";
+        public static string NHM_NoDev_Help = "https://github.com/nicehash/NiceHashMinerLegacy/wiki/Troubleshooting#nosupportdev";
         // faq
         public static string NHM_BTC_Wallet_Faq = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=faq#faqs15";
         public static string NHM_Paying_Faq = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=faq#faqs6";
