@@ -29,7 +29,7 @@ namespace NiceHashMiner
     using NiceHashMiner.Miners.Parsing;
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
-        private static string VisitURL = Links.VisitURL;
+        private String VisitURLNew = Links.VisitURLNew;
 
         private Timer MinerStatsCheck;
         private Timer UpdateCheck;
@@ -613,8 +613,8 @@ namespace NiceHashMiner
 
             if (ret < 0)
             {
-                //linkLabelVisitUs.Text = String.Format(International.GetText("Form_Main_new_version_released"), ver);
-                VisitURL = Links.VisitURLNew + ver;
+                linkLabelNewVersion.Text = String.Format(International.GetText("Form_Main_new_version_released"), ver);
+                VisitURLNew = Links.VisitURLNew + ver;
             }
         }
 
@@ -645,13 +645,6 @@ namespace NiceHashMiner
             return true;
         }
 
-
-        private void linkLabelVisitUs_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(VisitURL);
-        }
-
-
         private void linkLabelCheckStats_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (!VerifyMiningAddress(true)) return;
@@ -663,6 +656,11 @@ namespace NiceHashMiner
         private void linkLabelChooseBTCWallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(Links.NHM_BTC_Wallet_Faq);
+        }
+
+        private void linkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) 
+        {
+            System.Diagnostics.Process.Start(VisitURLNew);
         }
 
 
@@ -741,8 +739,12 @@ namespace NiceHashMiner
         }
 
 
-        private void buttonHelp_Click(object sender, EventArgs e)
+        private void buttonLogo_Click(object sender, EventArgs e)
         {
+            System.Diagnostics.Process.Start(Links.VisitURL);
+        }
+
+        private void buttonHelp_Click(object sender, EventArgs e) {
             System.Diagnostics.Process.Start(Links.NHM_Help);
         }
 

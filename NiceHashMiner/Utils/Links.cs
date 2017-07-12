@@ -4,13 +4,13 @@ using System.Text;
 
 namespace NiceHashMiner {
     public static class Links {
-        public static string VisitURL = "https://github.com/DillonN/NiceHashMiner";
+        public static string VisitURL = "https://www.nicehash.com?utm_source=NHM";
         // add version
         public static string VisitURLNew = "https://github.com/NiceHash/NiceHashMinerLegacy/releases/tag/";
         // add btc adress as parameter
         public static string CheckStats = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=miners&addr=";
         // help and faq
-        public static string NHM_Help = "https://github.com/DillonN/NiceHashMiner/issues";
+        public static string NHM_Help = "https://github.com/nicehash/NiceHashMinerLegacy/";
         // faq
         public static string NHM_BTC_Wallet_Faq = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=faq#faqs15";
         public static string NHM_Paying_Faq = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=faq#faqs6";
