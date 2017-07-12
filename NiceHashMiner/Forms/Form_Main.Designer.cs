@@ -280,7 +280,7 @@
             this.buttonHelp.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonHelp.FlatAppearance.BorderSize = 0;
             this.buttonHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonHelp.Image = global::NiceHashMiner.Properties.Resources.NHM_logo_big_light;
+            this.buttonHelp.Image = global::NiceHashMiner.Properties.Resources.NHM_logo_xsmall_light;
             this.buttonHelp.Location = new System.Drawing.Point(708, 15);
             this.buttonHelp.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.buttonHelp.Name = "buttonHelp";
