@@ -17,7 +17,7 @@
 NiceHash Miner Legacy is a continuation of NiceHash Miner v1. This version is intended for experienced miners who want the quickest updates and highest hashrates, and are okay with some customization of the software and antivirus. If you are new to mining, please check out the new [NiceHash Miner v2](https://miner.nicehash.com/) for a simpler start at earning Bitcoins with your idle GPU & CPU.
 
 
-<img src="https://nicehash.com/imgs/NHM_v1610.png" />
+<img src="Resources/NHML_1800_GUI.png" />
 
 Please follow us on Twitter <a href="https://twitter.com/NiceHashMining" target="_blank">@NiceHashMining</a> for updates on new versions and other important information.
 
