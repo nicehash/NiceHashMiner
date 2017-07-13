@@ -49,7 +49,7 @@ NiceHash Miner Legacy is an advanced auto-miner that supports the latest algorit
 - **up-to-date patches** for OS
 - **up-to-date drivers** for all GPUs
 - **Reliable** internet connectivity
-- **Paging file size** of x% of your total GPU memory
+- For GPU Mining, **paging file size** of x% of your total GPU memory
 - Personal **Bitcoin wallet**: https://www.nicehash.com/index.jsp?p=faq#faqs15
 
 # <a name="run"></a> How to get&run it?
