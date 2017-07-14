@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace NiceHashMiner.Forms {
     public partial class Form_Settings : Form {
@@ -36,6 +37,9 @@ namespace NiceHashMiner.Forms {
         bool ShowUniqueDeviceList = true;
 
         ComputeDevice _selectedComputeDevice;
+
+        private RegistryKey rkStartup = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        private bool isStartupChanged = false;
 
         public Form_Settings() {
             InitializeComponent();
@@ -180,6 +184,9 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.checkBox_NVIDIAP0State, International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
             toolTip1.SetToolTip(this.pictureBox_NVIDIAP0State, International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
 
+            toolTip1.SetToolTip(this.checkBox_RunAtStartup, International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
+            toolTip1.SetToolTip(this.pictureBox_RunAtStartup, International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
+
 
             toolTip1.SetToolTip(this.checkBox_AutoStartMining, International.GetText("Form_Settings_ToolTip_checkBox_AutoStartMining"));
             toolTip1.SetToolTip(this.pictureBox_AutoStartMining, International.GetText("Form_Settings_ToolTip_checkBox_AutoStartMining"));
@@ -244,6 +251,7 @@ namespace NiceHashMiner.Forms {
             checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
             checkBox_AMD_DisableAMDTempControl.Text = International.GetText("Form_Settings_General_DisableAMDTempControl");
             checkBox_AllowMultipleInstances.Text = International.GetText("Form_Settings_General_AllowMultipleInstances_Text");
+            checkBox_RunAtStartup.Text = International.GetText("Form_Settings_General_RunAtStartup");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
@@ -388,6 +396,7 @@ namespace NiceHashMiner.Forms {
                 checkBox_IdleWhenNoInternetAccess.Checked = ConfigManager.GeneralConfig.IdleWhenNoInternetAccess;
                 this.checkBox_Use3rdPartyMiners.Checked = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
                 this.checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
+                checkBox_RunAtStartup.Checked = isInStartupRegistry();
             }
 
             // Textboxes
@@ -534,6 +543,15 @@ namespace NiceHashMiner.Forms {
                     }
                 }
             }
+        }
+
+        private void checkBox_RunAtStartup_CheckedChanged(object sender, EventArgs e) {
+            isStartupChanged = true;
+        }
+
+        private bool isInStartupRegistry() {
+            // Value is stored in registry
+            return ((String)rkStartup.GetValue(Application.ProductName, "") == Application.ExecutablePath);
         }
 
         private void GeneralTextBoxes_Leave(object sender, EventArgs e) {
@@ -694,6 +712,16 @@ namespace NiceHashMiner.Forms {
                 ConfigManager.GeneralConfigFileCommit();
                 ConfigManager.CommitBenchmarks();
                 International.Initialize(ConfigManager.GeneralConfig.Language);
+
+                if (isStartupChanged) {
+                    // Commit to registry
+                    if (checkBox_RunAtStartup.Checked) {
+                        // Add NHML to startup registry
+                        rkStartup.SetValue(Application.ProductName, Application.ExecutablePath);
+                    } else {
+                        rkStartup.DeleteValue(Application.ProductName, false);
+                    }
+                }
             } else {
                 ConfigManager.RestoreBackup();
             }

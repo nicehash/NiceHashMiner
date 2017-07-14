@@ -59,7 +59,7 @@
     "Form_Main_msgbox_InvalidBTCAddressMsg": "¡Dirección Bitcoin inválida!\n\nIntruduzca una dirección válida o pulse Sí para crear una.",
     "Form_Main_msgbox_InvalidWorkerNameMsg": "¡Nombre inválido!\n\nPor favor introduzca un nombre válido (Aa-Zz, 0-9, de hasta 7 carácteres).",
     "Form_Main_msgbox_NullNiceHashDataMsg": "No se puede obtener los datos de rentabilidad de NiceHash. Si está conectado a Internet, inténtelo más tarde.",
-    "Form_Main_msgbox_HaveNotBenchmarkedMsg": "No ha hecho ningún benchmark para el dispositivo {0}. Sin hacer un benchmark primero, NiceHashMiner no podrá cambiar al algoritmo más rentable. Para continuar, pulsa Sí. Si le gustaría hacer un benchmark primero, pulse No y haga click en Benchmark.",
+    "Form_Main_msgbox_HaveNotBenchmarkedMsg": "No ha hecho ningún benchmark para el dispositivo {0}. Sin hacer un benchmark primero, NiceHashMinerLegacy no podrá cambiar al algoritmo más rentable. Para continuar, pulsa Sí. Si le gustaría hacer un benchmark primero, pulse No y haga click en Benchmark.",
     "Form_Main_msgbox_buttonBenchmarkWarningMsg": "Solo usuarios avanzados deberían cambiar las configuraciones avanzadas. \r\n\r\nSi {0} se cierra por una mala configuración, puede arreglarlo eliminando el archivo 'config.json' .\r\n\r\n¿Seguro que quiere editar la configuración avanzada?",
     "Form_Main_msgbox_buttonBenchmarkRestartWarningTitle": "Reiniciando {0}",
     "Form_Main_msgbox_buttonBenchmarkRestartWarningMsg": "{0} se cierrará. Esta nueva ventana de configuración está aún en beta y {0} necesita un reinicio para que haga efecto.",
@@ -123,6 +123,7 @@
     "Form_Settings_General_UseNewSettingsPage": "Usar la nueva página de configuración",
     "Form_Settings_General_NVIDIAP0State": "Estado NVIDIA P0",
     "Form_Settings_General_LogToFile": "Guardar el registro de eventos",
+    "Form_Settings_General_RunAtStartup": "Ejecutar con Windows",
 
     "Form_Settings_General_Language": "Lenguaje",
     "Form_Settings_General_MinIdleSeconds": "Tiempo mínimo detenido [s]",
@@ -190,18 +191,19 @@
     "Form_Settings_ToolTip_BitcoinAddress": "Dirección Bitcoin del usuario para minar.",
     "Form_Settings_ToolTip_WorkerName": "Para identificar el ordenador del usuario.",
     "Form_Settings_ToolTip_ServiceLocation": "Establece la ubicación de minado. Elegir Hong Kong o Japón añadirá latencia extra.",
-    "Form_Settings_ToolTip_checkBox_AutoStartMining": "Si está marcada, NiceHashMiner empezará a minar al abrirse.",
+    "Form_Settings_ToolTip_checkBox_AutoStartMining": "Si está marcada, NiceHashMinerLegacy empezará a minar al abrirse.",
     "Form_Settings_ToolTip_checkBox_HideMiningWindows": "Si está marcada, las consolas de sgminer, ccminer, cpuminer y ethminer se ocultarán.",
-    "Form_Settings_ToolTip_checkBox_MinimizeToTray": "Si está marcada, NiceHashMiner se minimizará a la bandeja (Tray).",
+    "Form_Settings_ToolTip_checkBox_MinimizeToTray": "Si está marcada, NiceHashMinerLegacy se minimizará a la bandeja (Tray).",
     "Form_Settings_ToolTip_CPU_LessThreads": "Reducir número de hilos usados por cada CPU por LessThreads.",
     "Form_Settings_ToolTip_CPU_ForceCPUExtension": "Forzar minero de una extensión en particular.",
+    "Form_Settings_ToolTip_checkBox_RunAtStartup": "Cuando se selecciona, NiceHashMinerLegacy se ejecutará al iniciar sesión.",
 
     "Form_Settings_ToolTip_SwitchMinSecondsFixed": "Parte fija de tiempo mínimo (en segundos) antes de que el minero cambie de algoritmo.\nEl tiempo total es SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
     "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Parte aleatoria del tiempo mínimo (en segundos) antes de que el minero cambie de algoritmo.\nEl tiempo total es SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nEsta parte aleatoria es usada para que no todos los usuarios de NiceHash Miner Legacy tengan los mismos patrones de cambio de algoritmo.",
     "Form_Settings_ToolTip_SwitchMinSecondsAMD": "Parte fija del tiempo mínimo (en segundos) antes de que el minero cambie de algoritmo (tiempo adicional para targetas gráficas AMD).\nEl tiempo total es SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
 
     "Form_Settings_ToolTip_MinerAPIQueryInterval": "Intervalo de consulta de API para ccminer, sgminer cpuminer and ethminer.",
-    "Form_Settings_ToolTip_MinerRestartDelayMS": "Cantidad de tiempo (en milisegundos) que NiceHashMiner esperará antes de reiniciar el minero.",
+    "Form_Settings_ToolTip_MinerRestartDelayMS": "Cantidad de tiempo (en milisegundos) que NiceHashMinerLegacy esperará antes de reiniciar el minero.",
     "Form_Settings_ToolTip_MinerAPIGraceSeconds": "Periodo de tiempo en el que el minero no es forzado a reiniciarse cuando falla una consulta de API.",
     "Form_Settings_ToolTip_MinerAPIGraceSecondsAMD": "Periodo de tiempo en el que el minero AMD no es forzado a reiniciarse cuando falla una consulta de API.",
 
@@ -217,8 +219,8 @@
 
     "Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning": "Si está marcado, NiceHash Miner Legacy dará un aviso si\nla versión óptima del driver está instalada.",
     "Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting": "Si está marcado, si un minero crasheara,NiceHash Miner Legacy sería capaz de reabrirlo si no está bloqueado por algún mensaje de error de Windows.\nEs recomendable dejarlo activado para que se pueda minar ininterrunpidamente con unos mineros que no sean completamente estables.",
-    "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "Si está marcado, NiceHashMiner usará la nueva página de configuración.",
-    "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Si está marcado, NiceHashMiner pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
+    "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "Si está marcado, NiceHashMinerLegacy usará la nueva página de configuración.",
+    "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Si está marcado, NiceHashMinerLegacy pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
     "Form_Settings_ToolTip_ethminerAPIPort": "Puerto de la API que será usado por ethminer para {0} GPUs.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Establece la altura de bloque usado para hacer el benchmark si la llamada a la API falla.",
 
