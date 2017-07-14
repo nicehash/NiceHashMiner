@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
+using System.Net.Sockets;
 using System.IO;
 using System.Windows.Forms;
+using System.Threading;
 using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
@@ -23,8 +25,7 @@ namespace NiceHashMiner
     }
 #pragma warning restore 649
 
-    class NiceHashStats
-    {
+    class NiceHashSocket {
 #pragma warning disable 649
         //class nicehash_global_stats
         //{
@@ -35,8 +36,7 @@ namespace NiceHashMiner
         //    public double speed;
         //}
 
-        public class nicehash_stats
-        {
+        public class nicehash_stats {
             public double balance;
             public double balance_unexchanged;
             public double balance_immature;
@@ -46,24 +46,20 @@ namespace NiceHashMiner
             public int algo;
         }
 
-        public class nicehash_result_2
-        {
+        public class nicehash_result_2 {
             public NiceHashSMA[] simplemultialgo;
         }
 
-        public class nicehash_json_2
-        {
+        public class nicehash_json_2 {
             public nicehash_result_2 result;
             public string method;
         }
 
-        class nicehash_result<T>
-        {
+        class nicehash_result<T> {
             public T[] stats;
         }
-        
-        class nicehash_json<T>
-        {
+
+        class nicehash_json<T> {
             public nicehash_result<T> result;
             public string method;
         }
@@ -73,18 +69,92 @@ namespace NiceHashMiner
             public string method;
         }
 
-        class nicehash_error
-        {
+        class nicehash_error {
             public string error;
             public string method;
         }
 
-        class nicehashminer_version
-        {
+        class nicehashminer_version {
             public string version;
         }
+
+        #region JSON Models
+        class nicehash_login
+        {
+            public string method = "login";
+            public string version;
+        }
+
+        #endregion
 #pragma warning restore 649
 
+        public readonly Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates;
+        public readonly double Balance;
+        private readonly int port;
+        private readonly string address;
+
+        private static ManualResetEvent connectDone = new ManualResetEvent(false);
+        private static ManualResetEvent sendDone = new ManualResetEvent(false);
+        private static ManualResetEvent receiveDone = new ManualResetEvent(false);
+
+        public NiceHashSocket(string address, int port) {
+            this.address = address;
+            this.port = port;
+        }
+
+        #region Socket Methods
+
+        public void StartClient() {
+            try {
+                var ipHostInfo = Dns.GetHostEntry(address);
+                var ipAddress = ipHostInfo.AddressList[0];
+                var remoteEP = new IPEndPoint(ipAddress, port);
+
+                var client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+            } catch (Exception e) {
+                Helpers.ConsolePrint("SOCKET", e.ToString());
+            }
+        }
+
+        private void ConnectCallback(IAsyncResult ar) {
+            try {
+                var client = (Socket)ar.AsyncState;
+
+                client.EndConnect(ar);
+
+                Helpers.ConsolePrint("SOCKET", String.Format("Socket connected to {0}", client.RemoteEndPoint.ToString()));
+
+                //send login
+                var version = "NHML/" + Application.ProductVersion;
+                var login = new nicehash_login();
+                login.version = version;
+                var loginJson = JsonConvert.SerializeObject(login);
+                Send(client, loginJson);
+            } catch (Exception e) {
+                Helpers.ConsolePrint("SOCKET", e.ToString());
+            }
+        }
+
+        private void Send(Socket client, String data) {
+            // Convert string to byte data ASCII
+            byte[] byteData = Encoding.ASCII.GetBytes(data);
+
+            client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
+        }
+
+        private void SendCallback(IAsyncResult ar) {
+            try {
+                var client = (Socket)ar.AsyncState;
+
+                int bytesSent = client.EndSend(ar);
+                Helpers.ConsolePrint("SOCKET", String.Format("Sent {0} bytes to server", bytesSent));
+            } catch (Exception e) {
+                Helpers.ConsolePrint("SOCKET", e.ToString());
+            }
+        }
+
+        #endregion
 
         public static Dictionary<AlgorithmType, NiceHashSMA> GetAlgorithmRates(string worker)
         {
