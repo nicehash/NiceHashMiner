@@ -25,7 +25,7 @@ namespace NiceHashMiner
     }
 #pragma warning restore 649
 
-    class NiceHashSocket {
+    class NiceHashConnection {
 #pragma warning disable 649
         //class nicehash_global_stats
         //{
@@ -85,29 +85,40 @@ namespace NiceHashMiner
             public string version;
         }
 
+        class nicehash_receive
+        {
+            public string method;
+        }
+
         #endregion
 #pragma warning restore 649
 
-        public readonly Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates;
-        public readonly double Balance;
-        private readonly int port;
-        private readonly string address;
+        // State object for receiving data from remote device.  
+        public class StateObject
+        {
+            // Client socket.  
+            public Socket workSocket = null;
+            // Size of receive buffer.  
+            public const int BufferSize = 256;
+            // Receive buffer.  
+            public byte[] buffer = new byte[BufferSize];
+            // Received data string.  
+            public StringBuilder sb = new StringBuilder();
+        }
+
+        public static readonly Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates;
+        public static readonly double Balance;
 
         private static ManualResetEvent connectDone = new ManualResetEvent(false);
         private static ManualResetEvent sendDone = new ManualResetEvent(false);
         private static ManualResetEvent receiveDone = new ManualResetEvent(false);
 
-        public NiceHashSocket(string address, int port) {
-            this.address = address;
-            this.port = port;
-        }
-
         #region Socket Methods
 
-        public void StartClient() {
+        public static void StartClient(string address, int port) {
             try {
                 var ipHostInfo = Dns.GetHostEntry(address);
-                var ipAddress = ipHostInfo.AddressList[0];
+                var ipAddress = ipHostInfo.AddressList[1];
                 var remoteEP = new IPEndPoint(ipAddress, port);
 
                 var client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -117,7 +128,7 @@ namespace NiceHashMiner
             }
         }
 
-        private void ConnectCallback(IAsyncResult ar) {
+        private static void ConnectCallback(IAsyncResult ar) {
             try {
                 var client = (Socket)ar.AsyncState;
 
@@ -131,19 +142,62 @@ namespace NiceHashMiner
                 login.version = version;
                 var loginJson = JsonConvert.SerializeObject(login);
                 Send(client, loginJson);
+
+                Receive(client);
+                receiveDone.WaitOne();
             } catch (Exception e) {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
         }
 
-        private void Send(Socket client, String data) {
+        private static void Receive(Socket client) {
+            try {
+                var state = new StateObject();
+                state.workSocket = client;
+
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+            } catch (Exception e) {
+                Helpers.ConsolePrint("SOCKET", e.ToString());
+            }
+        }
+
+        private static void ReceiveCallback(IAsyncResult ar) {
+            try {
+                var state = (StateObject)ar.AsyncState;
+                var client = state.workSocket;
+
+                int bytesRead = client.EndReceive(ar);
+                if (bytesRead > 0) {
+                    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
+                    if (state.sb.ToString().EndsWith("}")) {
+                        var received = state.sb.ToString();
+                        Helpers.ConsolePrint("SOCKET", received);
+
+                        var d = JObject.Parse(received);
+                        Console.WriteLine((string)d["method"]);
+
+                        // Listen again
+                        Receive(client);
+                    } else {  // More data
+                        // Get rest of data
+                        client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
+                    }
+                } else {
+                    // Do something
+                }
+            } catch (Exception e) {
+                Helpers.ConsolePrint("SOCKET", e.ToString());
+            }
+        }
+
+        private static void Send(Socket client, String data) {
             // Convert string to byte data ASCII
             byte[] byteData = Encoding.ASCII.GetBytes(data);
 
             client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
         }
 
-        private void SendCallback(IAsyncResult ar) {
+        private static void SendCallback(IAsyncResult ar) {
             try {
                 var client = (Socket)ar.AsyncState;
 
