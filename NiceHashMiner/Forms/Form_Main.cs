@@ -242,7 +242,7 @@ namespace NiceHashMiner
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
 
-            NiceHashConnection.StartClient(Links.NHM_Socket_Address);
+            NiceHashStats.StartConnection(Links.NHM_Socket_Address);
 
             MinerStatsCheck = new Timer();
             MinerStatsCheck.Tick += MinerStatsCheck_Tick;
@@ -545,7 +545,7 @@ namespace NiceHashMiner
             if (VerifyMiningAddress(false))
             {
                 Helpers.ConsolePrint("NICEHASH", "Balance get");
-                double Balance = NiceHashConnection.Balance;
+                double Balance = NiceHashStats.Balance;
                 if (Balance > 0)
                 {
                     if (ConfigManager.GeneralConfig.AutoScaleBTCValues && Balance < 0.1)
@@ -585,7 +585,7 @@ namespace NiceHashMiner
             Dictionary<AlgorithmType, NiceHashSMA> t = null;
 
             for (int i = 0; i < 5; i++) {
-                t = NiceHashConnection.AlgorithmRates;
+                t = NiceHashStats.AlgorithmRates;
                 if (t != null) {
                     Globals.NiceHashData = t;
                     break;
@@ -593,7 +593,7 @@ namespace NiceHashMiner
 
                 Helpers.ConsolePrint("NICEHASH", "SMA get failed .. retrying");
                 System.Threading.Thread.Sleep(1000);
-                t = NiceHashConnection.AlgorithmRates;
+                t = NiceHashStats.AlgorithmRates;
             }
 
             if (t == null && Globals.NiceHashData == null && ShowWarningNiceHashData) {
@@ -613,7 +613,7 @@ namespace NiceHashMiner
         void UpdateCheck_Tick(object sender, EventArgs e)
         {
             Helpers.ConsolePrint("NICEHASH", "Version get");
-            string ver = NiceHashConnection.GetVersion(textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim());
+            string ver = NiceHashStats.GetVersion(textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim());
 
             if (ver == null) return;
 

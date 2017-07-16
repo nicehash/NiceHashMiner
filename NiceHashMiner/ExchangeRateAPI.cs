@@ -61,7 +61,7 @@ namespace NiceHashMiner {
         }
 
         public static void UpdateAPI(string worker) {
-            string resp = NiceHashConnection.GetNiceHashAPIData(apiUrl, worker);
+            string resp = NiceHashStats.GetNiceHashAPIData(apiUrl, worker);
             if (resp != null) {
                 try {
                     var LastResponse = JsonConvert.DeserializeObject<ExchangeRateJSON>(resp, Globals.JsonSettings);
