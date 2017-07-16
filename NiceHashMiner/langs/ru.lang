@@ -12,7 +12,7 @@
     "BitcoinAddress": "Биткоин-адрес",
     "WorkerName": "Имя воркера",
     "Rate": "Ставка",
-    "Day": "День",
+    "Day": "день",
     "Quick": "Быстрого",
     "Standard": "Стандарт.",
     "Precise": "Точного",
@@ -20,7 +20,7 @@
     "ListView_Group": "Группа",
     "ListView_Device": "Устройство",
     "ListView_Algorithm": "Алгоритм",
-    "ListView_Speed": "Скорость",
+    "ListView_Speed": "Скор.",
 
 
     "Form_Main_visit_us": "Посетите нас @ www.nicehash.com",
@@ -152,7 +152,7 @@
 
     "Form_Settings_General_APIBindPort": "Порт связи API",
     "Form_Settings_General_UsePassword": "Пароль",
-    "Form_Settings_General_MinimumProfit": "Мин. прибыльность ($/День)",
+    "Form_Settings_General_MinimumProfit": "Мин. прибыльность ($/день)",
     "Form_Settings_General_DisabledDevices": "Отключ. устройтва",
     "Form_Settings_General_ExtraLaunchParameters": "Доп. параметры",
     "Form_Settings_General_DaggerHashimotoGenerateDevice": "Устройство генерации DaggerHashimoto",
@@ -248,8 +248,8 @@
     "AlgorithmsListView_Enabled": "Включён",
     "AlgorithmsListView_Algorithm": "Алгоритм",
     "AlgorithmsListView_Speed": "Скорость",
-    "AlgorithmsListView_Ratio": "BTC/GH/День соотношение",
-    "AlgorithmsListView_Rate": "BTC/День",
+    "AlgorithmsListView_Ratio": "BTC/GH/день соотношение",
+    "AlgorithmsListView_Rate": "BTC/день",
     "AlgorithmSettingsControl_IntensityWarning": "Значения интенсивности для выбранного алгоритма должны быть между {0} и {1}",
     "EnabledUnbenchmarkedAlgorithmsWarning": "Для выбранных устройств есть алгоритмы, не прошедшие бенчмарк. Нажмите Да для бенчмаркинга и начала майнинга, Нет - для пропуска бенчмаркинга и продолжения майнинга, Отмена - для прерывания",
     "AlgorithmSettingsControl_Label_Intensity": "Интенсивность",
