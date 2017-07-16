@@ -80,14 +80,12 @@ namespace NiceHashMiner
         }
 
         #region JSON Models
-        class nicehash_login
-        {
+        class nicehash_login {
             public string method = "login";
             public string version;
         }
 
-        class nicehash_credentials
-        {
+        class nicehash_credentials {
             public string method = "credentials.set";
             public string btc;
             public string worker;
@@ -99,6 +97,9 @@ namespace NiceHashMiner
         public static Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates { get; private set; }
         public static double Balance { get; private set; }
         public static bool IsAlive { get { return NiceHashConnection.IsAlive; } }
+        public static event EventHandler OnBalanceUpdate = delegate { };
+        public static event EventHandler OnSMAUpdate = delegate { };
+        public static event EventHandler OnConnectionLost = delegate { };
 
         #region Socket
         private class NiceHashConnection
@@ -108,10 +109,16 @@ namespace NiceHashMiner
 
             public static void StartConnection(string address) {
                 try {
-                    webSocket = new WebSocket(address);
+                    if (webSocket == null) {
+                        webSocket = new WebSocket(address);
+                    } else {
+                        webSocket.Close();
+                    }
                     webSocket.OnOpen += ConnectCallback;
                     webSocket.OnMessage += ReceiveCallback;
                     webSocket.OnError += ErrorCallback;
+                    webSocket.OnClose += CloseCallback;
+                    webSocket.EmitOnPing = true;
                     webSocket.Connect();
                 } catch (Exception e) {
                     Helpers.ConsolePrint("SOCKET", e.ToString());
@@ -120,8 +127,10 @@ namespace NiceHashMiner
 
             private static void ConnectCallback(object sender, EventArgs e) {
                 try {
-                    // Populate SMA first (for port etc)
-                    AlgorithmRates = GetAlgorithmRates("worker1");
+                    if (AlgorithmRates == null) {
+                        // Populate SMA first (for port etc)
+                        AlgorithmRates = GetAlgorithmRates("worker1");
+                    }
                     //send login
                     var version = "NHML/" + Application.ProductVersion;
                     var login = new nicehash_login();
@@ -154,12 +163,18 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
 
+            private static void CloseCallback(object sender, CloseEventArgs e) {
+                Helpers.ConsolePrint("SOCKET", "Connection closed: " + e.Reason);
+                AttemptReconnect();
+            }
+
             public static bool SendData(string data) {
                 if (webSocket.IsAlive) {  // Make sure connection is open
                     try {
                         // Verify valid JSON and method
                         dynamic dataJson = JsonConvert.DeserializeObject(data);
                         if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "login") {
+                            Helpers.ConsolePrint("SOCKET", "Sending data: " + data);
                             webSocket.Send(data);
                             return true;
                         }
@@ -172,32 +187,49 @@ namespace NiceHashMiner
                 }
                 return false;
             }
+
+            private static bool AttemptReconnect() {
+                Helpers.ConsolePrint("SOCKET", "Attempting reconnect");
+                if (webSocket.IsAlive) {
+                    return true;
+                }
+                for (int i = 0; i < 5; i++) {
+                    webSocket.Connect();
+                    Thread.Sleep(100);
+                    if (webSocket.IsAlive) {
+                        return true;
+                    }
+                    Thread.Sleep(1000);
+                }
+                OnConnectionLost.Emit(null, EventArgs.Empty);
+                return false;
+            }
         }
 
         public static void StartConnection(string address) {
             NiceHashConnection.StartConnection(address);
         }
 
-
         #endregion
 
         private static void SetAlgorithmRates(JArray data) {
-            foreach (var algo in data) {
-                Helpers.ConsolePrint("SOCKET", algo.ToString());
-                try {
+            try {
+                foreach (var algo in data) {
                     var algoKey = (AlgorithmType)algo[0].Value<int>();
                     if (AlgorithmRates.ContainsKey(algoKey)) {
                         AlgorithmRates[algoKey].paying = algo[1].Value<double>();
                     }
-                } catch (Exception e) {
-                    Helpers.ConsolePrint("Socket", e.ToString());
                 }
+                OnSMAUpdate.Emit(null, EventArgs.Empty);
+            } catch (Exception e) {
+                Helpers.ConsolePrint("Socket", e.ToString());
             }
         }
 
         private static void SetBalance(JObject balance) {
             try {
                 Balance = balance.Value<double>();
+                OnBalanceUpdate.Emit(null, EventArgs.Empty);
             } catch (Exception e) {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }

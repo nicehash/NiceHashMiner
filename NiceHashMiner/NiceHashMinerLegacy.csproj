@@ -90,7 +90,7 @@
     <Compile Include="ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\EWBF.cs" />
-    <Compile Include="NiceHashConnection.cs" />
+    <Compile Include="NiceHashStats.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
