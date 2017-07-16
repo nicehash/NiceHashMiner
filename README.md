@@ -42,11 +42,14 @@ NiceHash Miner Legacy is an advanced auto-miner that supports the latest algorit
 # <a name="requirements"></a> Requirements
 
 - **Windows** 7 or newer operating system **64-bit**
+- **[Note: Windows 10 is recommended and will provide you a much better user experience]**
 - For CPU mining a modern CPU with SSE2 support
 - For AMD mining any AMD GPU with OpenCL support
 - For NVIDIA mining any NVIDIA GPU with Compute capability (SM) 2.1 or newer
+- **up-to-date patches** for OS
 - **up-to-date drivers** for all GPUs
 - **Reliable** internet connectivity
+- For GPU Mining, **paging file size** of 60% of your total GPU VRAM memory
 - Personal **Bitcoin wallet**: https://www.nicehash.com/index.jsp?p=faq#faqs15
 
 # <a name="run"></a> How to get&run it?
