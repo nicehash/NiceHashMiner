@@ -754,6 +754,11 @@ namespace NiceHashMiner
         {
             if (VerifyMiningAddress(false))
             {
+                if (ConfigManager.GeneralConfig.BitcoinAddress != textBoxBTCAddress.Text.Trim()
+                    || ConfigManager.GeneralConfig.WorkerName != textBoxWorkerName.Text.Trim()) {
+                    // Reset credentials
+                    NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
+                }
                 // Commit to config.json
                 ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
                 ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
@@ -877,12 +882,6 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.IsMining = true;
             buttonStopMining.Enabled = true;
 
-            if (!DemoMode 
-                && (ConfigManager.GeneralConfig.BitcoinAddress != textBoxBTCAddress.Text.Trim() 
-                || ConfigManager.GeneralConfig.WorkerName != textBoxWorkerName.Text.Trim())) {
-                // Reset credentials
-                NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
-            }
             ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
             ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;

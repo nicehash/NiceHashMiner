@@ -119,6 +119,7 @@ namespace NiceHashMiner
                     webSocket.OnError += ErrorCallback;
                     webSocket.OnClose += CloseCallback;
                     webSocket.EmitOnPing = true;
+                    webSocket.Log.Level = LogLevel.Debug;
                     webSocket.Connect();
                 } catch (Exception e) {
                     Helpers.ConsolePrint("SOCKET", e.ToString());
