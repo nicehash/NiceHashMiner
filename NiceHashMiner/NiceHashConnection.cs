@@ -26,7 +26,7 @@ namespace NiceHashMiner
     }
 #pragma warning restore 649
 
-    class NiceHashConnection {
+    class NiceHashStats {
 #pragma warning disable 649
         //class nicehash_global_stats
         //{
@@ -86,79 +86,135 @@ namespace NiceHashMiner
             public string version;
         }
 
-        class nicehash_receive
+        class nicehash_credentials
         {
-            public string method;
+            public string method = "credentials.set";
+            public string btc;
+            public string worker;
         }
 
         #endregion
 #pragma warning restore 649
 
-        // State object for receiving data from remote device.  
-        public class StateObject
+        public static Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates { get; private set; }
+        public static double Balance { get; private set; }
+        public static bool IsAlive { get { return NiceHashConnection.IsAlive; } }
+
+        #region Socket
+        private class NiceHashConnection
         {
-            // Client socket.  
-            public Socket workSocket = null;
-            // Size of receive buffer.  
-            public const int BufferSize = 256;
-            // Receive buffer.  
-            public byte[] buffer = new byte[BufferSize];
-            // Received data string.  
-            public StringBuilder sb = new StringBuilder();
+            static WebSocket webSocket;
+            public static bool IsAlive { get { return webSocket.IsAlive; } }
+
+            public static void StartConnection(string address) {
+                try {
+                    webSocket = new WebSocket(address);
+                    webSocket.OnOpen += ConnectCallback;
+                    webSocket.OnMessage += ReceiveCallback;
+                    webSocket.OnError += ErrorCallback;
+                    webSocket.Connect();
+                } catch (Exception e) {
+                    Helpers.ConsolePrint("SOCKET", e.ToString());
+                }
+            }
+
+            private static void ConnectCallback(object sender, EventArgs e) {
+                try {
+                    // Populate SMA first (for port etc)
+                    AlgorithmRates = GetAlgorithmRates("worker1");
+                    //send login
+                    var version = "NHML/" + Application.ProductVersion;
+                    var login = new nicehash_login();
+                    login.version = version;
+                    var loginJson = JsonConvert.SerializeObject(login);
+                    SendData(loginJson);
+                } catch (Exception er) {
+                    Helpers.ConsolePrint("SOCKET", er.ToString());
+                }
+            }
+
+            private static void ReceiveCallback(object sender, MessageEventArgs e) {
+                try {
+                    if (e.IsText) {
+                        Helpers.ConsolePrint("SOCKET", e.Data);
+                        dynamic message = JsonConvert.DeserializeObject(e.Data);
+                        if (message.method == "sma") {
+                            SetAlgorithmRates(message.data);
+                        }
+                        if (message.method == "balance") {
+                            SetBalance(message.value);
+                        }
+                    }
+                } catch (Exception er) {
+                    Helpers.ConsolePrint("SOCKET", er.ToString());
+                }
+            }
+
+            private static void ErrorCallback(object sender, WebSocketSharp.ErrorEventArgs e) {
+                Helpers.ConsolePrint("SOCKET", e.ToString());
+            }
+
+            public static bool SendData(string data) {
+                if (webSocket.IsAlive) {  // Make sure connection is open
+                    try {
+                        // Verify valid JSON and method
+                        dynamic dataJson = JsonConvert.DeserializeObject(data);
+                        if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "login") {
+                            webSocket.Send(data);
+                            return true;
+                        }
+                    } catch (Exception e) {
+                        Helpers.ConsolePrint("SOCKET", e.ToString());
+                    }
+                }
+                else {
+                    // TODO reconnect
+                }
+                return false;
+            }
         }
 
-        public static readonly Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates;
-        public static readonly double Balance;
+        public static void StartConnection(string address) {
+            NiceHashConnection.StartConnection(address);
+        }
 
-        private static ManualResetEvent connectDone = new ManualResetEvent(false);
-        private static ManualResetEvent sendDone = new ManualResetEvent(false);
-        private static ManualResetEvent receiveDone = new ManualResetEvent(false);
 
-        #region Socket Methods
+        #endregion
 
-        public static void StartClient(string address) {
+        private static void SetAlgorithmRates(JArray data) {
+            foreach (var algo in data) {
+                Helpers.ConsolePrint("SOCKET", algo.ToString());
+                try {
+                    var algoKey = (AlgorithmType)algo[0].Value<int>();
+                    if (AlgorithmRates.ContainsKey(algoKey)) {
+                        AlgorithmRates[algoKey].paying = algo[1].Value<double>();
+                    }
+                } catch (Exception e) {
+                    Helpers.ConsolePrint("Socket", e.ToString());
+                }
+            }
+        }
+
+        private static void SetBalance(JObject balance) {
             try {
-                var ws = new WebSocket(address);
-                ws.OnOpen += ConnectCallback;
-                ws.OnMessage += ReceiveCallback;
-                ws.OnError += ErrorCallback;
-                ws.Connect();
+                Balance = balance.Value<double>();
             } catch (Exception e) {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
         }
 
-        private static void ConnectCallback(object sender, EventArgs e) {
-            try {
-                var ws = (WebSocket)sender;
-                //send login
-                var version = "NHML/" + Application.ProductVersion;
-                var login = new nicehash_login();
-                login.version = version;
-                var loginJson = JsonConvert.SerializeObject(login);
-                ws.Send(loginJson);
-            } catch (Exception er) {
-                Helpers.ConsolePrint("SOCKET", er.ToString());
+        public static void SetCredentials(string btc, string worker) {
+            var data = new nicehash_credentials();
+            data.btc = btc;
+            data.worker = worker;
+            if (BitcoinAddress.ValidateBitcoinAddress(data.btc) && BitcoinAddress.ValidateWorkerName(worker)) {
+                var sendData = JsonConvert.SerializeObject(data);
+
+                NiceHashConnection.SendData(sendData);
             }
         }
 
-        private static void ReceiveCallback(object sender, MessageEventArgs e) {
-            try {
-                if (e.IsText) {
-                    Helpers.ConsolePrint("SOCKET", e.Data);
-                }
-            } catch (Exception er) {
-                Helpers.ConsolePrint("SOCKET", er.ToString());
-            }
-        }
-
-        private static void ErrorCallback(object sender, WebSocketSharp.ErrorEventArgs e) {
-            Helpers.ConsolePrint("SOCKET", e.ToString());
-        }
-
-        #endregion
-
-        public static Dictionary<AlgorithmType, NiceHashSMA> GetAlgorithmRates(string worker)
+        private static Dictionary<AlgorithmType, NiceHashSMA> GetAlgorithmRates(string worker)
         {
             string r1 = GetNiceHashAPIData(Links.NHM_API_info, worker);
             if (r1 == null) return null;
