@@ -152,7 +152,7 @@
 
     "Form_Settings_General_APIBindPort": "Порт связи API",
     "Form_Settings_General_UsePassword": "Пароль",
-    "Form_Settings_General_MinimumProfit": "Мин. прибыльность ($/день)",
+    "Form_Settings_General_MinimumProfit": "Мин. прибыльность ($/День)",
     "Form_Settings_General_DisabledDevices": "Отключ. устройтва",
     "Form_Settings_General_ExtraLaunchParameters": "Доп. параметры",
     "Form_Settings_General_DaggerHashimotoGenerateDevice": "Устройство генерации DaggerHashimoto",
@@ -245,7 +245,7 @@
     "Form_Settings_ToolTip_APIBindPortStart": "Начальный номер порта, с которого порты связи API будут установлены для коммуникации.",
     "Form_Settings_DagGeneration": "Режим загрузки Dag",
     "Form_Settings_ToolTip_DagGeneration": "Устанавливает режим загрузки Dag для ethminer.",
-    "AlgorithmsListView_Enabled": "Включен",
+    "AlgorithmsListView_Enabled": "Включён",
     "AlgorithmsListView_Algorithm": "Алгоритм",
     "AlgorithmsListView_Speed": "Скорость",
     "AlgorithmsListView_Ratio": "BTC/GH/День соотношение",
