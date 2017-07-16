@@ -15,7 +15,6 @@ using System.IO;
 using System.Globalization;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Miners.Grouping;
-using NiceHashMiner.Net20_backport;
 
 namespace NiceHashMiner.Devices
 {
@@ -660,7 +659,7 @@ namespace NiceHashMiner.Devices
                                 bool isAdlInit = true;
                                 // ADL does not get devices in order map devices by bus number
                                 // bus id, <name, uuid>
-                                Dictionary<int, Tuple3<string, string, string>> _busIdsInfo = new Dictionary<int, Tuple3<string, string, string>>();
+                                Dictionary<int, Tuple<string, string, string>> _busIdsInfo = new Dictionary<int, Tuple<string, string, string>>();
                                 List<string> _amdDeviceName = new List<string>();
                                 List<string> _amdDeviceUUID = new List<string>();
                                 try {
@@ -739,7 +738,7 @@ namespace NiceHashMiner.Devices
                                                                         //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                         _amdDeviceName.Add(devName);
                                                                         if (!_busIdsInfo.ContainsKey(budId)) {
-                                                                            var nameUuid = new Tuple3<string, string, string>(devName, uuid, infSection);
+                                                                            var nameUuid = new Tuple<string, string, string>(devName, uuid, infSection);
                                                                             _busIdsInfo.Add(budId, nameUuid);
                                                                         }
                                                                     }

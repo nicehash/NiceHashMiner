@@ -4,7 +4,6 @@ using System.Text;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Net20_backport;
 
 namespace NiceHashMiner.Miners.Grouping {
     public class GroupMiner {
@@ -31,7 +30,7 @@ namespace NiceHashMiner.Miners.Grouping {
                     foreach (var pair in miningPairs) {
                         deviceNames.Add(pair.Device.NameCount);
                     }
-                    DevicesInfoString = "{ " + StringHelper.Join(", ", deviceNames) + " }";
+                    DevicesInfoString = "{ " + String.Join(", ", deviceNames) + " }";
                 }
                 // init miner
                 {

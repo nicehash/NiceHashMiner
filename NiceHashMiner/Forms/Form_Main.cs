@@ -25,7 +25,6 @@ using System.Timers;
 namespace NiceHashMiner
 {
     using NiceHashMiner.Miners.Grouping;
-    using NiceHashMiner.Net20_backport;
     using NiceHashMiner.Miners.Parsing;
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
@@ -198,6 +197,15 @@ namespace NiceHashMiner
             // Internals Init
             // TODO add loading step
             MinersSettingsManager.Init();
+
+            if (!Helpers.Is45NetOrHigher()) {
+                MessageBox.Show(International.GetText("NET45_Not_Installed_msg"),
+                                International.GetText("Warning_with_Exclamation"),
+                                MessageBoxButtons.OK);
+
+                this.Close();
+                return;
+            }
 
             if (!Helpers.InternalCheckIsWow64()) {
                 MessageBox.Show(International.GetText("Form_Main_x64_Support_Only"),
