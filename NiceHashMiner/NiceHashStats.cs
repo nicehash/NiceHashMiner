@@ -145,13 +145,13 @@ namespace NiceHashMiner
             private static void ReceiveCallback(object sender, MessageEventArgs e) {
                 try {
                     if (e.IsText) {
-                        Helpers.ConsolePrint("SOCKET", e.Data);
+                        Helpers.ConsolePrint("SOCKET", "Received: " + e.Data);
                         dynamic message = JsonConvert.DeserializeObject(e.Data);
                         if (message.method == "sma") {
                             SetAlgorithmRates(message.data);
                         }
                         if (message.method == "balance") {
-                            SetBalance(message.value);
+                            SetBalance(message.value.Value);
                         }
                     }
                 } catch (Exception er) {
@@ -226,9 +226,11 @@ namespace NiceHashMiner
             }
         }
 
-        private static void SetBalance(JObject balance) {
+        private static void SetBalance(string balance) {
             try {
-                Balance = balance.Value<double>();
+                double bal = 0d;
+                double.TryParse(balance, out bal);
+                Balance = bal;
                 OnBalanceUpdate.Emit(null, EventArgs.Empty);
             } catch (Exception e) {
                 Helpers.ConsolePrint("SOCKET", e.ToString());

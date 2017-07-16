@@ -144,7 +144,7 @@ namespace NiceHashMiner
 
             toolStripStatusLabelBalanceDollarValue.Text = "(" + ExchangeRateAPI.ActiveDisplayCurrency + ")";
             toolStripStatusLabelBalanceText.Text = (ExchangeRateAPI.ActiveDisplayCurrency + "/") + International.GetText("Day") + "     " + International.GetText("Form_Main_balance") + ":";
-            BalanceCheck_Tick(null, null); // update currency changes
+            BalanceCallback(null, null); // update currency changes
 
             if (_isDeviceDetectionInitialized) {
                 devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
@@ -242,8 +242,6 @@ namespace NiceHashMiner
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
 
-            NiceHashStats.StartConnection(Links.NHM_Socket_Address);
-
             MinerStatsCheck = new Timer();
             MinerStatsCheck.Tick += MinerStatsCheck_Tick;
             MinerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
@@ -262,11 +260,12 @@ namespace NiceHashMiner
             UpdateCheck_Tick(null, null);
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
-
-            SMACheck = new SystemTimer();
-            SMACheck.Elapsed += SMACheck_Tick;
-            SMACheck.Interval = 60 * 1000 * 2; // every 2 minutes
-            SMACheck.Start();
+            // Init ws connection
+            NiceHashStats.OnBalanceUpdate += BalanceCallback;
+            NiceHashStats.OnSMAUpdate += SMACallback;
+            NiceHashStats.OnConnectionLost += ConnectionLostCallback;
+            NiceHashStats.StartConnection(Links.NHM_Socket_Address);
+            NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
 
             // increase timeout
             if (Globals.IsFirstNetworkCheckTimeout) {
@@ -275,8 +274,6 @@ namespace NiceHashMiner
                 }
             }
 
-            SMACheck_Tick(null, null);
-
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
 
             BitcoinExchangeCheck = new Timer();
@@ -284,14 +281,6 @@ namespace NiceHashMiner
             BitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
             BitcoinExchangeCheck.Start();
             BitcoinExchangeCheck_Tick(null, null);
-
-            LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashBalance"));
-
-            BalanceCheck = new Timer();
-            BalanceCheck.Tick += BalanceCheck_Tick;
-            BalanceCheck.Interval = 61 * 1000 * 5; // every ~5 minutes
-            BalanceCheck.Start();
-            BalanceCheck_Tick(null, null);
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();
@@ -540,30 +529,27 @@ namespace NiceHashMiner
         }
 
 
-        void BalanceCheck_Tick(object sender, EventArgs e)
+        void BalanceCallback(object sender, EventArgs e)
         {
-            if (VerifyMiningAddress(false))
+            Helpers.ConsolePrint("NICEHASH", "Balance update");
+            double Balance = NiceHashStats.Balance;
+            if (Balance > 0)
             {
-                Helpers.ConsolePrint("NICEHASH", "Balance get");
-                double Balance = NiceHashStats.Balance;
-                if (Balance > 0)
+                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && Balance < 0.1)
                 {
-                    if (ConfigManager.GeneralConfig.AutoScaleBTCValues && Balance < 0.1)
-                    {
-                        toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
-                        toolStripStatusLabelBalanceBTCValue.Text = (Balance * 1000).ToString("F5", CultureInfo.InvariantCulture);
-                    }
-                    else
-                    {
-                        toolStripStatusLabelBalanceBTCCode.Text = "BTC";
-                        toolStripStatusLabelBalanceBTCValue.Text = Balance.ToString("F6", CultureInfo.InvariantCulture);
-                    }
-
-                    //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
-                    double Amount = (Balance * Globals.BitcoinUSDRate);
-                    Amount = ExchangeRateAPI.ConvertToActiveCurrency(Amount);
-                    toolStripStatusLabelBalanceDollarText.Text = Amount.ToString("F2", CultureInfo.InvariantCulture);
+                    toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
+                    toolStripStatusLabelBalanceBTCValue.Text = (Balance * 1000).ToString("F5", CultureInfo.InvariantCulture);
                 }
+                else
+                {
+                    toolStripStatusLabelBalanceBTCCode.Text = "BTC";
+                    toolStripStatusLabelBalanceBTCValue.Text = Balance.ToString("F6", CultureInfo.InvariantCulture);
+                }
+
+                //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
+                double Amount = (Balance * Globals.BitcoinUSDRate);
+                Amount = ExchangeRateAPI.ConvertToActiveCurrency(Amount);
+                toolStripStatusLabelBalanceDollarText.Text = Amount.ToString("F2", CultureInfo.InvariantCulture);
             }
         }
 
@@ -577,26 +563,18 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("NICEHASH", "Current Bitcoin rate: " + Globals.BitcoinUSDRate.ToString("F2", CultureInfo.InvariantCulture));
         }
 
-
-        void SMACheck_Tick(object sender, EventArgs e)
-        {
-            string worker = textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim();
-            Helpers.ConsolePrint("NICEHASH", "SMA get");
-            Dictionary<AlgorithmType, NiceHashSMA> t = null;
-
-            for (int i = 0; i < 5; i++) {
-                t = NiceHashStats.AlgorithmRates;
-                if (t != null) {
-                    Globals.NiceHashData = t;
-                    break;
-                }
-
-                Helpers.ConsolePrint("NICEHASH", "SMA get failed .. retrying");
-                System.Threading.Thread.Sleep(1000);
-                t = NiceHashStats.AlgorithmRates;
+        void SMACallback(object sender, EventArgs e) {
+            Helpers.ConsolePrint("NICEHASH", "SMA Update");
+            if (NiceHashStats.AlgorithmRates != null) {
+                Globals.NiceHashData = NiceHashStats.AlgorithmRates;
             }
+            else {
+                // TODO
+            }
+        }
 
-            if (t == null && Globals.NiceHashData == null && ShowWarningNiceHashData) {
+        void ConnectionLostCallback(object sender, EventArgs e) {
+            if (Globals.NiceHashData == null && ShowWarningNiceHashData) {
                 ShowWarningNiceHashData = false;
                 DialogResult dialogResult = MessageBox.Show(International.GetText("Form_Main_msgbox_NoInternetMsg"),
                                                             International.GetText("Form_Main_msgbox_NoInternetTitle"),
@@ -608,7 +586,6 @@ namespace NiceHashMiner
                     System.Windows.Forms.Application.Exit();
             }
         }
-
 
         void UpdateCheck_Tick(object sender, EventArgs e)
         {
@@ -903,6 +880,7 @@ namespace NiceHashMiner
             ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
             ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
+            NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress, ConfigManager.GeneralConfig.WorkerName);
 
             InitFlowPanelStart();
             ClearRatesALL();
