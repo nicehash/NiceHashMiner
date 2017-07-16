@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using Newtonsoft.Json.Linq;
+using WebSocketSharp;
 
 
 
@@ -115,97 +116,44 @@ namespace NiceHashMiner
 
         #region Socket Methods
 
-        public static void StartClient(string address, int port) {
+        public static void StartClient(string address) {
             try {
-                var ipHostInfo = Dns.GetHostEntry(address);
-                var ipAddress = ipHostInfo.AddressList[1];
-                var remoteEP = new IPEndPoint(ipAddress, port);
-
-                var client = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                client.BeginConnect(remoteEP, new AsyncCallback(ConnectCallback), client);
+                var ws = new WebSocket(address);
+                ws.OnOpen += ConnectCallback;
+                ws.OnMessage += ReceiveCallback;
+                ws.OnError += ErrorCallback;
+                ws.Connect();
             } catch (Exception e) {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
         }
 
-        private static void ConnectCallback(IAsyncResult ar) {
+        private static void ConnectCallback(object sender, EventArgs e) {
             try {
-                var client = (Socket)ar.AsyncState;
-
-                client.EndConnect(ar);
-
-                Helpers.ConsolePrint("SOCKET", String.Format("Socket connected to {0}", client.RemoteEndPoint.ToString()));
-
+                var ws = (WebSocket)sender;
                 //send login
                 var version = "NHML/" + Application.ProductVersion;
                 var login = new nicehash_login();
                 login.version = version;
                 var loginJson = JsonConvert.SerializeObject(login);
-                Send(client, loginJson);
-
-                Receive(client);
-                receiveDone.WaitOne();
-            } catch (Exception e) {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
+                ws.Send(loginJson);
+            } catch (Exception er) {
+                Helpers.ConsolePrint("SOCKET", er.ToString());
             }
         }
 
-        private static void Receive(Socket client) {
+        private static void ReceiveCallback(object sender, MessageEventArgs e) {
             try {
-                var state = new StateObject();
-                state.workSocket = client;
-
-                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
-            } catch (Exception e) {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
-            }
-        }
-
-        private static void ReceiveCallback(IAsyncResult ar) {
-            try {
-                var state = (StateObject)ar.AsyncState;
-                var client = state.workSocket;
-
-                int bytesRead = client.EndReceive(ar);
-                if (bytesRead > 0) {
-                    state.sb.Append(Encoding.ASCII.GetString(state.buffer, 0, bytesRead));
-                    if (state.sb.ToString().EndsWith("}")) {
-                        var received = state.sb.ToString();
-                        Helpers.ConsolePrint("SOCKET", received);
-
-                        var d = JObject.Parse(received);
-                        Console.WriteLine((string)d["method"]);
-
-                        // Listen again
-                        Receive(client);
-                    } else {  // More data
-                        // Get rest of data
-                        client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0, new AsyncCallback(ReceiveCallback), state);
-                    }
-                } else {
-                    // Do something
+                if (e.IsText) {
+                    Helpers.ConsolePrint("SOCKET", e.Data);
                 }
-            } catch (Exception e) {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
+            } catch (Exception er) {
+                Helpers.ConsolePrint("SOCKET", er.ToString());
             }
         }
 
-        private static void Send(Socket client, String data) {
-            // Convert string to byte data ASCII
-            byte[] byteData = Encoding.ASCII.GetBytes(data);
-
-            client.BeginSend(byteData, 0, byteData.Length, 0, new AsyncCallback(SendCallback), client);
-        }
-
-        private static void SendCallback(IAsyncResult ar) {
-            try {
-                var client = (Socket)ar.AsyncState;
-
-                int bytesSent = client.EndSend(ar);
-                Helpers.ConsolePrint("SOCKET", String.Format("Sent {0} bytes to server", bytesSent));
-            } catch (Exception e) {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
-            }
+        private static void ErrorCallback(object sender, WebSocketSharp.ErrorEventArgs e) {
+            Helpers.ConsolePrint("SOCKET", e.ToString());
         }
 
         #endregion

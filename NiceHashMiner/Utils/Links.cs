@@ -26,7 +26,6 @@ namespace NiceHashMiner {
         public static string NHM_Profit_Check = "https://api.nicehash.com/?utm_source=NHM&p=calc&name=";
 
         // SMA Socket
-        public static string NHM_Socket_Address = "localhost";
-        public static int NHM_Socket_Port = 23;
+        public static string NHM_Socket_Address = "wss://api.nicehash.com/nhm";
     }
 }

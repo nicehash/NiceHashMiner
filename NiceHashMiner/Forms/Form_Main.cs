@@ -242,7 +242,7 @@ namespace NiceHashMiner
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_CheckLatestVersion"));
 
-            NiceHashConnection.StartClient(Links.NHM_Socket_Address, Links.NHM_Socket_Port);
+            NiceHashConnection.StartClient(Links.NHM_Socket_Address);
 
             MinerStatsCheck = new Timer();
             MinerStatsCheck.Tick += MinerStatsCheck_Tick;
