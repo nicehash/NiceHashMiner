@@ -32,6 +32,7 @@
         "Form_Main_settings": "&Настройки",
         "Form_Main_start": "&Старт",
         "Form_Main_stop": "Сто&п",
+        "Form_Main_help": "П&омощ",
         "Form_Main_new_version_released": "ВАЖНО! Публикувана е нова версия v{0}.\r\n Кликнете тук, за да я свалите.",
         "Form_Main_DemoModeLabel": "NiceHash Miner Legacy работи в ДЕМО режим!",
         "Form_Main_DemoModeTitle": "Започване на работа в ДЕМО режим??",
