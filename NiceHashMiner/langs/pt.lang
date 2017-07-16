@@ -32,6 +32,7 @@
     "Form_Main_settings": "C&onfigurar",
     "Form_Main_start": "&Iniciar",
     "Form_Main_stop": "Pa&rar",
+    "Form_Main_help": "&Socorro",
     "Form_Main_new_version_released": "IMPORTANTE! A versão v{0} foi\r\nlançada. Clique aqui para baixar ela!",
     "Form_Main_DemoModeLabel": "NiceHash Miner Legacy está rodando no modo DEMONSTRAÇÃO!",
     "Form_Main_DemoModeTitle": "Começar a minerar no modo de DEMONSTRAÇÃO?",
