@@ -328,7 +328,7 @@
     "Compute_Device_Query_Manager_No_Devices": "Не найдено поддерживаемых устройств. Нажмите кнопку «ОК» для получения справки или отмените для продолжения.",
     "Compute_Device_Query_Manager_No_Devices_Title": "Нет поддерживаемых устройств",
     "NET45_Not_Installed_msg": "Для корректной работы NiceHash Miner Legacy требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
-    "Form_Settings_ToolTip_DisableDefaultOptimizations": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг потенциально более стабильным, но значительно медленнее (особенно для карт  AMD).",
+    "Form_Settings_ToolTip_DisableDefaultOptimizations": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг потенциально более стабильным, но значительно медленнее (особенно для карт AMD).",
     "Form_Settings_Text_DisableDefaultOptimizations": "Отключить оптимизацию",
     "Form_Settings_Text_ContinueMiningIfNoInternetAccess": "Простаивать, когда нет интернета",
     "Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess": "Если включено, NiceHashMinerLegacy будет останавливать майнинг, при отсутствии доступа к интернету",
