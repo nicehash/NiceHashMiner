@@ -268,7 +268,7 @@
     "FormBenchmark_Benchmark_Step": "Бенчмаркинг шаг ( {0} / {1} )",
     "FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg": "Все тесты были удачными",
     "FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg": "Не все тесты прошли удачно. Попробуйте перезапустить бенчмарк для алгоритмов, непрошедших его, либо Отмените для отключения этих алгоритмов.",
-    "FormBenchmark_Benchmark_Finish_MsgBox_Title": "Бенчмарк был завершен",
+    "FormBenchmark_Benchmark_Finish_MsgBox_Title": "Бенчмарк был завершён",
     "FormBenchmark_Benchmark_GroupBoxStatus": "Прогресс бенчмарка:",
     "FormBenchmark_Benchmark_All_Selected_Unbenchmarked": "Бенчмарк выбранных непротестированных алгоритмов",
     "FormBenchmark_Benchmark_All_Selected_ReUnbenchmarked": "Бенчмарк всех выбранных алгоритмов",
