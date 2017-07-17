@@ -337,7 +337,7 @@
     "Form_Main_3rdParty_Button_Agree_Text": "Я соглашаюсь",
     "Form_Main_3rdParty_Button_Refuse_Text": "Я отказываюсь",
     "Form_Settings_General_3rdparty_Text": "Включить сторонние майнеры",
-    "Form_Settings_General_3rdparty_ToolTip": "Используйте закрытое стороннее программное обеспечение майнинга для повышенной прибыльности. Использование на вашей собственной ответственности.",
+    "Form_Settings_General_3rdparty_ToolTip": "Используйте закрытое стороннее программное обеспечение майнинга для повышения прибыльности. Использование на вашей собственной ответственности.",
     "Form_Settings_General_AllowMultipleInstances_Text": "Разрешить несколько экземпляров",
     "Form_Settings_General_AllowMultipleInstances_ToolTip": "Когда не отмечено, NiceHash Miner Legacy разрешит работу только одного экземпляра (он закроет новый запущенный экземпляр, если один экземпляр уже работает).",
     "Form_Main_No_Device_Enabled_Algorithms_For_Mining": "Для выбранных устройств нет включённых алгоритмов. Перейдите в Настройки или Бенчмарк и включите хотя-бы 1 алгоритм.",
