@@ -551,7 +551,13 @@ namespace NiceHashMiner.Forms {
 
         private bool isInStartupRegistry() {
             // Value is stored in registry
-            return ((String)rkStartup.GetValue(Application.ProductName, "") == Application.ExecutablePath);
+            var startVal = "";
+            try {
+                startVal = (String)rkStartup.GetValue(Application.ProductName, "");
+            } catch (Exception e) {
+                Helpers.ConsolePrint("REGISTRY", e.ToString());
+            }
+            return startVal == Application.ExecutablePath;
         }
 
         private void GeneralTextBoxes_Leave(object sender, EventArgs e) {
@@ -715,11 +721,15 @@ namespace NiceHashMiner.Forms {
 
                 if (isStartupChanged) {
                     // Commit to registry
-                    if (checkBox_RunAtStartup.Checked) {
-                        // Add NHML to startup registry
-                        rkStartup.SetValue(Application.ProductName, Application.ExecutablePath);
-                    } else {
-                        rkStartup.DeleteValue(Application.ProductName, false);
+                    try {
+                        if (checkBox_RunAtStartup.Checked) {
+                            // Add NHML to startup registry
+                            rkStartup.SetValue(Application.ProductName, Application.ExecutablePath);
+                        } else {
+                            rkStartup.DeleteValue(Application.ProductName, false);
+                        }
+                    } catch (Exception er) {
+                        Helpers.ConsolePrint("REGISTRY", er.ToString());
                     }
                 }
             } else {
