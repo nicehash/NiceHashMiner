@@ -150,6 +150,13 @@ namespace NiceHashMiner.Miners {
             List<string> ids = new List<string>();
             foreach (var mPair in MiningSetup.MiningPairs) {
                 var id = mPair.Device.ID;
+                if (this is ClaymoreDual && mPair.Device.DeviceType == DeviceType.AMD) {
+                    id = mPair.Device.IDByBus;
+                    if (id < 0) {
+                        // should never happen
+                        Helpers.ConsolePrint("ClaymroeDualIndexing", "ID by Bus too low: " + id.ToString());
+                    }
+                }
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
                     Helpers.ConsolePrint("ClaymoreDualIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
                     id += amdDeviceCount;
