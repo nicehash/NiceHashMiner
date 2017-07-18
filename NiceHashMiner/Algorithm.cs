@@ -48,7 +48,7 @@ namespace NiceHashMiner {
             SecondaryBenchmarkSpeed = 0.0d;
             ExtraLaunchParameters = "";
             LessThreads = 0;
-            Enabled = !IsDual();
+            Enabled = !(NiceHashID == AlgorithmType.Nist5);
             BenchmarkStatus = "";
         }
 
