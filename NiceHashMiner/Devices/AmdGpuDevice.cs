@@ -11,6 +11,7 @@ namespace NiceHashMiner.Devices {
                                         " --temp-target 75 --auto-fan --auto-gpu ";
 
         public int DeviceID { get { return (int)_openClSubset.DeviceID; } }
+        public int BusID { get { return (int)_openClSubset.AMD_BUS_ID;  } }
         public string DeviceName; // init this with the ADL
         public string UUID; // init this with the ADL, use PCI_VEN & DEV IDs
         public ulong DeviceGlobalMemory { get { return _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE; } }
