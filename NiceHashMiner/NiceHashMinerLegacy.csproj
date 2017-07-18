@@ -341,6 +341,9 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="langs\bg.lang">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="langs\en.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
