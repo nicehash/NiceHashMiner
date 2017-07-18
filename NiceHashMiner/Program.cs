@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using System.IO;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
@@ -20,6 +21,9 @@ namespace NiceHashMiner
         [STAThread]
         static void Main(string[] argv)
         {
+            // Set working directory to exe
+            Environment.CurrentDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
