@@ -331,7 +331,7 @@
             this.flowLayoutPanelRates.Location = new System.Drawing.Point(4, 24);
             this.flowLayoutPanelRates.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.flowLayoutPanelRates.Name = "flowLayoutPanelRates";
-            this.flowLayoutPanelRates.Size = new System.Drawing.Size(805, 62);
+            this.flowLayoutPanelRates.Size = new System.Drawing.Size(818, 62);
             this.flowLayoutPanelRates.TabIndex = 107;
             this.flowLayoutPanelRates.WrapContents = false;
             // 
@@ -339,11 +339,11 @@
             // 
             this.groupBox1.Controls.Add(this.label_NotProfitable);
             this.groupBox1.Controls.Add(this.flowLayoutPanelRates);
-            this.groupBox1.Location = new System.Drawing.Point(16, 379);
+            this.groupBox1.Location = new System.Drawing.Point(13, 379);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Size = new System.Drawing.Size(813, 91);
+            this.groupBox1.Size = new System.Drawing.Size(826, 91);
             this.groupBox1.TabIndex = 108;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Group/Device Rates:";

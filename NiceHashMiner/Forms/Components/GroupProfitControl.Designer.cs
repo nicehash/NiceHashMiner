@@ -44,7 +44,7 @@
             this.groupBoxMinerGroup.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxMinerGroup.Name = "groupBoxMinerGroup";
             this.groupBoxMinerGroup.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxMinerGroup.Size = new System.Drawing.Size(788, 49);
+            this.groupBoxMinerGroup.Size = new System.Drawing.Size(804, 49);
             this.groupBoxMinerGroup.TabIndex = 108;
             this.groupBoxMinerGroup.TabStop = false;
             this.groupBoxMinerGroup.Text = "Mining Devices { N/A } ";
@@ -111,7 +111,7 @@
             this.Controls.Add(this.groupBoxMinerGroup);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "GroupProfitControl";
-            this.Size = new System.Drawing.Size(789, 55);
+            this.Size = new System.Drawing.Size(806, 55);
             this.groupBoxMinerGroup.ResumeLayout(false);
             this.groupBoxMinerGroup.PerformLayout();
             this.ResumeLayout(false);
