@@ -140,8 +140,7 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.ccminer_neoscrypt;
                 }
                 if (AlgorithmType.Lyra2RE == algorithmType 
-                    || AlgorithmType.Lyra2REv2 == algorithmType 
-                    || AlgorithmType.Nist5 == algorithmType) {
+                    || AlgorithmType.Lyra2REv2 == algorithmType) {
                     return Data.ccminer_nanashi;
                 }
                 if (AlgorithmType.CryptoNight == algorithmType) {
@@ -149,11 +148,11 @@ namespace NiceHashMiner.Miners.Grouping
                 }
                 if (AlgorithmType.Lbry == algorithmType 
                     || AlgorithmType.X11Gost == algorithmType 
-                    || AlgorithmType.Blake2s == algorithmType 
-                    || AlgorithmType.Nist5 == algorithmType) {
+                    || AlgorithmType.Blake2s == algorithmType) {
                     return Data.ccminer_tpruvot;
                 }
-                if (AlgorithmType.Sia == algorithmType) {
+                if (AlgorithmType.Sia == algorithmType
+                    || AlgorithmType.Nist5 == algorithmType) {
                     return Data.ccminer_klaust;
                 }
 
