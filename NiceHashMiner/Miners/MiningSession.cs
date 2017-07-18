@@ -274,7 +274,7 @@ namespace NiceHashMiner.Miners {
                 }
                 Helpers.ConsolePrint(TAG, stringBuilderFull.ToString());
             }
-
+            
             // check profit threshold
             Helpers.ConsolePrint(TAG, String.Format("PrevStateProfit {0}, CurrentProfit {1}", PrevStateProfit, CurrentProfit));
             if (PrevStateProfit > 0 && CurrentProfit > 0) {
@@ -298,6 +298,9 @@ namespace NiceHashMiner.Miners {
             // check if should mine
             // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
             if (CheckIfShouldMine(CurrentProfit, log) == false) {
+                foreach (var device in _miningDevices) {
+                    device.SetNotMining();
+                }
                 return;
             }
 

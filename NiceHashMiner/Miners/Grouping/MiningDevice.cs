@@ -115,6 +115,14 @@ namespace NiceHashMiner.Miners.Grouping {
             MostProfitableMinerBaseType = PrevProfitableMinerBaseType;
         }
 
+        public void SetNotMining() {
+            // device isn't mining (e.g. below profit threshold) so set state to none
+            PrevProfitableAlgorithmType = AlgorithmType.NONE;
+            PrevProfitableMinerBaseType = MinerBaseType.NONE;
+            MostProfitableAlgorithmType = AlgorithmType.NONE;
+            MostProfitableMinerBaseType = MinerBaseType.NONE;
+        }
+
         public void CalculateProfits(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
             // save last state
             PrevProfitableAlgorithmType = MostProfitableAlgorithmType;
