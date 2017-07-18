@@ -106,6 +106,7 @@ namespace NiceHashMiner
         {
             static WebSocket webSocket;
             public static bool IsAlive { get { return webSocket.IsAlive; } }
+            static bool attemptingReconnect = false;
 
             public static void StartConnection(string address) {
                 try {
@@ -190,18 +191,24 @@ namespace NiceHashMiner
             }
 
             private static bool AttemptReconnect() {
-                Helpers.ConsolePrint("SOCKET", "Attempting reconnect");
-                if (webSocket.IsAlive) {
+                if (attemptingReconnect) {
+                    return false;
+                }
+                if (webSocket.IsAlive) {  // no reconnect needed
                     return true;
                 }
+                attemptingReconnect = true;
+                Helpers.ConsolePrint("SOCKET", "Attempting reconnect");
                 for (int i = 0; i < 5; i++) {
                     webSocket.Connect();
                     Thread.Sleep(100);
                     if (webSocket.IsAlive) {
+                        attemptingReconnect = false;
                         return true;
                     }
                     Thread.Sleep(1000);
                 }
+                attemptingReconnect = false;
                 OnConnectionLost.Emit(null, EventArgs.Empty);
                 return false;
             }
