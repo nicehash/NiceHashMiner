@@ -100,6 +100,7 @@ namespace NiceHashMiner
         public static event EventHandler OnBalanceUpdate = delegate { };
         public static event EventHandler OnSMAUpdate = delegate { };
         public static event EventHandler OnConnectionLost = delegate { };
+        public static event EventHandler OnConnectionEstablished = delegate { };
 
         #region Socket
         private class NiceHashConnection
@@ -139,6 +140,8 @@ namespace NiceHashMiner
                     login.version = version;
                     var loginJson = JsonConvert.SerializeObject(login);
                     SendData(loginJson);
+
+                    OnConnectionEstablished.Emit(null, EventArgs.Empty);
                 } catch (Exception er) {
                     Helpers.ConsolePrint("SOCKET", er.ToString());
                 }

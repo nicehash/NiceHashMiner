@@ -264,8 +264,8 @@ namespace NiceHashMiner
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
             NiceHashStats.OnSMAUpdate += SMACallback;
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
+            NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
             NiceHashStats.StartConnection(Links.NHM_Socket_Address);
-            NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
 
             // increase timeout
             if (Globals.IsFirstNetworkCheckTimeout) {
@@ -585,6 +585,11 @@ namespace NiceHashMiner
                 else if (dialogResult == DialogResult.No)
                     System.Windows.Forms.Application.Exit();
             }
+        }
+
+        void ConnectionEstablishedCallback(object sender, EventArgs e) {
+            // send credentials
+            NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
         }
 
         void UpdateCheck_Tick(object sender, EventArgs e)
