@@ -253,16 +253,11 @@ namespace NiceHashMiner
                 SMAMinerCheck.Interval = (ConfigManager.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
 
-            UpdateCheck = new Timer();
-            UpdateCheck.Tick += UpdateCheck_Tick;
-            UpdateCheck.Interval = 1000 * 3600; // every 1 hour
-            UpdateCheck.Start();
-            UpdateCheck_Tick(null, null);
-
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
             NiceHashStats.OnSMAUpdate += SMACallback;
+            NiceHashStats.OnVersionUpdate += VersionUpdateCallback;
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
             NiceHashStats.StartConnection(Links.NHM_Socket_Address);
@@ -592,11 +587,9 @@ namespace NiceHashMiner
             NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
         }
 
-        void UpdateCheck_Tick(object sender, EventArgs e)
+        void VersionUpdateCallback(object sender, EventArgs e)
         {
-            Helpers.ConsolePrint("NICEHASH", "Version get");
-            string ver = NiceHashStats.GetVersion(textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim());
-
+            var ver = NiceHashStats.Version;
             if (ver == null) return;
 
             Version programVersion = new Version(Application.ProductVersion);

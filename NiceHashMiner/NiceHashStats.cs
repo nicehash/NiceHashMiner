@@ -96,9 +96,11 @@ namespace NiceHashMiner
 
         public static Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates { get; private set; }
         public static double Balance { get; private set; }
+        public static string Version { get; private set; }
         public static bool IsAlive { get { return NiceHashConnection.IsAlive; } }
         public static event EventHandler OnBalanceUpdate = delegate { };
         public static event EventHandler OnSMAUpdate = delegate { };
+        public static event EventHandler OnVersionUpdate = delegate { };
         public static event EventHandler OnConnectionLost = delegate { };
         public static event EventHandler OnConnectionEstablished = delegate { };
 
@@ -154,9 +156,10 @@ namespace NiceHashMiner
                         dynamic message = JsonConvert.DeserializeObject(e.Data);
                         if (message.method == "sma") {
                             SetAlgorithmRates(message.data);
-                        }
-                        if (message.method == "balance") {
+                        }else if (message.method == "balance") {
                             SetBalance(message.value.Value);
+                        } else if (message.method == "versions") {
+                            SetVersion(message.legacy.Value);
                         }
                     }
                 } catch (Exception er) {
@@ -246,6 +249,11 @@ namespace NiceHashMiner
             } catch (Exception e) {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
+        }
+
+        private static void SetVersion(string version) {
+            Version = version;
+            OnVersionUpdate.Emit(null, EventArgs.Empty);
         }
 
         public static void SetCredentials(string btc, string worker) {
