@@ -264,9 +264,9 @@ namespace NiceHashMiner.Miners.Parsing {
                     return MinerType.eqm_CUDA;
                 }
             }
-            if (MinerBaseType.excavator == minerBaseType) {
-                return MinerType.excavator;
-            }
+            //if (MinerBaseType.excavator == minerBaseType) {
+            //    return MinerType.excavator;
+            //}
             if (MinerBaseType.EWBF == minerBaseType) {
                 return MinerType.EWBF;
             }

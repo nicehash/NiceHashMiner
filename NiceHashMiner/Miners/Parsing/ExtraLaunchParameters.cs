@@ -168,7 +168,7 @@ namespace NiceHashMiner.Miners.Parsing {
                     new MinerOption("PciMode"               , "--pci-mode", "--pci-mode", "", MinerOptionFlagType.SingleParam, ""),
                 },
                 new List<MinerOption>()
-            ),
+            ), /*
             new MinerOptionPackage(
                 MinerType.excavator,
                 new List<MinerOption>() {
@@ -181,7 +181,7 @@ namespace NiceHashMiner.Miners.Parsing {
                     //new MinerOption("Overclocking_od", "-od", "-od", "2", MinerOptionFlagType.MultiParam, " "),
                 },
                 new List<MinerOption>()
-            ),
+            ), */
             new MinerOptionPackage(
                 MinerType.ClaymoreDual,
                 new List<MinerOption>() {
