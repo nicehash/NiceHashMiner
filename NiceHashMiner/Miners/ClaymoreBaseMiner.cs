@@ -13,9 +13,13 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using WindowsInput;
 
 namespace NiceHashMiner.Miners {
-    public abstract class ClaymoreBaseMiner : Miner {
+    public abstract class ClaymoreBaseMiner : Miner
+    {
 
         protected int benchmarkTimeWait = 2 * 45; // Ok... this was all wrong 
         int benchmark_read_count = 0;
@@ -29,6 +33,11 @@ namespace NiceHashMiner.Miners {
         protected bool ignoreZero = false;
         protected double api_read_mult = 1;
         protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
+
+        // CD intensity tuning
+        protected Algorithm Algorithm;
+        protected int currentIntensity = 30;
+        protected bool tuningEnabled { get { return IsDual() && ConfigManager.GeneralConfig.CDIntensityTuningEnabled; } }
 
         public ClaymoreBaseMiner(string minerDeviceName, string look_FOR_START)
             : base(minerDeviceName) {
@@ -52,7 +61,8 @@ namespace NiceHashMiner.Miners {
             return 60 * 1000 * 5; // 5 minute max, whole waiting time 75seconds
         }
 
-        private class JsonApiResponse {
+        private class JsonApiResponse
+        {
             public List<string> result { get; set; }
             public int id { get; set; }
             public object error { get; set; }
@@ -257,8 +267,7 @@ namespace NiceHashMiner.Miners {
                                     benchmark_sum += getNumber(lineLowered);
                                     ++benchmark_read_count;
                                 }
-                            }
-                            else if (lineLowered.Contains(SecondaryLookForStart())) {
+                            } else if (lineLowered.Contains(SecondaryLookForStart())) {
                                 if (ignoreZero) {
                                     double got = getNumber(lineLowered, SecondaryLookForStart(), LOOK_FOR_END);
                                     if (got != 0) {
@@ -312,7 +321,7 @@ namespace NiceHashMiner.Miners {
 
         protected double getNumber(string outdata, string LOOK_FOR_START, string LOOK_FOR_END) {
             try {
-                double mult = 1; 
+                double mult = 1;
                 int speedStart = outdata.IndexOf(LOOK_FOR_START);
                 string speed = outdata.Substring(speedStart, outdata.Length - speedStart);
                 speed = speed.Replace(LOOK_FOR_START, "");

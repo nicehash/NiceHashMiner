@@ -15,7 +15,7 @@ namespace NiceHashMiner {
         public readonly string AlgorithmStringID;
         // ClaymoreDual intensity tuning
         public Dictionary<int, double> IntensitySpeeds;
-        public Dictionary<int, double> IntensitySecondarySpeeds;
+        public Dictionary<int, double> SecondaryIntensitySpeeds;
         // Miner name is used for miner ALGO flag parameter
         public readonly string MinerName;
         private double benchmarkSpeed;
@@ -56,7 +56,7 @@ namespace NiceHashMiner {
             BenchmarkStatus = "";
 
             IntensitySpeeds = new Dictionary<int, double> { };
-            IntensitySecondarySpeeds = new Dictionary<int, double> { };
+            SecondaryIntensitySpeeds = new Dictionary<int, double> { };
         }
 
         // benchmark info
@@ -79,13 +79,13 @@ namespace NiceHashMiner {
                 string rate = International.GetText("BenchmarkRatioRateN_A");
                 var payingRate = 0.0d;
                 if (Globals.NiceHashData != null) {
-                    var intensity = MostProfitableIntensity(Globals.NiceHashData);
+                    var intensity = MostProfitableIntensity();
                     if (intensity > -1) {
                         if (IntensitySpeeds[intensity] > 0) {
                             payingRate += IntensitySpeeds[intensity] * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
                         }
-                        if (IntensitySecondarySpeeds.ContainsKey(intensity) && IntensitySecondarySpeeds[intensity] > 0) {
-                            payingRate += IntensitySecondarySpeeds[intensity] * Globals.NiceHashData[SecondaryNiceHashID].paying * 0.000000001;
+                        if (SecondaryIntensitySpeeds.ContainsKey(intensity) && SecondaryIntensitySpeeds[intensity] > 0) {
+                            payingRate += SecondaryIntensitySpeeds[intensity] * Globals.NiceHashData[SecondaryNiceHashID].paying * 0.000000001;
                         }
                     } else {
                         if (BenchmarkSpeed > 0) {
@@ -132,6 +132,10 @@ namespace NiceHashMiner {
             if (Enabled && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             } else if (BenchmarkSpeed > 0) {
+                var intensity = MostProfitableIntensity();
+                if (intensity > -1) {
+                    return Helpers.FormatDualSpeedOutput(IntensitySpeeds[intensity], SecondaryIntensitySpeeds[intensity]);
+                }
                 return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, SecondaryBenchmarkSpeed);
             } else if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
@@ -159,8 +163,9 @@ namespace NiceHashMiner {
             return (AlgorithmType.DaggerSia <= DualNiceHashID() && DualNiceHashID() <= AlgorithmType.DaggerPascal);
         }
 
-        public int MostProfitableIntensity(Dictionary<AlgorithmType, NiceHashSMA> NiceHashSMA) {
-            if (!IsDual()) return -1;
+        public int MostProfitableIntensity() {
+            var NiceHashSMA = Globals.NiceHashData;
+            if (!IsDual() || NiceHashSMA == null) return -1;
 
             var maxProfit = 0d;
             var intensity = -1;
@@ -168,8 +173,8 @@ namespace NiceHashMiner {
             var secondaryPaying = NiceHashSMA[SecondaryNiceHashID].paying;
             foreach (var key in IntensitySpeeds.Keys) {
                 var profit = IntensitySpeeds[key] * paying;
-                if (IntensitySecondarySpeeds.ContainsKey(key)) {
-                    profit += IntensitySecondarySpeeds[key] * secondaryPaying;
+                if (SecondaryIntensitySpeeds.ContainsKey(key)) {
+                    profit += SecondaryIntensitySpeeds[key] * secondaryPaying;
                 }
                 if (profit > maxProfit) {
                     maxProfit = profit;
@@ -178,7 +183,5 @@ namespace NiceHashMiner {
             }
             return intensity;
         }
-
-        public double 
     }
 }

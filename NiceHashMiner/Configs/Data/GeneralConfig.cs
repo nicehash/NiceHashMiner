@@ -67,6 +67,12 @@ namespace NiceHashMiner.Configs.Data {
         public string hwid = "";
         public int agreedWithTOS = 0;
 
+        // ClaymoreDual intensity tuning
+        public bool CDIntensityTuningEnabled = false;
+        public int CDIntensityTuningStart = 25;
+        public int CDIntensityTuningInterval = 25;
+        public int CDIntensityTuningEnd = 200;
+
         // methods
         public void SetDefaults() {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
