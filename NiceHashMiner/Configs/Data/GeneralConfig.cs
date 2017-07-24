@@ -160,10 +160,13 @@ namespace NiceHashMiner.Configs.Data {
             if (this.LastDevicesSettup == null) {
                 this.LastDevicesSettup = new List<ComputeDeviceConfig>();
             }
-
-            CDIntensityTuningStart = Math.Min(Math.Max(0, CDIntensityTuningStart), CDIntensityTuningEnd);
-            CDIntensityTuningInterval = Math.Max(0, CDIntensityTuningInterval);
-            CDIntensityTuningEnd = Math.Max(Math.Max(0, CDIntensityTuningEnd), CDIntensityTuningStart);
+            if (CDIntensityTuningStart < 0 || CDIntensityTuningStart > CDIntensityTuningEnd) {
+                CDIntensityTuningStart = 25;
+            }
+            if (CDIntensityTuningInterval < 1) {
+                CDIntensityTuningInterval = 25;
+            }
+            CDIntensityTuningEnd = Math.Min(CDIntensityTuningEnd, CDIntensityTuningStart);
         }
 
     }
