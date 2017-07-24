@@ -83,6 +83,7 @@ namespace NiceHashMiner
         class nicehash_login {
             public string method = "login";
             public string version;
+            public int protocol = 1;
         }
 
         class nicehash_credentials {
