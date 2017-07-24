@@ -207,8 +207,8 @@ namespace NiceHashMiner
                 this.Close();
                 return;
             }
-
-            if (!Helpers.InternalCheckIsWow64()) {
+            
+            if (!Helpers.Is64BitOperatingSystem) {
                 MessageBox.Show(International.GetText("Form_Main_x64_Support_Only"),
                                 International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK);

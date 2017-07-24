@@ -15,6 +15,7 @@ using System.IO;
 using System.Globalization;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Miners.Grouping;
+using ManagedCuda.Nvml;
 
 namespace NiceHashMiner.Devices
 {
@@ -344,7 +345,7 @@ namespace NiceHashMiner.Devices
                     // get all cores (including virtual - HT can benefit mining)
                     int ThreadsPerCPU = CPUID.GetVirtualCoresCount() / Avaliable.CPUsCount;
 
-                    if (!Helpers.InternalCheckIsWow64()) {
+                    if (!Helpers.Is64BitOperatingSystem) {
                         MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64bitMsg"),
                                         International.GetText("Warning_with_Exclamation"),
                                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -431,6 +432,10 @@ namespace NiceHashMiner.Devices
                         StringBuilder stringBuilder = new StringBuilder();
                         stringBuilder.AppendLine("");
                         stringBuilder.AppendLine("CudaDevicesDetection:");
+
+                        // Init now so we are not every constructor
+                        NvmlNativeMethods.nvmlInit();
+
                         foreach (var cudaDev in CudaDevices) {
                             // check sm vesrions
                             bool isUnderSM21;

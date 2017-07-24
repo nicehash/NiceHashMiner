@@ -16,7 +16,7 @@ namespace NiceHashMiner
         
 
         static bool is64BitProcess = (IntPtr.Size == 8);
-        static bool is64BitOperatingSystem = is64BitProcess || InternalCheckIsWow64();
+        public static bool Is64BitOperatingSystem = is64BitProcess || InternalCheckIsWow64();
 
         public static bool InternalCheckIsWow64()
         {

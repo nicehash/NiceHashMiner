@@ -2,12 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
+using System.Management;
+using System.Runtime.InteropServices;
 using NiceHashMiner.Enums;
 using System.Security.Cryptography;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners;
+using ManagedCuda.Nvml;
 
 namespace NiceHashMiner.Devices
 {
@@ -47,6 +51,37 @@ namespace NiceHashMiner.Devices
 
         public string BenchmarkCopyUUID { get; set; }
 
+        #region Hardware Monitoring
+
+        //NVIDIA
+        nvmlDevice nvDevice;
+
+        // Load
+        PerformanceCounter cpuCounter;
+        public float Load {
+            get {
+                if (DeviceType == DeviceType.CPU && cpuCounter != null) return cpuCounter.NextValue();
+
+                return 0;
+            }
+        }
+
+        // Temps
+
+        // Fan
+        private nvmlUnitFanSpeeds nvFanSpeeds;
+        public uint FanSpeed {
+            get {
+                if (DeviceType == DeviceType.NVIDIA) {
+                }
+
+                return 0;
+            }
+        }
+
+        #endregion
+
+
         // Fake dev
         public ComputeDevice(int id) {
             ID = id;
@@ -77,6 +112,11 @@ namespace NiceHashMiner.Devices
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             IsEtherumCapale = false;
             GpuRam = 0;
+
+            cpuCounter = new PerformanceCounter();
+            cpuCounter.CategoryName = "Processor";
+            cpuCounter.CounterName = "% Processor Time";
+            cpuCounter.InstanceName = "_Total";
         }
 
         // GPU NVIDIA
@@ -95,6 +135,11 @@ namespace NiceHashMiner.Devices
             UUID = cudaDevice.UUID;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             GpuRam = cudaDevice.DeviceGlobalMemory;
+
+            var result = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(UUID, ref nvDevice);
+            if (result != nvmlReturn.Success) {
+                Helpers.ConsolePrint("NVML", NvmlNativeMethods.nvmlErrorString(result));
+            }
         }
 
         public bool IsSM50() { return _SM_major == 5 && _SM_minor == 0; }

@@ -30,7 +30,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -68,6 +68,9 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenHardwareMonitorLib, Version=0.7.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenHardwareMonitor.0.7.1\lib\net40\OpenHardwareMonitorLib.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress">
       <HintPath>..\3rdparty\sharpcompress-0.11\SharpCompress.dll</HintPath>
@@ -387,6 +390,10 @@
     <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Core\MyDownloader.Core.csproj">
       <Project>{e763345e-6696-4c53-8764-47e4abd67def}</Project>
       <Name>MyDownloader.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\3rdparty\ManagedCuda\Nvml\Nvml.csproj">
+      <Project>{92d51a33-7bf0-47fd-9ece-d758ffe1691d}</Project>
+      <Name>Nvml</Name>
     </ProjectReference>
     <ProjectReference Include="..\MessageBoxManager\MessageBoxManager.csproj">
       <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
