@@ -77,7 +77,7 @@ namespace NiceHashMiner
         public bool IsNeverHideMiningWindow { get; protected set; }
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
-        protected MiningSetup MiningSetup { get; set; }
+        public MiningSetup MiningSetup { get; set; }
         // sgminer/zcash claymore workaround
         protected bool IsKillAllUsedMinerProcs { get; set; }
         public bool IsRunning { get; protected set; }

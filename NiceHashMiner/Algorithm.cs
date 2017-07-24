@@ -3,6 +3,7 @@ using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner {
     public class Algorithm {
@@ -21,9 +22,8 @@ namespace NiceHashMiner {
         private double benchmarkSpeed;
         public double BenchmarkSpeed {
             get {
-                var intensity = MostProfitableIntensity();
-                if (intensity > 0) {
-                    return IntensitySpeeds[intensity];
+                if (MostProfitableIntensity > 0) {
+                    return IntensitySpeeds[MostProfitableIntensity];
                 }
                 return benchmarkSpeed;
             }
@@ -34,9 +34,8 @@ namespace NiceHashMiner {
         private double secondaryBenchmarkSpeed;
         public double SecondaryBenchmarkSpeed {
             get {
-                var intensity = MostProfitableIntensity();
-                if (intensity > 0) {
-                    return SecondaryIntensitySpeeds[intensity];
+                if (MostProfitableIntensity > 0) {
+                    return SecondaryIntensitySpeeds[MostProfitableIntensity];
                 }
                 return secondaryBenchmarkSpeed;
             }
@@ -59,7 +58,16 @@ namespace NiceHashMiner {
         public double CurrentProfit = 0;
         public double CurNhmSMADataVal = 0;
         public double SecondaryCurNhmSMADataVal = 0;
-        
+        public bool TuningEnabled { get { return IsDual() && ConfigManager.GeneralConfig.CDIntensityTuningEnabled; } }
+        public int CurrentIntensity = -1;
+        // This should ideally be false when SMA or speeds are updated and no check has been done yet
+        public bool IntensityUpToDate = false;
+        private int mostProfitableIntensity = -1;
+        public int MostProfitableIntensity { get {
+                if (!IntensityUpToDate) UpdateProfitableIntensity();
+                return mostProfitableIntensity;
+            } }
+
         public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName, AlgorithmType secondaryNiceHashID=AlgorithmType.NONE) {
             NiceHashID = niceHashID;
             SecondaryNiceHashID = secondaryNiceHashID;
@@ -172,9 +180,19 @@ namespace NiceHashMiner {
             return (AlgorithmType.DaggerSia <= DualNiceHashID() && DualNiceHashID() <= AlgorithmType.DaggerPascal);
         }
 
-        public int MostProfitableIntensity() {
+        public void SetIntensitySpeedsForCurrent(double speed, double secondarySpeed) {
+            IntensitySpeeds[CurrentIntensity] = speed;
+            SecondaryIntensitySpeeds[CurrentIntensity] = secondarySpeed;
+            Helpers.ConsolePrint("CDTUNING", String.Format("Speeds set for intensity {0}: {1} / {2}", CurrentIntensity, speed, secondarySpeed));
+            IntensityUpToDate = false;
+        }
+
+        public void UpdateProfitableIntensity() {
             var NiceHashSMA = Globals.NiceHashData;
-            if (!IsDual() || NiceHashSMA == null) return -1;
+            if (!IsDual() || NiceHashSMA == null) {
+                mostProfitableIntensity = -1;
+                return;
+            }
 
             var maxProfit = 0d;
             var intensity = -1;
@@ -190,7 +208,8 @@ namespace NiceHashMiner {
                     intensity = key;
                 }
             }
-            return intensity;
+            mostProfitableIntensity = intensity;
+            IntensityUpToDate = true;
         }
     }
 }

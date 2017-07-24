@@ -353,9 +353,18 @@ namespace NiceHashMiner.Miners {
                         // runningGroupKey is contained but needs to check if mining algorithm is changed
                         var miningPairs = newGroupedMiningPairs[runningGroupKey];
                         var newAlgoType = GetMinerPairAlgorithmType(miningPairs);
-                        if(newAlgoType != AlgorithmType.NONE && newAlgoType != AlgorithmType.INVALID) {
+                        if (newAlgoType != AlgorithmType.NONE && newAlgoType != AlgorithmType.INVALID) {
+                            // Check if dcri optimal value has changed
+                            var dcriChanged = false;
+                            foreach (var mPair in _runningGroupMiners[runningGroupKey].Miner.MiningSetup.MiningPairs) {
+                                var algo = mPair.Algorithm;
+                                if (algo.TuningEnabled && algo.MostProfitableIntensity != algo.CurrentIntensity) {
+                                    dcriChanged = true;
+                                    break;
+                                }
+                            }
                             // if algoType valid and different from currently running update
-                            if (newAlgoType != _runningGroupMiners[runningGroupKey].AlgorithmType) {
+                            if (newAlgoType != _runningGroupMiners[runningGroupKey].AlgorithmType || dcriChanged) {
                                 // remove current one and schedule to stop mining
                                 toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
                                 // create new one TODO check if DaggerHashimoto

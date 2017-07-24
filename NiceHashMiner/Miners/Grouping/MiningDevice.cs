@@ -134,6 +134,8 @@ namespace NiceHashMiner.Miners.Grouping {
             foreach (var algo in Algorithms) {
                 AlgorithmType key = algo.NiceHashID;
                 AlgorithmType secondaryKey = algo.SecondaryNiceHashID;
+                // Refresh dcri for algo, workaround until sockets are implemented
+                algo.IntensityUpToDate = false;
                 if (NiceHashData.ContainsKey(key)) {
                     algo.CurNhmSMADataVal = NiceHashData[key].paying;
                     algo.CurrentProfit = algo.CurNhmSMADataVal * algo.AvaragedSpeed * 0.000000001;

@@ -8,13 +8,12 @@ namespace NiceHashMiner.Miners {
     public class ClaymoreDual : ClaymoreBaseMiner {
 
         const string _LOOK_FOR_START = "ETH - Total Speed:";
-        public ClaymoreDual(AlgorithmType secondaryAlgorithmType, int intensity)
+        public ClaymoreDual(AlgorithmType secondaryAlgorithmType)
             : base("ClaymoreDual", _LOOK_FOR_START) {
             ignoreZero = true;
             api_read_mult = 1000;
             ConectionType = NHMConectionType.STRATUM_TCP;
             SecondaryAlgorithmType = secondaryAlgorithmType;
-            currentIntensity = intensity;
         }
 
         // eth-only: 1%
@@ -84,10 +83,6 @@ namespace NiceHashMiner.Miners {
             } else {
                 string urlSecond = Globals.GetLocationURL(SecondaryAlgorithmType, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
                 dualModeParams = String.Format(" -dcoin {0} -dpool {1} -dwal {2} -dpsw x", SecondaryShortName(), urlSecond, username);
-                if (tuningEnabled) {
-                    var intensity = (currentIntensity >= 0) ? currentIntensity : 30;
-                    dualModeParams += " -dcri " + intensity.ToString();
-                }
             }
 
             return " "
@@ -97,6 +92,14 @@ namespace NiceHashMiner.Miners {
         }
 
         public override void Start(string url, string btcAdress, string worker) {
+            // Update to most profitable intensity
+            if (TuningEnabled) {
+                foreach (var mPair in MiningSetup.MiningPairs) {
+                    var intensity = mPair.Algorithm.MostProfitableIntensity;
+                    if (intensity < 0) intensity = defaultIntensity;
+                    mPair.Algorithm.CurrentIntensity = intensity;
+                }
+            }
             string username = GetUsername(btcAdress, worker);
             LastCommandLine = GetStartCommand(url, btcAdress, worker) + " -dbg -1";
             ProcessHandle = _Start();

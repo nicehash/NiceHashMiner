@@ -36,8 +36,8 @@ namespace NiceHashMiner.Miners {
 
         // CD intensity tuning
         protected Algorithm Algorithm;
-        protected int currentIntensity = 30;
-        protected bool tuningEnabled { get { return IsDual() && ConfigManager.GeneralConfig.CDIntensityTuningEnabled; } }
+        protected const int defaultIntensity = 30;
+        public bool TuningEnabled { get { return IsDual() && ConfigManager.GeneralConfig.CDIntensityTuningEnabled; } }
 
         public ClaymoreBaseMiner(string minerDeviceName, string look_FOR_START)
             : base(minerDeviceName) {
@@ -157,14 +157,16 @@ namespace NiceHashMiner.Miners {
             Helpers.ConsolePrint("ClaymoreDualIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
             string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string deviceStringCommand = " -di ";
+            string intensityStringCommand = "";
             List<string> ids = new List<string>();
+            var intensities = new List<string>();
             foreach (var mPair in MiningSetup.MiningPairs) {
                 var id = mPair.Device.ID;
                 if (this is ClaymoreDual && mPair.Device.DeviceType == DeviceType.AMD) {
                     id = mPair.Device.IDByBus;
                     if (id < 0) {
                         // should never happen
-                        Helpers.ConsolePrint("ClaymroeDualIndexing", "ID by Bus too low: " + id.ToString());
+                        Helpers.ConsolePrint("ClaymoreDualIndexing", "ID by Bus too low: " + id.ToString());
                     }
                 }
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
@@ -172,24 +174,30 @@ namespace NiceHashMiner.Miners {
                     id += amdDeviceCount;
                 }
                 ids.Add(id.ToString());
+                if (TuningEnabled) {
+                    intensities.Add(mPair.Algorithm.CurrentIntensity.ToString());
+                }
             }
             deviceStringCommand += StringHelper.Join("", ids);
+            if (TuningEnabled) {
+                intensityStringCommand = " -dcri " + StringHelper.Join(",", intensities);
+            }
 
-            return deviceStringCommand + extraParams;
+            return deviceStringCommand + intensityStringCommand + extraParams;
         }
 
         // benchmark stuff
 
         public override void BenchmarkStart(int time, IBenchmarkComunicator benchmarkComunicator) {
-            currentIntensity = ConfigManager.GeneralConfig.CDIntensityTuningStart;
+            BenchmarkAlgorithm.CurrentIntensity = ConfigManager.GeneralConfig.CDIntensityTuningStart;
             base.BenchmarkStart(time, benchmarkComunicator);
         }
 
         protected override void BenchmarkThreadRoutine(object CommandLine) {
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
-            if (tuningEnabled) {
-                Helpers.ConsolePrint("CDTUNING", String.Format("Starting benchmark for intensity {0} out of {1}", currentIntensity, ConfigManager.GeneralConfig.CDIntensityTuningEnd));
+            if (TuningEnabled) {
+                Helpers.ConsolePrint("CDTUNING", String.Format("Starting benchmark for intensity {0} out of {1}", BenchmarkAlgorithm.CurrentIntensity, ConfigManager.GeneralConfig.CDIntensityTuningEnd));
             }
 
             BenchmarkSignalQuit = false;
@@ -293,18 +301,16 @@ namespace NiceHashMiner.Miners {
                     if (benchmark_read_count > 0) {
                         var speed = benchmark_sum / benchmark_read_count;
                         var secondarySpeed = secondary_benchmark_sum / secondary_benchmark_read_count;
-                        if (tuningEnabled) {
-                            BenchmarkAlgorithm.IntensitySpeeds[currentIntensity] = speed;
-                            BenchmarkAlgorithm.SecondaryIntensitySpeeds[currentIntensity] = secondarySpeed;
-                            Helpers.ConsolePrint("CDTUNING", String.Format("Finished benchmark for intensity {0}: {1} / {2}", currentIntensity, speed, secondarySpeed));
+                        if (TuningEnabled) {
+                            BenchmarkAlgorithm.SetIntensitySpeedsForCurrent(speed, secondarySpeed);
                         } else {
                             BenchmarkAlgorithm.BenchmarkSpeed = speed;
                             BenchmarkAlgorithm.SecondaryBenchmarkSpeed = secondarySpeed;
                         }
                     }
                 }
-                if (tuningEnabled && currentIntensity < ConfigManager.GeneralConfig.CDIntensityTuningEnd) {
-                    currentIntensity += ConfigManager.GeneralConfig.CDIntensityTuningInterval;
+                if (TuningEnabled && BenchmarkAlgorithm.CurrentIntensity < ConfigManager.GeneralConfig.CDIntensityTuningEnd) {
+                    BenchmarkAlgorithm.CurrentIntensity += ConfigManager.GeneralConfig.CDIntensityTuningInterval;
                     base.BenchmarkStart(BenchmarkTimeInSeconds, BenchmarkComunicator);  // Start over for next intensity value
                 } else {
                     BenchmarkThreadRoutineFinish();
