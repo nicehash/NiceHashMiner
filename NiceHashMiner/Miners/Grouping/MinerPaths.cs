@@ -40,7 +40,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string sgminer_gm = _bin + @"\sgminer-gm\sgminer.exe";
 
             public const string nheqminer = _bin + @"\nheqminer_v0.4b\nheqminer.exe";
-            // public const string excavator = _bin + @"\excavator\excavator.exe";
+            public const string excavator = _bin + @"\excavator\excavator.exe";
 
             public const string XmrStackCPUMiner = _bin + @"\xmr-stak-cpu\xmr-stak-cpu.exe";
 
@@ -76,8 +76,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return AMD_GROUP.ClaymorePath(algoType);
                 case MinerBaseType.OptiminerAMD:
                     return Data.OptiminerZcashMiner;
-                //case MinerBaseType.excavator:
-                //    return Data.excavator;
+                case MinerBaseType.excavator:
+                    return Data.excavator;
                 case MinerBaseType.XmrStackCPU:
                     return Data.XmrStackCPUMiner;
                 case MinerBaseType.ccminer_alexis:
