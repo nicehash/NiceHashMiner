@@ -19,8 +19,31 @@ namespace NiceHashMiner {
         // Miner name is used for miner ALGO flag parameter
         public readonly string MinerName;
         private double benchmarkSpeed;
-        public double BenchmarkSpeed { get; set; }
-        public double SecondaryBenchmarkSpeed { get; set; }
+        public double BenchmarkSpeed {
+            get {
+                var intensity = MostProfitableIntensity();
+                if (intensity > 0) {
+                    return IntensitySpeeds[intensity];
+                }
+                return benchmarkSpeed;
+            }
+            set {
+                benchmarkSpeed = value;
+            }
+        }
+        private double secondaryBenchmarkSpeed;
+        public double SecondaryBenchmarkSpeed {
+            get {
+                var intensity = MostProfitableIntensity();
+                if (intensity > 0) {
+                    return SecondaryIntensitySpeeds[intensity];
+                }
+                return secondaryBenchmarkSpeed;
+            }
+            set {
+                secondaryBenchmarkSpeed = value;
+            }
+        }
         public string ExtraLaunchParameters { get; set; }
         public bool Enabled { get; set; }
 
@@ -79,21 +102,11 @@ namespace NiceHashMiner {
                 string rate = International.GetText("BenchmarkRatioRateN_A");
                 var payingRate = 0.0d;
                 if (Globals.NiceHashData != null) {
-                    var intensity = MostProfitableIntensity();
-                    if (intensity > -1) {
-                        if (IntensitySpeeds[intensity] > 0) {
-                            payingRate += IntensitySpeeds[intensity] * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
-                        }
-                        if (SecondaryIntensitySpeeds.ContainsKey(intensity) && SecondaryIntensitySpeeds[intensity] > 0) {
-                            payingRate += SecondaryIntensitySpeeds[intensity] * Globals.NiceHashData[SecondaryNiceHashID].paying * 0.000000001;
-                        }
-                    } else {
-                        if (BenchmarkSpeed > 0) {
-                            payingRate += BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
-                        }
-                        if (SecondaryBenchmarkSpeed > 0 && IsDual()) {
-                            payingRate += SecondaryBenchmarkSpeed * Globals.NiceHashData[SecondaryNiceHashID].paying * 0.000000001;
-                        }
+                    if (BenchmarkSpeed > 0) {
+                        payingRate += BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
+                    }
+                    if (SecondaryBenchmarkSpeed > 0 && IsDual()) {
+                        payingRate += SecondaryBenchmarkSpeed * Globals.NiceHashData[SecondaryNiceHashID].paying * 0.000000001;
                     }
                     rate = payingRate.ToString("F8");
                 }
@@ -132,17 +145,13 @@ namespace NiceHashMiner {
             if (Enabled && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             } else if (BenchmarkSpeed > 0) {
-                var intensity = MostProfitableIntensity();
-                if (intensity > -1) {
-                    return Helpers.FormatDualSpeedOutput(IntensitySpeeds[intensity], SecondaryIntensitySpeeds[intensity]);
-                }
                 return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, SecondaryBenchmarkSpeed);
             } else if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             }
             return International.GetText("BenchmarkSpeedStringNone");
         }
-   
+
         // return hybrid type if dual, else standard ID
         public AlgorithmType DualNiceHashID() {
             if (NiceHashID == AlgorithmType.DaggerHashimoto) {

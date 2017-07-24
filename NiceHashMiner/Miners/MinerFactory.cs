@@ -17,13 +17,14 @@ namespace NiceHashMiner.Miners {
             return null;
         }
 
-        private static Miner CreateClaymore(AlgorithmType algorithmType, AlgorithmType secondaryAlgorithmType) {
+        private static Miner CreateClaymore(Algorithm algorithm) {
+            var algorithmType = algorithm.NiceHashID;
             if (AlgorithmType.Equihash == algorithmType) {
                 return new ClaymoreZcashMiner();
             } else if (AlgorithmType.CryptoNight == algorithmType) {
                 return new ClaymoreCryptoNightMiner();
             } else if (AlgorithmType.DaggerHashimoto == algorithmType) {
-                return new ClaymoreDual(secondaryAlgorithmType);
+                return new ClaymoreDual(algorithm.SecondaryNiceHashID, algorithm.MostProfitableIntensity());
             }
             return null;
         }
@@ -35,7 +36,8 @@ namespace NiceHashMiner.Miners {
             return null;
         }
 
-        public static Miner CreateMiner(DeviceType deviceType, AlgorithmType algorithmType, MinerBaseType minerBaseType, AlgorithmType secondaryAlgorithmType=AlgorithmType.NONE) {
+        public static Miner CreateMiner(DeviceType deviceType, Algorithm algorithm) {
+            var minerBaseType = algorithm.MinerBaseType;
             switch (minerBaseType) {
                 case MinerBaseType.ccminer:
                     return new ccminer();
@@ -46,7 +48,7 @@ namespace NiceHashMiner.Miners {
                 case MinerBaseType.ethminer:
                     return CreateEthminer(deviceType);
                 case MinerBaseType.Claymore:
-                    return CreateClaymore(algorithmType, secondaryAlgorithmType);
+                    return CreateClaymore(algorithm);
                 case MinerBaseType.OptiminerAMD:
                     return new OptiminerZcashMiner();
                 //case MinerBaseType.excavator:
@@ -56,7 +58,7 @@ namespace NiceHashMiner.Miners {
                 case MinerBaseType.ccminer_alexis:
                     return new ccminer();
                 case MinerBaseType.experimental:
-                    return CreateExperimental(deviceType, algorithmType);
+                    return CreateExperimental(deviceType, algorithm.NiceHashID);
                 case MinerBaseType.EWBF:
                     return new EWBF();
             }
@@ -66,7 +68,7 @@ namespace NiceHashMiner.Miners {
         // create miner creates new miners based on device type and algorithm/miner path
         public static Miner CreateMiner(ComputeDevice device, Algorithm algorithm) {
             if (device != null && algorithm != null) {
-                return CreateMiner(device.DeviceType, algorithm.NiceHashID, algorithm.MinerBaseType, algorithm.SecondaryNiceHashID);
+                return CreateMiner(device.DeviceType, algorithm);
             }
             return null;
         }
