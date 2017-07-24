@@ -15,7 +15,6 @@ using System.Text;
 using System.Threading;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using WindowsInput;
 
 namespace NiceHashMiner.Miners {
     public abstract class ClaymoreBaseMiner : Miner
@@ -282,11 +281,21 @@ namespace NiceHashMiner.Miners {
                         }
                     }
                     if (benchmark_read_count > 0) {
-                        BenchmarkAlgorithm.BenchmarkSpeed = benchmark_sum / benchmark_read_count;
-                        BenchmarkAlgorithm.SecondaryBenchmarkSpeed = secondary_benchmark_sum / secondary_benchmark_read_count;
+                        if (tuningEnabled) {
+                            BenchmarkAlgorithm.IntensitySpeeds[currentIntensity] = benchmark_sum / benchmark_read_count;
+                            BenchmarkAlgorithm.SecondaryIntensitySpeeds[currentIntensity] = secondary_benchmark_sum / secondary_benchmark_read_count;
+                        } else {
+                            BenchmarkAlgorithm.BenchmarkSpeed = benchmark_sum / benchmark_read_count;
+                            BenchmarkAlgorithm.SecondaryBenchmarkSpeed = secondary_benchmark_sum / secondary_benchmark_read_count;
+                        }
                     }
                 }
-                BenchmarkThreadRoutineFinish();
+                if (tuningEnabled && currentIntensity < ConfigManager.GeneralConfig.CDIntensityTuningEnd) {
+                    currentIntensity += ConfigManager.GeneralConfig.CDIntensityTuningInterval;
+                    BenchmarkStart(BenchmarkTimeInSeconds, BenchmarkComunicator);  // Start over for next intensity value
+                } else {
+                    BenchmarkThreadRoutineFinish();
+                }
             }
         }
 
