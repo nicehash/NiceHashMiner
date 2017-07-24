@@ -179,6 +179,8 @@ namespace NiceHashMiner.Devices
                         setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
                         setAlgo.Enabled = conf.Enabled;
                         setAlgo.LessThreads = conf.LessThreads;
+                        setAlgo.IntensitySpeeds = conf.IntensitySpeeds;
+                        setAlgo.SecondaryIntensitySpeeds = conf.SecondaryIntensitySpeeds;
                     }
                 }
             }
@@ -209,6 +211,8 @@ namespace NiceHashMiner.Devices
                 conf.ExtraLaunchParameters = algo.ExtraLaunchParameters;
                 conf.Enabled = algo.Enabled;
                 conf.LessThreads = algo.LessThreads;
+                conf.IntensitySpeeds = algo.IntensitySpeeds;
+                conf.SecondaryIntensitySpeeds = algo.SecondaryIntensitySpeeds;
                 // insert
                 ret.AlgorithmSettings.Add(conf);
             }

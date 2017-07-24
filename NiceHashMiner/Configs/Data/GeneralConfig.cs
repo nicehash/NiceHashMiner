@@ -114,6 +114,10 @@ namespace NiceHashMiner.Configs.Data {
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
+            CDIntensityTuningEnabled = false;
+            CDIntensityTuningStart = 25;
+            CDIntensityTuningInterval = 25;
+            CDIntensityTuningEnd = 200;
         }
 
         public void FixSettingBounds() {
@@ -156,6 +160,10 @@ namespace NiceHashMiner.Configs.Data {
             if (this.LastDevicesSettup == null) {
                 this.LastDevicesSettup = new List<ComputeDeviceConfig>();
             }
+
+            CDIntensityTuningStart = Math.Min(Math.Max(0, CDIntensityTuningStart), CDIntensityTuningEnd);
+            CDIntensityTuningInterval = Math.Max(0, CDIntensityTuningInterval);
+            CDIntensityTuningEnd = Math.Max(Math.Max(0, CDIntensityTuningEnd), CDIntensityTuningStart);
         }
 
     }
