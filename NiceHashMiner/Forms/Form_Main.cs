@@ -38,6 +38,7 @@ namespace NiceHashMiner
         private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;
         private Timer IdleCheck;
+        private Timer DeviceStatusUpdate;
 
         private bool ShowWarningNiceHashData;
         private bool DemoMode;
@@ -253,6 +254,11 @@ namespace NiceHashMiner
                 SMAMinerCheck.Interval = (ConfigManager.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
 
+            DeviceStatusUpdate = new Timer();
+            DeviceStatusUpdate.Tick += DeviceStatusUpdate_Tick;
+            DeviceStatusUpdate.Interval = 60 * 1000;  // Every minute
+            DeviceStatusUpdate.Start();
+
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
@@ -427,6 +433,10 @@ namespace NiceHashMiner
             SMAMinerCheck.Interval = MiningDevice.SMAMinerCheckInterval;
 #endif
             MinersManager.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
+        }
+
+        private void DeviceStatusUpdate_Tick(object sender, EventArgs e) {
+            NiceHashStats.SetDeviceStatus(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
         }
 
 

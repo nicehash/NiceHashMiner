@@ -9,6 +9,7 @@ using System.Threading;
 using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Devices;
 using Newtonsoft.Json.Linq;
 using WebSocketSharp;
 
@@ -90,6 +91,12 @@ namespace NiceHashMiner
             public string method = "credentials.set";
             public string btc;
             public string worker;
+        }
+
+        class nicehash_device_status
+        {
+            public string method = "devices.status";
+            public List<JArray> devices;
         }
 
         #endregion
@@ -265,6 +272,17 @@ namespace NiceHashMiner
                 var sendData = JsonConvert.SerializeObject(data);
 
                 NiceHashConnection.SendData(sendData);
+            }
+        }
+
+        public static void SetDeviceStatus(List<ComputeDevice> devices) {
+            var deviceList = new List<JArray>();
+            foreach (var device in devices) {
+                var array = new JArray();
+                array.Add(device.ID);
+                array.Add(device.Name);
+
+                deviceList.Add(array);
             }
         }
 
