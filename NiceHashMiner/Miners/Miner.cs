@@ -145,7 +145,8 @@ namespace NiceHashMiner
             LastCommandLine = "";
 
             IsAPIReadException = false;
-            IsNeverHideMiningWindow = false;
+            // Only set minimize if hide is false (specific miners will override true after)
+            IsNeverHideMiningWindow = ConfigManager.GeneralConfig.MinimizeMiningWindows && !ConfigManager.GeneralConfig.HideMiningWindows;
             IsKillAllUsedMinerProcs = false;
             _MAX_CooldownTimeInMilliseconds = GET_MAX_CooldownTimeInMilliseconds();
             // 
