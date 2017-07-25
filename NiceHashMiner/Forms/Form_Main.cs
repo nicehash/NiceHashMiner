@@ -17,7 +17,9 @@ using NiceHashMiner.Interfaces;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Utils;
 using NiceHashMiner.PInvoke;
-
+using System.IO;
+using MiniHttpd;
+using Newtonsoft.Json;
 using SystemTimer = System.Timers.Timer;
 using Timer = System.Windows.Forms.Timer;
 using System.Timers;
@@ -30,6 +32,7 @@ namespace NiceHashMiner
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         private String VisitURLNew = Links.VisitURLNew;
+        private static string WebManagerVisitUrl = "http://127.0.0.1:8888";
 
         private Timer MinerStatsCheck;
         private Timer UpdateCheck;
@@ -59,6 +62,9 @@ namespace NiceHashMiner
 
         int MainFormHeight = 0;
         int EmtpyGroupPanelHeight = 0;
+
+        private HttpWebServer server;
+        private List<object> hashData;
 
         public Form_Main()
         {
@@ -439,6 +445,15 @@ namespace NiceHashMiner
 
         private void MinerStatsCheck_Tick(object sender, EventArgs e) {
             MinersManager.MinerStatsCheck(Globals.NiceHashData);
+            string json = JsonConvert.SerializeObject(hashData, Formatting.Indented);
+            try
+            {
+                File.WriteAllText(Path.Combine(((DriveDirectory)server.Root).Path, "stats.json"), json);
+            }
+            catch (Exception ex)
+            {
+                // continue
+            }
         }
 
         private void InitFlowPanelStart() {
@@ -484,7 +499,7 @@ namespace NiceHashMiner
             this.Size = new Size(this.Size.Width, MainFormHeight + groupBox1Height);
         }
 
-        public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, bool isApiGetException) {
+        public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, List<String> devNames, bool isApiGetException) {
             string ApiGetExceptionString = isApiGetException ? "**" : "";
 
             string speedString = Helpers.FormatDualSpeedOutput(iAPIData.Speed, iAPIData.SecondarySpeed) + iAPIData.AlgorithmName + ApiGetExceptionString;
@@ -498,6 +513,72 @@ namespace NiceHashMiner
             
             ((GroupProfitControl)flowLayoutPanelRates.Controls[flowLayoutPanelRatesIndex++])
                 .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBTCString, rateCurrencyString);
+
+            double Balance = NiceHashStats.GetBalance(textBoxBTCAddress.Text.Trim(), textBoxBTCAddress.Text.Trim() + "." + textBoxWorkerName.Text.Trim());
+            Dictionary<string, string> localDevNames = new Dictionary<string, string>();
+            localDevNames = new Dictionary<string, string>();
+            localDevNames["Devices"] = String.Join(",", devNames.ToArray());
+            localDevNames["BTCExRate"] = ExchangeRateAPI.ConvertToActiveCurrency(Globals.BitcoinUSDRate).ToString("F2", CultureInfo.InvariantCulture)
+                 + " " + ExchangeRateAPI.ActiveDisplayCurrency;
+            localDevNames["BTCBalance"] = (Balance * 1000).ToString("F5", CultureInfo.InvariantCulture);
+            bool found = false;
+            int pos = 0;
+            foreach (Dictionary<string, string> foundData in hashData)
+            {
+                if (foundData.ContainsKey("Devices"))
+                {
+                    hashData[pos] = localDevNames;
+                    found = true;
+                    break;
+
+                }
+                pos++;
+            }
+            if (!found)
+            {
+                hashData.Add(localDevNames);
+            }
+            string[] devicesStrings = deviceStringInfo.Trim('{', ' ').Trim(' ', '}').Split(new string[] { ", " }, StringSplitOptions.None);
+
+            Dictionary<string, string> localData = new Dictionary<string, string>();
+            localData = new Dictionary<string, string>();
+            localData["DeviceInfo"] = deviceStringInfo;
+            localData["Speed"] = speedString;
+            localData["RateBTC"] = rateBTCString;
+            localData["RateCurrency"] = rateCurrencyString;
+            localData["GroupName"] = groupName;
+            found = false;
+            pos = 0;
+            foreach (Dictionary<string, string> foundData in hashData.ToArray())
+            {
+                if (foundData.ContainsKey("GroupName"))
+                {
+                    if (foundData["GroupName"] == groupName)
+                    {
+                        hashData[pos] = localData;
+                        found = true;
+                        break;
+                    }
+                    else
+                    {
+                        foreach (string deviceString in devicesStrings)
+                        {
+                            if (foundData["DeviceInfo"].Contains(deviceString))
+                            {
+                                hashData.RemoveAt(pos);
+                                pos--;
+                                break;
+                            }
+                        }
+                    }
+                }
+                pos++;
+            }
+            if (!found)
+            {
+
+                hashData.Add(localData);
+            }
 
             UpdateGlobalRate();
         }
@@ -653,8 +734,12 @@ namespace NiceHashMiner
             System.Diagnostics.Process.Start(Links.CheckStats + textBoxBTCAddress.Text.Trim());
         }
 
+        private void linkLabelWebManager_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(WebManagerVisitUrl);
+        }
 
-        private void linkLabelChooseBTCWallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    private void linkLabelChooseBTCWallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(Links.NHM_BTC_Wallet_Faq);
         }
@@ -667,7 +752,10 @@ namespace NiceHashMiner
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MinersManager.StopAllMiners();
+            if (devicesListViewEnableControl1.IsMining)
+            {
+                StopMining();
+            }
 
             MessageBoxManager.Unregister();
         }        
@@ -902,11 +990,27 @@ namespace NiceHashMiner
             var isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex], textBoxWorkerName.Text.Trim(), btcAdress);
 
             if (!DemoMode) ConfigManager.GeneralConfigFileCommit();
+            
+            IDirectory rootDirectory = new MiniHttpd.DriveDirectory(Path.Combine(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "Web"));
+            server = new HttpWebServer(ConfigManager.GeneralConfig.WebInterfacePort, rootDirectory);
+            hashData = new List<object>();
+            try
+            {
+                if (ConfigManager.GeneralConfig.WebInterfaceEnabled == true)
+                    server.Start();
+                    server.Timeout = 500;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            
 
             SMAMinerCheck.Interval = 100;
             SMAMinerCheck.Start();
             MinerStatsCheck.Start();
 
+                       
             return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
         }
 
@@ -929,7 +1033,9 @@ namespace NiceHashMiner
                 DemoMode = false;
                 labelDemoMode.Visible = false;
             }
-
+            if (ConfigManager.GeneralConfig.WebInterfaceEnabled)
+                File.WriteAllText(Path.Combine(((DriveDirectory)server.Root).Path, "stats.json"), "[ { \"Status\": \"Nicehash Miner is stopped\" } ]");
+                server.Stop();
             UpdateGlobalRate();
         }
     }
