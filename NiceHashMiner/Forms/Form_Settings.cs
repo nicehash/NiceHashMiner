@@ -328,6 +328,7 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_LogToFile.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_AutoStartMining.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_CDEnabled.CheckedChanged += new System.EventHandler(checkBox_CDEnabled_CheckedChanged);
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -344,6 +345,9 @@ namespace NiceHashMiner.Forms {
                 this.textBox_ethminerDefaultBlockHeight.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_APIBindPortStart.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_MinProfit.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+                this.textBox_StartingIntensity.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+                this.textBox_EndingIntensity.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+                this.textBox_IntensityInterval.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 // set int only keypress
                 this.textBox_SwitchMinSecondsFixed.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_SwitchMinSecondsDynamic.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
@@ -354,10 +358,13 @@ namespace NiceHashMiner.Forms {
                 this.textBox_LogMaxFileSize.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_ethminerDefaultBlockHeight.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 this.textBox_APIBindPortStart.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
+                this.textBox_StartingIntensity.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
+                this.textBox_EndingIntensity.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
+                this.textBox_EndingIntensity.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress);
                 // set double only keypress
                 this.textBox_MinProfit.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxDoubleOnly_KeyPress);
             }
-            // Add EventHandler for all the general tab's textboxes
+            // Add EventHandler for all the general tab's dropdowns
             {
                 this.comboBox_Language.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
                 this.comboBox_ServiceLocation.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
@@ -397,6 +404,7 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_Use3rdPartyMiners.Checked = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
                 this.checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
                 checkBox_RunAtStartup.Checked = isInStartupRegistry();
+                checkBox_CDEnabled.Checked = ConfigManager.GeneralConfig.CDIntensityTuningEnabled;
             }
 
             // Textboxes
@@ -414,6 +422,13 @@ namespace NiceHashMiner.Forms {
                 textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
                 textBox_MinProfit.Text = ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma;
                 textBox_SwitchProfitabilityThreshold.Text = ConfigManager.GeneralConfig.SwitchProfitabilityThreshold.ToString("F2").Replace(',', '.'); // force comma;
+
+                textBox_StartingIntensity.Text = ConfigManager.GeneralConfig.CDIntensityTuningStart.ToString();
+                textBox_EndingIntensity.Text = ConfigManager.GeneralConfig.CDIntensityTuningEnd.ToString();
+                textBox_IntensityInterval.Text = ConfigManager.GeneralConfig.CDIntensityTuningInterval.ToString();
+                textBox_StartingIntensity.Enabled = checkBox_CDEnabled.Checked;
+                textBox_EndingIntensity.Enabled = checkBox_CDEnabled.Checked;
+                textBox_IntensityInterval.Enabled = checkBox_CDEnabled.Checked;
             }
 
             // set custom control referances
@@ -560,6 +575,15 @@ namespace NiceHashMiner.Forms {
             return startVal == Application.ExecutablePath;
         }
 
+        private void checkBox_CDEnabled_CheckedChanged(object sender, EventArgs e) {
+            if (!_isInitFinished) return;
+            IsChange = true;
+            ConfigManager.GeneralConfig.CDIntensityTuningEnabled = checkBox_CDEnabled.Checked;
+            textBox_StartingIntensity.Enabled = checkBox_CDEnabled.Checked;
+            textBox_EndingIntensity.Enabled = checkBox_CDEnabled.Checked;
+            textBox_IntensityInterval.Enabled = checkBox_CDEnabled.Checked;
+        }
+
         private void GeneralTextBoxes_Leave(object sender, EventArgs e) {
             if (!_isInitFinished) return;
             IsChange = true;
@@ -578,6 +602,10 @@ namespace NiceHashMiner.Forms {
             // min profit
             ConfigManager.GeneralConfig.MinimumProfit = Helpers.ParseDouble(textBox_MinProfit.Text);
             ConfigManager.GeneralConfig.SwitchProfitabilityThreshold = Helpers.ParseDouble(textBox_SwitchProfitabilityThreshold.Text);
+            // CD tuning
+            ConfigManager.GeneralConfig.CDIntensityTuningStart = Helpers.ParseInt(textBox_StartingIntensity.Text);
+            ConfigManager.GeneralConfig.CDIntensityTuningEnd = Helpers.ParseInt(textBox_EndingIntensity.Text);
+            ConfigManager.GeneralConfig.CDIntensityTuningInterval = Helpers.ParseInt(textBox_IntensityInterval.Text);
 
             // Fix bounds
             ConfigManager.GeneralConfig.FixSettingBounds();
@@ -593,6 +621,9 @@ namespace NiceHashMiner.Forms {
             textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
             textBox_ethminerDefaultBlockHeight.Text = ConfigManager.GeneralConfig.ethminerDefaultBlockHeight.ToString();
             textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
+            textBox_StartingIntensity.Text = ConfigManager.GeneralConfig.CDIntensityTuningStart.ToString();
+            textBox_EndingIntensity.Text = ConfigManager.GeneralConfig.CDIntensityTuningEnd.ToString();
+            textBox_IntensityInterval.Text = ConfigManager.GeneralConfig.CDIntensityTuningInterval.ToString();
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e) {
