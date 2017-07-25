@@ -28,6 +28,7 @@
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.pictureBox_RunAtStartup = new System.Windows.Forms.PictureBox();
             this.checkBox_RunAtStartup = new System.Windows.Forms.CheckBox();
             this.checkBox_AllowMultipleInstances = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableDefaultOptimizations = new System.Windows.Forms.CheckBox();
@@ -137,10 +138,22 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
-            this.pictureBox_RunAtStartup = new System.Windows.Forms.PictureBox();
+            this.groupBoxCDIntensityTuning = new System.Windows.Forms.GroupBox();
+            this.checkBox_CDEnabled = new System.Windows.Forms.CheckBox();
+            this.pictureBox_CDEnabled = new System.Windows.Forms.PictureBox();
+            this.pictureBox_IntensityInterval = new System.Windows.Forms.PictureBox();
+            this.pictureBox_EndingIntensity = new System.Windows.Forms.PictureBox();
+            this.pictureBox_StartingIntensity = new System.Windows.Forms.PictureBox();
+            this.label_StartingIntensity = new System.Windows.Forms.Label();
+            this.label_IntensityInterval = new System.Windows.Forms.Label();
+            this.label_EndingIntensity = new System.Windows.Forms.Label();
+            this.textBox_StartingIntensity = new System.Windows.Forms.TextBox();
+            this.textBox_IntensityInterval = new System.Windows.Forms.TextBox();
+            this.textBox_EndingIntensity = new System.Windows.Forms.TextBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDefaultOptimizations)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AMD_DisableAMDTempControl)).BeginInit();
@@ -185,7 +198,11 @@
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).BeginInit();
+            this.groupBoxCDIntensityTuning.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_CDEnabled)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_IntensityInterval)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_EndingIntensity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_StartingIntensity)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -202,7 +219,7 @@
             this.tabControlGeneral.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabControlGeneral.Name = "tabControlGeneral";
             this.tabControlGeneral.SelectedIndex = 0;
-            this.tabControlGeneral.Size = new System.Drawing.Size(918, 585);
+            this.tabControlGeneral.Size = new System.Drawing.Size(918, 734);
             this.tabControlGeneral.TabIndex = 0;
             this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControlGeneral_Selected);
             // 
@@ -216,7 +233,7 @@
             this.tabPageGeneral.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageGeneral.Size = new System.Drawing.Size(910, 552);
+            this.tabPageGeneral.Size = new System.Drawing.Size(910, 701);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
@@ -261,6 +278,17 @@
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
+            // 
+            // pictureBox_RunAtStartup
+            // 
+            this.pictureBox_RunAtStartup.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_RunAtStartup.Location = new System.Drawing.Point(332, 473);
+            this.pictureBox_RunAtStartup.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pictureBox_RunAtStartup.Name = "pictureBox_RunAtStartup";
+            this.pictureBox_RunAtStartup.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_RunAtStartup.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_RunAtStartup.TabIndex = 367;
+            this.pictureBox_RunAtStartup.TabStop = false;
             // 
             // checkBox_RunAtStartup
             // 
@@ -979,13 +1007,14 @@
             // 
             // tabPageAdvanced
             // 
+            this.tabPageAdvanced.Controls.Add(this.groupBoxCDIntensityTuning);
             this.tabPageAdvanced.Controls.Add(this.groupBox_Miners);
             this.tabPageAdvanced.Controls.Add(this.groupBoxBenchmarkTimeLimits);
             this.tabPageAdvanced.Location = new System.Drawing.Point(4, 29);
             this.tabPageAdvanced.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(910, 552);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(910, 701);
             this.tabPageAdvanced.TabIndex = 2;
             this.tabPageAdvanced.Text = "Advanced";
             this.tabPageAdvanced.UseVisualStyleBackColor = true;
@@ -1429,7 +1458,7 @@
             this.tabPageDevicesAlgos.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tabPageDevicesAlgos.Name = "tabPageDevicesAlgos";
             this.tabPageDevicesAlgos.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(910, 552);
+            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(910, 701);
             this.tabPageDevicesAlgos.TabIndex = 1;
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
@@ -1452,7 +1481,7 @@
             this.algorithmSettingsControl1.Location = new System.Drawing.Point(544, 98);
             this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(357, 428);
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(357, 590);
             this.algorithmSettingsControl1.TabIndex = 396;
             // 
             // groupBoxAlgorithmSettings
@@ -1462,7 +1491,7 @@
             this.groupBoxAlgorithmSettings.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBoxAlgorithmSettings.Name = "groupBoxAlgorithmSettings";
             this.groupBoxAlgorithmSettings.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBoxAlgorithmSettings.Size = new System.Drawing.Size(526, 317);
+            this.groupBoxAlgorithmSettings.Size = new System.Drawing.Size(526, 473);
             this.groupBoxAlgorithmSettings.TabIndex = 395;
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
@@ -1475,7 +1504,7 @@
             this.algorithmsListView1.Location = new System.Drawing.Point(9, 23);
             this.algorithmsListView1.Margin = new System.Windows.Forms.Padding(6, 8, 6, 8);
             this.algorithmsListView1.Name = "algorithmsListView1";
-            this.algorithmsListView1.Size = new System.Drawing.Size(508, 294);
+            this.algorithmsListView1.Size = new System.Drawing.Size(508, 437);
             this.algorithmsListView1.TabIndex = 2;
             // 
             // buttonAllProfit
@@ -1503,7 +1532,7 @@
             // buttonSaveClose
             // 
             this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(556, 611);
+            this.buttonSaveClose.Location = new System.Drawing.Point(556, 761);
             this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonSaveClose.Name = "buttonSaveClose";
             this.buttonSaveClose.Size = new System.Drawing.Size(165, 35);
@@ -1515,7 +1544,7 @@
             // buttonDefaults
             // 
             this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(435, 611);
+            this.buttonDefaults.Location = new System.Drawing.Point(435, 761);
             this.buttonDefaults.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(112, 35);
@@ -1527,7 +1556,7 @@
             // buttonCloseNoSave
             // 
             this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(730, 611);
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(730, 761);
             this.buttonCloseNoSave.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.buttonCloseNoSave.Name = "buttonCloseNoSave";
             this.buttonCloseNoSave.Size = new System.Drawing.Size(202, 35);
@@ -1536,22 +1565,143 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
-            // pictureBox_RunAtStartup
+            // groupBoxCDIntensityTuning
             // 
-            this.pictureBox_RunAtStartup.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_RunAtStartup.Location = new System.Drawing.Point(332, 473);
-            this.pictureBox_RunAtStartup.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.pictureBox_RunAtStartup.Name = "pictureBox_RunAtStartup";
-            this.pictureBox_RunAtStartup.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_RunAtStartup.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_RunAtStartup.TabIndex = 367;
-            this.pictureBox_RunAtStartup.TabStop = false;
+            this.groupBoxCDIntensityTuning.Controls.Add(this.pictureBox_IntensityInterval);
+            this.groupBoxCDIntensityTuning.Controls.Add(this.pictureBox_EndingIntensity);
+            this.groupBoxCDIntensityTuning.Controls.Add(this.pictureBox_StartingIntensity);
+            this.groupBoxCDIntensityTuning.Controls.Add(this.label_StartingIntensity);
+            this.groupBoxCDIntensityTuning.Controls.Add(this.label_IntensityInterval);
+            this.groupBoxCDIntensityTuning.Controls.Add(this.label_EndingIntensity);
+            this.groupBoxCDIntensityTuning.Controls.Add(this.textBox_StartingIntensity);
+            this.groupBoxCDIntensityTuning.Controls.Add(this.textBox_IntensityInterval);
+            this.groupBoxCDIntensityTuning.Controls.Add(this.textBox_EndingIntensity);
+            this.groupBoxCDIntensityTuning.Controls.Add(this.checkBox_CDEnabled);
+            this.groupBoxCDIntensityTuning.Controls.Add(this.pictureBox_CDEnabled);
+            this.groupBoxCDIntensityTuning.Location = new System.Drawing.Point(9, 546);
+            this.groupBoxCDIntensityTuning.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxCDIntensityTuning.Name = "groupBoxCDIntensityTuning";
+            this.groupBoxCDIntensityTuning.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.groupBoxCDIntensityTuning.Size = new System.Drawing.Size(888, 139);
+            this.groupBoxCDIntensityTuning.TabIndex = 390;
+            this.groupBoxCDIntensityTuning.TabStop = false;
+            this.groupBoxCDIntensityTuning.Text = "ClaymoreDual Intensity Tuning:";
+            // 
+            // checkBox_CDEnabled
+            // 
+            this.checkBox_CDEnabled.AutoSize = true;
+            this.checkBox_CDEnabled.Location = new System.Drawing.Point(18, 29);
+            this.checkBox_CDEnabled.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.checkBox_CDEnabled.Name = "checkBox_CDEnabled";
+            this.checkBox_CDEnabled.Size = new System.Drawing.Size(94, 24);
+            this.checkBox_CDEnabled.TabIndex = 365;
+            this.checkBox_CDEnabled.Text = "Enabled";
+            this.checkBox_CDEnabled.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox_CDEnabled
+            // 
+            this.pictureBox_CDEnabled.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_CDEnabled.Location = new System.Drawing.Point(252, 29);
+            this.pictureBox_CDEnabled.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pictureBox_CDEnabled.Name = "pictureBox_CDEnabled";
+            this.pictureBox_CDEnabled.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_CDEnabled.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_CDEnabled.TabIndex = 366;
+            this.pictureBox_CDEnabled.TabStop = false;
+            // 
+            // pictureBox_IntensityInterval
+            // 
+            this.pictureBox_IntensityInterval.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_IntensityInterval.Location = new System.Drawing.Point(844, 72);
+            this.pictureBox_IntensityInterval.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pictureBox_IntensityInterval.Name = "pictureBox_IntensityInterval";
+            this.pictureBox_IntensityInterval.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_IntensityInterval.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_IntensityInterval.TabIndex = 392;
+            this.pictureBox_IntensityInterval.TabStop = false;
+            // 
+            // pictureBox_EndingIntensity
+            // 
+            this.pictureBox_EndingIntensity.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_EndingIntensity.Location = new System.Drawing.Point(544, 72);
+            this.pictureBox_EndingIntensity.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pictureBox_EndingIntensity.Name = "pictureBox_EndingIntensity";
+            this.pictureBox_EndingIntensity.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_EndingIntensity.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_EndingIntensity.TabIndex = 393;
+            this.pictureBox_EndingIntensity.TabStop = false;
+            // 
+            // pictureBox_StartingIntensity
+            // 
+            this.pictureBox_StartingIntensity.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_StartingIntensity.Location = new System.Drawing.Point(252, 72);
+            this.pictureBox_StartingIntensity.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.pictureBox_StartingIntensity.Name = "pictureBox_StartingIntensity";
+            this.pictureBox_StartingIntensity.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_StartingIntensity.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_StartingIntensity.TabIndex = 394;
+            this.pictureBox_StartingIntensity.TabStop = false;
+            // 
+            // label_StartingIntensity
+            // 
+            this.label_StartingIntensity.AutoSize = true;
+            this.label_StartingIntensity.Location = new System.Drawing.Point(14, 72);
+            this.label_StartingIntensity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label_StartingIntensity.Name = "label_StartingIntensity";
+            this.label_StartingIntensity.Size = new System.Drawing.Size(127, 20);
+            this.label_StartingIntensity.TabIndex = 389;
+            this.label_StartingIntensity.Text = "Starting intensity";
+            // 
+            // label_IntensityInterval
+            // 
+            this.label_IntensityInterval.AutoSize = true;
+            this.label_IntensityInterval.Location = new System.Drawing.Point(614, 72);
+            this.label_IntensityInterval.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label_IntensityInterval.Name = "label_IntensityInterval";
+            this.label_IntensityInterval.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.label_IntensityInterval.Size = new System.Drawing.Size(125, 20);
+            this.label_IntensityInterval.TabIndex = 390;
+            this.label_IntensityInterval.Text = "Intensity Interval";
+            // 
+            // label_EndingIntensity
+            // 
+            this.label_EndingIntensity.AutoSize = true;
+            this.label_EndingIntensity.Location = new System.Drawing.Point(314, 72);
+            this.label_EndingIntensity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label_EndingIntensity.Name = "label_EndingIntensity";
+            this.label_EndingIntensity.Size = new System.Drawing.Size(123, 20);
+            this.label_EndingIntensity.TabIndex = 391;
+            this.label_EndingIntensity.Text = "Ending Intensity";
+            // 
+            // textBox_StartingIntensity
+            // 
+            this.textBox_StartingIntensity.Location = new System.Drawing.Point(14, 100);
+            this.textBox_StartingIntensity.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBox_StartingIntensity.Name = "textBox_StartingIntensity";
+            this.textBox_StartingIntensity.Size = new System.Drawing.Size(264, 26);
+            this.textBox_StartingIntensity.TabIndex = 387;
+            // 
+            // textBox_IntensityInterval
+            // 
+            this.textBox_IntensityInterval.Location = new System.Drawing.Point(614, 100);
+            this.textBox_IntensityInterval.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBox_IntensityInterval.Name = "textBox_IntensityInterval";
+            this.textBox_IntensityInterval.Size = new System.Drawing.Size(256, 26);
+            this.textBox_IntensityInterval.TabIndex = 386;
+            // 
+            // textBox_EndingIntensity
+            // 
+            this.textBox_EndingIntensity.Location = new System.Drawing.Point(314, 100);
+            this.textBox_EndingIntensity.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.textBox_EndingIntensity.Name = "textBox_EndingIntensity";
+            this.textBox_EndingIntensity.Size = new System.Drawing.Size(256, 26);
+            this.textBox_EndingIntensity.TabIndex = 388;
             // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(951, 665);
+            this.ClientSize = new System.Drawing.Size(951, 815);
             this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.buttonSaveClose);
             this.Controls.Add(this.tabControlGeneral);
@@ -1567,6 +1717,7 @@
             this.tabPageGeneral.ResumeLayout(false);
             this.groupBox_Misc.ResumeLayout(false);
             this.groupBox_Misc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDefaultOptimizations)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AMD_DisableAMDTempControl)).EndInit();
@@ -1615,7 +1766,12 @@
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).EndInit();
+            this.groupBoxCDIntensityTuning.ResumeLayout(false);
+            this.groupBoxCDIntensityTuning.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_CDEnabled)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_IntensityInterval)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_EndingIntensity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_StartingIntensity)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1736,5 +1892,17 @@
         private System.Windows.Forms.Label label_SwitchProfitabilityThreshold;
         private System.Windows.Forms.CheckBox checkBox_RunAtStartup;
         private System.Windows.Forms.PictureBox pictureBox_RunAtStartup;
+        private System.Windows.Forms.GroupBox groupBoxCDIntensityTuning;
+        private System.Windows.Forms.PictureBox pictureBox_IntensityInterval;
+        private System.Windows.Forms.PictureBox pictureBox_EndingIntensity;
+        private System.Windows.Forms.PictureBox pictureBox_StartingIntensity;
+        private System.Windows.Forms.Label label_StartingIntensity;
+        private System.Windows.Forms.Label label_IntensityInterval;
+        private System.Windows.Forms.Label label_EndingIntensity;
+        private System.Windows.Forms.TextBox textBox_StartingIntensity;
+        private System.Windows.Forms.TextBox textBox_IntensityInterval;
+        private System.Windows.Forms.TextBox textBox_EndingIntensity;
+        private System.Windows.Forms.CheckBox checkBox_CDEnabled;
+        private System.Windows.Forms.PictureBox pictureBox_CDEnabled;
     }
 }
