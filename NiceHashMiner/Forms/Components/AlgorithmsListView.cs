@@ -42,7 +42,7 @@ namespace NiceHashMiner.Forms.Components {
                 if (algorithm != null) {
                     if (algorithm.Enabled == false && !algorithm.IsBenchmarkPending) {
                         lvi.BackColor = DISABLED_COLOR;
-                    } else if (algorithm.BenchmarkSpeed > 0 && !algorithm.IsBenchmarkPending) {
+                    } else if (!algorithm.BenchmarkNeeded && !algorithm.IsBenchmarkPending) {
                         lvi.BackColor = BENCHMARKED_COLOR;
                     } else {
                         lvi.BackColor = UNBENCHMARKED_COLOR;

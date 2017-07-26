@@ -442,7 +442,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private bool ShoulBenchmark(Algorithm algorithm) {
-            bool isBenchmarked = algorithm.BenchmarkSpeed > 0 ? true : false;
+            bool isBenchmarked = !algorithm.BenchmarkNeeded;
             if (_algorithmOption == AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms
                 && !isBenchmarked && algorithm.Enabled) {
                     return true;

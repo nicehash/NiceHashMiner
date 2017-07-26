@@ -190,7 +190,9 @@ namespace NiceHashMiner.Miners
         // benchmark stuff
 
         public override void BenchmarkStart(int time, IBenchmarkComunicator benchmarkComunicator) {
-            BenchmarkAlgorithm.CurrentIntensity = ConfigManager.GeneralConfig.CDIntensityTuningStart;
+            if (BenchmarkAlgorithm.TuningEnabled) {
+                BenchmarkAlgorithm.StartTuning();
+            }
             base.BenchmarkStart(time, benchmarkComunicator);
         }
 
@@ -320,8 +322,7 @@ namespace NiceHashMiner.Miners
                         }
                     }
                 }
-                if (TuningEnabled && BenchmarkAlgorithm.CurrentIntensity < ConfigManager.GeneralConfig.CDIntensityTuningEnd && !BenchmarkSignalQuit) {
-                    BenchmarkAlgorithm.CurrentIntensity += ConfigManager.GeneralConfig.CDIntensityTuningInterval;
+                if (!BenchmarkSignalQuit && BenchmarkAlgorithm.IncrementToNextEmptyIntensity()) {
                     base.BenchmarkStart(BenchmarkTimeInSeconds, BenchmarkComunicator);  // Start over for next intensity value
                 } else {
                     BenchmarkThreadRoutineFinish();

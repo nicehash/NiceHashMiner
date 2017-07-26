@@ -78,7 +78,23 @@ namespace NiceHashMiner {
         public int MostProfitableIntensity { get {
                 if (!IntensityUpToDate) UpdateProfitableIntensity();
                 return mostProfitableIntensity;
-            } }
+        } }
+        public bool BenchmarkNeeded {
+            get {
+                if (TuningEnabled) {
+                    for (var i = ConfigManager.GeneralConfig.CDIntensityTuningStart;
+                    i < ConfigManager.GeneralConfig.CDIntensityTuningEnd;
+                    i += ConfigManager.GeneralConfig.CDIntensityTuningInterval) {
+                        if (isIntensityEmpty(i)) return true;
+                    }
+                } else {
+                    if ((IsDual() && SecondaryBenchmarkSpeed <= 0) || BenchmarkSpeed <= 0) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
 
         public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName, AlgorithmType secondaryNiceHashID=AlgorithmType.NONE) {
             NiceHashID = niceHashID;
@@ -222,6 +238,30 @@ namespace NiceHashMiner {
             }
             mostProfitableIntensity = intensity;
             IntensityUpToDate = true;
+        }
+
+        private bool isIntensityEmpty(int i) {
+            if (!IntensitySpeeds.ContainsKey(i) || !SecondaryIntensitySpeeds.ContainsKey(i)) return true;
+            if (IntensitySpeeds[i] <= 0 || SecondaryIntensitySpeeds[i] <= 0) return true;
+            return false;
+        }
+
+        public bool IncrementToNextEmptyIntensity() {  // Return false if no more needed increment
+            if (!TuningEnabled) return false;
+            for (var i = Math.Max(CurrentIntensity, ConfigManager.GeneralConfig.CDIntensityTuningStart);
+                i < ConfigManager.GeneralConfig.CDIntensityTuningEnd;
+                i += ConfigManager.GeneralConfig.CDIntensityTuningInterval) {
+                if (isIntensityEmpty(i)) {
+                    CurrentIntensity = i;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool StartTuning() {  // Return false if no benchmark needed
+            CurrentIntensity = ConfigManager.GeneralConfig.CDIntensityTuningStart;
+            return IncrementToNextEmptyIntensity();
         }
     }
 }
