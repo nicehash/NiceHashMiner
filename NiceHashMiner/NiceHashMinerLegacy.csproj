@@ -89,7 +89,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />
+    <Compile Include="3rdParty\Nvml\NvmlNativeMethods.cs" />
+    <Compile Include="3rdParty\Nvml\NvmlTypes.cs" />
     <Compile Include="Algorithm.cs" />
+    <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
+    <Compile Include="Devices\ComputeDevice\CPUComputeDevice.cs" />
+    <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
     <Compile Include="ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\EWBF.cs" />
@@ -107,7 +112,7 @@
     <Compile Include="Configs\ConfigJsonFile\DeviceBenchmarkConfigFile.cs" />
     <Compile Include="Configs\ConfigJsonFile\GeneralConfigFile.cs" />
     <Compile Include="Devices\AmdGpuDevice.cs" />
-    <Compile Include="Devices\ComputeDevice.cs" />
+    <Compile Include="Devices\ComputeDevice\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceManager.cs" />
     <Compile Include="Devices\CPUUtils.cs" />
     <Compile Include="Devices\CudaDevice.cs" />
@@ -390,10 +395,6 @@
     <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Core\MyDownloader.Core.csproj">
       <Project>{e763345e-6696-4c53-8764-47e4abd67def}</Project>
       <Name>MyDownloader.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\3rdparty\ManagedCuda\Nvml\Nvml.csproj">
-      <Project>{92d51a33-7bf0-47fd-9ece-d758ffe1691d}</Project>
-      <Name>Nvml</Name>
     </ProjectReference>
     <ProjectReference Include="..\MessageBoxManager\MessageBoxManager.csproj">
       <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>

@@ -11,7 +11,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners;
-using ManagedCuda.Nvml;
+using NVIDIA.Nvml;
 
 namespace NiceHashMiner.Devices
 {
@@ -28,12 +28,12 @@ namespace NiceHashMiner.Devices
         // CPU, NVIDIA, AMD
         readonly public DeviceType DeviceType;
         // UUID now used for saving
-        readonly public string UUID;
+        public string UUID { get; protected set; }
 
 
         // CPU extras
-        readonly public int Threads;
-        readonly public ulong AffinityMask;
+        public int Threads { get; protected set; }
+        public ulong AffinityMask { get; protected set; }
 
         // GPU extras
         public readonly ulong GpuRam;
@@ -42,45 +42,50 @@ namespace NiceHashMiner.Devices
 
         // sgminer extra quickfix
         //public readonly bool IsOptimizedVersion;
-        public readonly string Codename;
-        public readonly string InfSection;
+        public string Codename { get; protected set; }
+        public string InfSection { get; protected set; }
         // amd has some algos not working with new drivers
-        public readonly bool DriverDisableAlgos;
+        public bool DriverDisableAlgos { get; protected set; }
 
-        private List<Algorithm> AlgorithmSettings;
+        protected List<Algorithm> AlgorithmSettings;
 
         public string BenchmarkCopyUUID { get; set; }
 
         #region Hardware Monitoring
-
-        //NVIDIA
-        nvmlDevice nvDevice;
-
-        // Load
-        PerformanceCounter cpuCounter;
-        public float Load {
+        
+        public virtual float Load {
             get {
-                if (DeviceType == DeviceType.CPU && cpuCounter != null) return cpuCounter.NextValue();
-
                 return 0;
             }
         }
 
         // Temps
+        public virtual float Temp {
+            get {
+                return 0;
+            }
+        }
 
         // Fan
-        private nvmlUnitFanSpeeds nvFanSpeeds;
-        public uint FanSpeed {
+        public virtual uint FanSpeed {
             get {
-                if (DeviceType == DeviceType.NVIDIA) {
-                }
-
                 return 0;
             }
         }
 
         #endregion
 
+        // Ambiguous constructor
+        protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable, DeviceType type, string nameCount, ulong gpuRAM) {
+            ID = id;
+            Name = name;
+            Enabled = enabled;
+            DeviceGroupType = group;
+            IsEtherumCapale = ethereumCapable;
+            DeviceType = type;
+            NameCount = nameCount;
+            GpuRam = gpuRAM;
+        }
 
         // Fake dev
         public ComputeDevice(int id) {
@@ -112,16 +117,11 @@ namespace NiceHashMiner.Devices
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             IsEtherumCapale = false;
             GpuRam = 0;
-
-            cpuCounter = new PerformanceCounter();
-            cpuCounter.CategoryName = "Processor";
-            cpuCounter.CounterName = "% Processor Time";
-            cpuCounter.InstanceName = "_Total";
         }
 
         // GPU NVIDIA
-        int _SM_major = -1;
-        int _SM_minor = -1;
+        protected int _SM_major = -1;
+        protected int _SM_minor = -1;
         public ComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int GPUCount) {
             _SM_major = cudaDevice.SM_major;
             _SM_minor = cudaDevice.SM_minor;
@@ -135,11 +135,6 @@ namespace NiceHashMiner.Devices
             UUID = cudaDevice.UUID;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             GpuRam = cudaDevice.DeviceGlobalMemory;
-
-            var result = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(UUID, ref nvDevice);
-            if (result != nvmlReturn.Success) {
-                Helpers.ConsolePrint("NVML", NvmlNativeMethods.nvmlErrorString(result));
-            }
         }
 
         public bool IsSM50() { return _SM_major == 5 && _SM_minor == 0; }
@@ -308,7 +303,7 @@ namespace NiceHashMiner.Devices
         
         // static methods
         
-        private static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
+        protected static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
             var SHA256 = new SHA256Managed();
             var hash = new StringBuilder();
             string mixedAttr = id.ToString() + group + name + ((int)deviceGroupType).ToString();

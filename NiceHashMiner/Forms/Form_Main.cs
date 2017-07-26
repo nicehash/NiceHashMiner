@@ -258,6 +258,7 @@ namespace NiceHashMiner
             DeviceStatusUpdate.Tick += DeviceStatusUpdate_Tick;
             DeviceStatusUpdate.Interval = 60 * 1000;  // Every minute
             DeviceStatusUpdate.Start();
+            DeviceStatusUpdate_Tick(null, null);
 
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection

@@ -15,7 +15,7 @@ using System.IO;
 using System.Globalization;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Miners.Grouping;
-using ManagedCuda.Nvml;
+using NVIDIA.Nvml;
 
 namespace NiceHashMiner.Devices
 {
@@ -366,12 +366,12 @@ namespace NiceHashMiner.Devices
                     if (CPUUtils.IsCPUMiningCapable()) {
                         if (Avaliable.CPUsCount == 1) {
                             Avaliable.AllAvaliableDevices.Add(
-                                new ComputeDevice(0, "CPU0", CPUID.GetCPUName().Trim(), ThreadsPerCPU, (ulong)0, ++CPUCount)
+                                new CPUComputeDevice(0, "CPU0", CPUID.GetCPUName().Trim(), ThreadsPerCPU, (ulong)0, ++CPUCount)
                             );
                         } else if (Avaliable.CPUsCount > 1) {
                             for (int i = 0; i < Avaliable.CPUsCount; i++) {
                                 Avaliable.AllAvaliableDevices.Add(
-                                    new ComputeDevice(i, "CPU" + i, CPUID.GetCPUName().Trim(), ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask), ++CPUCount)
+                                    new CPUComputeDevice(i, "CPU" + i, CPUID.GetCPUName().Trim(), ThreadsPerCPU,         CPUID.CreateAffinityMask(i, ThreadsPerCPUMask), ++CPUCount)
                                 );
                             }
                         }
@@ -478,8 +478,8 @@ namespace NiceHashMiner.Devices
                                         break;
                                 }
                                 Avaliable.AllAvaliableDevices.Add(
-                                    new ComputeDevice(cudaDev, group, ++GPUCount)
-                                    );
+                                    new CudaComputeDevice(cudaDev, group, ++GPUCount)
+                                );
                             }
                         }
                         Helpers.ConsolePrint(TAG, stringBuilder.ToString());
@@ -800,7 +800,7 @@ namespace NiceHashMiner.Devices
                                             string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
                                             Avaliable.AllAvaliableDevices.Add(
-                                                new ComputeDevice(newAmdDev, ++GPUCount, false));
+                                                new AmdComputeDevice(newAmdDev, ++GPUCount, false));
                                             // just in case 
                                             try {
                                                 stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
@@ -851,7 +851,7 @@ namespace NiceHashMiner.Devices
                                         string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
                                         Avaliable.AllAvaliableDevices.Add(
-                                            new ComputeDevice(newAmdDev, ++GPUCount, true));
+                                            new AmdComputeDevice(newAmdDev, ++GPUCount, true));
                                         // just in case 
                                         try {
                                             stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));

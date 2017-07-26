@@ -26,7 +26,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 
 
-namespace ManagedCuda.Nvml
+namespace NVIDIA.Nvml
 {
 	public static class NvmlNativeMethods
 	{
