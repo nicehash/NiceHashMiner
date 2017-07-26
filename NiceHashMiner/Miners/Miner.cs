@@ -523,7 +523,7 @@ namespace NiceHashMiner
         protected void BenchmarkThreadRoutineFinish() {
             BenchmarkProcessStatus status = BenchmarkProcessStatus.Finished;
 
-            if (BenchmarkAlgorithm.BenchmarkSpeed > 0) {
+            if (!BenchmarkAlgorithm.BenchmarkNeeded) {
                 status = BenchmarkProcessStatus.Success;
             }
 

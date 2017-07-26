@@ -283,7 +283,7 @@ namespace NiceHashMiner.Forms {
         private string getDotsWaitString() {
             ++dotCount;
             if (dotCount > 3) dotCount = 1;
-            return new String('.', dotCount);
+            return new String('.', dotCount) + (_currentAlgorithm.TuningEnabled ? " (dcri " + _currentAlgorithm.CurrentIntensity + ")" : "");
         }
 
         private void InitLocale() {

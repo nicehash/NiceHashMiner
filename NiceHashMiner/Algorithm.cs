@@ -160,9 +160,7 @@ namespace NiceHashMiner {
 
         private bool IsPendingString() {
             return BenchmarkStatus == International.GetText("Algorithm_Waiting_Benchmark")
-                || BenchmarkStatus == "."
-                || BenchmarkStatus == ".."
-                || BenchmarkStatus == "...";
+                || BenchmarkStatus.Contains(".");  // Workaround to allow dcri display
         }
 
         public void ClearBenchmarkPending() {

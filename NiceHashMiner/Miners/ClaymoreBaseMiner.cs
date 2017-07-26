@@ -342,7 +342,7 @@ namespace NiceHashMiner.Miners
                         }
                     }
                 }
-            } catch { }
+            } catch (Exception e) { Helpers.ConsolePrint(MinerTAG(), e.ToString()); }
         }
 
         // stub benchmarks read from file
