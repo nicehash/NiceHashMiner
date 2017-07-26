@@ -127,6 +127,7 @@
     "Form_Settings_General_NVIDIAP0State": "NVIDIA P0 статус",
     "Form_Settings_General_LogToFile": "Запись в файл",
     "Form_Settings_General_RunAtStartup": "Запуск с Windows",
+    "Form_Settings_General_MinimizeMiningWindows": "Минимизировать окна майнинга",
 
     "Form_Settings_General_Language": "Язык",
     "Form_Settings_General_MinIdleSeconds": "Минимальный простой [с]",
@@ -233,6 +234,7 @@
     "Form_Settings_ToolTip_ExtraLaunchParameters": "Дополнительные параметры при запуске майнера.",
     "Form_Settings_ToolTip_DaggerHashimotoGenerateDevice": "Выберите какая GPU будет создавать DAG-файл.\nСоветуем выбрать самую быструю из доступных.",
     "Form_Settings_ToolTip_DisableAMDTempControl": "Отметьте, если вы хотели бы отключить встроенный контроль температуры\nдля AMD GPU (за исключением алгоритма daggerhashimoto).",
+    "Form_Settings_ToolTip_MinimizeMiningWindows": "Когда отмечено, окна майнеров будут запускаться в свёрнутом состоянии.",
 
     "Form_Settings_ToolTip_AlgoSkip": "Отметьте, если вы хотели бы пропустить/отключить определенный алгоритм. \nБенчмаркинг, а также фактический майнинг будут отключены для этого конкретного алгоритма. \nЭто означает, что автоматическое переключение будет пропускать этот алгоритм во время майнинга.",
     "Form_Settings_ToolTip_AlgoUsePassword": "Использовать этот пароль при запуске майнера и этого алгоритма. Если не указано, будет использоваться пароль группы.",
