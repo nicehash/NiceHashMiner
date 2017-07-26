@@ -609,8 +609,18 @@ namespace NiceHashMiner
 
             if (ret < 0)
             {
-                linkLabelNewVersion.Text = String.Format(International.GetText("Form_Main_new_version_released"), ver);
+                SetVersionLabel(String.Format(International.GetText("Form_Main_new_version_released"), ver));
                 VisitURLNew = Links.VisitURLNew + ver;
+            }
+        }
+
+        delegate void SetVersionLabelCallback(string text);
+        void SetVersionLabel(string text) {
+            if (linkLabelNewVersion.InvokeRequired) {
+                SetVersionLabelCallback d = new SetVersionLabelCallback(SetVersionLabel);
+                Invoke(d, new object[] { text });
+            } else {
+                linkLabelNewVersion.Text = text;
             }
         }
 

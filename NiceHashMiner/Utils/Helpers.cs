@@ -41,7 +41,7 @@ namespace NiceHashMiner
 
         public static void ConsolePrint(string grp, string text)
         {
-            Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
+            Debug.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
 
             if (ConfigManager.GeneralConfig.LogToFile && Logger.IsInit)
                 Logger.log.Info("[" + grp + "] " + text);
