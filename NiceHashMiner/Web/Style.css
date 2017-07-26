@@ -1,0 +1,8 @@
+﻿body
+{
+    font-family: sans-serif;
+}
+.bold-red {
+    color: red;
+    font-weight: bold;
+}

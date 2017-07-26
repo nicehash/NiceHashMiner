@@ -62,6 +62,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3rdparty\log4net\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="MiniHttpd">
+      <HintPath>..\3rdparty\MiniHttpd\MiniHttpd.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\3rdparty\json\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -372,6 +375,15 @@
     <Content Include="Resources\NHM_logo_xxsmall_light.png" />
     <None Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
     <Content Include="Resources\NHM_help_50px.png" />
+    <Content Include="Web\index.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web\jquery-3.2.1.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Web\Style.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
