@@ -220,6 +220,9 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(pictureBox_SwitchProfitabilityThreshold, International.GetText("Form_Settings_ToolTip_SwitchProfitabilityThreshold"));
             toolTip1.SetToolTip(label_SwitchProfitabilityThreshold, International.GetText("Form_Settings_ToolTip_SwitchProfitabilityThreshold"));
 
+            toolTip1.SetToolTip(pictureBox_MinimizeMiningWindows, International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
+            toolTip1.SetToolTip(checkBox_MinimizeMiningWindows, International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
+
             this.Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
@@ -252,6 +255,7 @@ namespace NiceHashMiner.Forms {
             checkBox_AMD_DisableAMDTempControl.Text = International.GetText("Form_Settings_General_DisableAMDTempControl");
             checkBox_AllowMultipleInstances.Text = International.GetText("Form_Settings_General_AllowMultipleInstances_Text");
             checkBox_RunAtStartup.Text = International.GetText("Form_Settings_General_RunAtStartup");
+            checkBox_MinimizeMiningWindows.Text = International.GetText("Form_Settings_General_MinimizeMiningWindows");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";

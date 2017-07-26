@@ -125,6 +125,7 @@
     "Form_Settings_General_NVIDIAP0State": "Estado NVIDIA P0",
     "Form_Settings_General_LogToFile": "Guardar el registro de eventos",
     "Form_Settings_General_RunAtStartup": "Ejecutar con Windows",
+    "Form_Settings_General_MinimizeMiningWindows": "Minimizar las ventanas de minería",
 
     "Form_Settings_General_Language": "Lenguaje",
     "Form_Settings_General_MinIdleSeconds": "Tiempo mínimo detenido [s]",
@@ -232,6 +233,7 @@
     "Form_Settings_ToolTip_ExtraLaunchParameters": "Parámetros de inicio adicionales.",
     "Form_Settings_ToolTip_DaggerHashimotoGenerateDevice": "Elige que GPU creará el archivo DAG.\nElije la GPU más rápida posible.",
     "Form_Settings_ToolTip_DisableAMDTempControl": "Márcalo si quieres desactivar el control de temperatura predeterminado\npara las GPUs de AMD (excepto para el algoritmo daggerhashimoto).",
+    "Form_Settings_ToolTip_MinimizeMiningWindows": "Cuando está marcada, las ventanas de minería comenzarán minimizadas.",
 
     "Form_Settings_ToolTip_AlgoSkip": "Márcalo si quieres saltar y desactivar un algoritmo en particular.\nEl minado y el benchmark serán desactivados para este algoritmo en particular.\nEl cambio automático de algoritmo también ignorará este algoritmo.",
     "Form_Settings_ToolTip_AlgoUsePassword": "Usa esta contraseña al iniciar este minero y este algoritmo. Si no se establece, UsePassword del grupo se usará.",
