@@ -504,6 +504,9 @@ namespace NiceHashMiner.Forms {
                 } else {
                     __ClaymoreZcashStatus = null;
                 }
+                if (_currentAlgorithm.TuningEnabled) {
+                    _currentAlgorithm.StartTuning();
+                }
             }
 
             if (_currentMiner != null && _currentAlgorithm != null) {
@@ -617,6 +620,12 @@ namespace NiceHashMiner.Forms {
                     }
                 }
 
+                if (_currentAlgorithm.TuningEnabled) {
+                    if (_currentAlgorithm.IncrementToNextEmptyIntensity()) {
+                        rebenchSame = true;
+                    }
+                }
+
                 if(!rebenchSame) {
                     _benchmarkingTimer.Stop();
                 }
@@ -639,6 +648,10 @@ namespace NiceHashMiner.Forms {
                         _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);
                     } else if (__ClaymoreZcashStatus != null) {
                         _currentMiner.BenchmarkStart(__ClaymoreZcashStatus.Time, this);
+                    } else if (_currentAlgorithm.TuningEnabled) {
+                        var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
+                            .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
+                        _currentMiner.BenchmarkStart(time, this);
                     }
                 } else {
                     NextBenchmark();

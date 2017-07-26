@@ -189,13 +189,6 @@ namespace NiceHashMiner.Miners
 
         // benchmark stuff
 
-        public override void BenchmarkStart(int time, IBenchmarkComunicator benchmarkComunicator) {
-            if (BenchmarkAlgorithm.TuningEnabled) {
-                BenchmarkAlgorithm.StartTuning();
-            }
-            base.BenchmarkStart(time, benchmarkComunicator);
-        }
-
         protected override void BenchmarkThreadRoutine(object CommandLine) {
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
@@ -214,7 +207,6 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTAG(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
-                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 2);
                 Stopwatch _benchmarkTimer = new Stopwatch();
                 _benchmarkTimer.Reset();
                 _benchmarkTimer.Start();
@@ -258,6 +250,10 @@ namespace NiceHashMiner.Miners
                         Thread.Sleep(1000);
                     }
 
+                }
+                BenchmarkHandle.WaitForExit();
+                if (_benchmarkTimer.Elapsed.TotalSeconds < 10 && BenchmarkException == null && !BenchmarkSignalQuit) {  // CD crashed before mining start
+                    throw new Exception("ClaymoreDual crashed on startup");
                 }
             } catch (Exception ex) {
                 BenchmarkThreadRoutineCatch(ex);
@@ -322,11 +318,7 @@ namespace NiceHashMiner.Miners
                         }
                     }
                 }
-                if (!BenchmarkSignalQuit && BenchmarkAlgorithm.IncrementToNextEmptyIntensity()) {
-                    base.BenchmarkStart(BenchmarkTimeInSeconds, BenchmarkComunicator);  // Start over for next intensity value
-                } else {
-                    BenchmarkThreadRoutineFinish();
-                }
+                BenchmarkThreadRoutineFinish();
             }
         }
 
