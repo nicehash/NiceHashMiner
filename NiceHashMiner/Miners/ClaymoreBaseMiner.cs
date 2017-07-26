@@ -17,7 +17,8 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using NiceHashMiner.Interfaces;
 
-namespace NiceHashMiner.Miners {
+namespace NiceHashMiner.Miners
+{
     public abstract class ClaymoreBaseMiner : Miner
     {
 
@@ -197,6 +198,8 @@ namespace NiceHashMiner.Miners {
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             if (TuningEnabled) {
+                var stepsLeft = (int)Math.Ceiling((double)(ConfigManager.GeneralConfig.CDIntensityTuningEnd - BenchmarkAlgorithm.CurrentIntensity) / (ConfigManager.GeneralConfig.CDIntensityTuningInterval)) + 1;
+                Helpers.ConsolePrint("CDTUING", "{0} tuning steps remain, should complete in {1} seconds", stepsLeft, stepsLeft * benchmarkTimeWait);
                 Helpers.ConsolePrint("CDTUNING", String.Format("Starting benchmark for intensity {0} out of {1}", BenchmarkAlgorithm.CurrentIntensity, ConfigManager.GeneralConfig.CDIntensityTuningEnd));
             }
 
@@ -267,7 +270,15 @@ namespace NiceHashMiner.Miners {
                 }
                 // read file log
                 if (File.Exists(WorkingDirectory + latestLogFile)) {
-                    var lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
+                    var lines = new string[0];
+                    for (var i = 0; i < 5; i++) {
+                        try {
+                            lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
+                            break;
+                        } catch (Exception e) {
+                            Helpers.ConsolePrint(MinerTAG(), e.ToString());
+                        }
+                    }
                     var addBenchLines = bench_lines.Count == 0;
                     foreach (var line in lines) {
                         if (line != null) {
