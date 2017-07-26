@@ -261,7 +261,7 @@ namespace NiceHashMiner.Miners {
                     foreach (var algo in device.Algorithms) {
                        stringBuilderDevice.AppendLine(String.Format("\t\tPROFIT = {0}\t(SPEED = {1}\t\t| NHSMA = {2})\t[{3}]",
                             algo.CurrentProfit.ToString(DOUBLE_FORMAT), // Profit
-                            algo.AvaragedSpeed + (algo.IsDual() ? "/" + algo.SecondaryAveragedSpeed : ""), // Speed
+                            algo.AvaragedSpeed + (algo.IsDual() ? "/" + algo.SecondaryAveragedSpeed : "") + (algo.TuningEnabled ? " dcri:" + algo.MostProfitableIntensity : ""), // Speed
                             algo.CurNhmSMADataVal + (algo.IsDual() ? "/" + algo.SecondaryCurNhmSMADataVal : ""), // NiceHashData
                             algo.AlgorithmStringID // Name
                         ));

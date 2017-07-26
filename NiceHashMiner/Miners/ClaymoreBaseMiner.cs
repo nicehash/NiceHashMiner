@@ -309,7 +309,7 @@ namespace NiceHashMiner.Miners {
                         }
                     }
                 }
-                if (TuningEnabled && BenchmarkAlgorithm.CurrentIntensity < ConfigManager.GeneralConfig.CDIntensityTuningEnd) {
+                if (TuningEnabled && BenchmarkAlgorithm.CurrentIntensity < ConfigManager.GeneralConfig.CDIntensityTuningEnd && !BenchmarkSignalQuit) {
                     BenchmarkAlgorithm.CurrentIntensity += ConfigManager.GeneralConfig.CDIntensityTuningInterval;
                     base.BenchmarkStart(BenchmarkTimeInSeconds, BenchmarkComunicator);  // Start over for next intensity value
                 } else {

@@ -219,6 +219,8 @@ namespace NiceHashMiner.Forms.Components {
                     if (algorithm != null) {
                         algorithm.BenchmarkSpeed = 0;
                         algorithm.SecondaryBenchmarkSpeed = 0;
+                        algorithm.IntensitySpeeds = new Dictionary<int, double>();
+                        algorithm.SecondaryIntensitySpeeds = new Dictionary<int, double>();
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
                         // update benchmark status data
                         if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();

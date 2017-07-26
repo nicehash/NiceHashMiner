@@ -15,15 +15,38 @@ namespace NiceHashMiner {
         public readonly MinerBaseType MinerBaseType;
         public readonly string AlgorithmStringID;
         // ClaymoreDual intensity tuning
-        public Dictionary<int, double> IntensitySpeeds;
-        public Dictionary<int, double> SecondaryIntensitySpeeds;
+        private Dictionary<int, double> intensitySpeeds;
+        public Dictionary<int, double> IntensitySpeeds {
+            get {
+                return intensitySpeeds;
+            }
+            set {
+                IntensityUpToDate = false;
+                intensitySpeeds = value;
+            }
+        }
+        private Dictionary<int, double> secondaryIntensitySpeeds;
+        public Dictionary<int, double> SecondaryIntensitySpeeds {
+            get {
+                return secondaryIntensitySpeeds;
+            }
+            set {
+                IntensityUpToDate = false;
+                secondaryIntensitySpeeds = value;
+            }
+        }
         // Miner name is used for miner ALGO flag parameter
         public readonly string MinerName;
         private double benchmarkSpeed;
         public double BenchmarkSpeed {
             get {
                 if (MostProfitableIntensity > 0) {
-                    return IntensitySpeeds[MostProfitableIntensity];
+                    try {
+                        return IntensitySpeeds[MostProfitableIntensity];
+                    } catch (Exception e) {
+                        Helpers.ConsolePrint("CDTUNING", e.ToString());
+                        return 0;
+                    }
                 }
                 return benchmarkSpeed;
             }
@@ -35,7 +58,12 @@ namespace NiceHashMiner {
         public double SecondaryBenchmarkSpeed {
             get {
                 if (MostProfitableIntensity > 0) {
-                    return SecondaryIntensitySpeeds[MostProfitableIntensity];
+                    try {
+                        return SecondaryIntensitySpeeds[MostProfitableIntensity];
+                    } catch (Exception e) {
+                        Helpers.ConsolePrint("CDTUNING", e.ToString());
+                        return 0;
+                    }
                 }
                 return secondaryBenchmarkSpeed;
             }
@@ -177,14 +205,13 @@ namespace NiceHashMiner {
             return NiceHashID;
         }
         public bool IsDual() {
-            return (AlgorithmType.DaggerSia <= DualNiceHashID() && DualNiceHashID() <= AlgorithmType.DaggerPascal);
+            return (MinerBaseType == MinerBaseType.Claymore) && (AlgorithmType.DaggerSia <= DualNiceHashID() && DualNiceHashID() <= AlgorithmType.DaggerPascal);
         }
 
         public void SetIntensitySpeedsForCurrent(double speed, double secondarySpeed) {
             IntensitySpeeds[CurrentIntensity] = speed;
             SecondaryIntensitySpeeds[CurrentIntensity] = secondarySpeed;
             Helpers.ConsolePrint("CDTUNING", String.Format("Speeds set for intensity {0}: {1} / {2}", CurrentIntensity, speed, secondarySpeed));
-            IntensityUpToDate = false;
         }
 
         public void UpdateProfitableIntensity() {
