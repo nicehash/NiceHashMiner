@@ -196,6 +196,17 @@ namespace NiceHashMiner.Forms.Components {
                     clearItem.Click += toolStripMenuItemClear_Click;
                     contextMenuStrip1.Items.Add(clearItem);
                 }
+                // open dcri
+                {
+                    var openDcri = new ToolStripMenuItem();
+                    openDcri.Text = "Dcri values";
+                    openDcri.Click += toolStripMenuItemDcri_Click;
+                    if (listViewAlgorithms.SelectedItems.Count <= 0
+                        || !((Algorithm)listViewAlgorithms.SelectedItems[0].Tag).TuningEnabled) {
+                        openDcri.Enabled = false;
+                    }
+                    contextMenuStrip1.Items.Add(openDcri);
+                }
                 contextMenuStrip1.Show(Cursor.Position);
             }
         }
@@ -232,5 +243,12 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
 
+        private void toolStripMenuItemDcri_Click(object sender, EventArgs e) {
+            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
+                var algo = lvi.Tag as Algorithm;
+                var dcriValues = new Form_DcriValues(algo);
+                dcriValues.ShowDialog();
+            }
+        }
     }
 }

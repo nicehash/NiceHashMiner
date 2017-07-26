@@ -75,10 +75,23 @@ namespace NiceHashMiner {
         // This should ideally be false when SMA or speeds are updated and no check has been done yet
         public bool IntensityUpToDate = false;
         private int mostProfitableIntensity = -1;
-        public int MostProfitableIntensity { get {
+        public int MostProfitableIntensity {
+            get {
                 if (!IntensityUpToDate) UpdateProfitableIntensity();
                 return mostProfitableIntensity;
-        } }
+            }
+        }
+        public List<int> Intensities {
+            get {
+                var list = new List<int>(IntensitySpeeds.Keys);
+                foreach (var key in SecondaryIntensitySpeeds.Keys) {
+                    if (!list.Contains(key)) {
+                        list.Add(key);
+                    }
+                }
+                return list;
+            }
+        }
         public bool BenchmarkNeeded {
             get {
                 if (TuningEnabled) {
@@ -260,6 +273,18 @@ namespace NiceHashMiner {
         public bool StartTuning() {  // Return false if no benchmark needed
             CurrentIntensity = ConfigManager.GeneralConfig.CDIntensityTuningStart;
             return IncrementToNextEmptyIntensity();
+        }
+
+        public double ProfitForIntensity(int intensity) {
+            if (Globals.NiceHashData == null) return 0;
+            var profit = 0d;
+            if (Globals.NiceHashData.ContainsKey(NiceHashID) && IntensitySpeeds.ContainsKey(intensity)) {
+                profit += IntensitySpeeds[intensity] * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
+            }
+            if (Globals.NiceHashData.ContainsKey(SecondaryNiceHashID) && SecondaryIntensitySpeeds.ContainsKey(intensity)) {
+                profit += SecondaryIntensitySpeeds[intensity] * Globals.NiceHashData[SecondaryNiceHashID].paying * 0.000000001;
+            }
+            return profit;
         }
     }
 }
