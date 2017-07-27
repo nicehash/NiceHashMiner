@@ -77,6 +77,12 @@ namespace ATI.ADL {
     /// <returns>return ADL Error Code</returns>
     internal delegate int ADL_Display_DisplayInfo_Get(int adapterIndex, ref int numDisplays, out IntPtr displayInfoArray, int forceDetect);
 
+    internal delegate int ADL_Overdrive5_CurrentActivity_Get(int iAdapterIndex, ref ADLPMActivity activity);
+
+    internal delegate int ADL_Overdrive5_Temperature_Get(int adapterIndex, int thermalControllerIndex, ref ADLTemperature temperature);
+
+    internal delegate int ADL_Overdrive5_FanSpeed_Get(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedValue temperature);
+
     #endregion Export Delegates
 
     #region Export Struct
@@ -174,6 +180,39 @@ namespace ATI.ADL {
     }
     #endregion ADLDisplayInfo
 
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLPMActivity
+    {
+        public int Size;
+        public int EngineClock;
+        public int MemoryClock;
+        public int Vddc;
+        public int ActivityPercent;
+        public int CurrentPerformanceLevel;
+        public int CurrentBusSpeed;
+        public int CurrentBusLanes;
+        public int MaximumBusLanes;
+        public int Reserved;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLTemperature
+    {
+        public int Size;
+        public int Temperature;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLFanSpeedValue
+    {
+        public int Size;
+        public int Flags;
+        public int MinPercent;
+        public int MaxPercent;
+        public int MinRPM;
+        public int MaxRPM;
+    }
+
     #endregion Export Struct
 
     #region ADL Class
@@ -201,6 +240,8 @@ namespace ATI.ADL {
         /// <summary> Maximum number of ADLMOdes for the adapter </summary>
         internal const int ADL_MAX_NUM_DISPLAYMODES = 1024;
 
+        internal const int ADL_DL_FANCTRL_SPEED_TYPE_PERCENT = 1;
+        internal const int ADL_DL_FANCTRL_SPEED_TYPE_RPM = 2;
         #endregion Internal Constant
 
         #region Class ADLImport
@@ -240,6 +281,15 @@ namespace ATI.ADL {
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Display_DisplayInfo_Get(int adapterIndex, ref int numDisplays, out IntPtr displayInfoArray, int forceDetect);
+            
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL_Overdrive5_CurrentActivity_Get(int iAdapterIndex, ref ADLPMActivity activity);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL_Overdrive5_Temperature_Get(int adapterIndex, int thermalControllerIndex, ref ADLTemperature temperature);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL_Overdrive5_FanSpeed_Get(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedValue fanSpeedValue);
 
             #endregion DLLImport
         }
@@ -444,6 +494,48 @@ namespace ATI.ADL {
         /// <summary> check flag to indicate the delegate has been checked</summary>
         private static bool ADL_Display_DisplayInfo_Get_Check = false;
         #endregion ADL_Display_DisplayInfo_Get
+
+        internal static ADL_Overdrive5_CurrentActivity_Get ADL_Overdrive5_CurrentActivity_Get {
+            get {
+                if (!ADL_Overdrive5_CurrentActivity_Get_Check && null == ADL_Overdrive5_CurrentActivity_Get_) {
+                    ADL_Overdrive5_CurrentActivity_Get_Check = true;
+                    if (ADLCheckLibrary.IsFunctionValid("ADL_Overdrive5_CurrentActivity_Get")) {
+                        ADL_Overdrive5_CurrentActivity_Get_ = ADLImport.ADL_Overdrive5_CurrentActivity_Get;
+                    }
+                }
+                return ADL_Overdrive5_CurrentActivity_Get_;
+            }
+        }
+        private static ADL_Overdrive5_CurrentActivity_Get ADL_Overdrive5_CurrentActivity_Get_ = null;
+        private static bool ADL_Overdrive5_CurrentActivity_Get_Check = false;
+
+        internal static ADL_Overdrive5_Temperature_Get ADL_Overdrive5_Temperature_Get {
+            get {
+                if (!ADL_Overdrive5_Temperature_Get_Check && null == ADL_Overdrive5_Temperature_Get_) {
+                    ADL_Overdrive5_Temperature_Get_Check = true;
+                    if (ADLCheckLibrary.IsFunctionValid("ADL_Overdrive5_Temperature_Get")) {
+                        ADL_Overdrive5_Temperature_Get_ = ADLImport.ADL_Overdrive5_Temperature_Get;
+                    }
+                }
+                return ADL_Overdrive5_Temperature_Get_;
+            }
+        }
+        private static ADL_Overdrive5_Temperature_Get ADL_Overdrive5_Temperature_Get_ = null;
+        private static bool ADL_Overdrive5_Temperature_Get_Check = false;
+
+        internal static ADL_Overdrive5_FanSpeed_Get ADL_Overdrive5_FanSpeed_Get {
+            get {
+                if (!ADL_Overdrive5_FanSpeed_Get_Check && null == ADL_Overdrive5_FanSpeed_Get_) {
+                    ADL_Overdrive5_FanSpeed_Get_Check = true;
+                    if (ADLCheckLibrary.IsFunctionValid("ADL_Overdrive5_FanSpeed_Get")) {
+                        ADL_Overdrive5_FanSpeed_Get_ = ADLImport.ADL_Overdrive5_FanSpeed_Get;
+                    }
+                }
+                return ADL_Overdrive5_FanSpeed_Get_;
+            }
+        }
+        private static ADL_Overdrive5_FanSpeed_Get ADL_Overdrive5_FanSpeed_Get_ = null;
+        private static bool ADL_Overdrive5_FanSpeed_Get_Check = false;
 
         #endregion Export Functions
     }
