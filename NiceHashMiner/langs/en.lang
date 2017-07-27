@@ -200,7 +200,7 @@
     "Form_Settings_ToolTip_checkBox_RunAtStartup": "When checked, NiceHash Miner Legacy will run on login.",
 
     "Form_Settings_ToolTip_SwitchMinSecondsFixed": "Fixed part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
-    "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nRandom part is used to prevent all world-wide NiceHash Legacy Miner users to have the exact same switching pattern.",
+    "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nRandom part is used to prevent all world-wide NiceHash Miner Legacy users to have the exact same switching pattern.",
     "Form_Settings_ToolTip_SwitchMinSecondsAMD": "Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs).\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
 
     "Form_Settings_ToolTip_MinerAPIQueryInterval": "API query interval for ccminer, sgminer cpuminer and ethminer.",
