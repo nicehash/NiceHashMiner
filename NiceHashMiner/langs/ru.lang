@@ -54,7 +54,7 @@
 
     "Form_Main_msgbox_CPUMining64bitMsg": "NiceHash Miner Legacy работает только на 64-разрядной версии ОС для майнинга на CPU. Майнинг на CPU будет отключён.",
     "Form_Main_msgbox_CPUMining64CoresMsg": "NiceHash Miner Legacy не поддерживает более 64 виртуальных ядер. Майнинг на CPU будет отключён.",
-    "Form_Main_msgbox_CPUMiningLessThreadMsg": "LessThreads выше, чем число ядер на CPU. Майнинг на CPU будет отключён.",
+    "Form_Main_msgbox_CPUMiningLessThreadMsg": "Уменьшитель кол-ва потоков больше, чем число ядер на CPU. Майнинг на CPU будет отключён.",
     "Form_Main_msgbox_NoInternetTitle": "Проверьте интернет соединение",
     "Form_Main_msgbox_NoInternetMsg": "NiceHash Miner Legacy запрашивает интернет соединение для работы. Убедитесь, что вы подключены к интернету, перед запуском NiceHash Miner Legacy. Хотели бы вы продолжить?",
     "Form_Main_msgbox_InvalidBTCAddressMsg": "Неверный Биткоин-адрес!\n\nПожалуйста, введите правильный Биткоин-адрес или выберите Да, чтобы создать новый.",
@@ -142,15 +142,15 @@
     "Form_Settings_General_SwitchMinSecondsAMD": "Мин. переключение AMD [с]",
 
     "Form_Settings_General_ethminerDefaultBlockHeight": "Высота блока ethminer",
-    "Form_Settings_General_ethminerAPIPortNVIDIA": "Ethminer API Port NVIDIA",
-    "Form_Settings_General_ethminerAPIPortAMD": "Ethminer API Port AMD",
+    "Form_Settings_General_ethminerAPIPortNVIDIA": "Ethminer API Порт NVIDIA",
+    "Form_Settings_General_ethminerAPIPortAMD": "Ethminer API Порт AMD",
 
     "Form_Settings_General_BenchmarkTimeLimitsCPU_Group": "(CPU) [с]",
     "Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group": "(NVIDIA) [с]",
     "Form_Settings_General_BenchmarkTimeLimitsAMD_Group": "(AMD) [с]",
 
     "Form_Settings_General_CPU_ForceCPUExtension": "Технология CPU принудительно",
-    "Form_Settings_General_CPU_LessThreads": "Less Threads",
+    "Form_Settings_General_CPU_LessThreads": "Уменьшитель кол-ва потоков",
 
     "Form_Settings_General_APIBindPort": "Порт связи API",
     "Form_Settings_General_UsePassword": "Пароль",
@@ -164,8 +164,8 @@
     "Form_Settings_Algo_BenchmarkSpeed": "Скорость бенчмарка (H/s)",
     "Form_Settings_Algo_SecondaryBenchmarkSpeed": "Средняя контрольная скорость",
 
-    "Form_Settings_LessThreadWarningTitle": "Неверное значение LessThreads!",
-    "Form_Settings_LessThreadWarningMsg": "Ошибка! Введите, пожалуйста, верное значение для LessThreads.",
+    "Form_Settings_LessThreadWarningTitle": "Неверное значение уменьшителя кол-ва потоков!",
+    "Form_Settings_LessThreadWarningMsg": "Ошибка! Введите, пожалуйста, верное значение для уменьшителя кол-ва потоков.",
     "Form_Settings_MinimumProfitWarningTitle": "Неверный минимальный доход!",
     "Form_Settings_MinimumProfitWarningMsg": "Ошибка! Введите, пожалуйста, минимальный доход, который является числом больше/равным 0.",
     "Form_Settings_APIBindPortWarningTitle": "Неверный номер порта API!",
@@ -197,8 +197,8 @@
     "Form_Settings_ToolTip_checkBox_AutoStartMining": "Если отмечено, NiceHash Miner Legacy автоматически будет начинать майнинг при запуске программы.",
     "Form_Settings_ToolTip_checkBox_HideMiningWindows": "Если отмечено, окна sgminer, ccminer, cpuminer и ethmier будут спрятаны.",
     "Form_Settings_ToolTip_checkBox_MinimizeToTray": "Если отмечено, NiceHash Miner Legacy будет сворачиваться в трей.",
-    "Form_Settings_ToolTip_CPU_LessThreads": "Уменьшает число ядер, используемых на каждом CPU.",
-    "Form_Settings_ToolTip_CPU_ForceCPUExtension": "Использовать определенную технологию для CPU.",
+    "Form_Settings_ToolTip_CPU_LessThreads": "Уменьшает число потоков (ядер), используемых на каждом CPU.",
+    "Form_Settings_ToolTip_CPU_ForceCPUExtension": "Использовать определённую технологию для CPU.",
     "Form_Settings_ToolTip_checkBox_RunAtStartup": "Когда отмечено, NiceHash Miner Legacy будет запущен при входе в систему.",
 
     "Form_Settings_ToolTip_SwitchMinSecondsFixed": "Фиксированная часть минимального времени (в секундах) перед переключением алгоритма майнером. \nОбщее время складывается из \"Мин. переключение фикс.\" + \"Мин. переключение дин.\".",
