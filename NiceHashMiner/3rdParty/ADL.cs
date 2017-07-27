@@ -187,6 +187,9 @@ namespace ATI.ADL {
         public int EngineClock;
         public int MemoryClock;
         public int Vddc;
+        /// <summary>
+        /// GPU Utilization
+        /// </summary>
         public int ActivityPercent;
         public int CurrentPerformanceLevel;
         public int CurrentBusSpeed;
@@ -199,6 +202,9 @@ namespace ATI.ADL {
     internal struct ADLTemperature
     {
         public int Size;
+        /// <summary>
+        /// Temperature in millidegrees Celsius
+        /// </summary>
         public int Temperature;
     }
 
@@ -206,11 +212,9 @@ namespace ATI.ADL {
     internal struct ADLFanSpeedValue
     {
         public int Size;
+        public int SpeedType;
+        public int FanSpeed;
         public int Flags;
-        public int MinPercent;
-        public int MaxPercent;
-        public int MinRPM;
-        public int MaxRPM;
     }
 
     #endregion Export Struct

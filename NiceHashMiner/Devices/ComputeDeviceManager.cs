@@ -664,7 +664,7 @@ namespace NiceHashMiner.Devices
                                 bool isAdlInit = true;
                                 // ADL does not get devices in order map devices by bus number
                                 // bus id, <name, uuid>
-                                Dictionary<int, Tuple<string, string, string>> _busIdsInfo = new Dictionary<int, Tuple<string, string, string>>();
+                                var _busIdsInfo = new Dictionary<int, Tuple<string, string, string, int>>();
                                 List<string> _amdDeviceName = new List<string>();
                                 List<string> _amdDeviceUUID = new List<string>();
                                 try {
@@ -731,6 +731,7 @@ namespace NiceHashMiner.Devices
                                                                     var pciVen_id_strSize = 21; // PCI_VEN_XXXX&DEV_XXXX
                                                                     var uuid = udid.Substring(0, pciVen_id_strSize) + "_" + serial;
                                                                     int budId = OSAdapterInfoData.ADLAdapterInfo[i].BusNumber;
+                                                                    var index = OSAdapterInfoData.ADLAdapterInfo[i].AdapterIndex;
                                                                     if (!_amdDeviceUUID.Contains(uuid)) {
                                                                         try {
                                                                             Helpers.ConsolePrint(TAG, String.Format("ADL device added BusNumber:{0}  NAME:{1}  UUID:{2}"),
@@ -743,7 +744,7 @@ namespace NiceHashMiner.Devices
                                                                         //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                         _amdDeviceName.Add(devName);
                                                                         if (!_busIdsInfo.ContainsKey(budId)) {
-                                                                            var nameUuid = new Tuple<string, string, string>(devName, uuid, infSection);
+                                                                            var nameUuid = new Tuple<string, string, string, int>(devName, uuid, infSection, index);
                                                                             _busIdsInfo.Add(budId, nameUuid);
                                                                         }
                                                                     }
@@ -794,6 +795,7 @@ namespace NiceHashMiner.Devices
                                             var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName], _busIdsInfo[busID].Item3, deviceDriverNO_neoscrypt_lyra2re[deviceName]);
                                             newAmdDev.DeviceName = deviceName;
                                             newAmdDev.UUID = _busIdsInfo[busID].Item2;
+                                            newAmdDev.AdapterIndex = _busIdsInfo[busID].Item4;
                                             bool isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
                                             string skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
                                             string isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
