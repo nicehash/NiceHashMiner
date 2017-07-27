@@ -281,6 +281,7 @@ namespace NiceHashMiner
                 var array = new JArray();
                 array.Add(device.ID);
                 array.Add(device.Name);
+                array.Add(device.Temp);
                 array.Add(device.FanSpeed);
                 array.Add(device.Load);
 
