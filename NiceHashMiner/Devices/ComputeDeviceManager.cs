@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Enums;
@@ -945,6 +946,15 @@ namespace NiceHashMiner.Devices
             public static bool HasAMD = false;
             public static bool HasCPU = false;
             public static int CPUsCount = 0;
+            public static int AvailCPUs { get {
+                    return AllAvaliableDevices.Count(d => d.DeviceType == DeviceType.CPU);
+                } }
+            public static int AvailNVGPUs { get {
+                    return AllAvaliableDevices.Count(d => d.DeviceType == DeviceType.NVIDIA);
+                } }
+            public static int AvailAMDGPUs { get {
+                    return AllAvaliableDevices.Count(d => d.DeviceType == DeviceType.AMD);
+                } }
             public static int GPUsCount = 0;
             public static int AMDOpenCLPlatformNum = -1;
             public static bool IsHyperThreadingEnabled = false;

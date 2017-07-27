@@ -56,6 +56,7 @@ namespace NiceHashMiner.Devices
             _SM_minor = cudaDevice.SM_minor;
             UUID = cudaDevice.UUID;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
+            Index = ID + ComputeDeviceManager.Avaliable.AvailCPUs;  // increment by CPU count
 
             var result = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(UUID, ref nvDevice);
             if (result != nvmlReturn.Success) {

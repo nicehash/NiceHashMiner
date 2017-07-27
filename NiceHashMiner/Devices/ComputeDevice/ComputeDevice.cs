@@ -18,6 +18,7 @@ namespace NiceHashMiner.Devices
     public class ComputeDevice
     {
         readonly public int ID;
+        public int Index { get; protected set; }  // For socket control, unique
         // to identify equality;
         readonly public string Name; // { get; set; }
         // name count is the short name for displaying in moning groups

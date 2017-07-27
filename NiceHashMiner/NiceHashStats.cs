@@ -185,8 +185,8 @@ namespace NiceHashMiner
             }
 
             public static bool SendData(string data) {
-                if (webSocket.IsAlive) {  // Make sure connection is open
-                    try {
+                try { 
+                    if (webSocket.IsAlive) {  // Make sure connection is open
                         // Verify valid JSON and method
                         dynamic dataJson = JsonConvert.DeserializeObject(data);
                         if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "login") {
@@ -194,12 +194,11 @@ namespace NiceHashMiner
                             webSocket.Send(data);
                             return true;
                         }
-                    } catch (Exception e) {
-                        Helpers.ConsolePrint("SOCKET", e.ToString());
+                    } else {
+                        // TODO reconnect
                     }
-                }
-                else {
-                    // TODO reconnect
+                } catch (Exception e) {
+                    Helpers.ConsolePrint("SOCKET", e.ToString());
                 }
                 return false;
             }
@@ -277,15 +276,28 @@ namespace NiceHashMiner
 
         public static void SetDeviceStatus(List<ComputeDevice> devices) {
             var deviceList = new List<JArray>();
+            var activeIDs = MinersManager.GetActiveMinersIndexes();
             foreach (var device in devices) {
-                var array = new JArray();
-                array.Add(device.ID);
-                array.Add(device.Name);
-                array.Add(device.FanSpeed);
-                array.Add(device.Load);
+                try {
+                    var array = new JArray();
+                    array.Add(device.Index);
+                    array.Add(device.Name);
+                    int status = Convert.ToInt32(activeIDs.Contains(device.Index));
+                    if (device.DeviceType == DeviceType.CPU) status += 6;
+                    else if (device.DeviceType == DeviceType.AMD) status += 4;
+                    else if (device.DeviceType == DeviceType.NVIDIA) status += 2;
+                    array.Add(status);
+                    array.Add((uint)device.Load);
+                    array.Add((uint)device.Temp);
+                    array.Add((uint)device.FanSpeed);
 
-                deviceList.Add(array);
+                    deviceList.Add(array);
+                } catch (Exception e) { Helpers.ConsolePrint("SOCKET", e.ToString()); }
             }
+            var data = new nicehash_device_status();
+            data.devices = deviceList;
+            var sendData = JsonConvert.SerializeObject(data);
+            NiceHashConnection.SendData(sendData);
         }
 
         private static Dictionary<AlgorithmType, NiceHashSMA> GetAlgorithmRates(string worker)

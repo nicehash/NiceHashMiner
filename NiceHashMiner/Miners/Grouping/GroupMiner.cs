@@ -14,6 +14,7 @@ namespace NiceHashMiner.Miners.Grouping {
         public DeviceType DeviceType { get; private set; }
         public double CurrentRate { get; set; }
         public string Key { get; private set; }
+        public List<int> DevIndexes { get; private set; }
 
         // , string miningLocation, string btcAdress, string worker
         public GroupMiner(List<MiningPair> miningPairs, string key) {
@@ -24,11 +25,13 @@ namespace NiceHashMiner.Miners.Grouping {
             if (miningPairs.Count > 0) {
                 // sort pairs by device id
                 miningPairs.Sort((a, b) => a.Device.ID - b.Device.ID);
-                // init name scope
+                // init name scope and IDs
                 {
                     List<string> deviceNames = new List<string>();
+                    DevIndexes = new List<int>();
                     foreach (var pair in miningPairs) {
                         deviceNames.Add(pair.Device.NameCount);
+                        DevIndexes.Add(pair.Device.Index);
                     }
                     DevicesInfoString = "{ " + String.Join(", ", deviceNames) + " }";
                 }

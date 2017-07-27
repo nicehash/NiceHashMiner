@@ -56,6 +56,18 @@ namespace NiceHashMiner.Miners {
             }
         }
 
+        public List<int> ActiveDeviceIndexes {
+            get {
+                var minerIDs = new List<int>();
+                if (!IsCurrentlyIdle) {
+                    foreach (var miner in _runningGroupMiners.Values) {
+                        minerIDs.AddRange(miner.DevIndexes);
+                    }
+                }
+                return minerIDs;
+            }
+        }
+
         public MiningSession(List<ComputeDevice> devices,
             IMainFormRatesComunication mainFormRatesComunication,
             string miningLocation, string worker, string btcAdress) {

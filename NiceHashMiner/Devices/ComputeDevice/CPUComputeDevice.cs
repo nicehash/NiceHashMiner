@@ -31,6 +31,7 @@ namespace NiceHashMiner.Devices
             AffinityMask = affinityMask;
             UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
+            Index = ID;  // Don't increment for CPU
 
             cpuCounter = new PerformanceCounter();
             cpuCounter.CategoryName = "Processor";
