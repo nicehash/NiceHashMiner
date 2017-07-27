@@ -12,6 +12,17 @@ namespace NiceHashMiner.Devices
     {
         int adapterIndex;
 
+        public override uint FanSpeed {
+            get {
+                var adlf = new ADLFanSpeedValue();
+                adlf.SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_RPM;
+                var result = ADL.ADL_Overdrive5_FanSpeed_Get(adapterIndex, 0, ref adlf);
+                if (result != ADL.ADL_SUCCESS) {
+                    Helpers.ConsolePrint("ADL", "ADL fan getting failed with error code " + result);
+                }
+                return (uint)adlf.FanSpeed;
+            }
+        }
         public override float Temp {
             get {
                 var adlt = new ADLTemperature();
@@ -20,6 +31,16 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint("ADL", "ADL temp getting failed with error code " + result);
                 }
                 return adlt.Temperature * 0.001f;
+            }
+        }
+        public override float Load {
+            get {
+                var adlp = new ADLPMActivity();
+                var result = ADL.ADL_Overdrive5_CurrentActivity_Get(adapterIndex, ref adlp);
+                if (result != ADL.ADL_SUCCESS) {
+                    Helpers.ConsolePrint("ADL", "ADL load getting failed with error code " + result);
+                }
+                return adlp.ActivityPercent;
             }
         }
         public AmdComputeDevice(AmdGpuDevice amdDevice, int GPUCount, bool isDetectionFallback) 
