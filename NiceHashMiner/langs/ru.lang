@@ -154,7 +154,7 @@
 
     "Form_Settings_General_APIBindPort": "Порт связи API",
     "Form_Settings_General_UsePassword": "Пароль",
-    "Form_Settings_General_MinimumProfit": "Мин. прибыльность ($/день)",
+    "Form_Settings_General_MinimumProfit": "Минимальная прибыльность ($/день)",
     "Form_Settings_General_DisabledDevices": "Отключ. устройства",
     "Form_Settings_General_ExtraLaunchParameters": "Дополнительные параметры",
     "Form_Settings_General_DaggerHashimotoGenerateDevice": "Устройство генерации DaggerHashimoto",
