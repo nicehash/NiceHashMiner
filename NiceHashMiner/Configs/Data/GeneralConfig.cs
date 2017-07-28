@@ -48,6 +48,7 @@ namespace NiceHashMiner.Configs.Data {
 
         public bool ShowDriverVersionWarning = true;
         public bool DisableWindowsErrorReporting = true;
+        public bool ShowInternetConnectionWarning = true;
         public bool NVIDIAP0State = false;
 
         public int ethminerDefaultBlockHeight = 2000000;
@@ -91,6 +92,7 @@ namespace NiceHashMiner.Configs.Data {
             LogMaxFileSize = 1048576;
             ShowDriverVersionWarning = true;
             DisableWindowsErrorReporting = true;
+            ShowInternetConnectionWarning = true;
             NVIDIAP0State = false;
             MinerRestartDelayMS = 500;
             ethminerDefaultBlockHeight = 2000000;

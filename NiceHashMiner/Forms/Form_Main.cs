@@ -587,7 +587,7 @@ namespace NiceHashMiner
                 t = NiceHashStats.GetAlgorithmRates(worker);
             }
 
-            if (t == null && Globals.NiceHashData == null && ShowWarningNiceHashData) {
+            if (t == null && Globals.NiceHashData == null && ConfigManager.GeneralConfig.ShowInternetConnectionWarning && ShowWarningNiceHashData) {
                 ShowWarningNiceHashData = false;
                 DialogResult dialogResult = MessageBox.Show(International.GetText("Form_Main_msgbox_NoInternetMsg"),
                                                             International.GetText("Form_Main_msgbox_NoInternetTitle"),

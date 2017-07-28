@@ -121,6 +121,7 @@
     "Form_Settings_General_StartMiningWhenIdle": "Iniciar Mineração Quando Inativo",
     "Form_Settings_General_ShowDriverVersionWarning": "Mostrar Aviso da Versão do Driver",
     "Form_Settings_General_DisableWindowsErrorReporting": "Desativar Relatórios de Erros do Windows",
+    "Form_Settings_General_ShowInternetConnectionWarning": "Show Internet Connection Warning",
     "Form_Settings_General_UseNewSettingsPage": "Usar nova página de configurações",
     "Form_Settings_General_NVIDIAP0State": "Modo P0 NVIDIA",
     "Form_Settings_General_LogToFile": "Salvar Log",
@@ -220,6 +221,7 @@
 
     "Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning": "When checked, NiceHashMinerLegacy would give warning if\nless optimal version of a driver is installed.",
     "Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting": "When checked, in the event of a miner crash,\nNiceHashMinerLegacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.",
+    "Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning": "When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available.",
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "When checked, NiceHashMinerLegacy would use the new settings page.",
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "When checked, NiceHashMinerLegacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.",
     "Form_Settings_ToolTip_ethminerAPIPort": "API port that will be used by ethminer for {0} GPUs.",
