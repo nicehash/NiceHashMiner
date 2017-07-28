@@ -293,7 +293,7 @@
     "DeviceListView_ContextMenu_CopySettings": "Скопировать настройки из (Бенчмарк, параметры алгоритмов, ...)",
     "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg": "Вы уверены, что хотите скопировать настройки из {0} в {1}?",
     "DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title": "Подтверждение копирования настроек",
-    "FormSettings_AlgorithmsSettings": "Настройки алгоритма для {0} :",
+    "FormSettings_AlgorithmsSettings": "Настройки алгоритма для {0}:",
     "FormSettings_ButtonProfitSingle": "Сперва выберите устройство",
     "Form_Settings_General_BenchmarkTimeLimits_Title": "Лимит времени бенчмарка",
     "Form_Settings_Title": "Настройки",
