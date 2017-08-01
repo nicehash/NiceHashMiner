@@ -57,6 +57,7 @@ namespace NiceHashMiner.Devices
             } else {
                 UUID = amdDevice.UUID;
             }
+            BusID = amdDevice.BusID;
             Codename = amdDevice.Codename;
             InfSection = amdDevice.InfSection;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
