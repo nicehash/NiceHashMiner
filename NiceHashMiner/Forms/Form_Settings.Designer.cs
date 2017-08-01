@@ -69,6 +69,10 @@
             this.pictureBox_LogToFile = new System.Windows.Forms.PictureBox();
             this.checkBox_DebugConsole = new System.Windows.Forms.CheckBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBox_IFTTTKey = new System.Windows.Forms.TextBox();
+            this.pictureBox_UseIFTTT = new System.Windows.Forms.PictureBox();
+            this.checkBox_UseIFTTT = new System.Windows.Forms.CheckBox();
             this.checkBox_IdleWhenNoInternetAccess = new System.Windows.Forms.CheckBox();
             this.pictureBox_WorkerName = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinProfit = new System.Windows.Forms.PictureBox();
@@ -164,6 +168,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_LogMaxFileSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_LogToFile)).BeginInit();
             this.groupBox_Main.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_UseIFTTT)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WorkerName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ServiceLocation)).BeginInit();
@@ -633,7 +638,7 @@
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogToFile);
             this.groupBox_Logging.Controls.Add(this.checkBox_DebugConsole);
-            this.groupBox_Logging.Location = new System.Drawing.Point(6, 268);
+            this.groupBox_Logging.Location = new System.Drawing.Point(6, 297);
             this.groupBox_Logging.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Logging.Name = "groupBox_Logging";
             this.groupBox_Logging.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -717,6 +722,10 @@
             // 
             // groupBox_Main
             // 
+            this.groupBox_Main.Controls.Add(this.label1);
+            this.groupBox_Main.Controls.Add(this.textBox_IFTTTKey);
+            this.groupBox_Main.Controls.Add(this.pictureBox_UseIFTTT);
+            this.groupBox_Main.Controls.Add(this.checkBox_UseIFTTT);
             this.groupBox_Main.Controls.Add(this.checkBox_IdleWhenNoInternetAccess);
             this.groupBox_Main.Controls.Add(this.pictureBox_WorkerName);
             this.groupBox_Main.Controls.Add(this.pictureBox_MinProfit);
@@ -735,10 +744,53 @@
             this.groupBox_Main.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Main.Name = "groupBox_Main";
             this.groupBox_Main.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Main.Size = new System.Drawing.Size(346, 180);
+            this.groupBox_Main.Size = new System.Drawing.Size(346, 214);
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(113, 170);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(81, 13);
+            this.label1.TabIndex = 369;
+            this.label1.Text = "IFTTT API Key:";
+            // 
+            // textBox_IFTTTKey
+            // 
+            this.textBox_IFTTTKey.Enabled = false;
+            this.textBox_IFTTTKey.Location = new System.Drawing.Point(110, 187);
+            this.textBox_IFTTTKey.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_IFTTTKey.Name = "textBox_IFTTTKey";
+            this.textBox_IFTTTKey.Size = new System.Drawing.Size(210, 20);
+            this.textBox_IFTTTKey.TabIndex = 368;
+            this.textBox_IFTTTKey.Leave += new System.EventHandler(this.textBox_IFTTTKey_Leave);
+            // 
+            // pictureBox_UseIFTTT
+            // 
+            this.pictureBox_UseIFTTT.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_UseIFTTT.Location = new System.Drawing.Point(88, 184);
+            this.pictureBox_UseIFTTT.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_UseIFTTT.Name = "pictureBox_UseIFTTT";
+            this.pictureBox_UseIFTTT.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_UseIFTTT.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_UseIFTTT.TabIndex = 367;
+            this.pictureBox_UseIFTTT.TabStop = false;
+            // 
+            // checkBox_UseIFTTT
+            // 
+            this.checkBox_UseIFTTT.AutoSize = true;
+            this.checkBox_UseIFTTT.Location = new System.Drawing.Point(10, 188);
+            this.checkBox_UseIFTTT.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_UseIFTTT.Name = "checkBox_UseIFTTT";
+            this.checkBox_UseIFTTT.Size = new System.Drawing.Size(78, 17);
+            this.checkBox_UseIFTTT.TabIndex = 366;
+            this.checkBox_UseIFTTT.Text = "Use IFTTT";
+            this.checkBox_UseIFTTT.UseVisualStyleBackColor = true;
+            this.checkBox_UseIFTTT.CheckedChanged += new System.EventHandler(this.checkBox_UseIFTTT_CheckChanged);
             // 
             // checkBox_IdleWhenNoInternetAccess
             // 
@@ -898,7 +950,7 @@
             this.groupBox_Localization.Controls.Add(this.comboBox_Language);
             this.groupBox_Localization.Controls.Add(this.currencyConverterCombobox);
             this.groupBox_Localization.Controls.Add(this.label_displayCurrency);
-            this.groupBox_Localization.Location = new System.Drawing.Point(6, 192);
+            this.groupBox_Localization.Location = new System.Drawing.Point(6, 226);
             this.groupBox_Localization.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Localization.Name = "groupBox_Localization";
             this.groupBox_Localization.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1617,6 +1669,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_LogToFile)).EndInit();
             this.groupBox_Main.ResumeLayout(false);
             this.groupBox_Main.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_UseIFTTT)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WorkerName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ServiceLocation)).EndInit();
@@ -1766,5 +1819,9 @@
         private System.Windows.Forms.PictureBox pictureBox_RunAtStartup;
         private System.Windows.Forms.CheckBox checkBox_MinimizeMiningWindows;
         private System.Windows.Forms.PictureBox pictureBox_MinimizeMiningWindows;
+        private System.Windows.Forms.CheckBox checkBox_UseIFTTT;
+        private System.Windows.Forms.PictureBox pictureBox_UseIFTTT;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox textBox_IFTTTKey;
     }
 }
