@@ -13,15 +13,29 @@ namespace NiceHashMiner.Devices
     {
         nvmlDevice nvDevice;
         NvPhysicalGpuHandle nvHandle;
+        private const int gpuCorePState = 0;  // memcontroller = 1, videng = 2
 
         public override float Load {
-            get {
+            get {/*
                 var utilization = new nvmlUtilization();
                 var result = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(nvDevice, ref utilization);
                 if (result != nvmlReturn.Success) {
                     printNVMLError(result);
                 }
-                return utilization.gpu;  // Will return 0 if no success
+                return utilization.gpu;  // Will return 0 if no success*/
+                int load = 0;
+                var pStates = new NvPStates();
+                pStates.Version = NVAPI.GPU_PSTATES_VER;
+                pStates.PStates = new NvPState[NVAPI.MAX_PSTATES_PER_GPU];
+                if (NVAPI.NvAPI_GPU_GetPStates != null) {
+                    var result = NVAPI.NvAPI_GPU_GetPStates(nvHandle, ref pStates);
+                    if (result != NvStatus.OK) {
+                        Helpers.ConsolePrint("NVAPI", "Load get failed with status: " + result);
+                    } else if (pStates.PStates[gpuCorePState].Present) {
+                        load = pStates.PStates[gpuCorePState].Percentage;
+                    }
+                }
+                return load;
             }
         }
         public override float Temp {
