@@ -73,6 +73,32 @@ namespace NVIDIA.NVAPI
         D3D10_1_LIBRARY_NOT_FOUND = -135,
         FUNCTION_NOT_FOUND = -136
     }
+    internal enum NvThermalController
+    {
+        NONE = 0,
+        GPU_INTERNAL,
+        ADM1032,
+        MAX6649,
+        MAX1617,
+        LM99,
+        LM89,
+        LM64,
+        ADT7473,
+        SBMAX6649,
+        VBIOSEVT,
+        OS,
+        UNKNOWN = -1,
+    }
+    internal enum NvThermalTarget
+    {
+        NONE = 0,
+        GPU = 1,
+        MEMORY = 2,
+        POWER_SUPPLY = 4,
+        BOARD = 8,
+        ALL = 15,
+        UNKNOWN = -1
+    };
     [StructLayout(LayoutKind.Sequential)]
     internal struct NvPhysicalGpuHandle
     {
@@ -99,11 +125,21 @@ namespace NVIDIA.NVAPI
         public int Policy;
     }
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
-    internal struct NvGPUCoolerLevels
+    internal struct NvSensor
+    {
+        public NvThermalController Controller;
+        public uint DefaultMinTemp;
+        public uint DefaultMaxTemp;
+        public uint CurrentTemp;
+        public NvThermalTarget Target;
+    }
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct NvGPUThermalSettings
     {
         public uint Version;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = NVAPI.MAX_COOLER_PER_GPU)]
-        public NvLevel[] Levels;
+        public uint Count;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = NVAPI.MAX_THERMAL_SENSORS_PER_GPU)]
+        public NvSensor[] Sensor;
     }
 
     internal class NVAPI
@@ -111,8 +147,10 @@ namespace NVIDIA.NVAPI
         internal const int MAX_PHYSICAL_GPUS = 64;
         internal const int MAX_PSTATES_PER_GPU = 8;
         internal const int MAX_COOLER_PER_GPU = 20;
+        internal const int MAX_THERMAL_SENSORS_PER_GPU = 3;
         
         public static readonly uint GPU_PSTATES_VER = (uint)Marshal.SizeOf(typeof(NvPStates)) | 0x10000;
+        public static readonly uint GPU_THERMAL_SETTINGS_VER = (uint)Marshal.SizeOf(typeof(NvGPUThermalSettings)) | 0x10000;
 
         private delegate IntPtr nvapi_QueryInterfaceDelegate(uint id);
         private delegate NvStatus NvAPI_InitializeDelegate();
@@ -121,7 +159,7 @@ namespace NVIDIA.NVAPI
         internal delegate NvStatus NvAPI_GPU_GetBusIdDelegate(NvPhysicalGpuHandle gpuHandle, out int busID);
         internal delegate NvStatus NvAPI_GPU_GetTachReadingDelegate(NvPhysicalGpuHandle gpuHandle, out int value);
         internal delegate NvStatus NvAPI_GPU_GetPStatesDelegate(NvPhysicalGpuHandle gpuHandle, ref NvPStates nvPStates);
-        internal delegate NvStatus NvAPI_GPU_GetCoolerLevelsDelegate(NvPhysicalGpuHandle gpuHandle, ref int coolerIndex, ref NvGPUCoolerLevels NvGPUCoolerLevels);
+        internal delegate NvStatus NvAPI_GPU_GetThermalSettingsDelegate(NvPhysicalGpuHandle gpuHandle, int sensorIndex, ref NvGPUThermalSettings nvGPUThermalSettings);
 
         private static readonly nvapi_QueryInterfaceDelegate nvapi_QueryInterface;
         private static readonly NvAPI_InitializeDelegate NvAPI_Initialize;
@@ -131,7 +169,7 @@ namespace NVIDIA.NVAPI
         internal static readonly NvAPI_GPU_GetBusIdDelegate NvAPI_GPU_GetBusID;
         internal static readonly NvAPI_GPU_GetTachReadingDelegate NvAPI_GPU_GetTachReading;
         internal static readonly NvAPI_GPU_GetPStatesDelegate NvAPI_GPU_GetPStates;
-        internal static readonly NvAPI_GPU_GetCoolerLevelsDelegate NvAPI_GPU_GetCoolerLevels;
+        internal static readonly NvAPI_GPU_GetThermalSettingsDelegate NvAPI_GPU_GetThermalSettings;
         
         private static void GetDelegate<T>(uint id, out T newDelegate) 
             where T : class {
@@ -160,7 +198,7 @@ namespace NVIDIA.NVAPI
             if (NvAPI_Initialize() == NvStatus.OK) {
                 GetDelegate(0x5F608315, out NvAPI_GPU_GetTachReading);
                 GetDelegate(0x60DED2ED, out NvAPI_GPU_GetPStates);
-                GetDelegate(0x891FA0AE, out NvAPI_GPU_GetCoolerLevels);
+                GetDelegate(0xE3640A56, out NvAPI_GPU_GetThermalSettings);
                 GetDelegate(0xE5AC921F, out NvAPI_EnumPhysicalGPUs);
                 GetDelegate(0x1BE0B8E5, out NvAPI_GPU_GetBusID);
             }

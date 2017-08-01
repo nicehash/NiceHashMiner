@@ -41,9 +41,28 @@ namespace NiceHashMiner.Devices
         public override float Temp {
             get {
                 uint temp = 0;
+                /*
                 var result = NvmlNativeMethods.nvmlDeviceGetTemperature(nvDevice, nvmlTemperatureSensors.Gpu, ref temp);
                 if (result != nvmlReturn.Success) {
                     printNVMLError(result);
+                }
+                */
+                if (NVAPI.NvAPI_GPU_GetThermalSettings != null) {
+                    var settings = new NvGPUThermalSettings();
+                    settings.Version = NVAPI.GPU_THERMAL_SETTINGS_VER;
+                    settings.Count = NVAPI.MAX_THERMAL_SENSORS_PER_GPU;
+                    settings.Sensor = new NvSensor[NVAPI.MAX_THERMAL_SENSORS_PER_GPU];
+                    var result = NVAPI.NvAPI_GPU_GetThermalSettings(nvHandle, (int)NvThermalTarget.ALL, ref settings);
+                    if (result != NvStatus.OK) {
+                        Helpers.ConsolePrint("NVAPI", "Temp get failed with status: " + result);
+                    } else {
+                        foreach (var sensor in settings.Sensor) {
+                            if (sensor.Target == NvThermalTarget.GPU) {
+                                temp = sensor.CurrentTemp;
+                                break;
+                            }
+                        }
+                    }
                 }
                 return temp;
             }
