@@ -69,12 +69,20 @@ namespace NiceHashMiner.Devices
         }
         public override uint FanSpeed {
             get {
-                uint fanSpeed = 0;
+                int fanSpeed = 0;
+                /*
                 var result = NvmlNativeMethods.nvmlDeviceGetFanSpeed(nvDevice, ref fanSpeed);
                 if (result != nvmlReturn.Success) {
                     Helpers.ConsolePrint("NVML", NvmlNativeMethods.nvmlErrorString(result));
                 }
-                return fanSpeed;
+                */
+                if (NVAPI.NvAPI_GPU_GetTachReading != null) {
+                    var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle, out fanSpeed);
+                    if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED) {  // GPUs without fans are not uncommon, so don't treat as error and just return 0
+                        Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
+                    } 
+                }
+                return (uint)fanSpeed;
             }
         }
 
