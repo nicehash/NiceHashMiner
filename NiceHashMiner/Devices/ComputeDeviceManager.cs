@@ -17,6 +17,7 @@ using System.Globalization;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Miners.Grouping;
 using NVIDIA.Nvml;
+using NVIDIA.NVAPI;
 
 namespace NiceHashMiner.Devices
 {
@@ -436,6 +437,29 @@ namespace NiceHashMiner.Devices
 
                         // Init now so we are not every constructor
                         NvmlNativeMethods.nvmlInit();
+                        var idHandles = new Dictionary<int, NvPhysicalGpuHandle>();
+                        if (NVAPI.IsAvailable) {
+                            NvPhysicalGpuHandle[] handles = new NvPhysicalGpuHandle[NVAPI.MAX_PHYSICAL_GPUS];
+                            int count;
+                            if (NVAPI.NvAPI_EnumPhysicalGPUs == null) {
+                                Helpers.ConsolePrint("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable");
+                            } else {
+                                var status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out count);
+                                if (status != NvStatus.OK) {
+                                    Helpers.ConsolePrint("NVAPI", "Enum physical GPUs failed with status: " + status);
+                                } else {
+                                    foreach (var handle in handles) {
+                                        int id = -1;
+                                        var idStatus = NVAPI.NvAPI_GPU_GetBusID(handle, out id);
+                                        if (idStatus != NvStatus.OK) {
+                                            Helpers.ConsolePrint("NVAPI", "Bus ID get failed with status: " + status);
+                                        } else {
+                                            idHandles[id] = handle;
+                                        }
+                                    }
+                                }
+                            }
+                        }
 
                         foreach (var cudaDev in CudaDevices) {
                             // check sm vesrions
@@ -478,8 +502,10 @@ namespace NiceHashMiner.Devices
                                         group = DeviceGroupType.NVIDIA_6_x;
                                         break;
                                 }
+                                NvPhysicalGpuHandle handle;
+                                idHandles.TryGetValue((int)cudaDev.DeviceID + 1, out handle);
                                 Avaliable.AllAvaliableDevices.Add(
-                                    new CudaComputeDevice(cudaDev, group, ++GPUCount)
+                                    new CudaComputeDevice(cudaDev, group, ++GPUCount, handle)
                                 );
                             }
                         }

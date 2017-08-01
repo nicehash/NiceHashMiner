@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using NiceHashMiner.Enums;
 using NVIDIA.Nvml;
+using NVIDIA.NVAPI;
 
 namespace NiceHashMiner.Devices
 {
     class CudaComputeDevice : ComputeDevice
     {
         nvmlDevice nvDevice;
+        NvPhysicalGpuHandle nvHandle;
 
         public override float Load {
             get {
@@ -43,7 +45,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public CudaComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int GPUCount)
+        public CudaComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int GPUCount, NvPhysicalGpuHandle nvHandle)
             : base((int)cudaDevice.DeviceID, 
                   cudaDevice.GetName(),
                   true,
@@ -62,6 +64,8 @@ namespace NiceHashMiner.Devices
             if (result != nvmlReturn.Success) {
                 Helpers.ConsolePrint("NVML", NvmlNativeMethods.nvmlErrorString(result));
             }
+
+            this.nvHandle = nvHandle;
         }
 
         private void printNVMLError(nvmlReturn error) {
