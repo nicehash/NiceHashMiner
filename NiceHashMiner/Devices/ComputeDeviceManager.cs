@@ -226,6 +226,12 @@ namespace NiceHashMiner.Devices
                     }
                 }
 
+                // create AMD bus ordering
+                var amdDevices = Avaliable.AllAvaliableDevices.FindAll((a) => a.DeviceType == DeviceType.AMD);
+                amdDevices.Sort((a, b) => a.BusID.CompareTo(b.BusID));
+                for (var i = 0; i < amdDevices.Count; i++) {
+                    amdDevices[i].IDByBus = i;
+                }
                 // get GPUs RAM sum
                 // bytes
                 Avaliable.NVIDIA_RAM_SUM = 0;

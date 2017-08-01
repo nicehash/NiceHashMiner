@@ -181,7 +181,8 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.Lbry, "lbry") { ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.CryptoNight, "cryptonight") { ExtraLaunchParameters = DefaultParam + "--rawintensity 512 -w 4 -g 2" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal") { ExtraLaunchParameters = DefaultParam + "--intensity 21 -w 64 -g 2" },
-                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "sibcoin-mod") { ExtraLaunchParameters = DefaultParam + "--intensity 16 -w 64 -g 2" }
+                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "sibcoin-mod") { ExtraLaunchParameters = DefaultParam + "--intensity 16 -w 64 -g 2" },
+                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.Keccak, "keccak") { ExtraLaunchParameters = DefaultParam + "-- intensity 15" }
                         }
                     },
                     { MinerBaseType.Claymore,
@@ -217,7 +218,8 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia"),
-                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Nist5, "nist5")
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Nist5, "nist5"),
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak")
                         }
                     },
                     { MinerBaseType.ccminer_alexis,

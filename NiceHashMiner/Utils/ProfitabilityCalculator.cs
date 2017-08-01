@@ -21,9 +21,9 @@ namespace NiceHashMiner {
             { AlgorithmType.ScryptNf_UNUSED ,               MHs }, // NOT used
             { AlgorithmType.X11_UNUSED ,                    MHs }, // NOT used
             { AlgorithmType.X13_UNUSED ,                    MHs },
-            { AlgorithmType.Keccak_UNUSED ,                 MHs },
+            { AlgorithmType.Keccak ,                 MHs },
             { AlgorithmType.X15_UNUSED ,                    MHs },
-            { AlgorithmType.Nist5_UNUSED ,                  MHs },
+            { AlgorithmType.Nist5 ,                  MHs },
             { AlgorithmType.NeoScrypt ,                     MHs },
             { AlgorithmType.Lyra2RE ,                       MHs },
             { AlgorithmType.WhirlpoolX_UNUSED ,             MHs },

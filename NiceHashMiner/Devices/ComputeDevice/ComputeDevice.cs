@@ -31,6 +31,10 @@ namespace NiceHashMiner.Devices
         // UUID now used for saving
         public string UUID { get; protected set; }
 
+        // used for Claymore indexing
+        public readonly int BusID = -1;
+        public int IDByBus = -1;
+
 
         // CPU extras
         public int Threads { get; protected set; }
@@ -143,6 +147,7 @@ namespace NiceHashMiner.Devices
         // GPU AMD
         public ComputeDevice(AmdGpuDevice amdDevice, int GPUCount, bool isDetectionFallback) {
             ID = amdDevice.DeviceID;
+            BusID = amdDevice.BusID;
             DeviceGroupType = DeviceGroupType.AMD_OpenCL;
             Name = amdDevice.DeviceName;
             Enabled = true;

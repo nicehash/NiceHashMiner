@@ -124,6 +124,7 @@ namespace NiceHashMiner
             buttonSettings.Text = International.GetText("Form_Main_settings");
             buttonStartMining.Text = International.GetText("Form_Main_start");
             buttonStopMining.Text = International.GetText("Form_Main_stop");
+            buttonHelp.Text = International.GetText("Form_Main_help");
 
             label_NotProfitable.Text = International.GetText("Form_Main_MINING_NOT_PROFITABLE");
             groupBox1.Text = International.GetText("Form_Main_Group_Device_Rates");
