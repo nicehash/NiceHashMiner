@@ -244,6 +244,7 @@
     "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Additional launch parameters when launching miner and this algorithm.",
     "Form_Settings_Text_ContinueMiningIfNoInternetAccess": "Idle When No Internet Access",
     "Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess": "If enabled NiceHash Miner Legacy will stop mining without internet connectivity",
+    "Form_Settings_ToolTip_UseIFTTT":  "If enabled, NiceHash Miner Legacy will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.",
     "Form_Settings_DisplayCurrency": "Display Currency",
     "Form_Settings_ToolTip_DisplayCurrency": "Choose what Currency to Display mining profit.",
     "Form_Settings_APIBindPortStart": "API Bind port pool start",

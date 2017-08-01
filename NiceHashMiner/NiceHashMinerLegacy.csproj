@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="Algorithm.cs" />
+    <Compile Include="IFTTT.cs" />
     <Compile Include="ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\EWBF.cs" />

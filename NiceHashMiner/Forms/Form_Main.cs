@@ -140,6 +140,7 @@ namespace NiceHashMiner
 
             textBoxBTCAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
             textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
+           
             ShowWarningNiceHashData = true;
             DemoMode = false;
 
@@ -505,11 +506,21 @@ namespace NiceHashMiner
         }
 
         public void ShowNotProfitable(string msg) {
+            if (ConfigManager.GeneralConfig.UseIFTTT)
+            {
+                
+            }
+
             label_NotProfitable.Visible = true;
             label_NotProfitable.Text = msg;
             label_NotProfitable.Invalidate();
         }
         public void HideNotProfitable() {
+            if (ConfigManager.GeneralConfig.UseIFTTT)
+            {
+
+            }
+
             label_NotProfitable.Visible = false;
             label_NotProfitable.Invalidate();
         }
