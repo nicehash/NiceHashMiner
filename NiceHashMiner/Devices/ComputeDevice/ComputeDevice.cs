@@ -32,7 +32,7 @@ namespace NiceHashMiner.Devices
         public string UUID { get; protected set; }
 
         // used for Claymore indexing
-        public readonly int BusID = -1;
+        public int BusID { get; protected set; } = -1;
         public int IDByBus = -1;
 
 
