@@ -249,7 +249,7 @@ namespace NiceHashMiner
                 }
                 OnSMAUpdate.Emit(null, EventArgs.Empty);
             } catch (Exception e) {
-                Helpers.ConsolePrint("Socket", e.ToString());
+                Helpers.ConsolePrint("SOCKET", e.ToString());
             }
         }
 
@@ -303,6 +303,8 @@ namespace NiceHashMiner
             var data = new nicehash_device_status();
             data.devices = deviceList;
             var sendData = JsonConvert.SerializeObject(data);
+            // This function is run every minute and sends data every run which has two auxiliary effects
+            // Keeps connection alive and attempts reconnection if internet was dropped
             NiceHashConnection.SendData(sendData);
         }
 

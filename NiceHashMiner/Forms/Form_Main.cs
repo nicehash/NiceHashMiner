@@ -57,6 +57,8 @@ namespace NiceHashMiner
 
         private bool IsManuallyStarted = false;
 
+        private bool isSMAUpdated = false;
+
         int MainFormHeight = 0;
         int EmtpyGroupPanelHeight = 0;
 
@@ -434,7 +436,10 @@ namespace NiceHashMiner
 #if (SWITCH_TESTING)
             SMAMinerCheck.Interval = MiningDevice.SMAMinerCheckInterval;
 #endif
-            MinersManager.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
+            if (isSMAUpdated) {  // Don't bother checking for new profits unless SMA has changed
+                isSMAUpdated = false;
+                MinersManager.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
+            }
         }
 
         private void DeviceStatusUpdate_Tick(object sender, EventArgs e) {
@@ -572,11 +577,9 @@ namespace NiceHashMiner
 
         void SMACallback(object sender, EventArgs e) {
             Helpers.ConsolePrint("NICEHASH", "SMA Update");
+            isSMAUpdated = true;
             if (NiceHashStats.AlgorithmRates != null) {
                 Globals.NiceHashData = NiceHashStats.AlgorithmRates;
-            }
-            else {
-                // TODO
             }
         }
 
