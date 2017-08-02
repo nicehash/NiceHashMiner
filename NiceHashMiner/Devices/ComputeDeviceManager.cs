@@ -16,7 +16,6 @@ using System.IO;
 using System.Globalization;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Miners.Grouping;
-using NVIDIA.Nvml;
 using NVIDIA.NVAPI;
 
 namespace NiceHashMiner.Devices
@@ -440,9 +439,8 @@ namespace NiceHashMiner.Devices
                         StringBuilder stringBuilder = new StringBuilder();
                         stringBuilder.AppendLine("");
                         stringBuilder.AppendLine("CudaDevicesDetection:");
-
-                        // Init now so we are not every constructor
-                        NvmlNativeMethods.nvmlInit();
+                        
+                        // Enumerate NVAPI handles and map to busid
                         var idHandles = new Dictionary<int, NvPhysicalGpuHandle>();
                         if (NVAPI.IsAvailable) {
                             NvPhysicalGpuHandle[] handles = new NvPhysicalGpuHandle[NVAPI.MAX_PHYSICAL_GPUS];

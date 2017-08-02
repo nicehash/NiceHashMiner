@@ -81,8 +81,6 @@
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="3rdParty\NVAPI.cs" />
-    <Compile Include="3rdParty\Nvml\NvmlNativeMethods.cs" />
-    <Compile Include="3rdParty\Nvml\NvmlTypes.cs" />
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithm.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />

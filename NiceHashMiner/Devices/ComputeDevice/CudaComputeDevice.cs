@@ -4,25 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NiceHashMiner.Enums;
-using NVIDIA.Nvml;
 using NVIDIA.NVAPI;
 
 namespace NiceHashMiner.Devices
 {
     class CudaComputeDevice : ComputeDevice
     {
-        nvmlDevice nvDevice;
         NvPhysicalGpuHandle nvHandle;
         private const int gpuCorePState = 0;  // memcontroller = 1, videng = 2
 
         public override float Load {
-            get {/*
-                var utilization = new nvmlUtilization();
-                var result = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(nvDevice, ref utilization);
-                if (result != nvmlReturn.Success) {
-                    printNVMLError(result);
-                }
-                return utilization.gpu;  // Will return 0 if no success*/
+            get {
                 int load = 0;
                 var pStates = new NvPStates();
                 pStates.Version = NVAPI.GPU_PSTATES_VER;
@@ -41,12 +33,6 @@ namespace NiceHashMiner.Devices
         public override float Temp {
             get {
                 uint temp = 0;
-                /*
-                var result = NvmlNativeMethods.nvmlDeviceGetTemperature(nvDevice, nvmlTemperatureSensors.Gpu, ref temp);
-                if (result != nvmlReturn.Success) {
-                    printNVMLError(result);
-                }
-                */
                 if (NVAPI.NvAPI_GPU_GetThermalSettings != null) {
                     var settings = new NvGPUThermalSettings();
                     settings.Version = NVAPI.GPU_THERMAL_SETTINGS_VER;
@@ -70,12 +56,6 @@ namespace NiceHashMiner.Devices
         public override uint FanSpeed {
             get {
                 int fanSpeed = 0;
-                /*
-                var result = NvmlNativeMethods.nvmlDeviceGetFanSpeed(nvDevice, ref fanSpeed);
-                if (result != nvmlReturn.Success) {
-                    Helpers.ConsolePrint("NVML", NvmlNativeMethods.nvmlErrorString(result));
-                }
-                */
                 if (NVAPI.NvAPI_GPU_GetTachReading != null) {
                     var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle, out fanSpeed);
                     if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED) {  // GPUs without fans are not uncommon, so don't treat as error and just return 0
@@ -101,16 +81,7 @@ namespace NiceHashMiner.Devices
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             Index = ID + ComputeDeviceManager.Avaliable.AvailCPUs;  // increment by CPU count
 
-            var result = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(UUID, ref nvDevice);
-            if (result != nvmlReturn.Success) {
-                Helpers.ConsolePrint("NVML", NvmlNativeMethods.nvmlErrorString(result));
-            }
-
             this.nvHandle = nvHandle;
-        }
-
-        private void printNVMLError(nvmlReturn error) {
-            Helpers.ConsolePrint("NVML", NvmlNativeMethods.nvmlErrorString(error));
         }
     }
 }

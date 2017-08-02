@@ -11,7 +11,6 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners;
-using NVIDIA.Nvml;
 
 namespace NiceHashMiner.Devices
 {
