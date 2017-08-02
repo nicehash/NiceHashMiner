@@ -184,9 +184,9 @@ namespace NiceHashMiner
                 AttemptReconnect();
             }
 
-            public static bool SendData(string data) {
+            public static bool SendData(string data, bool recurs = false) {
                 try { 
-                    if (webSocket.IsAlive) {  // Make sure connection is open
+                    if (webSocket != null && webSocket.IsAlive) {  // Make sure connection is open
                         // Verify valid JSON and method
                         dynamic dataJson = JsonConvert.DeserializeObject(data);
                         if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "login") {
@@ -194,8 +194,14 @@ namespace NiceHashMiner
                             webSocket.Send(data);
                             return true;
                         }
+                    } else if (webSocket != null) {
+                        if (AttemptReconnect() && !recurs) {  // Reconnect was successful, send data again (safety to prevent recursion overload)
+                            SendData(data, true);
+                        } else {
+                            Helpers.ConsolePrint("SOCKET", "Socket connection unsuccessfull, will try again on next device update (1min)");
+                        }
                     } else {
-                        // TODO reconnect
+                        Helpers.ConsolePrint("SOCKET", "Data sending attempted before socket initialization");
                     }
                 } catch (Exception e) {
                     Helpers.ConsolePrint("SOCKET", e.ToString());
