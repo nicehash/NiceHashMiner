@@ -89,7 +89,7 @@ namespace NiceHashMiner.Miners {
                 if (resp.result != null && resp.result.Count > 4) {
                     //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp.result != null && resp.result.Count > 4");
                     var speeds = resp.result[3].Split(';');
-                    var secondarySpeeds = resp.result[5].Split(';');
+                    var secondarySpeeds = (IsDual()) ? resp.result[5].Split(';') : new string[0];
                     ad.Speed = 0;
                     ad.SecondarySpeed = 0;
                     foreach (var speed in speeds) {
