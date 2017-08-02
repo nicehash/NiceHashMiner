@@ -137,7 +137,7 @@ namespace NiceHashMiner.Forms.Components {
 
         private void updateSpeedText()
         {
-            var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed, _currentlySelectedAlgorithm.SecondaryBenchmarkSpeed);
+            var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.NiceHashID, _currentlySelectedAlgorithm.BenchmarkSpeed, _currentlySelectedAlgorithm.SecondaryBenchmarkSpeed);
             // update lvi speed
             if (_currentlySelectedLvi != null) {
                 _currentlySelectedLvi.SubItems[2].Text = speedString;
