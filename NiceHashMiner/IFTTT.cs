@@ -20,16 +20,15 @@ namespace NiceHashMiner
             try
             {
                 string key = ConfigManager.GeneralConfig.IFTTTKey;
-
+                
                 using (WebClient client = new WebClient())
                 {
-                    byte[] response =
-                    client.UploadValues(apiUrl + action + "/with/key/" + key, new NameValueCollection()
-                    {
-                        { "Value1", msg }
-                    });
+                    var values = new NameValueCollection();
+                    values["Value1"] = msg;
 
-                    string result = System.Text.Encoding.UTF8.GetString(response);
+                    var response = client.UploadValues(apiUrl + action + "/with/key/" + key, values);
+
+                    var responseString = Encoding.Default.GetString(response);
                 }
             }
             catch (Exception ex)
