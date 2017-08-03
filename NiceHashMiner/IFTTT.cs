@@ -20,13 +20,17 @@ namespace NiceHashMiner
             try
             {
                 string key = ConfigManager.GeneralConfig.IFTTTKey;
-                
+                string worker = ConfigManager.GeneralConfig.WorkerName;
+                string minProfit = ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.');
+
                 using (WebClient client = new WebClient())
                 {
-                    var values = new NameValueCollection();
-                    values["Value1"] = msg;
+                    var postData = new NameValueCollection();
+                    postData["value1"] = worker;
+                    postData["value2"] = msg;
+                    postData["value3"] = minProfit;
 
-                    var response = client.UploadValues(apiUrl + action + "/with/key/" + key, values);
+                    var response = client.UploadValues(apiUrl + action + "/with/key/" + key, postData);
 
                     var responseString = Encoding.Default.GetString(response);
                 }
