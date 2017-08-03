@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.IO;
 using System.Windows.Forms;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
@@ -145,6 +146,7 @@ namespace NiceHashMiner
                 AttemptReconnect();
             }
 
+            // Don't call SendData on UI threads, since it will block the thread for a bit if a reconnect is needed
             public static bool SendData(string data, bool recurs = false) {
                 try { 
                     if (webSocket != null && webSocket.IsAlive) {  // Make sure connection is open
@@ -237,7 +239,8 @@ namespace NiceHashMiner
             if (BitcoinAddress.ValidateBitcoinAddress(data.btc) && BitcoinAddress.ValidateWorkerName(worker)) {
                 var sendData = JsonConvert.SerializeObject(data);
 
-                NiceHashConnection.SendData(sendData);
+                // Send as task since SetCredentials is called from UI threads
+                Task.Factory.StartNew(() => NiceHashConnection.SendData(sendData));
             }
         }
 
