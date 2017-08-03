@@ -350,11 +350,13 @@ namespace NiceHashMiner.Forms
                 this.checkBox_AutoStartMining.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_MinimizeMiningWindows.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_UseIFTTT.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             }
             // Add EventHandler for all the general tab's textboxes
             {
                 this.textBox_BitcoinAddress.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_WorkerName.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+                this.textBox_IFTTTKey.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 // these are ints only
                 this.textBox_SwitchMinSecondsFixed.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_SwitchMinSecondsDynamic.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
@@ -422,12 +424,14 @@ namespace NiceHashMiner.Forms
                 this.checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
                 checkBox_RunAtStartup.Checked = isInStartupRegistry();
                 checkBox_MinimizeMiningWindows.Checked = ConfigManager.GeneralConfig.MinimizeMiningWindows;
+                checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
             }
 
             // Textboxes
             {
                 textBox_BitcoinAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
                 textBox_WorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
+                textBox_IFTTTKey.Text = ConfigManager.GeneralConfig.IFTTTKey;
                 textBox_SwitchMinSecondsFixed.Text = ConfigManager.GeneralConfig.SwitchMinSecondsFixed.ToString();
                 textBox_SwitchMinSecondsDynamic.Text = ConfigManager.GeneralConfig.SwitchMinSecondsDynamic.ToString();
                 textBox_SwitchMinSecondsAMD.Text = ConfigManager.GeneralConfig.SwitchMinSecondsAMD.ToString();
