@@ -249,10 +249,7 @@ namespace NiceHashMiner
                     var array = new JArray();
                     array.Add(device.Index);
                     array.Add(device.Name);
-                    int status = Convert.ToInt32(activeIDs.Contains(device.Index));
-                    if (device.DeviceType == DeviceType.CPU) status += 6;
-                    else if (device.DeviceType == DeviceType.AMD) status += 4;
-                    else if (device.DeviceType == DeviceType.NVIDIA) status += 2;
+                    int status = Convert.ToInt32(activeIDs.Contains(device.Index)) + (((int)device.DeviceType + 1) * 2);
                     array.Add(status);
                     array.Add((uint)device.Load);
                     array.Add((uint)device.Temp);

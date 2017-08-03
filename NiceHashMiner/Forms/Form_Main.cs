@@ -600,6 +600,7 @@ namespace NiceHashMiner
         void ConnectionEstablishedCallback(object sender, EventArgs e) {
             // send credentials
             NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
+            DeviceStatusUpdate_Tick(null, null);
         }
 
         void VersionUpdateCallback(object sender, EventArgs e)
