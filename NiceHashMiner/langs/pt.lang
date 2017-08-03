@@ -5,6 +5,8 @@
     "Global_Yes": "&Sim",
     "Global_No": "&Não",
     "Global_OK": "&OK",
+    "Global_Cancel": "&Cancel",
+    "Global_Retry": "&Retry",
 
     "Service_Location": "Local do Servidor",
     "Warning_with_Exclamation": "Aviso!",

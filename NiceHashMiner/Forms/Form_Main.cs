@@ -105,6 +105,8 @@ namespace NiceHashMiner
             MessageBoxManager.Yes = International.GetText("Global_Yes");
             MessageBoxManager.No = International.GetText("Global_No");
             MessageBoxManager.OK = International.GetText("Global_OK");
+            MessageBoxManager.Cancel = International.GetText("Global_Cancel");
+            MessageBoxManager.Retry = International.GetText("Global_Retry");
             MessageBoxManager.Register();
 
             labelServiceLocation.Text = International.GetText("Service_Location") + ":";

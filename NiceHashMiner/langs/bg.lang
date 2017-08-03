@@ -5,6 +5,8 @@
     "Global_Yes": "&Да",
     "Global_No": "&Не",
     "Global_OK": "&ОК",
+    "Global_Cancel": "&Cancel",
+    "Global_Retry": "&Retry",
 
     "Service_Location": "Избор на локация",
     "Warning_with_Exclamation": "Внимание!",
