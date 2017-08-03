@@ -12,50 +12,31 @@ namespace NiceHashMiner
 {
     class IFTTT
     {
-       
+
         const string apiUrl = "https://maker.ifttt.com/trigger/";
 
-
-        public static void PostToIFTTT(string URL, string action)
+        public static void PostToIFTTT(string action, string msg)
         {
-            string ResponseFromServer;
             try
             {
+                string key = ConfigManager.GeneralConfig.IFTTTKey;
 
                 using (WebClient client = new WebClient())
                 {
-
                     byte[] response =
-                    client.UploadValues("http://dork.com/service", new NameValueCollection()
-       {
-           { "home", "Cosby" },
-           { "favorite+flavor", "flies" }
-       });
+                    client.UploadValues(apiUrl + action + "/with/key/" + key, new NameValueCollection()
+                    {
+                        { "Value1", msg }
+                    });
 
                     string result = System.Text.Encoding.UTF8.GetString(response);
                 }
-                //HttpWebRequest WR = (HttpWebRequest)WebRequest.Create(URL);
-                //WR.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
-                //if (worker.Length > 64) worker = worker.Substring(0, 64);
-                //WR.Headers.Add("NiceHash-Worker-ID", worker);
-                //WR.Timeout = 30 * 1000;
-                //WebResponse Response = WR.GetResponse();
-                //Stream SS = Response.GetResponseStream();
-                //SS.ReadTimeout = 20 * 1000;
-                //StreamReader Reader = new StreamReader(SS);
-                //ResponseFromServer = Reader.ReadToEnd();
-                //if (ResponseFromServer.Length == 0 || ResponseFromServer[0] != '{')
-                //    throw new Exception("Not JSON!");
-                //Reader.Close();
-                //Response.Close();
             }
             catch (Exception ex)
             {
                 Helpers.ConsolePrint("NICEHASH", ex.Message);
-                return null;
             }
 
-            return ResponseFromServer;
         }
 
     }
