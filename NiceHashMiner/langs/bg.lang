@@ -125,7 +125,7 @@
     "Form_Settings_General_NVIDIAP0State": "NVIDIA P0 режим",
     "Form_Settings_General_LogToFile": "Запис на журнала във файл",
     "Form_Settings_General_RunAtStartup": "Стартирайте с Windows",
-    "Form_Settings_General_MinimizeMiningWindows": "Минимизиране на минните прозорци",
+    "Form_Settings_General_MinimizeMiningWindows": "Минимизиране на изчисл. програма",
 
     "Form_Settings_General_Language": "Език",
     "Form_Settings_General_MinIdleSeconds": "Minimum Idle [s]",
@@ -197,7 +197,7 @@
     "Form_Settings_ToolTip_checkBox_MinimizeToTray": "Когато тази опция е маркирана, NiceHashMiner ще се минимизира като икона в статус лентата.",
     "Form_Settings_ToolTip_CPU_LessThreads": "Намаляване броя използвани нишки за всеки процесор със стойността на полето 'Свободни нишки'.",
     "Form_Settings_ToolTip_CPU_ForceCPUExtension": "Принудително използване на определена изчислителна програма при използване на процесора.",
-    "Form_Settings_ToolTip_checkBox_RunAtStartup": "Когато е отметнато, NiceHash Miner Legacy ще се изпълнява при влизане.",
+    "Form_Settings_ToolTip_checkBox_RunAtStartup": "Когато тази опция е маркирана, NiceHash Miner Legacy ще се стартира при първоначално зареждане.",
 
     "Form_Settings_ToolTip_SwitchMinSecondsFixed": "Фиксирана компонента на минималния интервал време (в секунди) преди програмата да превключи изчислителния алгоритъм.\nОбщият интервал е SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
     "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Случайна компонента на минималния интервал време в секунди) преди програмата да превключи изчислителния алгоритъм.\nОбщият интервал е SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nСлучайната компонента е необходима, за да се избегне възможността всички потребители на NiceHashMiner в целия свят да имат еднакъв ритъм на превключване на алгоритмите.",
@@ -232,7 +232,7 @@
     "Form_Settings_ToolTip_ExtraLaunchParameters": "Допълнителни параметри при стартиране на изчислителната програма.",
     "Form_Settings_ToolTip_DaggerHashimotoGenerateDevice": "Посочете видеокартата, която ще генерира работния DAG файл.\nКато правило, тази роля се изпълнява от най-бързата налична видеокарта.",
     "Form_Settings_ToolTip_DisableAMDTempControl": "Маркирайте тази опция, ако желаете да изключите вградения температурен контрол\nна AMD видеокартите (не важи за алгоритъма daggerhashimoto).",
-    "Form_Settings_ToolTip_MinimizeMiningWindows": "Когато е маркирано, минните прозорци ще започнат да се свеждат до минимум.",
+    "Form_Settings_ToolTip_MinimizeMiningWindows": "Когато тази опция е маркирана, прозорецът на изчислителната програма ще бъде минимизиран при стартиране.",
 
     "Form_Settings_ToolTip_AlgoSkip": "Маркирайте тази опция, ако искате да прескочите и деактивирате конкретен алгоритъм.\nТестовете за скорост и използването за реални изчисления на този алгоритъм ще бъдат забранени.\nДокато има изчислителна дейност, автоматичното превключване между алгоритмите ще го прескача.",
     "Form_Settings_ToolTip_AlgoUsePassword": "Използвайте тази парола при стартиране на изчисления с този алгоритъм. Ако не зададете парола, ще се използва паролата за групата.",
@@ -254,7 +254,7 @@
     "AlgorithmsListView_Ratio": "Отн. BTC/GH/ден",
     "AlgorithmsListView_Rate": "Приход BTC/ден",
     "AlgorithmSettingsControl_IntensityWarning": "Стойностите за интензивност за избрания алгоритъм трябва да са в интервала от {0} до {1}",
-    "EnabledUnbenchmarkedAlgorithmsWarning": "Има алгоритми за избраните активни устройства, които не са тествани за скорост. Изберете 'Yes', за да измерите скоростта и да започнете работа; изберете 'No', за да прескочите теста за скорост и да продължите работа; натиснете 'Cancel', за да прекратите работа.",
+    "EnabledUnbenchmarkedAlgorithmsWarning": "Има алгоритми за избраните активни устройства, които не са тествани за скорост. Изберете 'Да', за да измерите скоростта и да започнете работа; изберете 'Не', за да прескочите теста за скорост и да продължите работа; натиснете 'Cancel', за да прекратите работа.",
     "AlgorithmSettingsControl_Label_Intensity": "Интензивност",
     "AlgorithmSettingsControl_ToolTip_Intensity": "Задава параметъра 'Интензивност' за избрания алгоритъм (допустими стойности между 8.0 - 25.0 или 31.0 в зависимост от конкретния алгоритъм). Интензитет 0 се разбира като стойност по подразбиране. ФУНКЦИЯ ЗА НАПРЕДНАЛИ ПОТРЕБИТЕЛИ.",
     "AlgorithmsListView_GroupBox": "Алгоритъм: {0}",
