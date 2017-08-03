@@ -918,6 +918,7 @@ namespace NiceHashMiner
 
             if (!DemoMode) ConfigManager.GeneralConfigFileCommit();
 
+            isSMAUpdated = true;  // Always check profits on mining start
             SMAMinerCheck.Interval = 100;
             SMAMinerCheck.Start();
             MinerStatsCheck.Start();
