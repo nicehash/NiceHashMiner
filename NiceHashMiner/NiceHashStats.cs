@@ -17,31 +17,10 @@ using WebSocketSharp;
 
 
 namespace NiceHashMiner
-{
-#pragma warning disable 649
-    public class NiceHashSMA
-    {
-        public int port;
-        public string name;
-        public int algo;
-        public double paying;
-    }
-#pragma warning restore 649
-
+{ 
     class NiceHashStats {
 #pragma warning disable 649
         #region JSON Models
-
-        public class nicehash_result_2
-        {
-            public NiceHashSMA[] simplemultialgo;
-        }
-
-        public class nicehash_json_2
-        {
-            public nicehash_result_2 result;
-            public string method;
-        }
 
         class nicehash_login {
             public string method = "login";
@@ -104,7 +83,7 @@ namespace NiceHashMiner
                 try {
                     if (AlgorithmRates == null) {
                         // Populate SMA first (for port etc)
-                        AlgorithmRates = GetAlgorithmRates("worker1");
+                        AlgorithmRates = BaseNiceHashSMA.BaseNiceHashSMADict;
                     }
                     //send login
                     var version = "NHML/" + Application.ProductVersion;
@@ -267,31 +246,6 @@ namespace NiceHashMiner
             // This function is run every minute and sends data every run which has two auxiliary effects
             // Keeps connection alive and attempts reconnection if internet was dropped
             NiceHashConnection.SendData(sendData);
-        }
-
-        private static Dictionary<AlgorithmType, NiceHashSMA> GetAlgorithmRates(string worker)
-        {
-            string r1 = GetNiceHashAPIData(Links.NHM_API_info, worker);
-            if (r1 == null) return null;
-
-            nicehash_json_2 nhjson_current;
-            try
-            {
-                nhjson_current = JsonConvert.DeserializeObject<nicehash_json_2>(r1, Globals.JsonSettings);
-                Dictionary<AlgorithmType, NiceHashSMA> ret = new Dictionary<AlgorithmType, NiceHashSMA>();
-                NiceHashSMA[] temp = nhjson_current.result.simplemultialgo;
-                if (temp != null) {
-                    foreach (var sma in temp) {
-                        ret.Add((AlgorithmType)sma.algo, sma);
-                    }
-                    return ret;
-                }
-                return null;
-            }
-            catch
-            {
-                return null;
-            }
         }
 
         public static string GetNiceHashAPIData(string URL, string worker)

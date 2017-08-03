@@ -266,6 +266,7 @@
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="PInvoke\PInvokeHelpers.cs" />
+    <Compile Include="Utils\NiceHashSMA.cs" />
     <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
