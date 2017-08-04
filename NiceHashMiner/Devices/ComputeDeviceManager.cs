@@ -792,8 +792,9 @@ namespace NiceHashMiner.Devices
                                                     Marshal.FreeCoTaskMem(AdapterBuffer);
                                             }
                                         }
-                                        //if (null != ADL.ADL_Main_Control_Destroy)
-                                           // ADL.ADL_Main_Control_Destroy();
+                                        if (null != ADL.ADL_Main_Control_Destroy && NumberOfAdapters <= 0)
+                                            // Close ADL if it found no AMD devices
+                                            ADL.ADL_Main_Control_Destroy();
                                     } else {
                                         // TODO
                                         Helpers.ConsolePrint(TAG, "ADL_Main_Control_Create() returned error code " + ADLRet.ToString());

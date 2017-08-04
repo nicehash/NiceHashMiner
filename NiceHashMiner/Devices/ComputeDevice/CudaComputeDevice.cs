@@ -10,7 +10,7 @@ namespace NiceHashMiner.Devices
 {
     class CudaComputeDevice : ComputeDevice
     {
-        NvPhysicalGpuHandle nvHandle;
+        NvPhysicalGpuHandle nvHandle;  // For NVAPI
         private const int gpuCorePState = 0;  // memcontroller = 1, videng = 2
 
         public override float Load {

@@ -47,6 +47,7 @@ namespace NiceHashMiner
         public static double Balance { get; private set; }
         public static string Version { get; private set; }
         public static bool IsAlive { get { return NiceHashConnection.IsAlive; } }
+        // Event handlers for socket
         public static event EventHandler OnBalanceUpdate = delegate { };
         public static event EventHandler OnSMAUpdate = delegate { };
         public static event EventHandler OnVersionUpdate = delegate { };
@@ -181,6 +182,8 @@ namespace NiceHashMiner
 
         #endregion
 
+        #region Incoming socket calls
+
         private static void SetAlgorithmRates(JArray data) {
             try {
                 foreach (var algo in data) {
@@ -210,6 +213,10 @@ namespace NiceHashMiner
             Version = version;
             OnVersionUpdate.Emit(null, EventArgs.Empty);
         }
+
+        #endregion
+
+        #region Outgoing socket calls
 
         public static void SetCredentials(string btc, string worker) {
             var data = new nicehash_credentials();
@@ -247,6 +254,8 @@ namespace NiceHashMiner
             // Keeps connection alive and attempts reconnection if internet was dropped
             NiceHashConnection.SendData(sendData);
         }
+
+        #endregion
 
         public static string GetNiceHashAPIData(string URL, string worker)
         {

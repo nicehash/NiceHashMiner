@@ -17,6 +17,7 @@ namespace NiceHashMiner
 
     public static class BaseNiceHashSMA
     {
+        // Populate a base SMA dictionary with ports and names
         public static Dictionary<AlgorithmType, NiceHashSMA> BaseNiceHashSMADict {
             get {
                 var sma = new Dictionary<AlgorithmType, NiceHashSMA>();

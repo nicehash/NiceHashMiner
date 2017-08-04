@@ -31,9 +31,6 @@ namespace NiceHashMiner
         private String VisitURLNew = Links.VisitURLNew;
 
         private Timer MinerStatsCheck;
-        private Timer UpdateCheck;
-        private SystemTimer SMACheck;
-        private Timer BalanceCheck;
         private Timer SMAMinerCheck;
         private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;

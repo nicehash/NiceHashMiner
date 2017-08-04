@@ -19,6 +19,7 @@ using NiceHashMiner;
 
 namespace NVIDIA.NVAPI
 {
+    #region Enumms
     internal enum NvStatus
     {
         OK = 0,
@@ -99,6 +100,10 @@ namespace NVIDIA.NVAPI
         ALL = 15,
         UNKNOWN = -1
     };
+
+    #endregion
+
+    #region Structs
     [StructLayout(LayoutKind.Sequential)]
     internal struct NvPhysicalGpuHandle
     {
@@ -142,6 +147,8 @@ namespace NVIDIA.NVAPI
         public NvSensor[] Sensor;
     }
 
+    #endregion
+
     internal class NVAPI
     {
         internal const int MAX_PHYSICAL_GPUS = 64;
@@ -152,6 +159,7 @@ namespace NVIDIA.NVAPI
         public static readonly uint GPU_PSTATES_VER = (uint)Marshal.SizeOf(typeof(NvPStates)) | 0x10000;
         public static readonly uint GPU_THERMAL_SETTINGS_VER = (uint)Marshal.SizeOf(typeof(NvGPUThermalSettings)) | 0x10000;
 
+        #region Delegates
         private delegate IntPtr nvapi_QueryInterfaceDelegate(uint id);
         private delegate NvStatus NvAPI_InitializeDelegate();
 
@@ -170,7 +178,9 @@ namespace NVIDIA.NVAPI
         internal static readonly NvAPI_GPU_GetTachReadingDelegate NvAPI_GPU_GetTachReading;
         internal static readonly NvAPI_GPU_GetPStatesDelegate NvAPI_GPU_GetPStates;
         internal static readonly NvAPI_GPU_GetThermalSettingsDelegate NvAPI_GPU_GetThermalSettings;
-        
+
+        #endregion
+
         private static void GetDelegate<T>(uint id, out T newDelegate) 
             where T : class {
             IntPtr ptr = nvapi_QueryInterface(id);

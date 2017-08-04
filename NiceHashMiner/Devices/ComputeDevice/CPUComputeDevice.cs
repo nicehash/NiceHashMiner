@@ -18,6 +18,7 @@ namespace NiceHashMiner.Devices
                 return 0;
             }
         }
+
         public CPUComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int CPUCount)
             : base(id,
                   name,

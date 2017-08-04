@@ -54,30 +54,12 @@ namespace NiceHashMiner.Devices
         protected List<Algorithm> AlgorithmSettings;
 
         public string BenchmarkCopyUUID { get; set; }
-
-        #region Hardware Monitoring
         
-        public virtual float Load {
-            get {
-                return 0;
-            }
-        }
-
-        // Temps
-        public virtual float Temp {
-            get {
-                return 0;
-            }
-        }
-
-        // Fan
-        public virtual uint FanSpeed {
-            get {
-                return 0;
-            }
-        }
-
-        #endregion
+        public virtual float Load { get { return 0; } }
+        
+        public virtual float Temp { get { return 0;  } }
+        
+        public virtual uint FanSpeed { get { return 0; } }
 
         // Ambiguous constructor
         protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable, DeviceType type, string nameCount, ulong gpuRAM) {

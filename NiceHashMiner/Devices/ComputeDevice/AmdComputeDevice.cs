@@ -10,7 +10,7 @@ namespace NiceHashMiner.Devices
 {
     class AmdComputeDevice : ComputeDevice
     {
-        int adapterIndex;
+        int adapterIndex;  // For ADL
 
         public override uint FanSpeed {
             get {
@@ -23,6 +23,7 @@ namespace NiceHashMiner.Devices
                 return (uint)adlf.FanSpeed;
             }
         }
+
         public override float Temp {
             get {
                 var adlt = new ADLTemperature();
@@ -33,6 +34,7 @@ namespace NiceHashMiner.Devices
                 return adlt.Temperature * 0.001f;
             }
         }
+
         public override float Load {
             get {
                 var adlp = new ADLPMActivity();
