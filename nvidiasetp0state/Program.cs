@@ -14,6 +14,8 @@ namespace nvidiasetp0state
             smiPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe";
             if (smiPath.Contains(" (x86)")) smiPath = smiPath.Replace(" (x86)", "");
 
+            bool sumResult = true;
+
             try
             {
                 Process P = new Process();
@@ -88,6 +90,8 @@ namespace nvidiasetp0state
                     catch (Exception ex)
                     {
                         Console.WriteLine("[ChangeP0State] Exception: " + ex.Message);
+
+                        sumResult = false;
                     }
 
                     if (mem.Length > 1 && clk.Length > 1)
@@ -117,12 +121,17 @@ namespace nvidiasetp0state
                         catch (Exception ex)
                         {
                             Console.WriteLine("[ChangeP0State] Exception: " + ex.Message);
+
+                            sumResult = false;
                         }
                     }
                 }
             }
 
-            return 0;
+            if (sumResult)
+                return 0;
+            else
+                return 3;
         }
 
         static void Main(string[] args)
