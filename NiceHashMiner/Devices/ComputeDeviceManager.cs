@@ -459,6 +459,7 @@ namespace NiceHashMiner.Devices
                                             if (idStatus != NvStatus.OK) {
                                                 Helpers.ConsolePrint("NVAPI", "Bus ID get failed with status: " + idStatus);
                                             } else {
+                                                Helpers.ConsolePrint("NVAPI", "Found handle for busid " + id);
                                                 idHandles[id] = handle;
                                             }
                                         }
