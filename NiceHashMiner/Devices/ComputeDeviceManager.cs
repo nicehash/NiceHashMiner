@@ -455,10 +455,12 @@ namespace NiceHashMiner.Devices
                                     foreach (var handle in handles) {
                                         int id = -1;
                                         var idStatus = NVAPI.NvAPI_GPU_GetBusID(handle, out id);
-                                        if (idStatus != NvStatus.OK) {
-                                            Helpers.ConsolePrint("NVAPI", "Bus ID get failed with status: " + status);
-                                        } else {
-                                            idHandles[id] = handle;
+                                        if (idStatus != NvStatus.EXPECTED_PHYSICAL_GPU_HANDLE) {
+                                            if (idStatus != NvStatus.OK) {
+                                                Helpers.ConsolePrint("NVAPI", "Bus ID get failed with status: " + idStatus);
+                                            } else {
+                                                idHandles[id] = handle;
+                                            }
                                         }
                                     }
                                 }
