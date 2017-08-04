@@ -113,6 +113,7 @@
     "SubmitResultDialog_UsePreviousBenchmarkedValueTitle": "Използване на резултати от предишен тест?",
     "SubmitResultDialog_UsePreviousBenchmarkedValueMsg": "Може да използвате стойности от предишен тест за скорост. Изберете 'Да', за да използвате предишен резултат или 'Не' за повторно изпълнение на теста за скорост.",
 
+
     "Form_Settings_General_DebugConsole": "Debug конзола",
     "Form_Settings_General_AutoStartMining": "Автоматичен старт на изчисленията",
     "Form_Settings_General_HideMiningWindows": "Скриване на изчисл. програма",
