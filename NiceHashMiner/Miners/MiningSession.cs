@@ -302,15 +302,19 @@ namespace NiceHashMiner.Miners {
                 double b = Math.Min(PrevStateProfit, CurrentProfit);
                 //double percDiff = Math.Abs((PrevStateProfit / CurrentProfit) - 1);
                 double percDiff = ((a - b)) / b;
-                if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold) {
+                if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
+                {
                     // don't switch
                     Helpers.ConsolePrint(TAG, String.Format("Will NOT switch profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
                     // RESTORE OLD PROFITS STATE
-                    foreach (var device in _miningDevices) {
+                    foreach (var device in _miningDevices)
+                    {
                         device.RestoreOldProfitsState();
                     }
                     return;
-                } else {
+                }
+                else
+                {
                     Helpers.ConsolePrint(TAG, String.Format("Will SWITCH profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
                 }
             }
@@ -355,70 +359,126 @@ namespace NiceHashMiner.Miners {
                 // check which groupMiners should be stopped and which ones should be started and which to keep running
                 Dictionary<string, GroupMiner> toStopGroupMiners = new Dictionary<string, GroupMiner>();
                 Dictionary<string, GroupMiner> toRunNewGroupMiners = new Dictionary<string, GroupMiner>();
+                Dictionary<string, GroupMiner> noChangeGroupMiners = new Dictionary<string, GroupMiner>();
                 // check what to stop/update
-                foreach (string runningGroupKey in _runningGroupMiners.Keys) {
-                    if (newGroupedMiningPairs.ContainsKey(runningGroupKey) == false) {
+                foreach (string runningGroupKey in _runningGroupMiners.Keys)
+                {
+                    if (newGroupedMiningPairs.ContainsKey(runningGroupKey) == false)
+                    {
                         // runningGroupKey not in new group definately needs to be stopped and removed from curently running
                         toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
-                    } else {
+                    }
+                    else
+                    {
                         // runningGroupKey is contained but needs to check if mining algorithm is changed
                         var miningPairs = newGroupedMiningPairs[runningGroupKey];
                         var newAlgoType = GetMinerPairAlgorithmType(miningPairs);
-                        if(newAlgoType != AlgorithmType.NONE && newAlgoType != AlgorithmType.INVALID) {
+                        if (newAlgoType != AlgorithmType.NONE && newAlgoType != AlgorithmType.INVALID)
+                        {
                             // if algoType valid and different from currently running update
-                            if (newAlgoType != _runningGroupMiners[runningGroupKey].AlgorithmType) {
+                            if (newAlgoType != _runningGroupMiners[runningGroupKey].AlgorithmType)
+                            {
                                 // remove current one and schedule to stop mining
                                 toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
                                 // create new one TODO check if DaggerHashimoto
                                 GroupMiner newGroupMiner = null;
-                                if (newAlgoType == AlgorithmType.DaggerHashimoto) {
-                                    if (_ethminerNVIDIAPaused != null && _ethminerNVIDIAPaused.Key == runningGroupKey) {
+                                if (newAlgoType == AlgorithmType.DaggerHashimoto)
+                                {
+                                    if (_ethminerNVIDIAPaused != null && _ethminerNVIDIAPaused.Key == runningGroupKey)
+                                    {
                                         newGroupMiner = _ethminerNVIDIAPaused;
                                     }
-                                    if (_ethminerAMDPaused != null && _ethminerAMDPaused.Key == runningGroupKey) {
+                                    if (_ethminerAMDPaused != null && _ethminerAMDPaused.Key == runningGroupKey)
+                                    {
                                         newGroupMiner = _ethminerAMDPaused;
                                     }
                                 }
-                                if (newGroupMiner == null) {
+                                if (newGroupMiner == null)
+                                {
                                     newGroupMiner = new GroupMiner(miningPairs, runningGroupKey);
                                 }
                                 toRunNewGroupMiners[runningGroupKey] = newGroupMiner;
                             }
+                            else
+                                noChangeGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
                         }
                     }
                 }
                 // check brand new
-                foreach (var kvp in newGroupedMiningPairs) {
+                foreach (var kvp in newGroupedMiningPairs)
+                {
                     var key = kvp.Key;
                     var miningPairs = kvp.Value;
-                    if (_runningGroupMiners.ContainsKey(key) == false) {
+                    if (_runningGroupMiners.ContainsKey(key) == false)
+                    {
                         GroupMiner newGroupMiner = new GroupMiner(miningPairs, key);
                         toRunNewGroupMiners[key] = newGroupMiner;
                     }
                 }
-                // stop old miners
-                foreach (var toStop in toStopGroupMiners.Values) {
-                    toStop.Stop();
-                    _runningGroupMiners.Remove(toStop.Key);
-                    // TODO check if daggerHashimoto and save
-                    if(toStop.AlgorithmType == AlgorithmType.DaggerHashimoto) {
-                        if (toStop.DeviceType == DeviceType.NVIDIA) {
-                            _ethminerNVIDIAPaused = toStop;
-                        } else if (toStop.DeviceType == DeviceType.AMD) {
-                            _ethminerAMDPaused = toStop;
+
+                if ((toStopGroupMiners.Values.Count > 0) || (toRunNewGroupMiners.Values.Count > 0))
+                {
+                    StringBuilder stringBuilderPreviousAlgo = new StringBuilder();
+                    StringBuilder stringBuilderCurrentAlgo = new StringBuilder();
+                    StringBuilder stringBuilderNoChangeAlgo = new StringBuilder();
+
+                    // stop old miners
+                    if (toStopGroupMiners.Values.Count > 0)
+                    {                      
+                        foreach (var toStop in toStopGroupMiners.Values)
+                        {
+                            stringBuilderPreviousAlgo.Append(String.Format("{0}: {1}, ", toStop.DevicesInfoString, toStop.AlgorithmType));
+
+                            toStop.Stop();
+                            _runningGroupMiners.Remove(toStop.Key);
+                            // TODO check if daggerHashimoto and save
+                            if (toStop.AlgorithmType == AlgorithmType.DaggerHashimoto)
+                            {
+                                if (toStop.DeviceType == DeviceType.NVIDIA)
+                                {
+                                    _ethminerNVIDIAPaused = toStop;
+                                }
+                                else if (toStop.DeviceType == DeviceType.AMD)
+                                {
+                                    _ethminerAMDPaused = toStop;
+                                }
+                            }
                         }
                     }
-                }
-                // start new miners
-                foreach (var toStart in toRunNewGroupMiners.Values) {
-                    toStart.Start(_miningLocation, _btcAdress, _worker);
-                    _runningGroupMiners[toStart.Key] = toStart;
+
+                    // start new miners
+                    if (toRunNewGroupMiners.Values.Count > 0)
+                    {
+                        foreach (var toStart in toRunNewGroupMiners.Values)
+                        {
+                            stringBuilderCurrentAlgo.Append(String.Format("{0}: {1}, ", toStart.DevicesInfoString, toStart.AlgorithmType));
+
+                            toStart.Start(_miningLocation, _btcAdress, _worker);
+                            _runningGroupMiners[toStart.Key] = toStart;
+                        }
+                    }
+
+                    // which miners dosen't change
+                    if (noChangeGroupMiners.Values.Count > 0)
+                    {
+                        foreach (var noChange in noChangeGroupMiners.Values)
+                            stringBuilderNoChangeAlgo.Append(String.Format("{0}: {1}, ", noChange.DevicesInfoString, noChange.AlgorithmType));
+                    }
+
+                    if (stringBuilderPreviousAlgo.Length > 0)
+                        Helpers.ConsolePrint(TAG, String.Format("Stop Mining: {0}", stringBuilderPreviousAlgo.ToString()));
+
+                    if (stringBuilderCurrentAlgo.Length > 0)
+                        Helpers.ConsolePrint(TAG, String.Format("Now Mining : {0}", stringBuilderCurrentAlgo.ToString()));
+
+                    if (stringBuilderNoChangeAlgo.Length > 0)
+                        Helpers.ConsolePrint(TAG, String.Format("No change  : {0}", stringBuilderNoChangeAlgo.ToString()));
                 }
             }
 
             // stats quick fix code
             //if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
-                MinerStatsCheck(NiceHashData);
+            MinerStatsCheck(NiceHashData);
             //}
         }
 
