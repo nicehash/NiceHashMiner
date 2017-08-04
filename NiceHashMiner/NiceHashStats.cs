@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Globalization;
 using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
@@ -201,7 +202,7 @@ namespace NiceHashMiner
         private static void SetBalance(string balance) {
             try {
                 double bal = 0d;
-                double.TryParse(balance, out bal);
+                double.TryParse(balance, NumberStyles.Number, CultureInfo.InvariantCulture, out bal);
                 Balance = bal;
                 OnBalanceUpdate.Emit(null, EventArgs.Empty);
             } catch (Exception e) {
