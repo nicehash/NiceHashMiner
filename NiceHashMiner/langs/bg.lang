@@ -270,7 +270,7 @@
     "Form_Main_Group_Device_Rates": "Резултати за групата/устройствата:",
     "FormBenchmark_Benchmark_Step": "Стъпка от теста ( {0} / {1} )",
     "FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg": "Всички тестове за скорост приключиха успешно.",
-    "FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg": "Не всички тестове за скорост приключиха успешно. Натиснете 'Опитай отново', за да опитате повторно тестване на неизмерените алгоритми или изберете Cancel, за да ги деактивирате.",
+    "FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg": "Не всички тестове за скорост приключиха успешно. Натиснете 'Опитай отново', за да опитате повторно тестване на неизмерените алгоритми или изберете 'Отказ', за да ги деактивирате.",
     "FormBenchmark_Benchmark_Finish_MsgBox_Title": "Приключване на тестовете за скорост",
     "FormBenchmark_Benchmark_GroupBoxStatus": "Резултат от тестовете за скорост:",
     "FormBenchmark_Benchmark_All_Selected_Unbenchmarked": "Тестване на избраните алгоритми, които не са измервани досега",
