@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Enums;
@@ -15,7 +16,7 @@ using System.IO;
 using System.Globalization;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Miners.Grouping;
-using NiceHashMiner.Net20_backport;
+using NVIDIA.NVAPI;
 
 namespace NiceHashMiner.Devices
 {
@@ -351,7 +352,7 @@ namespace NiceHashMiner.Devices
                     // get all cores (including virtual - HT can benefit mining)
                     int ThreadsPerCPU = CPUID.GetVirtualCoresCount() / Avaliable.CPUsCount;
 
-                    if (!Helpers.InternalCheckIsWow64()) {
+                    if (!Helpers.Is64BitOperatingSystem) {
                         MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64bitMsg"),
                                         International.GetText("Warning_with_Exclamation"),
                                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -372,12 +373,12 @@ namespace NiceHashMiner.Devices
                     if (CPUUtils.IsCPUMiningCapable()) {
                         if (Avaliable.CPUsCount == 1) {
                             Avaliable.AllAvaliableDevices.Add(
-                                new ComputeDevice(0, "CPU0", CPUID.GetCPUName().Trim(), ThreadsPerCPU, (ulong)0, ++CPUCount)
+                                new CPUComputeDevice(0, "CPU0", CPUID.GetCPUName().Trim(), ThreadsPerCPU, (ulong)0, ++CPUCount)
                             );
                         } else if (Avaliable.CPUsCount > 1) {
                             for (int i = 0; i < Avaliable.CPUsCount; i++) {
                                 Avaliable.AllAvaliableDevices.Add(
-                                    new ComputeDevice(i, "CPU" + i, CPUID.GetCPUName().Trim(), ThreadsPerCPU, CPUID.CreateAffinityMask(i, ThreadsPerCPUMask), ++CPUCount)
+                                    new CPUComputeDevice(i, "CPU" + i, CPUID.GetCPUName().Trim(), ThreadsPerCPU,         CPUID.CreateAffinityMask(i, ThreadsPerCPUMask), ++CPUCount)
                                 );
                             }
                         }
@@ -438,6 +439,32 @@ namespace NiceHashMiner.Devices
                         StringBuilder stringBuilder = new StringBuilder();
                         stringBuilder.AppendLine("");
                         stringBuilder.AppendLine("CudaDevicesDetection:");
+                        
+                        // Enumerate NVAPI handles and map to busid
+                        var idHandles = new Dictionary<int, NvPhysicalGpuHandle>();
+                        if (NVAPI.IsAvailable) {
+                            NvPhysicalGpuHandle[] handles = new NvPhysicalGpuHandle[NVAPI.MAX_PHYSICAL_GPUS];
+                            int count;
+                            if (NVAPI.NvAPI_EnumPhysicalGPUs == null) {
+                                Helpers.ConsolePrint("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable");
+                            } else {
+                                var status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out count);
+                                if (status != NvStatus.OK) {
+                                    Helpers.ConsolePrint("NVAPI", "Enum physical GPUs failed with status: " + status);
+                                } else {
+                                    foreach (var handle in handles) {
+                                        int id = -1;
+                                        var idStatus = NVAPI.NvAPI_GPU_GetBusID(handle, out id);
+                                        if (idStatus != NvStatus.OK) {
+                                            Helpers.ConsolePrint("NVAPI", "Bus ID get failed with status: " + status);
+                                        } else {
+                                            idHandles[id] = handle;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         foreach (var cudaDev in CudaDevices) {
                             // check sm vesrions
                             bool isUnderSM21;
@@ -479,9 +506,11 @@ namespace NiceHashMiner.Devices
                                         group = DeviceGroupType.NVIDIA_6_x;
                                         break;
                                 }
+                                NvPhysicalGpuHandle handle;
+                                idHandles.TryGetValue((int)cudaDev.DeviceID + 1, out handle);
                                 Avaliable.AllAvaliableDevices.Add(
-                                    new ComputeDevice(cudaDev, group, ++GPUCount)
-                                    );
+                                    new CudaComputeDevice(cudaDev, group, ++GPUCount, handle)
+                                );
                             }
                         }
                         Helpers.ConsolePrint(TAG, stringBuilder.ToString());
@@ -666,7 +695,7 @@ namespace NiceHashMiner.Devices
                                 bool isAdlInit = true;
                                 // ADL does not get devices in order map devices by bus number
                                 // bus id, <name, uuid>
-                                Dictionary<int, Tuple3<string, string, string>> _busIdsInfo = new Dictionary<int, Tuple3<string, string, string>>();
+                                var _busIdsInfo = new Dictionary<int, Tuple<string, string, string, int>>();
                                 List<string> _amdDeviceName = new List<string>();
                                 List<string> _amdDeviceUUID = new List<string>();
                                 try {
@@ -733,6 +762,7 @@ namespace NiceHashMiner.Devices
                                                                     var pciVen_id_strSize = 21; // PCI_VEN_XXXX&DEV_XXXX
                                                                     var uuid = udid.Substring(0, pciVen_id_strSize) + "_" + serial;
                                                                     int budId = OSAdapterInfoData.ADLAdapterInfo[i].BusNumber;
+                                                                    var index = OSAdapterInfoData.ADLAdapterInfo[i].AdapterIndex;
                                                                     if (!_amdDeviceUUID.Contains(uuid)) {
                                                                         try {
                                                                             Helpers.ConsolePrint(TAG, String.Format("ADL device added BusNumber:{0}  NAME:{1}  UUID:{2}"),
@@ -745,7 +775,7 @@ namespace NiceHashMiner.Devices
                                                                         //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
                                                                         _amdDeviceName.Add(devName);
                                                                         if (!_busIdsInfo.ContainsKey(budId)) {
-                                                                            var nameUuid = new Tuple3<string, string, string>(devName, uuid, infSection);
+                                                                            var nameUuid = new Tuple<string, string, string, int>(devName, uuid, infSection, index);
                                                                             _busIdsInfo.Add(budId, nameUuid);
                                                                         }
                                                                     }
@@ -762,8 +792,8 @@ namespace NiceHashMiner.Devices
                                                     Marshal.FreeCoTaskMem(AdapterBuffer);
                                             }
                                         }
-                                        if (null != ADL.ADL_Main_Control_Destroy)
-                                            ADL.ADL_Main_Control_Destroy();
+                                        //if (null != ADL.ADL_Main_Control_Destroy)
+                                           // ADL.ADL_Main_Control_Destroy();
                                     } else {
                                         // TODO
                                         Helpers.ConsolePrint(TAG, "ADL_Main_Control_Create() returned error code " + ADLRet.ToString());
@@ -796,13 +826,14 @@ namespace NiceHashMiner.Devices
                                             var newAmdDev = new AmdGpuDevice(amdGpus[i_id], deviceDriverOld[deviceName], _busIdsInfo[busID].Item3, deviceDriverNO_neoscrypt_lyra2re[deviceName]);
                                             newAmdDev.DeviceName = deviceName;
                                             newAmdDev.UUID = _busIdsInfo[busID].Item2;
+                                            newAmdDev.AdapterIndex = _busIdsInfo[busID].Item4;
                                             bool isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
                                             string skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
                                             string isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
                                             string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
                                             Avaliable.AllAvaliableDevices.Add(
-                                                new ComputeDevice(newAmdDev, ++GPUCount, false));
+                                                new AmdComputeDevice(newAmdDev, ++GPUCount, false));
                                             // just in case 
                                             try {
                                                 stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
@@ -853,7 +884,7 @@ namespace NiceHashMiner.Devices
                                         string etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
                                         Avaliable.AllAvaliableDevices.Add(
-                                            new ComputeDevice(newAmdDev, ++GPUCount, true));
+                                            new AmdComputeDevice(newAmdDev, ++GPUCount, true));
                                         // just in case 
                                         try {
                                             stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
@@ -945,6 +976,15 @@ namespace NiceHashMiner.Devices
             public static bool HasAMD = false;
             public static bool HasCPU = false;
             public static int CPUsCount = 0;
+            public static int AvailCPUs { get {
+                    return AllAvaliableDevices.Count(d => d.DeviceType == DeviceType.CPU);
+                } }
+            public static int AvailNVGPUs { get {
+                    return AllAvaliableDevices.Count(d => d.DeviceType == DeviceType.NVIDIA);
+                } }
+            public static int AvailAMDGPUs { get {
+                    return AllAvaliableDevices.Count(d => d.DeviceType == DeviceType.AMD);
+                } }
             public static int GPUsCount = 0;
             public static int AMDOpenCLPlatformNum = -1;
             public static bool IsHyperThreadingEnabled = false;

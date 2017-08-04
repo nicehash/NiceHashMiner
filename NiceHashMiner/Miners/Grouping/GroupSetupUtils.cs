@@ -1,6 +1,5 @@
 ﻿using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
-using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
 using System.Text;

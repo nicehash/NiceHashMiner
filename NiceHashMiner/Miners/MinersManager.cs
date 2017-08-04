@@ -32,6 +32,13 @@ namespace NiceHashMiner.Miners {
             return "IDLE";
         }
 
+        public static List<int> GetActiveMinersIndexes() {
+            if (CurMiningSession != null) {
+                return CurMiningSession.ActiveDeviceIndexes;
+            }
+            return new List<int>();
+        }
+
         public static double GetTotalRate() {
             if (CurMiningSession != null) return CurMiningSession.GetTotalRate();
             return 0;
