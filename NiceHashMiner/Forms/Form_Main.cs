@@ -51,7 +51,7 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
 
-        const string _betaAlphaPostfixString = "";
+        const string _betaAlphaPostfixString = "-Pre";
 
         private bool _isDeviceDetectionInitialized = false;
 
@@ -609,12 +609,12 @@ namespace NiceHashMiner
         {
             var ver = NiceHashStats.Version;
             if (ver == null) return;
-
+            
             Version programVersion = new Version(Application.ProductVersion);
             Version onlineVersion = new Version(ver);
             int ret = programVersion.CompareTo(onlineVersion);
 
-            if (ret < 0)
+            if (ret < 0 || (ret == 0 && _betaAlphaPostfixString != ""))
             {
                 SetVersionLabel(String.Format(International.GetText("Form_Main_new_version_released"), ver));
                 VisitURLNew = Links.VisitURLNew + ver;
