@@ -5,8 +5,8 @@
     "Global_Yes": "&Да",
     "Global_No": "&Не",
     "Global_OK": "&ОК",
-    "Global_Cancel": "&Cancel",
-    "Global_Retry": "&Retry",
+    "Global_Cancel": "Отка&з",
+    "Global_Retry": "&Опитай отново",
 
     "Service_Location": "Избор на локация",
     "Warning_with_Exclamation": "Внимание!",
@@ -113,7 +113,6 @@
     "SubmitResultDialog_UsePreviousBenchmarkedValueTitle": "Използване на резултати от предишен тест?",
     "SubmitResultDialog_UsePreviousBenchmarkedValueMsg": "Може да използвате стойности от предишен тест за скорост. Изберете 'Да', за да използвате предишен резултат или 'Не' за повторно изпълнение на теста за скорост.",
 
-
     "Form_Settings_General_DebugConsole": "Debug конзола",
     "Form_Settings_General_AutoStartMining": "Автоматичен старт на изчисленията",
     "Form_Settings_General_HideMiningWindows": "Скриване на изчисл. програма",
@@ -123,6 +122,7 @@
     "Form_Settings_General_StartMiningWhenIdle": "Използване само в idle режим",
     "Form_Settings_General_ShowDriverVersionWarning": "Проверка за версия на драйвера",
     "Form_Settings_General_DisableWindowsErrorReporting": "Изкл. журнала за грешки на Windows",
+    "Form_Settings_General_ShowInternetConnectionWarning": "Проверка за липсваща интернет връзка",
     "Form_Settings_General_UseNewSettingsPage": "Нов панел за настройки",
     "Form_Settings_General_NVIDIAP0State": "NVIDIA P0 режим",
     "Form_Settings_General_LogToFile": "Запис на журнала във файл",
@@ -222,6 +222,7 @@
 
     "Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning": "Когато тази опция е активна, NiceHash Miner Legacy ще ви предупреждава, ако\nе инсталирана неоптимална версия на драйвера за видеокартата.",
     "Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting": "Когато тази опция е активна, при блокиране на програмата за изчисления\nNiceHash Miner Legacy ще може да я рестартира, тъй като контролът няма да бъде\r\nблокиран от съобщението за грешка на Windows.\r\n\r\nПрепоръчително е тази настройка да бъде активирана, за да се гарантира\r\nнепрекъснатост на изчислителния процес, тъй като програмите\r\nот този тип не са 100% стабилни.",
+    "Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning": "Когато тази опция е активна, NiceHash Miner Legacy ще покаже предупреждение,\nако няма работеща връзка към интернет.",
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "Когато тази опция е активна, NiceHash Miner Legacy ще използва новия панел за настройки.",
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Когато тази опция е активна, NiceHash Miner Legacy ще установи всички поддържани NVIDIA видеокарти в режим P0.\nТова води до леко повишаване на производителността при някои алгоритми.\nТази опция изисква административни привилегии, за да бъде активирана.",
     "Form_Settings_ToolTip_ethminerAPIPort": "API порт, използван от ethminer за {0} видеокарти.",
