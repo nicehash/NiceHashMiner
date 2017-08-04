@@ -56,7 +56,7 @@ namespace NiceHashMiner
         private bool _isDeviceDetectionInitialized = false;
 
         private bool IsManuallyStarted = false;
-        private bool IsStopped = false;
+        private bool IsNotProfitable = false;
 
         int MainFormHeight = 0;
         int EmtpyGroupPanelHeight = 0;
@@ -560,10 +560,10 @@ namespace NiceHashMiner
         {
             if (ConfigManager.GeneralConfig.UseIFTTT)
             {
-                if (!IsStopped)
+                if (!IsNotProfitable)
                 {
                     IFTTT.PostToIFTTT("nicehash", msg);
-                    IsStopped = true;
+                    IsNotProfitable = true;
                 }
             }
 
@@ -575,10 +575,10 @@ namespace NiceHashMiner
         {
             if (ConfigManager.GeneralConfig.UseIFTTT)
             {
-                if (IsStopped)
+                if (IsNotProfitable)
                 {
                     IFTTT.PostToIFTTT("nicehash", "Mining is once again profitable and has resumed.");
-                    IsStopped = false;
+                    IsNotProfitable = false;
                 }
             }
 
@@ -1037,6 +1037,7 @@ namespace NiceHashMiner
             buttonSettings.Enabled = true;
             devicesListViewEnableControl1.IsMining = false;
             buttonStopMining.Enabled = false;
+            IsNotProfitable = false;
 
             if (DemoMode)
             {
