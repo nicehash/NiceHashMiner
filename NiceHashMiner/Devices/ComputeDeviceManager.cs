@@ -215,7 +215,7 @@ namespace NiceHashMiner.Devices
                 }
 
                 // no devices found
-                if (showWarning && Avaliable.AllAvaliableDevices.Count <= 0) {
+                if (Avaliable.AllAvaliableDevices.Count <= 0) {
                     DialogResult result = MessageBox.Show(International.GetText("Compute_Device_Query_Manager_No_Devices"),
                                                           International.GetText("Compute_Device_Query_Manager_No_Devices_Title"),
                                                           MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
