@@ -483,6 +483,7 @@ namespace NiceHashMiner.Devices
                             string etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
                             stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
                             stringBuilder.AppendLine(String.Format("\t\tID: {0}", cudaDev.DeviceID.ToString()));
+                            stringBuilder.AppendLine(String.Format("\t\tBusID: {0}", cudaDev.pciBusID.ToString()));
                             stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", cudaDev.GetName()));
                             stringBuilder.AppendLine(String.Format("\t\tVENDOR: {0}", cudaDev.VendorName));
                             stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", cudaDev.UUID));
@@ -510,7 +511,7 @@ namespace NiceHashMiner.Devices
                                         break;
                                 }
                                 NvPhysicalGpuHandle handle;
-                                idHandles.TryGetValue((int)cudaDev.DeviceID + 1, out handle);
+                                idHandles.TryGetValue(cudaDev.pciBusID, out handle);
                                 Avaliable.AllAvaliableDevices.Add(
                                     new CudaComputeDevice(cudaDev, group, ++GPUCount, handle)
                                 );
