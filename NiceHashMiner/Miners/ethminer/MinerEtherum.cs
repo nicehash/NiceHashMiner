@@ -7,7 +7,6 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 using NiceHashMiner.Miners.Grouping;
-using NiceHashMiner.Net20_backport;
 
 namespace NiceHashMiner.Miners {
 
@@ -44,7 +43,7 @@ namespace NiceHashMiner.Miners {
             foreach (var mPair in MiningSetup.MiningPairs) {
                 ids.Add(mPair.Device.ID.ToString());
             }
-            deviceStringCommand += StringHelper.Join(" ", ids);
+            deviceStringCommand += String.Join(" ", ids);
             // set dag load mode
             deviceStringCommand += String.Format(" --dag-load-mode {0} ", GetDagGenerationString(DagGenerationType));
             if (DagGenerationType == DagGenerationType.Single

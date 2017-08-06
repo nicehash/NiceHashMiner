@@ -17,7 +17,6 @@ using NiceHashMiner.Miners.Grouping;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
-using NiceHashMiner.Net20_backport;
 using System.IO;
 
 namespace NiceHashMiner
@@ -211,7 +210,7 @@ namespace NiceHashMiner
                 // contains ids
                 List<string> ids = new List<string>();
                 foreach (var cdevs in MiningSetup.MiningPairs) ids.Add(cdevs.Device.ID.ToString());
-                _minetTag = String.Format(MASK, MinerDeviceName, MINER_ID, StringHelper.Join(",", ids));
+                _minetTag = String.Format(MASK, MinerDeviceName, MINER_ID, String.Join(",", ids));
             }
             return _minetTag;
         }
@@ -297,7 +296,7 @@ namespace NiceHashMiner
             foreach (var mPair in MiningSetup.MiningPairs) {
                 ids.Add(mPair.Device.ID.ToString());
             }
-            deviceStringCommand += StringHelper.Join(",", ids);
+            deviceStringCommand += String.Join(",", ids);
 
             return deviceStringCommand;
         }
