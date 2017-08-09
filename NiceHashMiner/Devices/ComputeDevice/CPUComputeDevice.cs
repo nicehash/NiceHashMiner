@@ -14,7 +14,9 @@ namespace NiceHashMiner.Devices
 
         public override float Load {
             get {
-                if (cpuCounter != null) return cpuCounter.NextValue();
+                try {
+                    if (cpuCounter != null) return cpuCounter.NextValue();
+                } catch (Exception e) { Helpers.ConsolePrint("CPUDIAG", e.ToString()); }
                 return 0;
             }
         }
