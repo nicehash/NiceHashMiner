@@ -70,8 +70,10 @@ namespace NiceHashMiner
             static WebSocket webSocket;
             public static bool IsAlive { get { return webSocket.IsAlive; } }
             static bool attemptingReconnect = false;
+            static bool connectionAttempted = false;
 
             public static void StartConnection(string address) {
+                connectionAttempted = true;
                 try {
                     if (webSocket == null) {
                         webSocket = new WebSocket(address);
@@ -156,7 +158,12 @@ namespace NiceHashMiner
                             Helpers.ConsolePrint("SOCKET", "Socket connection unsuccessfull, will try again on next device update (1min)");
                         }
                     } else {
-                        Helpers.ConsolePrint("SOCKET", "Data sending attempted before socket initialization");
+                        if (!connectionAttempted) {
+                            Helpers.ConsolePrint("SOCKET", "Data sending attempted before socket initialization");
+                        } else {
+                            Helpers.ConsolePrint("SOCKET", "webSocket not created, retrying");
+                            StartConnection(Links.NHM_Socket_Address);
+                        }
                     }
                 } catch (Exception e) {
                     Helpers.ConsolePrint("SOCKET", e.ToString());
