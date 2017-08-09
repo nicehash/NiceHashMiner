@@ -310,6 +310,13 @@ namespace NiceHashMiner.Forms {
             }
         }
 
+        public void StopBenchmark() {
+            if (_inBenchmark) {
+                StopButonClick();
+                BenchmarkStoppedGUISettings();
+            }
+        }
+
         private void BenchmarkStoppedGUISettings() {
             StartStopBtn.Text = International.GetText("Form_Benchmark_buttonStartBenchmark");
             // clear benchmark pending status

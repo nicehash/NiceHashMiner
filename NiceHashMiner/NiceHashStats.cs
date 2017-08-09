@@ -19,6 +19,14 @@ using WebSocketSharp;
 
 namespace NiceHashMiner
 { 
+    public class SocketEventArgs : EventArgs
+    {
+        public string Message = "";
+
+        public SocketEventArgs(string message) {
+            Message = message;
+        }
+    }
     class NiceHashStats {
 #pragma warning disable 649
         #region JSON Models
@@ -54,6 +62,7 @@ namespace NiceHashMiner
         public static event EventHandler OnVersionUpdate = delegate { };
         public static event EventHandler OnConnectionLost = delegate { };
         public static event EventHandler OnConnectionEstablished = delegate { };
+        public static event EventHandler<SocketEventArgs> OnVersionBurn = delegate { };
 
         #region Socket
         private class NiceHashConnection
@@ -107,10 +116,12 @@ namespace NiceHashMiner
                         dynamic message = JsonConvert.DeserializeObject(e.Data);
                         if (message.method == "sma") {
                             SetAlgorithmRates(message.data);
-                        }else if (message.method == "balance") {
+                        } else if (message.method == "balance") {
                             SetBalance(message.value.Value);
                         } else if (message.method == "versions") {
                             SetVersion(message.legacy.Value);
+                        } else if (message.method == "burn") {
+                            OnVersionBurn.Emit(null, new SocketEventArgs(message.message.Value));
                         }
                     }
                 } catch (Exception er) {

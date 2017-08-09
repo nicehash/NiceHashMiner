@@ -269,6 +269,7 @@ namespace NiceHashMiner
             NiceHashStats.OnVersionUpdate += VersionUpdateCallback;
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
+            NiceHashStats.OnVersionBurn += VersionBurnCallback;
             NiceHashStats.StartConnection(Links.NHM_Socket_Address);
 
             // increase timeout
@@ -580,6 +581,16 @@ namespace NiceHashMiner
             if (NiceHashStats.AlgorithmRates != null) {
                 Globals.NiceHashData = NiceHashStats.AlgorithmRates;
             }
+        }
+
+        void VersionBurnCallback(object sender, SocketEventArgs e) {
+            BeginInvoke((Action)(() => {
+                StopMining();
+                if (BenchmarkForm != null) 
+                    BenchmarkForm.StopBenchmark();
+                DialogResult dialogResult = MessageBox.Show(e.Message, International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }));
         }
 
         void ConnectionLostCallback(object sender, EventArgs e) {
