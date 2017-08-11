@@ -22,17 +22,12 @@ namespace NiceHashMiner.Forms
 
         private bool _isInitFinished = false;
         private bool _isChange = false;
-        public bool IsChange
-        {
+        public bool IsChange {
             get { return _isChange; }
-            private set
-            {
-                if (_isInitFinished)
-                {
+            private set {
+                if (_isInitFinished) {
                     _isChange = value;
-                }
-                else
-                {
+                } else {
                     _isChange = false;
                 }
             }
@@ -49,8 +44,7 @@ namespace NiceHashMiner.Forms
         private RegistryKey rkStartup = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
         private bool isStartupChanged = false;
 
-        public Form_Settings()
-        {
+        public Form_Settings() {
             InitializeComponent();
             this.Icon = NiceHashMiner.Properties.Resources.logo;
 
@@ -79,8 +73,7 @@ namespace NiceHashMiner.Forms
 
 
             // set first device selected {
-            if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0)
-            {
+            if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0) {
                 _selectedComputeDevice = ComputeDeviceManager.Avaliable.AllAvaliableDevices[0];
                 algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
                 groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
@@ -92,8 +85,7 @@ namespace NiceHashMiner.Forms
 
         #region Initializations
 
-        private void InitializeToolTip()
-        {
+        private void InitializeToolTip() {
             // Setup Tooltips
             toolTip1.SetToolTip(this.comboBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
             toolTip1.SetToolTip(this.label_Language, International.GetText("Form_Settings_ToolTip_Language"));
@@ -244,8 +236,7 @@ namespace NiceHashMiner.Forms
         }
 
         #region Form this
-        private void InitializeFormTranslations()
-        {
+        private void InitializeFormTranslations() {
             buttonDefaults.Text = International.GetText("Form_Settings_buttonDefaultsText");
             buttonSaveClose.Text = International.GetText("Form_Settings_buttonSaveText");
             buttonCloseNoSave.Text = International.GetText("Form_Settings_buttonCloseNoSaveText");
@@ -254,8 +245,7 @@ namespace NiceHashMiner.Forms
 
         #region Tab General
 
-        private void InitializeGeneralTabTranslations()
-        {
+        private void InitializeGeneralTabTranslations() {
             checkBox_DebugConsole.Text = International.GetText("Form_Settings_General_DebugConsole");
             checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
             checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
@@ -333,8 +323,7 @@ namespace NiceHashMiner.Forms
             label_SwitchProfitabilityThreshold.Text = International.GetText("Form_Settings_General_SwitchProfitabilityThreshold");
         }
 
-        private void InitializeGeneralTabCallbacks()
-        {
+        private void InitializeGeneralTabCallbacks() {
             // Add EventHandler for all the general tab's checkboxes
             {
                 this.checkBox_AutoScaleBTCValues.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
@@ -394,16 +383,14 @@ namespace NiceHashMiner.Forms
             comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged += comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged;
             // fill dag dropdown
             comboBox_DagLoadMode.Items.Clear();
-            for (int i = 0; i < (int)DagGenerationType.END; ++i)
-            {
+            for (int i = 0; i < (int)DagGenerationType.END; ++i) {
                 comboBox_DagLoadMode.Items.Add(MinerEtherum.GetDagGenerationString((DagGenerationType)i));
             }
             // set selected
             comboBox_DagLoadMode.SelectedIndex = (int)ConfigManager.GeneralConfig.EthminerDagGenerationType;
         }
 
-        private void InitializeGeneralTabFieldValuesReferences()
-        {
+        private void InitializeGeneralTabFieldValuesReferences() {
             // Checkboxes set checked value
             {
                 checkBox_DebugConsole.Checked = ConfigManager.GeneralConfig.DebugConsole;
@@ -463,8 +450,7 @@ namespace NiceHashMiner.Forms
                 Dictionary<LanguageType, string> lang = International.GetAvailableLanguages();
 
                 comboBox_Language.Items.Clear();
-                for (int i = 0; i < lang.Count; i++)
-                {
+                for (int i = 0; i < lang.Count; i++) {
                     comboBox_Language.Items.Add(lang[(LanguageType)i]);
                 }
             }
@@ -478,8 +464,7 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        private void InitializeGeneralTab()
-        {
+        private void InitializeGeneralTab() {
             InitializeGeneralTabTranslations();
             InitializeGeneralTabCallbacks();
             InitializeGeneralTabFieldValuesReferences();
@@ -489,13 +474,11 @@ namespace NiceHashMiner.Forms
 
         #region Tab Devices
 
-        private void InitializeDevicesTab()
-        {
+        private void InitializeDevicesTab() {
             InitializeDevicesCallbacks();
         }
 
-        private void InitializeDevicesCallbacks()
-        {
+        private void InitializeDevicesCallbacks() {
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
         }
 
@@ -507,8 +490,7 @@ namespace NiceHashMiner.Forms
         #region Form Callbacks
 
         #region Tab General
-        private void GeneralCheckBoxes_CheckedChanged(object sender, EventArgs e)
-        {
+        private void GeneralCheckBoxes_CheckedChanged(object sender, EventArgs e) {
             if (!_isInitFinished) return;
             // indicate there has been a change
             IsChange = true;
@@ -530,21 +512,16 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
         }
 
-        private void checkBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e)
-        {
+        private void checkBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e) {
             if (!_isInitFinished) return;
 
             // indicate there has been a change
             IsChange = true;
             ConfigManager.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
-            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
-            {
-                if (cDev.DeviceType == DeviceType.AMD)
-                {
-                    foreach (var algorithm in cDev.GetAlgorithmSettings())
-                    {
-                        if (algorithm.NiceHashID != AlgorithmType.DaggerHashimoto)
-                        {
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                if (cDev.DeviceType == DeviceType.AMD) {
+                    foreach (var algorithm in cDev.GetAlgorithmSettings()) {
+                        if (algorithm.NiceHashID != AlgorithmType.DaggerHashimoto) {
                             algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
                             algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
                                 new MiningPair(cDev, algorithm), algorithm.NiceHashID, DeviceType.AMD, false);
@@ -554,40 +531,30 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        private void checkBox_DisableDefaultOptimizations_CheckedChanged(object sender, EventArgs e)
-        {
+        private void checkBox_DisableDefaultOptimizations_CheckedChanged(object sender, EventArgs e) {
             if (!_isInitFinished) return;
 
             // indicate there has been a change
             IsChange = true;
             ConfigManager.GeneralConfig.DisableDefaultOptimizations = checkBox_DisableDefaultOptimizations.Checked;
-            if (ConfigManager.GeneralConfig.DisableDefaultOptimizations)
-            {
-                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
-                {
-                    foreach (var algorithm in cDev.GetAlgorithmSettings())
-                    {
+            if (ConfigManager.GeneralConfig.DisableDefaultOptimizations) {
+                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                    foreach (var algorithm in cDev.GetAlgorithmSettings()) {
                         algorithm.ExtraLaunchParameters = "";
-                        if (cDev.DeviceType == DeviceType.AMD && algorithm.NiceHashID != AlgorithmType.DaggerHashimoto)
-                        {
+                        if (cDev.DeviceType == DeviceType.AMD && algorithm.NiceHashID != AlgorithmType.DaggerHashimoto) {
                             algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
                             algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
                                 new MiningPair(cDev, algorithm), algorithm.NiceHashID, cDev.DeviceType, false);
                         }
                     }
                 }
-            }
-            else
-            {
-                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
-                {
+            } else {
+                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                     if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
                     var deviceDefaultsAlgoSettings = GroupAlgorithms.CreateForDeviceList(cDev);
-                    foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings)
-                    {
+                    foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings) {
                         var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings.MinerBaseType, defaultAlgoSettings.NiceHashID, defaultAlgoSettings.SecondaryNiceHashID);
-                        if (toSetAlgo != null)
-                        {
+                        if (toSetAlgo != null) {
                             toSetAlgo.ExtraLaunchParameters = defaultAlgoSettings.ExtraLaunchParameters;
                             toSetAlgo.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
                                 new MiningPair(cDev, toSetAlgo), toSetAlgo.NiceHashID, cDev.DeviceType, false);
@@ -597,28 +564,22 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        private void checkBox_RunAtStartup_CheckedChanged(object sender, EventArgs e)
-        {
+        private void checkBox_RunAtStartup_CheckedChanged(object sender, EventArgs e) {
             isStartupChanged = true;
         }
 
-        private bool isInStartupRegistry()
-        {
+        private bool isInStartupRegistry() {
             // Value is stored in registry
             var startVal = "";
-            try
-            {
+            try {
                 startVal = (String)rkStartup.GetValue(Application.ProductName, "");
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Helpers.ConsolePrint("REGISTRY", e.ToString());
             }
             return startVal == Application.ExecutablePath;
         }
 
-        private void GeneralTextBoxes_Leave(object sender, EventArgs e)
-        {
+        private void GeneralTextBoxes_Leave(object sender, EventArgs e) {
             if (!_isInitFinished) return;
             IsChange = true;
             if (ConfigManager.GeneralConfig.BitcoinAddress != textBox_BitcoinAddress.Text.Trim()) isCredChange = true;
@@ -655,8 +616,7 @@ namespace NiceHashMiner.Forms
             textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
         }
 
-        private void GeneralComboBoxes_Leave(object sender, EventArgs e)
-        {
+        private void GeneralComboBoxes_Leave(object sender, EventArgs e) {
             if (!_isInitFinished) return;
             IsChange = true;
             ConfigManager.GeneralConfig.Language = (LanguageType)comboBox_Language.SelectedIndex;
@@ -664,8 +624,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.EthminerDagGenerationType = (DagGenerationType)comboBox_DagLoadMode.SelectedIndex;
         }
 
-        private void comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged(object sender, EventArgs e) {
             ComboBox cmbbox = (ComboBox)sender;
             ConfigManager.GeneralConfig.ForceCPUExtension = (CPUExtensionType)cmbbox.SelectedIndex;
         }
@@ -674,8 +633,7 @@ namespace NiceHashMiner.Forms
 
 
         #region Tab Device
-        private void devicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
+        private void devicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
 
             algorithmSettingsControl1.Deselect();
             // show algorithms
@@ -684,18 +642,15 @@ namespace NiceHashMiner.Forms
             groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
         }
 
-        private void buttonSelectedProfit_Click(object sender, EventArgs e)
-        {
-            if (_selectedComputeDevice == null)
-            {
+        private void buttonSelectedProfit_Click(object sender, EventArgs e) {
+            if (_selectedComputeDevice == null) {
                 MessageBox.Show(International.GetText("FormSettings_ButtonProfitSingle"),
                                 International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK);
                 return;
             }
             var url = Links.NHM_Profit_Check + _selectedComputeDevice.Name;
-            foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettingsFastest())
-            {
+            foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettingsFastest()) {
                 var id = (int)algorithm.NiceHashID;
                 url += "&speed" + id + "=" + ProfitabilityCalculator.GetFormatedSpeed(algorithm.BenchmarkSpeed, algorithm.NiceHashID).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
             }
@@ -704,26 +659,19 @@ namespace NiceHashMiner.Forms
             System.Diagnostics.Process.Start(url);
         }
 
-        private void buttonAllProfit_Click(object sender, EventArgs e)
-        {
+        private void buttonAllProfit_Click(object sender, EventArgs e) {
             var url = Links.NHM_Profit_Check + "CUSTOM";
             Dictionary<AlgorithmType, double> total = new Dictionary<AlgorithmType, double>();
-            foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
-            {
-                foreach (var algorithm in curCDev.GetAlgorithmSettingsFastest())
-                {
-                    if (total.ContainsKey(algorithm.NiceHashID))
-                    {
+            foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
+                foreach (var algorithm in curCDev.GetAlgorithmSettingsFastest()) {
+                    if (total.ContainsKey(algorithm.NiceHashID)) {
                         total[algorithm.NiceHashID] += algorithm.BenchmarkSpeed;
-                    }
-                    else
-                    {
+                    } else {
                         total[algorithm.NiceHashID] = algorithm.BenchmarkSpeed;
                     }
                 }
             }
-            foreach (var algorithm in total)
-            {
+            foreach (var algorithm in total) {
                 var id = (int)algorithm.Key;
                 url += "&speed" + id + "=" + ProfitabilityCalculator.GetFormatedSpeed(algorithm.Value, algorithm.Key).ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
             }
@@ -735,20 +683,17 @@ namespace NiceHashMiner.Forms
         #endregion //Tab Device
 
 
-        private void toolTip1_Popup(object sender, PopupEventArgs e)
-        {
+        private void toolTip1_Popup(object sender, PopupEventArgs e) {
             toolTip1.ToolTipTitle = International.GetText("Form_Settings_ToolTip_Explaination");
         }
 
         #region Form Buttons
-        private void buttonDefaults_Click(object sender, EventArgs e)
-        {
+        private void buttonDefaults_Click(object sender, EventArgs e) {
             DialogResult result = MessageBox.Show(International.GetText("Form_Settings_buttonDefaultsMsg"),
                                                   International.GetText("Form_Settings_buttonDefaultsTitle"),
                                                   MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-            if (result == System.Windows.Forms.DialogResult.Yes)
-            {
+            if (result == System.Windows.Forms.DialogResult.Yes) {
                 IsChange = true;
                 IsChangeSaved = true;
                 ConfigManager.GeneralConfig.SetDefaults();
@@ -759,8 +704,7 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        private void buttonSaveClose_Click(object sender, EventArgs e)
-        {
+        private void buttonSaveClose_Click(object sender, EventArgs e) {
             MessageBox.Show(International.GetText("Form_Settings_buttonSaveMsg"),
                             International.GetText("Form_Settings_buttonSaveTitle"),
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -774,23 +718,19 @@ namespace NiceHashMiner.Forms
             this.Close();
         }
 
-        private void buttonCloseNoSave_Click(object sender, EventArgs e)
-        {
+        private void buttonCloseNoSave_Click(object sender, EventArgs e) {
             IsChangeSaved = false;
             this.Close();
         }
         #endregion // Form Buttons
 
-        private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (IsChange && !IsChangeSaved)
-            {
+        private void FormSettings_FormClosing(object sender, FormClosingEventArgs e) {
+            if (IsChange && !IsChangeSaved) {
                 DialogResult result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
                                                       International.GetText("Form_Settings_buttonCloseNoSaveTitle"),
                                                       MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
-                if (result == DialogResult.No)
-                {
+                if (result == DialogResult.No) {
                     e.Cancel = true;
                     return;
                 }
@@ -799,82 +739,63 @@ namespace NiceHashMiner.Forms
             // check restart parameters change
             IsRestartNeeded = ConfigManager.IsRestartNeeded();
 
-            if (IsChangeSaved)
-            {
+            if (IsChangeSaved) {
                 ConfigManager.GeneralConfigFileCommit();
                 ConfigManager.CommitBenchmarks();
                 International.Initialize(ConfigManager.GeneralConfig.Language);
 
-                if (isStartupChanged)
-                {
+                if (isStartupChanged) {
                     // Commit to registry
-                    try
-                    {
-                        if (checkBox_RunAtStartup.Checked)
-                        {
+                    try {
+                        if (checkBox_RunAtStartup.Checked) {
                             // Add NHML to startup registry
                             rkStartup.SetValue(Application.ProductName, Application.ExecutablePath);
-                        }
-                        else
-                        {
+                        } else {
                             rkStartup.DeleteValue(Application.ProductName, false);
                         }
-                    }
-                    catch (Exception er)
-                    {
+                    } catch (Exception er) {
                         Helpers.ConsolePrint("REGISTRY", er.ToString());
                     }
                 }
-            }
-            else
-            {
+            } else {
                 ConfigManager.RestoreBackup();
             }
         }
 
-        private void currencyConverterCombobox_SelectedIndexChanged(object sender, EventArgs e)
-        {
+        private void currencyConverterCombobox_SelectedIndexChanged(object sender, EventArgs e) {
             var Selected = currencyConverterCombobox.SelectedItem.ToString();
             ConfigManager.GeneralConfig.DisplayCurrency = Selected;
         }
 
         #endregion Form Callbacks
 
-        private void tabControlGeneral_Selected(object sender, TabControlEventArgs e)
-        {
+        private void tabControlGeneral_Selected(object sender, TabControlEventArgs e) {
             // set first device selected {
-            if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0)
-            {
+            if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0) {
                 algorithmSettingsControl1.Deselect();
             }
         }
 
-        private void checkBox_Use3rdPartyMiners_CheckedChanged(object sender, EventArgs e)
-        {
+        private void checkBox_Use3rdPartyMiners_CheckedChanged(object sender, EventArgs e) {
             if (!_isInitFinished) return;
-            if (this.checkBox_Use3rdPartyMiners.Checked)
-            {
+            if (this.checkBox_Use3rdPartyMiners.Checked) {
                 // Show TOS
                 Form tos = new Form_3rdParty_TOS();
                 tos.ShowDialog(this);
                 this.checkBox_Use3rdPartyMiners.Checked = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
-            }
-            else
-            {
+            } else {
                 ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
             }
         }
 
-        private void checkBox_HideMiningWindows_CheckChanged(object sender, EventArgs e)
-        {
+        private void checkBox_HideMiningWindows_CheckChanged(object sender, EventArgs e) {
             if (!_isInitFinished) return;
             IsChange = true;
             ConfigManager.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             checkBox_MinimizeMiningWindows.Enabled = !checkBox_HideMiningWindows.Checked;
         }
 
-        private void checkBox_UseIFTTT_CheckChanged(object sender, EventArgs e)
-        {
+        private void checkBox_UseIFTTT_CheckChanged(object sender, EventArgs e) {
             if (!_isInitFinished) return;
             IsChange = true;
 
@@ -883,8 +804,7 @@ namespace NiceHashMiner.Forms
             textBox_IFTTTKey.Enabled = checkBox_UseIFTTT.Checked;
         }
 
-        private void textBox_IFTTTKey_Leave(object sender, EventArgs e)
-        {
+        private void textBox_IFTTTKey_Leave(object sender, EventArgs e) {
             if (!_isInitFinished) return;
             IsChange = true;
 
