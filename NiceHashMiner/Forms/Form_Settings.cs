@@ -37,6 +37,7 @@ namespace NiceHashMiner.Forms
                 }
             }
         }
+        private bool isCredChange = false;
         public bool IsChangeSaved { get; private set; }
         public bool IsRestartNeeded { get; private set; }
 
@@ -620,7 +621,9 @@ namespace NiceHashMiner.Forms
         {
             if (!_isInitFinished) return;
             IsChange = true;
+            if (ConfigManager.GeneralConfig.BitcoinAddress != textBox_BitcoinAddress.Text.Trim()) isCredChange = true;
             ConfigManager.GeneralConfig.BitcoinAddress = textBox_BitcoinAddress.Text.Trim();
+            if (ConfigManager.GeneralConfig.WorkerName != textBox_WorkerName.Text.Trim()) isCredChange = true;
             ConfigManager.GeneralConfig.WorkerName = textBox_WorkerName.Text.Trim();
 
             ConfigManager.GeneralConfig.SwitchMinSecondsFixed = Helpers.ParseInt(textBox_SwitchMinSecondsFixed.Text);
@@ -763,6 +766,10 @@ namespace NiceHashMiner.Forms
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
             IsChange = true;
             IsChangeSaved = true;
+
+            if (isCredChange) {
+                NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress.Trim(), ConfigManager.GeneralConfig.WorkerName.Trim());
+            }
 
             this.Close();
         }

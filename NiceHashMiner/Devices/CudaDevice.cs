@@ -6,6 +6,7 @@ namespace NiceHashMiner.Devices {
     [Serializable]
     public class CudaDevice {
         public uint DeviceID;
+        public int pciBusID;
         public int VendorID;
         public string VendorName;
         public string DeviceName;
