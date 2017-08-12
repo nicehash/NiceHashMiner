@@ -98,9 +98,9 @@ namespace NiceHashMiner {
         public bool BenchmarkNeeded {
             get {
                 if (TuningEnabled) {
-                    for (var i = ConfigManager.GeneralConfig.CDIntensityTuningStart;
-                    i <= ConfigManager.GeneralConfig.CDIntensityTuningEnd;
-                    i += ConfigManager.GeneralConfig.CDIntensityTuningInterval) {
+                    for (var i = TuningStart;
+                    i <= TuningEnd;
+                    i += TuningInterval) {
                         if (isIntensityEmpty(i)) return true;
                     }
                 } else {
@@ -262,9 +262,9 @@ namespace NiceHashMiner {
 
         public bool IncrementToNextEmptyIntensity() {  // Return false if no more needed increment
             if (!TuningEnabled) return false;
-            for (var i = Math.Max(CurrentIntensity, ConfigManager.GeneralConfig.CDIntensityTuningStart);
-                i <= ConfigManager.GeneralConfig.CDIntensityTuningEnd;
-                i += ConfigManager.GeneralConfig.CDIntensityTuningInterval) {
+            for (var i = Math.Max(CurrentIntensity, TuningStart);
+                i <= TuningEnd;
+                i += TuningInterval) {
                 if (isIntensityEmpty(i)) {
                     CurrentIntensity = i;
                     return true;
@@ -274,7 +274,7 @@ namespace NiceHashMiner {
         }
 
         public bool StartTuning() {  // Return false if no benchmark needed
-            CurrentIntensity = ConfigManager.GeneralConfig.CDIntensityTuningStart;
+            CurrentIntensity = TuningStart;
             return IncrementToNextEmptyIntensity();
         }
 

@@ -37,7 +37,7 @@ namespace NiceHashMiner.Miners
         // CD intensity tuning
         protected Algorithm Algorithm;
         protected const int defaultIntensity = 30;
-        public bool TuningEnabled { get { return IsDual() && ConfigManager.GeneralConfig.CDIntensityTuningEnabled; } }
+        public bool TuningEnabled { get { return IsDual() && Algorithm.TuningEnabled; } }
 
         public ClaymoreBaseMiner(string minerDeviceName, string look_FOR_START)
             : base(minerDeviceName) {
@@ -204,9 +204,9 @@ namespace NiceHashMiner.Miners
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             if (TuningEnabled) {
-                var stepsLeft = (int)Math.Ceiling((double)(ConfigManager.GeneralConfig.CDIntensityTuningEnd - BenchmarkAlgorithm.CurrentIntensity) / (ConfigManager.GeneralConfig.CDIntensityTuningInterval)) + 1;
+                var stepsLeft = (int)Math.Ceiling((double)(BenchmarkAlgorithm.TuningEnd - BenchmarkAlgorithm.CurrentIntensity) / (BenchmarkAlgorithm.TuningInterval)) + 1;
                 Helpers.ConsolePrint("CDTUING", "{0} tuning steps remain, should complete in {1} seconds", stepsLeft, stepsLeft * benchmarkTimeWait);
-                Helpers.ConsolePrint("CDTUNING", String.Format("Starting benchmark for intensity {0} out of {1}", BenchmarkAlgorithm.CurrentIntensity, ConfigManager.GeneralConfig.CDIntensityTuningEnd));
+                Helpers.ConsolePrint("CDTUNING", String.Format("Starting benchmark for intensity {0} out of {1}", BenchmarkAlgorithm.CurrentIntensity, BenchmarkAlgorithm.TuningEnd));
             }
 
             BenchmarkSignalQuit = false;
