@@ -32,6 +32,12 @@
             this.columnHeader_Profit = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.button_Close = new System.Windows.Forms.Button();
             this.button_Save = new System.Windows.Forms.Button();
+            this.checkBox_TuningEnabled = new System.Windows.Forms.CheckBox();
+            this.field_Speed = new NiceHashMiner.Forms.Components.Field();
+            this.field_SecondarySpeed = new NiceHashMiner.Forms.Components.Field();
+            this.field_TuningStart = new NiceHashMiner.Forms.Components.Field();
+            this.field_TuningInterval = new NiceHashMiner.Forms.Components.Field();
+            this.field_TuningEnd = new NiceHashMiner.Forms.Components.Field();
             this.SuspendLayout();
             // 
             // listView_Intensities
@@ -47,10 +53,10 @@
             this.columnHeader_Profit});
             this.listView_Intensities.FullRowSelect = true;
             this.listView_Intensities.GridLines = true;
-            this.listView_Intensities.Location = new System.Drawing.Point(12, 12);
+            this.listView_Intensities.Location = new System.Drawing.Point(12, 42);
             this.listView_Intensities.MultiSelect = false;
             this.listView_Intensities.Name = "listView_Intensities";
-            this.listView_Intensities.Size = new System.Drawing.Size(738, 663);
+            this.listView_Intensities.Size = new System.Drawing.Size(459, 425);
             this.listView_Intensities.TabIndex = 0;
             this.listView_Intensities.UseCompatibleStateImageBehavior = false;
             this.listView_Intensities.View = System.Windows.Forms.View.Details;
@@ -81,37 +87,125 @@
             // button_Close
             // 
             this.button_Close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Close.Location = new System.Drawing.Point(616, 681);
+            this.button_Close.Location = new System.Drawing.Point(675, 430);
             this.button_Close.Name = "button_Close";
             this.button_Close.Size = new System.Drawing.Size(134, 35);
             this.button_Close.TabIndex = 1;
             this.button_Close.Text = "Close";
             this.button_Close.UseVisualStyleBackColor = true;
+            this.button_Close.Click += new System.EventHandler(this.button_Close_Clicked);
             // 
             // button_Save
             // 
             this.button_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Save.Location = new System.Drawing.Point(476, 681);
+            this.button_Save.Location = new System.Drawing.Point(535, 430);
             this.button_Save.Name = "button_Save";
             this.button_Save.Size = new System.Drawing.Size(134, 35);
             this.button_Save.TabIndex = 2;
             this.button_Save.Text = "Save";
             this.button_Save.UseVisualStyleBackColor = true;
+            this.button_Save.Click += new System.EventHandler(this.button_Save_Clicked);
+            // 
+            // checkBox_TuningEnabled
+            // 
+            this.checkBox_TuningEnabled.AutoSize = true;
+            this.checkBox_TuningEnabled.Location = new System.Drawing.Point(12, 12);
+            this.checkBox_TuningEnabled.Name = "checkBox_TuningEnabled";
+            this.checkBox_TuningEnabled.Size = new System.Drawing.Size(178, 24);
+            this.checkBox_TuningEnabled.TabIndex = 3;
+            this.checkBox_TuningEnabled.Text = "Dcri Tuning Enabled";
+            this.checkBox_TuningEnabled.UseVisualStyleBackColor = true;
+            this.checkBox_TuningEnabled.CheckedChanged += new System.EventHandler(this.checkBox_TuningEnabledCheckedChanged);
+            // 
+            // field_Speed
+            // 
+            this.field_Speed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.field_Speed.AutoSize = true;
+            this.field_Speed.BackColor = System.Drawing.Color.Transparent;
+            this.field_Speed.Enabled = false;
+            this.field_Speed.EntryText = "";
+            this.field_Speed.LabelText = "Speed (H/s)";
+            this.field_Speed.Location = new System.Drawing.Point(478, 42);
+            this.field_Speed.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.field_Speed.Name = "field_Speed";
+            this.field_Speed.Size = new System.Drawing.Size(336, 68);
+            this.field_Speed.TabIndex = 4;
+            // 
+            // field_SecondarySpeed
+            // 
+            this.field_SecondarySpeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.field_SecondarySpeed.AutoSize = true;
+            this.field_SecondarySpeed.BackColor = System.Drawing.Color.Transparent;
+            this.field_SecondarySpeed.Enabled = false;
+            this.field_SecondarySpeed.EntryText = "";
+            this.field_SecondarySpeed.LabelText = "Secondary Speed (H/s)";
+            this.field_SecondarySpeed.Location = new System.Drawing.Point(478, 120);
+            this.field_SecondarySpeed.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.field_SecondarySpeed.Name = "field_SecondarySpeed";
+            this.field_SecondarySpeed.Size = new System.Drawing.Size(330, 68);
+            this.field_SecondarySpeed.TabIndex = 5;
+            // 
+            // field_TuningStart
+            // 
+            this.field_TuningStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.field_TuningStart.AutoSize = true;
+            this.field_TuningStart.BackColor = System.Drawing.Color.Transparent;
+            this.field_TuningStart.EntryText = "";
+            this.field_TuningStart.LabelText = "Tuning Start";
+            this.field_TuningStart.Location = new System.Drawing.Point(478, 198);
+            this.field_TuningStart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.field_TuningStart.Name = "field_TuningStart";
+            this.field_TuningStart.Size = new System.Drawing.Size(330, 68);
+            this.field_TuningStart.TabIndex = 6;
+            // 
+            // field_TuningInterval
+            // 
+            this.field_TuningInterval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.field_TuningInterval.AutoSize = true;
+            this.field_TuningInterval.BackColor = System.Drawing.Color.Transparent;
+            this.field_TuningInterval.EntryText = "";
+            this.field_TuningInterval.LabelText = "Tuning Interval";
+            this.field_TuningInterval.Location = new System.Drawing.Point(478, 354);
+            this.field_TuningInterval.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.field_TuningInterval.Name = "field_TuningInterval";
+            this.field_TuningInterval.Size = new System.Drawing.Size(330, 68);
+            this.field_TuningInterval.TabIndex = 7;
+            // 
+            // field_TuningEnd
+            // 
+            this.field_TuningEnd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.field_TuningEnd.AutoSize = true;
+            this.field_TuningEnd.BackColor = System.Drawing.Color.Transparent;
+            this.field_TuningEnd.EntryText = "";
+            this.field_TuningEnd.LabelText = "Tuning End";
+            this.field_TuningEnd.Location = new System.Drawing.Point(478, 276);
+            this.field_TuningEnd.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.field_TuningEnd.Name = "field_TuningEnd";
+            this.field_TuningEnd.Size = new System.Drawing.Size(330, 68);
+            this.field_TuningEnd.TabIndex = 8;
             // 
             // Form_DcriValues
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(762, 730);
+            this.ClientSize = new System.Drawing.Size(821, 479);
+            this.Controls.Add(this.field_TuningEnd);
+            this.Controls.Add(this.field_TuningInterval);
+            this.Controls.Add(this.field_TuningStart);
+            this.Controls.Add(this.field_SecondarySpeed);
+            this.Controls.Add(this.field_Speed);
+            this.Controls.Add(this.checkBox_TuningEnabled);
             this.Controls.Add(this.button_Save);
             this.Controls.Add(this.button_Close);
             this.Controls.Add(this.listView_Intensities);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.MinimumSize = new System.Drawing.Size(843, 535);
             this.Name = "Form_DcriValues";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Dcri Values";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -124,5 +218,11 @@
         private System.Windows.Forms.ColumnHeader columnHeader_Speed;
         private System.Windows.Forms.ColumnHeader columnHeader_SecondarySpeed;
         private System.Windows.Forms.ColumnHeader columnHeader_Profit;
+        private System.Windows.Forms.CheckBox checkBox_TuningEnabled;
+        private Components.Field field_Speed;
+        private Components.Field field_SecondarySpeed;
+        private Components.Field field_TuningStart;
+        private Components.Field field_TuningInterval;
+        private Components.Field field_TuningEnd;
     }
 }

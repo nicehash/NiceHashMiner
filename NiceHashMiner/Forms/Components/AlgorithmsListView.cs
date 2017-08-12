@@ -202,7 +202,7 @@ namespace NiceHashMiner.Forms.Components {
                     openDcri.Text = "Dcri values";
                     openDcri.Click += toolStripMenuItemDcri_Click;
                     if (listViewAlgorithms.SelectedItems.Count <= 0
-                        || !((Algorithm)listViewAlgorithms.SelectedItems[0].Tag).TuningEnabled) {
+                        || !((Algorithm)listViewAlgorithms.SelectedItems[0].Tag).IsDual()) {
                         openDcri.Enabled = false;
                     }
                     contextMenuStrip1.Items.Add(openDcri);

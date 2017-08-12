@@ -289,5 +289,17 @@ namespace NiceHashMiner {
             }
             return profit;
         }
+
+        public double SpeedForIntensity(int intensity) {
+            double speed = -1;
+            IntensitySpeeds.TryGetValue(intensity, out speed);
+            return speed;
+        }
+
+        public double SecondarySpeedForIntensity(int intensity) {
+            double speed = -1;
+            SecondaryIntensitySpeeds.TryGetValue(intensity, out speed);
+            return speed;
+        }
     }
 }
