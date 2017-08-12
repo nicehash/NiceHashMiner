@@ -35,6 +35,7 @@ bool CudaDetection::QueryDevices() {
 
 			// init device info
 			cudaDevice.DeviceID = i;
+			cudaDevice.pciBusID = props.pciBusID;
 			cudaDevice.VendorName = getVendorString(pciInfo);
 			cudaDevice.DeviceName = props.name;
 			cudaDevice.SMVersionString = to_string(props.major) + "." + to_string(props.minor);
@@ -117,6 +118,7 @@ void CudaDetection::PrintDevicesJson() {
 void CudaDetection::json_print(CudaDevice &dev) {
 	cout << "\t{" << endl;
 	cout << "\t\t\"DeviceID\" : " << dev.DeviceID << "," << endl; // num
+	cout << "\t\t\"pciBusID\" : " << dev.pciBusID << "," << endl; // num
 	cout << "\t\t\"VendorID\" : " << dev.VendorID << "," << endl; // num
 	cout << "\t\t\"VendorName\" : \"" << dev.VendorName << "\"," << endl; // string
 	cout << "\t\t\"DeviceName\" : \"" << dev.DeviceName << "\"," << endl; // string
@@ -155,6 +157,7 @@ void CudaDetection::PrintDevicesJson_d() {
 void CudaDetection::json_print_d(CudaDevice &dev) {
 	cout << "{";
 	cout << "\"DeviceID\" : " << dev.DeviceID << ","; // num
+	cout << "\"pciBusID\" : " << dev.pciBusID << ","; // num
 	cout << "\"VendorID\" : " << dev.VendorID << ","; // num
 	cout << "\"VendorName\" : \"" << dev.VendorName << "\","; // string
 	cout << "\"DeviceName\" : \"" << dev.DeviceName << "\","; // string

@@ -5,6 +5,8 @@
     "Global_Yes": "&Yes",
     "Global_No": "&No",
     "Global_OK": "&OK",
+    "Global_Cancel": "&Cancel",
+    "Global_Retry": "&Retry",
 
     "Service_Location": "Service location",
     "Warning_with_Exclamation": "Warning!",
@@ -125,6 +127,7 @@
     "Form_Settings_General_NVIDIAP0State": "NVIDIA P0 State",
     "Form_Settings_General_LogToFile": "Log To File",
     "Form_Settings_General_RunAtStartup": "Run With Windows",
+    "Form_Settings_General_MinimizeMiningWindows": "Minimize Mining Windows",
 
     "Form_Settings_General_Language": "Language",
     "Form_Settings_General_MinIdleSeconds": "Minimum Idle [s]",
@@ -199,7 +202,7 @@
     "Form_Settings_ToolTip_checkBox_RunAtStartup": "When checked, NiceHash Miner Legacy will run on login.",
 
     "Form_Settings_ToolTip_SwitchMinSecondsFixed": "Fixed part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
-    "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nRandom part is used to prevent all world-wide NiceHashMinerLegacy users to have the exact same switching pattern.",
+    "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Random part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nRandom part is used to prevent all world-wide NiceHash Miner Legacy users to have the exact same switching pattern.",
     "Form_Settings_ToolTip_SwitchMinSecondsAMD": "Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs).\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
 
     "Form_Settings_ToolTip_MinerAPIQueryInterval": "API query interval for ccminer, sgminer cpuminer and ethminer.",
@@ -231,6 +234,7 @@
     "Form_Settings_ToolTip_ExtraLaunchParameters": "Additional launch parameters when launching miner.",
     "Form_Settings_ToolTip_DaggerHashimotoGenerateDevice": "Choose which GPU will create the on GPU DAG file.\nAs a rule of thumb, choose the fastest GPU that is available.",
     "Form_Settings_ToolTip_DisableAMDTempControl": "Check it, if you would like to disable the built-in temperature control\nfor AMD GPUs (except daggerhashimoto algorithm).",
+    "Form_Settings_ToolTip_MinimizeMiningWindows": "When checked, mining windows will start minimized.",
 
     "Form_Settings_ToolTip_AlgoSkip": "Check it if you would like to skip & disable a particular algorithm.\nBenchmarking as well as actual mining will be disabled for this particular algorithm.\nThat said, auto-switching will skip this algorithm when mining will be running.",
     "Form_Settings_ToolTip_AlgoUsePassword": "Use this password when launching miner and this algorithm. If not set, Groups's UsePassword is used.",

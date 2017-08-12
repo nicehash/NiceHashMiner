@@ -7,7 +7,6 @@ using System.Text;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Configs;
 using System.IO;
-using NiceHashMiner.Net20_backport;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
@@ -54,6 +53,18 @@ namespace NiceHashMiner.Miners {
         private bool IsCurrentlyIdle {
             get {
                 return !IsMiningEnabled || !IsConnectedToInternet || !IsProfitable;
+            }
+        }
+
+        public List<int> ActiveDeviceIndexes {
+            get {
+                var minerIDs = new List<int>();
+                if (!IsCurrentlyIdle) {
+                    foreach (var miner in _runningGroupMiners.Values) {
+                        minerIDs.AddRange(miner.DevIndexes);
+                    }
+                }
+                return minerIDs;
             }
         }
 
@@ -159,7 +170,7 @@ namespace NiceHashMiner.Miners {
         #endregion Start/Stop
 
         private string CalcGroupedDevicesKey(GroupedDevices group) {
-            return StringHelper.Join(", ", group);
+            return String.Join(", ", group);
         }
 
         public string GetActiveMinersGroup() {
@@ -177,7 +188,7 @@ namespace NiceHashMiner.Miners {
                 //}
             }
             if (UniqueMinerGroups.Count > 0 && IsProfitable) {
-                ActiveMinersGroup = StringHelper.Join("/", UniqueMinerGroups);
+                ActiveMinersGroup = String.Join("/", UniqueMinerGroups);
             }
 
             return ActiveMinersGroup;

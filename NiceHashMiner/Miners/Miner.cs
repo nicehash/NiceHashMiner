@@ -17,7 +17,6 @@ using NiceHashMiner.Miners.Grouping;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
-using NiceHashMiner.Net20_backport;
 using System.IO;
 
 namespace NiceHashMiner
@@ -145,7 +144,8 @@ namespace NiceHashMiner
             LastCommandLine = "";
 
             IsAPIReadException = false;
-            IsNeverHideMiningWindow = false;
+            // Only set minimize if hide is false (specific miners will override true after)
+            IsNeverHideMiningWindow = ConfigManager.GeneralConfig.MinimizeMiningWindows && !ConfigManager.GeneralConfig.HideMiningWindows;
             IsKillAllUsedMinerProcs = false;
             _MAX_CooldownTimeInMilliseconds = GET_MAX_CooldownTimeInMilliseconds();
             // 
@@ -210,7 +210,7 @@ namespace NiceHashMiner
                 // contains ids
                 List<string> ids = new List<string>();
                 foreach (var cdevs in MiningSetup.MiningPairs) ids.Add(cdevs.Device.ID.ToString());
-                _minetTag = String.Format(MASK, MinerDeviceName, MINER_ID, StringHelper.Join(",", ids));
+                _minetTag = String.Format(MASK, MinerDeviceName, MINER_ID, String.Join(",", ids));
             }
             return _minetTag;
         }
@@ -296,7 +296,7 @@ namespace NiceHashMiner
             foreach (var mPair in MiningSetup.MiningPairs) {
                 ids.Add(mPair.Device.ID.ToString());
             }
-            deviceStringCommand += StringHelper.Join(",", ids);
+            deviceStringCommand += String.Join(",", ids);
 
             return deviceStringCommand;
         }
@@ -622,7 +622,7 @@ namespace NiceHashMiner
             P.StartInfo.Arguments = LastCommandLine;
             if (IsNeverHideMiningWindow) {
                 P.StartInfo.CreateNoWindow = false;
-                if (ConfigManager.GeneralConfig.HideMiningWindows) {
+                if (ConfigManager.GeneralConfig.HideMiningWindows || ConfigManager.GeneralConfig.MinimizeMiningWindows) {
                     P.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
                     P.StartInfo.UseShellExecute = true;
                 }

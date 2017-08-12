@@ -182,7 +182,7 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.CryptoNight, "cryptonight") { ExtraLaunchParameters = DefaultParam + "--rawintensity 512 -w 4 -g 2" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal") { ExtraLaunchParameters = DefaultParam + "--intensity 21 -w 64 -g 2" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "sibcoin-mod") { ExtraLaunchParameters = DefaultParam + "--intensity 16 -w 64 -g 2" },
-                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.Keccak, "keccak")
+                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.Keccak, "keccak") { ExtraLaunchParameters = DefaultParam + "--intensity 15" }
                         }
                     },
                     { MinerBaseType.Claymore,
@@ -224,7 +224,8 @@ namespace NiceHashMiner.Devices {
                     },
                     { MinerBaseType.ccminer_alexis,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.X11Gost, "sib")
+                            new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.X11Gost, "sib"),
+                            new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.Nist5, "nist5")
                         }
                     },
                     { MinerBaseType.ethminer,
@@ -236,13 +237,13 @@ namespace NiceHashMiner.Devices {
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
                         }
-                    },/*
+                    },
                     { MinerBaseType.excavator,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.excavator, AlgorithmType.Equihash, "equihash"),
                             new Algorithm(MinerBaseType.excavator, AlgorithmType.Pascal, "pascal")
                         }
-                    },*/
+                    },
                     { MinerBaseType.EWBF,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.EWBF, AlgorithmType.Equihash, "")
@@ -285,7 +286,7 @@ namespace NiceHashMiner.Devices {
                     });
                     ToRemoveMinerTypes.AddRange(new MinerBaseType[] {
                         MinerBaseType.eqm,
-                        //MinerBaseType.excavator,
+                        MinerBaseType.excavator,
                         MinerBaseType.EWBF
                     });
                 }

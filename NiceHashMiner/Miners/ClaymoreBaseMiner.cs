@@ -3,7 +3,6 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
-using NiceHashMiner.Net20_backport;
 using NiceHashMiner.Devices;
 using System;
 using System.Collections.Generic;
@@ -101,7 +100,7 @@ namespace NiceHashMiner.Miners
                 if (resp.result != null && resp.result.Count > 4) {
                     //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp.result != null && resp.result.Count > 4");
                     var speeds = resp.result[3].Split(';');
-                    var secondarySpeeds = resp.result[5].Split(';');
+                    var secondarySpeeds = (IsDual()) ? resp.result[5].Split(';') : new string[0];
                     ad.Speed = 0;
                     ad.SecondarySpeed = 0;
                     foreach (var speed in speeds) {
@@ -163,25 +162,37 @@ namespace NiceHashMiner.Miners
             var intensities = new List<string>();
             foreach (var mPair in MiningSetup.MiningPairs) {
                 var id = mPair.Device.ID;
-                if (this is ClaymoreDual && mPair.Device.DeviceType == DeviceType.AMD) {
-                    id = mPair.Device.IDByBus;
-                    if (id < 0) {
-                        // should never happen
-                        Helpers.ConsolePrint("ClaymoreDualIndexing", "ID by Bus too low: " + id.ToString());
+                if (this is ClaymoreDual) {
+                    if (mPair.Device.DeviceType == DeviceType.AMD) {
+                        id = mPair.Device.IDByBus;
+                        if (id < 0) {
+                            // should never happen
+                            Helpers.ConsolePrint("ClaymoreDualIndexing", "ID by Bus too low: " + id.ToString());
+                        }
+                    } else if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
+                        Helpers.ConsolePrint("ClaymoreDualIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
+                        id += amdDeviceCount;
                     }
-                }
-                if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
-                    Helpers.ConsolePrint("ClaymoreDualIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
-                    id += amdDeviceCount;
-                }
-                ids.Add(id.ToString());
-                if (TuningEnabled) {
-                    intensities.Add(mPair.Algorithm.CurrentIntensity.ToString());
+                    if (id > 9) {  // New >10 GPU support in CD9.8
+                        if (id < 36) {  // CD supports 0-9 and a-z indexes, so 36 GPUs
+                            char idchar = (char)(id + 87);  // 10 = 97(a), 11 - 98(b), etc
+                            ids.Add(idchar.ToString());
+                        } else {
+                            Helpers.ConsolePrint("ClaymoreDualIndexing", "ID " + id + " too high, ignoring");
+                        }
+                    } else {
+                        ids.Add(id.ToString());
+                    }
+                    if (TuningEnabled) {
+                        intensities.Add(mPair.Algorithm.CurrentIntensity.ToString());
+                    }
+                } else {
+                    ids.Add(id.ToString());
                 }
             }
-            deviceStringCommand += StringHelper.Join("", ids);
+            deviceStringCommand += String.Join("", ids);
             if (TuningEnabled) {
-                intensityStringCommand = " -dcri " + StringHelper.Join(",", intensities);
+                intensityStringCommand = " -dcri " + String.Join(",", intensities);
             }
 
             return deviceStringCommand + intensityStringCommand + extraParams;

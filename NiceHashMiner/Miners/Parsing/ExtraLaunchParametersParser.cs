@@ -2,10 +2,10 @@
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
-using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace NiceHashMiner.Miners.Parsing {
     using MinerOptionType = String;
@@ -176,7 +176,7 @@ namespace NiceHashMiner.Miners.Parsing {
                             if(option.LongName.Contains("=")) {
                                 MASK = " {0}{1}";
                             }
-                            retVal += String.Format(MASK, option.LongName, StringHelper.Join(option.Separator, values));
+                            retVal += String.Format(MASK, option.LongName, String.Join(option.Separator, values));
                         } else if (option.FlagType == MinerOptionFlagType.SingleParam) {
                             HashSet<string> values = new HashSet<string>();
                             foreach (var pair in MiningPairs) {
@@ -198,7 +198,7 @@ namespace NiceHashMiner.Miners.Parsing {
                             foreach (var pair in MiningPairs) {
                                 values.Add(String.Format(MASK, option.LongName, cdevOptions[pair.Device.UUID][option.Type]));
                             }
-                            retVal += " " + StringHelper.Join(" ", values);
+                            retVal += " " + String.Join(" ", values);
                         }
                     }
                 }
@@ -275,9 +275,9 @@ namespace NiceHashMiner.Miners.Parsing {
                     return MinerType.eqm_CUDA;
                 }
             }
-            //if (MinerBaseType.excavator == minerBaseType) {
-            //    return MinerType.excavator;
-            //}
+            if (MinerBaseType.excavator == minerBaseType) {
+                return MinerType.excavator;
+            }
             if (MinerBaseType.EWBF == minerBaseType) {
                 return MinerType.EWBF;
             }

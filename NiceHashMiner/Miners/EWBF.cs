@@ -24,7 +24,7 @@ namespace NiceHashMiner.Miners
             public uint cudaid { get; set; }
             public string busid { get; set; }
             public uint gpu_status { get; set; }
-            public uint solver { get; set; }
+            public int solver { get; set; }
             public int temperature { get; set; }
             public uint gpu_power_usage { get; set; }
             public uint speed_sps { get; set; }

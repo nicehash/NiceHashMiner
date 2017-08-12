@@ -2,6 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
+using System.Management;
+using System.Runtime.InteropServices;
 using NiceHashMiner.Enums;
 using System.Security.Cryptography;
 using NiceHashMiner.Configs;
@@ -14,6 +17,7 @@ namespace NiceHashMiner.Devices
     public class ComputeDevice
     {
         readonly public int ID;
+        public int Index { get; protected set; }  // For socket control, unique
         // to identify equality;
         readonly public string Name; // { get; set; }
         // name count is the short name for displaying in moning groups
@@ -24,16 +28,16 @@ namespace NiceHashMiner.Devices
         // CPU, NVIDIA, AMD
         readonly public DeviceType DeviceType;
         // UUID now used for saving
-        readonly public string UUID;
+        public string UUID { get; protected set; }
 
         // used for Claymore indexing
-        public readonly int BusID = -1;
+        public int BusID { get; protected set; } = -1;
         public int IDByBus = -1;
 
 
         // CPU extras
-        readonly public int Threads;
-        readonly public ulong AffinityMask;
+        public int Threads { get; protected set; }
+        public ulong AffinityMask { get; protected set; }
 
         // GPU extras
         public readonly ulong GpuRam;
@@ -42,14 +46,32 @@ namespace NiceHashMiner.Devices
 
         // sgminer extra quickfix
         //public readonly bool IsOptimizedVersion;
-        public readonly string Codename;
-        public readonly string InfSection;
+        public string Codename { get; protected set; }
+        public string InfSection { get; protected set; }
         // amd has some algos not working with new drivers
-        public readonly bool DriverDisableAlgos;
+        public bool DriverDisableAlgos { get; protected set; }
 
-        private List<Algorithm> AlgorithmSettings;
+        protected List<Algorithm> AlgorithmSettings;
 
         public string BenchmarkCopyUUID { get; set; }
+        
+        public virtual float Load { get { return 0; } }
+        
+        public virtual float Temp { get { return 0;  } }
+        
+        public virtual uint FanSpeed { get { return 0; } }
+
+        // Ambiguous constructor
+        protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable, DeviceType type, string nameCount, ulong gpuRAM) {
+            ID = id;
+            Name = name;
+            Enabled = enabled;
+            DeviceGroupType = group;
+            IsEtherumCapale = ethereumCapable;
+            DeviceType = type;
+            NameCount = nameCount;
+            GpuRam = gpuRAM;
+        }
 
         // Fake dev
         public ComputeDevice(int id) {
@@ -84,8 +106,8 @@ namespace NiceHashMiner.Devices
         }
 
         // GPU NVIDIA
-        int _SM_major = -1;
-        int _SM_minor = -1;
+        protected int _SM_major = -1;
+        protected int _SM_minor = -1;
         public ComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int GPUCount) {
             _SM_major = cudaDevice.SM_major;
             _SM_minor = cudaDevice.SM_minor;
@@ -292,7 +314,7 @@ namespace NiceHashMiner.Devices
         
         // static methods
         
-        private static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
+        protected static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
             var SHA256 = new SHA256Managed();
             var hash = new StringBuilder();
             string mixedAttr = id.ToString() + group + name + ((int)deviceGroupType).ToString();
