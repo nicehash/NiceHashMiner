@@ -527,11 +527,13 @@ namespace NiceHashMiner
                 status = BenchmarkProcessStatus.Success;
             }
 
-            using (StreamWriter sw = File.AppendText(benchmarkLogPath)) {
-                foreach (var line in bench_lines) {
-                    sw.WriteLine(line);
+            try {
+                using (StreamWriter sw = File.AppendText(benchmarkLogPath)) {
+                    foreach (var line in bench_lines) {
+                        sw.WriteLine(line);
+                    }
                 }
-            }
+            } catch { }
             BenchmarkProcessStatus = status;
             Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, BenchmarkAlgorithm.SecondaryBenchmarkSpeed));
             Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
