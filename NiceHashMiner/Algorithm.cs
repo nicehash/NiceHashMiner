@@ -17,6 +17,10 @@ namespace NiceHashMiner {
         // ClaymoreDual intensity tuning
         public Dictionary<int, double> IntensitySpeeds;
         public Dictionary<int, double> SecondaryIntensitySpeeds;
+        public bool TuningEnabled;
+        public int TuningStart = 25;
+        public int TuningEnd = 200;
+        public int TuningInterval = 25;
         // Miner name is used for miner ALGO flag parameter
         public readonly string MinerName;
         private double benchmarkSpeed;
@@ -70,7 +74,6 @@ namespace NiceHashMiner {
         public double CurrentProfit = 0;
         public double CurNhmSMADataVal = 0;
         public double SecondaryCurNhmSMADataVal = 0;
-        public bool TuningEnabled { get { return IsDual() && ConfigManager.GeneralConfig.CDIntensityTuningEnabled; } }
         public int CurrentIntensity = -1;
         // This should ideally be false when SMA or speeds are updated and no check has been done yet
         public bool IntensityUpToDate = false;

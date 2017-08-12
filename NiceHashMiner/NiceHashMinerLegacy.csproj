@@ -86,6 +86,7 @@
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="Algorithm.cs" />
+    <Compile Include="Configs\Data\DualAlgorithmConfig.cs" />
     <Compile Include="ExchangeRateAPI.cs" />
     <Compile Include="Forms\Form_DcriValues.cs">
       <SubType>Form</SubType>

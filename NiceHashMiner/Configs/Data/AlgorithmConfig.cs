@@ -13,8 +13,6 @@ namespace NiceHashMiner.Configs.Data {
         public string MinerName = "";  // probably not needed
         public double BenchmarkSpeed = 0;
         public double SecondaryBenchmarkSpeed = 0;
-        public Dictionary<int, double> IntensitySpeeds = new Dictionary<int, double>();
-        public Dictionary<int, double> SecondaryIntensitySpeeds = new Dictionary<int, double>();
         public string ExtraLaunchParameters= "";
         public bool Enabled = true;
         public int LessThreads = 0;

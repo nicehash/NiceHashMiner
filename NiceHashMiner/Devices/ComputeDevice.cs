@@ -179,8 +179,17 @@ namespace NiceHashMiner.Devices
                         setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
                         setAlgo.Enabled = conf.Enabled;
                         setAlgo.LessThreads = conf.LessThreads;
-                        setAlgo.IntensitySpeeds = conf.IntensitySpeeds;
-                        setAlgo.SecondaryIntensitySpeeds = conf.SecondaryIntensitySpeeds;
+                        if (setAlgo.IsDual() && config.DualAlgorithmSettings != null) {
+                            var dualConf = config.DualAlgorithmSettings.Find(a => a.SecondaryNiceHashID == setAlgo.SecondaryNiceHashID);
+                            if (dualConf != null) {
+                                setAlgo.IntensitySpeeds = dualConf.IntensitySpeeds;
+                                setAlgo.SecondaryIntensitySpeeds = dualConf.SecondaryIntensitySpeeds;
+                                setAlgo.TuningEnabled = dualConf.TuningEnabled;
+                                setAlgo.TuningStart = dualConf.TuningStart;
+                                setAlgo.TuningEnd = dualConf.TuningEnd;
+                                setAlgo.TuningInterval = dualConf.TuningInterval;
+                            }
+                        }
                     }
                 }
             }
@@ -211,10 +220,21 @@ namespace NiceHashMiner.Devices
                 conf.ExtraLaunchParameters = algo.ExtraLaunchParameters;
                 conf.Enabled = algo.Enabled;
                 conf.LessThreads = algo.LessThreads;
-                conf.IntensitySpeeds = algo.IntensitySpeeds;
-                conf.SecondaryIntensitySpeeds = algo.SecondaryIntensitySpeeds;
                 // insert
                 ret.AlgorithmSettings.Add(conf);
+                if (algo.IsDual()) {
+                    DualAlgorithmConfig dualConf = new DualAlgorithmConfig();
+                    dualConf.Name = algo.AlgorithmStringID;
+                    dualConf.SecondaryNiceHashID = algo.SecondaryNiceHashID;
+                    dualConf.IntensitySpeeds = algo.IntensitySpeeds;
+                    dualConf.SecondaryIntensitySpeeds = algo.SecondaryIntensitySpeeds;
+                    dualConf.TuningEnabled = algo.TuningEnabled;
+                    dualConf.TuningStart = algo.TuningStart;
+                    dualConf.TuningEnd = algo.TuningEnd;
+                    dualConf.TuningInterval = algo.TuningInterval;
+
+                    ret.DualAlgorithmSettings.Add(dualConf);
+                }
             }
             return ret;
         }
