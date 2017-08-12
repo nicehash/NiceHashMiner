@@ -67,12 +67,6 @@ namespace NiceHashMiner.Configs.Data {
         public string hwid = "";
         public int agreedWithTOS = 0;
 
-        // ClaymoreDual intensity tuning
-        public bool CDIntensityTuningEnabled = false;
-        public int CDIntensityTuningStart = 25;
-        public int CDIntensityTuningInterval = 25;
-        public int CDIntensityTuningEnd = 200;
-
         // methods
         public void SetDefaults() {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -114,10 +108,6 @@ namespace NiceHashMiner.Configs.Data {
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
-            CDIntensityTuningEnabled = false;
-            CDIntensityTuningStart = 25;
-            CDIntensityTuningInterval = 25;
-            CDIntensityTuningEnd = 200;
         }
 
         public void FixSettingBounds() {
@@ -160,13 +150,6 @@ namespace NiceHashMiner.Configs.Data {
             if (this.LastDevicesSettup == null) {
                 this.LastDevicesSettup = new List<ComputeDeviceConfig>();
             }
-            if (CDIntensityTuningStart < 0 || CDIntensityTuningStart > CDIntensityTuningEnd) {
-                CDIntensityTuningStart = 25;
-            }
-            if (CDIntensityTuningInterval < 1) {
-                CDIntensityTuningInterval = 25;
-            }
-            CDIntensityTuningEnd = Math.Min(CDIntensityTuningEnd, CDIntensityTuningStart);
         }
 
     }

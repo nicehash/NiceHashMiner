@@ -15,5 +15,15 @@ namespace NiceHashMiner.Configs.Data
         public int TuningStart = 25;
         public int TuningEnd = 200;
         public int TuningInterval = 25;
+
+        public void FixSettingsBounds() {
+            if (TuningStart < 0 || TuningStart > TuningEnd) {
+                TuningStart = 25;
+            }
+            if (TuningInterval < 1) {
+                TuningInterval = 25;
+            }
+            TuningEnd = Math.Min(TuningEnd, TuningStart);
+        }
     }
 }

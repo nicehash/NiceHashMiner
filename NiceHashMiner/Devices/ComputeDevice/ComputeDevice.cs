@@ -204,6 +204,7 @@ namespace NiceHashMiner.Devices
                         if (setAlgo.IsDual() && config.DualAlgorithmSettings != null) {
                             var dualConf = config.DualAlgorithmSettings.Find(a => a.SecondaryNiceHashID == setAlgo.SecondaryNiceHashID);
                             if (dualConf != null) {
+                                dualConf.FixSettingsBounds();
                                 setAlgo.IntensitySpeeds = dualConf.IntensitySpeeds;
                                 setAlgo.SecondaryIntensitySpeeds = dualConf.SecondaryIntensitySpeeds;
                                 setAlgo.TuningEnabled = dualConf.TuningEnabled;
