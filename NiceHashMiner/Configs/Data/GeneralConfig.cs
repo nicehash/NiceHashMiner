@@ -166,7 +166,7 @@ namespace NiceHashMiner.Configs.Data {
             if (CDIntensityTuningInterval < 1) {
                 CDIntensityTuningInterval = 25;
             }
-            CDIntensityTuningEnd = Math.Max(CDIntensityTuningEnd, CDIntensityTuningStart);
+            CDIntensityTuningEnd = Math.Min(CDIntensityTuningEnd, CDIntensityTuningStart);
         }
 
     }
