@@ -767,7 +767,6 @@
             this.textBox_IFTTTKey.Name = "textBox_IFTTTKey";
             this.textBox_IFTTTKey.Size = new System.Drawing.Size(210, 20);
             this.textBox_IFTTTKey.TabIndex = 368;
-            this.textBox_IFTTTKey.Leave += new System.EventHandler(this.textBox_IFTTTKey_Leave);
             // 
             // pictureBox_UseIFTTT
             // 
@@ -790,7 +789,6 @@
             this.checkBox_UseIFTTT.TabIndex = 366;
             this.checkBox_UseIFTTT.Text = "Use IFTTT";
             this.checkBox_UseIFTTT.UseVisualStyleBackColor = true;
-            this.checkBox_UseIFTTT.CheckedChanged += new System.EventHandler(this.checkBox_UseIFTTT_CheckChanged);
             // 
             // checkBox_IdleWhenNoInternetAccess
             // 
