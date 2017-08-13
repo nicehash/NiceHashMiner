@@ -60,9 +60,9 @@ namespace NiceHashMiner {
                 string ratio = International.GetText("BenchmarkRatioRateN_A");
                 if (Globals.NiceHashData != null) {
                     ratio = Globals.NiceHashData[NiceHashID].paying.ToString("F8");
-                }
-                if (SecondaryNiceHashID != AlgorithmType.NONE) {
-                    ratio += "/" + Globals.NiceHashData[SecondaryNiceHashID].paying.ToString("F8");
+                    if (IsDual() && Globals.NiceHashData.ContainsKey(SecondaryNiceHashID)) {
+                        ratio += "/" + Globals.NiceHashData[SecondaryNiceHashID].paying.ToString("F8");
+                    }
                 }
                 return ratio;
             }
