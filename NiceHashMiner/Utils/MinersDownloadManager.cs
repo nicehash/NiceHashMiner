@@ -20,7 +20,7 @@ namespace NiceHashMiner.Utils {
             "bin");
 
         public static DownloadSetup ThirdPartyDlSetup = new DownloadSetup(
-            "http://github.com/NiceHash/NiceHashMinerLegacy/releases/download/1.8.0.0/bin_3rdparty_1_8_0_0.zip",
+            "http://github.com/NiceHash/NiceHashMinerLegacy/releases/download/1.8.1.0-Pre/bin_3rdparty_1_8_1_0.zip",
             "bins_3rdparty.zip",
             "bin_3rdparty");
     }

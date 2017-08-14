@@ -5,6 +5,7 @@
 
 struct CudaDevice {
 	unsigned int DeviceID;
+	int pciBusID;
 	std::string VendorName;
 	std::string DeviceName;
 	std::string SMVersionString;
