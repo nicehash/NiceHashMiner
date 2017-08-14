@@ -9,11 +9,42 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
+using SQLite.Net;
+using SQLite.Net.Platform.Win32;
+using SQLite.Net.Attributes;
 
 namespace NiceHashMiner.Miners
 {
     public class Prospector : Miner
     {
+        private class hashrates
+        {
+            [PrimaryKey, AutoIncrement]
+            public int id { get; set; }
+            public int session_id { get; set; }
+            public string coin { get; set; }
+            public string device { get; set; }
+            public int time { get; set; }
+            public double rate { get; set; }
+        }
+
+        private class ProspectorDatabase : SQLiteConnection
+        {
+            public ProspectorDatabase(string path)
+                : base(new SQLitePlatformWin32(), path) { }
+
+            public double QuerySpeed(string device) {
+                try {
+                    return Table<hashrates>().Where(x => x.device == device).OrderByDescending(x => x.time).Take(1).FirstOrDefault().rate;
+                } catch (Exception e) {
+                    Helpers.ConsolePrint("PROSPECTORSQL", e.ToString());
+                    return 0;
+                }
+            }
+        }
+
+        private ProspectorDatabase database;
+
         public Prospector()
             : base("Prospector") {
             this.ConectionType = NHMConectionType.NONE;
@@ -24,6 +55,9 @@ namespace NiceHashMiner.Miners
             return 3600000; // 1hour
         }
 
+        private string deviceIDString(int id) {
+            return String.Format("(0:{0})", id);
+        }
 
         private string GetConfigFileName() {
             return String.Format("config_{0}.json", this.MiningSetup.MiningPairs[0].Device.ID);
@@ -48,7 +82,7 @@ namespace NiceHashMiner.Miners
                         devJson.Add("enabled", true);
                         devJson.Add("name", dev.Device.Name);
 
-                        devicesJson.Add(String.Format("(0:{0})", dev.Device.ID), devJson);
+                        devicesJson.Add(deviceIDString(dev.Device.ID), devJson);
                     }
 
                     var cpuJson = new JObject();
@@ -74,31 +108,15 @@ namespace NiceHashMiner.Miners
         }
 
         public override APIData GetSummary() {
-            string resp;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
-
-            string DataToSend = GetHttpRequestNHMAgentStrin("h");
-
-            resp = GetAPIData(APIPort, DataToSend);
-            if (resp == null) {
-                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-                return null;
-            }
-            const string Totals = "Totals:";
-            const string Highest = "Highest:";
-            int start_i = resp.IndexOf(Totals);
-            int end_i = resp.IndexOf(Highest);
-            if (start_i > -1 && end_i > -1) {
-                string sub_resp = resp.Substring(start_i, end_i);
-                sub_resp = sub_resp.Replace(Totals, "");
-                sub_resp = sub_resp.Replace(Highest, "");
-                var strings = sub_resp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var s in strings) {
-                    if (s != "(na)") {
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-                        ad.Speed = Helpers.ParseDouble(s);
-                        break;
+            if (database == null) {
+                try {
+                    database = new ProspectorDatabase(WorkingDirectory + "info.db");
+                } catch (Exception e) { Helpers.ConsolePrint(MinerTAG(), e.ToString()); }
+            } else {
+                foreach (var pair in MiningSetup.MiningPairs) {
+                    if (database != null) {
+                        ad.Speed += database.QuerySpeed(deviceIDString(pair.Device.ID));
                     }
                 }
             }
