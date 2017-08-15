@@ -16,7 +16,7 @@ namespace NiceHashMiner
         
 
         static bool is64BitProcess = (IntPtr.Size == 8);
-        static bool is64BitOperatingSystem = is64BitProcess || InternalCheckIsWow64();
+        public static bool Is64BitOperatingSystem = is64BitProcess || InternalCheckIsWow64();
 
         public static bool InternalCheckIsWow64()
         {
@@ -41,7 +41,13 @@ namespace NiceHashMiner
 
         public static void ConsolePrint(string grp, string text)
         {
+            // Console.WriteLine does nothing on x64 while debugging with VS, so use Debug. Console.WriteLine works when run from .exe
+#if DEBUG
+            Debug.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
+#endif
+#if !DEBUG
             Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
+#endif
 
             if (ConfigManager.GeneralConfig.LogToFile && Logger.IsInit)
                 Logger.log.Info("[" + grp + "] " + text);
@@ -185,6 +191,42 @@ namespace NiceHashMiner
                 return false;
             }
             return true;
+        }
+
+        // Checking the version using >= will enable forward compatibility, 
+        // however you should always compile your code on newer versions of
+        // the framework to ensure your app works the same.
+        private static bool Is45DotVersion(int releaseKey) {
+            if (releaseKey >= 393295) {
+                //return "4.6 or later";
+                return true;
+            }
+            if ((releaseKey >= 379893)) {
+                //return "4.5.2 or later";
+                return true;
+            }
+            if ((releaseKey >= 378675)) {
+                //return "4.5.1 or later";
+                return true;
+            }
+            if ((releaseKey >= 378389)) {
+                //return "4.5 or later";
+                return true;
+            }
+            // This line should never execute. A non-null release key should mean
+            // that 4.5 or later is installed.
+            //return "No 4.5 or later version detected";
+            return false;
+        }
+
+        public static bool Is45NetOrHigher() {
+            using (RegistryKey ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\")) {
+                if (ndpKey != null && ndpKey.GetValue("Release") != null) {
+                    return Is45DotVersion((int)ndpKey.GetValue("Release"));
+                } else {
+                    return false;
+                }
+            }
         }
 
         public static bool IsConnectedToInternet() {

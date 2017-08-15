@@ -1,5 +1,4 @@
 ﻿using NiceHashMiner.Enums;
-using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -116,7 +115,7 @@ namespace NiceHashMiner.Configs.Data {
         public void FixSettingBounds() {
             this.ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             if (string.IsNullOrEmpty(this.DisplayCurrency)
-                || StringHelper.IsNullOrWhiteSpace(this.DisplayCurrency)) {
+                || String.IsNullOrWhiteSpace(this.DisplayCurrency)) {
                 this.DisplayCurrency = "USD";
             }
             if (this.SwitchMinSecondsFixed <= 0) {

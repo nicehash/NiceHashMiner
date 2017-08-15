@@ -219,12 +219,14 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Nist5, "nist5"),
-                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak")
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk")
                         }
                     },
                     { MinerBaseType.ccminer_alexis,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.X11Gost, "sib")
+                            new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.X11Gost, "sib"),
+                            new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.Nist5, "nist5")
                         }
                     },
                     { MinerBaseType.ethminer,

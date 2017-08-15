@@ -2,7 +2,6 @@
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
-using NiceHashMiner.Net20_backport;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

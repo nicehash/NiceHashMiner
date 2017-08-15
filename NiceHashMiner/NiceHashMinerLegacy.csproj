@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NiceHashMiner</RootNamespace>
     <AssemblyName>NiceHashMinerLegacy</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -30,7 +30,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -41,7 +41,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\Release\</OutputPath>
@@ -54,16 +54,17 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LinqBridge">
-      <HintPath>..\3rdparty\sharpcompress-0.11\LinqBridge.dll</HintPath>
-    </Reference>
     <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\3rdparty\log4net\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\3rdparty\json\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress">
       <HintPath>..\3rdparty\sharpcompress-0.11\SharpCompress.dll</HintPath>
@@ -76,13 +77,22 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />
+    <Compile Include="3rdParty\NVAPI.cs" />
+    <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithm.cs" />
+    <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
+    <Compile Include="Devices\ComputeDevice\CPUComputeDevice.cs" />
+    <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
     <Compile Include="ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\EWBF.cs" />
+    <Compile Include="NiceHashStats.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
@@ -96,7 +106,7 @@
     <Compile Include="Configs\ConfigJsonFile\DeviceBenchmarkConfigFile.cs" />
     <Compile Include="Configs\ConfigJsonFile\GeneralConfigFile.cs" />
     <Compile Include="Devices\AmdGpuDevice.cs" />
-    <Compile Include="Devices\ComputeDevice.cs" />
+    <Compile Include="Devices\ComputeDevice\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceManager.cs" />
     <Compile Include="Devices\CPUUtils.cs" />
     <Compile Include="Devices\CudaDevice.cs" />
@@ -225,11 +235,6 @@
     <Compile Include="Miners\MiningSession.cs" />
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
     <Compile Include="Miners\XmrStackCPUMiner.cs" />
-    <Compile Include="Net20_backport\HashSet.cs" />
-    <Compile Include="Net20_backport\SortedSet.cs" />
-    <Compile Include="Net20_backport\StringHelper.cs" />
-    <Compile Include="Net20_backport\Tuple.cs" />
-    <Compile Include="Net20_backport\Tuple3.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="Miners\ccminer.cs" />
@@ -263,8 +268,8 @@
     <Compile Include="Forms\MinerFileNotFoundDialog.Designer.cs">
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="NiceHashStats.cs" />
     <Compile Include="PInvoke\PInvokeHelpers.cs" />
+    <Compile Include="Utils\NiceHashSMA.cs" />
     <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -350,6 +355,7 @@
     <None Include="langs\ru.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
