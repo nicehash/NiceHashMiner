@@ -27,7 +27,6 @@ namespace NiceHashMiner.Miners.Grouping
             public const string ccminer_cryptonight = _bin + @"\ccminer_cryptonight\ccminer.exe";
             public const string ccminer_x11gost = _bin + @"\ccminer_x11gost\ccminer.exe";
             public const string ccminer_klaust = _bin + @"\ccminer_klaust\ccminer.exe";
-            public const string ccminer_krnlx = _bin + @"\ccminer_krnlx\ccminer.exe";
 
             /// <summary>
             /// ethminers
@@ -159,9 +158,6 @@ namespace NiceHashMiner.Miners.Grouping
                 if (AlgorithmType.Sia == algorithmType
                     || AlgorithmType.Nist5 == algorithmType) {
                     return Data.ccminer_klaust;
-                }
-                if (AlgorithmType.Skunk == algorithmType) {
-                    return Data.ccminer_krnlx;
                 }
 
                 return Data.ccminer_sp;
