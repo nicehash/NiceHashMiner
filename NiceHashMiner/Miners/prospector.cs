@@ -19,6 +19,24 @@ using SQLite.Net.Attributes;
 
 namespace NiceHashMiner.Miners
 {
+    public static class ProspectorPlatforms
+    {
+        public static bool IsInit {
+            get {
+                return NVPlatform >= 0 || AMDPlatform >= 0;
+            }
+        }
+        public static int NVPlatform = -1;
+        public static int AMDPlatform = -1;
+
+        public static int PlatformForDeviceType(DeviceType type) {
+            if (IsInit) {
+                if (type == DeviceType.NVIDIA) return NVPlatform;
+                if (type == DeviceType.AMD) return AMDPlatform;
+            }
+            return -1;
+        }
+    }
     public class Prospector : Miner
     {
         private class hashrates
@@ -77,6 +95,9 @@ namespace NiceHashMiner.Miners
         private int benchmarkTimeWait;
         private const double DevFee = 0.01;  // 1% devfee
 
+        private const string platformStart = "platform ";
+        private const string platformEnd = " - ";
+
         public Prospector()
             : base("Prospector") {
             this.ConectionType = NHMConectionType.NONE;
@@ -89,8 +110,13 @@ namespace NiceHashMiner.Miners
 
         private string deviceIDString(int id, DeviceType type) {
             var platform = 0;
-            if (ComputeDeviceManager.Avaliable.HasNVIDIA && type != DeviceType.NVIDIA)
-                platform = 1;
+            if (InitPlatforms()) {
+                platform = ProspectorPlatforms.PlatformForDeviceType(type);
+            } else {  // fallback
+                Helpers.ConsolePrint(MinerTAG(), "Failed to get platforms, falling back");
+                if (ComputeDeviceManager.Avaliable.HasNVIDIA && type != DeviceType.NVIDIA)
+                    platform = 1;
+            }
             return String.Format("({0}:{1})", platform, id);
         }
 
@@ -137,6 +163,66 @@ namespace NiceHashMiner.Miners
                 } catch {
                 }
             }
+        }
+
+        private bool InitPlatforms() {
+            if (ProspectorPlatforms.IsInit) return true;
+
+            CleanAllOldLogs();
+            var handle = BenchmarkStartProcess(" list-devices");
+            handle.Start();
+
+            handle.WaitForExit(20 * 1000);  // 20 seconds
+            handle = null;
+
+            try {
+                string latestLogFile = "";
+                var dirInfo = new DirectoryInfo(this.WorkingDirectory + "logs\\");
+                foreach (var file in dirInfo.GetFiles()) {
+                    latestLogFile = file.Name;
+                    break;
+                }
+                if (File.Exists(dirInfo + latestLogFile)) {
+                    var lines = File.ReadAllLines(dirInfo + latestLogFile);
+                    foreach (var line in lines) {
+                        if (line != null) {
+                            string lineLowered = line.ToLower();
+                            if (lineLowered.Contains(platformStart)) {
+                                int platStart = lineLowered.IndexOf(platformStart);
+                                string plat = lineLowered.Substring(platStart, line.Length - platStart);
+                                plat = plat.Replace(platformStart, "");
+                                plat = plat.Substring(0, plat.IndexOf(platformEnd));
+
+                                int platIndex = -1;
+                                if (int.TryParse(plat, out platIndex)) {
+                                    if (lineLowered.Contains("nvidia")) {
+                                        Helpers.ConsolePrint(MinerTAG(), "Setting nvidia platform: " + platIndex);
+                                        ProspectorPlatforms.NVPlatform = platIndex;
+                                        if (ProspectorPlatforms.AMDPlatform >= 0) break;
+                                    } else if (lineLowered.Contains("amd")) {
+                                        Helpers.ConsolePrint(MinerTAG(), "Setting amd platform: " + platIndex);
+                                        ProspectorPlatforms.AMDPlatform = platIndex;
+                                        if (ProspectorPlatforms.NVPlatform >= 0) break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) { Helpers.ConsolePrint(MinerTAG(), e.ToString()); }
+
+            return ProspectorPlatforms.IsInit;
+        }
+        protected void CleanAllOldLogs() {
+            // clean old logs
+            try {
+                var dirInfo = new DirectoryInfo(this.WorkingDirectory + "logs\\");
+                if (dirInfo != null && dirInfo.Exists) {
+                    foreach (FileInfo file in dirInfo.GetFiles()) {
+                        file.Delete();
+                    }
+                }
+            } catch { }
         }
 
         protected override void _Stop(MinerStopType willswitch) {
@@ -210,7 +296,6 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTAG(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
-                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 2);
                 Stopwatch _benchmarkTimer = new Stopwatch();
                 _benchmarkTimer.Reset();
                 _benchmarkTimer.Start();
