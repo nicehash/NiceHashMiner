@@ -61,6 +61,8 @@ namespace NiceHashMiner.Miners {
                     return CreateExperimental(deviceType, algorithm.NiceHashID);
                 case MinerBaseType.EWBF:
                     return new EWBF();
+                case MinerBaseType.Prospector:
+                    return new Prospector();
             }
             return null;
         }

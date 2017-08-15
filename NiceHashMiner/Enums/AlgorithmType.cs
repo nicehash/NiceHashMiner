@@ -79,7 +79,8 @@ namespace NiceHashMiner.Enums
         Pascal = 25,
         X11Gost = 26,
         Sia = 27,
-        Blake2s = 28
+        Blake2s = 28,
+        Skunk = 29
         #endregion // NiceHashAPI
     }
 }

@@ -834,6 +834,8 @@ namespace NiceHashMiner.Utils {
 @"\claymore_dual\EthDcrMiner64.exe",
 
 @"\ewbf\miner.exe",
+
+@"\prospector\prospector.exe"
 };
         #endregion //CODE_GEN STUFF // listFiles.py
     }

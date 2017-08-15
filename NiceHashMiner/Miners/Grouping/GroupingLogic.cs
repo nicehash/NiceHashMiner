@@ -10,8 +10,11 @@ namespace NiceHashMiner.Miners.Grouping {
         public static bool ShouldGroup(MiningPair a, MiningPair b) {
             bool canGroup = IsGroupableMinerBaseType(a) && IsGroupableMinerBaseType(b);
             // group if same bin path and same algo type
-            if (canGroup && IsSameBinPath(a, b) && IsSameAlgorithmType(a, b) && IsNotCpuGroups(a, b) && IsSameDeviceType(a, b)) {
-                return true;
+            if (canGroup && IsSameBinPath(a, b) && IsSameAlgorithmType(a, b)) {
+                // Allow group if prospector
+                if ((IsNotCpuGroups(a, b) && IsSameDeviceType(a, b)) 
+                    || (a.Algorithm.MinerBaseType == MinerBaseType.Prospector && b.Algorithm.MinerBaseType == MinerBaseType.Prospector))
+                    return true;
             }
             return false;
         }
