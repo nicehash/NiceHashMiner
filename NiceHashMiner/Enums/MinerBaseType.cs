@@ -22,6 +22,7 @@ namespace NiceHashMiner.Enums {
         ccminer_alexis,
         experimental,
         EWBF,
+        Prospector,
         END
     }
 }

@@ -242,10 +242,11 @@ namespace NiceHashMiner.Devices
                         Avaliable.AMD_RAM_SUM += dev.GpuRam;
                     }
                 }
-                double total_GPU_RAM = (Avaliable.NVIDIA_RAM_SUM + Avaliable.AMD_RAM_SUM) / 1024; // b to kb
+                // Make gpu ram needed not larger than 4GB per GPU
+                double total_GPU_RAM = Math.Min((Avaliable.NVIDIA_RAM_SUM + Avaliable.AMD_RAM_SUM) * 0.6 / 1024, (double)Avaliable.AvailGPUs * 4 * 1024 * 1024);
                 double total_Sys_RAM = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
                 // check
-                if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && total_Sys_RAM < total_GPU_RAM * 0.6) {
+                if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && total_Sys_RAM < total_GPU_RAM) {
                     Helpers.ConsolePrint(TAG, "virtual memory size BAD");
                     MessageBox.Show(International.GetText("VirtualMemorySize_BAD"),
                                 International.GetText("Warning_with_Exclamation"),
@@ -455,10 +456,13 @@ namespace NiceHashMiner.Devices
                                     foreach (var handle in handles) {
                                         int id = -1;
                                         var idStatus = NVAPI.NvAPI_GPU_GetBusID(handle, out id);
-                                        if (idStatus != NvStatus.OK) {
-                                            Helpers.ConsolePrint("NVAPI", "Bus ID get failed with status: " + status);
-                                        } else {
-                                            idHandles[id] = handle;
+                                        if (idStatus != NvStatus.EXPECTED_PHYSICAL_GPU_HANDLE) {
+                                            if (idStatus != NvStatus.OK) {
+                                                Helpers.ConsolePrint("NVAPI", "Bus ID get failed with status: " + idStatus);
+                                            } else {
+                                                Helpers.ConsolePrint("NVAPI", "Found handle for busid " + id);
+                                                idHandles[id] = handle;
+                                            }
                                         }
                                     }
                                 }
@@ -480,6 +484,7 @@ namespace NiceHashMiner.Devices
                             string etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
                             stringBuilder.AppendLine(String.Format("\t{0} device{1}:", skipOrAdd, isDisabledGroupStr));
                             stringBuilder.AppendLine(String.Format("\t\tID: {0}", cudaDev.DeviceID.ToString()));
+                            stringBuilder.AppendLine(String.Format("\t\tBusID: {0}", cudaDev.pciBusID.ToString()));
                             stringBuilder.AppendLine(String.Format("\t\tNAME: {0}", cudaDev.GetName()));
                             stringBuilder.AppendLine(String.Format("\t\tVENDOR: {0}", cudaDev.VendorName));
                             stringBuilder.AppendLine(String.Format("\t\tUUID: {0}", cudaDev.UUID));
@@ -507,7 +512,7 @@ namespace NiceHashMiner.Devices
                                         break;
                                 }
                                 NvPhysicalGpuHandle handle;
-                                idHandles.TryGetValue((int)cudaDev.DeviceID + 1, out handle);
+                                idHandles.TryGetValue(cudaDev.pciBusID, out handle);
                                 Avaliable.AllAvaliableDevices.Add(
                                     new CudaComputeDevice(cudaDev, group, ++GPUCount, handle)
                                 );
@@ -986,7 +991,9 @@ namespace NiceHashMiner.Devices
             public static int AvailAMDGPUs { get {
                     return AllAvaliableDevices.Count(d => d.DeviceType == DeviceType.AMD);
                 } }
-            public static int GPUsCount = 0;
+            public static int AvailGPUs { get {
+                    return AvailAMDGPUs + AvailNVGPUs;
+                } }
             public static int AMDOpenCLPlatformNum = -1;
             public static bool IsHyperThreadingEnabled = false;
 

@@ -111,6 +111,7 @@ MinIdleSeconds | number | When StartMiningWhenIdle is set to true, MinIdleSecond
 LogToFile | true or false | Set it to true if you would like NiceHashMinerLegacy to log to a file.
 LogMaxFileSize | number | The maximum size (in bytes) of the log file before roll over.
 ShowDriverVersionWarning | true or false | Set to true if you would like to get a warning if less than ideal driver for mining is detected.
+ShowInternetConnectionWarning | true or false | Set to true if you would like to get a warning if the internet connection is not available.
 DisableWindowsErrorReporting | true or false | Set it to true if you would like to disable windows error reporting. This will allow NiceHashMinerLegacy to restart the miner in the case of the miner crashes.
 UseNewSettingsPage | true or false | Set to true if you would like to use the new Settings form.
 NVIDIAP0State | true or false | When set to true, NiceHashMinerLegacy would change all supported NVidia GPUs to P0 state. This will increase some performance on certain algorithms.

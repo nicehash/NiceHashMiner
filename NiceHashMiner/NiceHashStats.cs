@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Globalization;
 using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
@@ -18,6 +19,14 @@ using WebSocketSharp;
 
 namespace NiceHashMiner
 { 
+    public class SocketEventArgs : EventArgs
+    {
+        public string Message = "";
+
+        public SocketEventArgs(string message) {
+            Message = message;
+        }
+    }
     class NiceHashStats {
 #pragma warning disable 649
         #region JSON Models
@@ -43,6 +52,9 @@ namespace NiceHashMiner
         #endregion
 #pragma warning restore 649
 
+        const int deviceUpdateLaunchDelay = 20 * 1000;
+        const int deviceUpdateInterval = 60 * 1000;
+
         public static Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates { get; private set; }
         public static double Balance { get; private set; }
         public static string Version { get; private set; }
@@ -53,6 +65,11 @@ namespace NiceHashMiner
         public static event EventHandler OnVersionUpdate = delegate { };
         public static event EventHandler OnConnectionLost = delegate { };
         public static event EventHandler OnConnectionEstablished = delegate { };
+        public static event EventHandler<SocketEventArgs> OnVersionBurn = delegate { };
+
+        static readonly Random random = new Random();
+
+        static System.Threading.Timer deviceUpdateTimer;
 
         #region Socket
         private class NiceHashConnection
@@ -60,8 +77,11 @@ namespace NiceHashMiner
             static WebSocket webSocket;
             public static bool IsAlive { get { return webSocket.IsAlive; } }
             static bool attemptingReconnect = false;
+            static bool connectionAttempted = false;
+            static bool connectionEstablished = false;
 
             public static void StartConnection(string address) {
+                connectionAttempted = true;
                 try {
                     if (webSocket == null) {
                         webSocket = new WebSocket(address);
@@ -75,6 +95,7 @@ namespace NiceHashMiner
                     webSocket.EmitOnPing = true;
                     webSocket.Log.Level = LogLevel.Debug;
                     webSocket.Connect();
+                    connectionEstablished = true;
                 } catch (Exception e) {
                     Helpers.ConsolePrint("SOCKET", e.ToString());
                 }
@@ -93,6 +114,8 @@ namespace NiceHashMiner
                     var loginJson = JsonConvert.SerializeObject(login);
                     SendData(loginJson);
 
+                    DeviceStatus_Tick(null);  // Send device to populate rig stats
+
                     OnConnectionEstablished.Emit(null, EventArgs.Empty);
                 } catch (Exception er) {
                     Helpers.ConsolePrint("SOCKET", er.ToString());
@@ -106,10 +129,12 @@ namespace NiceHashMiner
                         dynamic message = JsonConvert.DeserializeObject(e.Data);
                         if (message.method == "sma") {
                             SetAlgorithmRates(message.data);
-                        }else if (message.method == "balance") {
+                        } else if (message.method == "balance") {
                             SetBalance(message.value.Value);
                         } else if (message.method == "versions") {
                             SetVersion(message.legacy.Value);
+                        } else if (message.method == "burn") {
+                            OnVersionBurn.Emit(null, new SocketEventArgs(message.message.Value));
                         }
                     }
                 } catch (Exception er) {
@@ -144,7 +169,12 @@ namespace NiceHashMiner
                             Helpers.ConsolePrint("SOCKET", "Socket connection unsuccessfull, will try again on next device update (1min)");
                         }
                     } else {
-                        Helpers.ConsolePrint("SOCKET", "Data sending attempted before socket initialization");
+                        if (!connectionAttempted) {
+                            Helpers.ConsolePrint("SOCKET", "Data sending attempted before socket initialization");
+                        } else {
+                            Helpers.ConsolePrint("SOCKET", "webSocket not created, retrying");
+                            StartConnection(Links.NHM_Socket_Address);
+                        }
                     }
                 } catch (Exception e) {
                     Helpers.ConsolePrint("SOCKET", e.ToString());
@@ -160,7 +190,13 @@ namespace NiceHashMiner
                     return true;
                 }
                 attemptingReconnect = true;
-                Helpers.ConsolePrint("SOCKET", "Attempting reconnect");
+                var sleep = connectionEstablished ? 10 + random.Next(0, 20) : 0;
+                Helpers.ConsolePrint("SOCKET", "Attempting reconnect in " + sleep + " seconds");
+                if (connectionEstablished) {  // Don't wait if no connection yet
+                    // Don't not wait again
+                    connectionEstablished = true;
+                    Thread.Sleep(sleep * 1000);
+                }
                 for (int i = 0; i < 5; i++) {
                     webSocket.Connect();
                     Thread.Sleep(100);
@@ -178,6 +214,7 @@ namespace NiceHashMiner
 
         public static void StartConnection(string address) {
             NiceHashConnection.StartConnection(address);
+            deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_Tick, null, deviceUpdateInterval, deviceUpdateInterval);
         }
 
         #endregion
@@ -201,7 +238,7 @@ namespace NiceHashMiner
         private static void SetBalance(string balance) {
             try {
                 double bal = 0d;
-                double.TryParse(balance, out bal);
+                double.TryParse(balance, NumberStyles.Number, CultureInfo.InvariantCulture, out bal);
                 Balance = bal;
                 OnBalanceUpdate.Emit(null, EventArgs.Empty);
             } catch (Exception e) {
@@ -230,7 +267,8 @@ namespace NiceHashMiner
             }
         }
 
-        public static void SetDeviceStatus(List<ComputeDevice> devices) {
+        public static void DeviceStatus_Tick(object state) {
+            var devices = ComputeDeviceManager.Avaliable.AllAvaliableDevices;
             var deviceList = new List<JArray>();
             var activeIDs = MinersManager.GetActiveMinersIndexes();
             foreach (var device in devices) {

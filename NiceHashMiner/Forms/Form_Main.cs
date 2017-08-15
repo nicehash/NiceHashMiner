@@ -35,7 +35,6 @@ namespace NiceHashMiner
         private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;
         private Timer IdleCheck;
-        private Timer DeviceStatusUpdate;
 
         private bool ShowWarningNiceHashData;
         private bool DemoMode;
@@ -48,7 +47,7 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
 
-        const string _betaAlphaPostfixString = "-Pre";
+        const string _betaAlphaPostfixString = "-Pre1";
 
         private bool _isDeviceDetectionInitialized = false;
 
@@ -256,12 +255,6 @@ namespace NiceHashMiner
                 SMAMinerCheck.Interval = (ConfigManager.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
 
-            DeviceStatusUpdate = new Timer();
-            DeviceStatusUpdate.Tick += DeviceStatusUpdate_Tick;
-            DeviceStatusUpdate.Interval = 60 * 1000;  // Every minute
-            DeviceStatusUpdate.Start();
-            DeviceStatusUpdate_Tick(null, null);
-
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
@@ -269,6 +262,7 @@ namespace NiceHashMiner
             NiceHashStats.OnVersionUpdate += VersionUpdateCallback;
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
+            NiceHashStats.OnVersionBurn += VersionBurnCallback;
             NiceHashStats.StartConnection(Links.NHM_Socket_Address);
 
             // increase timeout
@@ -441,11 +435,6 @@ namespace NiceHashMiner
             }
         }
 
-        private void DeviceStatusUpdate_Tick(object sender, EventArgs e) {
-            NiceHashStats.SetDeviceStatus(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
-        }
-
-
         private void MinerStatsCheck_Tick(object sender, EventArgs e) {
             MinersManager.MinerStatsCheck(Globals.NiceHashData);
         }
@@ -582,8 +571,19 @@ namespace NiceHashMiner
             }
         }
 
+        void VersionBurnCallback(object sender, SocketEventArgs e) {
+            BeginInvoke((Action)(() => {
+                StopMining();
+                if (BenchmarkForm != null) 
+                    BenchmarkForm.StopBenchmark();
+                DialogResult dialogResult = MessageBox.Show(e.Message, International.GetText("Error_with_Exclamation"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }));
+        }
+
+
         void ConnectionLostCallback(object sender, EventArgs e) {
-            if (Globals.NiceHashData == null && ShowWarningNiceHashData) {
+            if (Globals.NiceHashData == null && ConfigManager.GeneralConfig.ShowInternetConnectionWarning && ShowWarningNiceHashData) {
                 ShowWarningNiceHashData = false;
                 DialogResult dialogResult = MessageBox.Show(International.GetText("Form_Main_msgbox_NoInternetMsg"),
                                                             International.GetText("Form_Main_msgbox_NoInternetTitle"),
@@ -599,7 +599,6 @@ namespace NiceHashMiner
         void ConnectionEstablishedCallback(object sender, EventArgs e) {
             // send credentials
             NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
-            DeviceStatusUpdate_Tick(null, null);
         }
 
         void VersionUpdateCallback(object sender, EventArgs e)
