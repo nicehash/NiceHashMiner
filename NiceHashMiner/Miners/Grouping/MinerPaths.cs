@@ -149,7 +149,8 @@ namespace NiceHashMiner.Miners.Grouping
                 }
                 if (AlgorithmType.Lbry == algorithmType 
                     || AlgorithmType.X11Gost == algorithmType 
-                    || AlgorithmType.Blake2s == algorithmType) {
+                    || AlgorithmType.Blake2s == algorithmType
+                    || AlgorithmType.Skunk == algorithmType) {
                     return Data.ccminer_tpruvot;
                 }
                 if (AlgorithmType.Sia == algorithmType
