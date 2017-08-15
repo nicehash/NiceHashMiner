@@ -203,7 +203,9 @@ namespace NiceHashMiner.Devices {
                     },
                     { MinerBaseType.Prospector,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "")
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt"),
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.DaggerHashimoto, "eth"),
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
                         }
                     }
                 };
@@ -269,6 +271,13 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
                         }
                     },
+                    { MinerBaseType.Prospector,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt"),
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.DaggerHashimoto, "eth"),
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
+                        }
+                    }
                 };
                 if (DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {

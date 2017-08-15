@@ -68,13 +68,14 @@ namespace NiceHashMiner.Miners
                 try {
                     var confJson = new JObject();
                     var poolsJson = new JObject();
-                    var sigtJson = new JObject();
+                    var algoJson = new JObject();
                     var devicesJson = new JObject();
+                    var algo = MiningSetup.MinerName;
 
-                    sigtJson.Add("url", pool);
-                    sigtJson.Add("username", wallet);
-                    sigtJson.Add("password", "x");
-                    poolsJson.Add("sigt", sigtJson);
+                    algoJson.Add("url", pool);
+                    algoJson.Add("username", wallet);
+                    algoJson.Add("password", "x");
+                    poolsJson.Add(algo, algoJson);
                     confJson.Add("pools", poolsJson);
 
                     foreach (var dev in MiningSetup.MiningPairs) {
@@ -92,7 +93,7 @@ namespace NiceHashMiner.Miners
                     confJson.Add("gpus", devicesJson);
                     confJson.Add("cpu", cpuJson);
 
-                    confJson.Add("gpu-coin", "sigt");
+                    confJson.Add("gpu-coin", algo);
 
                     string writeStr = confJson.ToString();
                     int start = writeStr.IndexOf("{");
