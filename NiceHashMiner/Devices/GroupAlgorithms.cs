@@ -201,6 +201,11 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.OptiminerAMD, AlgorithmType.Equihash, "equihash")
                         }
                     },
+                    { MinerBaseType.Prospector,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "")
+                        }
+                    }
                 };
             }
             // NVIDIA
