@@ -581,8 +581,9 @@ namespace NiceHashMiner
             }));
         }
 
+
         void ConnectionLostCallback(object sender, EventArgs e) {
-            if (Globals.NiceHashData == null && ShowWarningNiceHashData) {
+            if (Globals.NiceHashData == null && ConfigManager.GeneralConfig.ShowInternetConnectionWarning && ShowWarningNiceHashData) {
                 ShowWarningNiceHashData = false;
                 DialogResult dialogResult = MessageBox.Show(International.GetText("Form_Main_msgbox_NoInternetMsg"),
                                                             International.GetText("Form_Main_msgbox_NoInternetTitle"),
