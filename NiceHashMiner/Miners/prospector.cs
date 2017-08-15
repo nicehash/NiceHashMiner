@@ -3,12 +3,16 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMiner.Devices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
+using System.IO;
+using System.Linq;
 using SQLite.Net;
 using SQLite.Net.Platform.Win32;
 using SQLite.Net.Attributes;
@@ -28,12 +32,19 @@ namespace NiceHashMiner.Miners
             public double rate { get; set; }
         }
 
+        private class sessions
+        {
+            [PrimaryKey, AutoIncrement]
+            public int id { get; set; }
+            public string start { get; set; }
+        }
+
         private class ProspectorDatabase : SQLiteConnection
         {
             public ProspectorDatabase(string path)
                 : base(new SQLitePlatformWin32(), path) { }
 
-            public double QuerySpeed(string device) {
+            public double QueryLastSpeed(string device) {
                 try {
                     return Table<hashrates>().Where(x => x.device == device).OrderByDescending(x => x.time).Take(1).FirstOrDefault().rate;
                 } catch (Exception e) {
@@ -41,9 +52,30 @@ namespace NiceHashMiner.Miners
                     return 0;
                 }
             }
+
+            public IEnumerable<hashrates> QuerySpeedsForSession(int id) {
+                try {
+                    return Table<hashrates>().Where(x => x.session_id == id);
+                } catch (Exception e) {
+                    Helpers.ConsolePrint("PROSPECTORSQL", e.ToString());
+                    return new List<hashrates>();
+                }
+            }
+
+            public sessions LastSession() {
+                try {
+                    return Table<sessions>().LastOrDefault();
+                } catch (Exception e) {
+                    Helpers.ConsolePrint("PROSPECTORSQL", e.ToString());
+                    return new sessions();
+                }
+            }
         }
 
         private ProspectorDatabase database;
+
+        private int benchmarkTimeWait;
+        private const double DevFee = 0.01;  // 1% devfee
 
         public Prospector()
             : base("Prospector") {
@@ -55,8 +87,11 @@ namespace NiceHashMiner.Miners
             return 3600000; // 1hour
         }
 
-        private string deviceIDString(int id) {
-            return String.Format("(0:{0})", id);
+        private string deviceIDString(int id, DeviceType type) {
+            var platform = 0;
+            if (ComputeDeviceManager.Avaliable.HasNVIDIA && type != DeviceType.NVIDIA)
+                platform = 1;
+            return String.Format("({0}:{1})", platform, id);
         }
 
         private string GetConfigFileName() {
@@ -83,7 +118,7 @@ namespace NiceHashMiner.Miners
                         devJson.Add("enabled", true);
                         devJson.Add("name", dev.Device.Name);
 
-                        devicesJson.Add(deviceIDString(dev.Device.ID), devJson);
+                        devicesJson.Add(deviceIDString(dev.Device.ID, dev.Device.DeviceType), devJson);
                     }
 
                     var cpuJson = new JObject();
@@ -117,7 +152,7 @@ namespace NiceHashMiner.Miners
             } else {
                 foreach (var pair in MiningSetup.MiningPairs) {
                     if (database != null) {
-                        ad.Speed += database.QuerySpeed(deviceIDString(pair.Device.ID));
+                        ad.Speed += database.QueryLastSpeed(deviceIDString(pair.Device.ID, pair.Device.DeviceType));
                     }
                 }
             }
@@ -132,39 +167,137 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
                 return;
             }
-            string username = GetUsername(btcAdress, worker);
-            LastCommandLine = "--config " + GetConfigFileName();
+            LastCommandLine = GetStartupCommand(url, btcAdress, worker);
 
-            prepareConfigFile(url, username);
 
             ProcessHandle = _Start();
         }
 
-        // doesn't work stubs
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
-            prepareConfigFile(url, Globals.DemoUser);
-            return "benchmark_mode " + GetConfigFileName();
+        private string GetStartupCommand(string url, string btcAddress, string worker) {
+            string username = GetUsername(btcAddress, worker);
+            prepareConfigFile(url, username);
+            return "--config " + GetConfigFileName();
         }
 
-        protected override bool BenchmarkParseLine(string outdata) {
-            if (outdata.Contains("Total:")) {
-                string toParse = outdata.Substring(outdata.IndexOf("Total:")).Replace("Total:", "").Trim();
-                var strings = toParse.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var s in strings) {
-                    double lastSpeed = 0;
-                    if (double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out lastSpeed)) {
-                        Helpers.ConsolePrint("BENCHMARK " + MinerTAG(), "double.TryParse true. Last speed is" + lastSpeed.ToString());
-                        BenchmarkAlgorithm.BenchmarkSpeed = Helpers.ParseDouble(s);
-                        return true;
+        #region Benchmark
+
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+            // Prospector can take a very long time to start up
+            benchmarkTimeWait = time + 60;
+            // network stub
+            string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+            return GetStartupCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
+        }
+        private bool IsActiveProcess(int pid) {
+            try {
+                return Process.GetProcessById(pid) != null;
+            } catch {
+                return false;
+            }
+        }
+
+        protected override void BenchmarkThreadRoutine(object CommandLine) {
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
+
+            var startTime = DateTime.Now;
+
+            try {
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                Helpers.ConsolePrint(MinerTAG(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
+                BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
+                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 2);
+                Stopwatch _benchmarkTimer = new Stopwatch();
+                _benchmarkTimer.Reset();
+                _benchmarkTimer.Start();
+                //BenchmarkThreadRoutineStartSettup();
+                // wait a little longer then the benchmark routine if exit false throw
+                //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
+                //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
+                // don't use wait for it breaks everything
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                bool keepRunning = true;
+                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id)) {
+                    //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
+                    //BenchmarkOutputErrorDataReceivedImpl(outdata);
+                    // terminate process situations
+                    if (_benchmarkTimer.Elapsed.TotalSeconds >= (benchmarkTimeWait + 2)
+                        || BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null) {
+
+                        string imageName = MinerExeName.Replace(".exe", "");
+                        // maybe will have to KILL process
+                        KillProspectorClaymoreMinerBase(imageName);
+                        if (BenchmarkSignalTimedout) {
+                            throw new Exception("Benchmark timedout");
+                        }
+                        if (BenchmarkException != null) {
+                            throw BenchmarkException;
+                        }
+                        if (BenchmarkSignalQuit) {
+                            throw new Exception("Termined by user request");
+                        }
+                        if (BenchmarkSignalFinnished) {
+                            break;
+                        }
+                        keepRunning = false;
+                        break;
+                    } else {
+                        // wait a second reduce CPU load
+                        Thread.Sleep(1000);
                     }
                 }
+                BenchmarkHandle.WaitForExit(20 * 1000);  // Wait up to 20s for exit
+            } catch (Exception ex) {
+                BenchmarkThreadRoutineCatch(ex);
+            } finally {
+                BenchmarkAlgorithm.BenchmarkSpeed = 0;
+
+                if (database == null) {
+                    try {
+                        database = new ProspectorDatabase(WorkingDirectory + "info.db");
+                    } catch (Exception e) { Helpers.ConsolePrint(MinerTAG(), e.ToString()); }
+                }
+
+                var session = database.LastSession();
+                var sessionStart = Convert.ToDateTime(session.start);
+                if (sessionStart < startTime) {
+                    throw new Exception("Session not recorded!");
+                }
+
+                var hashrates = database.QuerySpeedsForSession(session.id);
+
+                double speed = 0;
+                int speedRead = 0;
+                foreach (var hashrate in hashrates) {
+                    if (hashrate.coin == MiningSetup.MinerName && hashrate.rate > 0) {
+                        speed += hashrate.rate;
+                        speedRead++;
+                    }
+                }
+
+                BenchmarkAlgorithm.BenchmarkSpeed = (speed / speedRead) * (1 - DevFee);
+
+                BenchmarkThreadRoutineFinish();
             }
-            return false;
         }
 
+        // stub benchmarks read from file
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
             CheckOutdata(outdata);
         }
+
+        protected override bool BenchmarkParseLine(string outdata) {
+            Helpers.ConsolePrint("BENCHMARK", outdata);
+            return false;
+        }
+        #endregion Benchmarking
     }
 }
