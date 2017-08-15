@@ -60,6 +60,7 @@
             this.listView_Intensities.TabIndex = 0;
             this.listView_Intensities.UseCompatibleStateImageBehavior = false;
             this.listView_Intensities.View = System.Windows.Forms.View.Details;
+            this.listView_Intensities.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView_Intensities_ItemSelectionChanged);
             // 
             // columnHeader_DcriValue
             // 

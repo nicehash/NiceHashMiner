@@ -3,6 +3,7 @@ using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using NiceHashMiner.Configs;
 
 namespace NiceHashMiner {
@@ -84,25 +85,29 @@ namespace NiceHashMiner {
                 return mostProfitableIntensity;
             }
         }
-        public List<int> Intensities {
+        public SortedSet<int> SelectedIntensities {
             get {
-                var list = new List<int>(IntensitySpeeds.Keys);
-                foreach (var key in SecondaryIntensitySpeeds.Keys) {
-                    if (!list.Contains(key)) {
-                        list.Add(key);
-                    }
+                var list = new SortedSet<int>();
+                for (var i = TuningStart;
+                    i <= TuningEnd;
+                    i += TuningInterval) {
+                    list.Add(i);
                 }
                 return list;
+            }
+        }
+        public SortedSet<int> AllIntensities {
+            get {
+                var list = new List<int>(IntensitySpeeds.Keys);
+                list.AddRange(SecondaryIntensitySpeeds.Keys);
+                list.AddRange(SelectedIntensities);
+                return new SortedSet<int>(list);
             }
         }
         public bool BenchmarkNeeded {
             get {
                 if (TuningEnabled) {
-                    for (var i = TuningStart;
-                    i <= TuningEnd;
-                    i += TuningInterval) {
-                        if (isIntensityEmpty(i)) return true;
-                    }
+                    if (SelectedIntensities.Any(x => isIntensityEmpty(x))) return true;
                 } else {
                     if ((IsDual() && SecondaryBenchmarkSpeed <= 0) || BenchmarkSpeed <= 0) {
                         return true;
@@ -262,14 +267,8 @@ namespace NiceHashMiner {
 
         public bool IncrementToNextEmptyIntensity() {  // Return false if no more needed increment
             if (!TuningEnabled) return false;
-            for (var i = Math.Max(CurrentIntensity, TuningStart);
-                i <= TuningEnd;
-                i += TuningInterval) {
-                if (isIntensityEmpty(i)) {
-                    CurrentIntensity = i;
-                    return true;
-                }
-            }
+            CurrentIntensity = SelectedIntensities.FirstOrDefault(x => isIntensityEmpty(x));
+            if (CurrentIntensity > 0) return true;
             return false;
         }
 
@@ -291,15 +290,27 @@ namespace NiceHashMiner {
         }
 
         public double SpeedForIntensity(int intensity) {
-            double speed = -1;
+            double speed = 0;
             IntensitySpeeds.TryGetValue(intensity, out speed);
             return speed;
         }
 
         public double SecondarySpeedForIntensity(int intensity) {
-            double speed = -1;
+            double speed = 0;
             SecondaryIntensitySpeeds.TryGetValue(intensity, out speed);
             return speed;
+        }
+
+        public string SpeedStringForIntensity(int intensity) {
+            double speed = SpeedForIntensity(intensity);
+            if (speed > 0) return Helpers.FormatSpeedOutput(speed) + "H/s";
+            return International.GetText("BenchmarkSpeedStringNone");
+        }
+
+        public string SecondarySpeedStringForIntensity(int intensity) {
+            double speed = SecondarySpeedForIntensity(intensity);
+            if (speed > 0) return Helpers.FormatSpeedOutput(speed) + "H/s";
+            return International.GetText("BenchmarkSpeedStringNone");
         }
     }
 }

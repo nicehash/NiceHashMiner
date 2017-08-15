@@ -23,7 +23,7 @@ namespace NiceHashMiner.Configs.Data
             if (TuningInterval < 1) {
                 TuningInterval = 25;
             }
-            TuningEnd = Math.Min(TuningEnd, TuningStart);
+            TuningEnd = Math.Max(TuningEnd, TuningStart);
         }
     }
 }
