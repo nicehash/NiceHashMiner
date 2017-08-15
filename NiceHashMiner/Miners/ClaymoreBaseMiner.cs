@@ -57,12 +57,6 @@ namespace NiceHashMiner.Miners {
             public object error { get; set; }
         }
 
-        protected void KillClaymoreMinerBase(string exeName) {
-            foreach (Process process in Process.GetProcessesByName(exeName)) {
-                try { process.Kill(); } catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
-            }
-        }
-
         public override APIData GetSummary() {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
@@ -217,7 +211,7 @@ namespace NiceHashMiner.Miners {
 
                         string imageName = MinerExeName.Replace(".exe", "");
                         // maybe will have to KILL process
-                        KillClaymoreMinerBase(imageName);
+                        KillProspectorClaymoreMinerBase(imageName);
                         if (BenchmarkSignalTimedout) {
                             throw new Exception("Benchmark timedout");
                         }

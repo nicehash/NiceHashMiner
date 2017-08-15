@@ -125,7 +125,7 @@
     "Form_Settings_General_StartMiningWhenIdle": "Запуск майнинга при простое",
     "Form_Settings_General_ShowDriverVersionWarning": "Предупреждать о версии драйвера",
     "Form_Settings_General_DisableWindowsErrorReporting": "Отключить ошибки",
-    Form_Settings_General_ShowInternetConnectionWarning": "Показывать предупреждение о соединении",
+    "Form_Settings_General_ShowInternetConnectionWarning": "Показывать предупреждение о соединении",
     "Form_Settings_General_UseNewSettingsPage": "Новая страница настроек",
     "Form_Settings_General_NVIDIAP0State": "NVIDIA P0 статус",
     "Form_Settings_General_LogToFile": "Запись в файл",

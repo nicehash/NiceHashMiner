@@ -53,6 +53,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string OptiminerZcashMiner = _bin_3rdparty + @"\optiminer_zcash_win\Optiminer.exe";
             public const string ClaymoreDual = _bin_3rdparty + @"\claymore_dual\EthDcrMiner64.exe";
             public const string EWBF = _bin_3rdparty + @"\ewbf\miner.exe";
+            public const string prospector = _bin_3rdparty + @"\prospector\prospector.exe";
         }
 
         // NEW START
@@ -86,6 +87,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return EXPERIMENTAL.GetPath(algoType, devGroupType);
                 case MinerBaseType.EWBF:
                     return Data.EWBF;
+                case MinerBaseType.Prospector:
+                    return Data.prospector;
             }
             return Data.NONE;
         }
@@ -148,7 +151,8 @@ namespace NiceHashMiner.Miners.Grouping
                 }
                 if (AlgorithmType.Lbry == algorithmType 
                     || AlgorithmType.X11Gost == algorithmType 
-                    || AlgorithmType.Blake2s == algorithmType) {
+                    || AlgorithmType.Blake2s == algorithmType
+                    || AlgorithmType.Skunk == algorithmType) {
                     return Data.ccminer_tpruvot;
                 }
                 if (AlgorithmType.Sia == algorithmType
@@ -174,7 +178,7 @@ namespace NiceHashMiner.Miners.Grouping
             public static string ccminer_unstable_path(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup) {
                 // sm5x and sm6x have same settings
                 if (nvidiaGroup == DeviceGroupType.NVIDIA_5_x || nvidiaGroup == DeviceGroupType.NVIDIA_6_x) {
-                    if (AlgorithmType.X11Gost == algorithmType) {
+                    if (AlgorithmType.X11Gost == algorithmType || AlgorithmType.Nist5 == algorithmType) {
                         return Data.ccminer_x11gost;
                     }
                 }

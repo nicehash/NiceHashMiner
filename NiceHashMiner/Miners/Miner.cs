@@ -288,6 +288,11 @@ namespace NiceHashMiner
                 if (IsKillAllUsedMinerProcs) KillAllUsedMinerProcesses();
             }
         }
+        protected void KillProspectorClaymoreMinerBase(string exeName) {
+            foreach (Process process in Process.GetProcessesByName(exeName)) {
+                try { process.Kill(); } catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+            }
+        }
 
         virtual protected string GetDevicesCommandString() {
             string deviceStringCommand = " ";

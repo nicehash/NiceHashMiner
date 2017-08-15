@@ -1,5 +1,7 @@
-﻿namespace NiceHashMiner.Forms {
-    partial class Form_Settings {
+﻿namespace NiceHashMiner.Forms
+{
+    partial class Form_Settings
+    {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -28,6 +30,8 @@
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.pictureBox_ShowInternetConnectionWarning = new System.Windows.Forms.PictureBox();
+            this.checkBox_ShowInternetConnectionWarning = new System.Windows.Forms.CheckBox();
             this.checkBox_MinimizeMiningWindows = new System.Windows.Forms.CheckBox();
             this.pictureBox_MinimizeMiningWindows = new System.Windows.Forms.PictureBox();
             this.pictureBox_RunAtStartup = new System.Windows.Forms.PictureBox();
@@ -143,6 +147,7 @@
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).BeginInit();
@@ -205,7 +210,7 @@
             this.tabControlGeneral.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabControlGeneral.Name = "tabControlGeneral";
             this.tabControlGeneral.SelectedIndex = 0;
-            this.tabControlGeneral.Size = new System.Drawing.Size(612, 396);
+            this.tabControlGeneral.Size = new System.Drawing.Size(612, 417);
             this.tabControlGeneral.TabIndex = 0;
             this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControlGeneral_Selected);
             // 
@@ -219,13 +224,15 @@
             this.tabPageGeneral.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(604, 370);
+            this.tabPageGeneral.Size = new System.Drawing.Size(604, 391);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
             // groupBox_Misc
             // 
+            this.groupBox_Misc.Controls.Add(this.pictureBox_ShowInternetConnectionWarning);
+            this.groupBox_Misc.Controls.Add(this.checkBox_ShowInternetConnectionWarning);
             this.groupBox_Misc.Controls.Add(this.checkBox_MinimizeMiningWindows);
             this.groupBox_Misc.Controls.Add(this.pictureBox_MinimizeMiningWindows);
             this.groupBox_Misc.Controls.Add(this.pictureBox_RunAtStartup);
@@ -262,10 +269,32 @@
             this.groupBox_Misc.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Misc.Name = "groupBox_Misc";
             this.groupBox_Misc.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Misc.Size = new System.Drawing.Size(244, 361);
+            this.groupBox_Misc.Size = new System.Drawing.Size(244, 383);
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
+            // 
+            // pictureBox_ShowInternetConnectionWarning
+            // 
+            this.pictureBox_ShowInternetConnectionWarning.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ShowInternetConnectionWarning.Location = new System.Drawing.Point(222, 361);
+            this.pictureBox_ShowInternetConnectionWarning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_ShowInternetConnectionWarning.Name = "pictureBox_ShowInternetConnectionWarning";
+            this.pictureBox_ShowInternetConnectionWarning.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ShowInternetConnectionWarning.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ShowInternetConnectionWarning.TabIndex = 371;
+            this.pictureBox_ShowInternetConnectionWarning.TabStop = false;
+            // 
+            // checkBox_ShowInternetConnectionWarning
+            // 
+            this.checkBox_ShowInternetConnectionWarning.AutoSize = true;
+            this.checkBox_ShowInternetConnectionWarning.Location = new System.Drawing.Point(6, 361);
+            this.checkBox_ShowInternetConnectionWarning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_ShowInternetConnectionWarning.Name = "checkBox_ShowInternetConnectionWarning";
+            this.checkBox_ShowInternetConnectionWarning.Size = new System.Drawing.Size(192, 17);
+            this.checkBox_ShowInternetConnectionWarning.TabIndex = 370;
+            this.checkBox_ShowInternetConnectionWarning.Text = "Show Internet Connection Warning";
+            this.checkBox_ShowInternetConnectionWarning.UseVisualStyleBackColor = true;
             // 
             // checkBox_MinimizeMiningWindows
             // 
@@ -1023,7 +1052,7 @@
             this.tabPageAdvanced.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(604, 370);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(604, 391);
             this.tabPageAdvanced.TabIndex = 2;
             this.tabPageAdvanced.Text = "Advanced";
             this.tabPageAdvanced.UseVisualStyleBackColor = true;
@@ -1467,7 +1496,7 @@
             this.tabPageDevicesAlgos.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageDevicesAlgos.Name = "tabPageDevicesAlgos";
             this.tabPageDevicesAlgos.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(604, 370);
+            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(604, 391);
             this.tabPageDevicesAlgos.TabIndex = 1;
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
@@ -1541,10 +1570,10 @@
             // buttonSaveClose
             // 
             this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(370, 413);
+            this.buttonSaveClose.Location = new System.Drawing.Point(348, 435);
             this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonSaveClose.Name = "buttonSaveClose";
-            this.buttonSaveClose.Size = new System.Drawing.Size(110, 23);
+            this.buttonSaveClose.Size = new System.Drawing.Size(134, 23);
             this.buttonSaveClose.TabIndex = 44;
             this.buttonSaveClose.Text = "&Save and Close";
             this.buttonSaveClose.UseVisualStyleBackColor = true;
@@ -1553,7 +1582,7 @@
             // buttonDefaults
             // 
             this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(290, 413);
+            this.buttonDefaults.Location = new System.Drawing.Point(270, 435);
             this.buttonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(74, 23);
@@ -1565,7 +1594,7 @@
             // buttonCloseNoSave
             // 
             this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(486, 413);
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(486, 435);
             this.buttonCloseNoSave.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonCloseNoSave.Name = "buttonCloseNoSave";
             this.buttonCloseNoSave.Size = new System.Drawing.Size(134, 23);
@@ -1578,7 +1607,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(634, 448);
+            this.ClientSize = new System.Drawing.Size(634, 471);
             this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.buttonSaveClose);
             this.Controls.Add(this.tabControlGeneral);
@@ -1594,6 +1623,7 @@
             this.tabPageGeneral.ResumeLayout(false);
             this.groupBox_Misc.ResumeLayout(false);
             this.groupBox_Misc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).EndInit();
@@ -1766,5 +1796,7 @@
         private System.Windows.Forms.PictureBox pictureBox_RunAtStartup;
         private System.Windows.Forms.CheckBox checkBox_MinimizeMiningWindows;
         private System.Windows.Forms.PictureBox pictureBox_MinimizeMiningWindows;
+        private System.Windows.Forms.PictureBox pictureBox_ShowInternetConnectionWarning;
+        private System.Windows.Forms.CheckBox checkBox_ShowInternetConnectionWarning;
     }
 }
