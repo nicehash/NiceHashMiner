@@ -57,12 +57,6 @@ namespace NiceHashMiner.Miners {
             public object error { get; set; }
         }
 
-        protected void KillClaymoreMinerBase(string exeName) {
-            foreach (Process process in Process.GetProcessesByName(exeName)) {
-                try { process.Kill(); } catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
-            }
-        }
-
         public override APIData GetSummary() {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
@@ -143,21 +137,22 @@ namespace NiceHashMiner.Miners {
 
         protected override string GetDevicesCommandString() {
             int amdDeviceCount = ComputeDeviceManager.Query.amdGpus.Count;
-            Helpers.ConsolePrint("ClaymoreDualIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
+            Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
             string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string deviceStringCommand = " -di ";
             List<string> ids = new List<string>();
             foreach (var mPair in MiningSetup.MiningPairs) {
                 var id = mPair.Device.ID;
+                if ((this is ClaymoreDual || this is ClaymoreZcashMiner) && mPair.Device.DeviceType == DeviceType.AMD) {
+                    id = mPair.Device.IDByBus;
+                    if (id < 0) {
+                        // should never happen
+                        Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id.ToString());
+                    }
+                }
                 if (this is ClaymoreDual) {
-                    if (mPair.Device.DeviceType == DeviceType.AMD) {
-                        id = mPair.Device.IDByBus;
-                        if (id < 0) {
-                            // should never happen
-                            Helpers.ConsolePrint("ClaymoreDualIndexing", "ID by Bus too low: " + id.ToString());
-                        }
-                    } else if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
-                        Helpers.ConsolePrint("ClaymoreDualIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
+                    if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
+                        Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
                         id += amdDeviceCount;
                     }
                     if (id > 9) {  // New >10 GPU support in CD9.8
@@ -165,7 +160,7 @@ namespace NiceHashMiner.Miners {
                             char idchar = (char)(id + 87);  // 10 = 97(a), 11 - 98(b), etc
                             ids.Add(idchar.ToString());
                         } else {
-                            Helpers.ConsolePrint("ClaymoreDualIndexing", "ID " + id + " too high, ignoring");
+                            Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
                         }
                     } else {
                         ids.Add(id.ToString());
@@ -217,7 +212,7 @@ namespace NiceHashMiner.Miners {
 
                         string imageName = MinerExeName.Replace(".exe", "");
                         // maybe will have to KILL process
-                        KillClaymoreMinerBase(imageName);
+                        KillProspectorClaymoreMinerBase(imageName);
                         if (BenchmarkSignalTimedout) {
                             throw new Exception("Benchmark timedout");
                         }

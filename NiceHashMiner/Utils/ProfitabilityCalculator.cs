@@ -21,9 +21,9 @@ namespace NiceHashMiner {
             { AlgorithmType.ScryptNf_UNUSED ,               MHs }, // NOT used
             { AlgorithmType.X11_UNUSED ,                    MHs }, // NOT used
             { AlgorithmType.X13_UNUSED ,                    MHs },
-            { AlgorithmType.Keccak ,                 MHs },
+            { AlgorithmType.Keccak ,                        MHs },
             { AlgorithmType.X15_UNUSED ,                    MHs },
-            { AlgorithmType.Nist5 ,                  MHs },
+            { AlgorithmType.Nist5 ,                         MHs },
             { AlgorithmType.NeoScrypt ,                     MHs },
             { AlgorithmType.Lyra2RE ,                       MHs },
             { AlgorithmType.WhirlpoolX_UNUSED ,             MHs },
@@ -44,7 +44,8 @@ namespace NiceHashMiner {
             { AlgorithmType.Pascal ,                        GHs }, 
             { AlgorithmType.X11Gost ,                       MHs },
             { AlgorithmType.Sia ,                           GHs },
-            { AlgorithmType.Blake2s ,                       GHs }
+            { AlgorithmType.Blake2s ,                       GHs },
+            { AlgorithmType.Skunk ,                         MHs }
         };
 
         public static double GetFormatedSpeed(double speed, AlgorithmType type) {

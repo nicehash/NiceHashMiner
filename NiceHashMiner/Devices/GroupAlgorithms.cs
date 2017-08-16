@@ -201,6 +201,13 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.OptiminerAMD, AlgorithmType.Equihash, "equihash")
                         }
                     },
+                    { MinerBaseType.Prospector,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt"),
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.DaggerHashimoto, "eth"),
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
+                        }
+                    }
                 };
             }
             // NVIDIA
@@ -219,7 +226,8 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Nist5, "nist5"),
-                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak")
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
+                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk")
                         }
                     },
                     { MinerBaseType.ccminer_alexis,
@@ -263,6 +271,13 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
                         }
                     },
+                    { MinerBaseType.Prospector,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt"),
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.DaggerHashimoto, "eth"),
+                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
+                        }
+                    }
                 };
                 if (DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
