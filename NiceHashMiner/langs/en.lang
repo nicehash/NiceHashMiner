@@ -253,6 +253,8 @@
     "Form_Settings_ToolTip_APIBindPortStart": "Set starting port number from which miner API Bind ports will be set for communication.",
     "Form_Settings_DagGeneration": "Dag Load Mode",
     "Form_Settings_ToolTip_DagGeneration": "Sets Dag Load Mode for ethminers.",
+    "Form_Settings_General_UseIFTTT": "Use IFTTT",
+    "Form_Settings_IFTTTAPIKey": "IFTTT API Key",
     "AlgorithmsListView_Enabled": "Enabled",
     "AlgorithmsListView_Algorithm": "Algorithm",
     "AlgorithmsListView_Speed": "Speed",

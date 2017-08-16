@@ -267,6 +267,7 @@ namespace NiceHashMiner.Forms
             checkBox_AllowMultipleInstances.Text = International.GetText("Form_Settings_General_AllowMultipleInstances_Text");
             checkBox_RunAtStartup.Text = International.GetText("Form_Settings_General_RunAtStartup");
             checkBox_MinimizeMiningWindows.Text = International.GetText("Form_Settings_General_MinimizeMiningWindows");
+            checkBox_UseIFTTT.Text = International.GetText("Form_Settings_General_UseIFTTT");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
@@ -288,6 +289,8 @@ namespace NiceHashMiner.Forms
             label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
 
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
+
+            label_IFTTTAPIKey.Text = International.GetText("Form_Settings_IFTTTAPIKey");
 
             // Benchmark time limits
             // internationalization change

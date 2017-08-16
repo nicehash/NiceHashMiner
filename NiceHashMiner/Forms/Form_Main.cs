@@ -926,6 +926,9 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.IsMining = true;
             buttonStopMining.Enabled = true;
 
+            // Disable profitable notification on start
+            IsNotProfitable = false;
+
             ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
             ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
@@ -950,6 +953,9 @@ namespace NiceHashMiner
             MinerStatsCheck.Stop();
             SMAMinerCheck.Stop();
 
+            // Disable IFTTT notification before label call
+            IsNotProfitable = false;
+
             MinersManager.StopAllMiners();
 
             textBoxBTCAddress.Enabled = true;
@@ -960,7 +966,6 @@ namespace NiceHashMiner
             buttonSettings.Enabled = true;
             devicesListViewEnableControl1.IsMining = false;
             buttonStopMining.Enabled = false;
-            IsNotProfitable = false;
 
             if (DemoMode) {
                 DemoMode = false;
