@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
-using NiceHashMiner.Devices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.IO;
 using System.Linq;
+using System.Net;
 using SQLite.Net;
 using SQLite.Net.Platform.Win32;
 using SQLite.Net.Attributes;
@@ -97,6 +97,8 @@ namespace NiceHashMiner.Miners
 
         private const string platformStart = "platform ";
         private const string platformEnd = " - ";
+
+        private const int apiPort = 42000;
 
         public Prospector()
             : base("Prospector") {
@@ -215,22 +217,46 @@ namespace NiceHashMiner.Miners
         protected override void _Stop(MinerStopType willswitch) {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
+        
+        private class HashrateApiResponse
+        {
+            public string coin { get; set; }
+            public string device { get; set; }
+            public double rate { get; set; }
+            public string time { get; set; }
+        }
 
         public override APIData GetSummary() {
-            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
-            if (database == null) {
-                try {
-                    database = new ProspectorDatabase(WorkingDirectory + "info.db");
-                } catch (Exception e) { Helpers.ConsolePrint(MinerTAG(), e.ToString()); }
-            } else {
-                foreach (var pair in MiningSetup.MiningPairs) {
-                    if (database != null) {
-                        ad.Speed += database.QueryLastSpeed(deviceIDString(pair.Device.ID, pair.Device.DeviceType));
+            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
+
+            WebClient client = new WebClient();
+            HashrateApiResponse[] resp = null;
+            try {
+                string url = String.Format("http://localhost:{0}/api/v0/hashrates", apiPort);
+                Stream data = client.OpenRead(url);
+                StreamReader reader = new StreamReader(data);
+                string s = reader.ReadToEnd();
+                data.Close();
+                reader.Close();
+
+                resp = JsonConvert.DeserializeObject<HashrateApiResponse[]>(s, Globals.JsonSettings);
+            } catch (Exception ex) {
+                Helpers.ConsolePrint(this.MinerTAG(), "GetSummary exception: " + ex.Message);
+            }
+
+            if (resp != null) {
+                ad.Speed = 0;
+                foreach (var response in resp) {
+                    if (response.coin == MiningSetup.MinerName) {
+                        ad.Speed += response.rate;
+                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                     }
                 }
+                if (ad.Speed == 0) {
+                    _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                }
             }
-            // check if speed zero
-            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
 
             return ad;
         }
