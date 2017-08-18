@@ -268,12 +268,12 @@ namespace NiceHashMiner.Miners
             }
             LastCommandLine = GetStartupCommand(url, btcAdress, worker);
 
-
             ProcessHandle = _Start();
         }
 
         private string GetStartupCommand(string url, string btcAddress, string worker) {
             string username = GetUsername(btcAddress, worker);
+            prepareConfigFile(url, username);
             return "--config " + GetConfigFileName();
         }
 
