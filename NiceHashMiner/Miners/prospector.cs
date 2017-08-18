@@ -100,7 +100,7 @@ namespace NiceHashMiner.Miners
 
         public Prospector()
             : base("Prospector") {
-            this.ConectionType = NHMConectionType.NONE;
+            this.ConectionType = NHMConectionType.STRATUM_TCP;
             IsNeverHideMiningWindow = true;
         }
 
@@ -117,49 +117,36 @@ namespace NiceHashMiner.Miners
                 if (ComputeDeviceManager.Avaliable.HasNVIDIA && type != DeviceType.NVIDIA)
                     platform = 1;
             }
-            return String.Format("({0}:{1})", platform, id);
+            return String.Format("{0}-{1}", platform, id);
         }
 
         private string GetConfigFileName() {
-            return String.Format("config_{0}.json", this.MiningSetup.MiningPairs[0].Device.ID);
+            return String.Format("config_{0}.toml", this.MiningSetup.MiningPairs[0].Device.ID);
         }
 
         private void prepareConfigFile(string pool, string wallet) {
             if (this.MiningSetup.MiningPairs.Count > 0) {
                 try {
-                    var confJson = new JObject();
-                    var poolsJson = new JObject();
-                    var algoJson = new JObject();
-                    var devicesJson = new JObject();
-                    var algo = MiningSetup.MinerName;
+                    var sb = new StringBuilder();
 
-                    algoJson.Add("url", pool);
-                    algoJson.Add("username", wallet);
-                    algoJson.Add("password", "x");
-                    poolsJson.Add(algo, algoJson);
-                    confJson.Add("pools", poolsJson);
+                    sb.AppendLine("[general]");
+                    sb.AppendLine(String.Format("gpu-coin = \"{0}\"", MiningSetup.MinerName));
+                    sb.AppendLine(String.Format("default-username = \"{0}\"", wallet));
+                    sb.AppendLine("default-password = \"x\"");
+
+                    sb.AppendLine(String.Format("[pools.{0}]", MiningSetup.MinerName));
+                    sb.AppendLine(String.Format("url = \"{0}\"", pool));
 
                     foreach (var dev in MiningSetup.MiningPairs) {
-                        var devJson = new JObject();
-                        devJson.Add("enabled", true);
-                        devJson.Add("name", dev.Device.Name);
-
-                        devicesJson.Add(deviceIDString(dev.Device.ID, dev.Device.DeviceType), devJson);
+                        sb.AppendLine(String.Format("[gpus.{0}]", deviceIDString(dev.Device.ID, dev.Device.DeviceType)));
+                        sb.AppendLine("enabled = true");
+                        sb.AppendLine(String.Format("label = \"{0}\"", dev.Device.Name));
                     }
 
-                    var cpuJson = new JObject();
-                    cpuJson.Add("enabled", false);
-                    cpuJson.Add("label", "CPU");
+                    sb.AppendLine("[cpu]");
+                    sb.AppendLine("enabled = false");
 
-                    confJson.Add("gpus", devicesJson);
-                    confJson.Add("cpu", cpuJson);
-
-                    confJson.Add("gpu-coin", algo);
-
-                    string writeStr = confJson.ToString();
-                    int start = writeStr.IndexOf("{");
-                    int end = writeStr.LastIndexOf("}");
-                    System.IO.File.WriteAllText(WorkingDirectory + GetConfigFileName(), writeStr);
+                    System.IO.File.WriteAllText(WorkingDirectory + GetConfigFileName(), sb.ToString());
                 } catch {
                 }
             }
@@ -261,7 +248,6 @@ namespace NiceHashMiner.Miners
 
         private string GetStartupCommand(string url, string btcAddress, string worker) {
             string username = GetUsername(btcAddress, worker);
-            prepareConfigFile(url, username);
             return "--config " + GetConfigFileName();
         }
 
