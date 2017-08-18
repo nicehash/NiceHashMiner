@@ -11,6 +11,7 @@ namespace NiceHashMiner.Enums
         Ru,
         Es,
         Pt,
-        Bg
+        Bg,
+        It
     }
 }
