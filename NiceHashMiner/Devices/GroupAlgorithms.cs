@@ -204,7 +204,6 @@ namespace NiceHashMiner.Devices {
                     { MinerBaseType.Prospector,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt"),
-                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.DaggerHashimoto, "eth"),
                             new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
                         }
                     }
@@ -269,13 +268,6 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
                             new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal),
                             new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
-                        }
-                    },
-                    { MinerBaseType.Prospector,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt"),
-                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.DaggerHashimoto, "eth"),
-                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
                         }
                     }
                 };
