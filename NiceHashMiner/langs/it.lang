@@ -14,7 +14,7 @@
     "BitcoinAddress": "Indirizzo Bitcoin",
     "WorkerName": "Nome del lavoratore",
     "Rate": "Rateo",
-    "Day": "g",
+    "Day": "Giorno",
     "Quick": "Veloce",
     "Standard": "Standard",
     "Precise": "Preciso",
