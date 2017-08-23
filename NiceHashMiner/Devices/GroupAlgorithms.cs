@@ -273,8 +273,7 @@ namespace NiceHashMiner.Devices {
                 };
                 if (DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
-                        AlgorithmType.NeoScrypt,
-                        AlgorithmType.CryptoNight
+                        AlgorithmType.NeoScrypt
                     });
                 }
                 if (DeviceGroupType.NVIDIA_6_x != deviceGroupType) {

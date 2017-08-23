@@ -23,6 +23,12 @@ namespace NiceHashMiner.Miners
         int _cryptonightTotalCount = 0;
         double _cryptonightTotal = 0;
         const int _cryptonightTotalDelim = 2;
+        bool benchmarkException {
+            get {
+                return MiningSetup.MinerPath == MinerPaths.Data.ccminer_cryptonight
+                    || MiningSetup.MinerPath == MinerPaths.Data.ccminer_klaust;
+            }
+        }
 
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             if (this.MiningSetup.MinerPath == MinerPaths.Data.ccminer_x11gost) {
@@ -39,14 +45,14 @@ namespace NiceHashMiner.Miners
             }
             string username = GetUsername(btcAdress, worker);
 
+            IsAPIReadException = MiningSetup.MinerPath == MinerPaths.Data.ccminer_cryptonight;
+
             string algo = "";
             string apiBind = "";
-            if (MiningSetup.CurrentAlgorithmType != AlgorithmType.CryptoNight) {
+            if (!IsAPIReadException) {
                 algo = "--algo=" + MiningSetup.MinerName;
                 apiBind = " --api-bind=" + APIPort.ToString();
             }
-
-            IsAPIReadException = MiningSetup.CurrentAlgorithmType == AlgorithmType.CryptoNight;
 
             LastCommandLine = algo +
                                   " --url=" + url +
@@ -70,7 +76,7 @@ namespace NiceHashMiner.Miners
         #region Decoupled benchmarking routines
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            string timeLimit = (algorithm.NiceHashID == AlgorithmType.CryptoNight || algorithm.NiceHashID == AlgorithmType.Sia || algorithm.NiceHashID == AlgorithmType.Nist5) ? "" : " --time-limit " + time.ToString();
+            string timeLimit = (benchmarkException) ? "" : " --time-limit " + time.ToString();
             string CommandLine = " --algo=" + algorithm.MinerName +
                               " --benchmark" +
                               timeLimit + " " +
@@ -90,7 +96,7 @@ namespace NiceHashMiner.Miners
 
         protected override bool BenchmarkParseLine(string outdata) {
             // cryptonight exception
-            if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight || BenchmarkAlgorithm.NiceHashID == AlgorithmType.Sia || BenchmarkAlgorithm.NiceHashID == AlgorithmType.Nist5) {
+            if (benchmarkException) {
                 int speedLength = (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight) ? 6 : 8;
                 if (outdata.Contains("Total: ")) {
                     int st = outdata.IndexOf("Total:") + 7;
@@ -143,7 +149,7 @@ namespace NiceHashMiner.Miners
 
         public override APIData GetSummary() {
             // CryptoNight does not have api bind port
-            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.CryptoNight) {
+            if (IsAPIReadException) {
                 // check if running
                 if (ProcessHandle == null) {
                     _currentMinerReadStatus = MinerAPIReadStatus.RESTART;

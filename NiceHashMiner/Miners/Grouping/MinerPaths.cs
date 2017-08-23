@@ -167,7 +167,11 @@ namespace NiceHashMiner.Miners.Grouping
                 if (nvidiaGroup == DeviceGroupType.NVIDIA_2_1 || nvidiaGroup == DeviceGroupType.NVIDIA_3_x) {
                     return NVIDIA_GROUPS.ccminer_sm21_or_sm3x(algorithmType);
                 }
-                // sm5x and sm6x have same settings
+                // CN exception
+                if (nvidiaGroup == DeviceGroupType.NVIDIA_6_x && algorithmType == AlgorithmType.CryptoNight) {
+                    return Data.ccminer_tpruvot;
+                }
+                // sm5x and sm6x have same settings otherwise
                 if (nvidiaGroup == DeviceGroupType.NVIDIA_5_x || nvidiaGroup == DeviceGroupType.NVIDIA_6_x) {
                     return NVIDIA_GROUPS.ccminer_sm5x_or_sm6x(algorithmType);
                 }
