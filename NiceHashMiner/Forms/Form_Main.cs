@@ -865,9 +865,12 @@ namespace NiceHashMiner
             }
             // Check if the user has run benchmark first
             if (!isBenchInit) {
-                DialogResult result = MessageBox.Show(International.GetText("EnabledUnbenchmarkedAlgorithmsWarning"),
-                                                          International.GetText("Warning_with_Exclamation"),
-                                                          MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                DialogResult result = DialogResult.No;
+                if (showWarnings) {
+                    result = MessageBox.Show(International.GetText("EnabledUnbenchmarkedAlgorithmsWarning"),
+                                                              International.GetText("Warning_with_Exclamation"),
+                                                              MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
+                }
                 if (result == System.Windows.Forms.DialogResult.Yes) {
                     BenchmarkForm = new Form_Benchmark(
                         BenchmarkPerformanceType.Standard,
