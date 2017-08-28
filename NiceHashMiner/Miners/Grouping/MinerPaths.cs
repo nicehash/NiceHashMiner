@@ -139,9 +139,6 @@ namespace NiceHashMiner.Miners.Grouping
                 if (AlgorithmType.Decred == algorithmType) {
                     return Data.ccminer_decred;
                 }
-                if (AlgorithmType.NeoScrypt == algorithmType) {
-                    return Data.ccminer_neoscrypt;
-                }
                 if (AlgorithmType.Lyra2RE == algorithmType 
                     || AlgorithmType.Lyra2REv2 == algorithmType) {
                     return Data.ccminer_nanashi;
@@ -152,7 +149,8 @@ namespace NiceHashMiner.Miners.Grouping
                 if (AlgorithmType.Lbry == algorithmType 
                     || AlgorithmType.X11Gost == algorithmType 
                     || AlgorithmType.Blake2s == algorithmType
-                    || AlgorithmType.Skunk == algorithmType) {
+                    || AlgorithmType.Skunk == algorithmType
+                    || AlgorithmType.NeoScrypt == algorithmType) {
                     return Data.ccminer_tpruvot;
                 }
                 if (AlgorithmType.Sia == algorithmType
