@@ -148,7 +148,7 @@ If your CPU has 8 virtual cores and you would like to mine only with 7:
 My NVIDIA video card(s) is/are not detected.
 > Make sure to install latest official NVIDIA drivers from here: 
 http://www.nvidia.com/Download/index.aspx
-> Also check whether your card has Compute capability (version) 2.1, 3.x or 5.x, check here: https://en.wikipedia.org/wiki/CUDA#Supported_GPUs
+> Also check whether your card has Compute capability (version) 2.1, 3.x or 5.x, check here: https://en.wikipedia.org/wiki/CUDA#GPUs_supported
 
 My AMD video card(s) is/are not detected.
 > Make sure to install latest official AMD drivers from here:
