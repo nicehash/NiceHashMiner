@@ -256,11 +256,6 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.EWBF, AlgorithmType.Equihash, "")
                         }
                     },
-                    { MinerBaseType.experimental,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.experimental, AlgorithmType.NeoScrypt, "neoscrypt")
-                        }
-                    },
                     { MinerBaseType.Claymore,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
@@ -271,6 +266,7 @@ namespace NiceHashMiner.Devices {
                         }
                     }
                 };
+                /*
                 if (DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
                     ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
                         AlgorithmType.NeoScrypt
@@ -279,6 +275,7 @@ namespace NiceHashMiner.Devices {
                 if (DeviceGroupType.NVIDIA_6_x != deviceGroupType) {
                     ToRemoveMinerTypes.Add(MinerBaseType.experimental);
                 }
+                */
                 if (DeviceGroupType.NVIDIA_6_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType) {
                     ToRemoveMinerTypes.AddRange(new MinerBaseType[] {
                         MinerBaseType.nheqminer
