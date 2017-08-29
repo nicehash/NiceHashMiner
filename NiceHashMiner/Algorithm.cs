@@ -162,9 +162,11 @@ namespace NiceHashMiner {
                     double std = Math.Sqrt(recentValues.Average(v => Math.Pow(v - avg, 2)));
 
                     if (CurrentValue > (std * STD_PROF_MULT) + avg) {  // result is deviant over
-                        Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} std devs over",
+                        Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} std devs over ({2} over {3}",
                             name,
-                            (CurrentValue - avg) / std));
+                            (CurrentValue - avg) / std,
+                            CurrentValue,
+                            avg));
                         return (std * STD_PROF_MULT) + avg;
                     }
                     return CurrentValue;
