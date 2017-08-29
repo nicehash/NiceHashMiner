@@ -31,8 +31,8 @@ namespace NiceHashMiner {
         public string MinerBinaryPath = "";
         // these are changing (logging reasons)
         public double CurrentProfit = 0;
-        public double CurNhmSMADataVal;
-        public double SecondaryCurNhmSMADataVal;
+        public double CurNhmSMADataVal = 0;
+        public double SecondaryCurNhmSMADataVal = 0;
         
         public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName, AlgorithmType secondaryNiceHashID=AlgorithmType.NONE) {
             NiceHashID = niceHashID;
