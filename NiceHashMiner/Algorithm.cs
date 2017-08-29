@@ -3,9 +3,13 @@ using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace NiceHashMiner {
     public class Algorithm {
+
+        private const double STD_PROF_MULT = 1.0;  // profit is considered deviant if it is this many std devs above average
+        private const int PROF_HIST = 5;  // num of recent profits to consider for average
 
         public readonly string AlgorithmName;
         public readonly string MinerBaseTypeName;
@@ -28,8 +32,27 @@ namespace NiceHashMiner {
         public double SecondaryAveragedSpeed { get; set; }
         // based on device and settings here we set the miner path
         public string MinerBinaryPath = "";
+        private List<double> recentProfits = new List<double>();
         // these are changing (logging reasons)
-        public double CurrentProfit = 0;
+        public double CurrentProfit {
+            get {
+                return recentProfits.LastOrDefault();
+            }
+        }
+        public double NormalizedProfit {
+            get {
+                double avg = recentProfits.Average();
+                double std = Math.Sqrt(recentProfits.Average(v => Math.Pow(v - avg, 2)));
+
+                if (CurrentProfit > (std * STD_PROF_MULT) + avg) {  // result is deviant over
+                    Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} std devs over",
+                        AlgorithmName, 
+                        (CurrentProfit - avg) / std));
+                    return (std * STD_PROF_MULT) + avg;
+                }
+                return CurrentProfit;
+            }
+        }
         public double CurNhmSMADataVal = 0;
         public double SecondaryCurNhmSMADataVal = 0;
         
@@ -140,6 +163,12 @@ namespace NiceHashMiner {
         }
         public bool IsDual() {
             return (AlgorithmType.DaggerSia <= DualNiceHashID() && DualNiceHashID() <= AlgorithmType.DaggerPascal);
+        }
+
+        public void AppendProfit(double profit) {
+            if (recentProfits.Count > PROF_HIST)
+                recentProfits.RemoveAt(0);
+            recentProfits.Add(profit);
         }
     }
 }
