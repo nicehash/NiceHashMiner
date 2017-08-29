@@ -32,29 +32,10 @@ namespace NiceHashMiner {
         public double SecondaryAveragedSpeed { get; set; }
         // based on device and settings here we set the miner path
         public string MinerBinaryPath = "";
-        private List<double> recentProfits = new List<double>();
         // these are changing (logging reasons)
-        public double CurrentProfit {
-            get {
-                return recentProfits.LastOrDefault();
-            }
-        }
-        public double NormalizedProfit {
-            get {
-                double avg = recentProfits.Average();
-                double std = Math.Sqrt(recentProfits.Average(v => Math.Pow(v - avg, 2)));
-
-                if (CurrentProfit > (std * STD_PROF_MULT) + avg) {  // result is deviant over
-                    Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} std devs over",
-                        AlgorithmName, 
-                        (CurrentProfit - avg) / std));
-                    return (std * STD_PROF_MULT) + avg;
-                }
-                return CurrentProfit;
-            }
-        }
-        public double CurNhmSMADataVal = 0;
-        public double SecondaryCurNhmSMADataVal = 0;
+        public double CurrentProfit = 0;
+        public SMADataVal CurNhmSMADataVal;
+        public SMADataVal SecondaryCurNhmSMADataVal;
         
         public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName, AlgorithmType secondaryNiceHashID=AlgorithmType.NONE) {
             NiceHashID = niceHashID;
@@ -63,6 +44,9 @@ namespace NiceHashMiner {
             this.AlgorithmName = AlgorithmNiceHashNames.GetName(DualNiceHashID());
             this.MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
             this.AlgorithmStringID = this.MinerBaseTypeName + "_" + this.AlgorithmName;
+
+            CurNhmSMADataVal = new SMADataVal(AlgorithmName);
+            SecondaryCurNhmSMADataVal = new SMADataVal(AlgorithmName);
 
             MinerBaseType = minerBaseType;
             MinerName = minerName;
@@ -165,10 +149,40 @@ namespace NiceHashMiner {
             return (AlgorithmType.DaggerSia <= DualNiceHashID() && DualNiceHashID() <= AlgorithmType.DaggerPascal);
         }
 
-        public void AppendProfit(double profit) {
-            if (recentProfits.Count > PROF_HIST)
-                recentProfits.RemoveAt(0);
-            recentProfits.Add(profit);
+        public class SMADataVal
+        {
+            public double CurrentValue {
+                get {
+                    return recentValues.LastOrDefault();
+                }
+            }
+            public double NormalizedValue {
+                get {
+                    double avg = recentValues.Average();
+                    double std = Math.Sqrt(recentValues.Average(v => Math.Pow(v - avg, 2)));
+
+                    if (CurrentValue > (std * STD_PROF_MULT) + avg) {  // result is deviant over
+                        Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} std devs over",
+                            name,
+                            (CurrentValue - avg) / std));
+                        return (std * STD_PROF_MULT) + avg;
+                    }
+                    return CurrentValue;
+                }
+            }
+
+            private List<Double> recentValues = new List<Double> { 0 };
+            private string name = "";  // for logging
+
+            public SMADataVal(string name) {
+                this.name = name;
+            }
+
+            public void AppendSMAPaying(double paying) {
+                if (recentValues.Count > PROF_HIST)
+                    recentValues.RemoveAt(0);
+                recentValues.Add(paying);
+            }
         }
     }
 }
