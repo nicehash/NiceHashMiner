@@ -8,9 +8,6 @@ using System.Linq;
 namespace NiceHashMiner {
     public class Algorithm {
 
-        private const double STD_PROF_MULT = 1.0;  // profit is considered deviant if it is this many std devs above average
-        private const int PROF_HIST = 5;  // num of recent profits to consider for average
-
         public readonly string AlgorithmName;
         public readonly string MinerBaseTypeName;
         public readonly AlgorithmType NiceHashID;
@@ -34,8 +31,8 @@ namespace NiceHashMiner {
         public string MinerBinaryPath = "";
         // these are changing (logging reasons)
         public double CurrentProfit = 0;
-        public SMADataVal CurNhmSMADataVal;
-        public SMADataVal SecondaryCurNhmSMADataVal;
+        public double CurNhmSMADataVal;
+        public double SecondaryCurNhmSMADataVal;
         
         public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName, AlgorithmType secondaryNiceHashID=AlgorithmType.NONE) {
             NiceHashID = niceHashID;
@@ -44,9 +41,6 @@ namespace NiceHashMiner {
             this.AlgorithmName = AlgorithmNiceHashNames.GetName(DualNiceHashID());
             this.MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
             this.AlgorithmStringID = this.MinerBaseTypeName + "_" + this.AlgorithmName;
-
-            CurNhmSMADataVal = new SMADataVal(AlgorithmName);
-            SecondaryCurNhmSMADataVal = new SMADataVal(AlgorithmName);
 
             MinerBaseType = minerBaseType;
             MinerName = minerName;
@@ -147,44 +141,6 @@ namespace NiceHashMiner {
         }
         public bool IsDual() {
             return (AlgorithmType.DaggerSia <= DualNiceHashID() && DualNiceHashID() <= AlgorithmType.DaggerPascal);
-        }
-
-        public class SMADataVal
-        {
-            public double CurrentValue {
-                get {
-                    return recentValues.LastOrDefault();
-                }
-            }
-            public double NormalizedValue {
-                get {
-                    double avg = recentValues.Average();
-                    double std = Math.Sqrt(recentValues.Average(v => Math.Pow(v - avg, 2)));
-
-                    if (CurrentValue > (std * STD_PROF_MULT) + avg) {  // result is deviant over
-                        Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} std devs over ({2} over {3}",
-                            name,
-                            (CurrentValue - avg) / std,
-                            CurrentValue,
-                            avg));
-                        return (std * STD_PROF_MULT) + avg;
-                    }
-                    return CurrentValue;
-                }
-            }
-
-            private List<Double> recentValues = new List<Double> { 0 };
-            private string name = "";  // for logging
-
-            public SMADataVal(string name) {
-                this.name = name;
-            }
-
-            public void AppendSMAPaying(double paying) {
-                if (recentValues.Count > PROF_HIST)
-                    recentValues.RemoveAt(0);
-                recentValues.Add(paying);
-            }
         }
     }
 }

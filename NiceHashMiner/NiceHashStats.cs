@@ -56,6 +56,7 @@ namespace NiceHashMiner
         const int deviceUpdateInterval = 60 * 1000;
 
         public static Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates { get; private set; }
+        private static NiceHashData niceHashData;
         public static double Balance { get; private set; }
         public static string Version { get; private set; }
         public static bool IsAlive { get { return NiceHashConnection.IsAlive; } }
@@ -103,9 +104,9 @@ namespace NiceHashMiner
 
             private static void ConnectCallback(object sender, EventArgs e) {
                 try {
-                    if (AlgorithmRates == null) {
-                        // Populate SMA first (for port etc)
-                        AlgorithmRates = BaseNiceHashSMA.BaseNiceHashSMADict;
+                    if (AlgorithmRates == null || niceHashData == null) {
+                        niceHashData = new NiceHashData();
+                        AlgorithmRates = niceHashData.NormalizedSMA();
                     }
                     //send login
                     var version = "NHML/" + Application.ProductVersion;
@@ -225,10 +226,9 @@ namespace NiceHashMiner
             try {
                 foreach (var algo in data) {
                     var algoKey = (AlgorithmType)algo[0].Value<int>();
-                    if (AlgorithmRates.ContainsKey(algoKey)) {
-                        AlgorithmRates[algoKey].paying = algo[1].Value<double>();
-                    }
+                    niceHashData.AppendPayingForAlgo(algoKey, algo[1].Value<double>());
                 }
+                AlgorithmRates = niceHashData.NormalizedSMA();
                 OnSMAUpdate.Emit(null, EventArgs.Empty);
             } catch (Exception e) {
                 Helpers.ConsolePrint("SOCKET", e.ToString());

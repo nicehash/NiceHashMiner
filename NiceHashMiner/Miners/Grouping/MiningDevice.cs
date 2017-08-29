@@ -135,11 +135,11 @@ namespace NiceHashMiner.Miners.Grouping {
                 AlgorithmType key = algo.NiceHashID;
                 AlgorithmType secondaryKey = algo.SecondaryNiceHashID;
                 if (NiceHashData.ContainsKey(key)) {
-                    algo.CurNhmSMADataVal.AppendSMAPaying(NiceHashData[key].paying);
-                    algo.CurrentProfit = algo.CurNhmSMADataVal.NormalizedValue * algo.AvaragedSpeed * 0.000000001;
+                    algo.CurNhmSMADataVal = NiceHashData[key].paying;
+                    algo.CurrentProfit = algo.CurNhmSMADataVal * algo.AvaragedSpeed * 0.000000001;
                     if (NiceHashData.ContainsKey(secondaryKey))  {
-                        algo.SecondaryCurNhmSMADataVal.AppendSMAPaying(NiceHashData[secondaryKey].paying);
-                        algo.CurrentProfit += algo.SecondaryCurNhmSMADataVal.NormalizedValue * algo.SecondaryAveragedSpeed * 0.000000001;
+                        algo.SecondaryCurNhmSMADataVal = NiceHashData[secondaryKey].paying;
+                        algo.CurrentProfit += algo.SecondaryCurNhmSMADataVal * algo.SecondaryAveragedSpeed * 0.000000001;
                     }
                 } else {
                     algo.CurrentProfit = 0;
