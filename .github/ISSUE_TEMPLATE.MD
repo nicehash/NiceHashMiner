@@ -1,4 +1,4 @@
-To keep development of NiceHash Miner Legacy streamlined please make sure the following are true:
+To keep development of NiceHash Miner Legacy streamlined please make sure the following are true before posting an issue:
 
 - [ ] The issue has not already been reported.
 - [ ] Relevant log files are included (generally `\logs\log.txt`).
