@@ -14,6 +14,7 @@ namespace NiceHashMiner.Configs.Data {
         public bool DebugConsole = false;
         public string BitcoinAddress = "";
         public string WorkerName = "worker1";
+        public string IFTTTKey = "";
         public int ServiceLocation = 0;
         public bool AutoStartMining = false;
         public bool HideMiningWindows = false;
@@ -55,6 +56,7 @@ namespace NiceHashMiner.Configs.Data {
         public int ApiBindPortPoolStart = 5100;
         public double MinimumProfit = 0;
         public bool IdleWhenNoInternetAccess = true;
+        public bool UseIFTTT = false;
         public bool DownloadInit = false;
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
@@ -110,6 +112,7 @@ namespace NiceHashMiner.Configs.Data {
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
+            UseIFTTT = false;
         }
 
         public void FixSettingBounds() {

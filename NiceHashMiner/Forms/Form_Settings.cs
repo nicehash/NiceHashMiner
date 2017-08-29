@@ -14,8 +14,10 @@ using System.Text;
 using System.Windows.Forms;
 using Microsoft.Win32;
 
-namespace NiceHashMiner.Forms {
-    public partial class Form_Settings : Form {
+namespace NiceHashMiner.Forms
+{
+    public partial class Form_Settings : Form
+    {
 
 
         private bool _isInitFinished = false;
@@ -52,7 +54,7 @@ namespace NiceHashMiner.Forms {
 
             // backup settings
             ConfigManager.CreateBackup();
-            
+
             // initialize form
             InitializeFormTranslations();
 
@@ -88,25 +90,25 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.comboBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
             toolTip1.SetToolTip(this.label_Language, International.GetText("Form_Settings_ToolTip_Language"));
             toolTip1.SetToolTip(this.pictureBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
-            
+
             toolTip1.SetToolTip(this.checkBox_DebugConsole, International.GetText("Form_Settings_ToolTip_checkBox_DebugConsole"));
             toolTip1.SetToolTip(this.pictureBox_DebugConsole, International.GetText("Form_Settings_ToolTip_checkBox_DebugConsole"));
-            
+
             toolTip1.SetToolTip(this.textBox_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
             toolTip1.SetToolTip(this.label_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
             toolTip1.SetToolTip(this.pictureBox_Info_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
-            
+
             toolTip1.SetToolTip(this.textBox_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
             toolTip1.SetToolTip(this.label_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
             toolTip1.SetToolTip(this.pictureBox_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
-            
+
             toolTip1.SetToolTip(this.comboBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(this.label_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(this.pictureBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
-            
+
             toolTip1.SetToolTip(this.checkBox_HideMiningWindows, International.GetText("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
             toolTip1.SetToolTip(this.pictureBox_HideMiningWindows, International.GetText("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
-            
+
             toolTip1.SetToolTip(this.checkBox_MinimizeToTray, International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
             toolTip1.SetToolTip(this.pictureBox_MinimizeToTray, International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
 
@@ -115,7 +117,7 @@ namespace NiceHashMiner.Forms {
 
             toolTip1.SetToolTip(this.checkBox_AllowMultipleInstances, International.GetText("Form_Settings_General_AllowMultipleInstances_ToolTip"));
             toolTip1.SetToolTip(this.pictureBox_AllowMultipleInstances, International.GetText("Form_Settings_General_AllowMultipleInstances_ToolTip"));
-            
+
 
             toolTip1.SetToolTip(this.textBox_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
             toolTip1.SetToolTip(this.label_SwitchMinSecondsFixed, International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
@@ -160,14 +162,14 @@ namespace NiceHashMiner.Forms {
 
             toolTip1.SetToolTip(this.checkBox_AutoScaleBTCValues, International.GetText("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
             toolTip1.SetToolTip(this.pictureBox_AutoScaleBTCValues, International.GetText("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
-            
+
             toolTip1.SetToolTip(this.checkBox_StartMiningWhenIdle, International.GetText("Form_Settings_ToolTip_checkBox_StartMiningWhenIdle"));
             toolTip1.SetToolTip(this.pictureBox_StartMiningWhenIdle, International.GetText("Form_Settings_ToolTip_checkBox_StartMiningWhenIdle"));
 
             toolTip1.SetToolTip(this.textBox_MinIdleSeconds, International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
             toolTip1.SetToolTip(this.label_MinIdleSeconds, International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
             toolTip1.SetToolTip(this.pictureBox_MinIdleSeconds, International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
-            
+
             toolTip1.SetToolTip(this.checkBox_LogToFile, International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
             toolTip1.SetToolTip(this.pictureBox_LogToFile, International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
 
@@ -178,7 +180,7 @@ namespace NiceHashMiner.Forms {
 
             toolTip1.SetToolTip(this.checkBox_ShowDriverVersionWarning, International.GetText("Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning"));
             toolTip1.SetToolTip(this.pictureBox_ShowDriverVersionWarning, International.GetText("Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning"));
-            
+
             toolTip1.SetToolTip(this.checkBox_DisableWindowsErrorReporting, International.GetText("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
             toolTip1.SetToolTip(this.pictureBox_DisableWindowsErrorReporting, International.GetText("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
             
@@ -195,7 +197,7 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.checkBox_AutoStartMining, International.GetText("Form_Settings_ToolTip_checkBox_AutoStartMining"));
             toolTip1.SetToolTip(this.pictureBox_AutoStartMining, International.GetText("Form_Settings_ToolTip_checkBox_AutoStartMining"));
 
-            
+
             toolTip1.SetToolTip(this.textBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(this.label_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(this.pictureBox_ethminerDefaultBlockHeight, International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
@@ -203,7 +205,7 @@ namespace NiceHashMiner.Forms {
             toolTip1.SetToolTip(this.label_displayCurrency, International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
             toolTip1.SetToolTip(this.pictureBox_displayCurrency, International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
             toolTip1.SetToolTip(this.currencyConverterCombobox, International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
-            
+
             // Setup Tooltips CPU
             toolTip1.SetToolTip(comboBox_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
             toolTip1.SetToolTip(label_CPU0_ForceCPUExtension, International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
@@ -220,6 +222,10 @@ namespace NiceHashMiner.Forms {
             // internet connection mining check
             toolTip1.SetToolTip(checkBox_IdleWhenNoInternetAccess, International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
             toolTip1.SetToolTip(pictureBox_IdleWhenNoInternetAccess, International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
+
+            // IFTTT notification check
+            toolTip1.SetToolTip(checkBox_UseIFTTT, International.GetText("Form_Settings_ToolTip_UseIFTTT"));
+            toolTip1.SetToolTip(pictureBox_UseIFTTT, International.GetText("Form_Settings_ToolTip_UseIFTTT"));
 
             toolTip1.SetToolTip(pictureBox_SwitchProfitabilityThreshold, International.GetText("Form_Settings_ToolTip_SwitchProfitabilityThreshold"));
             toolTip1.SetToolTip(label_SwitchProfitabilityThreshold, International.GetText("Form_Settings_ToolTip_SwitchProfitabilityThreshold"));
@@ -261,6 +267,7 @@ namespace NiceHashMiner.Forms {
             checkBox_AllowMultipleInstances.Text = International.GetText("Form_Settings_General_AllowMultipleInstances_Text");
             checkBox_RunAtStartup.Text = International.GetText("Form_Settings_General_RunAtStartup");
             checkBox_MinimizeMiningWindows.Text = International.GetText("Form_Settings_General_MinimizeMiningWindows");
+            checkBox_UseIFTTT.Text = International.GetText("Form_Settings_General_UseIFTTT");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
@@ -282,6 +289,8 @@ namespace NiceHashMiner.Forms {
             label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
 
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
+
+            label_IFTTTAPIKey.Text = International.GetText("Form_Settings_IFTTTAPIKey");
 
             // Benchmark time limits
             // internationalization change
@@ -339,11 +348,13 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_AutoStartMining.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_MinimizeMiningWindows.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_UseIFTTT.CheckedChanged += new System.EventHandler(checkBox_UseIFTTT_CheckChanged);
             }
             // Add EventHandler for all the general tab's textboxes
             {
                 this.textBox_BitcoinAddress.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_WorkerName.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
+                this.textBox_IFTTTKey.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 // these are ints only
                 this.textBox_SwitchMinSecondsFixed.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
                 this.textBox_SwitchMinSecondsDynamic.Leave += new System.EventHandler(this.GeneralTextBoxes_Leave);
@@ -410,12 +421,15 @@ namespace NiceHashMiner.Forms {
                 this.checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
                 checkBox_RunAtStartup.Checked = isInStartupRegistry();
                 checkBox_MinimizeMiningWindows.Checked = ConfigManager.GeneralConfig.MinimizeMiningWindows;
+                checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
             }
 
             // Textboxes
             {
                 textBox_BitcoinAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
                 textBox_WorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
+                textBox_IFTTTKey.Text = ConfigManager.GeneralConfig.IFTTTKey;
+                textBox_IFTTTKey.Enabled = ConfigManager.GeneralConfig.UseIFTTT;
                 textBox_SwitchMinSecondsFixed.Text = ConfigManager.GeneralConfig.SwitchMinSecondsFixed.ToString();
                 textBox_SwitchMinSecondsDynamic.Text = ConfigManager.GeneralConfig.SwitchMinSecondsDynamic.ToString();
                 textBox_SwitchMinSecondsAMD.Text = ConfigManager.GeneralConfig.SwitchMinSecondsAMD.ToString();
@@ -504,6 +518,7 @@ namespace NiceHashMiner.Forms {
             ConfigManager.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
             ConfigManager.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
             ConfigManager.GeneralConfig.IdleWhenNoInternetAccess = checkBox_IdleWhenNoInternetAccess.Checked;
+            ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
         }
@@ -596,6 +611,8 @@ namespace NiceHashMiner.Forms {
             ConfigManager.GeneralConfig.MinimumProfit = Helpers.ParseDouble(textBox_MinProfit.Text);
             ConfigManager.GeneralConfig.SwitchProfitabilityThreshold = Helpers.ParseDouble(textBox_SwitchProfitabilityThreshold.Text);
 
+            ConfigManager.GeneralConfig.IFTTTKey = textBox_IFTTTKey.Text.Trim();
+
             // Fix bounds
             ConfigManager.GeneralConfig.FixSettingBounds();
             // update strings
@@ -657,7 +674,7 @@ namespace NiceHashMiner.Forms {
 
         private void buttonAllProfit_Click(object sender, EventArgs e) {
             var url = Links.NHM_Profit_Check + "CUSTOM";
-            Dictionary<AlgorithmType, double> total = new Dictionary<AlgorithmType,double>();
+            Dictionary<AlgorithmType, double> total = new Dictionary<AlgorithmType, double>();
             foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 foreach (var algorithm in curCDev.GetAlgorithmSettingsFastest()) {
                     if (total.ContainsKey(algorithm.NiceHashID)) {
@@ -789,6 +806,15 @@ namespace NiceHashMiner.Forms {
             IsChange = true;
             ConfigManager.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             checkBox_MinimizeMiningWindows.Enabled = !checkBox_HideMiningWindows.Checked;
+        }
+
+        private void checkBox_UseIFTTT_CheckChanged(object sender, EventArgs e) {
+            if (!_isInitFinished) return;
+            IsChange = true;
+
+            ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
+
+            textBox_IFTTTKey.Enabled = checkBox_UseIFTTT.Checked;
         }
     }
 }

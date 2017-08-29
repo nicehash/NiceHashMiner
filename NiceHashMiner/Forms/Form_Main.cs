@@ -52,6 +52,7 @@ namespace NiceHashMiner
         private bool _isDeviceDetectionInitialized = false;
 
         private bool IsManuallyStarted = false;
+        private bool IsNotProfitable = false;
 
         private bool isSMAUpdated = false;
 
@@ -110,7 +111,7 @@ namespace NiceHashMiner
             labelServiceLocation.Text = International.GetText("Service_Location") + ":";
             labelBitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
             labelWorkerName.Text = International.GetText("WorkerName") + ":";
-            
+
             linkLabelCheckStats.Text = International.GetText("Form_Main_check_stats");
             linkLabelChooseBTCWallet.Text = International.GetText("Form_Main_choose_bitcoin_wallet");
 
@@ -138,6 +139,7 @@ namespace NiceHashMiner
 
             textBoxBTCAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
             textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
+
             ShowWarningNiceHashData = true;
             DemoMode = false;
 
@@ -493,19 +495,39 @@ namespace NiceHashMiner
             string rateBTCString = FormatPayingOutput(paying);
             string rateCurrencyString = ExchangeRateAPI.ConvertToActiveCurrency(paying * Globals.BitcoinUSDRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", ExchangeRateAPI.ActiveDisplayCurrency) + International.GetText("Day");
-            
+
             ((GroupProfitControl)flowLayoutPanelRates.Controls[flowLayoutPanelRatesIndex++])
                 .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBTCString, rateCurrencyString);
 
             UpdateGlobalRate();
         }
 
-        public void ShowNotProfitable(string msg) {
+        public void ShowNotProfitable(string msg)
+        {
+            if (ConfigManager.GeneralConfig.UseIFTTT)
+            {
+                if (!IsNotProfitable)
+                {
+                    IFTTT.PostToIFTTT("nicehash", msg);
+                    IsNotProfitable = true;
+                }
+            }
+
             label_NotProfitable.Visible = true;
             label_NotProfitable.Text = msg;
             label_NotProfitable.Invalidate();
         }
-        public void HideNotProfitable() {
+        public void HideNotProfitable()
+        {
+            if (ConfigManager.GeneralConfig.UseIFTTT)
+            {
+                if (IsNotProfitable)
+                {
+                    IFTTT.PostToIFTTT("nicehash", "Mining is once again profitable and has resumed.");
+                    IsNotProfitable = false;
+                }
+            }
+
             label_NotProfitable.Visible = false;
             label_NotProfitable.Invalidate();
         }
@@ -634,10 +656,10 @@ namespace NiceHashMiner
                 DialogResult result = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidBTCAddressMsg"),
                                                       International.GetText("Error_with_Exclamation"),
                                                       MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-                
+
                 if (result == System.Windows.Forms.DialogResult.Yes)
                     System.Diagnostics.Process.Start(Links.NHM_BTC_Wallet_Faq);
-                
+
                 textBoxBTCAddress.Focus();
                 return false;
             }
@@ -667,7 +689,7 @@ namespace NiceHashMiner
             System.Diagnostics.Process.Start(Links.NHM_BTC_Wallet_Faq);
         }
 
-        private void linkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e) 
+        private void linkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             System.Diagnostics.Process.Start(VisitURLNew);
         }
@@ -678,7 +700,7 @@ namespace NiceHashMiner
             MinersManager.StopAllMiners();
 
             MessageBoxManager.Unregister();
-        }        
+        }
 
         private void buttonBenchmark_Click(object sender, EventArgs e)
         {
@@ -907,6 +929,9 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.IsMining = true;
             buttonStopMining.Enabled = true;
 
+            // Disable profitable notification on start
+            IsNotProfitable = false;
+
             ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
             ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
@@ -930,6 +955,9 @@ namespace NiceHashMiner
         private void StopMining() {
             MinerStatsCheck.Stop();
             SMAMinerCheck.Stop();
+
+            // Disable IFTTT notification before label call
+            IsNotProfitable = false;
 
             MinersManager.StopAllMiners();
 
