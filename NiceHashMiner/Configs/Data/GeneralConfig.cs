@@ -70,6 +70,11 @@ namespace NiceHashMiner.Configs.Data {
         public string hwid = "";
         public int agreedWithTOS = 0;
 
+        // normalization stuff
+        public double IQROverFactor = 2.0;
+        public int NormalizedProfitHistory = 15;
+        public double IQRNormalizeFactor = 0.0;
+
         // methods
         public void SetDefaults() {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -113,6 +118,9 @@ namespace NiceHashMiner.Configs.Data {
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
             UseIFTTT = false;
+            IQROverFactor = 2.0;
+            NormalizedProfitHistory = 15;
+            IQRNormalizeFactor = 0.0;
         }
 
         public void FixSettingBounds() {
@@ -154,6 +162,15 @@ namespace NiceHashMiner.Configs.Data {
             }
             if (this.LastDevicesSettup == null) {
                 this.LastDevicesSettup = new List<ComputeDeviceConfig>();
+            }
+            if (IQROverFactor < 0) {
+                IQROverFactor = 2.0;
+            }
+            if (NormalizedProfitHistory < 1) {
+                NormalizedProfitHistory = 15;
+            }
+            if (IQRNormalizeFactor < 0) {
+                IQRNormalizeFactor = 0.0;
             }
         }
 

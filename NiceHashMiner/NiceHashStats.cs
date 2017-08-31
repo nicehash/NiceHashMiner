@@ -228,7 +228,7 @@ namespace NiceHashMiner
                 foreach (var algo in data) {
                     var algoKey = (AlgorithmType)algo[0].Value<int>();
                     Helpers.ConsolePrint("BALRG", times.ToString());
-                    if (times > 15 && algoKey == AlgorithmType.X11Gost) {
+                    if (times < 0 && algoKey == AlgorithmType.X11Gost) {
                         niceHashData.AppendPayingForAlgo(algoKey, 0.0844);
                     } else {
                         niceHashData.AppendPayingForAlgo(algoKey, algo[1].Value<double>());
