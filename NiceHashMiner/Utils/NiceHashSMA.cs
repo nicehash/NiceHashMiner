@@ -59,7 +59,7 @@ namespace NiceHashMiner
                     if (recentPaying[algo].Count >= ConfigManager.GeneralConfig.NormalizedProfitHistory 
                         && current > (IQR * ConfigManager.GeneralConfig.IQROverFactor) + TQ) {  // result is deviant over
                         var norm = (IQR * ConfigManager.GeneralConfig.IQRNormalizeFactor) + TQ;
-                        Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} IQRs over ({2} over {3}. Normalizing to {4}",
+                        Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} IQRs over ({2} actual, {3} 3Q). Normalizing to {4}",
                             currentSMA[algo].name,
                             (current - TQ) / IQR,
                             current,
