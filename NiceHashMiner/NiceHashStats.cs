@@ -221,18 +221,11 @@ namespace NiceHashMiner
         #endregion
 
         #region Incoming socket calls
-        static int times = 0;
         private static void SetAlgorithmRates(JArray data) {
             try {
-                ++times;
                 foreach (var algo in data) {
                     var algoKey = (AlgorithmType)algo[0].Value<int>();
-                    Helpers.ConsolePrint("BALRG", times.ToString());
-                    if (times > 15 && algoKey == AlgorithmType.X11Gost) {
-                        niceHashData.AppendPayingForAlgo(algoKey, 0.0844);
-                    } else {
-                        niceHashData.AppendPayingForAlgo(algoKey, algo[1].Value<double>());
-                    }
+                    niceHashData.AppendPayingForAlgo(algoKey, algo[1].Value<double>());
                 }
                 AlgorithmRates = niceHashData.NormalizedSMA();
                 OnSMAUpdate.Emit(null, EventArgs.Empty);
