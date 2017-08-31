@@ -3,7 +3,6 @@ using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Linq;
 
 namespace NiceHashMiner {
     public class Algorithm {

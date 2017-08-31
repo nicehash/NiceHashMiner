@@ -17,8 +17,9 @@ namespace NiceHashMiner
 
     public class NiceHashData
     {
-        private const double STD_PROF_MULT = 2.0;  // profit is considered deviant if it is this many std devs above average
-        private const int PROF_HIST = 5;  // num of recent profits to consider for average
+        private const double STD_PROF_MULT = 2;  // profit is considered deviant if it is this many std devs above average
+        private const int PROF_HIST = 15;  // num of recent profits to consider for average
+        private const double STD_NORM_MULT = 1.5;
 
         private Dictionary<AlgorithmType, List<double>> recentPaying;
         private Dictionary<AlgorithmType, NiceHashSMA> currentSMA;
@@ -55,15 +56,23 @@ namespace NiceHashMiner
                     double std = Math.Sqrt(recentPaying[algo].Average(v => Math.Pow(v - avg, 2)));
                     var current = currentPayingForAlgo(algo);
 
-                    if (current > (std * STD_PROF_MULT) + avg) {  // result is deviant over
-                        Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} std devs over ({2} over {3}",
+                    // Find IQR
+                    var quartiles = recentPaying[algo].Quartiles();
+                    var IQR = quartiles.Item3 - quartiles.Item1;
+                    var TQ = quartiles.Item3;
+
+                    if (recentPaying[algo].Count >= PROF_HIST && current > (IQR * STD_PROF_MULT) + TQ) {  // result is deviant over
+                        var norm = TQ;
+                        Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} std devs over ({2} over {3}. Normalizing to {4}",
                             currentSMA[algo].name,
-                            (current - avg) / std,
+                            (current - TQ) / IQR,
                             current,
-                            avg));
-                        currentSMA[algo].paying = (std * STD_PROF_MULT) + avg;
+                            TQ,
+                            norm));
+                        currentSMA[algo].paying = norm;
+                    } else {
+                        currentSMA[algo].paying = current;
                     }
-                    currentSMA[algo].paying = current;
                 }
             }
 
