@@ -193,12 +193,15 @@ namespace NiceHashMiner
                 attemptingReconnect = true;
                 var sleep = connectionEstablished ? 10 + random.Next(0, 20) : 0;
                 Helpers.ConsolePrint("SOCKET", "Attempting reconnect in " + sleep + " seconds");
+                // More retries on first attempt
+                var retries = connectionEstablished ? 5 : 20;
                 if (connectionEstablished) {  // Don't wait if no connection yet
+                    Thread.Sleep(sleep * 1000);
+                } else {
                     // Don't not wait again
                     connectionEstablished = true;
-                    Thread.Sleep(sleep * 1000);
                 }
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < retries; i++) {
                     webSocket.Connect();
                     Thread.Sleep(100);
                     if (webSocket.IsAlive) {
