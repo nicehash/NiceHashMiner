@@ -73,7 +73,7 @@ namespace NiceHashMiner.Configs.Data {
         // normalization stuff
         public double IQROverFactor = 3.0;
         public int NormalizedProfitHistory = 15;
-        public double IQRNormalizeFactor = 2.0;
+        public double IQRNormalizeFactor = 0.0;
 
         // methods
         public void SetDefaults() {
@@ -120,7 +120,7 @@ namespace NiceHashMiner.Configs.Data {
             UseIFTTT = false;
             IQROverFactor = 3.0;
             NormalizedProfitHistory = 15;
-            IQRNormalizeFactor = 2.0;
+            IQRNormalizeFactor = 0.0;
         }
 
         public void FixSettingBounds() {
@@ -170,7 +170,7 @@ namespace NiceHashMiner.Configs.Data {
                 NormalizedProfitHistory = 15;
             }
             if (IQRNormalizeFactor < 0) {
-                IQRNormalizeFactor = 2.0;
+                IQRNormalizeFactor = 0.0;
             }
         }
 
