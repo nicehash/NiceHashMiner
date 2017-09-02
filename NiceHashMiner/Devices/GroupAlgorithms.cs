@@ -266,16 +266,6 @@ namespace NiceHashMiner.Devices {
                         }
                     }
                 };
-                /*
-                if (DeviceGroupType.NVIDIA_6_x == deviceGroupType) {
-                    ToRemoveAlgoTypes.AddRange(new AlgorithmType[] {
-                        AlgorithmType.NeoScrypt
-                    });
-                }
-                if (DeviceGroupType.NVIDIA_6_x != deviceGroupType) {
-                    ToRemoveMinerTypes.Add(MinerBaseType.experimental);
-                }
-                */
                 if (DeviceGroupType.NVIDIA_6_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType) {
                     ToRemoveMinerTypes.AddRange(new MinerBaseType[] {
                         MinerBaseType.nheqminer
