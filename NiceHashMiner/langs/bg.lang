@@ -245,7 +245,7 @@
     "Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed": "Speed for the secondary algorithm when using dual algo mining.",
     "Form_Settings_ToolTip_AlgoDisabledDevices": "Всички маркирани устройства ще бъдат игнорирани от NiceHash Miner Legacy (само за този алгоритъм).",
     "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Допълнителни параметри, които се предават при стартирането на изчислителната програма за настоящия алгоритъм.",
-    "Form_Settings_ToolTip_UseIFTTT": "Ако тази опция е активирана, NiceHash Miner Legacy ще използва въведения API ключ за If This Then Thatt (IFTTT) да ви уведоми, когато рентабилността е по-ниска от зададената от вас. \nВижте инструкциите за употреба, за да научите как да конфигурирате тази функционалност.", 
+    "Form_Settings_ToolTip_UseIFTTT": "Ако тази опция е активирана, NiceHash Miner Legacy ще използва въведения API ключ за If This Then That (IFTTT) да ви уведоми, когато рентабилността е по-ниска от зададената от вас. \nВижте инструкциите за употреба, за да научите как да конфигурирате тази функционалност.", 
     "Form_Settings_Text_ContinueMiningIfNoInternetAccess": "Спиране на работа при липса на интернет достъп",
     "Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess": "Ако тази опция е активна, NiceHash Miner Legacy ще прекрати изчисленията при липса на интернет свързаност",
     "Form_Settings_DisplayCurrency": "Валута:",
