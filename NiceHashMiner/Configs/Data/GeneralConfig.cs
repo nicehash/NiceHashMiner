@@ -58,6 +58,7 @@ namespace NiceHashMiner.Configs.Data {
         public bool IdleWhenNoInternetAccess = true;
         public bool UseIFTTT = false;
         public bool DownloadInit = false;
+        public bool RunScriptOnCUDA_GPU_Lost = false;
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
         public bool DownloadInit3rdParty = false;

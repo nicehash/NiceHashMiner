@@ -132,7 +132,7 @@ namespace NiceHashMiner.Miners {
             List<string> ids = new List<string>();
             foreach (var mPair in MiningSetup.MiningPairs) {
                 if (this is ClaymoreDual || this is ClaymoreZcashMiner) {
-                    int amdDeviceCount = ComputeDeviceManager.Query.amdGpus.Count;
+                    int amdDeviceCount = ComputeDeviceManager.Query.AMD_Devices.Count;
                     Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
                     var id = mPair.Device.IDByBus;
                     if (id < 0) {

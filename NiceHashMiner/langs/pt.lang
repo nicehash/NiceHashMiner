@@ -129,6 +129,7 @@
     "Form_Settings_General_LogToFile": "Salvar Log",
     "Form_Settings_General_RunAtStartup": "Executar com o Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Minimizar Windows Mineração",
+    "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Run script when CUDA GPU is lost",
 
     "Form_Settings_General_Language": "Idioma",
     "Form_Settings_General_MinIdleSeconds": "Tempo Minimo Ocioso [s]",
@@ -226,6 +227,7 @@
     "Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning": "When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available.",
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "When checked, NiceHash Miner Legacy would use the new settings page.",
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.",
+    "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost, by default script should restart whole system.",
 
     "Form_Settings_ToolTip_ethminerAPIPort": "API port that will be used by ethminer for {0} GPUs.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Sets the default block height used for benchmarking if API call fails.",

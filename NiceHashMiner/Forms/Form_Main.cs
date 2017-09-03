@@ -26,6 +26,8 @@ namespace NiceHashMiner
 {
     using NiceHashMiner.Miners.Grouping;
     using NiceHashMiner.Miners.Parsing;
+    using System.IO;
+
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         private String VisitURLNew = Links.VisitURLNew;
@@ -35,6 +37,7 @@ namespace NiceHashMiner
         private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;
         private Timer IdleCheck;
+        private Timer ComputeDevicesCheckTimer;
 
         private bool ShowWarningNiceHashData;
         private bool DemoMode;
@@ -256,7 +259,7 @@ namespace NiceHashMiner
             if (ComputeDeviceManager.Group.ContainsAMD_GPUs) {
                 SMAMinerCheck.Interval = (ConfigManager.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
-
+            
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
@@ -425,6 +428,22 @@ namespace NiceHashMiner
 
         private void MinerStatsCheck_Tick(object sender, EventArgs e) {
             MinersManager.MinerStatsCheck(Globals.NiceHashData);
+        }
+
+        private void ComputeDevicesCheckTimer_Tick(object sender, EventArgs e)
+        {
+            if (ComputeDeviceManager.Query.CheckVideoControllersCountMismath())
+            {
+                // less GPUs than before, ACT!
+                try
+                {
+                    System.Diagnostics.Process.Start(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat");
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "OnGPUsMismatch.bat error: " + ex.Message);
+                }
+            }
         }
 
         private void InitFlowPanelStart() {
@@ -935,12 +954,23 @@ namespace NiceHashMiner
             SMAMinerCheck.Start();
             MinerStatsCheck.Start();
 
+            if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
+            {
+                ComputeDevicesCheckTimer = new Timer();
+                ComputeDevicesCheckTimer.Tick += ComputeDevicesCheckTimer_Tick;
+                ComputeDevicesCheckTimer.Interval = 60000;
+
+                ComputeDevicesCheckTimer.Start();
+            }
+
             return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
         }
 
         private void StopMining() {
             MinerStatsCheck.Stop();
             SMAMinerCheck.Stop();
+            if (ComputeDevicesCheckTimer != null)
+                ComputeDevicesCheckTimer.Stop();
 
             // Disable IFTTT notification before label call
             IsNotProfitable = false;
