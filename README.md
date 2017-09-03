@@ -163,6 +163,9 @@ If you are using Windows 10, the AMD installer utility is sometimes unable to in
 I'm getting "Always ask before opening this file" when running NiceHash Miner Legacy
 > Make sure you un-check the checkbox "Always ask before opening this file" when NiceHash Miner Legacy is starting cpuminer, ccminer or sgminer back-end programs. This is needed because back-end programs will be executed several times while NiceHash Miner Legacy is running (auto-switching according to profitability and in case programs hangs) and you have to make sure these programs will be to executed automatically without your intervention.
 
+Google Chrome is blocking the download of the application
+> Google Chrome falsely flags NiceHash Miner Legacy as a potentially unwanted program and thus prevents you from saving the program archive on your computer. This is an issue with Google Chrome and not with NiceHash Miner Legacy. Use another browser such as Firefox or Edge to download the file instead. Also, read 'My anti-virus is blocking the application' below.
+
 My anti-virus is blocking the application
 > Some anti-virus software might block NiceHash Miner Legacy as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into NiceHash Miner Legacy has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/nicehash/NiceHashMinerLegacy/releases. However, make sure you **never download and run any files from other unknown sources**! If you downloaded the software package from our GitHub repository you can simply resolve the issues with false-positives by adding the files sgminer.exe, ccminer_sp.exe, ccminer_tpruvot.exe, cpuminer_x64_AVX.exe, cpuminer_x64_AVX2.exe and cpuminer_x64_SSE2.exe to anti-virus exception list.
 
