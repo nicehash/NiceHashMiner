@@ -408,7 +408,7 @@ namespace NiceHashMiner
         private void Form_Main_Shown(object sender, EventArgs e)
         {
             // general loading indicator
-            int TotalLoadSteps = 12;
+            int TotalLoadSteps = 11;
             LoadingScreen = new Form_Loading(this,
                 International.GetText("Form_Loading_label_LoadingText"),
                 International.GetText("Form_Main_loadtext_CPU"), TotalLoadSteps);
