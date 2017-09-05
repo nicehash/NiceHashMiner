@@ -109,7 +109,16 @@ namespace NiceHashMiner.Miners.Grouping
         //    return algos.FindIndex((a) => a.MinerBaseType == minerBaseType && a.NiceHashID == algorithmType) > -1;
         //}
 
-        public static string GetPathFor(MinerBaseType minerBaseType, AlgorithmType algoType, DeviceGroupType devGroupType) {
+        public static string GetPathFor(MinerBaseType minerBaseType, AlgorithmType algoType, DeviceGroupType devGroupType, bool def = false) {
+            if (!def & configurableMiners.Contains(minerBaseType)) {
+                // Override with internals
+                var path = minerPathPackages.Find(p => p.DeviceType == devGroupType)
+                    .MinerTypes.Find(p => p.Type == minerBaseType)
+                    .Algorithms.Find(p => p.Algorithm == algoType);
+                if (path != null) {
+                    return path.Path;
+                }
+            }
             switch (minerBaseType) {
                 case MinerBaseType.ccminer:
                     return NVIDIA_GROUPS.ccminer_path(algoType, devGroupType);
@@ -280,7 +289,7 @@ namespace NiceHashMiner.Miners.Grouping
                     if (package.ContainsKey(type)) {
                         var minerPaths = new List<MinerPath>();
                         foreach (var algo in package[type]) {
-                            minerPaths.Add(new MinerPath(algo.NiceHashID, GetPathFor(type, algo.NiceHashID, i)));
+                            minerPaths.Add(new MinerPath(algo.NiceHashID, GetPathFor(type, algo.NiceHashID, i, true)));
                         }
                         minerTypePaths.Add(new MinerTypePath(type, minerPaths));
                     }
