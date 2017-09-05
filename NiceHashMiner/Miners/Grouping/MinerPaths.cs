@@ -1,4 +1,5 @@
 ﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Configs.ConfigJsonFile;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using System;
@@ -7,6 +8,42 @@ using System.Text;
 
 namespace NiceHashMiner.Miners.Grouping
 {
+    class MinerPathPackageFile : ConfigFile<MinerPathPackage>
+    {
+        public MinerPathPackageFile(string name)
+            : base(name) {
+        }
+    }
+
+    public class MinerPathPackage
+    {
+        public string Name;
+        public MinerType Type;
+        public List<MinerPath> Paths;
+
+        public MinerPathPackage(MinerType type, List<MinerPath> paths) {
+            Type = type;
+            Paths = paths;
+            Name = type.ToString();
+        }
+    }
+
+    public class MinerPath
+    {
+        public AlgorithmType Algorithm;
+        public string AlgorithmName;
+        public DeviceGroupType DeviceType;
+        public string DeviceTypeName;
+        public string Path;
+
+        public MinerPath(AlgorithmType algo, DeviceGroupType group, string path) {
+            Algorithm = algo;
+            DeviceType = group;
+            Path = path;
+            AlgorithmName = Algorithm.ToString();
+            DeviceTypeName = DeviceType.ToString();
+        }
+    }
     /// <summary>
     /// MinerPaths, used just to store miners paths strings. Only one instance needed
     /// </summary>
@@ -217,6 +254,18 @@ namespace NiceHashMiner.Miners.Grouping
                 }
                 return Data.NONE; // should not happen
             }
+        }
+
+        private static List<MinerPathPackage> MinerPathPackages = new List<MinerPathPackage>();
+        private static readonly List<MinerPathPackage> DEFAULTS = new List<MinerPathPackage>() {
+            new MinerPathPackage(
+                MinerType.ccminer,
+                new List<MinerPath>() {
+
+                })
+        };
+        public static void InitializePackages() {
+
         }
     }
 }
