@@ -366,7 +366,7 @@ namespace NiceHashMiner.Miners {
                         var newAlgoType = GetMinerPairAlgorithmType(miningPairs);
                         if(newAlgoType != AlgorithmType.NONE && newAlgoType != AlgorithmType.INVALID) {
                             // if algoType valid and different from currently running update
-                            if (newAlgoType != _runningGroupMiners[runningGroupKey].AlgorithmType) {
+                            if (newAlgoType != _runningGroupMiners[runningGroupKey].DualAlgorithmType) {
                                 // remove current one and schedule to stop mining
                                 toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
                                 // create new one TODO check if DaggerHashimoto
