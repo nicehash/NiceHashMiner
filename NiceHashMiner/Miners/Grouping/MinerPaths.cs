@@ -18,30 +18,39 @@ namespace NiceHashMiner.Miners.Grouping
     public class MinerPathPackage
     {
         public string Name;
-        public MinerType Type;
-        public List<MinerPath> Paths;
+        public DeviceGroupType DeviceType;
+        public List<MinerTypePath> MinerTypes;
 
-        public MinerPathPackage(MinerType type, List<MinerPath> paths) {
+        public MinerPathPackage(DeviceGroupType type, List<MinerTypePath> paths) {
+            DeviceType = type;
+            MinerTypes = paths;
+            Name = DeviceType.ToString();
+        }
+    }
+
+    public class MinerTypePath
+    {
+        public string Name;
+        public MinerBaseType Type;
+        public List<MinerPath> Algorithms;
+
+        public MinerTypePath(MinerBaseType type, List<MinerPath> paths) {
             Type = type;
-            Paths = paths;
+            Algorithms = paths;
             Name = type.ToString();
         }
     }
 
     public class MinerPath
     {
+        public string Name;
         public AlgorithmType Algorithm;
-        public string AlgorithmName;
-        public DeviceGroupType DeviceType;
-        public string DeviceTypeName;
         public string Path;
 
-        public MinerPath(AlgorithmType algo, DeviceGroupType group, string path) {
+        public MinerPath(AlgorithmType algo, string path) {
             Algorithm = algo;
-            DeviceType = group;
             Path = path;
-            AlgorithmName = Algorithm.ToString();
-            DeviceTypeName = DeviceType.ToString();
+            Name = Algorithm.ToString();
         }
     }
     /// <summary>
@@ -256,16 +265,44 @@ namespace NiceHashMiner.Miners.Grouping
             }
         }
 
-        private static List<MinerPathPackage> MinerPathPackages = new List<MinerPathPackage>();
-        private static readonly List<MinerPathPackage> DEFAULTS = new List<MinerPathPackage>() {
-            new MinerPathPackage(
-                MinerType.ccminer,
-                new List<MinerPath>() {
-
-                })
+        private static List<MinerPathPackage> minerPathPackages = new List<MinerPathPackage>();
+        private static readonly List<MinerBaseType> configurableMiners = new List<MinerBaseType> {
+            MinerBaseType.ccminer,
+            MinerBaseType.sgminer
         };
-        public static void InitializePackages() {
 
+        public static void InitializePackages() {
+            var defaults = new List<MinerPathPackage>();
+            for (var i = DeviceGroupType.NONE + 1; i < DeviceGroupType.LAST; i++) {
+                var minerTypePaths = new List<MinerTypePath>();
+                var package = GroupAlgorithms.CreateDefaultsForGroup(i);
+                foreach (var type in configurableMiners) {
+                    if (package.ContainsKey(type)) {
+                        var minerPaths = new List<MinerPath>();
+                        foreach (var algo in package[type]) {
+                            minerPaths.Add(new MinerPath(algo.NiceHashID, GetPathFor(type, algo.NiceHashID, i)));
+                        }
+                        minerTypePaths.Add(new MinerTypePath(type, minerPaths));
+                    }
+                }
+                if (minerTypePaths.Count > 0) {
+                    defaults.Add(new MinerPathPackage(i, minerTypePaths));
+                }
+            }
+
+            foreach (var pack in defaults) {
+                var packageName = String.Format("MinerPathPackage_{0}", pack.Name);
+                var packageFile = new MinerPathPackageFile(packageName);
+                var readPack = packageFile.ReadFile();
+                if (readPack == null) {   // read has failed
+                    Helpers.ConsolePrint("MinerPaths", "Creating internal paths config " + packageName);
+                    minerPathPackages.Add(pack);
+                    packageFile.Commit(pack);
+                } else {
+                    Helpers.ConsolePrint("MinerPaths", "Loading internal paths config " + packageName);
+                    minerPathPackages.Add(readPack);
+                }
+            }
         }
     }
 }
