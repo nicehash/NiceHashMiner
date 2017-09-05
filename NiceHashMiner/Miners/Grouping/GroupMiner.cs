@@ -10,6 +10,7 @@ namespace NiceHashMiner.Miners.Grouping {
         public Miner Miner { get; protected set; }
         public string DevicesInfoString { get; private set; }
         public AlgorithmType AlgorithmType { get; private set; }
+        public AlgorithmType DualAlgorithmType { get; private set; }
         // for now used only for dagger identification AMD or NVIDIA
         public DeviceType DeviceType { get; private set; }
         public double CurrentRate { get; set; }
@@ -19,6 +20,7 @@ namespace NiceHashMiner.Miners.Grouping {
         // , string miningLocation, string btcAdress, string worker
         public GroupMiner(List<MiningPair> miningPairs, string key) {
             AlgorithmType = AlgorithmType.NONE;
+            DualAlgorithmType = AlgorithmType.NONE;
             DevicesInfoString = "N/A";
             CurrentRate = 0;
             Key = key;
@@ -43,6 +45,7 @@ namespace NiceHashMiner.Miners.Grouping {
                     if(Miner != null) {
                         Miner.InitMiningSetup(new MiningSetup(miningPairs));
                         AlgorithmType = mPair.Algorithm.NiceHashID;
+                        DualAlgorithmType = mPair.Algorithm.DualNiceHashID();
                     }
                 }
             }
