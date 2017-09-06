@@ -118,6 +118,29 @@ namespace NiceHashMiner.Miners {
         public readonly bool nicehash_nonce = true; // 
 
         /*
+         * Manual hardware AES override
+         *
+         * Some VMs don't report AES capability correctly. You can set this value to true to enforce hardware AES or 
+         * to false to force disable AES or null to let the miner decide if AES is used.
+         * 
+         * WARNING: setting this to true on a CPU that doesn't support hardware AES will crash the miner.
+         */
+        public readonly bool? aes_override = null;
+
+        /*
+         * TLS Settings
+         * If you need real security, make sure tls_secure_algo is enabled (otherwise MITM attack can downgrade encryption
+         * to trivially breakable stuff like DES and MD5), and verify the server's fingerprint through a trusted channel. 
+         *
+         * use_tls         - This option will make us connect using Transport Layer Security.
+         * tls_secure_algo - Use only secure algorithms. This will make us quit with an error if we can't negotiate a secure algo.
+         * tls_fingerprint - Server's SHA256 fingerprint. If this string is non-empty then we will check the server's cert against it.
+         */
+        public readonly bool use_tls = false;
+        public readonly bool tls_secure_algo = true;
+        public readonly string tls_fingerprint = "";
+
+        /*
          * pool_address	  - Pool address should be in the form "pool.supportxmr.com:3333". Only stratum pools are supported.
          * wallet_address - Your wallet, or pool login.
          * pool_password  - Can be empty in most cases or "x".
@@ -138,9 +161,12 @@ namespace NiceHashMiner.Miners {
          * call_timeout - How long should we wait for a response from the server before we assume it is dead and drop the connection.
          * retry_time	- How long should we wait before another connection attempt.
          *                Both values are in seconds.
+         * giveup_limit - Limit how many times we try to reconnect to the pool. Zero means no limit. Note that stak miners
+         *                don't mine while the connection is lost, so your computer's power usage goes down to idle.
          */
         public int call_timeout = 10;
         public int retry_time = 10;
+        public int giveup_limit = 0;
 
         /*
          * Output control.
@@ -164,6 +190,22 @@ namespace NiceHashMiner.Miners {
          *                This option has no effect if verbose_level is not 4.
          */
         public int h_print_time = 60;
+
+        /*
+         * Daemon mode
+         *
+         * If you are running the process in the background and you don't need the keyboard reports, set this to true.
+         * This should solve the hashrate problems on some emulated terminals.
+         */
+        public bool daemon_mode = false;
+        
+        /*
+         * Output file
+         *
+         * output_file  - This option will log all output to a file.
+         *
+         */
+        public readonly string output_file = "";
 
         /*
          * Built-in web server
