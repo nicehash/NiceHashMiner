@@ -13,8 +13,6 @@ namespace NiceHashMiner.Configs {
 
         // helper variables
         private static bool IsGeneralConfigFileInit = false;
-        private static bool hwidLoadFromFile = false;
-        private static bool hwidOK = false;
         private static bool IsNewVersion = false;
 
         // for loading and saving
@@ -50,9 +48,6 @@ namespace NiceHashMiner.Configs {
                     GeneralConfigFile.CreateBackup();
                 }
                 ConfigManager.GeneralConfig.FixSettingBounds();
-                // check vars
-                hwidLoadFromFile = true;
-                hwidOK = Helpers.GetCpuID() == ConfigManager.GeneralConfig.hwid;
             } else {
                 GeneralConfigFileCommit();
             }
@@ -60,14 +55,6 @@ namespace NiceHashMiner.Configs {
 
         public static bool GeneralConfigIsFileExist() {
             return IsGeneralConfigFileInit;
-        }
-
-        public static bool GeneralConfigHwidLoadFromFile() {
-            return hwidLoadFromFile;
-        }
-
-        public static bool GeneralConfigHwidOK() {
-            return hwidOK;
         }
 
         public static void CreateBackup() {
