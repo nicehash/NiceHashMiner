@@ -716,9 +716,12 @@ namespace NiceHashMiner
                 while (!fin && tcpc.Client.Connected)
                 {
                     int r = tcpc.Client.Receive(IncomingBuffer, offset, 5000 - offset, SocketFlags.None);
-                    for (int i = offset; i < offset + r + 1; i++)
+                    for (int i = offset; i < offset + r; i++)
                     {
-                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00) {
+                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
+                            || (i > 0 && this is XmrStackCPUMiner 
+                            && IncomingBuffer[i] == 0x7d && IncomingBuffer[i - 1] == 0x7d)) {
+                            // Workaround for new XMR-STAK api
                             fin = true;
                             break;
                         }

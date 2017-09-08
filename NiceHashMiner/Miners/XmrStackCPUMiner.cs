@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace NiceHashMiner.Miners {
     
@@ -277,14 +278,8 @@ namespace NiceHashMiner.Miners {
 
             TcpClient client = null;
             try {
-                byte[] bytesToSend = Encoding.ASCII.GetBytes(GetHttpRequestNHMAgentStrin("api.json"));
-                client = new TcpClient("127.0.0.1", APIPort);
-                NetworkStream nwStream = client.GetStream();
-                nwStream.Write(bytesToSend, 0, bytesToSend.Length);
-                byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-                int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
-                string respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                client.Close();
+                string dataToSend = GetHttpRequestNHMAgentStrin("api.json");
+                string respStr = GetAPIData(APIPort, dataToSend);
 
                 if (respStr.IndexOf("HTTP/1.1 200 OK") > -1) {
                     respStr = respStr.Substring(respStr.IndexOf(HTTPHeaderDelimiter) + HTTPHeaderDelimiter.Length);
@@ -299,10 +294,12 @@ namespace NiceHashMiner.Miners {
 
                 if (resp != null) {
                     JArray totals = resp.hashrate.total;
-                    ad.Speed = totals.First.Value<double>();
-                    _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-                    if (ad.Speed == 0) {
-                        _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                    if (totals.First != null) {
+                        ad.Speed = totals.First.Value<double>();
+                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                        if (ad.Speed == 0) {
+                            _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                        }
                     }
                 }
                 else {
