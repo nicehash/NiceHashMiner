@@ -716,7 +716,7 @@ namespace NiceHashMiner
                 while (!fin && tcpc.Client.Connected)
                 {
                     int r = tcpc.Client.Receive(IncomingBuffer, offset, 5000 - offset, SocketFlags.None);
-                    for (int i = offset; i < offset + r; i++)
+                    for (int i = offset; i < offset + r + 1; i++)
                     {
                         if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00) {
                             fin = true;

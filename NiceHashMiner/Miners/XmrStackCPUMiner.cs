@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace NiceHashMiner.Miners {
     
@@ -225,7 +226,10 @@ namespace NiceHashMiner.Miners {
 
     }
 
-    public class XmrStackCPUMiner : Miner {
+    public class XmrStackCPUMiner : Miner
+    {
+        const string HTTPHeaderDelimiter = "\r\n\r\n";
+
         public XmrStackCPUMiner()
             : base("XmrStackCPUMiner") {
             this.ConectionType = NHMConectionType.NONE;
@@ -269,36 +273,44 @@ namespace NiceHashMiner.Miners {
         }
 
         public override APIData GetSummary() {
-            string resp;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
-            string DataToSend = GetHttpRequestNHMAgentStrin("h");
+            TcpClient client = null;
+            try {
+                byte[] bytesToSend = Encoding.ASCII.GetBytes(GetHttpRequestNHMAgentStrin("api.json"));
+                client = new TcpClient("127.0.0.1", APIPort);
+                NetworkStream nwStream = client.GetStream();
+                nwStream.Write(bytesToSend, 0, bytesToSend.Length);
+                byte[] bytesToRead = new byte[client.ReceiveBufferSize];
+                int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+                string respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                client.Close();
 
-            resp = GetAPIData(APIPort, DataToSend);
-            if (resp == null) {
-                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-                return null;
-            }
-            const string Totals = "Totals:";
-            const string Highest = "Highest:";
-            int start_i = resp.IndexOf(Totals);
-            int end_i = resp.IndexOf(Highest);
-            if (start_i > -1 && end_i > -1) {
-                string sub_resp = resp.Substring(start_i, end_i);
-                sub_resp = sub_resp.Replace(Totals, "");
-                sub_resp = sub_resp.Replace(Highest, "");
-                var strings = sub_resp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var s in strings) {
-                    if (s != "(na)") {
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-                        ad.Speed = Helpers.ParseDouble(s);
-                        break;
+                if (respStr.IndexOf("HTTP/1.1 200 OK") > -1) {
+                    respStr = respStr.Substring(respStr.IndexOf(HTTPHeaderDelimiter) + HTTPHeaderDelimiter.Length);
+                } else if (String.IsNullOrEmpty(respStr)) {
+                    _currentMinerReadStatus = MinerAPIReadStatus.NETWORK_EXCEPTION;
+                    throw new Exception("Response is empty!");
+                } else {
+                    throw new Exception("Response not HTTP formed! " + respStr);
+                }
+
+                dynamic resp = JsonConvert.DeserializeObject(respStr);
+
+                if (resp != null) {
+                    JArray totals = resp.hashrate.total;
+                    ad.Speed = totals.First.Value<double>();
+                    _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                    if (ad.Speed == 0) {
+                        _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
                     }
                 }
-            }
-            // check if speed zero
-            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                else {
+
+                }
+            } catch (Exception ex) {
+                Helpers.ConsolePrint(MinerTAG(), ex.Message);
+            } 
 
             return ad;
         }
