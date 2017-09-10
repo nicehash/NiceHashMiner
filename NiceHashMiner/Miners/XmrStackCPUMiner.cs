@@ -10,7 +10,6 @@ using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
-using System.Linq;
 
 namespace NiceHashMiner.Miners {
     
@@ -275,8 +274,7 @@ namespace NiceHashMiner.Miners {
 
         public override APIData GetSummary() {
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
-
-            TcpClient client = null;
+            
             try {
                 string dataToSend = GetHttpRequestNHMAgentStrin("api.json");
                 string respStr = GetAPIData(APIPort, dataToSend);
@@ -296,14 +294,14 @@ namespace NiceHashMiner.Miners {
                     JArray totals = resp.hashrate.total;
                     if (totals.First != null) {
                         ad.Speed = totals.First.Value<double>();
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                         if (ad.Speed == 0) {
                             _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                        } else {
+                            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                         }
                     }
-                }
-                else {
-
+                } else {
+                    throw new Exception("Response does not contain speed data");
                 }
             } catch (Exception ex) {
                 Helpers.ConsolePrint(MinerTAG(), ex.Message);
