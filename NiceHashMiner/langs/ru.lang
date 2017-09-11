@@ -233,7 +233,7 @@
 
     "Form_Settings_ToolTip_APIBindPort": "Порт API, который будет использоваться этой группой.",
     "Form_Settings_ToolTip_UsePassword": "Использовать этот пароль при запуске майнера. Если не указан, используется пароль по умолчанию 'x'.",
-    "Form_Settings_ToolTip_MinimumProfit": "Если указано значение выше 0 (USD), NiceHash Miner Legacy будет останавливать майнинг,\nесли рассчитанная прибыль ниже установленного значения.",
+    "Form_Settings_ToolTip_MinimumProfit": "Если указано значение выше 0 (USD), NiceHash Miner Legacy будет останавливать майнинг,\nкогда рассчитанная прибыль ниже установленного значения.",
     "Form_Settings_ToolTip_DisabledDevices": "Отмеченные устройства будут пропущены в NiceHash Miner Legacy.",
     "Form_Settings_ToolTip_ExtraLaunchParameters": "Дополнительные параметры при запуске майнера.",
     "Form_Settings_ToolTip_DaggerHashimotoGenerateDevice": "Выберите какая GPU будет создавать DAG-файл.\nСоветуем выбрать самую быструю из доступных.",
