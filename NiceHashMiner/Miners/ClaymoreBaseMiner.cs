@@ -126,15 +126,6 @@ namespace NiceHashMiner.Miners {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        private bool IsActiveProcess(int pid) {
-            try {
-                return Process.GetProcessById(pid) != null;
-            } catch {
-                return false;
-            }
-        }
-
-
         protected override string GetDevicesCommandString() {
             int amdDeviceCount = ComputeDeviceManager.Query.amdGpus.Count;
             Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));

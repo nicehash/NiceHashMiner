@@ -182,7 +182,7 @@ namespace NiceHashMiner.Miners {
          *                 3 - All of level 1, and new job (block) event in all cases, result submission event.
          *                 4 - All of level 3, and automatic hashrate report printing 
          */
-        public int verbose_level = 3;
+        public int verbose_level = 4;
 
         /*
          * Automatic hashrate report

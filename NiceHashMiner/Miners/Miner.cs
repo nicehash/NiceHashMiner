@@ -593,6 +593,14 @@ namespace NiceHashMiner
 
         abstract protected bool BenchmarkParseLine(string outdata);
 
+        protected bool IsActiveProcess(int pid) {
+            try {
+                return Process.GetProcessById(pid) != null;
+            } catch {
+                return false;
+            }
+        }
+
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
         virtual protected NiceHashProcess _Start()

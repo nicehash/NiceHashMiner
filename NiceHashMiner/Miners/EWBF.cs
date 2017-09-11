@@ -91,13 +91,6 @@ namespace NiceHashMiner.Miners
         }
 
         // benchmark stuff
-        private bool IsActiveProcess(int pid) {
-            try {
-                return Process.GetProcessById(pid) != null;
-            } catch {
-                return false;
-            }
-        }
         protected void KillMinerBase(string exeName) {
             foreach (Process process in Process.GetProcessesByName(exeName)) {
                 try { process.Kill(); } catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
