@@ -127,7 +127,7 @@
     "Form_Settings_General_DisableWindowsErrorReporting": "Отключить ошибки",
     "Form_Settings_General_ShowInternetConnectionWarning": "Уведомлять об интернет-соединении",
     "Form_Settings_General_UseNewSettingsPage": "Новая страница настроек",
-    "Form_Settings_General_NVIDIAP0State": "NVIDIA P0 статус",
+    "Form_Settings_General_NVIDIAP0State": "NVIDIA статус P0",
     "Form_Settings_General_LogToFile": "Запись в файл",
     "Form_Settings_General_RunAtStartup": "Запуск с Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Минимизировать окна майнинга",
@@ -227,7 +227,7 @@
     "Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting": "Если отмечено, в случае аварийного завершения работы майнера NiceHash Miner Legacy \nперезапустит майнер без блокирования сообщением об ошибке Windows. \nРекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны.",
     "Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning": "Если отмечено, NiceHash Miner Legacy будет показывать предупреждение,\nкогда соединение с интернетом недоступно.",
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "Если отмечено, NiceHash Miner Legacy будет использовать новую страницу настроек.",
-    "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Если отмечено, NiceHash Miner Legacy изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора.",
+    "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Если отмечено, NiceHash Miner Legacy изменит все поддерживаемые NVidia GPU в статус P0. \nЭто немногоувеличит производительность на некоторых алгоритмах. \nТребуются права администратора.",
     "Form_Settings_ToolTip_ethminerAPIPort": "Порт API, который будет использоваться ethminer для {0} GPU.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Устанавливает высоту блока по умолчанию, используемую для бенчмарка, если вызов API не сработает.",
 
