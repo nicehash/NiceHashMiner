@@ -50,7 +50,7 @@ NiceHash Miner Legacy is an advanced auto-miner that supports the latest algorit
 - **up-to-date drivers** for all GPUs
 - **Reliable** internet connectivity
 - For GPU Mining, **paging file size** of 60% of your total GPU VRAM memory
-- Personal **Bitcoin wallet**: https://www.nicehash.com/index.jsp?p=faq#faqs15
+- Personal **Bitcoin wallet**: https://www.nicehash.com/help/how-to-create-the-bitcoin-addresswallet
 
 # <a name="run"></a> How to get&run it?
 
@@ -63,8 +63,8 @@ Detailed instructions:
 - Extract zip archive
 - Run NiceHashMinerLegacy.exe
 - After first run, start benchmark test, otherwise Multi-Algorithm mining will not work properly; for AMD GPUs we suggest you to run **Precise benchmark**
-- Make sure you select your own personal Bitcoin wallet to receive payments, see **Bitcoin wallet guidelines and instructions** here: https://www.nicehash.com/index.jsp?p=faq#faqs15.
-- You will receive Bitcoin payments according to our payments schedule: https://www.nicehash.com/index.jsp?p=faq#faqs6
+- Make sure you select your own personal Bitcoin wallet to receive payments, see **Bitcoin wallet guidelines and instructions** here: https://www.nicehash.com/help/how-to-create-the-bitcoin-addresswallet.
+- You will receive Bitcoin payments according to our payments schedule: https://www.nicehash.com/help/when-and-how-do-you-get-paid
 
 **WARNING**: Due to specific requirements of the supporting back-end program "sgminer", you can **not** run NiceHash Miner Legacy through Windows RDP (Remote Desktop Protocol) if you are using **AMD GPUs**. If you still wish to use remote access to your computer while running NiceHash Miner Legacy we suggest you to use TeamViewer: https://www.teamviewer.com.
 
