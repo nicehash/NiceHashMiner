@@ -127,21 +127,18 @@ namespace NiceHashMiner.Miners {
         }
 
         protected override string GetDevicesCommandString() {
-            int amdDeviceCount = ComputeDeviceManager.Query.amdGpus.Count;
-            Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
             string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string deviceStringCommand = " -di ";
             List<string> ids = new List<string>();
             foreach (var mPair in MiningSetup.MiningPairs) {
-                var id = mPair.Device.ID;
-                if ((this is ClaymoreDual || this is ClaymoreZcashMiner) && mPair.Device.DeviceType == DeviceType.AMD) {
-                    id = mPair.Device.IDByBus;
+                if (this is ClaymoreDual || this is ClaymoreZcashMiner) {
+                    int amdDeviceCount = ComputeDeviceManager.Query.amdGpus.Count;
+                    Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
+                    var id = mPair.Device.IDByBus;
                     if (id < 0) {
                         // should never happen
                         Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id.ToString());
                     }
-                }
-                if (this is ClaymoreDual) {
                     if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
                         Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
                         id += amdDeviceCount;
@@ -157,6 +154,7 @@ namespace NiceHashMiner.Miners {
                         ids.Add(id.ToString());
                     }
                 } else {
+                    var id = mPair.Device.ID;
                     ids.Add(id.ToString());
                 }
             }
