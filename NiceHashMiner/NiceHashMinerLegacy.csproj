@@ -364,6 +364,9 @@
     <None Include="langs\es.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="langs\it.lang">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="langs\pt.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
