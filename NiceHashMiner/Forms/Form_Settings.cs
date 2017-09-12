@@ -421,6 +421,7 @@ namespace NiceHashMiner.Forms
                 this.checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
                 checkBox_RunAtStartup.Checked = isInStartupRegistry();
                 checkBox_MinimizeMiningWindows.Checked = ConfigManager.GeneralConfig.MinimizeMiningWindows;
+                checkBox_MinimizeMiningWindows.Enabled = !ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
             }
 
