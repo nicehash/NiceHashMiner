@@ -5,13 +5,14 @@ using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 
 namespace NiceHashMiner.Miners.Grouping
 {
     class MinerPathPackageFile : ConfigFile<MinerPathPackage>
     {
         public MinerPathPackageFile(string name)
-            : base(name) {
+            : base(FOLDERS.INTERNALS, String.Format("{0}.json", name), String.Format("{0}_old.json", name)) {
         }
     }
 
@@ -116,7 +117,11 @@ namespace NiceHashMiner.Miners.Grouping
                     .MinerTypes.Find(p => p.Type == minerBaseType)
                     .Algorithms.Find(p => p.Algorithm == algoType);
                 if (path != null) {
-                    return path.Path;
+                    if (File.Exists(path.Path)) {
+                        return path.Path;
+                    } else {
+                        Helpers.ConsolePrint("PATHS", String.Format("Path {0} not found, using defaults", path.Path));
+                    }
                 }
             }
             switch (minerBaseType) {
@@ -309,7 +314,25 @@ namespace NiceHashMiner.Miners.Grouping
                     packageFile.Commit(pack);
                 } else {
                     Helpers.ConsolePrint("MinerPaths", "Loading internal paths config " + packageName);
+                    var isChange = false;
+                    foreach (var miner in pack.MinerTypes) {
+                        var readMiner = readPack.MinerTypes.Find(x => x.Type == miner.Type);
+                        if (readMiner != null) {  // file contains miner type
+                            foreach (var algo in miner.Algorithms) {
+                                if (!readMiner.Algorithms.Exists(x => x.Algorithm == algo.Algorithm)) {  // file does not contain algo on this miner
+                                    Helpers.ConsolePrint("PATHS", String.Format("Algorithm {0} not found in miner {1} on device {2}. Adding default", algo.Name, miner.Name, pack.Name));
+                                    readMiner.Algorithms.Add(algo);
+                                    isChange = true;
+                                }
+                            }
+                        } else {  // file does not contain miner type
+                            Helpers.ConsolePrint("PATHS", String.Format("Miner {0} not found on device {1}", miner.Name, pack.Name));
+                            readPack.MinerTypes.Add(miner);
+                            isChange = true;
+                        }
+                    }
                     minerPathPackages.Add(readPack);
+                    if (isChange) packageFile.Commit(readPack);
                 }
             }
         }

@@ -38,13 +38,6 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
             TAG = String.Format(TAG_FORMAT, typeof(T).Name);
         }
 
-        /// <summary>
-        /// Internals only initializer
-        /// </summary>
-        public ConfigFile(string name) 
-            : this(FOLDERS.INTERNALS, String.Format("{0}.json", name), String.Format("{0}.json", name)) {
-        }
-
         public bool IsFileExists() {
             return File.Exists(_filePath);
         }
