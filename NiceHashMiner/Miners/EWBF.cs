@@ -184,15 +184,15 @@ namespace NiceHashMiner.Miners
                             try {
                                 lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
                                 read = true;
-                                Helpers.ConsolePrint("EWBF", "Successfully read log after " + iteration.ToString() + " iterations");
+                                Helpers.ConsolePrint(MinerTAG(), "Successfully read log after " + iteration.ToString() + " iterations");
                             } catch (Exception ex) {
-                                Helpers.ConsolePrint("EWBF", ex.Message);
+                                Helpers.ConsolePrint(MinerTAG(), ex.Message);
                                 Thread.Sleep(1000);
                             }
                             iteration++;
                         } else {
                             read = true;  // Give up after 10s
-                            Helpers.ConsolePrint("EWBF", "Gave up on iteration " + iteration.ToString());
+                            Helpers.ConsolePrint(MinerTAG(), "Gave up on iteration " + iteration.ToString());
                         }
                     }
 
@@ -285,7 +285,7 @@ namespace NiceHashMiner.Miners
                 resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
                 client.Close();
             } catch (Exception ex) {
-                Helpers.ConsolePrint("ERROR", ex.Message);
+                Helpers.ConsolePrint(MinerTAG(), ex.Message);
             }
 
             if (resp != null && resp.error == null) {
