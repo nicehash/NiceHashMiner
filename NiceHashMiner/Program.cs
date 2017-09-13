@@ -58,8 +58,10 @@ namespace NiceHashMiner
                 }
 
                 if (ConfigManager.GeneralConfig.DebugConsole) {
-                    Helpers.AllocConsole();
+                    // UNDONE: Gui LogViewer ,,,
+//                    Helpers.AllocConsole();
                 }
+            	
 
                 // init active display currency after config load
                 ExchangeRateAPI.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
