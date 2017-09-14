@@ -9,6 +9,12 @@
     "Global_Retry": "重试 (&R)",
 
     "Service_Location": "服务器地址",
+    "LocationName_eu": "欧洲 - 阿姆斯特丹",
+    "LocationName_usa": "美国 - 圣何塞",
+    "LocationName_hk": "中国 - 香港",
+    "LocationName_jp": "日本 - 东京",
+    "LocationName_in": "印度 - 金奈",
+    "LocationName_br": "巴西 - 圣保罗",
     "Warning_with_Exclamation": "警告！",
     "Error_with_Exclamation": "错误！",
     "BitcoinAddress": "比特币提现地址",

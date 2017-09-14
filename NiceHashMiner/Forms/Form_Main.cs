@@ -109,6 +109,12 @@ namespace NiceHashMiner
             MessageBoxManager.Register();
 
             labelServiceLocation.Text = International.GetText("Service_Location") + ":";
+            {
+                int i = 0;
+                System.Collections.IEnumerator ie = Globals.MiningLocation.GetEnumerator();
+                while ((ie.MoveNext()) && (ie.Current != null))
+                    comboBoxLocation.Items[i++] = International.GetText("LocationName_" + (string)ie.Current);
+            }
             labelBitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
             labelWorkerName.Text = International.GetText("WorkerName") + ":";
 

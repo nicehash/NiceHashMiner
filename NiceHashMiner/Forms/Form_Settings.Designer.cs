@@ -944,7 +944,6 @@
             "China - Hong Kong",
             "Japan - Tokyo",
             "India - Chennai",
-            "",
             "Brazil - Sao Paulo"});
             this.comboBox_ServiceLocation.Location = new System.Drawing.Point(160, 80);
             this.comboBox_ServiceLocation.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
