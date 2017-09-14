@@ -726,9 +726,14 @@ namespace NiceHashMiner
         protected string GetAPIData(int port, string DataToSend, bool exitHack = false)
         {
             string ResponseFromServer = null;
+            TcpClient tcpc = null;
             try
             {
-                TcpClient tcpc = new TcpClient("127.0.0.1", port);
+                tcpc = new TcpClient("127.0.0.1", port);
+
+                //Receive and Send can block the main thread, if the API version does not match.
+                tcpc.Client.ReceiveTimeout = 2000;
+                tcpc.Client.SendTimeout = 2000;
 
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
                 tcpc.Client.Send(BytesToSend);
@@ -766,8 +771,6 @@ namespace NiceHashMiner
                     }
                 }
 
-                tcpc.Close();
-
                 if (offset > 0)
                     ResponseFromServer = ASCIIEncoding.ASCII.GetString(IncomingBuffer);
             }
@@ -775,6 +778,13 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " GetAPIData reason: " + ex.Message);
                 return null;
+            }
+            finally
+            {
+                if (tcpc != null)
+                {
+                    tcpc.Close();
+                }
             }
 
             return ResponseFromServer;
