@@ -595,6 +595,14 @@ namespace NiceHashMiner
 
         abstract protected bool BenchmarkParseLine(string outdata);
 
+        protected bool IsActiveProcess(int pid) {
+            try {
+                return Process.GetProcessById(pid) != null;
+            } catch {
+                return false;
+            }
+        }
+
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
         virtual protected NiceHashProcess _Start()
@@ -720,7 +728,10 @@ namespace NiceHashMiner
                     int r = tcpc.Client.Receive(IncomingBuffer, offset, 5000 - offset, SocketFlags.None);
                     for (int i = offset; i < offset + r; i++)
                     {
-                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00) {
+                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
+                            || (i > 0 && this is XmrStackCPUMiner 
+                            && IncomingBuffer[i] == 0x7d && IncomingBuffer[i - 1] == 0x7d)) {
+                            // Workaround for new XMR-STAK api
                             fin = true;
                             break;
                         }

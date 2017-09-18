@@ -375,7 +375,7 @@ namespace NiceHashMiner.Miners {
                                 }
                             }
                             // if algoType valid and different from currently running update
-                            if (newAlgoType != _runningGroupMiners[runningGroupKey].AlgorithmType || dcriChanged) {
+                            if (newAlgoType != _runningGroupMiners[runningGroupKey].DualAlgorithmType || dcriChanged) {
                                 // remove current one and schedule to stop mining
                                 toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
                                 // create new one TODO check if DaggerHashimoto

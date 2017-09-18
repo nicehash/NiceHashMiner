@@ -17,7 +17,7 @@
 NiceHash Miner Legacy is a continuation of NiceHash Miner v1. This version is intended for experienced miners who want the quickest updates and highest hashrates, and are okay with some customization of the software and antivirus. If you are new to mining, please check out the new [NiceHash Miner v2](https://miner.nicehash.com/) for a simpler start at earning Bitcoins with your idle GPU & CPU.
 
 
-<img src="Resources/NHML_1800_GUI.png" />
+<img src="Resources/NHML_screenshot.PNG" />
 
 Please follow us on Twitter <a href="https://twitter.com/NiceHashMining" target="_blank">@NiceHashMining</a> for updates on new versions and other important information.
 
@@ -50,7 +50,7 @@ NiceHash Miner Legacy is an advanced auto-miner that supports the latest algorit
 - **up-to-date drivers** for all GPUs
 - **Reliable** internet connectivity
 - For GPU Mining, **paging file size** of 60% of your total GPU VRAM memory
-- Personal **Bitcoin wallet**: https://www.nicehash.com/index.jsp?p=faq#faqs15
+- Personal **Bitcoin wallet**: https://www.nicehash.com/help/how-to-create-the-bitcoin-addresswallet
 
 # <a name="run"></a> How to get&run it?
 
@@ -63,8 +63,8 @@ Detailed instructions:
 - Extract zip archive
 - Run NiceHashMinerLegacy.exe
 - After first run, start benchmark test, otherwise Multi-Algorithm mining will not work properly; for AMD GPUs we suggest you to run **Precise benchmark**
-- Make sure you select your own personal Bitcoin wallet to receive payments, see **Bitcoin wallet guidelines and instructions** here: https://www.nicehash.com/index.jsp?p=faq#faqs15.
-- You will receive Bitcoin payments according to our payments schedule: https://www.nicehash.com/index.jsp?p=faq#faqs6
+- Make sure you select your own personal Bitcoin wallet to receive payments, see **Bitcoin wallet guidelines and instructions** here: https://www.nicehash.com/help/how-to-create-the-bitcoin-addresswallet.
+- You will receive Bitcoin payments according to our payments schedule: https://www.nicehash.com/help/when-and-how-do-you-get-paid
 
 **WARNING**: Due to specific requirements of the supporting back-end program "sgminer", you can **not** run NiceHash Miner Legacy through Windows RDP (Remote Desktop Protocol) if you are using **AMD GPUs**. If you still wish to use remote access to your computer while running NiceHash Miner Legacy we suggest you to use TeamViewer: https://www.teamviewer.com.
 
@@ -148,7 +148,7 @@ If your CPU has 8 virtual cores and you would like to mine only with 7:
 My NVIDIA video card(s) is/are not detected.
 > Make sure to install latest official NVIDIA drivers from here: 
 http://www.nvidia.com/Download/index.aspx
-> Also check whether your card has Compute capability (version) 2.1, 3.x or 5.x, check here: https://en.wikipedia.org/wiki/CUDA#Supported_GPUs
+> Also check whether your card has Compute capability (version) 2.1, 3.x or 5.x, check here: https://en.wikipedia.org/wiki/CUDA#GPUs_supported
 
 My AMD video card(s) is/are not detected.
 > Make sure to install latest official AMD drivers from here:
@@ -162,6 +162,9 @@ If you are using Windows 10, the AMD installer utility is sometimes unable to in
 
 I'm getting "Always ask before opening this file" when running NiceHash Miner Legacy
 > Make sure you un-check the checkbox "Always ask before opening this file" when NiceHash Miner Legacy is starting cpuminer, ccminer or sgminer back-end programs. This is needed because back-end programs will be executed several times while NiceHash Miner Legacy is running (auto-switching according to profitability and in case programs hangs) and you have to make sure these programs will be to executed automatically without your intervention.
+
+Google Chrome is blocking the download of the application
+> Google Chrome falsely flags NiceHash Miner Legacy as a potentially unwanted program and thus prevents you from saving the program archive on your computer. This is an issue with Google Chrome and not with NiceHash Miner Legacy. Use another browser such as Firefox or Edge to download the file instead. Also, read 'My anti-virus is blocking the application' below.
 
 My anti-virus is blocking the application
 > Some anti-virus software might block NiceHash Miner Legacy as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into NiceHash Miner Legacy has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/nicehash/NiceHashMinerLegacy/releases. However, make sure you **never download and run any files from other unknown sources**! If you downloaded the software package from our GitHub repository you can simply resolve the issues with false-positives by adding the files sgminer.exe, ccminer_sp.exe, ccminer_tpruvot.exe, cpuminer_x64_AVX.exe, cpuminer_x64_AVX2.exe and cpuminer_x64_SSE2.exe to anti-virus exception list.

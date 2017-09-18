@@ -56,6 +56,7 @@ namespace NiceHashMiner
         const int deviceUpdateInterval = 60 * 1000;
 
         public static Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates { get; private set; }
+        private static NiceHashData niceHashData;
         public static double Balance { get; private set; }
         public static string Version { get; private set; }
         public static bool IsAlive { get { return NiceHashConnection.IsAlive; } }
@@ -103,9 +104,9 @@ namespace NiceHashMiner
 
             private static void ConnectCallback(object sender, EventArgs e) {
                 try {
-                    if (AlgorithmRates == null) {
-                        // Populate SMA first (for port etc)
-                        AlgorithmRates = BaseNiceHashSMA.BaseNiceHashSMADict;
+                    if (AlgorithmRates == null || niceHashData == null) {
+                        niceHashData = new NiceHashData();
+                        AlgorithmRates = niceHashData.NormalizedSMA();
                     }
                     //send login
                     var version = "NHML/" + Application.ProductVersion;
@@ -192,12 +193,15 @@ namespace NiceHashMiner
                 attemptingReconnect = true;
                 var sleep = connectionEstablished ? 10 + random.Next(0, 20) : 0;
                 Helpers.ConsolePrint("SOCKET", "Attempting reconnect in " + sleep + " seconds");
+                // More retries on first attempt
+                var retries = connectionEstablished ? 5 : 20;
                 if (connectionEstablished) {  // Don't wait if no connection yet
+                    Thread.Sleep(sleep * 1000);
+                } else {
                     // Don't not wait again
                     connectionEstablished = true;
-                    Thread.Sleep(sleep * 1000);
                 }
-                for (int i = 0; i < 5; i++) {
+                for (int i = 0; i < retries; i++) {
                     webSocket.Connect();
                     Thread.Sleep(100);
                     if (webSocket.IsAlive) {
@@ -220,15 +224,13 @@ namespace NiceHashMiner
         #endregion
 
         #region Incoming socket calls
-
         private static void SetAlgorithmRates(JArray data) {
             try {
                 foreach (var algo in data) {
                     var algoKey = (AlgorithmType)algo[0].Value<int>();
-                    if (AlgorithmRates.ContainsKey(algoKey)) {
-                        AlgorithmRates[algoKey].paying = algo[1].Value<double>();
-                    }
+                    niceHashData.AppendPayingForAlgo(algoKey, algo[1].Value<double>());
                 }
+                AlgorithmRates = niceHashData.NormalizedSMA();
                 OnSMAUpdate.Emit(null, EventArgs.Empty);
             } catch (Exception e) {
                 Helpers.ConsolePrint("SOCKET", e.ToString());

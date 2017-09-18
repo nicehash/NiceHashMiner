@@ -1,9 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
-using NiceHashMiner.Devices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,12 +12,31 @@ using System.Text;
 using System.Threading;
 using System.IO;
 using System.Linq;
+using System.Net;
 using SQLite.Net;
 using SQLite.Net.Platform.Win32;
 using SQLite.Net.Attributes;
 
 namespace NiceHashMiner.Miners
 {
+    public static class ProspectorPlatforms
+    {
+        public static bool IsInit {
+            get {
+                return NVPlatform >= 0 || AMDPlatform >= 0;
+            }
+        }
+        public static int NVPlatform = -1;
+        public static int AMDPlatform = -1;
+
+        public static int PlatformForDeviceType(DeviceType type) {
+            if (IsInit) {
+                if (type == DeviceType.NVIDIA) return NVPlatform;
+                if (type == DeviceType.AMD) return AMDPlatform;
+            }
+            return -1;
+        }
+    }
     public class Prospector : Miner
     {
         private class hashrates
@@ -77,9 +95,14 @@ namespace NiceHashMiner.Miners
         private int benchmarkTimeWait;
         private const double DevFee = 0.01;  // 1% devfee
 
+        private const string platformStart = "platform ";
+        private const string platformEnd = " - ";
+
+        private const int apiPort = 42000;
+
         public Prospector()
             : base("Prospector") {
-            this.ConectionType = NHMConectionType.NONE;
+            this.ConectionType = NHMConectionType.STRATUM_TCP;
             IsNeverHideMiningWindow = true;
         }
 
@@ -89,75 +112,151 @@ namespace NiceHashMiner.Miners
 
         private string deviceIDString(int id, DeviceType type) {
             var platform = 0;
-            if (ComputeDeviceManager.Avaliable.HasNVIDIA && type != DeviceType.NVIDIA)
-                platform = 1;
-            return String.Format("({0}:{1})", platform, id);
+            if (InitPlatforms()) {
+                platform = ProspectorPlatforms.PlatformForDeviceType(type);
+            } else {  // fallback
+                Helpers.ConsolePrint(MinerTAG(), "Failed to get platforms, falling back");
+                if (ComputeDeviceManager.Avaliable.HasNVIDIA && type != DeviceType.NVIDIA)
+                    platform = 1;
+            }
+            return String.Format("{0}-{1}", platform, id);
         }
 
         private string GetConfigFileName() {
-            return String.Format("config_{0}.json", this.MiningSetup.MiningPairs[0].Device.ID);
+            return String.Format("config_{0}.toml", this.MiningSetup.MiningPairs[0].Device.ID);
         }
 
         private void prepareConfigFile(string pool, string wallet) {
             if (this.MiningSetup.MiningPairs.Count > 0) {
                 try {
-                    var confJson = new JObject();
-                    var poolsJson = new JObject();
-                    var algoJson = new JObject();
-                    var devicesJson = new JObject();
-                    var algo = MiningSetup.MinerName;
+                    var sb = new StringBuilder();
 
-                    algoJson.Add("url", pool);
-                    algoJson.Add("username", wallet);
-                    algoJson.Add("password", "x");
-                    poolsJson.Add(algo, algoJson);
-                    confJson.Add("pools", poolsJson);
+                    sb.AppendLine("[general]");
+                    sb.AppendLine(String.Format("gpu-coin = \"{0}\"", MiningSetup.MinerName));
+                    sb.AppendLine(String.Format("default-username = \"{0}\"", wallet));
+                    sb.AppendLine("default-password = \"x\"");
+
+                    sb.AppendLine(String.Format("[pools.{0}]", MiningSetup.MinerName));
+                    sb.AppendLine(String.Format("url = \"{0}\"", pool));
 
                     foreach (var dev in MiningSetup.MiningPairs) {
-                        var devJson = new JObject();
-                        devJson.Add("enabled", true);
-                        devJson.Add("name", dev.Device.Name);
-
-                        devicesJson.Add(deviceIDString(dev.Device.ID, dev.Device.DeviceType), devJson);
+                        sb.AppendLine(String.Format("[gpus.{0}]", deviceIDString(dev.Device.ID, dev.Device.DeviceType)));
+                        sb.AppendLine("enabled = true");
+                        sb.AppendLine(String.Format("label = \"{0}\"", dev.Device.Name));
                     }
 
-                    var cpuJson = new JObject();
-                    cpuJson.Add("enabled", false);
-                    cpuJson.Add("label", "CPU");
+                    sb.AppendLine("[cpu]");
+                    sb.AppendLine("enabled = false");
 
-                    confJson.Add("gpus", devicesJson);
-                    confJson.Add("cpu", cpuJson);
-
-                    confJson.Add("gpu-coin", algo);
-
-                    string writeStr = confJson.ToString();
-                    int start = writeStr.IndexOf("{");
-                    int end = writeStr.LastIndexOf("}");
-                    System.IO.File.WriteAllText(WorkingDirectory + GetConfigFileName(), writeStr);
+                    System.IO.File.WriteAllText(WorkingDirectory + GetConfigFileName(), sb.ToString());
                 } catch {
                 }
             }
         }
 
+        private bool InitPlatforms() {
+            if (ProspectorPlatforms.IsInit) return true;
+
+            CleanAllOldLogs();
+            var handle = BenchmarkStartProcess(" list-devices");
+            handle.Start();
+
+            handle.WaitForExit(20 * 1000);  // 20 seconds
+            handle = null;
+
+            try {
+                string latestLogFile = "";
+                var dirInfo = new DirectoryInfo(this.WorkingDirectory + "logs\\");
+                foreach (var file in dirInfo.GetFiles()) {
+                    latestLogFile = file.Name;
+                    break;
+                }
+                if (File.Exists(dirInfo + latestLogFile)) {
+                    var lines = File.ReadAllLines(dirInfo + latestLogFile);
+                    foreach (var line in lines) {
+                        if (line != null) {
+                            string lineLowered = line.ToLower();
+                            if (lineLowered.Contains(platformStart)) {
+                                int platStart = lineLowered.IndexOf(platformStart);
+                                string plat = lineLowered.Substring(platStart, line.Length - platStart);
+                                plat = plat.Replace(platformStart, "");
+                                plat = plat.Substring(0, plat.IndexOf(platformEnd));
+
+                                int platIndex = -1;
+                                if (int.TryParse(plat, out platIndex)) {
+                                    if (lineLowered.Contains("nvidia")) {
+                                        Helpers.ConsolePrint(MinerTAG(), "Setting nvidia platform: " + platIndex);
+                                        ProspectorPlatforms.NVPlatform = platIndex;
+                                        if (ProspectorPlatforms.AMDPlatform >= 0) break;
+                                    } else if (lineLowered.Contains("amd")) {
+                                        Helpers.ConsolePrint(MinerTAG(), "Setting amd platform: " + platIndex);
+                                        ProspectorPlatforms.AMDPlatform = platIndex;
+                                        if (ProspectorPlatforms.NVPlatform >= 0) break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) { Helpers.ConsolePrint(MinerTAG(), e.ToString()); }
+
+            return ProspectorPlatforms.IsInit;
+        }
+        protected void CleanAllOldLogs() {
+            // clean old logs
+            try {
+                var dirInfo = new DirectoryInfo(this.WorkingDirectory + "logs\\");
+                if (dirInfo != null && dirInfo.Exists) {
+                    foreach (FileInfo file in dirInfo.GetFiles()) {
+                        file.Delete();
+                    }
+                }
+            } catch { }
+        }
+
         protected override void _Stop(MinerStopType willswitch) {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
+        
+        private class HashrateApiResponse
+        {
+            public string coin { get; set; }
+            public string device { get; set; }
+            public double rate { get; set; }
+            public string time { get; set; }
+        }
 
         public override APIData GetSummary() {
-            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
-            if (database == null) {
-                try {
-                    database = new ProspectorDatabase(WorkingDirectory + "info.db");
-                } catch (Exception e) { Helpers.ConsolePrint(MinerTAG(), e.ToString()); }
-            } else {
-                foreach (var pair in MiningSetup.MiningPairs) {
-                    if (database != null) {
-                        ad.Speed += database.QueryLastSpeed(deviceIDString(pair.Device.ID, pair.Device.DeviceType));
+            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
+
+            WebClient client = new WebClient();
+            HashrateApiResponse[] resp = null;
+            try {
+                string url = String.Format("http://localhost:{0}/api/v0/hashrates", apiPort);
+                Stream data = client.OpenRead(url);
+                StreamReader reader = new StreamReader(data);
+                string s = reader.ReadToEnd();
+                data.Close();
+                reader.Close();
+
+                resp = JsonConvert.DeserializeObject<HashrateApiResponse[]>(s, Globals.JsonSettings);
+            } catch (Exception ex) {
+                Helpers.ConsolePrint(this.MinerTAG(), "GetSummary exception: " + ex.Message);
+            }
+
+            if (resp != null) {
+                ad.Speed = 0;
+                foreach (var response in resp) {
+                    if (response.coin == MiningSetup.MinerName) {
+                        ad.Speed += response.rate;
+                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                     }
                 }
+                if (ad.Speed == 0) {
+                    _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                }
             }
-            // check if speed zero
-            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
 
             return ad;
         }
@@ -168,7 +267,6 @@ namespace NiceHashMiner.Miners
                 return;
             }
             LastCommandLine = GetStartupCommand(url, btcAdress, worker);
-
 
             ProcessHandle = _Start();
         }
@@ -210,7 +308,6 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTAG(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
                 BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
-                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 2);
                 Stopwatch _benchmarkTimer = new Stopwatch();
                 _benchmarkTimer.Reset();
                 _benchmarkTimer.Start();

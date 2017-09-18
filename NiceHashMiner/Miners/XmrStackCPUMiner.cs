@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace NiceHashMiner.Miners {
     
@@ -118,6 +119,29 @@ namespace NiceHashMiner.Miners {
         public readonly bool nicehash_nonce = true; // 
 
         /*
+         * Manual hardware AES override
+         *
+         * Some VMs don't report AES capability correctly. You can set this value to true to enforce hardware AES or 
+         * to false to force disable AES or null to let the miner decide if AES is used.
+         * 
+         * WARNING: setting this to true on a CPU that doesn't support hardware AES will crash the miner.
+         */
+        public readonly bool? aes_override = null;
+
+        /*
+         * TLS Settings
+         * If you need real security, make sure tls_secure_algo is enabled (otherwise MITM attack can downgrade encryption
+         * to trivially breakable stuff like DES and MD5), and verify the server's fingerprint through a trusted channel. 
+         *
+         * use_tls         - This option will make us connect using Transport Layer Security.
+         * tls_secure_algo - Use only secure algorithms. This will make us quit with an error if we can't negotiate a secure algo.
+         * tls_fingerprint - Server's SHA256 fingerprint. If this string is non-empty then we will check the server's cert against it.
+         */
+        public readonly bool use_tls = false;
+        public readonly bool tls_secure_algo = true;
+        public readonly string tls_fingerprint = "";
+
+        /*
          * pool_address	  - Pool address should be in the form "pool.supportxmr.com:3333". Only stratum pools are supported.
          * wallet_address - Your wallet, or pool login.
          * pool_password  - Can be empty in most cases or "x".
@@ -138,9 +162,12 @@ namespace NiceHashMiner.Miners {
          * call_timeout - How long should we wait for a response from the server before we assume it is dead and drop the connection.
          * retry_time	- How long should we wait before another connection attempt.
          *                Both values are in seconds.
+         * giveup_limit - Limit how many times we try to reconnect to the pool. Zero means no limit. Note that stak miners
+         *                don't mine while the connection is lost, so your computer's power usage goes down to idle.
          */
         public int call_timeout = 10;
         public int retry_time = 10;
+        public int giveup_limit = 0;
 
         /*
          * Output control.
@@ -155,7 +182,7 @@ namespace NiceHashMiner.Miners {
          *                 3 - All of level 1, and new job (block) event in all cases, result submission event.
          *                 4 - All of level 3, and automatic hashrate report printing 
          */
-        public int verbose_level = 3;
+        public int verbose_level = 4;
 
         /*
          * Automatic hashrate report
@@ -164,6 +191,22 @@ namespace NiceHashMiner.Miners {
          *                This option has no effect if verbose_level is not 4.
          */
         public int h_print_time = 60;
+
+        /*
+         * Daemon mode
+         *
+         * If you are running the process in the background and you don't need the keyboard reports, set this to true.
+         * This should solve the hashrate problems on some emulated terminals.
+         */
+        public bool daemon_mode = false;
+        
+        /*
+         * Output file
+         *
+         * output_file  - This option will log all output to a file.
+         *
+         */
+        public readonly string output_file = "";
 
         /*
          * Built-in web server
@@ -183,7 +226,10 @@ namespace NiceHashMiner.Miners {
 
     }
 
-    public class XmrStackCPUMiner : Miner {
+    public class XmrStackCPUMiner : Miner
+    {
+        const string HTTPHeaderDelimiter = "\r\n\r\n";
+
         public XmrStackCPUMiner()
             : base("XmrStackCPUMiner") {
             this.ConectionType = NHMConectionType.NONE;
@@ -227,36 +273,39 @@ namespace NiceHashMiner.Miners {
         }
 
         public override APIData GetSummary() {
-            string resp;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+            
+            try {
+                string dataToSend = GetHttpRequestNHMAgentStrin("api.json");
+                string respStr = GetAPIData(APIPort, dataToSend);
 
-            string DataToSend = GetHttpRequestNHMAgentStrin("h");
-
-            resp = GetAPIData(APIPort, DataToSend);
-            if (resp == null) {
-                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-                return null;
-            }
-            const string Totals = "Totals:";
-            const string Highest = "Highest:";
-            int start_i = resp.IndexOf(Totals);
-            int end_i = resp.IndexOf(Highest);
-            if (start_i > -1 && end_i > -1) {
-                string sub_resp = resp.Substring(start_i, end_i);
-                sub_resp = sub_resp.Replace(Totals, "");
-                sub_resp = sub_resp.Replace(Highest, "");
-                var strings = sub_resp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var s in strings) {
-                    if (s != "(na)") {
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-                        ad.Speed = Helpers.ParseDouble(s);
-                        break;
-                    }
+                if (respStr.IndexOf("HTTP/1.1 200 OK") > -1) {
+                    respStr = respStr.Substring(respStr.IndexOf(HTTPHeaderDelimiter) + HTTPHeaderDelimiter.Length);
+                } else if (String.IsNullOrEmpty(respStr)) {
+                    _currentMinerReadStatus = MinerAPIReadStatus.NETWORK_EXCEPTION;
+                    throw new Exception("Response is empty!");
+                } else {
+                    throw new Exception("Response not HTTP formed! " + respStr);
                 }
-            }
-            // check if speed zero
-            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+
+                dynamic resp = JsonConvert.DeserializeObject(respStr);
+
+                if (resp != null) {
+                    JArray totals = resp.hashrate.total;
+                    if (totals.First != null) {
+                        ad.Speed = totals.First.Value<double>();
+                        if (ad.Speed == 0) {
+                            _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                        } else {
+                            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                        }
+                    }
+                } else {
+                    throw new Exception("Response does not contain speed data");
+                }
+            } catch (Exception ex) {
+                Helpers.ConsolePrint(MinerTAG(), ex.Message);
+            } 
 
             return ad;
         }
