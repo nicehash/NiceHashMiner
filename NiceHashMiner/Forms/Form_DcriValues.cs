@@ -19,25 +19,11 @@ namespace NiceHashMiner.Forms
         Algorithm algorithm;
         bool isChange;
         int currentlySelectedIntensity = -1;
-        // backups for close without save
-        bool tuningEnabledBack;
-        Dictionary<int, double> speedBack;
-        Dictionary<int, double> secondarySpeedBack;
-        int tuningStartBack;
-        int tuningEndBack;
-        int tuningIntervalBack;
 
         public Form_DcriValues(Algorithm algorithm) {
             InitializeComponent();
             this.algorithm = algorithm;
             algorithm.MakeIntensityBackup();
-
-            tuningEnabledBack = algorithm.TuningEnabled;
-            speedBack = new Dictionary<int, double>(algorithm.IntensitySpeeds);
-            secondarySpeedBack = new Dictionary<int, double>(algorithm.SecondaryIntensitySpeeds);
-            tuningStartBack = algorithm.TuningStart;
-            tuningEndBack = algorithm.TuningEnd;
-            tuningIntervalBack = algorithm.TuningInterval;
 
             initLocale();
             setIntensities();
