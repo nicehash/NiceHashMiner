@@ -13,8 +13,8 @@ namespace NiceHashMiner {
         public static string NHM_Help = "https://github.com/nicehash/NiceHashMinerLegacy/";
         public static string NHM_NoDev_Help = "https://github.com/nicehash/NiceHashMinerLegacy/wiki/Troubleshooting#nosupportdev";
         // faq
-        public static string NHM_BTC_Wallet_Faq = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=faq#faqs15";
-        public static string NHM_Paying_Faq = "https://www.nicehash.com/index.jsp?utm_source=NHM&p=faq#faqs6";
+        public static string NHM_BTC_Wallet_Faq = "https://www.nicehash.com/help/how-to-create-the-bitcoin-addresswallet?utm_source=NHM";
+        public static string NHM_Paying_Faq = "https://www.nicehash.com/help/when-and-how-do-you-get-paid?utm_source=NHM";
         // API
         // btc adress as parameter
         public static string NHM_API_stats = "https://api.nicehash.com/api?method=stats.provider&addr=";
