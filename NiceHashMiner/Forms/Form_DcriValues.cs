@@ -39,6 +39,8 @@ namespace NiceHashMiner.Forms
             listView_Intensities.Columns[SECONDARYSPEED].Text = International.GetText("Form_DcriValues_SecondarySpeed");
             listView_Intensities.Columns[PROFIT].Text = International.GetText("AlgorithmsListView_Rate");
             Text = International.GetText("Form_DcriValues_Title");
+            button_Close.Text = International.GetText("Form_Settings_buttonCloseNoSaveText");
+            button_Save.Text = International.GetText("Form_Settings_buttonSaveText");
         }
 
         private void setIntensities() {
