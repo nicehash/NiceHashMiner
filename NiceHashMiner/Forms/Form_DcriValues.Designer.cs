@@ -59,7 +59,7 @@
             this.listView_Intensities.Margin = new System.Windows.Forms.Padding(2);
             this.listView_Intensities.MultiSelect = false;
             this.listView_Intensities.Name = "listView_Intensities";
-            this.listView_Intensities.Size = new System.Drawing.Size(352, 278);
+            this.listView_Intensities.Size = new System.Drawing.Size(352, 305);
             this.listView_Intensities.TabIndex = 0;
             this.listView_Intensities.UseCompatibleStateImageBehavior = false;
             this.listView_Intensities.View = System.Windows.Forms.View.Details;
@@ -92,10 +92,10 @@
             // button_Close
             // 
             this.button_Close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Close.Location = new System.Drawing.Point(495, 279);
+            this.button_Close.Location = new System.Drawing.Point(450, 309);
             this.button_Close.Margin = new System.Windows.Forms.Padding(2);
             this.button_Close.Name = "button_Close";
-            this.button_Close.Size = new System.Drawing.Size(89, 23);
+            this.button_Close.Size = new System.Drawing.Size(134, 23);
             this.button_Close.TabIndex = 1;
             this.button_Close.Text = "Close";
             this.button_Close.UseVisualStyleBackColor = true;
@@ -104,10 +104,10 @@
             // button_Save
             // 
             this.button_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Save.Location = new System.Drawing.Point(402, 279);
+            this.button_Save.Location = new System.Drawing.Point(450, 282);
             this.button_Save.Margin = new System.Windows.Forms.Padding(2);
             this.button_Save.Name = "button_Save";
-            this.button_Save.Size = new System.Drawing.Size(89, 23);
+            this.button_Save.Size = new System.Drawing.Size(134, 23);
             this.button_Save.TabIndex = 2;
             this.button_Save.Text = "Save";
             this.button_Save.UseVisualStyleBackColor = true;
@@ -197,7 +197,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(596, 322);
+            this.ClientSize = new System.Drawing.Size(596, 349);
             this.Controls.Add(this.field_TuningEnd);
             this.Controls.Add(this.field_TuningInterval);
             this.Controls.Add(this.field_TuningStart);
@@ -214,9 +214,9 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Dcri Values";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_DcriValues_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_DcriValues_FormClosing);
 
         }
 
