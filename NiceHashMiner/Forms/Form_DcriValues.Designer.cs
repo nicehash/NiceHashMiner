@@ -56,10 +56,10 @@
             this.listView_Intensities.FullRowSelect = true;
             this.listView_Intensities.GridLines = true;
             this.listView_Intensities.Location = new System.Drawing.Point(8, 27);
-            this.listView_Intensities.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listView_Intensities.Margin = new System.Windows.Forms.Padding(2);
             this.listView_Intensities.MultiSelect = false;
             this.listView_Intensities.Name = "listView_Intensities";
-            this.listView_Intensities.Size = new System.Drawing.Size(334, 278);
+            this.listView_Intensities.Size = new System.Drawing.Size(352, 278);
             this.listView_Intensities.TabIndex = 0;
             this.listView_Intensities.UseCompatibleStateImageBehavior = false;
             this.listView_Intensities.View = System.Windows.Forms.View.Details;
@@ -92,8 +92,8 @@
             // button_Close
             // 
             this.button_Close.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Close.Location = new System.Drawing.Point(477, 279);
-            this.button_Close.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_Close.Location = new System.Drawing.Point(495, 279);
+            this.button_Close.Margin = new System.Windows.Forms.Padding(2);
             this.button_Close.Name = "button_Close";
             this.button_Close.Size = new System.Drawing.Size(89, 23);
             this.button_Close.TabIndex = 1;
@@ -104,8 +104,8 @@
             // button_Save
             // 
             this.button_Save.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button_Save.Location = new System.Drawing.Point(384, 279);
-            this.button_Save.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_Save.Location = new System.Drawing.Point(402, 279);
+            this.button_Save.Margin = new System.Windows.Forms.Padding(2);
             this.button_Save.Name = "button_Save";
             this.button_Save.Size = new System.Drawing.Size(89, 23);
             this.button_Save.TabIndex = 2;
@@ -117,7 +117,7 @@
             // 
             this.checkBox_TuningEnabled.AutoSize = true;
             this.checkBox_TuningEnabled.Location = new System.Drawing.Point(8, 8);
-            this.checkBox_TuningEnabled.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.checkBox_TuningEnabled.Margin = new System.Windows.Forms.Padding(2);
             this.checkBox_TuningEnabled.Name = "checkBox_TuningEnabled";
             this.checkBox_TuningEnabled.Size = new System.Drawing.Size(123, 17);
             this.checkBox_TuningEnabled.TabIndex = 3;
@@ -138,7 +138,7 @@
             this.field_TuningEnd.BackColor = System.Drawing.Color.Transparent;
             this.field_TuningEnd.EntryText = "";
             this.field_TuningEnd.LabelText = "Tuning End";
-            this.field_TuningEnd.Location = new System.Drawing.Point(346, 179);
+            this.field_TuningEnd.Location = new System.Drawing.Point(364, 179);
             this.field_TuningEnd.Name = "field_TuningEnd";
             this.field_TuningEnd.Size = new System.Drawing.Size(220, 47);
             this.field_TuningEnd.TabIndex = 8;
@@ -150,7 +150,7 @@
             this.field_TuningInterval.BackColor = System.Drawing.Color.Transparent;
             this.field_TuningInterval.EntryText = "";
             this.field_TuningInterval.LabelText = "Tuning Interval";
-            this.field_TuningInterval.Location = new System.Drawing.Point(346, 230);
+            this.field_TuningInterval.Location = new System.Drawing.Point(364, 230);
             this.field_TuningInterval.Name = "field_TuningInterval";
             this.field_TuningInterval.Size = new System.Drawing.Size(220, 47);
             this.field_TuningInterval.TabIndex = 7;
@@ -162,7 +162,7 @@
             this.field_TuningStart.BackColor = System.Drawing.Color.Transparent;
             this.field_TuningStart.EntryText = "";
             this.field_TuningStart.LabelText = "Tuning Start";
-            this.field_TuningStart.Location = new System.Drawing.Point(346, 129);
+            this.field_TuningStart.Location = new System.Drawing.Point(364, 129);
             this.field_TuningStart.Name = "field_TuningStart";
             this.field_TuningStart.Size = new System.Drawing.Size(220, 47);
             this.field_TuningStart.TabIndex = 6;
@@ -175,7 +175,7 @@
             this.field_SecondarySpeed.Enabled = false;
             this.field_SecondarySpeed.EntryText = "";
             this.field_SecondarySpeed.LabelText = "Secondary Speed (H/s)";
-            this.field_SecondarySpeed.Location = new System.Drawing.Point(346, 78);
+            this.field_SecondarySpeed.Location = new System.Drawing.Point(364, 78);
             this.field_SecondarySpeed.Name = "field_SecondarySpeed";
             this.field_SecondarySpeed.Size = new System.Drawing.Size(220, 47);
             this.field_SecondarySpeed.TabIndex = 5;
@@ -188,7 +188,7 @@
             this.field_Speed.Enabled = false;
             this.field_Speed.EntryText = "";
             this.field_Speed.LabelText = "Speed (H/s)";
-            this.field_Speed.Location = new System.Drawing.Point(346, 27);
+            this.field_Speed.Location = new System.Drawing.Point(364, 27);
             this.field_Speed.Name = "field_Speed";
             this.field_Speed.Size = new System.Drawing.Size(224, 47);
             this.field_Speed.TabIndex = 4;
@@ -197,7 +197,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(578, 322);
+            this.ClientSize = new System.Drawing.Size(596, 322);
             this.Controls.Add(this.field_TuningEnd);
             this.Controls.Add(this.field_TuningInterval);
             this.Controls.Add(this.field_TuningStart);
@@ -208,7 +208,7 @@
             this.Controls.Add(this.button_Close);
             this.Controls.Add(this.listView_Intensities);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.MinimumSize = new System.Drawing.Size(594, 361);
             this.Name = "Form_DcriValues";
             this.ShowInTaskbar = false;
