@@ -197,14 +197,11 @@ namespace NiceHashMiner.Forms.Components {
                     contextMenuStrip1.Items.Add(clearItem);
                 }
                 // open dcri
-                {
-                    var openDcri = new ToolStripMenuItem();
-                    openDcri.Text = "Dcri values";
+                if (listViewAlgorithms.SelectedItems.Count > 0
+                    && ((Algorithm)listViewAlgorithms.SelectedItems[0].Tag).IsDual()) {
+                        var openDcri = new ToolStripMenuItem();
+                    openDcri.Text = International.GetText("Form_DcriValues_Title");
                     openDcri.Click += toolStripMenuItemDcri_Click;
-                    if (listViewAlgorithms.SelectedItems.Count <= 0
-                        || !((Algorithm)listViewAlgorithms.SelectedItems[0].Tag).IsDual()) {
-                        openDcri.Enabled = false;
-                    }
                     contextMenuStrip1.Items.Add(openDcri);
                 }
                 contextMenuStrip1.Show(Cursor.Position);

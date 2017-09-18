@@ -83,6 +83,10 @@
     "Form_Benchmark_listView_WaitMinutes": "Por favor espere unos {0} minutos...",
     "Form_Benchmark_listView_WaitForEth": "Corriendo benchmark (2-4 minutos)...",
 
+    "Form_DcriValues_Title": "ClaymoreDual Tuning",
+    "Form_DcriValues_Intensity": "Intensity",
+    "Form_DcriValues_SecondarySpeed": "Secondary Speed",
+
 
     "Form_Loading_label_LoadingText": "Cargando, espere por favor...",
 

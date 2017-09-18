@@ -39,9 +39,18 @@ namespace NiceHashMiner.Forms
             tuningEndBack = algorithm.TuningEnd;
             tuningIntervalBack = algorithm.TuningInterval;
 
+            initLocale();
             setIntensities();
             initializeControls();
             NiceHashStats.OnSMAUpdate += updateProfits;
+        }
+
+        private void initLocale() {
+            listView_Intensities.Columns[INTENSITY].Text = International.GetText("Form_DcriValues_Intensity");
+            listView_Intensities.Columns[SPEED].Text = International.GetText("AlgorithmsListView_Speed");
+            listView_Intensities.Columns[SECONDARYSPEED].Text = International.GetText("Form_DcriValues_SecondarySpeed");
+            listView_Intensities.Columns[PROFIT].Text = International.GetText("AlgorithmsListView_Rate");
+            Text = International.GetText("Form_DcriValues_Title");
         }
 
         private void setIntensities() {
