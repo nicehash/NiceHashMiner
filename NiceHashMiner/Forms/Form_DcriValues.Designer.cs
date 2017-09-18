@@ -216,6 +216,7 @@
             this.Text = "Dcri Values";
             this.ResumeLayout(false);
             this.PerformLayout();
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_DcriValues_FormClosing);
 
         }
 

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Linq;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Forms
 {
@@ -18,6 +19,7 @@ namespace NiceHashMiner.Forms
 
         Algorithm algorithm;
         bool isChange;
+        bool isChangeSaved;
         int currentlySelectedIntensity = -1;
 
         public Form_DcriValues(Algorithm algorithm) {
@@ -94,11 +96,11 @@ namespace NiceHashMiner.Forms
         }
 
         private void button_Close_Clicked(object sender, EventArgs e) {
-            algorithm.RestoreIntensityBackup();
+            isChangeSaved = false;
             this.Close();
         }
         private void button_Save_Clicked(object sender, EventArgs e) {
-            algorithm.IntensityUpToDate = false;
+            isChangeSaved = true;
             this.Close();
         }
         private void checkBox_TuningEnabledCheckedChanged(object sender, EventArgs e) {
@@ -111,6 +113,7 @@ namespace NiceHashMiner.Forms
         private void textChangedSpeed(object sender, EventArgs e) {
             double value;
             if (Double.TryParse(field_Speed.EntryText, out value)) {
+                isChange = true;
                 algorithm.IntensitySpeeds[currentlySelectedIntensity] = value;
             }
             updateIntensities();
@@ -118,6 +121,7 @@ namespace NiceHashMiner.Forms
         private void textChangedSecondarySpeed(object sender, EventArgs e) {
             double value;
             if (Double.TryParse(field_SecondarySpeed.EntryText, out value)) {
+                isChange = true;
                 algorithm.SecondaryIntensitySpeeds[currentlySelectedIntensity] = value;
             }
             updateIntensities();
@@ -125,6 +129,7 @@ namespace NiceHashMiner.Forms
         private void textChangedTuningStart(object sender, EventArgs e) {
             int value;
             if (int.TryParse(field_TuningStart.EntryText, out value)) {
+                isChange = true;
                 algorithm.TuningStart = value;
             }
             updateIntensityList();
@@ -132,6 +137,7 @@ namespace NiceHashMiner.Forms
         private void textChangedTuningEnd(object sender, EventArgs e) {
             int value;
             if (int.TryParse(field_TuningEnd.EntryText, out value)) {
+                isChange = true;
                 algorithm.TuningEnd = value;
             }
             updateIntensityList();
@@ -139,6 +145,7 @@ namespace NiceHashMiner.Forms
         private void textChangedTuningInterval(object sender, EventArgs e) {
             int value;
             if (int.TryParse(field_TuningInterval.EntryText, out value)) {
+                isChange = true;
                 algorithm.TuningInterval = value;
             }
             updateIntensityList();
@@ -180,9 +187,30 @@ namespace NiceHashMiner.Forms
         private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
             foreach (ListViewItem lvi in listView_Intensities.SelectedItems) {
                 var intensity = (int)lvi.Tag;
+                isChange = true;
                 algorithm.IntensitySpeeds[intensity] = 0;
                 algorithm.SecondaryIntensitySpeeds[intensity] = 0;
                 updateIntensities();
+            }
+        }
+
+        private void Form_DcriValues_FormClosing(object sender, FormClosingEventArgs e) {
+            if (isChange && !isChangeSaved) {
+                DialogResult result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
+                                                      International.GetText("Form_Settings_buttonCloseNoSaveTitle"),
+                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+                if (result == DialogResult.No) {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
+            if (isChangeSaved) {
+                algorithm.IntensityUpToDate = false;
+                ConfigManager.CommitBenchmarks();
+            } else {
+                algorithm.RestoreIntensityBackup();
             }
         }
     }
