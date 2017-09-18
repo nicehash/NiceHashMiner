@@ -209,7 +209,7 @@
             this.Controls.Add(this.listView_Intensities);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.MinimumSize = new System.Drawing.Size(594, 361);
+            this.MinimumSize = new System.Drawing.Size(612, 388);
             this.Name = "Form_DcriValues";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
