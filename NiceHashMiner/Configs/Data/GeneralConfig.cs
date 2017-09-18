@@ -166,7 +166,7 @@ namespace NiceHashMiner.Configs.Data {
             if (IQROverFactor < 0) {
                 IQROverFactor = 3.0;
             }
-            if (NormalizedProfitHistory < 1) {
+            if (NormalizedProfitHistory < 0) {
                 NormalizedProfitHistory = 15;
             }
             if (IQRNormalizeFactor < 0) {

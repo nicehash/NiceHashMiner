@@ -51,21 +51,25 @@ namespace NiceHashMiner
                 if (currentSMA.ContainsKey(algo)) {
                     var current = currentPayingForAlgo(algo);
 
-                    // Find IQR
-                    var quartiles = recentPaying[algo].Quartiles();
-                    var IQR = quartiles.Item3 - quartiles.Item1;
-                    var TQ = quartiles.Item3;
+                    if (ConfigManager.GeneralConfig.NormalizedProfitHistory > 0
+                        && recentPaying[algo].Count >= ConfigManager.GeneralConfig.NormalizedProfitHistory) {
+                        // Find IQR
+                        var quartiles = recentPaying[algo].Quartiles();
+                        var IQR = quartiles.Item3 - quartiles.Item1;
+                        var TQ = quartiles.Item3;
 
-                    if (recentPaying[algo].Count >= ConfigManager.GeneralConfig.NormalizedProfitHistory 
-                        && current > (IQR * ConfigManager.GeneralConfig.IQROverFactor) + TQ) {  // result is deviant over
-                        var norm = (IQR * ConfigManager.GeneralConfig.IQRNormalizeFactor) + TQ;
-                        Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} IQRs over ({2} actual, {3} 3Q). Normalizing to {4}",
-                            currentSMA[algo].name,
-                            (current - TQ) / IQR,
-                            current,
-                            TQ,
-                            norm));
-                        currentSMA[algo].paying = norm;
+                        if (current > (IQR * ConfigManager.GeneralConfig.IQROverFactor) + TQ) {  // result is deviant over
+                            var norm = (IQR * ConfigManager.GeneralConfig.IQRNormalizeFactor) + TQ;
+                            Helpers.ConsolePrint("PROFITNORM", String.Format("Algorithm {0} profit deviant, {1} IQRs over ({2} actual, {3} 3Q). Normalizing to {4}",
+                                currentSMA[algo].name,
+                                (current - TQ) / IQR,
+                                current,
+                                TQ,
+                                norm));
+                            currentSMA[algo].paying = norm;
+                        } else {
+                            currentSMA[algo].paying = current;
+                        }
                     } else {
                         currentSMA[algo].paying = current;
                     }
