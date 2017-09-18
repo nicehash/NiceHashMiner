@@ -35,9 +35,7 @@ namespace NiceHashMiner.Miners
         protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
 
         // CD intensity tuning
-        protected Algorithm Algorithm;
         protected const int defaultIntensity = 30;
-        public bool TuningEnabled { get { return IsDual() && Algorithm.TuningEnabled; } }
 
         public ClaymoreBaseMiner(string minerDeviceName, string look_FOR_START)
             : base(minerDeviceName) {
@@ -166,7 +164,7 @@ namespace NiceHashMiner.Miners
                     } else {
                         ids.Add(id.ToString());
                     }
-                    if (TuningEnabled) {
+                    if (mPair.Algorithm.TuningEnabled) {
                         intensities.Add(mPair.Algorithm.CurrentIntensity.ToString());
                     }
                 } else {
@@ -175,7 +173,7 @@ namespace NiceHashMiner.Miners
                 }
             }
             deviceStringCommand += String.Join("", ids);
-            if (TuningEnabled) {
+            if (intensities.Count > 0) {
                 intensityStringCommand = " -dcri " + String.Join(",", intensities);
             }
 
@@ -187,7 +185,7 @@ namespace NiceHashMiner.Miners
         protected override void BenchmarkThreadRoutine(object CommandLine) {
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
-            if (TuningEnabled) {
+            if (BenchmarkAlgorithm.TuningEnabled) {
                 var stepsLeft = (int)Math.Ceiling((double)(BenchmarkAlgorithm.TuningEnd - BenchmarkAlgorithm.CurrentIntensity) / (BenchmarkAlgorithm.TuningInterval)) + 1;
                 Helpers.ConsolePrint("CDTUING", "{0} tuning steps remain, should complete in {1} seconds", stepsLeft, stepsLeft * benchmarkTimeWait);
                 Helpers.ConsolePrint("CDTUNING", String.Format("Starting benchmark for intensity {0} out of {1}", BenchmarkAlgorithm.CurrentIntensity, BenchmarkAlgorithm.TuningEnd));
@@ -305,7 +303,7 @@ namespace NiceHashMiner.Miners
                     if (benchmark_read_count > 0) {
                         var speed = benchmark_sum / benchmark_read_count;
                         var secondarySpeed = secondary_benchmark_sum / secondary_benchmark_read_count;
-                        if (TuningEnabled) {
+                        if (BenchmarkAlgorithm.TuningEnabled) {
                             BenchmarkAlgorithm.SetIntensitySpeedsForCurrent(speed, secondarySpeed);
                         } else {
                             BenchmarkAlgorithm.BenchmarkSpeed = speed;

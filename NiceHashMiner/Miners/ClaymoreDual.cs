@@ -93,8 +93,8 @@ namespace NiceHashMiner.Miners {
 
         public override void Start(string url, string btcAdress, string worker) {
             // Update to most profitable intensity
-            if (TuningEnabled) {
-                foreach (var mPair in MiningSetup.MiningPairs) {
+            foreach (var mPair in MiningSetup.MiningPairs) {
+                if (mPair.Algorithm.TuningEnabled) {
                     var intensity = mPair.Algorithm.MostProfitableIntensity;
                     if (intensity < 0) intensity = defaultIntensity;
                     mPair.Algorithm.CurrentIntensity = intensity;

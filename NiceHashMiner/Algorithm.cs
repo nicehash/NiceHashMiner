@@ -22,6 +22,13 @@ namespace NiceHashMiner {
         public int TuningStart = 25;
         public int TuningEnd = 200;
         public int TuningInterval = 25;
+        // And backups
+        private Dictionary<int, double> intensitySpeedsBack;
+        private Dictionary<int, double> secondaryIntensitySpeedsBack;
+        private bool tuningEnabledBack;
+        private int tuningStartBack;
+        private int tuningEndBack;
+        public int tuningIntervalBack;
         // Miner name is used for miner ALGO flag parameter
         public readonly string MinerName;
         private double benchmarkSpeed;
@@ -311,6 +318,24 @@ namespace NiceHashMiner {
             double speed = SecondarySpeedForIntensity(intensity);
             if (speed > 0) return Helpers.FormatSpeedOutput(speed) + "H/s";
             return International.GetText("BenchmarkSpeedStringNone");
+        }
+
+        public void MakeIntensityBackup() {
+            intensitySpeedsBack = new Dictionary<int, double>(IntensitySpeeds);
+            secondaryIntensitySpeedsBack = new Dictionary<int, double>(SecondaryIntensitySpeeds);
+            tuningEnabledBack = TuningEnabled;
+            tuningStartBack = TuningStart;
+            tuningEndBack = TuningEnd;
+            tuningIntervalBack = TuningInterval;
+        }
+
+        public void RestoreIntensityBackup() {
+            IntensitySpeeds = new Dictionary<int, double>(intensitySpeedsBack);
+            SecondaryIntensitySpeeds = new Dictionary<int, double>(secondaryIntensitySpeedsBack);
+            TuningEnabled = tuningEnabledBack;
+            TuningStart = tuningStartBack;
+            TuningEnd = tuningEndBack;
+            TuningInterval = tuningIntervalBack;
         }
     }
 }

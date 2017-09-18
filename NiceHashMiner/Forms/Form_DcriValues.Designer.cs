@@ -25,6 +25,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             this.listView_Intensities = new System.Windows.Forms.ListView();
             this.columnHeader_DcriValue = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader_Speed = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -33,11 +34,12 @@
             this.button_Close = new System.Windows.Forms.Button();
             this.button_Save = new System.Windows.Forms.Button();
             this.checkBox_TuningEnabled = new System.Windows.Forms.CheckBox();
-            this.field_Speed = new NiceHashMiner.Forms.Components.Field();
-            this.field_SecondarySpeed = new NiceHashMiner.Forms.Components.Field();
-            this.field_TuningStart = new NiceHashMiner.Forms.Components.Field();
-            this.field_TuningInterval = new NiceHashMiner.Forms.Components.Field();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.field_TuningEnd = new NiceHashMiner.Forms.Components.Field();
+            this.field_TuningInterval = new NiceHashMiner.Forms.Components.Field();
+            this.field_TuningStart = new NiceHashMiner.Forms.Components.Field();
+            this.field_SecondarySpeed = new NiceHashMiner.Forms.Components.Field();
+            this.field_Speed = new NiceHashMiner.Forms.Components.Field();
             this.SuspendLayout();
             // 
             // listView_Intensities
@@ -61,6 +63,7 @@
             this.listView_Intensities.UseCompatibleStateImageBehavior = false;
             this.listView_Intensities.View = System.Windows.Forms.View.Details;
             this.listView_Intensities.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView_Intensities_ItemSelectionChanged);
+            this.listView_Intensities.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView_Intensities_MouseClick);
             // 
             // columnHeader_DcriValue
             // 
@@ -118,19 +121,50 @@
             this.checkBox_TuningEnabled.UseVisualStyleBackColor = true;
             this.checkBox_TuningEnabled.CheckedChanged += new System.EventHandler(this.checkBox_TuningEnabledCheckedChanged);
             // 
-            // field_Speed
+            // contextMenuStrip1
             // 
-            this.field_Speed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.field_Speed.AutoSize = true;
-            this.field_Speed.BackColor = System.Drawing.Color.Transparent;
-            this.field_Speed.Enabled = false;
-            this.field_Speed.EntryText = "";
-            this.field_Speed.LabelText = "Speed (H/s)";
-            this.field_Speed.Location = new System.Drawing.Point(478, 42);
-            this.field_Speed.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.field_Speed.Name = "field_Speed";
-            this.field_Speed.Size = new System.Drawing.Size(336, 68);
-            this.field_Speed.TabIndex = 4;
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
+            // field_TuningEnd
+            // 
+            this.field_TuningEnd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.field_TuningEnd.AutoSize = true;
+            this.field_TuningEnd.BackColor = System.Drawing.Color.Transparent;
+            this.field_TuningEnd.EntryText = "";
+            this.field_TuningEnd.LabelText = "Tuning End";
+            this.field_TuningEnd.Location = new System.Drawing.Point(478, 276);
+            this.field_TuningEnd.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.field_TuningEnd.Name = "field_TuningEnd";
+            this.field_TuningEnd.Size = new System.Drawing.Size(330, 68);
+            this.field_TuningEnd.TabIndex = 8;
+            // 
+            // field_TuningInterval
+            // 
+            this.field_TuningInterval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.field_TuningInterval.AutoSize = true;
+            this.field_TuningInterval.BackColor = System.Drawing.Color.Transparent;
+            this.field_TuningInterval.EntryText = "";
+            this.field_TuningInterval.LabelText = "Tuning Interval";
+            this.field_TuningInterval.Location = new System.Drawing.Point(478, 354);
+            this.field_TuningInterval.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.field_TuningInterval.Name = "field_TuningInterval";
+            this.field_TuningInterval.Size = new System.Drawing.Size(330, 68);
+            this.field_TuningInterval.TabIndex = 7;
+            // 
+            // field_TuningStart
+            // 
+            this.field_TuningStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.field_TuningStart.AutoSize = true;
+            this.field_TuningStart.BackColor = System.Drawing.Color.Transparent;
+            this.field_TuningStart.EntryText = "";
+            this.field_TuningStart.LabelText = "Tuning Start";
+            this.field_TuningStart.Location = new System.Drawing.Point(478, 198);
+            this.field_TuningStart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.field_TuningStart.Name = "field_TuningStart";
+            this.field_TuningStart.Size = new System.Drawing.Size(330, 68);
+            this.field_TuningStart.TabIndex = 6;
             // 
             // field_SecondarySpeed
             // 
@@ -146,44 +180,19 @@
             this.field_SecondarySpeed.Size = new System.Drawing.Size(330, 68);
             this.field_SecondarySpeed.TabIndex = 5;
             // 
-            // field_TuningStart
+            // field_Speed
             // 
-            this.field_TuningStart.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.field_TuningStart.AutoSize = true;
-            this.field_TuningStart.BackColor = System.Drawing.Color.Transparent;
-            this.field_TuningStart.EntryText = "";
-            this.field_TuningStart.LabelText = "Tuning Start";
-            this.field_TuningStart.Location = new System.Drawing.Point(478, 198);
-            this.field_TuningStart.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.field_TuningStart.Name = "field_TuningStart";
-            this.field_TuningStart.Size = new System.Drawing.Size(330, 68);
-            this.field_TuningStart.TabIndex = 6;
-            // 
-            // field_TuningInterval
-            // 
-            this.field_TuningInterval.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.field_TuningInterval.AutoSize = true;
-            this.field_TuningInterval.BackColor = System.Drawing.Color.Transparent;
-            this.field_TuningInterval.EntryText = "";
-            this.field_TuningInterval.LabelText = "Tuning Interval";
-            this.field_TuningInterval.Location = new System.Drawing.Point(478, 354);
-            this.field_TuningInterval.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.field_TuningInterval.Name = "field_TuningInterval";
-            this.field_TuningInterval.Size = new System.Drawing.Size(330, 68);
-            this.field_TuningInterval.TabIndex = 7;
-            // 
-            // field_TuningEnd
-            // 
-            this.field_TuningEnd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.field_TuningEnd.AutoSize = true;
-            this.field_TuningEnd.BackColor = System.Drawing.Color.Transparent;
-            this.field_TuningEnd.EntryText = "";
-            this.field_TuningEnd.LabelText = "Tuning End";
-            this.field_TuningEnd.Location = new System.Drawing.Point(478, 276);
-            this.field_TuningEnd.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.field_TuningEnd.Name = "field_TuningEnd";
-            this.field_TuningEnd.Size = new System.Drawing.Size(330, 68);
-            this.field_TuningEnd.TabIndex = 8;
+            this.field_Speed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.field_Speed.AutoSize = true;
+            this.field_Speed.BackColor = System.Drawing.Color.Transparent;
+            this.field_Speed.Enabled = false;
+            this.field_Speed.EntryText = "";
+            this.field_Speed.LabelText = "Speed (H/s)";
+            this.field_Speed.Location = new System.Drawing.Point(478, 42);
+            this.field_Speed.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.field_Speed.Name = "field_Speed";
+            this.field_Speed.Size = new System.Drawing.Size(336, 68);
+            this.field_Speed.TabIndex = 4;
             // 
             // Form_DcriValues
             // 
@@ -225,5 +234,6 @@
         private Components.Field field_TuningStart;
         private Components.Field field_TuningInterval;
         private Components.Field field_TuningEnd;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }

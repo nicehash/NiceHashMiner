@@ -11,14 +11,37 @@ namespace NiceHashMiner.Forms
 {
     public partial class Form_DcriValues : Form
     {
+        private const int INTENSITY      = 0;
+        private const int SPEED          = 1;
+        private const int SECONDARYSPEED = 2;
+        private const int PROFIT         = 3;
+
         Algorithm algorithm;
         bool isChange;
         int currentlySelectedIntensity = -1;
+        // backups for close without save
+        bool tuningEnabledBack;
+        Dictionary<int, double> speedBack;
+        Dictionary<int, double> secondarySpeedBack;
+        int tuningStartBack;
+        int tuningEndBack;
+        int tuningIntervalBack;
+
         public Form_DcriValues(Algorithm algorithm) {
             InitializeComponent();
             this.algorithm = algorithm;
+            algorithm.MakeIntensityBackup();
+
+            tuningEnabledBack = algorithm.TuningEnabled;
+            speedBack = new Dictionary<int, double>(algorithm.IntensitySpeeds);
+            secondarySpeedBack = new Dictionary<int, double>(algorithm.SecondaryIntensitySpeeds);
+            tuningStartBack = algorithm.TuningStart;
+            tuningEndBack = algorithm.TuningEnd;
+            tuningIntervalBack = algorithm.TuningInterval;
+
             setIntensities();
             initializeControls();
+            NiceHashStats.OnSMAUpdate += updateProfits;
         }
 
         private void setIntensities() {
@@ -28,7 +51,7 @@ namespace NiceHashMiner.Forms
                 ListViewItem lvi = new ListViewItem(intensity.ToString());
                 
                 lvi.SubItems.Add(algorithm.SpeedStringForIntensity(intensity));
-                lvi.SubItems.Add(algorithm.SpeedStringForIntensity(intensity));
+                lvi.SubItems.Add(algorithm.SecondarySpeedStringForIntensity(intensity));
                 lvi.SubItems.Add(algorithm.ProfitForIntensity(intensity).ToString("F8"));
                 lvi.Tag = intensity;
                 listView_Intensities.Items.Add(lvi);
@@ -57,6 +80,10 @@ namespace NiceHashMiner.Forms
             field_TuningStart.Enabled = algorithm.TuningEnabled;
             field_TuningEnd.Enabled = algorithm.TuningEnabled;
             field_TuningInterval.Enabled = algorithm.TuningEnabled;
+            if (!algorithm.TuningEnabled) {
+                field_Speed.Enabled = false;
+                field_SecondarySpeed.Enabled = false;
+            }
         }
 
         #region Callback Events
@@ -72,10 +99,12 @@ namespace NiceHashMiner.Forms
         }
 
         private void button_Close_Clicked(object sender, EventArgs e) {
+            algorithm.RestoreIntensityBackup();
             this.Close();
         }
         private void button_Save_Clicked(object sender, EventArgs e) {
-
+            algorithm.IntensityUpToDate = false;
+            this.Close();
         }
         private void checkBox_TuningEnabledCheckedChanged(object sender, EventArgs e) {
             isChange = true;
@@ -89,39 +118,77 @@ namespace NiceHashMiner.Forms
             if (Double.TryParse(field_Speed.EntryText, out value)) {
                 algorithm.IntensitySpeeds[currentlySelectedIntensity] = value;
             }
+            updateIntensities();
         }
         private void textChangedSecondarySpeed(object sender, EventArgs e) {
             double value;
             if (Double.TryParse(field_SecondarySpeed.EntryText, out value)) {
                 algorithm.SecondaryIntensitySpeeds[currentlySelectedIntensity] = value;
             }
+            updateIntensities();
         }
         private void textChangedTuningStart(object sender, EventArgs e) {
             int value;
             if (int.TryParse(field_TuningStart.EntryText, out value)) {
                 algorithm.TuningStart = value;
             }
-            updateTunings();
+            updateIntensityList();
         }
         private void textChangedTuningEnd(object sender, EventArgs e) {
             int value;
             if (int.TryParse(field_TuningEnd.EntryText, out value)) {
                 algorithm.TuningEnd = value;
             }
-            updateTunings();
+            updateIntensityList();
         }
         private void textChangedTuningInterval(object sender, EventArgs e) {
             int value;
             if (int.TryParse(field_TuningInterval.EntryText, out value)) {
                 algorithm.TuningInterval = value;
             }
-            updateTunings();
+            updateIntensityList();
+        }
+
+        private void listView_Intensities_MouseClick(object sender, MouseEventArgs e) {
+            if (e.Button == MouseButtons.Right) {
+                contextMenuStrip1.Items.Clear();
+                var clearItem = new ToolStripMenuItem();
+                clearItem.Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem");
+                clearItem.Click += toolStripMenuItemClear_Click;
+                contextMenuStrip1.Items.Add(clearItem);
+                contextMenuStrip1.Show(Cursor.Position);
+            }
         }
 
         #endregion Callback Events
 
-        private void updateTunings() {
+        private void updateIntensities() {
+            foreach (ListViewItem lvi in listView_Intensities.Items) {
+                var intensity = (int)lvi.Tag;
+                lvi.SubItems[SPEED].Text = algorithm.SpeedStringForIntensity(intensity).ToString();
+                lvi.SubItems[SECONDARYSPEED].Text = algorithm.SecondarySpeedStringForIntensity(intensity).ToString();
+                lvi.SubItems[PROFIT].Text = algorithm.ProfitForIntensity(intensity).ToString("F8");
+            }
+        }
 
+        private void updateIntensityList() {
+            setIntensities();
+        }
+
+        private void updateProfits(object sender, EventArgs e) {
+            foreach (ListViewItem lvi in listView_Intensities.Items) {
+                var intensity = (int)lvi.Tag;
+                lvi.SubItems[PROFIT].Text = algorithm.ProfitForIntensity(intensity).ToString("F8");
+            }
+        }
+
+        private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
+            foreach (ListViewItem lvi in listView_Intensities.SelectedItems) {
+                var intensity = (int)lvi.Tag;
+                algorithm.IntensitySpeeds[intensity] = 0;
+                algorithm.SecondaryIntensitySpeeds[intensity] = 0;
+                updateIntensities();
+            }
         }
     }
 }

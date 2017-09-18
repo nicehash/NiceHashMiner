@@ -248,6 +248,11 @@ namespace NiceHashMiner.Forms.Components {
                 var algo = lvi.Tag as Algorithm;
                 var dcriValues = new Form_DcriValues(algo);
                 dcriValues.ShowDialog();
+                RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                // update benchmark status data
+                if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+                // update settings
+                if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
             }
         }
     }
