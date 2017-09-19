@@ -18,7 +18,19 @@ namespace NiceHashMiner.Forms
         private const int PROFIT         = 3;
 
         DualAlgorithm algorithm;
-        bool isChange;
+
+        private bool _isInitFinished = false;
+        private bool _isChange = false;
+        private bool isChange {
+            get { return _isChange; }
+            set {
+                if (_isInitFinished) {
+                    _isChange = value;
+                } else {
+                    _isChange = false;
+                }
+            }
+        }
         bool isChangeSaved;
         int currentlySelectedIntensity = -1;
 
@@ -31,6 +43,8 @@ namespace NiceHashMiner.Forms
             setIntensities();
             initializeControls();
             NiceHashStats.OnSMAUpdate += updateProfits;
+
+            _isInitFinished = true;
         }
 
         private void initLocale() {
