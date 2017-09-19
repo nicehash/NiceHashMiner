@@ -124,7 +124,7 @@ namespace NiceHashMiner {
             if (Enabled && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             } else if (BenchmarkSpeed > 0) {
-                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed);
+                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, 0, NiceHashID);
             } else if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus)) {
                 return BenchmarkStatus;
             }

@@ -540,7 +540,10 @@ namespace NiceHashMiner
                 }
             } catch { }
             BenchmarkProcessStatus = status;
-            Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed));
+            var secondarySpeed = 0d;
+            if (BenchmarkAlgorithm is DualAlgorithm dualAlg)
+                secondarySpeed = dualAlg.SecondaryBenchmarkSpeed;
+            Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, secondarySpeed, BenchmarkAlgorithm.NiceHashID));
             Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                 OnBenchmarkCompleteCalled = true;
