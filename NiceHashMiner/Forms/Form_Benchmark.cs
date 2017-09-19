@@ -282,7 +282,11 @@ namespace NiceHashMiner.Forms {
         private string getDotsWaitString() {
             ++dotCount;
             if (dotCount > 3) dotCount = 1;
-            return new String('.', dotCount) + (_currentAlgorithm.TuningEnabled ? " (dcri " + _currentAlgorithm.CurrentIntensity + ")" : "");
+            string dcriInfo = "";
+            if (_currentAlgorithm is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled) {
+                dcriInfo = " (dcri " + dualAlgo.CurrentIntensity + ")";
+            }
+            return new String('.', dotCount) + dcriInfo;
         }
 
         private void InitLocale() {
@@ -510,8 +514,8 @@ namespace NiceHashMiner.Forms {
                 } else {
                     __ClaymoreZcashStatus = null;
                 }
-                if (_currentAlgorithm.TuningEnabled) {
-                    _currentAlgorithm.StartTuning();
+                if (_currentAlgorithm is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled) {
+                    dualAlgo.StartTuning();
                 }
             }
 
@@ -626,8 +630,9 @@ namespace NiceHashMiner.Forms {
                     }
                 }
 
-                if (_currentAlgorithm.TuningEnabled) {
-                    if (_currentAlgorithm.IncrementToNextEmptyIntensity()) {
+                var dualAlgo = _currentAlgorithm as DualAlgorithm;
+                if (dualAlgo != null && dualAlgo.TuningEnabled) {
+                    if (dualAlgo.IncrementToNextEmptyIntensity()) {
                         rebenchSame = true;
                     }
                 }
@@ -654,7 +659,7 @@ namespace NiceHashMiner.Forms {
                         _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);
                     } else if (__ClaymoreZcashStatus != null) {
                         _currentMiner.BenchmarkStart(__ClaymoreZcashStatus.Time, this);
-                    } else if (_currentAlgorithm.TuningEnabled) {
+                    } else if (dualAlgo != null && dualAlgo.TuningEnabled) {
                         var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
                             .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
                         _currentMiner.BenchmarkStart(time, this);

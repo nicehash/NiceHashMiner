@@ -38,9 +38,6 @@ namespace NiceHashMiner {
         // these are changing (logging reasons)
         public double CurrentProfit = 0;
         public double CurNhmSMADataVal = 0;
-        public double SecondaryCurNhmSMADataVal = 0;
-        // This should ideally be false when SMA or speeds are updated and no check has been done yet
-        public bool IntensityUpToDate = false;
         public virtual bool BenchmarkNeeded {
             get {
                 return BenchmarkSpeed <= 0;
@@ -129,6 +126,11 @@ namespace NiceHashMiner {
         public virtual AlgorithmType DualNiceHashID {
             get {
                 return NiceHashID;
+            }
+        }
+        public virtual bool IsDual {
+            get {
+                return false;
             }
         }
     }

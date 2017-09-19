@@ -296,7 +296,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 if (algo != null) {
                     algorithmType = algo.NiceHashID;
                     minerBaseType = algo.MinerBaseType;
-                    if (algo.TuningEnabled) ignoreDcri = true;
+                    if (algo is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled) ignoreDcri = true;
                 }
             }
 

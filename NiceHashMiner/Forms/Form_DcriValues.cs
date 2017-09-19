@@ -17,12 +17,12 @@ namespace NiceHashMiner.Forms
         private const int SECONDARYSPEED = 2;
         private const int PROFIT         = 3;
 
-        Algorithm algorithm;
+        DualAlgorithm algorithm;
         bool isChange;
         bool isChangeSaved;
         int currentlySelectedIntensity = -1;
 
-        public Form_DcriValues(Algorithm algorithm) {
+        public Form_DcriValues(DualAlgorithm algorithm) {
             InitializeComponent();
             this.algorithm = algorithm;
             algorithm.MakeIntensityBackup();

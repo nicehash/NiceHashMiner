@@ -20,9 +20,10 @@ namespace NiceHashMiner.Miners.Grouping {
                 this.MiningPairs.Sort((a, b) => a.Device.ID - b.Device.ID);
                 this.MinerName = miningPairs[0].Algorithm.MinerName;
                 this.CurrentAlgorithmType = miningPairs[0].Algorithm.NiceHashID;
-                this.CurrentSecondaryAlgorithmType = miningPairs[0].Algorithm.SecondaryNiceHashID;
                 this.MinerPath = miningPairs[0].Algorithm.MinerBinaryPath;
                 this.IsInit = MinerPaths.IsValidMinerPath(this.MinerPath);
+                if (miningPairs[0].Algorithm is DualAlgorithm dualAlgo)
+                    CurrentSecondaryAlgorithmType = dualAlgo.SecondaryNiceHashID;
             }
         }
     }

@@ -154,8 +154,14 @@ namespace NiceHashMiner.Devices
             return String.Format(International.GetText("ComputeDevice_Full_Device_Name"), NameCount, Name);
         }
 
+        public Algorithm GetAlgorithm(Algorithm modelAlgo) {
+            var secondaryAlgoType = (modelAlgo is DualAlgorithm dualAlgo) ? dualAlgo.SecondaryNiceHashID : AlgorithmType.NONE;
+            return GetAlgorithm(modelAlgo.MinerBaseType, modelAlgo.NiceHashID, secondaryAlgoType);
+        }
         public Algorithm GetAlgorithm(MinerBaseType MinerBaseType, AlgorithmType AlgorithmType, AlgorithmType SecondaryAlgorithmType) {
-            int toSetIndex = this.AlgorithmSettings.FindIndex((a) => a.NiceHashID == AlgorithmType && a.MinerBaseType == MinerBaseType && a.SecondaryNiceHashID == SecondaryAlgorithmType);
+            int toSetIndex = this.AlgorithmSettings.FindIndex((a) => a.NiceHashID == AlgorithmType 
+            && a.MinerBaseType == MinerBaseType 
+            && (SecondaryAlgorithmType == AlgorithmType.NONE || (a is DualAlgorithm da && da.SecondaryNiceHashID == SecondaryAlgorithmType)));
             if (toSetIndex > -1) {
                 return this.AlgorithmSettings[toSetIndex];
             }
@@ -172,12 +178,14 @@ namespace NiceHashMiner.Devices
 
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev) {
             foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings) {
-                var setAlgo = GetAlgorithm(copyFromAlgo.MinerBaseType, copyFromAlgo.NiceHashID, copyFromAlgo.SecondaryNiceHashID);
+                var setAlgo = GetAlgorithm(copyFromAlgo);
                 if (setAlgo != null) {
                     setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
-                    setAlgo.SecondaryBenchmarkSpeed = copyFromAlgo.SecondaryBenchmarkSpeed;
                     setAlgo.ExtraLaunchParameters = copyFromAlgo.ExtraLaunchParameters;
                     setAlgo.LessThreads = copyFromAlgo.LessThreads;
+                    if (setAlgo is DualAlgorithm dualSA && copyFromAlgo is DualAlgorithm dualCFA) {
+                        dualSA.SecondaryBenchmarkSpeed = dualCFA.SecondaryBenchmarkSpeed;
+                    }
                 }
             }
         }
@@ -197,20 +205,22 @@ namespace NiceHashMiner.Devices
                     var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID, conf.SecondaryNiceHashID);
                     if (setAlgo != null) {
                         setAlgo.BenchmarkSpeed = conf.BenchmarkSpeed;
-                        setAlgo.SecondaryBenchmarkSpeed = conf.SecondaryBenchmarkSpeed;
                         setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
                         setAlgo.Enabled = conf.Enabled;
                         setAlgo.LessThreads = conf.LessThreads;
-                        if (setAlgo.IsDual() && config.DualAlgorithmSettings != null) {
-                            var dualConf = config.DualAlgorithmSettings.Find(a => a.SecondaryNiceHashID == setAlgo.SecondaryNiceHashID);
-                            if (dualConf != null) {
-                                dualConf.FixSettingsBounds();
-                                setAlgo.IntensitySpeeds = dualConf.IntensitySpeeds;
-                                setAlgo.SecondaryIntensitySpeeds = dualConf.SecondaryIntensitySpeeds;
-                                setAlgo.TuningEnabled = dualConf.TuningEnabled;
-                                setAlgo.TuningStart = dualConf.TuningStart;
-                                setAlgo.TuningEnd = dualConf.TuningEnd;
-                                setAlgo.TuningInterval = dualConf.TuningInterval;
+                        if (setAlgo is DualAlgorithm dualSA) {
+                            dualSA.SecondaryBenchmarkSpeed = conf.SecondaryBenchmarkSpeed;
+                            if (config.DualAlgorithmSettings != null) {
+                                var dualConf = config.DualAlgorithmSettings.Find(a => a.SecondaryNiceHashID == dualSA.SecondaryNiceHashID);
+                                if (dualConf != null) {
+                                    dualConf.FixSettingsBounds();
+                                    dualSA.IntensitySpeeds = dualConf.IntensitySpeeds;
+                                    dualSA.SecondaryIntensitySpeeds = dualConf.SecondaryIntensitySpeeds;
+                                    dualSA.TuningEnabled = dualConf.TuningEnabled;
+                                    dualSA.TuningStart = dualConf.TuningStart;
+                                    dualSA.TuningEnd = dualConf.TuningEnd;
+                                    dualSA.TuningInterval = dualConf.TuningInterval;
+                                }
                             }
                         }
                     }
@@ -235,26 +245,27 @@ namespace NiceHashMiner.Devices
                 AlgorithmConfig conf = new AlgorithmConfig();
                 conf.Name = algo.AlgorithmStringID;
                 conf.NiceHashID = algo.NiceHashID;
-                conf.SecondaryNiceHashID = algo.SecondaryNiceHashID;
                 conf.MinerBaseType = algo.MinerBaseType;
                 conf.MinerName = algo.MinerName; // TODO probably not needed
                 conf.BenchmarkSpeed = algo.BenchmarkSpeed;
-                conf.SecondaryBenchmarkSpeed = algo.SecondaryBenchmarkSpeed;
                 conf.ExtraLaunchParameters = algo.ExtraLaunchParameters;
                 conf.Enabled = algo.Enabled;
                 conf.LessThreads = algo.LessThreads;
                 // insert
                 ret.AlgorithmSettings.Add(conf);
-                if (algo.IsDual()) {
+                if (algo is DualAlgorithm dualAlgo) {
+                    conf.SecondaryNiceHashID = dualAlgo.SecondaryNiceHashID;
+                    conf.SecondaryBenchmarkSpeed = dualAlgo.SecondaryBenchmarkSpeed;
+
                     DualAlgorithmConfig dualConf = new DualAlgorithmConfig();
                     dualConf.Name = algo.AlgorithmStringID;
-                    dualConf.SecondaryNiceHashID = algo.SecondaryNiceHashID;
-                    dualConf.IntensitySpeeds = algo.IntensitySpeeds;
-                    dualConf.SecondaryIntensitySpeeds = algo.SecondaryIntensitySpeeds;
-                    dualConf.TuningEnabled = algo.TuningEnabled;
-                    dualConf.TuningStart = algo.TuningStart;
-                    dualConf.TuningEnd = algo.TuningEnd;
-                    dualConf.TuningInterval = algo.TuningInterval;
+                    dualConf.SecondaryNiceHashID = dualAlgo.SecondaryNiceHashID;
+                    dualConf.IntensitySpeeds = dualAlgo.IntensitySpeeds;
+                    dualConf.SecondaryIntensitySpeeds = dualAlgo.SecondaryIntensitySpeeds;
+                    dualConf.TuningEnabled = dualAlgo.TuningEnabled;
+                    dualConf.TuningStart = dualAlgo.TuningStart;
+                    dualConf.TuningEnd = dualAlgo.TuningEnd;
+                    dualConf.TuningInterval = dualAlgo.TuningInterval;
 
                     ret.DualAlgorithmSettings.Add(dualConf);
                 }

@@ -198,7 +198,7 @@ namespace NiceHashMiner.Forms.Components {
                 }
                 // open dcri
                 if (listViewAlgorithms.SelectedItems.Count > 0
-                    && ((Algorithm)listViewAlgorithms.SelectedItems[0].Tag).IsDual()) {
+                    && ((Algorithm)listViewAlgorithms.SelectedItems[0].Tag).IsDual) {
                         var openDcri = new ToolStripMenuItem();
                     openDcri.Text = International.GetText("Form_DcriValues_Title");
                     openDcri.Click += toolStripMenuItemDcri_Click;
@@ -226,10 +226,12 @@ namespace NiceHashMiner.Forms.Components {
                     var algorithm = lvi.Tag as Algorithm;
                     if (algorithm != null) {
                         algorithm.BenchmarkSpeed = 0;
-                        algorithm.SecondaryBenchmarkSpeed = 0;
-                        algorithm.IntensitySpeeds = new Dictionary<int, double>();
-                        algorithm.SecondaryIntensitySpeeds = new Dictionary<int, double>();
-                        algorithm.IntensityUpToDate = false;
+                        if (algorithm is DualAlgorithm dualAlgo) {
+                            dualAlgo.SecondaryBenchmarkSpeed = 0;
+                            dualAlgo.IntensitySpeeds = new Dictionary<int, double>();
+                            dualAlgo.SecondaryIntensitySpeeds = new Dictionary<int, double>();
+                            dualAlgo.IntensityUpToDate = false;
+                        }
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
                         // update benchmark status data
                         if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
@@ -242,14 +244,16 @@ namespace NiceHashMiner.Forms.Components {
 
         private void toolStripMenuItemDcri_Click(object sender, EventArgs e) {
             foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
-                var algo = lvi.Tag as Algorithm;
-                var dcriValues = new Form_DcriValues(algo);
-                dcriValues.ShowDialog();
-                RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
-                // update benchmark status data
-                if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
-                // update settings
-                if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
+                var algo = lvi.Tag as DualAlgorithm;
+                if (algo != null) {
+                    var dcriValues = new Form_DcriValues(algo);
+                    dcriValues.ShowDialog();
+                    RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                    // update benchmark status data
+                    if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+                    // update settings
+                    if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
+                }
             }
         }
     }

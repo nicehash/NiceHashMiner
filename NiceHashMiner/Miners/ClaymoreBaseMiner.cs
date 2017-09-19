@@ -164,8 +164,8 @@ namespace NiceHashMiner.Miners
                     } else {
                         ids.Add(id.ToString());
                     }
-                    if (mPair.Algorithm.TuningEnabled) {
-                        intensities.Add(mPair.Algorithm.CurrentIntensity.ToString());
+                    if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled) {
+                        intensities.Add(algo.CurrentIntensity.ToString());
                     }
                 } else {
                     var id = mPair.Device.ID;
@@ -185,10 +185,12 @@ namespace NiceHashMiner.Miners
         protected override void BenchmarkThreadRoutine(object CommandLine) {
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
-            if (BenchmarkAlgorithm.TuningEnabled) {
-                var stepsLeft = (int)Math.Ceiling((double)(BenchmarkAlgorithm.TuningEnd - BenchmarkAlgorithm.CurrentIntensity) / (BenchmarkAlgorithm.TuningInterval)) + 1;
+            var dualBenchAlgo = BenchmarkAlgorithm as DualAlgorithm;
+
+            if (dualBenchAlgo != null && dualBenchAlgo.TuningEnabled) {
+                var stepsLeft = (int)Math.Ceiling((double)(dualBenchAlgo.TuningEnd - dualBenchAlgo.CurrentIntensity) / (dualBenchAlgo.TuningInterval)) + 1;
                 Helpers.ConsolePrint("CDTUING", "{0} tuning steps remain, should complete in {1} seconds", stepsLeft, stepsLeft * benchmarkTimeWait);
-                Helpers.ConsolePrint("CDTUNING", String.Format("Starting benchmark for intensity {0} out of {1}", BenchmarkAlgorithm.CurrentIntensity, BenchmarkAlgorithm.TuningEnd));
+                Helpers.ConsolePrint("CDTUNING", String.Format("Starting benchmark for intensity {0} out of {1}", dualBenchAlgo.CurrentIntensity, dualBenchAlgo.TuningEnd));
             }
 
             BenchmarkSignalQuit = false;
@@ -303,11 +305,13 @@ namespace NiceHashMiner.Miners
                     if (benchmark_read_count > 0) {
                         var speed = benchmark_sum / benchmark_read_count;
                         var secondarySpeed = secondary_benchmark_sum / secondary_benchmark_read_count;
-                        if (BenchmarkAlgorithm.TuningEnabled) {
-                            BenchmarkAlgorithm.SetIntensitySpeedsForCurrent(speed, secondarySpeed);
-                        } else {
-                            BenchmarkAlgorithm.BenchmarkSpeed = speed;
-                            BenchmarkAlgorithm.SecondaryBenchmarkSpeed = secondarySpeed;
+                        BenchmarkAlgorithm.BenchmarkSpeed = speed;
+                        if (dualBenchAlgo != null) {
+                            if (dualBenchAlgo.TuningEnabled) {
+                                dualBenchAlgo.SetIntensitySpeedsForCurrent(speed, secondarySpeed);
+                            } else {
+                                dualBenchAlgo.SecondaryBenchmarkSpeed = secondarySpeed;
+                            }
                         }
                     }
                 }

@@ -125,7 +125,9 @@ namespace NiceHashMiner.Miners.Grouping {
                             int index = miningDevs[minerDevIndex].Algorithms.FindIndex((a) => a.AlgorithmStringID == algo_id);
                             if(index > -1) {
                                 miningDevs[minerDevIndex].Algorithms[index].AvaragedSpeed = avaragedSpeed;
-                                miningDevs[minerDevIndex].Algorithms[index].SecondaryAveragedSpeed = secondaryAveragedSpeed;
+                                if (miningDevs[minerDevIndex].Algorithms[index] is DualAlgorithm dualAlgo) {
+                                    dualAlgo.SecondaryAveragedSpeed = secondaryAveragedSpeed;
+                                }
                             }
                         }
                     }
@@ -171,16 +173,19 @@ namespace NiceHashMiner.Miners.Grouping {
         public void AddAlgorithms(List<Algorithm> algos) {
             foreach (var algo in algos) {
                 var algo_id = algo.AlgorithmStringID;
+                double secondarySpeed = 0;
+                if (algo is DualAlgorithm dualAlgo) 
+                    secondarySpeed = dualAlgo.SecondaryBenchmarkSpeed;
                 if (BenchmarkSums.ContainsKey(algo_id) == false) {
                     var ssc = new SpeedSumCount();
                     ssc.count = 1;
                     ssc.speed = algo.BenchmarkSpeed;
-                    ssc.secondarySpeed = algo.SecondaryBenchmarkSpeed;
+                    ssc.secondarySpeed = secondarySpeed;
                     BenchmarkSums[algo_id] = ssc;
                 } else {
                     BenchmarkSums[algo_id].count++;
                     BenchmarkSums[algo_id].speed += algo.BenchmarkSpeed;
-                    BenchmarkSums[algo_id].secondarySpeed += algo.SecondaryBenchmarkSpeed;
+                    BenchmarkSums[algo_id].secondarySpeed += secondarySpeed;
                 }
             }
         }

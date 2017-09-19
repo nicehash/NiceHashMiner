@@ -7,8 +7,8 @@ using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
-    class DualAlgorithm : Algorithm {
-        public readonly AlgorithmType SecondaryNiceHashID;
+    public class DualAlgorithm : Algorithm {
+        public AlgorithmType SecondaryNiceHashID;
         // ClaymoreDual intensity tuning
         public int CurrentIntensity = -1;
 
@@ -25,6 +25,9 @@ namespace NiceHashMiner
         private int tuningStartBack;
         private int tuningEndBack;
         public int tuningIntervalBack;
+
+        public double SecondaryCurNhmSMADataVal = 0;
+        public bool IntensityUpToDate = false;
 
         public override double BenchmarkSpeed {
             get {
@@ -117,10 +120,15 @@ namespace NiceHashMiner
                 return NiceHashID;
             }
         }
+        public override bool IsDual {
+            get {
+                return true;
+            }
+        }
 
 
-        DualAlgorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID, string minerName) 
-            : base(minerBaseType, niceHashID, minerName) {
+        public DualAlgorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID) 
+            : base(minerBaseType, niceHashID, "") {
             SecondaryNiceHashID = secondaryNiceHashID;
 
             AlgorithmName = AlgorithmNiceHashNames.GetName(DualNiceHashID);  // needed to add secondary

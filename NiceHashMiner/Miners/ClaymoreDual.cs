@@ -94,10 +94,10 @@ namespace NiceHashMiner.Miners {
         public override void Start(string url, string btcAdress, string worker) {
             // Update to most profitable intensity
             foreach (var mPair in MiningSetup.MiningPairs) {
-                if (mPair.Algorithm.TuningEnabled) {
-                    var intensity = mPair.Algorithm.MostProfitableIntensity;
+                if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled) {
+                    var intensity = algo.MostProfitableIntensity;
                     if (intensity < 0) intensity = defaultIntensity;
-                    mPair.Algorithm.CurrentIntensity = intensity;
+                    algo.CurrentIntensity = intensity;
                 }
             }
             string username = GetUsername(btcAdress, worker);

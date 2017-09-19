@@ -270,10 +270,18 @@ namespace NiceHashMiner.Miners {
                     StringBuilder stringBuilderDevice = new StringBuilder();
                     stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", device.Device.UUID, device.Device.GetFullName()));
                     foreach (var algo in device.Algorithms) {
+                        var speed = algo.AvaragedSpeed.ToString(DOUBLE_FORMAT);
+                        var paying = algo.CurNhmSMADataVal.ToString(DOUBLE_FORMAT);
+                        if (algo is DualAlgorithm dualAlgo) {
+                            speed += "/" + dualAlgo.SecondaryAveragedSpeed.ToString(DOUBLE_FORMAT);
+                            if (dualAlgo.TuningEnabled)
+                                speed += " dcri:" + dualAlgo.MostProfitableIntensity;
+                            paying += "/" + dualAlgo.SecondaryCurNhmSMADataVal;
+                        }
                        stringBuilderDevice.AppendLine(String.Format("\t\tPROFIT = {0}\t(SPEED = {1}\t\t| NHSMA = {2})\t[{3}]",
                             algo.CurrentProfit.ToString(DOUBLE_FORMAT), // Profit
-                            algo.AvaragedSpeed + (algo.IsDual() ? "/" + algo.SecondaryAveragedSpeed : "") + (algo.TuningEnabled ? " dcri:" + algo.MostProfitableIntensity : ""), // Speed
-                            algo.CurNhmSMADataVal + (algo.IsDual() ? "/" + algo.SecondaryCurNhmSMADataVal : ""), // NiceHashData
+                            speed, // Speed
+                            paying, // NiceHashData
                             algo.AlgorithmStringID // Name
                         ));
                     }
@@ -368,8 +376,9 @@ namespace NiceHashMiner.Miners {
                             // Check if dcri optimal value has changed
                             var dcriChanged = false;
                             foreach (var mPair in _runningGroupMiners[runningGroupKey].Miner.MiningSetup.MiningPairs) {
-                                var algo = mPair.Algorithm;
-                                if (algo.TuningEnabled && algo.MostProfitableIntensity != algo.CurrentIntensity) {
+                                if (mPair.Algorithm is DualAlgorithm algo 
+                                    && algo.TuningEnabled 
+                                    && algo.MostProfitableIntensity != algo.CurrentIntensity) {
                                     dcriChanged = true;
                                     break;
                                 }
@@ -433,7 +442,7 @@ namespace NiceHashMiner.Miners {
 
         private AlgorithmType GetMinerPairAlgorithmType(List<MiningPair> miningPairs) {
             if (miningPairs.Count > 0) {
-                return miningPairs[0].Algorithm.DualNiceHashID();
+                return miningPairs[0].Algorithm.DualNiceHashID;
             }
             return AlgorithmType.NONE;
         }
