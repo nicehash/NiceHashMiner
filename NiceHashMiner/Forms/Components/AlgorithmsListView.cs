@@ -18,8 +18,9 @@ namespace NiceHashMiner.Forms.Components {
         private const int ENABLED   = 0;
         private const int ALGORITHM = 1;
         private const int SPEED     = 2;
-        private const int RATIO     = 3;
-        private const int RATE      = 4;
+        private const int SECSPEED  = 3;
+        private const int RATIO     = 4;
+        private const int RATE      = 5;
 
         public interface IAlgorithmsListView {
             void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice);
@@ -81,6 +82,7 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.Columns[ENABLED].Text = International.GetText("AlgorithmsListView_Enabled");
             listViewAlgorithms.Columns[ALGORITHM].Text = International.GetText("AlgorithmsListView_Algorithm");
             listViewAlgorithms.Columns[SPEED].Text = International.GetText("AlgorithmsListView_Speed");
+            listViewAlgorithms.Columns[SECSPEED].Text = International.GetText("Form_DcriValues_SecondarySpeed");
             listViewAlgorithms.Columns[RATIO].Text = International.GetText("AlgorithmsListView_Ratio");
             listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");
         }
@@ -91,11 +93,25 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.Items.Clear();
             foreach (var alg in computeDevice.GetAlgorithmSettings()) {
                 ListViewItem lvi = new ListViewItem();
-                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName));
+
+                var name = "";
+                var secondarySpeed = "";
+                var payingRatio = "";
+                if (alg is DualAlgorithm dualAlg) {
+                    name = "  + " + dualAlg.SecondaryAlgorithmName;
+                    secondarySpeed = dualAlg.SecondaryBenchmarkString();
+                    payingRatio = dualAlg.SecondaryCurPayingRatio;
+                } else {
+                    name = String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName);
+                    payingRatio = alg.CurPayingRatio;
+                }
+
+                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(name);
 
                 //sub.Tag = alg.Value;
                 lvi.SubItems.Add(alg.BenchmarkSpeedString());
-                lvi.SubItems.Add(alg.CurPayingRatio);
+                lvi.SubItems.Add(secondarySpeed);
+                lvi.SubItems.Add(payingRatio);
                 lvi.SubItems.Add(alg.CurPayingRate);
                 lvi.Tag = alg;
                 lvi.Checked = alg.Enabled;

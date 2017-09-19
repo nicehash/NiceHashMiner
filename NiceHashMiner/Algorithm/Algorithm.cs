@@ -70,7 +70,7 @@ namespace NiceHashMiner {
         // benchmark info
         public string BenchmarkStatus { get; set; }
         public bool IsBenchmarkPending { get; private set; }
-        public virtual string CurPayingRatio {
+        public string CurPayingRatio {
             get {
                 string ratio = International.GetText("BenchmarkRatioRateN_A");
                 if (Globals.NiceHashData != null) {

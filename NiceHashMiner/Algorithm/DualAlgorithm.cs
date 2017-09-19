@@ -14,6 +14,7 @@ namespace NiceHashMiner
                 return secondaryNiceHashID;
             }
         }
+        public string SecondaryAlgorithmName = "";
         // ClaymoreDual intensity tuning
         public int CurrentIntensity = -1;
 
@@ -131,12 +132,23 @@ namespace NiceHashMiner
             }
         }
 
+        public string SecondaryCurPayingRatio {
+            get {
+                string ratio = International.GetText("BenchmarkRatioRateN_A");
+                if (Globals.NiceHashData != null && Globals.NiceHashData.ContainsKey(SecondaryNiceHashID)) {
+                    ratio = Globals.NiceHashData[SecondaryNiceHashID].paying.ToString("F8");
+                }
+                return ratio;
+            }
+        }
+
 
         public DualAlgorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID) 
             : base(minerBaseType, niceHashID, "") {
             this.secondaryNiceHashID = secondaryNiceHashID;
 
             AlgorithmName = AlgorithmNiceHashNames.GetName(DualNiceHashID);  // needed to add secondary
+            SecondaryAlgorithmName = AlgorithmNiceHashNames.GetName(secondaryNiceHashID);
             AlgorithmStringID = MinerBaseTypeName + "_" + AlgorithmName;
 
             SecondaryBenchmarkSpeed = 0.0d;
@@ -144,16 +156,7 @@ namespace NiceHashMiner
             IntensitySpeeds = new Dictionary<int, double> { };
             SecondaryIntensitySpeeds = new Dictionary<int, double> { };
         }
-
-        public override string CurPayingRatio {
-            get {
-                string ratio = base.CurPayingRatio;
-                if (Globals.NiceHashData != null && Globals.NiceHashData.ContainsKey(SecondaryNiceHashID)) {
-                    ratio += "/" + Globals.NiceHashData[SecondaryNiceHashID].paying.ToString("F8");
-                }
-                return ratio;
-            }
-        }
+        
         public override string CurPayingRate {
             get {
                 string rate = International.GetText("BenchmarkRatioRateN_A");
@@ -171,13 +174,10 @@ namespace NiceHashMiner
             }
         }
 
-        public override string BenchmarkSpeedString() {
-            if (Enabled && IsBenchmarkPending && !string.IsNullOrEmpty(BenchmarkStatus)) {
-                return BenchmarkStatus;
-            } else if (BenchmarkSpeed > 0) {
-                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, SecondaryBenchmarkSpeed);
-            } else if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus)) {
-                return BenchmarkStatus;
+        public string SecondaryBenchmarkString() {
+            if (SecondaryBenchmarkSpeed > 0) {
+                return Helpers.FormatDualSpeedOutput(SecondaryBenchmarkSpeed) 
+                    + ((TuningEnabled) ? " (dcri:" + MostProfitableIntensity + ")" : "");
             }
             return International.GetText("BenchmarkSpeedStringNone");
         }
