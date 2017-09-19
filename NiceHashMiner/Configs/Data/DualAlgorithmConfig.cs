@@ -13,7 +13,7 @@ namespace NiceHashMiner.Configs.Data
         public Dictionary<int, double> SecondaryIntensitySpeeds = new Dictionary<int, double>();
         public bool TuningEnabled = true;
         public int TuningStart = 25;
-        public int TuningEnd = 200;
+        public int TuningEnd = 250;
         public int TuningInterval = 25;
 
         public void FixSettingsBounds() {
