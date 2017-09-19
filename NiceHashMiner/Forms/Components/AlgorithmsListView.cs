@@ -99,7 +99,7 @@ namespace NiceHashMiner.Forms.Components {
                 var payingRatio = "";
                 if (alg is DualAlgorithm dualAlg) {
                     name = "  + " + dualAlg.SecondaryAlgorithmName;
-                    secondarySpeed = dualAlg.SecondaryBenchmarkString();
+                    secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
                     payingRatio = dualAlg.SecondaryCurPayingRatio;
                 } else {
                     name = String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName);
@@ -126,6 +126,8 @@ namespace NiceHashMiner.Forms.Components {
                 foreach (ListViewItem lvi in listViewAlgorithms.Items) {
                     Algorithm algo = lvi.Tag as Algorithm;
                     lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                    if (algo is DualAlgorithm dualAlg)
+                        lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
                     _listItemCheckColorSetter.LviSetColor(lvi);
                 }
                 this.Enabled = isEnabled;
@@ -179,6 +181,8 @@ namespace NiceHashMiner.Forms.Components {
                             lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
                             lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
                             lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
+                            if (algorithm is DualAlgorithm dualAlg)
+                                lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
                             _listItemCheckColorSetter.LviSetColor(lvi);
                             break;
                         }

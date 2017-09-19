@@ -131,7 +131,7 @@ namespace NiceHashMiner
                 return true;
             }
         }
-
+        
         public string SecondaryCurPayingRatio {
             get {
                 string ratio = International.GetText("BenchmarkRatioRateN_A");
@@ -174,10 +174,18 @@ namespace NiceHashMiner
             }
         }
 
-        public string SecondaryBenchmarkString() {
+        public string SecondaryBenchmarkSpeedString() {
+            var dcriStatus = " (dcri:{0})";
+            if (Enabled && IsBenchmarkPending && TuningEnabled && !string.IsNullOrEmpty(BenchmarkStatus)) {
+                if (CurrentIntensity >= 0) {
+                    return String.Format(dcriStatus, CurrentIntensity);
+                } else {
+                    return BenchmarkSpeedString();
+                }
+            }
             if (SecondaryBenchmarkSpeed > 0) {
                 return Helpers.FormatDualSpeedOutput(SecondaryBenchmarkSpeed) 
-                    + ((TuningEnabled) ? " (dcri:" + MostProfitableIntensity + ")" : "");
+                    + ((TuningEnabled) ? String.Format(dcriStatus, MostProfitableIntensity) : "");
             }
             return International.GetText("BenchmarkSpeedStringNone");
         }
@@ -233,6 +241,15 @@ namespace NiceHashMiner
         public bool StartTuning() {  // Return false if no benchmark needed
             CurrentIntensity = TuningStart;
             return IncrementToNextEmptyIntensity();
+        }
+
+        public override void ClearBenchmarkPending() {
+            base.ClearBenchmarkPending();
+            CurrentIntensity = -1;
+        }
+        public override void ClearBenchmarkPendingFirst() {
+            base.ClearBenchmarkPendingFirst();
+            CurrentIntensity = -1;
         }
 
         public double ProfitForIntensity(int intensity) {

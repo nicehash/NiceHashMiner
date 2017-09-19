@@ -282,11 +282,7 @@ namespace NiceHashMiner.Forms {
         private string getDotsWaitString() {
             ++dotCount;
             if (dotCount > 3) dotCount = 1;
-            string dcriInfo = "";
-            if (_currentAlgorithm is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled) {
-                dcriInfo = " (dcri " + dualAlgo.CurrentIntensity + ")";
-            }
-            return new String('.', dotCount) + dcriInfo;
+            return new String('.', dotCount);
         }
 
         private void InitLocale() {
@@ -406,9 +402,9 @@ namespace NiceHashMiner.Forms {
                 foreach (var algo in deviceAlgosTuple.Item2) {
                     algo.SetBenchmarkPending();
                 }
-            }
-            if (_currentDevice != null) {
-                algorithmsListView1.RepaintStatus(_currentDevice.Enabled, _currentDevice.UUID);
+                if (deviceAlgosTuple.Item1 != null) {
+                    algorithmsListView1.RepaintStatus(deviceAlgosTuple.Item1.Enabled, deviceAlgosTuple.Item1.UUID);
+                }
             }
 
             StartBenchmark();

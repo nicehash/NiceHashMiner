@@ -103,17 +103,19 @@ namespace NiceHashMiner {
 
         protected bool IsPendingString() {
             return BenchmarkStatus == International.GetText("Algorithm_Waiting_Benchmark")
-                || BenchmarkStatus.Contains(".");  // Workaround to allow dcri display
+                || BenchmarkStatus == "."
+                || BenchmarkStatus == ".."
+                || BenchmarkStatus == "...";
         }
 
-        public void ClearBenchmarkPending() {
+        public virtual void ClearBenchmarkPending() {
             IsBenchmarkPending = false;
             if (IsPendingString()) {
                 BenchmarkStatus = "";
             }
         }
 
-        public void ClearBenchmarkPendingFirst() {
+        public virtual void ClearBenchmarkPendingFirst() {
             IsBenchmarkPending = false;
             BenchmarkStatus = "";
         }
