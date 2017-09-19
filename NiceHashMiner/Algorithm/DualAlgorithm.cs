@@ -8,7 +8,12 @@ using NiceHashMiner.Enums;
 namespace NiceHashMiner
 {
     public class DualAlgorithm : Algorithm {
-        public AlgorithmType SecondaryNiceHashID;
+        private AlgorithmType secondaryNiceHashID;
+        public override AlgorithmType SecondaryNiceHashID {
+            get {
+                return secondaryNiceHashID;
+            }
+        }
         // ClaymoreDual intensity tuning
         public int CurrentIntensity = -1;
 
@@ -129,7 +134,7 @@ namespace NiceHashMiner
 
         public DualAlgorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID) 
             : base(minerBaseType, niceHashID, "") {
-            SecondaryNiceHashID = secondaryNiceHashID;
+            this.secondaryNiceHashID = secondaryNiceHashID;
 
             AlgorithmName = AlgorithmNiceHashNames.GetName(DualNiceHashID);  // needed to add secondary
             AlgorithmStringID = MinerBaseTypeName + "_" + AlgorithmName;

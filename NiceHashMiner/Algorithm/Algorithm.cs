@@ -12,6 +12,12 @@ namespace NiceHashMiner {
         public string AlgorithmName { get; protected set; }
         public readonly string MinerBaseTypeName;
         public readonly AlgorithmType NiceHashID;
+        // Useful placeholder for sorting/finding
+        public virtual AlgorithmType SecondaryNiceHashID {
+            get {
+                return AlgorithmType.NONE;
+            }
+        }
         public readonly MinerBaseType MinerBaseType;
         public string AlgorithmStringID { get; protected set; }
         // Miner name is used for miner ALGO flag parameter

@@ -155,13 +155,12 @@ namespace NiceHashMiner.Devices
         }
 
         public Algorithm GetAlgorithm(Algorithm modelAlgo) {
-            var secondaryAlgoType = (modelAlgo is DualAlgorithm dualAlgo) ? dualAlgo.SecondaryNiceHashID : AlgorithmType.NONE;
-            return GetAlgorithm(modelAlgo.MinerBaseType, modelAlgo.NiceHashID, secondaryAlgoType);
+            return GetAlgorithm(modelAlgo.MinerBaseType, modelAlgo.NiceHashID, modelAlgo.SecondaryNiceHashID);
         }
         public Algorithm GetAlgorithm(MinerBaseType MinerBaseType, AlgorithmType AlgorithmType, AlgorithmType SecondaryAlgorithmType) {
             int toSetIndex = this.AlgorithmSettings.FindIndex((a) => a.NiceHashID == AlgorithmType 
             && a.MinerBaseType == MinerBaseType 
-            && (SecondaryAlgorithmType == AlgorithmType.NONE || (a is DualAlgorithm da && da.SecondaryNiceHashID == SecondaryAlgorithmType)));
+            && a.SecondaryNiceHashID == SecondaryAlgorithmType);
             if (toSetIndex > -1) {
                 return this.AlgorithmSettings[toSetIndex];
             }
@@ -288,7 +287,9 @@ namespace NiceHashMiner.Devices
             }
 
             // sort by algo
-            retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0 ? (a_1.NiceHashID - a_2.NiceHashID) : (a_1.MinerBaseType - a_2.MinerBaseType));
+            retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0 ? 
+                (a_1.NiceHashID - a_2.NiceHashID) : ((a_1.MinerBaseType - a_2.MinerBaseType) != 0 ?
+                (a_1.MinerBaseType - a_2.MinerBaseType) : (a_1.SecondaryNiceHashID - a_2.SecondaryNiceHashID)));
 
             return retAlgos;
         }
