@@ -99,7 +99,8 @@
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="3rdParty\NVAPI.cs" />
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
-    <Compile Include="Algorithm.cs" />
+    <Compile Include="Algorithm\Algorithm.cs" />
+    <Compile Include="Algorithm\DualAlgorithm.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CPUComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
