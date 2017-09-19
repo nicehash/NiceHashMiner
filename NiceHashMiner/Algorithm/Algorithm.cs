@@ -41,8 +41,19 @@ namespace NiceHashMiner {
         public double AvaragedSpeed { get; set; }
         // based on device and settings here we set the miner path
         public string MinerBinaryPath = "";
-        // these are changing (logging reasons)
-        public double CurrentProfit = 0;
+
+        public double Power = 0;  // Power this algorithm takes in Watts
+        public double placeholderElecRate = 0.000001;  // Electricity rate in BTC/kWh TODO get from config/exchange
+        private double currentProfit = 0;  // Profitability in BTC/day (without power consideration)
+        public double CurrentProfit {
+            get {
+                // Subtracted is power -> converted to kW -> times rate to give BTC/h loss -> times 24 to BTC/day
+                return currentProfit - (Power * 0.001 * placeholderElecRate * 24);
+            }
+            set {
+                currentProfit = value;
+            }
+        }
         public double CurNhmSMADataVal = 0;
         public virtual bool BenchmarkNeeded {
             get {
