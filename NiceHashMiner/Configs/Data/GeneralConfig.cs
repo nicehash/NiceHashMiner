@@ -75,6 +75,10 @@ namespace NiceHashMiner.Configs.Data {
         public int NormalizedProfitHistory = 15;
         public double IQRNormalizeFactor = 0.0;
 
+        // power calc stuff
+        public double ElectricityRate = 0.0;
+        public string ElectricityRateCurrency = "USD";
+
         // methods
         public void SetDefaults() {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -121,7 +125,9 @@ namespace NiceHashMiner.Configs.Data {
             IQROverFactor = 3.0;
             NormalizedProfitHistory = 15;
             IQRNormalizeFactor = 0.0;
-        }
+            ElectricityRate = 0.0;
+            ElectricityRateCurrency = "USD";
+    }
 
         public void FixSettingBounds() {
             this.ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -172,6 +178,7 @@ namespace NiceHashMiner.Configs.Data {
             if (IQRNormalizeFactor < 0) {
                 IQRNormalizeFactor = 0.0;
             }
+            ElectricityRate = Math.Max(ElectricityRate, 0);
         }
 
     }
