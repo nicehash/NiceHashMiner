@@ -193,7 +193,7 @@
 
     "Form_Settings_ToolTip_Explaination": "Объяснение",
     "Form_Settings_ToolTip_Language": "Изменяет язык по умолчанию для NiceHash Miner Legacy.",
-    "Form_Settings_ToolTip_checkBox_DebugConsole": "Если отмечено, отображает консоль отладки.",
+    "Form_Settings_ToolTip_checkBox_DebugConsole": "Если отмечено, отображается консоль отладки.",
     "Form_Settings_ToolTip_BitcoinAddress": "Биткоин-адрес пользователя для майнинга.",
     "Form_Settings_ToolTip_WorkerName": "Для идентификации компьютера пользователя.",
     "Form_Settings_ToolTip_ServiceLocation": "Устанавливает локацию майнинга. Выбор Гонконга или Токио увеличивает время задержки.",
