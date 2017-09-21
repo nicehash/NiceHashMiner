@@ -215,8 +215,8 @@
 
     "Form_Settings_ToolTip_BenchmarkTimeLimits": "Количество времени в секундах для {0} бенчмарка {1}",
 
-    "Form_Settings_ToolTip_checkBox_DisableDetection": "Отметьте, если хотели бы пропускать определение {0} GPU.",
-    "Form_Settings_ToolTip_checkBox_AutoScaleBTCValues": "Отметьте, если хотели бы видеть значения BTC в подходящем масштабе.",
+    "Form_Settings_ToolTip_checkBox_DisableDetection": "Отметьте, если хотите пропускать определение {0} GPU.",
+    "Form_Settings_ToolTip_checkBox_AutoScaleBTCValues": "Отметьте, если хотите видеть значения BTC в подходящем масштабе.",
     "Form_Settings_ToolTip_checkBox_StartMiningWhenIdle": "Автоматически запускать майнинг, когда компьютер простаивает,\nи останавливать майнинг, когда компьютер используется.",
 
     "Form_Settings_ToolTip_MinIdleSeconds": "Когда \"Запуск майнинга при простое\" отмечено, \"Минимальный простой\" указывает\nсколько секунд компьютер должен простаивать, прежде чем начнется майнинг.",
