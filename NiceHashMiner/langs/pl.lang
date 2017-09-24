@@ -60,7 +60,7 @@
     "Form_Main_msgbox_NoInternetTitle": "Sprawdź połączenie z internetem",
     "Form_Main_msgbox_NoInternetMsg": "NiceHash Miner Legacy wymaga połączenia z internetem. Upewnij się, że działa zanim właczysz NiceHash Miner Legacy. Czy chcesz kontynuować?",
     "Form_Main_msgbox_InvalidBTCAddressMsg": "Nieprawidłowy adres Bitcoin!\n\nWstaw prawidłowy adres Bitcoin lub kliknij Tak by stworzyć nowy.",
-    "Form_Main_msgbox_InvalidWorkerNameMsg": "Nieprawidłowy identyfikator!\n\nUżyj liter i liczb ze zbioru (Aa-Zz, 0-9), maks. 7 znaków.",
+    "Form_Main_msgbox_InvalidWorkerNameMsg": "Nieprawidłowy identyfikator!\n\nUżyj liter i liczb ze zbioru (Aa-Zz, 0-9), maks. 15 znaków.",
     "Form_Main_msgbox_NullNiceHashDataMsg": "Nie można pobrać danych zyskowności NiceHash. Jeśli jesteś połączony z internetem, spróbuj później.",
     "Form_Main_msgbox_HaveNotBenchmarkedMsg": "Nie wykonałeś benchmarków urządzenia {0}. Bez tego NiceHash Miner Legacy nie może przełączać się na najbardziej zyskowny algorytm. aby kontynuować kopanie, wybierz Tak. Aby przejść do benchmarków, wybierz Nie i kliknij na Benchmark.",
     "Form_Main_msgbox_buttonBenchmarkWarningMsg": "Zaawansowane ustawienia są dla zaawansowanych ludzi.\r\n\r\nJeśli {0} zawiesza się przez zły konfig możesz to naprawić kasując plik 'config.json'.\r\n\r\nKontynuować edycję ustawień?",

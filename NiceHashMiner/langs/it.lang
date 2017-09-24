@@ -60,7 +60,7 @@
     "Form_Main_msgbox_NoInternetTitle": "Controlla la connessione a Internet",
     "Form_Main_msgbox_NoInternetMsg": "NiceHash Miner Legacy richiede una connessione a Internet per funzionare. Per favore assicurati di essere connesso a Internet prima di eseguire NiceHash Miner Legacy. Desideri continuare?",
     "Form_Main_msgbox_InvalidBTCAddressMsg": "Indirizzo Bitcoin invalido!\n\nPer favore inserisci un indirizzo Bitcoin valido o clicca Si per crearne uno.",
-    "Form_Main_msgbox_InvalidWorkerNameMsg": "Nome lavoratore invalido!\n\nPer favore inserisci un nome lavoratore valido (Aa-Zz, 0-9, lungo fino a 7 caratteri).",
+    "Form_Main_msgbox_InvalidWorkerNameMsg": "Nome lavoratore invalido!\n\nPer favore inserisci un nome lavoratore valido (Aa-Zz, 0-9, lungo fino a 15 caratteri).",
     "Form_Main_msgbox_NullNiceHashDataMsg": "Impossibile recuperare i dati di redditività di NiceHash. Se sei connesso a Internet, riprova più tardi.",
     "Form_Main_msgbox_HaveNotBenchmarkedMsg": "Non hai eseguito il benchmark per il dispositivo {0}. Senza prima un benchmark, NiceHash Miner Legacy non sarà in grado di passare all'algoritmo più redditizio. Per continuare a minare, clicca Si. Se vuoi prima eseguire un benchmark, clicca No e clicca sul pulsante benchmark.",
     "Form_Main_msgbox_buttonBenchmarkWarningMsg": "Modificare le impostazioni avanzate è per utenti esperti.\r\n\r\nSe {0} crasha a causa del file di configurazione puoi resettarlo cancellando il file 'config.json'.\r\n\r\nContinuare a modificare le impostazioni?",

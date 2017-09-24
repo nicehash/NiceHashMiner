@@ -231,7 +231,7 @@
             // 
             this.textBoxWorkerName.Location = new System.Drawing.Point(113, 65);
             this.textBoxWorkerName.Name = "textBoxWorkerName";
-            this.textBoxWorkerName.Size = new System.Drawing.Size(60, 20);
+            this.textBoxWorkerName.Size = new System.Drawing.Size(120, 20);
             this.textBoxWorkerName.TabIndex = 2;
             this.textBoxWorkerName.Leave += new System.EventHandler(this.textBoxCheckBoxMain_Leave);
             // 
