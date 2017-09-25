@@ -92,6 +92,10 @@ namespace NiceHashMiner
         public void SetMessageAndIncrementStep(string infoMsg) {
             IncreaseLoadCounterAndMessage(infoMsg);
         }
+
+        public DialogResult ShowMessageBox(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon) {
+            return MessageBox.Show(text, caption, buttons, icon);
+        }
         #endregion //IMessageNotifier
 
         #region IMinerUpdateIndicator

@@ -138,6 +138,11 @@ namespace NiceHashMiner.Devices
                 MessageNotifier?.SetMessageAndIncrementStep(infoMsg);
             }
 
+            private static DialogResult showMessageBox(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon = MessageBoxIcon.None) {
+                if (MessageNotifier != null) return MessageNotifier.ShowMessageBox(text, caption, buttons, icon);
+                return DialogResult.Cancel;
+            }
+
             public static IMessageNotifier MessageNotifier { get; private set; }
 
             public static bool CheckVideoControllersCountMismath()
@@ -265,7 +270,7 @@ namespace NiceHashMiner.Devices
                     isNvidiaErrorShown = true;
                     var minDriver = NvidiaMinDetectionDriver.ToString();
                     var recomendDrvier = NvidiaRecomendedDriver.ToString();
-                    MessageBox.Show(string.Format(
+                    showMessageBox(string.Format(
                             International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Detection"),
                             minDriver, recomendDrvier),
                         International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
@@ -281,7 +286,7 @@ namespace NiceHashMiner.Devices
                             International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"),
                             _currentNvidiaSmiDriver)
                         : "";
-                    MessageBox.Show(string.Format(
+                    showMessageBox(string.Format(
                             International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended"),
                             recomendDrvier, nvdriverString, recomendDrvier),
                         International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
@@ -291,7 +296,7 @@ namespace NiceHashMiner.Devices
                 // no devices found
                 if (Avaliable.AllAvaliableDevices.Count <= 0)
                 {
-                    var result = MessageBox.Show(International.GetText("Compute_Device_Query_Manager_No_Devices"),
+                    var result = showMessageBox(International.GetText("Compute_Device_Query_Manager_No_Devices"),
                         International.GetText("Compute_Device_Query_Manager_No_Devices_Title"),
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                     if (result == DialogResult.OK)
@@ -338,7 +343,7 @@ namespace NiceHashMiner.Devices
                 if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && totalSysRam < totalGpuRam)
                 {
                     Helpers.ConsolePrint(Tag, "virtual memory size BAD");
-                    MessageBox.Show(International.GetText("VirtualMemorySize_BAD"),
+                    showMessageBox(International.GetText("VirtualMemorySize_BAD"),
                         International.GetText("Warning_with_Exclamation"),
                         MessageBoxButtons.OK);
                 }
@@ -446,7 +451,7 @@ namespace NiceHashMiner.Devices
                                                vc.Name, vc.Status, vc.PnpDeviceID);
                                 }
                             }
-                            MessageBox.Show(msg,
+                            showMessageBox(msg,
                                 International.GetText("QueryVideoControllers_NOT_ALL_OK_Title"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
@@ -478,7 +483,7 @@ namespace NiceHashMiner.Devices
 
                     if (!Helpers.Is64BitOperatingSystem)
                     {
-                        MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64bitMsg"),
+                        showMessageBox(International.GetText("Form_Main_msgbox_CPUMining64bitMsg"),
                             International.GetText("Warning_with_Exclamation"),
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         Avaliable.CpusCount = 0;
@@ -486,7 +491,7 @@ namespace NiceHashMiner.Devices
 
                     if (threadsPerCpu * Avaliable.CpusCount > 64)
                     {
-                        MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64CoresMsg"),
+                        showMessageBox(International.GetText("Form_Main_msgbox_CPUMining64CoresMsg"),
                             International.GetText("Warning_with_Exclamation"),
                             MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         Avaliable.CpusCount = 0;
