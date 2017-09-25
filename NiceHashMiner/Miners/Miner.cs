@@ -282,7 +282,9 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Shutting down miner");
             }
             if (ProcessHandle != null) {
-                try { ProcessHandle.Kill(); } catch { }
+                try { ProcessHandle.EndProcces(1000); } catch { 
+        			Helpers.ConsolePrint("my", ProcessTag() + " Error End Process");//FIXME:
+        		}
                 //try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
                 ProcessHandle.Close();
                 ProcessHandle = null;
@@ -621,33 +623,48 @@ namespace NiceHashMiner
             if (WorkingDirectory.Length > 1)
             {
                 P.StartInfo.WorkingDirectory = WorkingDirectory;
+                P.StartInfo.FileName = MinerExeName;
+            }else{
+            	P.StartInfo.FileName = Path;
             }
             if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path)) {
                 foreach (var kvp in MinersSettingsManager.MinerSystemVariables[Path]) {
                     string envName = kvp.Key;
                     string envValue = kvp.Value;
-                    P.StartInfo.EnvironmentVariables[envName] = envValue;
+//                    P.StartInfo.EnvironmentVariables[envName] = envValue;
+                    if (Environment.GetEnvironmentVariable(envName) == null)
+	                {
+	                    try { Environment.SetEnvironmentVariable(envName, envValue); }
+	                    catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
+	                }
+	
+	                // Check to make sure all the values are set correctly
+	                if (!Environment.GetEnvironmentVariable(envName).Equals(envValue))
+	                {
+	                    try { Environment.SetEnvironmentVariable(envName, envValue); }
+	                    catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
+	                }
                 }
             }
 
-            P.StartInfo.FileName = Path;
-            P.ExitEvent = Miner_Exited;
+            P.EnableRaisingEvents = true;
+            P.Exited += Miner_Exited;
 
+            P.StartInfo.UseShellExecute = true;
+            P.StartInfo.CreateNoWindow = false;
+            
             P.StartInfo.Arguments = LastCommandLine;
-            if (IsNeverHideMiningWindow) {
-                P.StartInfo.CreateNoWindow = false;
-                if (ConfigManager.GeneralConfig.HideMiningWindows || ConfigManager.GeneralConfig.MinimizeMiningWindows) {
-                    P.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-                    P.StartInfo.UseShellExecute = true;
-                }
-            } else {
-                P.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
+            if (ConfigManager.GeneralConfig.MinimizeMiningWindows) {
+            	P.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+			}
+			if(ConfigManager.GeneralConfig.HideMiningWindows) {
+                P.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             }
-            P.StartInfo.UseShellExecute = false;
+            //P.StartInfo.UseShellExecute = false;
 
             try
             {
-                if (P.Start()) {
+                if (P.StartProcces()) {
                     IsRunning = true;
 
                     _currentPidData = new MinerPID_Data();
@@ -691,7 +708,7 @@ namespace NiceHashMiner
         }
 
 
-        virtual protected void Miner_Exited() {
+        virtual protected void Miner_Exited(object sender, System.EventArgs e) {
             ScheduleRestart(5000);
         }
 
@@ -716,9 +733,14 @@ namespace NiceHashMiner
         protected async Task<string> GetAPIDataAsync(int port, string DataToSend, bool exitHack = false)
         {
             string ResponseFromServer = null;
+            TcpClient tcpc = null;
             try
             {
-                TcpClient tcpc = new TcpClient("127.0.0.1", port);
+                tcpc = new TcpClient("127.0.0.1", port);
+
+                //Receive and Send can block the main thread, if the API version does not match.
+                tcpc.Client.ReceiveTimeout = 2000;
+                tcpc.Client.SendTimeout = 2000;
 
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
                 tcpc.Client.Send(BytesToSend);
@@ -756,8 +778,6 @@ namespace NiceHashMiner
                     }
                 }
 
-                tcpc.Close();
-
                 if (offset > 0)
                     ResponseFromServer = ASCIIEncoding.ASCII.GetString(IncomingBuffer);
             }
@@ -765,6 +785,13 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " GetAPIData reason: " + ex.Message);
                 return null;
+            }
+            finally
+            {
+                if (tcpc != null)
+                {
+                    tcpc.Close();
+                }
             }
 
             return ResponseFromServer;

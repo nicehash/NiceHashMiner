@@ -280,11 +280,11 @@ namespace NiceHashMiner.Miners {
                 string dataToSend = GetHttpRequestNHMAgentStrin("api.json");
                 string respStr = await GetAPIDataAsync(APIPort, dataToSend);
 
-                if (respStr.IndexOf("HTTP/1.1 200 OK") > -1) {
-                    respStr = respStr.Substring(respStr.IndexOf(HTTPHeaderDelimiter) + HTTPHeaderDelimiter.Length);
-                } else if (String.IsNullOrEmpty(respStr)) {
+                if (String.IsNullOrEmpty(respStr)) {
                     _currentMinerReadStatus = MinerAPIReadStatus.NETWORK_EXCEPTION;
                     throw new Exception("Response is empty!");
+                } else if (respStr.IndexOf("HTTP/1.1 200 OK") > -1) {
+                    respStr = respStr.Substring(respStr.IndexOf(HTTPHeaderDelimiter) + HTTPHeaderDelimiter.Length);
                 } else {
                     throw new Exception("Response not HTTP formed! " + respStr);
                 }
