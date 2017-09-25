@@ -407,7 +407,7 @@ namespace NiceHashMiner
             StartupTimer.Start();
         }
 
-        private void SMAMinerCheck_Tick(object sender, EventArgs e)
+        private async void SMAMinerCheck_Tick(object sender, EventArgs e)
         {
             SMAMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 + R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             if (ComputeDeviceManager.Group.ContainsAMD_GPUs) {
@@ -419,7 +419,7 @@ namespace NiceHashMiner
 #endif
             if (isSMAUpdated) {  // Don't bother checking for new profits unless SMA has changed
                 isSMAUpdated = false;
-                MinersManager.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
+                await MinersManager.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
             }
         }
 

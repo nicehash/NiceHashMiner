@@ -117,7 +117,7 @@ namespace NiceHashMiner.Miners {
 
         public override Task<APIData> GetSummaryAsync() {
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
-
+            
             bool ismining;
             var getSpeedStatus = GetSpeed(out ismining, out ad.Speed);
             if (GetSpeedStatus.GOT == getSpeedStatus) {
@@ -137,7 +137,7 @@ namespace NiceHashMiner.Miners {
             //Helpers.ConsolePrint(MinerTAG(), "ethminer is not running.. restarting..");
             //IsRunning = false;
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-            return null;
+            return Task.FromResult<APIData>(null);
         }
 
         protected override NiceHashProcess _Start() {

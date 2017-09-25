@@ -245,7 +245,7 @@ namespace NiceHashMiner.Miners {
             return shouldMine;
         }
 
-        public void SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData, bool log = true) {
+        public async Task SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData, bool log = true) {
 #if (SWITCH_TESTING)
             MiningDevice.SetNextTest();
 #endif
@@ -419,7 +419,7 @@ namespace NiceHashMiner.Miners {
 
             // stats quick fix code
             //if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
-                MinerStatsCheck(NiceHashData);
+                await MinerStatsCheck(NiceHashData);
             //}
         }
 
