@@ -670,16 +670,20 @@ namespace NiceHashMiner
         }
 
         protected void StartCoolDownTimerChecker() {
-            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Starting cooldown checker");
-            if (_cooldownCheckTimer != null && _cooldownCheckTimer.Enabled) _cooldownCheckTimer.Stop();
-            // cool down init
-            _cooldownCheckTimer = new Timer() {
-                Interval = _MIN_CooldownTimeInMilliseconds
-            };
-            _cooldownCheckTimer.Elapsed += MinerCoolingCheck_Tick;
-            _cooldownCheckTimer.Start();
-            _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
-            _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
+            if (ConfigManager.GeneralConfig.CoolDownCheckEnabled) {
+                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Starting cooldown checker");
+                if (_cooldownCheckTimer != null && _cooldownCheckTimer.Enabled) _cooldownCheckTimer.Stop();
+                // cool down init
+                _cooldownCheckTimer = new Timer() {
+                    Interval = _MIN_CooldownTimeInMilliseconds
+                };
+                _cooldownCheckTimer.Elapsed += MinerCoolingCheck_Tick;
+                _cooldownCheckTimer.Start();
+                _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
+                _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
+            } else {
+                Helpers.ConsolePrint(MinerTAG(), "Cooldown checker disabled");
+            }
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
         }
 

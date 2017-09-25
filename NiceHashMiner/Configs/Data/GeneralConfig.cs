@@ -75,6 +75,8 @@ namespace NiceHashMiner.Configs.Data {
         public int NormalizedProfitHistory = 15;
         public double IQRNormalizeFactor = 0.0;
 
+        public bool CoolDownCheckEnabled = true;
+
         // methods
         public void SetDefaults() {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -121,6 +123,7 @@ namespace NiceHashMiner.Configs.Data {
             IQROverFactor = 3.0;
             NormalizedProfitHistory = 15;
             IQRNormalizeFactor = 0.0;
+            CoolDownCheckEnabled = true;
         }
 
         public void FixSettingBounds() {
