@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -268,19 +269,18 @@ namespace NiceHashMiner.Miners
             return 0;
         }
 
-        public override APIData GetSummary() {
+        public override async Task<APIData> GetSummaryAsync() {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
-
             TcpClient client = null;
             JsonApiResponse resp = null;
             try {
                 byte[] bytesToSend = Encoding.ASCII.GetBytes("{\"method\":\"getstat\"}\n");
                 client = new TcpClient("127.0.0.1", APIPort);
                 NetworkStream nwStream = client.GetStream();
-                nwStream.Write(bytesToSend, 0, bytesToSend.Length);
+                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
                 byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-                int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+                int bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                 string respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
                 resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
                 client.Close();

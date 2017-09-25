@@ -423,8 +423,8 @@ namespace NiceHashMiner
             }
         }
 
-        private void MinerStatsCheck_Tick(object sender, EventArgs e) {
-            MinersManager.MinerStatsCheck(Globals.NiceHashData);
+        async private void MinerStatsCheck_Tick(object sender, EventArgs e) {
+            await MinersManager.MinerStatsCheck(Globals.NiceHashData);
         }
 
         private void InitFlowPanelStart() {
@@ -482,8 +482,10 @@ namespace NiceHashMiner
             string rateCurrencyString = ExchangeRateAPI.ConvertToActiveCurrency(paying * Globals.BitcoinUSDRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", ExchangeRateAPI.ActiveDisplayCurrency) + International.GetText("Day");
 
-            ((GroupProfitControl)flowLayoutPanelRates.Controls[flowLayoutPanelRatesIndex++])
-                .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBTCString, rateCurrencyString);
+            try {  // flowLayoutPanelRatesIndex may be OOB, so catch
+                ((GroupProfitControl)flowLayoutPanelRates.Controls[flowLayoutPanelRatesIndex++])
+                    .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBTCString, rateCurrencyString);
+            } catch { }
 
             UpdateGlobalRate();
         }

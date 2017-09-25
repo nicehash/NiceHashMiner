@@ -7,6 +7,7 @@ using System.Text;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Configs;
 using System.IO;
+using System.Threading.Tasks;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
@@ -429,16 +430,18 @@ namespace NiceHashMiner.Miners {
             return AlgorithmType.NONE;
         }
 
-        public void MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
+        public async Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
             double CurrentProfit = 0.0d;
             _mainFormRatesComunication.ClearRates(_runningGroupMiners.Count);
             foreach (var groupMiners in _runningGroupMiners.Values) {
                 Miner m = groupMiners.Miner;
 
-                // skip if not running
-                if (!m.IsRunning) continue;
+                // skip if not running or if await already in progress
+                if (!m.IsRunning || m.IsUpdatingAPI) continue;
 
-                APIData AD = m.GetSummary();
+                m.IsUpdatingAPI = true;
+                APIData AD = await m.GetSummaryAsync();
+                m.IsUpdatingAPI = false;
                 if (AD == null) {
                     Helpers.ConsolePrint(m.MinerTAG(), "GetSummary returned null..");
                 }

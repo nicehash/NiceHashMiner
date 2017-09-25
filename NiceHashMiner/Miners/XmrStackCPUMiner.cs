@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
     
@@ -272,12 +273,12 @@ namespace NiceHashMiner.Miners {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        public override APIData GetSummary() {
+        public override async Task<APIData> GetSummaryAsync() {
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
             
             try {
                 string dataToSend = GetHttpRequestNHMAgentStrin("api.json");
-                string respStr = GetAPIData(APIPort, dataToSend);
+                string respStr = await GetAPIDataAsync(APIPort, dataToSend);
 
                 if (respStr.IndexOf("HTTP/1.1 200 OK") > -1) {
                     respStr = respStr.Substring(respStr.IndexOf(HTTPHeaderDelimiter) + HTTPHeaderDelimiter.Length);

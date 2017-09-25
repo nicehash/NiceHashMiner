@@ -14,6 +14,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners.Grouping;
+using System.Threading.Tasks;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
@@ -126,6 +127,8 @@ namespace NiceHashMiner
         private bool NeedsRestart = false;
 
         private bool isEnded = false;
+
+        public bool IsUpdatingAPI = false;
 
         public Miner(string minerDeviceName)
         {
@@ -710,7 +713,7 @@ namespace NiceHashMiner
             }
         }
 
-        protected string GetAPIData(int port, string DataToSend, bool exitHack = false)
+        protected async Task<string> GetAPIDataAsync(int port, string DataToSend, bool exitHack = false)
         {
             string ResponseFromServer = null;
             try
@@ -727,7 +730,7 @@ namespace NiceHashMiner
 
                 while (!fin && tcpc.Client.Connected)
                 {
-                    int r = tcpc.Client.Receive(IncomingBuffer, offset, 5000 - offset, SocketFlags.None);
+                    int r = await tcpc.GetStream().ReadAsync(IncomingBuffer, offset, 5000 - offset);
                     for (int i = offset; i < offset + r; i++)
                     {
                         if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
@@ -767,7 +770,7 @@ namespace NiceHashMiner
             return ResponseFromServer;
         }
 
-        public abstract APIData GetSummary();
+        public abstract Task<APIData> GetSummaryAsync();
 
         protected string GetHttpRequestNHMAgentStrin(string cmd) {
             return "GET /" + cmd + " HTTP/1.1\r\n" +
@@ -776,7 +779,7 @@ namespace NiceHashMiner
                     "\r\n";
         }
 
-        protected APIData GetSummaryCPU_CCMINER() {
+        protected async Task<APIData> GetSummaryCPU_CCMINERAsync() {
             string resp;
             // TODO aname
             string aname = null;
@@ -784,7 +787,7 @@ namespace NiceHashMiner
 
             string DataToSend = GetHttpRequestNHMAgentStrin("summary");
 
-            resp = GetAPIData(APIPort, DataToSend);
+            resp = await GetAPIDataAsync(APIPort, DataToSend);
             if (resp == null) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
