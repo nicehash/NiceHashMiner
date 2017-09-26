@@ -131,14 +131,22 @@ namespace NiceHashMiner.Miners {
             string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
             string deviceStringCommand = " -di ";
             List<string> ids = new List<string>();
+
+            int amdDeviceCount = ComputeDeviceManager.Query.amdGpus.Count;
+            Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
+            if (this is ClaymoreDual && amdDeviceCount == 0) {
+                // No AMD devices are loaded, so instruct CD to only consider NV devices
+                // This will prevent issues if e.g. a user has AMD GPUs or APUs but has device detection disabled
+                deviceStringCommand = " -platform 2" + deviceStringCommand;
+                amdDeviceCount = 0;
+            }
             foreach (var mPair in MiningSetup.MiningPairs) {
                 if (this is ClaymoreDual || this is ClaymoreZcashMiner) {
-                    int amdDeviceCount = ComputeDeviceManager.Query.amdGpus.Count;
-                    Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
                     var id = mPair.Device.IDByBus;
                     if (id < 0) {
                         // should never happen
-                        Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id.ToString());
+                        Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id.ToString() + " skipping device");
+                        continue;
                     }
                     if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
                         Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
