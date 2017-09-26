@@ -27,7 +27,20 @@ namespace NiceHashMiner.Miners {
             LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -o " + url + " -u " + username + " -p x -dbg -1";
             ProcessHandle = _Start();
         }
-        
+
+        protected override string GetDevicesCommandString() {
+            string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+            string deviceStringCommand = " -di ";
+            List<string> ids = new List<string>();
+            foreach (var mPair in MiningSetup.MiningPairs) {
+                    var id = mPair.Device.ID;
+                    ids.Add(id.ToString());
+            }
+            deviceStringCommand += String.Join("", ids);
+
+            return deviceStringCommand + extraParams;
+        }
+
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {

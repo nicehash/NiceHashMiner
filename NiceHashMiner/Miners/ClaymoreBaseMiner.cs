@@ -13,6 +13,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace NiceHashMiner.Miners {
     public abstract class ClaymoreBaseMiner : Miner {
@@ -127,47 +128,48 @@ namespace NiceHashMiner.Miners {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
+        protected virtual string DeviceCommand(int amdCount = 1) {
+            return " -di ";
+        }
+
+        // This method now overridden in ClaymoreCryptoNightMiner 
+        // Following logic for ClaymoreDual and ClaymoreZcash
         protected override string GetDevicesCommandString() {
-            string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
-            string deviceStringCommand = " -di ";
+            // First by device type (AMD then NV), then by bus ID index
+            var sortedMinerPairs = MiningSetup.MiningPairs
+                .OrderByDescending(pair => pair.Device.DeviceType)
+                .ThenBy(pair => pair.Device.IDByBus)
+                .ToList();
+            string extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
+
             List<string> ids = new List<string>();
 
             int amdDeviceCount = ComputeDeviceManager.Query.amdGpus.Count;
             Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
-            if (this is ClaymoreDual && amdDeviceCount == 0) {
-                // No AMD devices are loaded, so instruct CD to only consider NV devices
-                // This will prevent issues if e.g. a user has AMD GPUs or APUs but has device detection disabled
-                deviceStringCommand = " -platform 2" + deviceStringCommand;
-                amdDeviceCount = 0;
-            }
-            foreach (var mPair in MiningSetup.MiningPairs) {
-                if (this is ClaymoreDual || this is ClaymoreZcashMiner) {
-                    var id = mPair.Device.IDByBus;
-                    if (id < 0) {
-                        // should never happen
-                        Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id.ToString() + " skipping device");
-                        continue;
-                    }
-                    if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
-                        Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
-                        id += amdDeviceCount;
-                    }
-                    if (id > 9) {  // New >10 GPU support in CD9.8
-                        if (id < 36) {  // CD supports 0-9 and a-z indexes, so 36 GPUs
-                            char idchar = (char)(id + 87);  // 10 = 97(a), 11 - 98(b), etc
-                            ids.Add(idchar.ToString());
-                        } else {
-                            Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
-                        }
+
+            foreach (var mPair in sortedMinerPairs) {
+                var id = mPair.Device.IDByBus;
+                if (id < 0) {
+                    // should never happen
+                    Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id.ToString() + " skipping device");
+                    continue;
+                }
+                if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
+                    Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
+                    id += amdDeviceCount;
+                }
+                if (id > 9) {  // New >10 GPU support in CD9.8
+                    if (id < 36) {  // CD supports 0-9 and a-z indexes, so 36 GPUs
+                        char idchar = (char)(id + 87);  // 10 = 97(a), 11 - 98(b), etc
+                        ids.Add(idchar.ToString());
                     } else {
-                        ids.Add(id.ToString());
+                        Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
                     }
                 } else {
-                    var id = mPair.Device.ID;
                     ids.Add(id.ToString());
                 }
             }
-            deviceStringCommand += String.Join("", ids);
+            var deviceStringCommand = DeviceCommand(amdDeviceCount) + String.Join("", ids);
 
             return deviceStringCommand + extraParams;
         }
