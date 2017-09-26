@@ -277,6 +277,7 @@ namespace NiceHashMiner.Miners {
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
             
             try {
+                _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
                 string dataToSend = GetHttpRequestNHMAgentStrin("api.json");
                 string respStr = await GetAPIDataAsync(APIPort, dataToSend);
 
