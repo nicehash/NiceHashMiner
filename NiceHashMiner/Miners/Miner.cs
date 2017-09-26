@@ -719,18 +719,23 @@ namespace NiceHashMiner
             try
             {
                 TcpClient tcpc = new TcpClient("127.0.0.1", port);
+                var nwStream = tcpc.GetStream();
 
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
-                tcpc.Client.Send(BytesToSend);
+                await nwStream.WriteAsync(BytesToSend, 0, BytesToSend.Length);
 
                 byte[] IncomingBuffer = new byte[5000];
                 int prevOffset = -1;
                 int offset = 0;
                 bool fin = false;
 
+                // Timeout whole read operation 
+                Stopwatch timeoutTimer = new Stopwatch();
+                timeoutTimer.Start();
+
                 while (!fin && tcpc.Client.Connected)
                 {
-                    int r = await tcpc.GetStream().ReadAsync(IncomingBuffer, offset, 5000 - offset);
+                    int r = await nwStream.ReadAsync(IncomingBuffer, offset, 5000 - offset);
                     for (int i = offset; i < offset + r; i++)
                     {
                         if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
@@ -753,6 +758,11 @@ namespace NiceHashMiner
                             break;
                         }
                         prevOffset = offset;
+                    }
+                    if (timeoutTimer.ElapsedMilliseconds > 5000) {
+                        timeoutTimer.Stop();
+                        fin = true;
+                        throw new TimeoutException("Network receiving timed out");
                     }
                 }
 
