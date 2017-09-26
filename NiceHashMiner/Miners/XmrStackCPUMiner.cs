@@ -294,7 +294,7 @@ namespace NiceHashMiner.Miners {
 
                 if (resp != null) {
                     JArray totals = resp.hashrate.total;
-                    if (totals.First != null) {
+                    if (totals.First != null && totals.First.Type != JTokenType.Null) {
                         ad.Speed = totals.First.Value<double>();
                         if (ad.Speed == 0) {
                             _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
