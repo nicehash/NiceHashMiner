@@ -729,10 +729,6 @@ namespace NiceHashMiner
                 int offset = 0;
                 bool fin = false;
 
-                // Timeout whole read operation 
-                Stopwatch timeoutTimer = new Stopwatch();
-                timeoutTimer.Start();
-
                 while (!fin && tcpc.Client.Connected)
                 {
                     int r = await nwStream.ReadAsync(IncomingBuffer, offset, 5000 - offset);
@@ -758,11 +754,6 @@ namespace NiceHashMiner
                             break;
                         }
                         prevOffset = offset;
-                    }
-                    if (timeoutTimer.ElapsedMilliseconds > 5000) {
-                        timeoutTimer.Stop();
-                        fin = true;
-                        throw new TimeoutException("Network receiving timed out");
                     }
                 }
 
