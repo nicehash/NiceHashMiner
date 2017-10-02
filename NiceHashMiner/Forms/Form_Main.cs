@@ -37,7 +37,7 @@ namespace NiceHashMiner
         private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;
         private Timer IdleCheck;
-        private Timer ComputeDevicesCheckTimer;
+        private SystemTimer ComputeDevicesCheckTimer;
 
         private bool ShowWarningNiceHashData;
         private bool DemoMode;
@@ -957,8 +957,8 @@ namespace NiceHashMiner
             MinerStatsCheck.Start();
 
             if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost) {
-                ComputeDevicesCheckTimer = new Timer();
-                ComputeDevicesCheckTimer.Tick += ComputeDevicesCheckTimer_Tick;
+                ComputeDevicesCheckTimer = new SystemTimer();
+                ComputeDevicesCheckTimer.Elapsed += ComputeDevicesCheckTimer_Tick;
                 ComputeDevicesCheckTimer.Interval = 60000;
 
                 ComputeDevicesCheckTimer.Start();
