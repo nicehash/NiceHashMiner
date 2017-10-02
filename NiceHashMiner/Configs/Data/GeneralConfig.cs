@@ -14,6 +14,7 @@ namespace NiceHashMiner.Configs.Data {
         public bool DebugConsole = false;
         public string BitcoinAddress = "";
         public string WorkerName = "worker1";
+        public TimeUnitType TimeUnit = TimeUnitType.Day;
         public string IFTTTKey = "";
         public int ServiceLocation = 0;
         public bool AutoStartMining = false;
@@ -84,6 +85,7 @@ namespace NiceHashMiner.Configs.Data {
             ForceCPUExtension = CPUExtensionType.Automatic;
             BitcoinAddress = "";
             WorkerName = "worker1";
+            TimeUnit = TimeUnitType.Day;
             ServiceLocation = 0;
             AutoStartMining = false;
             //LessThreads = 0;
