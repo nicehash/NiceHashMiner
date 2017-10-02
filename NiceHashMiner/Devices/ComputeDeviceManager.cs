@@ -121,8 +121,7 @@ namespace NiceHashMiner.Devices
 
             public static IMessageNotifier MessageNotifier { get; private set; }
 
-            public static bool CheckVideoControllersCountMismath()
-            {
+            public static bool CheckVideoControllersCountMismath() {
                 // this function checks if count of CUDA devices is same as it was on application start, reason for that is
                 // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
                 // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
@@ -332,13 +331,11 @@ namespace NiceHashMiner.Devices
                     stringBuilder.AppendLine("QueryVideoControllers: ");
                     ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get();
                     bool allVideoContollersOK = true;
-                    foreach (var manObj in moc)
-                    {
+                    foreach (var manObj in moc) {
                         ulong memTmp = 0;
                         //Int16 ram_Str = manObj["ProtocolSupported"] as Int16; manObj["AdapterRAM"] as string
                         UInt64.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out memTmp);
-                        var vidController = new VideoControllerData()
-                        {
+                        var vidController = new VideoControllerData() {
                             Name = SafeGetProperty(manObj, "Name"),
                             Description = SafeGetProperty(manObj, "Description"),
                             PNPDeviceID = SafeGetProperty(manObj, "PNPDeviceID"),
@@ -357,8 +354,7 @@ namespace NiceHashMiner.Devices
                         stringBuilder.AppendLine(String.Format("\t\tAdapterRAM {0}", vidController.AdapterRAM));
 
                         // check if controller ok
-                        if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok"))
-                        {
+                        if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok")) {
                             allVideoContollersOK = false;
                         }
 
@@ -366,15 +362,11 @@ namespace NiceHashMiner.Devices
                     }
                     Helpers.ConsolePrint(TAG, stringBuilder.ToString());
 
-                    if (warningsEnabled)
-                    {
-                        if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK)
-                        {
+                    if (warningsEnabled) {
+                        if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK) {
                             string msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
-                            foreach (var vc in avaliableVideoControllers)
-                            {
-                                if (!vc.Status.ToLower().Equals("ok"))
-                                {
+                            foreach (var vc in avaliableVideoControllers) {
+                                if (!vc.Status.ToLower().Equals("ok")) {
                                     msg += Environment.NewLine
                                         + String.Format(International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg_Append"), vc.Name, vc.Status, vc.PNPDeviceID);
                                 }
@@ -456,13 +448,11 @@ namespace NiceHashMiner.Devices
                     return ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
                 }
 
-                static public void QueryCudaDevices()
-                {
+                static public void QueryCudaDevices() {
                     Helpers.ConsolePrint(TAG, "QueryCudaDevices START");
                     QueryCudaDevices(ref CUDA_Devices);
 
-                    if (CUDA_Devices != null && CUDA_Devices.Count != 0)
-                    {
+                    if (CUDA_Devices != null && CUDA_Devices.Count != 0) {
                         Avaliable.HasNVIDIA = true;
                         StringBuilder stringBuilder = new StringBuilder();
                         stringBuilder.AppendLine("");
@@ -470,35 +460,23 @@ namespace NiceHashMiner.Devices
 
                         // Enumerate NVAPI handles and map to busid
                         var idHandles = new Dictionary<int, NvPhysicalGpuHandle>();
-                        if (NVAPI.IsAvailable)
-                        {
+                        if (NVAPI.IsAvailable) {
                             NvPhysicalGpuHandle[] handles = new NvPhysicalGpuHandle[NVAPI.MAX_PHYSICAL_GPUS];
                             int count;
-                            if (NVAPI.NvAPI_EnumPhysicalGPUs == null)
-                            {
+                            if (NVAPI.NvAPI_EnumPhysicalGPUs == null) {
                                 Helpers.ConsolePrint("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable");
-                            }
-                            else
-                            {
+                            } else {
                                 var status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out count);
-                                if (status != NvStatus.OK)
-                                {
+                                if (status != NvStatus.OK) {
                                     Helpers.ConsolePrint("NVAPI", "Enum physical GPUs failed with status: " + status);
-                                }
-                                else
-                                {
-                                    foreach (var handle in handles)
-                                    {
+                                } else {
+                                    foreach (var handle in handles) {
                                         int id = -1;
                                         var idStatus = NVAPI.NvAPI_GPU_GetBusID(handle, out id);
-                                        if (idStatus != NvStatus.EXPECTED_PHYSICAL_GPU_HANDLE)
-                                        {
-                                            if (idStatus != NvStatus.OK)
-                                            {
+                                        if (idStatus != NvStatus.EXPECTED_PHYSICAL_GPU_HANDLE) {
+                                            if (idStatus != NvStatus.OK) {
                                                 Helpers.ConsolePrint("NVAPI", "Bus ID get failed with status: " + idStatus);
-                                            }
-                                            else
-                                            {
+                                            } else {
                                                 Helpers.ConsolePrint("NVAPI", "Found handle for busid " + id);
                                                 idHandles[id] = handle;
                                             }
@@ -508,8 +486,7 @@ namespace NiceHashMiner.Devices
                             }
                         }
 
-                        foreach (var cudaDev in CUDA_Devices)
-                        {
+                        foreach (var cudaDev in CUDA_Devices) {
                             // check sm vesrions
                             bool isUnderSM21;
                             {
@@ -532,11 +509,9 @@ namespace NiceHashMiner.Devices
                             stringBuilder.AppendLine(String.Format("\t\tMEMORY: {0}", cudaDev.DeviceGlobalMemory.ToString()));
                             stringBuilder.AppendLine(String.Format("\t\tETHEREUM: {0}", etherumCapableStr));
 
-                            if (!skip)
-                            {
+                            if (!skip) {
                                 DeviceGroupType group;
-                                switch (cudaDev.SM_major)
-                                {
+                                switch (cudaDev.SM_major) {
                                     case 2:
                                         group = DeviceGroupType.NVIDIA_2_1;
                                         break;
@@ -565,8 +540,7 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint(TAG, "QueryCudaDevices END");
                 }
 
-                static public void QueryCudaDevices(ref List<CudaDevice> cudaDevices)
-                {
+                static public void QueryCudaDevices(ref List<CudaDevice> cudaDevices) {
                     QueryCudaDevicesString = "";
 
                     Process CudaDevicesDetection = new Process();

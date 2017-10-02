@@ -956,8 +956,7 @@ namespace NiceHashMiner
             SMAMinerCheck.Start();
             MinerStatsCheck.Start();
 
-            if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
-            {
+            if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost) {
                 ComputeDevicesCheckTimer = new Timer();
                 ComputeDevicesCheckTimer.Tick += ComputeDevicesCheckTimer_Tick;
                 ComputeDevicesCheckTimer.Interval = 60000;

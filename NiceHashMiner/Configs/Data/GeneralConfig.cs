@@ -122,6 +122,7 @@ namespace NiceHashMiner.Configs.Data {
             IQROverFactor = 3.0;
             NormalizedProfitHistory = 15;
             IQRNormalizeFactor = 0.0;
+            RunScriptOnCUDA_GPU_Lost = false;
         }
 
         public void FixSettingBounds() {
