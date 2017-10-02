@@ -30,6 +30,8 @@
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.PictureBox();
+            this.checkBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.CheckBox();
             this.pictureBox_ShowInternetConnectionWarning = new System.Windows.Forms.PictureBox();
             this.checkBox_ShowInternetConnectionWarning = new System.Windows.Forms.CheckBox();
             this.checkBox_MinimizeMiningWindows = new System.Windows.Forms.CheckBox();
@@ -154,6 +156,7 @@
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).BeginInit();
@@ -219,7 +222,7 @@
             this.tabControlGeneral.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControlGeneral.Name = "tabControlGeneral";
             this.tabControlGeneral.SelectedIndex = 0;
-            this.tabControlGeneral.Size = new System.Drawing.Size(816, 513);
+            this.tabControlGeneral.Size = new System.Drawing.Size(816, 542);
             this.tabControlGeneral.TabIndex = 0;
             this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControlGeneral_Selected);
             // 
@@ -233,13 +236,15 @@
             this.tabPageGeneral.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPageGeneral.Size = new System.Drawing.Size(808, 484);
+            this.tabPageGeneral.Size = new System.Drawing.Size(808, 513);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
             // groupBox_Misc
             // 
+            this.groupBox_Misc.Controls.Add(this.pictureBox_RunScriptOnCUDA_GPU_Lost);
+            this.groupBox_Misc.Controls.Add(this.checkBox_RunScriptOnCUDA_GPU_Lost);
             this.groupBox_Misc.Controls.Add(this.pictureBox_ShowInternetConnectionWarning);
             this.groupBox_Misc.Controls.Add(this.checkBox_ShowInternetConnectionWarning);
             this.groupBox_Misc.Controls.Add(this.checkBox_MinimizeMiningWindows);
@@ -278,10 +283,32 @@
             this.groupBox_Misc.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox_Misc.Name = "groupBox_Misc";
             this.groupBox_Misc.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox_Misc.Size = new System.Drawing.Size(325, 471);
+            this.groupBox_Misc.Size = new System.Drawing.Size(325, 498);
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
+            // 
+            // pictureBox_RunScriptOnCUDA_GPU_Lost
+            // 
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(296, 471);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Name = "pictureBox_RunScriptOnCUDA_GPU_Lost";
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.TabIndex = 373;
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.TabStop = false;
+            // 
+            // checkBox_RunScriptOnCUDA_GPU_Lost
+            // 
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.AutoSize = true;
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(8, 471);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Name = "checkBox_RunScriptOnCUDA_GPU_Lost";
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(247, 21);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.TabIndex = 372;
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Text = "Run script when CUDA GPU is lost";
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.UseVisualStyleBackColor = true;
             // 
             // pictureBox_ShowInternetConnectionWarning
             // 
@@ -850,7 +877,7 @@
             // pictureBox_MinProfit
             // 
             this.pictureBox_MinProfit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_MinProfit.Location = new System.Drawing.Point(173, 126);
+            this.pictureBox_MinProfit.Location = new System.Drawing.Point(173, 127);
             this.pictureBox_MinProfit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox_MinProfit.Name = "pictureBox_MinProfit";
             this.pictureBox_MinProfit.Size = new System.Drawing.Size(18, 18);
@@ -911,7 +938,7 @@
             // label_MinProfit
             // 
             this.label_MinProfit.AutoSize = true;
-            this.label_MinProfit.Location = new System.Drawing.Point(13, 129);
+            this.label_MinProfit.Location = new System.Drawing.Point(13, 127);
             this.label_MinProfit.Name = "label_MinProfit";
             this.label_MinProfit.Size = new System.Drawing.Size(153, 17);
             this.label_MinProfit.TabIndex = 357;
@@ -1101,7 +1128,7 @@
             this.tabPageAdvanced.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(808, 484);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(808, 513);
             this.tabPageAdvanced.TabIndex = 2;
             this.tabPageAdvanced.Text = "Advanced";
             this.tabPageAdvanced.UseVisualStyleBackColor = true;
@@ -1534,7 +1561,7 @@
             this.tabPageDevicesAlgos.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPageDevicesAlgos.Name = "tabPageDevicesAlgos";
             this.tabPageDevicesAlgos.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(808, 484);
+            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(808, 513);
             this.tabPageDevicesAlgos.TabIndex = 1;
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
@@ -1608,7 +1635,7 @@
             // buttonSaveClose
             // 
             this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(464, 535);
+            this.buttonSaveClose.Location = new System.Drawing.Point(464, 564);
             this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonSaveClose.Name = "buttonSaveClose";
             this.buttonSaveClose.Size = new System.Drawing.Size(179, 28);
@@ -1620,7 +1647,7 @@
             // buttonDefaults
             // 
             this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(360, 535);
+            this.buttonDefaults.Location = new System.Drawing.Point(360, 564);
             this.buttonDefaults.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(99, 28);
@@ -1632,7 +1659,7 @@
             // buttonCloseNoSave
             // 
             this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(648, 535);
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(648, 564);
             this.buttonCloseNoSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonCloseNoSave.Name = "buttonCloseNoSave";
             this.buttonCloseNoSave.Size = new System.Drawing.Size(179, 28);
@@ -1655,11 +1682,11 @@
             // label_TimeUnit
             // 
             this.label_TimeUnit.AutoSize = true;
-            this.label_TimeUnit.Location = new System.Drawing.Point(213, 129);
+            this.label_TimeUnit.Location = new System.Drawing.Point(213, 126);
             this.label_TimeUnit.Name = "label_TimeUnit";
-            this.label_TimeUnit.Size = new System.Drawing.Size(72, 17);
+            this.label_TimeUnit.Size = new System.Drawing.Size(68, 17);
             this.label_TimeUnit.TabIndex = 371;
-            this.label_TimeUnit.Text = "Time Unit:";
+            this.label_TimeUnit.Text = "TimeUnit:";
             // 
             // comboBox_TimeUnit
             // 
@@ -1675,7 +1702,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(845, 580);
+            this.ClientSize = new System.Drawing.Size(845, 608);
             this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.buttonSaveClose);
             this.Controls.Add(this.tabControlGeneral);
@@ -1691,6 +1718,7 @@
             this.tabPageGeneral.ResumeLayout(false);
             this.groupBox_Misc.ResumeLayout(false);
             this.groupBox_Misc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).EndInit();
@@ -1872,6 +1900,8 @@
         private System.Windows.Forms.TextBox textBox_IFTTTKey;
         private System.Windows.Forms.PictureBox pictureBox_ShowInternetConnectionWarning;
         private System.Windows.Forms.CheckBox checkBox_ShowInternetConnectionWarning;
+        private System.Windows.Forms.PictureBox pictureBox_RunScriptOnCUDA_GPU_Lost;
+        private System.Windows.Forms.CheckBox checkBox_RunScriptOnCUDA_GPU_Lost;
         private System.Windows.Forms.PictureBox pictureBox_TimeUnit;
         private System.Windows.Forms.Label label_TimeUnit;
         private System.Windows.Forms.ComboBox comboBox_TimeUnit;
