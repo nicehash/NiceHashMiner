@@ -129,6 +129,7 @@
     "Form_Settings_General_LogToFile": "Log su un file",
     "Form_Settings_General_RunAtStartup": "Avvia con Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Riduci la finestra di mining",
+    "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Run script when CUDA GPU is lost",
 
     "Form_Settings_General_Language": "Lingua",
     "Form_Settings_General_MinIdleSeconds": "Tempo minimo di Idle [s]",
@@ -228,6 +229,7 @@
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Quando spuntato, NiceHash Miner Legacy cambierà lo stato di tutte le GPU NVIDIA allo stato P0.\nQuesto migliorerà le prestazioni con certi algoritmi.\nQuesta funzione richiede privilegi di amministratore per essere eseguita.",
     "Form_Settings_ToolTip_ethminerAPIPort": "La porta API che verrà usata da ethminer per le GPU {0}.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Imposta l'altezza dei blocchi di default usata per il benchmarking se le chiamate API falliscono.",
+    "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.",
 
     "Form_Settings_ToolTip_APIBindPort": "La porta API che verrà usata da questo gruppo.",
     "Form_Settings_ToolTip_UsePassword": "Usa questa password quando viene lanciato il miner. Se vuota, verrà usata la password di default 'x'.",
