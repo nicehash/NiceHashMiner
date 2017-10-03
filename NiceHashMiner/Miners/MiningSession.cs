@@ -8,6 +8,7 @@ using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Configs;
 using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
@@ -461,33 +462,36 @@ namespace NiceHashMiner.Miners {
         public async Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
             double CurrentProfit = 0.0d;
             _mainFormRatesComunication.ClearRates(_runningGroupMiners.Count);
-            foreach (var groupMiners in _runningGroupMiners.Values) {
-                Miner m = groupMiners.Miner;
+            var checks = new List<GroupMiner>(_runningGroupMiners.Values);
+            try {
+                foreach (var groupMiners in checks) {
+                    Miner m = groupMiners.Miner;
 
-                // skip if not running or if await already in progress
-                if (!m.IsRunning || m.IsUpdatingAPI) continue;
+                    // skip if not running or if await already in progress
+                    if (!m.IsRunning || m.IsUpdatingAPI) continue;
 
-                m.IsUpdatingAPI = true;
-                APIData AD = await m.GetSummaryAsync();
-                m.IsUpdatingAPI = false;
-                if (AD == null) {
-                    Helpers.ConsolePrint(m.MinerTAG(), "GetSummary returned null..");
-                }
-                // set rates
-                if (NiceHashData != null && AD != null) {
-                    groupMiners.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
-                    if (NiceHashData.ContainsKey(AD.SecondaryAlgorithmID)) {
-                        groupMiners.CurrentRate += NiceHashData[AD.SecondaryAlgorithmID].paying * AD.SecondarySpeed * 0.000000001;
+                    m.IsUpdatingAPI = true;
+                    APIData AD = await m.GetSummaryAsync();
+                    m.IsUpdatingAPI = false;
+                    if (AD == null) {
+                        Helpers.ConsolePrint(m.MinerTAG(), "GetSummary returned null..");
                     }
-                } else {
-                    groupMiners.CurrentRate = 0;
-                    // set empty
-                    AD = new APIData(groupMiners.AlgorithmType);
+                    // set rates
+                    if (NiceHashData != null && AD != null) {
+                        groupMiners.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
+                        if (NiceHashData.ContainsKey(AD.SecondaryAlgorithmID)) {
+                            groupMiners.CurrentRate += NiceHashData[AD.SecondaryAlgorithmID].paying * AD.SecondarySpeed * 0.000000001;
+                        }
+                    } else {
+                        groupMiners.CurrentRate = 0;
+                        // set empty
+                        AD = new APIData(groupMiners.AlgorithmType);
+                    }
+                    CurrentProfit += groupMiners.CurrentRate;
+                    // Update GUI
+                    _mainFormRatesComunication.AddRateInfo(m.MinerTAG(), groupMiners.DevicesInfoString, AD, groupMiners.CurrentRate, m.IsAPIReadException);
                 }
-                CurrentProfit += groupMiners.CurrentRate;
-                // Update GUI
-                _mainFormRatesComunication.AddRateInfo(m.MinerTAG(), groupMiners.DevicesInfoString, AD, groupMiners.CurrentRate, m.IsAPIReadException);
-            }
+            } catch (Exception e) { Helpers.ConsolePrint(TAG, e.Message); }
         }
 
     }
