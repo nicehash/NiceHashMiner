@@ -129,7 +129,7 @@
     "Form_Settings_General_LogToFile": "Log su un file",
     "Form_Settings_General_RunAtStartup": "Avvia con Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Riduci la finestra di mining",
-    "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Esegui script se disconnessa una GPU CUDA",
+    "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Esegui script se persa una GPU CUDA",
 
     "Form_Settings_General_Language": "Lingua",
     "Form_Settings_General_MinIdleSeconds": "Tempo minimo di Idle [s]",
