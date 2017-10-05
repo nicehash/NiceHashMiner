@@ -151,38 +151,7 @@ namespace NiceHashMiner.Miners
         public override async Task<APIData> GetSummaryAsync() {
             // CryptoNight does not have api bind port
             if (IsAPIReadException) {
-                // check if running
-                if (ProcessHandle == null) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                    Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight Proccess is null");
-                    return null;
-                }
-                try {
-                    var runningProcess = Process.GetProcessById(ProcessHandle.Id);
-                } catch (ArgumentException ex) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                    Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight reason: " + ex.Message);
-                    return null; // will restart outside
-                } catch (InvalidOperationException ex) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                    Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight reason: " + ex.Message);
-                    return null; // will restart outside
-                }
-
-                var totalSpeed = 0.0d;
-                foreach (var miningPair in MiningSetup.MiningPairs) {
-                    var algo = miningPair.Device.GetAlgorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight, AlgorithmType.NONE);
-                    if (algo != null) {
-                        totalSpeed += algo.BenchmarkSpeed;
-                    }
-                }
-
-                APIData CryptoNightData = new APIData(MiningSetup.CurrentAlgorithmType);
-                CryptoNightData.Speed = totalSpeed;
-                _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-                // check if speed zero
-                if (CryptoNightData.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
-                return CryptoNightData;
+                return GetAPIReadExceptionStatus(MinerBaseType.ccminer, AlgorithmType.CryptoNight);
             }
             return await GetSummaryCPU_CCMINERAsync();
         }

@@ -11,7 +11,9 @@ namespace NiceHashMiner.Miners
     {
         private int _benchmarkTimeWait = 120;
 
-        public Xmrig() : base("Xmrig") { }
+        public Xmrig() : base("Xmrig") {
+            IsAPIReadException = true;
+        }
 
         public override void Start(string url, string btcAdress, string worker) {
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
@@ -32,8 +34,7 @@ namespace NiceHashMiner.Miners
         }
 
         public override Task<APIData> GetSummaryAsync() {
-            // placeholder
-            return Task.FromResult<APIData>(null);
+            return Task.FromResult(GetAPIReadExceptionStatus(MinerBaseType.Xmrig, AlgorithmType.CryptoNight));
         }
 
         #region Benchmark
