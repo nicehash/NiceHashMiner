@@ -30,6 +30,8 @@
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.PictureBox();
+            this.checkBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.CheckBox();
             this.pictureBox_ShowInternetConnectionWarning = new System.Windows.Forms.PictureBox();
             this.checkBox_ShowInternetConnectionWarning = new System.Windows.Forms.CheckBox();
             this.checkBox_MinimizeMiningWindows = new System.Windows.Forms.CheckBox();
@@ -73,6 +75,9 @@
             this.pictureBox_LogToFile = new System.Windows.Forms.PictureBox();
             this.checkBox_DebugConsole = new System.Windows.Forms.CheckBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
+            this.pictureBox_TimeUnit = new System.Windows.Forms.PictureBox();
+            this.label_TimeUnit = new System.Windows.Forms.Label();
+            this.comboBox_TimeUnit = new System.Windows.Forms.ComboBox();
             this.label_IFTTTAPIKey = new System.Windows.Forms.Label();
             this.textBox_IFTTTKey = new System.Windows.Forms.TextBox();
             this.pictureBox_UseIFTTT = new System.Windows.Forms.PictureBox();
@@ -148,11 +153,10 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.PictureBox();
-            this.checkBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).BeginInit();
@@ -175,6 +179,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_LogMaxFileSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_LogToFile)).BeginInit();
             this.groupBox_Main.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TimeUnit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_UseIFTTT)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WorkerName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).BeginInit();
@@ -201,7 +206,6 @@
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -283,6 +287,28 @@
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
+            // 
+            // pictureBox_RunScriptOnCUDA_GPU_Lost
+            // 
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(222, 383);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Name = "pictureBox_RunScriptOnCUDA_GPU_Lost";
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.TabIndex = 373;
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.TabStop = false;
+            // 
+            // checkBox_RunScriptOnCUDA_GPU_Lost
+            // 
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.AutoSize = true;
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(6, 383);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Name = "checkBox_RunScriptOnCUDA_GPU_Lost";
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(191, 17);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.TabIndex = 372;
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Text = "Run script when CUDA GPU is lost";
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.UseVisualStyleBackColor = true;
             // 
             // pictureBox_ShowInternetConnectionWarning
             // 
@@ -756,6 +782,9 @@
             // 
             // groupBox_Main
             // 
+            this.groupBox_Main.Controls.Add(this.pictureBox_TimeUnit);
+            this.groupBox_Main.Controls.Add(this.label_TimeUnit);
+            this.groupBox_Main.Controls.Add(this.comboBox_TimeUnit);
             this.groupBox_Main.Controls.Add(this.label_IFTTTAPIKey);
             this.groupBox_Main.Controls.Add(this.textBox_IFTTTKey);
             this.groupBox_Main.Controls.Add(this.pictureBox_UseIFTTT);
@@ -782,6 +811,37 @@
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
+            // 
+            // pictureBox_TimeUnit
+            // 
+            this.pictureBox_TimeUnit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_TimeUnit.Location = new System.Drawing.Point(302, 102);
+            this.pictureBox_TimeUnit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_TimeUnit.Name = "pictureBox_TimeUnit";
+            this.pictureBox_TimeUnit.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_TimeUnit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_TimeUnit.TabIndex = 372;
+            this.pictureBox_TimeUnit.TabStop = false;
+            // 
+            // label_TimeUnit
+            // 
+            this.label_TimeUnit.AutoSize = true;
+            this.label_TimeUnit.Location = new System.Drawing.Point(160, 102);
+            this.label_TimeUnit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_TimeUnit.Name = "label_TimeUnit";
+            this.label_TimeUnit.Size = new System.Drawing.Size(52, 13);
+            this.label_TimeUnit.TabIndex = 371;
+            this.label_TimeUnit.Text = "TimeUnit:";
+            // 
+            // comboBox_TimeUnit
+            // 
+            this.comboBox_TimeUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox_TimeUnit.FormattingEnabled = true;
+            this.comboBox_TimeUnit.Location = new System.Drawing.Point(160, 123);
+            this.comboBox_TimeUnit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.comboBox_TimeUnit.Name = "comboBox_TimeUnit";
+            this.comboBox_TimeUnit.Size = new System.Drawing.Size(160, 21);
+            this.comboBox_TimeUnit.TabIndex = 370;
             // 
             // label_IFTTTAPIKey
             // 
@@ -850,7 +910,7 @@
             // pictureBox_MinProfit
             // 
             this.pictureBox_MinProfit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_MinProfit.Location = new System.Drawing.Point(230, 103);
+            this.pictureBox_MinProfit.Location = new System.Drawing.Point(130, 103);
             this.pictureBox_MinProfit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinProfit.Name = "pictureBox_MinProfit";
             this.pictureBox_MinProfit.Size = new System.Drawing.Size(18, 18);
@@ -885,7 +945,7 @@
             this.textBox_MinProfit.Location = new System.Drawing.Point(10, 123);
             this.textBox_MinProfit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_MinProfit.Name = "textBox_MinProfit";
-            this.textBox_MinProfit.Size = new System.Drawing.Size(238, 20);
+            this.textBox_MinProfit.Size = new System.Drawing.Size(138, 20);
             this.textBox_MinProfit.TabIndex = 334;
             // 
             // pictureBox_IdleWhenNoInternetAccess
@@ -1106,7 +1166,7 @@
             this.tabPageAdvanced.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(604, 391);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(604, 414);
             this.tabPageAdvanced.TabIndex = 2;
             this.tabPageAdvanced.Text = "Advanced";
             this.tabPageAdvanced.UseVisualStyleBackColor = true;
@@ -1550,7 +1610,7 @@
             this.tabPageDevicesAlgos.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageDevicesAlgos.Name = "tabPageDevicesAlgos";
             this.tabPageDevicesAlgos.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(604, 391);
+            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(604, 414);
             this.tabPageDevicesAlgos.TabIndex = 1;
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
@@ -1657,28 +1717,6 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
-            // pictureBox_RunScriptOnCUDA_GPU_Lost
-            // 
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(222, 383);
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Name = "pictureBox_RunScriptOnCUDA_GPU_Lost";
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.TabIndex = 373;
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.TabStop = false;
-            // 
-            // checkBox_RunScriptOnCUDA_GPU_Lost
-            // 
-            this.checkBox_RunScriptOnCUDA_GPU_Lost.AutoSize = true;
-            this.checkBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(6, 383);
-            this.checkBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_RunScriptOnCUDA_GPU_Lost.Name = "checkBox_RunScriptOnCUDA_GPU_Lost";
-            this.checkBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(191, 17);
-            this.checkBox_RunScriptOnCUDA_GPU_Lost.TabIndex = 372;
-            this.checkBox_RunScriptOnCUDA_GPU_Lost.Text = "Run script when CUDA GPU is lost";
-            this.checkBox_RunScriptOnCUDA_GPU_Lost.UseVisualStyleBackColor = true;
-            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1699,6 +1737,7 @@
             this.tabPageGeneral.ResumeLayout(false);
             this.groupBox_Misc.ResumeLayout(false);
             this.groupBox_Misc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).EndInit();
@@ -1723,6 +1762,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_LogToFile)).EndInit();
             this.groupBox_Main.ResumeLayout(false);
             this.groupBox_Main.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TimeUnit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_UseIFTTT)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WorkerName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).EndInit();
@@ -1751,7 +1791,6 @@
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1882,5 +1921,8 @@
         private System.Windows.Forms.CheckBox checkBox_ShowInternetConnectionWarning;
         private System.Windows.Forms.PictureBox pictureBox_RunScriptOnCUDA_GPU_Lost;
         private System.Windows.Forms.CheckBox checkBox_RunScriptOnCUDA_GPU_Lost;
+        private System.Windows.Forms.PictureBox pictureBox_TimeUnit;
+        private System.Windows.Forms.Label label_TimeUnit;
+        private System.Windows.Forms.ComboBox comboBox_TimeUnit;
     }
 }
