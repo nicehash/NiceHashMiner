@@ -190,6 +190,9 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(this.checkBox_NVIDIAP0State, International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
             toolTip1.SetToolTip(this.pictureBox_NVIDIAP0State, International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
 
+            toolTip1.SetToolTip(this.checkBox_RunScriptOnCUDA_GPU_Lost, International.GetText("Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost"));
+            toolTip1.SetToolTip(this.pictureBox_RunScriptOnCUDA_GPU_Lost, International.GetText("Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost"));
+
             toolTip1.SetToolTip(this.checkBox_RunAtStartup, International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
             toolTip1.SetToolTip(this.pictureBox_RunAtStartup, International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
 
@@ -268,6 +271,7 @@ namespace NiceHashMiner.Forms
             checkBox_RunAtStartup.Text = International.GetText("Form_Settings_General_RunAtStartup");
             checkBox_MinimizeMiningWindows.Text = International.GetText("Form_Settings_General_MinimizeMiningWindows");
             checkBox_UseIFTTT.Text = International.GetText("Form_Settings_General_UseIFTTT");
+            checkBox_RunScriptOnCUDA_GPU_Lost.Text = International.GetText("Form_Settings_General_RunScriptOnCUDA_GPU_Lost");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
@@ -349,6 +353,7 @@ namespace NiceHashMiner.Forms
                 this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_MinimizeMiningWindows.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_UseIFTTT.CheckedChanged += new System.EventHandler(checkBox_UseIFTTT_CheckChanged);
+                this.checkBox_RunScriptOnCUDA_GPU_Lost.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -421,7 +426,9 @@ namespace NiceHashMiner.Forms
                 this.checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
                 checkBox_RunAtStartup.Checked = isInStartupRegistry();
                 checkBox_MinimizeMiningWindows.Checked = ConfigManager.GeneralConfig.MinimizeMiningWindows;
+                checkBox_MinimizeMiningWindows.Enabled = !ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
+                checkBox_RunScriptOnCUDA_GPU_Lost.Checked = ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost;
             }
 
             // Textboxes
@@ -521,6 +528,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
+            ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
         }
 
         private void checkBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e) {

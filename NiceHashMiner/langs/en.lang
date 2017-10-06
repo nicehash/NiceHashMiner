@@ -60,7 +60,7 @@
     "Form_Main_msgbox_NoInternetTitle": "Check internet connection",
     "Form_Main_msgbox_NoInternetMsg": "NiceHash Miner Legacy requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner Legacy. Would you like to continue?",
     "Form_Main_msgbox_InvalidBTCAddressMsg": "Invalid Bitcoin address!\n\nPlease enter a valid Bitcoin address or choose Yes to create one.",
-    "Form_Main_msgbox_InvalidWorkerNameMsg": "Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 7 character long).",
+    "Form_Main_msgbox_InvalidWorkerNameMsg": "Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long).",
     "Form_Main_msgbox_NullNiceHashDataMsg": "Unable to get NiceHash profitability data. If you are connected to internet, try again later.",
     "Form_Main_msgbox_HaveNotBenchmarkedMsg": "You have not run benchmark for device {0}. Without benchmarking first, NiceHash Miner Legacy will not be able to switch to the most profitable algorithm. To continue mining, choose Yes. If you wish to benchmark first, choose No and click on the benchmark button.",
     "Form_Main_msgbox_buttonBenchmarkWarningMsg": "Editing additional settings is for advanced users.\r\n\r\nIf {0} crashes due to bad config value you can restore it by deleting 'config.json' file.\r\n\r\nContinue with editing settings?",
@@ -129,6 +129,7 @@
     "Form_Settings_General_LogToFile": "Log To File",
     "Form_Settings_General_RunAtStartup": "Run With Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Minimize Mining Windows",
+    "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Run script when CUDA GPU is lost",
 
     "Form_Settings_General_Language": "Language",
     "Form_Settings_General_MinIdleSeconds": "Minimum Idle [s]",
@@ -226,6 +227,7 @@
     "Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning": "When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available.",
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "When checked, NiceHash Miner Legacy would use the new settings page.",
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.",
+    "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.",
     "Form_Settings_ToolTip_ethminerAPIPort": "API port that will be used by ethminer for {0} GPUs.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Sets the default block height used for benchmarking if API call fails.",
 
@@ -246,7 +248,7 @@
     "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Additional launch parameters when launching miner and this algorithm.",
     "Form_Settings_Text_ContinueMiningIfNoInternetAccess": "Idle When No Internet Access",
     "Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess": "If enabled NiceHash Miner Legacy will stop mining without internet connectivity",
-    "Form_Settings_ToolTip_UseIFTTT":  "If enabled, NiceHash Miner Legacy will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.",
+    "Form_Settings_ToolTip_UseIFTTT": "If enabled, NiceHash Miner Legacy will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.",
     "Form_Settings_DisplayCurrency": "Display Currency",
     "Form_Settings_ToolTip_DisplayCurrency": "Choose what Currency to Display mining profit.",
     "Form_Settings_APIBindPortStart": "API Bind port pool start",

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Threading.Tasks;
 
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Configs;
@@ -64,12 +65,12 @@ namespace NiceHashMiner.Miners {
         /// Calculate profit for each supported algorithm per device and group.
         /// </summary>
         /// <param name="NiceHashData"></param>
-        public static void SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
-            if (CurMiningSession != null) CurMiningSession.SwichMostProfitableGroupUpMethod(NiceHashData);
+        public static async Task SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
+            if (CurMiningSession != null) await CurMiningSession.SwichMostProfitableGroupUpMethod(NiceHashData);
         }
 
-        public static void MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
-            if (CurMiningSession != null) CurMiningSession.MinerStatsCheck(NiceHashData);
+        async public static Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
+            if (CurMiningSession != null) await CurMiningSession.MinerStatsCheck(NiceHashData);
         }
     }
 }

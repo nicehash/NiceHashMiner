@@ -14,6 +14,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners.Grouping;
+using System.Threading.Tasks;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
@@ -126,6 +127,8 @@ namespace NiceHashMiner
         private bool NeedsRestart = false;
 
         private bool isEnded = false;
+
+        public bool IsUpdatingAPI = false;
 
         public Miner(string minerDeviceName)
         {
@@ -538,7 +541,7 @@ namespace NiceHashMiner
                 }
             }
             BenchmarkProcessStatus = status;
-            Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, BenchmarkAlgorithm.SecondaryBenchmarkSpeed));
+            Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.NiceHashID, BenchmarkAlgorithm.BenchmarkSpeed, BenchmarkAlgorithm.SecondaryBenchmarkSpeed));
             Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                 OnBenchmarkCompleteCalled = true;
@@ -670,16 +673,20 @@ namespace NiceHashMiner
         }
 
         protected void StartCoolDownTimerChecker() {
-            Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Starting cooldown checker");
-            if (_cooldownCheckTimer != null && _cooldownCheckTimer.Enabled) _cooldownCheckTimer.Stop();
-            // cool down init
-            _cooldownCheckTimer = new Timer() {
-                Interval = _MIN_CooldownTimeInMilliseconds
-            };
-            _cooldownCheckTimer.Elapsed += MinerCoolingCheck_Tick;
-            _cooldownCheckTimer.Start();
-            _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
-            _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
+            if (ConfigManager.GeneralConfig.CoolDownCheckEnabled) {
+                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Starting cooldown checker");
+                if (_cooldownCheckTimer != null && _cooldownCheckTimer.Enabled) _cooldownCheckTimer.Stop();
+                // cool down init
+                _cooldownCheckTimer = new Timer() {
+                    Interval = _MIN_CooldownTimeInMilliseconds
+                };
+                _cooldownCheckTimer.Elapsed += MinerCoolingCheck_Tick;
+                _cooldownCheckTimer.Start();
+                _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
+                _currentCooldownTimeInSecondsLeft = _currentCooldownTimeInSeconds;
+            } else {
+                Helpers.ConsolePrint(MinerTAG(), "Cooldown checker disabled");
+            }
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
         }
 
@@ -692,9 +699,14 @@ namespace NiceHashMiner
             var RestartInMS = ConfigManager.GeneralConfig.MinerRestartDelayMS > ms ?
                 ConfigManager.GeneralConfig.MinerRestartDelayMS : ms;
             Helpers.ConsolePrint(MinerTAG(), ProcessTag() + String.Format(" Miner_Exited Will restart in {0} ms", RestartInMS));
-            _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-            NeedsRestart = true;
-            _currentCooldownTimeInSecondsLeft = RestartInMS;
+            if (ConfigManager.GeneralConfig.CoolDownCheckEnabled) {
+                _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
+                NeedsRestart = true;
+                _currentCooldownTimeInSecondsLeft = RestartInMS;
+            } else {  // directly restart since cooldown checker not running
+                Thread.Sleep(RestartInMS);
+                Restart();
+            }
         }
 
         protected void Restart() {
@@ -706,15 +718,16 @@ namespace NiceHashMiner
             }
         }
 
-        protected string GetAPIData(int port, string DataToSend, bool exitHack = false)
+        protected async Task<string> GetAPIDataAsync(int port, string DataToSend, bool exitHack = false)
         {
             string ResponseFromServer = null;
             try
             {
                 TcpClient tcpc = new TcpClient("127.0.0.1", port);
+                var nwStream = tcpc.GetStream();
 
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
-                tcpc.Client.Send(BytesToSend);
+                await nwStream.WriteAsync(BytesToSend, 0, BytesToSend.Length);
 
                 byte[] IncomingBuffer = new byte[5000];
                 int prevOffset = -1;
@@ -723,7 +736,7 @@ namespace NiceHashMiner
 
                 while (!fin && tcpc.Client.Connected)
                 {
-                    int r = tcpc.Client.Receive(IncomingBuffer, offset, 5000 - offset, SocketFlags.None);
+                    int r = await nwStream.ReadAsync(IncomingBuffer, offset, 5000 - offset);
                     for (int i = offset; i < offset + r; i++)
                     {
                         if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
@@ -763,7 +776,7 @@ namespace NiceHashMiner
             return ResponseFromServer;
         }
 
-        public abstract APIData GetSummary();
+        public abstract Task<APIData> GetSummaryAsync();
 
         protected string GetHttpRequestNHMAgentStrin(string cmd) {
             return "GET /" + cmd + " HTTP/1.1\r\n" +
@@ -772,7 +785,7 @@ namespace NiceHashMiner
                     "\r\n";
         }
 
-        protected APIData GetSummaryCPU_CCMINER() {
+        protected async Task<APIData> GetSummaryCPU_CCMINERAsync() {
             string resp;
             // TODO aname
             string aname = null;
@@ -780,7 +793,7 @@ namespace NiceHashMiner
 
             string DataToSend = GetHttpRequestNHMAgentStrin("summary");
 
-            resp = GetAPIData(APIPort, DataToSend);
+            resp = await GetAPIDataAsync(APIPort, DataToSend);
             if (resp == null) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;

@@ -8,6 +8,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
     public class cpuminer : Miner {
@@ -37,8 +38,8 @@ namespace NiceHashMiner.Miners {
             ProcessHandle = _Start();
         }
 
-        public override APIData GetSummary() {
-            return GetSummaryCPU_CCMINER();
+        public override Task<APIData> GetSummaryAsync() {
+            return GetSummaryCPU_CCMINERAsync();
         }
 
         protected override void _Stop(MinerStopType willswitch) {

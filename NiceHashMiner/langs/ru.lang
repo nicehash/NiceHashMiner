@@ -60,7 +60,7 @@
     "Form_Main_msgbox_NoInternetTitle": "Проверьте интернет-соединение",
     "Form_Main_msgbox_NoInternetMsg": "NiceHash Miner Legacy запрашивает интернет-соединение для работы. Убедитесь, что вы подключены к интернету перед запуском NiceHash Miner Legacy. Хотели бы вы продолжить?",
     "Form_Main_msgbox_InvalidBTCAddressMsg": "Неверный Биткоин-адрес!\n\nПожалуйста, введите правильный Биткоин-адрес или выберите «Да», чтобы создать новый.",
-    "Form_Main_msgbox_InvalidWorkerNameMsg": "Неверное имя компьютера!\n\nПожалуйста, введите правильное имя компьютера (Aa-Zz, 0-9, длиной до 7 символов).",
+    "Form_Main_msgbox_InvalidWorkerNameMsg": "Неверное имя компьютера!\n\nПожалуйста, введите правильное имя компьютера (Aa-Zz, 0-9, длиной до 15 символов).",
     "Form_Main_msgbox_NullNiceHashDataMsg": "Не удаётся получить данные прибыльности NiceHash. Если вы подключены к интернету, попробуйте снова позже.",
     "Form_Main_msgbox_HaveNotBenchmarkedMsg": "Вы ещё не сделали бенчмарк для устройства {0}. Без бенчмарка NiceHash Miner Legacy не сможет переключаться на наиболее прибыльный алгоритм. Для продолжения майнинга, нажмите «Да». Если вы хотите сперва сделать бенчмарк, выберите «Нет» и нажмите на кнопку «Бенчмарк».",
     "Form_Main_msgbox_buttonBenchmarkWarningMsg": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается, в связи с плохой конфигурацией, вы можете сбросить ее удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
@@ -230,6 +230,7 @@
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "Если отмечено, NiceHash Miner Legacy будет использовать новую страницу настроек.",
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Если отмечено, NiceHash Miner Legacy изменит все поддерживаемые NVidia GPU в статус P0. \nЭто немного увеличит производительность на некоторых алгоритмах. \nТребуются права администратора.",
     "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "Если отмечено, NiceHash Miner Legacy запустит OnGPUsLost.bat \nпри потере хотя бы одного устройства CUDA GPU,\nпо умолчанию скрипт должен перезапускать всю систему.",
+    "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Если отмечено, NiceHash Miner Legacy изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора.",
     "Form_Settings_ToolTip_ethminerAPIPort": "Порт API, который будет использоваться ethminer для {0} GPU.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Устанавливает высоту блока по умолчанию, используемую для бенчмарка, если вызов API не сработает.",
 

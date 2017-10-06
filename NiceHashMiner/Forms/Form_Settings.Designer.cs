@@ -148,6 +148,8 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.PictureBox();
+            this.checkBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -199,6 +201,7 @@
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -215,7 +218,7 @@
             this.tabControlGeneral.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabControlGeneral.Name = "tabControlGeneral";
             this.tabControlGeneral.SelectedIndex = 0;
-            this.tabControlGeneral.Size = new System.Drawing.Size(612, 417);
+            this.tabControlGeneral.Size = new System.Drawing.Size(612, 440);
             this.tabControlGeneral.TabIndex = 0;
             this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControlGeneral_Selected);
             // 
@@ -229,13 +232,15 @@
             this.tabPageGeneral.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPageGeneral.Size = new System.Drawing.Size(604, 391);
+            this.tabPageGeneral.Size = new System.Drawing.Size(604, 414);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
             // groupBox_Misc
             // 
+            this.groupBox_Misc.Controls.Add(this.pictureBox_RunScriptOnCUDA_GPU_Lost);
+            this.groupBox_Misc.Controls.Add(this.checkBox_RunScriptOnCUDA_GPU_Lost);
             this.groupBox_Misc.Controls.Add(this.pictureBox_ShowInternetConnectionWarning);
             this.groupBox_Misc.Controls.Add(this.checkBox_ShowInternetConnectionWarning);
             this.groupBox_Misc.Controls.Add(this.checkBox_MinimizeMiningWindows);
@@ -274,7 +279,7 @@
             this.groupBox_Misc.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Misc.Name = "groupBox_Misc";
             this.groupBox_Misc.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Misc.Size = new System.Drawing.Size(244, 383);
+            this.groupBox_Misc.Size = new System.Drawing.Size(244, 405);
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
@@ -1102,7 +1107,7 @@
             this.tabPageAdvanced.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(604, 392);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(604, 391);
             this.tabPageAdvanced.TabIndex = 2;
             this.tabPageAdvanced.Text = "Advanced";
             this.tabPageAdvanced.UseVisualStyleBackColor = true;
@@ -1546,7 +1551,7 @@
             this.tabPageDevicesAlgos.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.tabPageDevicesAlgos.Name = "tabPageDevicesAlgos";
             this.tabPageDevicesAlgos.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(604, 392);
+            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(604, 391);
             this.tabPageDevicesAlgos.TabIndex = 1;
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
@@ -1620,7 +1625,7 @@
             // buttonSaveClose
             // 
             this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(348, 435);
+            this.buttonSaveClose.Location = new System.Drawing.Point(348, 458);
             this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonSaveClose.Name = "buttonSaveClose";
             this.buttonSaveClose.Size = new System.Drawing.Size(134, 23);
@@ -1632,7 +1637,7 @@
             // buttonDefaults
             // 
             this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(270, 435);
+            this.buttonDefaults.Location = new System.Drawing.Point(270, 458);
             this.buttonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(74, 23);
@@ -1644,7 +1649,7 @@
             // buttonCloseNoSave
             // 
             this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(486, 435);
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(486, 458);
             this.buttonCloseNoSave.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonCloseNoSave.Name = "buttonCloseNoSave";
             this.buttonCloseNoSave.Size = new System.Drawing.Size(134, 23);
@@ -1653,11 +1658,33 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
+            // pictureBox_RunScriptOnCUDA_GPU_Lost
+            // 
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(222, 383);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Name = "pictureBox_RunScriptOnCUDA_GPU_Lost";
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.TabIndex = 373;
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.TabStop = false;
+            // 
+            // checkBox_RunScriptOnCUDA_GPU_Lost
+            // 
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.AutoSize = true;
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(6, 383);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Name = "checkBox_RunScriptOnCUDA_GPU_Lost";
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(191, 17);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.TabIndex = 372;
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Text = "Run script when CUDA GPU is lost";
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(634, 471);
+            this.ClientSize = new System.Drawing.Size(634, 494);
             this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.buttonSaveClose);
             this.Controls.Add(this.tabControlGeneral);
@@ -1725,6 +1752,7 @@
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1853,5 +1881,7 @@
         private System.Windows.Forms.TextBox textBox_IFTTTKey;
         private System.Windows.Forms.PictureBox pictureBox_ShowInternetConnectionWarning;
         private System.Windows.Forms.CheckBox checkBox_ShowInternetConnectionWarning;
+        private System.Windows.Forms.PictureBox pictureBox_RunScriptOnCUDA_GPU_Lost;
+        private System.Windows.Forms.CheckBox checkBox_RunScriptOnCUDA_GPU_Lost;
     }
 }

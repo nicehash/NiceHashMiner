@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners {
     public class excavator : Miner {
@@ -114,7 +115,7 @@ namespace NiceHashMiner.Miners {
             return false;
         }
 
-        public override APIData GetSummary() {
+        public override async Task<APIData> GetSummaryAsync() {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
@@ -124,9 +125,9 @@ namespace NiceHashMiner.Miners {
                 byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes("status\n");
                 client = new TcpClient("127.0.0.1", APIPort);
                 NetworkStream nwStream = client.GetStream();
-                nwStream.Write(bytesToSend, 0, bytesToSend.Length);
+                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
                 byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-                int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+                int bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                 string respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
                 resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
                 client.Close();

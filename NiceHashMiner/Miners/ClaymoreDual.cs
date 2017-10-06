@@ -97,6 +97,13 @@ namespace NiceHashMiner.Miners {
             ProcessHandle = _Start();
         }
 
+        protected override string DeviceCommand(int amdCount = 1) {
+            // If no AMD cards loaded, instruct CD to only regard NV cards for indexing
+            // This will allow proper indexing if AMD GPUs or APUs are present in the system but detection disabled
+            string ret = (amdCount == 0) ? " -platform 2" : "";
+            return ret + base.DeviceCommand(amdCount);
+        }
+
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {

@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -226,7 +227,7 @@ namespace NiceHashMiner.Miners
             public string time { get; set; }
         }
 
-        public override APIData GetSummary() {
+        public override async Task<APIData> GetSummaryAsync() {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
 
@@ -236,7 +237,7 @@ namespace NiceHashMiner.Miners
                 string url = String.Format("http://localhost:{0}/api/v0/hashrates", apiPort);
                 Stream data = client.OpenRead(url);
                 StreamReader reader = new StreamReader(data);
-                string s = reader.ReadToEnd();
+                string s = await reader.ReadToEndAsync();
                 data.Close();
                 reader.Close();
 

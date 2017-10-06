@@ -11,6 +11,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.Equihash {
     public class OptiminerZcashMiner : Miner {
@@ -71,7 +72,7 @@ namespace NiceHashMiner.Miners.Equihash {
             return deviceStringCommand + extraParams;
         }
 
-        public override APIData GetSummary() {
+        public override async Task<APIData> GetSummaryAsync() {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
@@ -79,7 +80,7 @@ namespace NiceHashMiner.Miners.Equihash {
                 JsonApiResponse resp = null;
                 try {
                     string DataToSend = GetHttpRequestNHMAgentStrin("");
-                    string respStr = GetAPIData(APIPort, DataToSend, true);
+                    string respStr = await GetAPIDataAsync(APIPort, DataToSend, true);
                     if (respStr != null && respStr.Contains("{")) {
                         int start = respStr.IndexOf("{");
                         if (start > -1) {

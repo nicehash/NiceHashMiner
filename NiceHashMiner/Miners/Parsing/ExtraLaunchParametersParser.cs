@@ -274,7 +274,7 @@ namespace NiceHashMiner.Miners.Parsing {
             return MinerType.NONE;
         }
 
-        private static string ParseForMiningPairs(List<MiningPair> MiningPairs, DeviceType deviceType, bool showLog = true) {
+        public static string ParseForMiningPairs(List<MiningPair> MiningPairs, DeviceType deviceType, bool showLog = true) {
             _showLog = showLog;
 
             MinerBaseType minerBaseType = MinerBaseType.NONE;

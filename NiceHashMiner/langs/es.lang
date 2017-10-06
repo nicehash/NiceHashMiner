@@ -60,7 +60,7 @@
     "Form_Main_msgbox_NoInternetTitle": "Comprueba la conexión a Internet",
     "Form_Main_msgbox_NoInternetMsg": "NiceHash Miner Legacy requiere una conexión a Internet. Asegúrese de que tiene una conexión a internet antes de continuar. ¿Le gustaría continuar?",
     "Form_Main_msgbox_InvalidBTCAddressMsg": "¡Dirección Bitcoin inválida!\n\nIntruduzca una dirección válida o pulse Sí para crear una.",
-    "Form_Main_msgbox_InvalidWorkerNameMsg": "¡Nombre inválido!\n\nPor favor introduzca un nombre válido (Aa-Zz, 0-9, de hasta 7 carácteres).",
+    "Form_Main_msgbox_InvalidWorkerNameMsg": "¡Nombre inválido!\n\nPor favor introduzca un nombre válido (Aa-Zz, 0-9, de hasta 15 carácteres).",
     "Form_Main_msgbox_NullNiceHashDataMsg": "No se puede obtener los datos de rentabilidad de NiceHash. Si está conectado a Internet, inténtelo más tarde.",
     "Form_Main_msgbox_HaveNotBenchmarkedMsg": "No ha hecho ningún benchmark para el dispositivo {0}. Sin hacer un benchmark primero, NiceHash Miner Legacy no podrá cambiar al algoritmo más rentable. Para continuar, pulsa Sí. Si le gustaría hacer un benchmark primero, pulse No y haga click en Benchmark.",
     "Form_Main_msgbox_buttonBenchmarkWarningMsg": "Solo usuarios avanzados deberían cambiar las configuraciones avanzadas. \r\n\r\nSi {0} se cierra por una mala configuración, puede arreglarlo eliminando el archivo 'config.json' .\r\n\r\n¿Seguro que quiere editar la configuración avanzada?",
@@ -129,6 +129,7 @@
     "Form_Settings_General_LogToFile": "Guardar el registro de eventos",
     "Form_Settings_General_RunAtStartup": "Ejecutar con Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Minimizar las ventanas de minería",
+    "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Run script when CUDA GPU is lost",
 
     "Form_Settings_General_Language": "Lenguaje",
     "Form_Settings_General_MinIdleSeconds": "Tiempo mínimo detenido [s]",
@@ -227,6 +228,7 @@
     "Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning": "When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available.",
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "Si está marcado, NiceHash Miner Legacy usará la nueva página de configuración.",
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Si está marcado, NiceHash Miner Legacy pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
+    "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.",
 
     "Form_Settings_ToolTip_ethminerAPIPort": "Puerto de la API que será usado por ethminer para {0} GPUs.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Establece la altura de bloque usado para hacer el benchmark si la llamada a la API falla.",

@@ -58,6 +58,7 @@ namespace NiceHashMiner.Configs.Data {
         public bool IdleWhenNoInternetAccess = true;
         public bool UseIFTTT = false;
         public bool DownloadInit = false;
+        public bool RunScriptOnCUDA_GPU_Lost = false;
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
         public bool DownloadInit3rdParty = false;
@@ -74,6 +75,8 @@ namespace NiceHashMiner.Configs.Data {
         public double IQROverFactor = 3.0;
         public int NormalizedProfitHistory = 15;
         public double IQRNormalizeFactor = 0.0;
+
+        public bool CoolDownCheckEnabled = true;
 
         // methods
         public void SetDefaults() {
@@ -121,6 +124,8 @@ namespace NiceHashMiner.Configs.Data {
             IQROverFactor = 3.0;
             NormalizedProfitHistory = 15;
             IQRNormalizeFactor = 0.0;
+            CoolDownCheckEnabled = true;
+            RunScriptOnCUDA_GPU_Lost = false;
         }
 
         public void FixSettingBounds() {
@@ -166,7 +171,7 @@ namespace NiceHashMiner.Configs.Data {
             if (IQROverFactor < 0) {
                 IQROverFactor = 3.0;
             }
-            if (NormalizedProfitHistory < 1) {
+            if (NormalizedProfitHistory < 0) {
                 NormalizedProfitHistory = 15;
             }
             if (IQRNormalizeFactor < 0) {

@@ -12,6 +12,8 @@ using System.IO;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace NiceHashMiner.Miners {
     public abstract class ClaymoreBaseMiner : Miner {
@@ -57,7 +59,7 @@ namespace NiceHashMiner.Miners {
             public object error { get; set; }
         }
 
-        public override APIData GetSummary() {
+        public override async Task<APIData> GetSummaryAsync() {
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
 
@@ -67,9 +69,9 @@ namespace NiceHashMiner.Miners {
                 byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes("{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"miner_getstat1\"}n");
                 client = new TcpClient("127.0.0.1", APIPort);
                 NetworkStream nwStream = client.GetStream();
-                nwStream.Write(bytesToSend, 0, bytesToSend.Length);
+                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
                 byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-                int bytesRead = nwStream.Read(bytesToRead, 0, client.ReceiveBufferSize);
+                int bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                 string respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
                 resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
                 client.Close();
@@ -126,41 +128,48 @@ namespace NiceHashMiner.Miners {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
+        protected virtual string DeviceCommand(int amdCount = 1) {
+            return " -di ";
+        }
+
+        // This method now overridden in ClaymoreCryptoNightMiner 
+        // Following logic for ClaymoreDual and ClaymoreZcash
         protected override string GetDevicesCommandString() {
-            int amdDeviceCount = ComputeDeviceManager.Query.amdGpus.Count;
-            Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
-            string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
-            string deviceStringCommand = " -di ";
+            // First by device type (AMD then NV), then by bus ID index
+            var sortedMinerPairs = MiningSetup.MiningPairs
+                .OrderByDescending(pair => pair.Device.DeviceType)
+                .ThenBy(pair => pair.Device.IDByBus)
+                .ToList();
+            string extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
+
             List<string> ids = new List<string>();
-            foreach (var mPair in MiningSetup.MiningPairs) {
-                var id = mPair.Device.ID;
-                if ((this is ClaymoreDual || this is ClaymoreZcashMiner) && mPair.Device.DeviceType == DeviceType.AMD) {
-                    id = mPair.Device.IDByBus;
-                    if (id < 0) {
-                        // should never happen
-                        Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id.ToString());
-                    }
+
+            int amdDeviceCount = ComputeDeviceManager.Query.AMD_Devices.Count;
+            Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
+
+            foreach (var mPair in sortedMinerPairs) {
+                var id = mPair.Device.IDByBus;
+                if (id < 0) {
+                    // should never happen
+                    Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id.ToString() + " skipping device");
+                    continue;
                 }
-                if (this is ClaymoreDual) {
-                    if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
-                        Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
-                        id += amdDeviceCount;
-                    }
-                    if (id > 9) {  // New >10 GPU support in CD9.8
-                        if (id < 36) {  // CD supports 0-9 and a-z indexes, so 36 GPUs
-                            char idchar = (char)(id + 87);  // 10 = 97(a), 11 - 98(b), etc
-                            ids.Add(idchar.ToString());
-                        } else {
-                            Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
-                        }
+                if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
+                    Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
+                    id += amdDeviceCount;
+                }
+                if (id > 9) {  // New >10 GPU support in CD9.8
+                    if (id < 36) {  // CD supports 0-9 and a-z indexes, so 36 GPUs
+                        char idchar = (char)(id + 87);  // 10 = 97(a), 11 - 98(b), etc
+                        ids.Add(idchar.ToString());
                     } else {
-                        ids.Add(id.ToString());
+                        Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
                     }
                 } else {
                     ids.Add(id.ToString());
                 }
             }
-            deviceStringCommand += String.Join("", ids);
+            var deviceStringCommand = DeviceCommand(amdDeviceCount) + String.Join("", ids);
 
             return deviceStringCommand + extraParams;
         }
@@ -255,7 +264,7 @@ namespace NiceHashMiner.Miners {
                                     ++benchmark_read_count;
                                 }
                             }
-                            else if (lineLowered.Contains(SecondaryLookForStart())) {
+                            else if (!String.IsNullOrEmpty(SecondaryLookForStart()) && lineLowered.Contains(SecondaryLookForStart())) {
                                 if (ignoreZero) {
                                     double got = getNumber(lineLowered, SecondaryLookForStart(), LOOK_FOR_END);
                                     if (got != 0) {
