@@ -273,6 +273,11 @@ namespace NiceHashMiner.Forms
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
             label_WorkerName.Text = International.GetText("WorkerName") + ":";
             label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
+            {
+                int i = 0;
+                foreach (string loc in Globals.MiningLocation)
+                    comboBox_ServiceLocation.Items[i++] = International.GetText("LocationName_" + loc);
+            }
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
             label_MinerAPIQueryInterval.Text = International.GetText("Form_Settings_General_MinerAPIQueryInterval") + ":";

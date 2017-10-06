@@ -9,6 +9,12 @@
     "Global_Retry": "&Riprova",
 
     "Service_Location": "Luogo server",
+    "LocationName_eu": "Europe - Amsterdam",
+    "LocationName_usa": "USA - San Jose",
+    "LocationName_hk": "China - Hong Kong",
+    "LocationName_jp": "Japan - Tokyo",
+    "LocationName_in": "India - Chennai",
+    "LocationName_br": "Brazil - Sao Paulo",
     "Warning_with_Exclamation": "Attenzione!",
     "Error_with_Exclamation": "Errore!",
     "BitcoinAddress": "Indirizzo Bitcoin",
