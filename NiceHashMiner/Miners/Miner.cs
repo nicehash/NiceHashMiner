@@ -543,10 +543,15 @@ namespace NiceHashMiner
                 }
             } catch { }
             BenchmarkProcessStatus = status;
-            var secondarySpeed = 0d;
-            if (BenchmarkAlgorithm is DualAlgorithm dualAlg)
-                secondarySpeed = dualAlg.SecondaryBenchmarkSpeed;
-            Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, secondarySpeed, BenchmarkAlgorithm.NiceHashID));
+            if (BenchmarkAlgorithm is DualAlgorithm dualAlg) {
+                Helpers.ConsolePrint("BENCHMARK",
+                    "Final Speed: " + Helpers.FormatDualSpeedOutput(dualAlg.BenchmarkSpeed,
+                        dualAlg.SecondaryBenchmarkSpeed, dualAlg.DualNiceHashID));
+            } else {
+                Helpers.ConsolePrint("BENCHMARK",
+                    "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, 0,
+                        BenchmarkAlgorithm.NiceHashID));
+            }
             Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                 OnBenchmarkCompleteCalled = true;
