@@ -1,6 +1,6 @@
 ﻿{
   "Name": "Română",
-  "ID": 7,
+  "ID": 8,
   "Entries": {
     "Global_Yes": "&Da",
     "Global_No": "&Nu",
@@ -9,6 +9,12 @@
     "Global_Retry": "&Reîncearcă",
 
     "Service_Location": "Locație serviciu",
+    "LocationName_eu": "Europe - Amsterdam",
+    "LocationName_usa": "USA - San Jose",
+    "LocationName_hk": "China - Hong Kong",
+    "LocationName_jp": "Japan - Tokyo",
+    "LocationName_in": "India - Chennai",
+    "LocationName_br": "Brazil - Sao Paulo",
     "Warning_with_Exclamation": "Atenție!",
     "Error_with_Exclamation": "Eroare!",
     "BitcoinAddress": "Adresă Bitcoin",
