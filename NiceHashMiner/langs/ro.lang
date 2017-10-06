@@ -140,7 +140,7 @@
     "Form_Settings_General_LogToFile": "Log În Fișier",
     "Form_Settings_General_RunAtStartup": "Rulează cu Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Minimizează Ferestrele Minerilor",
-    "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Rulează un script când se pierde un GOU CUDA",
+    "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Rulează un script când se pierde un GOU",
 
     "Form_Settings_General_Language": "Limba",
     "Form_Settings_General_MinIdleSeconds": "Inactiv Minim [s]",
