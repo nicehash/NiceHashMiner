@@ -26,6 +26,8 @@ namespace NiceHashMiner
 {
     using NiceHashMiner.Miners.Grouping;
     using NiceHashMiner.Miners.Parsing;
+    using System.IO;
+
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         private String VisitURLNew = Links.VisitURLNew;
@@ -35,6 +37,7 @@ namespace NiceHashMiner
         private Timer BitcoinExchangeCheck;
         private Timer StartupTimer;
         private Timer IdleCheck;
+        private SystemTimer ComputeDevicesCheckTimer;
 
         private bool ShowWarningNiceHashData;
         private bool DemoMode;
@@ -47,7 +50,7 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
 
-        const string _betaAlphaPostfixString = "";
+        const string _betaAlphaPostfixString = "-Pre2";
 
         private bool _isDeviceDetectionInitialized = false;
 
@@ -261,7 +264,7 @@ namespace NiceHashMiner
             if (ComputeDeviceManager.Group.ContainsAMD_GPUs) {
                 SMAMinerCheck.Interval = (ConfigManager.GeneralConfig.SwitchMinSecondsAMD + ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 + R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
             }
-
+            
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
@@ -432,6 +435,24 @@ namespace NiceHashMiner
             await MinersManager.MinerStatsCheck(Globals.NiceHashData);
         }
 
+        private void ComputeDevicesCheckTimer_Tick(object sender, EventArgs e)
+        {
+            if (ComputeDeviceManager.Query.CheckVideoControllersCountMismath())
+            {
+                // less GPUs than before, ACT!
+                try
+                {
+                    ProcessStartInfo onGPUsLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat");
+                    onGPUsLost.WindowStyle = ProcessWindowStyle.Minimized;
+                    System.Diagnostics.Process.Start(onGPUsLost);
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "OnGPUsMismatch.bat error: " + ex.Message);
+                }
+            }
+        }
+
         private void InitFlowPanelStart() {
             flowLayoutPanelRates.Controls.Clear();
             // add for every cdev a 
@@ -478,11 +499,7 @@ namespace NiceHashMiner
         public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, bool isApiGetException) {
             string ApiGetExceptionString = isApiGetException ? "**" : "";
 
-            string speedString = Helpers.FormatDualSpeedOutput(iAPIData.Speed, iAPIData.SecondarySpeed) + iAPIData.AlgorithmName + ApiGetExceptionString;
-            if (iAPIData.AlgorithmID == AlgorithmType.Equihash) {
-                speedString = speedString.Replace("H/s", "Sols/s");
-            }
-            
+            string speedString = Helpers.FormatDualSpeedOutput(iAPIData.AlgorithmID, iAPIData.Speed, iAPIData.SecondarySpeed) + iAPIData.AlgorithmName + ApiGetExceptionString;
             string rateBTCString = FormatPayingOutput(paying);
             string rateCurrencyString = ExchangeRateAPI.ConvertToActiveCurrency(paying * Globals.BitcoinUSDRate).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", ExchangeRateAPI.ActiveDisplayCurrency) + International.GetText("Day");
@@ -942,12 +959,22 @@ namespace NiceHashMiner
             SMAMinerCheck.Start();
             MinerStatsCheck.Start();
 
+            if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost) {
+                ComputeDevicesCheckTimer = new SystemTimer();
+                ComputeDevicesCheckTimer.Elapsed += ComputeDevicesCheckTimer_Tick;
+                ComputeDevicesCheckTimer.Interval = 60000;
+
+                ComputeDevicesCheckTimer.Start();
+            }
+
             return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
         }
 
         private void StopMining() {
             MinerStatsCheck.Stop();
             SMAMinerCheck.Stop();
+            if (ComputeDevicesCheckTimer != null)
+                ComputeDevicesCheckTimer.Stop();
 
             // Disable IFTTT notification before label call
             IsNotProfitable = false;

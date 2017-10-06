@@ -1,12 +1,43 @@
-
 namespace NiceHashMiner.Utils {
     public static class Bins_Data_3rd {
         #region CODE_GEN STUFF // listFiles.py
         public static string[] ALL_FILES_BINS = {
-@"\claymore_cryptonight\Data.bin",
+@"\claymore_cryptonight\Data1a1.bin",
+@"\claymore_cryptonight\Data1b1.bin",
+@"\claymore_cryptonight\Data1c1.bin",
+@"\claymore_cryptonight\Data1d1.bin",
+@"\claymore_cryptonight\Data1e1.bin",
+@"\claymore_cryptonight\Data1g1.bin",
+@"\claymore_cryptonight\Data1h1.bin",
+@"\claymore_cryptonight\Data1i1.bin",
 @"\claymore_cryptonight\msvcr110.dll",
 @"\claymore_cryptonight\NsGpuCNMiner.exe",
 @"\claymore_cryptonight\Remote manager\EthMan.exe",
+@"\claymore_cryptonight\Remote manager\libeay32.dll",
+@"\claymore_cryptonight\Remote manager\ssleay32.dll",
+@"\claymore_dual\cudart64_80.dll",
+@"\claymore_dual\Data.bin",
+@"\claymore_dual\Data1a1.bin",
+@"\claymore_dual\Data1b1.bin",
+@"\claymore_dual\Data1c1.bin",
+@"\claymore_dual\Data1d1.bin",
+@"\claymore_dual\Data1e1.bin",
+@"\claymore_dual\Data1e2.bin",
+@"\claymore_dual\Data1g1.bin",
+@"\claymore_dual\Data1g2.bin",
+@"\claymore_dual\Data1h1.bin",
+@"\claymore_dual\Data1i1.bin",
+@"\claymore_dual\EthDcrMiner64.exe",
+@"\claymore_dual\libcurl.dll",
+@"\claymore_dual\msvcr110.dll",
+@"\claymore_dual\OpenCL.dll",
+@"\claymore_dual\cuda6.5\cudart64_65.dll",
+@"\claymore_dual\cuda6.5\EthDcrMiner64.exe",
+@"\claymore_dual\cuda7.5\cudart64_75.dll",
+@"\claymore_dual\cuda7.5\EthDcrMiner64.exe",
+@"\claymore_dual\Remote manager\EthMan.exe",
+@"\claymore_dual\Remote manager\libeay32.dll",
+@"\claymore_dual\Remote manager\ssleay32.dll",
 @"\claymore_zcash\Data.bin",
 @"\claymore_zcash\Data1a1.bin",
 @"\claymore_zcash\Data1b1.bin",
@@ -14,10 +45,18 @@ namespace NiceHashMiner.Utils {
 @"\claymore_zcash\Data1d1.bin",
 @"\claymore_zcash\Data1e1.bin",
 @"\claymore_zcash\Data1g1.bin",
+@"\claymore_zcash\Data1h1.bin",
+@"\claymore_zcash\Data1i1.bin",
 @"\claymore_zcash\Data2.bin",
 @"\claymore_zcash\msvcr110.dll",
 @"\claymore_zcash\ZecMiner64.exe",
 @"\claymore_zcash\Remote manager\EthMan.exe",
+@"\claymore_zcash\Remote manager\libeay32.dll",
+@"\claymore_zcash\Remote manager\ssleay32.dll",
+@"\ewbf\cudart32_80.dll",
+@"\ewbf\cudart64_80.dll",
+@"\ewbf\miner.exe",
+@"\ewbf\msvcr120.dll",
 @"\optiminer_zcash_win\Optiminer.exe",
 @"\optiminer_zcash_win\bin\asm.bin",
 @"\optiminer_zcash_win\bin\base.bin",
@@ -30,6 +69,7 @@ namespace NiceHashMiner.Utils {
 @"\optiminer_zcash_win\bin\round7.bin",
 @"\optiminer_zcash_win\bin\round8.bin",
 @"\optiminer_zcash_win\bin\round9.bin",
+@"\optiminer_zcash_win\bin\xFiji_asm.bin",
 @"\optiminer_zcash_win\bin-191205\Bonaire_round0.bin",
 @"\optiminer_zcash_win\bin-191205\Bonaire_round1.bin",
 @"\optiminer_zcash_win\bin-191205\Bonaire_round2.bin",
@@ -829,15 +869,10 @@ namespace NiceHashMiner.Utils {
 @"\optiminer_zcash_win\bin-223600\Tonga_round6.bin",
 @"\optiminer_zcash_win\bin-223600\Tonga_round7.bin",
 @"\optiminer_zcash_win\bin-223600\Tonga_round8.bin",
-@"\optiminer_zcash_win\bin-223600\Tonga_round9.bin",
-
-@"\claymore_dual\EthDcrMiner64.exe",
-
-@"\ewbf\miner.exe",
-
-@"\prospector\prospector.exe"
+@"\optiminer_zcash_win\bin-223600\Tonga_round9.bin",
+@"\prospector\prospector.exe",
+@"\prospector\vcruntime140.dll",
 };
         #endregion //CODE_GEN STUFF // listFiles.py
     }
 }
-

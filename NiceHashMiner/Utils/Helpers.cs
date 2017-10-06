@@ -8,6 +8,7 @@ using NiceHashMiner.Configs;
 using System.Globalization;
 using NiceHashMiner.PInvoke;
 using System.Management;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -145,7 +146,7 @@ namespace NiceHashMiner
             return ret;
         }
 
-        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0) {
+        public static string FormatDualSpeedOutput(AlgorithmType algorithmID, double primarySpeed, double secondarySpeed=0) {
             string ret;
             if (secondarySpeed > 0) {
                 ret = FormatSpeedOutput(primarySpeed, "") + "/" + FormatSpeedOutput(secondarySpeed, "") + " ";
@@ -153,7 +154,11 @@ namespace NiceHashMiner
             else {
                 ret = FormatSpeedOutput(primarySpeed);
             }
-            return ret + "H/s ";
+
+            if (algorithmID == AlgorithmType.Equihash)
+                return ret + "Sols/s ";
+            else
+                return ret + "H/s ";
         }
 
         public static string GetMotherboardID() {

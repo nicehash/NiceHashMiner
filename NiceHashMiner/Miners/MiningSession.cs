@@ -8,6 +8,7 @@ using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Configs;
 using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Timer = System.Timers.Timer;
 using System.Timers;
@@ -356,6 +357,7 @@ namespace NiceHashMiner.Miners {
                 // check which groupMiners should be stopped and which ones should be started and which to keep running
                 Dictionary<string, GroupMiner> toStopGroupMiners = new Dictionary<string, GroupMiner>();
                 Dictionary<string, GroupMiner> toRunNewGroupMiners = new Dictionary<string, GroupMiner>();
+                Dictionary<string, GroupMiner> noChangeGroupMiners = new Dictionary<string, GroupMiner>();
                 // check what to stop/update
                 foreach (string runningGroupKey in _runningGroupMiners.Keys) {
                     if (newGroupedMiningPairs.ContainsKey(runningGroupKey) == false) {
@@ -385,6 +387,8 @@ namespace NiceHashMiner.Miners {
                                 }
                                 toRunNewGroupMiners[runningGroupKey] = newGroupMiner;
                             }
+                            else
+                                noChangeGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
                         }
                     }
                 }
@@ -397,23 +401,48 @@ namespace NiceHashMiner.Miners {
                         toRunNewGroupMiners[key] = newGroupMiner;
                     }
                 }
-                // stop old miners
-                foreach (var toStop in toStopGroupMiners.Values) {
-                    toStop.Stop();
-                    _runningGroupMiners.Remove(toStop.Key);
-                    // TODO check if daggerHashimoto and save
-                    if(toStop.AlgorithmType == AlgorithmType.DaggerHashimoto) {
-                        if (toStop.DeviceType == DeviceType.NVIDIA) {
-                            _ethminerNVIDIAPaused = toStop;
-                        } else if (toStop.DeviceType == DeviceType.AMD) {
-                            _ethminerAMDPaused = toStop;
+
+                if ((toStopGroupMiners.Values.Count > 0) || (toRunNewGroupMiners.Values.Count > 0)) {
+                    StringBuilder stringBuilderPreviousAlgo = new StringBuilder();
+                    StringBuilder stringBuilderCurrentAlgo = new StringBuilder();
+                    StringBuilder stringBuilderNoChangeAlgo = new StringBuilder();
+
+                    // stop old miners                   
+                    foreach (var toStop in toStopGroupMiners.Values) {
+                        stringBuilderPreviousAlgo.Append(String.Format("{0}: {1}, ", toStop.DevicesInfoString, toStop.AlgorithmType));
+
+                        toStop.Stop();
+                        _runningGroupMiners.Remove(toStop.Key);
+                        // TODO check if daggerHashimoto and save
+                        if (toStop.AlgorithmType == AlgorithmType.DaggerHashimoto) {
+                            if (toStop.DeviceType == DeviceType.NVIDIA) {
+                                _ethminerNVIDIAPaused = toStop;
+                            } else if (toStop.DeviceType == DeviceType.AMD) {
+                                _ethminerAMDPaused = toStop;
+                            }
                         }
                     }
-                }
-                // start new miners
-                foreach (var toStart in toRunNewGroupMiners.Values) {
-                    toStart.Start(_miningLocation, _btcAdress, _worker);
-                    _runningGroupMiners[toStart.Key] = toStart;
+
+                    // start new miners
+                    foreach (var toStart in toRunNewGroupMiners.Values) {
+                        stringBuilderCurrentAlgo.Append(String.Format("{0}: {1}, ", toStart.DevicesInfoString, toStart.AlgorithmType));
+
+                        toStart.Start(_miningLocation, _btcAdress, _worker);
+                        _runningGroupMiners[toStart.Key] = toStart;
+                    }
+
+                    // which miners dosen't change
+                    foreach (var noChange in noChangeGroupMiners.Values)
+                        stringBuilderNoChangeAlgo.Append(String.Format("{0}: {1}, ", noChange.DevicesInfoString, noChange.AlgorithmType));
+
+                    if (stringBuilderPreviousAlgo.Length > 0)
+                        Helpers.ConsolePrint(TAG, String.Format("Stop Mining: {0}", stringBuilderPreviousAlgo.ToString()));
+
+                    if (stringBuilderCurrentAlgo.Length > 0)
+                        Helpers.ConsolePrint(TAG, String.Format("Now Mining : {0}", stringBuilderCurrentAlgo.ToString()));
+
+                    if (stringBuilderNoChangeAlgo.Length > 0)
+                        Helpers.ConsolePrint(TAG, String.Format("No change  : {0}", stringBuilderNoChangeAlgo.ToString()));
                 }
             }
 
@@ -433,33 +462,36 @@ namespace NiceHashMiner.Miners {
         public async Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
             double CurrentProfit = 0.0d;
             _mainFormRatesComunication.ClearRates(_runningGroupMiners.Count);
-            foreach (var groupMiners in _runningGroupMiners.Values) {
-                Miner m = groupMiners.Miner;
+            var checks = new List<GroupMiner>(_runningGroupMiners.Values);
+            try {
+                foreach (var groupMiners in checks) {
+                    Miner m = groupMiners.Miner;
 
-                // skip if not running or if await already in progress
-                if (!m.IsRunning || m.IsUpdatingAPI) continue;
+                    // skip if not running or if await already in progress
+                    if (!m.IsRunning || m.IsUpdatingAPI) continue;
 
-                m.IsUpdatingAPI = true;
-                APIData AD = await m.GetSummaryAsync();
-                m.IsUpdatingAPI = false;
-                if (AD == null) {
-                    Helpers.ConsolePrint(m.MinerTAG(), "GetSummary returned null..");
-                }
-                // set rates
-                if (NiceHashData != null && AD != null) {
-                    groupMiners.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
-                    if (NiceHashData.ContainsKey(AD.SecondaryAlgorithmID)) {
-                        groupMiners.CurrentRate += NiceHashData[AD.SecondaryAlgorithmID].paying * AD.SecondarySpeed * 0.000000001;
+                    m.IsUpdatingAPI = true;
+                    APIData AD = await m.GetSummaryAsync();
+                    m.IsUpdatingAPI = false;
+                    if (AD == null) {
+                        Helpers.ConsolePrint(m.MinerTAG(), "GetSummary returned null..");
                     }
-                } else {
-                    groupMiners.CurrentRate = 0;
-                    // set empty
-                    AD = new APIData(groupMiners.AlgorithmType);
+                    // set rates
+                    if (NiceHashData != null && AD != null) {
+                        groupMiners.CurrentRate = NiceHashData[AD.AlgorithmID].paying * AD.Speed * 0.000000001;
+                        if (NiceHashData.ContainsKey(AD.SecondaryAlgorithmID)) {
+                            groupMiners.CurrentRate += NiceHashData[AD.SecondaryAlgorithmID].paying * AD.SecondarySpeed * 0.000000001;
+                        }
+                    } else {
+                        groupMiners.CurrentRate = 0;
+                        // set empty
+                        AD = new APIData(groupMiners.AlgorithmType);
+                    }
+                    CurrentProfit += groupMiners.CurrentRate;
+                    // Update GUI
+                    _mainFormRatesComunication.AddRateInfo(m.MinerTAG(), groupMiners.DevicesInfoString, AD, groupMiners.CurrentRate, m.IsAPIReadException);
                 }
-                CurrentProfit += groupMiners.CurrentRate;
-                // Update GUI
-                _mainFormRatesComunication.AddRateInfo(m.MinerTAG(), groupMiners.DevicesInfoString, AD, groupMiners.CurrentRate, m.IsAPIReadException);
-            }
+            } catch (Exception e) { Helpers.ConsolePrint(TAG, e.Message); }
         }
 
     }
