@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using System.Net;
+using System.Threading.Tasks;
 using NiceHashMiner.Miners.Grouping;
 
 namespace NiceHashMiner.Miners {
@@ -114,9 +115,9 @@ namespace NiceHashMiner.Miners {
             }
         }
 
-        public override APIData GetSummary() {
+        public override Task<APIData> GetSummaryAsync() {
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
-
+            
             bool ismining;
             var getSpeedStatus = GetSpeed(out ismining, out ad.Speed);
             if (GetSpeedStatus.GOT == getSpeedStatus) {
@@ -125,18 +126,18 @@ namespace NiceHashMiner.Miners {
                 _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                 // check if speed zero
                 if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
-                return ad;
+                return Task.FromResult(ad);
             } else if (GetSpeedStatus.NONE == getSpeedStatus) {
                 ad.Speed = 0;
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-                return ad;
+                return Task.FromResult(ad);
             }
             // else if (GetSpeedStatus.EXCEPTION == getSpeedStatus) {
             // we don't restart unles not responding for long time check cooldown logic in Miner
             //Helpers.ConsolePrint(MinerTAG(), "ethminer is not running.. restarting..");
             //IsRunning = false;
             _currentMinerReadStatus = MinerAPIReadStatus.NONE;
-            return null;
+            return Task.FromResult<APIData>(null);
         }
 
         protected override NiceHashProcess _Start() {

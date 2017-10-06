@@ -12,6 +12,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -147,7 +148,7 @@ namespace NiceHashMiner.Miners
 
         #endregion // Decoupled benchmarking routines
 
-        public override APIData GetSummary() {
+        public override async Task<APIData> GetSummaryAsync() {
             // CryptoNight does not have api bind port
             if (IsAPIReadException) {
                 // check if running
@@ -183,7 +184,7 @@ namespace NiceHashMiner.Miners
                 if (CryptoNightData.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
                 return CryptoNightData;
             }
-            return GetSummaryCPU_CCMINER();
+            return await GetSummaryCPU_CCMINERAsync();
         }
 
     }

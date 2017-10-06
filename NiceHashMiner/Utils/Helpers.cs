@@ -9,6 +9,7 @@ using System.Globalization;
 using NiceHashMiner.PInvoke;
 using NiceHashMiner.Enums;
 using System.Management;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
@@ -324,5 +325,26 @@ namespace NiceHashMiner
             }
         }
 
+        public static void SetNvidiaP0State()
+        {
+            try
+            {
+                ProcessStartInfo psi = new ProcessStartInfo();
+                psi.FileName = "nvidiasetp0state.exe";
+                psi.Verb = "runas";
+                psi.UseShellExecute = true;
+                psi.CreateNoWindow = true;
+                Process p = Process.Start(psi);
+                p.WaitForExit();
+                if (p.ExitCode != 0)
+                    Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode.ToString());
+                else
+                    Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state all OK");
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
+            }
+        }
     }
 }

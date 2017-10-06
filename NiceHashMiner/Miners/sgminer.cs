@@ -14,6 +14,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -193,7 +194,7 @@ namespace NiceHashMiner.Miners
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
             if (_benchmarkTimer.Elapsed.TotalSeconds >= BenchmarkTimeInSeconds) {
-                string resp = GetAPIData(APIPort, "quit").TrimEnd(new char[] { (char)0 });
+                string resp = GetAPIDataAsync(APIPort, "quit").Result.TrimEnd(new char[] { (char)0 });
                 Helpers.ConsolePrint("BENCHMARK", "SGMiner Response: " + resp);
             }
             if (_benchmarkTimer.Elapsed.TotalSeconds >= BenchmarkTimeInSeconds + 2) {
@@ -274,11 +275,11 @@ namespace NiceHashMiner.Miners
         #endregion // Decoupled benchmarking routines
 
         // TODO _currentMinerReadStatus
-        public override APIData GetSummary() {
+        public override async Task<APIData> GetSummaryAsync() {
             string resp;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
-            resp = GetAPIData(APIPort, "summary");
+            resp = await GetAPIDataAsync(APIPort, "summary");
             if (resp == null) {
                 _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                 return null;
@@ -288,7 +289,7 @@ namespace NiceHashMiner.Miners
 
             try {
                 // Checks if all the GPUs are Alive first
-                string resp2 = GetAPIData(APIPort, "devs");
+                string resp2 = await GetAPIDataAsync(APIPort, "devs");
                 if (resp2 == null) {
                     _currentMinerReadStatus = MinerAPIReadStatus.NONE;
                     return null;

@@ -13,27 +13,27 @@ using System.Threading;
 namespace NiceHashMiner.Miners {
     public class ClaymoreCryptoNightMiner : ClaymoreBaseMiner {
 
-        const string _LOOK_FOR_START = "hashrate =";
+        const string _LOOK_FOR_START = "XMR - Total Speed:";
         public ClaymoreCryptoNightMiner()
             : base("ClaymoreCryptoNightMiner", _LOOK_FOR_START) {
         }
 
         protected override double DevFee() {
-            return 2.0;
+            return 1.0;
         }
 
         public override void Start(string url, string btcAdress, string worker) {
             string username = GetUsername(btcAdress, worker);
-            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -o " + url + " -u " + username + " -p x -dbg -1";
+            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -xpool " + url + " -xwal " + username + " -xpsw x -dbg -1";
             ProcessHandle = _Start();
         }
-        
+
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             // clean old logs
             CleanAllOldLogs();
-            benchmarkTimeWait = time / 3; // 3 times faster than sgminer
+            benchmarkTimeWait = time; // Takes longer as of v10
 
             // network workaround
             string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
@@ -42,7 +42,7 @@ namespace NiceHashMiner.Miners {
             if (ConfigManager.GeneralConfig.WorkerName.Length > 0)
                 username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
 
-            string ret = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -o " + url + " -u " + username + " -p x";
+            string ret = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -xpool " + url + " -xwal " + username + " -xpsw x";
             return ret;
         }
 

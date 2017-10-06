@@ -13,6 +13,8 @@ namespace NiceHashMiner.Enums
         Pt,
         Bg,
         It,
-        Pl
+        Pl,
+        Zh_cn,
+        Ro
     }
 }

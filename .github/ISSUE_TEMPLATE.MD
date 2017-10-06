@@ -5,3 +5,5 @@ To keep development of NiceHash Miner Legacy streamlined please make sure the fo
 - [ ] The issue is with NHML and not inherent of miner executables. This can be verified by launching the miner manually and looking for the error.
 - [ ] The issue is relevant to NHML specifically and not to the NiceHash service.
 - [ ] Specifications of setup such as NHML version, Windows version, and hardware are included.
+
+Note this is a guide, you can delete this text once you ensure enough information is given

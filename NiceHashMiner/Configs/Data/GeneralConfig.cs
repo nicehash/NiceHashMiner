@@ -14,6 +14,7 @@ namespace NiceHashMiner.Configs.Data {
         public bool DebugConsole = false;
         public string BitcoinAddress = "";
         public string WorkerName = "worker1";
+        public TimeUnitType TimeUnit = TimeUnitType.Day;
         public string IFTTTKey = "";
         public int ServiceLocation = 0;
         public bool AutoStartMining = false;
@@ -58,6 +59,7 @@ namespace NiceHashMiner.Configs.Data {
         public bool IdleWhenNoInternetAccess = true;
         public bool UseIFTTT = false;
         public bool DownloadInit = false;
+        public bool RunScriptOnCUDA_GPU_Lost = false;
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
         public bool DownloadInit3rdParty = false;
@@ -75,6 +77,8 @@ namespace NiceHashMiner.Configs.Data {
         public int NormalizedProfitHistory = 15;
         public double IQRNormalizeFactor = 0.0;
 
+        public bool CoolDownCheckEnabled = true;
+
         // methods
         public void SetDefaults() {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -82,6 +86,7 @@ namespace NiceHashMiner.Configs.Data {
             ForceCPUExtension = CPUExtensionType.Automatic;
             BitcoinAddress = "";
             WorkerName = "worker1";
+            TimeUnit = TimeUnitType.Day;
             ServiceLocation = 0;
             AutoStartMining = false;
             //LessThreads = 0;
@@ -121,6 +126,8 @@ namespace NiceHashMiner.Configs.Data {
             IQROverFactor = 3.0;
             NormalizedProfitHistory = 15;
             IQRNormalizeFactor = 0.0;
+            CoolDownCheckEnabled = true;
+            RunScriptOnCUDA_GPU_Lost = false;
         }
 
         public void FixSettingBounds() {
