@@ -242,11 +242,7 @@ namespace NiceHashMiner
             CurrentIntensity = TuningStart;
             return IncrementToNextEmptyIntensity();
         }
-
-        public override void ClearBenchmarkPending() {
-            base.ClearBenchmarkPending();
-            CurrentIntensity = -1;
-        }
+        
         public override void ClearBenchmarkPendingFirst() {
             base.ClearBenchmarkPendingFirst();
             CurrentIntensity = -1;
