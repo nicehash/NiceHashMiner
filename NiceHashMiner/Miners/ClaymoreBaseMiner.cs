@@ -150,11 +150,9 @@ namespace NiceHashMiner.Miners
                 .ThenBy(pair => pair.Device.IDByBus)
                 .ToList();
             string extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
-
-            string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
-            string deviceStringCommand = " -di ";
-            string intensityStringCommand = "";
+            
             List<string> ids = new List<string>();
+            var intensities = new List<string>();
 
             int amdDeviceCount = ComputeDeviceManager.Query.AMD_Devices.Count;
             Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
@@ -184,7 +182,8 @@ namespace NiceHashMiner.Miners
                     intensities.Add(algo.CurrentIntensity.ToString());
                 }
             }
-            deviceStringCommand += String.Join("", ids);
+            var deviceStringCommand = DeviceCommand() + String.Join("", ids);
+            string intensityStringCommand = "";
             if (intensities.Count > 0) {
                 intensityStringCommand = " -dcri " + String.Join(",", intensities);
             }
