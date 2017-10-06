@@ -322,21 +322,7 @@ namespace NiceHashMiner
             LoadingScreen.IncreaseLoadCounter();
             if (ConfigManager.GeneralConfig.NVIDIAP0State) {
                 LoadingScreen.SetInfoMsg(International.GetText("Form_Main_loadtext_NVIDIAP0State"));
-                try {
-                    ProcessStartInfo psi = new ProcessStartInfo();
-                    psi.FileName = "nvidiasetp0state.exe";
-                    psi.Verb = "runas";
-                    psi.UseShellExecute = true;
-                    psi.CreateNoWindow = true;
-                    Process p = Process.Start(psi);
-                    p.WaitForExit();
-                    if (p.ExitCode != 0)
-                        Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode.ToString());
-                    else
-                        Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state all OK");
-                } catch (Exception ex) {
-                    Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
-                }
+                Helpers.SetNvidiaP0State();
             }
 
             LoadingScreen.FinishLoad();
