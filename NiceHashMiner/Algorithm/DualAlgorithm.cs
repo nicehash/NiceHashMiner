@@ -8,12 +8,8 @@ using NiceHashMiner.Enums;
 namespace NiceHashMiner
 {
     public class DualAlgorithm : Algorithm {
-        private AlgorithmType secondaryNiceHashID;
-        public override AlgorithmType SecondaryNiceHashID {
-            get {
-                return secondaryNiceHashID;
-            }
-        }
+        public override AlgorithmType SecondaryNiceHashID { get; }
+
         public string SecondaryAlgorithmName = "";
         // ClaymoreDual intensity tuning
         public int CurrentIntensity = -1;
@@ -30,7 +26,7 @@ namespace NiceHashMiner
         private bool tuningEnabledBack;
         private int tuningStartBack;
         private int tuningEndBack;
-        public int tuningIntervalBack;
+        private int tuningIntervalBack;
 
         public double SecondaryCurNhmSMADataVal = 0;
         public bool IntensityUpToDate = false;
@@ -63,9 +59,7 @@ namespace NiceHashMiner
                 }
                 return secondaryBenchmarkSpeed;
             }
-            set {
-                secondaryBenchmarkSpeed = value;
-            }
+            set => secondaryBenchmarkSpeed = value;
         }
         public double SecondaryAveragedSpeed { get; set; }
 
@@ -99,7 +93,7 @@ namespace NiceHashMiner
         public override bool BenchmarkNeeded {
             get {
                 if (TuningEnabled) {
-                    if (SelectedIntensities.Any(x => isIntensityEmpty(x))) return true;
+                    if (SelectedIntensities.Any(isIntensityEmpty)) return true;
                 } else {
                     if (SecondaryBenchmarkSpeed <= 0 || BenchmarkSpeed <= 0) {
                         return true;
@@ -126,12 +120,8 @@ namespace NiceHashMiner
                 return NiceHashID;
             }
         }
-        public override bool IsDual {
-            get {
-                return true;
-            }
-        }
-        
+        public override bool IsDual => true;
+
         public string SecondaryCurPayingRatio {
             get {
                 string ratio = International.GetText("BenchmarkRatioRateN_A");
@@ -145,7 +135,7 @@ namespace NiceHashMiner
 
         public DualAlgorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID) 
             : base(minerBaseType, niceHashID, "") {
-            this.secondaryNiceHashID = secondaryNiceHashID;
+            SecondaryNiceHashID = secondaryNiceHashID;
 
             AlgorithmName = AlgorithmNiceHashNames.GetName(DualNiceHashID);  // needed to add secondary
             SecondaryAlgorithmName = AlgorithmNiceHashNames.GetName(secondaryNiceHashID);
@@ -175,13 +165,9 @@ namespace NiceHashMiner
         }
 
         public string SecondaryBenchmarkSpeedString() {
-            var dcriStatus = " (dcri:{0})";
+            const string dcriStatus = " (dcri:{0})";
             if (Enabled && IsBenchmarkPending && TuningEnabled && !string.IsNullOrEmpty(BenchmarkStatus)) {
-                if (CurrentIntensity >= 0) {
-                    return String.Format(dcriStatus, CurrentIntensity);
-                } else {
-                    return BenchmarkSpeedString();
-                }
+                return CurrentIntensity >= 0 ? String.Format(dcriStatus, CurrentIntensity) : BenchmarkSpeedString();
             }
             if (SecondaryBenchmarkSpeed > 0) {
                 return Helpers.FormatDualSpeedOutput(SecondaryBenchmarkSpeed) 
@@ -227,15 +213,13 @@ namespace NiceHashMiner
 
         private bool isIntensityEmpty(int i) {
             if (!IntensitySpeeds.ContainsKey(i) || !SecondaryIntensitySpeeds.ContainsKey(i)) return true;
-            if (IntensitySpeeds[i] <= 0 || SecondaryIntensitySpeeds[i] <= 0) return true;
-            return false;
+            return IntensitySpeeds[i] <= 0 || SecondaryIntensitySpeeds[i] <= 0;
         }
 
         public bool IncrementToNextEmptyIntensity() {  // Return false if no more needed increment
             if (!TuningEnabled) return false;
-            CurrentIntensity = SelectedIntensities.FirstOrDefault(x => isIntensityEmpty(x));
-            if (CurrentIntensity > 0) return true;
-            return false;
+            CurrentIntensity = SelectedIntensities.FirstOrDefault(isIntensityEmpty);
+            return CurrentIntensity > 0;
         }
 
         public bool StartTuning() {  // Return false if no benchmark needed
@@ -261,14 +245,12 @@ namespace NiceHashMiner
         }
 
         public double SpeedForIntensity(int intensity) {
-            double speed = 0;
-            IntensitySpeeds.TryGetValue(intensity, out speed);
+            IntensitySpeeds.TryGetValue(intensity, out var speed);
             return speed;
         }
 
         public double SecondarySpeedForIntensity(int intensity) {
-            double speed = 0;
-            SecondaryIntensitySpeeds.TryGetValue(intensity, out speed);
+            SecondaryIntensitySpeeds.TryGetValue(intensity, out var speed);
             return speed;
         }
 

@@ -13,23 +13,16 @@ namespace NiceHashMiner {
         public readonly string MinerBaseTypeName;
         public readonly AlgorithmType NiceHashID;
         // Useful placeholder for sorting/finding
-        public virtual AlgorithmType SecondaryNiceHashID {
-            get {
-                return AlgorithmType.NONE;
-            }
-        }
+        public virtual AlgorithmType SecondaryNiceHashID => AlgorithmType.NONE;
+
         public readonly MinerBaseType MinerBaseType;
         public string AlgorithmStringID { get; protected set; }
         // Miner name is used for miner ALGO flag parameter
         public readonly string MinerName;
         protected double benchmarkSpeed;
         public virtual double BenchmarkSpeed {
-            get {
-                return benchmarkSpeed;
-            }
-            set {
-                benchmarkSpeed = value;
-            }
+            get => benchmarkSpeed;
+            set => benchmarkSpeed = value;
         }
         public string ExtraLaunchParameters { get; set; }
         public bool Enabled { get; set; }
@@ -44,11 +37,7 @@ namespace NiceHashMiner {
         // these are changing (logging reasons)
         public double CurrentProfit = 0;
         public double CurNhmSMADataVal = 0;
-        public virtual bool BenchmarkNeeded {
-            get {
-                return BenchmarkSpeed <= 0;
-            }
-        }
+        public virtual bool BenchmarkNeeded => BenchmarkSpeed <= 0;
 
         public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName) {
             NiceHashID = niceHashID;
@@ -63,7 +52,7 @@ namespace NiceHashMiner {
             BenchmarkSpeed = 0.0d;
             ExtraLaunchParameters = "";
             LessThreads = 0;
-            Enabled = !(NiceHashID == AlgorithmType.Nist5);
+            Enabled = NiceHashID != AlgorithmType.Nist5;
             BenchmarkStatus = "";
         }
 
@@ -131,15 +120,8 @@ namespace NiceHashMiner {
             return International.GetText("BenchmarkSpeedStringNone");
         }
         
-        public virtual AlgorithmType DualNiceHashID {
-            get {
-                return NiceHashID;
-            }
-        }
-        public virtual bool IsDual {
-            get {
-                return false;
-            }
-        }
+        public virtual AlgorithmType DualNiceHashID => NiceHashID;
+
+        public virtual bool IsDual => false;
     }
 }
