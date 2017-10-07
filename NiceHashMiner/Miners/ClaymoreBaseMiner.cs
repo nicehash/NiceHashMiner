@@ -141,8 +141,6 @@ namespace NiceHashMiner.Miners
             return " -di ";
         }
 
-        // This method now overridden in ClaymoreCryptoNightMiner 
-        // Following logic for ClaymoreDual and ClaymoreZcash
         protected override string GetDevicesCommandString() {
             // First by device type (AMD then NV), then by bus ID index
             var sortedMinerPairs = MiningSetup.MiningPairs
@@ -155,22 +153,22 @@ namespace NiceHashMiner.Miners
             var intensities = new List<string>();
 
             int amdDeviceCount = ComputeDeviceManager.Query.AMD_Devices.Count;
-            Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
+            Helpers.ConsolePrint("ClaymoreIndexing", $"Found {amdDeviceCount} AMD devices");
 
             foreach (var mPair in sortedMinerPairs) {
                 var id = mPair.Device.IDByBus;
                 if (id < 0) {
                     // should never happen
-                    Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id.ToString() + " skipping device");
+                    Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id + " skipping device");
                     continue;
                 }
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA) {
-                    Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount.ToString());
+                    Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount);
                     id += amdDeviceCount;
                 }
                 if (id > 9) {  // New >10 GPU support in CD9.8
-                    if (id < 36) {  // CD supports 0-9 and a-z indexes, so 36 GPUs
-                        char idchar = (char)(id + 87);  // 10 = 97(a), 11 - 98(b), etc
+                    if (id < 36) {  // CD supports 0-9 and a-z indices, so 36 GPUs
+                        char idchar = (char)(id + 87);  // 10 = 97(a), 11 = 98(b), etc
                         ids.Add(idchar.ToString());
                     } else {
                         Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
