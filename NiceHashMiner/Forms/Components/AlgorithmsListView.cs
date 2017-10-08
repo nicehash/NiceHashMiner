@@ -85,7 +85,7 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");
         }
 
-        public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled) {
+        public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled, bool isHideDisabled = false) {
             _computeDevice = computeDevice;
             listViewAlgorithms.BeginUpdate();
             listViewAlgorithms.Items.Clear();
@@ -99,8 +99,16 @@ namespace NiceHashMiner.Forms.Components {
                 lvi.SubItems.Add(alg.CurPayingRate);
                 lvi.Tag = alg;
                 lvi.Checked = alg.Enabled;
-                listViewAlgorithms.Items.Add(lvi);
+                if ((isHideDisabled == false) || alg.Enabled == true)
+                {
+                    listViewAlgorithms.Items.Add(lvi);
+                }
             }
+            
+            // AutoResizeColumns to fit both headers and column content
+            listViewAlgorithms.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            listViewAlgorithms.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
             listViewAlgorithms.EndUpdate();
             this.Enabled = isEnabled;
         }

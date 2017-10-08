@@ -75,7 +75,7 @@ namespace NiceHashMiner.Forms
             // set first device selected {
             if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0) {
                 _selectedComputeDevice = ComputeDeviceManager.Avaliable.AllAvaliableDevices[0];
-                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled, checkBox_HideDisabledAlgorithms.Checked);
                 groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
             }
 
@@ -240,6 +240,10 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(pictureBox_MinimizeMiningWindows, International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
             toolTip1.SetToolTip(checkBox_MinimizeMiningWindows, International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
 
+            // Hide Disabled Algorithms
+            toolTip1.SetToolTip(checkBox_HideDisabledAlgorithms, International.GetText("Form_Settings_ToolTip_HideDisabledAlgorithms"));
+            toolTip1.SetToolTip(pictureBox_HideDisabledAlgorithms, International.GetText("Form_Settings_ToolTip_HideDisabledAlgorithms"));
+
             this.Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
@@ -333,6 +337,8 @@ namespace NiceHashMiner.Forms
             // advanced
             groupBox_Miners.Text = International.GetText("FormSettings_Tab_Advanced_Group_Miners");
             groupBoxBenchmarkTimeLimits.Text = International.GetText("FormSettings_Tab_Advanced_Group_BenchmarkTimeLimits");
+
+            checkBox_HideDisabledAlgorithms.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_HideDisabledAlgorithms");
 
             buttonAllProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_ALLProfitability");
             buttonSelectedProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability");
@@ -514,21 +520,27 @@ namespace NiceHashMiner.Forms
 
         private void InitializeDevicesTab() {
             InitializeDevicesCallbacks();
+            InitializeDevicesTabFieldValuesReferences();
         }
 
         private void InitializeDevicesCallbacks() {
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
+            checkBox_HideDisabledAlgorithms.CheckedChanged += new System.EventHandler(this.checkBox_HideDisabledAlgorithms_CheckChanged);
         }
 
-        #endregion //Tab Devices
+        private void InitializeDevicesTabFieldValuesReferences() {
+            checkBox_HideDisabledAlgorithms.Checked = ConfigManager.GeneralConfig.HideDisabledAlgorithms;
+        }
+
+            #endregion //Tab Devices
 
 
-        #endregion // Initializations
+            #endregion // Initializations
 
-        #region Form Callbacks
+            #region Form Callbacks
 
-        #region Tab General
-        private void GeneralCheckBoxes_CheckedChanged(object sender, EventArgs e) {
+            #region Tab General
+            private void GeneralCheckBoxes_CheckedChanged(object sender, EventArgs e) {
             if (!_isInitFinished) return;
             // indicate there has been a change
             IsChange = true;
@@ -681,7 +693,7 @@ namespace NiceHashMiner.Forms
             algorithmSettingsControl1.Deselect();
             // show algorithms
             _selectedComputeDevice = ComputeDeviceManager.Avaliable.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
-            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled, checkBox_HideDisabledAlgorithms.Checked);
             groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
         }
 
@@ -845,6 +857,16 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
 
             textBox_IFTTTKey.Enabled = checkBox_UseIFTTT.Checked;
+        }
+
+        private void checkBox_HideDisabledAlgorithms_CheckChanged(object sender, EventArgs e)
+        {
+            if (!_isInitFinished) return;
+            IsChange = true;
+
+            ConfigManager.GeneralConfig.HideDisabledAlgorithms = checkBox_HideDisabledAlgorithms.Checked;
+
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled, checkBox_HideDisabledAlgorithms.Checked);
         }
     }
 }

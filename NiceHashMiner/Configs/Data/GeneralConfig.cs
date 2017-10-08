@@ -66,6 +66,8 @@ namespace NiceHashMiner.Configs.Data {
 
         public bool AllowMultipleInstances = true;
 
+        public bool HideDisabledAlgorithms = false;
+
         // device enabled disabled stuff
         public List<ComputeDeviceConfig> LastDevicesSettup = new List<ComputeDeviceConfig>();
         // 
@@ -128,6 +130,7 @@ namespace NiceHashMiner.Configs.Data {
             IQRNormalizeFactor = 0.0;
             CoolDownCheckEnabled = true;
             RunScriptOnCUDA_GPU_Lost = false;
+            HideDisabledAlgorithms = false;
         }
 
         public void FixSettingBounds() {
