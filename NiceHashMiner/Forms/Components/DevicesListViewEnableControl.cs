@@ -219,5 +219,22 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
 
+        private void listViewDevices_Leave(object sender, EventArgs e)
+        {
+            if (listViewDevices.SelectedItems.Count > 0)
+            {
+                listViewDevices.SelectedItems[0].BackColor = SystemColors.Highlight;
+                listViewDevices.SelectedItems[0].ForeColor = SystemColors.HighlightText;
+            }
+        }
+
+        private void listViewDevices_Enter(object sender, EventArgs e)
+        {
+            if (listViewDevices.SelectedItems.Count > 0)
+            {
+                listViewDevices.SelectedItems[0].BackColor = SystemColors.Window;
+                listViewDevices.SelectedItems[0].ForeColor = SystemColors.WindowText;
+            }
+        }
     }
 }
