@@ -21,6 +21,9 @@ namespace NiceHashMiner.Forms.Components {
         private const int RATIO     = 3;
         private const int RATE      = 4;
 
+        private ColumnHeader SortedColumn = null;
+        private SortOrder SortOrder = SortOrder.None;
+
         public interface IAlgorithmsListView {
             void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice);
             void HandleCheck(ListViewItem lvi);
@@ -93,8 +96,9 @@ namespace NiceHashMiner.Forms.Components {
                 ListViewItem lvi = new ListViewItem();
                 ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName));
 
-                //sub.Tag = alg.Value;
                 lvi.SubItems.Add(alg.BenchmarkSpeedString());
+                // Use sum of speeds for sorting based on speed for dual algos
+                lvi.SubItems[SPEED].Tag = alg.BenchmarkSpeed + alg.SecondaryBenchmarkSpeed;
                 lvi.SubItems.Add(alg.CurPayingRatio);
                 lvi.SubItems.Add(alg.CurPayingRate);
                 lvi.Tag = alg;
@@ -169,6 +173,7 @@ namespace NiceHashMiner.Forms.Components {
                         if (algo != null && algo.AlgorithmStringID == algorithm.AlgorithmStringID) {
                             // TODO handle numbers
                             lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
+                            lvi.SubItems[SPEED].Tag = algorithm.BenchmarkSpeed + algorithm.SecondaryBenchmarkSpeed;
                             lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
                             lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
                             _listItemCheckColorSetter.LviSetColor(lvi);
@@ -208,6 +213,39 @@ namespace NiceHashMiner.Forms.Components {
             }
         }
 
+        private void listViewAlgorithms_ColumnClick(object sender, ColumnClickEventArgs e) {
+            // New sorted column
+            ColumnHeader NewSortedColumn = listViewAlgorithms.Columns[e.Column];
+            // Establish new sort order
+            if (SortOrder == SortOrder.None)
+            {
+                SortOrder = SortOrder.Ascending;
+            }
+            else
+            {
+                if (NewSortedColumn == SortedColumn)
+                {
+                    SortOrder = (SortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending);
+                }
+                else
+                {
+                    SortOrder = SortOrder.Ascending;
+                }
+                // Remove old sort marker
+                SortedColumn.Text = SortedColumn.Text.Substring(0, SortedColumn.Text.Length - 2);
+            }
+
+            // Replace sorted column
+            SortedColumn = NewSortedColumn;
+            SortedColumn.Text = SortedColumn.Text + " " + (SortOrder == SortOrder.Ascending ? "˄" : "˅");
+            // Resize column header to fit sort marker if needed
+            listViewAlgorithms.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            // Create the comparer
+            listViewAlgorithms.ListViewItemSorter = new AlgorithmsListViewComparer(SortedColumn.Index, SortOrder);
+            // Sort
+            listViewAlgorithms.Sort();
+        }
+
         private void toolStripMenuItemEnableAll_Click(object sender, EventArgs e) {
             foreach (ListViewItem lvi in listViewAlgorithms.Items) {
                 lvi.Checked = true;
@@ -236,6 +274,5 @@ namespace NiceHashMiner.Forms.Components {
                 }
             }
         }
-
     }
 }

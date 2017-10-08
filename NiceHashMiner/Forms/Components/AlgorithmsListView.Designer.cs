@@ -46,12 +46,14 @@
             this.listViewAlgorithms.FullRowSelect = true;
             this.listViewAlgorithms.GridLines = true;
             this.listViewAlgorithms.Location = new System.Drawing.Point(0, 0);
+            this.listViewAlgorithms.Margin = new System.Windows.Forms.Padding(4);
             this.listViewAlgorithms.MultiSelect = false;
             this.listViewAlgorithms.Name = "listViewAlgorithms";
-            this.listViewAlgorithms.Size = new System.Drawing.Size(539, 380);
+            this.listViewAlgorithms.Size = new System.Drawing.Size(719, 468);
             this.listViewAlgorithms.TabIndex = 11;
             this.listViewAlgorithms.UseCompatibleStateImageBehavior = false;
             this.listViewAlgorithms.View = System.Windows.Forms.View.Details;
+            this.listViewAlgorithms.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.listViewAlgorithms_ColumnClick);
             this.listViewAlgorithms.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewAlgorithms_MouseClick);
             // 
             // columnHeader0
@@ -82,16 +84,18 @@
             // 
             // contextMenuStrip1
             // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
             // AlgorithmsListView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.listViewAlgorithms);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "AlgorithmsListView";
-            this.Size = new System.Drawing.Size(539, 380);
+            this.Size = new System.Drawing.Size(719, 468);
             this.ResumeLayout(false);
 
         }
