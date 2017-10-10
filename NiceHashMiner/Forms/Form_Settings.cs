@@ -106,6 +106,10 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(this.label_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(this.pictureBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
 
+            toolTip1.SetToolTip(this.comboBox_TimeUnit, International.GetText("Form_Settings_ToolTip_TimeUnit"));
+            toolTip1.SetToolTip(this.label_TimeUnit, International.GetText("Form_Settings_ToolTip_TimeUnit"));
+            toolTip1.SetToolTip(this.pictureBox_TimeUnit, International.GetText("Form_Settings_ToolTip_TimeUnit"));
+
             toolTip1.SetToolTip(this.checkBox_HideMiningWindows, International.GetText("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
             toolTip1.SetToolTip(this.pictureBox_HideMiningWindows, International.GetText("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
 
@@ -277,6 +281,11 @@ namespace NiceHashMiner.Forms
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
             label_WorkerName.Text = International.GetText("WorkerName") + ":";
             label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
+            {
+                int i = 0;
+                foreach (string loc in Globals.MiningLocation)
+                    comboBox_ServiceLocation.Items[i++] = International.GetText("LocationName_" + loc);
+            }
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
             label_MinerAPIQueryInterval.Text = International.GetText("Form_Settings_General_MinerAPIQueryInterval") + ":";
@@ -388,6 +397,7 @@ namespace NiceHashMiner.Forms
             {
                 this.comboBox_Language.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
                 this.comboBox_ServiceLocation.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
+                this.comboBox_TimeUnit.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
                 this.comboBox_DagLoadMode.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
             }
 
@@ -472,11 +482,22 @@ namespace NiceHashMiner.Forms
                 }
             }
 
+            // Add time unit selection list
+            {
+                Dictionary<TimeUnitType, string> timeunits = new Dictionary<TimeUnitType, string>();
+
+                foreach (TimeUnitType timeunit in Enum.GetValues(typeof(TimeUnitType)))
+                {
+                    timeunits.Add(timeunit, International.GetText(timeunit.ToString()));
+                    comboBox_TimeUnit.Items.Add(timeunits[timeunit]);
+                }
+            }
+
             // ComboBox
             {
                 comboBox_Language.SelectedIndex = (int)ConfigManager.GeneralConfig.Language;
                 comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
-
+                comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
             }
         }
@@ -642,6 +663,7 @@ namespace NiceHashMiner.Forms
             IsChange = true;
             ConfigManager.GeneralConfig.Language = (LanguageType)comboBox_Language.SelectedIndex;
             ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
+            ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType)comboBox_TimeUnit.SelectedIndex;
             ConfigManager.GeneralConfig.EthminerDagGenerationType = (DagGenerationType)comboBox_DagLoadMode.SelectedIndex;
         }
 
