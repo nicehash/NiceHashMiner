@@ -34,8 +34,6 @@ namespace NiceHashMiner.Miners {
 
         // benchmark stuff
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            // clean old logs
-            CleanAllOldLogs();
             benchmarkTimeWait = time / 3; // 3 times faster than sgminer
 
             string ret =  " -mport 127.0.0.1:" + APIPort + " -benchmark 1 " + GetDevicesCommandString();

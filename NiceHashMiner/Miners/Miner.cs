@@ -20,6 +20,7 @@ using Timer = System.Timers.Timer;
 using System.Timers;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms.VisualStyles;
 using Newtonsoft.Json.Linq;
 
 namespace NiceHashMiner
@@ -597,6 +598,109 @@ namespace NiceHashMiner
                 BenchmarkThreadRoutineFinish();
             }
         }
+
+        /// <summary>
+        /// Thread routine for miners that cannot be scheduled to stop and need speed data read from command line
+        /// </summary>
+        /// <param name="commandLine"></param>
+        /// <param name="benchmarkTimeWait"></param>
+        protected void BenchmarkThreadRoutineAlternate(object commandLine, int benchmarkTimeWait) {
+            CleanAllOldLogs();
+
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
+
+            try {
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                Helpers.ConsolePrint(MinerTAG(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
+                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 2);
+                Stopwatch _benchmarkTimer = new Stopwatch();
+                _benchmarkTimer.Reset();
+                _benchmarkTimer.Start();
+                //BenchmarkThreadRoutineStartSettup();
+                // wait a little longer then the benchmark routine if exit false throw
+                //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
+                //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
+                // don't use wait for it breaks everything
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                bool keepRunning = true;
+                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id)) {
+                    //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
+                    //BenchmarkOutputErrorDataReceivedImpl(outdata);
+                    // terminate process situations
+                    if (_benchmarkTimer.Elapsed.TotalSeconds >= (benchmarkTimeWait + 2)
+                        || BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null) {
+
+                        string imageName = MinerExeName.Replace(".exe", "");
+                        // maybe will have to KILL process
+                        KillProspectorClaymoreMinerBase(imageName);
+                        if (BenchmarkSignalTimedout) {
+                            throw new Exception("Benchmark timedout");
+                        }
+                        if (BenchmarkException != null) {
+                            throw BenchmarkException;
+                        }
+                        if (BenchmarkSignalQuit) {
+                            throw new Exception("Termined by user request");
+                        }
+                        if (BenchmarkSignalFinnished) {
+                            break;
+                        }
+                        keepRunning = false;
+                        break;
+                    } else {
+                        // wait a second reduce CPU load
+                        Thread.Sleep(1000);
+                    }
+
+                }
+            } catch (Exception ex) {
+                BenchmarkThreadRoutineCatch(ex);
+            } finally {
+                BenchmarkAlgorithm.BenchmarkSpeed = 0;
+                // find latest log file
+                string latestLogFile = "";
+                var dirInfo = new DirectoryInfo(this.WorkingDirectory);
+                foreach (var file in dirInfo.GetFiles("*_log.txt")) {
+                    latestLogFile = file.Name;
+                    break;
+                }
+                BenchmarkHandle.WaitForExit(10000);
+                // read file log
+                if (File.Exists(WorkingDirectory + latestLogFile)) {
+                    var lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
+                    var addBenchLines = bench_lines.Count == 0;
+                    ProcessBenchLinesAlternate(lines);
+                }
+                BenchmarkThreadRoutineFinish();
+            }
+        }
+
+        protected void CleanAllOldLogs() {
+            // clean old logs
+            try {
+                var dirInfo = new DirectoryInfo(this.WorkingDirectory);
+                var deleteContains = "_log.txt";
+                if (dirInfo != null && dirInfo.Exists) {
+                    foreach (FileInfo file in dirInfo.GetFiles()) {
+                        if (file.Name.Contains(deleteContains)) {
+                            file.Delete();
+                        }
+                    }
+                }
+            } catch { }
+        }
+
+        protected virtual void ProcessBenchLinesAlternate(string[] lines) { }
 
         abstract protected bool BenchmarkParseLine(string outdata);
 
