@@ -824,38 +824,6 @@ namespace NiceHashMiner
             return ad;
         }
 
-        // For miners without api bind port
-        protected APIData GetAPIReadExceptionStatus(MinerBaseType minerType, AlgorithmType algoType) {
-            // check if running
-            if (ProcessHandle == null) {
-                _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from Proccess is null");
-                return null;
-            }
-            try {
-                var runningProcess = Process.GetProcessById(ProcessHandle.Id);
-            } catch (ArgumentException ex) {
-                _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data reason: " + ex.Message);
-                return null; // will restart outside
-            } catch (InvalidOperationException ex) {
-                _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
-                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data reason: " + ex.Message);
-                return null; // will restart outside
-            }
-
-            var totalSpeed = MiningSetup.MiningPairs
-                .Select(miningPair => miningPair.Device.GetAlgorithm(minerType, algoType, AlgorithmType.NONE))
-                .Where(algo => algo != null)
-                .Sum(algo => algo.BenchmarkSpeed);
-
-            var data = new APIData(MiningSetup.CurrentAlgorithmType) {Speed = totalSpeed};
-            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-            // check if speed zero
-            if (data.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
-            return data;
-        }
-
         protected string GetHttpRequestNHMAgentStrin(string cmd) {
             return "GET /" + cmd + " HTTP/1.1\r\n" +
                     "Host: 127.0.0.1\r\n" +
