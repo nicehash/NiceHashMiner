@@ -227,13 +227,13 @@ namespace NiceHashMiner.Forms.Components {
                         dcriMenu.Enabled = true;
 
                         var openDcri = new ToolStripMenuItem {
-                            Text = "Tuning Settings"
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_OpenDcri")
                         };
                         openDcri.Click += toolStripMenuItemOpenDcri_Click;
                         dcriMenu.DropDownItems.Add(openDcri);
 
                         var tuningEnabled = new ToolStripMenuItem {
-                            Text = "Tuning Enabled",
+                            Text = International.GetText("Form_DcriValues_TuningEnabled"),
                             CheckOnClick = true,
                             Checked = dualAlg.TuningEnabled
                         };

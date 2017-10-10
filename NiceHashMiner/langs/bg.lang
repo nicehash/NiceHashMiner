@@ -97,6 +97,15 @@
     "Form_DcriValues_Title": "ClaymoreDual Tuning",
     "Form_DcriValues_Intensity": "Intensity",
     "Form_DcriValues_SecondarySpeed": "Secondary Speed",
+    "Form_DcriValues_TuningEnabled": "Tuning Enabled",
+    "Form_DcriValues_TuningStart": "Tuning Start",
+    "Form_DcriValues_TuningEnd": "Tuning End",
+    "Form_DcriValues_TuningInterval": "Tuning Interval",
+    "Form_DcriValues_ToolTip_TuningStart": "The first dcri value to use for tuning",
+    "Form_DcriValues_ToolTip_TuningEnd": "The last dcri value to use for tuning",
+    "Form_DcriValues_ToolTip_TuningInterval": "The interval for dcri values to use for tuning",
+    "Form_DcriValues_ToolTip_TuningEnabled": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
+    "AlgorithmsListView_ContextMenu_OpenDcri": "Tuning Settings",
 
 
     "Form_Loading_label_LoadingText": "Настройките се зареждат, моля изчакайте...",

@@ -19,17 +19,11 @@ namespace NiceHashMiner.Forms
 
         DualAlgorithm algorithm;
 
-        private bool _isInitFinished = false;
+        private readonly bool _isInitFinished = false;
         private bool _isChange = false;
         private bool isChange {
-            get { return _isChange; }
-            set {
-                if (_isInitFinished) {
-                    _isChange = value;
-                } else {
-                    _isChange = false;
-                }
-            }
+            get => _isChange;
+            set => _isChange = _isInitFinished && value;
         }
         bool isChangeSaved;
         int currentlySelectedIntensity = -1;
@@ -55,6 +49,26 @@ namespace NiceHashMiner.Forms
             Text = International.GetText("Form_DcriValues_Title");
             button_Close.Text = International.GetText("Form_Settings_buttonCloseNoSaveText");
             button_Save.Text = International.GetText("Form_Settings_buttonSaveText");
+            checkBox_TuningEnabled.Text = International.GetText("Form_DcriValues_TuningEnabled");
+
+            field_Speed.InitLocale(toolTip1,
+                International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
+                International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
+            field_SecondarySpeed.InitLocale(toolTip1, 
+                International.GetText("Form_Settings_Algo_SecondaryBenchmarkSpeed") + ":",
+                International.GetText("Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed"));
+            field_TuningStart.InitLocale(toolTip1, 
+                International.GetText("Form_DcriValues_TuningStart") + ":",
+                International.GetText("Form_DcriValues_ToolTip_TuningStart"));
+            field_TuningEnd.InitLocale(toolTip1,
+                International.GetText("Form_DcriValues_TuningEnd") + ":",
+                International.GetText("Form_DcriValues_ToolTip_TuningEnd"));
+            field_TuningInterval.InitLocale(toolTip1,
+                International.GetText("Form_DcriValues_TuningInterval") + ":",
+                International.GetText("Form_DcriValues_ToolTip_TuningInterval"));
+
+            toolTip1.SetToolTip(checkBox_TuningEnabled, International.GetText("Form_DcriValues_ToolTip_TuningEnabled"));
+            toolTip1.SetToolTip(pictureBox_TuningEnabled, International.GetText("Form_DcriValues_ToolTip_TuningEnabled"));
         }
 
         private void setIntensities() {
@@ -127,40 +141,35 @@ namespace NiceHashMiner.Forms
         }
 
         private void textChangedSpeed(object sender, EventArgs e) {
-            double value;
-            if (Double.TryParse(field_Speed.EntryText, out value)) {
+            if (Double.TryParse(field_Speed.EntryText, out var value)) {
                 isChange = true;
                 algorithm.IntensitySpeeds[currentlySelectedIntensity] = value;
             }
             updateIntensities();
         }
         private void textChangedSecondarySpeed(object sender, EventArgs e) {
-            double value;
-            if (Double.TryParse(field_SecondarySpeed.EntryText, out value)) {
+            if (Double.TryParse(field_SecondarySpeed.EntryText, out var value)) {
                 isChange = true;
                 algorithm.SecondaryIntensitySpeeds[currentlySelectedIntensity] = value;
             }
             updateIntensities();
         }
         private void textChangedTuningStart(object sender, EventArgs e) {
-            int value;
-            if (int.TryParse(field_TuningStart.EntryText, out value)) {
+            if (int.TryParse(field_TuningStart.EntryText, out var value)) {
                 isChange = true;
                 algorithm.TuningStart = value;
             }
             updateIntensityList();
         }
         private void textChangedTuningEnd(object sender, EventArgs e) {
-            int value;
-            if (int.TryParse(field_TuningEnd.EntryText, out value)) {
+            if (int.TryParse(field_TuningEnd.EntryText, out var value)) {
                 isChange = true;
                 algorithm.TuningEnd = value;
             }
             updateIntensityList();
         }
         private void textChangedTuningInterval(object sender, EventArgs e) {
-            int value;
-            if (int.TryParse(field_TuningInterval.EntryText, out value)) {
+            if (int.TryParse(field_TuningInterval.EntryText, out var value)) {
                 isChange = true;
                 algorithm.TuningInterval = value;
             }
