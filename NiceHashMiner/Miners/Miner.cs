@@ -804,13 +804,15 @@ namespace NiceHashMiner
 
                 if (resp != null) {
                     JArray totals = resp.hashrate.total;
-                    if (totals.First != null && totals.First.Type != JTokenType.Null) {
-                        ad.Speed = totals.First.Value<double>();
-                        if (ad.Speed == 0) {
-                            _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
-                        } else {
-                            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-                        }
+                    foreach (var total in totals) {
+                        if (total.Value<string>() == null) continue;
+                        ad.Speed = total.Value<double>();
+                        break;
+                    }
+                    if (ad.Speed == 0) {
+                        _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                    } else {
+                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                     }
                 } else {
                     throw new Exception("Response does not contain speed data");
