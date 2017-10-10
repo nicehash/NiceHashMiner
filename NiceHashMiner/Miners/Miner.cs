@@ -20,6 +20,7 @@ using Timer = System.Timers.Timer;
 using System.Timers;
 using System.IO;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 
 namespace NiceHashMiner
 {
@@ -130,6 +131,8 @@ namespace NiceHashMiner
         private bool isEnded = false;
 
         public bool IsUpdatingAPI = false;
+
+        protected const string HTTPHeaderDelimiter = "\r\n\r\n";
 
         public Miner(string minerDeviceName)
         {
@@ -719,7 +722,7 @@ namespace NiceHashMiner
             }
         }
 
-        protected async Task<string> GetAPIDataAsync(int port, string DataToSend, bool exitHack = false)
+        protected async Task<string> GetAPIDataAsync(int port, string DataToSend, bool exitHack = false, bool overrideLoop = false)
         {
             string ResponseFromServer = null;
             try
@@ -740,7 +743,7 @@ namespace NiceHashMiner
                     int r = await nwStream.ReadAsync(IncomingBuffer, offset, 5000 - offset);
                     for (int i = offset; i < offset + r; i++)
                     {
-                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
+                        if (overrideLoop || IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
                             || (i > 0 && this is XmrStackCPUMiner 
                             && IncomingBuffer[i] == 0x7d && IncomingBuffer[i - 1] == 0x7d)) {
                             // Workaround for new XMR-STAK api
@@ -778,6 +781,46 @@ namespace NiceHashMiner
         }
 
         public abstract Task<APIData> GetSummaryAsync();
+
+        protected async Task<APIData> GetSummaryCPUAsync(string method = "", bool overrideLoop = false) {
+            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+
+            try {
+                _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
+                string dataToSend = GetHttpRequestNHMAgentStrin(method);
+                string respStr = await GetAPIDataAsync(APIPort, dataToSend, false, overrideLoop);
+
+                if (String.IsNullOrEmpty(respStr)) {
+                    _currentMinerReadStatus = MinerAPIReadStatus.NETWORK_EXCEPTION;
+                    throw new Exception("Response is empty!");
+                }
+                if (respStr.IndexOf("HTTP/1.1 200 OK") > -1) {
+                    respStr = respStr.Substring(respStr.IndexOf(HTTPHeaderDelimiter) + HTTPHeaderDelimiter.Length);
+                } else {
+                    throw new Exception("Response not HTTP formed! " + respStr);
+                }
+
+                dynamic resp = JsonConvert.DeserializeObject(respStr);
+
+                if (resp != null) {
+                    JArray totals = resp.hashrate.total;
+                    if (totals.First != null && totals.First.Type != JTokenType.Null) {
+                        ad.Speed = totals.First.Value<double>();
+                        if (ad.Speed == 0) {
+                            _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                        } else {
+                            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                        }
+                    }
+                } else {
+                    throw new Exception("Response does not contain speed data");
+                }
+            } catch (Exception ex) {
+                Helpers.ConsolePrint(MinerTAG(), ex.Message);
+            }
+
+            return ad;
+        }
 
         // For miners without api bind port
         protected APIData GetAPIReadExceptionStatus(MinerBaseType minerType, AlgorithmType algoType) {
