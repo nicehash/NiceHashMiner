@@ -217,12 +217,33 @@ namespace NiceHashMiner.Forms.Components {
                     contextMenuStrip1.Items.Add(clearItem);
                 }
                 // open dcri
-                if (listViewAlgorithms.SelectedItems.Count > 0
-                    && ((Algorithm)listViewAlgorithms.SelectedItems[0].Tag).IsDual) {
-                        var openDcri = new ToolStripMenuItem();
-                    openDcri.Text = International.GetText("Form_DcriValues_Title");
-                    openDcri.Click += toolStripMenuItemDcri_Click;
-                    contextMenuStrip1.Items.Add(openDcri);
+                {
+                    var dcriMenu = new ToolStripMenuItem {
+                        Text = International.GetText("Form_DcriValues_Title")
+                    };
+
+                    if (listViewAlgorithms.SelectedItems.Count > 0
+                        && listViewAlgorithms.SelectedItems[0].Tag is DualAlgorithm dualAlg) {
+                        dcriMenu.Enabled = true;
+
+                        var openDcri = new ToolStripMenuItem {
+                            Text = "Tuning Settings"
+                        };
+                        openDcri.Click += toolStripMenuItemOpenDcri_Click;
+                        dcriMenu.DropDownItems.Add(openDcri);
+
+                        var tuningEnabled = new ToolStripMenuItem {
+                            Text = "Tuning Enabled",
+                            CheckOnClick = true,
+                            Checked = dualAlg.TuningEnabled
+                        };
+                        tuningEnabled.CheckedChanged += toolStripMenuItemTuningEnabled_Checked;
+                        dcriMenu.DropDownItems.Add(tuningEnabled);
+                    } else {
+                        dcriMenu.Enabled = false;
+                    }
+
+                    contextMenuStrip1.Items.Add(dcriMenu);
                 }
                 contextMenuStrip1.Show(Cursor.Position);
             }
@@ -243,8 +264,7 @@ namespace NiceHashMiner.Forms.Components {
         private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
             if (_computeDevice != null) {
                 foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
-                    var algorithm = lvi.Tag as Algorithm;
-                    if (algorithm != null) {
+                    if (lvi.Tag is Algorithm algorithm) {
                         algorithm.BenchmarkSpeed = 0;
                         if (algorithm is DualAlgorithm dualAlgo) {
                             dualAlgo.SecondaryBenchmarkSpeed = 0;
@@ -254,25 +274,33 @@ namespace NiceHashMiner.Forms.Components {
                         }
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
                         // update benchmark status data
-                        if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+                        BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
                         // update settings
-                        if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
+                        ComunicationInterface?.ChangeSpeed(lvi);
                     }
                 }
             }
         }
 
-        private void toolStripMenuItemDcri_Click(object sender, EventArgs e) {
+        private void toolStripMenuItemOpenDcri_Click(object sender, EventArgs e) {
             foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
-                var algo = lvi.Tag as DualAlgorithm;
-                if (algo != null) {
+                if (lvi.Tag is DualAlgorithm algo) {
                     var dcriValues = new Form_DcriValues(algo);
                     dcriValues.ShowDialog();
                     RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
                     // update benchmark status data
-                    if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+                    BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
                     // update settings
-                    if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
+                    ComunicationInterface?.ChangeSpeed(lvi);
+                }
+            }
+        }
+
+        private void toolStripMenuItemTuningEnabled_Checked(object sender, EventArgs e) {
+            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
+                if (lvi.Tag is DualAlgorithm algo) {
+                    algo.TuningEnabled = ((ToolStripMenuItem)sender).Checked;
+                    RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
                 }
             }
         }
