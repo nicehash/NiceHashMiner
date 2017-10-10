@@ -19,11 +19,11 @@ namespace NiceHashMiner.Forms
 
         DualAlgorithm algorithm;
 
-        private readonly bool _isInitFinished = false;
+        private bool _isInitFinished = false;
         private bool _isChange = false;
         private bool isChange {
             get => _isChange;
-            set => _isChange = _isInitFinished && value;
+            set => _isChange = _isChange || (_isInitFinished && value);
         }
         bool isChangeSaved;
         int currentlySelectedIntensity = -1;
@@ -118,8 +118,10 @@ namespace NiceHashMiner.Forms
         private void listView_Intensities_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e) {
             var intensity = (int)e.Item.Tag;
             currentlySelectedIntensity = intensity;
+            _isInitFinished = false;
             field_Speed.EntryText = algorithm.SpeedForIntensity(intensity).ToString();
             field_SecondarySpeed.EntryText = algorithm.SecondarySpeedForIntensity(intensity).ToString();
+            _isInitFinished = true;
 
             field_Speed.Enabled = true;
             field_SecondarySpeed.Enabled = true;
