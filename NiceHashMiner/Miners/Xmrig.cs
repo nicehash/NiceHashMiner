@@ -49,7 +49,7 @@ namespace NiceHashMiner.Miners
                 ConectionType);
             _benchmarkTimeWait = time;
             return GetStartCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
-                + " -l benchmark_log.txt --print-time=2.5";
+                + " -l benchmark_log.txt --print-time=2";
         }
 
         protected override void BenchmarkThreadRoutine(object CommandLine) {
