@@ -250,6 +250,20 @@ namespace NiceHashMiner.Miners.Parsing {
                 },
                 new List<MinerOption>()
             ),
+            new MinerOptionPackage(
+                MinerType.Xmrig,
+                new List<MinerOption> {
+                    new MinerOption("Xmrig_fee", "--donate-level=", "0", MinerOptionFlagType.SingleParam),
+                    new MinerOption("Xmrig_threads", "-t", "--threads=", null, MinerOptionFlagType.SingleParam),
+                    new MinerOption("Xmrig_av", "-v", "--av=", "0", MinerOptionFlagType.SingleParam),
+                    new MinerOption("Xmrig_affinity", "--cpu-affinity", null, MinerOptionFlagType.SingleParam),
+                    new MinerOption("Xmrig_priority", "--cpu-priority", null, MinerOptionFlagType.SingleParam),
+                    new MinerOption("Xmrig_nohugepages", "--no-huge-pages", null, MinerOptionFlagType.Uni),
+                    new MinerOption("Xmrig_nocolor", "--no-color", null, MinerOptionFlagType.Uni),
+                    new MinerOption("Xmrig_maxusage", "--max-cpu-usage=", "75", MinerOptionFlagType.SingleParam),
+                    new MinerOption("Xmrig_safe", "--safe", null, MinerOptionFlagType.Uni)
+                },
+                new List<MinerOption>())
         };
 
         private static List<MinerOptionPackage> MinerOptionPackages = new List<MinerOptionPackage>();

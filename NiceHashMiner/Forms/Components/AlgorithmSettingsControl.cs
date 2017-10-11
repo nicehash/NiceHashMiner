@@ -80,9 +80,11 @@ namespace NiceHashMiner.Forms.Components {
                 groupBoxSelectedAlgorithmSettings.Text = String.Format(International.GetText("AlgorithmsListView_GroupBox"),
                 String.Format("{0} ({1})", algorithm.AlgorithmName, algorithm.MinerBaseTypeName)); ;
 
-                field_LessThreads.Enabled = _computeDevice.DeviceGroupType == DeviceGroupType.CPU;
+                field_LessThreads.Enabled = _computeDevice.DeviceGroupType == DeviceGroupType.CPU && algorithm.MinerBaseType == MinerBaseType.XmrStackCPU;
                 if (field_LessThreads.Enabled) {
                     field_LessThreads.EntryText = algorithm.LessThreads.ToString();
+                } else {
+                    field_LessThreads.EntryText = "";
                 }
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);

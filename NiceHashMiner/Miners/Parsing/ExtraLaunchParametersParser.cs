@@ -270,6 +270,9 @@ namespace NiceHashMiner.Miners.Parsing {
             if (MinerBaseType.EWBF == minerBaseType) {
                 return MinerType.EWBF;
             }
+            if (MinerBaseType.Xmrig == minerBaseType) {
+                return MinerType.Xmrig;
+            }
 
             return MinerType.NONE;
         }

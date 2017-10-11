@@ -22,6 +22,7 @@ namespace NiceHashMiner.Enums {
         excavator,
         ClaymoreDual,
         EWBF,
+        Xmrig,
         END
     }
 }
