@@ -23,6 +23,7 @@ namespace NiceHashMiner.Enums {
         experimental,
         EWBF,
         Prospector,
+        Xmrig,
         END
     }
 }

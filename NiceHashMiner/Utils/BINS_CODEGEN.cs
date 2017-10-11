@@ -67,6 +67,8 @@ namespace NiceHashMiner.Utils {
 @"\xmr-stak-cpu\vccorlib140.dll",
 @"\xmr-stak-cpu\vcruntime140.dll",
 @"\xmr-stak-cpu\xmr-stak-cpu.exe",
+
+@"\xmrig\xmrig.exe"
 };
     #endregion //CODE_GEN STUFF // listFiles.py
     }

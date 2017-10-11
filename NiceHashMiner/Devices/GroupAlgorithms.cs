@@ -164,6 +164,11 @@ namespace NiceHashMiner.Devices {
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.XmrStackCPU, AlgorithmType.CryptoNight, "cryptonight")
                         }
+                    },
+                    { MinerBaseType.Xmrig,
+                        new List<Algorithm>() {
+                            new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNight, "")
+                        }
                     }
                 };
             }
