@@ -1616,7 +1616,7 @@
             this.algorithmSettingsControl1.Location = new System.Drawing.Point(483, 78);
             this.algorithmSettingsControl1.Margin = new System.Windows.Forms.Padding(5, 6, 5, 6);
             this.algorithmSettingsControl1.Name = "algorithmSettingsControl1";
-            this.algorithmSettingsControl1.Size = new System.Drawing.Size(317, 342);
+            this.algorithmSettingsControl1.Size = new System.Drawing.Size(317, 427);
             this.algorithmSettingsControl1.TabIndex = 396;
             // 
             // groupBoxAlgorithmSettings
