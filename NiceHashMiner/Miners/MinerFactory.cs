@@ -61,6 +61,8 @@ namespace NiceHashMiner.Miners {
                     return new EWBF();
                 case MinerBaseType.Prospector:
                     return new Prospector();
+                case MinerBaseType.Xmrig:
+                    return new Xmrig();
             }
             return null;
         }

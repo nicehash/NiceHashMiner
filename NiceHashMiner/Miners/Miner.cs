@@ -19,6 +19,9 @@ using System.Threading.Tasks;
 using Timer = System.Timers.Timer;
 using System.Timers;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms.VisualStyles;
+using Newtonsoft.Json.Linq;
 
 namespace NiceHashMiner
 {
@@ -129,6 +132,8 @@ namespace NiceHashMiner
         private bool isEnded = false;
 
         public bool IsUpdatingAPI = false;
+
+        protected const string HTTPHeaderDelimiter = "\r\n\r\n";
 
         public Miner(string minerDeviceName)
         {
@@ -594,6 +599,109 @@ namespace NiceHashMiner
             }
         }
 
+        /// <summary>
+        /// Thread routine for miners that cannot be scheduled to stop and need speed data read from command line
+        /// </summary>
+        /// <param name="commandLine"></param>
+        /// <param name="benchmarkTimeWait"></param>
+        protected void BenchmarkThreadRoutineAlternate(object commandLine, int benchmarkTimeWait) {
+            CleanAllOldLogs();
+
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+
+            BenchmarkSignalQuit = false;
+            BenchmarkSignalHanged = false;
+            BenchmarkSignalFinnished = false;
+            BenchmarkException = null;
+
+            try {
+                Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
+                Helpers.ConsolePrint(MinerTAG(), "Benchmark should end in : " + benchmarkTimeWait + " seconds");
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
+                BenchmarkHandle.WaitForExit(benchmarkTimeWait + 2);
+                Stopwatch _benchmarkTimer = new Stopwatch();
+                _benchmarkTimer.Reset();
+                _benchmarkTimer.Start();
+                //BenchmarkThreadRoutineStartSettup();
+                // wait a little longer then the benchmark routine if exit false throw
+                //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
+                //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
+                // don't use wait for it breaks everything
+                BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
+                bool keepRunning = true;
+                while (keepRunning && IsActiveProcess(BenchmarkHandle.Id)) {
+                    //string outdata = BenchmarkHandle.StandardOutput.ReadLine();
+                    //BenchmarkOutputErrorDataReceivedImpl(outdata);
+                    // terminate process situations
+                    if (_benchmarkTimer.Elapsed.TotalSeconds >= (benchmarkTimeWait + 2)
+                        || BenchmarkSignalQuit
+                        || BenchmarkSignalFinnished
+                        || BenchmarkSignalHanged
+                        || BenchmarkSignalTimedout
+                        || BenchmarkException != null) {
+
+                        string imageName = MinerExeName.Replace(".exe", "");
+                        // maybe will have to KILL process
+                        KillProspectorClaymoreMinerBase(imageName);
+                        if (BenchmarkSignalTimedout) {
+                            throw new Exception("Benchmark timedout");
+                        }
+                        if (BenchmarkException != null) {
+                            throw BenchmarkException;
+                        }
+                        if (BenchmarkSignalQuit) {
+                            throw new Exception("Termined by user request");
+                        }
+                        if (BenchmarkSignalFinnished) {
+                            break;
+                        }
+                        keepRunning = false;
+                        break;
+                    } else {
+                        // wait a second reduce CPU load
+                        Thread.Sleep(1000);
+                    }
+
+                }
+            } catch (Exception ex) {
+                BenchmarkThreadRoutineCatch(ex);
+            } finally {
+                BenchmarkAlgorithm.BenchmarkSpeed = 0;
+                // find latest log file
+                string latestLogFile = "";
+                var dirInfo = new DirectoryInfo(this.WorkingDirectory);
+                foreach (var file in dirInfo.GetFiles("*_log.txt")) {
+                    latestLogFile = file.Name;
+                    break;
+                }
+                BenchmarkHandle.WaitForExit(10000);
+                // read file log
+                if (File.Exists(WorkingDirectory + latestLogFile)) {
+                    var lines = File.ReadAllLines(WorkingDirectory + latestLogFile);
+                    var addBenchLines = bench_lines.Count == 0;
+                    ProcessBenchLinesAlternate(lines);
+                }
+                BenchmarkThreadRoutineFinish();
+            }
+        }
+
+        protected void CleanAllOldLogs() {
+            // clean old logs
+            try {
+                var dirInfo = new DirectoryInfo(this.WorkingDirectory);
+                var deleteContains = "_log.txt";
+                if (dirInfo != null && dirInfo.Exists) {
+                    foreach (FileInfo file in dirInfo.GetFiles()) {
+                        if (file.Name.Contains(deleteContains)) {
+                            file.Delete();
+                        }
+                    }
+                }
+            } catch { }
+        }
+
+        protected virtual void ProcessBenchLinesAlternate(string[] lines) { }
+
         abstract protected bool BenchmarkParseLine(string outdata);
 
         protected bool IsActiveProcess(int pid) {
@@ -718,7 +826,7 @@ namespace NiceHashMiner
             }
         }
 
-        protected async Task<string> GetAPIDataAsync(int port, string DataToSend, bool exitHack = false)
+        protected async Task<string> GetAPIDataAsync(int port, string DataToSend, bool exitHack = false, bool overrideLoop = false)
         {
             string ResponseFromServer = null;
             try
@@ -739,7 +847,7 @@ namespace NiceHashMiner
                     int r = await nwStream.ReadAsync(IncomingBuffer, offset, 5000 - offset);
                     for (int i = offset; i < offset + r; i++)
                     {
-                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
+                        if (overrideLoop || IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
                             || (i > 0 && this is XmrStackCPUMiner 
                             && IncomingBuffer[i] == 0x7d && IncomingBuffer[i - 1] == 0x7d)) {
                             // Workaround for new XMR-STAK api
@@ -777,6 +885,48 @@ namespace NiceHashMiner
         }
 
         public abstract Task<APIData> GetSummaryAsync();
+
+        protected async Task<APIData> GetSummaryCPUAsync(string method = "", bool overrideLoop = false) {
+            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+
+            try {
+                _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
+                string dataToSend = GetHttpRequestNHMAgentStrin(method);
+                string respStr = await GetAPIDataAsync(APIPort, dataToSend, false, overrideLoop);
+
+                if (String.IsNullOrEmpty(respStr)) {
+                    _currentMinerReadStatus = MinerAPIReadStatus.NETWORK_EXCEPTION;
+                    throw new Exception("Response is empty!");
+                }
+                if (respStr.IndexOf("HTTP/1.1 200 OK") > -1) {
+                    respStr = respStr.Substring(respStr.IndexOf(HTTPHeaderDelimiter) + HTTPHeaderDelimiter.Length);
+                } else {
+                    throw new Exception("Response not HTTP formed! " + respStr);
+                }
+
+                dynamic resp = JsonConvert.DeserializeObject(respStr);
+
+                if (resp != null) {
+                    JArray totals = resp.hashrate.total;
+                    foreach (var total in totals) {
+                        if (total.Value<string>() == null) continue;
+                        ad.Speed = total.Value<double>();
+                        break;
+                    }
+                    if (ad.Speed == 0) {
+                        _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                    } else {
+                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                    }
+                } else {
+                    throw new Exception("Response does not contain speed data");
+                }
+            } catch (Exception ex) {
+                Helpers.ConsolePrint(MinerTAG(), ex.Message);
+            }
+
+            return ad;
+        }
 
         protected string GetHttpRequestNHMAgentStrin(string cmd) {
             return "GET /" + cmd + " HTTP/1.1\r\n" +

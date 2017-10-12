@@ -107,10 +107,6 @@ namespace NiceHashMiner.Miners {
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            // clean old logs
-            CleanAllOldLogs();
-
-
             // network stub
             string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             // demo for benchmark
