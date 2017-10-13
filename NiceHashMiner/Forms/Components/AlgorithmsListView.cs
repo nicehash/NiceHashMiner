@@ -43,7 +43,7 @@ namespace NiceHashMiner.Forms.Components {
             public void LviSetColor(ListViewItem lvi) {
                 Algorithm algorithm = lvi.Tag as Algorithm;
                 if (algorithm != null) {
-                    if (algorithm.Enabled == false && !algorithm.IsBenchmarkPending) {
+                    if (algorithm.Enabled == false) {
                         lvi.BackColor = DISABLED_COLOR;
                     } else if (algorithm.BenchmarkSpeed > 0 && !algorithm.IsBenchmarkPending) {
                         lvi.BackColor = BENCHMARKED_COLOR;
