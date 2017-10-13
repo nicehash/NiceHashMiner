@@ -837,14 +837,14 @@ namespace NiceHashMiner
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
                 await nwStream.WriteAsync(BytesToSend, 0, BytesToSend.Length);
 
-                byte[] IncomingBuffer = new byte[5000];
+                byte[] IncomingBuffer = new byte[tcpc.ReceiveBufferSize];
                 int prevOffset = -1;
                 int offset = 0;
                 bool fin = false;
 
                 while (!fin && tcpc.Client.Connected)
                 {
-                    int r = await nwStream.ReadAsync(IncomingBuffer, offset, 5000 - offset);
+                    int r = await nwStream.ReadAsync(IncomingBuffer, offset, tcpc.ReceiveBufferSize - offset);
                     for (int i = offset; i < offset + r; i++)
                     {
                         if (overrideLoop || IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
@@ -919,7 +919,7 @@ namespace NiceHashMiner
                         _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                     }
                 } else {
-                    throw new Exception("Response does not contain speed data");
+                    throw new Exception($"Response does not contain speed data: {respStr.Trim()}");
                 }
             } catch (Exception ex) {
                 Helpers.ConsolePrint(MinerTAG(), ex.Message);
