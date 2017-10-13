@@ -826,6 +826,10 @@ namespace NiceHashMiner
             }
         }
 
+        protected virtual bool IsApiEof(byte third, byte second, byte last) {
+            return false;
+        }
+
         protected async Task<string> GetAPIDataAsync(int port, string DataToSend, bool exitHack = false, bool overrideLoop = false)
         {
             string ResponseFromServer = null;
@@ -847,10 +851,8 @@ namespace NiceHashMiner
                     int r = await nwStream.ReadAsync(IncomingBuffer, offset, tcpc.ReceiveBufferSize - offset);
                     for (int i = offset; i < offset + r; i++)
                     {
-                        if (overrideLoop || IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
-                            || (i > 0 && this is XmrStackCPUMiner 
-                            && IncomingBuffer[i] == 0x7d && IncomingBuffer[i - 1] == 0x7d)) {
-                            // Workaround for new XMR-STAK api
+                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
+                            || (i > 2 && IsApiEof(IncomingBuffer[i - 2], IncomingBuffer[i - 1], IncomingBuffer[i]))) {
                             fin = true;
                             break;
                         }

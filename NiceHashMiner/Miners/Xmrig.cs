@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using MyDownloader.Core.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Configs;
@@ -38,7 +40,11 @@ namespace NiceHashMiner.Miners
         }
 
         public override async Task<APIData> GetSummaryAsync() {
-            return await GetSummaryCPUAsync("", true);
+            return await GetSummaryCPUAsync();
+        }
+
+        protected override bool IsApiEof(byte third, byte second, byte last) {
+            return third == 0x7d && second == 0xa && last == 0x7d;
         }
 
         #region Benchmark

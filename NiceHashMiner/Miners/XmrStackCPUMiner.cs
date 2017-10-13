@@ -275,6 +275,10 @@ namespace NiceHashMiner.Miners {
             return await GetSummaryCPUAsync("api.json");
         }
 
+        protected override bool IsApiEof(byte third, byte second, byte last) {
+            return second == 0x7d && last == 0x7d;
+        }
+
         public override void Start(string url, string btcAdress, string worker) {
             if (!IsInit) {
                 Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
