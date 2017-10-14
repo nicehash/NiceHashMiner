@@ -290,6 +290,7 @@ namespace NiceHashMiner.Forms
                 foreach (string loc in Globals.MiningLocation)
                     comboBox_ServiceLocation.Items[i++] = International.GetText("LocationName_" + loc);
             }
+            label_TimeUnit.Text = International.GetText("Time_Unit") + ":";
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
             label_MinerAPIQueryInterval.Text = International.GetText("Form_Settings_General_MinerAPIQueryInterval") + ":";

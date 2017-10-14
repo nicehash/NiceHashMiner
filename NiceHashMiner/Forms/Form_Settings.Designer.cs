@@ -828,7 +828,7 @@
             // label_TimeUnit
             // 
             this.label_TimeUnit.AutoSize = true;
-            this.label_TimeUnit.Location = new System.Drawing.Point(213, 126);
+            this.label_TimeUnit.Location = new System.Drawing.Point(213, 127);
             this.label_TimeUnit.Name = "label_TimeUnit";
             this.label_TimeUnit.Size = new System.Drawing.Size(68, 17);
             this.label_TimeUnit.TabIndex = 371;
