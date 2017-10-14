@@ -155,6 +155,8 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
+            this.pictureBox_ShowDetailedDeviceInfo = new System.Windows.Forms.PictureBox();
+            this.checkBox_ShowDetailedDeviceInfo = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -209,6 +211,7 @@
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideDisabledAlgorithms)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowDetailedDeviceInfo)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -225,7 +228,7 @@
             this.tabControlGeneral.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControlGeneral.Name = "tabControlGeneral";
             this.tabControlGeneral.SelectedIndex = 0;
-            this.tabControlGeneral.Size = new System.Drawing.Size(816, 542);
+            this.tabControlGeneral.Size = new System.Drawing.Size(816, 569);
             this.tabControlGeneral.TabIndex = 0;
             this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControlGeneral_Selected);
             // 
@@ -239,13 +242,15 @@
             this.tabPageGeneral.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPageGeneral.Size = new System.Drawing.Size(808, 513);
+            this.tabPageGeneral.Size = new System.Drawing.Size(808, 540);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
             // groupBox_Misc
             // 
+            this.groupBox_Misc.Controls.Add(this.pictureBox_ShowDetailedDeviceInfo);
+            this.groupBox_Misc.Controls.Add(this.checkBox_ShowDetailedDeviceInfo);
             this.groupBox_Misc.Controls.Add(this.pictureBox_RunScriptOnCUDA_GPU_Lost);
             this.groupBox_Misc.Controls.Add(this.checkBox_RunScriptOnCUDA_GPU_Lost);
             this.groupBox_Misc.Controls.Add(this.pictureBox_ShowInternetConnectionWarning);
@@ -286,7 +291,7 @@
             this.groupBox_Misc.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox_Misc.Name = "groupBox_Misc";
             this.groupBox_Misc.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox_Misc.Size = new System.Drawing.Size(325, 498);
+            this.groupBox_Misc.Size = new System.Drawing.Size(325, 525);
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
@@ -1160,7 +1165,7 @@
             this.tabPageAdvanced.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPageAdvanced.Name = "tabPageAdvanced";
             this.tabPageAdvanced.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPageAdvanced.Size = new System.Drawing.Size(808, 513);
+            this.tabPageAdvanced.Size = new System.Drawing.Size(808, 540);
             this.tabPageAdvanced.TabIndex = 2;
             this.tabPageAdvanced.Text = "Advanced";
             this.tabPageAdvanced.UseVisualStyleBackColor = true;
@@ -1593,7 +1598,7 @@
             this.tabPageDevicesAlgos.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPageDevicesAlgos.Name = "tabPageDevicesAlgos";
             this.tabPageDevicesAlgos.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(808, 513);
+            this.tabPageDevicesAlgos.Size = new System.Drawing.Size(808, 540);
             this.tabPageDevicesAlgos.TabIndex = 1;
             this.tabPageDevicesAlgos.Text = "Devices/Algorithms";
             this.tabPageDevicesAlgos.UseVisualStyleBackColor = true;
@@ -1691,7 +1696,7 @@
             // buttonSaveClose
             // 
             this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(464, 564);
+            this.buttonSaveClose.Location = new System.Drawing.Point(464, 591);
             this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonSaveClose.Name = "buttonSaveClose";
             this.buttonSaveClose.Size = new System.Drawing.Size(179, 28);
@@ -1703,7 +1708,7 @@
             // buttonDefaults
             // 
             this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(360, 564);
+            this.buttonDefaults.Location = new System.Drawing.Point(360, 591);
             this.buttonDefaults.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(99, 28);
@@ -1715,7 +1720,7 @@
             // buttonCloseNoSave
             // 
             this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(648, 564);
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(648, 591);
             this.buttonCloseNoSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonCloseNoSave.Name = "buttonCloseNoSave";
             this.buttonCloseNoSave.Size = new System.Drawing.Size(179, 28);
@@ -1724,11 +1729,33 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
+            // pictureBox_ShowDetailedDeviceInfo
+            // 
+            this.pictureBox_ShowDetailedDeviceInfo.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ShowDetailedDeviceInfo.Location = new System.Drawing.Point(296, 498);
+            this.pictureBox_ShowDetailedDeviceInfo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pictureBox_ShowDetailedDeviceInfo.Name = "pictureBox_ShowDetailedDeviceInfo";
+            this.pictureBox_ShowDetailedDeviceInfo.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ShowDetailedDeviceInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ShowDetailedDeviceInfo.TabIndex = 375;
+            this.pictureBox_ShowDetailedDeviceInfo.TabStop = false;
+            // 
+            // checkBox_ShowDetailedDeviceInfo
+            // 
+            this.checkBox_ShowDetailedDeviceInfo.AutoSize = true;
+            this.checkBox_ShowDetailedDeviceInfo.Location = new System.Drawing.Point(8, 498);
+            this.checkBox_ShowDetailedDeviceInfo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.checkBox_ShowDetailedDeviceInfo.Name = "checkBox_ShowDetailedDeviceInfo";
+            this.checkBox_ShowDetailedDeviceInfo.Size = new System.Drawing.Size(182, 21);
+            this.checkBox_ShowDetailedDeviceInfo.TabIndex = 374;
+            this.checkBox_ShowDetailedDeviceInfo.Text = "ShowDetailedDeviceInfo";
+            this.checkBox_ShowDetailedDeviceInfo.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(845, 608);
+            this.ClientSize = new System.Drawing.Size(845, 635);
             this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.buttonSaveClose);
             this.Controls.Add(this.tabControlGeneral);
@@ -1800,6 +1827,7 @@
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideDisabledAlgorithms)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowDetailedDeviceInfo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1935,5 +1963,7 @@
         private System.Windows.Forms.ComboBox comboBox_TimeUnit;
         private System.Windows.Forms.CheckBox checkBox_HideDisabledAlgorithms;
         private System.Windows.Forms.PictureBox pictureBox_HideDisabledAlgorithms;
+        private System.Windows.Forms.PictureBox pictureBox_ShowDetailedDeviceInfo;
+        private System.Windows.Forms.CheckBox checkBox_ShowDetailedDeviceInfo;
     }
 }

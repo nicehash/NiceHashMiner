@@ -60,6 +60,7 @@ namespace NiceHashMiner.Configs.Data {
         public bool UseIFTTT = false;
         public bool DownloadInit = false;
         public bool RunScriptOnCUDA_GPU_Lost = false;
+        public bool ShowDetailedDeviceInfo = true;
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
         public bool DownloadInit3rdParty = false;
@@ -130,6 +131,7 @@ namespace NiceHashMiner.Configs.Data {
             IQRNormalizeFactor = 0.0;
             CoolDownCheckEnabled = true;
             RunScriptOnCUDA_GPU_Lost = false;
+            ShowDetailedDeviceInfo = false;
             HideDisabledAlgorithms = false;
         }
 

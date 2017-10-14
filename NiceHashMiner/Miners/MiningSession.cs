@@ -489,7 +489,7 @@ namespace NiceHashMiner.Miners {
                     }
                     CurrentProfit += groupMiners.CurrentRate;
                     // Update GUI
-                    _mainFormRatesComunication.AddRateInfo(m.MinerTAG(), groupMiners.DevicesInfoString, AD, groupMiners.CurrentRate, m.IsAPIReadException);
+                    _mainFormRatesComunication.AddRateInfo(m.MinerTAG(), ConfigManager.GeneralConfig.ShowDetailedDeviceInfo ? groupMiners.DevicesDetailedInfoString : groupMiners.DevicesInfoString, AD, groupMiners.CurrentRate, m.IsAPIReadException);
                 }
             } catch (Exception e) { Helpers.ConsolePrint(TAG, e.Message); }
         }
