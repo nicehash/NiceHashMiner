@@ -826,6 +826,10 @@ namespace NiceHashMiner
             }
         }
 
+        protected virtual bool IsApiEof(byte third, byte second, byte last) {
+            return false;
+        }
+
         protected async Task<string> GetAPIDataAsync(int port, string DataToSend, bool exitHack = false, bool overrideLoop = false)
         {
             string ResponseFromServer = null;
@@ -837,20 +841,18 @@ namespace NiceHashMiner
                 byte[] BytesToSend = ASCIIEncoding.ASCII.GetBytes(DataToSend);
                 await nwStream.WriteAsync(BytesToSend, 0, BytesToSend.Length);
 
-                byte[] IncomingBuffer = new byte[5000];
+                byte[] IncomingBuffer = new byte[tcpc.ReceiveBufferSize];
                 int prevOffset = -1;
                 int offset = 0;
                 bool fin = false;
 
                 while (!fin && tcpc.Client.Connected)
                 {
-                    int r = await nwStream.ReadAsync(IncomingBuffer, offset, 5000 - offset);
+                    int r = await nwStream.ReadAsync(IncomingBuffer, offset, tcpc.ReceiveBufferSize - offset);
                     for (int i = offset; i < offset + r; i++)
                     {
-                        if (overrideLoop || IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
-                            || (i > 0 && this is XmrStackCPUMiner 
-                            && IncomingBuffer[i] == 0x7d && IncomingBuffer[i - 1] == 0x7d)) {
-                            // Workaround for new XMR-STAK api
+                        if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
+                            || (i > 2 && IsApiEof(IncomingBuffer[i - 2], IncomingBuffer[i - 1], IncomingBuffer[i]))) {
                             fin = true;
                             break;
                         }
@@ -919,7 +921,7 @@ namespace NiceHashMiner
                         _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
                     }
                 } else {
-                    throw new Exception("Response does not contain speed data");
+                    throw new Exception($"Response does not contain speed data: {respStr.Trim()}");
                 }
             } catch (Exception ex) {
                 Helpers.ConsolePrint(MinerTAG(), ex.Message);
