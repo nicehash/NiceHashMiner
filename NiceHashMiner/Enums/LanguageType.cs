@@ -15,6 +15,7 @@ namespace NiceHashMiner.Enums
         It,
         Pl,
         Zh_cn,
-        Ro
+        Ro,
+		Ja
     }
 }
