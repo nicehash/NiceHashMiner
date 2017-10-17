@@ -281,6 +281,9 @@ namespace NiceHashMiner.Miners.Parsing {
             if (MinerBaseType.EWBF == minerBaseType) {
                 return MinerType.EWBF;
             }
+            if (MinerBaseType.Xmrig == minerBaseType) {
+                return MinerType.Xmrig;
+            }
 
             return MinerType.NONE;
         }
@@ -307,7 +310,7 @@ namespace NiceHashMiner.Miners.Parsing {
             List<MiningPair> setMiningPairs = MiningPairs.ConvertAll((mp) => mp);
             // handle exceptions and package parsing
             // CPU exception
-            if (deviceType == DeviceType.CPU) {
+            if (deviceType == DeviceType.CPU && minerType != MinerType.Xmrig) {
                 CheckAndSetCPUPairs(setMiningPairs);
             }
             // ethminer exception

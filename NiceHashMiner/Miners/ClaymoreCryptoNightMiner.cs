@@ -31,8 +31,6 @@ namespace NiceHashMiner.Miners {
         // benchmark stuff
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            // clean old logs
-            CleanAllOldLogs();
             benchmarkTimeWait = time; // Takes longer as of v10
 
             // network workaround

@@ -229,8 +229,6 @@ namespace NiceHashMiner.Miners {
 
     public class XmrStackCPUMiner : Miner
     {
-        const string HTTPHeaderDelimiter = "\r\n\r\n";
-
         public XmrStackCPUMiner()
             : base("XmrStackCPUMiner") {
             this.ConectionType = NHMConectionType.NONE;
@@ -274,44 +272,11 @@ namespace NiceHashMiner.Miners {
         }
 
         public override async Task<APIData> GetSummaryAsync() {
-            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
-            
-            try {
-                _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
-                string dataToSend = GetHttpRequestNHMAgentStrin("api.json");
-                string respStr = await GetAPIDataAsync(APIPort, dataToSend);
+            return await GetSummaryCPUAsync("api.json");
+        }
 
-                if (respStr.IndexOf("HTTP/1.1 200 OK") > -1) {
-                    respStr = respStr.Substring(respStr.IndexOf(HTTPHeaderDelimiter) + HTTPHeaderDelimiter.Length);
-                } else if (String.IsNullOrEmpty(respStr)) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.NETWORK_EXCEPTION;
-                    throw new Exception("Response is empty!");
-                } else {
-                    throw new Exception("Response not HTTP formed! " + respStr);
-                }
-
-                dynamic resp = JsonConvert.DeserializeObject(respStr);
-
-                if (resp != null) {
-                    JArray totals = resp.hashrate.total;
-                    foreach (var total in totals) {
-                        if (total.Value<string>() == null) continue;
-                        ad.Speed = total.Value<double>();
-                        break;
-                    }
-                    if (ad.Speed == 0) {
-                        _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
-                    } else {
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
-                    }
-                } else {
-                    throw new Exception("Response does not contain speed data");
-                }
-            } catch (Exception ex) {
-                Helpers.ConsolePrint(MinerTAG(), ex.Message);
-            } 
-
-            return ad;
+        protected override bool IsApiEof(byte third, byte second, byte last) {
+            return second == 0x7d && last == 0x7d;
         }
 
         public override void Start(string url, string btcAdress, string worker) {

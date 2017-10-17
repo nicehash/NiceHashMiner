@@ -117,6 +117,7 @@
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\EWBF.cs" />
     <Compile Include="Miners\prospector.cs" />
+    <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="NiceHashStats.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
