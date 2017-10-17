@@ -133,21 +133,25 @@ namespace NiceHashMiner.Miners.Grouping {
             // calculate new profits
             foreach (var algo in Algorithms) {
                 AlgorithmType key = algo.NiceHashID;
+                const double mult = 0.000000001;
                 if (NiceHashData.ContainsKey(key)) {
                     algo.CurNhmSMADataVal = NiceHashData[key].paying;
-                    algo.CurrentProfit = algo.CurNhmSMADataVal * algo.AvaragedSpeed * 0.000000001;
+                    if (algo is DualAlgorithm dualAlgo) {
+                        dualAlgo.IntensityUpToDate = false;
+                        // Bypass averager for dual algos
+                        dualAlgo.CurrentProfit = dualAlgo.CurNhmSMADataVal * dualAlgo.BenchmarkSpeed * mult;
 
+                        var secondaryKey = dualAlgo.SecondaryNiceHashID;
+                        if (NiceHashData.ContainsKey(secondaryKey)) {
+                            dualAlgo.SecondaryCurNhmSMADataVal = NiceHashData[secondaryKey].paying;
+                            dualAlgo.CurrentProfit +=
+                                dualAlgo.SecondaryCurNhmSMADataVal * dualAlgo.SecondaryBenchmarkSpeed * mult;
+                        }
+                    } else {
+                        algo.CurrentProfit = algo.CurNhmSMADataVal * algo.AvaragedSpeed * mult;
+                    }
                 } else {
                     algo.CurrentProfit = 0;
-                }
-                
-                if (algo is DualAlgorithm dualAlgo) {
-                    dualAlgo.IntensityUpToDate = false;
-                    var secondaryKey = dualAlgo.SecondaryNiceHashID;
-                    if (NiceHashData.ContainsKey(secondaryKey)) {
-                        dualAlgo.SecondaryCurNhmSMADataVal = NiceHashData[secondaryKey].paying;
-                        algo.CurrentProfit += dualAlgo.SecondaryCurNhmSMADataVal * dualAlgo.SecondaryAveragedSpeed * 0.000000001;
-                    }
                 }
             }
             // find max paying value and save key
