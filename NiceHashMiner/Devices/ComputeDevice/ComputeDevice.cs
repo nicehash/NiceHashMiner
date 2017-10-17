@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using NiceHashMiner.Enums;
@@ -54,6 +55,8 @@ namespace NiceHashMiner.Devices
         protected List<Algorithm> AlgorithmSettings;
 
         public string BenchmarkCopyUUID { get; set; }
+
+        public string TuningCopyUUID { get; set; }
         
         public virtual float Load { get { return 0; } }
         
@@ -185,6 +188,20 @@ namespace NiceHashMiner.Devices
                     if (setAlgo is DualAlgorithm dualSA && copyFromAlgo is DualAlgorithm dualCFA) {
                         dualSA.SecondaryBenchmarkSpeed = dualCFA.SecondaryBenchmarkSpeed;
                     }
+                }
+            }
+        }
+
+        public void CopyTuningSettingsFrom(ComputeDevice copyTuningCDev) {
+            foreach (var copyFromAlgo in copyTuningCDev.AlgorithmSettings.OfType<DualAlgorithm>()) {
+                if (GetAlgorithm(copyFromAlgo) is DualAlgorithm setAlgo) {
+                    setAlgo.IntensitySpeeds = copyFromAlgo.IntensitySpeeds;
+                    setAlgo.SecondaryIntensitySpeeds = copyFromAlgo.SecondaryIntensitySpeeds;
+                    setAlgo.TuningStart = copyFromAlgo.TuningStart;
+                    setAlgo.TuningEnd = copyFromAlgo.TuningEnd;
+                    setAlgo.TuningInterval = copyFromAlgo.TuningInterval;
+                    setAlgo.TuningEnabled = copyFromAlgo.TuningEnabled;
+                    setAlgo.IntensityUpToDate = false;
                 }
             }
         }
