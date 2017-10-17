@@ -192,13 +192,11 @@ namespace NiceHashMiner.Miners
         // benchmark stuff
 
         protected override void BenchmarkThreadRoutine(object CommandLine) {
-
-            var dualBenchAlgo = BenchmarkAlgorithm as DualAlgorithm;
-
             if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo && dualBenchAlgo.TuningEnabled) {
                 var stepsLeft = (int)Math.Ceiling((double)(dualBenchAlgo.TuningEnd - dualBenchAlgo.CurrentIntensity) / (dualBenchAlgo.TuningInterval)) + 1;
                 Helpers.ConsolePrint("CDTUING", "{0} tuning steps remain, should complete in {1} seconds", stepsLeft, stepsLeft * benchmarkTimeWait);
-                Helpers.ConsolePrint("CDTUNING", String.Format("Starting benchmark for intensity {0} out of {1}", dualBenchAlgo.CurrentIntensity, dualBenchAlgo.TuningEnd));
+                Helpers.ConsolePrint("CDTUNING",
+                    $"Starting benchmark for intensity {dualBenchAlgo.CurrentIntensity} out of {dualBenchAlgo.TuningEnd}");
             }
             BenchmarkThreadRoutineAlternate(CommandLine, benchmarkTimeWait);
         }
