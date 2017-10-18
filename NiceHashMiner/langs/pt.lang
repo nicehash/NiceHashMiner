@@ -106,6 +106,7 @@
     "Form_DcriValues_ToolTip_TuningInterval": "The interval for dcri values to use for tuning",
     "Form_DcriValues_ToolTip_TuningEnabled": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
     "AlgorithmsListView_ContextMenu_OpenDcri": "Tuning Settings",
+    "DeviceListView_ContectMenu_CopyTuning": "Copy tuning settings only",
 
 
     "Form_Loading_label_LoadingText": "Carregando, por favor aguarde...",
