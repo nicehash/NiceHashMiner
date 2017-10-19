@@ -137,13 +137,12 @@ namespace NiceHashMiner.Miners.Parsing {
             new MinerOptionPackage(
                 MinerType.ClaymoreCryptoNight,
                 new List<MinerOption>() {
-                    new MinerOption("ClaymoreCryptoNight_a"      , "-a", "-a", "0", MinerOptionFlagType.MultiParam, ""),
                     new MinerOption("ClaymoreCryptoNight_wd"     , "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
                     //new MinerOption(ClaymoreCryptoNight_r      , , , , MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("ClaymoreCryptoNight_nofee"  , "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
                     new MinerOption("ClaymoreCryptoNight_li"     , "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("ClaymoreCryptoNight_h"     , "-h", "-h", "0", MinerOptionFlagType.MultiParam, ","),
-                
+                    new MinerOption("ClaymoreCryptoNight_allpools", "-allpools", "0", MinerOptionFlagType.SingleParam),
                     new MinerOption("ClaymoreCryptoNight_cclock" , "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("ClaymoreCryptoNight_mclock" , "-mclock", "-mclock", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("ClaymoreCryptoNight_powlim" , "-powlim", "-powlim", "0", MinerOptionFlagType.MultiParam, ","),
