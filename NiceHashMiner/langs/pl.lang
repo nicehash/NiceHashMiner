@@ -274,6 +274,7 @@
     "AlgorithmsListView_Ratio": "Kurs BTC/GH/Dzień",
     "AlgorithmsListView_Rate": "BTC/Dzień",
     "AlgorithmSettingsControl_IntensityWarning": "Wartości intensywności dla wybranych algorytmów muszą zawierać się między {0} a {1}",
+    "ServiceLocationsListView_DefaultCannotBeDisabled": "Default service location cannot be disabled",
     "EnabledUnbenchmarkedAlgorithmsWarning": "Pozostały niezmieszone tempa dla niektórych algorytmów. Wybierz Tak aby powtórzyć pomiar i zacząć kopanie, Nie aby pominąć pomiar i zacząć kopanie, Anuluj by stąd wyjść",
     "AlgorithmSettingsControl_Label_Intensity": "Intensywność",
     "AlgorithmSettingsControl_ToolTip_Intensity": "Ustawia intensywność dla wybranych algorytmów (wartości mięczy 8.0 - 25.0 lub 31.0 w zależności od algorytmu). Wartość 0 daje domyślną intensywność. TYLKO DLA EKSPERTÓW.",

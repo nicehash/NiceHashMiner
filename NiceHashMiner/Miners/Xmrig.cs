@@ -22,13 +22,22 @@ namespace NiceHashMiner.Miners
         public Xmrig() : base("Xmrig") { }
 
         public override void Start(string url, string btcAdress, string worker) {
-            LastCommandLine = GetStartCommand(url, btcAdress, worker);
+            LastCommandLine = GetStartCommand(btcAdress, worker);
             ProcessHandle = _Start();
         }
 
-        private string GetStartCommand(string url, string btcAdress, string worker) {
+        private string GetStartCommand(string btcAdress, string worker) {
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.CPU);
-            return $" -o {url} -u {btcAdress}.{worker}:x --nicehash {extras} --api-port {APIPort}";
+            string StartCommand = "";
+            // Has support for unlimited failover pools, so use all
+            foreach (Configs.Data.ServiceLocationConfig ServiceLocation in ConfigManager.GeneralConfig.ServiceLocations)
+            {
+                if (ServiceLocation.Enabled == true)
+                {
+                    StartCommand += $" -o {Globals.GetLocationURL(MiningSetup.CurrentAlgorithmType, ServiceLocation.ServiceLocation, ConectionType)} -u {btcAdress}.{worker}:x --nicehash {extras} --api-port {APIPort}";
+                }
+            }
+            return StartCommand;
         }
 
         protected override void _Stop(MinerStopType willswitch) {
@@ -50,11 +59,7 @@ namespace NiceHashMiner.Miners
         #region Benchmark
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            var server = Globals.GetLocationURL(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], 
-                ConectionType);
-            _benchmarkTimeWait = time;
-            return GetStartCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
+            return GetStartCommand(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
                 + " -l benchmark_log.txt --print-time=2";
         }
 

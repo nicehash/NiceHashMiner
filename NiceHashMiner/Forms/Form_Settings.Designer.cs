@@ -30,6 +30,8 @@
             this.tabControlGeneral = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.pictureBox_ShowDetailedDeviceInfo = new System.Windows.Forms.PictureBox();
+            this.checkBox_ShowDetailedDeviceInfo = new System.Windows.Forms.CheckBox();
             this.pictureBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.PictureBox();
             this.checkBox_RunScriptOnCUDA_GPU_Lost = new System.Windows.Forms.CheckBox();
             this.pictureBox_ShowInternetConnectionWarning = new System.Windows.Forms.PictureBox();
@@ -75,6 +77,7 @@
             this.pictureBox_LogToFile = new System.Windows.Forms.PictureBox();
             this.checkBox_DebugConsole = new System.Windows.Forms.CheckBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
+            this.serviceLocationListView1 = new NiceHashMiner.Forms.Components.ServiceLocationListView();
             this.pictureBox_TimeUnit = new System.Windows.Forms.PictureBox();
             this.label_TimeUnit = new System.Windows.Forms.Label();
             this.comboBox_TimeUnit = new System.Windows.Forms.ComboBox();
@@ -93,7 +96,6 @@
             this.label_MinProfit = new System.Windows.Forms.Label();
             this.label_WorkerName = new System.Windows.Forms.Label();
             this.label_ServiceLocation = new System.Windows.Forms.Label();
-            this.comboBox_ServiceLocation = new System.Windows.Forms.ComboBox();
             this.textBox_BitcoinAddress = new System.Windows.Forms.TextBox();
             this.textBox_WorkerName = new System.Windows.Forms.TextBox();
             this.groupBox_Localization = new System.Windows.Forms.GroupBox();
@@ -155,11 +157,10 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
-            this.pictureBox_ShowDetailedDeviceInfo = new System.Windows.Forms.PictureBox();
-            this.checkBox_ShowDetailedDeviceInfo = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowDetailedDeviceInfo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).BeginInit();
@@ -211,7 +212,6 @@
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideDisabledAlgorithms)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowDetailedDeviceInfo)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -295,6 +295,28 @@
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
+            // 
+            // pictureBox_ShowDetailedDeviceInfo
+            // 
+            this.pictureBox_ShowDetailedDeviceInfo.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ShowDetailedDeviceInfo.Location = new System.Drawing.Point(296, 498);
+            this.pictureBox_ShowDetailedDeviceInfo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pictureBox_ShowDetailedDeviceInfo.Name = "pictureBox_ShowDetailedDeviceInfo";
+            this.pictureBox_ShowDetailedDeviceInfo.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ShowDetailedDeviceInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ShowDetailedDeviceInfo.TabIndex = 375;
+            this.pictureBox_ShowDetailedDeviceInfo.TabStop = false;
+            // 
+            // checkBox_ShowDetailedDeviceInfo
+            // 
+            this.checkBox_ShowDetailedDeviceInfo.AutoSize = true;
+            this.checkBox_ShowDetailedDeviceInfo.Location = new System.Drawing.Point(8, 498);
+            this.checkBox_ShowDetailedDeviceInfo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.checkBox_ShowDetailedDeviceInfo.Name = "checkBox_ShowDetailedDeviceInfo";
+            this.checkBox_ShowDetailedDeviceInfo.Size = new System.Drawing.Size(182, 21);
+            this.checkBox_ShowDetailedDeviceInfo.TabIndex = 374;
+            this.checkBox_ShowDetailedDeviceInfo.Text = "ShowDetailedDeviceInfo";
+            this.checkBox_ShowDetailedDeviceInfo.UseVisualStyleBackColor = true;
             // 
             // pictureBox_RunScriptOnCUDA_GPU_Lost
             // 
@@ -706,7 +728,7 @@
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogToFile);
             this.groupBox_Logging.Controls.Add(this.checkBox_DebugConsole);
-            this.groupBox_Logging.Location = new System.Drawing.Point(8, 366);
+            this.groupBox_Logging.Location = new System.Drawing.Point(8, 444);
             this.groupBox_Logging.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox_Logging.Name = "groupBox_Logging";
             this.groupBox_Logging.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -789,6 +811,7 @@
             // 
             // groupBox_Main
             // 
+            this.groupBox_Main.Controls.Add(this.serviceLocationListView1);
             this.groupBox_Main.Controls.Add(this.pictureBox_TimeUnit);
             this.groupBox_Main.Controls.Add(this.label_TimeUnit);
             this.groupBox_Main.Controls.Add(this.comboBox_TimeUnit);
@@ -807,22 +830,29 @@
             this.groupBox_Main.Controls.Add(this.label_MinProfit);
             this.groupBox_Main.Controls.Add(this.label_WorkerName);
             this.groupBox_Main.Controls.Add(this.label_ServiceLocation);
-            this.groupBox_Main.Controls.Add(this.comboBox_ServiceLocation);
             this.groupBox_Main.Controls.Add(this.textBox_BitcoinAddress);
             this.groupBox_Main.Controls.Add(this.textBox_WorkerName);
             this.groupBox_Main.Location = new System.Drawing.Point(8, 7);
             this.groupBox_Main.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox_Main.Name = "groupBox_Main";
             this.groupBox_Main.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox_Main.Size = new System.Drawing.Size(461, 263);
+            this.groupBox_Main.Size = new System.Drawing.Size(461, 341);
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
             // 
+            // serviceLocationListView1
+            // 
+            this.serviceLocationListView1.Location = new System.Drawing.Point(213, 98);
+            this.serviceLocationListView1.Name = "serviceLocationListView1";
+            this.serviceLocationListView1.SaveToGeneralConfig = false;
+            this.serviceLocationListView1.Size = new System.Drawing.Size(242, 135);
+            this.serviceLocationListView1.TabIndex = 373;
+            // 
             // pictureBox_TimeUnit
             // 
             this.pictureBox_TimeUnit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_TimeUnit.Location = new System.Drawing.Point(403, 126);
+            this.pictureBox_TimeUnit.Location = new System.Drawing.Point(173, 184);
             this.pictureBox_TimeUnit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox_TimeUnit.Name = "pictureBox_TimeUnit";
             this.pictureBox_TimeUnit.Size = new System.Drawing.Size(18, 18);
@@ -833,7 +863,7 @@
             // label_TimeUnit
             // 
             this.label_TimeUnit.AutoSize = true;
-            this.label_TimeUnit.Location = new System.Drawing.Point(213, 127);
+            this.label_TimeUnit.Location = new System.Drawing.Point(13, 185);
             this.label_TimeUnit.Name = "label_TimeUnit";
             this.label_TimeUnit.Size = new System.Drawing.Size(68, 17);
             this.label_TimeUnit.TabIndex = 371;
@@ -843,16 +873,16 @@
             // 
             this.comboBox_TimeUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_TimeUnit.FormattingEnabled = true;
-            this.comboBox_TimeUnit.Location = new System.Drawing.Point(213, 151);
+            this.comboBox_TimeUnit.Location = new System.Drawing.Point(13, 209);
             this.comboBox_TimeUnit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.comboBox_TimeUnit.Name = "comboBox_TimeUnit";
-            this.comboBox_TimeUnit.Size = new System.Drawing.Size(212, 24);
+            this.comboBox_TimeUnit.Size = new System.Drawing.Size(183, 24);
             this.comboBox_TimeUnit.TabIndex = 370;
             // 
             // label_IFTTTAPIKey
             // 
             this.label_IFTTTAPIKey.AutoSize = true;
-            this.label_IFTTTAPIKey.Location = new System.Drawing.Point(151, 209);
+            this.label_IFTTTAPIKey.Location = new System.Drawing.Point(149, 286);
             this.label_IFTTTAPIKey.Name = "label_IFTTTAPIKey";
             this.label_IFTTTAPIKey.Size = new System.Drawing.Size(103, 17);
             this.label_IFTTTAPIKey.TabIndex = 369;
@@ -861,7 +891,7 @@
             // textBox_IFTTTKey
             // 
             this.textBox_IFTTTKey.Enabled = false;
-            this.textBox_IFTTTKey.Location = new System.Drawing.Point(147, 230);
+            this.textBox_IFTTTKey.Location = new System.Drawing.Point(145, 307);
             this.textBox_IFTTTKey.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.textBox_IFTTTKey.Name = "textBox_IFTTTKey";
             this.textBox_IFTTTKey.Size = new System.Drawing.Size(279, 22);
@@ -870,7 +900,7 @@
             // pictureBox_UseIFTTT
             // 
             this.pictureBox_UseIFTTT.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_UseIFTTT.Location = new System.Drawing.Point(117, 226);
+            this.pictureBox_UseIFTTT.Location = new System.Drawing.Point(115, 303);
             this.pictureBox_UseIFTTT.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox_UseIFTTT.Name = "pictureBox_UseIFTTT";
             this.pictureBox_UseIFTTT.Size = new System.Drawing.Size(18, 18);
@@ -881,7 +911,7 @@
             // checkBox_UseIFTTT
             // 
             this.checkBox_UseIFTTT.AutoSize = true;
-            this.checkBox_UseIFTTT.Location = new System.Drawing.Point(13, 231);
+            this.checkBox_UseIFTTT.Location = new System.Drawing.Point(11, 308);
             this.checkBox_UseIFTTT.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.checkBox_UseIFTTT.Name = "checkBox_UseIFTTT";
             this.checkBox_UseIFTTT.Size = new System.Drawing.Size(97, 21);
@@ -892,7 +922,7 @@
             // checkBox_IdleWhenNoInternetAccess
             // 
             this.checkBox_IdleWhenNoInternetAccess.AutoSize = true;
-            this.checkBox_IdleWhenNoInternetAccess.Location = new System.Drawing.Point(13, 183);
+            this.checkBox_IdleWhenNoInternetAccess.Location = new System.Drawing.Point(11, 260);
             this.checkBox_IdleWhenNoInternetAccess.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.checkBox_IdleWhenNoInternetAccess.Name = "checkBox_IdleWhenNoInternetAccess";
             this.checkBox_IdleWhenNoInternetAccess.Size = new System.Drawing.Size(265, 21);
@@ -956,7 +986,7 @@
             // pictureBox_IdleWhenNoInternetAccess
             // 
             this.pictureBox_IdleWhenNoInternetAccess.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_IdleWhenNoInternetAccess.Location = new System.Drawing.Point(403, 183);
+            this.pictureBox_IdleWhenNoInternetAccess.Location = new System.Drawing.Point(401, 260);
             this.pictureBox_IdleWhenNoInternetAccess.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.pictureBox_IdleWhenNoInternetAccess.Name = "pictureBox_IdleWhenNoInternetAccess";
             this.pictureBox_IdleWhenNoInternetAccess.Size = new System.Drawing.Size(18, 18);
@@ -1000,23 +1030,6 @@
             this.label_ServiceLocation.TabIndex = 363;
             this.label_ServiceLocation.Text = "ServiceLocation:";
             // 
-            // comboBox_ServiceLocation
-            // 
-            this.comboBox_ServiceLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_ServiceLocation.FormattingEnabled = true;
-            this.comboBox_ServiceLocation.Items.AddRange(new object[] {
-            "Europe - Amsterdam",
-            "USA - San Jose",
-            "China - Hong Kong",
-            "Japan - Tokyo",
-            "India - Chennai",
-            "Brazil - Sao Paulo"});
-            this.comboBox_ServiceLocation.Location = new System.Drawing.Point(213, 98);
-            this.comboBox_ServiceLocation.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.comboBox_ServiceLocation.Name = "comboBox_ServiceLocation";
-            this.comboBox_ServiceLocation.Size = new System.Drawing.Size(212, 24);
-            this.comboBox_ServiceLocation.TabIndex = 330;
-            // 
             // textBox_BitcoinAddress
             // 
             this.textBox_BitcoinAddress.Location = new System.Drawing.Point(13, 44);
@@ -1042,7 +1055,7 @@
             this.groupBox_Localization.Controls.Add(this.comboBox_Language);
             this.groupBox_Localization.Controls.Add(this.currencyConverterCombobox);
             this.groupBox_Localization.Controls.Add(this.label_displayCurrency);
-            this.groupBox_Localization.Location = new System.Drawing.Point(8, 278);
+            this.groupBox_Localization.Location = new System.Drawing.Point(8, 356);
             this.groupBox_Localization.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox_Localization.Name = "groupBox_Localization";
             this.groupBox_Localization.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
@@ -1729,28 +1742,6 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
-            // pictureBox_ShowDetailedDeviceInfo
-            // 
-            this.pictureBox_ShowDetailedDeviceInfo.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ShowDetailedDeviceInfo.Location = new System.Drawing.Point(296, 498);
-            this.pictureBox_ShowDetailedDeviceInfo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.pictureBox_ShowDetailedDeviceInfo.Name = "pictureBox_ShowDetailedDeviceInfo";
-            this.pictureBox_ShowDetailedDeviceInfo.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_ShowDetailedDeviceInfo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_ShowDetailedDeviceInfo.TabIndex = 375;
-            this.pictureBox_ShowDetailedDeviceInfo.TabStop = false;
-            // 
-            // checkBox_ShowDetailedDeviceInfo
-            // 
-            this.checkBox_ShowDetailedDeviceInfo.AutoSize = true;
-            this.checkBox_ShowDetailedDeviceInfo.Location = new System.Drawing.Point(8, 498);
-            this.checkBox_ShowDetailedDeviceInfo.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.checkBox_ShowDetailedDeviceInfo.Name = "checkBox_ShowDetailedDeviceInfo";
-            this.checkBox_ShowDetailedDeviceInfo.Size = new System.Drawing.Size(182, 21);
-            this.checkBox_ShowDetailedDeviceInfo.TabIndex = 374;
-            this.checkBox_ShowDetailedDeviceInfo.Text = "ShowDetailedDeviceInfo";
-            this.checkBox_ShowDetailedDeviceInfo.UseVisualStyleBackColor = true;
-            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -1771,6 +1762,7 @@
             this.tabPageGeneral.ResumeLayout(false);
             this.groupBox_Misc.ResumeLayout(false);
             this.groupBox_Misc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowDetailedDeviceInfo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunScriptOnCUDA_GPU_Lost)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).EndInit();
@@ -1827,7 +1819,6 @@
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideDisabledAlgorithms)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowDetailedDeviceInfo)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1848,7 +1839,6 @@
         private System.Windows.Forms.Label label_Language;
         private System.Windows.Forms.ComboBox comboBox_Language;
         private System.Windows.Forms.Label label_LogMaxFileSize;
-        private System.Windows.Forms.ComboBox comboBox_ServiceLocation;
         private System.Windows.Forms.Label label_ServiceLocation;
         private System.Windows.Forms.Label label_WorkerName;
         private System.Windows.Forms.Label label_BitcoinAddress;
@@ -1965,5 +1955,6 @@
         private System.Windows.Forms.PictureBox pictureBox_HideDisabledAlgorithms;
         private System.Windows.Forms.PictureBox pictureBox_ShowDetailedDeviceInfo;
         private System.Windows.Forms.CheckBox checkBox_ShowDetailedDeviceInfo;
+        private Components.ServiceLocationListView serviceLocationListView1;
     }
 }

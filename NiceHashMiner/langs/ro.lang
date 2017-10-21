@@ -278,6 +278,7 @@
     "AlgorithmsListView_Ratio": "Rație BTC/GH/Zi",
     "AlgorithmsListView_Rate": "BTC/Zi",
     "AlgorithmSettingsControl_IntensityWarning": "Valorile intensității pentru algoritmul selectat trebuie să fie în intervalul {0} la {1}",
+    "ServiceLocationsListView_DefaultCannotBeDisabled": "Locația implicită nu poate fi dezactivată",
     "EnabledUnbenchmarkedAlgorithmsWarning": "Există algoritmi fără benchmark pentru dispozitivele active selectate. Apăsați Da pentru benchmark și începere minare, Nu pentru a sări peste benchmark și a continua minarea, Anulare pentru renunțare",
     "AlgorithmSettingsControl_Label_Intensity": "Intensitate",
     "AlgorithmSettingsControl_ToolTip_Intensity": "Setează Intensitate pentru algoritmul selectat (valori între 8.0 - 25.0 sau 31.0 funcție de algoritm). Intensitatea 0 folosește intensitatea implicită. FUNCȚIONALITATE UTILIZATOR AVANSAT.",

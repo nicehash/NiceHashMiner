@@ -278,6 +278,7 @@
     "AlgorithmsListView_Ratio": "算力售价 BTC/GH/天",
     "AlgorithmsListView_Rate": "BTC/天",
     "AlgorithmSettingsControl_IntensityWarning": "所选算法烈度值必须在{0}到{1}范围内。",
+    "ServiceLocationsListView_DefaultCannotBeDisabled": "Default service location cannot be disabled",
     "EnabledUnbenchmarkedAlgorithmsWarning": "已启用的设备上有算法还没有经过基准测试。请点击“是”来进行基准测试并开始挖矿，点击“否”略过基准测试，或点击“取消”中止当前操作。",
     "AlgorithmSettingsControl_Label_Intensity": "烈度",
     "AlgorithmSettingsControl_ToolTip_Intensity": "设置所选算法的烈度值（取决于算法，烈度值应处于8.0 - 25.0或31.0范围内）。0代表默认烈度。注意，此功能仅适用于资深用户。",

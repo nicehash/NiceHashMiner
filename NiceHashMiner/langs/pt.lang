@@ -279,6 +279,7 @@
     "AlgorithmsListView_Ratio": "Taxa BTC/GH/Dia",
     "AlgorithmsListView_Rate": "BTC/Dia",
     "AlgorithmSettingsControl_IntensityWarning": "Valores de intensidade para esse algoritimo precisam estar entre {0} e {1}",
+    "ServiceLocationsListView_DefaultCannotBeDisabled": "Default service location cannot be disabled",
     "EnabledUnbenchmarkedAlgorithmsWarning": "Você ainda não fez benchmark em algum(s) dispositivo(s) selecionado(s). Clique em Sim para fazer o benchmark e iniciar mineração, Não para pular o benchmark e continuar minerando",
     "AlgorithmSettingsControl_Label_Intensity": "Intensidade",
     "AlgorithmSettingsControl_ToolTip_Intensity": "Define Intensidade para o algoritmo selecionado (valores entre 8.0 - 25.0 ou 31.0 dependendo do algoritmo). Intensidade 0 usa intensidade padrão. CONFIGURAÇÕES PARA USUÁRIOS AVANÇADOS.",
