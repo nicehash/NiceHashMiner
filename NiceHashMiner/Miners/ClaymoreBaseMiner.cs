@@ -73,7 +73,8 @@ namespace NiceHashMiner.Miners
             try
             {
                 var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"miner_getstat1\"}n");
-                var client = new TcpClient("127.0.0.1", ApiPort);
+                var client = new TcpClient();
+                await client.ConnectAsync("127.0.0.1", ApiPort);
                 var nwStream = client.GetStream();
                 await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
                 var bytesToRead = new byte[client.ReceiveBufferSize];

@@ -994,7 +994,8 @@ namespace NiceHashMiner
             string responseFromServer = null;
             try
             {
-                var tcpc = new TcpClient("127.0.0.1", port);
+                var tcpc = new TcpClient();
+                await tcpc.ConnectAsync("127.0.0.1", port);
                 var nwStream = tcpc.GetStream();
 
                 var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);

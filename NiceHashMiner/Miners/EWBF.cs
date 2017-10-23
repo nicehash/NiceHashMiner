@@ -270,7 +270,8 @@ namespace NiceHashMiner.Miners
             JsonApiResponse resp = null;
             try {
                 var bytesToSend = Encoding.ASCII.GetBytes("{\"method\":\"getstat\"}\n");
-                var client = new TcpClient("127.0.0.1", ApiPort);
+                var client = new TcpClient();
+                await client.ConnectAsync("127.0.0.1", ApiPort);
                 var nwStream = client.GetStream();
                 await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
                 var bytesToRead = new byte[client.ReceiveBufferSize];
