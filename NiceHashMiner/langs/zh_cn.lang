@@ -207,7 +207,7 @@
     "Form_Settings_ToolTip_checkBox_DebugConsole": "选择此复选框以显示调试控制台。",
     "Form_Settings_ToolTip_BitcoinAddress": "比特币提现地址。用于分发挖矿所得。",
     "Form_Settings_ToolTip_WorkerName": "用于识别该计算机。",
-    "Form_Settings_ToolTip_ServiceLocation": "设置服务器所在区域。请根据矿机所在位置酌情选择。",
+    "Form_Settings_ToolTip_ServiceLocation": "设置服务器所在区域。First location is the default one. The other locations are used by multipool algorithms。",
     "Form_Settings_ToolTip_TimeUnit": "设置显示收益的时间单位。",
     "Form_Settings_ToolTip_checkBox_AutoStartMining": "选择此处以在程序开启后自动开始挖矿。",
     "Form_Settings_ToolTip_checkBox_HideMiningWindows": "选择此处来隐藏挖矿程序 (sgminer, ccminer, cpuminer and ethminer) 的命令行窗口。",

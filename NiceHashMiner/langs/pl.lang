@@ -203,7 +203,7 @@
     "Form_Settings_ToolTip_checkBox_DebugConsole": "Pokazuje konsolę debug.",
     "Form_Settings_ToolTip_BitcoinAddress": "Twój adres bitcoin do kopania.",
     "Form_Settings_ToolTip_WorkerName": "Identyfikator tego komputera.",
-    "Form_Settings_ToolTip_ServiceLocation": "Ustawia lokalizację serwera. Wybierz najbliższy miejsca zamieszkania.",
+    "Form_Settings_ToolTip_ServiceLocation": "Ustawia lokalizację serwera. First location is the default one. The other locations are used by multipool algorithms.",
     "Form_Settings_ToolTip_TimeUnit": "Sets the time unit to report BTC rates.",
     "Form_Settings_ToolTip_checkBox_AutoStartMining": "Spowoduje automatyczny start kopania po uruchomieniu programu NiceHash Miner Legacy.",
     "Form_Settings_ToolTip_checkBox_HideMiningWindows": "Spowoduje ukrycie konsol górników sgminer, ccminer, cpuminer i ethminer.",

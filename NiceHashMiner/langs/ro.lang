@@ -207,7 +207,7 @@
     "Form_Settings_ToolTip_checkBox_DebugConsole": "Când bifați, afișează consola de depanare.",
     "Form_Settings_ToolTip_BitcoinAddress": "Adresa bitcoin a utilizatorului pentru minare.",
     "Form_Settings_ToolTip_WorkerName": "Pentru identificarea calculatorului utilizatorului.",
-    "Form_Settings_ToolTip_ServiceLocation": "Setați locația de minare. Alegând Hong Kong sau Tokyo latența o să fie mai mare.",
+    "Form_Settings_ToolTip_ServiceLocation": "Setați locațiile de minare. Prima locație este cea implicită. Celelalte locații sunt folosite de algoritmii multipool.",
     "Form_Settings_ToolTip_TimeUnit": "Setați unitatea de timp pentru raportarea ratei BTC.",
     "Form_Settings_ToolTip_checkBox_AutoStartMining": "Când bifați, NiceHash Miner Legacy o să mineze automat la pornire.",
     "Form_Settings_ToolTip_checkBox_HideMiningWindows": "Când bifați, consolele sgminer, ccminer, cpuminer și ethminer vor fi ascunse.",

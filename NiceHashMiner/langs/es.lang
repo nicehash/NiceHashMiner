@@ -208,7 +208,7 @@
     "Form_Settings_ToolTip_checkBox_DebugConsole": "Si está marcada, abre la consola de depuración.",
     "Form_Settings_ToolTip_BitcoinAddress": "Dirección Bitcoin del usuario para minar.",
     "Form_Settings_ToolTip_WorkerName": "Para identificar el ordenador del usuario.",
-    "Form_Settings_ToolTip_ServiceLocation": "Establece la ubicación de minado. Elegir Hong Kong o Japón añadirá latencia extra.",
+    "Form_Settings_ToolTip_ServiceLocation": "Establece la ubicación de minado. First location is the default one. The other locations are used by multipool algorithms.",
     "Form_Settings_ToolTip_TimeUnit": "Sets the time unit to report BTC rates.",
     "Form_Settings_ToolTip_checkBox_AutoStartMining": "Si está marcada, NiceHash Miner Legacy empezará a minar al abrirse.",
     "Form_Settings_ToolTip_checkBox_HideMiningWindows": "Si está marcada, las consolas de sgminer, ccminer, cpuminer y ethminer se ocultarán.",

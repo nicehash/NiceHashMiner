@@ -207,7 +207,7 @@
     "Form_Settings_ToolTip_checkBox_DebugConsole": "When checked, it displays debug console.",
     "Form_Settings_ToolTip_BitcoinAddress": "User's bitcoin address for mining.",
     "Form_Settings_ToolTip_WorkerName": "To identify the user's computer.",
-    "Form_Settings_ToolTip_ServiceLocation": "Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency.",
+    "Form_Settings_ToolTip_ServiceLocation": "Sets the mining locations. First location is the default one. The other locations are used by multipool algorithms.",
     "Form_Settings_ToolTip_TimeUnit": "Sets the time unit to report BTC rates.",
     "Form_Settings_ToolTip_checkBox_AutoStartMining": "When checked, NiceHash Miner Legacy will automatically start mining when launched.",
     "Form_Settings_ToolTip_checkBox_HideMiningWindows": "When checked, sgminer, ccminer, cpuminer and ethminer console windows will be hidden.",
