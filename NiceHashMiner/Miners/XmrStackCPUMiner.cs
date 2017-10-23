@@ -304,7 +304,7 @@ namespace NiceHashMiner.Miners {
 
         // doesn't work stubs
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+            string url = Globals.GetLocationURL(algorithm.NiceHashID, ConfigManager.GeneralConfig.ServiceLocations[0].ServiceLocation, this.ConectionType);
             prepareConfigFile(url, Globals.DemoUser);
             return "benchmark_mode " + GetConfigFileName();
         }

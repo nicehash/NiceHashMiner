@@ -100,11 +100,18 @@
     <Compile Include="3rdParty\NVAPI.cs" />
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithm.cs" />
+    <Compile Include="Configs\Data\ServiceLocationConfig.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CPUComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
     <Compile Include="Enums\TimeUnitType.cs" />
     <Compile Include="Forms\Components\AlgorithmsListViewComparer.cs" />
+    <Compile Include="Forms\Components\ServiceLocationListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\ServiceLocationListView.Designer.cs">
+      <DependentUpon>ServiceLocationListView.cs</DependentUpon>
+    </Compile>
     <Compile Include="IFTTT.cs" />
     <Compile Include="ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
@@ -324,6 +331,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\ServiceLocationListView.resx">
+      <DependentUpon>ServiceLocationListView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Benchmark.resx">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>

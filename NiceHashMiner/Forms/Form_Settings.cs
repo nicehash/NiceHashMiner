@@ -102,7 +102,7 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(this.label_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
             toolTip1.SetToolTip(this.pictureBox_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
 
-            toolTip1.SetToolTip(this.comboBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
+            toolTip1.SetToolTip(this.serviceLocationListView1, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(this.label_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(this.pictureBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
 
@@ -289,11 +289,9 @@ namespace NiceHashMiner.Forms
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
             label_WorkerName.Text = International.GetText("WorkerName") + ":";
             label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
-            {
-                int i = 0;
-                foreach (string loc in Globals.MiningLocation)
-                    comboBox_ServiceLocation.Items[i++] = International.GetText("LocationName_" + loc);
-            }
+
+            serviceLocationListView1.SetServiceLocations();
+            
             label_TimeUnit.Text = International.GetText("Time_Unit") + ":";
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
@@ -405,10 +403,9 @@ namespace NiceHashMiner.Forms
                 // set double only keypress
                 this.textBox_MinProfit.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxDoubleOnly_KeyPress);
             }
-            // Add EventHandler for all the general tab's textboxes
+            // Add EventHandler for all the general tab's comboboxes
             {
                 this.comboBox_Language.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
-                this.comboBox_ServiceLocation.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
                 this.comboBox_TimeUnit.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
                 this.comboBox_DagLoadMode.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
             }
@@ -509,7 +506,6 @@ namespace NiceHashMiner.Forms
             // ComboBox
             {
                 comboBox_Language.SelectedIndex = (int)ConfigManager.GeneralConfig.Language;
-                comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
                 comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
             }
@@ -682,7 +678,6 @@ namespace NiceHashMiner.Forms
             if (!_isInitFinished) return;
             IsChange = true;
             ConfigManager.GeneralConfig.Language = (LanguageType)comboBox_Language.SelectedIndex;
-            ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType)comboBox_TimeUnit.SelectedIndex;
             ConfigManager.GeneralConfig.EthminerDagGenerationType = (DagGenerationType)comboBox_DagLoadMode.SelectedIndex;
         }
@@ -777,6 +772,9 @@ namespace NiceHashMiner.Forms
             if (isCredChange) {
                 NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress.Trim(), ConfigManager.GeneralConfig.WorkerName.Trim());
             }
+
+            if (serviceLocationListView1.SaveToGeneralConfig)
+                serviceLocationListView1.SaveServiceLocations();
 
             this.Close();
         }
