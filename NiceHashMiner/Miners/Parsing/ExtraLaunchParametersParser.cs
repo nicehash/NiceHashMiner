@@ -417,5 +417,11 @@ namespace NiceHashMiner.Miners.Parsing {
             }
             return Threads;
         }
+
+        public static bool GetNoPrefetch(MiningPair cpuPair) {
+            var cDev = cpuPair.Device;
+            var algo = cpuPair.Algorithm;
+            return algo.ExtraLaunchParameters.Contains("--no_prefetch");
+        }
     }
 }
