@@ -852,7 +852,8 @@ namespace NiceHashMiner
                     for (int i = offset; i < offset + r; i++)
                     {
                         if (IncomingBuffer[i] == 0x7C || IncomingBuffer[i] == 0x00
-                            || (i > 2 && IsApiEof(IncomingBuffer[i - 2], IncomingBuffer[i - 1], IncomingBuffer[i]))) {
+                            || (i > 2 && IsApiEof(IncomingBuffer[i - 2], IncomingBuffer[i - 1], IncomingBuffer[i]))
+                            || overrideLoop) {
                             fin = true;
                             break;
                         }

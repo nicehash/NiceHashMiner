@@ -29,7 +29,7 @@ namespace NiceHashMiner.Miners
         }
 
         public override async Task<APIData> GetSummaryAsync() {
-            return await GetSummaryCPUAsync("api.json");
+            return await GetSummaryCPUAsync("api.json", true);
         }
 
         protected override bool IsApiEof(byte third, byte second, byte last) {

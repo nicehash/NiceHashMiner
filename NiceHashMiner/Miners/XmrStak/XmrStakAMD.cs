@@ -5,8 +5,10 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
+using System.Text.RegularExpressions;
 
 namespace NiceHashMiner.Miners
 {
@@ -35,6 +37,7 @@ namespace NiceHashMiner.Miners
             foreach (var settings in gpuSettings) {
                 gpu_threads_conf.Add(JObject.FromObject(settings));
             }
+            gpu_thread_num = gpuSettings.Count;
         }
         /* 
          * Number of GPUs that you have in your system. Each GPU will get its own CPU thread.
@@ -82,17 +85,56 @@ namespace NiceHashMiner.Miners
                 var gpuConfigs = new List<XmrStakGPUSettings>();
                 foreach (var pair in MiningSetup.MiningPairs) {
                     var intensities = ExtraLaunchParametersParser.GetIntensityStak(pair);
+                    if (intensities.Count <= 0) intensities.Add(1000);
                     gpuConfigs.AddRange(intensities.Select(intensity =>
                         new XmrStakGPUSettings(pair.Device.ID, intensity)));
                 }
                 config.Initialize_gpu_threads_conf(gpuConfigs);
+                var serializer = new JsonSerializer();
+                serializer.TypeNameHandling = TypeNameHandling.All;
                 var confJson = JObject.FromObject(config);
                 var writeStr = confJson.ToString();
                 var start = writeStr.IndexOf("{");
-                int end = writeStr.IndexOf("}");
+                int end = writeStr.LastIndexOf("}");
                 writeStr = writeStr.Substring(start + 1, end - 1);
                 System.IO.File.WriteAllText(WorkingDirectory + GetConfigFileName(), writeStr);
             } catch { }
+        }
+
+        public override async Task<APIData> GetSummaryAsync() {
+            string resp;
+            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+
+            string DataToSend = GetHttpRequestNHMAgentStrin("h");
+
+            resp = await GetAPIDataAsync(APIPort, DataToSend, false, true);
+            if (resp == null) {
+                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
+                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                return null;
+            }
+            const string Totals = "Totals:";
+            const string Highest = "Highest:";
+            int start_i = resp.IndexOf(Totals);
+            int end_i = resp.IndexOf(Highest);
+            if (start_i > -1 && end_i > -1) {
+                string sub_resp = resp.Substring(start_i, end_i - start_i);
+                sub_resp = sub_resp.Replace(Totals, "");
+                sub_resp = sub_resp.Replace(Highest, "");
+                sub_resp = Regex.Replace(sub_resp, "<.*?>", string.Empty);  // Remove HTML tags
+                var strings = sub_resp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var s in strings) {
+                    if (double.TryParse(s, out var speed)) {
+                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                        ad.Speed = speed;
+                        break;
+                    }
+                }
+            }
+            // check if speed zero
+            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+
+            return ad;
         }
     }
 }

@@ -429,7 +429,7 @@ namespace NiceHashMiner.Miners.Parsing {
             if (algo.ExtraLaunchParameters.Contains("--intensity")) {
                 var strings = algo.ExtraLaunchParameters.Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries).ToList();
                 var i = strings.FindIndex(a => a == "--intensity") + 1;
-                if (i > -1 && strings.Count < i) {
+                if (i > -1 && strings.Count > i) {
                     var int_strings = strings[i].Split(new string[] {","}, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var int_string in int_strings) {
                         if (int.TryParse(int_string, out var intensity)) {
