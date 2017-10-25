@@ -212,11 +212,11 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
                         }
                     },
-                    { MinerBaseType.XmrStakAMD,
-                        new List<Algorithm> {
-                            new Algorithm(MinerBaseType.XmrStakAMD, AlgorithmType.CryptoNight, "")
-                        }
-                    }
+                    //{ MinerBaseType.XmrStakAMD,
+                    //    new List<Algorithm> {
+                    //        new Algorithm(MinerBaseType.XmrStakAMD, AlgorithmType.CryptoNight, "")
+                    //    }
+                    //}
                 };
             }
             // NVIDIA
