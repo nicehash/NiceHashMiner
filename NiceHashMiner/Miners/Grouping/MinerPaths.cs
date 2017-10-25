@@ -90,6 +90,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string excavator = _bin + @"\excavator\excavator.exe";
 
             public const string XmrStackCPUMiner = _bin + @"\xmr-stak-cpu\xmr-stak-cpu.exe";
+            public const string XmrStakAMD = _bin + @"\xmr-stak-amd\xmr-stak-amd.exe";
             public const string Xmrig = _bin + @"\xmrig\xmrig.exe";
 
             public const string NONE = "";
@@ -152,6 +153,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.prospector;
                 case MinerBaseType.Xmrig:
                     return Data.Xmrig;
+                case MinerBaseType.XmrStakAMD:
+                    return Data.XmrStakAMD;
             }
             return Data.NONE;
         }

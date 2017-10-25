@@ -109,6 +109,8 @@
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\EWBF.cs" />
     <Compile Include="Miners\prospector.cs" />
+    <Compile Include="Miners\XmrStak\XmrStak.cs" />
+    <Compile Include="Miners\XmrStak\XmrStakAMD.cs" />
     <Compile Include="Miners\XmrStak\XmrStakConfig.cs" />
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="NiceHashStats.cs" />
