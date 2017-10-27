@@ -31,8 +31,12 @@ namespace NiceHashMiner.Devices {
                                 sgminerAlgos[NeoScrypt_Index].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
                                 Helpers.ConsolePrint("ComputeDevice", "The GPU detected (" + device.Codename + ") is not Tahiti. Changing default gpu-threads to 2.");
                             }
-                            if (CryptoNight_Index > -1 && device.Name.Contains("Hawaii")) {
-                                sgminerAlgos[CryptoNight_Index].ExtraLaunchParameters = "--rawintensity 640 -w 8 -g 2";
+                            if (CryptoNight_Index > -1) {
+                                if (device.Codename.Contains("Hawaii")) {
+                                    sgminerAlgos[CryptoNight_Index].ExtraLaunchParameters = "--rawintensity 640 -w 8 -g 2";
+                                } else if (device.Name.Contains("Vega")) {
+                                    sgminerAlgos[CryptoNight_Index].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + " --rawintensity 1850 -w 8 -g 2";
+                                }
                             }
                         }
 
