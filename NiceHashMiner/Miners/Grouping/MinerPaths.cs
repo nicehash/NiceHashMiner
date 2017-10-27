@@ -274,7 +274,6 @@ namespace NiceHashMiner.Miners.Grouping
                 if(AlgorithmType.Equihash == type) {
                     return Data.ClaymoreZcashMiner;
                 } else if(AlgorithmType.CryptoNight == type) {
-                    if 
                     return Data.ClaymoreCryptoNightMiner;
                 } else if (AlgorithmType.DaggerHashimoto == type) {
                     return Data.ClaymoreDual;

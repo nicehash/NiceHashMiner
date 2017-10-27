@@ -68,18 +68,16 @@ namespace NiceHashMiner.Devices {
                                     "470",
                                     "480"};
                                 */
-                                // Some old devs currently not supported in old version
+                                // Some old devs currently not supported in new version
                                 List<string> old = new List<string> {
-                                    "7700",
-                                    "7790",
-                                    "450",
-                                    "550",
-                                    "260",
-                                    "360"
+                                    "Verde",
+                                    "Oland",
+                                    "Bonaire"
                                 };
                                 foreach (var namePart in old) {
-                                    if (device.Name.Contains(namePart)) {
+                                    if (device.Codename.Contains(namePart)) {
                                         ClaymoreAlgos[CryptoNight_Index].ExtraLaunchParameters = "-a 4";
+                                        // This will tell NHML to use old bin
                                         ClaymoreAlgos[CryptoNight_Index].MinerName = "old";
                                         break;
                                     }
