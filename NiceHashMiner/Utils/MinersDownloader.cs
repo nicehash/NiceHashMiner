@@ -43,6 +43,11 @@ namespace NiceHashMiner.Utils {
             } catch { }
         }
 
+        public DownloadSetup DownloadSetup
+        {
+            get { return _downloadSetup; }
+        }
+
         public void Start(IMinerUpdateIndicator minerUpdateIndicator) {
             _minerUpdateIndicator = minerUpdateIndicator;
 
@@ -58,6 +63,22 @@ namespace NiceHashMiner.Utils {
                 Helpers.ConsolePrint("MinersDownloader", e.Message);
             }
             Downlaod();
+        }
+
+        public void Stop()
+        {
+            if (downloader != null)
+            {
+                DownloadManager.Instance.RemoveDownload(downloader);
+                downloader = null;
+                timer.Dispose();
+            }
+
+            if (_UnzipThread != null)
+            {
+                _UnzipThread.Abort();
+                _UnzipThread = null;
+            }
         }
 
         // #2 download the file
@@ -133,6 +154,7 @@ namespace NiceHashMiner.Utils {
 
                     UnzipStart();
                 }
+                downloader = null;
             }
         }
 
@@ -150,6 +172,7 @@ namespace NiceHashMiner.Utils {
         }
 
         private void UnzipThreadRoutine() {
+            IArchive archive = null;
             try {
                 if (File.Exists(_downloadSetup.BinsZipLocation)) {
                     
@@ -158,7 +181,7 @@ namespace NiceHashMiner.Utils {
 
                     // if using other formats as zip are returning 0
                     FileInfo fileArchive = new FileInfo(_downloadSetup.BinsZipLocation);
-                    var archive = ArchiveFactory.Open(_downloadSetup.BinsZipLocation);
+                    archive = ArchiveFactory.Open(_downloadSetup.BinsZipLocation);
                     _minerUpdateIndicator.SetMaxProgressValue(100);
                     long SizeCount = 0;
                     foreach (var entry in archive.Entries) {
@@ -187,8 +210,15 @@ namespace NiceHashMiner.Utils {
                     Helpers.ConsolePrint(TAG, String.Format("UnzipThreadRoutine {0} file not found", _downloadSetup.BinsZipLocation));
                 }
             } catch (Exception e) {
+                if (archive != null)
+                {
+                    archive.Dispose();
+                    archive = null;
+                }
+
                 Helpers.ConsolePrint(TAG, "UnzipThreadRoutine has encountered an error: " + e.Message);
             }
+            _UnzipThread = null;
         }
     }
 }
