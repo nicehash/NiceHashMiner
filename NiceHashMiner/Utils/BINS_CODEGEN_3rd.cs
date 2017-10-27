@@ -11,7 +11,7 @@ namespace NiceHashMiner.Utils {
 @"\claymore_cryptonight\Data1h1.bin",
 @"\claymore_cryptonight\Data1i1.bin",
 @"\claymore_cryptonight\msvcr110.dll",
-@"\claymore_cryptonight\NsGpuCNMiner.exe",@"claymore_cryptonight_old\NsGpuCNMiner.exe",
+@"\claymore_cryptonight\NsGpuCNMiner.exe",@"\claymore_cryptonight_old\NsGpuCNMiner.exe",
 @"\claymore_cryptonight\Remote manager\EthMan.exe",
 @"\claymore_cryptonight\Remote manager\libeay32.dll",
 @"\claymore_cryptonight\Remote manager\ssleay32.dll",
