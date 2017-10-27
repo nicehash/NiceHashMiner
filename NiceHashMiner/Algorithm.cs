@@ -48,7 +48,7 @@ namespace NiceHashMiner {
             SecondaryBenchmarkSpeed = 0.0d;
             ExtraLaunchParameters = "";
             LessThreads = 0;
-            Enabled = !(NiceHashID == AlgorithmType.Nist5);
+            Enabled = !(NiceHashID == AlgorithmType.Nist5 || (NiceHashID == AlgorithmType.NeoScrypt && minerBaseType == MinerBaseType.sgminer));
             BenchmarkStatus = "";
         }
 
