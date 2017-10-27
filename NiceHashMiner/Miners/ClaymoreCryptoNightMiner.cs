@@ -11,7 +11,10 @@ using System.Text;
 using System.Threading;
 
 namespace NiceHashMiner.Miners {
-    public class ClaymoreCryptoNightMiner : ClaymoreBaseMiner {
+    public class ClaymoreCryptoNightMiner : ClaymoreBaseMiner
+    {
+
+        private bool isOld => MiningSetup.MinerName == "old";
 
         const string _LOOK_FOR_START = "XMR - Total Speed:";
         public ClaymoreCryptoNightMiner()
@@ -19,12 +22,33 @@ namespace NiceHashMiner.Miners {
         }
 
         protected override double DevFee() {
-            return 1.0;
+            return isOld ? 2.0 : 1.0;
+        }
+        
+        protected override string GetDevicesCommandString() {
+            if (!isOld) return base.GetDevicesCommandString();
+
+            string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+            string deviceStringCommand = " -di ";
+            List<string> ids = new List<string>();
+            foreach (var mPair in MiningSetup.MiningPairs) {
+                var id = mPair.Device.ID;
+                ids.Add(id.ToString());
+            }
+            deviceStringCommand += String.Join("", ids);
+
+            return deviceStringCommand + extraParams;
         }
 
         public override void Start(string url, string btcAdress, string worker) {
             string username = GetUsername(btcAdress, worker);
-            LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -xpool " + url + " -xwal " + username + " -xpsw x -dbg -1";
+            if (isOld) {
+                LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -o " + url + " -u " +
+                                  username + " -p x -dbg -1";
+            } else {
+                LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -xpool " + url +
+                                  " -xwal " + username + " -xpsw x -dbg -1";
+            }
             ProcessHandle = _Start();
         }
 
@@ -39,8 +63,14 @@ namespace NiceHashMiner.Miners {
             string username = Globals.DemoUser;
             if (ConfigManager.GeneralConfig.WorkerName.Length > 0)
                 username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
-
-            string ret = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -xpool " + url + " -xwal " + username + " -xpsw x";
+            string ret;
+            if (isOld) {
+                ret = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -o " + url + " -u " + username +
+                      " -p x";
+            } else {
+                ret = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -xpool " + url + " -xwal " +
+                             username + " -xpsw x";
+            }
             return ret;
         }
 

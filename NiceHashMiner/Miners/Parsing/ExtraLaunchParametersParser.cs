@@ -417,5 +417,28 @@ namespace NiceHashMiner.Miners.Parsing {
             }
             return Threads;
         }
+
+        public static bool GetNoPrefetch(MiningPair cpuPair) {
+            var algo = cpuPair.Algorithm;
+            return algo.ExtraLaunchParameters.Contains("--no_prefetch");
+        }
+
+        public static List<int> GetIntensityStak(MiningPair pair) {
+            var algo = pair.Algorithm;
+            var intensities = new List<int>();
+            if (algo.ExtraLaunchParameters.Contains("--intensity")) {
+                var strings = algo.ExtraLaunchParameters.Split(new string[] {" "}, StringSplitOptions.RemoveEmptyEntries).ToList();
+                var i = strings.FindIndex(a => a == "--intensity") + 1;
+                if (i > -1 && strings.Count > i) {
+                    var int_strings = strings[i].Split(new string[] {","}, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var int_string in int_strings) {
+                        if (int.TryParse(int_string, out var intensity)) {
+                            intensities.Add(intensity);
+                        }
+                    }
+                }
+            }
+            return intensities;
+        }
     }
 }

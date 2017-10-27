@@ -90,6 +90,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string excavator = _bin + @"\excavator\excavator.exe";
 
             public const string XmrStackCPUMiner = _bin + @"\xmr-stak-cpu\xmr-stak-cpu.exe";
+            public const string XmrStakAMD = _bin + @"\xmr-stak-amd\xmr-stak-amd.exe";
             public const string Xmrig = _bin + @"\xmrig\xmrig.exe";
 
             public const string NONE = "";
@@ -98,6 +99,7 @@ namespace NiceHashMiner.Miners.Grouping
             private const string _bin_3rdparty = @"bin_3rdparty";
             public const string ClaymoreZcashMiner = _bin_3rdparty + @"\claymore_zcash\ZecMiner64.exe";
             public const string ClaymoreCryptoNightMiner = _bin_3rdparty + @"\claymore_cryptonight\NsGpuCNMiner.exe";
+            public const string ClaymoreCryptoNightMiner_old = _bin_3rdparty + @"\claymore_cryptonight_old\NsGpuCNMiner.exe";
             public const string OptiminerZcashMiner = _bin_3rdparty + @"\optiminer_zcash_win\Optiminer.exe";
             public const string ClaymoreDual = _bin_3rdparty + @"\claymore_dual\EthDcrMiner64.exe";
             public const string EWBF = _bin_3rdparty + @"\ewbf\miner.exe";
@@ -152,6 +154,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.prospector;
                 case MinerBaseType.Xmrig:
                     return Data.Xmrig;
+                case MinerBaseType.XmrStakAMD:
+                    return Data.XmrStakAMD;
             }
             return Data.NONE;
         }
@@ -159,6 +163,12 @@ namespace NiceHashMiner.Miners.Grouping
         public static string GetPathFor(ComputeDevice computeDevice, Algorithm algorithm /*, Options: MinerPathsConfig*/) {
             if (computeDevice == null || algorithm == null) {
                 return Data.NONE;
+            }
+
+            // Temp claymore cn workaround
+            if (algorithm.MinerBaseType == MinerBaseType.Claymore &&
+                algorithm.NiceHashID == AlgorithmType.CryptoNight && algorithm.MinerName == "old") {
+                return Data.ClaymoreCryptoNightMiner_old;
             }
 
             return GetPathFor(
