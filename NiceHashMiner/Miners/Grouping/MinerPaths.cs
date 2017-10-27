@@ -99,6 +99,7 @@ namespace NiceHashMiner.Miners.Grouping
             private const string _bin_3rdparty = @"bin_3rdparty";
             public const string ClaymoreZcashMiner = _bin_3rdparty + @"\claymore_zcash\ZecMiner64.exe";
             public const string ClaymoreCryptoNightMiner = _bin_3rdparty + @"\claymore_cryptonight\NsGpuCNMiner.exe";
+            public const string ClaymoreCryptoNightMiner_old = _bin_3rdparty + @"\claymore_cryptonight_old\NsGpuCNMiner.exe";
             public const string OptiminerZcashMiner = _bin_3rdparty + @"\optiminer_zcash_win\Optiminer.exe";
             public const string ClaymoreDual = _bin_3rdparty + @"\claymore_dual\EthDcrMiner64.exe";
             public const string EWBF = _bin_3rdparty + @"\ewbf\miner.exe";
@@ -162,6 +163,12 @@ namespace NiceHashMiner.Miners.Grouping
         public static string GetPathFor(ComputeDevice computeDevice, Algorithm algorithm /*, Options: MinerPathsConfig*/) {
             if (computeDevice == null || algorithm == null) {
                 return Data.NONE;
+            }
+
+            // Temp claymore cn workaround
+            if (algorithm.MinerBaseType == MinerBaseType.Claymore &&
+                algorithm.NiceHashID == AlgorithmType.CryptoNight && algorithm.MinerName == "old") {
+                return Data.ClaymoreCryptoNightMiner_old;
             }
 
             return GetPathFor(
@@ -267,6 +274,7 @@ namespace NiceHashMiner.Miners.Grouping
                 if(AlgorithmType.Equihash == type) {
                     return Data.ClaymoreZcashMiner;
                 } else if(AlgorithmType.CryptoNight == type) {
+                    if 
                     return Data.ClaymoreCryptoNightMiner;
                 } else if (AlgorithmType.DaggerHashimoto == type) {
                     return Data.ClaymoreDual;

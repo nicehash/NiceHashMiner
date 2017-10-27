@@ -54,6 +54,7 @@ namespace NiceHashMiner.Devices {
                             int CryptoNight_Index = ClaymoreAlgos.FindIndex((el) => el.NiceHashID == AlgorithmType.CryptoNight);
                             if (CryptoNight_Index > -1) {
                                 //string regex_a_3 = "[5|6][0-9][0-9][0-9]";
+                                /*
                                 List<string> a_4 = new List<string>() {
                                     "270",
                                     "270x",
@@ -66,9 +67,20 @@ namespace NiceHashMiner.Devices {
                                     "390",
                                     "470",
                                     "480"};
-                                foreach (var namePart in a_4) {
+                                */
+                                // Some old devs currently not supported in old version
+                                List<string> old = new List<string> {
+                                    "7700",
+                                    "7790",
+                                    "450",
+                                    "550",
+                                    "260",
+                                    "360"
+                                };
+                                foreach (var namePart in old) {
                                     if (device.Name.Contains(namePart)) {
                                         ClaymoreAlgos[CryptoNight_Index].ExtraLaunchParameters = "-a 4";
+                                        ClaymoreAlgos[CryptoNight_Index].MinerName = "old";
                                         break;
                                     }
                                 }

@@ -14,7 +14,7 @@ namespace NiceHashMiner {
         public readonly MinerBaseType MinerBaseType;
         public readonly string AlgorithmStringID;
         // Miner name is used for miner ALGO flag parameter
-        public readonly string MinerName;
+        public string MinerName;
         public double BenchmarkSpeed { get; set; }
         public double SecondaryBenchmarkSpeed { get; set; }
         public string ExtraLaunchParameters { get; set; }
