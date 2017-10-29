@@ -117,6 +117,9 @@
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\EWBF.cs" />
     <Compile Include="Miners\prospector.cs" />
+    <Compile Include="Miners\XmrStak\XmrStak.cs" />
+    <Compile Include="Miners\XmrStak\XmrStakAMD.cs" />
+    <Compile Include="Miners\XmrStak\XmrStakConfig.cs" />
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="NiceHashStats.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
@@ -261,7 +264,7 @@
     <Compile Include="Miners\Equihash\nheqminer.cs" />
     <Compile Include="Miners\MiningSession.cs" />
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
-    <Compile Include="Miners\XmrStackCPUMiner.cs" />
+    <Compile Include="Miners\XmrStak\XmrStackCPUMiner.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="Miners\ccminer.cs" />

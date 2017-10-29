@@ -31,8 +31,12 @@ namespace NiceHashMiner.Devices {
                                 sgminerAlgos[NeoScrypt_Index].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
                                 Helpers.ConsolePrint("ComputeDevice", "The GPU detected (" + device.Codename + ") is not Tahiti. Changing default gpu-threads to 2.");
                             }
-                            if (CryptoNight_Index > -1 && device.Name.Contains("Hawaii")) {
-                                sgminerAlgos[CryptoNight_Index].ExtraLaunchParameters = "--rawintensity 640 -w 8 -g 2";
+                            if (CryptoNight_Index > -1) {
+                                if (device.Codename.Contains("Hawaii")) {
+                                    sgminerAlgos[CryptoNight_Index].ExtraLaunchParameters = "--rawintensity 640 -w 8 -g 2";
+                                } else if (device.Name.Contains("Vega")) {
+                                    sgminerAlgos[CryptoNight_Index].ExtraLaunchParameters = AmdGpuDevice.DefaultParam + " --rawintensity 1850 -w 8 -g 2";
+                                }
                             }
                         }
 
@@ -54,6 +58,7 @@ namespace NiceHashMiner.Devices {
                             int CryptoNight_Index = ClaymoreAlgos.FindIndex((el) => el.NiceHashID == AlgorithmType.CryptoNight);
                             if (CryptoNight_Index > -1) {
                                 //string regex_a_3 = "[5|6][0-9][0-9][0-9]";
+                                /*
                                 List<string> a_4 = new List<string>() {
                                     "270",
                                     "270x",
@@ -66,9 +71,18 @@ namespace NiceHashMiner.Devices {
                                     "390",
                                     "470",
                                     "480"};
-                                foreach (var namePart in a_4) {
-                                    if (device.Name.Contains(namePart)) {
+                                */
+                                // Some old devs currently not supported in new version
+                                List<string> old = new List<string> {
+                                    "Verde",
+                                    "Oland",
+                                    "Bonaire"
+                                };
+                                foreach (var namePart in old) {
+                                    if (device.Codename.Contains(namePart)) {
                                         ClaymoreAlgos[CryptoNight_Index].ExtraLaunchParameters = "-a 4";
+                                        // This will tell NHML to use old bin
+                                        ClaymoreAlgos[CryptoNight_Index].MinerName = "old";
                                         break;
                                     }
                                 }
@@ -211,7 +225,12 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt"),
                             new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
                         }
-                    }
+                    },
+                    //{ MinerBaseType.XmrStakAMD,
+                    //    new List<Algorithm> {
+                    //        new Algorithm(MinerBaseType.XmrStakAMD, AlgorithmType.CryptoNight, "")
+                    //    }
+                    //}
                 };
             }
             // NVIDIA

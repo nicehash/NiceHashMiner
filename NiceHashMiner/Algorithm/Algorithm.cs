@@ -18,7 +18,7 @@ namespace NiceHashMiner {
         public readonly MinerBaseType MinerBaseType;
         public string AlgorithmStringID { get; protected set; }
         // Miner name is used for miner ALGO flag parameter
-        public readonly string MinerName;
+        public string MinerName;
         protected double benchmarkSpeed;
         public virtual double BenchmarkSpeed {
             get => benchmarkSpeed;
@@ -52,7 +52,7 @@ namespace NiceHashMiner {
             BenchmarkSpeed = 0.0d;
             ExtraLaunchParameters = "";
             LessThreads = 0;
-            Enabled = NiceHashID != AlgorithmType.Nist5;
+            Enabled = !(NiceHashID == AlgorithmType.Nist5 || (NiceHashID == AlgorithmType.NeoScrypt && minerBaseType == MinerBaseType.sgminer));
             BenchmarkStatus = "";
         }
 
