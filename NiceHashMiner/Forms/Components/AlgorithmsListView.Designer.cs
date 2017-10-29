@@ -51,7 +51,7 @@
             this.listViewAlgorithms.Margin = new System.Windows.Forms.Padding(4);
             this.listViewAlgorithms.MultiSelect = false;
             this.listViewAlgorithms.Name = "listViewAlgorithms";
-            this.listViewAlgorithms.Size = new System.Drawing.Size(719, 468);=======
+            this.listViewAlgorithms.Size = new System.Drawing.Size(719, 468);
             this.listViewAlgorithms.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.listViewAlgorithms.MultiSelect = false;
             this.listViewAlgorithms.Name = "listViewAlgorithms";

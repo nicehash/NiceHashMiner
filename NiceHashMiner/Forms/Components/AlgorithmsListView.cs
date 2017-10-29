@@ -100,9 +100,11 @@ namespace NiceHashMiner.Forms.Components {
                 var name = "";
                 var secondarySpeed = "";
                 var payingRatio = "";
+                double secondarySpeedNumber = 0.0d;
                 if (alg is DualAlgorithm dualAlg) {
                     name = "  + " + dualAlg.SecondaryAlgorithmName;
                     secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
+                    secondarySpeedNumber = dualAlg.SecondaryBenchmarkSpeed;
                     payingRatio = dualAlg.SecondaryCurPayingRatio;
                 } else {
                     name = String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName);
@@ -112,17 +114,14 @@ namespace NiceHashMiner.Forms.Components {
                 ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(name);
 
                 lvi.SubItems.Add(alg.BenchmarkSpeedString());
-                
-              // Resolve conflict between following 4 lines
-                // Use sum of speeds for sorting based on speed for dual algos
-                lvi.SubItems[SPEED].Tag = alg.BenchmarkSpeed + alg.SecondaryBenchmarkSpeed;
-                lvi.SubItems.Add(alg.CurPayingRatio);
-
                 lvi.SubItems.Add(secondarySpeed);
                 lvi.SubItems.Add(payingRatio);
 
                 lvi.SubItems.Add(alg.CurPayingRate);
                 lvi.Tag = alg;
+                lvi.SubItems[SPEED].Tag = alg.BenchmarkSpeed;
+                lvi.SubItems[SECSPEED].Tag = secondarySpeedNumber;
+
                 lvi.Checked = alg.Enabled;
                 if ((isHideDisabled == false) || alg.Enabled == true)
                 {
@@ -143,8 +142,16 @@ namespace NiceHashMiner.Forms.Components {
                 foreach (ListViewItem lvi in listViewAlgorithms.Items) {
                     Algorithm algo = lvi.Tag as Algorithm;
                     lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                    lvi.SubItems[SPEED].Tag = algo.BenchmarkSpeed;
                     if (algo is DualAlgorithm dualAlg)
+                    {
                         lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
+                        lvi.SubItems[SECSPEED].Tag = dualAlg.SecondaryBenchmarkSpeed;
+                    }
+                    else
+                    {
+                        lvi.SubItems[SECSPEED].Tag = 0;
+                    }
                     _listItemCheckColorSetter.LviSetColor(lvi);
                 }
                 this.Enabled = isEnabled;
@@ -196,11 +203,18 @@ namespace NiceHashMiner.Forms.Components {
                         if (algo != null && algo.AlgorithmStringID == algorithm.AlgorithmStringID) {
                             // TODO handle numbers
                             lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
-                            lvi.SubItems[SPEED].Tag = algorithm.BenchmarkSpeed + algorithm.SecondaryBenchmarkSpeed;
+                            lvi.SubItems[SPEED].Tag = algorithm.BenchmarkSpeed;
                             lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
                             lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
                             if (algorithm is DualAlgorithm dualAlg)
+                            {
                                 lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
+                                lvi.SubItems[SECSPEED].Tag = dualAlg.SecondaryBenchmarkSpeed;
+                            }
+                            else
+                            {
+                                lvi.SubItems[SECSPEED].Tag = 0;
+                            }
                             _listItemCheckColorSetter.LviSetColor(lvi);
                             break;
                         }

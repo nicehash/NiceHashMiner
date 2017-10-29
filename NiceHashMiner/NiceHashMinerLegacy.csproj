@@ -101,6 +101,7 @@
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithm\Algorithm.cs" />
     <Compile Include="Algorithm\DualAlgorithm.cs" />
+    <Compile Include="Configs\Data\ServiceLocationConfig.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CPUComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
