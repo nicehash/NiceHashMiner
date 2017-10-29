@@ -94,6 +94,20 @@
     "Form_Benchmark_listView_WaitMinutes": "Por favor espere unos {0} minutos...",
     "Form_Benchmark_listView_WaitForEth": "Corriendo benchmark (2-4 minutos)...",
 
+    "Form_DcriValues_Title": "ClaymoreDual Tuning",
+    "Form_DcriValues_Intensity": "Intensity",
+    "Form_DcriValues_SecondarySpeed": "Secondary Speed",
+    "Form_DcriValues_TuningEnabled": "Tuning Enabled",
+    "Form_DcriValues_TuningStart": "Tuning Start",
+    "Form_DcriValues_TuningEnd": "Tuning End",
+    "Form_DcriValues_TuningInterval": "Tuning Interval",
+    "Form_DcriValues_ToolTip_TuningStart": "The first dcri value to use for tuning",
+    "Form_DcriValues_ToolTip_TuningEnd": "The last dcri value to use for tuning",
+    "Form_DcriValues_ToolTip_TuningInterval": "The interval for dcri values to use for tuning",
+    "Form_DcriValues_ToolTip_TuningEnabled": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
+    "AlgorithmsListView_ContextMenu_OpenDcri": "Tuning Settings",
+    "DeviceListView_ContectMenu_CopyTuning": "Copy tuning settings only",
+
 
     "Form_Loading_label_LoadingText": "Cargando, espere por favor...",
 
@@ -141,6 +155,8 @@
     "Form_Settings_General_RunAtStartup": "Ejecutar con Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Minimizar las ventanas de minería",
     "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Run script when CUDA GPU is lost",
+    "Form_Settings_General_ShowDetailedDeviceInfo": "Show Detailed Device Info",
+    "Form_Settings_General_ShowVirtualMemoryWarning": "Show Virtual Memory Warning",
 
     "Form_Settings_General_Language": "Lenguaje",
     "Form_Settings_General_MinIdleSeconds": "Tiempo mínimo detenido [s]",
@@ -207,7 +223,7 @@
     "Form_Settings_ToolTip_checkBox_DebugConsole": "Si está marcada, abre la consola de depuración.",
     "Form_Settings_ToolTip_BitcoinAddress": "Dirección Bitcoin del usuario para minar.",
     "Form_Settings_ToolTip_WorkerName": "Para identificar el ordenador del usuario.",
-    "Form_Settings_ToolTip_ServiceLocation": "Establece la ubicación de minado. Elegir Hong Kong o Japón añadirá latencia extra.",
+    "Form_Settings_ToolTip_ServiceLocation": "Establece la ubicación de minado. First location is the default one. The other locations are used by multipool algorithms.",
     "Form_Settings_ToolTip_TimeUnit": "Sets the time unit to report BTC rates.",
     "Form_Settings_ToolTip_checkBox_AutoStartMining": "Si está marcada, NiceHash Miner Legacy empezará a minar al abrirse.",
     "Form_Settings_ToolTip_checkBox_HideMiningWindows": "Si está marcada, las consolas de sgminer, ccminer, cpuminer y ethminer se ocultarán.",
@@ -241,7 +257,8 @@
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "Si está marcado, NiceHash Miner Legacy usará la nueva página de configuración.",
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Si está marcado, NiceHash Miner Legacy pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
     "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.",
-
+    "Form_Settings_ToolTip_checkBox_ShowDetailedDeviceInfo": "When checked, detailed device information (load, temperature, fan speed) will be displayed while mining,\nif available for the device.",
+    "Form_Settings_ToolTip_checkBox_ShowVirtualMemoryWarning": "When checked, NiceHash Miner Legacy would issue a warning if\nthe virtual memory is set too low.",
     "Form_Settings_ToolTip_ethminerAPIPort": "Puerto de la API que será usado por ethminer para {0} GPUs.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Establece la altura de bloque usado para hacer el benchmark si la llamada a la API falla.",
 
@@ -261,6 +278,7 @@
     "Form_Settings_ToolTip_AlgoDisabledDevices": "Todos los dispositivos marcados serán ignorados por NiceHash Miner Legacy (solo para este algoritmo).",
     "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Parámetros de inicio adicionales al lanzar el minero y este algoritmo.",
     "Form_Settings_ToolTip_UseIFTTT": "Si está habilitada, NiceHash Miner Legacy usará la Clave de API que proporciona para notificarle cuando la rentabilidad se ha quedado por debajo de la rentabilidad que ha configurado. \nConsulte las instrucciones para obtener detalles sobre cómo configurar esta funcionalidad.",
+    "Form_Settings_ToolTip_HideDisabledAlgorithms": "When checked, hides disabled algorithms from the list",
     "Form_Settings_DisplayCurrency": "Mostrar divisa",
     "Form_Settings_ToolTip_DisplayCurrency": "Elija qué divisa mostrar",
     "Form_Settings_APIBindPortStart": "Puertos disponibles para la API",
@@ -275,6 +293,7 @@
     "AlgorithmsListView_Ratio": "Ratio BTC/GH/Día",
     "AlgorithmsListView_Rate": "BTC/Día",
     "AlgorithmSettingsControl_IntensityWarning": "Los valores de intensidad para el algoritmo seleccionado deben estar entre {0} y {1}",
+    "ServiceLocationsListView_DefaultCannotBeDisabled": "Default service location cannot be disabled",
     "EnabledUnbenchmarkedAlgorithmsWarning": "No hay benchamark para alguno de los dispositivos seleccionados. Haga click en Sí para realizar un benchmark y empezar a minar, o a No para saltar el benchmark y empezar a minar, o a Cancelar para detenerse.",
     "AlgorithmSettingsControl_Label_Intensity": "Intensidad",
     "AlgorithmSettingsControl_ToolTip_Intensity": "Establece la intensidad para el algoritmo seleccionado (valores entre 8.0 - 25.0 o 31.0 dependiendo del algoritmo). La intensidad 0 usa la valor predeterminado. OPCIÓN DE USUARIO AVANZADO.",
@@ -302,6 +321,7 @@
     "FormSettings_Tab_General_Group_Misc": "Misceláneo:",
     "FormSettings_Tab_Advanced_Group_Miners": "Mineros:",
     "FormSettings_Tab_Advanced_Group_BenchmarkTimeLimits": "Límites de tiempo de los benchamark:",
+    "FormSettings_Tab_Devices_Algorithms_HideDisabledAlgorithms": "Hide Disabled Algorithms",
     "FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability": "Comprobar rentabilidad de uno",
     "FormSettings_Tab_Devices_Algorithms_Check_ALLProfitability": "Comprobar rentabilidad de todos",
     "MinersDownloadManager_Title_Downloading": "Descargando mineros",

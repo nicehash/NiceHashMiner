@@ -9,6 +9,7 @@ namespace NiceHashMiner.Miners.Grouping {
     public class GroupMiner {
         public Miner Miner { get; protected set; }
         public string DevicesInfoString { get; private set; }
+        public string DevicesDetailedInfoString { get; private set; }
         public AlgorithmType AlgorithmType { get; private set; }
         public AlgorithmType DualAlgorithmType { get; private set; }
         // for now used only for dagger identification AMD or NVIDIA
@@ -22,6 +23,7 @@ namespace NiceHashMiner.Miners.Grouping {
             AlgorithmType = AlgorithmType.NONE;
             DualAlgorithmType = AlgorithmType.NONE;
             DevicesInfoString = "N/A";
+            DevicesDetailedInfoString = "N/A";
             CurrentRate = 0;
             Key = key;
             if (miningPairs.Count > 0) {
@@ -30,12 +32,19 @@ namespace NiceHashMiner.Miners.Grouping {
                 // init name scope and IDs
                 {
                     List<string> deviceNames = new List<string>();
+                    List<string> deviceNamesWithInfo = new List<string>();
                     DevIndexes = new List<int>();
                     foreach (var pair in miningPairs) {
                         deviceNames.Add(pair.Device.NameCount);
+                        deviceNamesWithInfo.Add(pair.Device.NameCount + " (" 
+                            + ((int)(pair.Device.Load)).ToString() + "%" 
+                            + (pair.Device.Temp == 0 ? "" : ", " + pair.Device.Temp.ToString() + "˚C")
+                            + (pair.Device.FanSpeed == 0 ? "" : ", " + pair.Device.FanSpeed.ToString() + "rpm")
+                             + ")");
                         DevIndexes.Add(pair.Device.Index);
                     }
                     DevicesInfoString = "{ " + String.Join(", ", deviceNames) + " }";
+                    DevicesDetailedInfoString = "{ " + String.Join(", ", deviceNamesWithInfo) + " }";
                 }
                 // init miner
                 {
@@ -45,7 +54,7 @@ namespace NiceHashMiner.Miners.Grouping {
                     if(Miner != null) {
                         Miner.InitMiningSetup(new MiningSetup(miningPairs));
                         AlgorithmType = mPair.Algorithm.NiceHashID;
-                        DualAlgorithmType = mPair.Algorithm.DualNiceHashID();
+                        DualAlgorithmType = mPair.Algorithm.DualNiceHashID;
                     }
                 }
             }

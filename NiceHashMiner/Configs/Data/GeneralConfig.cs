@@ -16,7 +16,8 @@ namespace NiceHashMiner.Configs.Data {
         public string WorkerName = "worker1";
         public TimeUnitType TimeUnit = TimeUnitType.Day;
         public string IFTTTKey = "";
-        public int ServiceLocation = 0;
+        //public int ServiceLocation = 0;
+        public List<ServiceLocationConfig> ServiceLocations = new List<ServiceLocationConfig>(Globals.MiningLocation.Length);
         public bool AutoStartMining = false;
         public bool HideMiningWindows = false;
         public bool MinimizeToTray = false;
@@ -60,11 +61,15 @@ namespace NiceHashMiner.Configs.Data {
         public bool UseIFTTT = false;
         public bool DownloadInit = false;
         public bool RunScriptOnCUDA_GPU_Lost = false;
+        public bool ShowDetailedDeviceInfo = true;
+        public bool ShowVirtualMemoryWarning = true;
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
         public bool DownloadInit3rdParty = false;
 
         public bool AllowMultipleInstances = true;
+
+        public bool HideDisabledAlgorithms = false;
 
         // device enabled disabled stuff
         public List<ComputeDeviceConfig> LastDevicesSettup = new List<ComputeDeviceConfig>();
@@ -87,7 +92,15 @@ namespace NiceHashMiner.Configs.Data {
             BitcoinAddress = "";
             WorkerName = "worker1";
             TimeUnit = TimeUnitType.Day;
-            ServiceLocation = 0;
+            //ServiceLocation = 0;
+            ServiceLocations.Clear();
+            foreach (string loc in Globals.MiningLocation)
+            {
+                ServiceLocationConfig serviceLocationConfig = new ServiceLocationConfig();
+                serviceLocationConfig.ServiceLocation = loc;
+                serviceLocationConfig.Enabled = true;
+                ServiceLocations.Add(serviceLocationConfig);
+            }
             AutoStartMining = false;
             //LessThreads = 0;
             DebugConsole = false;
@@ -128,6 +141,9 @@ namespace NiceHashMiner.Configs.Data {
             IQRNormalizeFactor = 0.0;
             CoolDownCheckEnabled = true;
             RunScriptOnCUDA_GPU_Lost = false;
+            ShowDetailedDeviceInfo = false;
+            HideDisabledAlgorithms = false;
+            ShowVirtualMemoryWarning = true;
         }
 
         public void FixSettingBounds() {
@@ -178,6 +194,13 @@ namespace NiceHashMiner.Configs.Data {
             }
             if (IQRNormalizeFactor < 0) {
                 IQRNormalizeFactor = 0.0;
+            }
+            if (ServiceLocations.Count == 0)
+            {
+                foreach (string ServiceLocation in Globals.MiningLocation)
+                {
+                    ServiceLocations.Add(new ServiceLocationConfig() { ServiceLocation = ServiceLocation, Enabled = true });
+                }
             }
         }
 

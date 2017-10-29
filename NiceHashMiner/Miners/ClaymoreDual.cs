@@ -63,7 +63,7 @@ namespace NiceHashMiner.Miners {
                         }
                         if (pair.CurrentExtraLaunchParameters.Contains("Siacoin")) {
                             dual = AlgorithmType.Sia;
-                            coinP = " -dcoin sc";
+                            coinP = " -dcoin sc ";
                         }
                         if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))  {
                             dual = AlgorithmType.Lbry;
@@ -74,14 +74,14 @@ namespace NiceHashMiner.Miners {
                             coinP = " -dcoin pasc ";
                         }
                         if (dual != AlgorithmType.NONE)  {
-                            string urlSecond = Globals.GetLocationURL(dual, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+                            string urlSecond = Globals.GetLocationURL(dual, ConfigManager.GeneralConfig.ServiceLocations[0].ServiceLocation, this.ConectionType);
                             dualModeParams = String.Format(" {0} -dpool {1} -dwal {2}", coinP, urlSecond, username);
                             break;
                         }
                     }
                 }
             } else {
-                string urlSecond = Globals.GetLocationURL(SecondaryAlgorithmType, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+                string urlSecond = Globals.GetLocationURL(SecondaryAlgorithmType, ConfigManager.GeneralConfig.ServiceLocations[0].ServiceLocation, this.ConectionType);
                 dualModeParams = String.Format(" -dcoin {0} -dpool {1} -dwal {2} -dpsw x", SecondaryShortName(), urlSecond, username);
             }
 
@@ -92,7 +92,14 @@ namespace NiceHashMiner.Miners {
         }
 
         public override void Start(string url, string btcAdress, string worker) {
-            string username = GetUsername(btcAdress, worker);
+            // Update to most profitable intensity
+            foreach (var mPair in MiningSetup.MiningPairs) {
+                if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled) {
+                    var intensity = algo.MostProfitableIntensity;
+                    if (intensity < 0) intensity = defaultIntensity;
+                    algo.CurrentIntensity = intensity;
+                }
+            }
             LastCommandLine = GetStartCommand(url, btcAdress, worker) + " -dbg -1";
             ProcessHandle = _Start();
         }
@@ -108,7 +115,7 @@ namespace NiceHashMiner.Miners {
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             // network stub
-            string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+            string url = Globals.GetLocationURL(algorithm.NiceHashID, ConfigManager.GeneralConfig.ServiceLocations[0].ServiceLocation, this.ConectionType);
             // demo for benchmark
             string ret = GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
             // local benhcmark

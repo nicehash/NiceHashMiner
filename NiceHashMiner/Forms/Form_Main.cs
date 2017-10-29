@@ -50,7 +50,7 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
 
-        const string _betaAlphaPostfixString = "";
+        const string _betaAlphaPostfixString = "-Pre";
 
         private bool _isDeviceDetectionInitialized = false;
 
@@ -116,8 +116,16 @@ namespace NiceHashMiner
             labelServiceLocation.Text = International.GetText("Service_Location") + ":";
             {
                 int i = 0;
+                int selected = 0;
                 foreach (string loc in Globals.MiningLocation)
+                {
+                    if ((ConfigManager.GeneralConfig.ServiceLocations.Count > 0) && (ConfigManager.GeneralConfig.ServiceLocations[0].ServiceLocation == loc))
+                    {
+                        selected = i;
+                    }
                     comboBoxLocation.Items[i++] = International.GetText("LocationName_" + loc);
+                }
+                comboBoxLocation.SelectedIndex = selected;
             }
             labelBitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
             labelWorkerName.Text = International.GetText("WorkerName") + ":";
@@ -142,11 +150,6 @@ namespace NiceHashMiner
         }
 
         private void InitMainConfigGUIData() {
-            if (ConfigManager.GeneralConfig.ServiceLocation >= 0 && ConfigManager.GeneralConfig.ServiceLocation < Globals.MiningLocation.Length)
-                comboBoxLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
-            else
-                comboBoxLocation.SelectedIndex = 0;
-
             textBoxBTCAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
             textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
 
@@ -507,7 +510,8 @@ namespace NiceHashMiner
         public void AddRateInfo(string groupName, string deviceStringInfo, APIData iAPIData, double paying, bool isApiGetException) {
             string ApiGetExceptionString = isApiGetException ? "**" : "";
 
-            string speedString = Helpers.FormatDualSpeedOutput(iAPIData.AlgorithmID, iAPIData.Speed, iAPIData.SecondarySpeed) + iAPIData.AlgorithmName + ApiGetExceptionString;
+            string speedString = Helpers.FormatDualSpeedOutput(iAPIData.Speed, iAPIData.SecondarySpeed, iAPIData.AlgorithmID) + iAPIData.AlgorithmName + ApiGetExceptionString;
+            
             string rateBTCString = FormatPayingOutput(paying);
             string rateCurrencyString = ExchangeRateAPI.ConvertToActiveCurrency(paying * Globals.BitcoinUSDRate * factorTimeUnit).ToString("F2", CultureInfo.InvariantCulture)
                 + String.Format(" {0}/", ExchangeRateAPI.ActiveDisplayCurrency) + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
@@ -722,8 +726,6 @@ namespace NiceHashMiner
 
         private void buttonBenchmark_Click(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-
             BenchmarkForm = new Form_Benchmark();
             SetChildFormCenter(BenchmarkForm);
             BenchmarkForm.ShowDialog();
@@ -824,7 +826,12 @@ namespace NiceHashMiner
                 // Commit to config.json
                 ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
                 ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
-                ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
+                int index = ConfigManager.GeneralConfig.ServiceLocations.FindIndex(x => x.ServiceLocation == Globals.MiningLocation[comboBoxLocation.SelectedIndex]);
+                Configs.Data.ServiceLocationConfig NewDefaultServiceLocation = ConfigManager.GeneralConfig.ServiceLocations[index];
+                ConfigManager.GeneralConfig.ServiceLocations.RemoveAt(index);
+                // Make sure the new default service location is enabled
+                NewDefaultServiceLocation.Enabled = true;
+                ConfigManager.GeneralConfig.ServiceLocations.Insert(0, NewDefaultServiceLocation);
                 ConfigManager.GeneralConfigFileCommit();
             }
         }
@@ -952,7 +959,6 @@ namespace NiceHashMiner
 
             ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
             ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
-            ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
             InitFlowPanelStart();
             ClearRatesALL();

@@ -18,8 +18,12 @@ namespace NiceHashMiner.Forms.Components {
         private const int ENABLED   = 0;
         private const int ALGORITHM = 1;
         private const int SPEED     = 2;
-        private const int RATIO     = 3;
-        private const int RATE      = 4;
+        private const int SECSPEED  = 3;
+        private const int RATIO     = 4;
+        private const int RATE      = 5;
+
+        private ColumnHeader SortedColumn = null;
+        private SortOrder SortOrder = SortOrder.None;
 
         public interface IAlgorithmsListView {
             void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice);
@@ -40,9 +44,9 @@ namespace NiceHashMiner.Forms.Components {
             public void LviSetColor(ListViewItem lvi) {
                 Algorithm algorithm = lvi.Tag as Algorithm;
                 if (algorithm != null) {
-                    if (algorithm.Enabled == false && !algorithm.IsBenchmarkPending) {
+                    if (algorithm.Enabled == false) {
                         lvi.BackColor = DISABLED_COLOR;
-                    } else if (algorithm.BenchmarkSpeed > 0 && !algorithm.IsBenchmarkPending) {
+                    } else if (!algorithm.BenchmarkNeeded && !algorithm.IsBenchmarkPending) {
                         lvi.BackColor = BENCHMARKED_COLOR;
                     } else {
                         lvi.BackColor = UNBENCHMARKED_COLOR;
@@ -81,26 +85,55 @@ namespace NiceHashMiner.Forms.Components {
             listViewAlgorithms.Columns[ENABLED].Text = International.GetText("AlgorithmsListView_Enabled");
             listViewAlgorithms.Columns[ALGORITHM].Text = International.GetText("AlgorithmsListView_Algorithm");
             listViewAlgorithms.Columns[SPEED].Text = International.GetText("AlgorithmsListView_Speed");
+            listViewAlgorithms.Columns[SECSPEED].Text = International.GetText("Form_DcriValues_SecondarySpeed");
             listViewAlgorithms.Columns[RATIO].Text = International.GetText("AlgorithmsListView_Ratio");
             listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");
         }
 
-        public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled) {
+        public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled, bool isHideDisabled = false) {
             _computeDevice = computeDevice;
             listViewAlgorithms.BeginUpdate();
             listViewAlgorithms.Items.Clear();
             foreach (var alg in computeDevice.GetAlgorithmSettings()) {
                 ListViewItem lvi = new ListViewItem();
-                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName));
 
-                //sub.Tag = alg.Value;
+                var name = "";
+                var secondarySpeed = "";
+                var payingRatio = "";
+                if (alg is DualAlgorithm dualAlg) {
+                    name = "  + " + dualAlg.SecondaryAlgorithmName;
+                    secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
+                    payingRatio = dualAlg.SecondaryCurPayingRatio;
+                } else {
+                    name = String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName);
+                    payingRatio = alg.CurPayingRatio;
+                }
+
+                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(name);
+
                 lvi.SubItems.Add(alg.BenchmarkSpeedString());
+                
+              // Resolve conflict between following 4 lines
+                // Use sum of speeds for sorting based on speed for dual algos
+                lvi.SubItems[SPEED].Tag = alg.BenchmarkSpeed + alg.SecondaryBenchmarkSpeed;
                 lvi.SubItems.Add(alg.CurPayingRatio);
+
+                lvi.SubItems.Add(secondarySpeed);
+                lvi.SubItems.Add(payingRatio);
+
                 lvi.SubItems.Add(alg.CurPayingRate);
                 lvi.Tag = alg;
                 lvi.Checked = alg.Enabled;
-                listViewAlgorithms.Items.Add(lvi);
+                if ((isHideDisabled == false) || alg.Enabled == true)
+                {
+                    listViewAlgorithms.Items.Add(lvi);
+                }
             }
+            
+            // AutoResizeColumns to fit both headers and column content
+            listViewAlgorithms.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            listViewAlgorithms.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+
             listViewAlgorithms.EndUpdate();
             this.Enabled = isEnabled;
         }
@@ -110,6 +143,8 @@ namespace NiceHashMiner.Forms.Components {
                 foreach (ListViewItem lvi in listViewAlgorithms.Items) {
                     Algorithm algo = lvi.Tag as Algorithm;
                     lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
+                    if (algo is DualAlgorithm dualAlg)
+                        lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
                     _listItemCheckColorSetter.LviSetColor(lvi);
                 }
                 this.Enabled = isEnabled;
@@ -161,8 +196,11 @@ namespace NiceHashMiner.Forms.Components {
                         if (algo != null && algo.AlgorithmStringID == algorithm.AlgorithmStringID) {
                             // TODO handle numbers
                             lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
+                            lvi.SubItems[SPEED].Tag = algorithm.BenchmarkSpeed + algorithm.SecondaryBenchmarkSpeed;
                             lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
                             lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
+                            if (algorithm is DualAlgorithm dualAlg)
+                                lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
                             _listItemCheckColorSetter.LviSetColor(lvi);
                             break;
                         }
@@ -196,8 +234,70 @@ namespace NiceHashMiner.Forms.Components {
                     clearItem.Click += toolStripMenuItemClear_Click;
                     contextMenuStrip1.Items.Add(clearItem);
                 }
+                // open dcri
+                {
+                    var dcriMenu = new ToolStripMenuItem {
+                        Text = International.GetText("Form_DcriValues_Title")
+                    };
+
+                    if (listViewAlgorithms.SelectedItems.Count > 0
+                        && listViewAlgorithms.SelectedItems[0].Tag is DualAlgorithm dualAlg) {
+                        dcriMenu.Enabled = true;
+
+                        var openDcri = new ToolStripMenuItem {
+                            Text = International.GetText("AlgorithmsListView_ContextMenu_OpenDcri")
+                        };
+                        openDcri.Click += toolStripMenuItemOpenDcri_Click;
+                        dcriMenu.DropDownItems.Add(openDcri);
+
+                        var tuningEnabled = new ToolStripMenuItem {
+                            Text = International.GetText("Form_DcriValues_TuningEnabled"),
+                            CheckOnClick = true,
+                            Checked = dualAlg.TuningEnabled
+                        };
+                        tuningEnabled.CheckedChanged += toolStripMenuItemTuningEnabled_Checked;
+                        dcriMenu.DropDownItems.Add(tuningEnabled);
+                    } else {
+                        dcriMenu.Enabled = false;
+                    }
+
+                    contextMenuStrip1.Items.Add(dcriMenu);
+                }
                 contextMenuStrip1.Show(Cursor.Position);
             }
+        }
+
+        private void listViewAlgorithms_ColumnClick(object sender, ColumnClickEventArgs e) {
+            // New sorted column
+            ColumnHeader NewSortedColumn = listViewAlgorithms.Columns[e.Column];
+            // Establish new sort order
+            if (SortOrder == SortOrder.None)
+            {
+                SortOrder = SortOrder.Ascending;
+            }
+            else
+            {
+                if (NewSortedColumn == SortedColumn)
+                {
+                    SortOrder = (SortOrder == SortOrder.Ascending ? SortOrder.Descending : SortOrder.Ascending);
+                }
+                else
+                {
+                    SortOrder = SortOrder.Ascending;
+                }
+                // Remove old sort marker
+                SortedColumn.Text = SortedColumn.Text.Substring(0, SortedColumn.Text.Length - 2);
+            }
+
+            // Replace sorted column
+            SortedColumn = NewSortedColumn;
+            SortedColumn.Text = SortedColumn.Text + " " + (SortOrder == SortOrder.Ascending ? "˄" : "˅");
+            // Resize column header to fit sort marker if needed
+            listViewAlgorithms.AutoResizeColumns(ColumnHeaderAutoResizeStyle.HeaderSize);
+            // Create the comparer
+            listViewAlgorithms.ListViewItemSorter = new AlgorithmsListViewComparer(SortedColumn.Index, SortOrder);
+            // Sort
+            listViewAlgorithms.Sort();
         }
 
         private void toolStripMenuItemEnableAll_Click(object sender, EventArgs e) {
@@ -215,19 +315,45 @@ namespace NiceHashMiner.Forms.Components {
         private void toolStripMenuItemClear_Click(object sender, EventArgs e) {
             if (_computeDevice != null) {
                 foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
-                    var algorithm = lvi.Tag as Algorithm;
-                    if (algorithm != null) {
+                    if (lvi.Tag is Algorithm algorithm) {
                         algorithm.BenchmarkSpeed = 0;
-                        algorithm.SecondaryBenchmarkSpeed = 0;
+                        if (algorithm is DualAlgorithm dualAlgo) {
+                            dualAlgo.SecondaryBenchmarkSpeed = 0;
+                            dualAlgo.IntensitySpeeds = new Dictionary<int, double>();
+                            dualAlgo.SecondaryIntensitySpeeds = new Dictionary<int, double>();
+                            dualAlgo.IntensityUpToDate = false;
+                        }
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
                         // update benchmark status data
-                        if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
+                        BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
                         // update settings
-                        if (ComunicationInterface != null) ComunicationInterface.ChangeSpeed(lvi);
+                        ComunicationInterface?.ChangeSpeed(lvi);
                     }
                 }
             }
         }
 
+      private void toolStripMenuItemOpenDcri_Click(object sender, EventArgs e) {
+            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
+                if (lvi.Tag is DualAlgorithm algo) {
+                    var dcriValues = new Form_DcriValues(algo);
+                    dcriValues.ShowDialog();
+                    RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                    // update benchmark status data
+                    BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
+                    // update settings
+                    ComunicationInterface?.ChangeSpeed(lvi);
+                }
+            }
+        }
+
+        private void toolStripMenuItemTuningEnabled_Checked(object sender, EventArgs e) {
+            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) {
+                if (lvi.Tag is DualAlgorithm algo) {
+                    algo.TuningEnabled = ((ToolStripMenuItem)sender).Checked;
+                    RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                }
+            }
+        }
     }
 }

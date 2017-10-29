@@ -101,7 +101,7 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             CleanAllOldLogs();
 
-            string server = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+            string server = Globals.GetLocationURL(algorithm.NiceHashID, ConfigManager.GeneralConfig.ServiceLocations[0].ServiceLocation, this.ConectionType);
             string ret = " --log 2 --logfile benchmark_log.txt" + GetStartCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
             benchmarkTimeWait = Math.Max(time * 3, 90);  // EWBF takes a long time to get started
             return ret;

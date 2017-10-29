@@ -94,6 +94,20 @@
     "Form_Benchmark_listView_WaitMinutes": "Aguarde cerca de {0} minutos...",
     "Form_Benchmark_listView_WaitForEth": "Fazendo o Benchmark (2-4 minutos)...",
 
+    "Form_DcriValues_Title": "ClaymoreDual Tuning",
+    "Form_DcriValues_Intensity": "Intensity",
+    "Form_DcriValues_SecondarySpeed": "Secondary Speed",
+    "Form_DcriValues_TuningEnabled": "Tuning Enabled",
+    "Form_DcriValues_TuningStart": "Tuning Start",
+    "Form_DcriValues_TuningEnd": "Tuning End",
+    "Form_DcriValues_TuningInterval": "Tuning Interval",
+    "Form_DcriValues_ToolTip_TuningStart": "The first dcri value to use for tuning",
+    "Form_DcriValues_ToolTip_TuningEnd": "The last dcri value to use for tuning",
+    "Form_DcriValues_ToolTip_TuningInterval": "The interval for dcri values to use for tuning",
+    "Form_DcriValues_ToolTip_TuningEnabled": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
+    "AlgorithmsListView_ContextMenu_OpenDcri": "Tuning Settings",
+    "DeviceListView_ContectMenu_CopyTuning": "Copy tuning settings only",
+
 
     "Form_Loading_label_LoadingText": "Carregando, por favor aguarde...",
 
@@ -141,6 +155,8 @@
     "Form_Settings_General_RunAtStartup": "Executar com o Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Minimizar Windows Mineração",
     "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Run script when CUDA GPU is lost",
+    "Form_Settings_General_ShowDetailedDeviceInfo": "Show Detailed Device Info",
+    "Form_Settings_General_ShowVirtualMemoryWarning": "Show Virtual Memory Warning",
 
     "Form_Settings_General_Language": "Idioma",
     "Form_Settings_General_MinIdleSeconds": "Tempo Minimo Ocioso [s]",
@@ -206,7 +222,7 @@
     "Form_Settings_ToolTip_checkBox_DebugConsole": "Quando marcado, ele exibe console de debug.",
     "Form_Settings_ToolTip_BitcoinAddress": "Endereço de bitcoin do usuário para mineração.",
     "Form_Settings_ToolTip_WorkerName": "Para identificar o computador do usuário.",
-    "Form_Settings_ToolTip_ServiceLocation": "Define o local de mineração. Escolhendo Hong Kong ou Tóquio adicionará latência extra.",
+    "Form_Settings_ToolTip_ServiceLocation": "Define o local de mineração. First location is the default one. The other locations are used by multipool algorithms.",
     "Form_Settings_ToolTip_TimeUnit": "Sets the time unit to report BTC rates.",
     "Form_Settings_ToolTip_checkBox_AutoStartMining": "Quando marcado, o NiceHash Miner Legacy iniciará automaticamente a mineração quando iniciado.",
     "Form_Settings_ToolTip_checkBox_HideMiningWindows": "Quando marcado, as janelas de console sgminer, ccminer, cpuminer e ethminer serão escondidas.",
@@ -240,7 +256,8 @@
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "When checked, NiceHash Miner Legacy would use the new settings page.",
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.",
     "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.",
-
+    "Form_Settings_ToolTip_checkBox_ShowDetailedDeviceInfo": "When checked, detailed device information (load, temperature, fan speed) will be displayed while mining,\nif available for the device.",
+    "Form_Settings_ToolTip_checkBox_ShowVirtualMemoryWarning": "When checked, NiceHash Miner Legacy would issue a warning if\nthe virtual memory is set too low.",
     "Form_Settings_ToolTip_ethminerAPIPort": "API port that will be used by ethminer for {0} GPUs.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Sets the default block height used for benchmarking if API call fails.",
 
@@ -262,6 +279,7 @@
     "Form_Settings_Text_ContinueMiningIfNoInternetAccess": "Inativo Quando não Tiver Acesso a Internet",
     "Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess": "Se habilitado, o NiceHash Miner Legacy irá parar a mineração quando o computador não estiver conectado a internet.",
     "Form_Settings_ToolTip_UseIFTTT": "Se habilitado, o NiceHash Miner Legacy usará a chave de API que você fornecerá para notificá-lo quando a lucratividade estiver abaixo da lucratividade que você configurou. \nConsulte as instruções para obter detalhes sobre como configurar essa funcionalidade.",
+    "Form_Settings_ToolTip_HideDisabledAlgorithms": "When checked, hides disabled algorithms from the list",
     "Form_Settings_DisplayCurrency": "Mostrar Moeda",
     "Form_Settings_ToolTip_DisplayCurrency": "Escolha em qual Moeda exibir lucro de mineração.",
     "Form_Settings_APIBindPortStart": "API Bind port pool start",
@@ -276,6 +294,7 @@
     "AlgorithmsListView_Ratio": "Taxa BTC/GH/Dia",
     "AlgorithmsListView_Rate": "BTC/Dia",
     "AlgorithmSettingsControl_IntensityWarning": "Valores de intensidade para esse algoritimo precisam estar entre {0} e {1}",
+    "ServiceLocationsListView_DefaultCannotBeDisabled": "Default service location cannot be disabled",
     "EnabledUnbenchmarkedAlgorithmsWarning": "Você ainda não fez benchmark em algum(s) dispositivo(s) selecionado(s). Clique em Sim para fazer o benchmark e iniciar mineração, Não para pular o benchmark e continuar minerando",
     "AlgorithmSettingsControl_Label_Intensity": "Intensidade",
     "AlgorithmSettingsControl_ToolTip_Intensity": "Define Intensidade para o algoritmo selecionado (valores entre 8.0 - 25.0 ou 31.0 dependendo do algoritmo). Intensidade 0 usa intensidade padrão. CONFIGURAÇÕES PARA USUÁRIOS AVANÇADOS.",
@@ -303,6 +322,7 @@
     "FormSettings_Tab_General_Group_Misc": "Outros:",
     "FormSettings_Tab_Advanced_Group_Miners": "Mineradores:",
     "FormSettings_Tab_Advanced_Group_BenchmarkTimeLimits": "Tempo limite de Benchmark:",
+    "FormSettings_Tab_Devices_Algorithms_HideDisabledAlgorithms": "Hide Disabled Algorithms",
     "FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability": "Ver a Rentabilidade de Um",
     "FormSettings_Tab_Devices_Algorithms_Check_ALLProfitability": "Ver a Rentabilidade de Todos",
     "MinersDownloadManager_Title_Downloading": "Baixando mineradores",

@@ -94,6 +94,20 @@
     "Form_Benchmark_listView_WaitMinutes": "Моля изчакайте около {0} минути...",
     "Form_Benchmark_listView_WaitForEth": "Тест за скорост (2-4 минути)...",
 
+    "Form_DcriValues_Title": "ClaymoreDual Tuning",
+    "Form_DcriValues_Intensity": "Intensity",
+    "Form_DcriValues_SecondarySpeed": "Secondary Speed",
+    "Form_DcriValues_TuningEnabled": "Tuning Enabled",
+    "Form_DcriValues_TuningStart": "Tuning Start",
+    "Form_DcriValues_TuningEnd": "Tuning End",
+    "Form_DcriValues_TuningInterval": "Tuning Interval",
+    "Form_DcriValues_ToolTip_TuningStart": "The first dcri value to use for tuning",
+    "Form_DcriValues_ToolTip_TuningEnd": "The last dcri value to use for tuning",
+    "Form_DcriValues_ToolTip_TuningInterval": "The interval for dcri values to use for tuning",
+    "Form_DcriValues_ToolTip_TuningEnabled": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
+    "AlgorithmsListView_ContextMenu_OpenDcri": "Tuning Settings",
+    "DeviceListView_ContectMenu_CopyTuning": "Copy tuning settings only",
+
 
     "Form_Loading_label_LoadingText": "Настройките се зареждат, моля изчакайте...",
 
@@ -141,6 +155,8 @@
     "Form_Settings_General_RunAtStartup": "Стартирайте с Windows",
     "Form_Settings_General_MinimizeMiningWindows": "Минимизиране на изчисл. програма",
     "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Изпълняване на скрипт при отпадане на CUDA GPU",
+    "Form_Settings_General_ShowDetailedDeviceInfo": "Show Detailed Device Info",
+    "Form_Settings_General_ShowVirtualMemoryWarning": "Show Virtual Memory Warning",
 
     "Form_Settings_General_Language": "Език",
     "Form_Settings_General_MinIdleSeconds": "Minimum Idle [s]",
@@ -206,7 +222,7 @@
     "Form_Settings_ToolTip_checkBox_DebugConsole": "Когато маркирате тази опция, debug конзолата ще се показва.",
     "Form_Settings_ToolTip_BitcoinAddress": "Bitcoin адресът на потребителя, към който ще се изплащат доходите от изчисления.",
     "Form_Settings_ToolTip_WorkerName": "Служи за идентифициране на компютъра.",
-    "Form_Settings_ToolTip_ServiceLocation": "Избира местоположението на изчислителния сървър. Изборът на по-отдалечена локация (напр. Хонг Конг, Токио...) увеличава латентността.",
+    "Form_Settings_ToolTip_ServiceLocation": "Избира местоположението на изчислителния сървър. First location is the default one. The other locations are used by multipool algorithms.",
     "Form_Settings_ToolTip_TimeUnit": "Избира периода от време за показване на дохода в BTC.",
     "Form_Settings_ToolTip_checkBox_AutoStartMining": "Когато тази опция е маркирана, NiceHash Miner Legacy автоматично ще започне изчисления с пускането на програмата.",
     "Form_Settings_ToolTip_checkBox_HideMiningWindows": "Когато тази опция е маркирана, конзолните прозорци на sgminer, ccminer, cpuminer и ethminer ще бъдат скрити.",
@@ -240,7 +256,8 @@
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "Когато тази опция е активна, NiceHash Miner Legacy ще използва новия панел за настройки.",
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Когато тази опция е активна, NiceHash Miner Legacy ще установи всички поддържани NVIDIA видеокарти в режим P0.\nТова води до леко повишаване на производителността при някои алгоритми.\nТази опция изисква административни привилегии, за да бъде активирана.",
     "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "Когато тази опция е активна, NiceHash Miner Legacy ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
-
+    "Form_Settings_ToolTip_checkBox_ShowDetailedDeviceInfo": "When checked, detailed device information (load, temperature, fan speed) will be displayed while mining,\nif available for the device.",
+    "Form_Settings_ToolTip_checkBox_ShowVirtualMemoryWarning": "When checked, NiceHash Miner Legacy would issue a warning if\nthe virtual memory is set too low.",
     "Form_Settings_ToolTip_ethminerAPIPort": "API порт, използван от ethminer за {0} видеокарти.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Задава стандартна височина на блока за тестване на скоростта, ако API заявката пропадне.",
 
@@ -260,6 +277,7 @@
     "Form_Settings_ToolTip_AlgoDisabledDevices": "Всички маркирани устройства ще бъдат игнорирани от NiceHash Miner Legacy (само за този алгоритъм).",
     "Form_Settings_ToolTip_AlgoExtraLaunchParameters": "Допълнителни параметри, които се предават при стартирането на изчислителната програма за настоящия алгоритъм.",
     "Form_Settings_ToolTip_UseIFTTT": "Ако тази опция е активирана, NiceHash Miner Legacy ще използва въведения API ключ за If This Then That (IFTTT) да ви уведоми, когато рентабилността е по-ниска от зададената от вас. \nВижте инструкциите за употреба, за да научите как да конфигурирате тази функционалност.",
+    "Form_Settings_ToolTip_HideDisabledAlgorithms": "When checked, hides disabled algorithms from the list",
     "Form_Settings_Text_ContinueMiningIfNoInternetAccess": "Спиране на работа при липса на интернет достъп",
     "Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess": "Ако тази опция е активна, NiceHash Miner Legacy ще прекрати изчисленията при липса на интернет свързаност",
     "Form_Settings_DisplayCurrency": "Валута:",
@@ -276,6 +294,7 @@
     "AlgorithmsListView_Ratio": "Отн. BTC/GH/ден",
     "AlgorithmsListView_Rate": "Приход BTC/ден",
     "AlgorithmSettingsControl_IntensityWarning": "Стойностите за интензивност за избрания алгоритъм трябва да са в интервала от {0} до {1}",
+    "ServiceLocationsListView_DefaultCannotBeDisabled": "Default service location cannot be disabled",
     "EnabledUnbenchmarkedAlgorithmsWarning": "Има алгоритми за избраните активни устройства, които не са тествани за скорост. Изберете 'Да', за да измерите скоростта и да започнете работа; изберете 'Не', за да прескочите теста за скорост и да продължите работа; натиснете 'Отказ', за да прекратите работа.",
     "AlgorithmSettingsControl_Label_Intensity": "Интензивност",
     "AlgorithmSettingsControl_ToolTip_Intensity": "Задава параметъра 'Интензивност' за избрания алгоритъм (допустими стойности между 8.0 - 25.0 или 31.0 в зависимост от конкретния алгоритъм). Интензитет 0 се разбира като стойност по подразбиране. ФУНКЦИЯ ЗА НАПРЕДНАЛИ ПОТРЕБИТЕЛИ.",
@@ -303,6 +322,7 @@
     "FormSettings_Tab_General_Group_Misc": "Разни:",
     "FormSettings_Tab_Advanced_Group_Miners": "Изчисл. програми:",
     "FormSettings_Tab_Advanced_Group_BenchmarkTimeLimits": "Лимити на време за тестовете:",
+    "FormSettings_Tab_Devices_Algorithms_HideDisabledAlgorithms": "Hide Disabled Algorithms",
     "FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability": "Проверка на единична доходност",
     "FormSettings_Tab_Devices_Algorithms_Check_ALLProfitability": "Проверка на всички доходности",
     "MinersDownloadManager_Title_Downloading": "Сваляне на изчислителни програми",

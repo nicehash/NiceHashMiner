@@ -75,7 +75,7 @@ namespace NiceHashMiner.Forms
             // set first device selected {
             if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0) {
                 _selectedComputeDevice = ComputeDeviceManager.Avaliable.AllAvaliableDevices[0];
-                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled, checkBox_HideDisabledAlgorithms.Checked);
                 groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
             }
 
@@ -102,7 +102,7 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(this.label_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
             toolTip1.SetToolTip(this.pictureBox_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
 
-            toolTip1.SetToolTip(this.comboBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
+            toolTip1.SetToolTip(this.serviceLocationListView1, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(this.label_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(this.pictureBox_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
 
@@ -197,6 +197,12 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(this.checkBox_RunScriptOnCUDA_GPU_Lost, International.GetText("Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost"));
             toolTip1.SetToolTip(this.pictureBox_RunScriptOnCUDA_GPU_Lost, International.GetText("Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost"));
 
+            toolTip1.SetToolTip(this.checkBox_ShowDetailedDeviceInfo, International.GetText("Form_Settings_ToolTip_checkBox_ShowDetailedDeviceInfo"));
+            toolTip1.SetToolTip(this.pictureBox_ShowDetailedDeviceInfo, International.GetText("Form_Settings_ToolTip_checkBox_ShowDetailedDeviceInfo"));
+
+            toolTip1.SetToolTip(this.checkBox_ShowVirtualMemoryWarning, International.GetText("Form_Settings_ToolTip_checkBox_ShowVirtualMemoryWarning"));
+            toolTip1.SetToolTip(this.pictureBox_ShowVirtualMemoryWarning, International.GetText("Form_Settings_ToolTip_checkBox_ShowVirtualMemoryWarning"));
+
             toolTip1.SetToolTip(this.checkBox_RunAtStartup, International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
             toolTip1.SetToolTip(this.pictureBox_RunAtStartup, International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
 
@@ -240,6 +246,10 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(pictureBox_MinimizeMiningWindows, International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
             toolTip1.SetToolTip(checkBox_MinimizeMiningWindows, International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
 
+            // Hide Disabled Algorithms
+            toolTip1.SetToolTip(checkBox_HideDisabledAlgorithms, International.GetText("Form_Settings_ToolTip_HideDisabledAlgorithms"));
+            toolTip1.SetToolTip(pictureBox_HideDisabledAlgorithms, International.GetText("Form_Settings_ToolTip_HideDisabledAlgorithms"));
+
             this.Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
@@ -276,16 +286,17 @@ namespace NiceHashMiner.Forms
             checkBox_MinimizeMiningWindows.Text = International.GetText("Form_Settings_General_MinimizeMiningWindows");
             checkBox_UseIFTTT.Text = International.GetText("Form_Settings_General_UseIFTTT");
             checkBox_RunScriptOnCUDA_GPU_Lost.Text = International.GetText("Form_Settings_General_RunScriptOnCUDA_GPU_Lost");
+            checkBox_ShowDetailedDeviceInfo.Text = International.GetText("Form_Settings_General_ShowDetailedDeviceInfo");
+            checkBox_ShowVirtualMemoryWarning.Text = International.GetText("Form_Settings_General_ShowVirtualMemoryWarning");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
             label_WorkerName.Text = International.GetText("WorkerName") + ":";
             label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
-            {
-                int i = 0;
-                foreach (string loc in Globals.MiningLocation)
-                    comboBox_ServiceLocation.Items[i++] = International.GetText("LocationName_" + loc);
-            }
+
+            serviceLocationListView1.SetServiceLocations();
+            
+            label_TimeUnit.Text = International.GetText("Time_Unit") + ":";
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
             label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
             label_MinerAPIQueryInterval.Text = International.GetText("Form_Settings_General_MinerAPIQueryInterval") + ":";
@@ -334,6 +345,8 @@ namespace NiceHashMiner.Forms
             groupBox_Miners.Text = International.GetText("FormSettings_Tab_Advanced_Group_Miners");
             groupBoxBenchmarkTimeLimits.Text = International.GetText("FormSettings_Tab_Advanced_Group_BenchmarkTimeLimits");
 
+            checkBox_HideDisabledAlgorithms.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_HideDisabledAlgorithms");
+
             buttonAllProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_ALLProfitability");
             buttonSelectedProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability");
 
@@ -363,6 +376,8 @@ namespace NiceHashMiner.Forms
                 this.checkBox_MinimizeMiningWindows.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_UseIFTTT.CheckedChanged += new System.EventHandler(checkBox_UseIFTTT_CheckChanged);
                 this.checkBox_RunScriptOnCUDA_GPU_Lost.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_ShowDetailedDeviceInfo.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_ShowVirtualMemoryWarning.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -393,10 +408,9 @@ namespace NiceHashMiner.Forms
                 // set double only keypress
                 this.textBox_MinProfit.KeyPress += new KeyPressEventHandler(TextBoxKeyPressEvents.textBoxDoubleOnly_KeyPress);
             }
-            // Add EventHandler for all the general tab's textboxes
+            // Add EventHandler for all the general tab's comboboxes
             {
                 this.comboBox_Language.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
-                this.comboBox_ServiceLocation.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
                 this.comboBox_TimeUnit.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
                 this.comboBox_DagLoadMode.Leave += new System.EventHandler(this.GeneralComboBoxes_Leave);
             }
@@ -439,6 +453,8 @@ namespace NiceHashMiner.Forms
                 checkBox_MinimizeMiningWindows.Enabled = !ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
                 checkBox_RunScriptOnCUDA_GPU_Lost.Checked = ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost;
+                checkBox_ShowDetailedDeviceInfo.Checked = ConfigManager.GeneralConfig.ShowDetailedDeviceInfo;
+                checkBox_ShowVirtualMemoryWarning.Checked = ConfigManager.GeneralConfig.ShowVirtualMemoryWarning;
             }
 
             // Textboxes
@@ -496,7 +512,6 @@ namespace NiceHashMiner.Forms
             // ComboBox
             {
                 comboBox_Language.SelectedIndex = (int)ConfigManager.GeneralConfig.Language;
-                comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
                 comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
             }
@@ -514,21 +529,27 @@ namespace NiceHashMiner.Forms
 
         private void InitializeDevicesTab() {
             InitializeDevicesCallbacks();
+            InitializeDevicesTabFieldValuesReferences();
         }
 
         private void InitializeDevicesCallbacks() {
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(devicesListView1_ItemSelectionChanged);
+            checkBox_HideDisabledAlgorithms.CheckedChanged += new System.EventHandler(this.checkBox_HideDisabledAlgorithms_CheckChanged);
         }
 
-        #endregion //Tab Devices
+        private void InitializeDevicesTabFieldValuesReferences() {
+            checkBox_HideDisabledAlgorithms.Checked = ConfigManager.GeneralConfig.HideDisabledAlgorithms;
+        }
+
+            #endregion //Tab Devices
 
 
-        #endregion // Initializations
+            #endregion // Initializations
 
-        #region Form Callbacks
+            #region Form Callbacks
 
-        #region Tab General
-        private void GeneralCheckBoxes_CheckedChanged(object sender, EventArgs e) {
+            #region Tab General
+            private void GeneralCheckBoxes_CheckedChanged(object sender, EventArgs e) {
             if (!_isInitFinished) return;
             // indicate there has been a change
             IsChange = true;
@@ -550,6 +571,8 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
             ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
+            ConfigManager.GeneralConfig.ShowDetailedDeviceInfo = checkBox_ShowDetailedDeviceInfo.Checked;
+            ConfigManager.GeneralConfig.ShowVirtualMemoryWarning = checkBox_ShowVirtualMemoryWarning.Checked;
         }
 
         private void checkBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e) {
@@ -593,7 +616,7 @@ namespace NiceHashMiner.Forms
                     if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
                     var deviceDefaultsAlgoSettings = GroupAlgorithms.CreateForDeviceList(cDev);
                     foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings) {
-                        var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings.MinerBaseType, defaultAlgoSettings.NiceHashID, defaultAlgoSettings.SecondaryNiceHashID);
+                        var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings);
                         if (toSetAlgo != null) {
                             toSetAlgo.ExtraLaunchParameters = defaultAlgoSettings.ExtraLaunchParameters;
                             toSetAlgo.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
@@ -662,7 +685,6 @@ namespace NiceHashMiner.Forms
             if (!_isInitFinished) return;
             IsChange = true;
             ConfigManager.GeneralConfig.Language = (LanguageType)comboBox_Language.SelectedIndex;
-            ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType)comboBox_TimeUnit.SelectedIndex;
             ConfigManager.GeneralConfig.EthminerDagGenerationType = (DagGenerationType)comboBox_DagLoadMode.SelectedIndex;
         }
@@ -681,7 +703,7 @@ namespace NiceHashMiner.Forms
             algorithmSettingsControl1.Deselect();
             // show algorithms
             _selectedComputeDevice = ComputeDeviceManager.Avaliable.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
-            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled, checkBox_HideDisabledAlgorithms.Checked);
             groupBoxAlgorithmSettings.Text = String.Format(International.GetText("FormSettings_AlgorithmsSettings"), _selectedComputeDevice.Name);
         }
 
@@ -757,6 +779,9 @@ namespace NiceHashMiner.Forms
             if (isCredChange) {
                 NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress.Trim(), ConfigManager.GeneralConfig.WorkerName.Trim());
             }
+
+            if (serviceLocationListView1.SaveToGeneralConfig)
+                serviceLocationListView1.SaveServiceLocations();
 
             this.Close();
         }
@@ -845,6 +870,16 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
 
             textBox_IFTTTKey.Enabled = checkBox_UseIFTTT.Checked;
+        }
+
+        private void checkBox_HideDisabledAlgorithms_CheckChanged(object sender, EventArgs e)
+        {
+            if (!_isInitFinished) return;
+            IsChange = true;
+
+            ConfigManager.GeneralConfig.HideDisabledAlgorithms = checkBox_HideDisabledAlgorithms.Checked;
+
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled, checkBox_HideDisabledAlgorithms.Checked);
         }
     }
 }
