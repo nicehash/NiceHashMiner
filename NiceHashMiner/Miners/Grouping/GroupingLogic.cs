@@ -27,7 +27,7 @@ namespace NiceHashMiner.Miners.Grouping {
             return a.Algorithm.MinerBinaryPath == b.Algorithm.MinerBinaryPath;
         }
         private static bool IsSameAlgorithmType(MiningPair a, MiningPair b) {
-            return a.Algorithm.DualNiceHashID() == b.Algorithm.DualNiceHashID();
+            return a.Algorithm.DualNiceHashID == b.Algorithm.DualNiceHashID;
         }
         private static bool IsSameDeviceType(MiningPair a, MiningPair b) {
             return a.Device.DeviceType == b.Device.DeviceType;

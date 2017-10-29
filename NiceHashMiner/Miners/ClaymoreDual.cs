@@ -63,7 +63,7 @@ namespace NiceHashMiner.Miners {
                         }
                         if (pair.CurrentExtraLaunchParameters.Contains("Siacoin")) {
                             dual = AlgorithmType.Sia;
-                            coinP = " -dcoin sc";
+                            coinP = " -dcoin sc ";
                         }
                         if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))  {
                             dual = AlgorithmType.Lbry;
@@ -92,7 +92,14 @@ namespace NiceHashMiner.Miners {
         }
 
         public override void Start(string url, string btcAdress, string worker) {
-            string username = GetUsername(btcAdress, worker);
+            // Update to most profitable intensity
+            foreach (var mPair in MiningSetup.MiningPairs) {
+                if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled) {
+                    var intensity = algo.MostProfitableIntensity;
+                    if (intensity < 0) intensity = defaultIntensity;
+                    algo.CurrentIntensity = intensity;
+                }
+            }
             LastCommandLine = GetStartCommand(url, btcAdress, worker) + " -dbg -1";
             ProcessHandle = _Start();
         }

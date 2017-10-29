@@ -80,7 +80,7 @@ namespace NiceHashMiner
         public bool IsNeverHideMiningWindow { get; protected set; }
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
-        protected MiningSetup MiningSetup { get; set; }
+        public MiningSetup MiningSetup { get; set; }
         // sgminer/zcash claymore workaround
         protected bool IsKillAllUsedMinerProcs { get; set; }
         public bool IsRunning { get; protected set; }
@@ -536,17 +536,29 @@ namespace NiceHashMiner
         protected void BenchmarkThreadRoutineFinish() {
             BenchmarkProcessStatus status = BenchmarkProcessStatus.Finished;
 
-            if (BenchmarkAlgorithm.BenchmarkSpeed > 0) {
+            if (!BenchmarkAlgorithm.BenchmarkNeeded) {
                 status = BenchmarkProcessStatus.Success;
             }
 
-            using (StreamWriter sw = File.AppendText(benchmarkLogPath)) {
-                foreach (var line in bench_lines) {
-                    sw.WriteLine(line);
+            try {
+                using (StreamWriter sw = File.AppendText(benchmarkLogPath)) {
+                    foreach (var line in bench_lines) {
+                        sw.WriteLine(line);
+                    }
                 }
-            }
+            } catch { }
             BenchmarkProcessStatus = status;
-            Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.NiceHashID, BenchmarkAlgorithm.BenchmarkSpeed, BenchmarkAlgorithm.SecondaryBenchmarkSpeed));
+            if (BenchmarkAlgorithm is DualAlgorithm dualAlg) {
+                if (!dualAlg.TuningEnabled) {  // Tuning will report speed
+                    Helpers.ConsolePrint("BENCHMARK",
+                        "Final Speed: " + Helpers.FormatDualSpeedOutput(dualAlg.BenchmarkSpeed,
+                            dualAlg.SecondaryBenchmarkSpeed, dualAlg.DualNiceHashID));
+                }
+            } else {
+                Helpers.ConsolePrint("BENCHMARK",
+                    "Final Speed: " + Helpers.FormatDualSpeedOutput(BenchmarkAlgorithm.BenchmarkSpeed, 0,
+                        BenchmarkAlgorithm.NiceHashID));
+            }
             Helpers.ConsolePrint("BENCHMARK", "Benchmark ends");
             if (BenchmarkComunicator != null && !OnBenchmarkCompleteCalled) {
                 OnBenchmarkCompleteCalled = true;

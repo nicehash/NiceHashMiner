@@ -99,8 +99,8 @@
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="3rdParty\NVAPI.cs" />
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
-    <Compile Include="Algorithm.cs" />
-    <Compile Include="Configs\Data\ServiceLocationConfig.cs" />
+    <Compile Include="Algorithm\Algorithm.cs" />
+    <Compile Include="Algorithm\DualAlgorithm.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CPUComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
@@ -113,7 +113,14 @@
       <DependentUpon>ServiceLocationListView.cs</DependentUpon>
     </Compile>
     <Compile Include="IFTTT.cs" />
+    <Compile Include="Configs\Data\DualAlgorithmConfig.cs" />
     <Compile Include="ExchangeRateAPI.cs" />
+    <Compile Include="Forms\Form_DcriValues.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_DcriValues.Designer.cs">
+      <DependentUpon>Form_DcriValues.cs</DependentUpon>
+    </Compile>
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\EWBF.cs" />
     <Compile Include="Miners\prospector.cs" />
@@ -347,6 +354,9 @@
     <EmbeddedResource Include="Forms\Form_3rdParty_TOS.resx">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_DcriValues.resx">
+      <DependentUpon>Form_DcriValues.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </EmbeddedResource>
@@ -404,6 +414,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\NiceHashMiner.Forms.Form_DcriValues.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

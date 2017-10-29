@@ -54,7 +54,7 @@ namespace NiceHashMiner.Miners.Grouping {
                     if(Miner != null) {
                         Miner.InitMiningSetup(new MiningSetup(miningPairs));
                         AlgorithmType = mPair.Algorithm.NiceHashID;
-                        DualAlgorithmType = mPair.Algorithm.DualNiceHashID();
+                        DualAlgorithmType = mPair.Algorithm.DualNiceHashID;
                     }
                 }
             }

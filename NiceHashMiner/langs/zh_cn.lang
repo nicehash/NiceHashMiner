@@ -94,6 +94,20 @@
     "Form_Benchmark_listView_WaitMinutes": "请等待约{0}分钟...",
     "Form_Benchmark_listView_WaitForEth": "正在测试（大约需2-4分钟）...",
 
+    "Form_DcriValues_Title": "ClaymoreDual Tuning",
+    "Form_DcriValues_Intensity": "Intensity",
+    "Form_DcriValues_SecondarySpeed": "Secondary Speed",
+    "Form_DcriValues_TuningEnabled": "Tuning Enabled",
+    "Form_DcriValues_TuningStart": "Tuning Start",
+    "Form_DcriValues_TuningEnd": "Tuning End",
+    "Form_DcriValues_TuningInterval": "Tuning Interval",
+    "Form_DcriValues_ToolTip_TuningStart": "The first dcri value to use for tuning",
+    "Form_DcriValues_ToolTip_TuningEnd": "The last dcri value to use for tuning",
+    "Form_DcriValues_ToolTip_TuningInterval": "The interval for dcri values to use for tuning",
+    "Form_DcriValues_ToolTip_TuningEnabled": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
+    "AlgorithmsListView_ContextMenu_OpenDcri": "Tuning Settings",
+    "DeviceListView_ContectMenu_CopyTuning": "Copy tuning settings only",
+
 
     "Form_Loading_label_LoadingText": "加载中，请稍后...",
 

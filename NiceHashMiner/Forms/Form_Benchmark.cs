@@ -402,9 +402,9 @@ namespace NiceHashMiner.Forms {
                 foreach (var algo in deviceAlgosTuple.Item2) {
                     algo.SetBenchmarkPending();
                 }
-            }
-            if (_currentDevice != null) {
-                algorithmsListView1.RepaintStatus(_currentDevice.Enabled, _currentDevice.UUID);
+                if (deviceAlgosTuple.Item1 != null) {
+                    algorithmsListView1.RepaintStatus(deviceAlgosTuple.Item1.Enabled, deviceAlgosTuple.Item1.UUID);
+                }
             }
 
             StartBenchmark();
@@ -448,7 +448,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private bool ShoulBenchmark(Algorithm algorithm) {
-            bool isBenchmarked = algorithm.BenchmarkSpeed > 0 ? true : false;
+            bool isBenchmarked = !algorithm.BenchmarkNeeded;
             if (_algorithmOption == AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms
                 && !isBenchmarked && algorithm.Enabled) {
                     return true;
@@ -509,6 +509,9 @@ namespace NiceHashMiner.Forms {
                     _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetTestExtraParams();
                 } else {
                     __ClaymoreZcashStatus = null;
+                }
+                if (_currentAlgorithm is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled) {
+                    dualAlgo.StartTuning();
                 }
             }
 
@@ -623,6 +626,13 @@ namespace NiceHashMiner.Forms {
                     }
                 }
 
+                var dualAlgo = _currentAlgorithm as DualAlgorithm;
+                if (dualAlgo != null && dualAlgo.TuningEnabled) {
+                    if (dualAlgo.IncrementToNextEmptyIntensity()) {
+                        rebenchSame = true;
+                    }
+                }
+
                 if(!rebenchSame) {
                     _benchmarkingTimer.Stop();
                 }
@@ -645,6 +655,10 @@ namespace NiceHashMiner.Forms {
                         _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);
                     } else if (__ClaymoreZcashStatus != null) {
                         _currentMiner.BenchmarkStart(__ClaymoreZcashStatus.Time, this);
+                    } else if (dualAlgo != null && dualAlgo.TuningEnabled) {
+                        var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
+                            .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
+                        _currentMiner.BenchmarkStart(time, this);
                     }
                 } else {
                     NextBenchmark();
