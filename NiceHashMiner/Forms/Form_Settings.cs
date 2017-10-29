@@ -200,6 +200,9 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(this.checkBox_ShowDetailedDeviceInfo, International.GetText("Form_Settings_ToolTip_checkBox_ShowDetailedDeviceInfo"));
             toolTip1.SetToolTip(this.pictureBox_ShowDetailedDeviceInfo, International.GetText("Form_Settings_ToolTip_checkBox_ShowDetailedDeviceInfo"));
 
+            toolTip1.SetToolTip(this.checkBox_ShowVirtualMemoryWarning, International.GetText("Form_Settings_ToolTip_checkBox_ShowVirtualMemoryWarning"));
+            toolTip1.SetToolTip(this.pictureBox_ShowVirtualMemoryWarning, International.GetText("Form_Settings_ToolTip_checkBox_ShowVirtualMemoryWarning"));
+
             toolTip1.SetToolTip(this.checkBox_RunAtStartup, International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
             toolTip1.SetToolTip(this.pictureBox_RunAtStartup, International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
 
@@ -284,6 +287,7 @@ namespace NiceHashMiner.Forms
             checkBox_UseIFTTT.Text = International.GetText("Form_Settings_General_UseIFTTT");
             checkBox_RunScriptOnCUDA_GPU_Lost.Text = International.GetText("Form_Settings_General_RunScriptOnCUDA_GPU_Lost");
             checkBox_ShowDetailedDeviceInfo.Text = International.GetText("Form_Settings_General_ShowDetailedDeviceInfo");
+            checkBox_ShowVirtualMemoryWarning.Text = International.GetText("Form_Settings_General_ShowVirtualMemoryWarning");
 
             label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
             label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
@@ -373,6 +377,7 @@ namespace NiceHashMiner.Forms
                 this.checkBox_UseIFTTT.CheckedChanged += new System.EventHandler(checkBox_UseIFTTT_CheckChanged);
                 this.checkBox_RunScriptOnCUDA_GPU_Lost.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
                 this.checkBox_ShowDetailedDeviceInfo.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
+                this.checkBox_ShowVirtualMemoryWarning.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -449,6 +454,7 @@ namespace NiceHashMiner.Forms
                 checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
                 checkBox_RunScriptOnCUDA_GPU_Lost.Checked = ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost;
                 checkBox_ShowDetailedDeviceInfo.Checked = ConfigManager.GeneralConfig.ShowDetailedDeviceInfo;
+                checkBox_ShowVirtualMemoryWarning.Checked = ConfigManager.GeneralConfig.ShowVirtualMemoryWarning;
             }
 
             // Textboxes
@@ -566,6 +572,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
             ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
             ConfigManager.GeneralConfig.ShowDetailedDeviceInfo = checkBox_ShowDetailedDeviceInfo.Checked;
+            ConfigManager.GeneralConfig.ShowVirtualMemoryWarning = checkBox_ShowVirtualMemoryWarning.Checked;
         }
 
         private void checkBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e) {

@@ -142,6 +142,7 @@
     "Form_Settings_General_MinimizeMiningWindows": "Минимизиране на изчисл. програма",
     "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Изпълняване на скрипт при отпадане на CUDA GPU",
     "Form_Settings_General_ShowDetailedDeviceInfo": "Show Detailed Device Info",
+    "Form_Settings_General_ShowVirtualMemoryWarning": "Show Virtual Memory Warning",
 
     "Form_Settings_General_Language": "Език",
     "Form_Settings_General_MinIdleSeconds": "Minimum Idle [s]",
@@ -242,7 +243,7 @@
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "Когато тази опция е активна, NiceHash Miner Legacy ще установи всички поддържани NVIDIA видеокарти в режим P0.\nТова води до леко повишаване на производителността при някои алгоритми.\nТази опция изисква административни привилегии, за да бъде активирана.",
     "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "Когато тази опция е активна, NiceHash Miner Legacy ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
     "Form_Settings_ToolTip_checkBox_ShowDetailedDeviceInfo": "When checked, detailed device information (load, temperature, fan speed) will be displayed while mining,\nif available for the device.",
-
+    "Form_Settings_ToolTip_checkBox_ShowVirtualMemoryWarning": "When checked, NiceHash Miner Legacy would issue a warning if\nthe virtual memory is set too low.",
     "Form_Settings_ToolTip_ethminerAPIPort": "API порт, използван от ethminer за {0} видеокарти.",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Задава стандартна височина на блока за тестване на скоростта, ако API заявката пропадне.",
 

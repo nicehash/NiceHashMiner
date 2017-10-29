@@ -142,6 +142,7 @@
     "Form_Settings_General_MinimizeMiningWindows": "最小化挖矿窗口",
     "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "CUDA GPU停止响应后执行脚本",
     "Form_Settings_General_ShowDetailedDeviceInfo": "Show Detailed Device Info",
+    "Form_Settings_General_ShowVirtualMemoryWarning": "Show Virtual Memory Warning",
 
     "Form_Settings_General_Language": "语言",
     "Form_Settings_General_MinIdleSeconds": "最小空闲时间 [秒]",
@@ -241,6 +242,7 @@
     "Form_Settings_ToolTip_checkBox_UseNewSettingsPage": "若选择此复选框，NiceHash Miner Legacy将启用新版的设置页面。",
     "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "若选择此复选框，NiceHash Miner Legacy将在探测到有CUDA GPU停止响应后执行OnGPUsLost.bat脚本。默认脚本会重新启动计算机。",
     "Form_Settings_ToolTip_checkBox_ShowDetailedDeviceInfo": "When checked, detailed device information (load, temperature, fan speed) will be displayed while mining,\nif available for the device.",
+    "Form_Settings_ToolTip_checkBox_ShowVirtualMemoryWarning": "When checked, NiceHash Miner Legacy would issue a warning if\nthe virtual memory is set too low.",
     "Form_Settings_ToolTip_checkBox_NVIDIAP0State": "若选择此复选框，NiceHash Miner Legacy将会把所有受支持的NVIDIA图形处理器调整到P0状态。\n这将略微增强部分算法的执行速率。\n开启此功能需要管理员权限。",
     "Form_Settings_ToolTip_ethminerAPIPort": "ethminer在{0} GPU上运行时使用的API端口。",
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "如果API调用失败，ethminer基准测试时将使用此以太坊默认区块高度。",

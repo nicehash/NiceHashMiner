@@ -62,6 +62,7 @@ namespace NiceHashMiner.Configs.Data {
         public bool DownloadInit = false;
         public bool RunScriptOnCUDA_GPU_Lost = false;
         public bool ShowDetailedDeviceInfo = true;
+        public bool ShowVirtualMemoryWarning = true;
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
         public bool DownloadInit3rdParty = false;
@@ -142,6 +143,7 @@ namespace NiceHashMiner.Configs.Data {
             RunScriptOnCUDA_GPU_Lost = false;
             ShowDetailedDeviceInfo = false;
             HideDisabledAlgorithms = false;
+            ShowVirtualMemoryWarning = true;
         }
 
         public void FixSettingBounds() {

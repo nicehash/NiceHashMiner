@@ -142,6 +142,7 @@
     "Form_Settings_General_MinimizeMiningWindows": "Riduci la finestra di mining",
     "Form_Settings_General_RunScriptOnCUDA_GPU_Lost": "Esegui script se persa una GPU CUDA",
     "Form_Settings_General_ShowDetailedDeviceInfo": "Show Detailed Device Info",
+    "Form_Settings_General_ShowVirtualMemoryWarning": "Show Virtual Memory Warning",
 
     "Form_Settings_General_Language": "Lingua",
     "Form_Settings_General_MinIdleSeconds": "Tempo minimo di Idle [s]",
@@ -244,7 +245,7 @@
     "Form_Settings_ToolTip_ethminerDefaultBlockHeight": "Imposta l'altezza dei blocchi di default usata per il benchmarking se le chiamate API falliscono.",
     "Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost": "Quando spuntato, NiceHash Miner Legacy eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
     "Form_Settings_ToolTip_checkBox_ShowDetailedDeviceInfo": "When checked, detailed device information (load, temperature, fan speed) will be displayed while mining,\nif available for the device.",
-
+    "Form_Settings_ToolTip_checkBox_ShowVirtualMemoryWarning": "When checked, NiceHash Miner Legacy would issue a warning if\nthe virtual memory is set too low.",
     "Form_Settings_ToolTip_APIBindPort": "La porta API che verrà usata da questo gruppo.",
     "Form_Settings_ToolTip_UsePassword": "Usa questa password quando viene lanciato il miner. Se vuota, verrà usata la password di default 'x'.",
     "Form_Settings_ToolTip_MinimumProfit": "Se impostato un valore maggiore di 0 (USD), NiceHash Miner Legacy smetterà di minare\nse il profitto calcolato scende sotto la cifra impostata.",

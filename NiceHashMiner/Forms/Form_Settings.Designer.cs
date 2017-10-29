@@ -157,6 +157,8 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
+            this.pictureBox_ShowVirtualMemoryWarning = new System.Windows.Forms.PictureBox();
+            this.checkBox_ShowVirtualMemoryWarning = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -212,6 +214,7 @@
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideDisabledAlgorithms)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowVirtualMemoryWarning)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -228,7 +231,7 @@
             this.tabControlGeneral.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabControlGeneral.Name = "tabControlGeneral";
             this.tabControlGeneral.SelectedIndex = 0;
-            this.tabControlGeneral.Size = new System.Drawing.Size(816, 569);
+            this.tabControlGeneral.Size = new System.Drawing.Size(816, 596);
             this.tabControlGeneral.TabIndex = 0;
             this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControlGeneral_Selected);
             // 
@@ -242,13 +245,15 @@
             this.tabPageGeneral.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.tabPageGeneral.Name = "tabPageGeneral";
             this.tabPageGeneral.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.tabPageGeneral.Size = new System.Drawing.Size(808, 540);
+            this.tabPageGeneral.Size = new System.Drawing.Size(808, 567);
             this.tabPageGeneral.TabIndex = 0;
             this.tabPageGeneral.Text = "General";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
             // groupBox_Misc
             // 
+            this.groupBox_Misc.Controls.Add(this.pictureBox_ShowVirtualMemoryWarning);
+            this.groupBox_Misc.Controls.Add(this.checkBox_ShowVirtualMemoryWarning);
             this.groupBox_Misc.Controls.Add(this.pictureBox_ShowDetailedDeviceInfo);
             this.groupBox_Misc.Controls.Add(this.checkBox_ShowDetailedDeviceInfo);
             this.groupBox_Misc.Controls.Add(this.pictureBox_RunScriptOnCUDA_GPU_Lost);
@@ -291,7 +296,7 @@
             this.groupBox_Misc.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.groupBox_Misc.Name = "groupBox_Misc";
             this.groupBox_Misc.Padding = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.groupBox_Misc.Size = new System.Drawing.Size(325, 525);
+            this.groupBox_Misc.Size = new System.Drawing.Size(325, 552);
             this.groupBox_Misc.TabIndex = 391;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
@@ -1709,7 +1714,7 @@
             // buttonSaveClose
             // 
             this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(464, 591);
+            this.buttonSaveClose.Location = new System.Drawing.Point(464, 618);
             this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonSaveClose.Name = "buttonSaveClose";
             this.buttonSaveClose.Size = new System.Drawing.Size(179, 28);
@@ -1721,7 +1726,7 @@
             // buttonDefaults
             // 
             this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(360, 591);
+            this.buttonDefaults.Location = new System.Drawing.Point(360, 618);
             this.buttonDefaults.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(99, 28);
@@ -1733,7 +1738,7 @@
             // buttonCloseNoSave
             // 
             this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(648, 591);
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(648, 618);
             this.buttonCloseNoSave.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonCloseNoSave.Name = "buttonCloseNoSave";
             this.buttonCloseNoSave.Size = new System.Drawing.Size(179, 28);
@@ -1742,11 +1747,33 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
             // 
+            // pictureBox_ShowVirtualMemoryWarning
+            // 
+            this.pictureBox_ShowVirtualMemoryWarning.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ShowVirtualMemoryWarning.Location = new System.Drawing.Point(296, 525);
+            this.pictureBox_ShowVirtualMemoryWarning.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.pictureBox_ShowVirtualMemoryWarning.Name = "pictureBox_ShowVirtualMemoryWarning";
+            this.pictureBox_ShowVirtualMemoryWarning.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ShowVirtualMemoryWarning.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ShowVirtualMemoryWarning.TabIndex = 377;
+            this.pictureBox_ShowVirtualMemoryWarning.TabStop = false;
+            // 
+            // checkBox_ShowVirtualMemoryWarning
+            // 
+            this.checkBox_ShowVirtualMemoryWarning.AutoSize = true;
+            this.checkBox_ShowVirtualMemoryWarning.Location = new System.Drawing.Point(8, 525);
+            this.checkBox_ShowVirtualMemoryWarning.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.checkBox_ShowVirtualMemoryWarning.Name = "checkBox_ShowVirtualMemoryWarning";
+            this.checkBox_ShowVirtualMemoryWarning.Size = new System.Drawing.Size(207, 21);
+            this.checkBox_ShowVirtualMemoryWarning.TabIndex = 376;
+            this.checkBox_ShowVirtualMemoryWarning.Text = "ShowVirtualMemoryWarning";
+            this.checkBox_ShowVirtualMemoryWarning.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(845, 635);
+            this.ClientSize = new System.Drawing.Size(845, 662);
             this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.buttonSaveClose);
             this.Controls.Add(this.tabControlGeneral);
@@ -1819,6 +1846,7 @@
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
             this.groupBoxAlgorithmSettings.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_HideDisabledAlgorithms)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowVirtualMemoryWarning)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1956,5 +1984,7 @@
         private System.Windows.Forms.PictureBox pictureBox_ShowDetailedDeviceInfo;
         private System.Windows.Forms.CheckBox checkBox_ShowDetailedDeviceInfo;
         private Components.ServiceLocationListView serviceLocationListView1;
+        private System.Windows.Forms.PictureBox pictureBox_ShowVirtualMemoryWarning;
+        private System.Windows.Forms.CheckBox checkBox_ShowVirtualMemoryWarning;
     }
 }
