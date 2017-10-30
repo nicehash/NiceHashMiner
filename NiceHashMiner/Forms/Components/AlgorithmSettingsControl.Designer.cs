@@ -73,7 +73,7 @@
             this.field_LessThreads.Margin = new System.Windows.Forms.Padding(5);
             this.field_LessThreads.Name = "field_LessThreads";
             this.field_LessThreads.Size = new System.Drawing.Size(294, 56);
-            this.field_LessThreads.TabIndex = 15;
+            this.field_LessThreads.TabIndex = 0;
             // 
             // fieldBoxBenchmarkSpeed
             // 
@@ -97,7 +97,7 @@
             this.secondaryFieldBoxBenchmarkSpeed.Margin = new System.Windows.Forms.Padding(5);
             this.secondaryFieldBoxBenchmarkSpeed.Name = "secondaryFieldBoxBenchmarkSpeed";
             this.secondaryFieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(294, 56);
-            this.secondaryFieldBoxBenchmarkSpeed.TabIndex = 16;
+            this.secondaryFieldBoxBenchmarkSpeed.TabIndex = 2;
             // 
             // groupBoxExtraLaunchParameters
             // 
@@ -108,7 +108,7 @@
             this.groupBoxExtraLaunchParameters.Name = "groupBoxExtraLaunchParameters";
             this.groupBoxExtraLaunchParameters.Padding = new System.Windows.Forms.Padding(4);
             this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(289, 189);
-            this.groupBoxExtraLaunchParameters.TabIndex = 14;
+            this.groupBoxExtraLaunchParameters.TabIndex = 3;
             this.groupBoxExtraLaunchParameters.TabStop = false;
             this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
             // 
@@ -129,7 +129,7 @@
             this.richTextBoxExtraLaunchParameters.Margin = new System.Windows.Forms.Padding(4);
             this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
             this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(281, 159);
-            this.richTextBoxExtraLaunchParameters.TabIndex = 0;
+            this.richTextBoxExtraLaunchParameters.TabIndex = 3;
             this.richTextBoxExtraLaunchParameters.Text = "";
             // 
             // AlgorithmSettingsControl
