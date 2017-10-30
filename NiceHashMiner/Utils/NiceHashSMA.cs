@@ -8,6 +8,7 @@ using NiceHashMiner.Configs;
 
 namespace NiceHashMiner
 {
+    [Serializable]
     public class NiceHashSMA
     {
         public int port;

@@ -146,7 +146,7 @@ namespace NiceHashMiner
             buttonHelp.Text = International.GetText("Form_Main_help");
 
             label_NotProfitable.Text = International.GetText("Form_Main_MINING_NOT_PROFITABLE");
-            groupBox1.Text = International.GetText("Form_Main_Group_Device_Rates");
+            groupBox1.Text = String.Format(International.GetText("Form_Main_Group_Device_Rates"), International.GetText("Form_Main_SMA_Update_NEVER"));
         }
 
         private void InitMainConfigGUIData() {
@@ -329,6 +329,13 @@ namespace NiceHashMiner
             }
 
             LoadingScreen.FinishLoad();
+
+            // Use last saved rates if exist
+            if (Globals.NiceHashData == null && ConfigManager.GeneralConfig.NiceHashData != null)
+            {
+                Globals.NiceHashData = ConfigManager.GeneralConfig.NiceHashData;
+                groupBox1.Text = String.Format(International.GetText("Form_Main_Group_Device_Rates"), ConfigManager.GeneralConfig.NiceHashDataTimeStamp);
+            }
 
             bool runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
             // standard miners check scope
@@ -610,8 +617,15 @@ namespace NiceHashMiner
         void SMACallback(object sender, EventArgs e) {
             Helpers.ConsolePrint("NICEHASH", "SMA Update");
             isSMAUpdated = true;
-            if (NiceHashStats.AlgorithmRates != null) {
+            if (NiceHashStats.AlgorithmRates != null)
+            {
                 Globals.NiceHashData = NiceHashStats.AlgorithmRates;
+                // Save new rates to config
+                ConfigManager.GeneralConfig.NiceHashData = NiceHashStats.AlgorithmRates;
+                ConfigManager.GeneralConfig.NiceHashDataTimeStamp = DateTime.Now;
+                ConfigManager.GeneralConfigFileCommit();
+
+                groupBox1.Text = String.Format(International.GetText("Form_Main_Group_Device_Rates"), ConfigManager.GeneralConfig.NiceHashDataTimeStamp);
             }
         }
 

@@ -71,6 +71,10 @@ namespace NiceHashMiner.Configs.Data {
 
         public bool HideDisabledAlgorithms = false;
 
+        // SMA data
+        public Dictionary<AlgorithmType, NiceHashSMA> NiceHashData = null;
+        public DateTime NiceHashDataTimeStamp = DateTime.MinValue;
+
         // device enabled disabled stuff
         public List<ComputeDeviceConfig> LastDevicesSettup = new List<ComputeDeviceConfig>();
         // 
