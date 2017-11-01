@@ -16,7 +16,6 @@ namespace NiceHashMiner.Enums {
         eqm,
         ethminer,
         Claymore,
-        Claymore_old,
         OptiminerAMD,
         excavator,
         XmrStackCPU,
@@ -26,6 +25,7 @@ namespace NiceHashMiner.Enums {
         Prospector,
         Xmrig,
         XmrStakAMD,
+        Claymore_old,
         END
     }
 }
