@@ -156,6 +156,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.Xmrig;
                 case MinerBaseType.XmrStakAMD:
                     return Data.XmrStakAMD;
+                case MinerBaseType.Claymore_old:
+                    return Data.ClaymoreCryptoNightMiner_old;
             }
             return Data.NONE;
         }
@@ -163,12 +165,6 @@ namespace NiceHashMiner.Miners.Grouping
         public static string GetPathFor(ComputeDevice computeDevice, Algorithm algorithm /*, Options: MinerPathsConfig*/) {
             if (computeDevice == null || algorithm == null) {
                 return Data.NONE;
-            }
-
-            // Temp claymore cn workaround
-            if (algorithm.MinerBaseType == MinerBaseType.Claymore &&
-                algorithm.NiceHashID == AlgorithmType.CryptoNight && algorithm.MinerName == "old") {
-                return Data.ClaymoreCryptoNightMiner_old;
             }
 
             return GetPathFor(
