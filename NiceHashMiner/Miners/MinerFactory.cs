@@ -66,7 +66,7 @@ namespace NiceHashMiner.Miners {
                 case MinerBaseType.XmrStakAMD:
                     return new XmrStakAMD();
                 case MinerBaseType.Claymore_old:
-                    return new ClaymoreCryptoNightMiner();
+                    return new ClaymoreCryptoNightMiner(true);
             }
             return null;
         }

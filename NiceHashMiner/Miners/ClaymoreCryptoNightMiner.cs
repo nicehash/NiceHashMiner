@@ -14,11 +14,13 @@ namespace NiceHashMiner.Miners {
     public class ClaymoreCryptoNightMiner : ClaymoreBaseMiner
     {
 
-        private bool isOld => MiningSetup.MinerName == "old";
+        private bool isOld;
 
         const string _LOOK_FOR_START = "XMR - Total Speed:";
-        public ClaymoreCryptoNightMiner()
-            : base("ClaymoreCryptoNightMiner", _LOOK_FOR_START) {
+        const string _LOOK_FOR_START_OLD = "hashrate =";
+        public ClaymoreCryptoNightMiner(bool isOld = false)
+            : base("ClaymoreCryptoNightMiner", isOld ? _LOOK_FOR_START_OLD : _LOOK_FOR_START) {
+            this.isOld = isOld;
         }
 
         protected override double DevFee() {
