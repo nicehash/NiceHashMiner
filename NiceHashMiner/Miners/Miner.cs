@@ -895,7 +895,7 @@ namespace NiceHashMiner
             try {
                 _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
                 string dataToSend = GetHttpRequestNHMAgentStrin(method);
-                string respStr = await GetAPIDataAsync(APIPort, dataToSend, false, overrideLoop);
+                string respStr = await GetAPIDataAsync(APIPort, dataToSend);
 
                 if (String.IsNullOrEmpty(respStr)) {
                     _currentMinerReadStatus = MinerAPIReadStatus.NETWORK_EXCEPTION;
