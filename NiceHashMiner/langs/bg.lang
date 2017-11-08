@@ -1,6 +1,6 @@
 {
     "Name": "Български",
-    "ID": 4,
+    "ID": "bg",
   "Entries": {
     "Global_Yes": "&Да",
     "Global_No": "&Не",

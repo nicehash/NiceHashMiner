@@ -13,7 +13,7 @@ namespace NiceHashMiner
         {
 #pragma warning disable 649
             public string Name;
-            public LanguageType ID;
+            public string ID;
             public Dictionary<string, string> Entries;
 #pragma warning restore 649
         }
@@ -50,7 +50,7 @@ namespace NiceHashMiner
             return langs;
         }
 
-        public static void Initialize(LanguageType lid)
+        public static void Initialize(string lid)
         {
             List<Language> langs = GetLanguages();
 
@@ -71,10 +71,10 @@ namespace NiceHashMiner
         /// Call this method to obtain available languages. Used by Settings GUI.
         /// </summary>
         /// <returns>Each dictionary entry contains id of the language (int) and name of the language (string).</returns>
-        public static Dictionary<LanguageType, string> GetAvailableLanguages()
+        public static Dictionary<string, string> GetAvailableLanguages()
         {
             List<Language> langs = GetLanguages();
-            Dictionary<LanguageType, string> retdict = new Dictionary<LanguageType, string>();
+            Dictionary<string, string> retdict = new Dictionary<string, string>();
 
             foreach (Language lang in langs)
             {
@@ -83,6 +83,25 @@ namespace NiceHashMiner
             }
 
             return retdict;
+        }
+
+        public static string GetLanguagesId(string name)
+        {
+            List<Language> langs = GetLanguages();
+
+            foreach (Language lang in langs)
+            {
+                if (lang.Name == name)
+                {
+                    return lang.ID;
+                }
+            }
+            return "en";
+        }
+
+        public static string SelectedLanguageName
+        {
+            get { return (SelectedLanguage == null) ? "English" : SelectedLanguage.Name; }
         }
 
         public static string GetText(string token)

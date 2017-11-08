@@ -1,6 +1,6 @@
 ﻿{
   "Name": "简体中文",
-  "ID": 7,
+  "ID": "zh_cn",
   "Entries": {
     "Global_Yes": "是 (&Y)",
     "Global_No": "否 (&N)",

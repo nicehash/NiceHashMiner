@@ -9,7 +9,7 @@ namespace NiceHashMiner.Utils
     {
         // keep it simple only two parameters for now
         readonly public bool IsLang = false;
-        readonly public LanguageType LangValue = 0;
+        readonly public string LangValue = "en";
 
         public CommandLineParser(string[] argv)
         {
@@ -19,12 +19,12 @@ namespace NiceHashMiner.Utils
             }
             if (ParseCommandLine(argv, "-lang", out tmpString)) {
                 IsLang = true;
-                int tmp;
                 // if parsing fails set to default
-                if (Int32.TryParse(tmpString, out tmp)) {
-                    LangValue = (LanguageType)tmp;
+                if (System.IO.File.Exists(Environment.CurrentDirectory + "langs/" + tmpString))
+                {
+                    LangValue = tmpString;
                 } else {
-                    LangValue = LanguageType.En;
+                    LangValue = "en";
                 }
             }
         }

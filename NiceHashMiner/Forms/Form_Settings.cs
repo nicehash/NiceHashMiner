@@ -474,11 +474,11 @@ namespace NiceHashMiner.Forms
 
             // Add language selections list
             {
-                Dictionary<LanguageType, string> lang = International.GetAvailableLanguages();
+                Dictionary<string, string> lang = International.GetAvailableLanguages();
 
                 comboBox_Language.Items.Clear();
-                for (int i = 0; i < lang.Count; i++) {
-                    comboBox_Language.Items.Add(lang[(LanguageType)i]);
+                foreach (string l in lang.Keys) {
+                    comboBox_Language.Items.Add(lang[l]);
                 }
             }
 
@@ -495,7 +495,7 @@ namespace NiceHashMiner.Forms
 
             // ComboBox
             {
-                comboBox_Language.SelectedIndex = (int)ConfigManager.GeneralConfig.Language;
+                comboBox_Language.SelectedIndex = comboBox_Language.FindString(International.SelectedLanguageName);
                 comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
                 comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
@@ -661,7 +661,7 @@ namespace NiceHashMiner.Forms
         private void GeneralComboBoxes_Leave(object sender, EventArgs e) {
             if (!_isInitFinished) return;
             IsChange = true;
-            ConfigManager.GeneralConfig.Language = (LanguageType)comboBox_Language.SelectedIndex;
+            ConfigManager.GeneralConfig.Language = International.GetLanguagesId(comboBox_Language.Text);
             ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType)comboBox_TimeUnit.SelectedIndex;
             ConfigManager.GeneralConfig.EthminerDagGenerationType = (DagGenerationType)comboBox_DagLoadMode.SelectedIndex;

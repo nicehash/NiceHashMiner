@@ -1,6 +1,6 @@
 ﻿{
   "Name": "Română",
-  "ID": 8,
+  "ID": "ro",
   "Entries": {
     "Global_Yes": "&Da",
     "Global_No": "&Nu",

@@ -144,7 +144,6 @@
     <Compile Include="Enums\DeviceGroupType.cs" />
     <Compile Include="Enums\DeviceMiningStatus.cs" />
     <Compile Include="Enums\DeviceType.cs" />
-    <Compile Include="Enums\LanguageType.cs" />
     <Compile Include="Enums\MinerAPIReadStatus.cs" />
     <Compile Include="Enums\MinerBaseType.cs" />
     <Compile Include="Enums\MinerOptionFlagType.cs" />

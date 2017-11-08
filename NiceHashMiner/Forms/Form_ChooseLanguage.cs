@@ -18,14 +18,18 @@ namespace NiceHashMiner.Forms {
             InitializeComponent();
 
             // Add language selections list
-            Dictionary<LanguageType, string> lang = International.GetAvailableLanguages();
+            Dictionary<string, string> lang = International.GetAvailableLanguages();
 
             comboBox_Languages.Items.Clear();
-            for (int i = 0; i < lang.Count; i++) {
-                comboBox_Languages.Items.Add(lang[(LanguageType)i]);
+            foreach (string l in lang.Keys) {
+                comboBox_Languages.Items.Add(lang[l]);
+                if (l == "en")
+                {
+                    comboBox_Languages.SelectedIndex = comboBox_Languages.Items.Count - 1;
+                }
             }
 
-            comboBox_Languages.SelectedIndex = 0;
+            //comboBox_Languages.SelectedIndex = 0;
 
             //label_Instruction.Location = new Point((this.Width - label_Instruction.Size.Width) / 2, label_Instruction.Location.Y);
             //button_OK.Location = new Point((this.Width - button_OK.Size.Width) / 2, button_OK.Location.Y);
@@ -35,7 +39,7 @@ namespace NiceHashMiner.Forms {
         }
 
         private void button_OK_Click(object sender, EventArgs e) {
-            ConfigManager.GeneralConfig.Language = (LanguageType)comboBox_Languages.SelectedIndex;
+            ConfigManager.GeneralConfig.Language = International.GetLanguagesId(comboBox_Languages.Text);
             ConfigManager.GeneralConfigFileCommit();
             this.Close();
         }
