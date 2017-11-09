@@ -142,6 +142,35 @@ namespace NiceHashMiner
         }
 
         private void InitMainConfigGUIData() {
+            
+            if ((ConfigManager.GeneralConfig.StartupWindowX > -1) || (ConfigManager.GeneralConfig.StartupWindowY > -1))
+            {
+                // If startup window coordinates are defined, position the window
+                int windowX = ConfigManager.GeneralConfig.StartupWindowX;
+                int windowY = ConfigManager.GeneralConfig.StartupWindowY;
+                if (windowX < 0) windowX = this.Location.X;
+                if (windowY < 0) windowY = this.Location.Y;
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = WindowManager.GetMonitorCorrectedFormPoints(ConfigManager.GeneralConfig.StartupWindowMonitor,
+                    windowX, windowY);
+                if (ConfigManager.GeneralConfig.DebugConsole)
+                {
+                    WindowManager.MoveConsoleWindow(Process.GetCurrentProcess().Id, 
+                        ConfigManager.GeneralConfig.StartupWindowMonitor, windowX, windowY + this.Height);
+                }
+            }
+            else if (ConfigManager.GeneralConfig.StartupWindowMonitor > -1)
+            {
+                // If only startup monitor is defined, center the window on the target monitor
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = WindowManager.GetCenteredOnMonitorFormPoints(ConfigManager.GeneralConfig.StartupWindowMonitor,
+                    this.Width, this.Height);
+                if (ConfigManager.GeneralConfig.DebugConsole)
+                {
+                    WindowManager.MoveConsoleWindow(Process.GetCurrentProcess().Id,
+                        ConfigManager.GeneralConfig.StartupWindowMonitor, this.Location.X, this.Location.Y + this.Height);
+                }
+            }
             if (ConfigManager.GeneralConfig.ServiceLocation >= 0 && ConfigManager.GeneralConfig.ServiceLocation < Globals.MiningLocation.Length)
                 comboBoxLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
             else

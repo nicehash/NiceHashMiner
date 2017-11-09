@@ -304,6 +304,7 @@
     <Compile Include="Utils\MinersDownloader.cs" />
     <Compile Include="Utils\MinersDownloadManager.cs" />
     <Compile Include="Utils\MinersExistanceChecker.cs" />
+    <Compile Include="Utils\WindowManager.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
       <SubType>Designer</SubType>

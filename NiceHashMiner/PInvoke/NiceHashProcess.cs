@@ -13,6 +13,7 @@ namespace NiceHashMiner
         private const uint NORMAL_PRIORITY_CLASS = 0x0020;
         private const uint CREATE_NO_WINDOW = 0x08000000;
         private const int STARTF_USESHOWWINDOW = 0x00000001;
+        private const short SW_SHOWNOACTIVATE = 4;
         private const short SW_SHOWMINNOACTIVE = 7;
         private const uint INFINITE = 0xFFFFFFFF;
         private const uint STILL_ACTIVE = 259;
@@ -159,6 +160,8 @@ namespace NiceHashMiner
                 sflags = CREATE_NEW_CONSOLE;
             }
             else {
+                sInfo.dwFlags = STARTF_USESHOWWINDOW;
+                sInfo.wShowWindow = SW_SHOWNOACTIVATE;
                 sflags = CREATE_NEW_CONSOLE;
             }
 

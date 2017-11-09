@@ -29,6 +29,10 @@ namespace NiceHashMiner.Devices
         readonly public DeviceType DeviceType;
         // UUID now used for saving
         public string UUID { get; protected set; }
+        // Initial window coordinates and monitor info
+        public int WindowMonitor { get; protected set; } = -1;
+        public int WindowX { get; protected set; } = -1;
+        public int WindowY { get; protected set; } = -1;
 
         // used for Claymore indexing
         public int BusID { get; protected set; } = -1;
@@ -192,6 +196,9 @@ namespace NiceHashMiner.Devices
         }
         public void SetAlgorithmDeviceConfig(DeviceBenchmarkConfig config) {
             if (config != null && config.DeviceUUID == UUID && config.AlgorithmSettings != null) {
+                WindowMonitor = config.WindowMonitor;
+                WindowX = config.WindowX;
+                WindowY = config.WindowY;
                 this.AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
                 foreach (var conf in config.AlgorithmSettings) {
                     var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID, conf.SecondaryNiceHashID);
@@ -217,6 +224,9 @@ namespace NiceHashMiner.Devices
             DeviceBenchmarkConfig ret = new DeviceBenchmarkConfig();
             ret.DeviceName = this.Name;
             ret.DeviceUUID = this.UUID;
+            ret.WindowMonitor = this.WindowMonitor;
+            ret.WindowX = this.WindowX;
+            ret.WindowY = this.WindowY;
             // init algo settings
             foreach (var algo in this.AlgorithmSettings) {
                 // create/setup

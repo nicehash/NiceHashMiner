@@ -8,6 +8,10 @@ namespace NiceHashMiner.Configs.Data {
     public class DeviceBenchmarkConfig {
         public string DeviceUUID = "";
         public string DeviceName = "";
+        //Window location and monitor settings
+        public int WindowMonitor = -1;
+        public int WindowX = -1;
+        public int WindowY = -1;
         //public int TimeLimit { get; set; }
         public List<AlgorithmConfig> AlgorithmSettings = new List<AlgorithmConfig>();
     }

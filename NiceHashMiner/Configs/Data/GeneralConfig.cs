@@ -21,6 +21,9 @@ namespace NiceHashMiner.Configs.Data {
         public bool HideMiningWindows = false;
         public bool MinimizeToTray = false;
         public bool MinimizeMiningWindows = false;
+        public int StartupWindowMonitor = -1;
+        public int StartupWindowX = -1;
+        public int StartupWindowY = -1;
         //public int LessThreads;
         public CPUExtensionType ForceCPUExtension = CPUExtensionType.Automatic;
 

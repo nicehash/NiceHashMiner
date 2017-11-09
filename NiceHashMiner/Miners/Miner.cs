@@ -755,6 +755,8 @@ namespace NiceHashMiner
 
             try
             {
+                // Get handle of current foreground window before starting mining process
+                IntPtr currentForegroundWindow = Utils.WindowManager.GetForegroundWindow();
                 if (P.Start()) {
                     IsRunning = true;
 
@@ -766,6 +768,14 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint(MinerTAG(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
 
                     StartCoolDownTimerChecker();
+                    // If there are coordinates configured for the mining device, move the window
+                    if (MiningSetup.MiningPairs[0].Device.WindowX > -1 || MiningSetup.MiningPairs[0].Device.WindowY > -1)
+                    {
+                        Utils.WindowManager.MoveConsoleWindow(P.Id, MiningSetup.MiningPairs[0].Device.WindowMonitor,
+                            MiningSetup.MiningPairs[0].Device.WindowX, MiningSetup.MiningPairs[0].Device.WindowY);
+                        // Bring focus and top most z-order to previous foreground window
+                        Utils.WindowManager.BringWindowToTop(currentForegroundWindow);
+                    }
 
                     return P;
                 } else {
