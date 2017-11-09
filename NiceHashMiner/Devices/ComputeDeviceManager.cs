@@ -405,10 +405,16 @@ namespace NiceHashMiner.Devices
                         Avaliable.CPUsCount = 0;
                     }
 
-                    if (ThreadsPerCPU * Avaliable.CPUsCount > 64) {
-                        MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64CoresMsg"),
-                                        International.GetText("Warning_with_Exclamation"),
-                                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    if (ThreadsPerCPU * Avaliable.CPUsCount > 64)
+                    {
+                        // Show warning only when Auto Start Mining is disabled
+                        if (ConfigManager.GeneralConfig.AutoStartMining == false)
+                        {
+                            MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64CoresMsg"),
+                                            International.GetText("Warning_with_Exclamation"),
+                                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                        Helpers.ConsolePrint(TAG, "CPU mining disabled. More than 64 cores detected.");
                         Avaliable.CPUsCount = 0;
                     }
 
