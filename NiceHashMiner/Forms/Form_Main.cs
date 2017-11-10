@@ -566,6 +566,7 @@ namespace NiceHashMiner
             }
 
             toolStripStatusLabelBTCDayValue.Text = ExchangeRateAPI.ConvertToActiveCurrency((TotalRate * factorTimeUnit * Globals.BitcoinUSDRate)).ToString("F2", CultureInfo.InvariantCulture);
+            toolStripStatusLabelBalanceText.Text = (ExchangeRateAPI.ActiveDisplayCurrency + "/") + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " + International.GetText("Form_Main_balance") + ":";
         }
 
 
@@ -590,6 +591,7 @@ namespace NiceHashMiner
                 double Amount = (Balance * Globals.BitcoinUSDRate);
                 Amount = ExchangeRateAPI.ConvertToActiveCurrency(Amount);
                 toolStripStatusLabelBalanceDollarText.Text = Amount.ToString("F2", CultureInfo.InvariantCulture);
+                toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateAPI.ActiveDisplayCurrency})";
             }
         }
 
