@@ -118,13 +118,13 @@ namespace NiceHashMiner.Devices {
                                     }
                                 }
                             }
-                            if (algoSettings.ContainsKey(MinerBaseType.Claymore)) {
-                                foreach (var algo in algoSettings[MinerBaseType.Claymore]) {
-                                    if (algo.NiceHashID == AlgorithmType.CryptoNight) {
-                                        algo.Enabled = false;
-                                    }
-                                }
-                            }
+                            //if (algoSettings.ContainsKey(MinerBaseType.Claymore)) {
+                            //    foreach (var algo in algoSettings[MinerBaseType.Claymore]) {
+                            //        if (algo.NiceHashID == AlgorithmType.CryptoNight) {
+                            //            algo.Enabled = false;
+                            //        }
+                            //    }
+                            //}
                         }
                     } // END AMD case
 
