@@ -91,6 +91,9 @@ WorkerName | text | To identify the computer on NiceHash web UI.
 ServiceLocation | number | Used to select the location of the mining server.
 HideMiningWindows | true or false | When set to true, sgminer, ccminer and cpuminer console windows will be hidden.
 MinimizeToTray | true or false | When set to true, NiceHashMinerLegacy will minimize to the system tray.
+StartupWindowMonitor | number | When set to 0 or above, NiceHashMinerLegacy will move the main interface to the specified monitor. If set to -1 the primary monitor will be used.
+StartupWindowX | number | When set to 0 or above, NiceHashMinerLegacy will move the main interface to the specified x coordinate. (On the monitor specified in StartupWindowMonitor)
+StartupWindowY | number | When set to 0 or above, NiceHashMinerLegacy will move the main interface to the specified y coordinate. (On the monitor specified in StartupWindowMonitor)
 ForceCPUExtension | 0, 1, 2, 3 or 4 | Force certain CPU extension miner. 0 is automatic, 1 for AVX2, 2 for AVX, 3 for AES and  4 for SSE2.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
 SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner Legacy users to have the exact same switching pattern.
@@ -129,6 +132,9 @@ Parameter | Range | Description
 -----------------|----------|-------------------
 DeviceUUID | text | Used for unique identification purposes in the config file (**DO NOT EDIT**)
 DeviceName | text | Used for identification purposes in the config file (**DO NOT EDIT**)
+WindowMonitor | number | When set to 0 or above, NiceHashMinerLegacy will move the mining console to the specified monitor. If set to -1 the primary monitor will be used.
+WindowX | number | When set to 0 or above, NiceHashMinerLegacy will move the mining console to the specified x coordinate. (On the monitor specified in WindowMonitor)
+WindowY | number | When set to 0 or above, NiceHashMinerLegacy will move the mining console to the specified y coordinate. (On the monitor specified in WindowMonitor)
 AlgorithmSettings | dictionary {key: text, value: Algorithm } | Key value paired dictionary with avaliable device algorithms settings. Keys should not be edited only Algorithm data.
 AlgorithmSettings\Algorithm\NiceHashID | number | Algorithm ID (**DO NOT EDIT**)
 AlgorithmSettings\Algorithm\MinerName | text | specific miner name setting (**DO NOT EDIT**)
