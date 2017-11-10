@@ -601,7 +601,14 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
             ExchangeRateAPI.UpdateAPI(textBoxWorkerName.Text.Trim());
             double BR = ExchangeRateAPI.GetUSDExchangeRate();
-            if (BR > 0) Globals.BitcoinUSDRate = BR;
+            var currencyRate = International.GetText("BenchmarkRatioRateN_A");
+            if (BR > 0) {
+                Globals.BitcoinUSDRate = BR;
+                currencyRate = ExchangeRateAPI.ConvertToActiveCurrency(BR).ToString("F2");
+            }
+            
+            toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateAPI.ActiveDisplayCurrency}");
+
             Helpers.ConsolePrint("NICEHASH", "Current Bitcoin rate: " + Globals.BitcoinUSDRate.ToString("F2", CultureInfo.InvariantCulture));
         }
 
