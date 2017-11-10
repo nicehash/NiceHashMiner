@@ -88,13 +88,18 @@ DisplayCurrency | valid 3 letter code | Converts to selected currency via http:/
 DebugConsole | true or false | When set to true, it displays debug console.
 BitcoinAddress | valid BTC address | The address that NiceHashMinerLegacy will mine to.
 WorkerName | text | To identify the computer on NiceHash web UI.
+TimeUnit | number | TimeUnit to report BTC rates. 0 for hour, 1 for day, 2 for week, 3 for month, 4 for year.
+IFTTTKey | text | IFTTT API Key.
 ServiceLocation | number | Used to select the location of the mining server.
+AutoStartMining | true or false | When set to true, mining will start after launch.
 HideMiningWindows | true or false | When set to true, sgminer, ccminer and cpuminer console windows will be hidden.
 MinimizeToTray | true or false | When set to true, NiceHashMinerLegacy will minimize to the system tray.
+MinimizeMiningWindows | true or false | When set to true, mining windows will start minimized.
 ForceCPUExtension | 0, 1, 2, 3 or 4 | Force certain CPU extension miner. 0 is automatic, 1 for AVX2, 2 for AVX, 3 for AES and  4 for SSE2.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
 SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner Legacy users to have the exact same switching pattern.
 SwitchMinSecondsAMD | number | Fixed part of minimal time (in seconds) before miner switches algorithm (additional time for AMD GPUs). Total time is SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.
+SwitchProfitabilityThreshold | number | Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1].
 MinerAPIQueryInterval | number | Amount of time between each API call to get the latest stats from miner.
 MinerRestartDelayMS | number | Amount of time to delay before trying to restart the miner.
 BenchmarkTimeLimits\CPU | numbers | List of benchmarking time (in seconds). The first one is for "Quick benchmark", second one is for "Standard benchmark" and third one is for "Precise benchmark".
@@ -105,6 +110,8 @@ DeviceDetection\DisableDetectionNVidia5X | true or false | Set it to true if you
 DeviceDetection\DisableDetectionNVidia3X | true or false | Set it to true if you would like to skip the detection of NVidia3.X GPUs.
 DeviceDetection\DisableDetectionNVidia2X | true or false | Set it to true if you would like to skip the detection of NVidia2.X GPUs.
 DeviceDetection\DisableDetectionAMD | true or false | Set it to true if you would like to skip the detection of AMD GPUs.
+DisableAMDTempControl | true or false | Set it to true to disable AMD Temperature Control.
+DisableDefaultOptimizations | true or false | Set it to true to disable all default optimization settings, making mining potentially more stable but significantly slower.
 AutoScaleBTCValues | true or false | Set it to true if you wish to see the BTC values autoscale to the appropriate scale.
 StartMiningWhenIdle | true or false | Automatically start mining when computer is idle and stop mining when computer is being used.
 MinIdleSeconds | number | When StartMiningWhenIdle is set to true, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.
@@ -113,12 +120,17 @@ LogMaxFileSize | number | The maximum size (in bytes) of the log file before rol
 ShowDriverVersionWarning | true or false | Set to true if you would like to get a warning if less than ideal driver for mining is detected.
 ShowInternetConnectionWarning | true or false | Set to true if you would like to get a warning if the internet connection is not available.
 DisableWindowsErrorReporting | true or false | Set it to true if you would like to disable windows error reporting. This will allow NiceHashMinerLegacy to restart the miner in the case of the miner crashes.
-UseNewSettingsPage | true or false | Set to true if you would like to use the new Settings form.
 NVIDIAP0State | true or false | When set to true, NiceHashMinerLegacy would change all supported NVidia GPUs to P0 state. This will increase some performance on certain algorithms.
 ethminerDefaultBlockHeight | number | A fallback number that will be used if API call fails. This is only used for benchmarking.
 EthminerDagGenerationType | 0, 1, 2, 3 | Set ethminer DAG mode generation 0 - SingleKeep, 1 - Single, 2 - Sequential, 3 - Parallel.
 ApiBindPortPoolStart | number | Set the starting value (default is 5100) for miners API ports. When a new miner is created it will use an avaliable API port starting from the ApiBindPortPoolStart and higher.
 MinimumProfit | number | If set to any value more than 0 (USD), NiceHashMinerLegacy will stop mining if the calculated profit falls below the set amount.
+UseIFTTT | true or false | Set it to true for NiceHashMinerLegacy to use the API Key you provide to notify you when profitability has gone below the profitability you have configured.
+RunScriptOnCUDA_GPU_Lost | true or false | Set it to true for NiceHashMinerLegacy to run OnGPUsLost.bat in case at least one CUDA GPU is lost.
+ShowDetailedDeviceInfo | true or false | Set it to true for detailed device information (load, temperature, fan speed) to be displayed while mining.
+ShowVirtualMemoryWarning | true or false | Set it to false for NiceHashMinerLegacy not to issue a warning if the virtual memory is set too low.
+AllowMultipleInstances | true or false | Set it to true to allow more than one instance of NiceHashMinerLegacy to run.
+HideDisabledAlgorithms | true or false | Set it to true to hide disabled algorithms from Benchmark and Settings screens.
 LastDevicesSettup | device settup list | This list is used for setting if a device is enabled or disabled.
 LastDevicesSettup\Enabled | true or false | Set to false if you would like to disable this device for benchmarking and mining by NiceHashMinerLegacy.
 LastDevicesSettup\UUID | text | Used for unique identification purposes in the config file (**DO NOT EDIT**)
@@ -185,13 +197,15 @@ My benchmarking results are not accurate
 Benchmarks on particular algorithms keep getting terminated on AMD GPUs
 > In some particular combinations of Windows version + AMD Driver version benchmarks on some algorithms keep getting terminated. If the particular algorithm that is being terminated is shown on pause on the front page of NiceHash.com (No orders - mining unavailable), then this is normal expected behaviour. However, if benchmark is also terminated for active algorithms, then you have to apply workaround solution. The solution is to copy all .cl files from the [..\bin\sgminer-5-3-0-general\kernel] folder into [c:\Users\[your_username_here]\appdata\local\temp\] folder and then re-run the benchmark for the algorithms that are terminated during benchmark.
 
+More troubleshooting advices here: https://github.com/NiceHash/NiceHashMinerLegacy/wiki/Troubleshooting
+
 # <a name="bugs"></a> How to report bugs and issues?
 
 To report bugs and issues please use the GitHub issue reporting tool: https://github.com/nicehash/NiceHashMinerLegacy/issues. Any bugs and issues reports are very much appreciated since it helps us to improve NiceHash Miner Legacy. Thank you.
 
 # <a name="references"></a> References
 
-- For CPU mining our joblo's forked cpuminer-opt has been used from here: https://github.com/nicehash/cpuminer-opt (compiled with MingW64).
+- For CPU mining, xmr-stak-cpu from https://github.com/fireice-uk/xmr-stak-cpu and xmrig forked from https://github.com/xmrig/xmrig.
 - For NVIDIA 2.1, 3.x, 5.x and 6.x cryptonight mining our tsiv's forked ccminer-cryptonight has been used from here: https://github.com/nicehash/ccminer-cryptonight
 - For NVIDIA 5.x and 6.x cards, sp's fork of ccminer has been used from here: https://github.com/sp-hash/ccminer.
 - For NVIDIA 2.1 and 3.x (older cards), tpruvot's fork of ccminer has been used from here: https://github.com/tpruvot/ccminer.
