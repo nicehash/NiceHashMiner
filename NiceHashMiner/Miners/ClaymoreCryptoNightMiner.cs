@@ -65,11 +65,9 @@ namespace NiceHashMiner.Miners {
                 username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
             string ret;
             if (isOld) {
-                ret = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -o " + url + " -u " + username +
-                      " -p x";
+                ret = $" {GetDevicesCommandString()} -mport -{APIPort} -o {url} -u {username} -p x -logfile {GetLogFileName()}";
             } else {
-                ret = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -xpool " + url + " -xwal " +
-                             username + " -xpsw x";
+                ret = $" {GetDevicesCommandString()} -mport -{APIPort} -xpool {url} -xwal {username} -xpsw x -logfile {GetLogFileName()}";
             }
             return ret;
         }

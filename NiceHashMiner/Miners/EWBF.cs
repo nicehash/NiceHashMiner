@@ -99,10 +99,10 @@ namespace NiceHashMiner.Miners
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            CleanAllOldLogs();
+            CleanOldLogs();
 
-            string server = Globals.GetLocationURL(algorithm.NiceHashID, ConfigManager.GeneralConfig.ServiceLocations[0].ServiceLocation, this.ConectionType);
-            string ret = " --log 2 --logfile benchmark_log.txt" + GetStartCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
+            string server = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+            string ret = $" --log 2 --logfile {GetLogFileName()} " + GetStartCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
             benchmarkTimeWait = Math.Max(time * 3, 90);  // EWBF takes a long time to get started
             return ret;
         }
@@ -171,7 +171,7 @@ namespace NiceHashMiner.Miners
                 // find latest log file
                 string latestLogFile = "";
                 var dirInfo = new DirectoryInfo(this.WorkingDirectory);
-                foreach (var file in dirInfo.GetFiles("*_log.txt")) {
+                foreach (var file in dirInfo.GetFiles(GetLogFileName())) {
                     latestLogFile = file.Name;
                     break;
                 }
@@ -214,21 +214,6 @@ namespace NiceHashMiner.Miners
                 }
                 BenchmarkThreadRoutineFinish();
             }
-        }
-
-        protected void CleanAllOldLogs() {
-            // clean old logs
-            try {
-                var dirInfo = new DirectoryInfo(this.WorkingDirectory);
-                var deleteContains = "_log.txt";
-                if (dirInfo != null && dirInfo.Exists) {
-                    foreach (FileInfo file in dirInfo.GetFiles()) {
-                        if (file.Name.Contains(deleteContains)) {
-                            file.Delete();
-                        }
-                    }
-                }
-            } catch { }
         }
 
         // stub benchmarks read from file

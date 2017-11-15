@@ -682,7 +682,7 @@ namespace NiceHashMiner
                 // find latest log file
                 string latestLogFile = "";
                 var dirInfo = new DirectoryInfo(this.WorkingDirectory);
-                foreach (var file in dirInfo.GetFiles("*_log.txt")) {
+                foreach (var file in dirInfo.GetFiles(GetLogFileName())) {
                     latestLogFile = file.Name;
                     break;
                 }
@@ -697,11 +697,11 @@ namespace NiceHashMiner
             }
         }
 
-        protected void CleanAllOldLogs() {
+        protected void CleanOldLogs() {
             // clean old logs
             try {
                 var dirInfo = new DirectoryInfo(this.WorkingDirectory);
-                var deleteContains = "_log.txt";
+                var deleteContains = GetLogFileName();
                 if (dirInfo != null && dirInfo.Exists) {
                     foreach (FileInfo file in dirInfo.GetFiles()) {
                         if (file.Name.Contains(deleteContains)) {
@@ -710,6 +710,11 @@ namespace NiceHashMiner
                     }
                 }
             } catch { }
+        }
+
+        protected string GetLogFileName() {
+            var ids = MiningSetup.MiningPairs.Select(x => x.Device.Index);
+            return $"{string.Join(",", ids)}_log.txt";
         }
 
         protected virtual void ProcessBenchLinesAlternate(string[] lines) { }
