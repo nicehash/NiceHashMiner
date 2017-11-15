@@ -372,7 +372,7 @@ namespace NiceHashMiner.Miners
 
                 var dev = MiningSetup.MiningPairs[0].Device;
                 var devString = deviceIDString(dev.ID, dev.DeviceType);
-                var hashrates = database.QuerySpeedsForSession(session.id, devString);
+                var hashrates = database.QuerySpeedsForSessionDev(session.id, devString);
 
                 double speed = 0;
                 int speedRead = 0;
