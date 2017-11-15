@@ -114,6 +114,7 @@
     <Compile Include="Forms\Form_DcriValues.Designer.cs">
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\EWBF.cs" />
     <Compile Include="Miners\prospector.cs" />
