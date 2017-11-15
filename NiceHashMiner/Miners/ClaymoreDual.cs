@@ -121,7 +121,7 @@ namespace NiceHashMiner.Miners {
             // local benhcmark
             if (!IsDual()) {
                 benchmarkTimeWait = time;
-                return ret + "  -benchmark 1";
+                return ret + "  -benchmark 1 -logfile " + GetLogFileName();
             } else {
                 benchmarkTimeWait = Math.Max(60, Math.Min(120, time*3));  // dual seems to stop mining after this time if redirect output is true
                 return ret;  // benchmark 1 does not output secondary speeds
