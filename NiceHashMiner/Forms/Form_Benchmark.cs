@@ -10,50 +10,28 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
+using NiceHashMiner.Miners.Grouping;
 
 namespace NiceHashMiner.Forms {
-    using NiceHashMiner.Miners.Grouping;
-    public partial class Form_Benchmark : Form, IListItemCheckColorSetter, IBenchmarkComunicator, IBenchmarkCalculation {
+    #region Benchmark Handler
 
-        private bool _inBenchmark = false;
-        private int _bechmarkCurrentIndex = 0;
-        private int _bechmarkedSuccessCount = 0;
-        private int _benchmarkAlgorithmsCount = 0;
-        private AlgorithmBenchmarkSettingsType _algorithmOption = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
-
-        private List<Miner> _benchmarkMiners;
-        private Miner _currentMiner;
-        private List<Tuple<ComputeDevice, Queue<Algorithm>>> _benchmarkDevicesAlgorithmQueue;
-
-        private bool ExitWhenFinished = false;
-        //private AlgorithmType _singleBenchmarkType = AlgorithmType.NONE;
-
-        private Timer _benchmarkingTimer;
-        private int dotCount = 0;
-
-        public bool StartMining { get; private set; }
-
-        private struct DeviceAlgo {
-            public string Device { get; set; }
-            public string Algorithm { get; set; }
-        }
-        private List<DeviceAlgo> _benchmarkFailedAlgoPerDev;
-
-        private enum BenchmarkSettingsStatus : int {
-            NONE = 0,
-            TODO,
-            DISABLED_NONE,
-            DISABLED_TODO
-        }
-        private Dictionary<string, BenchmarkSettingsStatus> _benchmarkDevicesAlgorithmStatus;
-        private ComputeDevice _currentDevice;
+    public class BenchmarkHandler : IBenchmarkComunicator
+    {
+        private int _benchmarkCurrentIndex = -1;
+        private Queue<Algorithm> _benchmarkAlgorithmQueue;
+        private int _benchmarkAlgorithmsCount;
         private Algorithm _currentAlgorithm;
+        private ComputeDevice _currentDevice;
+        private Miner _currentMiner;
+        private int _dotCount;
+        private BenchmarkPerformanceType performanceType;
 
-        private string CurrentAlgoName;
 
-        // CPU benchmarking helpers
-        private class CPUBenchmarkStatus {
-            private class benchmark {
+        #region Benchmark Helpers
+        private class CPUBenchmarkStatus
+        {
+            private class benchmark
+            {
                 public benchmark(int lt, double bench) {
                     LessTreads = lt;
                     Benchmark = bench;
@@ -77,7 +55,7 @@ namespace NiceHashMiner.Forms {
             }
 
             public void FindFastest() {
-                _benchmarks.Sort((a, b) => - a.Benchmark.CompareTo(b.Benchmark));
+                _benchmarks.Sort((a, b) => -a.Benchmark.CompareTo(b.Benchmark));
             }
             public double GetBestSpeed() {
                 return _benchmarks[0].Benchmark;
@@ -94,7 +72,8 @@ namespace NiceHashMiner.Forms {
         }
         private CPUBenchmarkStatus __CPUBenchmarkStatus = null;
 
-        private class ClaymoreZcashStatus {
+        private class ClaymoreZcashStatus
+        {
             private const int MAX_BENCH = 2;
             private readonly string[] ASM_MODES = new string[] { " -asm 1", " -asm 0" };
 
@@ -136,7 +115,7 @@ namespace NiceHashMiner.Forms {
                         maxValue = speeds[i];
                     }
                 }
-                
+
                 return 0;
             }
 
@@ -155,6 +134,233 @@ namespace NiceHashMiner.Forms {
         private List<AlgorithmType> CPUAlgos = new List<AlgorithmType>() {
             AlgorithmType.CryptoNight
         };
+        #endregion
+
+        private void NextBenchmark() {
+            ++_benchmarkCurrentIndex;
+            if (_benchmarkCurrentIndex > 0) {
+                StepUpBenchmarkStepProgress();
+            }
+            if (_benchmarkCurrentIndex >= _benchmarkAlgorithmsCount) {
+                EndBenchmark();
+                return;
+            }
+
+            if (_benchmarkAlgorithmQueue.Count > 0)
+                _currentAlgorithm = _benchmarkAlgorithmQueue.Dequeue();
+
+            if (_currentDevice != null && _currentAlgorithm != null) {
+                _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
+
+                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight 
+                    && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters) 
+                    && _currentAlgorithm.ExtraLaunchParameters.Contains("enable_ht=true") == false) {
+                    __CPUBenchmarkStatus = new CPUBenchmarkStatus(Globals.ThreadsPerCPU);
+                    _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
+                } else {
+                    __CPUBenchmarkStatus = null;
+                }
+
+                if (_currentAlgorithm.MinerBaseType == MinerBaseType.Claymore && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash 
+                    && _currentAlgorithm.ExtraLaunchParameters != null && !_currentAlgorithm.ExtraLaunchParameters.Contains("-asm")) {
+                    __ClaymoreZcashStatus = new ClaymoreZcashStatus(_currentAlgorithm.ExtraLaunchParameters);
+                    _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetTestExtraParams();
+                } else {
+                    __ClaymoreZcashStatus = null;
+                }
+
+                if (_currentAlgorithm is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled) {
+                    dualAlgo.StartTuning();
+                }
+            }
+
+            if (_currentMiner != null && _currentAlgorithm != null) {
+                _currentMiner.InitBenchmarkSetup(new MiningPair(_currentDevice, _currentAlgorithm));
+
+                var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
+                    .GetBenchamrktime(performanceType, _currentDevice.DeviceGroupType);
+                //currentConfig.TimeLimit = time;
+                if (__CPUBenchmarkStatus != null) {
+                    __CPUBenchmarkStatus.Time = time;
+                }
+                if (__ClaymoreZcashStatus != null) {
+                    __ClaymoreZcashStatus.Time = time;
+                }
+
+                // dagger about 4 minutes
+                var showWaitTime = _currentAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto ? 4 * 60 : time;
+
+                _dotCount = 0;
+                _benchmarkingTimer.Start();
+
+                _currentMiner.BenchmarkStart(time, this);
+                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm,
+                    GetDotsWaitString());
+            } else {
+                NextBenchmark();
+            }
+
+        }
+
+        void EndBenchmark() {
+            _benchmarkingTimer.Stop();
+            _inBenchmark = false;
+            Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
+
+            //CopyBenchmarks();
+
+            BenchmarkStoppedGUISettings();
+            // check if all ok
+            if (_benchmarkFailedAlgoPerDev.Count == 0 && StartMining == false) {
+                MessageBox.Show(
+                    International.GetText("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
+                    International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
+                    MessageBoxButtons.OK);
+            } else if (StartMining == false) {
+                var result = MessageBox.Show(
+                    International.GetText("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
+                    International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
+                    MessageBoxButtons.RetryCancel);
+
+                if (result == System.Windows.Forms.DialogResult.Retry) {
+                    StartButonClick();
+                    return;
+                } else /*Cancel*/ {
+                    // get unbenchmarked from criteria and disable
+                    CalcBenchmarkDevicesAlgorithmQueue();
+                    foreach (var deviceAlgoQueue in _benchmarkDevicesAlgorithmQueue) {
+                        foreach (var algorithm in deviceAlgoQueue.Item2) {
+                            algorithm.Enabled = false;
+                        }
+                    }
+                }
+            }
+            if (ExitWhenFinished || StartMining) {
+                this.Close();
+            }
+        }
+
+        public void OnBenchmarkComplete(bool success, string status) {
+            if (!_inBenchmark) return;
+            this.Invoke((MethodInvoker)delegate {
+                _bechmarkedSuccessCount += success ? 1 : 0;
+                bool rebenchSame = false;
+                if (success && __CPUBenchmarkStatus != null && CPUAlgos.Contains(_currentAlgorithm.NiceHashID) && _currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU) {
+                    __CPUBenchmarkStatus.SetNextSpeed(_currentAlgorithm.BenchmarkSpeed);
+                    rebenchSame = __CPUBenchmarkStatus.HasTest();
+                    _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
+                    if (rebenchSame == false) {
+                        __CPUBenchmarkStatus.FindFastest();
+                        _currentAlgorithm.BenchmarkSpeed = __CPUBenchmarkStatus.GetBestSpeed();
+                        _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.GetLessThreads();
+                    }
+                }
+
+                if (__ClaymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.Claymore && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash) {
+                    if (__ClaymoreZcashStatus.HasTest()) {
+                        _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
+                        rebenchSame = true;
+                        //System.Threading.Thread.Sleep(1000*60*5);
+                        __ClaymoreZcashStatus.SetSpeed(_currentAlgorithm.BenchmarkSpeed);
+                        __ClaymoreZcashStatus.SetNext();
+                        _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetTestExtraParams();
+                        Helpers.ConsolePrint("ClaymoreAMD_Equihash", _currentAlgorithm.ExtraLaunchParameters);
+                        _currentMiner.InitBenchmarkSetup(new MiningPair(_currentDevice, _currentAlgorithm));
+                    }
+
+                    if (__ClaymoreZcashStatus.HasTest() == false) {
+                        rebenchSame = false;
+                        // set fastest mode
+                        _currentAlgorithm.BenchmarkSpeed = __ClaymoreZcashStatus.GetFastestTime();
+                        _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetFastestExtraParams();
+                    }
+                }
+
+                var dualAlgo = _currentAlgorithm as DualAlgorithm;
+                if (dualAlgo != null && dualAlgo.TuningEnabled) {
+                    if (dualAlgo.IncrementToNextEmptyIntensity()) {
+                        rebenchSame = true;
+                    }
+                }
+
+                if (!rebenchSame) {
+                    _benchmarkingTimer.Stop();
+                }
+
+                if (!success && !rebenchSame) {
+                    // add new failed list
+                    _benchmarkFailedAlgoPerDev.Add(
+                        new DeviceAlgo() {
+                            Device = _currentDevice.Name,
+                            Algorithm = _currentAlgorithm.AlgorithmName
+                        });
+                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, status);
+                } else if (!rebenchSame) {
+                    // set status to empty string it will return speed
+                    _currentAlgorithm.ClearBenchmarkPending();
+                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, "");
+                }
+                if (rebenchSame) {
+                    if (__CPUBenchmarkStatus != null) {
+                        _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);
+                    } else if (__ClaymoreZcashStatus != null) {
+                        _currentMiner.BenchmarkStart(__ClaymoreZcashStatus.Time, this);
+                    } else if (dualAlgo != null && dualAlgo.TuningEnabled) {
+                        var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
+                            .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
+                        _currentMiner.BenchmarkStart(time, this);
+                    }
+                } else {
+                    NextBenchmark();
+                }
+            });
+        }
+        private string GetDotsWaitString() {
+            ++_dotCount;
+            if (_dotCount > 3) _dotCount = 1;
+            return new String('.', _dotCount);
+        }
+    }
+
+    #endregion
+
+    public partial class Form_Benchmark : Form, IListItemCheckColorSetter, IBenchmarkComunicator, IBenchmarkCalculation {
+
+        private bool _inBenchmark = false;
+        private int _bechmarkCurrentIndex = 0;
+        private int _bechmarkedSuccessCount = 0;
+        private int _benchmarkAlgorithmsCount = 0;
+        private AlgorithmBenchmarkSettingsType _algorithmOption = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
+
+        private List<Miner> _benchmarkMiners;
+        private Miner _currentMiner;
+        private List<Tuple<ComputeDevice, Queue<Algorithm>>> _benchmarkDevicesAlgorithmQueue;
+
+        private bool ExitWhenFinished = false;
+        //private AlgorithmType _singleBenchmarkType = AlgorithmType.NONE;
+
+        private Timer _benchmarkingTimer;
+        private int dotCount = 0;
+
+        public bool StartMining { get; private set; }
+
+        private struct DeviceAlgo {
+            public string Device { get; set; }
+            public string Algorithm { get; set; }
+        }
+        private List<DeviceAlgo> _benchmarkFailedAlgoPerDev;
+
+        private enum BenchmarkSettingsStatus : int {
+            NONE = 0,
+            TODO,
+            DISABLED_NONE,
+            DISABLED_TODO
+        }
+        private Dictionary<string, BenchmarkSettingsStatus> _benchmarkDevicesAlgorithmStatus;
+        private ComputeDevice _currentDevice;
+        private Algorithm _currentAlgorithm;
+
+        private string CurrentAlgoName;
 
         private static Color DISABLED_COLOR = Color.DarkGray;
         private static Color BENCHMARKED_COLOR = Color.LightGreen;
@@ -277,12 +483,6 @@ namespace NiceHashMiner.Forms {
             if (_inBenchmark) {
                 algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, getDotsWaitString());
             }
-        }
-
-        private string getDotsWaitString() {
-            ++dotCount;
-            if (dotCount > 3) dotCount = 1;
-            return new String('.', dotCount);
         }
 
         private void InitLocale() {
@@ -472,117 +672,6 @@ namespace NiceHashMiner.Forms {
             NextBenchmark();
         }
 
-        void NextBenchmark() {
-            if (_bechmarkCurrentIndex > -1) {
-                StepUpBenchmarkStepProgress();
-            }
-            ++_bechmarkCurrentIndex;
-            if (_bechmarkCurrentIndex >= _benchmarkAlgorithmsCount) {
-                EndBenchmark();
-                return;
-            }
-
-            Tuple<ComputeDevice, Queue<Algorithm>> currentDeviceAlgosTuple;
-            Queue<Algorithm> algorithmBenchmarkQueue;
-            while (_benchmarkDevicesAlgorithmQueue.Count > 0) {
-                currentDeviceAlgosTuple = _benchmarkDevicesAlgorithmQueue[0];
-                _currentDevice = currentDeviceAlgosTuple.Item1;
-                algorithmBenchmarkQueue = currentDeviceAlgosTuple.Item2;
-                if(algorithmBenchmarkQueue.Count != 0) {
-                    _currentAlgorithm = algorithmBenchmarkQueue.Dequeue();
-                    break;
-                } else {
-                    _benchmarkDevicesAlgorithmQueue.RemoveAt(0);
-                }
-            }
-
-            if (_currentDevice != null && _currentAlgorithm != null) {
-                _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
-                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters) && _currentAlgorithm.ExtraLaunchParameters.Contains("enable_ht=true") == false) {
-                    __CPUBenchmarkStatus = new CPUBenchmarkStatus(Globals.ThreadsPerCPU);
-                    _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;
-                } else {
-                    __CPUBenchmarkStatus = null;
-                }
-                if (_currentAlgorithm.MinerBaseType == MinerBaseType.Claymore && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash && _currentAlgorithm.ExtraLaunchParameters != null && !_currentAlgorithm.ExtraLaunchParameters.Contains("-asm")) {
-                    __ClaymoreZcashStatus = new ClaymoreZcashStatus(_currentAlgorithm.ExtraLaunchParameters);
-                    _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetTestExtraParams();
-                } else {
-                    __ClaymoreZcashStatus = null;
-                }
-                if (_currentAlgorithm is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled) {
-                    dualAlgo.StartTuning();
-                }
-            }
-
-            if (_currentMiner != null && _currentAlgorithm != null) {
-                _benchmarkMiners.Add(_currentMiner);
-                CurrentAlgoName = AlgorithmNiceHashNames.GetName(_currentAlgorithm.NiceHashID);
-                _currentMiner.InitBenchmarkSetup(new MiningPair(_currentDevice, _currentAlgorithm));
-
-                var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
-                    .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
-                //currentConfig.TimeLimit = time;
-                if (__CPUBenchmarkStatus != null) {
-                    __CPUBenchmarkStatus.Time = time;
-                }
-                if (__ClaymoreZcashStatus != null) {
-                    __ClaymoreZcashStatus.Time = time;
-                }
-                
-                // dagger about 4 minutes
-                var showWaitTime = _currentAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto ? 4 * 60 : time;
-
-                dotCount = 0;
-                _benchmarkingTimer.Start();
-
-                _currentMiner.BenchmarkStart(time, this);
-                algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm,
-                    getDotsWaitString());
-            } else {
-                NextBenchmark();
-            }
-
-        }
-
-        void EndBenchmark() {
-            _benchmarkingTimer.Stop();
-            _inBenchmark = false;
-            Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
-
-            //CopyBenchmarks();
-
-            BenchmarkStoppedGUISettings();
-            // check if all ok
-            if(_benchmarkFailedAlgoPerDev.Count == 0 && StartMining == false) {
-                MessageBox.Show(
-                    International.GetText("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
-                    International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
-                    MessageBoxButtons.OK);
-            } else if (StartMining == false) {
-                var result = MessageBox.Show(
-                    International.GetText("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
-                    International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
-                    MessageBoxButtons.RetryCancel);
-
-                if (result == System.Windows.Forms.DialogResult.Retry) {
-                    StartButonClick();
-                    return;
-                } else /*Cancel*/ {
-                    // get unbenchmarked from criteria and disable
-                    CalcBenchmarkDevicesAlgorithmQueue();
-                    foreach (var deviceAlgoQueue in _benchmarkDevicesAlgorithmQueue) {
-                        foreach (var algorithm in deviceAlgoQueue.Item2) {
-                            algorithm.Enabled = false;
-                        }
-                    }
-                }
-            }
-            if (ExitWhenFinished || StartMining) {
-                this.Close();
-            }
-        }
-
 
         public void SetCurrentStatus(string status) {
             this.Invoke((MethodInvoker)delegate {
@@ -590,81 +679,7 @@ namespace NiceHashMiner.Forms {
             });
         }
 
-        public void OnBenchmarkComplete(bool success, string status) {
-            if (!_inBenchmark) return;
-            this.Invoke((MethodInvoker)delegate {
-                _bechmarkedSuccessCount += success ? 1 : 0;
-                bool rebenchSame = false;
-                if(success && __CPUBenchmarkStatus != null && CPUAlgos.Contains(_currentAlgorithm.NiceHashID) && _currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU) {
-                    __CPUBenchmarkStatus.SetNextSpeed(_currentAlgorithm.BenchmarkSpeed);
-                    rebenchSame = __CPUBenchmarkStatus.HasTest();
-                    _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads; 
-                    if (rebenchSame == false) {
-                        __CPUBenchmarkStatus.FindFastest();
-                        _currentAlgorithm.BenchmarkSpeed = __CPUBenchmarkStatus.GetBestSpeed();
-                        _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.GetLessThreads();
-                    }
-                }
 
-                if (__ClaymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.Claymore && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash) {
-                    if (__ClaymoreZcashStatus.HasTest()) {
-                        _currentMiner = MinerFactory.CreateMiner(_currentDevice, _currentAlgorithm);
-                        rebenchSame = true;
-                        //System.Threading.Thread.Sleep(1000*60*5);
-                        __ClaymoreZcashStatus.SetSpeed(_currentAlgorithm.BenchmarkSpeed);
-                        __ClaymoreZcashStatus.SetNext();
-                        _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetTestExtraParams();
-                        Helpers.ConsolePrint("ClaymoreAMD_Equihash", _currentAlgorithm.ExtraLaunchParameters);
-                        _currentMiner.InitBenchmarkSetup(new MiningPair(_currentDevice, _currentAlgorithm));
-                    }
-
-                    if (__ClaymoreZcashStatus.HasTest() == false) {
-                        rebenchSame = false;
-                        // set fastest mode
-                        _currentAlgorithm.BenchmarkSpeed = __ClaymoreZcashStatus.GetFastestTime();
-                        _currentAlgorithm.ExtraLaunchParameters = __ClaymoreZcashStatus.GetFastestExtraParams();
-                    }
-                }
-
-                var dualAlgo = _currentAlgorithm as DualAlgorithm;
-                if (dualAlgo != null && dualAlgo.TuningEnabled) {
-                    if (dualAlgo.IncrementToNextEmptyIntensity()) {
-                        rebenchSame = true;
-                    }
-                }
-
-                if(!rebenchSame) {
-                    _benchmarkingTimer.Stop();
-                }
-
-                if (!success && !rebenchSame) {
-                    // add new failed list
-                    _benchmarkFailedAlgoPerDev.Add(
-                        new DeviceAlgo() {
-                            Device = _currentDevice.Name,
-                            Algorithm = _currentAlgorithm.AlgorithmName
-                        } );
-                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, status);
-                } else if (!rebenchSame) {
-                    // set status to empty string it will return speed
-                    _currentAlgorithm.ClearBenchmarkPending();
-                    algorithmsListView1.SetSpeedStatus(_currentDevice, _currentAlgorithm, "");
-                }
-                if (rebenchSame) {
-                    if (__CPUBenchmarkStatus != null) {
-                        _currentMiner.BenchmarkStart(__CPUBenchmarkStatus.Time, this);
-                    } else if (__ClaymoreZcashStatus != null) {
-                        _currentMiner.BenchmarkStart(__ClaymoreZcashStatus.Time, this);
-                    } else if (dualAlgo != null && dualAlgo.TuningEnabled) {
-                        var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
-                            .GetBenchamrktime(benchmarkOptions1.PerformanceType, _currentDevice.DeviceGroupType);
-                        _currentMiner.BenchmarkStart(time, this);
-                    }
-                } else {
-                    NextBenchmark();
-                }
-            });
-        }
 
         #region Benchmark progress GUI stuff
 
