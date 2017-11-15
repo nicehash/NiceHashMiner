@@ -51,7 +51,7 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             var server = Globals.GetLocationURL(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], 
+                ConfigManager.GeneralConfig.ServiceLocations[0].ServiceLocation, 
                 ConectionType);
             _benchmarkTimeWait = time;
             return GetStartCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
