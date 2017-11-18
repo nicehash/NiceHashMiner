@@ -395,6 +395,7 @@ namespace NiceHashMiner
 
             if (ConfigManager.GeneralConfig.AutoStartMining) {
                 Form_AutoStartMining form_Auto = new Form_AutoStartMining();
+                SetChildFormCenter(form_Auto);
                 form_Auto.ShowDialog(this);
             }
         }
@@ -856,8 +857,7 @@ namespace NiceHashMiner
                 if (showWarnings) {
                     DialogResult result = MsgBox.Show(International.GetText("Form_Main_DemoModeMsg"),
                                                       International.GetText("Form_Main_DemoModeTitle"),
-                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
-                                                      30, DialogResult.Yes);
+                                                      MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                     if (result == System.Windows.Forms.DialogResult.Yes) {
                         DemoMode = true;
@@ -876,7 +876,7 @@ namespace NiceHashMiner
                     Utils.MsgBox.Show(International.GetText("Form_Main_msgbox_NullNiceHashDataMsg"),
                                 International.GetText("Error_with_Exclamation"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Error,
-                                30, DialogResult.Yes);
+                                30, DialogResult.OK);
                 }
                 return StartMiningReturnType.IgnoreMsgNullNiceHashData;
             }
