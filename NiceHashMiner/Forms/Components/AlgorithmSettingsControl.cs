@@ -151,7 +151,7 @@ namespace NiceHashMiner.Forms.Components {
             int val;
             if (Int32.TryParse(txtbox.Text, out val)) {
                 if (Globals.ThreadsPerCPU - val < 1) {
-                    MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMiningLessThreadMsg"),
+                    Utils.MsgBox.Show(International.GetText("Form_Main_msgbox_CPUMiningLessThreadMsg"),
                                     International.GetText("Warning_with_Exclamation"),
                                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 } else {
@@ -159,7 +159,7 @@ namespace NiceHashMiner.Forms.Components {
                 }
                 txtbox.Text = _currentlySelectedAlgorithm.LessThreads.ToString();
             } else {
-                MessageBox.Show(International.GetText("Form_Settings_LessThreadWarningMsg"),
+                Utils.MsgBox.Show(International.GetText("Form_Settings_LessThreadWarningMsg"),
                                 International.GetText("Form_Settings_LessThreadWarningTitle"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtbox.Text = _currentlySelectedAlgorithm.LessThreads.ToString();

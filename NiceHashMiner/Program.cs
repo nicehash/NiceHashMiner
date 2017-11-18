@@ -90,7 +90,7 @@ namespace NiceHashMiner
                     }
                 }
                 else {
-                    MessageBox.Show(International.GetText("Program_WMI_Error_Text"),
+                    Utils.MsgBox.Show(International.GetText("Program_WMI_Error_Text"),
                                                             International.GetText("Program_WMI_Error_Title"),
                                                             MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }

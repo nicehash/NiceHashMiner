@@ -1,11 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLegacy", "NiceHashMiner\NiceHashMinerLegacy.csproj", "{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}"
 	ProjectSection(ProjectDependencies) = postProject
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A} = {0E9D874E-5354-465E-9EC3-F7A35C268A8A}
 		{23C94F99-F466-4CBE-90B7-71B450DD7BF1} = {23C94F99-F466-4CBE-90B7-71B450DD7BF1}
 		{CC9B70AB-897D-4AE9-8785-33CEB199E2E6} = {CC9B70AB-897D-4AE9-8785-33CEB199E2E6}
 	EndProjectSection
@@ -15,8 +14,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setcpuaff", "setcpuaff\setcpuaff.vcxproj", "{CC9B70AB-897D-4AE9-8785-33CEB199E2E6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nvidiasetp0state", "nvidiasetp0state\nvidiasetp0state.csproj", "{9E106E41-0813-489D-A1B5-85ED434F2C3E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBoxManager", "MessageBoxManager\MessageBoxManager.csproj", "{0E9D874E-5354-465E-9EC3-F7A35C268A8A}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CudaDeviceDetection", "CudaDeviceDetection\CudaDeviceDetection.vcxproj", "{36DC07F9-A4A6-4877-A146-1B960083CF6F}"
 EndProject
@@ -144,28 +141,6 @@ Global
 		{9E106E41-0813-489D-A1B5-85ED434F2C3E}.Release|Win32.ActiveCfg = Release|Any CPU
 		{9E106E41-0813-489D-A1B5-85ED434F2C3E}.Release|Win32.Build.0 = Release|Any CPU
 		{9E106E41-0813-489D-A1B5-85ED434F2C3E}.Release|x64.ActiveCfg = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug_Ubuntu|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug_Ubuntu|Win32.ActiveCfg = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug_Ubuntu|x64.ActiveCfg = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug|Win32.Build.0 = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release_Ubuntu|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release_Ubuntu|Win32.ActiveCfg = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release_Ubuntu|x64.ActiveCfg = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release|Win32.ActiveCfg = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release|Win32.Build.0 = Release|Any CPU
-		{0E9D874E-5354-465E-9EC3-F7A35C268A8A}.Release|x64.ActiveCfg = Release|Any CPU
 		{36DC07F9-A4A6-4877-A146-1B960083CF6F}.Debug_Ubuntu|Any CPU.ActiveCfg = Release|x64
 		{36DC07F9-A4A6-4877-A146-1B960083CF6F}.Debug_Ubuntu|Mixed Platforms.ActiveCfg = Debug|x64
 		{36DC07F9-A4A6-4877-A146-1B960083CF6F}.Debug_Ubuntu|Win32.ActiveCfg = Release|x64
@@ -278,5 +253,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2E670A0C-20B5-4B21-B7EE-577BEC5864A1}
 	EndGlobalSection
 EndGlobal

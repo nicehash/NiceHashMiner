@@ -367,7 +367,7 @@ namespace NiceHashMiner.Forms {
                     }
                 }
                 if (noneSelected) {
-                    MessageBox.Show(International.GetText("FormBenchmark_No_Devices_Selected_Msg"),
+                    Utils.MsgBox.Show(International.GetText("FormBenchmark_No_Devices_Selected_Msg"),
                         International.GetText("FormBenchmark_No_Devices_Selected_Title"),
                         MessageBoxButtons.OK);
                     return false;
@@ -383,7 +383,7 @@ namespace NiceHashMiner.Forms {
                     }
                 }
                 if (nothingToBench) {
-                    MessageBox.Show(International.GetText("FormBenchmark_Nothing_to_Benchmark_Msg"),
+                    Utils.MsgBox.Show(International.GetText("FormBenchmark_Nothing_to_Benchmark_Msg"),
                         International.GetText("FormBenchmark_Nothing_to_Benchmark_Title"),
                         MessageBoxButtons.OK);
                     return false;
@@ -552,12 +552,12 @@ namespace NiceHashMiner.Forms {
             BenchmarkStoppedGUISettings();
             // check if all ok
             if(_benchmarkFailedAlgoPerDev.Count == 0 && StartMining == false) {
-                MessageBox.Show(
+                Utils.MsgBox.Show(
                     International.GetText("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
                     International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
                     MessageBoxButtons.OK);
             } else if (StartMining == false) {
-                var result = MessageBox.Show(
+                var result = Utils.MsgBox.Show(
                     International.GetText("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
                     International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
                     MessageBoxButtons.RetryCancel);

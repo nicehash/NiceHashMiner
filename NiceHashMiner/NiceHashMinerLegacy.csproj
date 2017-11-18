@@ -103,9 +103,23 @@
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CPUComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
+    <Compile Include="Enums\StartMiningReturnType.cs" />
     <Compile Include="Enums\TimeUnitType.cs" />
+    <Compile Include="Forms\Form_AutoStartMining.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_AutoStartMining.Designer.cs">
+      <DependentUpon>Form_AutoStartMining.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Form_Msg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_Msg.Designer.cs">
+      <DependentUpon>Form_Msg.cs</DependentUpon>
+    </Compile>
     <Compile Include="IFTTT.cs" />
     <Compile Include="ExchangeRateAPI.cs" />
+    <Compile Include="Interfaces\IMiningControl.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\EWBF.cs" />
     <Compile Include="Miners\prospector.cs" />
@@ -291,6 +305,7 @@
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="PInvoke\PInvokeHelpers.cs" />
+    <Compile Include="Utils\MsgBox.cs" />
     <Compile Include="Utils\NiceHashSMA.cs" />
     <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
@@ -327,6 +342,9 @@
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_AutoStartMining.resx">
+      <DependentUpon>Form_AutoStartMining.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Benchmark.resx">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </EmbeddedResource>
@@ -335,6 +353,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_3rdParty_TOS.resx">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_Msg.resx">
+      <DependentUpon>Form_Msg.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
@@ -436,10 +457,6 @@
     <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Extension\MyDownloader.Extension.csproj">
       <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
       <Name>MyDownloader.Extension</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\MessageBoxManager\MessageBoxManager.csproj">
-      <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
-      <Name>MessageBoxManager</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

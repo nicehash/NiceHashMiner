@@ -191,7 +191,7 @@ namespace NiceHashMiner.Forms.Components {
                     var copyBenchCDev = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(uuid);
                     CDevice.BenchmarkCopyUUID = uuid;
 
-                    var result = MessageBox.Show(
+                    var result = Utils.MsgBox.Show(
                         String.Format(
                         International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg"), copyBenchCDev.GetFullName(), CDevice.GetFullName()),
                                 International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title"),

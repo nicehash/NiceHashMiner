@@ -687,7 +687,7 @@ namespace NiceHashMiner.Forms
 
         private void buttonSelectedProfit_Click(object sender, EventArgs e) {
             if (_selectedComputeDevice == null) {
-                MessageBox.Show(International.GetText("FormSettings_ButtonProfitSingle"),
+                Utils.MsgBox.Show(International.GetText("FormSettings_ButtonProfitSingle"),
                                 International.GetText("Warning_with_Exclamation"),
                                 MessageBoxButtons.OK);
                 return;
@@ -732,7 +732,7 @@ namespace NiceHashMiner.Forms
 
         #region Form Buttons
         private void buttonDefaults_Click(object sender, EventArgs e) {
-            DialogResult result = MessageBox.Show(International.GetText("Form_Settings_buttonDefaultsMsg"),
+            DialogResult result = Utils.MsgBox.Show(International.GetText("Form_Settings_buttonDefaultsMsg"),
                                                   International.GetText("Form_Settings_buttonDefaultsTitle"),
                                                   MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -748,7 +748,7 @@ namespace NiceHashMiner.Forms
         }
 
         private void buttonSaveClose_Click(object sender, EventArgs e) {
-            MessageBox.Show(International.GetText("Form_Settings_buttonSaveMsg"),
+            Utils.MsgBox.Show(International.GetText("Form_Settings_buttonSaveMsg"),
                             International.GetText("Form_Settings_buttonSaveTitle"),
                             MessageBoxButtons.OK, MessageBoxIcon.Information);
             IsChange = true;
@@ -769,7 +769,7 @@ namespace NiceHashMiner.Forms
 
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e) {
             if (IsChange && !IsChangeSaved) {
-                DialogResult result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
+                DialogResult result = Utils.MsgBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
                                                       International.GetText("Form_Settings_buttonCloseNoSaveTitle"),
                                                       MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
