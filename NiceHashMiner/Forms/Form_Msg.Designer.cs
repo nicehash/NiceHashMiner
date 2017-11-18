@@ -57,7 +57,7 @@
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panelBut);
             this.splitContainer1.Size = new System.Drawing.Size(350, 84);
-            this.splitContainer1.SplitterDistance = 39;
+            this.splitContainer1.SplitterDistance = 42;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 4;
             // 
@@ -83,7 +83,7 @@
             this.panelBut.Location = new System.Drawing.Point(0, 0);
             this.panelBut.Margin = new System.Windows.Forms.Padding(0);
             this.panelBut.Name = "panelBut";
-            this.panelBut.Size = new System.Drawing.Size(350, 44);
+            this.panelBut.Size = new System.Drawing.Size(350, 41);
             this.panelBut.TabIndex = 4;
             this.panelBut.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.panelBut_ControlAdded);
             // 
@@ -102,6 +102,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form_Msg";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Form_Msg";
             this.Shown += new System.EventHandler(this.Form_Msg_Shown);
             this.splitContainer1.Panel1.ResumeLayout(false);

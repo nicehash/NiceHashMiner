@@ -61,7 +61,7 @@
             this.Name = "Form_AutoStartMining";
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Form_AutoStartMining";
+            this.Text = "AutoStartMining";
             this.Shown += new System.EventHandler(this.Form_AutoStartMining_Shown);
             this.ResumeLayout(false);
 
