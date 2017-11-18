@@ -617,7 +617,7 @@ namespace NiceHashMiner
         /// <param name="commandLine"></param>
         /// <param name="benchmarkTimeWait"></param>
         protected void BenchmarkThreadRoutineAlternate(object commandLine, int benchmarkTimeWait) {
-            CleanAllOldLogs();
+            CleanOldLogs();
 
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 

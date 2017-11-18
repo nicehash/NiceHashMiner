@@ -117,15 +117,16 @@ namespace NiceHashMiner.Miners {
             // network stub
             string url = Globals.GetLocationURL(algorithm.NiceHashID, ConfigManager.GeneralConfig.ServiceLocations[0].ServiceLocation, this.ConectionType);
             // demo for benchmark
-            string ret = GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
+            string ret = GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim()) 
+                + " -logfile " + GetLogFileName();
             // local benhcmark
             if (!IsDual()) {
                 benchmarkTimeWait = time;
-                return ret + "  -benchmark 1 -logfile " + GetLogFileName();
+                ret += "  -benchmark 1 ";
             } else {
                 benchmarkTimeWait = Math.Max(60, Math.Min(120, time*3));  // dual seems to stop mining after this time if redirect output is true
-                return ret;  // benchmark 1 does not output secondary speeds
             }
+            return ret;
         }
 
     }

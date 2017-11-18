@@ -455,11 +455,15 @@ namespace NiceHashMiner.Forms {
         }
 
         public void AddToStatusCheck(ComputeDevice device, Algorithm algorithm) {
-            _statusCheckAlgos[device] = algorithm;
+            this.Invoke((MethodInvoker)delegate {
+                _statusCheckAlgos[device] = algorithm;
+            });
         }
 
         public void RemoveFromStatusCheck(ComputeDevice device, Algorithm algorithm) {
-            _statusCheckAlgos.Remove(device);
+            this.Invoke((MethodInvoker)delegate {
+                _statusCheckAlgos.Remove(device);
+            });
         }
 
         private string GetDotsWaitString() {
@@ -625,6 +629,7 @@ namespace NiceHashMiner.Forms {
             progressBarBenchmarkSteps.Maximum = _benchmarkAlgorithmsCount;
             progressBarBenchmarkSteps.Value = 0;
             SetLabelBenchmarkSteps(0, _benchmarkAlgorithmsCount);
+            _bechmarkCurrentIndex = -1;
         }
 
         private bool ShoulBenchmark(Algorithm algorithm) {
