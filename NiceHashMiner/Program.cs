@@ -59,10 +59,10 @@ namespace NiceHashMiner
                 }
 
                 if (ConfigManager.GeneralConfig.LogToFile) {
-                    Logger.ConfigureWithFile();
+                    Logger.ConfigureLog();
                 }
-
-
+    
+                
                 // init active display currency after config load
                 ExchangeRateAPI.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
@@ -89,8 +89,6 @@ namespace NiceHashMiner
                 if (Helpers.IsWMIEnabled()) {
                     if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CURRENT_TOS_VER) {
                         Application.Run(new Form_Main());
-                        Console.WriteLine("Press to exit");
-                        Console.ReadLine();
                     }
                 }
                 else {

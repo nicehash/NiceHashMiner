@@ -18,7 +18,7 @@ namespace NiceHashMiner
 
         public const string _logPath = @"logs\";
 
-        public static void ConfigureWithFile()
+        public static void ConfigureLog()
         {
             try {
                 if (!Directory.Exists("logs")) {
@@ -94,12 +94,12 @@ namespace NiceHashMiner
             appender.AddMapping(new ColoredConsoleAppender.LevelColors
             {
                 Level = Level.Debug,
-                ForeColor = ColoredConsoleAppender.Colors.Green
+                ForeColor = ColoredConsoleAppender.Colors.White
             });
             appender.AddMapping(new ColoredConsoleAppender.LevelColors
             {
                 Level = Level.Info,
-                ForeColor = ColoredConsoleAppender.Colors.White
+                ForeColor = ColoredConsoleAppender.Colors.Green
             });
             appender.AddMapping(new ColoredConsoleAppender.LevelColors
             {
