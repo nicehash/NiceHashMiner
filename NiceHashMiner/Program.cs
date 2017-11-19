@@ -15,6 +15,7 @@ namespace NiceHashMiner
 {
     static class Program
     {
+        public static readonly log4net.ILog log = log4net.LogManager.GetLogger("NICEHASH");
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -53,13 +54,14 @@ namespace NiceHashMiner
             }
 
             if (startProgram) {
+                if (ConfigManager.GeneralConfig.DebugConsole) {
+                    Helpers.AllocConsole();
+                }
+
                 if (ConfigManager.GeneralConfig.LogToFile) {
                     Logger.ConfigureWithFile();
                 }
 
-                if (ConfigManager.GeneralConfig.DebugConsole) {
-                    Helpers.AllocConsole();
-                }
 
                 // init active display currency after config load
                 ExchangeRateAPI.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
@@ -67,10 +69,10 @@ namespace NiceHashMiner
                 // #2 then parse args
                 var commandLineArgs = new CommandLineParser(argv);
 
-                Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
+                log.Info("Starting up NiceHashMiner v" + Application.ProductVersion);
                 bool tosChecked = ConfigManager.GeneralConfig.agreedWithTOS == Globals.CURRENT_TOS_VER;
                 if (!tosChecked || !ConfigManager.GeneralConfigIsFileExist() && !commandLineArgs.IsLang) {
-                    Helpers.ConsolePrint("NICEHASH", "No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
+                    log.Warn("No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
                     Application.Run(new Form_ChooseLanguage());
                 }
 
@@ -78,7 +80,7 @@ namespace NiceHashMiner
                 International.Initialize(ConfigManager.GeneralConfig.Language);
 
                 if (commandLineArgs.IsLang) {
-                    Helpers.ConsolePrint("NICEHASH", "Language is overwritten by command line parameter (-lang).");
+                    log.Warn("Language is overwritten by command line parameter (-lang).");
                     International.Initialize(commandLineArgs.LangValue);
                     ConfigManager.GeneralConfig.Language = commandLineArgs.LangValue;
                 }
@@ -87,9 +89,12 @@ namespace NiceHashMiner
                 if (Helpers.IsWMIEnabled()) {
                     if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CURRENT_TOS_VER) {
                         Application.Run(new Form_Main());
+                        Console.WriteLine("Press to exit");
+                        Console.ReadLine();
                     }
                 }
                 else {
+                    log.Fatal("Error WMI service Disabled");
                     MessageBox.Show(International.GetText("Program_WMI_Error_Text"),
                                                             International.GetText("Program_WMI_Error_Title"),
                                                             MessageBoxButtons.OK, MessageBoxIcon.Error);

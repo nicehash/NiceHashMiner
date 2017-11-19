@@ -14,7 +14,7 @@ namespace NiceHashMiner
 {
     class Helpers : PInvokeHelpers
     {
-        
+        public static readonly log4net.ILog log = log4net.LogManager.GetLogger("HELPERS");
 
         static bool is64BitProcess = (IntPtr.Size == 8);
         public static bool Is64BitOperatingSystem = is64BitProcess || InternalCheckIsWow64();
@@ -43,15 +43,15 @@ namespace NiceHashMiner
         public static void ConsolePrint(string grp, string text)
         {
             // Console.WriteLine does nothing on x64 while debugging with VS, so use Debug. Console.WriteLine works when run from .exe
-#if DEBUG
-            Debug.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
-#endif
-#if !DEBUG
-            Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
-#endif
+            //#if DEBUG
+            //Debug.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
+            //#endif
+            //#if !DEBUG
+            //Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
+            //#endif
 
-            if (ConfigManager.GeneralConfig.LogToFile && Logger.IsInit)
-                Logger.log.Info("[" + grp + "] " + text);
+            //if (ConfigManager.GeneralConfig.LogToFile && Logger.IsInit)
+            Logger.log.Debug("[" + grp + "] " + text);
         }
 
         public static void ConsolePrint(string grp, string text, params object[] arg)
@@ -87,7 +87,7 @@ namespace NiceHashMiner
         {
             //bool failed = false;
 
-            Helpers.ConsolePrint("NICEHASH", "Trying to enable/disable Windows error reporting");
+            log.Debug("Trying to enable/disable Windows error reporting");
 
             // CurrentUser
             try
@@ -100,34 +100,34 @@ namespace NiceHashMiner
                         if (o != null)
                         {
                             int val = (int)o;
-                            Helpers.ConsolePrint("NICEHASH", "Current DontShowUI value: " + val);
+                            log.Info("Current DontShowUI value: " + val);
 
                             if (val == 0 && en)
                             {
-                                Helpers.ConsolePrint("NICEHASH", "Setting register value to 1.");
+                                log.Debug("Setting register value to 1.");
                                 rk.SetValue("DontShowUI", 1);
                             }
                             else if (val == 1 && !en)
                             {
-                                Helpers.ConsolePrint("NICEHASH", "Setting register value to 0.");
+                                log.Debug("Setting register value to 0.");
                                 rk.SetValue("DontShowUI", 0);
                             }
                         }
                         else
                         {
-                            Helpers.ConsolePrint("NICEHASH", "Registry key not found .. creating one..");
+                            log.Debug("Registry key not found .. creating one..");
                             rk.CreateSubKey("DontShowUI", RegistryKeyPermissionCheck.Default);
-                            Helpers.ConsolePrint("NICEHASH", "Setting register value to 1..");
+                            log.Debug("Setting register value to 1..");
                             rk.SetValue("DontShowUI", en ? 1 : 0);
                         }
                     }
                     else
-                        Helpers.ConsolePrint("NICEHASH", "Unable to open SubKey.");
+                        log.Warn("Unable to open SubKey.");
                 }
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("NICEHASH", "Unable to access registry. Error: " + ex.Message);
+                log.Error("Unable to access registry. Error: " + ex.Message);
             }
         }
 
@@ -273,11 +273,11 @@ namespace NiceHashMiner
         public static bool IsWMIEnabled() {
             try {
                 ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
-                ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
+                log.Debug("WMI service seems to be running, ManagementObjectSearcher returned success.");
                 return true;
             }
             catch {
-                ConsolePrint("NICEHASH", "ManagementObjectSearcher not working need WMI service to be running");
+                log.Debug("ManagementObjectSearcher not working need WMI service to be running");
             }
             return false;
         }
@@ -298,7 +298,7 @@ namespace NiceHashMiner
 
         public static void SetDefaultEnvironmentVariables()
         {
-            Helpers.ConsolePrint("NICEHASH", "Setting environment variables");
+            log.Debug("Setting environment variables");
 
             Dictionary<string, string> envNameValues = new Dictionary<string, string>() {
                 { "GPU_MAX_ALLOC_PERCENT",      "100" },
@@ -315,14 +315,14 @@ namespace NiceHashMiner
                 if (Environment.GetEnvironmentVariable(envName) == null)
                 {
                     try { Environment.SetEnvironmentVariable(envName, envValue); }
-                    catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
+                    catch (Exception e) { log.Error(e.ToString()); }
                 }
 
                 // Check to make sure all the values are set correctly
                 if (!Environment.GetEnvironmentVariable(envName).Equals(envValue))
                 {
                     try { Environment.SetEnvironmentVariable(envName, envValue); }
-                    catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
+                    catch (Exception e) { log.Error(e.ToString()); }
                 }
             }
         }
@@ -339,13 +339,13 @@ namespace NiceHashMiner
                 Process p = Process.Start(psi);
                 p.WaitForExit();
                 if (p.ExitCode != 0)
-                    Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode.ToString());
+                    log.Debug("nvidiasetp0state returned error code: " + p.ExitCode.ToString());
                 else
-                    Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state all OK");
+                    log.Debug("nvidiasetp0state all OK");
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
+                log.Error("nvidiasetp0state error: " + ex.Message);
             }
         }
     }

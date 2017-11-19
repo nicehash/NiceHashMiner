@@ -9,6 +9,8 @@ namespace NiceHashMiner
 {
     class International
     {
+        public static readonly log4net.ILog log = log4net.LogManager.GetLogger("LANGUAGE");
+
         private class Language
         {
 #pragma warning disable 649
@@ -38,13 +40,13 @@ namespace NiceHashMiner
                     }
                     catch (Exception ex)
                     {
-                        Helpers.ConsolePrint("NICEHASH", "Lang error: " + ex.Message);
+                        log.Error(ex.Message);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("NICEHASH", "Lang error: " + ex.Message);
+                log.Error(ex.Message);
             }
 
             return langs;
@@ -58,13 +60,13 @@ namespace NiceHashMiner
             {
                 if (lang.ID == lid)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Selected language: " + lang.Name);
+                    log.Info("Selected language: " + lang.Name);
                     SelectedLanguage = lang;
                     return;
                 }
             }
-            
-            Helpers.ConsolePrint("NICEHASH", "Critical error: missing language");
+
+            log.Error("Critical error: missing language");
         }
 
         /// <summary>
@@ -78,7 +80,7 @@ namespace NiceHashMiner
 
             foreach (Language lang in langs)
             {
-                Helpers.ConsolePrint("NICEHASH", "Found language: " + lang.Name);
+                log.Debug("Found language: " + lang.Name);
                 retdict.Add(lang.ID, lang.Name);
             }
 
