@@ -145,7 +145,9 @@ namespace NiceHashMiner.Miners
             {
                 // fallback
                 Helpers.ConsolePrint(MinerTag(), "Failed to get platforms, falling back");
-                if (ComputeDeviceManager.Avaliable.HasNvidia && type != DeviceType.NVIDIA)
+                if (ComputeDeviceManager.Avaliable.HasNvidia && type == DeviceType.NVIDIA)
+                    platform = 1;
+                if (ComputeDeviceManager.Avaliable.HasAmd && type == DeviceType.AMD)
                     platform = 1;
             }
             return $"{platform}-{id}";
@@ -208,7 +210,21 @@ namespace NiceHashMiner.Miners
                 }
                 if (File.Exists(dirInfo + latestLogFile))
                 {
-                    var lines = File.ReadAllLines(dirInfo + latestLogFile);
+                    var lines = new string[] { };
+                    int retries = 10;
+                    while (true) {
+                        try {
+                            lines = File.ReadAllLines(dirInfo + latestLogFile);
+                            break;
+                        } catch (System.IO.IOException e) {
+                            if (retries-- > 0) {
+                                Helpers.ConsolePrint(MinerTag(), String.Format("Retrying ({0})", e.GetType().ToString()));
+                                Thread.Sleep(1 * 1000); // 1 second
+                                continue;
+                            }
+                            throw e;
+                        }
+                    }
                     foreach (var line in lines)
                     {
                         if (line == null) continue;
