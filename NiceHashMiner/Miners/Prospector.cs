@@ -438,24 +438,25 @@ namespace NiceHashMiner.Miners
                 var sessionStart = Convert.ToDateTime(session.start);
                 if (sessionStart < startTime)
                 {
-                    throw new Exception("Session not recorded!");
+                    Helpers.ConsolePrint(MinerTag(), "Session not recorded!");
                 }
-
-                var hashrates = _database.QuerySpeedsForSession(session.id);
-
-                double speed = 0;
-                var speedRead = 0;
-                foreach (var hashrate in hashrates)
+                else
                 {
-                    if (hashrate.coin == MiningSetup.MinerName && hashrate.rate > 0)
+                    var hashrates = _database.QuerySpeedsForSession(session.id);
+
+                    double speed = 0;
+                    var speedRead = 0;
+                    foreach (var hashrate in hashrates)
                     {
-                        speed += hashrate.rate;
-                        speedRead++;
+                        if (hashrate.coin == MiningSetup.MinerName && hashrate.rate > 0)
+                        {
+                            speed += hashrate.rate;
+                            speedRead++;
+                        }
                     }
+
+                    BenchmarkAlgorithm.BenchmarkSpeed = (speed / speedRead) * (1 - DevFee);
                 }
-
-                BenchmarkAlgorithm.BenchmarkSpeed = (speed / speedRead) * (1 - DevFee);
-
                 BenchmarkThreadRoutineFinish();
             }
         }
