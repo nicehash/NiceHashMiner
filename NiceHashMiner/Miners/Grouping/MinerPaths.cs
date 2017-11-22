@@ -91,6 +91,7 @@ namespace NiceHashMiner.Miners.Grouping
 
             public const string XmrStackCPUMiner = _bin + @"\xmr-stak-cpu\xmr-stak-cpu.exe";
             public const string XmrStakAMD = _bin + @"\xmr-stak-amd\xmr-stak-amd.exe";
+            public const string XmrStak = _bin + @"\xmr-stak\xmr-stak.exe";
             public const string Xmrig = _bin + @"\xmrig\xmrig.exe";
 
             public const string NONE = "";
@@ -142,8 +143,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.OptiminerZcashMiner;
                 case MinerBaseType.excavator:
                     return Data.excavator;
-                case MinerBaseType.XmrStackCPU:
-                    return Data.XmrStackCPUMiner;
+                case MinerBaseType.XmrStak:
+                    return Data.XmrStak;
                 case MinerBaseType.ccminer_alexis:
                     return NVIDIA_GROUPS.ccminer_unstable_path(algoType, devGroupType);
                 case MinerBaseType.experimental:
@@ -154,8 +155,6 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.prospector;
                 case MinerBaseType.Xmrig:
                     return Data.Xmrig;
-                case MinerBaseType.XmrStakAMD:
-                    return Data.XmrStakAMD;
             }
             return Data.NONE;
         }

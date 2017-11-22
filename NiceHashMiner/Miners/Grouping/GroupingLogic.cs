@@ -34,7 +34,7 @@ namespace NiceHashMiner.Miners.Grouping {
         }
         private static bool IsGroupableMinerBaseType(MiningPair a) {
             return a.Algorithm.MinerBaseType != MinerBaseType.cpuminer
-                && a.Algorithm.MinerBaseType != MinerBaseType.XmrStackCPU;
+                && a.Algorithm.MinerBaseType != MinerBaseType.XmrStak;
         }
     }
 }

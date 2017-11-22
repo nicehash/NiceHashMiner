@@ -170,7 +170,7 @@ namespace NiceHashMiner.Forms {
             if (Device != null && _currentAlgorithm != null) {
                 _currentMiner = MinerFactory.CreateMiner(Device, _currentAlgorithm);
 
-                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight 
+                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStak && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight 
                     && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters) 
                     && _currentAlgorithm.ExtraLaunchParameters.Contains("enable_ht=true") == false) {
                     __CPUBenchmarkStatus = new CPUBenchmarkStatus(Globals.ThreadsPerCPU);
@@ -220,7 +220,7 @@ namespace NiceHashMiner.Forms {
             if (!benchmarkForm.InBenchmark) return;
             
             bool rebenchSame = false;
-            if (success && __CPUBenchmarkStatus != null && CPUAlgos.Contains(_currentAlgorithm.NiceHashID) && _currentAlgorithm.MinerBaseType == MinerBaseType.XmrStackCPU) {
+            if (success && __CPUBenchmarkStatus != null && CPUAlgos.Contains(_currentAlgorithm.NiceHashID) && _currentAlgorithm.MinerBaseType == MinerBaseType.XmrStak) {
                 __CPUBenchmarkStatus.SetNextSpeed(_currentAlgorithm.BenchmarkSpeed);
                 rebenchSame = __CPUBenchmarkStatus.HasTest();
                 _currentAlgorithm.LessThreads = __CPUBenchmarkStatus.LessTreads;

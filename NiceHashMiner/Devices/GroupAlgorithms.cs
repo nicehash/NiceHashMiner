@@ -174,9 +174,9 @@ namespace NiceHashMiner.Devices {
         public static Dictionary<MinerBaseType, List<Algorithm>> CreateDefaultsForGroup(DeviceGroupType deviceGroupType) {
             if (DeviceGroupType.CPU == deviceGroupType) {
                 return new Dictionary<MinerBaseType, List<Algorithm>>() {
-                    { MinerBaseType.XmrStackCPU,
+                    { MinerBaseType.XmrStak,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.XmrStackCPU, AlgorithmType.CryptoNight, "cryptonight")
+                            new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, "cryptonight")
                         }
                     },
                     { MinerBaseType.Xmrig,
