@@ -2,18 +2,23 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 
 namespace NiceHashMiner.Miners
 {
     public class XmrStak : Miner
     {
+        private const string _configName = "config_nh.txt";
         public XmrStak(string name="")
             : base("XmrStak") {
             ConectionType = NHMConectionType.NONE;
@@ -23,9 +28,14 @@ namespace NiceHashMiner.Miners
             return 5 * 60 * 1000;  // 5 minutes
         }
 
-        protected string GetConfigFileName() {
+        protected string GetDevConfigFileName(DeviceType type) {
             var ids = MiningSetup.MiningPairs.Select(pair => pair.Device.ID).ToList();
-            return $"config_{string.Join(",", ids)}.txt";
+            return $"{type}_{string.Join(",", ids)}.txt";
+        }
+
+        private string GetBenchConfigName() {
+            var ids = MiningSetup.MiningPairs.Select(pair => pair.Device.ID).ToList();
+            return $"bench_";
         }
 
         protected override void _Stop(MinerStopType willswitch) {
@@ -45,18 +55,31 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
                 return;
             }
-            string username = GetUsername(btcAdress, worker);
-            LastCommandLine = GetConfigFileName();
 
-            prepareConfigFile(url, username);
+            var devConfigs = PrepareConfigFiles();
+            LastCommandLine = CreateLaunchCommand(_configName, url, btcAdress, worker, devConfigs);
 
             ProcessHandle = _Start();
         }
 
+        private string CreateLaunchCommand(string configName, string url, string btcAddress, string worker, Dictionary<DeviceType, string> devConfigs) {
+            var username = GetUsername(btcAddress, worker);
+            var devs = "";
+            foreach (var dev in devConfigs.Keys) {
+                if (string.IsNullOrEmpty(devConfigs[dev])) {
+                    devs += $"--no{dev} ";
+                }
+                else {
+                    devs += $"--{dev.ToString().ToLower()} {devConfigs[dev]} ";
+                }
+            }
+            return $"-c {configName} --currency monero -o {url} -u {username}  -p x {devs} ";
+        }
+
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
-            prepareConfigFile(url, Globals.DemoUser);
-            return "benchmark_mode " + GetConfigFileName();
+            var configs = PrepareConfigFiles(true);
+            return CreateLaunchCommand(GetBenchConfigName(), url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim(), configs);
         }
         protected override bool BenchmarkParseLine(string outdata) {
             if (outdata.Contains("Total:")) {
@@ -78,27 +101,72 @@ namespace NiceHashMiner.Miners
             CheckOutdata(outdata);
         }
 
-        protected virtual void prepareConfigFile(string pool, string wallet) {
-            if (this.MiningSetup.MiningPairs.Count > 0) {
-                try {
-                    bool IsHyperThreadingEnabled = this.MiningSetup.MiningPairs[0].CurrentExtraLaunchParameters.Contains("enable_ht=true");
-                    int numTr = ExtraLaunchParametersParser.GetThreadsNumber(this.MiningSetup.MiningPairs[0]);
-                    if (IsHyperThreadingEnabled) {
+        protected virtual Dictionary<DeviceType, string> PrepareConfigFiles(bool bench = false) {
+            var configs = new Dictionary<DeviceType, string>();
+            var types = new List<DeviceType>();
+            foreach (var pair in MiningSetup.MiningPairs) {
+                if (!types.Contains(pair.Device.DeviceType)) types.Add(pair.Device.DeviceType);
+            }
+
+            foreach (var type in types) {
+                if (type == DeviceType.CPU) {
+                    var cpuPair = MiningSetup.MiningPairs.Find(p => p.Device.DeviceType == type);
+                    var isHyperThreadingEnabled = cpuPair.CurrentExtraLaunchParameters.Contains("enable_ht=true");
+                    var numTr = ExtraLaunchParametersParser.GetThreadsNumber(cpuPair);
+                    var no_prefetch = ExtraLaunchParametersParser.GetNoPrefetch(cpuPair);
+                    if (isHyperThreadingEnabled) {
                         numTr /= 2;
                     }
-                    var config = new XmrStackCPUMinerConfig(numTr, pool, wallet, this.APIPort);
-                    var no_prefetch = ExtraLaunchParametersParser.GetNoPrefetch(MiningSetup.MiningPairs[0]);
-                    //config.Inti_cpu_threads_conf(false, false, true, ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled);
-                    config.Inti_cpu_threads_conf(false, no_prefetch, false, IsHyperThreadingEnabled);
-                    var confJson = JObject.FromObject(config);
-                    string writeStr = confJson.ToString();
-                    int start = writeStr.IndexOf("{");
-                    int end = writeStr.LastIndexOf("}");
-                    writeStr = writeStr.Substring(start + 1, end - 1);
-                    System.IO.File.WriteAllText(WorkingDirectory + GetConfigFileName(), writeStr);
-                } catch {
+                    // Fallback on classic config if haven't been able to open 
+                    var config = ParseJsonFile<XmrStakConfigCpu>($"{type.ToString().ToLower()}.txt") ?? new XmrStakConfigCpu(numTr);
+                    if (config.cpu_threads_conf.Count == 0) {
+                        // No thread count would prevent CPU from mining, so fill with estimates
+                        // Otherwise use values set by xmr-stak/user
+                        config.Inti_cpu_threads_conf(false, no_prefetch, false, isHyperThreadingEnabled);
+                    }
+                    configs[type] = WriteJsonFile(config, type);
                 }
+
+                var ids = MiningSetup.MiningPairs.Where(p => p.Device.DeviceType == type).Select(p => p.Device.ID);
             }
+
+            return configs;
+        }
+
+        private T ParseJsonFile<T>(string filename, bool fallback = false) {
+            if (fallback) return default(T);
+            var json = default(T);
+            try {
+                var file = File.ReadAllText(WorkingDirectory + filename);
+                json = JsonConvert.DeserializeObject<T>(file);
+            }
+            catch (Exception e) {
+                Helpers.ConsolePrint(MinerTAG(), e.ToString());
+            }
+            if (json == null) {
+                // Try running xmr-stak to create default configs
+                var handle = BenchmarkStartProcess("");
+                Thread.Sleep(2000);
+                json = ParseJsonFile<T>(filename, true);
+            }
+            return json;
+        }
+
+        private string WriteJsonFile(object config, DeviceType type) {
+            var filename = GetDevConfigFileName(type);
+            try {
+                var confJson = JObject.FromObject(config);
+                string writeStr = confJson.ToString();
+                int start = writeStr.IndexOf("{");
+                int end = writeStr.LastIndexOf("}");
+                writeStr = writeStr.Substring(start + 1, end - 1);
+                System.IO.File.WriteAllText(WorkingDirectory + filename, writeStr);
+            }
+            catch (Exception e) {
+                Helpers.ConsolePrint(MinerTAG(), e.ToString());
+                Helpers.ConsolePrint(MinerTAG(), "Config was unable to write for xmr-stak, mining may not work");
+            }
+            return filename;
         }
 
         protected override NiceHashProcess _Start() {
