@@ -169,7 +169,7 @@ namespace NiceHashMiner.Forms {
 
             if (Device != null && _currentAlgorithm != null) {
                 _currentMiner = MinerFactory.CreateMiner(Device, _currentAlgorithm);
-
+                /*
                 if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStak && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight 
                     && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters) 
                     && _currentAlgorithm.ExtraLaunchParameters.Contains("enable_ht=true") == false) {
@@ -178,6 +178,8 @@ namespace NiceHashMiner.Forms {
                 } else {
                     __CPUBenchmarkStatus = null;
                 }
+                */
+                __CPUBenchmarkStatus = null;
 
                 if (_currentAlgorithm.MinerBaseType == MinerBaseType.Claymore && _currentAlgorithm.NiceHashID == AlgorithmType.Equihash 
                     && _currentAlgorithm.ExtraLaunchParameters != null && !_currentAlgorithm.ExtraLaunchParameters.Contains("-asm")) {

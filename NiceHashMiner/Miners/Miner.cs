@@ -113,6 +113,8 @@ namespace NiceHashMiner
         string benchmarkLogPath = "";
         protected List<string> bench_lines;
 
+        protected bool TimeoutStandard;
+
         
         // TODO maybe set for individual miner cooldown/retries logic variables
         // this replaces MinerAPIGraceSeconds(AMD)
@@ -317,6 +319,7 @@ namespace NiceHashMiner
         #region BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
         public int BenchmarkTimeoutInSeconds(int timeInSeconds) {
+            if (TimeoutStandard) return timeInSeconds;
             if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto) {
                 return 5 * 60 + 120; // 5 minutes plus two minutes
             }
@@ -424,9 +427,12 @@ namespace NiceHashMiner
                 || BenchmarkSignalHanged
                 || BenchmarkSignalTimedout
                 || BenchmarkException != null) {
+                FinishUpBenchmark();
                 EndBenchmarkProcces();
             }
         }
+
+        protected virtual void FinishUpBenchmark() { }
 
         protected abstract void BenchmarkOutputErrorDataReceivedImpl(string outdata);
 
@@ -589,7 +595,7 @@ namespace NiceHashMiner
                 // don't use wait for it breaks everything
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
                 BenchmarkHandle.WaitForExit();
-                if (BenchmarkSignalTimedout) {
+                if (BenchmarkSignalTimedout && !TimeoutStandard) {
                     throw new Exception("Benchmark timedout");
                 }
                 if (BenchmarkException != null) {
@@ -712,7 +718,7 @@ namespace NiceHashMiner
             } catch { }
         }
 
-        protected string GetLogFileName() {
+        protected virtual string GetLogFileName() {
             var ids = MiningSetup.MiningPairs.Select(x => x.Device.Index);
             return $"{string.Join(",", ids)}_log.txt";
         }

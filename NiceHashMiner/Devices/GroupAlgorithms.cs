@@ -238,11 +238,11 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
                         }
                     },
-                    //{ MinerBaseType.XmrStakAMD,
-                    //    new List<Algorithm> {
-                    //        new Algorithm(MinerBaseType.XmrStakAMD, AlgorithmType.CryptoNight, "")
-                    //    }
-                    //}
+                    { MinerBaseType.XmrStak,
+                        new List<Algorithm> {
+                            new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, "")
+                        }
+                    }
                 };
             }
             // NVIDIA
@@ -300,7 +300,12 @@ namespace NiceHashMiner.Devices {
                             new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal),
                             new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Sia)
                         }
+                    },
+                    { MinerBaseType.XmrStak,
+                    new List<Algorithm> {
+                        new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, "")
                     }
+                }
                 };
                 if (DeviceGroupType.NVIDIA_6_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType) {
                     ToRemoveMinerTypes.AddRange(new MinerBaseType[] {

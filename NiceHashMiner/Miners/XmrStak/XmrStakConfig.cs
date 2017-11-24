@@ -39,6 +39,13 @@ namespace NiceHashMiner.Miners
             }
         }
 
+        public void SetBenchmarkOptions(string logFile) {
+            output_file = logFile;
+            h_print_time = 1;
+            daemon_mode = true;
+            flush_stdout = true;
+        }
+
         /*
          * pool_address    - Pool address should be in the form "pool.supportxmr.com:3333". Only stratum pools are supported.
          * wallet_address  - Your wallet, or pool login.
@@ -101,7 +108,7 @@ namespace NiceHashMiner.Miners
          * h_print_time - How often, in seconds, should we print a hashrate report if verbose_level is set to 4.
          *                This option has no effect if verbose_level is not 4.
          */
-        public readonly int h_print_time = 60;
+        public int h_print_time = 60;
 
         /*
          * Manual hardware AES override
@@ -171,7 +178,7 @@ namespace NiceHashMiner.Miners
          * If you are running the process in the background and you don't need the keyboard reports, set this to true.
          * This should solve the hashrate problems on some emulated terminals.
          */
-        public readonly bool daemon_mode = false;
+        public bool daemon_mode = false;
 
         /*
          * Buffered output control.
@@ -179,7 +186,7 @@ namespace NiceHashMiner.Miners
          * each output line immediately. This can cause delays when running in background.
          * Set this option to true to flush stdout after each line, so it can be read immediately.
          */
-        public readonly bool flush_stdout = false;
+        public bool flush_stdout = false;
 
         /*
          * Output file

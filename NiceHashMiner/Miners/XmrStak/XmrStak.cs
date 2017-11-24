@@ -21,23 +21,32 @@ namespace NiceHashMiner.Miners
     {
         private const string _configName = "config_nh.txt";
         private const string _defConfigName = "config.txt";
+        
+        private int _benchmarkCount;
+        private double _benchmarkSum;
+
         public XmrStak(string name="")
             : base("XmrStak") {
             ConectionType = NHMConectionType.NONE;
             IsNeverHideMiningWindow = true;
+            TimeoutStandard = true;
         }
         protected override int GET_MAX_CooldownTimeInMilliseconds() {
             return 5 * 60 * 1000;  // 5 minutes
         }
 
         protected string GetDevConfigFileName(DeviceType type) {
-            var ids = MiningSetup.MiningPairs.Select(pair => pair.Device.ID).ToList();
+            var ids = MiningSetup.MiningPairs.Where(pair => pair.Device.DeviceType == type).Select(pair => pair.Device.ID).ToList();
             return $"{type}_{string.Join(",", ids)}.txt";
         }
 
         private string GetBenchConfigName() {
-            var ids = MiningSetup.MiningPairs.Select(pair => pair.Device.ID).ToList();
-            return $"bench_";
+            var dev = MiningSetup.MiningPairs[0].Device;
+            return $"bench_{(int)dev.DeviceType}-{dev.ID}.txt";
+        }
+
+        protected override string GetLogFileName() {
+            return (int) MiningSetup.MiningPairs[0].Device.DeviceType + base.GetLogFileName();
         }
 
         private string DisableDevCmd(ICollection<DeviceType> usedDevs) {
@@ -83,22 +92,27 @@ namespace NiceHashMiner.Miners
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+            var url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             var configs = PrepareConfigFiles(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim(), true);
+            _benchmarkCount = 0;
+            _benchmarkSum = 0;
+            BenchmarkTimeInSeconds = Math.Max(time, 60);
             return CreateLaunchCommand(GetBenchConfigName(), configs);
         }
+
+        protected override void FinishUpBenchmark() {
+            BenchmarkAlgorithm.BenchmarkSpeed = _benchmarkSum / Math.Max(1, _benchmarkCount);
+        }
+
         protected override bool BenchmarkParseLine(string outdata) {
-            if (outdata.Contains("Total:")) {
-                string toParse = outdata.Substring(outdata.IndexOf("Total:")).Replace("Total:", "").Trim();
-                var strings = toParse.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var s in strings) {
-                    double lastSpeed = 0;
-                    if (double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out lastSpeed)) {
-                        Helpers.ConsolePrint("BENCHMARK " + MinerTAG(), "double.TryParse true. Last speed is" + lastSpeed.ToString());
-                        BenchmarkAlgorithm.BenchmarkSpeed = Helpers.ParseDouble(s);
-                        return true;
-                    }
-                }
+            if (!outdata.Contains("Totals:")) return false;
+
+            var speeds = outdata.Split();
+            foreach (var s in speeds) {
+                if (!double.TryParse(s, out var speed)) continue;
+                _benchmarkSum += speed;
+                _benchmarkCount++;
+                break;
             }
             return false;
         }
@@ -118,6 +132,9 @@ namespace NiceHashMiner.Miners
             var config = ParseJsonFile<XmrStakConfig>(filename: _defConfigName) ?? new XmrStakConfig();
             config.SetupPools(url, GetUsername(btcAddress, worker));
             config.httpd_port = APIPort;
+            if (bench) {
+                config.SetBenchmarkOptions(GetLogFileName());
+            }
             WriteJsonFile(config, configName);
 
             foreach (var type in types) {
