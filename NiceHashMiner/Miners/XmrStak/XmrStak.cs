@@ -78,16 +78,8 @@ namespace NiceHashMiner.Miners
         }
 
         private string CreateLaunchCommand(string configName, Dictionary<DeviceType, string> devConfigs) {
-            var devs = "";
-            foreach (var dev in devConfigs.Keys) {
-                if (string.IsNullOrEmpty(devConfigs[dev])) {
-                    devs += $"--no{dev} ";
-                }
-                else {
-                    devs += $"--{dev.ToString().ToLower()} {devConfigs[dev]} ";
-                }
-            }
-            return $"-c {configName} {devs} ";
+            var devs = devConfigs.Keys.Aggregate("", (current, dev) => current + $"--{dev.ToString().ToLower()} {devConfigs[dev]} ");
+            return $"-c {configName} {devs} {DisableDevCmd(devConfigs.Keys)}";
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
@@ -146,12 +138,20 @@ namespace NiceHashMiner.Miners
                     }
                     configs[type] = WriteJsonFile(configCpu, type);
                 }
+                else {
+                    var ids = MiningSetup.MiningPairs.Where(p => p.Device.DeviceType == type).Select(p => p.Device.ID);
 
-                var ids = MiningSetup.MiningPairs.Where(p => p.Device.DeviceType == type).Select(p => p.Device.ID);
+                    var configGpu = ParseJsonFile<XmrStakConfigGpu>(type) ?? new XmrStakConfigGpu();
+                    configGpu.SetupThreads(ids);
+
+                    configs[type] = WriteJsonFile(configGpu, type);
+                }
             }
 
             return configs;
         }
+
+        #region JSON Helpers
 
         private T ParseJsonFile<T>(DeviceType type = DeviceType.CPU, string filename = "", bool fallback = false) {
             if (filename == "") filename = $"{type.ToString().ToLower()}.txt";
@@ -198,11 +198,11 @@ namespace NiceHashMiner.Miners
         private string WriteJsonFile(object config, string filename) {
             try {
                 var confJson = JObject.FromObject(config);
-                string writeStr = confJson.ToString();
-                int start = writeStr.IndexOf("{");
-                int end = writeStr.LastIndexOf("}");
+                var writeStr = confJson.ToString();
+                var start = writeStr.IndexOf("{");
+                var end = writeStr.LastIndexOf("}");
                 writeStr = writeStr.Substring(start + 1, end - 1);
-                System.IO.File.WriteAllText(WorkingDirectory + filename, writeStr);
+                File.WriteAllText(WorkingDirectory + filename, writeStr);
             } catch (Exception e) {
                 Helpers.ConsolePrint(MinerTAG(), e.ToString());
                 Helpers.ConsolePrint(MinerTAG(), $"Config {filename} was unable to write for xmr-stak, mining may not work");
@@ -211,8 +211,10 @@ namespace NiceHashMiner.Miners
         }
 
         private string WriteJsonFile(object config, DeviceType type) {
-            return WriteJsonFile(config, type.ToString());
+            return WriteJsonFile(config, GetDevConfigFileName(type));
         }
+
+        #endregion
 
         protected override NiceHashProcess _Start() {
             NiceHashProcess P = base._Start();
