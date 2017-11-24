@@ -158,10 +158,16 @@ namespace NiceHashMiner.Miners
                 else {
                     var ids = MiningSetup.MiningPairs.Where(p => p.Device.DeviceType == type).Select(p => p.Device.ID);
 
-                    var configGpu = ParseJsonFile<XmrStakConfigGpu>(type) ?? new XmrStakConfigGpu();
-                    configGpu.SetupThreads(ids);
-
-                    configs[type] = WriteJsonFile(configGpu, type);
+                    if (type == DeviceType.AMD) {
+                        var configGpu = ParseJsonFile<XmrStakConfigAmd>(type) ?? new XmrStakConfigAmd();
+                        configGpu.SetupThreads(ids);
+                        configs[type] = WriteJsonFile(configGpu, type);
+                    }
+                    else {
+                        var configGpu = ParseJsonFile<XmrStakConfigNvidia>(type) ?? new XmrStakConfigNvidia();
+                        configGpu.SetupThreads(ids);
+                        configs[type] = WriteJsonFile(configGpu, type);
+                    }
                 }
             }
 
