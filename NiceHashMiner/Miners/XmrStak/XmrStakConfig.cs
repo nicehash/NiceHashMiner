@@ -331,5 +331,10 @@ namespace NiceHashMiner.Miners
          */
 
         public List<XmrStakGpuItem> gpu_threads_conf = new List<XmrStakGpuItem>();
+
+        /*
+        * Platform index. This will be 0 unless you have different OpenCL platform - eg. AMD and Intel.
+        */
+        public int platform_index = 0;
     }
 }

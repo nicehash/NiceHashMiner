@@ -46,7 +46,7 @@ namespace NiceHashMiner.Miners
         }
 
         protected override string GetLogFileName() {
-            return (int) MiningSetup.MiningPairs[0].Device.DeviceType + base.GetLogFileName();
+            return $"{(int) MiningSetup.MiningPairs[0].Device.DeviceType}-{base.GetLogFileName()}";
         }
 
         private string DisableDevCmd(ICollection<DeviceType> usedDevs) {

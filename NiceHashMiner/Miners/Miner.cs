@@ -455,6 +455,9 @@ namespace NiceHashMiner
             // Ethminer
             if (outdata.Contains("No GPU device with sufficient memory was found"))
                 BenchmarkException = new Exception("[daggerhashimoto] No GPU device with sufficient memory was found.");
+            // xmr-stak
+            if (outdata.Contains("Press any key to exit"))
+                BenchmarkException = new Exception("Xmr-Stak erred, check its logs");
 
             // lastly parse data
             if (BenchmarkParseLine(outdata)) {
