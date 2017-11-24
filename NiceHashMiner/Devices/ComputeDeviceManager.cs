@@ -674,10 +674,14 @@ namespace NiceHashMiner.Devices
                         if ((vidContrllr.Name.Contains("AMD") || vidContrllr.Name.Contains("Radeon")) && ShowWarningDialog == false) {
                             Version AMDDriverVersion = new Version(vidContrllr.DriverVersion);
 
-                            bool greaterOrEqual = AMDDriverVersion.CompareTo(sgminer_NO_neoscrypt_lyra2re) >= 0;
-                            if (greaterOrEqual) {
-                                deviceDriverNO_neoscrypt_lyra2re[vidContrllr.Name] = true;
-                                Helpers.ConsolePrint(TAG, "Driver version seems to be " + sgminer_NO_neoscrypt_lyra2re.ToString() + " or higher. NeoScrypt and Lyra2REv2 will be removed from list");
+                            if (!ConfigManager.GeneralConfig.ForceSkipAMDNeoscryptLyraCheck) {
+                                bool greaterOrEqual = AMDDriverVersion.CompareTo(sgminer_NO_neoscrypt_lyra2re) >= 0;
+                                if (greaterOrEqual) {
+                                    deviceDriverNO_neoscrypt_lyra2re[vidContrllr.Name] = true;
+                                    Helpers.ConsolePrint(TAG,
+                                        "Driver version seems to be " + sgminer_NO_neoscrypt_lyra2re.ToString() +
+                                        " or higher. NeoScrypt and Lyra2REv2 will be removed from list");
+                                }
                             }
 
 

@@ -38,7 +38,7 @@ namespace NiceHashMiner {
 
             // if we are still null after an update something went wrong. just use USD hopefully itll update next tick
             if (exchanges_fiat == null || ActiveDisplayCurrency == "USD") {
-                Helpers.ConsolePrint("CurrencyConverter", "Unable to retrieve update, Falling back to USD");
+                // Moved logging to update for berevity 
                 return amount;
             }
 
@@ -68,8 +68,13 @@ namespace NiceHashMiner {
                     // set that we have a response
                     if (LastResponse != null) {
                         Result last_result = LastResponse.result;
-                        ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
                         exchanges_fiat = last_result.exchanges_fiat;
+                        if (exchanges_fiat == null) {
+                            Helpers.ConsolePrint("CurrencyConverter", "Unable to retrieve update, Falling back to USD");
+                            ActiveDisplayCurrency = "USD";
+                        } else {
+                            ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
+                        }
                         // ActiveDisplayCurrency = "USD";
                         // check if currency avaliable and fill currency list
                         foreach (var pair in last_result.exchanges) {

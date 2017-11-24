@@ -53,12 +53,17 @@ namespace NiceHashMiner.Devices {
                             }
                         }
                         // non sgminer optimizations
-                        if (algoSettings.ContainsKey(MinerBaseType.Claymore)) {
-                            var ClaymoreAlgos = algoSettings[MinerBaseType.Claymore];
-                            int CryptoNight_Index = ClaymoreAlgos.FindIndex((el) => el.NiceHashID == AlgorithmType.CryptoNight);
-                            if (CryptoNight_Index > -1) {
+                        if (algoSettings.ContainsKey(MinerBaseType.Claymore_old) && algoSettings.ContainsKey(MinerBaseType.Claymore)) {
+                            var claymoreOldAlgos = algoSettings[MinerBaseType.Claymore_old];
+                            var cryptoNightOldIndex = 
+                                claymoreOldAlgos.FindIndex((el) => el.NiceHashID == AlgorithmType.CryptoNight);
+                            
+                            var claymoreNewAlgos = algoSettings[MinerBaseType.Claymore];
+                            var cryptoNightNewIndex =
+                                claymoreNewAlgos.FindIndex(el => el.NiceHashID == AlgorithmType.CryptoNight);
+
+                            if (cryptoNightOldIndex > -1 && cryptoNightNewIndex > -1) {
                                 //string regex_a_3 = "[5|6][0-9][0-9][0-9]";
-                                /*
                                 List<string> a_4 = new List<string>() {
                                     "270",
                                     "270x",
@@ -71,20 +76,22 @@ namespace NiceHashMiner.Devices {
                                     "390",
                                     "470",
                                     "480"};
-                                */
-                                // Some old devs currently not supported in new version
+                                foreach (var namePart in a_4) {
+                                    if (device.Name.Contains(namePart)) {
+                                        claymoreOldAlgos[cryptoNightOldIndex].ExtraLaunchParameters = "-a 4";
+                                        break;
+                                    }
+                                }
+
                                 List<string> old = new List<string> {
                                     "Verde",
                                     "Oland",
                                     "Bonaire"
                                 };
-                                foreach (var namePart in old) {
-                                    if (device.Codename.Contains(namePart)) {
-                                        ClaymoreAlgos[CryptoNight_Index].ExtraLaunchParameters = "-a 4";
-                                        // This will tell NHML to use old bin
-                                        ClaymoreAlgos[CryptoNight_Index].MinerName = "old";
-                                        break;
-                                    }
+                                foreach (var codeName in old) {
+                                    var isOld = device.Codename.Contains(codeName);
+                                    claymoreOldAlgos[cryptoNightOldIndex].Enabled = isOld;
+                                    claymoreNewAlgos[cryptoNightNewIndex].Enabled = !isOld;
                                 }
                             }
                         }
@@ -111,13 +118,13 @@ namespace NiceHashMiner.Devices {
                                     }
                                 }
                             }
-                            if (algoSettings.ContainsKey(MinerBaseType.Claymore)) {
-                                foreach (var algo in algoSettings[MinerBaseType.Claymore]) {
-                                    if (algo.NiceHashID == AlgorithmType.CryptoNight) {
-                                        algo.Enabled = false;
-                                    }
-                                }
-                            }
+                            //if (algoSettings.ContainsKey(MinerBaseType.Claymore)) {
+                            //    foreach (var algo in algoSettings[MinerBaseType.Claymore]) {
+                            //        if (algo.NiceHashID == AlgorithmType.CryptoNight) {
+                            //            algo.Enabled = false;
+                            //        }
+                            //    }
+                            //}
                         }
                     } // END AMD case
 
@@ -213,6 +220,11 @@ namespace NiceHashMiner.Devices {
                             new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Lbry),
                             new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal),
                             new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Sia)
+                        }
+                    },
+                    { MinerBaseType.Claymore_old,
+                        new List<Algorithm> {
+                            new Algorithm(MinerBaseType.Claymore_old, AlgorithmType.CryptoNight, "old")
                         }
                     },
                     { MinerBaseType.OptiminerAMD,

@@ -24,6 +24,7 @@ namespace NiceHashMiner.Enums {
         EWBF,
         Prospector,
         Xmrig,
+        Claymore_old,
         END
     }
 }

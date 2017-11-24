@@ -248,6 +248,11 @@ namespace NiceHashMiner.Miners.Parsing {
                     return MinerType.ClaymoreDual;
                 }
             }
+            if (MinerBaseType.Claymore_old == minerBaseType) {
+                if (AlgorithmType.CryptoNight == algorithmType) {
+                    return MinerType.ClaymoreCryptoNight;
+                }
+            }
             if (MinerBaseType.ethminer == minerBaseType) {
                 if(DeviceType.AMD == deviceType) {
                     return MinerType.ethminer_OCL;
