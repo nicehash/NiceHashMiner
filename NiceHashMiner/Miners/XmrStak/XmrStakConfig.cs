@@ -12,25 +12,26 @@ namespace NiceHashMiner.Miners
         public class XmrStakPoolItem
         {
             public string pool_address;
-            public string worker_address;
+            public string wallet_address;
             public string pool_password = "x";
             public bool use_nicehash = true;
-            public bool use_tls = true;
-            public string tls_fingerprint;
+            public bool use_tls = false;
+            public string tls_fingerprint = "";
             public int pool_weight = 1;
 
             public XmrStakPoolItem(string pool, string worker, int weight) {
                 pool_address = pool;
-                worker_address = worker;
+                wallet_address = worker;
                 pool_weight = weight;
             }
         }
-        public XmrStakConfig(string poolAddr, string wallet, int port)
-            : this(new List<string> { poolAddr }, wallet, port) {
+
+        public void SetupPools(string poolAddr, string wallet) {
+            SetupPools(new List<string> {poolAddr}, wallet);
         }
 
-        public XmrStakConfig(List<string> poolAddrs, string wallet, int port) {
-            httpd_port = port;
+        public void SetupPools(List<string> poolAddrs, string wallet) {
+            pool_list = new List<XmrStakPoolItem>();
             var i = 1;
             foreach (var poolAddr in poolAddrs) {
                 pool_list.Add(new XmrStakPoolItem(poolAddr, wallet, i));
@@ -50,7 +51,7 @@ namespace NiceHashMiner.Miners
          *
          * We feature pools up to 1MH/s. For a more complete list see M5M400's pool list at www.moneropools.com
          */
-        public readonly List<XmrStakPoolItem> pool_list = new List<XmrStakPoolItem>();
+        public List<XmrStakPoolItem> pool_list = new List<XmrStakPoolItem>();
 
         /*
          * currency to mine
@@ -196,7 +197,7 @@ namespace NiceHashMiner.Miners
          *
          * httpd_port - Port we should listen on. Default, 0, will switch off the server.
          */
-        public readonly int httpd_port = 0;
+        public int httpd_port = 0;
 
         /*
          * HTTP Authentication
