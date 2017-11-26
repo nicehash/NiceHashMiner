@@ -33,6 +33,8 @@ namespace NiceHashMiner.Miners
             return 5 * 60 * 1000;  // 5 minutes
         }
 
+        #region Filename Helpers
+
         protected string GetDevConfigFileName(DeviceType type) {
             var ids = MiningSetup.MiningPairs.Where(pair => pair.Device.DeviceType == type).Select(pair => pair.Device.ID).ToList();
             return $"{type}_{string.Join(",", ids)}.txt";
@@ -47,6 +49,11 @@ namespace NiceHashMiner.Miners
             return $"{(int) MiningSetup.MiningPairs[0].Device.DeviceType}-{base.GetLogFileName()}";
         }
 
+        #endregion
+
+        #region Commandline helpers
+
+        // Return command to disable unused devices
         private string DisableDevCmd(ICollection<DeviceType> usedDevs) {
             var devTypes = new List<DeviceType> {
                 DeviceType.AMD,
@@ -59,6 +66,8 @@ namespace NiceHashMiner.Miners
         private string DisableDevCmd(DeviceType usedDev) {
             return DisableDevCmd(new List<DeviceType> {usedDev});
         }
+
+        #endregion
 
         protected override void _Stop(MinerStopType willswitch) {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
@@ -87,36 +96,6 @@ namespace NiceHashMiner.Miners
         private string CreateLaunchCommand(string configName, Dictionary<DeviceType, string> devConfigs) {
             var devs = devConfigs.Keys.Aggregate("", (current, dev) => current + $"--{dev.ToString().ToLower()} {devConfigs[dev]} ");
             return $"-c {configName} {devs} {DisableDevCmd(devConfigs.Keys)}";
-        }
-
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            var url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
-            var configs = PrepareConfigFiles(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim(), true);
-            _benchmarkCount = 0;
-            _benchmarkSum = 0;
-            BenchmarkTimeInSeconds = Math.Max(time, 60);
-            return CreateLaunchCommand(GetBenchConfigName(), configs);
-        }
-
-        protected override void FinishUpBenchmark() {
-            BenchmarkAlgorithm.BenchmarkSpeed = _benchmarkSum / Math.Max(1, _benchmarkCount);
-        }
-
-        protected override bool BenchmarkParseLine(string outdata) {
-            if (!outdata.Contains("Totals:")) return false;
-
-            var speeds = outdata.Split();
-            foreach (var s in speeds) {
-                if (!double.TryParse(s, out var speed)) continue;
-                _benchmarkSum += speed;
-                _benchmarkCount++;
-                break;
-            }
-            return false;
-        }
-
-        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
-            CheckOutdata(outdata);
         }
 
         protected virtual Dictionary<DeviceType, string> PrepareConfigFiles(string url, string btcAddress, string worker, bool bench = false) {
@@ -152,16 +131,14 @@ namespace NiceHashMiner.Miners
                         configCpu.Inti_cpu_threads_conf(false, no_prefetch, false, isHyperThreadingEnabled);
                     }
                     configs[type] = WriteJsonFile(configCpu, type);
-                }
-                else {
+                } else {
                     var ids = MiningSetup.MiningPairs.Where(p => p.Device.DeviceType == type).Select(p => p.Device.ID);
 
                     if (type == DeviceType.AMD) {
                         var configGpu = ParseJsonFile<XmrStakConfigAmd>(type) ?? new XmrStakConfigAmd();
                         configGpu.SetupThreads(ids);
                         configs[type] = WriteJsonFile(configGpu, type);
-                    }
-                    else {
+                    } else {
                         var keepBVals = MiningSetup.MiningPairs.Any(p =>
                             p.CurrentExtraLaunchParameters.Contains("--keep-b") && p.Device.DeviceType == type);
                         var configGpu = ParseJsonFile<XmrStakConfigNvidia>(type) ?? new XmrStakConfigNvidia();
@@ -175,6 +152,41 @@ namespace NiceHashMiner.Miners
 
             return configs;
         }
+
+        #region Benchmarking
+
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+            var url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+            var configs = PrepareConfigFiles(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim(), true);
+            _benchmarkCount = 0;
+            _benchmarkSum = 0;
+            BenchmarkTimeInSeconds = Math.Max(time, 60);
+            CleanOldLogs();
+            return CreateLaunchCommand(GetBenchConfigName(), configs);
+        }
+
+        protected override void FinishUpBenchmark() {
+            BenchmarkAlgorithm.BenchmarkSpeed = _benchmarkSum / Math.Max(1, _benchmarkCount);
+        }
+
+        protected override bool BenchmarkParseLine(string outdata) {
+            if (!outdata.Contains("Totals:")) return false;
+
+            var speeds = outdata.Split();
+            foreach (var s in speeds) {
+                if (!double.TryParse(s, out var speed)) continue;
+                _benchmarkSum += speed;
+                _benchmarkCount++;
+                break;
+            }
+            return false;
+        }
+
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
+            CheckOutdata(outdata);
+        }
+
+        #endregion
 
         #region JSON Helpers
 
@@ -257,25 +269,5 @@ namespace NiceHashMiner.Miners
         }
 
         #endregion
-
-        protected override NiceHashProcess _Start() {
-            NiceHashProcess P = base._Start();
-
-            var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
-            if (AffinityMask != 0 && P != null)
-                CPUID.AdjustAffinity(P.Id, AffinityMask);
-
-            return P;
-        }
-
-        protected override Process BenchmarkStartProcess(string CommandLine) {
-            Process BenchmarkHandle = base.BenchmarkStartProcess(CommandLine);
-
-            var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
-            if (AffinityMask != 0 && BenchmarkHandle != null)
-                CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
-
-            return BenchmarkHandle;
-        }
     }
 }
