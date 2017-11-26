@@ -44,6 +44,7 @@ namespace NiceHashMiner.Miners
             h_print_time = 1;
             daemon_mode = true;
             flush_stdout = true;
+            verbose_level = 4;
         }
 
         /*
@@ -80,9 +81,9 @@ namespace NiceHashMiner.Miners
          * giveup_limit - Limit how many times we try to reconnect to the pool. Zero means no limit. Note that stak miners
          *                don't mine while the connection is lost, so your computer's power usage goes down to idle.
          */
-        public readonly int call_timeout = 10;
-        public readonly int retry_time = 30;
-        public readonly int giveup_limit = 0;
+        public int call_timeout = 10;
+        public int retry_time = 30;
+        public int giveup_limit = 0;
 
         /*
          * Output control.
@@ -99,8 +100,8 @@ namespace NiceHashMiner.Miners
          *
          * print_motd    - Display messages from your pool operator in the hashrate result.
          */
-        public readonly int verbose_level = 4;
-        public readonly bool print_motd = true;
+        public int verbose_level = 4;
+        public bool print_motd = true;
 
         /*
          * Automatic hashrate report
@@ -118,7 +119,7 @@ namespace NiceHashMiner.Miners
          *
          * WARNING: setting this to true on a CPU that doesn't support hardware AES will crash the miner.
          */
-        public readonly bool? aes_override = null;
+        public bool? aes_override = null;
 
         /*
          * LARGE PAGE SUPPORT
@@ -161,7 +162,7 @@ namespace NiceHashMiner.Miners
          *           It will never use slow memory, but it won't attempt to mlock
          * never   - If we fail to allocate large pages we will print an error and exit.
          */
-        public readonly string use_slow_memory = "warn";
+        public string use_slow_memory = "warn";
 
         /*
          * TLS Settings
@@ -170,7 +171,7 @@ namespace NiceHashMiner.Miners
          *
          * tls_secure_algo - Use only secure algorithms. This will make us quit with an error if we can't negotiate a secure algo.
          */
-        public readonly bool tls_secure_algo = true;
+        public bool tls_secure_algo = true;
 
         /*
          * Daemon mode
@@ -216,14 +217,14 @@ namespace NiceHashMiner.Miners
          * http_login - Login. Empty login disables authentication.
          * http_pass  - Password.
          */
-        public readonly string http_login = "";
-        public readonly string http_pass = "";
+        public string http_login = "";
+        public string http_pass = "";
 
         /*
          * prefer_ipv4 - IPv6 preference. If the host is available on both IPv4 and IPv6 net, which one should be choose?
          *               This setting will only be needed in 2020's. No need to worry about it now.
          */
-        public readonly bool prefer_ipv4 = true;
+        public bool prefer_ipv4 = true;
     }
 
     public class XmrStakConfigCpu
