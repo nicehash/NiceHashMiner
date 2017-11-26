@@ -26,7 +26,12 @@ namespace NiceHashMiner.Miners {
         protected override double DevFee() {
             return isOld ? 2.0 : 1.0;
         }
-        
+
+        protected override string GetLogFileName() {
+            if (isOld) return "*_log.txt";
+            return base.GetLogFileName();
+        }
+
         protected override string GetDevicesCommandString() {
             if (!isOld) return base.GetDevicesCommandString();
 

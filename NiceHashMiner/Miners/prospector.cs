@@ -383,7 +383,7 @@ namespace NiceHashMiner.Miners
                     }
                 }
 
-                BenchmarkAlgorithm.BenchmarkSpeed = (speed / speedRead) * (1 - DevFee);
+                BenchmarkAlgorithm.BenchmarkSpeed = (speed / Math.Max(1, speedRead)) * (1 - DevFee);
 
                 BenchmarkThreadRoutineFinish();
             }

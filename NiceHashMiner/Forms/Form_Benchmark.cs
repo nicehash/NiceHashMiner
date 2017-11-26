@@ -151,6 +151,8 @@ namespace NiceHashMiner.Forms {
             _benchmarkAlgorithmsCount = _benchmarkAlgorithmQueue.Count;
 
             var thread = new Thread(NextBenchmark);
+            if (thread.Name == null)
+                thread.Name = $"dev_{device.ID}_benchmark";
             thread.Start();
         }
 
