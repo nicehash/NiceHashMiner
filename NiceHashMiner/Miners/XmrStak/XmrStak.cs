@@ -214,7 +214,7 @@ namespace NiceHashMiner.Miners
                     var config = new XmrStakConfig();
                     // Dummy values for pools, won't load with an empty pool list
                     var url = Globals.GetLocationURL(AlgorithmType.CryptoNight,
-                        Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+                        ConfigManager.GeneralConfig.ServiceLocations[0].ServiceLocation, this.ConectionType);
                     var worker = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
                     config.SetupPools(url, worker);
                     WriteJsonFile(config, filename);
