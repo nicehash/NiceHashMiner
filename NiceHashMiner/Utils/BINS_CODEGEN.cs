@@ -62,11 +62,17 @@ namespace NiceHashMiner.Utils {
 @"\nheqminer_v0.4b\nheqminer.exe",
 @"\sgminer-5-6-0-general\sgminer.exe",
 @"\sgminer-gm\sgminer.exe",
-@"\xmr-stak-cpu\concrt140.dll",
-@"\xmr-stak-cpu\msvcp140.dll",
-@"\xmr-stak-cpu\vccorlib140.dll",
-@"\xmr-stak-cpu\vcruntime140.dll",
-@"\xmr-stak-cpu\xmr-stak-cpu.exe",
+@"\xmr-stak\msvcp140.dll",
+@"\xmr-stak\vcruntime140.dll",
+@"\xmr-stak\xmr-stak.exe",
+
+@"\xmr-stak\xmrstak_cuda_backend.dll",
+
+@"\xmr-stak\xmrstak_opencl_backend.dll",
+
+@"\xmr-stak\libeay32.dll",
+
+@"\xmr-stak\ssleay32.dll",
 
 @"\xmrig\xmrig.exe"
 };
