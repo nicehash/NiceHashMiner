@@ -14,7 +14,7 @@ namespace NiceHashMiner.Miners
         protected XmrStak(string name)
             : base(name) {
             ConectionType = NHMConectionType.NONE;
-            IsNeverHideMiningWindow = true;
+            IsNeverHideMiningWindow = false;
         }
 
         protected abstract void prepareConfigFile(string pool, string wallet);
@@ -42,7 +42,7 @@ namespace NiceHashMiner.Miners
                 return;
             }
             string username = GetUsername(btcAdress, worker);
-            LastCommandLine = GetConfigFileName();
+            LastCommandLine = "-c " + GetConfigFileName();
 
             prepareConfigFile(url, username);
 
@@ -52,7 +52,7 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
             string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             prepareConfigFile(url, Globals.DemoUser);
-            return "benchmark_mode " + GetConfigFileName();
+            return GetConfigFileName();
         }
         protected override bool BenchmarkParseLine(string outdata) {
             if (outdata.Contains("Total:")) {

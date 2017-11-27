@@ -10,9 +10,11 @@ namespace NiceHashMiner.Miners
     public class XmrStakConfig
     {
         public XmrStakConfig(string poolAddr, string wallet, int port) {
-            pool_address = poolAddr;
-            wallet_address = wallet;
             httpd_port = port;
+            this.pool_list.Add(JObject.FromObject(new { pool_address = poolAddr,
+                wallet_address = wallet,
+                pool_password = "x",
+                use_nicehash = true, use_tls = this.use_tls, tls_fingerprint = this.tls_fingerprint, pool_weight = 1 }));
         }
 
         /*
@@ -27,15 +29,20 @@ namespace NiceHashMiner.Miners
         public readonly bool use_tls = false;
         public readonly bool tls_secure_algo = true;
         public readonly string tls_fingerprint = "";
+        public readonly string currency = "monero";
+        public readonly bool print_motd = false;
+        public readonly string http_login = "";
+        public readonly string http_pass = "";
+        public readonly bool flush_stdout = false;
+
 
         /*
          * pool_address	  - Pool address should be in the form "pool.supportxmr.com:3333". Only stratum pools are supported.
          * wallet_address - Your wallet, or pool login.
          * pool_password  - Can be empty in most cases or "x".
          */
-        public readonly string pool_address; // : "pool.supportxmr.com:3333",
-        public readonly string wallet_address;
-        public readonly string pool_password = "x";
+
+        public List<JObject> pool_list = new List<JObject>();
 
         /*
          * Network timeouts.
