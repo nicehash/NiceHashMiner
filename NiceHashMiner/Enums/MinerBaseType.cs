@@ -18,13 +18,13 @@ namespace NiceHashMiner.Enums {
         Claymore,
         OptiminerAMD,
         excavator,
-        XmrStackCPU,
+        XmrStak,
         ccminer_alexis,
         experimental,
         EWBF,
         Prospector,
         Xmrig,
-        XmrStakAMD,
+        Claymore_old,
         END
     }
 }

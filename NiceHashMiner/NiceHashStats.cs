@@ -95,6 +95,7 @@ namespace NiceHashMiner
                     webSocket.OnClose += CloseCallback;
                     webSocket.EmitOnPing = true;
                     webSocket.Log.Level = LogLevel.Debug;
+                    webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
                     webSocket.Connect();
                     connectionEstablished = true;
                 } catch (Exception e) {
@@ -148,7 +149,7 @@ namespace NiceHashMiner
             }
 
             private static void CloseCallback(object sender, CloseEventArgs e) {
-                Helpers.ConsolePrint("SOCKET", "Connection closed: " + e.Reason);
+                Helpers.ConsolePrint("SOCKET", $"Connection closed code {e.Code}: {e.Reason}");
                 AttemptReconnect();
             }
 
@@ -194,7 +195,7 @@ namespace NiceHashMiner
                 var sleep = connectionEstablished ? 10 + random.Next(0, 20) : 0;
                 Helpers.ConsolePrint("SOCKET", "Attempting reconnect in " + sleep + " seconds");
                 // More retries on first attempt
-                var retries = connectionEstablished ? 5 : 20;
+                var retries = connectionEstablished ? 5 : 25;
                 if (connectionEstablished) {  // Don't wait if no connection yet
                     Thread.Sleep(sleep * 1000);
                 } else {

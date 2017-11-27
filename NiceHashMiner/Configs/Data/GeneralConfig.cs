@@ -88,6 +88,9 @@ namespace NiceHashMiner.Configs.Data {
 
         public bool CoolDownCheckEnabled = true;
 
+        // Set to skip driver checks to enable Neoscrypt/Lyra2RE on AMD
+        public bool ForceSkipAMDNeoscryptLyraCheck = false;
+
         // methods
         public void SetDefaults() {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -148,6 +151,7 @@ namespace NiceHashMiner.Configs.Data {
             ShowDetailedDeviceInfo = false;
             HideDisabledAlgorithms = false;
             ShowVirtualMemoryWarning = true;
+            ForceSkipAMDNeoscryptLyraCheck = false;
         }
 
         public void FixSettingBounds() {

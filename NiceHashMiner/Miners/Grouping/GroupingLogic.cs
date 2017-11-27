@@ -13,7 +13,8 @@ namespace NiceHashMiner.Miners.Grouping {
             if (canGroup && IsSameBinPath(a, b) && IsSameAlgorithmType(a, b)) {
                 // Allow group if prospector
                 if ((IsNotCpuGroups(a, b) && IsSameDeviceType(a, b)) 
-                    || (a.Algorithm.MinerBaseType == MinerBaseType.Prospector && b.Algorithm.MinerBaseType == MinerBaseType.Prospector))
+                    || (a.Algorithm.MinerBaseType == MinerBaseType.Prospector && b.Algorithm.MinerBaseType == MinerBaseType.Prospector)
+                    || a.Algorithm.MinerBaseType == MinerBaseType.XmrStak)
                     return true;
             }
             return false;
@@ -33,8 +34,7 @@ namespace NiceHashMiner.Miners.Grouping {
             return a.Device.DeviceType == b.Device.DeviceType;
         }
         private static bool IsGroupableMinerBaseType(MiningPair a) {
-            return a.Algorithm.MinerBaseType != MinerBaseType.cpuminer
-                && a.Algorithm.MinerBaseType != MinerBaseType.XmrStackCPU;
+            return a.Algorithm.MinerBaseType != MinerBaseType.cpuminer;
         }
     }
 }

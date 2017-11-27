@@ -61,6 +61,7 @@
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.buttonHelp = new System.Windows.Forms.Button();
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -405,7 +406,7 @@
             this.Enabled = false;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(578, 322);
+            this.MinimumSize = new System.Drawing.Size(576, 316);
             this.Name = "Form_Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NiceHash Miner Legacy";
@@ -455,6 +456,7 @@
         private Forms.Components.DevicesListViewEnableControl devicesListViewEnableControl1;
         private System.Windows.Forms.Button buttonHelp;
         private System.Windows.Forms.LinkLabel linkLabelNewVersion;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 

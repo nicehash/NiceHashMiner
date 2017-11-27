@@ -50,7 +50,7 @@ namespace NiceHashMiner
         int flowLayoutPanelVisibleCount = 0;
         int flowLayoutPanelRatesIndex = 0;
 
-        const string _betaAlphaPostfixString = "-Pre";
+        const string _betaAlphaPostfixString = "-Pre2";
 
         private bool _isDeviceDetectionInitialized = false;
 
@@ -577,6 +577,7 @@ namespace NiceHashMiner
             }
 
             toolStripStatusLabelBTCDayValue.Text = ExchangeRateAPI.ConvertToActiveCurrency((TotalRate * factorTimeUnit * Globals.BitcoinUSDRate)).ToString("F2", CultureInfo.InvariantCulture);
+            toolStripStatusLabelBalanceText.Text = (ExchangeRateAPI.ActiveDisplayCurrency + "/") + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " + International.GetText("Form_Main_balance") + ":";
         }
 
 
@@ -601,6 +602,7 @@ namespace NiceHashMiner
                 double Amount = (Balance * Globals.BitcoinUSDRate);
                 Amount = ExchangeRateAPI.ConvertToActiveCurrency(Amount);
                 toolStripStatusLabelBalanceDollarText.Text = Amount.ToString("F2", CultureInfo.InvariantCulture);
+                toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateAPI.ActiveDisplayCurrency})";
             }
         }
 
@@ -610,7 +612,14 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
             ExchangeRateAPI.UpdateAPI(textBoxWorkerName.Text.Trim());
             double BR = ExchangeRateAPI.GetUSDExchangeRate();
-            if (BR > 0) Globals.BitcoinUSDRate = BR;
+            var currencyRate = International.GetText("BenchmarkRatioRateN_A");
+            if (BR > 0) {
+                Globals.BitcoinUSDRate = BR;
+                currencyRate = ExchangeRateAPI.ConvertToActiveCurrency(BR).ToString("F2");
+            }
+            
+            toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateAPI.ActiveDisplayCurrency}");
+
             Helpers.ConsolePrint("NICEHASH", "Current Bitcoin rate: " + Globals.BitcoinUSDRate.ToString("F2", CultureInfo.InvariantCulture));
         }
 

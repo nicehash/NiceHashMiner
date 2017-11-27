@@ -53,8 +53,8 @@ namespace NiceHashMiner.Miners {
                     return new OptiminerZcashMiner();
                 case MinerBaseType.excavator:
                     return new excavator();
-                case MinerBaseType.XmrStackCPU:
-                    return new XmrStackCPUMiner();
+                case MinerBaseType.XmrStak:
+                    return new XmrStak();
                 case MinerBaseType.ccminer_alexis:
                     return new ccminer();
                 case MinerBaseType.experimental:
@@ -65,8 +65,8 @@ namespace NiceHashMiner.Miners {
                     return new Prospector();
                 case MinerBaseType.Xmrig:
                     return new Xmrig();
-                case MinerBaseType.XmrStakAMD:
-                    return new XmrStakAMD();
+                case MinerBaseType.Claymore_old:
+                    return new ClaymoreCryptoNightMiner(true);
             }
             return null;
         }
