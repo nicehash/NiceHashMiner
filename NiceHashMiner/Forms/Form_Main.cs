@@ -304,7 +304,7 @@ namespace NiceHashMiner
                     --Globals.FirstNetworkCheckTimeoutTries;
                 }
             }
-
+                  
             LoadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
 
             BitcoinExchangeCheck = new Timer();
@@ -601,11 +601,11 @@ namespace NiceHashMiner
             Helpers.ConsolePrint("NICEHASH", "Current Bitcoin rate: " + Globals.BitcoinUSDRate.ToString("F2", CultureInfo.InvariantCulture));
         }
 
-        void SMACallback(object sender, EventArgs e) {
+        void SMACallback(object sender, AlgorithmRatesEventArgs e) {
             Helpers.ConsolePrint("NICEHASH", "SMA Update");
             isSMAUpdated = true;
-            if (NiceHashStats.AlgorithmRates != null) {
-                Globals.NiceHashData = NiceHashStats.AlgorithmRates;
+            if (e.AlgorithmRates != null) {
+                Globals.NiceHashData = e.AlgorithmRates;
             }
         }
 

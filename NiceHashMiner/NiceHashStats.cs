@@ -27,6 +27,12 @@ namespace NiceHashMiner
             Message = message;
         }
     }
+
+    public class AlgorithmRatesEventArgs : EventArgs
+    {
+        public Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates;
+    }
+    
     class NiceHashStats {
 #pragma warning disable 649
         #region JSON Models
@@ -55,6 +61,8 @@ namespace NiceHashMiner
         const int deviceUpdateLaunchDelay = 20 * 1000;
         const int deviceUpdateInterval = 60 * 1000;
 
+        static string _worker = "worker1";
+
         public static Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates { get; private set; }
         private static NiceHashData niceHashData;
         public static double Balance { get; private set; }
@@ -62,7 +70,7 @@ namespace NiceHashMiner
         public static bool IsAlive { get { return NiceHashConnection.IsAlive; } }
         // Event handlers for socket
         public static event EventHandler OnBalanceUpdate = delegate { };
-        public static event EventHandler OnSMAUpdate = delegate { };
+        public static event EventHandler<AlgorithmRatesEventArgs> OnSMAUpdate = delegate { };
         public static event EventHandler OnVersionUpdate = delegate { };
         public static event EventHandler OnConnectionLost = delegate { };
         public static event EventHandler OnConnectionEstablished = delegate { };
@@ -71,6 +79,8 @@ namespace NiceHashMiner
         static readonly Random random = new Random();
 
         static System.Threading.Timer deviceUpdateTimer;
+        static System.Threading.Timer timerOldSMA;
+        static System.Threading.Timer timerLostConnection;
 
         #region Socket
         private class NiceHashConnection
@@ -95,6 +105,7 @@ namespace NiceHashMiner
                     webSocket.OnClose += CloseCallback;
                     webSocket.EmitOnPing = true;
                     webSocket.Log.Level = LogLevel.Debug;
+                    webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
                     webSocket.Connect();
                     connectionEstablished = true;
                 } catch (Exception e) {
@@ -211,14 +222,15 @@ namespace NiceHashMiner
                     Thread.Sleep(1000);
                 }
                 attemptingReconnect = false;
-                OnConnectionLost.Emit(null, EventArgs.Empty);
                 return false;
             }
         }
 
         public static void StartConnection(string address) {
+            timerOldSMA = new System.Threading.Timer(OldSMA, null, 20*1000, 90*1000);
             NiceHashConnection.StartConnection(address);
             deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_Tick, null, deviceUpdateInterval, deviceUpdateInterval);
+            timerLostConnection = new System.Threading.Timer(ConnectionLost, null, 120 * 1000, -1);
         }
 
         #endregion
@@ -231,7 +243,11 @@ namespace NiceHashMiner
                     niceHashData.AppendPayingForAlgo(algoKey, algo[1].Value<double>());
                 }
                 AlgorithmRates = niceHashData.NormalizedSMA();
-                OnSMAUpdate.Emit(null, EventArgs.Empty);
+                timerOldSMA.Change(120 * 1000, 90 * 1000);
+                timerLostConnection.Change(120 * 1000, -1);
+                OnSMAUpdate.Emit(null, new AlgorithmRatesEventArgs() {
+                    AlgorithmRates = AlgorithmRates
+                });
             } catch (Exception e) {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
@@ -261,7 +277,8 @@ namespace NiceHashMiner
             var data = new nicehash_credentials();
             data.btc = btc;
             data.worker = worker;
-            if (BitcoinAddress.ValidateBitcoinAddress(data.btc) && BitcoinAddress.ValidateWorkerName(worker)) {
+            if (BitcoinAddress.ValidateBitcoinAddress(data.btc) && BitcoinAddress.ValidateWorkerName(worker)){
+                _worker = worker;
                 var sendData = JsonConvert.SerializeObject(data);
 
                 // Send as task since SetCredentials is called from UI threads
@@ -296,6 +313,66 @@ namespace NiceHashMiner
         }
 
         #endregion
+
+
+
+        private static void ConnectionLost(object state)
+        {
+            Helpers.ConsolePrint("SOCKET", "ConnectionLost");
+            OnConnectionLost.Emit(null, EventArgs.Empty);
+        }
+
+        private static void OldSMA(object state)
+        {
+            OnSMAUpdate.Emit(null, new AlgorithmRatesEventArgs()
+            {
+                AlgorithmRates = GetAlgorithmRates(_worker)
+            });
+
+            Helpers.ConsolePrint("SOCKET", "HTTPS SMA Update");
+        }
+
+        #region old
+
+        public class nicehash_result_2
+        {
+            public NiceHashSMA[] simplemultialgo;
+        }
+
+        public class nicehash_json_2
+        {
+            public nicehash_result_2 result;
+            public string method;
+        }
+
+        public static Dictionary<AlgorithmType, NiceHashSMA> GetAlgorithmRates(string worker)
+        {
+            string r1 = GetNiceHashAPIData(Links.NHM_API_info, worker);
+            if (r1 == null) return null;
+
+            nicehash_json_2 nhjson_current;
+            try
+            {
+                nhjson_current = JsonConvert.DeserializeObject<nicehash_json_2>(r1, Globals.JsonSettings);
+                Dictionary<AlgorithmType, NiceHashSMA> ret = new Dictionary<AlgorithmType, NiceHashSMA>();
+                NiceHashSMA[] temp = nhjson_current.result.simplemultialgo;
+                if (temp != null)
+                {
+                    foreach (var sma in temp)
+                    {
+                        ret.Add((AlgorithmType)sma.algo, sma);
+                    }
+                    return ret;
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        #endregion old
 
         public static string GetNiceHashAPIData(string URL, string worker)
         {
