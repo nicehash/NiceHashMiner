@@ -228,9 +228,9 @@ namespace NiceHashMiner
 
         public static void StartConnection(string address) {
             timerOldSMA = new System.Threading.Timer(OldSMA, null, 20*1000, 90*1000);
+            timerLostConnection = new System.Threading.Timer(ConnectionLost, null, 120 * 1000, -1);
             NiceHashConnection.StartConnection(address);
             deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_Tick, null, deviceUpdateInterval, deviceUpdateInterval);
-            timerLostConnection = new System.Threading.Timer(ConnectionLost, null, 120 * 1000, -1);
         }
 
         #endregion
