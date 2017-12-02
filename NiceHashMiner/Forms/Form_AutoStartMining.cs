@@ -13,24 +13,37 @@ namespace NiceHashMiner.Forms
         }
 
         private IMiningControl miningControl;
+        private int trynumber = 1;
+        private int waitSeconds = 10;
+        private bool isFirst = true;
 
         private void button_Cancel_Click(object sender, EventArgs e)
         {
             timer1.Stop();
             Close();
-        }
-
-      
+        }      
 
         private void Form_AutoStartMining_Shown(object sender, EventArgs e)
         {
             miningControl = Owner as IMiningControl;
-            timer1.Interval = 5000;
+            Text = $"AutoStart wait {waitSeconds--}s";
+            timer1.Interval = 1000;
             timer1.Start();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
+            if (isFirst)
+            {
+                Text = $"AutoStart wait {waitSeconds--}s";
+                if(waitSeconds < 0)
+                {
+                    isFirst = false;
+                    timer1.Interval = 5000;
+                }
+                return;
+            }
+
             timer1.Stop();
             if (miningControl == null)
             {
@@ -38,6 +51,7 @@ namespace NiceHashMiner.Forms
             }
             else
             {
+                Text = $"AutoStart try {trynumber++}";
                 Helpers.ConsolePrint("NICEHASH", "AutoStart");
 
                 StartMiningReturnType miningReturn = miningControl.StartMining(true);
