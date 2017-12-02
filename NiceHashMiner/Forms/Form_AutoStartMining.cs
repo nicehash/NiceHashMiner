@@ -36,12 +36,15 @@ namespace NiceHashMiner.Forms
             if (isFirst)
             {
                 Text = $"AutoStart wait {waitSeconds--}s";
-                if(waitSeconds < 0)
+                if (waitSeconds < 0)
                 {
                     isFirst = false;
                     timer1.Interval = 5000;
                 }
-                return;
+                else
+                {
+                    return;
+                }
             }
 
             timer1.Stop();
@@ -65,6 +68,11 @@ namespace NiceHashMiner.Forms
                     timer1.Start();
                 }
             }
+        }
+
+        private void Form_AutoStartMining_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            timer1.Stop();
         }
     }
 }
