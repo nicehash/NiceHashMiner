@@ -14,7 +14,7 @@ namespace NiceHashMiner.Forms
 
         private IMiningControl miningControl;
         private int trynumber = 1;
-        private int waitSeconds = 10;
+        private int waitSeconds = 25;
         private bool isFirst = true;
 
         private void button_Cancel_Click(object sender, EventArgs e)

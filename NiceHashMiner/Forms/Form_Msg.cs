@@ -25,35 +25,62 @@ namespace NiceHashMiner.Forms
         private void AddButton(DialogResult dialogResult)
         {
             Button button = new Button();
-            button.DialogResult = dialogResult;
-            button.Text = International.GetText("Global_" + dialogResult.ToString());
+            //button.DialogResult = dialogResult;
+            button.Text = dialogResult.ToString();
+            button.Size = new Size(80, 27);
+            button.Margin = new Padding(5);
             button.Click += new EventHandler(button_Click);
-            panelBut.Controls.Add(button);
+            flowLayoutPanel2.Controls.Add(button);
 
-            if(dialogResult == timeOutDialogResult)
+            if (dialogResult == timeOutDialogResult)
             {
                 timeOutButton = button;
                 buttonText = button.Text;
             }
         }
 
-        internal DialogResult ShowMsg(string text, string caption, MessageBoxButtons buttons, int timeout, DialogResult timeOutResult)
+        private Icon GetIcon(MessageBoxIcon icon)
+        {
+            switch (icon)
+            {
+                case MessageBoxIcon.Information:
+                    return SystemIcons.Information;
+                case MessageBoxIcon.Question:
+                    return SystemIcons.Question;
+                case MessageBoxIcon.Error:
+                    return SystemIcons.Error;
+                case MessageBoxIcon.Exclamation:
+                    return SystemIcons.Exclamation;
+                default:
+                    return null;
+            }
+        }
+
+        internal DialogResult ShowMsg(string text, string caption, MessageBoxButtons buttons, int timeout, DialogResult timeOutResult, MessageBoxIcon icon)
         {
             timeOutInSec = timeout;
             timeOutDialogResult = timeOutResult;
 
-            label_msg.Text = text;
-            Text = caption;
-
-
             DialogResult result = DialogResult.None;
+
+            label_msg.Text = caption;
+            Width = label_msg.Width;
+
+            if (icon != MessageBoxIcon.None)
+            {
+                pictureBox1.Image = new Icon(GetIcon(icon), 32, 32).ToBitmap();
+            }
+            else
+            {
+                pictureBox1.Visible = false;
+            }
 
             switch (buttons)
             {
                 case MessageBoxButtons.AbortRetryIgnore:
-                    AddButton(DialogResult.Abort);
-                    AddButton(DialogResult.Retry);
                     AddButton(DialogResult.Ignore);
+                    AddButton(DialogResult.Retry);
+                    AddButton(DialogResult.Abort);
                     break;
 
                 case MessageBoxButtons.OK:
@@ -61,26 +88,34 @@ namespace NiceHashMiner.Forms
                     break;
 
                 case MessageBoxButtons.OKCancel:
-                    AddButton(DialogResult.OK);
                     AddButton(DialogResult.Cancel);
+                    AddButton(DialogResult.OK);
                     break;
 
                 case MessageBoxButtons.RetryCancel:
-                    AddButton(DialogResult.Retry);
                     AddButton(DialogResult.Cancel);
+                    AddButton(DialogResult.Retry);
                     break;
 
                 case MessageBoxButtons.YesNo:
-                    AddButton(DialogResult.Yes);
                     AddButton(DialogResult.No);
+                    AddButton(DialogResult.Yes);
                     break;
 
                 case MessageBoxButtons.YesNoCancel:
-                    AddButton(DialogResult.Yes);
-                    AddButton(DialogResult.No);
                     AddButton(DialogResult.Cancel);
+                    AddButton(DialogResult.No);
+                    AddButton(DialogResult.Yes);
                     break;
 
+            }
+
+            label_msg.Text = text;
+            Text = caption;
+
+            if (Width < flowLayoutPanel3.Width)
+            {
+                Width = flowLayoutPanel3.Width + flowLayoutPanel3.Margin.Right;
             }
 
             if (timeOutButton != null)
@@ -98,36 +133,6 @@ namespace NiceHashMiner.Forms
             Close();
         }
 
-        private void panelBut_ControlAdded(object sender, ControlEventArgs e)
-        {
-            int buttonsWidth = 0;
-            foreach (Control con in panelBut.Controls)
-            {
-                Button button = con as Button;
-                if (button != null)
-                {
-                    buttonsWidth += button.Size.Width + 10;
-                }
-            }
-            buttonsWidth -= 10;
-
-
-            int labelWidth = label_msg.Width + 10;
-            Width = (labelWidth > buttonsWidth) ? labelWidth : buttonsWidth;
-
-            int X = (/*panelBut.*/Width - buttonsWidth) / 2;
-
-            foreach (Control con in panelBut.Controls)
-            {
-                Button button = con as Button;
-                if (button != null)
-                {
-                    button.Location = new Point(X, (panelBut.Height - button.Height) / 2);
-                    X += button.Width + 10;
-                }
-            }
-        }
-
         private void Form_Msg_Shown(object sender, EventArgs e)
         {
             if (timeOutInSec == 0)
@@ -139,19 +144,19 @@ namespace NiceHashMiner.Forms
                 timer1.Interval = 1000;
                 timer1.Start();
             }
-
-            Height = label_msg.Height + 0 + panelBut.Height;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            timeOutButton.Text = buttonText + "("+timeOutInSec-- +")";
-            if(timeOutInSec < 0)
+            timeOutButton.Text = buttonText + "(" + timeOutInSec-- + ")";
+            if (timeOutInSec < 0)
             {
                 timer1.Stop();
                 this.DialogResult = timeOutDialogResult;
                 Close();
             }
         }
+
+
     }
 }
