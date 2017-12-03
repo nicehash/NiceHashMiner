@@ -43,7 +43,9 @@ namespace NiceHashMiner
 #if DEBUG
                 h.Root.AddAppender(CreateDebugAppender());
 #else
-                h.Root.AddAppender(CreateColoredConsoleAppender());
+                if (ConfigManager.GeneralConfig.DebugConsole) {
+                    h.Root.AddAppender(CreateColoredConsoleAppender());
+                }
 #endif
                 h.Configured = true;
             } catch (Exception) {
