@@ -106,7 +106,7 @@ namespace NiceHashMiner
                     webSocket.EmitOnPing = true;
                     webSocket.Log.Level = LogLevel.Debug;
                     webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
-                    webSocket.Connect();
+                    webSocket.ConnectAsync();
                     connectionEstablished = true;
                 } catch (Exception e) {
                     Helpers.ConsolePrint("SOCKET", e.ToString());
