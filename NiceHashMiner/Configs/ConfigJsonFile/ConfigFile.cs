@@ -63,7 +63,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile {
                 return;
             }
             try {
-                File.WriteAllText(_filePath, JsonConvert.SerializeObject(file, Formatting.Indented));
+                File.WriteAllText(_filePath, JsonConvert.SerializeObject(file, Formatting.Indented, Globals.JsonSettings));
             } catch (Exception ex) {
                 Helpers.ConsolePrint(TAG, String.Format("Commit {0}: exception {1}", _filePath, ex.ToString()));
             }
