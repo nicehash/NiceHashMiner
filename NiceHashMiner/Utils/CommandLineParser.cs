@@ -27,6 +27,9 @@ namespace NiceHashMiner.Utils
                     LangValue = LanguageType.En;
                 }
             }
+
+            if (ParseCommandLine(argv, "-donations", out tmpString))
+                if (tmpString == "false") Miner.DonationStart = DateTime.MaxValue;
         }
 
         private bool ParseCommandLine(string[] argv, string find, out string value)

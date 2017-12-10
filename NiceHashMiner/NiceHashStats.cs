@@ -108,8 +108,9 @@ namespace NiceHashMiner
                     var zData = JsonConvert.DeserializeObject<Dictionary<string, zPoolAlgo>>(ResponseFromServer);
                     zSetAlgorithmRates(zData.Values.ToArray());
                 }
-                catch
+                catch (Exception e)
                 {
+                    int x = 0;
                 }
             }
 

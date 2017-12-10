@@ -84,10 +84,6 @@ namespace NiceHashMiner
                     ConfigManager.GeneralConfig.Language = commandLineArgs.LangValue;
                 }
 
-                // Disable donations if specified
-                if (argv.Any(a => a == "--disable-donation"))
-                    Miner.DonationStart = DateTime.MaxValue;
-
                 // check WMI
                 if (Helpers.IsWMIEnabled()) {
                     if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CURRENT_TOS_VER) {
