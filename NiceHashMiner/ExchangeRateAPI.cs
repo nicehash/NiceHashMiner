@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
-using System.Text;
+using Newtonsoft.Json.Linq;
+
+// TODO: @Allan update this
 
 namespace NiceHashMiner {
     class ExchangeRateAPI {
@@ -60,37 +62,57 @@ namespace NiceHashMiner {
             return 0.0;
         }
 
-        public static void UpdateAPI(string worker) {
-            string resp = NiceHashStats.GetNiceHashAPIData(apiUrl, worker);
-            if (resp != null) {
-                try {
-                    var LastResponse = JsonConvert.DeserializeObject<ExchangeRateJSON>(resp, Globals.JsonSettings);
-                    // set that we have a response
-                    if (LastResponse != null) {
-                        Result last_result = LastResponse.result;
-                        exchanges_fiat = last_result.exchanges_fiat;
-                        if (exchanges_fiat == null) {
-                            Helpers.ConsolePrint("CurrencyConverter", "Unable to retrieve update, Falling back to USD");
-                            ActiveDisplayCurrency = "USD";
-                        } else {
-                            ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
-                        }
-                        // ActiveDisplayCurrency = "USD";
-                        // check if currency avaliable and fill currency list
-                        foreach (var pair in last_result.exchanges) {
-                            if (pair.ContainsKey("USD") && pair.ContainsKey("coin") && pair["coin"] == "BTC" && pair["USD"] != null) {
-                                USD_BTC_rate = Helpers.ParseDouble(pair["USD"]);
-                                break;
-                            }
-                        }
-                    }
-                } catch(Exception e) {
-                    Helpers.ConsolePrint("ExchangeRateAPI", "UpdateAPI got Exception: " + e.Message);
-                }
-            } else {
-                Helpers.ConsolePrint("ExchangeRateAPI", "UpdateAPI got NULL");
+        public static void UpdateAPI(string worker)
+        {
+            var WR = (HttpWebRequest)WebRequest.Create("https://blockchain.info/ticker");
+            var Response = WR.GetResponse();
+            var SS = Response.GetResponseStream();
+            SS.ReadTimeout = 20 * 1000;
+            var Reader = new StreamReader(SS);
+            var ResponseFromServer = Reader.ReadToEnd();
+            if (ResponseFromServer.Length == 0 || ResponseFromServer[0] != '{')
+                throw new Exception("Not JSON!");
+            Reader.Close();
+            Response.Close();
+
+            dynamic fiat_rates = JObject.Parse(ResponseFromServer);
+            try
+            {
+                //USD_BTC_rate = Helpers.ParseDouble((string)fiat_rates[ConfigManager.GeneralConfig.DisplayCurrency]["last"]);
+                USD_BTC_rate = Helpers.ParseDouble((string)fiat_rates["USD"]["last"]);
+
+                exchanges_fiat = new Dictionary<string, double>();
+                foreach (var c in _supportedCurrencies)
+                    exchanges_fiat.Add(c, Helpers.ParseDouble((string)fiat_rates[c]["last"]) / USD_BTC_rate);
+            }
+            catch
+            {
             }
         }
 
+        private static readonly string[] _supportedCurrencies = {
+            "AUD", 
+            "BRL", 
+            "CAD", 
+            "CHF", 
+            "CLP", 
+            "CNY", 
+            "DKK", 
+            "EUR", 
+            "GBP", 
+            "HKD", 
+            "INR", 
+            "ISK", 
+            "JPY", 
+            "KRW", 
+            "NZD", 
+            "PLN", 
+            "RUB", 
+            "SEK", 
+            "SGD", 
+            "THB", 
+            "TWD", 
+            "USD"
+        };
     }
 }

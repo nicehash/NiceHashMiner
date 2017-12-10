@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Globalization;
+using System.Linq;
 using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
@@ -71,6 +72,7 @@ namespace NiceHashMiner
         static readonly Random random = new Random();
 
         static System.Threading.Timer deviceUpdateTimer;
+        static System.Threading.Timer algoRatesUpdateTimer;
 
         #region Socket
         private class NiceHashConnection
@@ -81,26 +83,28 @@ namespace NiceHashMiner
             static bool connectionAttempted = false;
             static bool connectionEstablished = false;
 
-            public static void StartConnection(string address) {
-                connectionAttempted = true;
-                try {
-                    if (webSocket == null) {
-                        webSocket = new WebSocket(address);
-                    } else {
-                        webSocket.Close();
-                    }
-                    webSocket.OnOpen += ConnectCallback;
-                    webSocket.OnMessage += ReceiveCallback;
-                    webSocket.OnError += ErrorCallback;
-                    webSocket.OnClose += CloseCallback;
-                    webSocket.EmitOnPing = true;
-                    webSocket.Log.Level = LogLevel.Debug;
-                    webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
-                    webSocket.Connect();
-                    connectionEstablished = true;
-                } catch (Exception e) {
-                    Helpers.ConsolePrint("SOCKET", e.ToString());
-                }
+            public static void StartConnection(string address)
+            {
+                UpdateAlgoRates(null);
+                algoRatesUpdateTimer = new System.Threading.Timer(UpdateAlgoRates, null, deviceUpdateInterval, deviceUpdateInterval);
+            }
+
+            private static void UpdateAlgoRates(object state)
+            {
+                // We get the algo payment info here - http://www.zpool.ca/api/status
+                var WR = (HttpWebRequest)WebRequest.Create("http://www.zpool.ca/api/status");
+                var Response = WR.GetResponse();
+                var SS = Response.GetResponseStream();
+                SS.ReadTimeout = 20 * 1000;
+                var Reader = new StreamReader(SS);
+                var ResponseFromServer = Reader.ReadToEnd().Trim();
+                if (ResponseFromServer.Length == 0 || ResponseFromServer[0] != '{')
+                    throw new Exception("Not JSON!");
+                Reader.Close();
+                Response.Close();
+
+                var zData = JsonConvert.DeserializeObject<Dictionary<string, zPoolAlgo>>(ResponseFromServer);
+                zSetAlgorithmRates(zData.Values.ToArray());
             }
 
             private static void ConnectCallback(object sender, EventArgs e) {
@@ -238,6 +242,24 @@ namespace NiceHashMiner
             }
         }
 
+        private static void zSetAlgorithmRates(zPoolAlgo[] data)
+        {
+            try
+            {
+                if (niceHashData == null) niceHashData = new NiceHashData(data);
+                foreach (var algo in data)
+                {
+                    niceHashData.AppendPayingForAlgo((AlgorithmType)algo.NiceHashAlgoId(), (double)algo.MidPoint24HrEstimate);
+                }
+                AlgorithmRates = niceHashData.NormalizedSMA();
+                OnSMAUpdate.Emit(null, EventArgs.Empty);
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("SOCKET", e.ToString());
+            }
+        }
+
         private static void SetBalance(string balance) {
             try {
                 double bal = 0d;
@@ -293,7 +315,7 @@ namespace NiceHashMiner
             var sendData = JsonConvert.SerializeObject(data);
             // This function is run every minute and sends data every run which has two auxiliary effects
             // Keeps connection alive and attempts reconnection if internet was dropped
-            NiceHashConnection.SendData(sendData);
+            //NiceHashConnection.SendData(sendData);
         }
 
         #endregion
@@ -329,5 +351,186 @@ namespace NiceHashMiner
 
             return ResponseFromServer;
         }
+    }
+
+    public class zPoolAlgo
+    {
+        public string name { get; set; }
+        public int port { get; set; }
+        //public decimal coins { get; set; }
+        //public decimal fees { get; set; }
+        //public decimal hashrate { get; set; }
+        //public int workers { get; set; }
+        public decimal estimate_current { get; set; }
+        public decimal estimate_last24h { get; set; }
+        public decimal actual_last24h { get; set; }
+
+        public decimal NormalizedEstimate => MagnitudeFactor(name) * estimate_current;
+        public decimal Normalized24HrEstimate => MagnitudeFactor(name) * estimate_last24h;
+        public decimal Normalized24HrActual => MagnitudeFactor(name) * actual_last24h * 0.001m;
+        public decimal MidPoint24HrEstimate => (Normalized24HrEstimate + Normalized24HrActual) / 2m;
+
+        // if the normalized estimate (now) is 20% less than the midpoint, we want to return the 
+        // normalized estimate
+        public decimal Safe24HrEstimate => NormalizedEstimate * 1.2m < MidPoint24HrEstimate
+            ? NormalizedEstimate
+            : MidPoint24HrEstimate;
+
+        //public decimal hashrate_last24h { get; set; }
+        //public decimal rental_current { get; set; }
+
+        public zAlgorithm Algorithm => ToAlgorithm(name);
+        private zAlgorithm ToAlgorithm(string s)
+        {
+            switch (s.ToLower())
+            {
+                case "bitcore": return zAlgorithm.bitcore;
+                case "blake2s": return zAlgorithm.blake2s;
+                case "blakecoin": return zAlgorithm.blake256r8;
+                case "c11": return zAlgorithm.c11;
+                case "decred": return zAlgorithm.decred;
+                case "equihash": return zAlgorithm.equihash;
+                case "groestl": return zAlgorithm.groestl;
+                case "hmq1725": return zAlgorithm.hmq1725;
+                case "lbry": return zAlgorithm.lbry;
+                case "lyra2v2": return zAlgorithm.lyra2re2;
+                case "m7m": return zAlgorithm.m7m;
+                case "myr-gr": return zAlgorithm.myriad_groestl;
+                case "neoscrypt": return zAlgorithm.neoscrypt;
+                case "nist5": return zAlgorithm.nist5;
+                case "quark": return zAlgorithm.quark;
+                case "qubit": return zAlgorithm.qubit;
+                case "scrypt": return zAlgorithm.scrypt;
+                case "sha256": return zAlgorithm.sha256;
+                case "sib": return zAlgorithm.sib;
+                case "skein": return zAlgorithm.skein;
+                case "timetravel": return zAlgorithm.timetravel;
+                case "veltor": return zAlgorithm.veltor;
+                case "x11": return zAlgorithm.x11;
+                case "x11evo": return zAlgorithm.x11evo;
+                case "x13": return zAlgorithm.x13;
+                case "x14": return zAlgorithm.x14;
+                case "x15": return zAlgorithm.x15;
+                case "x17": return zAlgorithm.x17;
+                case "xevan": return zAlgorithm.xevan;
+                case "yescrypt": return zAlgorithm.yescrypt;
+                case "skunk": return zAlgorithm.skunk;
+                case "keccak": return zAlgorithm.keccak;
+            }
+
+            return zAlgorithm.unknown;
+        }
+
+        public int NiceHashAlgoId() {
+            switch (name)
+            {
+                case "blake2s": return 28;
+                case "blakecoin": return 16;
+                case "decred": return 21;
+                case "equihash": return 24;
+                case "lbry": return 23;
+                case "lyra2v2": return 9;
+                case "neoscrypt": return 8;
+                case "nist5": return 7;
+                case "quark": return 12;
+                case "qubit": return 11;
+                case "scrypt": return 0;
+                case "sha256": return 1;
+                case "x11": return 3;
+                case "x13": return 4;
+                case "x15": return 6;
+                case "keccak": return 5;
+                case "skunk": return 29;
+                case "sib": return 26;
+
+                default: return -1;
+            }
+        }
+
+        private decimal MagnitudeFactor(string s)
+        {
+            switch (s)
+            {
+                case "decred":
+                case "bitcore":
+                case "blakecoin":
+                case "blake2s":
+                    return 1;
+                case "equihash": return 1e6m;
+                case "sha256":
+                case "x11":
+                case "quark":
+                case "qubit":
+                    return 1e-3m;
+                default: return 1e3m;
+            }
+        }
+
+        private decimal Min(params decimal[] values) =>
+            values.Length == 1
+                ? values[0]
+                : values.Length == 2
+                    ? Math.Min(values[0], values[1])
+                    : Min(values[0], Min(values.Skip(1).ToArray()));
+
+        private decimal Max(params decimal[] values) =>
+            values.Length == 1
+                ? values[0]
+                : values.Length == 2
+                    ? Math.Max(values[0], values[1])
+                    : Max(values[0], Min(values.Skip(1).ToArray()));
+    }
+
+    public enum zAlgorithm
+    {
+        scrypt,
+        sha256,
+        scryptnf,
+        x11,
+        x13,
+        keccak,
+        x15,
+        nist5,
+        neoscrypt,
+        lyra2re,
+        whirlpoolx,
+        qubit,
+        quark,
+        axiom,
+        lyra2re2,
+        scryptjanenf16,
+        blake256r8,
+        blake256r14,
+        blake256r8vnl,
+        hodl,
+        ethash,
+        decred,
+        cryptonight,
+        lbry,
+        equihash,
+        pascal,
+        x11gost,
+        sia,
+        blake2s,
+        skunk,
+        // This is the ones not supported by NiceHash ... we need to keep this in order .. oops
+        lyra2z,
+        yescrypt,
+        skein,
+        myriad_groestl,
+        groestl,
+        unknown,
+        bitcore,
+        c11,
+        hmq1725,
+        m7m,
+        sib,
+        timetravel,
+        veltor,
+        x11evo,
+        x14,
+        x17,
+        xevan,
+        tribus
     }
 }

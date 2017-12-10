@@ -1108,38 +1108,28 @@
             this.currencyConverterCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.currencyConverterCombobox.FormattingEnabled = true;
             this.currencyConverterCombobox.Items.AddRange(new object[] {
-            "AUD",
-            "BGN",
-            "BRL",
-            "CAD",
-            "CHF",
-            "CNY",
-            "CZK",
-            "DKK",
-            "EUR",
-            "GBP",
-            "HKD",
-            "HRK",
-            "HUF",
-            "IDR",
-            "ILS",
-            "INR",
-            "JPY",
-            "KRW",
-            "MXN",
-            "MYR",
-            "NOK",
-            "NZD",
-            "PHP",
-            "PLN",
-            "RON",
-            "RUB",
-            "SEK",
-            "SGD",
-            "THB",
-            "TRY",
-            "USD",
-            "ZAR"});
+            "AUD",//
+            "BRL",//
+            "CAD",//
+            "CHF",//
+            "CLP",//
+            "CNY",//
+            "DKK",//
+            "EUR",//
+            "GBP",//
+            "HKD",//
+            "INR",//
+            "ISK",//
+            "JPY",//
+            "KRW",//
+            "NZD",//
+            "PLN",//
+            "RUB",//
+            "SEK",//
+            "SGD",//
+            "THB",//
+            "TWD",//
+            "USD"});
             this.currencyConverterCombobox.Location = new System.Drawing.Point(212, 36);
             this.currencyConverterCombobox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.currencyConverterCombobox.Name = "currencyConverterCombobox";

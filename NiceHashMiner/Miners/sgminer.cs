@@ -1,17 +1,9 @@
 ﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
 using System.Globalization;
-using System.Net;
-using System.Net.Sockets;
-using System.Windows.Forms;
-using System.Management;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
-using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using System.Threading;
 using System.Threading.Tasks;

@@ -20,6 +20,7 @@ namespace NiceHashMiner
     {
         private Dictionary<AlgorithmType, List<double>> recentPaying;
         private Dictionary<AlgorithmType, NiceHashSMA> currentSMA;
+
         public NiceHashData() {
             recentPaying = new Dictionary<AlgorithmType, List<double>>();
             var sma = new Dictionary<AlgorithmType, NiceHashSMA>();
@@ -33,6 +34,24 @@ namespace NiceHashMiner
                     };
                     recentPaying[algo] = new List<double> { 0 };
                 }
+            }
+            currentSMA = sma;
+        }
+
+        public NiceHashData(zPoolAlgo[] data)
+        {
+            recentPaying = new Dictionary<AlgorithmType, List<double>>();
+            var sma = new Dictionary<AlgorithmType, NiceHashSMA>();
+            foreach (var algo in data)
+            {
+                    sma[(AlgorithmType)algo.NiceHashAlgoId()] = new NiceHashSMA
+                    {
+                        port = algo.port,
+                        name = algo.Algorithm.ToString().ToLower(),
+                        algo = algo.NiceHashAlgoId(),
+                        paying = 0
+                    };
+                    recentPaying[(AlgorithmType)algo.NiceHashAlgoId()] = new List<double> { 0 };
             }
             currentSMA = sma;
         }

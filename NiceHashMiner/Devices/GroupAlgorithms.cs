@@ -202,31 +202,32 @@ namespace NiceHashMiner.Devices {
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.NeoScrypt, "neoscrypt") { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4" },
                             //new Algorithm(MinerBaseType.sgminer, AlgorithmType.Lyra2REv2,  "Lyra2REv2") { ExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity  160 --thread-concurrency    0 --worksize  64 --gpu-threads 1" },
-                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.DaggerHashimoto, "ethash") { ExtraLaunchParameters = RemDis + "--xintensity 512 -w 192 -g 1" },
+                            // not on zPool
+                            //new Algorithm(MinerBaseType.sgminer, AlgorithmType.DaggerHashimoto, "ethash") { ExtraLaunchParameters = RemDis + "--xintensity 512 -w 192 -g 1" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.Decred, "decred") { ExtraLaunchParameters = RemDis + "--gpu-threads 1 --xintensity 256 --lookup-gap 2 --worksize 64" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.Lbry, "lbry") { ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2" },
-                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.CryptoNight, "cryptonight") { ExtraLaunchParameters = DefaultParam + "--rawintensity 512 -w 4 -g 2" },
-                            new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal") { ExtraLaunchParameters = DefaultParam + "--intensity 21 -w 64 -g 2" },
+                            //new Algorithm(MinerBaseType.sgminer, AlgorithmType.CryptoNight, "cryptonight") { ExtraLaunchParameters = DefaultParam + "--rawintensity 512 -w 4 -g 2" },
+                            //new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal") { ExtraLaunchParameters = DefaultParam + "--intensity 21 -w 64 -g 2" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "sibcoin-mod") { ExtraLaunchParameters = DefaultParam + "--intensity 16 -w 64 -g 2" },
                             new Algorithm(MinerBaseType.sgminer, AlgorithmType.Keccak, "keccak") { ExtraLaunchParameters = DefaultParam + "--intensity 15" }
                         }
                     },
                     { MinerBaseType.Claymore,
                         new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.CryptoNight, "cryptonight"),
+                            //new Algorithm(MinerBaseType.Claymore, AlgorithmType.CryptoNight, "cryptonight"),
                             new Algorithm(MinerBaseType.Claymore, AlgorithmType.Equihash, "equihash"),
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal),
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
+                            //new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
+                            //new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
+                            //new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
+                            //new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal),
+                            //new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
                         }
                     },
-                    { MinerBaseType.Claymore_old,
-                        new List<Algorithm> {
-                            new Algorithm(MinerBaseType.Claymore_old, AlgorithmType.CryptoNight, "old")
-                        }
-                    },
+                    //{ MinerBaseType.Claymore_old,
+                    //    new List<Algorithm> {
+                    //        new Algorithm(MinerBaseType.Claymore_old, AlgorithmType.CryptoNight, "old")
+                    //    }
+                    //},
                     { MinerBaseType.OptiminerAMD,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.OptiminerAMD, AlgorithmType.Equihash, "equihash")
@@ -235,7 +236,7 @@ namespace NiceHashMiner.Devices {
                     { MinerBaseType.Prospector,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt"),
-                            new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
+                            //new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
                         }
                     },
                     //{ MinerBaseType.XmrStakAMD,
@@ -255,11 +256,11 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.NeoScrypt, "neoscrypt"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv2, "lyra2v2"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Decred, "decred"),
-                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight, "cryptonight"),
+                            //new Algorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight, "cryptonight"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lbry, "lbry"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s"),
-                            new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia"),
+                            //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Nist5, "nist5"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
                             new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk")
@@ -271,11 +272,11 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.Nist5, "nist5")
                         }
                     },
-                    { MinerBaseType.ethminer,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto")
-                        }
-                    },
+                    //{ MinerBaseType.ethminer,
+                    //    new List<Algorithm>() {
+                    //        new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto")
+                    //    }
+                    //},
                     { MinerBaseType.nheqminer,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
@@ -284,7 +285,7 @@ namespace NiceHashMiner.Devices {
                     { MinerBaseType.excavator,
                         new List<Algorithm>() {
                             new Algorithm(MinerBaseType.excavator, AlgorithmType.Equihash, "equihash"),
-                            new Algorithm(MinerBaseType.excavator, AlgorithmType.Pascal, "pascal")
+                            //new Algorithm(MinerBaseType.excavator, AlgorithmType.Pascal, "pascal")
                         }
                     },
                     { MinerBaseType.EWBF,
@@ -292,15 +293,15 @@ namespace NiceHashMiner.Devices {
                             new Algorithm(MinerBaseType.EWBF, AlgorithmType.Equihash, "")
                         }
                     },
-                    { MinerBaseType.Claymore,
-                        new List<Algorithm>() {
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal),
-                            new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
-                        }
-                    }
+                    //{ MinerBaseType.Claymore,
+                    //    new List<Algorithm>() {
+                    //        new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
+                    //        new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Decred),
+                    //        new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Lbry),
+                    //        new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Pascal),
+                    //        new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "", AlgorithmType.Sia)
+                    //    }
+                    //}
                 };
                 if (DeviceGroupType.NVIDIA_6_x == deviceGroupType || DeviceGroupType.NVIDIA_5_x == deviceGroupType) {
                     ToRemoveMinerTypes.AddRange(new MinerBaseType[] {

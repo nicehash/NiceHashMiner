@@ -173,7 +173,8 @@ namespace NiceHashMiner.Devices
                 WindowsDisplayAdapters.QueryVideoControllers();
                 // Order important CPU Query must be first
                 // #1 CPU
-                CPU.QueryCPUs();
+                // We skip CPUs because zPool does not have cryptonight
+                //CPU.QueryCPUs();
                 // #2 CUDA
                 if (NVIDIA.IsSkipNVIDIA()) {
                     Helpers.ConsolePrint(TAG, "Skipping NVIDIA device detection, settings are set to disabled");
