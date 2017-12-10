@@ -230,6 +230,7 @@
             // 
             // textBoxWorkerName
             // 
+            this.textBoxWorkerName.Enabled = false;
             this.textBoxWorkerName.Location = new System.Drawing.Point(113, 65);
             this.textBoxWorkerName.Name = "textBoxWorkerName";
             this.textBoxWorkerName.Size = new System.Drawing.Size(120, 20);

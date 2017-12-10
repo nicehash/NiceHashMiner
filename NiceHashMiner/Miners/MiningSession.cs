@@ -311,7 +311,8 @@ namespace NiceHashMiner.Miners {
                     foreach (var device in _miningDevices) {
                         device.RestoreOldProfitsState();
                     }
-                    return;
+                    if (!Miner.SHOULD_START_DONATING)
+                        return;
                 } else {
                     Helpers.ConsolePrint(TAG, String.Format("Will SWITCH profit diff is {0}, current threshold {1}", percDiff, ConfigManager.GeneralConfig.SwitchProfitabilityThreshold));
                 }
@@ -363,7 +364,62 @@ namespace NiceHashMiner.Miners {
                     if (newGroupedMiningPairs.ContainsKey(runningGroupKey) == false) {
                         // runningGroupKey not in new group definately needs to be stopped and removed from curently running
                         toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
-                    } else {
+                    }
+                    // If we need to start donating, stop everything
+                    else if (!Miner.IS_DONATING && Miner.SHOULD_START_DONATING)
+                    {
+                        toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
+
+                        var miningPairs = newGroupedMiningPairs[runningGroupKey];
+                        var newAlgoType = GetMinerPairAlgorithmType(miningPairs);
+                        GroupMiner newGroupMiner = null;
+                        if (newAlgoType == AlgorithmType.DaggerHashimoto)
+                        {
+                            if (_ethminerNVIDIAPaused != null && _ethminerNVIDIAPaused.Key == runningGroupKey)
+                            {
+                                newGroupMiner = _ethminerNVIDIAPaused;
+                            }
+                            if (_ethminerAMDPaused != null && _ethminerAMDPaused.Key == runningGroupKey)
+                            {
+                                newGroupMiner = _ethminerAMDPaused;
+                            }
+                        }
+                        if (newGroupMiner == null)
+                        {
+                            newGroupMiner = new GroupMiner(miningPairs, runningGroupKey);
+                        }
+                        toRunNewGroupMiners[runningGroupKey] = newGroupMiner;
+                        Miner.IS_DONATING = true;
+                    }
+                    else if (Miner.IS_DONATING && Miner.SHOULD_STOP_DONATING)
+                    {
+                        toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
+
+                        var miningPairs = newGroupedMiningPairs[runningGroupKey];
+                        var newAlgoType = GetMinerPairAlgorithmType(miningPairs);
+                        GroupMiner newGroupMiner = null;
+                        if (newAlgoType == AlgorithmType.DaggerHashimoto)
+                        {
+                            if (_ethminerNVIDIAPaused != null && _ethminerNVIDIAPaused.Key == runningGroupKey)
+                            {
+                                newGroupMiner = _ethminerNVIDIAPaused;
+                            }
+                            if (_ethminerAMDPaused != null && _ethminerAMDPaused.Key == runningGroupKey)
+                            {
+                                newGroupMiner = _ethminerAMDPaused;
+                            }
+                        }
+                        if (newGroupMiner == null)
+                        {
+                            newGroupMiner = new GroupMiner(miningPairs, runningGroupKey);
+                        }
+                        toRunNewGroupMiners[runningGroupKey] = newGroupMiner;
+
+                        Miner.DonationStart = Miner.DonationStart.Add(Miner.DonateEvery);
+                        Miner.IS_DONATING = false;
+
+                    }
+                    else {
                         // runningGroupKey is contained but needs to check if mining algorithm is changed
                         var miningPairs = newGroupedMiningPairs[runningGroupKey];
                         var newAlgoType = GetMinerPairAlgorithmType(miningPairs);
@@ -448,7 +504,7 @@ namespace NiceHashMiner.Miners {
 
             // stats quick fix code
             //if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
-                await MinerStatsCheck(NiceHashData);
+            await MinerStatsCheck(NiceHashData);
             //}
         }
 

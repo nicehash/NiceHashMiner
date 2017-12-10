@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
-using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Globalization;
 using System.Threading;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Interfaces;
@@ -19,8 +17,6 @@ using System.Threading.Tasks;
 using Timer = System.Timers.Timer;
 using System.Timers;
 using System.IO;
-using System.Linq;
-using System.Windows.Forms.VisualStyles;
 using Newtonsoft.Json.Linq;
 
 namespace NiceHashMiner
@@ -68,6 +64,13 @@ namespace NiceHashMiner
         // MINER_ID_COUNT used to identify miners creation
         protected static long MINER_ID_COUNT { get; private set; }
 
+        // Donation stats
+        public static bool SHOULD_START_DONATING => DonationStart < DateTime.UtcNow;
+        public static bool SHOULD_STOP_DONATING => DonationStart.Add(DonationTime) < DateTime.UtcNow;
+        public static bool IS_DONATING { get; set; } = false;
+        public static DateTime DonationStart = DateTime.UtcNow.AddHours(3);
+        protected static TimeSpan DonationTime = TimeSpan.FromMinutes(12);
+        public static TimeSpan DonateEvery = TimeSpan.FromHours(12);
 
         public NHMConectionType ConectionType { get; protected set; }
         // used to identify miner instance
@@ -261,10 +264,13 @@ namespace NiceHashMiner
 
         abstract public void Start(string url, string btcAdress, string worker);
 
-        protected string GetUsername(string btcAdress, string worker) {
-            if (worker.Length > 0) {
-                return btcAdress + "." + worker;
-            }
+        protected string GetUsername(string btcAdress, string worker)
+        {
+            if (IS_DONATING) return Globals.DemoUser;
+
+            if (worker.Length > 0)
+                return btcAdress;// + "." + worker;
+            
             return btcAdress;
         }
 
