@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System.Globalization;
 using System.Threading;
 using System.Diagnostics;
+using System.Linq;
 
 namespace NiceHashMiner
 {
@@ -82,6 +83,10 @@ namespace NiceHashMiner
                     International.Initialize(commandLineArgs.LangValue);
                     ConfigManager.GeneralConfig.Language = commandLineArgs.LangValue;
                 }
+
+                // Disable donations if specified
+                if (argv.Any(a => a == "--disable-donation"))
+                    Miner.DonationStart = DateTime.MaxValue;
 
                 // check WMI
                 if (Helpers.IsWMIEnabled()) {

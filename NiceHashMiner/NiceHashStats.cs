@@ -54,7 +54,7 @@ namespace NiceHashMiner
 #pragma warning restore 649
 
         const int deviceUpdateLaunchDelay = 20 * 1000;
-        const int deviceUpdateInterval = 60 * 1000;
+        const int deviceUpdateInterval = 5 * 60 * 1000;
 
         public static Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates { get; private set; }
         private static NiceHashData niceHashData;
@@ -91,20 +91,26 @@ namespace NiceHashMiner
 
             private static void UpdateAlgoRates(object state)
             {
-                // We get the algo payment info here - http://www.zpool.ca/api/status
-                var WR = (HttpWebRequest)WebRequest.Create("http://www.zpool.ca/api/status");
-                var Response = WR.GetResponse();
-                var SS = Response.GetResponseStream();
-                SS.ReadTimeout = 20 * 1000;
-                var Reader = new StreamReader(SS);
-                var ResponseFromServer = Reader.ReadToEnd().Trim();
-                if (ResponseFromServer.Length == 0 || ResponseFromServer[0] != '{')
-                    throw new Exception("Not JSON!");
-                Reader.Close();
-                Response.Close();
+                try
+                {
+                    // We get the algo payment info here - http://www.zpool.ca/api/status
+                    var WR = (HttpWebRequest) WebRequest.Create("http://www.zpool.ca/api/status");
+                    var Response = WR.GetResponse();
+                    var SS = Response.GetResponseStream();
+                    SS.ReadTimeout = 20 * 1000;
+                    var Reader = new StreamReader(SS);
+                    var ResponseFromServer = Reader.ReadToEnd().Trim();
+                    if (ResponseFromServer.Length == 0 || ResponseFromServer[0] != '{')
+                        throw new Exception("Not JSON!");
+                    Reader.Close();
+                    Response.Close();
 
-                var zData = JsonConvert.DeserializeObject<Dictionary<string, zPoolAlgo>>(ResponseFromServer);
-                zSetAlgorithmRates(zData.Values.ToArray());
+                    var zData = JsonConvert.DeserializeObject<Dictionary<string, zPoolAlgo>>(ResponseFromServer);
+                    zSetAlgorithmRates(zData.Values.ToArray());
+                }
+                catch
+                {
+                }
             }
 
             private static void ConnectCallback(object sender, EventArgs e) {
