@@ -58,9 +58,11 @@ namespace NiceHashMiner {
         public string CurPayingRatio {
             get {
                 string ratio = International.GetText("BenchmarkRatioRateN_A");
-                if (Globals.NiceHashData != null) {
+                if (Globals.NiceHashData != null)
+                {
                     ratio = Globals.NiceHashData[NiceHashID].paying.ToString("F8");
-                    if (IsDual() && Globals.NiceHashData.ContainsKey(SecondaryNiceHashID)) {
+                    if (IsDual() && Globals.NiceHashData.ContainsKey(SecondaryNiceHashID))
+                    {
                         ratio += "/" + Globals.NiceHashData[SecondaryNiceHashID].paying.ToString("F8");
                     }
                 }

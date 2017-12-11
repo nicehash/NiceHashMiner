@@ -436,7 +436,7 @@ namespace NiceHashMiner
                 case "decred": return 21;
                 case "equihash": return 24;
                 case "lbry": return 23;
-                case "lyra2v2": return 9;
+                case "lyra2v2": return 14;
                 case "neoscrypt": return 8;
                 case "nist5": return 7;
                 case "quark": return 12;
