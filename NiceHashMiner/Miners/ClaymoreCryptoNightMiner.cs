@@ -46,10 +46,10 @@ namespace NiceHashMiner.Miners {
             string username = GetUsername(btcAdress, worker);
             if (isOld) {
                 LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -o " + url + " -u " +
-                                  username + " -p x -dbg -1";
+                                  username + " -p " + worker + " -dbg -1";
             } else {
                 LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + APIPort + " -xpool " + url +
-                                  " -xwal " + username + " -xpsw x -dbg -1";
+                                  " -xwal " + username + " -xpsw " + worker + " -dbg -1";
             }
             ProcessHandle = _Start();
         }

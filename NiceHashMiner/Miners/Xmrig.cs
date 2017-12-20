@@ -28,7 +28,7 @@ namespace NiceHashMiner.Miners
 
         private string GetStartCommand(string url, string btcAdress, string worker) {
             var extras = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.CPU);
-            return $" -o {url} -u {btcAdress}.{worker}:x --nicehash {extras} --api-port {APIPort}";
+            return $" -o {url} -u {btcAdress}:{worker} --nicehash {extras} --api-port {APIPort}";
         }
 
         protected override void _Stop(MinerStopType willswitch) {

@@ -71,7 +71,7 @@ namespace NiceHashMiner.Miners
         private string GetStartCommand(string url, string btcAddress, string worker) {
             var ret = GetDevicesCommandString()
                 + " --server " + url.Split(':')[0]
-                + " --user " + btcAddress + "." + worker + " --pass x --port "
+                + " --user " + btcAddress + " --pass " + worker + " --port "
                 + url.Split(':')[1] + " --api 127.0.0.1:" + APIPort;
             if (!ret.Contains("--fee")) {
                 ret += " --fee 0";

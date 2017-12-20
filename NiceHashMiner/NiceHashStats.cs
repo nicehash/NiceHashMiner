@@ -400,7 +400,7 @@ namespace NiceHashMiner
                 case "groestl": return zAlgorithm.groestl;
                 case "hmq1725": return zAlgorithm.hmq1725;
                 case "lbry": return zAlgorithm.lbry;
-                case "lyra2v2": return zAlgorithm.lyra2re2;
+                case "lyra2v2": return zAlgorithm.lyra2v2;
                 case "m7m": return zAlgorithm.m7m;
                 case "myr-gr": return zAlgorithm.myriad_groestl;
                 case "neoscrypt": return zAlgorithm.neoscrypt;
@@ -504,7 +504,7 @@ namespace NiceHashMiner
         qubit,
         quark,
         axiom,
-        lyra2re2,
+        lyra2v2,
         scryptjanenf16,
         blake256r8,
         blake256r14,

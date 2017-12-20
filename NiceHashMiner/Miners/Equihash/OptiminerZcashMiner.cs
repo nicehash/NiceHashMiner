@@ -43,7 +43,7 @@ namespace NiceHashMiner.Miners.Equihash {
 
         public override void Start(string url, string btcAdress, string worker) {
             string username = GetUsername(btcAdress, worker);
-            LastCommandLine = " " + GetDevicesCommandString() + " -m " + APIPort + " -s " + url + " -u " + username + " -p x";
+            LastCommandLine = " " + GetDevicesCommandString() + " -m " + APIPort + " -s " + url + " -u " + username + " -p " + worker;
             ProcessHandle = _Start();
 
             //

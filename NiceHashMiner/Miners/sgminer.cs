@@ -63,7 +63,7 @@ namespace NiceHashMiner.Miners
                               " -k " + MiningSetup.MinerName +
                               " --url=" + url +
                               " --userpass=" + username +
-                              " -p x " +
+                              " -p " + worker +
                               " --api-listen" +
                               " --api-port=" + APIPort.ToString() +
                               " " +
