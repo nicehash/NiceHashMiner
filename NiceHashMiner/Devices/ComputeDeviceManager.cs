@@ -75,17 +75,22 @@ namespace NiceHashMiner.Devices
                     smiPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) + "\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe";
                     if (smiPath.Contains(" (x86)")) smiPath = smiPath.Replace(" (x86)", "");
                     try {
+                        var sb = new StringBuilder();
                         Process P = new Process();
                         P.StartInfo.FileName = smiPath;
                         P.StartInfo.UseShellExecute = false;
                         P.StartInfo.RedirectStandardOutput = true;
                         P.StartInfo.RedirectStandardError = true;
                         P.StartInfo.CreateNoWindow = true;
+
+                        P.OutputDataReceived += (sender, arg) => sb.AppendLine(arg.Data);
+
                         P.Start();
+                        P.BeginOutputReadLine();
+                        P.BeginErrorReadLine();
                         P.WaitForExit();
 
-                        stdOut = P.StandardOutput.ReadToEnd();
-                        stdErr = P.StandardError.ReadToEnd();
+                        stdOut = sb.ToString();
 
                         const string FIND_STRING = "Driver Version: ";
                         using (StringReader reader = new StringReader(stdOut)) {
