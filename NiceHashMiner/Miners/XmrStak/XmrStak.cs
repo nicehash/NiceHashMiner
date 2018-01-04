@@ -174,7 +174,7 @@ namespace NiceHashMiner.Miners
 
             var speeds = outdata.Split();
             foreach (var s in speeds) {
-                if (!double.TryParse(s, out var speed)) continue;
+                if (!double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var speed)) continue;
                 _benchmarkSum += speed;
                 _benchmarkCount++;
                 break;
