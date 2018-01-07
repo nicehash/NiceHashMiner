@@ -727,31 +727,10 @@ namespace NiceHashMiner.Devices
                                     }
                                 }
                             }
-                            bool isBusID_OK = true;
-                            // check if buss ids are unique and different from -1
-                            {
-                                HashSet<int> bus_ids = new HashSet<int>();
-                                foreach (var amdOclDev in AMD_Devices) {
-                                    if (amdOclDev.AMD_BUS_ID < 0) {
-                                        isBusID_OK = false;
-                                        break;
-                                    }
-                                    bus_ids.Add(amdOclDev.AMD_BUS_ID);
-                                }
-                                // check if unique
-                                isBusID_OK = isBusID_OK && bus_ids.Count == AMD_Devices.Count;
-                            }
 
                             if (AMD_Devices.Count == 0) {
                                 Helpers.ConsolePrint(TAG, "AMD GPUs count is 0");
                             } else {
-                                // print BUS id status
-                                if (isBusID_OK) {
-                                    Helpers.ConsolePrint(TAG, "AMD Bus IDs are unique and valid. OK");
-                                } else {
-                                    Helpers.ConsolePrint(TAG, "AMD Bus IDs IS INVALID. Using fallback AMD detection mode");
-                                }
-
                                 Helpers.ConsolePrint(TAG, "AMD GPUs count : " + AMD_Devices.Count.ToString());
                                 Helpers.ConsolePrint(TAG, "AMD Getting device name and serial from ADL");
                                 // ADL
@@ -828,11 +807,11 @@ namespace NiceHashMiner.Devices
                                                                     var index = OSAdapterInfoData.ADLAdapterInfo[i].AdapterIndex;
                                                                     if (!_amdDeviceUUID.Contains(uuid)) {
                                                                         try {
-                                                                            Helpers.ConsolePrint(TAG, String.Format("ADL device added BusNumber:{0}  NAME:{1}  UUID:{2}"),
+                                                                            Helpers.ConsolePrint(TAG, String.Format("ADL device added BusNumber:{0}  NAME:{1}  UUID:{2}",
                                                                                 budId,
                                                                                 devName,
-                                                                                uuid);
-                                                                        } catch { }
+                                                                                uuid));
+                                                                        } catch (Exception e) { Helpers.ConsolePrint(TAG, e.Message); }
 
                                                                         _amdDeviceUUID.Add(uuid);
                                                                         //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
@@ -867,6 +846,27 @@ namespace NiceHashMiner.Devices
                                 } catch (Exception ex) {
                                     Helpers.ConsolePrint(TAG, "AMD ADL exception: " + ex.Message);
                                     isAdlInit = false;
+                                }
+
+                                bool isBusID_OK = true;
+                                // check if buss ids are unique and different from -1
+                                {
+                                    HashSet<int> bus_ids = new HashSet<int>();
+                                    foreach (var amdOclDev in AMD_Devices) {
+                                        if (amdOclDev.AMD_BUS_ID < 0 || !_busIdsInfo.ContainsKey(amdOclDev.AMD_BUS_ID)) {
+                                            isBusID_OK = false;
+                                            break;
+                                        }
+                                        bus_ids.Add(amdOclDev.AMD_BUS_ID);
+                                    }
+                                    // check if unique
+                                    isBusID_OK = isBusID_OK && bus_ids.Count == AMD_Devices.Count;
+                                }
+                                // print BUS id status
+                                if (isBusID_OK) {
+                                    Helpers.ConsolePrint(TAG, "AMD Bus IDs are unique and valid. OK");
+                                } else {
+                                    Helpers.ConsolePrint(TAG, "AMD Bus IDs IS INVALID. Using fallback AMD detection mode");
                                 }
 
                                 ///////
