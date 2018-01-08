@@ -70,6 +70,9 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(AMDAPPSDKROOT)include</IncludePath>
+    <LibraryPath>$(AMDAPPSDKROOT)lib\x86_64;$(LibraryPath)</LibraryPath>
+    <ExecutablePath>$(AMDAPPSDKROOT)bin\x86_64;$(ExecutablePath)</ExecutablePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
@@ -99,10 +102,10 @@
     </Link>
     <PostBuildEvent>
       <Command>
-        copy /Y "$(AMDAPPSDKROOT)\bin\x86_64\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL.dll"
+        copy /Y "$(AMDAPPSDKROOT)bin\x86_64\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL.dll"
         REM the path is absolute maybe fix
-        copy /Y "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x64\Microsoft.VC120.CRT\msvcp120.dll" "$(SolutionDir)$(Configuration)\msvcp120.dll"
-        copy /Y "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\redist\x64\Microsoft.VC120.CRT\msvcr120.dll" "$(SolutionDir)$(Configuration)\msvcr120.dll"
+        copy /Y "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Redist\MSVC\14.11.25325\x64\Microsoft.VC141.CRT\msvcp140.dll" "$(SolutionDir)$(Configuration)\msvcp120.dll"
+        copy /Y "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Redist\MSVC\14.11.25325\x64\Microsoft.VC141.CRT\vcruntime140.dll" "$(SolutionDir)$(Configuration)\msvcr120.dll"
       </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
