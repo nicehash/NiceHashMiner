@@ -852,7 +852,15 @@ namespace NiceHashMiner.Devices
                                 // check if buss ids are unique and different from -1
                                 {
                                     HashSet<int> bus_ids = new HashSet<int>();
-                                    foreach (var amdOclDev in AMD_Devices) {
+                                    // Override AMD bus IDs
+                                    var overrides = ConfigManager.GeneralConfig.OverrideAMDBusIds.Split(',');
+                                    for (var i = 0; i < AMD_Devices.Count; i++) {
+                                        var amdOclDev = AMD_Devices[i];
+                                        if (overrides.Count() > i && 
+                                            int.TryParse(overrides[i], out var overrideBus) &&
+                                            overrideBus >= 0) {
+                                            amdOclDev.AMD_BUS_ID = overrideBus;
+                                        }
                                         if (amdOclDev.AMD_BUS_ID < 0 || !_busIdsInfo.ContainsKey(amdOclDev.AMD_BUS_ID)) {
                                             isBusID_OK = false;
                                             break;
