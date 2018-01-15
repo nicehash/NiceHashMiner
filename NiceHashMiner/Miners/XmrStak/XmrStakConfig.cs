@@ -335,6 +335,7 @@ namespace NiceHashMiner.Miners
     {
         public int intensity = 512;
         public int worksize = 8;
+        public bool strided_index = true;
 
         public XmrStakAmdItem(int index, bool affine)
             : base(index, affine) { }
@@ -359,6 +360,7 @@ namespace NiceHashMiner.Miners
         public int blocks = 60;
         public int bfactor = 8;
         public int bsleep = 100;
+        public int sync_mode = 3;
 
         public XmrStakNvidiaItem(int index, bool affine)
             : base(index, affine) { }
