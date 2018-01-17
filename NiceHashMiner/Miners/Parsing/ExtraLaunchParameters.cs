@@ -7,7 +7,7 @@ using System.Text;
 namespace NiceHashMiner.Miners.Parsing {
     class MinerOptionPackageFile : ConfigFile<MinerOptionPackage> {
         public MinerOptionPackageFile(string name) 
-            : base(FOLDERS.INTERNALS, String.Format("{0}.json", name), String.Format("{0}.json", name)) {
+            : base(Folders.Internals, String.Format("{0}.json", name), String.Format("{0}.json", name)) {
         }
     }
     public static class ExtraLaunchParameters {

@@ -12,13 +12,13 @@ namespace NiceHashMiner.Miners {
 
         class MinerReservedPortsFile : ConfigFile<Dictionary<MinerBaseType, Dictionary<string, Dictionary<AlgorithmType, List<int>>>>> {
             public MinerReservedPortsFile()
-                : base(FOLDERS.CONFIG, "MinerReservedPorts.json", "MinerReservedPorts_old.json") {
+                : base(Folders.Config, "MinerReservedPorts.json", "MinerReservedPorts_old.json") {
             }
         }
 
         // {miner path : {envName : envValue} }
         class MinerSystemVariablesFile : ConfigFile<Dictionary<string, Dictionary<string, string>>> {
-            public MinerSystemVariablesFile() : base(FOLDERS.CONFIG, "MinerSystemVariables.json", "MinerSystemVariables_old.json") {}
+            public MinerSystemVariablesFile() : base(Folders.Config, "MinerSystemVariables.json", "MinerSystemVariables_old.json") {}
         }
 
         private static Dictionary<MinerBaseType,

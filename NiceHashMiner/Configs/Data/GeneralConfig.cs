@@ -1,12 +1,12 @@
 ﻿using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace NiceHashMiner.Configs.Data {
+namespace NiceHashMiner.Configs.Data
+{
     [Serializable]
-    public class GeneralConfig {
-
+    public class GeneralConfig
+    {
         public Version ConfigFileVersion;
         public LanguageType Language = LanguageType.En;
         public string DisplayCurrency = "USD";
@@ -20,7 +20,9 @@ namespace NiceHashMiner.Configs.Data {
         public bool AutoStartMining = false;
         public bool HideMiningWindows = false;
         public bool MinimizeToTray = false;
+
         public bool MinimizeMiningWindows = false;
+
         //public int LessThreads;
         public CPUExtensionType ForceCPUExtension = CPUExtensionType.Automatic;
 
@@ -32,6 +34,7 @@ namespace NiceHashMiner.Configs.Data {
         public int MinerRestartDelayMS = 500;
 
         public BenchmarkTimeLimitsConfig BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
+
         // TODO deprecate this
         public DeviceDetectionConfig DeviceDetection = new DeviceDetectionConfig();
 
@@ -59,21 +62,27 @@ namespace NiceHashMiner.Configs.Data {
         public bool IdleWhenNoInternetAccess = true;
         public bool UseIFTTT = false;
         public bool DownloadInit = false;
+
         public bool RunScriptOnCUDA_GPU_Lost = false;
+
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
+
         public bool DownloadInit3rdParty = false;
 
         public bool AllowMultipleInstances = true;
 
         // device enabled disabled stuff
         public List<ComputeDeviceConfig> LastDevicesSettup = new List<ComputeDeviceConfig>();
+
         // 
         public string hwid = "";
+
         public int agreedWithTOS = 0;
 
         // normalization stuff
         public double IQROverFactor = 3.0;
+
         public int NormalizedProfitHistory = 15;
         public double IQRNormalizeFactor = 0.0;
 
@@ -86,7 +95,8 @@ namespace NiceHashMiner.Configs.Data {
         public string OverrideAMDBusIds = "";
 
         // methods
-        public void SetDefaults() {
+        public void SetDefaults()
+        {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             Language = LanguageType.En;
             ForceCPUExtension = CPUExtensionType.Automatic;
@@ -138,56 +148,71 @@ namespace NiceHashMiner.Configs.Data {
             OverrideAMDBusIds = "";
         }
 
-        public void FixSettingBounds() {
-            this.ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            if (string.IsNullOrEmpty(this.DisplayCurrency)
-                || String.IsNullOrWhiteSpace(this.DisplayCurrency)) {
-                this.DisplayCurrency = "USD";
+        public void FixSettingBounds()
+        {
+            ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            if (string.IsNullOrEmpty(DisplayCurrency)
+                || string.IsNullOrWhiteSpace(DisplayCurrency))
+            {
+                DisplayCurrency = "USD";
             }
-            if (this.SwitchMinSecondsFixed <= 0) {
-                this.SwitchMinSecondsFixed = 90;
+            if (SwitchMinSecondsFixed <= 0)
+            {
+                SwitchMinSecondsFixed = 90;
             }
-            if (this.SwitchMinSecondsDynamic <= 0) {
-                this.SwitchMinSecondsDynamic = 30;
+            if (SwitchMinSecondsDynamic <= 0)
+            {
+                SwitchMinSecondsDynamic = 30;
             }
-            if (this.SwitchMinSecondsAMD <= 0) {
-                this.SwitchMinSecondsAMD = 60;
+            if (SwitchMinSecondsAMD <= 0)
+            {
+                SwitchMinSecondsAMD = 60;
             }
-            if (this.MinerAPIQueryInterval <= 0) {
-                this.MinerAPIQueryInterval = 5;
+            if (MinerAPIQueryInterval <= 0)
+            {
+                MinerAPIQueryInterval = 5;
             }
-            if (this.MinerRestartDelayMS <= 0) {
-                this.MinerRestartDelayMS = 500;
+            if (MinerRestartDelayMS <= 0)
+            {
+                MinerRestartDelayMS = 500;
             }
-            if (this.MinIdleSeconds <= 0) {
-                this.MinIdleSeconds = 60;
+            if (MinIdleSeconds <= 0)
+            {
+                MinIdleSeconds = 60;
             }
-            if (this.LogMaxFileSize <= 0) {
-                this.LogMaxFileSize = 1048576;
+            if (LogMaxFileSize <= 0)
+            {
+                LogMaxFileSize = 1048576;
             }
             // check port start number, leave about 2000 ports pool size, huge yea!
-            if (this.ApiBindPortPoolStart > (65535 - 2000)) {
-                this.ApiBindPortPoolStart = 5100;
+            if (ApiBindPortPoolStart > (65535 - 2000))
+            {
+                ApiBindPortPoolStart = 5100;
             }
-            if (this.BenchmarkTimeLimits == null) {
-                this.BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
+            if (BenchmarkTimeLimits == null)
+            {
+                BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
             }
-            if (this.DeviceDetection == null) {
-                this.DeviceDetection = new DeviceDetectionConfig();
+            if (DeviceDetection == null)
+            {
+                DeviceDetection = new DeviceDetectionConfig();
             }
-            if (this.LastDevicesSettup == null) {
-                this.LastDevicesSettup = new List<ComputeDeviceConfig>();
+            if (LastDevicesSettup == null)
+            {
+                LastDevicesSettup = new List<ComputeDeviceConfig>();
             }
-            if (IQROverFactor < 0) {
+            if (IQROverFactor < 0)
+            {
                 IQROverFactor = 3.0;
             }
-            if (NormalizedProfitHistory < 0) {
+            if (NormalizedProfitHistory < 0)
+            {
                 NormalizedProfitHistory = 15;
             }
-            if (IQRNormalizeFactor < 0) {
+            if (IQRNormalizeFactor < 0)
+            {
                 IQRNormalizeFactor = 0.0;
             }
         }
-
     }
 }

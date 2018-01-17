@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Configs.ConfigJsonFile {
-    public static class FOLDERS {
-        public static readonly string CONFIG = @"configs\";
-        public static readonly string INTERNALS = @"internals\";
+﻿namespace NiceHashMiner.Configs.ConfigJsonFile
+{
+    public static class Folders
+    {
+        public static readonly string Config = @"configs\";
+        public static readonly string Internals = @"internals\";
     }
 }

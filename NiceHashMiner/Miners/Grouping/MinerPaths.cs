@@ -12,7 +12,7 @@ namespace NiceHashMiner.Miners.Grouping
     class MinerPathPackageFile : ConfigFile<MinerPathPackage>
     {
         public MinerPathPackageFile(string name)
-            : base(FOLDERS.INTERNALS, String.Format("{0}.json", name), String.Format("{0}_old.json", name)) {
+            : base(Folders.Internals, String.Format("{0}.json", name), String.Format("{0}_old.json", name)) {
         }
     }
 

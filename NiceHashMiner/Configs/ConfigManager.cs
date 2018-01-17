@@ -1,167 +1,207 @@
 ﻿using NiceHashMiner.Configs.ConfigJsonFile;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace NiceHashMiner.Configs {
-    public static class ConfigManager {
-        private static readonly string TAG = "ConfigManager";
+namespace NiceHashMiner.Configs
+{
+    public static class ConfigManager
+    {
+        private const string Tag = "ConfigManager";
         public static GeneralConfig GeneralConfig = new GeneralConfig();
 
         // helper variables
-        private static bool IsGeneralConfigFileInit = false;
-        private static bool IsNewVersion = false;
+        private static bool _isGeneralConfigFileInit;
+
+        private static bool _isNewVersion;
 
         // for loading and saving
-        private static GeneralConfigFile GeneralConfigFile = new GeneralConfigFile();
-        private static Dictionary<string, DeviceBenchmarkConfigFile> BenchmarkConfigFiles = new Dictionary<string, DeviceBenchmarkConfigFile>();
+        private static readonly GeneralConfigFile GeneralConfigFile = new GeneralConfigFile();
+
+        private static readonly Dictionary<string, DeviceBenchmarkConfigFile> BenchmarkConfigFiles =
+            new Dictionary<string, DeviceBenchmarkConfigFile>();
 
         // backups
-        private static GeneralConfig GeneralConfigBackup = new GeneralConfig();
-        private static Dictionary<string, DeviceBenchmarkConfig> BenchmarkConfigsBackup = new Dictionary<string, DeviceBenchmarkConfig>();
+        private static GeneralConfig _generalConfigBackup = new GeneralConfig();
 
-        public static void InitializeConfig() {
+        private static Dictionary<string, DeviceBenchmarkConfig> _benchmarkConfigsBackup =
+            new Dictionary<string, DeviceBenchmarkConfig>();
+
+        public static void InitializeConfig()
+        {
             // init defaults
-            ConfigManager.GeneralConfig.SetDefaults();
-            ConfigManager.GeneralConfig.hwid = Helpers.GetCpuID();
+            GeneralConfig.SetDefaults();
+            GeneralConfig.hwid = Helpers.GetCpuID();
             // if exists load file
             GeneralConfig fromFile = null;
-            if(GeneralConfigFile.IsFileExists()) {
+            if (GeneralConfigFile.IsFileExists())
+            {
                 fromFile = GeneralConfigFile.ReadFile();
             }
             // just in case
-            if (fromFile != null) {
+            if (fromFile != null)
+            {
                 // set config loaded from file
-                IsGeneralConfigFileInit = true;
-                ConfigManager.GeneralConfig = fromFile;
-                if (ConfigManager.GeneralConfig.ConfigFileVersion == null
-                    || ConfigManager.GeneralConfig.ConfigFileVersion.CompareTo(System.Reflection.Assembly.GetExecutingAssembly().GetName().Version) != 0) {
-                    if (ConfigManager.GeneralConfig.ConfigFileVersion == null) {
-                        Helpers.ConsolePrint(TAG, "Loaded Config file no version detected falling back to defaults.");
-                        ConfigManager.GeneralConfig.SetDefaults();
+                _isGeneralConfigFileInit = true;
+                GeneralConfig = fromFile;
+                if (GeneralConfig.ConfigFileVersion == null
+                    || GeneralConfig.ConfigFileVersion.CompareTo(System.Reflection.Assembly.GetExecutingAssembly()
+                        .GetName().Version) != 0)
+                {
+                    if (GeneralConfig.ConfigFileVersion == null)
+                    {
+                        Helpers.ConsolePrint(Tag, "Loaded Config file no version detected falling back to defaults.");
+                        GeneralConfig.SetDefaults();
                     }
-                    Helpers.ConsolePrint(TAG, "Config file is from an older version of NiceHashMiner..");
-                    IsNewVersion = true;
+                    Helpers.ConsolePrint(Tag, "Config file is from an older version of NiceHashMiner..");
+                    _isNewVersion = true;
                     GeneralConfigFile.CreateBackup();
                 }
-                ConfigManager.GeneralConfig.FixSettingBounds();
-            } else {
+                GeneralConfig.FixSettingBounds();
+            }
+            else
+            {
                 GeneralConfigFileCommit();
             }
         }
 
-        public static bool GeneralConfigIsFileExist() {
-            return IsGeneralConfigFileInit;
+        public static bool GeneralConfigIsFileExist()
+        {
+            return _isGeneralConfigFileInit;
         }
 
-        public static void CreateBackup() {
-            GeneralConfigBackup = MemoryHelper.DeepClone(ConfigManager.GeneralConfig);
-            BenchmarkConfigsBackup = new Dictionary<string, DeviceBenchmarkConfig>();
-            foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                BenchmarkConfigsBackup[CDev.UUID] = CDev.GetAlgorithmDeviceConfig();
+        public static void CreateBackup()
+        {
+            _generalConfigBackup = MemoryHelper.DeepClone(GeneralConfig);
+            _benchmarkConfigsBackup = new Dictionary<string, DeviceBenchmarkConfig>();
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+            {
+                _benchmarkConfigsBackup[cDev.UUID] = cDev.GetAlgorithmDeviceConfig();
             }
         }
 
-        public static void RestoreBackup() {
+        public static void RestoreBackup()
+        {
             // restore general
-            GeneralConfig = GeneralConfigBackup;
-            if (GeneralConfig.LastDevicesSettup != null) {
-                foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                    foreach (var conf in GeneralConfig.LastDevicesSettup) {
-                        CDev.SetFromComputeDeviceConfig(conf);
+            GeneralConfig = _generalConfigBackup;
+            if (GeneralConfig.LastDevicesSettup != null)
+            {
+                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+                {
+                    foreach (var conf in GeneralConfig.LastDevicesSettup)
+                    {
+                        cDev.SetFromComputeDeviceConfig(conf);
                     }
                 }
             }
             // restore benchmarks
-            foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                if (BenchmarkConfigsBackup != null && BenchmarkConfigsBackup.ContainsKey(CDev.UUID)) {
-                    CDev.SetAlgorithmDeviceConfig(BenchmarkConfigsBackup[CDev.UUID]);
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+            {
+                if (_benchmarkConfigsBackup != null && _benchmarkConfigsBackup.ContainsKey(cDev.UUID))
+                {
+                    cDev.SetAlgorithmDeviceConfig(_benchmarkConfigsBackup[cDev.UUID]);
                 }
             }
         }
 
-        public static bool IsRestartNeeded() {
-            return ConfigManager.GeneralConfig.DebugConsole != GeneralConfigBackup.DebugConsole
-                || ConfigManager.GeneralConfig.NVIDIAP0State != GeneralConfigBackup.NVIDIAP0State
-                || ConfigManager.GeneralConfig.LogToFile != GeneralConfigBackup.LogToFile
-                || ConfigManager.GeneralConfig.SwitchMinSecondsFixed != GeneralConfigBackup.SwitchMinSecondsFixed
-                || ConfigManager.GeneralConfig.SwitchMinSecondsAMD != GeneralConfigBackup.SwitchMinSecondsAMD
-                || ConfigManager.GeneralConfig.SwitchMinSecondsDynamic != GeneralConfigBackup.SwitchMinSecondsDynamic
-                || ConfigManager.GeneralConfig.MinerAPIQueryInterval != GeneralConfigBackup.MinerAPIQueryInterval
-                || ConfigManager.GeneralConfig.DisableWindowsErrorReporting != GeneralConfigBackup.DisableWindowsErrorReporting ;
+        public static bool IsRestartNeeded()
+        {
+            return GeneralConfig.DebugConsole != _generalConfigBackup.DebugConsole
+                   || GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
+                   || GeneralConfig.LogToFile != _generalConfigBackup.LogToFile
+                   || GeneralConfig.SwitchMinSecondsFixed != _generalConfigBackup.SwitchMinSecondsFixed
+                   || GeneralConfig.SwitchMinSecondsAMD != _generalConfigBackup.SwitchMinSecondsAMD
+                   || GeneralConfig.SwitchMinSecondsDynamic != _generalConfigBackup.SwitchMinSecondsDynamic
+                   || GeneralConfig.MinerAPIQueryInterval != _generalConfigBackup.MinerAPIQueryInterval
+                   || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting;
         }
 
-        public static void GeneralConfigFileCommit() {
+        public static void GeneralConfigFileCommit()
+        {
             GeneralConfig.LastDevicesSettup.Clear();
-            foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                GeneralConfig.LastDevicesSettup.Add(CDev.GetComputeDeviceConfig());
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+            {
+                GeneralConfig.LastDevicesSettup.Add(cDev.GetComputeDeviceConfig());
             }
             GeneralConfigFile.Commit(GeneralConfig);
         }
 
-        public static void CommitBenchmarks() {
-            foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                string devUUID = CDev.UUID;
-                if (BenchmarkConfigFiles.ContainsKey(devUUID)) {
-                    BenchmarkConfigFiles[devUUID].Commit(CDev.GetAlgorithmDeviceConfig());
-                } else {
-                    BenchmarkConfigFiles[devUUID] = new DeviceBenchmarkConfigFile(devUUID);
-                    BenchmarkConfigFiles[devUUID].Commit(CDev.GetAlgorithmDeviceConfig());
+        public static void CommitBenchmarks()
+        {
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+            {
+                var devUuid = cDev.UUID;
+                if (BenchmarkConfigFiles.ContainsKey(devUuid))
+                {
+                    BenchmarkConfigFiles[devUuid].Commit(cDev.GetAlgorithmDeviceConfig());
+                }
+                else
+                {
+                    BenchmarkConfigFiles[devUuid] = new DeviceBenchmarkConfigFile(devUuid);
+                    BenchmarkConfigFiles[devUuid].Commit(cDev.GetAlgorithmDeviceConfig());
                 }
             }
         }
 
-        public static void AfterDeviceQueryInitialization() {
+        public static void AfterDeviceQueryInitialization()
+        {
             // extra check (probably will never happen but just in case)
             {
-                List<ComputeDevice> invalidDevices = new List<ComputeDevice>();
-                foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                    if (CDev.IsAlgorithmSettingsInitialized() == false) {
-                        Helpers.ConsolePrint(TAG, "CRITICAL ISSUE!!! Device has AlgorithmSettings == null. Will remove");
-                        invalidDevices.Add(CDev);
+                var invalidDevices = new List<ComputeDevice>();
+                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+                {
+                    if (cDev.IsAlgorithmSettingsInitialized() == false)
+                    {
+                        Helpers.ConsolePrint(Tag,
+                            "CRITICAL ISSUE!!! Device has AlgorithmSettings == null. Will remove");
+                        invalidDevices.Add(cDev);
                     }
                 }
                 // remove invalids
-                foreach (var invalid in invalidDevices) {
+                foreach (var invalid in invalidDevices)
+                {
                     ComputeDeviceManager.Avaliable.AllAvaliableDevices.Remove(invalid);
                 }
             }
             // set enabled/disabled devs
-            foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                foreach (var devConf in GeneralConfig.LastDevicesSettup) {
-                    CDev.SetFromComputeDeviceConfig(devConf);
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+            {
+                foreach (var devConf in GeneralConfig.LastDevicesSettup)
+                {
+                    cDev.SetFromComputeDeviceConfig(devConf);
                 }
             }
             // create/init device benchmark configs files and configs
-            foreach (var CDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
-                string keyUUID = CDev.UUID;
-                BenchmarkConfigFiles[keyUUID] = new DeviceBenchmarkConfigFile(keyUUID);
+            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+            {
+                var keyUuid = cDev.UUID;
+                BenchmarkConfigFiles[keyUuid] = new DeviceBenchmarkConfigFile(keyUuid);
                 // init 
                 {
                     DeviceBenchmarkConfig currentConfig = null;
-                    if (BenchmarkConfigFiles[keyUUID].IsFileExists()) {
-                        currentConfig = BenchmarkConfigFiles[keyUUID].ReadFile();
+                    if (BenchmarkConfigFiles[keyUuid].IsFileExists())
+                    {
+                        currentConfig = BenchmarkConfigFiles[keyUuid].ReadFile();
                     }
                     // config exists and file load success set from file
-                    if (currentConfig != null) {
-                        CDev.SetAlgorithmDeviceConfig(currentConfig);
+                    if (currentConfig != null)
+                    {
+                        cDev.SetAlgorithmDeviceConfig(currentConfig);
                         // if new version create backup
-                        if (IsNewVersion) {
-                            BenchmarkConfigFiles[keyUUID].CreateBackup();
+                        if (_isNewVersion)
+                        {
+                            BenchmarkConfigFiles[keyUuid].CreateBackup();
                         }
-                    } else {
+                    }
+                    else
+                    {
                         // no config file or not loaded, create new
-                        BenchmarkConfigFiles[keyUUID].Commit(CDev.GetAlgorithmDeviceConfig());
+                        BenchmarkConfigFiles[keyUuid].Commit(cDev.GetAlgorithmDeviceConfig());
                     }
                 }
             }
             // save settings
             GeneralConfigFileCommit();
         }
-
-
     }
 }
