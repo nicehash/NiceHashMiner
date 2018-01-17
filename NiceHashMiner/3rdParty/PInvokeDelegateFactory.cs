@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.InteropServices;
+// ReSharper disable All
 
 namespace NVIDIA
 {
