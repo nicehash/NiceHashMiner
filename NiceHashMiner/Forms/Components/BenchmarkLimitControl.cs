@@ -40,9 +40,9 @@ namespace NiceHashMiner.Forms.Components
         public BenchmarkLimitControl()
         {
             InitializeComponent();
-            textBoxQuick.KeyPress += TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress;
-            textBoxStandard.KeyPress += TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress;
-            textBoxPrecise.KeyPress += TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress;
+            textBoxQuick.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
+            textBoxStandard.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
+            textBoxPrecise.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
             _textBoxes = new[] {textBoxQuick, textBoxStandard, textBoxPrecise};
             //InitLocale();
         }

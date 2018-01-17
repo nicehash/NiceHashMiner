@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Configs;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Forms
 {
     public partial class DriverVersionConfirmationDialog : Form
     {
@@ -15,14 +10,15 @@ namespace NiceHashMiner
         {
             InitializeComponent();
 
-            this.Text = International.GetText("DriverVersionConfirmationDialog_title");
+            Text = International.GetText("DriverVersionConfirmationDialog_title");
             labelWarning.Text = International.GetText("DriverVersionConfirmationDialog_labelWarning");
-            linkToDriverDownloadPage.Text = International.GetText("DriverVersionConfirmationDialog_linkToDriverDownloadPage");
+            linkToDriverDownloadPage.Text =
+                International.GetText("DriverVersionConfirmationDialog_linkToDriverDownloadPage");
             chkBoxDontShowAgain.Text = International.GetText("DriverVersionConfirmationDialog_chkBoxDontShowAgain");
             buttonOK.Text = International.GetText("Global_OK");
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
+        private void ButtonOK_Click(object sender, EventArgs e)
         {
             if (chkBoxDontShowAgain.Checked)
             {
@@ -30,12 +26,13 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfig.ShowDriverVersionWarning = false;
             }
 
-            this.Close();
+            Close();
         }
 
-        private void linkToDriverDownloadPage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LinkToDriverDownloadPage_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://support.amd.com/en-us/download/desktop/legacy?product=legacy3&os=Windows+7+-+64");
+            System.Diagnostics.Process.Start(
+                "http://support.amd.com/en-us/download/desktop/legacy?product=legacy3&os=Windows+7+-+64");
         }
     }
 }

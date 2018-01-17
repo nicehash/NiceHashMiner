@@ -45,7 +45,7 @@
             this.linkLabelError.TabStop = true;
             this.linkLabelError.Text = resources.GetString("linkLabelError.Text");
             this.linkLabelError.UseCompatibleTextRendering = true;
-            this.linkLabelError.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelError_LinkClicked);
+            this.linkLabelError.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelError_LinkClicked);
             // 
             // chkBoxDisableDetection
             // 
@@ -67,7 +67,7 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseCompatibleTextRendering = true;
             this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            this.buttonOK.Click += new System.EventHandler(this.ButtonOK_Click);
             // 
             // MinerFileNotFoundDialog
             // 

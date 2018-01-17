@@ -39,12 +39,12 @@ namespace NiceHashMiner.Forms.Components
 
         public void SetInputModeDoubleOnly()
         {
-            textBox.KeyPress += TextBoxKeyPressEvents.textBoxDoubleOnly_KeyPress;
+            textBox.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
         }
 
         public void SetInputModeIntOnly()
         {
-            textBox.KeyPress += TextBoxKeyPressEvents.textBoxIntsOnly_KeyPress;
+            textBox.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
         }
 
         public void SetOnTextChanged(EventHandler textChanged)

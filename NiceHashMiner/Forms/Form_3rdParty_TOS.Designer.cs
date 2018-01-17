@@ -36,7 +36,7 @@
             this.button_Agree.TabIndex = 0;
             this.button_Agree.Text = "button1";
             this.button_Agree.UseVisualStyleBackColor = true;
-            this.button_Agree.Click += new System.EventHandler(this.button_Agree_Click);
+            this.button_Agree.Click += new System.EventHandler(this.Button_Agree_Click);
             // 
             // button_Decline
             // 
@@ -46,7 +46,7 @@
             this.button_Decline.TabIndex = 1;
             this.button_Decline.Text = "button2";
             this.button_Decline.UseVisualStyleBackColor = true;
-            this.button_Decline.Click += new System.EventHandler(this.button_Decline_Click);
+            this.button_Decline.Click += new System.EventHandler(this.Button_Decline_Click);
             // 
             // label_Tos
             // 
