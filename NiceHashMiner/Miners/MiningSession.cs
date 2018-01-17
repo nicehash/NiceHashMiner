@@ -141,7 +141,7 @@ namespace NiceHashMiner.Miners {
                 _ethminerAMDPaused = null;
             }
             if (_mainFormRatesComunication != null) {
-                _mainFormRatesComunication.ClearRatesALL();
+                _mainFormRatesComunication.ClearRatesAll();
             }
 
             // restroe/enable sleep

@@ -96,7 +96,7 @@ namespace NiceHashMiner
                 _emtpyGroupPanelHeight = 59;
                 _mainFormHeight = 330 - _emtpyGroupPanelHeight;
             }
-            ClearRatesALL();
+            ClearRatesAll();
         }
 
         private void InitLocalization()
@@ -538,7 +538,7 @@ namespace NiceHashMiner
             }
         }
 
-        public void ClearRatesALL()
+        public void ClearRatesAll()
         {
             HideNotProfitable();
             ClearRates(-1);
@@ -1099,7 +1099,7 @@ namespace NiceHashMiner
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
             InitFlowPanelStart();
-            ClearRatesALL();
+            ClearRatesAll();
 
             var btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
             var isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
