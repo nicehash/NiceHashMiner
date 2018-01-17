@@ -108,7 +108,7 @@ namespace NiceHashMiner.Miners.Grouping {
             foreach (var device in miningDevs) {
                 string devName = device.Device.Name;
                 // add UUID
-                allAvaragers[devName].UUIDsList.Add(device.Device.UUID);
+                allAvaragers[devName].UUIDsList.Add(device.Device.Uuid);
                 allAvaragers[devName].AddAlgorithms(device.Algorithms);
             }
             // calculate and set new AvarageSpeeds for miningDeviceReferences
@@ -116,7 +116,7 @@ namespace NiceHashMiner.Miners.Grouping {
                 AvaragerGroup curAvarager = curAvaragerKvp.Value;
                 var calculatedAvaragers = curAvarager.CalculateAvarages();
                 foreach (var uuid in curAvarager.UUIDsList) {
-                    int minerDevIndex = miningDevs.FindIndex((dev) => dev.Device.UUID == uuid);
+                    int minerDevIndex = miningDevs.FindIndex((dev) => dev.Device.Uuid == uuid);
                     if (minerDevIndex > -1) {
                         foreach (var avgKvp in calculatedAvaragers) {
                             string algo_id = avgKvp.Key;

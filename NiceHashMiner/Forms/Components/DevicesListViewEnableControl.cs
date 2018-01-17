@@ -143,7 +143,7 @@ namespace NiceHashMiner.Forms.Components {
             }
             var lvi = e.Item as ListViewItem;
             if (lvi != null) _listItemCheckColorSetter.LviSetColor(lvi);
-            if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(CDevice.Enabled, CDevice.UUID);
+            if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(CDevice.Enabled, CDevice.Uuid);
             if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
         }
 
@@ -159,7 +159,7 @@ namespace NiceHashMiner.Forms.Components {
                     contextMenuStrip1.Items.Clear();
                     if (IsSettingsCopyEnabled) {
                         var CDevice = listViewDevices.FocusedItem.Tag as ComputeDevice;
-                        var sameDevTypes = ComputeDeviceManager.Avaliable.GetSameDevicesTypeAsDeviceWithUUID(CDevice.UUID);
+                        var sameDevTypes = ComputeDeviceManager.Avaliable.GetSameDevicesTypeAsDeviceWithUuid(CDevice.Uuid);
                         if (sameDevTypes.Count > 0) {
                             var copyBenchItem = new ToolStripMenuItem();
                             //copyBenchItem.DropDownItems
@@ -167,9 +167,9 @@ namespace NiceHashMiner.Forms.Components {
                                 if (cDev.Enabled) {
                                     var copyBenchDropDownItem = new ToolStripMenuItem();
                                     copyBenchDropDownItem.Text = cDev.Name;
-                                    copyBenchDropDownItem.Checked = cDev.UUID == CDevice.BenchmarkCopyUUID;
+                                    copyBenchDropDownItem.Checked = cDev.Uuid == CDevice.BenchmarkCopyUuid;
                                     copyBenchDropDownItem.Click += toolStripMenuItemCopySettings_Click;
-                                    copyBenchDropDownItem.Tag = cDev.UUID;
+                                    copyBenchDropDownItem.Tag = cDev.Uuid;
                                     copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
                                 }
                             }
@@ -188,8 +188,8 @@ namespace NiceHashMiner.Forms.Components {
             if(item != null) {
                 var uuid = item.Tag as string;
                 if (uuid != null) {
-                    var copyBenchCDev = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(uuid);
-                    CDevice.BenchmarkCopyUUID = uuid;
+                    var copyBenchCDev = ComputeDeviceManager.Avaliable.GetDeviceWithUuid(uuid);
+                    CDevice.BenchmarkCopyUuid = uuid;
 
                     var result = MessageBox.Show(
                         String.Format(
@@ -199,7 +199,7 @@ namespace NiceHashMiner.Forms.Components {
                     if(result == DialogResult.Yes) {
                         // just copy
                         CDevice.CopyBenchmarkSettingsFrom(copyBenchCDev);
-                        if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(CDevice.Enabled, CDevice.UUID);
+                        if (_algorithmsListView != null) _algorithmsListView.RepaintStatus(CDevice.Enabled, CDevice.Uuid);
                     }
                 }
             }

@@ -144,7 +144,7 @@ namespace NiceHashMiner.Miners {
 
             List<string> ids = new List<string>();
 
-            int amdDeviceCount = ComputeDeviceManager.Query.AMD_Devices.Count;
+            int amdDeviceCount = ComputeDeviceManager.Query.AmdDevices.Count;
             Helpers.ConsolePrint("ClaymoreIndexing", String.Format("Found {0} AMD devices", amdDeviceCount));
 
             foreach (var mPair in sortedMinerPairs) {

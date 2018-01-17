@@ -162,7 +162,7 @@ namespace NiceHashMiner.Forms {
         public void LviSetColor(ListViewItem lvi) {
             var CDevice = lvi.Tag as ComputeDevice;
             if (CDevice != null && _benchmarkDevicesAlgorithmStatus != null) {
-                var uuid = CDevice.UUID;
+                var uuid = CDevice.Uuid;
                 if (!CDevice.Enabled) {
                     lvi.BackColor = DISABLED_COLOR;
                 } else {
@@ -263,10 +263,10 @@ namespace NiceHashMiner.Forms {
             Helpers.ConsolePrint("CopyBenchmarks", "Checking for benchmarks to copy");
             foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices) {
                 // check if copy
-                if (!cDev.Enabled && cDev.BenchmarkCopyUUID != null) {
-                    var copyCdevSettings = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(cDev.BenchmarkCopyUUID);
+                if (!cDev.Enabled && cDev.BenchmarkCopyUuid != null) {
+                    var copyCdevSettings = ComputeDeviceManager.Avaliable.GetDeviceWithUuid(cDev.BenchmarkCopyUuid);
                     if (copyCdevSettings != null) {
-                        Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", cDev.UUID, cDev.BenchmarkCopyUUID));
+                        Helpers.ConsolePrint("CopyBenchmarks", String.Format("Copy from {0} to {1}", cDev.Uuid, cDev.BenchmarkCopyUuid));
                         cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
                     }
                 }
@@ -333,7 +333,7 @@ namespace NiceHashMiner.Forms {
             algorithmsListView1.IsInBenchmark = false;
             devicesListViewEnableControl1.IsInBenchmark = false;
             if (_currentDevice != null) {
-                algorithmsListView1.RepaintStatus(_currentDevice.Enabled, _currentDevice.UUID);
+                algorithmsListView1.RepaintStatus(_currentDevice.Enabled, _currentDevice.Uuid);
             }
 
             CloseBtn.Enabled = true;
@@ -404,7 +404,7 @@ namespace NiceHashMiner.Forms {
                 }
             }
             if (_currentDevice != null) {
-                algorithmsListView1.RepaintStatus(_currentDevice.Enabled, _currentDevice.UUID);
+                algorithmsListView1.RepaintStatus(_currentDevice.Enabled, _currentDevice.Uuid);
             }
 
             StartBenchmark();
@@ -439,7 +439,7 @@ namespace NiceHashMiner.Forms {
                 } else {
                     status = algorithmQueue.Count == 0 ? BenchmarkSettingsStatus.DISABLED_NONE : BenchmarkSettingsStatus.DISABLED_TODO;
                 }
-                _benchmarkDevicesAlgorithmStatus[cDev.UUID] = status;
+                _benchmarkDevicesAlgorithmStatus[cDev.Uuid] = status;
             }
             // GUI stuff
             progressBarBenchmarkSteps.Maximum = _benchmarkAlgorithmsCount;

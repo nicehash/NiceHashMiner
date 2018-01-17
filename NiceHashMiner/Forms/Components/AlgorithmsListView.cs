@@ -106,7 +106,7 @@ namespace NiceHashMiner.Forms.Components {
         }
 
         public void RepaintStatus(bool isEnabled, string uuid) {
-            if (_computeDevice != null && _computeDevice.UUID == uuid) {
+            if (_computeDevice != null && _computeDevice.Uuid == uuid) {
                 foreach (ListViewItem lvi in listViewAlgorithms.Items) {
                     Algorithm algo = lvi.Tag as Algorithm;
                     lvi.SubItems[SPEED].Text = algo.BenchmarkSpeedString();
@@ -155,7 +155,7 @@ namespace NiceHashMiner.Forms.Components {
             if (algorithm != null) {
                 algorithm.BenchmarkStatus = status;
                 // gui update only if same as selected
-                if (_computeDevice != null && computeDevice.UUID == _computeDevice.UUID) {
+                if (_computeDevice != null && computeDevice.Uuid == _computeDevice.Uuid) {
                     foreach (ListViewItem lvi in listViewAlgorithms.Items) {
                         Algorithm algo = lvi.Tag as Algorithm;
                         if (algo != null && algo.AlgorithmStringID == algorithm.AlgorithmStringID) {
@@ -219,7 +219,7 @@ namespace NiceHashMiner.Forms.Components {
                     if (algorithm != null) {
                         algorithm.BenchmarkSpeed = 0;
                         algorithm.SecondaryBenchmarkSpeed = 0;
-                        RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                        RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         // update benchmark status data
                         if (BenchmarkCalculation != null) BenchmarkCalculation.CalcBenchmarkDevicesAlgorithmQueue();
                         // update settings

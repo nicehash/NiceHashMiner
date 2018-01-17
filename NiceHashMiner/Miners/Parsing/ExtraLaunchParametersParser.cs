@@ -80,7 +80,7 @@ namespace NiceHashMiner.Miners.Parsing {
                 foreach (var option in options) {
                     defaults[option.Type] = option.Default;
                 }
-                cdevOptions[pair.Device.UUID] = defaults;
+                cdevOptions[pair.Device.Uuid] = defaults;
             }
             // init order and params flags, and params list
             foreach (var option in options) {
@@ -92,7 +92,7 @@ namespace NiceHashMiner.Miners.Parsing {
             }
             // parse
             foreach (var pair in MiningPairs) {
-                LogParser(String.Format("ExtraLaunch params \"{0}\" for device UUID {1}", pair.CurrentExtraLaunchParameters, pair.Device.UUID));
+                LogParser(String.Format("ExtraLaunch params \"{0}\" for device UUID {1}", pair.CurrentExtraLaunchParameters, pair.Device.Uuid));
                 var parameters = pair.CurrentExtraLaunchParameters.Replace("=", "= ").Split(' ');
 
                 IgnorePrintLogInit();
@@ -109,7 +109,7 @@ namespace NiceHashMiner.Miners.Parsing {
                                 isIngored = false;
                                 if (option.FlagType == MinerOptionFlagType.Uni) {
                                     isOptionExist[option.Type] = true;
-                                    cdevOptions[pair.Device.UUID][option.Type] = "notNull"; // if Uni param is null it is not present
+                                    cdevOptions[pair.Device.Uuid][option.Type] = "notNull"; // if Uni param is null it is not present
                                 } else { // Sinlge and Multi param
                                     currentFlag = option.Type;
                                 }
@@ -120,7 +120,7 @@ namespace NiceHashMiner.Miners.Parsing {
                         }
                     } else if (currentFlag != MinerOptionType_NONE) {
                         isOptionExist[currentFlag] = true;
-                        cdevOptions[pair.Device.UUID][currentFlag] = param;
+                        cdevOptions[pair.Device.Uuid][currentFlag] = param;
                         currentFlag = MinerOptionType_NONE;
                     } else { // problem
                         IgnorePrintLog(param, IGNORE_PARAM, ignoreLogOpions);
@@ -134,7 +134,7 @@ namespace NiceHashMiner.Miners.Parsing {
             bool isAllDefault = true;
             foreach (var pair in MiningPairs) {
                 foreach (var option in options) {
-                    if (option.Default != cdevOptions[pair.Device.UUID][option.Type]) {
+                    if (option.Default != cdevOptions[pair.Device.Uuid][option.Type]) {
                         isAllDefault = false;
                         isOptionDefaults[option.Type] = false;
                     }
@@ -148,7 +148,7 @@ namespace NiceHashMiner.Miners.Parsing {
                             // uni params if one exist use or all must exist?
                             bool isOptionInUse = false;
                             foreach (var pair in MiningPairs) {
-                                if (cdevOptions[pair.Device.UUID][option.Type] != null) {
+                                if (cdevOptions[pair.Device.Uuid][option.Type] != null) {
                                     isOptionInUse = true;
                                     break;
                                 }
@@ -159,7 +159,7 @@ namespace NiceHashMiner.Miners.Parsing {
                         } else if(option.FlagType == MinerOptionFlagType.MultiParam) {
                             List<string> values = new List<string>();
                             foreach (var pair in MiningPairs) {
-                                values.Add(cdevOptions[pair.Device.UUID][option.Type]);
+                                values.Add(cdevOptions[pair.Device.Uuid][option.Type]);
                             }
                             string MASK = " {0} {1}";
                             if(option.LongName.Contains("=")) {
@@ -169,7 +169,7 @@ namespace NiceHashMiner.Miners.Parsing {
                         } else if (option.FlagType == MinerOptionFlagType.SingleParam) {
                             HashSet<string> values = new HashSet<string>();
                             foreach (var pair in MiningPairs) {
-                                values.Add(cdevOptions[pair.Device.UUID][option.Type]);
+                                values.Add(cdevOptions[pair.Device.Uuid][option.Type]);
                             }
                             string setValue = option.Default;
                             if (values.Count >= 1) {
@@ -185,7 +185,7 @@ namespace NiceHashMiner.Miners.Parsing {
                             List<string> values = new List<string>();
                             string MASK = " {0} {1}";
                             foreach (var pair in MiningPairs) {
-                                values.Add(String.Format(MASK, option.LongName, cdevOptions[pair.Device.UUID][option.Type]));
+                                values.Add(String.Format(MASK, option.LongName, cdevOptions[pair.Device.Uuid][option.Type]));
                             }
                             retVal += " " + String.Join(" ", values);
                         }

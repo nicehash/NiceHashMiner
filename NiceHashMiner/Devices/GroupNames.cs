@@ -1,38 +1,43 @@
 ﻿using NiceHashMiner.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NiceHashMiner.Devices
 {
-    static public class GroupNames
+    public static class GroupNames
     {
-        private static readonly string[] _names = {
-                                        "CPU", // we can have more then one CPU
-                                        "AMD_OpenCL",
-                                        "NVIDIA2.1",
-                                        "NVIDIA3.x",
-                                        "NVIDIA5.x",
-                                        "NVIDIA6.x",
-                                                  };
+        private static readonly string[] Names =
+        {
+            "CPU", // we can have more then one CPU
+            "AMD_OpenCL",
+            "NVIDIA2.1",
+            "NVIDIA3.x",
+            "NVIDIA5.x",
+            "NVIDIA6.x",
+        };
 
-        public static string GetGroupName(DeviceGroupType type, int id) {
-            if(DeviceGroupType.CPU == type) {
-                return "CPU"+id;
-            } else if ((int)type < _names.Length && (int)type >= 0) {
-                return _names[(int)type];
+        public static string GetGroupName(DeviceGroupType type, int id)
+        {
+            if (DeviceGroupType.CPU == type)
+            {
+                return "CPU" + id;
+            }
+            if ((int) type < Names.Length && (int) type >= 0)
+            {
+                return Names[(int) type];
             }
             return "UnknownGroup";
         }
 
-        public static string GetNameGeneral(DeviceType type) {
-            if(DeviceType.CPU == type) {
-                return "CPU";
-            } else if(DeviceType.NVIDIA == type) {
-                return "NVIDIA";
-            } else if (DeviceType.AMD == type) {
-                return "AMD";
-            } 
+        public static string GetNameGeneral(DeviceType type)
+        {
+            switch (type)
+            {
+                case DeviceType.CPU:
+                    return "CPU";
+                case DeviceType.NVIDIA:
+                    return "NVIDIA";
+                case DeviceType.AMD:
+                    return "AMD";
+            }
             return "UnknownDeviceType";
         }
     }

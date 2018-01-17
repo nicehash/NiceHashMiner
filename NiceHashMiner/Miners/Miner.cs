@@ -348,7 +348,7 @@ namespace NiceHashMiner
                 }
             } catch { }
             bench_lines = new List<string>();
-            benchmarkLogPath = String.Format("{0}Log_{1}_{2}", Logger._logPath, MiningSetup.MiningPairs[0].Device.UUID, MiningSetup.MiningPairs[0].Algorithm.AlgorithmStringID);
+            benchmarkLogPath = String.Format("{0}Log_{1}_{2}", Logger._logPath, MiningSetup.MiningPairs[0].Device.Uuid, MiningSetup.MiningPairs[0].Algorithm.AlgorithmStringID);
 
             string CommandLine = BenchmarkCreateCommandLine(BenchmarkAlgorithm, time);
 

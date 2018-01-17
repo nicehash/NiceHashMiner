@@ -117,7 +117,7 @@ namespace NiceHashMiner.Miners
                 platform = ProspectorPlatforms.PlatformForDeviceType(type);
             } else {  // fallback
                 Helpers.ConsolePrint(MinerTAG(), "Failed to get platforms, falling back");
-                if (ComputeDeviceManager.Avaliable.HasNVIDIA && type != DeviceType.NVIDIA)
+                if (ComputeDeviceManager.Avaliable.HasNvidia && type != DeviceType.NVIDIA)
                     platform = 1;
             }
             return String.Format("{0}-{1}", platform, id);

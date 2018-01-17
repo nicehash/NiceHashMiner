@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace NiceHashMiner.Devices {
+namespace NiceHashMiner.Devices
+{
     [Serializable]
-    public class OpenCLDevice {
+    public class OpenCLDevice
+    {
         public uint DeviceID;
         public string _CL_DEVICE_NAME;
         public string _CL_DEVICE_TYPE;

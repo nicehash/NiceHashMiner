@@ -270,7 +270,7 @@ namespace NiceHashMiner.Miners {
                 stringBuilderFull.AppendLine("Current device profits:");
                 foreach (var device in _miningDevices) {
                     StringBuilder stringBuilderDevice = new StringBuilder();
-                    stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", device.Device.UUID, device.Device.GetFullName()));
+                    stringBuilderDevice.AppendLine(String.Format("\tProfits for {0} ({1}):", device.Device.Uuid, device.Device.GetFullName()));
                     foreach (var algo in device.Algorithms) {
                        stringBuilderDevice.AppendLine(String.Format("\t\tPROFIT = {0}\t(SPEED = {1}\t\t| NHSMA = {2})\t[{3}]",
                             algo.CurrentProfit.ToString(DOUBLE_FORMAT), // Profit
@@ -327,7 +327,7 @@ namespace NiceHashMiner.Miners {
                     // check if is in group
                     bool isInGroup = false;
                     foreach (var groupedDevices in currentGroupedDevices) {
-                        if (groupedDevices.Contains(firstDev.UUID)) {
+                        if (groupedDevices.Contains(firstDev.Uuid)) {
                             isInGroup = true;
                             break;
                         }
@@ -336,14 +336,14 @@ namespace NiceHashMiner.Miners {
                     if (isInGroup == false) {
                         var newGroup = new GroupedDevices();
                         var miningPairs = new List<MiningPair>() { profitableDevices[first] };
-                        newGroup.Add(firstDev.UUID);
+                        newGroup.Add(firstDev.Uuid);
                         for (int second = first + 1; second < profitableDevices.Count; ++second) {
                             // check if we should group
                             var firstPair = profitableDevices[first];
                             var secondPair = profitableDevices[second];
                             if (GroupingLogic.ShouldGroup(firstPair, secondPair)) {
                                 var secondDev = profitableDevices[second].Device;
-                                newGroup.Add(secondDev.UUID);
+                                newGroup.Add(secondDev.Uuid);
                                 miningPairs.Add(profitableDevices[second]);
                             }
                         }

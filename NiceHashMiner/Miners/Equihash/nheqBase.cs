@@ -38,7 +38,7 @@ namespace NiceHashMiner.Miners {
 
         public nheqBase(string minerDeviceName)
             : base(minerDeviceName) {
-                AMD_OCL_PLATFORM = ComputeDeviceManager.Avaliable.AMDOpenCLPlatformNum;
+                AMD_OCL_PLATFORM = ComputeDeviceManager.Avaliable.AmdOpenCLPlatformNum;
         }
 
         public override void InitMiningSetup(MiningSetup miningSetup) {

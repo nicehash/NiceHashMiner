@@ -1,35 +1,30 @@
-﻿using Newtonsoft.Json;
+﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Configs.Data;
+using NiceHashMiner.Enums;
+using NiceHashMiner.Miners.Grouping;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Management;
-using System.Runtime.InteropServices;
-using NiceHashMiner.Enums;
+using System.Linq;
 using System.Security.Cryptography;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Configs.Data;
-using NiceHashMiner.Miners.Grouping;
-using NiceHashMiner.Miners;
+using System.Text;
 
 namespace NiceHashMiner.Devices
 {
     public class ComputeDevice
     {
-        readonly public int ID;
-        public int Index { get; protected set; }  // For socket control, unique
+        public readonly int ID;
+
+        public int Index { get; protected set; } // For socket control, unique
         // to identify equality;
-        readonly public string Name; // { get; set; }
+        public readonly string Name; // { get; set; }
         // name count is the short name for displaying in moning groups
-        readonly public string NameCount;
+        public readonly string NameCount;
         public bool Enabled;
-
-        readonly public DeviceGroupType DeviceGroupType;
+        public readonly DeviceGroupType DeviceGroupType;
         // CPU, NVIDIA, AMD
-        readonly public DeviceType DeviceType;
+        public readonly DeviceType DeviceType;
         // UUID now used for saving
-        public string UUID { get; protected set; }
-
+        public string Uuid { get; protected set; }
         // used for Claymore indexing
         public int BusID { get; protected set; } = -1;
         public int IDByBus = -1;
@@ -42,27 +37,29 @@ namespace NiceHashMiner.Devices
         // GPU extras
         public readonly ulong GpuRam;
         public readonly bool IsEtherumCapale;
-        public static readonly ulong MEMORY_3GB = 3221225472;
+        public static readonly ulong Memory3Gb = 3221225472;
 
         // sgminer extra quickfix
         //public readonly bool IsOptimizedVersion;
         public string Codename { get; protected set; }
+
         public string InfSection { get; protected set; }
+
         // amd has some algos not working with new drivers
         public bool DriverDisableAlgos { get; protected set; }
 
         protected List<Algorithm> AlgorithmSettings;
 
-        public string BenchmarkCopyUUID { get; set; }
-        
-        public virtual float Load { get { return 0; } }
-        
-        public virtual float Temp { get { return 0;  } }
-        
-        public virtual uint FanSpeed { get { return 0; } }
+        public string BenchmarkCopyUuid { get; set; }
+
+        public virtual float Load => 0;
+        public virtual float Temp => 0;
+        public virtual uint FanSpeed => 0;
 
         // Ambiguous constructor
-        protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable, DeviceType type, string nameCount, ulong gpuRAM) {
+        protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable,
+            DeviceType type, string nameCount, ulong gpuRam)
+        {
             ID = id;
             Name = name;
             Enabled = enabled;
@@ -70,11 +67,12 @@ namespace NiceHashMiner.Devices
             IsEtherumCapale = ethereumCapable;
             DeviceType = type;
             NameCount = nameCount;
-            GpuRam = gpuRAM;
+            GpuRam = gpuRam;
         }
 
         // Fake dev
-        public ComputeDevice(int id) {
+        public ComputeDevice(int id)
+        {
             ID = id;
             Name = "fake_" + id;
             NameCount = Name;
@@ -84,12 +82,12 @@ namespace NiceHashMiner.Devices
             IsEtherumCapale = false;
             //IsOptimizedVersion = false;
             Codename = "fake";
-            UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+            Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
             GpuRam = 0;
         }
 
         // CPU 
-        public ComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int CPUCount)
+        public ComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int cpuCount)
         {
             ID = id;
             Name = name;
@@ -98,35 +96,42 @@ namespace NiceHashMiner.Devices
             Enabled = true;
             DeviceGroupType = DeviceGroupType.CPU;
             DeviceType = DeviceType.CPU;
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_CPU"), CPUCount);
-            UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+            NameCount = string.Format(International.GetText("ComputeDevice_Short_Name_CPU"), cpuCount);
+            Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             IsEtherumCapale = false;
             GpuRam = 0;
         }
 
         // GPU NVIDIA
-        protected int _SM_major = -1;
-        protected int _SM_minor = -1;
-        public ComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int GPUCount) {
-            _SM_major = cudaDevice.SM_major;
-            _SM_minor = cudaDevice.SM_minor;
-            ID = (int)cudaDevice.DeviceID;
+        protected int SMMajor = -1;
+
+        protected int SMMinor = -1;
+
+        public ComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int gpuCount)
+        {
+            SMMajor = cudaDevice.SM_major;
+            SMMinor = cudaDevice.SM_minor;
+            ID = (int) cudaDevice.DeviceID;
             Name = cudaDevice.GetName();
             Enabled = true;
             DeviceGroupType = group;
             IsEtherumCapale = cudaDevice.IsEtherumCapable();
             DeviceType = DeviceType.NVIDIA;
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), GPUCount);
-            UUID = cudaDevice.UUID;
+            NameCount = string.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), gpuCount);
+            Uuid = cudaDevice.UUID;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             GpuRam = cudaDevice.DeviceGlobalMemory;
         }
 
-        public bool IsSM50() { return _SM_major == 5 && _SM_minor == 0; }
+        public bool IsSM50()
+        {
+            return SMMajor == 5 && SMMinor == 0;
+        }
 
         // GPU AMD
-        public ComputeDevice(AmdGpuDevice amdDevice, int GPUCount, bool isDetectionFallback) {
+        public ComputeDevice(AmdGpuDevice amdDevice, int gpuCount, bool isDetectionFallback)
+        {
             ID = amdDevice.DeviceID;
             BusID = amdDevice.BusID;
             DeviceGroupType = DeviceGroupType.AMD_OpenCL;
@@ -134,12 +139,10 @@ namespace NiceHashMiner.Devices
             Enabled = true;
             IsEtherumCapale = amdDevice.IsEtherumCapable();
             DeviceType = DeviceType.AMD;
-            NameCount = String.Format(International.GetText("ComputeDevice_Short_Name_AMD_GPU"), GPUCount);
-            if (isDetectionFallback) {
-                UUID = GetUUID(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
-            } else {
-                UUID = amdDevice.UUID;
-            }
+            NameCount = string.Format(International.GetText("ComputeDevice_Short_Name_AMD_GPU"), gpuCount);
+            Uuid = isDetectionFallback
+                ? GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType)
+                : amdDevice.UUID;
             // sgminer extra
             //IsOptimizedVersion = amdDevice.UseOptimizedVersion;
             Codename = amdDevice.Codename;
@@ -150,16 +153,18 @@ namespace NiceHashMiner.Devices
         }
 
         // combines long and short name
-        public string GetFullName() {
-            return String.Format(International.GetText("ComputeDevice_Full_Device_Name"), NameCount, Name);
+        public string GetFullName()
+        {
+            return string.Format(International.GetText("ComputeDevice_Full_Device_Name"), NameCount, Name);
         }
 
-        public Algorithm GetAlgorithm(MinerBaseType MinerBaseType, AlgorithmType AlgorithmType, AlgorithmType SecondaryAlgorithmType) {
-            int toSetIndex = this.AlgorithmSettings.FindIndex((a) => a.NiceHashID == AlgorithmType && a.MinerBaseType == MinerBaseType && a.SecondaryNiceHashID == SecondaryAlgorithmType);
-            if (toSetIndex > -1) {
-                return this.AlgorithmSettings[toSetIndex];
-            }
-            return null;
+        public Algorithm GetAlgorithm(MinerBaseType minerBaseType, AlgorithmType algorithmType,
+            AlgorithmType secondaryAlgorithmType)
+        {
+            var toSetIndex = AlgorithmSettings.FindIndex(a =>
+                a.NiceHashID == algorithmType && a.MinerBaseType == minerBaseType &&
+                a.SecondaryNiceHashID == secondaryAlgorithmType);
+            return toSetIndex > -1 ? AlgorithmSettings[toSetIndex] : null;
         }
 
         //public Algorithm GetAlgorithm(string algoID) {
@@ -170,10 +175,14 @@ namespace NiceHashMiner.Devices
         //    return null;
         //}
 
-        public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev) {
-            foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings) {
-                var setAlgo = GetAlgorithm(copyFromAlgo.MinerBaseType, copyFromAlgo.NiceHashID, copyFromAlgo.SecondaryNiceHashID);
-                if (setAlgo != null) {
+        public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)
+        {
+            foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings)
+            {
+                var setAlgo = GetAlgorithm(copyFromAlgo.MinerBaseType, copyFromAlgo.NiceHashID,
+                    copyFromAlgo.SecondaryNiceHashID);
+                if (setAlgo != null)
+                {
                     setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
                     setAlgo.SecondaryBenchmarkSpeed = copyFromAlgo.SecondaryBenchmarkSpeed;
                     setAlgo.ExtraLaunchParameters = copyFromAlgo.ExtraLaunchParameters;
@@ -183,19 +192,27 @@ namespace NiceHashMiner.Devices
         }
 
         #region Config Setters/Getters
+
         // settings
         // setters
-        public void SetFromComputeDeviceConfig(ComputeDeviceConfig config) {
-            if (config != null && config.UUID == UUID) {
-                this.Enabled = config.Enabled;
+        public void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
+        {
+            if (config != null && config.UUID == Uuid)
+            {
+                Enabled = config.Enabled;
             }
         }
-        public void SetAlgorithmDeviceConfig(DeviceBenchmarkConfig config) {
-            if (config != null && config.DeviceUUID == UUID && config.AlgorithmSettings != null) {
-                this.AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
-                foreach (var conf in config.AlgorithmSettings) {
+
+        public void SetAlgorithmDeviceConfig(DeviceBenchmarkConfig config)
+        {
+            if (config != null && config.DeviceUUID == Uuid && config.AlgorithmSettings != null)
+            {
+                AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
+                foreach (var conf in config.AlgorithmSettings)
+                {
                     var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID, conf.SecondaryNiceHashID);
-                    if (setAlgo != null) {
+                    if (setAlgo != null)
+                    {
                         setAlgo.BenchmarkSpeed = conf.BenchmarkSpeed;
                         setAlgo.SecondaryBenchmarkSpeed = conf.SecondaryBenchmarkSpeed;
                         setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
@@ -205,105 +222,140 @@ namespace NiceHashMiner.Devices
                 }
             }
         }
+
         // getters
-        public ComputeDeviceConfig GetComputeDeviceConfig() {
-            ComputeDeviceConfig ret = new ComputeDeviceConfig();
-            ret.Enabled = this.Enabled;
-            ret.Name = this.Name;
-            ret.UUID = this.UUID;
+        public ComputeDeviceConfig GetComputeDeviceConfig()
+        {
+            var ret = new ComputeDeviceConfig
+            {
+                Enabled = Enabled,
+                Name = Name,
+                UUID = Uuid
+            };
             return ret;
         }
-        public DeviceBenchmarkConfig GetAlgorithmDeviceConfig() {
-            DeviceBenchmarkConfig ret = new DeviceBenchmarkConfig();
-            ret.DeviceName = this.Name;
-            ret.DeviceUUID = this.UUID;
+
+        public DeviceBenchmarkConfig GetAlgorithmDeviceConfig()
+        {
+            var ret = new DeviceBenchmarkConfig
+            {
+                DeviceName = Name,
+                DeviceUUID = Uuid
+            };
             // init algo settings
-            foreach (var algo in this.AlgorithmSettings) {
+            foreach (var algo in AlgorithmSettings)
+            {
                 // create/setup
-                AlgorithmConfig conf = new AlgorithmConfig();
-                conf.Name = algo.AlgorithmStringID;
-                conf.NiceHashID = algo.NiceHashID;
-                conf.SecondaryNiceHashID = algo.SecondaryNiceHashID;
-                conf.MinerBaseType = algo.MinerBaseType;
-                conf.MinerName = algo.MinerName; // TODO probably not needed
-                conf.BenchmarkSpeed = algo.BenchmarkSpeed;
-                conf.SecondaryBenchmarkSpeed = algo.SecondaryBenchmarkSpeed;
-                conf.ExtraLaunchParameters = algo.ExtraLaunchParameters;
-                conf.Enabled = algo.Enabled;
-                conf.LessThreads = algo.LessThreads;
+                var conf = new AlgorithmConfig
+                {
+                    Name = algo.AlgorithmStringID,
+                    NiceHashID = algo.NiceHashID,
+                    SecondaryNiceHashID = algo.SecondaryNiceHashID,
+                    MinerBaseType = algo.MinerBaseType,
+                    MinerName = algo.MinerName,
+                    BenchmarkSpeed = algo.BenchmarkSpeed,
+                    SecondaryBenchmarkSpeed = algo.SecondaryBenchmarkSpeed,
+                    ExtraLaunchParameters = algo.ExtraLaunchParameters,
+                    Enabled = algo.Enabled,
+                    LessThreads = algo.LessThreads
+                };
+                // TODO probably not needed
                 // insert
                 ret.AlgorithmSettings.Add(conf);
             }
             return ret;
         }
+
         #endregion Config Setters/Getters
 
-        public List<Algorithm> GetAlgorithmSettings() {
+        public List<Algorithm> GetAlgorithmSettings()
+        {
             // hello state
             var algos = GetAlgorithmSettingsThirdParty(ConfigManager.GeneralConfig.Use3rdPartyMiners);
 
-            var retAlgos = MinerPaths.GetAndInitAlgorithmsMinerPaths(algos, this);;
+            var retAlgos = MinerPaths.GetAndInitAlgorithmsMinerPaths(algos, this);
+            ;
 
             // NVIDIA
-            if (this.DeviceGroupType == DeviceGroupType.NVIDIA_5_x || this.DeviceGroupType == DeviceGroupType.NVIDIA_6_x) {
-                retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.nheqminer);
-            } else if (this.DeviceType == DeviceType.NVIDIA) {
-                retAlgos = retAlgos.FindAll((a) => a.MinerBaseType != MinerBaseType.eqm);
+            if (DeviceGroupType == DeviceGroupType.NVIDIA_5_x || DeviceGroupType == DeviceGroupType.NVIDIA_6_x)
+            {
+                retAlgos = retAlgos.FindAll(a => a.MinerBaseType != MinerBaseType.nheqminer);
+            }
+            else if (DeviceType == DeviceType.NVIDIA)
+            {
+                retAlgos = retAlgos.FindAll(a => a.MinerBaseType != MinerBaseType.eqm);
             }
 
             // sort by algo
-            retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0 ? (a_1.NiceHashID - a_2.NiceHashID) : (a_1.MinerBaseType - a_2.MinerBaseType));
+            retAlgos.Sort((a1, a2) =>
+                (a1.NiceHashID - a2.NiceHashID) != 0
+                    ? (a1.NiceHashID - a2.NiceHashID)
+                    : (a1.MinerBaseType - a2.MinerBaseType));
 
             return retAlgos;
         }
 
-        public List<Algorithm> GetAlgorithmSettingsFastest() {
+        public List<Algorithm> GetAlgorithmSettingsFastest()
+        {
             // hello state
             var algosTmp = GetAlgorithmSettings();
-            Dictionary<AlgorithmType, Algorithm> sortDict = new Dictionary<AlgorithmType, Algorithm>();
-            foreach (var algo in algosTmp) {
+            var sortDict = new Dictionary<AlgorithmType, Algorithm>();
+            foreach (var algo in algosTmp)
+            {
                 var algoKey = algo.NiceHashID;
-                if (sortDict.ContainsKey(algoKey)) {
-                    if (sortDict[algoKey].BenchmarkSpeed < algo.BenchmarkSpeed) {
+                if (sortDict.ContainsKey(algoKey))
+                {
+                    if (sortDict[algoKey].BenchmarkSpeed < algo.BenchmarkSpeed)
+                    {
                         sortDict[algoKey] = algo;
                     }
-                } else {
+                }
+                else
+                {
                     sortDict[algoKey] = algo;
                 }
             }
-            List<Algorithm> retAlgos = new List<Algorithm>();
-            foreach (var fastestAlgo in sortDict.Values) {
-                retAlgos.Add(fastestAlgo);
-            }
 
-            return retAlgos;
+            return sortDict.Values.ToList();
         }
 
-        private List<Algorithm> GetAlgorithmSettingsThirdParty(Use3rdPartyMiners use3rdParty) {
-            if (use3rdParty == Use3rdPartyMiners.YES) {
-                return this.AlgorithmSettings;
+        private List<Algorithm> GetAlgorithmSettingsThirdParty(Use3rdPartyMiners use3rdParty)
+        {
+            if (use3rdParty == Use3rdPartyMiners.YES)
+            {
+                return AlgorithmSettings;
             }
-            var third_party_miners = new List<MinerBaseType>() { MinerBaseType.Claymore, MinerBaseType.OptiminerAMD, MinerBaseType.EWBF, MinerBaseType.Prospector };
+            var thirdPartyMiners = new List<MinerBaseType>
+            {
+                MinerBaseType.Claymore,
+                MinerBaseType.OptiminerAMD,
+                MinerBaseType.EWBF,
+                MinerBaseType.Prospector
+            };
 
-            return this.AlgorithmSettings.FindAll((a) => third_party_miners.IndexOf(a.MinerBaseType) == -1);
+            return AlgorithmSettings.FindAll(a => thirdPartyMiners.IndexOf(a.MinerBaseType) == -1);
         }
-        
+
         // static methods
-        
-        protected static string GetUUID(int id, string group, string name, DeviceGroupType deviceGroupType) {
-            var SHA256 = new SHA256Managed();
+
+        protected static string GetUuid(int id, string group, string name, DeviceGroupType deviceGroupType)
+        {
+            var sha256 = new SHA256Managed();
             var hash = new StringBuilder();
-            string mixedAttr = id.ToString() + group + name + ((int)deviceGroupType).ToString();
-            byte[] hashedBytes = SHA256.ComputeHash(Encoding.UTF8.GetBytes(mixedAttr), 0, Encoding.UTF8.GetByteCount(mixedAttr));
-            foreach (var b in hashedBytes) {
+            var mixedAttr = id + group + name + (int) deviceGroupType;
+            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(mixedAttr), 0,
+                Encoding.UTF8.GetByteCount(mixedAttr));
+            foreach (var b in hashedBytes)
+            {
                 hash.Append(b.ToString("x2"));
             }
             // GEN indicates the UUID has been generated and cannot be presumed to be immutable
-            return "GEN-" + hash.ToString();
+            return "GEN-" + hash;
         }
 
-        internal bool IsAlgorithmSettingsInitialized() {
-            return this.AlgorithmSettings != null;
+        internal bool IsAlgorithmSettingsInitialized()
+        {
+            return AlgorithmSettings != null;
         }
     }
 }
