@@ -24,12 +24,12 @@ namespace NiceHashMiner.Devices
         {
             switch (type)
             {
-                case CpuExtensionType.AVX2_AES: return (CPUID.SupportsAVX2() == 1) && (CPUID.SupportsAES() == 1);
-                case CpuExtensionType.AVX2: return CPUID.SupportsAVX2() == 1;
-                case CpuExtensionType.AVX_AES: return (CPUID.SupportsAVX() == 1) && (CPUID.SupportsAES() == 1);
-                case CpuExtensionType.AVX: return CPUID.SupportsAVX() == 1;
-                case CpuExtensionType.AES: return CPUID.SupportsAES() == 1;
-                case CpuExtensionType.SSE2: return CPUID.SupportsSSE2() == 1;
+                case CpuExtensionType.AVX2_AES: return (CpuID.SupportsAVX2() == 1) && (CpuID.SupportsAES() == 1);
+                case CpuExtensionType.AVX2: return CpuID.SupportsAVX2() == 1;
+                case CpuExtensionType.AVX_AES: return (CpuID.SupportsAVX() == 1) && (CpuID.SupportsAES() == 1);
+                case CpuExtensionType.AVX: return CpuID.SupportsAVX() == 1;
+                case CpuExtensionType.AES: return CpuID.SupportsAES() == 1;
+                case CpuExtensionType.SSE2: return CpuID.SupportsSSE2() == 1;
                 default: // CPUExtensionType.Automatic
                     break;
             }

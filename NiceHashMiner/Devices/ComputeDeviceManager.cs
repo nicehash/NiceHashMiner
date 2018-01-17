@@ -465,8 +465,8 @@ namespace NiceHashMiner.Devices
                 {
                     Helpers.ConsolePrint(Tag, "QueryCpus START");
                     // get all CPUs
-                    Avaliable.CpusCount = CPUID.GetPhysicalProcessorCount();
-                    Avaliable.IsHyperThreadingEnabled = CPUID.IsHypeThreadingEnabled();
+                    Avaliable.CpusCount = CpuID.GetPhysicalProcessorCount();
+                    Avaliable.IsHyperThreadingEnabled = CpuID.IsHypeThreadingEnabled();
 
                     Helpers.ConsolePrint(Tag,
                         Avaliable.IsHyperThreadingEnabled
@@ -474,7 +474,7 @@ namespace NiceHashMiner.Devices
                             : "HyperThreadingEnabled = FALSE");
 
                     // get all cores (including virtual - HT can benefit mining)
-                    var threadsPerCpu = CPUID.GetVirtualCoresCount() / Avaliable.CpusCount;
+                    var threadsPerCpu = CpuID.GetVirtualCoresCount() / Avaliable.CpusCount;
 
                     if (!Helpers.Is64BitOperatingSystem)
                     {
@@ -501,7 +501,7 @@ namespace NiceHashMiner.Devices
                         if (Avaliable.CpusCount == 1)
                         {
                             Avaliable.AllAvaliableDevices.Add(
-                                new CpuComputeDevice(0, "CPU0", CPUID.GetCPUName().Trim(), threadsPerCpu, 0,
+                                new CpuComputeDevice(0, "CPU0", CpuID.GetCpuName().Trim(), threadsPerCpu, 0,
                                     ++_cpuCount)
                             );
                         }
@@ -510,8 +510,8 @@ namespace NiceHashMiner.Devices
                             for (var i = 0; i < Avaliable.CpusCount; i++)
                             {
                                 Avaliable.AllAvaliableDevices.Add(
-                                    new CpuComputeDevice(i, "CPU" + i, CPUID.GetCPUName().Trim(), threadsPerCpu,
-                                        CPUID.CreateAffinityMask(i, threadsPerCpuMask), ++_cpuCount)
+                                    new CpuComputeDevice(i, "CPU" + i, CpuID.GetCpuName().Trim(), threadsPerCpu,
+                                        CpuID.CreateAffinityMask(i, threadsPerCpuMask), ++_cpuCount)
                                 );
                             }
                         }

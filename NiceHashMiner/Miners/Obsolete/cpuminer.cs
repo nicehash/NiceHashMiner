@@ -51,7 +51,7 @@ namespace NiceHashMiner.Miners {
 
             var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
             if (AffinityMask != 0 && P != null)
-                CPUID.AdjustAffinity(P.Id, AffinityMask);
+                CpuID.AdjustAffinity(P.Id, AffinityMask);
 
             return P;
         }
@@ -73,7 +73,7 @@ namespace NiceHashMiner.Miners {
 
             var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
             if (AffinityMask != 0 && BenchmarkHandle != null)
-                CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
+                CpuID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
 
             return BenchmarkHandle;
         }
