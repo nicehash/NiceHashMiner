@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Text;
-using System.IO.Compression;
-using System.Windows.Forms;
-using NiceHashMiner.Interfaces;
-using System.Threading;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
-
-namespace NiceHashMiner.Utils {
-    public static class MinersDownloadManager {
+﻿namespace NiceHashMiner.Utils
+{
+    public static class MinersDownloadManager
+    {
         public static DownloadSetup StandardDlSetup = new DownloadSetup(
             "http://github.com/NiceHash/NiceHashMinerLegacy/releases/download/1.8.1.5/bin_1_8_1_5.zip",
             "bins.zip",

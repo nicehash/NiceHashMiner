@@ -841,7 +841,7 @@ namespace NiceHashMiner.Forms
                     MessageBoxButtons.OK);
                 return;
             }
-            var url = Links.NHM_Profit_Check + _selectedComputeDevice.Name;
+            var url = Links.NhmProfitCheck + _selectedComputeDevice.Name;
             foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettingsFastest())
             {
                 var id = (int) algorithm.NiceHashID;
@@ -856,7 +856,7 @@ namespace NiceHashMiner.Forms
 
         private void ButtonAllProfit_Click(object sender, EventArgs e)
         {
-            var url = Links.NHM_Profit_Check + "CUSTOM";
+            var url = Links.NhmProfitCheck + "CUSTOM";
             var total = new Dictionary<AlgorithmType, double>();
             foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
             {

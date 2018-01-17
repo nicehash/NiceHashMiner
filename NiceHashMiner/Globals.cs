@@ -12,7 +12,7 @@ namespace NiceHashMiner {
         public static int CURRENT_TOS_VER = 3;
 
         // Variables
-        public static Dictionary<AlgorithmType, NiceHashSMA> NiceHashData = null;
+        public static Dictionary<AlgorithmType, NiceHashSma> NiceHashData = null;
         public static double BitcoinUSDRate;
         public static JsonSerializerSettings JsonSettings = null;
         public static int ThreadsPerCPU;

@@ -57,12 +57,12 @@ namespace NiceHashMiner.Miners
         /// Calculate profit for each supported algorithm per device and group.
         /// </summary>
         /// <param name="niceHashData"></param>
-        public static async Task SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> niceHashData)
+        public static async Task SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSma> niceHashData)
         {
             if (_curMiningSession != null) await _curMiningSession.SwichMostProfitableGroupUpMethod(niceHashData);
         }
 
-        public static async Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> niceHashData)
+        public static async Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSma> niceHashData)
         {
             if (_curMiningSession != null) await _curMiningSession.MinerStatsCheck(niceHashData);
         }

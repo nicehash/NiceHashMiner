@@ -405,7 +405,7 @@ namespace NiceHashMiner
             catch { }
             BenchLines = new List<string>();
             _benchmarkLogPath =
-                $"{Logger._logPath}Log_{MiningSetup.MiningPairs[0].Device.Uuid}_{MiningSetup.MiningPairs[0].Algorithm.AlgorithmStringID}";
+                $"{Logger.LogPath}Log_{MiningSetup.MiningPairs[0].Device.Uuid}_{MiningSetup.MiningPairs[0].Algorithm.AlgorithmStringID}";
 
             var commandLine = BenchmarkCreateCommandLine(BenchmarkAlgorithm, time);
 

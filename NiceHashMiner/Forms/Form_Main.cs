@@ -22,7 +22,7 @@ namespace NiceHashMiner
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
-        private string _visitUrlNew = Links.VisitURLNew;
+        private string _visitUrlNew = Links.VisitUrlNew;
 
         private Timer _minerStatsCheck;
         private Timer _smaMinerCheck;
@@ -312,7 +312,7 @@ namespace NiceHashMiner
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
             NiceHashStats.OnVersionBurn += VersionBurnCallback;
-            NiceHashStats.StartConnection(Links.NHM_Socket_Address);
+            NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
             // increase timeout
             if (Globals.IsFirstNetworkCheckTimeout)
@@ -763,7 +763,7 @@ namespace NiceHashMiner
             if (ret < 0 || (ret == 0 && BetaAlphaPostfixString != ""))
             {
                 SetVersionLabel(string.Format(International.GetText("Form_Main_new_version_released"), ver));
-                _visitUrlNew = Links.VisitURLNew + ver;
+                _visitUrlNew = Links.VisitUrlNew + ver;
             }
         }
 
@@ -791,7 +791,7 @@ namespace NiceHashMiner
                     MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                 if (result == DialogResult.Yes)
-                    Process.Start(Links.NHM_BTC_Wallet_Faq);
+                    Process.Start(Links.NhmBtcWalletFaq);
 
                 textBoxBTCAddress.Focus();
                 return false;
@@ -819,7 +819,7 @@ namespace NiceHashMiner
 
         private void LinkLabelChooseBTCWallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(Links.NHM_BTC_Wallet_Faq);
+            Process.Start(Links.NhmBtcWalletFaq);
         }
 
         private void LinkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -919,17 +919,17 @@ namespace NiceHashMiner
 
         private void ButtonLogo_Click(object sender, EventArgs e)
         {
-            Process.Start(Links.VisitURL);
+            Process.Start(Links.VisitUrl);
         }
 
         private void ButtonHelp_Click(object sender, EventArgs e)
         {
-            Process.Start(Links.NHM_Help);
+            Process.Start(Links.NhmHelp);
         }
 
         private void ToolStripStatusLabel10_Click(object sender, EventArgs e)
         {
-            Process.Start(Links.NHM_Paying_Faq);
+            Process.Start(Links.NhmPayingFaq);
         }
 
         private void ToolStripStatusLabel10_MouseHover(object sender, EventArgs e)

@@ -84,7 +84,7 @@ namespace NiceHashMiner
                 }
 
                 // check WMI
-                if (Helpers.IsWMIEnabled()) {
+                if (Helpers.IsWmiEnabled()) {
                     if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CURRENT_TOS_VER) {
                         Application.Run(new Form_Main());
                     }

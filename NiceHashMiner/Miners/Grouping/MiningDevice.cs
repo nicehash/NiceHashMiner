@@ -145,7 +145,7 @@ namespace NiceHashMiner.Miners.Grouping
             MostProfitableMinerBaseType = MinerBaseType.NONE;
         }
 
-        public void CalculateProfits(Dictionary<AlgorithmType, NiceHashSMA> niceHashData)
+        public void CalculateProfits(Dictionary<AlgorithmType, NiceHashSma> niceHashData)
         {
             // save last state
             PrevProfitableAlgorithmType = MostProfitableAlgorithmType;

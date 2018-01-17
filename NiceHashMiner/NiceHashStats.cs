@@ -55,7 +55,7 @@ namespace NiceHashMiner
         const int deviceUpdateLaunchDelay = 20 * 1000;
         const int deviceUpdateInterval = 60 * 1000;
 
-        public static Dictionary<AlgorithmType, NiceHashSMA> AlgorithmRates { get; private set; }
+        public static Dictionary<AlgorithmType, NiceHashSma> AlgorithmRates { get; private set; }
         private static NiceHashData niceHashData;
         public static double Balance { get; private set; }
         public static string Version { get; private set; }
@@ -175,7 +175,7 @@ namespace NiceHashMiner
                             Helpers.ConsolePrint("SOCKET", "Data sending attempted before socket initialization");
                         } else {
                             Helpers.ConsolePrint("SOCKET", "webSocket not created, retrying");
-                            StartConnection(Links.NHM_Socket_Address);
+                            StartConnection(Links.NhmSocketAddress);
                         }
                     }
                 } catch (Exception e) {

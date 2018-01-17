@@ -1,43 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using NiceHashMiner.Configs;
-using System.Globalization;
-using NiceHashMiner.PInvoke;
-using System.Management;
 using NiceHashMiner.Enums;
+using NiceHashMiner.PInvoke;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.Management;
 
 namespace NiceHashMiner
 {
-    class Helpers : PInvokeHelpers
+    internal class Helpers : PInvokeHelpers
     {
-        
-
-        static bool is64BitProcess = (IntPtr.Size == 8);
-        public static bool Is64BitOperatingSystem = is64BitProcess || InternalCheckIsWow64();
+        private static readonly bool Is64BitProcess = (IntPtr.Size == 8);
+        public static bool Is64BitOperatingSystem = Is64BitProcess || InternalCheckIsWow64();
 
         public static bool InternalCheckIsWow64()
         {
             if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) ||
                 Environment.OSVersion.Version.Major >= 6)
             {
-                using (Process p = Process.GetCurrentProcess())
+                using (var p = Process.GetCurrentProcess())
                 {
-                    bool retVal;
-                    if (!IsWow64Process(p.Handle, out retVal))
-                    {
-                        return false;
-                    }
-                    return retVal;
+                    return IsWow64Process(p.Handle, out var retVal) && retVal;
                 }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public static void ConsolePrint(string grp, string text)
@@ -51,88 +39,89 @@ namespace NiceHashMiner
 #endif
 
             if (ConfigManager.GeneralConfig.LogToFile && Logger.IsInit)
-                Logger.log.Info("[" + grp + "] " + text);
+                Logger.Log.Info("[" + grp + "] " + text);
         }
 
         public static void ConsolePrint(string grp, string text, params object[] arg)
         {
-            ConsolePrint(grp, String.Format(text, arg));
+            ConsolePrint(grp, string.Format(text, arg));
         }
 
         public static void ConsolePrint(string grp, string text, object arg0)
         {
-            ConsolePrint(grp, String.Format(text, arg0));
+            ConsolePrint(grp, string.Format(text, arg0));
         }
 
         public static void ConsolePrint(string grp, string text, object arg0, object arg1)
         {
-            ConsolePrint(grp, String.Format(text, arg0, arg1));
+            ConsolePrint(grp, string.Format(text, arg0, arg1));
         }
 
         public static void ConsolePrint(string grp, string text, object arg0, object arg1, object arg2)
         {
-            ConsolePrint(grp, String.Format(text, arg0, arg1, arg2));
-        }    
+            ConsolePrint(grp, string.Format(text, arg0, arg1, arg2));
+        }
 
         public static uint GetIdleTime()
         {
-            LASTINPUTINFO lastInPut = new LASTINPUTINFO();
-            lastInPut.cbSize = (uint)System.Runtime.InteropServices.Marshal.SizeOf(lastInPut);
+            var lastInPut = new LASTINPUTINFO();
+            lastInPut.cbSize = (uint) System.Runtime.InteropServices.Marshal.SizeOf(lastInPut);
             GetLastInputInfo(ref lastInPut);
 
-            return ((uint)Environment.TickCount - lastInPut.dwTime);
+            return ((uint) Environment.TickCount - lastInPut.dwTime);
         }
 
         public static void DisableWindowsErrorReporting(bool en)
         {
             //bool failed = false;
 
-            Helpers.ConsolePrint("NICEHASH", "Trying to enable/disable Windows error reporting");
+            ConsolePrint("NICEHASH", "Trying to enable/disable Windows error reporting");
 
             // CurrentUser
             try
             {
-                using (RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\Windows Error Reporting"))
+                using (var rk = Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\Windows Error Reporting"))
                 {
                     if (rk != null)
                     {
-                        Object o = rk.GetValue("DontShowUI");
+                        var o = rk.GetValue("DontShowUI");
                         if (o != null)
                         {
-                            int val = (int)o;
-                            Helpers.ConsolePrint("NICEHASH", "Current DontShowUI value: " + val);
+                            var val = (int) o;
+                            ConsolePrint("NICEHASH", "Current DontShowUI value: " + val);
 
                             if (val == 0 && en)
                             {
-                                Helpers.ConsolePrint("NICEHASH", "Setting register value to 1.");
+                                ConsolePrint("NICEHASH", "Setting register value to 1.");
                                 rk.SetValue("DontShowUI", 1);
                             }
                             else if (val == 1 && !en)
                             {
-                                Helpers.ConsolePrint("NICEHASH", "Setting register value to 0.");
+                                ConsolePrint("NICEHASH", "Setting register value to 0.");
                                 rk.SetValue("DontShowUI", 0);
                             }
                         }
                         else
                         {
-                            Helpers.ConsolePrint("NICEHASH", "Registry key not found .. creating one..");
+                            ConsolePrint("NICEHASH", "Registry key not found .. creating one..");
                             rk.CreateSubKey("DontShowUI", RegistryKeyPermissionCheck.Default);
-                            Helpers.ConsolePrint("NICEHASH", "Setting register value to 1..");
+                            ConsolePrint("NICEHASH", "Setting register value to 1..");
                             rk.SetValue("DontShowUI", en ? 1 : 0);
                         }
                     }
                     else
-                        Helpers.ConsolePrint("NICEHASH", "Unable to open SubKey.");
+                        ConsolePrint("NICEHASH", "Unable to open SubKey.");
                 }
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("NICEHASH", "Unable to access registry. Error: " + ex.Message);
+                ConsolePrint("NICEHASH", "Unable to access registry. Error: " + ex.Message);
             }
         }
 
-        public static string FormatSpeedOutput(double speed, string separator=" ") {
-            string ret = "";
+        public static string FormatSpeedOutput(double speed, string separator = " ")
+        {
+            string ret;
 
             if (speed < 1000)
                 ret = (speed).ToString("F3", CultureInfo.InvariantCulture) + separator;
@@ -146,53 +135,64 @@ namespace NiceHashMiner
             return ret;
         }
 
-        public static string FormatDualSpeedOutput(AlgorithmType algorithmID, double primarySpeed, double secondarySpeed=0) {
+        public static string FormatDualSpeedOutput(AlgorithmType algorithmID, double primarySpeed, double secondarySpeed = 0)
+        {
             string ret;
-            if (secondarySpeed > 0) {
+            if (secondarySpeed > 0)
+            {
                 ret = FormatSpeedOutput(primarySpeed, "") + "/" + FormatSpeedOutput(secondarySpeed, "") + " ";
             }
-            else {
+            else
+            {
                 ret = FormatSpeedOutput(primarySpeed);
             }
 
             if (algorithmID == AlgorithmType.Equihash)
                 return ret + "Sols/s ";
-            else
-                return ret + "H/s ";
+            return ret + "H/s ";
         }
 
-        public static string GetMotherboardID() {
-            ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard");
-            ManagementObjectCollection moc = mos.Get();
-            string serial = "";
-            foreach (ManagementObject mo in moc) {
-                serial = (string)mo["SerialNumber"];
+        public static string GetMotherboardID()
+        {
+            var mos = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard");
+            var moc = mos.Get();
+            var serial = "";
+            foreach (ManagementObject mo in moc)
+            {
+                serial = (string) mo["SerialNumber"];
             }
 
             return serial;
         }
 
         // TODO could have multiple cpus
-        public static string GetCpuID() {
-            string id = "N/A";
-            try {
-                ManagementObjectCollection mbsList = null;
-                ManagementObjectSearcher mbs = new ManagementObjectSearcher("Select * From Win32_processor");
-                mbsList = mbs.Get();
-                foreach (ManagementObject mo in mbsList) {
+        public static string GetCpuID()
+        {
+            var id = "N/A";
+            try
+            {
+                var mbs = new ManagementObjectSearcher("Select * From Win32_processor");
+                var mbsList = mbs.Get();
+                foreach (ManagementObject mo in mbsList)
+                {
                     id = mo["ProcessorID"].ToString();
                 }
-            } catch { }
+            }
+            catch { }
             return id;
         }
 
-        public static bool WebRequestTestGoogle() {
-            string url = "http://www.google.com";
-            try {
-                System.Net.WebRequest myRequest = System.Net.WebRequest.Create(url);
+        public static bool WebRequestTestGoogle()
+        {
+            const string url = "http://www.google.com";
+            try
+            {
+                var myRequest = System.Net.WebRequest.Create(url);
                 myRequest.Timeout = Globals.FirstNetworkCheckTimeoutTimeMS;
-                System.Net.WebResponse myResponse = myRequest.GetResponse();
-            } catch (System.Net.WebException) {
+                myRequest.GetResponse();
+            }
+            catch (System.Net.WebException)
+            {
                 return false;
             }
             return true;
@@ -201,20 +201,25 @@ namespace NiceHashMiner
         // Checking the version using >= will enable forward compatibility, 
         // however you should always compile your code on newer versions of
         // the framework to ensure your app works the same.
-        private static bool Is45DotVersion(int releaseKey) {
-            if (releaseKey >= 393295) {
+        private static bool Is45DotVersion(int releaseKey)
+        {
+            if (releaseKey >= 393295)
+            {
                 //return "4.6 or later";
                 return true;
             }
-            if ((releaseKey >= 379893)) {
+            if ((releaseKey >= 379893))
+            {
                 //return "4.5.2 or later";
                 return true;
             }
-            if ((releaseKey >= 378675)) {
+            if ((releaseKey >= 378675))
+            {
                 //return "4.5.1 or later";
                 return true;
             }
-            if ((releaseKey >= 378389)) {
+            if ((releaseKey >= 378389))
+            {
                 //return "4.5 or later";
                 return true;
             }
@@ -224,105 +229,118 @@ namespace NiceHashMiner
             return false;
         }
 
-        public static bool Is45NetOrHigher() {
-            using (RegistryKey ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32).OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\")) {
-                if (ndpKey != null && ndpKey.GetValue("Release") != null) {
-                    return Is45DotVersion((int)ndpKey.GetValue("Release"));
-                } else {
-                    return false;
-                }
+        public static bool Is45NetOrHigher()
+        {
+            using (var ndpKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry32)
+                .OpenSubKey("SOFTWARE\\Microsoft\\NET Framework Setup\\NDP\\v4\\Full\\"))
+            {
+                return ndpKey?.GetValue("Release") != null && Is45DotVersion((int) ndpKey.GetValue("Release"));
             }
         }
 
-        public static bool IsConnectedToInternet() {
-            bool returnValue = false;
-            try {
-                int Desc;
-                returnValue = InternetGetConnectedState(out Desc, 0);
-            } catch {
+        public static bool IsConnectedToInternet()
+        {
+            bool returnValue;
+            try
+            {
+                returnValue = InternetGetConnectedState(out _, 0);
+            }
+            catch
+            {
                 returnValue = false;
             }
             return returnValue;
         }
 
         // parsing helpers
-        public static int ParseInt(string text) {
-            int tmpVal = 0;
-            if (Int32.TryParse(text, out tmpVal)) {
-                return tmpVal;
-            }
-            return 0;
+        public static int ParseInt(string text)
+        {
+            return int.TryParse(text, out var tmpVal) ? tmpVal : 0;
         }
-        public static long ParseLong(string text) {
-            long tmpVal = 0;
-            if (Int64.TryParse(text, out tmpVal)) {
-                return tmpVal;
-            }
-            return 0;
+
+        public static long ParseLong(string text)
+        {
+            return long.TryParse(text, out var tmpVal) ? tmpVal : 0;
         }
-        public static double ParseDouble(string text) {
-            try {
-                string parseText = text.Replace(',', '.');
-                return Double.Parse(parseText, CultureInfo.InvariantCulture);
-            } catch {
+
+        public static double ParseDouble(string text)
+        {
+            try
+            {
+                var parseText = text.Replace(',', '.');
+                return double.Parse(parseText, CultureInfo.InvariantCulture);
+            }
+            catch
+            {
                 return 0;
             }
         }
 
         // IsWMI enabled
-        public static bool IsWMIEnabled() {
-            try {
-                ManagementObjectCollection moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
+        public static bool IsWmiEnabled()
+        {
+            try
+            {
+                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
                 ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
                 return true;
             }
-            catch {
+            catch
+            {
                 ConsolePrint("NICEHASH", "ManagementObjectSearcher not working need WMI service to be running");
             }
             return false;
         }
 
-        public static void InstallVcRedist() {
-            Process CudaDevicesDetection = new Process();
-            CudaDevicesDetection.StartInfo.FileName = @"bin\vc_redist.x64.exe";
-            CudaDevicesDetection.StartInfo.Arguments = "/q /norestart";
-            CudaDevicesDetection.StartInfo.UseShellExecute = false;
-            CudaDevicesDetection.StartInfo.RedirectStandardError = false;
-            CudaDevicesDetection.StartInfo.RedirectStandardOutput = false;
-            CudaDevicesDetection.StartInfo.CreateNoWindow = false;
+        public static void InstallVcRedist()
+        {
+            var cudaDevicesDetection = new Process
+            {
+                StartInfo =
+                {
+                    FileName = @"bin\vc_redist.x64.exe",
+                    Arguments = "/q /norestart",
+                    UseShellExecute = false,
+                    RedirectStandardError = false,
+                    RedirectStandardOutput = false,
+                    CreateNoWindow = false
+                }
+            };
 
             //const int waitTime = 45 * 1000; // 45seconds
             //CudaDevicesDetection.WaitForExit(waitTime);
-            CudaDevicesDetection.Start();
+            cudaDevicesDetection.Start();
         }
 
         public static void SetDefaultEnvironmentVariables()
         {
-            Helpers.ConsolePrint("NICEHASH", "Setting environment variables");
+            ConsolePrint("NICEHASH", "Setting environment variables");
 
-            Dictionary<string, string> envNameValues = new Dictionary<string, string>() {
-                { "GPU_MAX_ALLOC_PERCENT",      "100" },
-                { "GPU_USE_SYNC_OBJECTS",       "1" },
-                { "GPU_SINGLE_ALLOC_PERCENT",   "100" },
-                { "GPU_MAX_HEAP_SIZE",          "100" },
-                { "GPU_FORCE_64BIT_PTR",        "1" }
+            var envNameValues = new Dictionary<string, string>()
+            {
+                {"GPU_MAX_ALLOC_PERCENT", "100"},
+                {"GPU_USE_SYNC_OBJECTS", "1"},
+                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+                {"GPU_MAX_HEAP_SIZE", "100"},
+                {"GPU_FORCE_64BIT_PTR", "1"}
             };
 
-            foreach (var kvp in envNameValues) {
-                string envName = kvp.Key;
-                string envValue = kvp.Value;
+            foreach (var kvp in envNameValues)
+            {
+                var envName = kvp.Key;
+                var envValue = kvp.Value;
                 // Check if all the variables is set
                 if (Environment.GetEnvironmentVariable(envName) == null)
                 {
                     try { Environment.SetEnvironmentVariable(envName, envValue); }
-                    catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
+                    catch (Exception e) { ConsolePrint("NICEHASH", e.ToString()); }
                 }
 
                 // Check to make sure all the values are set correctly
-                if (!Environment.GetEnvironmentVariable(envName).Equals(envValue))
+                if (!Environment.GetEnvironmentVariable(envName)?.Equals(envValue) ?? false)
                 {
                     try { Environment.SetEnvironmentVariable(envName, envValue); }
-                    catch (Exception e) { Helpers.ConsolePrint("NICEHASH", e.ToString()); }
+                    catch (Exception e) { ConsolePrint("NICEHASH", e.ToString()); }
                 }
             }
         }
@@ -331,21 +349,23 @@ namespace NiceHashMiner
         {
             try
             {
-                ProcessStartInfo psi = new ProcessStartInfo();
-                psi.FileName = "nvidiasetp0state.exe";
-                psi.Verb = "runas";
-                psi.UseShellExecute = true;
-                psi.CreateNoWindow = true;
-                Process p = Process.Start(psi);
-                p.WaitForExit();
-                if (p.ExitCode != 0)
-                    Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode.ToString());
+                var psi = new ProcessStartInfo
+                {
+                    FileName = "nvidiasetp0state.exe",
+                    Verb = "runas",
+                    UseShellExecute = true,
+                    CreateNoWindow = true
+                };
+                var p = Process.Start(psi);
+                p?.WaitForExit();
+                if (p?.ExitCode != 0)
+                    ConsolePrint("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode);
                 else
-                    Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state all OK");
+                    ConsolePrint("NICEHASH", "nvidiasetp0state all OK");
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
+                ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
             }
         }
     }

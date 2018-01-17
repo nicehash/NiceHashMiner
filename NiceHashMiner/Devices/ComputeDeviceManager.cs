@@ -296,7 +296,7 @@ namespace NiceHashMiner.Devices
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                     if (result == DialogResult.OK)
                     {
-                        Process.Start(Links.NHM_NoDev_Help);
+                        Process.Start(Links.NhmNoDevHelp);
                     }
                 }
 
