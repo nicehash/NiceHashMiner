@@ -22,7 +22,7 @@ namespace NiceHashMiner {
         public static int FirstNetworkCheckTimeoutTries = 10;
         
 
-        public static string GetLocationURL(AlgorithmType AlgorithmType, string miningLocation, NHMConectionType ConectionType) {
+        public static string GetLocationURL(AlgorithmType AlgorithmType, string miningLocation, NhmConectionType ConectionType) {
             if (Globals.NiceHashData != null && Globals.NiceHashData.ContainsKey(AlgorithmType)) {
                 string name = Globals.NiceHashData[AlgorithmType].name;
                 int n_port = Globals.NiceHashData[AlgorithmType].port;
@@ -31,13 +31,13 @@ namespace NiceHashMiner {
                 // NHMConectionType.NONE
                 string prefix = "";
                 int port = n_port;
-                if (NHMConectionType.LOCKED == ConectionType) {
+                if (NhmConectionType.LOCKED == ConectionType) {
                     return miningLocation;
                 }
-                if (NHMConectionType.STRATUM_TCP == ConectionType) {
+                if (NhmConectionType.STRATUM_TCP == ConectionType) {
                     prefix = "stratum+tcp://";
                 }
-                if (NHMConectionType.STRATUM_SSL == ConectionType) {
+                if (NhmConectionType.STRATUM_SSL == ConectionType) {
                     prefix = "stratum+ssl://";
                     port = ssl_port;
                 }

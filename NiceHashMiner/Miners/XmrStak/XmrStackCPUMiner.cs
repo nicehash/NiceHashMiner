@@ -132,7 +132,7 @@ namespace NiceHashMiner.Miners {
     {
         public XmrStackCPUMiner()
             : base("XmrStackCPUMiner") {
-            this.ConectionType = NHMConectionType.NONE;
+            this.ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
         }
 

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums
+﻿namespace NiceHashMiner.Enums
 {
     /// <summary>
     /// AlgorithmType enum should/must mirror the values from https://www.nicehash.com/?p=api
     /// Some algorithms are not used anymore on the client, rename them with _UNUSED postfix so we can catch compile time errors if they are used.
     /// </summary>
-    public enum AlgorithmType : int
+    public enum AlgorithmType
     {
         // dual algos for grouping
         DaggerSia = -6,

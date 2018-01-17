@@ -103,7 +103,7 @@ namespace NiceHashMiner.Miners
 
         public Prospector()
             : base("Prospector") {
-            this.ConectionType = NHMConectionType.STRATUM_TCP;
+            this.ConectionType = NhmConectionType.STRATUM_TCP;
             IsNeverHideMiningWindow = true;
         }
 
@@ -228,7 +228,7 @@ namespace NiceHashMiner.Miners
         }
 
         public override async Task<APIData> GetSummaryAsync() {
-            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+            _currentMinerReadStatus = MinerApiReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
 
             WebClient client = new WebClient();
@@ -251,11 +251,11 @@ namespace NiceHashMiner.Miners
                 foreach (var response in resp) {
                     if (response.coin == MiningSetup.MinerName) {
                         ad.Speed += response.rate;
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                        _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                     }
                 }
                 if (ad.Speed == 0) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                    _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 }
             }
 

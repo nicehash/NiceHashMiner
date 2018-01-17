@@ -669,7 +669,7 @@ namespace NiceHashMiner.Forms
 
         private void comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged(object sender, EventArgs e) {
             ComboBox cmbbox = (ComboBox)sender;
-            ConfigManager.GeneralConfig.ForceCPUExtension = (CPUExtensionType)cmbbox.SelectedIndex;
+            ConfigManager.GeneralConfig.ForceCPUExtension = (CpuExtensionType)cmbbox.SelectedIndex;
         }
 
         #endregion //Tab General

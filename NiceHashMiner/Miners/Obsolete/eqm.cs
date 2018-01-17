@@ -9,7 +9,7 @@ namespace NiceHashMiner.Miners {
     public class eqm : nheqBase {
         public eqm()
             : base("eqm") {
-            ConectionType = NHMConectionType.LOCKED;
+            ConectionType = NhmConectionType.LOCKED;
             IsNeverHideMiningWindow = true;
         }
 

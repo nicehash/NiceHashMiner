@@ -15,7 +15,7 @@ namespace NiceHashMiner.Miners {
     public class nheqminer : nheqBase {
         public nheqminer()
             : base("nheqminer") {
-                ConectionType = NHMConectionType.NONE;
+                ConectionType = NhmConectionType.NONE;
         }
 
         // CPU aff set from NHM

@@ -281,7 +281,7 @@ namespace NiceHashMiner.Miners
 
             resp = await GetAPIDataAsync(APIPort, "summary");
             if (resp == null) {
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                _currentMinerReadStatus = MinerApiReadStatus.NONE;
                 return null;
             }
             //// sgminer debug log
@@ -291,7 +291,7 @@ namespace NiceHashMiner.Miners
                 // Checks if all the GPUs are Alive first
                 string resp2 = await GetAPIDataAsync(APIPort, "devs");
                 if (resp2 == null) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                    _currentMinerReadStatus = MinerApiReadStatus.NONE;
                     return null;
                 }
                 //// sgminer debug log
@@ -302,7 +302,7 @@ namespace NiceHashMiner.Miners
                 for (int i = 1; i < checkGPUStatus.Length - 1; i++) {
                     if (checkGPUStatus[i].Contains("Enabled=Y") && !checkGPUStatus[i].Contains("Status=Alive")) {
                         Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
-                        _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
+                        _currentMinerReadStatus = MinerApiReadStatus.WAIT;
                         return null;
                     }
                 }
@@ -322,7 +322,7 @@ namespace NiceHashMiner.Miners
                     if (total_mh <= PreviousTotalMH) {
                         Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " SGMiner might be stuck as no new hashes are being produced");
                         Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
-                        _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                        _currentMinerReadStatus = MinerApiReadStatus.NONE;
                         return null;
                     }
 
@@ -331,13 +331,13 @@ namespace NiceHashMiner.Miners
                     ad.Speed = 0;
                 }
             } catch {
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                _currentMinerReadStatus = MinerApiReadStatus.NONE;
                 return null;
             }
 
-            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+            _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
             // check if speed zero
-            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+            if (ad.Speed == 0) _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
 
             return ad;
         }

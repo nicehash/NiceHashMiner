@@ -13,7 +13,7 @@ namespace NiceHashMiner.Miners
     {
         protected XmrStak(string name)
             : base(name) {
-            ConectionType = NHMConectionType.NONE;
+            ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
         }
 

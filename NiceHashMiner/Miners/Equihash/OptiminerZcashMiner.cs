@@ -17,7 +17,7 @@ namespace NiceHashMiner.Miners.Equihash {
     public class OptiminerZcashMiner : Miner {
         public OptiminerZcashMiner()
             : base("OptiminerZcashMiner") {
-            ConectionType = NHMConectionType.NONE;
+            ConectionType = NhmConectionType.NONE;
         }
 
         private class Stratum {
@@ -73,7 +73,7 @@ namespace NiceHashMiner.Miners.Equihash {
         }
 
         public override async Task<APIData> GetSummaryAsync() {
-            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+            _currentMinerReadStatus = MinerApiReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
             if (_skipAPICheck == false) {
@@ -101,11 +101,11 @@ namespace NiceHashMiner.Miners.Equihash {
                         var total_solution_rate_dict = resp.solution_rate[total_key];
                         if (total_solution_rate_dict != null && total_solution_rate_dict.ContainsKey(_5s_key)) {
                             ad.Speed = total_solution_rate_dict[_5s_key];
-                            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                            _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                         }
                     }
                     if (ad.Speed == 0) {
-                        _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                        _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                     }
                 }
             } else if (_skipAPICheck && _startAPI.Elapsed.TotalSeconds > waitSeconds) {

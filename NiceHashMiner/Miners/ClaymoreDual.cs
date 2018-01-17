@@ -12,7 +12,7 @@ namespace NiceHashMiner.Miners {
             : base("ClaymoreDual", _LOOK_FOR_START) {
             ignoreZero = true;
             api_read_mult = 1000;
-            ConectionType = NHMConectionType.STRATUM_TCP;
+            ConectionType = NhmConectionType.STRATUM_TCP;
             SecondaryAlgorithmType = secondaryAlgorithmType;
         }
 

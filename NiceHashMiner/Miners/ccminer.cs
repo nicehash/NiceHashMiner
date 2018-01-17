@@ -153,18 +153,18 @@ namespace NiceHashMiner.Miners
             if (IsAPIReadException) {
                 // check if running
                 if (ProcessHandle == null) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
+                    _currentMinerReadStatus = MinerApiReadStatus.RESTART;
                     Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight Proccess is null");
                     return null;
                 }
                 try {
                     var runningProcess = Process.GetProcessById(ProcessHandle.Id);
                 } catch (ArgumentException ex) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
+                    _currentMinerReadStatus = MinerApiReadStatus.RESTART;
                     Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight reason: " + ex.Message);
                     return null; // will restart outside
                 } catch (InvalidOperationException ex) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
+                    _currentMinerReadStatus = MinerApiReadStatus.RESTART;
                     Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from CryptoNight reason: " + ex.Message);
                     return null; // will restart outside
                 }
@@ -179,9 +179,9 @@ namespace NiceHashMiner.Miners
 
                 APIData CryptoNightData = new APIData(MiningSetup.CurrentAlgorithmType);
                 CryptoNightData.Speed = totalSpeed;
-                _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 // check if speed zero
-                if (CryptoNightData.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                if (CryptoNightData.Speed == 0) _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 return CryptoNightData;
             }
             return await GetSummaryCPU_CCMINERAsync();

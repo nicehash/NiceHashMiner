@@ -69,7 +69,7 @@ namespace NiceHashMiner
         protected static long MINER_ID_COUNT { get; private set; }
 
 
-        public NHMConectionType ConectionType { get; protected set; }
+        public NhmConectionType ConectionType { get; protected set; }
         // used to identify miner instance
         protected readonly long MINER_ID;
         private string _minetTag = null;
@@ -123,7 +123,7 @@ namespace NiceHashMiner
         private readonly int _MAX_CooldownTimeInMilliseconds; // = GET_MAX_CooldownTimeInMilliseconds();
         protected abstract int GET_MAX_CooldownTimeInMilliseconds();
         private Timer _cooldownCheckTimer;
-        protected MinerAPIReadStatus _currentMinerReadStatus { get; set; }
+        protected MinerApiReadStatus _currentMinerReadStatus { get; set; }
         private int _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
         private int _currentCooldownTimeInSecondsLeft = _MIN_CooldownTimeInMilliseconds;
         private const int IS_COOLDOWN_CHECK_TIMER_ALIVE_CAP = 15;
@@ -137,7 +137,7 @@ namespace NiceHashMiner
 
         public Miner(string minerDeviceName)
         {
-            ConectionType = NHMConectionType.STRATUM_TCP;
+            ConectionType = NhmConectionType.STRATUM_TCP;
             MiningSetup = new MiningSetup(null);
             IsInit = false;
             MINER_ID = MINER_ID_COUNT++;
@@ -795,7 +795,7 @@ namespace NiceHashMiner
             } else {
                 Helpers.ConsolePrint(MinerTAG(), "Cooldown checker disabled");
             }
-            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+            _currentMinerReadStatus = MinerApiReadStatus.NONE;
         }
 
 
@@ -808,7 +808,7 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfig.MinerRestartDelayMS : ms;
             Helpers.ConsolePrint(MinerTAG(), ProcessTag() + String.Format(" Miner_Exited Will restart in {0} ms", RestartInMS));
             if (ConfigManager.GeneralConfig.CoolDownCheckEnabled) {
-                _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
+                _currentMinerReadStatus = MinerApiReadStatus.RESTART;
                 NeedsRestart = true;
                 _currentCooldownTimeInSecondsLeft = RestartInMS;
             } else {  // directly restart since cooldown checker not running
@@ -893,12 +893,12 @@ namespace NiceHashMiner
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
             try {
-                _currentMinerReadStatus = MinerAPIReadStatus.WAIT;
+                _currentMinerReadStatus = MinerApiReadStatus.WAIT;
                 string dataToSend = GetHttpRequestNHMAgentStrin(method);
                 string respStr = await GetAPIDataAsync(APIPort, dataToSend);
 
                 if (String.IsNullOrEmpty(respStr)) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.NETWORK_EXCEPTION;
+                    _currentMinerReadStatus = MinerApiReadStatus.NETWORK_EXCEPTION;
                     throw new Exception("Response is empty!");
                 }
                 if (respStr.IndexOf("HTTP/1.1 200 OK") > -1) {
@@ -917,9 +917,9 @@ namespace NiceHashMiner
                         break;
                     }
                     if (ad.Speed == 0) {
-                        _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                        _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                     } else {
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                        _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                     }
                 } else {
                     throw new Exception($"Response does not contain speed data: {respStr.Trim()}");
@@ -949,7 +949,7 @@ namespace NiceHashMiner
             resp = await GetAPIDataAsync(APIPort, DataToSend);
             if (resp == null) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                _currentMinerReadStatus = MinerApiReadStatus.NONE;
                 return null;
             }
 
@@ -965,13 +965,13 @@ namespace NiceHashMiner
                 }
             } catch {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Could not read data from API bind port");
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                _currentMinerReadStatus = MinerApiReadStatus.NONE;
                 return null;
             }
 
-            _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+            _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
             // check if speed zero
-            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+            if (ad.Speed == 0) _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
 
             return ad;
         }
@@ -985,7 +985,7 @@ namespace NiceHashMiner
             if (_currentCooldownTimeInSeconds > _MIN_CooldownTimeInMilliseconds) {
                 _currentCooldownTimeInSeconds = _MIN_CooldownTimeInMilliseconds;
                 Helpers.ConsolePrint(MinerTAG(), String.Format("{0} Reseting cool time = {1} ms", ProcessTag(), _MIN_CooldownTimeInMilliseconds.ToString()));
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                _currentMinerReadStatus = MinerApiReadStatus.NONE;
             }
         }
 
@@ -996,7 +996,7 @@ namespace NiceHashMiner
             _currentCooldownTimeInSeconds *= 2;
             Helpers.ConsolePrint(MinerTAG(), String.Format("{0} Cooling UP, cool time is {1} ms", ProcessTag(), _currentCooldownTimeInSeconds.ToString()));
             if (_currentCooldownTimeInSeconds > _MAX_CooldownTimeInMilliseconds) {
-                _currentMinerReadStatus = MinerAPIReadStatus.RESTART;
+                _currentMinerReadStatus = MinerApiReadStatus.RESTART;
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " MAX cool time exceeded. RESTARTING");
                 Restart();
             }
@@ -1013,12 +1013,12 @@ namespace NiceHashMiner
                 if (NeedsRestart) {
                     NeedsRestart = false;
                     Restart();
-                } else if (_currentMinerReadStatus == MinerAPIReadStatus.GOT_READ) {
+                } else if (_currentMinerReadStatus == MinerApiReadStatus.GOT_READ) {
                     CoolDown();
-                } else if (_currentMinerReadStatus == MinerAPIReadStatus.READ_SPEED_ZERO) {
+                } else if (_currentMinerReadStatus == MinerApiReadStatus.READ_SPEED_ZERO) {
                     Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " READ SPEED ZERO, will cool up");
                     CoolUp();
-                } else if (_currentMinerReadStatus == MinerAPIReadStatus.RESTART) {
+                } else if (_currentMinerReadStatus == MinerApiReadStatus.RESTART) {
                     Restart();
                 } else {
                     CoolUp();

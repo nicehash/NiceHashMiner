@@ -71,7 +71,7 @@ namespace NiceHashMiner.Miners
     {
         public XmrStakAMD()
             : base("XmrStakAMD") {
-            ConectionType = NHMConectionType.NONE;
+            ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
         }
 
@@ -110,7 +110,7 @@ namespace NiceHashMiner.Miners
             resp = await GetAPIDataAsync(APIPort, DataToSend, false, true);
             if (resp == null) {
                 Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                _currentMinerReadStatus = MinerApiReadStatus.NONE;
                 return null;
             }
             const string Totals = "Totals:";
@@ -125,14 +125,14 @@ namespace NiceHashMiner.Miners
                 var strings = sub_resp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var s in strings) {
                     if (double.TryParse(s, out var speed)) {
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                        _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                         ad.Speed = speed;
                         break;
                     }
                 }
             }
             // check if speed zero
-            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+            if (ad.Speed == 0) _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
 
             return ad;
         }

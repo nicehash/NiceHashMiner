@@ -24,7 +24,7 @@ namespace NiceHashMiner.Configs.Data
         public bool MinimizeMiningWindows = false;
 
         //public int LessThreads;
-        public CPUExtensionType ForceCPUExtension = CPUExtensionType.Automatic;
+        public CpuExtensionType ForceCPUExtension = CpuExtensionType.Automatic;
 
         public int SwitchMinSecondsFixed = 90;
         public int SwitchMinSecondsDynamic = 30;
@@ -99,7 +99,7 @@ namespace NiceHashMiner.Configs.Data
         {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             Language = LanguageType.En;
-            ForceCPUExtension = CPUExtensionType.Automatic;
+            ForceCPUExtension = CpuExtensionType.Automatic;
             BitcoinAddress = "";
             WorkerName = "worker1";
             TimeUnit = TimeUnitType.Day;

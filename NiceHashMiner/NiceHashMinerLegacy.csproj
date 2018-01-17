@@ -139,18 +139,18 @@
     <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkPerformanceType.cs" />
     <Compile Include="Enums\BenchmarkProcessStatus.cs" />
-    <Compile Include="Enums\CPUExtensionType.cs" />
+    <Compile Include="Enums\CpuExtensionType.cs" />
     <Compile Include="Enums\DagGenerationType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />
     <Compile Include="Enums\DeviceMiningStatus.cs" />
     <Compile Include="Enums\DeviceType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
-    <Compile Include="Enums\MinerAPIReadStatus.cs" />
+    <Compile Include="Enums\MinerApiReadStatus.cs" />
     <Compile Include="Enums\MinerBaseType.cs" />
     <Compile Include="Enums\MinerOptionFlagType.cs" />
     <Compile Include="Enums\MinerStopType.cs" />
     <Compile Include="Enums\MinerType.cs" />
-    <Compile Include="Enums\NHMConectionType.cs" />
+    <Compile Include="Enums\NhmConectionType.cs" />
     <Compile Include="Enums\Use3rdPartyMiners.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>

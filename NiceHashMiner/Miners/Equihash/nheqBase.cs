@@ -70,7 +70,7 @@ namespace NiceHashMiner.Miners {
         }
 
         public override async Task<APIData> GetSummaryAsync() {
-            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+            _currentMinerReadStatus = MinerApiReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
 
             TcpClient client = null;
@@ -91,9 +91,9 @@ namespace NiceHashMiner.Miners {
 
             if (resp != null && resp.error == null) {
                 ad.Speed = resp.result.speed_sps;
-                _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 if (ad.Speed == 0) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                    _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 }
             }
 

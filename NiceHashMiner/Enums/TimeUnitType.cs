@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums
+﻿namespace NiceHashMiner.Enums
 {
-    public enum TimeUnitType : int
+    public enum TimeUnitType
     {
         Hour = 0,
         Day,

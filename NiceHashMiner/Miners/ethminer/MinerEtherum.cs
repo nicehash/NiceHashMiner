@@ -123,20 +123,20 @@ namespace NiceHashMiner.Miners {
             if (GetSpeedStatus.GOT == getSpeedStatus) {
                 // fix MH/s
                 ad.Speed *= 1000 * 1000;
-                _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 // check if speed zero
-                if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                if (ad.Speed == 0) _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 return Task.FromResult(ad);
             } else if (GetSpeedStatus.NONE == getSpeedStatus) {
                 ad.Speed = 0;
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                _currentMinerReadStatus = MinerApiReadStatus.NONE;
                 return Task.FromResult(ad);
             }
             // else if (GetSpeedStatus.EXCEPTION == getSpeedStatus) {
             // we don't restart unles not responding for long time check cooldown logic in Miner
             //Helpers.ConsolePrint(MinerTAG(), "ethminer is not running.. restarting..");
             //IsRunning = false;
-            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+            _currentMinerReadStatus = MinerApiReadStatus.NONE;
             return Task.FromResult<APIData>(null);
         }
 

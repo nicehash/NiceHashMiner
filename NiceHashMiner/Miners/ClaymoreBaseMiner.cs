@@ -33,7 +33,7 @@ namespace NiceHashMiner.Miners {
 
         public ClaymoreBaseMiner(string minerDeviceName, string look_FOR_START)
             : base(minerDeviceName) {
-            ConectionType = NHMConectionType.STRATUM_SSL;
+            ConectionType = NhmConectionType.STRATUM_SSL;
             LOOK_FOR_START = look_FOR_START.ToLower();
             IsKillAllUsedMinerProcs = true;
         }
@@ -60,7 +60,7 @@ namespace NiceHashMiner.Miners {
         }
 
         public override async Task<APIData> GetSummaryAsync() {
-            _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+            _currentMinerReadStatus = MinerApiReadStatus.NONE;
             APIData ad = new APIData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
 
             TcpClient client = null;
@@ -109,10 +109,10 @@ namespace NiceHashMiner.Miners {
                     }
                     ad.Speed *= api_read_mult;
                     ad.SecondarySpeed *= api_read_mult;
-                    _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                    _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 }
                 if (ad.Speed == 0) {
-                    _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+                    _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 }
                 // some clayomre miners have this issue reporting negative speeds in that case restart miner
                 if (ad.Speed < 0) {
