@@ -1,62 +1,54 @@
-﻿using System;
+﻿using NiceHashMiner.Devices;
+using NiceHashMiner.Enums;
+using NiceHashMiner.Interfaces;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Threading.Tasks;
 
-using NiceHashMiner.Interfaces;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
+namespace NiceHashMiner.Miners
+{
+    public static class MinersManager
+    {
+        private static MiningSession _curMiningSession;
 
-namespace NiceHashMiner.Miners {
-    using NiceHashMiner.Miners.Grouping;
-    using NiceHashMiner.Miners.Equihash;
-    public static class MinersManager {
-
-        private static MiningSession CurMiningSession;
-
-        public static void StopAllMiners() {
-            if (CurMiningSession != null) CurMiningSession.StopAllMiners();
-            CurMiningSession = null;
+        public static void StopAllMiners()
+        {
+            _curMiningSession?.StopAllMiners();
+            _curMiningSession = null;
         }
 
-        public static void StopAllMinersNonProfitable() {
-            if (CurMiningSession != null) CurMiningSession.StopAllMinersNonProfitable();
+        public static void StopAllMinersNonProfitable()
+        {
+            _curMiningSession?.StopAllMinersNonProfitable();
         }
 
-        public static string GetActiveMinersGroup() {
-            if (CurMiningSession != null) {
-                return CurMiningSession.GetActiveMinersGroup();
-            }
+        public static string GetActiveMinersGroup()
+        {
             // if no session it is idle
-            return "IDLE";
+            return _curMiningSession != null ? _curMiningSession.GetActiveMinersGroup() : "IDLE";
         }
 
-        public static List<int> GetActiveMinersIndexes() {
-            if (CurMiningSession != null) {
-                return CurMiningSession.ActiveDeviceIndexes;
-            }
-            return new List<int>();
+        public static List<int> GetActiveMinersIndexes()
+        {
+            return _curMiningSession != null ? _curMiningSession.ActiveDeviceIndexes : new List<int>();
         }
 
-        public static double GetTotalRate() {
-            if (CurMiningSession != null) return CurMiningSession.GetTotalRate();
-            return 0;
+        public static double GetTotalRate()
+        {
+            return _curMiningSession?.GetTotalRate() ?? 0;
         }
 
         public static bool StartInitialize(IMainFormRatesComunication mainFormRatesComunication,
-            string miningLocation, string worker, string btcAdress) {
-                
-            CurMiningSession = new MiningSession(ComputeDeviceManager.Avaliable.AllAvaliableDevices,
+            string miningLocation, string worker, string btcAdress)
+        {
+            _curMiningSession = new MiningSession(ComputeDeviceManager.Avaliable.AllAvaliableDevices,
                 mainFormRatesComunication, miningLocation, worker, btcAdress);
 
-            return CurMiningSession.IsMiningEnabled;
+            return _curMiningSession.IsMiningEnabled;
         }
 
-        public static bool IsMiningEnabled() {
-            if (CurMiningSession != null) return CurMiningSession.IsMiningEnabled;
-            return false;
+        public static bool IsMiningEnabled()
+        {
+            return _curMiningSession != null && _curMiningSession.IsMiningEnabled;
         }
 
 
@@ -64,13 +56,15 @@ namespace NiceHashMiner.Miners {
         /// SwichMostProfitable should check the best combination for most profit.
         /// Calculate profit for each supported algorithm per device and group.
         /// </summary>
-        /// <param name="NiceHashData"></param>
-        public static async Task SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
-            if (CurMiningSession != null) await CurMiningSession.SwichMostProfitableGroupUpMethod(NiceHashData);
+        /// <param name="niceHashData"></param>
+        public static async Task SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSMA> niceHashData)
+        {
+            if (_curMiningSession != null) await _curMiningSession.SwichMostProfitableGroupUpMethod(niceHashData);
         }
 
-        async public static Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
-            if (CurMiningSession != null) await CurMiningSession.MinerStatsCheck(NiceHashData);
+        public static async Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSMA> niceHashData)
+        {
+            if (_curMiningSession != null) await _curMiningSession.MinerStatsCheck(niceHashData);
         }
     }
 }

@@ -9,20 +9,24 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NiceHashMiner.Miners {
-    public abstract class nheqBase : Miner {
-        protected MiningSetup CPU_Setup = new MiningSetup(null);
-        protected MiningSetup NVIDIA_Setup = new MiningSetup(null);
-        protected readonly int AMD_OCL_PLATFORM;
-        protected MiningSetup AMD_Setup = new MiningSetup(null);
+namespace NiceHashMiner.Miners
+{
+    public abstract class NhEqBase : Miner
+    {
+        protected MiningSetup CpuSetup = new MiningSetup(null);
+        protected MiningSetup NvidiaSetup = new MiningSetup(null);
+        protected readonly int AmdOclPlatform;
+        protected MiningSetup AmdSetup = new MiningSetup(null);
 
         // extra benchmark stuff
-        protected double curSpeed = 0;
-        static protected readonly String Iter_PER_SEC = "I/s";
-        static protected readonly String Sols_PER_SEC = "Sols/s";
+        protected double CurSpeed = 0;
+
+        protected static readonly string IterPerSec = "I/s";
+        protected static readonly string SolsPerSec = "Sols/s";
         protected const double SolMultFactor = 1.9;
 
-        private class Result {
+        private class Result
+        {
             public double interval_seconds { get; set; }
             public double speed_ips { get; set; }
             public double speed_sps { get; set; }
@@ -30,100 +34,118 @@ namespace NiceHashMiner.Miners {
             public double rejected_per_minute { get; set; }
         }
 
-        private class JsonApiResponse {
+        private class JsonApiResponse
+        {
             public string method { get; set; }
             public Result result { get; set; }
             public object error { get; set; }
         }
 
-        public nheqBase(string minerDeviceName)
-            : base(minerDeviceName) {
-                AMD_OCL_PLATFORM = ComputeDeviceManager.Avaliable.AmdOpenCLPlatformNum;
+        protected NhEqBase(string minerDeviceName)
+            : base(minerDeviceName)
+        {
+            AmdOclPlatform = ComputeDeviceManager.Avaliable.AmdOpenCLPlatformNum;
         }
 
-        public override void InitMiningSetup(MiningSetup miningSetup) {
+        public override void InitMiningSetup(MiningSetup miningSetup)
+        {
             base.InitMiningSetup(miningSetup);
-            List<MiningPair> CPUs = new List<MiningPair>();
-            List<MiningPair> NVIDIAs = new List<MiningPair>();
-            List<MiningPair> AMDs = new List<MiningPair>();
-            foreach (var pairs in MiningSetup.MiningPairs) {
-                if (pairs.Device.DeviceType == DeviceType.CPU) {
-                    CPUs.Add(pairs);
-                }
-                if (pairs.Device.DeviceType == DeviceType.NVIDIA) {
-                    NVIDIAs.Add(pairs);
-                }
-                if (pairs.Device.DeviceType == DeviceType.AMD) {
-                    AMDs.Add(pairs);
+            var cpus = new List<MiningPair>();
+            var nvidias = new List<MiningPair>();
+            var amds = new List<MiningPair>();
+            foreach (var pairs in MiningSetup.MiningPairs)
+            {
+                switch (pairs.Device.DeviceType)
+                {
+                    case DeviceType.CPU:
+                        cpus.Add(pairs);
+                        break;
+                    case DeviceType.NVIDIA:
+                        nvidias.Add(pairs);
+                        break;
+                    case DeviceType.AMD:
+                        amds.Add(pairs);
+                        break;
                 }
             }
             // reinit
-            CPU_Setup = new MiningSetup(CPUs);
-            NVIDIA_Setup = new MiningSetup(NVIDIAs);
-            AMD_Setup = new MiningSetup(AMDs);
+            CpuSetup = new MiningSetup(cpus);
+            NvidiaSetup = new MiningSetup(nvidias);
+            AmdSetup = new MiningSetup(amds);
         }
 
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
+        {
             // TODO nvidia extras
-            String ret = "-b " + GetDevicesCommandString();
+            var ret = "-b " + GetDevicesCommandString();
             return ret;
         }
 
-        public override async Task<APIData> GetSummaryAsync() {
-            _currentMinerReadStatus = MinerApiReadStatus.NONE;
-            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+        public override async Task<ApiData> GetSummaryAsync()
+        {
+            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
-            TcpClient client = null;
             JsonApiResponse resp = null;
-            try {
-                byte[] bytesToSend = ASCIIEncoding.ASCII.GetBytes("status\n");
-                client = new TcpClient("127.0.0.1", APIPort);
-                NetworkStream nwStream = client.GetStream();
+            try
+            {
+                var bytesToSend = Encoding.ASCII.GetBytes("status\n");
+                var client = new TcpClient("127.0.0.1", ApiPort);
+                var nwStream = client.GetStream();
                 await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                byte[] bytesToRead = new byte[client.ReceiveBufferSize];
-                int bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                string respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                var bytesToRead = new byte[client.ReceiveBufferSize];
+                var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
+                var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
                 resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
                 client.Close();
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Helpers.ConsolePrint("ERROR", ex.Message);
             }
 
-            if (resp != null && resp.error == null) {
+            if (resp != null && resp.error == null)
+            {
                 ad.Speed = resp.result.speed_sps;
-                _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-                if (ad.Speed == 0) {
-                    _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                if (ad.Speed == 0)
+                {
+                    CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 }
             }
 
             return ad;
         }
 
-        protected override void _Stop(MinerStopType willswitch) {
+        protected override void _Stop(MinerStopType willswitch)
+        {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+        protected override int GetMaxCooldownTimeInMilliseconds()
+        {
             return 60 * 1000 * 5; // 5 minute max, whole waiting time 75seconds
         }
 
-        protected double getNumber(string outdata, string startF, string remF) {
-            try {
-                int speedStart = outdata.IndexOf(startF);
-                String speed = outdata.Substring(speedStart, outdata.Length - speedStart);
+        protected double GetNumber(string outdata, string startF, string remF)
+        {
+            try
+            {
+                var speedStart = outdata.IndexOf(startF);
+                var speed = outdata.Substring(speedStart, outdata.Length - speedStart);
                 speed = speed.Replace(startF, "");
                 speed = speed.Replace(remF, "");
                 speed = speed.Trim();
-                return Double.Parse(speed, CultureInfo.InvariantCulture);
-            } catch {
+                return double.Parse(speed, CultureInfo.InvariantCulture);
             }
+            catch { }
             return 0;
         }
 
         // benchmark stuff
 
-        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
+        {
             CheckOutdata(outdata);
         }
     }

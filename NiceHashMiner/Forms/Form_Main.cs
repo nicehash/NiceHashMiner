@@ -574,7 +574,7 @@ namespace NiceHashMiner
             Size = new Size(Size.Width, _mainFormHeight + groupBox1Height);
         }
 
-        public void AddRateInfo(string groupName, string deviceStringInfo, APIData iApiData, double paying,
+        public void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying,
             bool isApiGetException)
         {
             var apiGetExceptionString = isApiGetException ? "**" : "";

@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
@@ -7,20 +6,21 @@ using NiceHashMiner.Miners.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace NiceHashMiner.Miners.Equihash {
-    public class OptiminerZcashMiner : Miner {
+namespace NiceHashMiner.Miners.Equihash
+{
+    public class OptiminerZcashMiner : Miner
+    {
         public OptiminerZcashMiner()
-            : base("OptiminerZcashMiner") {
+            : base("OptiminerZcashMiner")
+        {
             ConectionType = NhmConectionType.NONE;
         }
 
-        private class Stratum {
+        private class Stratum
+        {
             public string target { get; set; }
             public bool connected { get; set; }
             public int connection_failures { get; set; }
@@ -28,7 +28,8 @@ namespace NiceHashMiner.Miners.Equihash {
             public int port { get; set; }
         }
 
-        private class JsonApiResponse {
+        private class JsonApiResponse
+        {
             public double uptime;
             public Dictionary<string, Dictionary<string, double>> solution_rate;
             public Dictionary<string, double> share;
@@ -37,80 +38,96 @@ namespace NiceHashMiner.Miners.Equihash {
         }
 
         // give some time or else it will crash
-        Stopwatch _startAPI = null;
-        bool _skipAPICheck = true;
-        int waitSeconds = 30;
+        private Stopwatch _startApi = null;
 
-        public override void Start(string url, string btcAdress, string worker) {
-            string username = GetUsername(btcAdress, worker);
-            LastCommandLine = " " + GetDevicesCommandString() + " -m " + APIPort + " -s " + url + " -u " + username + " -p x";
+        private bool _skipApiCheck = true;
+        private readonly int _waitSeconds = 30;
+
+        public override void Start(string url, string btcAdress, string worker)
+        {
+            var username = GetUsername(btcAdress, worker);
+            LastCommandLine = " " + GetDevicesCommandString() + " -m " + ApiPort + " -s " + url + " -u " + username +
+                              " -p x";
             ProcessHandle = _Start();
 
-            //
-            _startAPI = new Stopwatch();
-            _startAPI.Start();
+            _startApi = new Stopwatch();
+            _startApi.Start();
         }
 
-        protected override void _Stop(MinerStopType willswitch) {
+        protected override void _Stop(MinerStopType willswitch)
+        {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+        protected override int GetMaxCooldownTimeInMilliseconds()
+        {
             return 60 * 1000 * 5; // 5 minute max, whole waiting time 75seconds
         }
 
-        protected override string GetDevicesCommandString() {
-            string extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
-            string deviceStringCommand = " -c " + ComputeDeviceManager.Avaliable.AmdOpenCLPlatformNum;
+        protected override string GetDevicesCommandString()
+        {
+            var extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+            var deviceStringCommand = " -c " + ComputeDeviceManager.Avaliable.AmdOpenCLPlatformNum;
             deviceStringCommand += " ";
-            List<string> ids = new List<string>();
-            foreach (var mPair in MiningSetup.MiningPairs) {
-                ids.Add("-d " + mPair.Device.ID.ToString());
-            }
-            deviceStringCommand += String.Join(" ", ids);
+            var ids = MiningSetup.MiningPairs.Select(mPair => "-d " + mPair.Device.ID.ToString()).ToList();
+            deviceStringCommand += string.Join(" ", ids);
 
             return deviceStringCommand + extraParams;
         }
 
-        public override async Task<APIData> GetSummaryAsync() {
-            _currentMinerReadStatus = MinerApiReadStatus.NONE;
-            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+        public override async Task<ApiData> GetSummaryAsync()
+        {
+            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
-            if (_skipAPICheck == false) {
+            if (_skipApiCheck == false)
+            {
                 JsonApiResponse resp = null;
-                try {
-                    string DataToSend = GetHttpRequestNHMAgentStrin("");
-                    string respStr = await GetAPIDataAsync(APIPort, DataToSend, true);
-                    if (respStr != null && respStr.Contains("{")) {
-                        int start = respStr.IndexOf("{");
-                        if (start > -1) {
-                            string respStrJSON = respStr.Substring(start);
-                            resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStrJSON.Trim(), Globals.JsonSettings);
+                try
+                {
+                    var dataToSend = GetHttpRequestNhmAgentStrin("");
+                    var respStr = await GetApiDataAsync(ApiPort, dataToSend, true);
+                    if (respStr != null && respStr.Contains("{"))
+                    {
+                        var start = respStr.IndexOf("{");
+                        if (start > -1)
+                        {
+                            var respStrJson = respStr.Substring(start);
+                            resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStrJson.Trim(),
+                                Globals.JsonSettings);
                         }
                     }
                     //Helpers.ConsolePrint("OptiminerZcashMiner API back:", respStr);
-                } catch (Exception ex) {
+                }
+                catch (Exception ex)
+                {
                     Helpers.ConsolePrint("OptiminerZcashMiner", "GetSummary exception: " + ex.Message);
                 }
 
-                if (resp != null && resp.solution_rate != null) {
+                if (resp?.solution_rate != null)
+                {
                     //Helpers.ConsolePrint("OptiminerZcashMiner API back:", "resp != null && resp.error == null");
-                    const string total_key = "Total";
-                    const string _5s_key = "5s";
-                    if (resp.solution_rate.ContainsKey(total_key)) {
-                        var total_solution_rate_dict = resp.solution_rate[total_key];
-                        if (total_solution_rate_dict != null && total_solution_rate_dict.ContainsKey(_5s_key)) {
-                            ad.Speed = total_solution_rate_dict[_5s_key];
-                            _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+                    const string totalKey = "Total";
+                    const string _5SKey = "5s";
+                    if (resp.solution_rate.ContainsKey(totalKey))
+                    {
+                        var totalSolutionRateDict = resp.solution_rate[totalKey];
+                        if (totalSolutionRateDict != null && totalSolutionRateDict.ContainsKey(_5SKey))
+                        {
+                            ad.Speed = totalSolutionRateDict[_5SKey];
+                            CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                         }
                     }
-                    if (ad.Speed == 0) {
-                        _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                    if (ad.Speed == 0)
+                    {
+                        CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                     }
                 }
-            } else if (_skipAPICheck && _startAPI.Elapsed.TotalSeconds > waitSeconds) {
-                _startAPI.Stop();
-                _skipAPICheck = false;
+            }
+            else if (_skipApiCheck && _startApi.Elapsed.TotalSeconds > _waitSeconds)
+            {
+                _startApi.Stop();
+                _skipApiCheck = false;
             }
 
             return ad;
@@ -118,22 +135,28 @@ namespace NiceHashMiner.Miners.Equihash {
 
         // benchmark stuff
 
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            int t = time / 9; // sgminer needs 9 times more than this miner so reduce benchmark speed
-            string ret = " " + GetDevicesCommandString() + " --benchmark " + t;
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
+        {
+            var t = time / 9; // sgminer needs 9 times more than this miner so reduce benchmark speed
+            var ret = " " + GetDevicesCommandString() + " --benchmark " + t;
             return ret;
         }
-        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
+
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
+        {
             CheckOutdata(outdata);
         }
 
-        protected override bool BenchmarkParseLine(string outdata) {
-            const string FIND = "Benchmark:";
-            if (outdata.Contains(FIND)) {
-                int start = outdata.IndexOf("Benchmark:") + FIND.Length;
-                string itersAndVars = outdata.Substring(start).Trim();
-                var ar = itersAndVars.Split(new char[] { ' ' });
-                if (ar.Length >= 4) {
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            const string find = "Benchmark:";
+            if (outdata.Contains(find))
+            {
+                var start = outdata.IndexOf("Benchmark:") + find.Length;
+                var itersAndVars = outdata.Substring(start).Trim();
+                var ar = itersAndVars.Split(' ');
+                if (ar.Length >= 4)
+                {
                     // gets sols/s
                     BenchmarkAlgorithm.BenchmarkSpeed = Helpers.ParseDouble(ar[2]);
                     return true;
@@ -141,6 +164,5 @@ namespace NiceHashMiner.Miners.Equihash {
             }
             return false;
         }
-
     }
 }

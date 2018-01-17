@@ -1,83 +1,90 @@
-﻿using System;
-using System.IO;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using System.Globalization;
-using System.Net;
-using System.Net.Sockets;
-using System.Windows.Forms;
-using System.Management;
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+using System;
+using System.Diagnostics;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
-    class sgminer : Miner
+    internal class Sgminer : Miner
     {
-        private readonly int GPUPlatformNumber;
-        Stopwatch _benchmarkTimer = new Stopwatch();
+        private readonly int _gpuPlatformNumber;
+        private readonly Stopwatch _benchmarkTimer = new Stopwatch();
 
-        public sgminer()
+        public Sgminer()
             : base("sgminer_AMD")
         {
-            GPUPlatformNumber = ComputeDeviceManager.Avaliable.AmdOpenCLPlatformNum;
+            _gpuPlatformNumber = ComputeDeviceManager.Avaliable.AmdOpenCLPlatformNum;
             IsKillAllUsedMinerProcs = true;
         }
 
         // use ONLY for exiting a benchmark
-        public void KillSGMiner() {
-            foreach (Process process in Process.GetProcessesByName("sgminer")) {
-                try { process.Kill(); } catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+        public void KillSgminer()
+        {
+            foreach (var process in Process.GetProcessesByName("sgminer"))
+            {
+                try { process.Kill(); }
+                catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
             }
         }
 
-        public override void EndBenchmarkProcces() {
-            if (BenchmarkProcessStatus != BenchmarkProcessStatus.Killing && BenchmarkProcessStatus != BenchmarkProcessStatus.DoneKilling) {
+        public override void EndBenchmarkProcces()
+        {
+            if (BenchmarkProcessStatus != BenchmarkProcessStatus.Killing && BenchmarkProcessStatus != BenchmarkProcessStatus.DoneKilling)
+            {
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Killing;
-                try {
-                    Helpers.ConsolePrint("BENCHMARK", String.Format("Trying to kill benchmark process {0} algorithm {1}", BenchmarkProcessPath, BenchmarkAlgorithm.AlgorithmName));
-                    KillSGMiner();
-                } catch { } finally {
+                try
+                {
+                    Helpers.ConsolePrint("BENCHMARK",
+                        $"Trying to kill benchmark process {BenchmarkProcessPath} algorithm {BenchmarkAlgorithm.AlgorithmName}");
+                    KillSgminer();
+                }
+                catch { }
+                finally
+                {
                     BenchmarkProcessStatus = BenchmarkProcessStatus.DoneKilling;
-                    Helpers.ConsolePrint("BENCHMARK", String.Format("Benchmark process {0} algorithm {1} KILLED", BenchmarkProcessPath, BenchmarkAlgorithm.AlgorithmName));
+                    Helpers.ConsolePrint("BENCHMARK",
+                        $"Benchmark process {BenchmarkProcessPath} algorithm {BenchmarkAlgorithm.AlgorithmName} KILLED");
                     //BenchmarkHandle = null;
                 }
             }
         }
 
-        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+        protected override int GetMaxCooldownTimeInMilliseconds()
+        {
             return 90 * 1000; // 1.5 minute max, whole waiting time 75seconds
         }
 
-        protected override void _Stop(MinerStopType willswitch) {
+        protected override void _Stop(MinerStopType willswitch)
+        {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
         public override void Start(string url, string btcAdress, string worker)
         {
-            if (!IsInit) {
-                Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
+            if (!IsInit)
+            {
+                Helpers.ConsolePrint(MinerTag(), "MiningSetup is not initialized exiting Start()");
                 return;
             }
-            string username = GetUsername(btcAdress, worker);
-            
-            LastCommandLine = " --gpu-platform " + GPUPlatformNumber +
+            var username = GetUsername(btcAdress, worker);
+
+            LastCommandLine = " --gpu-platform " + _gpuPlatformNumber +
                               " -k " + MiningSetup.MinerName +
                               " --url=" + url +
                               " --userpass=" + username +
                               " -p x " +
                               " --api-listen" +
-                              " --api-port=" + APIPort.ToString() +
+                              " --api-port=" + ApiPort +
                               " " +
                               ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                                MiningSetup,
-                                                                DeviceType.AMD) +
+                                  MiningSetup,
+                                  DeviceType.AMD) +
                               " --device ";
 
             LastCommandLine += GetDevicesCommandString();
@@ -86,52 +93,56 @@ namespace NiceHashMiner.Miners
         }
 
         // new decoupled benchmarking routines
+
         #region Decoupled benchmarking routines
 
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            string CommandLine;
-
-            string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
+        {
+            var url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
+                ConectionType);
 
             // demo for benchmark
-            string username = Globals.DemoUser;
+            var username = Globals.DemoUser;
 
             if (ConfigManager.GeneralConfig.WorkerName.Length > 0)
                 username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
 
             // cd to the cgminer for the process bins
-            CommandLine = " /C \"cd /d " + WorkingDirectory + " && sgminer.exe " +
-                          " --gpu-platform " + GPUPlatformNumber +
-                          " -k " + algorithm.MinerName +
-                          " --url=" + url +
-                          " --userpass=" + username +
-                          " -p x " +
-                          " --sched-stop " + DateTime.Now.AddSeconds(time).ToString("HH:mm") +
-                          " -T --log 10 --log-file dump.txt" +
-                          " " +
-                          ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                                MiningSetup,
-                                                                DeviceType.AMD) +
-                          " --device ";
+            var commandLine = " /C \"cd /d " + WorkingDirectory + " && sgminer.exe " +
+                              " --gpu-platform " + _gpuPlatformNumber +
+                              " -k " + algorithm.MinerName +
+                              " --url=" + url +
+                              " --userpass=" + username +
+                              " -p x " +
+                              " --sched-stop " + DateTime.Now.AddSeconds(time).ToString("HH:mm") +
+                              " -T --log 10 --log-file dump.txt" +
+                              " " +
+                              ExtraLaunchParametersParser.ParseForMiningSetup(
+                                  MiningSetup,
+                                  DeviceType.AMD) +
+                              " --device ";
 
-            CommandLine += GetDevicesCommandString();
+            commandLine += GetDevicesCommandString();
 
-            CommandLine += " && del dump.txt\"";
+            commandLine += " && del dump.txt\"";
 
-            return CommandLine;
+            return commandLine;
         }
 
-        protected override bool BenchmarkParseLine(string outdata) {
-            if (outdata.Contains("Average hashrate:") && outdata.Contains("/s") && BenchmarkAlgorithm.NiceHashID != AlgorithmType.DaggerHashimoto) {
-                int i = outdata.IndexOf(": ");
-                int k = outdata.IndexOf("/s");
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            if (outdata.Contains("Average hashrate:") && outdata.Contains("/s") &&
+                BenchmarkAlgorithm.NiceHashID != AlgorithmType.DaggerHashimoto)
+            {
+                var i = outdata.IndexOf(": ");
+                var k = outdata.IndexOf("/s");
 
                 // save speed
-                string hashSpeed = outdata.Substring(i + 2, k - i + 2);
+                var hashSpeed = outdata.Substring(i + 2, k - i + 2);
                 Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashSpeed);
 
                 hashSpeed = hashSpeed.Substring(0, hashSpeed.IndexOf(" "));
-                double speed = Double.Parse(hashSpeed, CultureInfo.InvariantCulture);
+                var speed = double.Parse(hashSpeed, CultureInfo.InvariantCulture);
 
                 if (outdata.Contains("Kilohash"))
                     speed *= 1000;
@@ -140,26 +151,32 @@ namespace NiceHashMiner.Miners
 
                 BenchmarkAlgorithm.BenchmarkSpeed = speed;
                 return true;
-            } else if (outdata.Contains(String.Format("GPU{0}", MiningSetup.MiningPairs[0].Device.ID)) && outdata.Contains("s):") && BenchmarkAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto) {
-                int i = outdata.IndexOf("s):");
-                int k = outdata.IndexOf("(avg)");
+            }
+            if (outdata.Contains($"GPU{MiningSetup.MiningPairs[0].Device.ID}") && outdata.Contains("s):") &&
+                BenchmarkAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto)
+            {
+                var i = outdata.IndexOf("s):");
+                var k = outdata.IndexOf("(avg)");
 
                 // save speed
-                string hashSpeed = outdata.Substring(i + 3, k - i + 3).Trim();
+                var hashSpeed = outdata.Substring(i + 3, k - i + 3).Trim();
                 hashSpeed = hashSpeed.Replace("(avg):", "");
                 Helpers.ConsolePrint("BENCHMARK", "Final Speed: " + hashSpeed);
 
                 double mult = 1;
-                if (hashSpeed.Contains("K")) {
+                if (hashSpeed.Contains("K"))
+                {
                     hashSpeed = hashSpeed.Replace("K", " ");
                     mult = 1000;
-                } else if (hashSpeed.Contains("M")) {
+                }
+                else if (hashSpeed.Contains("M"))
+                {
                     hashSpeed = hashSpeed.Replace("M", " ");
                     mult = 1000000;
                 }
 
                 hashSpeed = hashSpeed.Substring(0, hashSpeed.IndexOf(" "));
-                double speed = Double.Parse(hashSpeed, CultureInfo.InvariantCulture) * mult;
+                var speed = double.Parse(hashSpeed, CultureInfo.InvariantCulture) * mult;
 
                 BenchmarkAlgorithm.BenchmarkSpeed = speed;
 
@@ -168,20 +185,23 @@ namespace NiceHashMiner.Miners
             return false;
         }
 
-        protected override void BenchmarkThreadRoutineStartSettup() {
+        protected override void BenchmarkThreadRoutineStartSettup()
+        {
             // sgminer extra settings
-            AlgorithmType NHDataIndex = BenchmarkAlgorithm.NiceHashID;
+            var nhDataIndex = BenchmarkAlgorithm.NiceHashID;
 
-            if (Globals.NiceHashData == null) {
+            if (Globals.NiceHashData == null)
+            {
                 Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no internet " +
-                    "connection. Sgminer needs internet connection to do benchmarking.");
+                                                  "connection. Sgminer needs internet connection to do benchmarking.");
 
                 throw new Exception("No internet connection");
             }
 
-            if (Globals.NiceHashData[NHDataIndex].paying == 0) {
+            if (Globals.NiceHashData[nhDataIndex].paying == 0)
+            {
                 Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
-                    "[algo: " + BenchmarkAlgorithm.AlgorithmName + "(" + NHDataIndex + ")]");
+                                                  "[algo: " + BenchmarkAlgorithm.AlgorithmName + "(" + nhDataIndex + ")]");
 
                 throw new Exception("No work can be used for benchmarking");
             }
@@ -192,31 +212,38 @@ namespace NiceHashMiner.Miners
             //BenchmarkHandle.BeginOutputReadLine();
         }
 
-        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata) {
-            if (_benchmarkTimer.Elapsed.TotalSeconds >= BenchmarkTimeInSeconds) {
-                string resp = GetAPIDataAsync(APIPort, "quit").Result.TrimEnd(new char[] { (char)0 });
+        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
+        {
+            if (_benchmarkTimer.Elapsed.TotalSeconds >= BenchmarkTimeInSeconds)
+            {
+                var resp = GetApiDataAsync(ApiPort, "quit").Result.TrimEnd((char) 0);
                 Helpers.ConsolePrint("BENCHMARK", "SGMiner Response: " + resp);
             }
-            if (_benchmarkTimer.Elapsed.TotalSeconds >= BenchmarkTimeInSeconds + 2) {
+            if (_benchmarkTimer.Elapsed.TotalSeconds >= BenchmarkTimeInSeconds + 2)
+            {
                 _benchmarkTimer.Stop();
                 // this is safe in a benchmark
-                KillSGMiner();
+                KillSgminer();
                 BenchmarkSignalHanged = true;
             }
-            if (!BenchmarkSignalFinnished && outdata != null) {
+            if (!BenchmarkSignalFinnished && outdata != null)
+            {
                 CheckOutdata(outdata);
             }
         }
 
-        protected override string GetFinalBenchmarkString() {
-            if (BenchmarkAlgorithm.BenchmarkSpeed <= 0) {
+        protected override string GetFinalBenchmarkString()
+        {
+            if (BenchmarkAlgorithm.BenchmarkSpeed <= 0)
+            {
                 Helpers.ConsolePrint("sgminer_GetFinalBenchmarkString", International.GetText("sgminer_precise_try"));
                 return International.GetText("sgminer_precise_try");
             }
             return base.GetFinalBenchmarkString();
         }
 
-        protected override void BenchmarkThreadRoutine(object CommandLine) {
+        protected override void BenchmarkThreadRoutine(object commandLine)
+        {
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS * 3); // increase wait for sgminer
 
             BenchmarkSignalQuit = false;
@@ -224,50 +251,64 @@ namespace NiceHashMiner.Miners
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
 
-            try {
+            try
+            {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
-                BenchmarkHandle = BenchmarkStartProcess((string)CommandLine);
+                BenchmarkHandle = BenchmarkStartProcess((string) commandLine);
                 BenchmarkThreadRoutineStartSettup();
                 // wait a little longer then the benchmark routine if exit false throw
                 //var timeoutTime = BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds);
                 //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
                 // don't use wait for it breaks everything
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
-                while(true) {
-                    string outdata = BenchmarkHandle.StandardOutput.ReadLine();
+                while (true)
+                {
+                    var outdata = BenchmarkHandle.StandardOutput.ReadLine();
                     BenchmarkOutputErrorDataReceivedImpl(outdata);
                     // terminate process situations
                     if (BenchmarkSignalQuit
                         || BenchmarkSignalFinnished
                         || BenchmarkSignalHanged
                         || BenchmarkSignalTimedout
-                        || BenchmarkException != null) {
+                        || BenchmarkException != null)
+                    {
                         //EndBenchmarkProcces();
                         // this is safe in a benchmark
-                        KillSGMiner();
-                        if (BenchmarkSignalTimedout) {
+                        KillSgminer();
+                        if (BenchmarkSignalTimedout)
+                        {
                             throw new Exception("Benchmark timedout");
                         }
-                        if (BenchmarkException != null) {
+                        if (BenchmarkException != null)
+                        {
                             throw BenchmarkException;
                         }
-                        if (BenchmarkSignalQuit) {
+                        if (BenchmarkSignalQuit)
+                        {
                             throw new Exception("Termined by user request");
                         }
-                        if (BenchmarkSignalHanged) {
+                        if (BenchmarkSignalHanged)
+                        {
                             throw new Exception("SGMiner is not responding");
                         }
-                        if (BenchmarkSignalFinnished) {
+                        if (BenchmarkSignalFinnished)
+                        {
                             break;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         // wait a second reduce CPU load
                         Thread.Sleep(1000);
                     }
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 BenchmarkThreadRoutineCatch(ex);
-            } finally {
+            }
+            finally
+            {
                 BenchmarkThreadRoutineFinish();
             }
         }
@@ -275,69 +316,83 @@ namespace NiceHashMiner.Miners
         #endregion // Decoupled benchmarking routines
 
         // TODO _currentMinerReadStatus
-        public override async Task<APIData> GetSummaryAsync() {
-            string resp;
-            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+        public override async Task<ApiData> GetSummaryAsync()
+        {
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
-            resp = await GetAPIDataAsync(APIPort, "summary");
-            if (resp == null) {
-                _currentMinerReadStatus = MinerApiReadStatus.NONE;
+            var resp = await GetApiDataAsync(ApiPort, "summary");
+            if (resp == null)
+            {
+                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
                 return null;
             }
             //// sgminer debug log
             //Helpers.ConsolePrint("sgminer-DEBUG_resp", resp);
 
-            try {
+            try
+            {
                 // Checks if all the GPUs are Alive first
-                string resp2 = await GetAPIDataAsync(APIPort, "devs");
-                if (resp2 == null) {
-                    _currentMinerReadStatus = MinerApiReadStatus.NONE;
+                var resp2 = await GetApiDataAsync(ApiPort, "devs");
+                if (resp2 == null)
+                {
+                    CurrentMinerReadStatus = MinerApiReadStatus.NONE;
                     return null;
                 }
                 //// sgminer debug log
                 //Helpers.ConsolePrint("sgminer-DEBUG_resp2", resp2);
 
-                string[] checkGPUStatus = resp2.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                var checkGpuStatus = resp2.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
 
-                for (int i = 1; i < checkGPUStatus.Length - 1; i++) {
-                    if (checkGPUStatus[i].Contains("Enabled=Y") && !checkGPUStatus[i].Contains("Status=Alive")) {
-                        Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
-                        _currentMinerReadStatus = MinerApiReadStatus.WAIT;
+                for (var i = 1; i < checkGpuStatus.Length - 1; i++)
+                {
+                    if (checkGpuStatus[i].Contains("Enabled=Y") && !checkGpuStatus[i].Contains("Status=Alive"))
+                    {
+                        Helpers.ConsolePrint(MinerTag(),
+                            ProcessTag() + " GPU " + i + ": Sick/Dead/NoStart/Initialising/Disabled/Rejecting/Unknown");
+                        CurrentMinerReadStatus = MinerApiReadStatus.WAIT;
                         return null;
                     }
                 }
 
-                string[] resps = resp.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                var resps = resp.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
 
-                if (resps[1].Contains("SUMMARY")) {
-                    string[] data = resps[1].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if (resps[1].Contains("SUMMARY"))
+                {
+                    var data = resps[1].Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
 
                     // Get miner's current total speed
-                    string[] speed = data[4].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                    var speed = data[4].Split(new[] {'='}, StringSplitOptions.RemoveEmptyEntries);
                     // Get miner's current total MH
-                    double total_mh = Double.Parse(data[18].Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries)[1], new CultureInfo("en-US"));
+                    var totalMH = double.Parse(data[18].Split(new[] {'='}, StringSplitOptions.RemoveEmptyEntries)[1],
+                        new CultureInfo("en-US"));
 
-                    ad.Speed = Double.Parse(speed[1]) * 1000;
+                    ad.Speed = double.Parse(speed[1]) * 1000;
 
-                    if (total_mh <= PreviousTotalMH) {
-                        Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " SGMiner might be stuck as no new hashes are being produced");
-                        Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + total_mh);
-                        _currentMinerReadStatus = MinerApiReadStatus.NONE;
+                    if (totalMH <= PreviousTotalMH)
+                    {
+                        Helpers.ConsolePrint(MinerTag(), ProcessTag() + " SGMiner might be stuck as no new hashes are being produced");
+                        Helpers.ConsolePrint(MinerTag(),
+                            ProcessTag() + " Prev Total MH: " + PreviousTotalMH + " .. Current Total MH: " + totalMH);
+                        CurrentMinerReadStatus = MinerApiReadStatus.NONE;
                         return null;
                     }
 
-                    PreviousTotalMH = total_mh;
-                } else {
+                    PreviousTotalMH = totalMH;
+                }
+                else
+                {
                     ad.Speed = 0;
                 }
-            } catch {
-                _currentMinerReadStatus = MinerApiReadStatus.NONE;
+            }
+            catch
+            {
+                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
                 return null;
             }
 
-            _currentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+            CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
             // check if speed zero
-            if (ad.Speed == 0) _currentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+            if (ad.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
 
             return ad;
         }

@@ -16,13 +16,13 @@ namespace NiceHashMiner.Miners {
             : base("cpuminer_CPU") {
         }        
 
-        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+        protected override int GetMaxCooldownTimeInMilliseconds() {
             return 3600000; // 1hour
         }
 
         public override void Start(string url, string btcAdress, string worker) {
             if(!IsInit) {
-                Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
+                Helpers.ConsolePrint(MinerTag(), "MiningSetup is not initialized exiting Start()");
                 return;
             }
             string username = GetUsername(btcAdress, worker);
@@ -33,13 +33,13 @@ namespace NiceHashMiner.Miners {
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
                                                                 DeviceType.CPU) +
-                              " --api-bind=" + APIPort.ToString();
+                              " --api-bind=" + ApiPort.ToString();
 
             ProcessHandle = _Start();
         }
 
-        public override Task<APIData> GetSummaryAsync() {
-            return GetSummaryCPU_CCMINERAsync();
+        public override Task<ApiData> GetSummaryAsync() {
+            return GetSummaryCpuCcminerAsync();
         }
 
         protected override void _Stop(MinerStopType willswitch) {

@@ -197,7 +197,7 @@ namespace NiceHashMiner.Devices
             //        algoSettings[MinerBaseType.excavator][Equihash_index].ExtraLaunchParameters = "-c1 1";
             //    }
             //}
-            // nheqminer exceptions scope
+            // NhEqMiner exceptions scope
             {
                 const MinerBaseType minerBaseKey = MinerBaseType.nheqminer;
                 if (algoSettings.ContainsKey(minerBaseKey) && device.Name.Contains("GTX")

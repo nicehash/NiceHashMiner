@@ -31,7 +31,7 @@ namespace NiceHashMiner.Miners {
         }
 
         public override void Start(string url, string btcAdress, string worker) {
-            Helpers.ConsolePrint(MinerTAG(), "Starting MinerEtherumOCL, checking existing MinerEtherumOCL to stop");
+            Helpers.ConsolePrint(MinerTag(), "Starting MinerEtherumOCL, checking existing MinerEtherumOCL to stop");
             base.Start(url, btcAdress, worker, MinerEtherumOCLList);
         }
 
@@ -43,7 +43,7 @@ namespace NiceHashMiner.Miners {
                                                     DeviceType.AMD)
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":x " 
-                + " --api-port " + APIPort.ToString()
+                + " --api-port " + ApiPort.ToString()
                 + " --opencl-devices ";
         }
 

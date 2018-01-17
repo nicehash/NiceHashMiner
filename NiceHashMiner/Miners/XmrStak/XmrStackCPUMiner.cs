@@ -136,7 +136,7 @@ namespace NiceHashMiner.Miners {
             IsNeverHideMiningWindow = true;
         }
 
-        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+        protected override int GetMaxCooldownTimeInMilliseconds() {
             return 3600000; // 1hour
         }
 
@@ -148,7 +148,7 @@ namespace NiceHashMiner.Miners {
                     if (IsHyperThreadingEnabled) {
                         numTr /= 2;
                     }
-                    var config = new XmrStackCPUMinerConfig(numTr, pool, wallet, this.APIPort);
+                    var config = new XmrStackCPUMinerConfig(numTr, pool, wallet, this.ApiPort);
                     var no_prefetch = ExtraLaunchParametersParser.GetNoPrefetch(MiningSetup.MiningPairs[0]);
                     //config.Inti_cpu_threads_conf(false, false, true, ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled);
                     config.Inti_cpu_threads_conf(false, no_prefetch, false, IsHyperThreadingEnabled);

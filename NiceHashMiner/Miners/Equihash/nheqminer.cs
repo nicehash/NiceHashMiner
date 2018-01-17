@@ -1,101 +1,110 @@
-﻿using Newtonsoft.Json;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Net.Sockets;
-using System.Text;
-using NiceHashMiner.Miners.Grouping;
-using System.Diagnostics;
+﻿using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
+using System.Diagnostics;
+using System.Linq;
 
-namespace NiceHashMiner.Miners {
-    public class nheqminer : nheqBase {
-        public nheqminer()
-            : base("nheqminer") {
-                ConectionType = NhmConectionType.NONE;
+namespace NiceHashMiner.Miners
+{
+    public class NhEqMiner : NhEqBase
+    {
+        public NhEqMiner()
+            : base("NhEqMiner")
+        {
+            ConectionType = NhmConectionType.NONE;
         }
 
         // CPU aff set from NHM
-        protected override NiceHashProcess _Start() {
-            NiceHashProcess P = base._Start();
-            if (CPU_Setup.IsInit && P != null) {
-                var AffinityMask = CPU_Setup.MiningPairs[0].Device.AffinityMask;
-                if (AffinityMask != 0) {
-                    CPUID.AdjustAffinity(P.Id, AffinityMask);
+        protected override NiceHashProcess _Start()
+        {
+            var P = base._Start();
+            if (CpuSetup.IsInit && P != null)
+            {
+                var affinityMask = CpuSetup.MiningPairs[0].Device.AffinityMask;
+                if (affinityMask != 0)
+                {
+                    CPUID.AdjustAffinity(P.Id, affinityMask);
                 }
             }
 
             return P;
         }
 
-        public override void Start(string url, string btcAdress, string worker) {
-            string username = GetUsername(btcAdress, worker);
-            LastCommandLine = GetDevicesCommandString() + " -a " + APIPort + " -l " + url + " -u " + username;
+        public override void Start(string url, string btcAdress, string worker)
+        {
+            var username = GetUsername(btcAdress, worker);
+            LastCommandLine = GetDevicesCommandString() + " -a " + ApiPort + " -l " + url + " -u " + username;
             ProcessHandle = _Start();
         }
 
 
-        protected override string GetDevicesCommandString() {
-            string deviceStringCommand = " ";
+        protected override string GetDevicesCommandString()
+        {
+            var deviceStringCommand = " ";
 
-            if (CPU_Setup.IsInit) {
-                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(CPU_Setup, DeviceType.CPU);
-            } else {
+            if (CpuSetup.IsInit)
+            {
+                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(CpuSetup, DeviceType.CPU);
+            }
+            else
+            {
                 // disable CPU
                 deviceStringCommand += " -t 0 ";
             }
 
-            if (NVIDIA_Setup.IsInit) {
+            if (NvidiaSetup.IsInit)
+            {
                 deviceStringCommand += " -cd ";
-                foreach (var nvidia_pair in NVIDIA_Setup.MiningPairs) {
-                    deviceStringCommand += nvidia_pair.Device.ID + " ";
-                }
-                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(NVIDIA_Setup, DeviceType.NVIDIA);
+                deviceStringCommand = NvidiaSetup.MiningPairs.Aggregate(deviceStringCommand,
+                    (current, nvidiaPair) => current + (nvidiaPair.Device.ID + " "));
+                deviceStringCommand +=
+                    " " + ExtraLaunchParametersParser.ParseForMiningSetup(NvidiaSetup, DeviceType.NVIDIA);
             }
 
-            if (AMD_Setup.IsInit) {
-                deviceStringCommand += " -op " + AMD_OCL_PLATFORM.ToString();
+            if (AmdSetup.IsInit)
+            {
+                deviceStringCommand += " -op " + AmdOclPlatform.ToString();
                 deviceStringCommand += " -od ";
-                foreach (var amd_pair in AMD_Setup.MiningPairs) {
-                    deviceStringCommand += amd_pair.Device.ID + " ";
-                }
-                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(AMD_Setup, DeviceType.AMD);
+                deviceStringCommand = AmdSetup.MiningPairs.Aggregate(deviceStringCommand,
+                    (current, amdPair) => current + (amdPair.Device.ID + " "));
+                deviceStringCommand += " " + ExtraLaunchParametersParser.ParseForMiningSetup(AmdSetup, DeviceType.AMD);
             }
 
             return deviceStringCommand;
         }
 
         // benchmark stuff
-        protected override Process BenchmarkStartProcess(string CommandLine) {
-            Process BenchmarkHandle = base.BenchmarkStartProcess(CommandLine);
+        protected override Process BenchmarkStartProcess(string commandLine)
+        {
+            var benchmarkHandle = base.BenchmarkStartProcess(commandLine);
 
-            if (CPU_Setup.IsInit && BenchmarkHandle != null) {
-                var AffinityMask = CPU_Setup.MiningPairs[0].Device.AffinityMask;
-                if (AffinityMask != 0) {
-                    CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
+            if (CpuSetup.IsInit && benchmarkHandle != null)
+            {
+                var affinityMask = CpuSetup.MiningPairs[0].Device.AffinityMask;
+                if (affinityMask != 0)
+                {
+                    CPUID.AdjustAffinity(benchmarkHandle.Id, affinityMask);
                 }
             }
 
-            return BenchmarkHandle;
+            return benchmarkHandle;
         }
 
-        protected override bool BenchmarkParseLine(string outdata) {
-
-            if (outdata.Contains(Iter_PER_SEC)) {
-                curSpeed = getNumber(outdata, "Speed: ", Iter_PER_SEC) * SolMultFactor;
+        protected override bool BenchmarkParseLine(string outdata)
+        {
+            if (outdata.Contains(IterPerSec))
+            {
+                CurSpeed = GetNumber(outdata, "Speed: ", IterPerSec) * SolMultFactor;
             }
-            if (outdata.Contains(Sols_PER_SEC)) {
-                var sols = getNumber(outdata, "Speed: ", Sols_PER_SEC);
-                if (sols > 0) {
-                    BenchmarkAlgorithm.BenchmarkSpeed = curSpeed;
+            if (outdata.Contains(SolsPerSec))
+            {
+                var sols = GetNumber(outdata, "Speed: ", SolsPerSec);
+                if (sols > 0)
+                {
+                    BenchmarkAlgorithm.BenchmarkSpeed = CurSpeed;
                     return true;
                 }
             }
             return false;
         }
-        
     }
 }

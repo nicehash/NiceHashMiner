@@ -27,7 +27,7 @@ namespace NiceHashMiner.Miners
         }
 
         public override void Start(string url, string btcAdress, string worker) {
-            Helpers.ConsolePrint(MinerTAG(), "Starting MinerEtherumCUDA, checking existing MinerEtherumCUDA to stop");
+            Helpers.ConsolePrint(MinerTag(), "Starting MinerEtherumCUDA, checking existing MinerEtherumCUDA to stop");
             base.Start(url, btcAdress, worker, MinerEtherumCUDAList);
         }
 
@@ -39,7 +39,7 @@ namespace NiceHashMiner.Miners
                                                     DeviceType.NVIDIA)
                 + " -S " + url.Substring(14)
                 + " -O " + username + ":x "
-                + " --api-port " + APIPort.ToString()
+                + " --api-port " + ApiPort.ToString()
                 + " --cuda-devices ";
         }
 

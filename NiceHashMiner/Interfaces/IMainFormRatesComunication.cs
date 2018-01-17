@@ -5,7 +5,7 @@
         void ClearRatesAll();
         void ClearRates(int groupCount);
 
-        void AddRateInfo(string groupName, string deviceStringInfo, APIData iApiData, double paying,
+        void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying,
             bool isApiGetException);
 
         void ShowNotProfitable(string msg);
