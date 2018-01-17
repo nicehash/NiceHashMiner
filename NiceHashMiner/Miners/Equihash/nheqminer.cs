@@ -22,7 +22,7 @@ namespace NiceHashMiner.Miners
                 var affinityMask = CpuSetup.MiningPairs[0].Device.AffinityMask;
                 if (affinityMask != 0)
                 {
-                    CPUID.AdjustAffinity(P.Id, affinityMask);
+                    CpuID.AdjustAffinity(P.Id, affinityMask);
                 }
             }
 
@@ -82,7 +82,7 @@ namespace NiceHashMiner.Miners
                 var affinityMask = CpuSetup.MiningPairs[0].Device.AffinityMask;
                 if (affinityMask != 0)
                 {
-                    CPUID.AdjustAffinity(benchmarkHandle.Id, affinityMask);
+                    CpuID.AdjustAffinity(benchmarkHandle.Id, affinityMask);
                 }
             }
 
