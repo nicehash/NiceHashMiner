@@ -329,7 +329,7 @@ namespace NiceHashMiner.Miners
             // Prospector can take a very long time to start up
             _benchmarkTimeWait = time + 60;
             // network stub
-            var url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
+            var url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                 ConectionType);
             return GetStartupCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
         }
