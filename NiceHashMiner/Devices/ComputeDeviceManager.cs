@@ -494,7 +494,7 @@ namespace NiceHashMiner.Devices
 
                     // TODO important move this to settings
                     var threadsPerCpuMask = threadsPerCpu;
-                    Globals.ThreadsPerCPU = threadsPerCpu;
+                    Globals.ThreadsPerCpu = threadsPerCpu;
 
                     if (CpuUtils.IsCpuMiningCapable())
                     {

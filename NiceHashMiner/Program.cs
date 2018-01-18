@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using System.IO;
-using NiceHashMiner.Utils;
+﻿using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
-using NiceHashMiner.Enums;
-using Newtonsoft.Json;
-using System.Globalization;
-using System.Threading;
+using NiceHashMiner.PInvoke;
+using NiceHashMiner.Utils;
+using System;
 using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Threading;
+using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
@@ -27,10 +26,11 @@ namespace NiceHashMiner
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             //Console.OutputEncoding = System.Text.Encoding.Unicode;
             // #0 set this first so data parsing will work correctly
-            Globals.JsonSettings = new JsonSerializerSettings {
+            Globals.JsonSettings = new JsonSerializerSettings
+            {
                 NullValueHandling = NullValueHandling.Ignore,
                 MissingMemberHandling = MissingMemberHandling.Ignore,
                 Culture = CultureInfo.InvariantCulture
@@ -40,62 +40,75 @@ namespace NiceHashMiner
             ConfigManager.InitializeConfig();
 
             // #2 check if multiple instances are allowed
-            bool startProgram = true;
-            if (ConfigManager.GeneralConfig.AllowMultipleInstances == false) {
-                try {
-                    Process current = Process.GetCurrentProcess();
-                    foreach (Process process in Process.GetProcessesByName(current.ProcessName)) {
-                        if (process.Id != current.Id) {
+            var startProgram = true;
+            if (ConfigManager.GeneralConfig.AllowMultipleInstances == false)
+            {
+                try
+                {
+                    var current = Process.GetCurrentProcess();
+                    foreach (var process in Process.GetProcessesByName(current.ProcessName))
+                    {
+                        if (process.Id != current.Id)
+                        {
                             startProgram = false;
                         }
                     }
-                } catch { }
+                }
+                catch { }
             }
 
-            if (startProgram) {
-                if (ConfigManager.GeneralConfig.LogToFile) {
+            if (startProgram)
+            {
+                if (ConfigManager.GeneralConfig.LogToFile)
+                {
                     Logger.ConfigureWithFile();
                 }
 
-                if (ConfigManager.GeneralConfig.DebugConsole) {
-                    Helpers.AllocConsole();
+                if (ConfigManager.GeneralConfig.DebugConsole)
+                {
+                    PInvokeHelpers.AllocConsole();
                 }
 
                 // init active display currency after config load
-                ExchangeRateAPI.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
+                ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
                 // #2 then parse args
                 var commandLineArgs = new CommandLineParser(argv);
 
                 Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
-                bool tosChecked = ConfigManager.GeneralConfig.agreedWithTOS == Globals.CURRENT_TOS_VER;
-                if (!tosChecked || !ConfigManager.GeneralConfigIsFileExist() && !commandLineArgs.IsLang) {
-                    Helpers.ConsolePrint("NICEHASH", "No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
+                var tosChecked = ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer;
+                if (!tosChecked || !ConfigManager.GeneralConfigIsFileExist() && !commandLineArgs.IsLang)
+                {
+                    Helpers.ConsolePrint("NICEHASH",
+                        "No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
                     Application.Run(new Form_ChooseLanguage());
                 }
 
                 // Init languages
                 International.Initialize(ConfigManager.GeneralConfig.Language);
 
-                if (commandLineArgs.IsLang) {
+                if (commandLineArgs.IsLang)
+                {
                     Helpers.ConsolePrint("NICEHASH", "Language is overwritten by command line parameter (-lang).");
                     International.Initialize(commandLineArgs.LangValue);
                     ConfigManager.GeneralConfig.Language = commandLineArgs.LangValue;
                 }
 
                 // check WMI
-                if (Helpers.IsWmiEnabled()) {
-                    if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CURRENT_TOS_VER) {
+                if (Helpers.IsWmiEnabled())
+                {
+                    if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
+                    {
                         Application.Run(new Form_Main());
                     }
                 }
-                else {
+                else
+                {
                     MessageBox.Show(International.GetText("Program_WMI_Error_Text"),
-                                                            International.GetText("Program_WMI_Error_Title"),
-                                                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        International.GetText("Program_WMI_Error_Title"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
-
     }
 }

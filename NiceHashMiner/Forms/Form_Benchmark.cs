@@ -582,7 +582,7 @@ namespace NiceHashMiner.Forms
                     string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters) &&
                     _currentAlgorithm.ExtraLaunchParameters.Contains("enable_ht=true") == false)
                 {
-                    _cpuBenchmarkStatus = new CpuBenchmarkStatus(Globals.ThreadsPerCPU);
+                    _cpuBenchmarkStatus = new CpuBenchmarkStatus(Globals.ThreadsPerCpu);
                     _currentAlgorithm.LessThreads = _cpuBenchmarkStatus.LessTreads;
                 }
                 else

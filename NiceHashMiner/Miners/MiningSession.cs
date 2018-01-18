@@ -231,7 +231,7 @@ namespace NiceHashMiner.Miners
         private bool CheckIfProfitable(double currentProfit, bool log = true)
         {
             // TODO FOR NOW USD ONLY
-            var currentProfitUsd = (currentProfit * Globals.BitcoinUSDRate);
+            var currentProfitUsd = (currentProfit * Globals.BitcoinUsdRate);
             _isProfitable =
                 _isMiningRegardlesOfProfit
                 || !_isMiningRegardlesOfProfit && currentProfitUsd >= ConfigManager.GeneralConfig.MinimumProfit;
@@ -316,7 +316,7 @@ namespace NiceHashMiner.Miners
                         stringBuilderDevice.AppendLine(
                             $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
                             $"\t(SPEED = {algo.AvaragedSpeed + (algo.IsDual() ? "/" + algo.SecondaryAveragedSpeed : "")}" +
-                            $"\t\t| NHSMA = {algo.CurNhmSMADataVal + (algo.IsDual() ? "/" + algo.SecondaryCurNhmSMADataVal : "")})" +
+                            $"\t\t| NHSMA = {algo.CurNhmSmaDataVal + (algo.IsDual() ? "/" + algo.SecondaryCurNhmSmaDataVal : "")})" +
                             $"\t[{algo.AlgorithmStringID}]"
                         );
                     }

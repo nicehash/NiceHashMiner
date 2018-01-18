@@ -160,13 +160,13 @@ namespace NiceHashMiner.Miners.Grouping
                 var secondaryKey = algo.SecondaryNiceHashID;
                 if (niceHashData.ContainsKey(key))
                 {
-                    algo.CurNhmSMADataVal = niceHashData[key].paying;
-                    algo.CurrentProfit = algo.CurNhmSMADataVal * algo.AvaragedSpeed * 0.000000001;
+                    algo.CurNhmSmaDataVal = niceHashData[key].paying;
+                    algo.CurrentProfit = algo.CurNhmSmaDataVal * algo.AvaragedSpeed * 0.000000001;
                     if (niceHashData.ContainsKey(secondaryKey))
                     {
-                        algo.SecondaryCurNhmSMADataVal = niceHashData[secondaryKey].paying;
+                        algo.SecondaryCurNhmSmaDataVal = niceHashData[secondaryKey].paying;
                         algo.CurrentProfit +=
-                            algo.SecondaryCurNhmSMADataVal * algo.SecondaryAveragedSpeed * 0.000000001;
+                            algo.SecondaryCurNhmSmaDataVal * algo.SecondaryAveragedSpeed * 0.000000001;
                     }
                 }
                 else

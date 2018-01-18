@@ -45,7 +45,7 @@ namespace NiceHashMiner.Forms
         {
             if (checkBox_TOS.Checked)
             {
-                ConfigManager.GeneralConfig.agreedWithTOS = Globals.CURRENT_TOS_VER;
+                ConfigManager.GeneralConfig.agreedWithTOS = Globals.CurrentTosVer;
                 comboBox_Languages.Enabled = true;
                 button_OK.Enabled = true;
             }

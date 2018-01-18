@@ -146,7 +146,7 @@ namespace NiceHashMiner
 
         public static void GetCurrentBlock(string worker)
         {
-            string ret = NiceHashStats.GetNiceHashAPIData("https://etherchain.org/api/blocks/count", worker);
+            string ret = NiceHashStats.GetNiceHashApiData("https://etherchain.org/api/blocks/count", worker);
             
             if (ret == null)
             {

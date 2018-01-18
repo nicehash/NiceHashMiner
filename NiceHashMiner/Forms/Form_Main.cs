@@ -124,7 +124,7 @@ namespace NiceHashMiner
             toolStripStatusLabelGlobalRateText.Text = International.GetText("Form_Main_global_rate") + ":";
             toolStripStatusLabelBTCDayText.Text =
                 "BTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            toolStripStatusLabelBalanceText.Text = (ExchangeRateAPI.ActiveDisplayCurrency + "/") +
+            toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                                                    International.GetText(
                                                        ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
                                                    International.GetText("Form_Main_balance") + ":";
@@ -156,7 +156,7 @@ namespace NiceHashMiner
             _demoMode = false;
 
             // init active display currency after config load
-            ExchangeRateAPI.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
+            ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
             // init factor for Time Unit
             switch (ConfigManager.GeneralConfig.TimeUnit)
@@ -178,8 +178,8 @@ namespace NiceHashMiner
                     break;
             }
 
-            toolStripStatusLabelBalanceDollarValue.Text = "(" + ExchangeRateAPI.ActiveDisplayCurrency + ")";
-            toolStripStatusLabelBalanceText.Text = (ExchangeRateAPI.ActiveDisplayCurrency + "/") +
+            toolStripStatusLabelBalanceDollarValue.Text = "(" + ExchangeRateApi.ActiveDisplayCurrency + ")";
+            toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                                                    International.GetText(
                                                        ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
                                                    International.GetText("Form_Main_balance") + ":";
@@ -307,7 +307,7 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
-            NiceHashStats.OnSMAUpdate += SmaCallback;
+            NiceHashStats.OnSmaUpdate += SmaCallback;
             NiceHashStats.OnVersionUpdate += VersionUpdateCallback;
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
@@ -583,10 +583,10 @@ namespace NiceHashMiner
                 Helpers.FormatDualSpeedOutput(iApiData.AlgorithmID, iApiData.Speed, iApiData.SecondarySpeed) +
                 iApiData.AlgorithmName + apiGetExceptionString;
             var rateBtcString = FormatPayingOutput(paying);
-            var rateCurrencyString = ExchangeRateAPI
-                                         .ConvertToActiveCurrency(paying * Globals.BitcoinUSDRate * _factorTimeUnit)
+            var rateCurrencyString = ExchangeRateApi
+                                         .ConvertToActiveCurrency(paying * Globals.BitcoinUsdRate * _factorTimeUnit)
                                          .ToString("F2", CultureInfo.InvariantCulture)
-                                     + $" {ExchangeRateAPI.ActiveDisplayCurrency}/" +
+                                     + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
             try
@@ -606,7 +606,7 @@ namespace NiceHashMiner
             {
                 if (!_isNotProfitable)
                 {
-                    IFTTT.PostToIFTTT("nicehash", msg);
+                    Ifttt.PostToIfttt("nicehash", msg);
                     _isNotProfitable = true;
                 }
             }
@@ -622,7 +622,7 @@ namespace NiceHashMiner
             {
                 if (_isNotProfitable)
                 {
-                    IFTTT.PostToIFTTT("nicehash", "Mining is once again profitable and has resumed.");
+                    Ifttt.PostToIfttt("nicehash", "Mining is once again profitable and has resumed.");
                     _isNotProfitable = false;
                 }
             }
@@ -650,10 +650,10 @@ namespace NiceHashMiner
                     (totalRate * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture);
             }
 
-            toolStripStatusLabelBTCDayValue.Text = ExchangeRateAPI
-                .ConvertToActiveCurrency((totalRate * _factorTimeUnit * Globals.BitcoinUSDRate))
+            toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
+                .ConvertToActiveCurrency((totalRate * _factorTimeUnit * Globals.BitcoinUsdRate))
                 .ToString("F2", CultureInfo.InvariantCulture);
-            toolStripStatusLabelBalanceText.Text = (ExchangeRateAPI.ActiveDisplayCurrency + "/") +
+            toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                                                    International.GetText(
                                                        ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
                                                    International.GetText("Form_Main_balance") + ":";
@@ -679,10 +679,10 @@ namespace NiceHashMiner
                 }
 
                 //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
-                var amount = (balance * Globals.BitcoinUSDRate);
-                amount = ExchangeRateAPI.ConvertToActiveCurrency(amount);
+                var amount = (balance * Globals.BitcoinUsdRate);
+                amount = ExchangeRateApi.ConvertToActiveCurrency(amount);
                 toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
-                toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateAPI.ActiveDisplayCurrency})";
+                toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
             }
         }
 
@@ -690,19 +690,19 @@ namespace NiceHashMiner
         private void BitcoinExchangeCheck_Tick(object sender, EventArgs e)
         {
             Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
-            ExchangeRateAPI.UpdateAPI(textBoxWorkerName.Text.Trim());
-            var br = ExchangeRateAPI.GetUSDExchangeRate();
+            ExchangeRateApi.UpdateApi(textBoxWorkerName.Text.Trim());
+            var br = ExchangeRateApi.GetUsdExchangeRate();
             var currencyRate = International.GetText("BenchmarkRatioRateN_A");
             if (br > 0)
             {
-                Globals.BitcoinUSDRate = br;
-                currencyRate = ExchangeRateAPI.ConvertToActiveCurrency(br).ToString("F2");
+                Globals.BitcoinUsdRate = br;
+                currencyRate = ExchangeRateApi.ConvertToActiveCurrency(br).ToString("F2");
             }
 
-            toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateAPI.ActiveDisplayCurrency}");
+            toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
 
             Helpers.ConsolePrint("NICEHASH",
-                "Current Bitcoin rate: " + Globals.BitcoinUSDRate.ToString("F2", CultureInfo.InvariantCulture));
+                "Current Bitcoin rate: " + Globals.BitcoinUsdRate.ToString("F2", CultureInfo.InvariantCulture));
         }
 
         private void SmaCallback(object sender, EventArgs e)

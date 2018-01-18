@@ -86,7 +86,7 @@ namespace NiceHashMiner.Miners
                     }
                     if (dual != AlgorithmType.NONE)
                     {
-                        var urlSecond = Globals.GetLocationURL(dual, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
+                        var urlSecond = Globals.GetLocationUrl(dual, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                             ConectionType);
                         dualModeParams = $" {coinP} -dpool {urlSecond} -dwal {username}";
                         break;
@@ -95,7 +95,7 @@ namespace NiceHashMiner.Miners
             }
             else
             {
-                var urlSecond = Globals.GetLocationURL(SecondaryAlgorithmType,
+                var urlSecond = Globals.GetLocationUrl(SecondaryAlgorithmType,
                     Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
                 dualModeParams = $" -dcoin {SecondaryShortName()} -dpool {urlSecond} -dwal {username} -dpsw x";
             }
@@ -126,7 +126,7 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             // network stub
-            var url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
+            var url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                 ConectionType);
             // demo for benchmark
             var ret = GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());

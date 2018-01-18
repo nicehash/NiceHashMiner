@@ -188,7 +188,7 @@ namespace NiceHashMiner
             try
             {
                 var myRequest = System.Net.WebRequest.Create(url);
-                myRequest.Timeout = Globals.FirstNetworkCheckTimeoutTimeMS;
+                myRequest.Timeout = Globals.FirstNetworkCheckTimeoutTimeMs;
                 myRequest.GetResponse();
             }
             catch (System.Net.WebException)

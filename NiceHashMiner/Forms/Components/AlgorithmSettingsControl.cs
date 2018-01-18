@@ -162,7 +162,7 @@ namespace NiceHashMiner.Forms.Components
             var txtbox = (TextBox) sender;
             if (int.TryParse(txtbox.Text, out var val))
             {
-                if (Globals.ThreadsPerCPU - val < 1)
+                if (Globals.ThreadsPerCpu - val < 1)
                 {
                     MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMiningLessThreadMsg"),
                         International.GetText("Warning_with_Exclamation"),
