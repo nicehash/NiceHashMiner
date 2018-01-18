@@ -107,7 +107,7 @@ namespace NiceHashMiner
                 try {
                     if (AlgorithmRates == null || niceHashData == null) {
                         niceHashData = new NiceHashData();
-                        AlgorithmRates = niceHashData.NormalizedSMA();
+                        AlgorithmRates = niceHashData.NormalizedSma();
                     }
                     //send login
                     var version = "NHML/" + Application.ProductVersion;
@@ -231,7 +231,7 @@ namespace NiceHashMiner
                     var algoKey = (AlgorithmType)algo[0].Value<int>();
                     niceHashData.AppendPayingForAlgo(algoKey, algo[1].Value<double>());
                 }
-                AlgorithmRates = niceHashData.NormalizedSMA();
+                AlgorithmRates = niceHashData.NormalizedSma();
                 OnSMAUpdate.Emit(null, EventArgs.Empty);
             } catch (Exception e) {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
