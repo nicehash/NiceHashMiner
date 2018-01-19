@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using NiceHashMiner;
 // ReSharper disable All
+#pragma warning disable
 
 namespace NVIDIA.NVAPI
 {

@@ -24,10 +24,10 @@ namespace NiceHashMiner
 
         public static bool ValidateWorkerName(string workername)
         {
-            return workername.Length <= 15 && isAlphaNumeric(workername) && !workername.Contains(" ");
+            return workername.Length <= 15 && IsAlphaNumeric(workername) && !workername.Contains(" ");
         }
 
-        public static bool isAlphaNumeric(string strToCheck)
+        public static bool IsAlphaNumeric(string strToCheck)
         {
             var rg = new Regex(@"^[a-zA-Z0-9\s,]*$");
             return rg.IsMatch(strToCheck);

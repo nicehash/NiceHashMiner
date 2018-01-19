@@ -7,6 +7,7 @@ namespace NiceHashMiner
 {
     internal class ExchangeRateApi
     {
+#pragma warning disable IDE1006
         public class Result
         {
             public Object algorithms { get; set; }
@@ -21,6 +22,7 @@ namespace NiceHashMiner
             public Result result { get; set; }
             public string method { get; set; }
         }
+#pragma warning restore IDE1006
 
         private const string ApiUrl = "https://api.nicehash.com/api?method=nicehash.service.info";
 

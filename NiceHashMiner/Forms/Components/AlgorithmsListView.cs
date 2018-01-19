@@ -221,7 +221,7 @@ namespace NiceHashMiner.Forms.Components
                     {
                         Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem")
                     };
-                    clearItem.Click += toolStripMenuItemClear_Click;
+                    clearItem.Click += ToolStripMenuItemClear_Click;
                     contextMenuStrip1.Items.Add(clearItem);
                 }
                 contextMenuStrip1.Show(Cursor.Position);
@@ -244,7 +244,7 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private void toolStripMenuItemClear_Click(object sender, EventArgs e)
+        private void ToolStripMenuItemClear_Click(object sender, EventArgs e)
         {
             if (_computeDevice != null)
             {

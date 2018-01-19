@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Configs;
-
+// ReSharper disable All
+#pragma warning disable
 namespace NiceHashMiner.Miners
 {
     public abstract class XmrStak : Miner

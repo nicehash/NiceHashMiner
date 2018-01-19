@@ -28,7 +28,7 @@ namespace NiceHashMiner
 
     internal class NiceHashStats
     {
-#pragma warning disable 649
+#pragma warning disable 649, IDE1006
 
         #region JSON Models
 
@@ -54,7 +54,7 @@ namespace NiceHashMiner
 
         #endregion
 
-#pragma warning restore 649
+#pragma warning restore 649, IDE1006
 
         private const int DeviceUpdateLaunchDelay = 20 * 1000;
         private const int DeviceUpdateInterval = 60 * 1000;

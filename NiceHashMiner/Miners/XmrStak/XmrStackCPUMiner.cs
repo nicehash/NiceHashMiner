@@ -11,6 +11,8 @@ using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+// ReSharper disable All
+#pragma warning disable
 
 namespace NiceHashMiner.Miners {
 

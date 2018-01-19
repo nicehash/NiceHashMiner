@@ -1,56 +1,54 @@
-﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using NiceHashMiner.Miners.Grouping;
+﻿using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
+using System.Collections.Generic;
 
 namespace NiceHashMiner.Miners
 {
     public class MinerEtherumCUDA : MinerEtherum
     {
-
         // reference to all MinerEtherumCUDA make sure to clear this after miner Stop
         // we make sure only ONE instance of MinerEtherumCUDA is running
-        private static List<MinerEtherum> MinerEtherumCUDAList = new List<MinerEtherum>();
+        private static readonly List<MinerEtherum> MinerEtherumCudaList = new List<MinerEtherum>();
 
         public MinerEtherumCUDA()
-            : base("MinerEtherumCUDA", "NVIDIA") {
-            MinerEtherumCUDAList.Add(this);
+            : base("MinerEtherumCUDA", "NVIDIA")
+        {
+            MinerEtherumCudaList.Add(this);
         }
 
-        ~MinerEtherumCUDA() {
+        ~MinerEtherumCUDA()
+        {
             // remove from list
-            MinerEtherumCUDAList.Remove(this);
+            MinerEtherumCudaList.Remove(this);
         }
 
-        public override void Start(string url, string btcAdress, string worker) {
+        public override void Start(string url, string btcAdress, string worker)
+        {
             Helpers.ConsolePrint(MinerTag(), "Starting MinerEtherumCUDA, checking existing MinerEtherumCUDA to stop");
-            base.Start(url, btcAdress, worker, MinerEtherumCUDAList);
+            base.Start(url, btcAdress, worker, MinerEtherumCudaList);
         }
 
-        protected override string GetStartCommandStringPart(string url, string username) {
+        protected override string GetStartCommandStringPart(string url, string username)
+        {
             return " --cuda"
-                + " "
-                + ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                    MiningSetup,
-                                                    DeviceType.NVIDIA)
-                + " -S " + url.Substring(14)
-                + " -O " + username + ":x "
-                + " --api-port " + ApiPort.ToString()
-                + " --cuda-devices ";
+                   + " "
+                   + ExtraLaunchParametersParser.ParseForMiningSetup(
+                       MiningSetup,
+                       DeviceType.NVIDIA)
+                   + " -S " + url.Substring(14)
+                   + " -O " + username + ":x "
+                   + " --api-port " + ApiPort
+                   + " --cuda-devices ";
         }
 
-        protected override string GetBenchmarkCommandStringPart(Algorithm algorithm) {
+        protected override string GetBenchmarkCommandStringPart(Algorithm algorithm)
+        {
             return " --benchmark-warmup 40 --benchmark-trial 20"
-                + " "
-                + ExtraLaunchParametersParser.ParseForMiningSetup(
-                                                    MiningSetup,
-                                                    DeviceType.NVIDIA)
-                + " --cuda --cuda-devices ";
+                   + " "
+                   + ExtraLaunchParametersParser.ParseForMiningSetup(
+                       MiningSetup,
+                       DeviceType.NVIDIA)
+                   + " --cuda --cuda-devices ";
         }
-
     }
 }

@@ -60,9 +60,9 @@ namespace NiceHashMiner.Forms
         // CPU benchmarking helpers
         private class CpuBenchmarkStatus
         {
-            private class benchmark
+            private class CpuBenchmark
             {
-                public benchmark(int lt, double bench)
+                public CpuBenchmark(int lt, double bench)
                 {
                     LessTreads = lt;
                     Benchmark = bench;
@@ -86,7 +86,7 @@ namespace NiceHashMiner.Forms
             {
                 if (HasTest())
                 {
-                    _benchmarks.Add(new benchmark(LessTreads, speed));
+                    _benchmarks.Add(new CpuBenchmark(LessTreads, speed));
                     ++LessTreads;
                 }
             }
@@ -107,7 +107,7 @@ namespace NiceHashMiner.Forms
             }
 
             private readonly int _maxThreads;
-            private readonly List<benchmark> _benchmarks = new List<benchmark>();
+            private readonly List<CpuBenchmark> _benchmarks = new List<CpuBenchmark>();
             public int LessTreads { get; private set; } = 0;
             public int Time;
         }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
+// Resharper disable All
+#pragma warning disable
 
 namespace NiceHashMiner.Miners {
     public class eqm : NhEqBase {

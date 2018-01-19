@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
 using System.Text.RegularExpressions;
+// ReSharper disable All
+#pragma warning disable
 
 namespace NiceHashMiner.Miners
 {

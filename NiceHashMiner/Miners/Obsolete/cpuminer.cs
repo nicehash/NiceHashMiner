@@ -9,6 +9,8 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using System.Threading.Tasks;
+// Resharper disable All
+#pragma warning disable
 
 namespace NiceHashMiner.Miners {
     public class cpuminer : Miner {

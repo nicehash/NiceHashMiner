@@ -19,6 +19,7 @@ namespace NiceHashMiner.Miners.Equihash
             ConectionType = NhmConectionType.NONE;
         }
 
+#pragma warning disable IDE1006
         private class Stratum
         {
             public string target { get; set; }
@@ -36,6 +37,7 @@ namespace NiceHashMiner.Miners.Equihash
             public Dictionary<string, Dictionary<string, double>> iteration_rate;
             public Stratum stratum;
         }
+#pragma warning restore IDE1006
 
         // give some time or else it will crash
         private Stopwatch _startApi = null;

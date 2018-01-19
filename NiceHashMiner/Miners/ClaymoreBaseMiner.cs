@@ -57,9 +57,11 @@ namespace NiceHashMiner.Miners
 
         private class JsonApiResponse
         {
+#pragma warning disable IDE1006 // Naming Styles
             public List<string> result { get; set; }
             public int id { get; set; }
             public object error { get; set; }
+#pragma warning restore IDE1006 // Naming Styles
         }
 
         public override async Task<ApiData> GetSummaryAsync()

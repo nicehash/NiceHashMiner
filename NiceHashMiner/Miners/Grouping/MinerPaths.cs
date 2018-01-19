@@ -143,7 +143,7 @@ namespace NiceHashMiner.Miners.Grouping
             switch (minerBaseType)
             {
                 case MinerBaseType.ccminer:
-                    return NvidiaGroups.ccminer_path(algoType, devGroupType);
+                    return NvidiaGroups.Ccminer_path(algoType, devGroupType);
                 case MinerBaseType.sgminer:
                     return AmdGroup.SgminerPath(algoType);
                 case MinerBaseType.nheqminer:
@@ -254,7 +254,7 @@ namespace NiceHashMiner.Miners.Grouping
                 return Data.CcminerSp;
             }
 
-            public static string ccminer_path(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup)
+            public static string Ccminer_path(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup)
             {
                 switch (nvidiaGroup)
                 {
@@ -317,7 +317,7 @@ namespace NiceHashMiner.Miners.Grouping
             public static string GetPath(AlgorithmType algoType, DeviceGroupType devGroupType)
             {
                 return devGroupType == DeviceGroupType.NVIDIA_6_x
-                    ? NvidiaGroups.ccminer_path(algoType, devGroupType)
+                    ? NvidiaGroups.Ccminer_path(algoType, devGroupType)
                     : Data.None;
             }
         }

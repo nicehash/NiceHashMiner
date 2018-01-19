@@ -60,7 +60,7 @@ namespace NiceHashMiner.Devices
                 DeviceGroupType.AMD_OpenCL,
                 amdDevice.IsEtherumCapable(),
                 DeviceType.AMD,
-                String.Format(International.GetText("ComputeDevice_Short_Name_AMD_GPU"), gpuCount),
+                string.Format(International.GetText("ComputeDevice_Short_Name_AMD_GPU"), gpuCount),
                 amdDevice.DeviceGlobalMemory)
         {
             Uuid = isDetectionFallback

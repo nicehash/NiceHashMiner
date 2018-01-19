@@ -36,6 +36,7 @@ namespace NiceHashMiner.Miners
 
     public class Prospector : Miner
     {
+#pragma warning disable IDE1006
         private class hashrates
         {
             [PrimaryKey, AutoIncrement]
@@ -55,6 +56,15 @@ namespace NiceHashMiner.Miners
 
             public string start { get; set; }
         }
+
+        private class HashrateApiResponse
+        {
+            public string coin { get; set; }
+            public string device { get; set; }
+            public double rate { get; set; }
+            public string time { get; set; }
+        }
+#pragma warning restore IDE1006
 
         private class ProspectorDatabase : SQLiteConnection
         {
@@ -250,14 +260,6 @@ namespace NiceHashMiner.Miners
         protected override void _Stop(MinerStopType willswitch)
         {
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
-        }
-
-        private class HashrateApiResponse
-        {
-            public string coin { get; set; }
-            public string device { get; set; }
-            public double rate { get; set; }
-            public string time { get; set; }
         }
 
         public override async Task<ApiData> GetSummaryAsync()
