@@ -25,6 +25,7 @@ namespace NiceHashMiner.Miners
         protected static readonly string SolsPerSec = "Sols/s";
         protected const double SolMultFactor = 1.9;
 
+#pragma warning disable IDE1006
         private class Result
         {
             public double interval_seconds { get; set; }
@@ -40,6 +41,7 @@ namespace NiceHashMiner.Miners
             public Result result { get; set; }
             public object error { get; set; }
         }
+#pragma warning restore IDE1006
 
         protected NhEqBase(string minerDeviceName)
             : base(minerDeviceName)

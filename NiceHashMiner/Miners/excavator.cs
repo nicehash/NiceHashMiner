@@ -13,6 +13,7 @@ namespace NiceHashMiner.Miners
 {
     public class Excavator : Miner
     {
+#pragma warning disable IDE1006
         private class DeviceStat
         {
             public int id { get; set; }
@@ -36,6 +37,7 @@ namespace NiceHashMiner.Miners
             public Result result { get; set; }
             public object error { get; set; }
         }
+#pragma warning restore IDE1006
 
         public Excavator()
             : base("excavator")

@@ -20,7 +20,7 @@ namespace NiceHashMiner.Miners
         private double _cryptonightTotal = 0;
         private const int CryptonightTotalDelim = 2;
 
-        private bool benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.CcminerCryptonight
+        private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.CcminerCryptonight
                                            || MiningSetup.MinerPath == MinerPaths.Data.CcminerKlausT;
 
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -76,7 +76,7 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            var timeLimit = (benchmarkException) ? "" : " --time-limit " + time;
+            var timeLimit = (_benchmarkException) ? "" : " --time-limit " + time;
             var commandLine = " --algo=" + algorithm.MinerName +
                               " --benchmark" +
                               timeLimit + " " +
@@ -97,7 +97,7 @@ namespace NiceHashMiner.Miners
         protected override bool BenchmarkParseLine(string outdata)
         {
             // cryptonight exception
-            if (benchmarkException)
+            if (_benchmarkException)
             {
                 var speedLength = (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight) ? 6 : 8;
                 if (outdata.Contains("Total: "))

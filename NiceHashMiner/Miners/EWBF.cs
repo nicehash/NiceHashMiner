@@ -18,7 +18,7 @@ namespace NiceHashMiner.Miners
 {
     public class Ewbf : Miner
     {
-
+#pragma warning disable IDE1006
         private class Result
         {
             public uint gpuid { get; set; }
@@ -40,6 +40,7 @@ namespace NiceHashMiner.Miners
             public object error { get; set; }
             public List<Result> result { get; set; }
         }
+#pragma warning restore IDE1006
 
         private int _benchmarkTimeWait = 2 * 45;
         private int _benchmarkReadCount;
