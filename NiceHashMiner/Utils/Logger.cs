@@ -42,7 +42,7 @@ namespace NiceHashMiner
                 h.Root.AddAppender(CreateFileAppender());
                 h.Configured = true;
             }
-            catch (Exception e)
+            catch
             {
                 IsInit = false;
             }

@@ -10,9 +10,9 @@ namespace NiceHashMiner
 #pragma warning disable IDE1006
         public class Result
         {
-            public Object algorithms { get; set; }
-            public Object servers { get; set; }
-            public Object idealratios { get; set; }
+            public object algorithms { get; set; }
+            public object servers { get; set; }
+            public object idealratios { get; set; }
             public List<Dictionary<string, string>> exchanges { get; set; }
             public Dictionary<string, double> exchanges_fiat { get; set; }
         }
