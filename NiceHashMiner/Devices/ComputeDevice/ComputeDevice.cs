@@ -330,7 +330,8 @@ namespace NiceHashMiner.Devices
                 MinerBaseType.Claymore,
                 MinerBaseType.OptiminerAMD,
                 MinerBaseType.EWBF,
-                MinerBaseType.Prospector
+                MinerBaseType.Prospector,
+                MinerBaseType.ZMiner
             };
 
             return AlgorithmSettings.FindAll(a => thirdPartyMiners.IndexOf(a.MinerBaseType) == -1);

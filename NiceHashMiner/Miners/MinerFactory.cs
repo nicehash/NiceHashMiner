@@ -59,6 +59,8 @@ namespace NiceHashMiner.Miners
                     return new Excavator();
                 case MinerBaseType.XmrStackCPU:
                     return new XmrStackCPUMiner();
+                case MinerBaseType.ZMiner:
+                    return new ZMiner();
                 case MinerBaseType.ccminer_alexis:
                     return new Ccminer();
                 case MinerBaseType.experimental:

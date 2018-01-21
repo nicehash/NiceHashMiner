@@ -20,6 +20,7 @@
         excavator,
         ClaymoreDual,
         EWBF,
+        ZMiner,
         Xmrig,
         END
     }

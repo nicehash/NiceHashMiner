@@ -105,6 +105,7 @@ namespace NiceHashMiner.Miners.Grouping
 
             public const string ClaymoreZcashMiner = Bin3rdParty + @"\claymore_zcash\ZecMiner64.exe";
             public const string ClaymoreCryptoNightMiner = Bin3rdParty + @"\claymore_cryptonight\NsGpuCNMiner.exe";
+            public const string ZMiner = Bin3rdParty + @"\zminer\zm.exe";
 
             public const string ClaymoreCryptoNightMinerOld =
                 Bin3rdParty + @"\claymore_cryptonight_old\NsGpuCNMiner.exe";

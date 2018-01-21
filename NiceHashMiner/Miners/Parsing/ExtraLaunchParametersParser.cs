@@ -332,6 +332,8 @@ namespace NiceHashMiner.Miners.Parsing
                     return MinerType.excavator;
                 case MinerBaseType.EWBF:
                     return MinerType.EWBF;
+                case MinerBaseType.ZMiner:
+                    return MinerType.ZMiner;
                 case MinerBaseType.Xmrig:
                     return MinerType.Xmrig;
             }

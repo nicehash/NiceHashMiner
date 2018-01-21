@@ -407,6 +407,13 @@ namespace NiceHashMiner.Devices
                             }
                         },
                         {
+                            MinerBaseType.ZMiner,
+                            new List<Algorithm>
+                            {
+                                new Algorithm(MinerBaseType.ZMiner, AlgorithmType.Equihash, "")
+                            }
+                        },
+                        {
                             MinerBaseType.Claymore,
                             new List<Algorithm>
                             {
@@ -443,7 +450,8 @@ namespace NiceHashMiner.Devices
                             {
                                 MinerBaseType.eqm,
                                 MinerBaseType.excavator,
-                                MinerBaseType.EWBF
+                                MinerBaseType.EWBF,
+                                MinerBaseType.ZMiner
                             });
                             break;
                     }
