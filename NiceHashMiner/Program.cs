@@ -29,6 +29,11 @@ namespace NiceHashMiner
                 pathSet = true;
             }
 
+            // Add common folder to path for launched processes
+            var pathVar = Environment.GetEnvironmentVariable("PATH");
+            pathVar += ";" + Path.Combine(Environment.CurrentDirectory, "common");
+            Environment.SetEnvironmentVariable("PATH", pathVar);
+
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
