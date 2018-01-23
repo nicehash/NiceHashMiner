@@ -16,6 +16,8 @@ namespace NiceHashMiner.Configs.Data
         public string WorkerName = "worker1";
         public TimeUnitType TimeUnit = TimeUnitType.Day;
         public string IFTTTKey = "";
+        public string TelegramAPIToken = "";
+        public string TelegramChatID = "";
         public int ServiceLocation = 0;
         public bool AutoStartMining = false;
         public bool HideMiningWindows = false;
@@ -61,6 +63,7 @@ namespace NiceHashMiner.Configs.Data
         public double MinimumProfit = 0;
         public bool IdleWhenNoInternetAccess = true;
         public bool UseIFTTT = false;
+        public bool UseTelegramBot = false;
         public bool DownloadInit = false;
 
         public bool RunScriptOnCUDA_GPU_Lost = false;

@@ -460,6 +460,7 @@ namespace NiceHashMiner.Forms
                 checkBox_AllowMultipleInstances.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_UseIFTTT.CheckedChanged += CheckBox_UseIFTTT_CheckChanged;
+                checkBox_UseTelegramBot.CheckedChanged += CheckBox_UseTelegramBot_CheckedChanged;
                 checkBox_RunScriptOnCUDA_GPU_Lost.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
             // Add EventHandler for all the general tab's textboxes
@@ -467,6 +468,8 @@ namespace NiceHashMiner.Forms
                 textBox_BitcoinAddress.Leave += GeneralTextBoxes_Leave;
                 textBox_WorkerName.Leave += GeneralTextBoxes_Leave;
                 textBox_IFTTTKey.Leave += GeneralTextBoxes_Leave;
+                textBox_TelegramAPIToken.Leave += this.GeneralTextBoxes_Leave;
+                textBox_TelegramChatId.Leave += this.GeneralTextBoxes_Leave;
                 // these are ints only
                 textBox_SwitchMinSecondsFixed.Leave += GeneralTextBoxes_Leave;
                 textBox_SwitchMinSecondsDynamic.Leave += GeneralTextBoxes_Leave;
@@ -543,6 +546,7 @@ namespace NiceHashMiner.Forms
                 checkBox_MinimizeMiningWindows.Checked = ConfigManager.GeneralConfig.MinimizeMiningWindows;
                 checkBox_MinimizeMiningWindows.Enabled = !ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
+                checkBox_UseTelegramBot.Checked = ConfigManager.GeneralConfig.UseTelegramBot;
                 checkBox_RunScriptOnCUDA_GPU_Lost.Checked = ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost;
             }
 
@@ -552,6 +556,10 @@ namespace NiceHashMiner.Forms
                 textBox_WorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
                 textBox_IFTTTKey.Text = ConfigManager.GeneralConfig.IFTTTKey;
                 textBox_IFTTTKey.Enabled = ConfigManager.GeneralConfig.UseIFTTT;
+                textBox_TelegramAPIToken.Text = ConfigManager.GeneralConfig.TelegramAPIToken;
+                textBox_TelegramAPIToken.Enabled = ConfigManager.GeneralConfig.UseTelegramBot;
+                textBox_TelegramChatId.Text = ConfigManager.GeneralConfig.TelegramChatID;
+                textBox_TelegramChatId.Enabled = ConfigManager.GeneralConfig.UseTelegramBot;
                 textBox_SwitchMinSecondsFixed.Text = ConfigManager.GeneralConfig.SwitchMinSecondsFixed.ToString();
                 textBox_SwitchMinSecondsDynamic.Text = ConfigManager.GeneralConfig.SwitchMinSecondsDynamic.ToString();
                 textBox_SwitchMinSecondsAMD.Text = ConfigManager.GeneralConfig.SwitchMinSecondsAMD.ToString();
@@ -661,6 +669,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
             ConfigManager.GeneralConfig.IdleWhenNoInternetAccess = checkBox_IdleWhenNoInternetAccess.Checked;
             ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
+            ConfigManager.GeneralConfig.UseTelegramBot = checkBox_UseTelegramBot.Checked;
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
             ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
@@ -780,6 +789,8 @@ namespace NiceHashMiner.Forms
                 Helpers.ParseDouble(textBox_SwitchProfitabilityThreshold.Text);
 
             ConfigManager.GeneralConfig.IFTTTKey = textBox_IFTTTKey.Text.Trim();
+            ConfigManager.GeneralConfig.TelegramChatID = textBox_TelegramChatId.Text.Trim();
+            ConfigManager.GeneralConfig.TelegramAPIToken = textBox_TelegramAPIToken.Text.Trim();
 
             // Fix bounds
             ConfigManager.GeneralConfig.FixSettingBounds();
@@ -1037,6 +1048,18 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
 
             textBox_IFTTTKey.Enabled = checkBox_UseIFTTT.Checked;
+        }
+
+        private void CheckBox_UseTelegramBot_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!_isInitFinished) return;
+            IsChange = true;
+
+            ConfigManager.GeneralConfig.UseTelegramBot = checkBox_UseTelegramBot.Checked;
+
+            textBox_TelegramAPIToken.Enabled = checkBox_UseTelegramBot.Checked;
+            textBox_TelegramChatId.Enabled = checkBox_UseTelegramBot.Checked;
+
         }
     }
 }

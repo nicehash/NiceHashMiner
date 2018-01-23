@@ -97,6 +97,41 @@ namespace NiceHashMiner
                 _mainFormHeight = 330 - _emtpyGroupPanelHeight;
             }
             ClearRatesAll();
+
+            if (ConfigManager.GeneralConfig.UseTelegramBot && !TelegramBotService.BotRunning)
+            {
+                GetStatus getStatus = GetStatus;
+                TelegramBotService.StartBot(getStatus);
+            }
+            else if (ConfigManager.GeneralConfig.UseTelegramBot && TelegramBotService.BotRunning)
+            {
+                TelegramBotService.RestartBot();
+            }
+            else if (TelegramBotService.BotRunning)
+            { TelegramBotService.StopBot(); }
+        }
+        private string GetStatus()
+        {
+            System.Text.StringBuilder statusMessage = new System.Text.StringBuilder();
+            statusMessage.AppendLine(string.Format("Laptop - '{0}'", Environment.MachineName));
+            statusMessage.AppendLine(string.Format("WorkerName - '{0}'", textBoxWorkerName.Text));
+
+            if (_flowLayoutPanelVisibleCount > 0)
+            {
+                foreach (GroupProfitControl control in flowLayoutPanelRates.Controls)
+                {
+                    statusMessage.AppendLine("____________________");
+                    statusMessage.AppendLine(string.Format("{0}", control.GetStatus()));
+                }
+                statusMessage.AppendLine("____________________");
+
+            }
+            statusMessage.AppendLine(string.Format("{0} {1}"
+                , toolStripStatusLabelBTCDayValue.Text
+                , (ExchangeRateApi.ActiveDisplayCurrency + "/") + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString())
+               ));
+
+            return statusMessage.ToString();
         }
 
         private void InitLocalization()

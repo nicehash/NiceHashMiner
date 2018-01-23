@@ -153,6 +153,11 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
+            this.label_TelegramChatID = new System.Windows.Forms.Label();
+            this.textBox_TelegramChatId = new System.Windows.Forms.TextBox();
+            this.label_TelegramAPIToken = new System.Windows.Forms.Label();
+            this.textBox_TelegramAPIToken = new System.Windows.Forms.TextBox();
+            this.checkBox_UseTelegramBot = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -698,7 +703,7 @@
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogToFile);
             this.groupBox_Logging.Controls.Add(this.checkBox_DebugConsole);
-            this.groupBox_Logging.Location = new System.Drawing.Point(6, 297);
+            this.groupBox_Logging.Location = new System.Drawing.Point(6, 340);
             this.groupBox_Logging.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Logging.Name = "groupBox_Logging";
             this.groupBox_Logging.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -782,6 +787,11 @@
             // 
             // groupBox_Main
             // 
+            this.groupBox_Main.Controls.Add(this.label_TelegramChatID);
+            this.groupBox_Main.Controls.Add(this.textBox_TelegramChatId);
+            this.groupBox_Main.Controls.Add(this.label_TelegramAPIToken);
+            this.groupBox_Main.Controls.Add(this.textBox_TelegramAPIToken);
+            this.groupBox_Main.Controls.Add(this.checkBox_UseTelegramBot);
             this.groupBox_Main.Controls.Add(this.pictureBox_TimeUnit);
             this.groupBox_Main.Controls.Add(this.label_TimeUnit);
             this.groupBox_Main.Controls.Add(this.comboBox_TimeUnit);
@@ -807,7 +817,7 @@
             this.groupBox_Main.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Main.Name = "groupBox_Main";
             this.groupBox_Main.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Main.Size = new System.Drawing.Size(346, 214);
+            this.groupBox_Main.Size = new System.Drawing.Size(346, 257);
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
@@ -1041,7 +1051,7 @@
             this.groupBox_Localization.Controls.Add(this.comboBox_Language);
             this.groupBox_Localization.Controls.Add(this.currencyConverterCombobox);
             this.groupBox_Localization.Controls.Add(this.label_displayCurrency);
-            this.groupBox_Localization.Location = new System.Drawing.Point(6, 226);
+            this.groupBox_Localization.Location = new System.Drawing.Point(6, 269);
             this.groupBox_Localization.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Localization.Name = "groupBox_Localization";
             this.groupBox_Localization.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1717,6 +1727,55 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.ButtonCloseNoSave_Click);
             // 
+            // label_TelegramChatID
+            // 
+            this.label_TelegramChatID.AutoSize = true;
+            this.label_TelegramChatID.Location = new System.Drawing.Point(245, 210);
+            this.label_TelegramChatID.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_TelegramChatID.Name = "label_TelegramChatID";
+            this.label_TelegramChatID.Size = new System.Drawing.Size(46, 13);
+            this.label_TelegramChatID.TabIndex = 382;
+            this.label_TelegramChatID.Text = "Chat ID:";
+            // 
+            // textBox_TelegramChatId
+            // 
+            this.textBox_TelegramChatId.Enabled = false;
+            this.textBox_TelegramChatId.Location = new System.Drawing.Point(248, 229);
+            this.textBox_TelegramChatId.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_TelegramChatId.Name = "textBox_TelegramChatId";
+            this.textBox_TelegramChatId.Size = new System.Drawing.Size(72, 20);
+            this.textBox_TelegramChatId.TabIndex = 381;
+            // 
+            // label_TelegramAPIToken
+            // 
+            this.label_TelegramAPIToken.AutoSize = true;
+            this.label_TelegramAPIToken.Location = new System.Drawing.Point(124, 211);
+            this.label_TelegramAPIToken.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_TelegramAPIToken.Name = "label_TelegramAPIToken";
+            this.label_TelegramAPIToken.Size = new System.Drawing.Size(61, 13);
+            this.label_TelegramAPIToken.TabIndex = 380;
+            this.label_TelegramAPIToken.Text = "API Token:";
+            // 
+            // textBox_TelegramAPIToken
+            // 
+            this.textBox_TelegramAPIToken.Enabled = false;
+            this.textBox_TelegramAPIToken.Location = new System.Drawing.Point(122, 229);
+            this.textBox_TelegramAPIToken.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_TelegramAPIToken.Name = "textBox_TelegramAPIToken";
+            this.textBox_TelegramAPIToken.Size = new System.Drawing.Size(122, 20);
+            this.textBox_TelegramAPIToken.TabIndex = 379;
+            // 
+            // checkBox_UseTelegramBot
+            // 
+            this.checkBox_UseTelegramBot.AutoSize = true;
+            this.checkBox_UseTelegramBot.Location = new System.Drawing.Point(10, 232);
+            this.checkBox_UseTelegramBot.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_UseTelegramBot.Name = "checkBox_UseTelegramBot";
+            this.checkBox_UseTelegramBot.Size = new System.Drawing.Size(111, 17);
+            this.checkBox_UseTelegramBot.TabIndex = 378;
+            this.checkBox_UseTelegramBot.Text = "Use Telegram Bot";
+            this.checkBox_UseTelegramBot.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1924,5 +1983,10 @@
         private System.Windows.Forms.PictureBox pictureBox_TimeUnit;
         private System.Windows.Forms.Label label_TimeUnit;
         private System.Windows.Forms.ComboBox comboBox_TimeUnit;
+        private System.Windows.Forms.Label label_TelegramChatID;
+        private System.Windows.Forms.TextBox textBox_TelegramChatId;
+        private System.Windows.Forms.Label label_TelegramAPIToken;
+        private System.Windows.Forms.TextBox textBox_TelegramAPIToken;
+        private System.Windows.Forms.CheckBox checkBox_UseTelegramBot;
     }
 }
