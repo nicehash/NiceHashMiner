@@ -1,6 +1,8 @@
 ﻿using NiceHashMiner.Enums;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
+using NiceHashMiner.Miners.Parsing;
 
 namespace NiceHashMiner.Miners
 {
@@ -26,7 +28,14 @@ namespace NiceHashMiner.Miners
             var urls = url.Split(':');
             var server = urls.Length > 0 ? urls[0] : "";
             var port = urls.Length > 1 ? urls[1] : "";
-            return $" --server {server} --port {port} --user {btcAddress}.{worker} ";
+            return $" {GetDeviceCommand()} --server {server} --port {port} --user {btcAddress}.{worker} ";
+        }
+
+        private string GetDeviceCommand()
+        {
+            var dev = MiningSetup.MiningPairs.Aggregate(" --dev ", (current, nvPair) => current + nvPair.Device.ID + " ");
+            dev += ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
+            return dev;
         }
 
         protected override void _Stop(MinerStopType willswitch)
