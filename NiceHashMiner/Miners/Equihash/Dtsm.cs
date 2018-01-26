@@ -97,7 +97,7 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            BenchmarkAlgorithm.BenchmarkSpeed = benchSum / Math.Max(1, benchCount);
+            BenchmarkAlgorithm.BenchmarkSpeed = (benchSum / Math.Max(1, benchCount)) * (1 - DevFee * 0.01);
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
