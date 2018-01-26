@@ -1,13 +1,17 @@
-﻿using NiceHashMiner.Enums;
+﻿using Newtonsoft.Json;
+using NiceHashMiner.Enums;
+using NiceHashMiner.Miners.Parsing;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NiceHashMiner.Miners.Parsing;
 
 namespace NiceHashMiner.Miners
 {
     public class Dtsm : Miner
     {
+        private const double DevFee = 2.0;
+
         public Dtsm() : base("dtsm")
         {
             ConectionType = NhmConectionType.NONE;
@@ -28,7 +32,11 @@ namespace NiceHashMiner.Miners
             var urls = url.Split(':');
             var server = urls.Length > 0 ? urls[0] : "";
             var port = urls.Length > 1 ? urls[1] : "";
-            return $" {GetDeviceCommand()} --server {server} --port {port} --user {btcAddress}.{worker} ";
+            return $" {GetDeviceCommand()} " +
+                   $"--server {server} " +
+                   $"--port {port} " +
+                   $"--user {btcAddress}.{worker} " +
+                   $"--telemetry=127.0.0.1:{ApiPort} ";
         }
 
         private string GetDeviceCommand()
@@ -58,11 +66,58 @@ namespace NiceHashMiner.Miners
             throw new NotImplementedException();
         }
 
+        #region API
+
         public override async Task<ApiData> GetSummaryAsync()
         {
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            var request = JsonConvert.SerializeObject(new
+            {
+                method = "getstat",
+                id = 1
+            });
+
+            var response = await GetApiDataAsync(ApiPort, request);
+            DtsmResponse resp = null;
+
+            try
+            {
+                resp = JsonConvert.DeserializeObject<DtsmResponse>(response);
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint(MinerTag(), e.Message);
+            }
+
+            if (resp?.result != null)
+            {
+                ad.Speed = resp.result.Sum(gpu => gpu.sol_ps);
+            }
 
             return ad;
         }
+
+        protected override bool IsApiEof(byte third, byte second, byte last)
+        {
+            return second == 125 && last == 10;
+        }
+
+        #region JSON Models
+#pragma warning disable
+
+        public class DtsmResponse
+        {
+            public List<DtsmGpuResult> result { get; set; }
+        }
+
+        public class DtsmGpuResult
+        {
+            public double sol_ps { get; set; } = 0;
+        }
+
+#pragma warning restore
+        #endregion
+
+        #endregion
     }
 }
