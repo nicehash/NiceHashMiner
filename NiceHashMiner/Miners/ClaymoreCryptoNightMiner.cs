@@ -41,7 +41,7 @@ namespace NiceHashMiner.Miners
             var username = GetUsername(btcAdress, worker);
             if (_isOld)
             {
-                LastCommandLine = " " + GetDevicesCommandString() + " -mport 127.0.0.1:-" + ApiPort + " -o " + url +
+                LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort + " -o " + url +
                                   " -u " + username + " -p x -dbg -1";
             }
             else
