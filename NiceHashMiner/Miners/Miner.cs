@@ -833,6 +833,12 @@ namespace NiceHashMiner
 
         protected abstract bool BenchmarkParseLine(string outdata);
 
+        protected string GetServiceUrl(AlgorithmType algo)
+        {
+            return Globals.GetLocationUrl(algo, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
+                ConectionType);
+        }
+
         protected bool IsActiveProcess(int pid)
         {
             try

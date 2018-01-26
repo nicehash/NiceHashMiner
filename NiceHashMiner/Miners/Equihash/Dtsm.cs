@@ -3,14 +3,20 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Miners
 {
     public class Dtsm : Miner
     {
         private const double DevFee = 2.0;
+        private const string LookForStart = "sol/s: ";
+        private const string LookForEnd = "sol/w";
+
+        private int _benchmarkTime = 60;
 
         public Dtsm() : base("dtsm")
         {
@@ -41,9 +47,9 @@ namespace NiceHashMiner.Miners
 
         private string GetDeviceCommand()
         {
-            var dev = MiningSetup.MiningPairs.Aggregate(" --dev ", (current, nvPair) => current + nvPair.Device.ID + " ");
-            dev += ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
-            return dev;
+            return " --dev " +
+                   string.Join(" ", MiningSetup.MiningPairs.Select(p => p.Device.ID)) +
+                   ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
         }
 
         protected override void _Stop(MinerStopType willswitch)
@@ -51,20 +57,58 @@ namespace NiceHashMiner.Miners
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
+        #region Benchmarking
+
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            throw new NotImplementedException();
+            var url = GetServiceUrl(algorithm.NiceHashID);
+
+            _benchmarkTime = Math.Max(time, 60);
+
+            return GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim()) +
+                   " --logfile=benchmark_log.txt";
+        }
+
+        protected override void BenchmarkThreadRoutine(object commandLine)
+        {
+            BenchmarkThreadRoutineAlternate(commandLine, _benchmarkTime);
+        }
+
+        protected override void ProcessBenchLinesAlternate(string[] lines)
+        {
+            var benchSum = 0d;
+            var benchCount = 0;
+
+            foreach (var line in lines)
+            {
+                BenchLines.Add(line);
+                var lowered = line.ToLower();
+
+                var start = lowered.IndexOf(LookForStart, StringComparison.Ordinal);
+                if (start <= -1) continue;
+                lowered = lowered.Substring(start, lowered.Length - start);
+                lowered = lowered.Replace(LookForStart, "");
+                var end = lowered.IndexOf(LookForEnd, StringComparison.Ordinal);
+                lowered = lowered.Substring(0, end);
+                if (double.TryParse(lowered, out var speed))
+                {
+                    benchSum += speed;
+                    benchCount++;
+                }
+            }
+
+            BenchmarkAlgorithm.BenchmarkSpeed = benchSum / Math.Max(1, benchCount);
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
-        {
-            throw new NotImplementedException();
-        }
+        { }
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            throw new NotImplementedException();
+            return false;
         }
+
+        #endregion
 
         #region API
 
