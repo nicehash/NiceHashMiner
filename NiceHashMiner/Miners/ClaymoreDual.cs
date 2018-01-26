@@ -102,7 +102,7 @@ namespace NiceHashMiner.Miners
 
             return " "
                    + GetDevicesCommandString()
-                   + $"  -epool {url} -ewal {username} -mport 127.0.0.1:{ApiPort} -esm 3 -epsw x -allpools 1"
+                   + $"  -epool {url} -ewal {username} -mport 127.0.0.1:-{ApiPort} -esm 3 -epsw x -allpools 1"
                    + dualModeParams;
         }
 
