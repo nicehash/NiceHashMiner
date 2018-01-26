@@ -114,6 +114,8 @@ namespace NiceHashMiner.Miners
 
         public override async Task<ApiData> GetSummaryAsync()
         {
+            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
             var request = JsonConvert.SerializeObject(new
             {
@@ -136,6 +138,11 @@ namespace NiceHashMiner.Miners
             if (resp?.result != null)
             {
                 ad.Speed = resp.result.Sum(gpu => gpu.sol_ps);
+                CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
+            }
+            if (ad.Speed == 0)
+            {
+                CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
             }
 
             return ad;
