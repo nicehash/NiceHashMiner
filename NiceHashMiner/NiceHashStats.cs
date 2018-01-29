@@ -108,6 +108,7 @@ namespace NiceHashMiner
                     _webSocket.EmitOnPing = true;
                     _webSocket.Log.Level = LogLevel.Debug;
                     _webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
+                    _webSocket.EnableRedirection = true;
                     _webSocket.Connect();
                     _connectionEstablished = true;
                 }
