@@ -98,40 +98,113 @@ namespace NiceHashMiner
             }
             ClearRatesAll();
 
-            if (ConfigManager.GeneralConfig.UseTelegramBot && !TelegramBotService.BotRunning)
-            {
-                GetStatus getStatus = GetStatus;
-                TelegramBotService.StartBot(getStatus);
-            }
-            else if (ConfigManager.GeneralConfig.UseTelegramBot && TelegramBotService.BotRunning)
-            {
-                TelegramBotService.RestartBot();
-            }
-            else if (TelegramBotService.BotRunning)
-            { TelegramBotService.StopBot(); }
         }
-        private string GetStatus()
+        private string TelegramGetInfo(TelegramBotService.TelegramOptions options)
         {
-            System.Text.StringBuilder statusMessage = new System.Text.StringBuilder();
-            statusMessage.AppendLine(string.Format("Laptop - '{0}'", Environment.MachineName));
-            statusMessage.AppendLine(string.Format("WorkerName - '{0}'", textBoxWorkerName.Text));
+            System.Text.StringBuilder message = new System.Text.StringBuilder();
 
-            if (_flowLayoutPanelVisibleCount > 0)
+            switch (options)
             {
-                foreach (GroupProfitControl control in flowLayoutPanelRates.Controls)
-                {
-                    statusMessage.AppendLine("____________________");
-                    statusMessage.AppendLine(string.Format("{0}", control.GetStatus()));
-                }
-                statusMessage.AppendLine("____________________");
+                case TelegramBotService.TelegramOptions.FullStatus:
+                    if (_flowLayoutPanelVisibleCount > 0)
+                    {
+                        foreach (GroupProfitControl control in flowLayoutPanelRates.Controls)
+                        {
+                            message.AppendLine("____________________");
+                            message.AppendLine(string.Format("{0}", control.GetStatus()));
+                        }
+                        message.AppendLine("____________________");
 
+                    }
+                    message.AppendLine(string.Format("{0} {1}"
+                        , toolStripStatusLabelBTCDayValue.Text
+                        , (ExchangeRateApi.ActiveDisplayCurrency + "/") + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString())
+                       ));
+                    message.AppendLine(string.Format("Is Running : {0}", _isManuallyStarted));
+
+                    break;
+                case TelegramBotService.TelegramOptions.Info:
+
+
+                    if (_flowLayoutPanelVisibleCount > 0)
+                    {
+                        foreach (GroupProfitControl control in flowLayoutPanelRates.Controls)
+                        {
+                            message.AppendLine("____________________");
+                            message.AppendLine(string.Format("{0}", control.GetStatus()));
+                        }
+                        message.AppendLine("____________________");
+
+                    }
+                    message.AppendLine(string.Format("{0} {1}"
+                        , toolStripStatusLabelBTCDayValue.Text
+                        , (ExchangeRateApi.ActiveDisplayCurrency + "/") + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString())
+                       ));
+                    break;
+                case TelegramBotService.TelegramOptions.Profit:
+                    message.AppendLine(string.Format("{0} {1}"
+                                           , toolStripStatusLabelBTCDayValue.Text
+                                           , (ExchangeRateApi.ActiveDisplayCurrency + "/") + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString())
+                                          ));
+                    break;
+                case TelegramBotService.TelegramOptions.IsRunning:
+                    message.AppendLine(string.Format("Is Running : {0}", _isManuallyStarted));
+                    break;
+                case TelegramBotService.TelegramOptions.ForceStop:
+                    if (_isManuallyStarted)
+                    {
+                        ButtonStopMining_Click(null, null);
+                    }
+                    message.AppendLine(string.Format("Is Running : {0}", _isManuallyStarted));
+                    break;
+                case TelegramBotService.TelegramOptions.ForceStart:
+                    if (!_isManuallyStarted)
+                    {
+                        if (InvokeRequired)
+                        {
+                            this.Invoke(new Action(() => ButtonStartMining_Click(null, null)));
+                        }
+                        else
+                        {
+                            ButtonStartMining_Click(null, null);
+                        }
+                    }
+                    message.AppendLine(string.Format("Is Running : {0}", _isManuallyStarted));
+                    break;
+                case TelegramBotService.TelegramOptions.ForceRestart:
+                    if (_isManuallyStarted)
+                    {
+                        if (InvokeRequired)
+                        {
+                            this.Invoke(new Action(() => ButtonStopMining_Click(null, null)));
+                        }
+                        else
+                        {
+                            ButtonStopMining_Click(null, null);
+                        }
+                    }
+                    if (InvokeRequired)
+                    {
+                        this.Invoke(new Action(() =>
+                        {
+                            Timer timer = new Timer() { Interval = 5 * 1000 };
+                            timer.Start();
+                            timer.Tick += (s, e) =>
+                                {
+                                    if (!_isManuallyStarted)
+                                    {
+                                        timer.Stop();
+                                        ButtonStartMining_Click(null, null);
+                                        timer = null;
+                                    }
+                                };
+                        }));
+                    }
+                    message.AppendLine(string.Format("Is Running : {0}", _isManuallyStarted));
+                    break;
             }
-            statusMessage.AppendLine(string.Format("{0} {1}"
-                , toolStripStatusLabelBTCDayValue.Text
-                , (ExchangeRateApi.ActiveDisplayCurrency + "/") + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString())
-               ));
 
-            return statusMessage.ToString();
+            return message.ToString();
         }
 
         private void InitLocalization()
@@ -223,6 +296,21 @@ namespace NiceHashMiner
             if (_isDeviceDetectionInitialized)
             {
                 devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
+            }
+
+
+            if (ConfigManager.GeneralConfig.UseTelegramBot && !TelegramBotService.BotRunning)
+            {
+                TelegramGetInfo getStatus = TelegramGetInfo;
+                TelegramBotService.StartBot(getStatus);
+            }
+            else if (ConfigManager.GeneralConfig.UseTelegramBot && TelegramBotService.BotRunning)
+            {
+                TelegramBotService.RestartBot();
+            }
+            else if (TelegramBotService.BotRunning)
+            {
+                TelegramBotService.StopBot();
             }
         }
 
