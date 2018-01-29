@@ -14,11 +14,7 @@ namespace NiceHashMiner
                 var decoded = DecodeBase58(address);
                 var d1 = Hash(SubArray(decoded, 0, 21));
                 var d2 = Hash(d1);
-                if (decoded[21] != d2[0] ||
-                    decoded[22] != d2[1] ||
-                    decoded[23] != d2[2] ||
-                    decoded[24] != d2[3]) return false;
-                return true;
+                return decoded[21] == d2[0] && decoded[22] == d2[1] && decoded[23] == d2[2] && decoded[24] == d2[3];
             }
             catch
             {
@@ -28,20 +24,17 @@ namespace NiceHashMiner
 
         public static bool ValidateWorkerName(string workername)
         {
-            if (workername.Length > 15 || !isAlphaNumeric(workername) || workername.Contains(" "))
-                return false;
-
-            return true;
+            return workername.Length <= 15 && IsAlphaNumeric(workername) && !workername.Contains(" ");
         }
 
-        public static bool isAlphaNumeric(string strToCheck)
+        public static bool IsAlphaNumeric(string strToCheck)
         {
-            Regex rg = new Regex(@"^[a-zA-Z0-9\s,]*$");
+            var rg = new Regex(@"^[a-zA-Z0-9\s,]*$");
             return rg.IsMatch(strToCheck);
         }
 
-        const string Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
-        const int Size = 25;
+        private const string Alphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+        private const int Size = 25;
 
         private static byte[] DecodeBase58(string input)
         {
@@ -54,7 +47,7 @@ namespace NiceHashMiner
                 while (--j >= 0)
                 {
                     p += 58 * output[j];
-                    output[j] = (byte)(p % 256);
+                    output[j] = (byte) (p % 256);
                     p /= 256;
                 }
                 if (p != 0) throw new Exception("Address too long.");
@@ -76,4 +69,3 @@ namespace NiceHashMiner
         }
     }
 }
- 

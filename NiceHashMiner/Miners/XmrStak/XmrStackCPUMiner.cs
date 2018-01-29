@@ -11,6 +11,8 @@ using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+// ReSharper disable All
+#pragma warning disable
 
 namespace NiceHashMiner.Miners {
 
@@ -132,11 +134,11 @@ namespace NiceHashMiner.Miners {
     {
         public XmrStackCPUMiner()
             : base("XmrStackCPUMiner") {
-            this.ConectionType = NHMConectionType.NONE;
+            this.ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
         }
 
-        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+        protected override int GetMaxCooldownTimeInMilliseconds() {
             return 3600000; // 1hour
         }
 
@@ -148,7 +150,7 @@ namespace NiceHashMiner.Miners {
                     if (IsHyperThreadingEnabled) {
                         numTr /= 2;
                     }
-                    var config = new XmrStackCPUMinerConfig(numTr, pool, wallet, this.APIPort);
+                    var config = new XmrStackCPUMinerConfig(numTr, pool, wallet, this.ApiPort);
                     var no_prefetch = ExtraLaunchParametersParser.GetNoPrefetch(MiningSetup.MiningPairs[0]);
                     //config.Inti_cpu_threads_conf(false, false, true, ComputeDeviceManager.Avaliable.IsHyperThreadingEnabled);
                     config.Inti_cpu_threads_conf(false, no_prefetch, false, IsHyperThreadingEnabled);
@@ -168,7 +170,7 @@ namespace NiceHashMiner.Miners {
 
             var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
             if (AffinityMask != 0 && P != null)
-                CPUID.AdjustAffinity(P.Id, AffinityMask);
+                CpuID.AdjustAffinity(P.Id, AffinityMask);
 
             return P;
         }
@@ -178,7 +180,7 @@ namespace NiceHashMiner.Miners {
 
             var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
             if (AffinityMask != 0 && BenchmarkHandle != null)
-                CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
+                CpuID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
 
             return BenchmarkHandle;
         }

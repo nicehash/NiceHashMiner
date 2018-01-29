@@ -6,14 +6,15 @@ using System.Text;
 using System.Threading.Tasks;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Configs;
-
+// ReSharper disable All
+#pragma warning disable
 namespace NiceHashMiner.Miners
 {
     public abstract class XmrStak : Miner
     {
         protected XmrStak(string name)
             : base(name) {
-            ConectionType = NHMConectionType.NONE;
+            ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
         }
 
@@ -28,8 +29,8 @@ namespace NiceHashMiner.Miners
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        public override async Task<APIData> GetSummaryAsync() {
-            return await GetSummaryCPUAsync("api.json", true);
+        public override async Task<ApiData> GetSummaryAsync() {
+            return await GetSummaryCpuAsync("api.json", true);
         }
 
         protected override bool IsApiEof(byte third, byte second, byte last) {
@@ -38,7 +39,7 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string url, string btcAdress, string worker) {
             if (!IsInit) {
-                Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
+                Helpers.ConsolePrint(MinerTag(), "MiningSetup is not initialized exiting Start()");
                 return;
             }
             string username = GetUsername(btcAdress, worker);
@@ -50,7 +51,7 @@ namespace NiceHashMiner.Miners
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            string url = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
+            string url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], this.ConectionType);
             prepareConfigFile(url, Globals.DemoUser);
             return "benchmark_mode " + GetConfigFileName();
         }
@@ -61,7 +62,7 @@ namespace NiceHashMiner.Miners
                 foreach (var s in strings) {
                     double lastSpeed = 0;
                     if (double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out lastSpeed)) {
-                        Helpers.ConsolePrint("BENCHMARK " + MinerTAG(), "double.TryParse true. Last speed is" + lastSpeed.ToString());
+                        Helpers.ConsolePrint("BENCHMARK " + MinerTag(), "double.TryParse true. Last speed is" + lastSpeed.ToString());
                         BenchmarkAlgorithm.BenchmarkSpeed = Helpers.ParseDouble(s);
                         return true;
                     }

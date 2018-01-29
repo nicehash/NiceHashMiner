@@ -101,14 +101,15 @@
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithm.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
-    <Compile Include="Devices\ComputeDevice\CPUComputeDevice.cs" />
+    <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
     <Compile Include="Enums\TimeUnitType.cs" />
     <Compile Include="IFTTT.cs" />
     <Compile Include="ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
-    <Compile Include="Miners\EWBF.cs" />
-    <Compile Include="Miners\prospector.cs" />
+    <Compile Include="Miners\Equihash\Dtsm.cs" />
+    <Compile Include="Miners\Ewbf.cs" />
+    <Compile Include="Miners\Prospector.cs" />
     <Compile Include="Miners\XmrStak\XmrStak.cs" />
     <Compile Include="Miners\XmrStak\XmrStakAMD.cs" />
     <Compile Include="Miners\XmrStak\XmrStakConfig.cs" />
@@ -139,18 +140,18 @@
     <Compile Include="Enums\AlgorithmType.cs" />
     <Compile Include="Enums\BenchmarkPerformanceType.cs" />
     <Compile Include="Enums\BenchmarkProcessStatus.cs" />
-    <Compile Include="Enums\CPUExtensionType.cs" />
+    <Compile Include="Enums\CpuExtensionType.cs" />
     <Compile Include="Enums\DagGenerationType.cs" />
     <Compile Include="Enums\DeviceGroupType.cs" />
     <Compile Include="Enums\DeviceMiningStatus.cs" />
     <Compile Include="Enums\DeviceType.cs" />
     <Compile Include="Enums\LanguageType.cs" />
-    <Compile Include="Enums\MinerAPIReadStatus.cs" />
+    <Compile Include="Enums\MinerApiReadStatus.cs" />
     <Compile Include="Enums\MinerBaseType.cs" />
     <Compile Include="Enums\MinerOptionFlagType.cs" />
     <Compile Include="Enums\MinerStopType.cs" />
     <Compile Include="Enums\MinerType.cs" />
-    <Compile Include="Enums\NHMConectionType.cs" />
+    <Compile Include="Enums\NhmConectionType.cs" />
     <Compile Include="Enums\Use3rdPartyMiners.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
@@ -233,9 +234,9 @@
     <Compile Include="Miners\ClaymoreCryptoNightMiner.cs" />
     <Compile Include="Miners\Equihash\ClaymoreZcashMiner.cs" />
     <Compile Include="Miners\Obsolete\eqm.cs" />
-    <Compile Include="Miners\Equihash\nheqBase.cs" />
+    <Compile Include="Miners\Equihash\NhEqBase.cs" />
     <Compile Include="Miners\Equihash\OptiminerZcashMiner.cs" />
-    <Compile Include="Miners\excavator.cs" />
+    <Compile Include="Miners\Excavator.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
@@ -253,13 +254,13 @@
     <Compile Include="Miners\Grouping\MinerPaths.cs" />
     <Compile Include="Miners\MinersApiPortsManager.cs" />
     <Compile Include="Miners\MinersManager.cs" />
-    <Compile Include="Miners\Equihash\nheqminer.cs" />
+    <Compile Include="Miners\Equihash\NhEqMiner.cs" />
     <Compile Include="Miners\MiningSession.cs" />
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
     <Compile Include="Miners\XmrStak\XmrStackCPUMiner.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
-    <Compile Include="Miners\ccminer.cs" />
+    <Compile Include="Miners\Ccminer.cs" />
     <Compile Include="Forms\DriverVersionConfirmationDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -295,7 +296,7 @@
     <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Miners\sgminer.cs" />
+    <Compile Include="Miners\Sgminer.cs" />
     <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
     <Compile Include="Utils\BINS_CODEGEN_3rd.cs" />

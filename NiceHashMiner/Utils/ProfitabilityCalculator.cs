@@ -1,18 +1,18 @@
 ﻿using NiceHashMiner.Enums;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace NiceHashMiner {
+namespace NiceHashMiner
+{
     // this class mirrors the web profitability, chech what https://www.nicehash.com/?p=calc is using for each algo
-    static class ProfitabilityCalculator {
+    internal static class ProfitabilityCalculator
+    {
         private const double kHs = 1000;
         private const double MHs = 1000000;
         private const double GHs = 1000000000;
         private const double THs = 1000000000000;
 
         // divide factor to mirror web values
-        readonly static private Dictionary<AlgorithmType, double> _div = new Dictionary<AlgorithmType, double>()
+        private static readonly Dictionary<AlgorithmType, double> Div = new Dictionary<AlgorithmType, double>
         {
             { AlgorithmType.INVALID , 1 },
             { AlgorithmType.NONE , 1 },
@@ -48,9 +48,11 @@ namespace NiceHashMiner {
             { AlgorithmType.Skunk ,                         MHs }
         };
 
-        public static double GetFormatedSpeed(double speed, AlgorithmType type) {
-            if (_div.ContainsKey(type)) {
-                return speed / _div[type];
+        public static double GetFormatedSpeed(double speed, AlgorithmType type)
+        {
+            if (Div.ContainsKey(type))
+            {
+                return speed / Div[type];
             }
             return speed; // should never happen
         }

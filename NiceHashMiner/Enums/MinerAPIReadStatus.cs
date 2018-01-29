@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums {
-    public enum MinerAPIReadStatus {
+﻿namespace NiceHashMiner.Enums
+{
+    public enum MinerApiReadStatus
+    {
         NONE,
         WAIT,
         GOT_READ,

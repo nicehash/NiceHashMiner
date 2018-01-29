@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Interfaces
+﻿namespace NiceHashMiner.Interfaces
 {
     /// <summary>
     /// IMessageNotifier interface is for message setting.

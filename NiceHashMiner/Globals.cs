@@ -1,62 +1,70 @@
-using System;
-using System.Collections.Generic;
-using NiceHashMiner.Enums;
 using Newtonsoft.Json;
+using NiceHashMiner.Enums;
+using System.Collections.Generic;
 
-namespace NiceHashMiner {
-    public class Globals {
+namespace NiceHashMiner
+{
+    public class Globals
+    {
         // Constants
-        public static string[] MiningLocation = { "eu", "usa", "hk", "jp", "in", "br" };
-        public static readonly string DemoUser = "3DJhaQaKA6oyRaGyDZYdkZcise4b9DrCi2";
+        public static string[] MiningLocation = {"eu", "usa", "hk", "jp", "in", "br"};
+
+        public static readonly string DemoUser = "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
+
         // change this if TOS changes
-        public static int CURRENT_TOS_VER = 3;
+        public static int CurrentTosVer = 3;
 
         // Variables
-        public static Dictionary<AlgorithmType, NiceHashSMA> NiceHashData = null;
-        public static double BitcoinUSDRate;
+        public static Dictionary<AlgorithmType, NiceHashSma> NiceHashData = null;
+
+        public static double BitcoinUsdRate;
         public static JsonSerializerSettings JsonSettings = null;
-        public static int ThreadsPerCPU;
+
+        public static int ThreadsPerCpu;
+
         // quickfix guard for checking internet conection
         public static bool IsFirstNetworkCheckTimeout = true;
-        public static int FirstNetworkCheckTimeoutTimeMS = 500;
+
+        public static int FirstNetworkCheckTimeoutTimeMs = 500;
         public static int FirstNetworkCheckTimeoutTries = 10;
-        
 
-        public static string GetLocationURL(AlgorithmType AlgorithmType, string miningLocation, NHMConectionType ConectionType) {
-            if (Globals.NiceHashData != null && Globals.NiceHashData.ContainsKey(AlgorithmType)) {
-                string name = Globals.NiceHashData[AlgorithmType].name;
-                int n_port = Globals.NiceHashData[AlgorithmType].port;
-                int ssl_port = 30000 + n_port;
 
-                // NHMConectionType.NONE
-                string prefix = "";
-                int port = n_port;
-                if (NHMConectionType.LOCKED == ConectionType) {
+        public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
+        {
+            if (NiceHashData == null || !NiceHashData.ContainsKey(algorithmType)) return "";
+
+            var name = NiceHashData[algorithmType].name;
+            var nPort = NiceHashData[algorithmType].port;
+            var sslPort = 30000 + nPort;
+
+            // NHMConectionType.NONE
+            var prefix = "";
+            var port = nPort;
+            switch (conectionType)
+            {
+                case NhmConectionType.LOCKED:
                     return miningLocation;
-                }
-                if (NHMConectionType.STRATUM_TCP == ConectionType) {
+                case NhmConectionType.STRATUM_TCP:
                     prefix = "stratum+tcp://";
-                }
-                if (NHMConectionType.STRATUM_SSL == ConectionType) {
+                    break;
+                case NhmConectionType.STRATUM_SSL:
                     prefix = "stratum+ssl://";
-                    port = ssl_port;
-                }
-
-                return prefix
-                        + name
-                        + "." + miningLocation
-                        + ".nicehash.com:"
-                        + port;
+                    port = sslPort;
+                    break;
             }
-            return "";
+
+            return prefix
+                   + name
+                   + "." + miningLocation
+                   + ".nicehash.com:"
+                   + port;
         }
 
-        public static string GetBitcoinUser() {
-            if (BitcoinAddress.ValidateBitcoinAddress((Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim()))) {
-                return Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim();
-            } else {
-                return DemoUser;
-            }
+        public static string GetBitcoinUser()
+        {
+            return BitcoinAddress.ValidateBitcoinAddress(Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim())
+                ? Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim()
+                : DemoUser;
         }
     }
 }

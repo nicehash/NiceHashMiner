@@ -52,7 +52,7 @@
             this.listViewAlgorithms.TabIndex = 11;
             this.listViewAlgorithms.UseCompatibleStateImageBehavior = false;
             this.listViewAlgorithms.View = System.Windows.Forms.View.Details;
-            this.listViewAlgorithms.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listViewAlgorithms_MouseClick);
+            this.listViewAlgorithms.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListViewAlgorithms_MouseClick);
             // 
             // columnHeader0
             // 

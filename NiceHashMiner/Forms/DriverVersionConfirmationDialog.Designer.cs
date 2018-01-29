@@ -1,4 +1,4 @@
-﻿namespace NiceHashMiner
+﻿namespace NiceHashMiner.Forms
 {
     partial class DriverVersionConfirmationDialog
     {
@@ -55,7 +55,7 @@
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseCompatibleTextRendering = true;
             this.buttonOK.UseVisualStyleBackColor = true;
-            this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
+            this.buttonOK.Click += new System.EventHandler(this.ButtonOK_Click);
             // 
             // chkBoxDontShowAgain
             // 
@@ -77,7 +77,7 @@
             this.linkToDriverDownloadPage.TabIndex = 1;
             this.linkToDriverDownloadPage.TabStop = true;
             this.linkToDriverDownloadPage.Text = "&Link to Driver Download Page";
-            this.linkToDriverDownloadPage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkToDriverDownloadPage_LinkClicked);
+            this.linkToDriverDownloadPage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkToDriverDownloadPage_LinkClicked);
             // 
             // DriverVersionConfirmationDialog
             // 

@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
 using System.Text.RegularExpressions;
+// ReSharper disable All
+#pragma warning disable
 
 namespace NiceHashMiner.Miners
 {
@@ -71,17 +73,17 @@ namespace NiceHashMiner.Miners
     {
         public XmrStakAMD()
             : base("XmrStakAMD") {
-            ConectionType = NHMConectionType.NONE;
+            ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
         }
 
-        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+        protected override int GetMaxCooldownTimeInMilliseconds() {
             return 5 * 60 * 1000;  // 5 minutes
         }
         
         protected override void prepareConfigFile(string pool, string wallet) {
             try {
-                var config = new XmrStakAMDConfig(pool, wallet, APIPort);
+                var config = new XmrStakAMDConfig(pool, wallet, ApiPort);
                 var gpuConfigs = new List<XmrStakGPUSettings>();
                 foreach (var pair in MiningSetup.MiningPairs) {
                     var intensities = ExtraLaunchParametersParser.GetIntensityStak(pair);
@@ -101,16 +103,16 @@ namespace NiceHashMiner.Miners
             } catch { }
         }
 
-        public override async Task<APIData> GetSummaryAsync() {
+        public override async Task<ApiData> GetSummaryAsync() {
             string resp;
-            APIData ad = new APIData(MiningSetup.CurrentAlgorithmType);
+            ApiData ad = new ApiData(MiningSetup.CurrentAlgorithmType);
 
-            string DataToSend = GetHttpRequestNHMAgentStrin("h");
+            string DataToSend = GetHttpRequestNhmAgentStrin("h");
 
-            resp = await GetAPIDataAsync(APIPort, DataToSend, false, true);
+            resp = await GetApiDataAsync(ApiPort, DataToSend, false, true);
             if (resp == null) {
-                Helpers.ConsolePrint(MinerTAG(), ProcessTag() + " summary is null");
-                _currentMinerReadStatus = MinerAPIReadStatus.NONE;
+                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " summary is null");
+                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
                 return null;
             }
             const string Totals = "Totals:";
@@ -125,14 +127,14 @@ namespace NiceHashMiner.Miners
                 var strings = sub_resp.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var s in strings) {
                     if (double.TryParse(s, out var speed)) {
-                        _currentMinerReadStatus = MinerAPIReadStatus.GOT_READ;
+                        CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                         ad.Speed = speed;
                         break;
                     }
                 }
             }
             // check if speed zero
-            if (ad.Speed == 0) _currentMinerReadStatus = MinerAPIReadStatus.READ_SPEED_ZERO;
+            if (ad.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
 
             return ad;
         }

@@ -1,36 +1,33 @@
-﻿using Newtonsoft.Json;
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using System;
-using System.IO;
+using System.Collections.Specialized;
 using System.Net;
 using System.Text;
-using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Collections.Specialized;
 
 namespace NiceHashMiner
 {
-    class IFTTT
+    internal class Ifttt
     {
+        private const string ApiUrl = "https://maker.ifttt.com/trigger/";
 
-        const string apiUrl = "https://maker.ifttt.com/trigger/";
-
-        public static void PostToIFTTT(string action, string msg)
+        public static void PostToIfttt(string action, string msg)
         {
             try
             {
-                string key = ConfigManager.GeneralConfig.IFTTTKey;
-                string worker = ConfigManager.GeneralConfig.WorkerName;
-                string minProfit = ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.');
+                var key = ConfigManager.GeneralConfig.IFTTTKey;
+                var worker = ConfigManager.GeneralConfig.WorkerName;
+                var minProfit = ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.');
 
-                using (WebClient client = new WebClient())
+                using (var client = new WebClient())
                 {
-                    var postData = new NameValueCollection();
-                    postData["value1"] = worker;
-                    postData["value2"] = msg;
-                    postData["value3"] = minProfit;
+                    var postData = new NameValueCollection
+                    {
+                        ["value1"] = worker,
+                        ["value2"] = msg,
+                        ["value3"] = minProfit
+                    };
 
-                    var response = client.UploadValues(apiUrl + action + "/with/key/" + key, postData);
+                    var response = client.UploadValues(ApiUrl + action + "/with/key/" + key, postData);
 
                     var responseString = Encoding.Default.GetString(response);
                 }
@@ -39,8 +36,6 @@ namespace NiceHashMiner
             {
                 Helpers.ConsolePrint("NICEHASH", ex.Message);
             }
-
         }
-
     }
 }
