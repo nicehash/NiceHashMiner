@@ -113,6 +113,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string ClaymoreDual = Bin3rdParty + @"\claymore_dual\EthDcrMiner64.exe";
             public const string Ewbf = Bin3rdParty + @"\ewbf\miner.exe";
             public const string Prospector = Bin3rdParty + @"\prospector\prospector.exe";
+            public const string Dtsm = Bin3rdParty + @"\dtsm\zm.exe";
         }
 
         // NEW START
@@ -172,6 +173,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.XmrStakAmd;
                 case MinerBaseType.Claymore_old:
                     return Data.ClaymoreCryptoNightMinerOld;
+                case MinerBaseType.dtsm:
+                    return Data.Dtsm;
             }
             return Data.None;
         }

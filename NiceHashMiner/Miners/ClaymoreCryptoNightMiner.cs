@@ -41,13 +41,13 @@ namespace NiceHashMiner.Miners
             var username = GetUsername(btcAdress, worker);
             if (_isOld)
             {
-                LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort + " -o " + url + " -u " +
-                                  username + " -p x -dbg -1";
+                LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort + " -o " + url +
+                                  " -u " + username + " -p x -dbg -1";
             }
             else
             {
-                LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort + " -xpool " + url +
-                                  " -xwal " + username + " -xpsw x -dbg -1";
+                LastCommandLine = " " + GetDevicesCommandString() + " -mport 127.0.0.1:-" + ApiPort + " -xpool " +
+                                  url + " -xwal " + username + " -xpsw x -dbg -1";
             }
             ProcessHandle = _Start();
         }

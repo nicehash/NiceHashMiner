@@ -102,7 +102,7 @@ namespace NiceHashMiner.Miners
 
             return " "
                    + GetDevicesCommandString()
-                   + $"  -epool {url} -ewal {username} -mport 127.0.0.1:{ApiPort} -esm 3 -epsw x -allpools 1"
+                   + $"  -epool {url} -ewal {username} -mport 127.0.0.1:-{ApiPort} -esm 3 -epsw x -allpools 1"
                    + dualModeParams;
         }
 
@@ -126,8 +126,7 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             // network stub
-            var url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
-                ConectionType);
+            var url = GetServiceUrl(algorithm.NiceHashID);
             // demo for benchmark
             var ret = GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
             // local benhcmark

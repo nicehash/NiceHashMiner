@@ -420,6 +420,13 @@ namespace NiceHashMiner.Devices
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
                                     AlgorithmType.Sia)
                             }
+                        },
+                        {
+                            MinerBaseType.dtsm,
+                            new List<Algorithm>
+                            {
+                                new Algorithm(MinerBaseType.dtsm, AlgorithmType.Equihash, "")
+                            }
                         }
                     };
                     switch (deviceGroupType)
@@ -443,7 +450,8 @@ namespace NiceHashMiner.Devices
                             {
                                 MinerBaseType.eqm,
                                 MinerBaseType.excavator,
-                                MinerBaseType.EWBF
+                                MinerBaseType.EWBF,
+                                MinerBaseType.dtsm
                             });
                             break;
                     }

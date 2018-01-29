@@ -21,7 +21,19 @@ namespace NiceHashMiner
         static void Main(string[] argv)
         {
             // Set working directory to exe
-            Environment.CurrentDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+            var pathSet = false;
+            var path = Path.GetDirectoryName(Application.ExecutablePath);
+            if (path != null)
+            {
+                Environment.CurrentDirectory = path;
+                pathSet = true;
+            }
+
+            // Add common folder to path for launched processes
+            var pathVar = Environment.GetEnvironmentVariable("PATH");
+            pathVar += ";" + Path.Combine(Environment.CurrentDirectory, "common");
+            Environment.SetEnvironmentVariable("PATH", pathVar);
+
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -76,6 +88,12 @@ namespace NiceHashMiner
                 var commandLineArgs = new CommandLineParser(argv);
 
                 Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
+
+                if (!pathSet)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "Path not set to executable");
+                }
+
                 var tosChecked = ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer;
                 if (!tosChecked || !ConfigManager.GeneralConfigIsFileExist() && !commandLineArgs.IsLang)
                 {
