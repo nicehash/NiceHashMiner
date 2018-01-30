@@ -247,10 +247,10 @@ namespace NiceHashMiner.Miners.Grouping
                     case AlgorithmType.X11Gost:
                     case AlgorithmType.Blake2s:
                     case AlgorithmType.Skunk:
-                    case AlgorithmType.NeoScrypt:
                         return Data.CcminerTPruvot;
                     case AlgorithmType.Sia:
                     case AlgorithmType.Nist5:
+                    case AlgorithmType.NeoScrypt:
                         return Data.CcminerKlausT;
                 }
 
