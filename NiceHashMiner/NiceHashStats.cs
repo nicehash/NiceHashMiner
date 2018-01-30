@@ -52,6 +52,12 @@ namespace NiceHashMiner
             public List<JArray> devices;
         }
 
+        private class NiceHashExchange
+        {
+            public List<Dictionary<string, string>> exchanges;
+            public Dictionary<string, double> exchanges_fiat;
+        }
+
         #endregion
 
 #pragma warning restore 649, IDE1006
@@ -73,6 +79,7 @@ namespace NiceHashMiner
         public static event EventHandler OnConnectionLost = delegate { };
         public static event EventHandler OnConnectionEstablished = delegate { };
         public static event EventHandler<SocketEventArgs> OnVersionBurn = delegate { };
+        public static event EventHandler OnExchangeUpdate = delegate { };
 
         private static readonly Random Random = new Random();
 
@@ -169,6 +176,10 @@ namespace NiceHashMiner
                         else if (message.method == "burn")
                         {
                             OnVersionBurn.Emit(null, new SocketEventArgs(message.message.Value));
+                        }
+                        else if (message.method == "exchange_rates")
+                        {
+                            SetExchangeRates(message.data.Value);
                         }
                     }
                 }
@@ -327,6 +338,31 @@ namespace NiceHashMiner
         {
             Version = version;
             OnVersionUpdate.Emit(null, EventArgs.Empty);
+        }
+
+        private static void SetExchangeRates(string data)
+        {
+            NiceHashExchange exchange = null;
+            try
+            {
+                exchange = JsonConvert.DeserializeObject<NiceHashExchange>(data);
+            }
+            catch { }
+            if (exchange?.exchanges != null)
+            {
+                foreach (var ex in exchange.exchanges)
+                {
+                    if (!ex.ContainsKey("USD") || !ex.ContainsKey("coin") || ex["coin"] != "BTC") continue;
+                    if (double.TryParse(ex["USD"], out var val))
+                        ExchangeRateApi.UsdBtcRate = val;
+                }
+            }
+            if (exchange?.exchanges_fiat != null)
+            {
+                ExchangeRateApi.ExchangesFiat = exchange.exchanges_fiat;
+            }
+
+            OnExchangeUpdate.Emit(null, EventArgs.Empty);
         }
 
         #endregion

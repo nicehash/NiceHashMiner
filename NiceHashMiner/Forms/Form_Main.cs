@@ -12,6 +12,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Management;
+using System.Threading;
 using System.Windows.Forms;
 using SystemTimer = System.Timers.Timer;
 using Timer = System.Windows.Forms.Timer;
@@ -312,6 +313,7 @@ namespace NiceHashMiner
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
             NiceHashStats.OnVersionBurn += VersionBurnCallback;
+            NiceHashStats.OnExchangeUpdate += ExchangeCallback;
             NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
             // increase timeout
@@ -325,11 +327,21 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
 
-            _bitcoinExchangeCheck = new Timer();
-            _bitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
-            _bitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
-            _bitcoinExchangeCheck.Start();
-            BitcoinExchangeCheck_Tick(null, null);
+            // Don't start timer if socket is giving data
+            if (ExchangeRateApi.ExchangesFiat == null)
+            {
+                // Wait a bit and check again
+                Thread.Sleep(1000);
+                if (ExchangeRateApi.ExchangesFiat == null)
+                {
+                    Helpers.ConsolePrint("NICEHASH", "No exchange from socket yet, getting manually");
+                    _bitcoinExchangeCheck = new Timer();
+                    _bitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
+                    _bitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
+                    _bitcoinExchangeCheck.Start();
+                    BitcoinExchangeCheck_Tick(null, null);
+                }
+            }
 
             _loadingScreen.IncreaseLoadCounterAndMessage(
                 International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
@@ -691,6 +703,19 @@ namespace NiceHashMiner
         {
             Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
             ExchangeRateApi.UpdateApi(textBoxWorkerName.Text.Trim());
+            UpdateExchange();
+        }
+
+        private void ExchangeCallback(object sender, EventArgs e)
+        {
+            // We are getting data from socket so stop checking manually
+            _bitcoinExchangeCheck?.Stop();
+            Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
+            Invoke((MethodInvoker) UpdateExchange);
+        }
+
+        private void UpdateExchange()
+        {
             var br = ExchangeRateApi.GetUsdExchangeRate();
             var currencyRate = International.GetText("BenchmarkRatioRateN_A");
             if (br > 0)
