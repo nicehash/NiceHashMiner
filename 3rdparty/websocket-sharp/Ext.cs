@@ -961,12 +961,20 @@ namespace WebSocketSharp
     /// represents an error message or <see langword="null"/>
     /// if <paramref name="uriString"/> is valid.
     /// </param>
+    /// <param name="rewriteToWS">
+    /// Whether to rewrite URIs from http/https to ws/wss.
+    /// </param>
     internal static bool TryCreateWebSocketUri (
-      this string uriString, out Uri result, out string message
+      this string uriString, out Uri result, out string message, bool rewriteToWS = false
     )
     {
       result = null;
       message = null;
+
+      if (rewriteToWS && uriString.StartsWith("http"))
+      {
+          uriString = uriString.Replace("http", "ws");
+      }
 
       var uri = uriString.ToUri ();
       if (uri == null) {

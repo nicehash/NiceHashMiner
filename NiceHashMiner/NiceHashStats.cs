@@ -83,7 +83,7 @@ namespace NiceHashMiner
         private class NiceHashConnection
         {
             private static WebSocket _webSocket;
-            public static bool IsAlive => _webSocket.IsAlive;
+            public static bool IsAlive => _webSocket.ReadyState == WebSocketState.Open;
             private static bool _attemptingReconnect;
             private static bool _connectionAttempted;
             private static bool _connectionEstablished;
@@ -95,7 +95,7 @@ namespace NiceHashMiner
                 {
                     if (_webSocket == null)
                     {
-                        _webSocket = new WebSocket(address);
+                        _webSocket = new WebSocket(address, true);
                     }
                     else
                     {
@@ -105,7 +105,6 @@ namespace NiceHashMiner
                     _webSocket.OnMessage += ReceiveCallback;
                     _webSocket.OnError += ErrorCallback;
                     _webSocket.OnClose += CloseCallback;
-                    _webSocket.EmitOnPing = true;
                     _webSocket.Log.Level = LogLevel.Debug;
                     _webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
                     _webSocket.EnableRedirection = true;
@@ -194,7 +193,7 @@ namespace NiceHashMiner
             {
                 try
                 {
-                    if (_webSocket != null && _webSocket.IsAlive)
+                    if (_webSocket != null && IsAlive)
                     {
                         // Make sure connection is open
                         // Verify valid JSON and method
@@ -244,7 +243,7 @@ namespace NiceHashMiner
                 {
                     return false;
                 }
-                if (_webSocket.IsAlive)
+                if (IsAlive)
                 {
                     // no reconnect needed
                     return true;
@@ -268,7 +267,7 @@ namespace NiceHashMiner
                 {
                     _webSocket.Connect();
                     Thread.Sleep(100);
-                    if (_webSocket.IsAlive)
+                    if (IsAlive)
                     {
                         _attemptingReconnect = false;
                         return true;

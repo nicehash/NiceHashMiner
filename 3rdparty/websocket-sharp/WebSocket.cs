@@ -209,11 +209,14 @@ namespace WebSocketSharp
     ///   A <see cref="string"/> that specifies the URL to which to connect.
     ///   </para>
     ///   <para>
-    ///   The scheme of the URL must be ws or wss.
+    ///   The scheme of the URL must be ws or wss unless <paramref name="rewriteToWS"/> is true.
     ///   </para>
     ///   <para>
     ///   The new instance uses a secure connection if the scheme is wss.
     ///   </para>
+    /// </param>
+    /// <param name="rewriteToWS">
+    ///   Whether to allow rewriting http/https URIs to ws/wss.
     /// </param>
     /// <param name="protocols">
     ///   <para>
@@ -252,8 +255,9 @@ namespace WebSocketSharp
     ///   <paramref name="protocols"/> contains a value twice.
     ///   </para>
     /// </exception>
-    public WebSocket (string url, params string[] protocols)
+    public WebSocket (string url, bool rewriteToWS = false, params string[] protocols)
     {
+      RewriteToWS = rewriteToWS;
       if (url == null)
         throw new ArgumentNullException ("url");
 
@@ -261,7 +265,7 @@ namespace WebSocketSharp
         throw new ArgumentException ("An empty string.", "url");
 
       string msg;
-      if (!url.TryCreateWebSocketUri (out _uri, out msg))
+      if (!url.TryCreateWebSocketUri (out _uri, out msg, RewriteToWS))
         throw new ArgumentException (msg, "url");
 
       if (protocols != null && protocols.Length > 0) {
@@ -491,6 +495,8 @@ namespace WebSocketSharp
         }
       }
     }
+
+    public bool RewriteToWS { get; set; }
 
     /// <summary>
     /// Gets the extensions selected by server.
@@ -1807,6 +1813,8 @@ namespace WebSocketSharp
         _tcpClient.Close ();
         _tcpClient = null;
       }
+
+      _sslConfig = null;
     }
 
     private void releaseCommonResources ()
@@ -1988,7 +1996,7 @@ namespace WebSocketSharp
     private HttpResponse sendHandshakeRequest ()
     {
       var req = createHandshakeRequest ();
-      var res = sendHttpRequest (req, 90000);
+      var res = sendHttpRequest (req, 10000);
       if (res.IsUnauthorized) {
         var chal = res.Headers["WWW-Authenticate"];
         _logger.Warn (String.Format ("Received an authentication requirement for '{0}'.", chal));
@@ -2028,7 +2036,7 @@ namespace WebSocketSharp
 
           Uri uri;
           string msg;
-          if (!url.TryCreateWebSocketUri (out uri, out msg)) {
+          if (!url.TryCreateWebSocketUri (out uri, out msg, RewriteToWS)) {
             _logger.Error ("An invalid url to redirect is located: " + msg);
             return res;
           }
