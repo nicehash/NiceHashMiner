@@ -51,16 +51,9 @@ namespace NiceHashMiner.Miners
                 apiBind = " --api-bind=" + ApiPort;
             }
 
-            LastCommandLine = algo +
-                              " --url=" + url +
-                              " --userpass=" + username + ":x " +
-                              apiBind + " " +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                  MiningSetup,
-                                  DeviceType.NVIDIA) +
-                              " --devices ";
-
-            LastCommandLine += GetDevicesCommandString();
+            LastCommandLine = $"{algo} --url={url} --userpass={username}:x {apiBind} " +
+                              $"--devices {GetDevicesCommandString()} " +
+                              $"{ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)} ";
 
             ProcessHandle = _Start();
         }
