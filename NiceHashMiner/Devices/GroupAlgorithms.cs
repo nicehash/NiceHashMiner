@@ -313,7 +313,9 @@ namespace NiceHashMiner.Devices
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
                                     AlgorithmType.Pascal),
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
-                                    AlgorithmType.Sia)
+                                    AlgorithmType.Sia),
+                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
+                                    AlgorithmType.Keccak)
                             }
                         },
                         {
@@ -418,7 +420,9 @@ namespace NiceHashMiner.Devices
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
                                     AlgorithmType.Pascal),
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
-                                    AlgorithmType.Sia)
+                                    AlgorithmType.Sia),
+                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
+                                    AlgorithmType.Keccak)
                             }
                         },
                         {

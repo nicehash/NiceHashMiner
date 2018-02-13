@@ -52,6 +52,8 @@ namespace NiceHashMiner
                         return AlgorithmType.DaggerPascal;
                     case AlgorithmType.Sia:
                         return AlgorithmType.DaggerSia;
+                    case AlgorithmType.Keccak:
+                        return AlgorithmType.DaggerKeccak;
                 }
             }
             return AlgorithmID;

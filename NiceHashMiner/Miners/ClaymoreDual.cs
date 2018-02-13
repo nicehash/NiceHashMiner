@@ -37,6 +37,8 @@ namespace NiceHashMiner.Miners
                     return "pasc";
                 case AlgorithmType.Sia:
                     return "sc";
+                case AlgorithmType.Keccak:
+                    return "kc";
             }
             return "";
         }
@@ -83,6 +85,11 @@ namespace NiceHashMiner.Miners
                     {
                         dual = AlgorithmType.Pascal;
                         coinP = " -dcoin pasc ";
+                    }
+                    if (pair.CurrentExtraLaunchParameters.Contains("keccak"))
+                    {
+                        dual = AlgorithmType.Keccak;
+                        coinP = " -dcoin keccak ";
                     }
                     if (dual != AlgorithmType.NONE)
                     {

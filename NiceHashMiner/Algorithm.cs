@@ -170,6 +170,8 @@ namespace NiceHashMiner
                         return AlgorithmType.DaggerPascal;
                     case AlgorithmType.Sia:
                         return AlgorithmType.DaggerSia;
+                    case AlgorithmType.Keccak:
+                        return AlgorithmType.DaggerKeccak;
                 }
             }
             return NiceHashID;
@@ -177,7 +179,7 @@ namespace NiceHashMiner
 
         public bool IsDual()
         {
-            return AlgorithmType.DaggerSia <= DualNiceHashID() && DualNiceHashID() <= AlgorithmType.DaggerPascal;
+            return AlgorithmType.DaggerKeccak <= DualNiceHashID() && DualNiceHashID() <= AlgorithmType.DaggerPascal;
         }
     }
 }
