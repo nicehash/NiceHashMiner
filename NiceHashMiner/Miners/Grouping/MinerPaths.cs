@@ -287,7 +287,7 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 // sm5x and sm6x have same settings
                 if ((nvidiaGroup == DeviceGroupType.NVIDIA_5_x || nvidiaGroup == DeviceGroupType.NVIDIA_6_x) &&
-                    (AlgorithmType.X11Gost == algorithmType || AlgorithmType.Nist5 == algorithmType))
+                    (AlgorithmType.X11Gost == algorithmType || AlgorithmType.Nist5 == algorithmType || AlgorithmType.Keccak == algorithmType))
                     return Data.CcminerX11Gost;
                 // TODO wrong case?
                 return Data.None; // should not happen
