@@ -20,7 +20,8 @@ namespace NiceHashMiner.Miners.Parsing
                 MinerType.ccminer,
                 new List<MinerOption>
                 {
-                    new MinerOption("Intensity", "-i", "--intensity=", "0", MinerOptionFlagType.MultiParam, ",")
+                    new MinerOption("Intensity", "-i", "--intensity=", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ccminer_CUDA_Schedule", "--cuda-schedule=", "0", MinerOptionFlagType.Uni)
                 },
                 new List<MinerOption>()
             ),
