@@ -215,6 +215,15 @@ namespace NiceHashMiner.Forms.Components
                     enableAllItems.Click += ToolStripMenuItemEnableAll_Click;
                     contextMenuStrip1.Items.Add(enableAllItems);
                 }
+                // test this
+                {
+                    var testItem = new ToolStripMenuItem
+                    {
+                        Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem")
+                    };
+                    testItem.Click += ToolStripMenuItemTest_Click;
+                    contextMenuStrip1.Items.Add(testItem);
+                }
                 // enable benchmarked only
                 {
                     var enableBenchedItem = new ToolStripMenuItem
@@ -232,15 +241,6 @@ namespace NiceHashMiner.Forms.Components
                     };
                     clearItem.Click += ToolStripMenuItemClear_Click;
                     contextMenuStrip1.Items.Add(clearItem);
-                }
-                // test this
-                {
-                    var testItem = new ToolStripMenuItem
-                    {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem")
-                    };
-                    testItem.Click += ToolStripMenuItemTest_Click;
-                    contextMenuStrip1.Items.Add(testItem);
                 }
                 contextMenuStrip1.Show(Cursor.Position);
             }
