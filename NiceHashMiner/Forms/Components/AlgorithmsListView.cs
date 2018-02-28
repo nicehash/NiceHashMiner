@@ -206,6 +206,15 @@ namespace NiceHashMiner.Forms.Components
                     disableAllItems.Click += ToolStripMenuItemDisableAll_Click;
                     contextMenuStrip1.Items.Add(disableAllItems);
                 }
+                // test this
+                {
+                    var enableBenchedItem = new ToolStripMenuItem
+                    {
+                        Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem")
+                    };
+                    enableBenchedItem.Click += ToolStripMenuItemEnableBenched_Click;
+                    contextMenuStrip1.Items.Add(enableBenchedItem);
+                }
                 // enable all
                 {
                     var enableAllItems = new ToolStripMenuItem
@@ -223,6 +232,15 @@ namespace NiceHashMiner.Forms.Components
                     };
                     clearItem.Click += ToolStripMenuItemClear_Click;
                     contextMenuStrip1.Items.Add(clearItem);
+                }
+                // test this
+                {
+                    var testItem = new ToolStripMenuItem
+                    {
+                        Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem")
+                    };
+                    testItem.Click += ToolStripMenuItemTest_Click;
+                    contextMenuStrip1.Items.Add(testItem);
                 }
                 contextMenuStrip1.Show(Cursor.Position);
             }
@@ -259,6 +277,40 @@ namespace NiceHashMiner.Forms.Components
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
                         // update settings
                         ComunicationInterface?.ChangeSpeed(lvi);
+                    }
+                }
+            }
+        }
+
+        private void ToolStripMenuItemTest_Click(object sender, EventArgs e)
+        {
+            if (_computeDevice != null)
+            {
+                foreach (ListViewItem lvi in listViewAlgorithms.Items)
+                {
+                    if (lvi.Tag is Algorithm algorithm)
+                    {
+                        lvi.Checked = lvi.Selected;
+                        if (lvi.Selected && algorithm.BenchmarkSpeed <= 0)
+                        {
+                            // If it has zero speed, set to 1 so it can be tested
+                            algorithm.BenchmarkSpeed = 1;
+                            ComunicationInterface?.ChangeSpeed(lvi);
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ToolStripMenuItemEnableBenched_Click(object sender, EventArgs e)
+        {
+            if (_computeDevice != null)
+            {
+                foreach (ListViewItem lvi in listViewAlgorithms.Items)
+                {
+                    if (lvi.Tag is Algorithm algorithm && algorithm.BenchmarkSpeed > 0)
+                    {
+                        lvi.Checked = true;
                     }
                 }
             }
