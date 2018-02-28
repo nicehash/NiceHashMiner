@@ -96,10 +96,10 @@ namespace NiceHashMiner.Miners
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time) {
-            CleanAllOldLogs();
+            CleanOldLogs();
 
-            var server = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
-            var ret = " --log 2 --logfile benchmark_log.txt" + GetStartCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
+            var server = Globals.GetLocationURL(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
+            var ret = $" --log 2 --logfile {GetLogFileName()} " + GetStartCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
             _benchmarkTimeWait = Math.Max(time * 3, 90);  // EWBF takes a long time to get started
             return ret;
         }
@@ -166,7 +166,7 @@ namespace NiceHashMiner.Miners
                 // find latest log file
                 var latestLogFile = "";
                 var dirInfo = new DirectoryInfo(WorkingDirectory);
-                foreach (var file in dirInfo.GetFiles("*_log.txt")) {
+                foreach (var file in dirInfo.GetFiles(GetLogFileName())) {
                     latestLogFile = file.Name;
                     break;
                 }
@@ -209,21 +209,6 @@ namespace NiceHashMiner.Miners
                 }
                 BenchmarkThreadRoutineFinish();
             }
-        }
-
-        protected void CleanAllOldLogs() {
-            // clean old logs
-            try {
-                var dirInfo = new DirectoryInfo(WorkingDirectory);
-                const string deleteContains = "_log.txt";
-                if (dirInfo.Exists) {
-                    foreach (var file in dirInfo.GetFiles()) {
-                        if (file.Name.Contains(deleteContains)) {
-                            file.Delete();
-                        }
-                    }
-                }
-            } catch { }
         }
 
         // stub benchmarks read from file

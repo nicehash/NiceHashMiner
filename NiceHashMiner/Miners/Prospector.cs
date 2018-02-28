@@ -85,13 +85,13 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            public IEnumerable<hashrates> QuerySpeedsForSession(int id)
+            public IEnumerable<hashrates> QuerySpeedsForSessionDev(int id, string device) 
             {
-                try
+                try 
                 {
-                    return Table<hashrates>().Where(x => x.session_id == id);
-                }
-                catch (Exception e)
+                    return Table<hashrates>().Where(x => x.session_id == id && x.device == device);
+                } 
+                catch (Exception e) 
                 {
                     Helpers.ConsolePrint("PROSPECTORSQL", e.ToString());
                     return new List<hashrates>();
@@ -425,7 +425,9 @@ namespace NiceHashMiner.Miners
                     throw new Exception("Session not recorded!");
                 }
 
-                var hashrates = _database.QuerySpeedsForSession(session.id);
+                var dev = MiningSetup.MiningPairs[0].Device;
+                var devString = deviceIDString(dev.ID, dev.DeviceType);
+                var hashrates = _database.QuerySpeedsForSessionDev(session.id, devString);
 
                 double speed = 0;
                 var speedRead = 0;
@@ -438,7 +440,7 @@ namespace NiceHashMiner.Miners
                     }
                 }
 
-                BenchmarkAlgorithm.BenchmarkSpeed = (speed / speedRead) * (1 - DevFee);
+                BenchmarkAlgorithm.BenchmarkSpeed = (speed / Math.Max(1, speedRead)) * (1 - DevFee);
 
                 BenchmarkThreadRoutineFinish();
             }
