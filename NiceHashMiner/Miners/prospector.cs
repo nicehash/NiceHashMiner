@@ -452,7 +452,8 @@ namespace NiceHashMiner.Miners
             CheckOutdata(outdata);
         }
         
-        protected override bool BenchmarkParseLine(string outdata) {
+        protected override bool BenchmarkParseLine(string outdata) 
+        {
             Helpers.ConsolePrint("BENCHMARK", outdata);
             return false;
         }
