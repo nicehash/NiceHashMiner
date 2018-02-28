@@ -1,6 +1,6 @@
 ﻿namespace NiceHashMiner.Forms
 {
-    partial class Form_DcriValues
+    partial class FormDcriValues
     {
         /// <summary>
         /// Required designer variable.
@@ -66,8 +66,8 @@
             this.listView_Intensities.TabIndex = 0;
             this.listView_Intensities.UseCompatibleStateImageBehavior = false;
             this.listView_Intensities.View = System.Windows.Forms.View.Details;
-            this.listView_Intensities.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView_Intensities_ItemSelectionChanged);
-            this.listView_Intensities.MouseClick += new System.Windows.Forms.MouseEventHandler(this.listView_Intensities_MouseClick);
+            this.listView_Intensities.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.ListView_Intensities_ItemSelectionChanged);
+            this.listView_Intensities.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListView_Intensities_MouseClick);
             // 
             // columnHeader_DcriValue
             // 
@@ -102,7 +102,7 @@
             this.button_Close.TabIndex = 1;
             this.button_Close.Text = "Close";
             this.button_Close.UseVisualStyleBackColor = true;
-            this.button_Close.Click += new System.EventHandler(this.button_Close_Clicked);
+            this.button_Close.Click += new System.EventHandler(this.Button_Close_Clicked);
             // 
             // button_Save
             // 
@@ -114,7 +114,7 @@
             this.button_Save.TabIndex = 2;
             this.button_Save.Text = "Save";
             this.button_Save.UseVisualStyleBackColor = true;
-            this.button_Save.Click += new System.EventHandler(this.button_Save_Clicked);
+            this.button_Save.Click += new System.EventHandler(this.Button_Save_Clicked);
             // 
             // checkBox_TuningEnabled
             // 
@@ -126,7 +126,7 @@
             this.checkBox_TuningEnabled.TabIndex = 3;
             this.checkBox_TuningEnabled.Text = "Dcri Tuning Enabled";
             this.checkBox_TuningEnabled.UseVisualStyleBackColor = true;
-            this.checkBox_TuningEnabled.CheckedChanged += new System.EventHandler(this.checkBox_TuningEnabledCheckedChanged);
+            this.checkBox_TuningEnabled.CheckedChanged += new System.EventHandler(this.CheckBox_TuningEnabledCheckedChanged);
             // 
             // contextMenuStrip1
             // 
@@ -230,7 +230,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.MinimumSize = new System.Drawing.Size(610, 382);
-            this.Name = "Form_DcriValues";
+            this.Name = "FormDcriValues";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Dcri Values";

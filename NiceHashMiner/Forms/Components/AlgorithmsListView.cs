@@ -1,6 +1,7 @@
 ﻿using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -336,7 +337,7 @@ namespace NiceHashMiner.Forms.Components
                             dualAlgo.SecondaryIntensitySpeeds = new Dictionary<int, double>();
                             dualAlgo.IntensityUpToDate = false;
                         }
-                        RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                        RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         // update benchmark status data
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
                         // update settings
@@ -373,9 +374,9 @@ namespace NiceHashMiner.Forms.Components
             {
                 if (lvi.Tag is DualAlgorithm algo) 
                 {
-                    var dcriValues = new Form_DcriValues(algo);
+                    var dcriValues = new FormDcriValues(algo);
                     dcriValues.ShowDialog();
-                    RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                    RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                     // update benchmark status data
                     BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
                     // update settings
@@ -401,7 +402,7 @@ namespace NiceHashMiner.Forms.Components
                 if (lvi.Tag is DualAlgorithm algo) 
                 {
                     algo.TuningEnabled = ((ToolStripMenuItem)sender).Checked;
-                    RepaintStatus(_computeDevice.Enabled, _computeDevice.UUID);
+                    RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                 }
             }
         }

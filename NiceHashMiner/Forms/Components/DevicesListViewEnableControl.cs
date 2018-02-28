@@ -34,7 +34,7 @@ namespace NiceHashMiner.Forms.Components
         private AlgorithmsListView _algorithmsListView;
 
         // disable checkboxes when in benchmark mode
-        private bool _isInBenchmark = false;
+        private bool _isInBenchmark;
 
         // helper for benchmarking logic
         public bool IsInBenchmark
@@ -55,7 +55,7 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private bool _isMining = false;
+        private bool _isMining;
 
         public bool IsMining
         {
@@ -197,7 +197,7 @@ namespace NiceHashMiner.Forms.Components
                             if (sameDevTypes.Count > 0)
                             {
                                 var copyBenchItem = new ToolStripMenuItem();
-                                copyTuningItem = new ToolStripMenuItem();
+                                var copyTuningItem = new ToolStripMenuItem();
                                 //copyBenchItem.DropDownItems
                                 foreach (var cDev in sameDevTypes)
                                 {
@@ -213,18 +213,18 @@ namespace NiceHashMiner.Forms.Components
                                         copyBenchItem.DropDownItems.Add(copyBenchDropDownItem);
                                         
                                         var copyTuningDropDownItem = new ToolStripMenuItem {
-                                            Text = cDev.Name,
+                                            Text = cDev.Name
                                             //Checked = cDev.UUID == CDevice.TuningCopyUUID
                                         };
-                                        copyTuningDropDownItem.Click += toolStripMenuItemCopyTuning_Click;
-                                        copyTuningDropDownItem.Tag = cDev.UUID;
+                                        copyTuningDropDownItem.Click += ToolStripMenuItemCopyTuning_Click;
+                                        copyTuningDropDownItem.Tag = cDev.Uuid;
                                         copyTuningItem.DropDownItems.Add(copyTuningDropDownItem);
                                     }
                                 }
                                 copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopySettings");
                                 copyTuningItem.Text = International.GetText("DeviceListView_ContectMenu_CopyTuning");
                                 contextMenuStrip1.Items.Add(copyBenchItem);
-                                contextMenuStrip1.Items.Add(copyTuningItem)
+                                contextMenuStrip1.Items.Add(copyTuningItem);
                             }
                         }
                     }
@@ -233,13 +233,13 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private void toolStripMenuItem_Click(object sender, bool justTuning) {
+        private void ToolStripMenuItem_Click(object sender, bool justTuning) {
             if (sender is ToolStripMenuItem item && item.Tag is string uuid
                 && listViewDevices.FocusedItem.Tag is ComputeDevice CDevice) {
-                var copyBenchCDev = ComputeDeviceManager.Avaliable.GetDeviceWithUUID(uuid);
+                var copyBenchCDev = ComputeDeviceManager.Avaliable.GetDeviceWithUuid(uuid);
 
                 var result = MessageBox.Show(
-                    String.Format(
+                    string.Format(
                         International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg"),
                         copyBenchCDev.GetFullName(), CDevice.GetFullName()),
                     International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title"),
@@ -248,27 +248,27 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (justTuning) 
                     {
-                        CDevice.TuningCopyUUID = uuid;
+                        CDevice.TuningCopyUuid = uuid;
                         CDevice.CopyTuningSettingsFrom(copyBenchCDev);
                     } 
                     else 
                     {
-                        CDevice.BenchmarkCopyUUID = uuid;
+                        CDevice.BenchmarkCopyUuid = uuid;
                         CDevice.CopyBenchmarkSettingsFrom(copyBenchCDev);
                     }
-                    _algorithmsListView?.RepaintStatus(CDevice.Enabled, CDevice.UUID);
+                    _algorithmsListView?.RepaintStatus(CDevice.Enabled, CDevice.Uuid);
                 }
             }
         }
 
-        private void toolStripMenuItemCopySettings_Click(object sender, EventArgs e) 
+        private void ToolStripMenuItemCopySettings_Click(object sender, EventArgs e) 
         {
-            toolStripMenuItem_Click(sender, false);
+            ToolStripMenuItem_Click(sender, false);
         }
 
-        private void toolStripMenuItemCopyTuning_Click(object sender, EventArgs e) 
+        private void ToolStripMenuItemCopyTuning_Click(object sender, EventArgs e) 
         {
-            toolStripMenuItem_Click(sender, true);
+            ToolStripMenuItem_Click(sender, true);
         }
 
         private void DevicesListViewEnableControl_Resize(object sender, EventArgs e)

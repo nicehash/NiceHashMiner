@@ -140,7 +140,7 @@ namespace NiceHashMiner.Miners.Parsing
                                 {
                                     if (option.FlagType == MinerOptionFlagType.Uni) {
                                         isOptionExist[option.Type] = true;
-                                        cdevOptions[pair.Device.UUID][option.Type] = "notNull"; // if Uni param is null it is not present
+                                        cdevOptions[pair.Device.Uuid][option.Type] = "notNull"; // if Uni param is null it is not present
                                     } 
                                     else 
                                     { 
@@ -158,7 +158,7 @@ namespace NiceHashMiner.Miners.Parsing
                                 ignoringNextOption = false;
                             } else 
                             {
-                                IgnorePrintLog(param, IGNORE_PARAM, ignoreLogOpions);
+                                IgnorePrintLog(param, ignoreParam, ignoreLogOpions);
                             }
                         }
                     } 

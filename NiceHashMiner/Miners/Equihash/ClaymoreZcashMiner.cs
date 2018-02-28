@@ -2,10 +2,10 @@
 {
     public class ClaymoreZcashMiner : ClaymoreBaseMiner
     {
-        private const string LookForStart = "ZEC - Total Speed:";
+        private const string _LookForStart = "ZEC - Total Speed:";
 
         public ClaymoreZcashMiner()
-            : base("ClaymoreZcashMiner", LookForStart)
+            : base("ClaymoreZcashMiner", _LookForStart)
         {
             IgnoreZero = true;
         }
@@ -29,7 +29,7 @@
         {
             BenchmarkTimeWait = time / 3; // 3 times faster than sgminer
 
-            string ret =  $" -mport 127.0.0.1:{APIPort} -benchmark 1 -logfile {GetLogFileName()} {GetDevicesCommandString()}";
+            var ret = $" -mport 127.0.0.1:{ApiPort} -benchmark 1 -logfile {GetLogFileName()} {GetDevicesCommandString()}";
             return ret;
         }
     }

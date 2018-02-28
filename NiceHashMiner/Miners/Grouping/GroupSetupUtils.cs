@@ -38,6 +38,7 @@ namespace NiceHashMiner.Miners.Grouping
                     status = DeviceMiningStatus.NoEnabledAlgorithms;
                 }
             }
+
             return new Tuple<ComputeDevice, DeviceMiningStatus>(device, status);
         }
 
@@ -58,6 +59,7 @@ namespace NiceHashMiner.Miners.Grouping
                     nonMiningDevStatuses.Add(devStatus);
                 }
             }
+
             return new Tuple<List<MiningDevice>, List<Tuple<ComputeDevice, DeviceMiningStatus>>>(miningDevices,
                 nonMiningDevStatuses);
         }
@@ -75,6 +77,7 @@ namespace NiceHashMiner.Miners.Grouping
                 case DeviceMiningStatus.NoEnabledAlgorithms:
                     return "No Enabled Algorithms: " + dev.GetFullName();
             }
+
             return "Invalid status Passed";
         }
 
@@ -91,8 +94,10 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     stringBuilder.AppendLine("\t" + GetDisabledDeviceStatusString(deviceStatus));
                 }
+
                 Helpers.ConsolePrint(Tag, stringBuilder.ToString());
             }
+
             if (enabledDevices.Count > 0)
             {
                 // print enabled
@@ -110,6 +115,7 @@ namespace NiceHashMiner.Miners.Grouping
                             $"\t\tALGORITHM {(isEnabled ? "ENABLED " : "DISABLED")} ({algo.AlgorithmStringID})");
                     }
                 }
+
                 Helpers.ConsolePrint(Tag, stringBuilder.ToString());
             }
         }
@@ -121,6 +127,7 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 LogMiningNonMiningStatuses(miningNonMiningDevs.Item1, miningNonMiningDevs.Item2);
             }
+
             return miningNonMiningDevs.Item1;
         }
 
@@ -137,6 +144,7 @@ namespace NiceHashMiner.Miners.Grouping
                 var devName = device.Device.Name;
                 allAvaragers[devName] = new AveragerGroup();
             }
+
             // fill avarager
             foreach (var device in miningDevs)
             {
@@ -145,6 +153,7 @@ namespace NiceHashMiner.Miners.Grouping
                 allAvaragers[devName].UuidList.Add(device.Device.Uuid);
                 allAvaragers[devName].AddAlgorithms(device.Algorithms);
             }
+
             // calculate and set new AvarageSpeeds for miningDeviceReferences
             foreach (var curAvaragerKvp in allAvaragers)
             {
@@ -165,7 +174,7 @@ namespace NiceHashMiner.Miners.Grouping
                             if (index > -1)
                             {
                                 miningDevs[minerDevIndex].Algorithms[index].AvaragedSpeed = avaragedSpeed;
-                                if (miningDevs[minerDevIndex].Algorithms[index] is DualAlgorithm dualAlgo) 
+                                if (miningDevs[minerDevIndex].Algorithms[index] is DualAlgorithm dualAlgo)
                                 {
                                     dualAlgo.SecondaryAveragedSpeed = secondaryAveragedSpeed;
                                 }
@@ -175,6 +184,7 @@ namespace NiceHashMiner.Miners.Grouping
                 }
             }
         }
+    }
 
     public class SpeedSumCount
     {

@@ -96,7 +96,7 @@ namespace NiceHashMiner.Miners.Grouping
 
             public const string XmrStackCpuMiner = Bin + @"\xmr-stak-cpu\xmr-stak-cpu.exe";
             public const string XmrStakAmd = Bin + @"\xmr-stak-amd\xmr-stak-amd.exe";
-            public const string XmrStak = _bin + @"\xmr-stak\xmr-stak.exe";
+            public const string XmrStak = Bin + @"\xmr-stak\xmr-stak.exe";
             public const string Xmrig = Bin + @"\xmrig\xmrig.exe";
 
             public const string None = "";

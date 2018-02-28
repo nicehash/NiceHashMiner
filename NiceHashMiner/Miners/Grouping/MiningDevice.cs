@@ -173,7 +173,7 @@ namespace NiceHashMiner.Miners.Grouping
                     } 
                     else 
                     {
-                        algo.CurrentProfit = algo.CurNhmSMADataVal * algo.AvaragedSpeed * mult;
+                        algo.CurrentProfit = algo.CurNhmSmaDataVal * algo.AvaragedSpeed * mult;
                     }
                 } 
                 else 

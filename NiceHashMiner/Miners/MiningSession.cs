@@ -313,14 +313,14 @@ namespace NiceHashMiner.Miners
                     stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
                     foreach (var algo in device.Algorithms)
                     {                        
-                        var speed = algo.AvaragedSpeed.ToString(DOUBLE_FORMAT);
-                        var paying = algo.CurNhmSMADataVal.ToString(DOUBLE_FORMAT);
+                        var speed = algo.AvaragedSpeed.ToString(DoubleFormat);
+                        var paying = algo.CurNhmSmaDataVal.ToString(DoubleFormat);
                         if (algo is DualAlgorithm dualAlgo) 
                         {
-                            speed += "/" + dualAlgo.SecondaryAveragedSpeed.ToString(DOUBLE_FORMAT);
+                            speed += "/" + dualAlgo.SecondaryAveragedSpeed.ToString(DoubleFormat);
                             if (dualAlgo.TuningEnabled)
                                 speed += " dcri:" + dualAlgo.MostProfitableIntensity;
-                            paying += "/" + dualAlgo.SecondaryCurNhmSMADataVal;
+                            paying += "/" + dualAlgo.SecondaryCurNhmSmaDataVal;
                         }
                         stringBuilderDevice.AppendLine(
                             $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +

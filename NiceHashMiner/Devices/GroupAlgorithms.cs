@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using NiceHashMiner.Enums;
+﻿using NiceHashMiner.Enums;
+using System.Collections.Generic;
 
 namespace NiceHashMiner.Devices
 {
@@ -236,10 +236,10 @@ namespace NiceHashMiner.Devices
                     return new Dictionary<MinerBaseType, List<Algorithm>>
                     {
                         {
-                            MinerBaseType.XmrStack,
+                            MinerBaseType.XmrStak,
                             new List<Algorithm>
                             {
-                                new Algorithm(MinerBaseType.XmrStack, AlgorithmType.CryptoNight, "cryptonight")
+                                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, "cryptonight")
                             }
                         },
                         {
@@ -306,14 +306,10 @@ namespace NiceHashMiner.Devices
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.CryptoNight, "cryptonight"),
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.Equihash, "equihash"),
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
-                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
-                                    AlgorithmType.Decred),
-                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
-                                    AlgorithmType.Lbry),
-                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
-                                    AlgorithmType.Pascal),
-                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
-                                    AlgorithmType.Sia)
+                                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred),
+                                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Lbry),
+                                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal),
+                                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Sia)
                             }
                         },
                         {
@@ -336,7 +332,8 @@ namespace NiceHashMiner.Devices
                             {
                                 new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt"),
                                 new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
-                            },
+                            }
+                        },
                         { 
                             MinerBaseType.XmrStak,
                             new List<Algorithm> {
@@ -412,14 +409,10 @@ namespace NiceHashMiner.Devices
                             new List<Algorithm>
                             {
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
-                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
-                                    AlgorithmType.Decred),
-                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
-                                    AlgorithmType.Lbry),
-                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
-                                    AlgorithmType.Pascal),
-                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, "",
-                                    AlgorithmType.Sia)
+                                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred),
+                                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Lbry),
+                                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal),
+                                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Sia)
                             }
                         },
                         {
@@ -434,6 +427,7 @@ namespace NiceHashMiner.Devices
                             new List<Algorithm> {
                                 new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, "")
                             }
+                        }
                     };
                     switch (deviceGroupType)
                     {

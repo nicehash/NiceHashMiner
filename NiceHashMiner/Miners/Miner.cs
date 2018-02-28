@@ -89,7 +89,7 @@ namespace NiceHashMiner
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
 
-        protected MiningSetup MiningSetup { get; set; }
+        public MiningSetup MiningSetup { get; protected set; }
 
         // sgminer/zcash claymore workaround
         protected bool IsKillAllUsedMinerProcs { get; set; }
@@ -855,6 +855,8 @@ namespace NiceHashMiner
 
         protected virtual void ProcessBenchLinesAlternate(string[] lines) 
         { }
+
+        protected abstract bool BenchmarkParseLine(string outdata);
 
         protected string GetServiceUrl(AlgorithmType algo)
         {

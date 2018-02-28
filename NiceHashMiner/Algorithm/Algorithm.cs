@@ -1,11 +1,11 @@
-﻿using NiceHashMiner.Enums;
-using System;
+﻿using System;
+using NiceHashMiner.Enums;
 
 namespace NiceHashMiner
 {
     public class Algorithm
     {
-        public readonly string AlgorithmName { get; protected set; }
+        public string AlgorithmName { get; protected set; }
         public readonly string MinerBaseTypeName;
         public readonly AlgorithmType NiceHashID;
         // Useful placeholder for sorting/finding
@@ -43,14 +43,13 @@ namespace NiceHashMiner
         {
             NiceHashID = niceHashID;
 
-            AlgorithmName = AlgorithmNiceHashNames.GetName(DualNiceHashID());
+            AlgorithmName = AlgorithmNiceHashNames.GetName(DualNiceHashID);
             MinerBaseTypeName = Enum.GetName(typeof(MinerBaseType), minerBaseType);
             AlgorithmStringID = MinerBaseTypeName + "_" + AlgorithmName;
 
             MinerBaseType = minerBaseType;
             MinerName = minerName;
-
-            BenchmarkSpeed = 0.0d;
+            
             ExtraLaunchParameters = "";
             LessThreads = 0;
             Enabled = !(NiceHashID == AlgorithmType.Nist5 ||
