@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums {
+﻿namespace NiceHashMiner.Enums
+{
     // indicates if uni flag (no parameter), single param or multi param
-    public enum MinerOptionFlagType {
+    public enum MinerOptionFlagType
+    {
         Uni,
         SingleParam,
         MultiParam,

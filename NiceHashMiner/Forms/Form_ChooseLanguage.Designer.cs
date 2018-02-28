@@ -59,7 +59,7 @@
             this.button_OK.TabIndex = 2;
             this.button_OK.Text = "OK";
             this.button_OK.UseVisualStyleBackColor = true;
-            this.button_OK.Click += new System.EventHandler(this.button_OK_Click);
+            this.button_OK.Click += new System.EventHandler(this.Button_OK_Click);
             // 
             // checkBox_TOS
             // 
@@ -70,7 +70,7 @@
             this.checkBox_TOS.TabIndex = 3;
             this.checkBox_TOS.Text = "I accept the Terms Of Use";
             this.checkBox_TOS.UseVisualStyleBackColor = true;
-            this.checkBox_TOS.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            this.checkBox_TOS.CheckedChanged += new System.EventHandler(this.CheckBox1_CheckedChanged);
             // 
             // textBox_TOS
             // 

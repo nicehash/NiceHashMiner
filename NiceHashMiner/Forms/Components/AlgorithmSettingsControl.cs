@@ -1,39 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Text;
-using System.Windows.Forms;
-using NiceHashMiner.Devices;
+﻿using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
-using NiceHashMiner.Miners;
+using System;
+using System.Windows.Forms;
 
-namespace NiceHashMiner.Forms.Components {
-    public partial class AlgorithmSettingsControl : UserControl, AlgorithmsListView.IAlgorithmsListView {
+namespace NiceHashMiner.Forms.Components
+{
+    public partial class AlgorithmSettingsControl : UserControl, AlgorithmsListView.IAlgorithmsListView
+    {
+        private ComputeDevice _computeDevice;
+        private Algorithm _currentlySelectedAlgorithm;
+        private ListViewItem _currentlySelectedLvi;
 
-        ComputeDevice _computeDevice = null;
-        Algorithm _currentlySelectedAlgorithm = null;
-        ListViewItem _currentlySelectedLvi = null;
         // winform crappy event workarond
-        bool _selected = false;
+        private bool _selected = false;
 
-        public AlgorithmSettingsControl() {
+        public AlgorithmSettingsControl()
+        {
             InitializeComponent();
             fieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
             secondaryFieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
             field_LessThreads.SetInputModeIntOnly();
 
             field_LessThreads.SetOnTextLeave(LessThreads_Leave);
-            fieldBoxBenchmarkSpeed.SetOnTextChanged(textChangedBenchmarkSpeed);
-            secondaryFieldBoxBenchmarkSpeed.SetOnTextChanged(secondaryTextChangedBenchmarkSpeed);
-            richTextBoxExtraLaunchParameters.TextChanged += textChangedExtraLaunchParameters;
-
+            fieldBoxBenchmarkSpeed.SetOnTextChanged(TextChangedBenchmarkSpeed);
+            secondaryFieldBoxBenchmarkSpeed.SetOnTextChanged(SecondaryTextChangedBenchmarkSpeed);
+            richTextBoxExtraLaunchParameters.TextChanged += TextChangedExtraLaunchParameters;
         }
 
-        public void Deselect() {
+        public void Deselect()
+        {
             _selected = false;
-            groupBoxSelectedAlgorithmSettings.Text = String.Format(International.GetText("AlgorithmsListView_GroupBox"),
+            groupBoxSelectedAlgorithmSettings.Text = string.Format(International.GetText("AlgorithmsListView_GroupBox"),
                 International.GetText("AlgorithmsListView_GroupBox_NONE"));
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
@@ -42,7 +39,8 @@ namespace NiceHashMiner.Forms.Components {
             richTextBoxExtraLaunchParameters.Text = "";
         }
 
-        public void InitLocale(ToolTip toolTip1) {
+        public void InitLocale(ToolTip toolTip1)
+        {
             field_LessThreads.InitLocale(toolTip1,
                 International.GetText("Form_Settings_General_CPU_LessThreads") + ":",
                 International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
@@ -53,136 +51,166 @@ namespace NiceHashMiner.Forms.Components {
                 International.GetText("Form_Settings_Algo_SecondaryBenchmarkSpeed") + ":",
                 International.GetText("Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed"));
             groupBoxExtraLaunchParameters.Text = International.GetText("Form_Settings_General_ExtraLaunchParameters");
-            toolTip1.SetToolTip(groupBoxExtraLaunchParameters, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
+            toolTip1.SetToolTip(groupBoxExtraLaunchParameters,
+                International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
             toolTip1.SetToolTip(pictureBox1, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
         }
 
-        private string ParseStringDefault(string value) {
-            return value == null ? "" : value;
+        private static string ParseStringDefault(string value)
+        {
+            return value ?? "";
         }
 
-        private string ParseDoubleDefault(double value) {
+        private static string ParseDoubleDefault(double value)
+        {
             return value <= 0 ? "" : value.ToString();
         }
 
-        public void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice) {
+        public void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice)
+        {
             // should not happen ever
             if (lvi == null) return;
 
             _computeDevice = computeDevice;
-            var algorithm = lvi.Tag as Algorithm;
-            if (algorithm != null) {
+            if (lvi.Tag is Algorithm algorithm)
+            {
                 _selected = true;
                 _currentlySelectedAlgorithm = algorithm;
                 _currentlySelectedLvi = lvi;
-                this.Enabled = lvi.Checked;
+                Enabled = lvi.Checked;
 
-                groupBoxSelectedAlgorithmSettings.Text = String.Format(International.GetText("AlgorithmsListView_GroupBox"),
-                String.Format("{0} ({1})", algorithm.AlgorithmName, algorithm.MinerBaseTypeName)); ;
+                groupBoxSelectedAlgorithmSettings.Text = string.Format(
+                    International.GetText("AlgorithmsListView_GroupBox"),
+                    $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})");
+                ;
 
                 field_LessThreads.Enabled = false; //_computeDevice.DeviceGroupType == DeviceGroupType.CPU && algorithm.MinerBaseType == MinerBaseType.XmrStak;
-                if (field_LessThreads.Enabled) {
+                if (field_LessThreads.Enabled) 
+                {
                     field_LessThreads.EntryText = algorithm.LessThreads.ToString();
-                } else {
+                } 
+                else 
+                {
                     field_LessThreads.EntryText = "";
                 }
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
-                if (algorithm is DualAlgorithm dualAlgo) {
+                if (algorithm is DualAlgorithm dualAlgo) 
+                {
                     secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(dualAlgo.SecondaryBenchmarkSpeed);
                     secondaryFieldBoxBenchmarkSpeed.Enabled = true;
-                } else {
+                } 
+                else 
+                {
                     secondaryFieldBoxBenchmarkSpeed.Enabled = false;
                 }
                 this.Update();
-            } else {
+            } 
+            else {
                 // TODO this should not be null
             }
         }
 
-        public void HandleCheck(ListViewItem lvi) {
-            if (Object.ReferenceEquals(_currentlySelectedLvi, lvi)) {
-                this.Enabled = lvi.Checked;
+        public void HandleCheck(ListViewItem lvi)
+        {
+            if (ReferenceEquals(_currentlySelectedLvi, lvi))
+            {
+                Enabled = lvi.Checked;
             }
         }
 
         public void ChangeSpeed(ListViewItem lvi)
         {
-            if (Object.ReferenceEquals(_currentlySelectedLvi, lvi))
+            if (ReferenceEquals(_currentlySelectedLvi, lvi))
             {
-                var algorithm = lvi.Tag as Algorithm;
-                if (algorithm != null) {
+                if (lvi.Tag is Algorithm algorithm)
+                {
                     fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
-                    if (algorithm is DualAlgorithm dualAlgo) {
+                    if (algorithm is DualAlgorithm dualAlgo) 
+                    {
                         secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(dualAlgo.SecondaryBenchmarkSpeed);
-                    } else {
+                    } 
+                    else 
+                    {
                         secondaryFieldBoxBenchmarkSpeed.EntryText = "0";
                     }
                 }
             }
         }
 
-        private bool CanEdit() {
+        private bool CanEdit()
+        {
             return _currentlySelectedAlgorithm != null && _selected;
         }
 
         #region Callbacks Events
-        private void textChangedBenchmarkSpeed(object sender, EventArgs e) {
+
+        private void TextChangedBenchmarkSpeed(object sender, EventArgs e)
+        {
             if (!CanEdit()) return;
-            double value;
-            if (Double.TryParse(fieldBoxBenchmarkSpeed.EntryText, out value)) {
+            if (double.TryParse(fieldBoxBenchmarkSpeed.EntryText, out var value))
+            {
                 _currentlySelectedAlgorithm.BenchmarkSpeed = value;
             }
-            updateSpeedText();
+            UpdateSpeedText();
         }
 
-        private void secondaryTextChangedBenchmarkSpeed(object sender, EventArgs e)
+        private void SecondaryTextChangedBenchmarkSpeed(object sender, EventArgs e)
         {
-            double secondaryValue;
-            if (Double.TryParse(secondaryFieldBoxBenchmarkSpeed.EntryText, out secondaryValue)
-                && _currentlySelectedAlgorithm is DualAlgorithm dualAlgo) {
+            if (double.TryParse(secondaryFieldBoxBenchmarkSpeed.EntryText, out var secondaryValue)
+                && _currentlySelectedAlgorithm is DualAlgorithm dualAlgo)
+            {
                 dualAlgo.SecondaryBenchmarkSpeed = secondaryValue;
             }
-            updateSpeedText();
+            UpdateSpeedText();
         }
 
-        private void updateSpeedText()
+        private void UpdateSpeedText()
         {
-            double secondarySpeed = (_currentlySelectedAlgorithm is DualAlgorithm dualAlgo) ? dualAlgo.SecondaryBenchmarkSpeed : 0;
+            var secondarySpeed = (_currentlySelectedAlgorithm is DualAlgorithm dualAlgo) ? dualAlgo.SecondaryBenchmarkSpeed : 0;
             var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed, secondarySpeed, _currentlySelectedAlgorithm.NiceHashID);
             // update lvi speed
-            if (_currentlySelectedLvi != null) {
+            if (_currentlySelectedLvi != null)
+            {
                 _currentlySelectedLvi.SubItems[2].Text = speedString;
             }
         }
 
-        private void LessThreads_Leave(object sender, EventArgs e) {
-            TextBox txtbox = (TextBox)sender;
-            int val;
-            if (Int32.TryParse(txtbox.Text, out val)) {
-                if (Globals.ThreadsPerCPU - val < 1) {
+        private void LessThreads_Leave(object sender, EventArgs e)
+        {
+            var txtbox = (TextBox) sender;
+            if (int.TryParse(txtbox.Text, out var val))
+            {
+                if (Globals.ThreadsPerCpu - val < 1)
+                {
                     MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMiningLessThreadMsg"),
-                                    International.GetText("Warning_with_Exclamation"),
-                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                } else {
+                        International.GetText("Warning_with_Exclamation"),
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                {
                     _currentlySelectedAlgorithm.LessThreads = val;
                 }
                 txtbox.Text = _currentlySelectedAlgorithm.LessThreads.ToString();
-            } else {
+            }
+            else
+            {
                 MessageBox.Show(International.GetText("Form_Settings_LessThreadWarningMsg"),
-                                International.GetText("Form_Settings_LessThreadWarningTitle"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    International.GetText("Form_Settings_LessThreadWarningTitle"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtbox.Text = _currentlySelectedAlgorithm.LessThreads.ToString();
                 txtbox.Focus();
             }
         }
 
-        private void textChangedExtraLaunchParameters(object sender, EventArgs e) {
+        private void TextChangedExtraLaunchParameters(object sender, EventArgs e)
+        {
             if (!CanEdit()) return;
-            var ExtraLaunchParams = richTextBoxExtraLaunchParameters.Text.Replace("\r\n", " ");
-            ExtraLaunchParams = ExtraLaunchParams.Replace("\n", " ");
-            _currentlySelectedAlgorithm.ExtraLaunchParameters = ExtraLaunchParams;
+            var extraLaunchParams = richTextBoxExtraLaunchParameters.Text.Replace("\r\n", " ");
+            extraLaunchParams = extraLaunchParams.Replace("\n", " ");
+            _currentlySelectedAlgorithm.ExtraLaunchParameters = extraLaunchParams;
         }
+
         #endregion
 
         //private void buttonBenchmark_Click(object sender, EventArgs e) {
@@ -198,6 +226,5 @@ namespace NiceHashMiner.Forms.Components {
         //        _currentlySelectedLvi.SubItems[2].Text = Helpers.FormatSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed);
         //    }
         //}
-
     }
 }

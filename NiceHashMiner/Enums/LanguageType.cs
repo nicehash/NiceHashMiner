@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums
+﻿namespace NiceHashMiner.Enums
 {
-    public enum LanguageType : int
+    public enum LanguageType
     {
         //NONE = -1,
         En = 0,

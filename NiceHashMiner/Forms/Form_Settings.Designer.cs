@@ -211,7 +211,7 @@
             // toolTip1
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
+            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.ToolTip1_Popup);
             // 
             // tabControlGeneral
             // 
@@ -224,7 +224,7 @@
             this.tabControlGeneral.SelectedIndex = 0;
             this.tabControlGeneral.Size = new System.Drawing.Size(612, 440);
             this.tabControlGeneral.TabIndex = 0;
-            this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControlGeneral_Selected);
+            this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabControlGeneral_Selected);
             // 
             // tabPageGeneral
             // 
@@ -375,7 +375,7 @@
             this.checkBox_RunAtStartup.TabIndex = 366;
             this.checkBox_RunAtStartup.Text = "Start With Windows";
             this.checkBox_RunAtStartup.UseVisualStyleBackColor = true;
-            this.checkBox_RunAtStartup.CheckedChanged += new System.EventHandler(this.checkBox_RunAtStartup_CheckedChanged);
+            this.checkBox_RunAtStartup.CheckedChanged += new System.EventHandler(this.CheckBox_RunAtStartup_CheckedChanged);
             // 
             // checkBox_AllowMultipleInstances
             // 
@@ -387,7 +387,7 @@
             this.checkBox_AllowMultipleInstances.TabIndex = 365;
             this.checkBox_AllowMultipleInstances.Text = "Allow Multiple Instances";
             this.checkBox_AllowMultipleInstances.UseVisualStyleBackColor = true;
-            this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.checkBox_DisableDefaultOptimizations_CheckedChanged);
+            this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.CheckBox_DisableDefaultOptimizations_CheckedChanged);
             // 
             // checkBox_DisableDefaultOptimizations
             // 
@@ -399,7 +399,7 @@
             this.checkBox_DisableDefaultOptimizations.TabIndex = 365;
             this.checkBox_DisableDefaultOptimizations.Text = "Disable Default Optimizations";
             this.checkBox_DisableDefaultOptimizations.UseVisualStyleBackColor = true;
-            this.checkBox_DisableDefaultOptimizations.CheckedChanged += new System.EventHandler(this.checkBox_DisableDefaultOptimizations_CheckedChanged);
+            this.checkBox_DisableDefaultOptimizations.CheckedChanged += new System.EventHandler(this.CheckBox_DisableDefaultOptimizations_CheckedChanged);
             // 
             // checkBox_AMD_DisableAMDTempControl
             // 
@@ -411,7 +411,7 @@
             this.checkBox_AMD_DisableAMDTempControl.TabIndex = 365;
             this.checkBox_AMD_DisableAMDTempControl.Text = "DisableAMDTempControl";
             this.checkBox_AMD_DisableAMDTempControl.UseVisualStyleBackColor = true;
-            this.checkBox_AMD_DisableAMDTempControl.CheckedChanged += new System.EventHandler(this.checkBox_AMD_DisableAMDTempControl_CheckedChanged);
+            this.checkBox_AMD_DisableAMDTempControl.CheckedChanged += new System.EventHandler(this.CheckBox_AMD_DisableAMDTempControl_CheckedChanged);
             // 
             // checkBox_AutoStartMining
             // 
@@ -610,7 +610,7 @@
             this.checkBox_Use3rdPartyMiners.TabIndex = 319;
             this.checkBox_Use3rdPartyMiners.Text = "Enable3rdPartyMiners";
             this.checkBox_Use3rdPartyMiners.UseVisualStyleBackColor = true;
-            this.checkBox_Use3rdPartyMiners.CheckedChanged += new System.EventHandler(this.checkBox_Use3rdPartyMiners_CheckedChanged);
+            this.checkBox_Use3rdPartyMiners.CheckedChanged += new System.EventHandler(this.CheckBox_Use3rdPartyMiners_CheckedChanged);
             // 
             // checkBox_DisableDetectionNVIDIA
             // 
@@ -1146,7 +1146,7 @@
             this.currencyConverterCombobox.Size = new System.Drawing.Size(122, 21);
             this.currencyConverterCombobox.Sorted = true;
             this.currencyConverterCombobox.TabIndex = 381;
-            this.currencyConverterCombobox.SelectedIndexChanged += new System.EventHandler(this.currencyConverterCombobox_SelectedIndexChanged);
+            this.currencyConverterCombobox.SelectedIndexChanged += new System.EventHandler(this.CurrencyConverterCombobox_SelectedIndexChanged);
             // 
             // label_displayCurrency
             // 
@@ -1379,7 +1379,7 @@
             this.comboBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(178, 21);
             this.comboBox_CPU0_ForceCPUExtension.TabIndex = 379;
             this.comboBox_CPU0_ForceCPUExtension.Visible = false;
-            this.comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged += new System.EventHandler(this.comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged);
+            this.comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged += new System.EventHandler(this.ComboBox_CPU0_ForceCPUExtension_SelectedIndexChanged);
             // 
             // label_CPU0_ForceCPUExtension
             // 
@@ -1668,7 +1668,7 @@
             this.buttonAllProfit.TabIndex = 394;
             this.buttonAllProfit.Text = "Check All Profitability";
             this.buttonAllProfit.UseVisualStyleBackColor = true;
-            this.buttonAllProfit.Click += new System.EventHandler(this.buttonAllProfit_Click);
+            this.buttonAllProfit.Click += new System.EventHandler(this.ButtonAllProfit_Click);
             // 
             // buttonSelectedProfit
             // 
@@ -1679,7 +1679,7 @@
             this.buttonSelectedProfit.TabIndex = 393;
             this.buttonSelectedProfit.Text = "Check Selected Profitability";
             this.buttonSelectedProfit.UseVisualStyleBackColor = true;
-            this.buttonSelectedProfit.Click += new System.EventHandler(this.buttonSelectedProfit_Click);
+            this.buttonSelectedProfit.Click += new System.EventHandler(this.ButtonSelectedProfit_Click);
             // 
             // buttonSaveClose
             // 
@@ -1691,7 +1691,7 @@
             this.buttonSaveClose.TabIndex = 44;
             this.buttonSaveClose.Text = "&Save and Close";
             this.buttonSaveClose.UseVisualStyleBackColor = true;
-            this.buttonSaveClose.Click += new System.EventHandler(this.buttonSaveClose_Click);
+            this.buttonSaveClose.Click += new System.EventHandler(this.ButtonSaveClose_Click);
             // 
             // buttonDefaults
             // 
@@ -1703,7 +1703,7 @@
             this.buttonDefaults.TabIndex = 43;
             this.buttonDefaults.Text = "&Defaults";
             this.buttonDefaults.UseVisualStyleBackColor = true;
-            this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
+            this.buttonDefaults.Click += new System.EventHandler(this.ButtonDefaults_Click);
             // 
             // buttonCloseNoSave
             // 
@@ -1715,7 +1715,7 @@
             this.buttonCloseNoSave.TabIndex = 45;
             this.buttonCloseNoSave.Text = "&Close without Saving";
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
-            this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
+            this.buttonCloseNoSave.Click += new System.EventHandler(this.ButtonCloseNoSave_Click);
             // 
             // Form_Settings
             // 

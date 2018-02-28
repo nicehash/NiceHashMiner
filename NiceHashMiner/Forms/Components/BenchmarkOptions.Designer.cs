@@ -51,7 +51,7 @@
             this.radioButton_PreciseBenchmark.TabIndex = 14;
             this.radioButton_PreciseBenchmark.Text = "&Precise (will take longer)";
             this.radioButton_PreciseBenchmark.UseVisualStyleBackColor = true;
-            this.radioButton_PreciseBenchmark.CheckedChanged += new System.EventHandler(this.radioButton_PreciseBenchmark_CheckedChanged);
+            this.radioButton_PreciseBenchmark.CheckedChanged += new System.EventHandler(this.RadioButton_PreciseBenchmark_CheckedChanged);
             // 
             // radioButton_StandardBenchmark
             // 
@@ -64,7 +64,7 @@
             this.radioButton_StandardBenchmark.TabStop = true;
             this.radioButton_StandardBenchmark.Text = "&Standard";
             this.radioButton_StandardBenchmark.UseVisualStyleBackColor = true;
-            this.radioButton_StandardBenchmark.CheckedChanged += new System.EventHandler(this.radioButton_StandardBenchmark_CheckedChanged);
+            this.radioButton_StandardBenchmark.CheckedChanged += new System.EventHandler(this.RadioButton_StandardBenchmark_CheckedChanged);
             // 
             // radioButton_QuickBenchmark
             // 
@@ -75,7 +75,7 @@
             this.radioButton_QuickBenchmark.TabIndex = 12;
             this.radioButton_QuickBenchmark.Text = "&Quick (can be inaccurate)";
             this.radioButton_QuickBenchmark.UseVisualStyleBackColor = true;
-            this.radioButton_QuickBenchmark.CheckedChanged += new System.EventHandler(this.radioButton_QuickBenchmark_CheckedChanged);
+            this.radioButton_QuickBenchmark.CheckedChanged += new System.EventHandler(this.RadioButton_QuickBenchmark_CheckedChanged);
             // 
             // BenchmarkOptions
             // 

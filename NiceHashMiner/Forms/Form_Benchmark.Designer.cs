@@ -99,7 +99,7 @@
             this.radioButton_SelectedUnbenchmarked.TabStop = true;
             this.radioButton_SelectedUnbenchmarked.Text = "Benchmark Selected Unbenchmarked Algorithms ";
             this.radioButton_SelectedUnbenchmarked.UseVisualStyleBackColor = true;
-            this.radioButton_SelectedUnbenchmarked.CheckedChanged += new System.EventHandler(this.radioButton_SelectedUnbenchmarked_CheckedChanged_1);
+            this.radioButton_SelectedUnbenchmarked.CheckedChanged += new System.EventHandler(this.RadioButton_SelectedUnbenchmarked_CheckedChanged_1);
             // 
             // radioButton_RE_SelectedUnbenchmarked
             // 
@@ -111,7 +111,7 @@
             this.radioButton_RE_SelectedUnbenchmarked.TabIndex = 110;
             this.radioButton_RE_SelectedUnbenchmarked.Text = "Benchmark All Selected Algorithms ";
             this.radioButton_RE_SelectedUnbenchmarked.UseVisualStyleBackColor = true;
-            this.radioButton_RE_SelectedUnbenchmarked.CheckedChanged += new System.EventHandler(this.radioButton_RE_SelectedUnbenchmarked_CheckedChanged);
+            this.radioButton_RE_SelectedUnbenchmarked.CheckedChanged += new System.EventHandler(this.RadioButton_RE_SelectedUnbenchmarked_CheckedChanged);
             // 
             // checkBox_StartMiningAfterBenchmark
             // 
@@ -123,7 +123,7 @@
             this.checkBox_StartMiningAfterBenchmark.TabIndex = 111;
             this.checkBox_StartMiningAfterBenchmark.Text = "Start mining after benchmark";
             this.checkBox_StartMiningAfterBenchmark.UseVisualStyleBackColor = true;
-            this.checkBox_StartMiningAfterBenchmark.CheckedChanged += new System.EventHandler(this.checkBox_StartMiningAfterBenchmark_CheckedChanged);
+            this.checkBox_StartMiningAfterBenchmark.CheckedChanged += new System.EventHandler(this.CheckBox_StartMiningAfterBenchmark_CheckedChanged);
             // 
             // algorithmsListView1
             // 

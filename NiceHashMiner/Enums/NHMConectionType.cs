@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums {
-    public enum NHMConectionType {
+﻿namespace NiceHashMiner.Enums
+{
+    public enum NhmConectionType
+    {
         NONE,
         STRATUM_TCP,
         STRATUM_SSL,

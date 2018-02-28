@@ -1,49 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NiceHashMiner.Enums;
+﻿using NiceHashMiner.Enums;
 using NVIDIA.NVAPI;
 
 namespace NiceHashMiner.Devices
 {
-    class CudaComputeDevice : ComputeDevice
+    internal class CudaComputeDevice : ComputeDevice
     {
-        NvPhysicalGpuHandle nvHandle;  // For NVAPI
-        private const int gpuCorePState = 0;  // memcontroller = 1, videng = 2
+        private readonly NvPhysicalGpuHandle _nvHandle; // For NVAPI
+        private const int GpuCorePState = 0; // memcontroller = 1, videng = 2
 
-        public override float Load {
-            get {
-                int load = 0;
-                var pStates = new NvPStates();
-                pStates.Version = NVAPI.GPU_PSTATES_VER;
-                pStates.PStates = new NvPState[NVAPI.MAX_PSTATES_PER_GPU];
-                if (NVAPI.NvAPI_GPU_GetPStates != null) {
-                    var result = NVAPI.NvAPI_GPU_GetPStates(nvHandle, ref pStates);
-                    if (result != NvStatus.OK) {
+        public override float Load
+        {
+            get
+            {
+                var load = 0;
+                var pStates = new NvPStates
+                {
+                    Version = NVAPI.GPU_PSTATES_VER,
+                    PStates = new NvPState[NVAPI.MAX_PSTATES_PER_GPU]
+                };
+                if (NVAPI.NvAPI_GPU_GetPStates != null)
+                {
+                    var result = NVAPI.NvAPI_GPU_GetPStates(_nvHandle, ref pStates);
+                    if (result != NvStatus.OK)
+                    {
                         Helpers.ConsolePrint("NVAPI", "Load get failed with status: " + result);
-                    } else if (pStates.PStates[gpuCorePState].Present) {
-                        load = pStates.PStates[gpuCorePState].Percentage;
+                    }
+                    else if (pStates.PStates[GpuCorePState].Present)
+                    {
+                        load = pStates.PStates[GpuCorePState].Percentage;
                     }
                 }
                 return load;
             }
         }
-        public override float Temp {
-            get {
+
+        public override float Temp
+        {
+            get
+            {
                 uint temp = 0;
-                if (NVAPI.NvAPI_GPU_GetThermalSettings != null) {
-                    var settings = new NvGPUThermalSettings();
-                    settings.Version = NVAPI.GPU_THERMAL_SETTINGS_VER;
-                    settings.Count = NVAPI.MAX_THERMAL_SENSORS_PER_GPU;
-                    settings.Sensor = new NvSensor[NVAPI.MAX_THERMAL_SENSORS_PER_GPU];
-                    var result = NVAPI.NvAPI_GPU_GetThermalSettings(nvHandle, (int)NvThermalTarget.ALL, ref settings);
-                    if (result != NvStatus.OK) {
+                if (NVAPI.NvAPI_GPU_GetThermalSettings != null)
+                {
+                    var settings = new NvGPUThermalSettings
+                    {
+                        Version = NVAPI.GPU_THERMAL_SETTINGS_VER,
+                        Count = NVAPI.MAX_THERMAL_SENSORS_PER_GPU,
+                        Sensor = new NvSensor[NVAPI.MAX_THERMAL_SENSORS_PER_GPU]
+                    };
+                    var result = NVAPI.NvAPI_GPU_GetThermalSettings(_nvHandle, (int) NvThermalTarget.ALL, ref settings);
+                    if (result != NvStatus.OK)
+                    {
                         Helpers.ConsolePrint("NVAPI", "Temp get failed with status: " + result);
-                    } else {
-                        foreach (var sensor in settings.Sensor) {
-                            if (sensor.Target == NvThermalTarget.GPU) {
+                    }
+                    else
+                    {
+                        foreach (var sensor in settings.Sensor)
+                        {
+                            if (sensor.Target == NvThermalTarget.GPU)
+                            {
                                 temp = sensor.CurrentTemp;
                                 break;
                             }
@@ -53,36 +67,44 @@ namespace NiceHashMiner.Devices
                 return temp;
             }
         }
-        public override uint FanSpeed {
-            get {
-                int fanSpeed = 0;
-                if (NVAPI.NvAPI_GPU_GetTachReading != null) {
-                    var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle, out fanSpeed);
-                    if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED) {  // GPUs without fans are not uncommon, so don't treat as error and just return 0
+
+        public override uint FanSpeed
+        {
+            get
+            {
+                var fanSpeed = 0;
+                if (NVAPI.NvAPI_GPU_GetTachReading != null)
+                {
+                    var result = NVAPI.NvAPI_GPU_GetTachReading(_nvHandle, out fanSpeed);
+                    if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
+                    {
+                        // GPUs without fans are not uncommon, so don't treat as error and just return 0
                         Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
-                    } 
+                    }
                 }
-                return (uint)fanSpeed;
+                return (uint) fanSpeed;
             }
         }
 
-        public CudaComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int GPUCount, NvPhysicalGpuHandle nvHandle)
-            : base((int)cudaDevice.DeviceID, 
-                  cudaDevice.GetName(),
-                  true,
-                  group,
-                  cudaDevice.IsEtherumCapable(),
-                  DeviceType.NVIDIA,
-                  String.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), GPUCount),
-                  cudaDevice.DeviceGlobalMemory) {
+        public CudaComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int gpuCount,
+            NvPhysicalGpuHandle nvHandle)
+            : base((int) cudaDevice.DeviceID,
+                cudaDevice.GetName(),
+                true,
+                group,
+                cudaDevice.IsEtherumCapable(),
+                DeviceType.NVIDIA,
+                string.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), gpuCount),
+                cudaDevice.DeviceGlobalMemory)
+        {
             BusID = cudaDevice.pciBusID;
-            _SM_major = cudaDevice.SM_major;
-            _SM_minor = cudaDevice.SM_minor;
-            UUID = cudaDevice.UUID;
+            SMMajor = cudaDevice.SM_major;
+            SMMinor = cudaDevice.SM_minor;
+            Uuid = cudaDevice.UUID;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
-            Index = ID + ComputeDeviceManager.Avaliable.AvailCPUs;  // increment by CPU count
+            Index = ID + ComputeDeviceManager.Avaliable.AvailCpus; // increment by CPU count
 
-            this.nvHandle = nvHandle;
+            _nvHandle = nvHandle;
         }
     }
 }

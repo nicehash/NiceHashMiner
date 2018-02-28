@@ -298,6 +298,8 @@
     "AlgorithmsListView_ContextMenu_DisableAll": "Отключить все алгоритмы",
     "AlgorithmsListView_ContextMenu_EnableAll": "Включить все алгоритмы",
     "AlgorithmsListView_ContextMenu_ClearItem": "Сбросить скорость алгоритма",
+    "AlgorithmsListView_ContextMenu_TestItem": "Включить это только",
+    "AlgorithmsListView_ContextMenu_EnableBenched": "Включить только контрольные показатели",
     "BenchmarkOptions_Benchmark_Type": "Тип бенчмарка:",
     "Form_Main_MiningDevices": "Устройства {0}:",
     "Form_Main_bins_folder_files_missing": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. NiceHash Miner Legacy может не работать правильно без недостающих файлов. Нажмите «Да» для переустановки NiceHash Miner Legacy, чтобы попробовать исправить ошибку.",

@@ -368,6 +368,8 @@
     "AlgorithmsListView_ContextMenu_DisableAll": "Disattiva tutti gli algoritmi",
     "AlgorithmsListView_ContextMenu_EnableAll": "Attiva tutti gli algoritmi",
     "AlgorithmsListView_ContextMenu_ClearItem": "Cancella la velocità dell'algoritmo",
+    "AlgorithmsListView_ContextMenu_TestItem": "Abilita questo solo",
+    "AlgorithmsListView_ContextMenu_EnableBenched": "Abilita solo con benchmark",
     "Form_Main_No_Device_Enabled_For_Mining": "Attenzione, nessun dispositivo è stato selezionato per il mining, abilita almeno 1 dispositivo per iniziare a minare.",
     "Form_Main_3rdParty_Title": "Avvertimento sull'uso di software di terze parti",
     "Form_Main_3rdParty_Text": "Abbiamo integrato software di mining di terze parti che dovrebbere velocizzare il tuo mining e darti un'esperienza di mining più stabile - questo potrebbe potenzialmente portare a più guadagni in un periodo di tempo più corto anche dopo che sarà prelevata la quota degli sviluppatori. Comunque, visto che questo è software di terze parti completamente closed-source, non abbiamo modo di ispezionarlo. NiceHash non può garantire per l'utilizzo di quel software e si rifiuta di prendere ogni responsabilità per ogni danno causato, falle di sicurezza, perdita di dati o fondi, errori di sistema o hardware, e altri problemi. Accettando questa avvertenza prendi pienamente consenso e responsabilità per l'uso di questi miners closed-source così come sono.",

@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums
+﻿namespace NiceHashMiner.Enums
 {
-    public enum BenchmarkPerformanceType : int
+    public enum BenchmarkPerformanceType
     {
         Quick = 0,
         Standard,

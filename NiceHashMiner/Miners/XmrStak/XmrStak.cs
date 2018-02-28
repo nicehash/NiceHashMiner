@@ -12,6 +12,8 @@ using Newtonsoft.Json.Linq;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Parsing;
+// ReSharper disable All
+#pragma warning disable
 
 namespace NiceHashMiner.Miners
 {
@@ -73,8 +75,8 @@ namespace NiceHashMiner.Miners
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        public override async Task<APIData> GetSummaryAsync() {
-            return await GetSummaryCPUAsync("api.json", true);
+        public override async Task<ApiData> GetSummaryAsync() {
+            return await GetSummaryCpuAsync("api.json", true);
         }
 
         protected override bool IsApiEof(byte third, byte second, byte last) {
@@ -83,7 +85,7 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string url, string btcAdress, string worker) {
             if (!IsInit) {
-                Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
+                Helpers.ConsolePrint(MinerTag(), "MiningSetup is not initialized exiting Start()");
                 return;
             }
 

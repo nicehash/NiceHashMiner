@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums {
-    
+﻿namespace NiceHashMiner.Enums
+{
     /// <summary>
     /// This is used for ethminers DAG generation mode
     /// </summary>
-    public enum DagGenerationType : int {
+    public enum DagGenerationType
+    {
         SingleKeep = 0,
         Single,
         Sequential,

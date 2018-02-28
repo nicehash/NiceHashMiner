@@ -79,7 +79,7 @@
             this.textBoxQuick.Name = "textBoxQuick";
             this.textBoxQuick.Size = new System.Drawing.Size(100, 20);
             this.textBoxQuick.TabIndex = 383;
-            this.textBoxQuick.TextChanged += new System.EventHandler(this.textBoxQuick_TextChanged);
+            this.textBoxQuick.TextChanged += new System.EventHandler(this.TextBoxQuick_TextChanged);
             // 
             // labelQuick
             // 
@@ -106,7 +106,7 @@
             this.textBoxStandard.Name = "textBoxStandard";
             this.textBoxStandard.Size = new System.Drawing.Size(100, 20);
             this.textBoxStandard.TabIndex = 383;
-            this.textBoxStandard.TextChanged += new System.EventHandler(this.textBoxStandard_TextChanged);
+            this.textBoxStandard.TextChanged += new System.EventHandler(this.TextBoxStandard_TextChanged);
             // 
             // labelStandard
             // 
@@ -133,7 +133,7 @@
             this.textBoxPrecise.Name = "textBoxPrecise";
             this.textBoxPrecise.Size = new System.Drawing.Size(100, 20);
             this.textBoxPrecise.TabIndex = 383;
-            this.textBoxPrecise.TextChanged += new System.EventHandler(this.textBoxPrecise_TextChanged);
+            this.textBoxPrecise.TextChanged += new System.EventHandler(this.TextBoxPrecise_TextChanged);
             // 
             // labelPrecise
             // 
