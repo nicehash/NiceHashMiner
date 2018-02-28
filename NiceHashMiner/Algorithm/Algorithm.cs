@@ -1,5 +1,5 @@
-﻿using System;
-using NiceHashMiner.Enums;
+﻿using NiceHashMiner.Enums;
+using System;
 
 namespace NiceHashMiner
 {

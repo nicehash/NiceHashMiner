@@ -28,9 +28,10 @@ namespace NiceHashMiner.Miners
 
         protected double ApiReadMult = 1;
         protected AlgorithmType SecondaryAlgorithmType = AlgorithmType.NONE;
-        
+
         // CD intensity tuning
         protected const int defaultIntensity = 30;
+
         protected ClaymoreBaseMiner(string minerDeviceName, string lookForStart)
             : base(minerDeviceName)
         {
@@ -112,8 +113,10 @@ namespace NiceHashMiner.Miners
                         {
                             tmpSpeed = 0;
                         }
+
                         ad.Speed += tmpSpeed;
                     }
+
                     foreach (var speed in secondarySpeeds)
                     {
                         double tmpSpeed;
@@ -125,16 +128,20 @@ namespace NiceHashMiner.Miners
                         {
                             tmpSpeed = 0;
                         }
+
                         ad.SecondarySpeed += tmpSpeed;
                     }
+
                     ad.Speed *= ApiReadMult;
                     ad.SecondarySpeed *= ApiReadMult;
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 }
+
                 if (ad.Speed == 0)
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 }
+
                 // some clayomre miners have this issue reporting negative speeds in that case restart miner
                 if (ad.Speed < 0)
                 {
@@ -182,11 +189,13 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id + " skipping device");
                     continue;
                 }
+
                 if (mPair.Device.DeviceType == DeviceType.NVIDIA)
                 {
                     Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount);
                     id += amdDeviceCount;
                 }
+
                 if (id > 9)
                 {
                     // New >10 GPU support in CD9.8
@@ -205,14 +214,16 @@ namespace NiceHashMiner.Miners
                 {
                     ids.Add(id.ToString());
                 }
-                if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled) 
+
+                if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled)
                 {
                     intensities.Add(algo.CurrentIntensity.ToString());
                 }
             }
+
             var deviceStringCommand = DeviceCommand(amdDeviceCount) + string.Join("", ids);
             var intensityStringCommand = "";
-            if (intensities.Count > 0) 
+            if (intensities.Count > 0)
             {
                 intensityStringCommand = " -dcri " + string.Join(",", intensities);
             }
@@ -222,15 +233,18 @@ namespace NiceHashMiner.Miners
 
         // benchmark stuff
 
-        protected override void BenchmarkThreadRoutine(object commandLine) 
+        protected override void BenchmarkThreadRoutine(object commandLine)
         {
-            if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo && dualBenchAlgo.TuningEnabled) 
+            if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo && dualBenchAlgo.TuningEnabled)
             {
-                var stepsLeft = (int)Math.Ceiling((double)(dualBenchAlgo.TuningEnd - dualBenchAlgo.CurrentIntensity) / (dualBenchAlgo.TuningInterval)) + 1;
-                Helpers.ConsolePrint("CDTUING", "{0} tuning steps remain, should complete in {1} seconds", stepsLeft, stepsLeft * BenchmarkTimeWait);
+                var stepsLeft = (int) Math.Ceiling((double) (dualBenchAlgo.TuningEnd - dualBenchAlgo.CurrentIntensity) /
+                                                   (dualBenchAlgo.TuningInterval)) + 1;
+                Helpers.ConsolePrint("CDTUING", "{0} tuning steps remain, should complete in {1} seconds", stepsLeft,
+                    stepsLeft * BenchmarkTimeWait);
                 Helpers.ConsolePrint("CDTUNING",
                     $"Starting benchmark for intensity {dualBenchAlgo.CurrentIntensity} out of {dualBenchAlgo.TuningEnd}");
             }
+
             BenchmarkThreadRoutineAlternate(commandLine, BenchmarkTimeWait);
         }
 
@@ -259,7 +273,8 @@ namespace NiceHashMiner.Miners
                             ++_benchmarkReadCount;
                         }
                     }
-                    else if (!string.IsNullOrEmpty(SecondaryLookForStart()) && lineLowered.Contains(SecondaryLookForStart()))
+                    else if (!string.IsNullOrEmpty(SecondaryLookForStart()) &&
+                             lineLowered.Contains(SecondaryLookForStart()))
                     {
                         if (IgnoreZero)
                         {
@@ -278,17 +293,19 @@ namespace NiceHashMiner.Miners
                     }
                 }
             }
-            if (_benchmarkReadCount > 0) {
+
+            if (_benchmarkReadCount > 0)
+            {
                 var speed = _benchmarkSum / _benchmarkReadCount;
                 var secondarySpeed = _secondaryBenchmarkSum / _secondaryBenchmarkSum;
                 BenchmarkAlgorithm.BenchmarkSpeed = speed;
-                if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo) 
+                if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo)
                 {
-                    if (dualBenchAlgo.TuningEnabled) 
+                    if (dualBenchAlgo.TuningEnabled)
                     {
                         dualBenchAlgo.SetIntensitySpeedsForCurrent(speed, secondarySpeed);
-                    } 
-                    else 
+                    }
+                    else
                     {
                         dualBenchAlgo.SecondaryBenchmarkSpeed = secondarySpeed;
                     }
@@ -333,14 +350,17 @@ namespace NiceHashMiner.Miners
                     mult = 1000000;
                     speed = speed.Replace("m", "");
                 }
+
                 //Helpers.ConsolePrint("speed", speed);
                 speed = speed.Trim();
                 return (double.Parse(speed, CultureInfo.InvariantCulture) * mult) * (1.0 - DevFee() * 0.01);
             }
             catch (Exception ex)
             {
-                Helpers.ConsolePrint("GetNumber", ex.Message + " | args => " + outdata + " | " + LOOK_FOR_END + " | " + LOOK_FOR_START);
+                Helpers.ConsolePrint("GetNumber",
+                    ex.Message + " | args => " + outdata + " | " + LOOK_FOR_END + " | " + LOOK_FOR_START);
             }
+
             return 0;
         }
     }

@@ -57,6 +57,7 @@ namespace NiceHashMiner.Miners.Grouping
                     Algorithms.Add(algo);
                 }
             }
+
             MostProfitableAlgorithmType = AlgorithmType.NONE;
             MostProfitableMinerBaseType = MinerBaseType.NONE;
         }
@@ -81,14 +82,16 @@ namespace NiceHashMiner.Miners.Grouping
 
         public MinerBaseType PrevProfitableMinerBaseType { get; private set; }
 
-        private int GetMostProfitableIndex() 
+        private int GetMostProfitableIndex()
         {
-            return Algorithms.FindIndex((a) => a.DualNiceHashID == MostProfitableAlgorithmType && a.MinerBaseType == MostProfitableMinerBaseType);
+            return Algorithms.FindIndex((a) =>
+                a.DualNiceHashID == MostProfitableAlgorithmType && a.MinerBaseType == MostProfitableMinerBaseType);
         }
 
-        private int GetPrevProfitableIndex() 
+        private int GetPrevProfitableIndex()
         {
-            return Algorithms.FindIndex((a) => a.DualNiceHashID == PrevProfitableAlgorithmType && a.MinerBaseType == PrevProfitableMinerBaseType);
+            return Algorithms.FindIndex((a) =>
+                a.DualNiceHashID == PrevProfitableAlgorithmType && a.MinerBaseType == PrevProfitableMinerBaseType);
         }
 
         public double GetCurrentMostProfitValue
@@ -100,6 +103,7 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     return Algorithms[mostProfitableIndex].CurrentProfit;
                 }
+
                 return 0;
             }
         }
@@ -113,6 +117,7 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     return Algorithms[mostProfitableIndex].CurrentProfit;
                 }
+
                 return 0;
             }
         }
@@ -152,35 +157,38 @@ namespace NiceHashMiner.Miners.Grouping
             MostProfitableAlgorithmType = AlgorithmType.NONE;
             MostProfitableMinerBaseType = MinerBaseType.NONE;
             // calculate new profits
-            foreach (var algo in Algorithms) 
+            foreach (var algo in Algorithms)
             {
                 var key = algo.NiceHashID;
                 const double mult = 0.000000001;
-                if (niceHashData.ContainsKey(key)) {
+                if (niceHashData.ContainsKey(key))
+                {
                     algo.CurNhmSmaDataVal = niceHashData[key].paying;
-                    if (algo is DualAlgorithm dualAlgo) {
+                    if (algo is DualAlgorithm dualAlgo)
+                    {
                         dualAlgo.IntensityUpToDate = false;
                         // Bypass averager for dual algos
                         dualAlgo.CurrentProfit = dualAlgo.CurNhmSmaDataVal * dualAlgo.BenchmarkSpeed * mult;
 
                         var secondaryKey = dualAlgo.SecondaryNiceHashID;
-                        if (niceHashData.ContainsKey(secondaryKey)) 
+                        if (niceHashData.ContainsKey(secondaryKey))
                         {
                             dualAlgo.SecondaryCurNhmSmaDataVal = niceHashData[secondaryKey].paying;
                             dualAlgo.CurrentProfit +=
                                 dualAlgo.SecondaryCurNhmSmaDataVal * dualAlgo.SecondaryBenchmarkSpeed * mult;
                         }
-                    } 
-                    else 
+                    }
+                    else
                     {
                         algo.CurrentProfit = algo.CurNhmSmaDataVal * algo.AvaragedSpeed * mult;
                     }
-                } 
-                else 
+                }
+                else
                 {
                     algo.CurrentProfit = 0;
                 }
             }
+
             // find max paying value and save key
             double maxProfit = 0;
             foreach (var algo in Algorithms)

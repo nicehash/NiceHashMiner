@@ -12,6 +12,7 @@ namespace NiceHashMiner.Miners
             {
                 return new MinerEtherumOCL();
             }
+
             return DeviceType.NVIDIA == deviceType ? new MinerEtherumCUDA() : null;
         }
 
@@ -26,6 +27,7 @@ namespace NiceHashMiner.Miners
                 case AlgorithmType.DaggerHashimoto:
                     return new ClaymoreDual(algorithm.SecondaryNiceHashID);
             }
+
             return null;
         }
 
@@ -35,12 +37,13 @@ namespace NiceHashMiner.Miners
             {
                 return new Ccminer();
             }
+
             return null;
         }
 
-        public static Miner CreateMiner(DeviceType deviceType, Algorithm algorithm) 
+        public static Miner CreateMiner(DeviceType deviceType, Algorithm algorithm)
         {
-            switch (algorithm.MinerBaseType) 
+            switch (algorithm.MinerBaseType)
             {
                 case MinerBaseType.ccminer:
                     return new Ccminer();
@@ -73,16 +76,18 @@ namespace NiceHashMiner.Miners
                 case MinerBaseType.dtsm:
                     return new Dtsm();
             }
+
             return null;
         }
 
         // create miner creates new miners based on device type and algorithm/miner path
-        public static Miner CreateMiner(ComputeDevice device, Algorithm algorithm) 
+        public static Miner CreateMiner(ComputeDevice device, Algorithm algorithm)
         {
-            if (device != null && algorithm != null) 
+            if (device != null && algorithm != null)
             {
                 return CreateMiner(device.DeviceType, algorithm);
             }
+
             return null;
         }
     }

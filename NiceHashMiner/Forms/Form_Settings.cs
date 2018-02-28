@@ -509,6 +509,7 @@ namespace NiceHashMiner.Forms
             {
                 comboBox_DagLoadMode.Items.Add(MinerEtherum.GetDagGenerationString((DagGenerationType) i));
             }
+
             // set selected
             comboBox_DagLoadMode.SelectedIndex = (int) ConfigManager.GeneralConfig.EthminerDagGenerationType;
         }
@@ -719,10 +720,11 @@ namespace NiceHashMiner.Forms
                 {
                     if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
                     var deviceDefaultsAlgoSettings = GroupAlgorithms.CreateForDeviceList(cDev);
-                    foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings) 
+                    foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings)
                     {
                         var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings);
-                        if (toSetAlgo != null) {
+                        if (toSetAlgo != null)
+                        {
                             toSetAlgo.ExtraLaunchParameters = defaultAlgoSettings.ExtraLaunchParameters;
                             toSetAlgo.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
                                 new MiningPair(cDev, toSetAlgo), toSetAlgo.NiceHashID, cDev.DeviceType, false);
@@ -749,6 +751,7 @@ namespace NiceHashMiner.Forms
             {
                 Helpers.ConsolePrint("REGISTRY", e.ToString());
             }
+
             return startVal == Application.ExecutablePath;
         }
 
@@ -839,6 +842,7 @@ namespace NiceHashMiner.Forms
                     MessageBoxButtons.OK);
                 return;
             }
+
             var url = Links.NhmProfitCheck + _selectedComputeDevice.Name;
             foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettingsFastest())
             {
@@ -847,6 +851,7 @@ namespace NiceHashMiner.Forms
                            .GetFormatedSpeed(algorithm.BenchmarkSpeed, algorithm.NiceHashID)
                            .ToString("F2", CultureInfo.InvariantCulture);
             }
+
             url += "&nhmver=" + Application.ProductVersion; // Add version info
             url += "&cost=1&power=1"; // Set default power and cost to 1
             System.Diagnostics.Process.Start(url);
@@ -870,12 +875,14 @@ namespace NiceHashMiner.Forms
                     }
                 }
             }
+
             foreach (var algorithm in total)
             {
                 var id = (int) algorithm.Key;
                 url += "&speed" + id + "=" + ProfitabilityCalculator.GetFormatedSpeed(algorithm.Value, algorithm.Key)
                            .ToString("F2", CultureInfo.InvariantCulture);
             }
+
             url += "&nhmver=" + Application.ProductVersion; // Add version info
             url += "&cost=1&power=1"; // Set default power and cost to 1
             System.Diagnostics.Process.Start(url);

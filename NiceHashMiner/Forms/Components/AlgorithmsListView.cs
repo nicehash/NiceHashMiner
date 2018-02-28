@@ -11,10 +11,10 @@ namespace NiceHashMiner.Forms.Components
     {
         private const int ENABLED = 0;
         private const int ALGORITHM = 1;
-        private const int SPEED     = 2;
-        private const int SECSPEED  = 3;
-        private const int RATIO     = 4;
-        private const int RATE      = 5;
+        private const int SPEED = 2;
+        private const int SECSPEED = 3;
+        private const int RATIO = 4;
+        private const int RATE = 5;
 
         public interface IAlgorithmsListView
         {
@@ -103,20 +103,20 @@ namespace NiceHashMiner.Forms.Components
             _computeDevice = computeDevice;
             listViewAlgorithms.BeginUpdate();
             listViewAlgorithms.Items.Clear();
-            foreach (var alg in computeDevice.GetAlgorithmSettings()) 
+            foreach (var alg in computeDevice.GetAlgorithmSettings())
             {
                 var lvi = new ListViewItem();
 
                 var name = "";
                 var secondarySpeed = "";
                 var payingRatio = "";
-                if (alg is DualAlgorithm dualAlg) 
+                if (alg is DualAlgorithm dualAlg)
                 {
                     name = "  + " + dualAlg.SecondaryAlgorithmName;
                     secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
                     payingRatio = dualAlg.SecondaryCurPayingRatio;
-                } 
-                else 
+                }
+                else
                 {
                     name = String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName);
                     payingRatio = alg.CurPayingRatio;
@@ -133,6 +133,7 @@ namespace NiceHashMiner.Forms.Components
                 lvi.Checked = alg.Enabled;
                 listViewAlgorithms.Items.Add(lvi);
             }
+
             listViewAlgorithms.EndUpdate();
             Enabled = isEnabled;
         }
@@ -149,6 +150,7 @@ namespace NiceHashMiner.Forms.Components
                         lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
                     _listItemCheckColorSetter.LviSetColor(lvi);
                 }
+
                 Enabled = isEnabled;
             }
         }
@@ -167,10 +169,12 @@ namespace NiceHashMiner.Forms.Components
                 e.Item.Checked = !e.Item.Checked;
                 return;
             }
+
             if (e.Item.Tag is Algorithm algo)
             {
                 algo.Enabled = e.Item.Checked;
             }
+
             ComunicationInterface?.HandleCheck(e.Item);
             var lvi = e.Item;
             _listItemCheckColorSetter.LviSetColor(lvi);
@@ -268,24 +272,24 @@ namespace NiceHashMiner.Forms.Components
                 }
                 // open dcri
                 {
-                    var dcriMenu = new ToolStripMenuItem 
+                    var dcriMenu = new ToolStripMenuItem
                     {
                         Text = International.GetText("Form_DcriValues_Title")
                     };
 
                     if (listViewAlgorithms.SelectedItems.Count > 0
-                        && listViewAlgorithms.SelectedItems[0].Tag is DualAlgorithm dualAlg) 
+                        && listViewAlgorithms.SelectedItems[0].Tag is DualAlgorithm dualAlg)
                     {
                         dcriMenu.Enabled = true;
 
-                        var openDcri = new ToolStripMenuItem 
+                        var openDcri = new ToolStripMenuItem
                         {
                             Text = International.GetText("AlgorithmsListView_ContextMenu_OpenDcri")
                         };
                         openDcri.Click += toolStripMenuItemOpenDcri_Click;
                         dcriMenu.DropDownItems.Add(openDcri);
 
-                        var tuningEnabled = new ToolStripMenuItem 
+                        var tuningEnabled = new ToolStripMenuItem
                         {
                             Text = International.GetText("Form_DcriValues_TuningEnabled"),
                             CheckOnClick = true,
@@ -293,8 +297,8 @@ namespace NiceHashMiner.Forms.Components
                         };
                         tuningEnabled.CheckedChanged += toolStripMenuItemTuningEnabled_Checked;
                         dcriMenu.DropDownItems.Add(tuningEnabled);
-                    } 
-                    else 
+                    }
+                    else
                     {
                         dcriMenu.Enabled = false;
                     }
@@ -330,13 +334,14 @@ namespace NiceHashMiner.Forms.Components
                     if (lvi.Tag is Algorithm algorithm)
                     {
                         algorithm.BenchmarkSpeed = 0;
-                        if (algorithm is DualAlgorithm dualAlgo) 
+                        if (algorithm is DualAlgorithm dualAlgo)
                         {
                             dualAlgo.SecondaryBenchmarkSpeed = 0;
                             dualAlgo.IntensitySpeeds = new Dictionary<int, double>();
                             dualAlgo.SecondaryIntensitySpeeds = new Dictionary<int, double>();
                             dualAlgo.IntensityUpToDate = false;
                         }
+
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         // update benchmark status data
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
@@ -368,11 +373,11 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private void toolStripMenuItemOpenDcri_Click(object sender, EventArgs e) 
+        private void toolStripMenuItemOpenDcri_Click(object sender, EventArgs e)
         {
-            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) 
+            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
             {
-                if (lvi.Tag is DualAlgorithm algo) 
+                if (lvi.Tag is DualAlgorithm algo)
                 {
                     var dcriValues = new FormDcriValues(algo);
                     dcriValues.ShowDialog();
@@ -395,13 +400,14 @@ namespace NiceHashMiner.Forms.Components
                 }
             }
         }
-        private void toolStripMenuItemTuningEnabled_Checked(object sender, EventArgs e) 
+
+        private void toolStripMenuItemTuningEnabled_Checked(object sender, EventArgs e)
         {
-            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems) 
+            foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
             {
-                if (lvi.Tag is DualAlgorithm algo) 
+                if (lvi.Tag is DualAlgorithm algo)
                 {
-                    algo.TuningEnabled = ((ToolStripMenuItem)sender).Checked;
+                    algo.TuningEnabled = ((ToolStripMenuItem) sender).Checked;
                     RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                 }
             }

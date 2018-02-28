@@ -2,7 +2,6 @@
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -15,16 +14,22 @@ namespace NiceHashMiner.Devices
         public readonly int ID;
 
         public int Index { get; protected set; } // For socket control, unique
+
         // to identify equality;
         public readonly string Name; // { get; set; }
+
         // name count is the short name for displaying in moning groups
         public readonly string NameCount;
         public bool Enabled;
+
         public readonly DeviceGroupType DeviceGroupType;
+
         // CPU, NVIDIA, AMD
         public readonly DeviceType DeviceType;
+
         // UUID now used for saving
         public string Uuid { get; protected set; }
+
         // used for Claymore indexing
         public int BusID { get; protected set; } = -1;
         public int IDByBus = -1;
@@ -158,11 +163,12 @@ namespace NiceHashMiner.Devices
         {
             return string.Format(International.GetText("ComputeDevice_Full_Device_Name"), NameCount, Name);
         }
-        
-        public Algorithm GetAlgorithm(Algorithm modelAlgo) 
+
+        public Algorithm GetAlgorithm(Algorithm modelAlgo)
         {
             return GetAlgorithm(modelAlgo.MinerBaseType, modelAlgo.NiceHashID, modelAlgo.SecondaryNiceHashID);
         }
+
         public Algorithm GetAlgorithm(MinerBaseType minerBaseType, AlgorithmType algorithmType,
             AlgorithmType secondaryAlgorithmType)
         {
@@ -180,17 +186,17 @@ namespace NiceHashMiner.Devices
         //    return null;
         //}
 
-        public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev) 
+        public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)
         {
-            foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings) 
+            foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings)
             {
                 var setAlgo = GetAlgorithm(copyFromAlgo);
-                if (setAlgo != null) 
+                if (setAlgo != null)
                 {
                     setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
                     setAlgo.ExtraLaunchParameters = copyFromAlgo.ExtraLaunchParameters;
                     setAlgo.LessThreads = copyFromAlgo.LessThreads;
-                    if (setAlgo is DualAlgorithm dualSA && copyFromAlgo is DualAlgorithm dualCFA) 
+                    if (setAlgo is DualAlgorithm dualSA && copyFromAlgo is DualAlgorithm dualCFA)
                     {
                         dualSA.SecondaryBenchmarkSpeed = dualCFA.SecondaryBenchmarkSpeed;
                     }
@@ -198,11 +204,11 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public void CopyTuningSettingsFrom(ComputeDevice copyTuningCDev) 
+        public void CopyTuningSettingsFrom(ComputeDevice copyTuningCDev)
         {
-            foreach (var copyFromAlgo in copyTuningCDev.AlgorithmSettings.OfType<DualAlgorithm>()) 
+            foreach (var copyFromAlgo in copyTuningCDev.AlgorithmSettings.OfType<DualAlgorithm>())
             {
-                if (GetAlgorithm(copyFromAlgo) is DualAlgorithm setAlgo) 
+                if (GetAlgorithm(copyFromAlgo) is DualAlgorithm setAlgo)
                 {
                     setAlgo.IntensitySpeeds = copyFromAlgo.IntensitySpeeds;
                     setAlgo.SecondaryIntensitySpeeds = copyFromAlgo.SecondaryIntensitySpeeds;
@@ -241,11 +247,15 @@ namespace NiceHashMiner.Devices
                         setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
                         setAlgo.Enabled = conf.Enabled;
                         setAlgo.LessThreads = conf.LessThreads;
-                        if (setAlgo is DualAlgorithm dualSA) {
+                        if (setAlgo is DualAlgorithm dualSA)
+                        {
                             dualSA.SecondaryBenchmarkSpeed = conf.SecondaryBenchmarkSpeed;
-                            if (config.DualAlgorithmSettings != null) {
-                                var dualConf = config.DualAlgorithmSettings.Find(a => a.SecondaryNiceHashID == dualSA.SecondaryNiceHashID);
-                                if (dualConf != null) {
+                            if (config.DualAlgorithmSettings != null)
+                            {
+                                var dualConf = config.DualAlgorithmSettings.Find(a =>
+                                    a.SecondaryNiceHashID == dualSA.SecondaryNiceHashID);
+                                if (dualConf != null)
+                                {
                                     dualConf.FixSettingsBounds();
                                     dualSA.IntensitySpeeds = dualConf.IntensitySpeeds;
                                     dualSA.SecondaryIntensitySpeeds = dualConf.SecondaryIntensitySpeeds;
@@ -297,7 +307,7 @@ namespace NiceHashMiner.Devices
                 };
                 // insert
                 ret.AlgorithmSettings.Add(conf);
-                if (algo is DualAlgorithm dualAlgo) 
+                if (algo is DualAlgorithm dualAlgo)
                 {
                     conf.SecondaryNiceHashID = dualAlgo.SecondaryNiceHashID;
                     conf.SecondaryBenchmarkSpeed = dualAlgo.SecondaryBenchmarkSpeed;
@@ -317,6 +327,7 @@ namespace NiceHashMiner.Devices
                     ret.DualAlgorithmSettings.Add(dualConf);
                 }
             }
+
             return ret;
         }
 
@@ -341,9 +352,11 @@ namespace NiceHashMiner.Devices
             }
 
             // sort by algo
-            retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0 ? 
-                (a_1.NiceHashID - a_2.NiceHashID) : ((a_1.MinerBaseType - a_2.MinerBaseType) != 0 ?
-                (a_1.MinerBaseType - a_2.MinerBaseType) : (a_1.SecondaryNiceHashID - a_2.SecondaryNiceHashID)));
+            retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0
+                ? (a_1.NiceHashID - a_2.NiceHashID)
+                : ((a_1.MinerBaseType - a_2.MinerBaseType) != 0
+                    ? (a_1.MinerBaseType - a_2.MinerBaseType)
+                    : (a_1.SecondaryNiceHashID - a_2.SecondaryNiceHashID)));
 
             return retAlgos;
         }
@@ -378,6 +391,7 @@ namespace NiceHashMiner.Devices
             {
                 return AlgorithmSettings;
             }
+
             var thirdPartyMiners = new List<MinerBaseType>
             {
                 MinerBaseType.Claymore,
@@ -403,6 +417,7 @@ namespace NiceHashMiner.Devices
             {
                 hash.Append(b.ToString("x2"));
             }
+
             // GEN indicates the UUID has been generated and cannot be presumed to be immutable
             return "GEN-" + hash;
         }
