@@ -354,7 +354,7 @@
     "AlgorithmsListView_ContextMenu_DisableAll": "Disattiva tutti gli algoritmi",
     "AlgorithmsListView_ContextMenu_EnableAll": "Attiva tutti gli algoritmi",
     "AlgorithmsListView_ContextMenu_ClearItem": "Cancella la velocità dell'algoritmo",
-    "AlgorithmsListView_ContextMenu_TestItem": "Abilita questo solo",
+    "AlgorithmsListView_ContextMenu_TestItem": "Abilita solo questo",
     "AlgorithmsListView_ContextMenu_EnableBenched": "Abilita solo con benchmark",
     "Form_Main_No_Device_Enabled_For_Mining": "Attenzione, nessun dispositivo è stato selezionato per il mining, abilita almeno 1 dispositivo per iniziare a minare.",
     "Form_Main_3rdParty_Title": "Avvertimento sull'uso di software di terze parti",
