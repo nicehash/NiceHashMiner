@@ -295,6 +295,7 @@ namespace NiceHashMiner.Forms.Components
                         {
                             // If it has zero speed, set to 1 so it can be tested
                             algorithm.BenchmarkSpeed = 1;
+                            RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                             ComunicationInterface?.ChangeSpeed(lvi);
                         }
                     }
@@ -304,14 +305,11 @@ namespace NiceHashMiner.Forms.Components
 
         private void ToolStripMenuItemEnableBenched_Click(object sender, EventArgs e)
         {
-            if (_computeDevice != null)
+            foreach (ListViewItem lvi in listViewAlgorithms.Items)
             {
-                foreach (ListViewItem lvi in listViewAlgorithms.Items)
+                if (lvi.Tag is Algorithm algorithm && algorithm.BenchmarkSpeed > 0)
                 {
-                    if (lvi.Tag is Algorithm algorithm && algorithm.BenchmarkSpeed > 0)
-                    {
-                        lvi.Checked = true;
-                    }
+                    lvi.Checked = true;
                 }
             }
         }
