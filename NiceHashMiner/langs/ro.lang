@@ -354,6 +354,8 @@
     "AlgorithmsListView_ContextMenu_DisableAll": "Dezactivează Toți Algoritmii",
     "AlgorithmsListView_ContextMenu_EnableAll": "Activează Toți Algoritmii",
     "AlgorithmsListView_ContextMenu_ClearItem": "Curăță Viteză Algoritm",
+    "AlgorithmsListView_ContextMenu_TestItem": "Activați numai acest lucru",
+    "AlgorithmsListView_ContextMenu_EnableBenched": "Activează doar Benchmarked",
     "Form_Main_No_Device_Enabled_For_Mining": "Nici un dispozitiv activ pentru minare, vă rugăm activați cel puțin un dispozitiv pentru a începe minarea.",
     "Form_Main_3rdParty_Title": "Declinare responsabilitate la utilizarea programelor 3rd party",
     "Form_Main_3rdParty_Text": "Am integrat programe de minare 3rd party care ar trebui să crească viteza de minare și să vă dea o experiență de minare mai stabilă - acest lucru poate duce la mai multe câștiguri pe o perioadă mai scurtă de timp chiar și după ce taxa dezvoltatorului este scăzută. Totuși, deoarece acestea sunt programe 3rd party care nu sunt open-source, nu avem nici o posibilitate de a le inspecta. NiceHash nu poate garanta că folosirea acestor programe și nu își asumă nici o responsabilitate pentru orice daune cauzate, breșe de securitate, pierderi de date și fonduri, erori de sistem sau hardware, și orice alte probleme. Acceptând această declinare de responsabilitate vă asumați întreaga răspundere pentru utilizarea acestori mineri fără open-source așa cum sunt.",

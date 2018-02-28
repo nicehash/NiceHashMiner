@@ -354,6 +354,8 @@
     "AlgorithmsListView_ContextMenu_DisableAll": "禁用所有算法",
     "AlgorithmsListView_ContextMenu_EnableAll": "启用所有算法",
     "AlgorithmsListView_ContextMenu_ClearItem": "清除测得速率",
+    "AlgorithmsListView_ContextMenu_TestItem": "仅启用此功能",
+    "AlgorithmsListView_ContextMenu_EnableBenched": "仅启用基准测试",
     "Form_Main_No_Device_Enabled_For_Mining": "警告！没有挖矿设备被启用。请至少启用一台设备进行挖矿。",
     "Form_Main_3rdParty_Title": "第三方挖矿程序免责声明",
     "Form_Main_3rdParty_Text": "我们集成立了第三方挖矿程序。这些程序将会加快部分算法的运算速度并给您更为稳定的挖矿体验。即便考虑到这些程序会索取小额的第三方使用费，它们在短时间内仍将为您带来更高的收益。然而我们需要指出这些程序是闭源的第三方软件，因此我们无法检视它们的源码。NiceHash无法为这些软件提供认证，也无法对任何因使用第三方软件而造成的数据或财产损失，信息安全隐患，软件或硬件故障，以及任何其他损害或问题承担责任。如果您同意此免责条款，您将对由因第三方闭源软件的使用而所致的一切后果承担责任。",

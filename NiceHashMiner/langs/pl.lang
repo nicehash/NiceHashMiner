@@ -350,6 +350,8 @@
     "AlgorithmsListView_ContextMenu_DisableAll": "Wyłącz wszystkie algorytmy",
     "AlgorithmsListView_ContextMenu_EnableAll": "Włącz wszystkie algorytmy",
     "AlgorithmsListView_ContextMenu_ClearItem": "Wyczyść pomierzone tempa",
+    "AlgorithmsListView_ContextMenu_TestItem": "Włącz tylko to",
+    "AlgorithmsListView_ContextMenu_EnableBenched": "Włącz tylko test porównawczy",
     "Form_Main_No_Device_Enabled_For_Mining": "Uwaga! Brak zaznaczonych urządzeń, zaznacz co najmniej jedno aby było co kopać.",
     "Form_Main_3rdParty_Title": "Zgoda na używanie oprogramowania zewnętrznego",
     "Form_Main_3rdParty_Text": "Zintegrowaliśmy w programie oprogramowanie zewnętrzne, które może przyspieszyć kopanie i uczynić je stabilniejszym - potencjalnie może to skutkować większymi zarobkami w jednostce czasu nawet kiedy producent tego oprogramowania pobiera podatek. Aczkolwiek jest to oprogramowanie zamknięte, nie mamy możliwości jego inspekcji. NiceHash nie chce brać odpowiedzialności za jakiekolwiek szkody wyrządzone przez to oprogramowanie, włamania, utratę danych lub pieniędzy, bład systemu lub uszkodzenie sprzętu, ani inne szkody. Zgadzając się na używanie tego oprogramowania bierzesz na siebie tę odpowiedzialność.",
