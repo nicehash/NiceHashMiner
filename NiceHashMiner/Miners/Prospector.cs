@@ -426,7 +426,7 @@ namespace NiceHashMiner.Miners
                 }
 
                 var dev = MiningSetup.MiningPairs[0].Device;
-                var devString = deviceIDString(dev.ID, dev.DeviceType);
+                var devString = DeviceIDString(dev.ID, dev.DeviceType);
                 var hashrates = _database.QuerySpeedsForSessionDev(session.id, devString);
 
                 double speed = 0;
@@ -451,8 +451,8 @@ namespace NiceHashMiner.Miners
         {
             CheckOutdata(outdata);
         }
-
-        protected override bool BenchmarkParseLine(string outdata)
+        
+        protected override bool BenchmarkParseLine(string outdata) 
         {
             Helpers.ConsolePrint("BENCHMARK", outdata);
             return false;
