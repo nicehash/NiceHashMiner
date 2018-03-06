@@ -15,6 +15,8 @@ namespace NiceHashMiner.Switching
 
         // Global list of SMA data, should be accessed with a lock since callbacks/timers update it
         private static readonly Dictionary<AlgorithmType, NiceHashSma> _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
+        // Global list of stable algorithms, should be accessed with a lock
+        private static readonly HashSet<AlgorithmType> _stableAlgorithms = new HashSet<AlgorithmType>();
 
         public static void Initialize()
         {
@@ -42,7 +44,7 @@ namespace NiceHashMiner.Switching
             Initialized = true;
         }
 
-        public static void UpdateSmaPaying(Dictionary<AlgorithmType, NiceHashSma> newSma)
+        public static void UpdateSmaPaying(Dictionary<AlgorithmType, double> newSma)
         {
             lock (_currentSma)
             {
@@ -50,7 +52,7 @@ namespace NiceHashMiner.Switching
                 {
                     if (_currentSma.ContainsKey(algo))
                     {
-                        _currentSma[algo].paying = newSma[algo].paying;
+                        _currentSma[algo].paying = newSma[algo];
                     }
                 }
             }
@@ -58,17 +60,15 @@ namespace NiceHashMiner.Switching
             HasData = true;
         }
 
-        public static void UpdateSmaPaying(AlgorithmType algo, double paying)
+        public static void UpdateStableAlgorithms(IEnumerable<AlgorithmType> algorithms)
         {
-            lock (_currentSma)
+            lock (_stableAlgorithms)
             {
-                if (_currentSma.ContainsKey(algo))
+                foreach (var algo in algorithms)
                 {
-                    _currentSma[algo].paying = paying;
+                    _stableAlgorithms.Add(algo);
                 }
             }
-
-            HasData = true;
         }
 
         public static bool TryGetSma(AlgorithmType algo, out NiceHashSma sma)

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -153,7 +154,8 @@ namespace NiceHashMiner
                         dynamic message = JsonConvert.DeserializeObject(e.Data);
                         if (message.method == "sma")
                         {
-                            SetAlgorithmRates(message.data);
+                            var stable = JsonConvert.DeserializeObject(message.stable.Value);
+                            SetAlgorithmRates(message.data, stable);
                         }
                         else if (message.method == "balance")
                         {
@@ -288,15 +290,21 @@ namespace NiceHashMiner
 
         #region Incoming socket calls
 
-        private static void SetAlgorithmRates(JArray data)
+        private static void SetAlgorithmRates(JArray data, JArray stable)
         {
             try
             {
+                var payingDict = new Dictionary<AlgorithmType, double>();
                 foreach (var algo in data)
                 {
                     var algoKey = (AlgorithmType) algo[0].Value<int>();
-                    NHSmaData.UpdateSmaPaying(algoKey, algo[1].Value<double>());
+                    payingDict[algoKey] = algo[1].Value<double>();
                 }
+                NHSmaData.UpdateSmaPaying(payingDict);
+                
+                var stables = stable.Select(algo => (AlgorithmType) algo.Value<int>());
+                NHSmaData.UpdateStableAlgorithms(stables);
+
                 OnSmaUpdate.Emit(null, EventArgs.Empty);
             }
             catch (Exception e)
