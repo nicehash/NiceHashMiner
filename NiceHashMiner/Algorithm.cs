@@ -1,5 +1,6 @@
 ﻿using NiceHashMiner.Enums;
 using System;
+using NiceHashMiner.Switching;
 
 namespace NiceHashMiner
 {
@@ -70,12 +71,12 @@ namespace NiceHashMiner
             get
             {
                 var ratio = International.GetText("BenchmarkRatioRateN_A");
-                if (Globals.NiceHashData != null)
+                if (NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
-                    ratio = Globals.NiceHashData[NiceHashID].paying.ToString("F8");
-                    if (IsDual() && Globals.NiceHashData.ContainsKey(SecondaryNiceHashID))
+                    ratio = paying.ToString("F8");
+                    if (IsDual() && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secondaryPaying))
                     {
-                        ratio += "/" + Globals.NiceHashData[SecondaryNiceHashID].paying.ToString("F8");
+                        ratio += "/" + secondaryPaying.ToString("F8");
                     }
                 }
                 return ratio;
@@ -88,18 +89,15 @@ namespace NiceHashMiner
             {
                 var rate = International.GetText("BenchmarkRatioRateN_A");
                 var payingRate = 0.0d;
-                if (Globals.NiceHashData != null)
+                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
-                    if (BenchmarkSpeed > 0)
-                    {
-                        payingRate += BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
-                    }
-                    if (SecondaryBenchmarkSpeed > 0 && IsDual())
-                    {
-                        payingRate += SecondaryBenchmarkSpeed * Globals.NiceHashData[SecondaryNiceHashID].paying * 0.000000001;
-                    }
-                    rate = payingRate.ToString("F8");
+                    payingRate += BenchmarkSpeed * paying * 0.000000001;
                 }
+                if (SecondaryBenchmarkSpeed > 0 && IsDual() && NHSmaData.TryGetPaying(NiceHashID, out var secondaryPaying))
+                {
+                    payingRate += SecondaryBenchmarkSpeed * secondaryPaying * 0.000000001;
+                }
+                rate = payingRate.ToString("F8");
                 return rate;
             }
         }

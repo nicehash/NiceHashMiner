@@ -11,6 +11,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NiceHashMiner.Switching;
 using WebSocketSharp;
 
 
@@ -58,9 +59,7 @@ namespace NiceHashMiner
 
         private const int DeviceUpdateLaunchDelay = 20 * 1000;
         private const int DeviceUpdateInterval = 60 * 1000;
-
-        public static Dictionary<AlgorithmType, NiceHashSma> AlgorithmRates { get; private set; }
-        private static NiceHashData _niceHashData;
+        
         public static double Balance { get; private set; }
         public static string Version { get; private set; }
         public static bool IsAlive => NiceHashConnection.IsAlive;
@@ -121,10 +120,9 @@ namespace NiceHashMiner
             {
                 try
                 {
-                    if (AlgorithmRates == null || _niceHashData == null)
+                    if (!NHSmaData.Initialized)
                     {
-                        _niceHashData = new NiceHashData();
-                        AlgorithmRates = _niceHashData.NormalizedSma();
+                        NHSmaData.Initialize();
                     }
                     //send login
                     var version = "NHML/" + Application.ProductVersion;
@@ -297,9 +295,8 @@ namespace NiceHashMiner
                 foreach (var algo in data)
                 {
                     var algoKey = (AlgorithmType) algo[0].Value<int>();
-                    _niceHashData.AppendPayingForAlgo(algoKey, algo[1].Value<double>());
+                    NHSmaData.UpdateSmaPaying(algoKey, algo[1].Value<double>());
                 }
-                AlgorithmRates = _niceHashData.NormalizedSma();
                 OnSmaUpdate.Emit(null, EventArgs.Empty);
             }
             catch (Exception e)

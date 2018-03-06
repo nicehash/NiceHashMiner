@@ -13,6 +13,7 @@ using System.Globalization;
 using System.Linq;
 using System.Management;
 using System.Windows.Forms;
+using NiceHashMiner.Switching;
 using SystemTimer = System.Timers.Timer;
 using Timer = System.Windows.Forms.Timer;
 
@@ -492,13 +493,13 @@ namespace NiceHashMiner
             {
                 // Don't bother checking for new profits unless SMA has changed
                 _isSmaUpdated = false;
-                await MinersManager.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
+                await MinersManager.SwichMostProfitableGroupUpMethod();
             }
         }
 
         private static async void MinerStatsCheck_Tick(object sender, EventArgs e)
         {
-            await MinersManager.MinerStatsCheck(Globals.NiceHashData);
+            await MinersManager.MinerStatsCheck();
         }
 
         private static void ComputeDevicesCheckTimer_Tick(object sender, EventArgs e)
@@ -709,10 +710,6 @@ namespace NiceHashMiner
         {
             Helpers.ConsolePrint("NICEHASH", "SMA Update");
             _isSmaUpdated = true;
-            if (NiceHashStats.AlgorithmRates != null)
-            {
-                Globals.NiceHashData = NiceHashStats.AlgorithmRates;
-            }
         }
 
         private void VersionBurnCallback(object sender, SocketEventArgs e)
@@ -730,7 +727,7 @@ namespace NiceHashMiner
 
         private void ConnectionLostCallback(object sender, EventArgs e)
         {
-            if (Globals.NiceHashData == null && ConfigManager.GeneralConfig.ShowInternetConnectionWarning &&
+            if (!NHSmaData.HasData && ConfigManager.GeneralConfig.ShowInternetConnectionWarning &&
                 _showWarningNiceHashData)
             {
                 _showWarningNiceHashData = false;
@@ -1020,7 +1017,7 @@ namespace NiceHashMiner
             }
             else if (!VerifyMiningAddress(true)) return StartMiningReturnType.IgnoreMsg;
 
-            if (Globals.NiceHashData == null)
+            if (!NHSmaData.HasData)
             {
                 if (showWarnings)
                 {

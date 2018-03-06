@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using NiceHashMiner.Switching;
 using Timer = System.Timers.Timer;
 
 namespace NiceHashMiner.Miners
@@ -281,7 +282,7 @@ namespace NiceHashMiner.Miners
             return shouldMine;
         }
 
-        public async Task SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSma> niceHashData, bool log = true)
+        public async Task SwichMostProfitableGroupUpMethod(bool log = true)
         {
 #if (SWITCH_TESTING)
             MiningDevice.SetNextTest();
@@ -292,7 +293,7 @@ namespace NiceHashMiner.Miners
             foreach (var device in _miningDevices)
             {
                 // calculate profits
-                device.CalculateProfits(niceHashData);
+                device.CalculateProfits();
                 // check if device has profitable algo
                 if (device.HasProfitableAlgo())
                 {
@@ -514,7 +515,7 @@ namespace NiceHashMiner.Miners
 
             // stats quick fix code
             //if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
-            await MinerStatsCheck(niceHashData);
+            await MinerStatsCheck();
             //}
         }
 
@@ -527,7 +528,7 @@ namespace NiceHashMiner.Miners
             return AlgorithmType.NONE;
         }
 
-        public async Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSma> niceHashData)
+        public async Task MinerStatsCheck()
         {
             var currentProfit = 0.0d;
             _mainFormRatesComunication.ClearRates(_runningGroupMiners.Count);
@@ -549,12 +550,12 @@ namespace NiceHashMiner.Miners
                         Helpers.ConsolePrint(m.MinerTag(), "GetSummary returned null..");
                     }
                     // set rates
-                    if (niceHashData != null && ad != null)
+                    if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     {
-                        groupMiners.CurrentRate = niceHashData[ad.AlgorithmID].paying * ad.Speed * 0.000000001;
-                        if (niceHashData.ContainsKey(ad.SecondaryAlgorithmID))
+                        groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
+                        if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
                         {
-                            groupMiners.CurrentRate += niceHashData[ad.SecondaryAlgorithmID].paying * ad.SecondarySpeed * 0.000000001;
+                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
                         }
                     }
                     else

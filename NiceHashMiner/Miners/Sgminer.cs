@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using NiceHashMiner.Switching;
 
 namespace NiceHashMiner.Miners
 {
@@ -190,7 +191,7 @@ namespace NiceHashMiner.Miners
             // sgminer extra settings
             var nhDataIndex = BenchmarkAlgorithm.NiceHashID;
 
-            if (Globals.NiceHashData == null)
+            if (!NHSmaData.HasData)
             {
                 Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no internet " +
                                                   "connection. Sgminer needs internet connection to do benchmarking.");
@@ -198,7 +199,8 @@ namespace NiceHashMiner.Miners
                 throw new Exception("No internet connection");
             }
 
-            if (Globals.NiceHashData[nhDataIndex].paying == 0)
+            NHSmaData.TryGetPaying(nhDataIndex, out var paying);
+            if (paying == 0)
             {
                 Helpers.ConsolePrint("BENCHMARK", "Skipping sgminer benchmark because there is no work on Nicehash.com " +
                                                   "[algo: " + BenchmarkAlgorithm.AlgorithmName + "(" + nhDataIndex + ")]");

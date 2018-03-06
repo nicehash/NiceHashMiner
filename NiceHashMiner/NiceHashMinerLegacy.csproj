@@ -112,6 +112,7 @@
     <Compile Include="Miners\XmrStak\XmrStakConfig.cs" />
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="NiceHashStats.cs" />
+    <Compile Include="Switching\Models.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
@@ -289,7 +290,7 @@
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="PInvoke\PInvokeHelpers.cs" />
-    <Compile Include="Utils\NiceHashSMA.cs" />
+    <Compile Include="Switching\NHSmaData.cs" />
     <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

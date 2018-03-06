@@ -2,6 +2,7 @@
 using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
+using NiceHashMiner.Switching;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -145,7 +146,7 @@ namespace NiceHashMiner.Miners.Grouping
             MostProfitableMinerBaseType = MinerBaseType.NONE;
         }
 
-        public void CalculateProfits(Dictionary<AlgorithmType, NiceHashSma> niceHashData)
+        public void CalculateProfits()
         {
             // save last state
             PrevProfitableAlgorithmType = MostProfitableAlgorithmType;
@@ -158,13 +159,13 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 var key = algo.NiceHashID;
                 var secondaryKey = algo.SecondaryNiceHashID;
-                if (niceHashData.ContainsKey(key))
+                if (NHSmaData.TryGetPayingWithTick("", key, out var paying))
                 {
-                    algo.CurNhmSmaDataVal = niceHashData[key].paying;
+                    algo.CurNhmSmaDataVal = paying;
                     algo.CurrentProfit = algo.CurNhmSmaDataVal * algo.AvaragedSpeed * 0.000000001;
-                    if (niceHashData.ContainsKey(secondaryKey))
+                    if (NHSmaData.TryGetPayingWithTick("", secondaryKey, out var secPaying))
                     {
-                        algo.SecondaryCurNhmSmaDataVal = niceHashData[secondaryKey].paying;
+                        algo.SecondaryCurNhmSmaDataVal = secPaying;
                         algo.CurrentProfit +=
                             algo.SecondaryCurNhmSmaDataVal * algo.SecondaryAveragedSpeed * 0.000000001;
                     }
