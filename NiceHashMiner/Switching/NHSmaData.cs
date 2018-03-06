@@ -1,13 +1,15 @@
-﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Enums;
+﻿using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace NiceHashMiner.Switching
 {
     public static class NHSmaData
     {
+        private const string Tag = "NHSMAData";
+
         public static bool Initialized { get; private set; }
         public static bool HasData { get; private set; }
 
@@ -44,6 +46,8 @@ namespace NiceHashMiner.Switching
             Initialized = true;
         }
 
+        #region Update Methods
+
         public static void UpdateSmaPaying(Dictionary<AlgorithmType, double> newSma)
         {
             lock (_currentSma)
@@ -62,14 +66,36 @@ namespace NiceHashMiner.Switching
 
         public static void UpdateStableAlgorithms(IEnumerable<AlgorithmType> algorithms)
         {
+            var sb = new StringBuilder();
+            sb.AppendLine("Updating stable algorithms");
+
             lock (_stableAlgorithms)
             {
-                foreach (var algo in algorithms)
+                var algosEnumd = algorithms as AlgorithmType[] ?? algorithms.ToArray();
+                foreach (var algo in algosEnumd)
                 {
-                    _stableAlgorithms.Add(algo);
+                    if (_stableAlgorithms.Add(algo))
+                    {
+                        sb.AppendLine($"\tADDED {algo}");
+                    }
                 }
+
+                _stableAlgorithms.RemoveWhere(algo =>
+                {
+                    if (algosEnumd.Contains(algo)) return false;
+
+                    sb.AppendLine($"\tREMOVED {algo}");
+                    return true;
+
+                });
             }
+
+            Helpers.ConsolePrint(Tag, sb.ToString());
         }
+
+        #endregion
+
+        # region Get Methods
 
         public static bool TryGetSma(AlgorithmType algo, out NiceHashSma sma)
         {
@@ -103,6 +129,16 @@ namespace NiceHashMiner.Switching
             // TODO
             return TryGetPaying(algo, out paying);
         }
+
+        public static bool IsAlgorithmStable(AlgorithmType algo)
+        {
+            lock (_stableAlgorithms)
+            {
+                return _stableAlgorithms.Contains(algo);
+            }
+        }
+
+        #endregion
 
         #region Obsolete
 

@@ -154,8 +154,16 @@ namespace NiceHashMiner
                         dynamic message = JsonConvert.DeserializeObject(e.Data);
                         if (message.method == "sma")
                         {
-                            var stable = JsonConvert.DeserializeObject(message.stable.Value);
-                            SetAlgorithmRates(message.data, stable);
+                            // Try in case stable is not sent, we still get updated paying rates
+                            try
+                            {
+                                var stable = JsonConvert.DeserializeObject(message.stable.Value);
+                                SetStableAlgorithms(stable);
+                            }
+                            catch
+                            {
+                                SetAlgorithmRates(message.data);
+                            }
                         }
                         else if (message.method == "balance")
                         {
@@ -290,27 +298,34 @@ namespace NiceHashMiner
 
         #region Incoming socket calls
 
-        private static void SetAlgorithmRates(JArray data, JArray stable)
+        private static void SetAlgorithmRates(JArray data)
         {
             try
             {
                 var payingDict = new Dictionary<AlgorithmType, double>();
-                foreach (var algo in data)
+                if (data != null)
                 {
-                    var algoKey = (AlgorithmType) algo[0].Value<int>();
-                    payingDict[algoKey] = algo[1].Value<double>();
+                    foreach (var algo in data)
+                    {
+                        var algoKey = (AlgorithmType) algo[0].Value<int>();
+                        payingDict[algoKey] = algo[1].Value<double>();
+                    }
                 }
+
                 NHSmaData.UpdateSmaPaying(payingDict);
                 
-                var stables = stable.Select(algo => (AlgorithmType) algo.Value<int>());
-                NHSmaData.UpdateStableAlgorithms(stables);
-
                 OnSmaUpdate.Emit(null, EventArgs.Empty);
             }
             catch (Exception e)
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
+        }
+
+        private static void SetStableAlgorithms(JArray stable)
+        {
+            var stables = stable.Select(algo => (AlgorithmType) algo.Value<int>());
+            NHSmaData.UpdateStableAlgorithms(stables);
         }
 
         private static void SetBalance(string balance)
