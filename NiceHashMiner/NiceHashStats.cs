@@ -121,10 +121,7 @@ namespace NiceHashMiner
             {
                 try
                 {
-                    if (!NHSmaData.Initialized)
-                    {
-                        NHSmaData.Initialize();
-                    }
+                    NHSmaData.InitializeIfNeeded();
                     //send login
                     var version = "NHML/" + Application.ProductVersion;
                     var login = new nicehash_login

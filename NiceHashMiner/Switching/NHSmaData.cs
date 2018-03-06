@@ -16,13 +16,14 @@ namespace NiceHashMiner.Switching
         // private static Dictionary<AlgorithmType, List<double>> _recentPaying;
 
         // Global list of SMA data, should be accessed with a lock since callbacks/timers update it
-        private static readonly Dictionary<AlgorithmType, NiceHashSma> _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
+        private static Dictionary<AlgorithmType, NiceHashSma> _currentSma;
         // Global list of stable algorithms, should be accessed with a lock
-        private static readonly HashSet<AlgorithmType> _stableAlgorithms = new HashSet<AlgorithmType>();
+        private static HashSet<AlgorithmType> _stableAlgorithms;
 
         public static void Initialize()
         {
-            if (Initialized) return;
+            _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
+            _stableAlgorithms = new HashSet<AlgorithmType>();
 
            // _recentPaying = new Dictionary<AlgorithmType, List<double>>();
             foreach (AlgorithmType algo in Enum.GetValues(typeof(AlgorithmType)))
@@ -44,6 +45,11 @@ namespace NiceHashMiner.Switching
             }
 
             Initialized = true;
+        }
+
+        public static void InitializeIfNeeded()
+        {
+            if (!Initialized) Initialize();
         }
 
         #region Update Methods
