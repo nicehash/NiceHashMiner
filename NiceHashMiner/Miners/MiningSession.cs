@@ -29,6 +29,8 @@ namespace NiceHashMiner.Miners
         private readonly List<MiningDevice> _miningDevices;
         private readonly IMainFormRatesComunication _mainFormRatesComunication;
 
+        private readonly AlgorithmSwitchingManager _switchingManager;
+
         // session varibles changing
         // GroupDevices hash code doesn't work correctly use string instead
         //Dictionary<GroupedDevices, GroupMiners> _groupedDevicesMiners;
@@ -77,6 +79,8 @@ namespace NiceHashMiner.Miners
             // init fixed
             _mainFormRatesComunication = mainFormRatesComunication;
             _miningLocation = miningLocation;
+
+            _switchingManager = new AlgorithmSwitchingManager();
 
             _btcAdress = btcAdress;
             _worker = worker;

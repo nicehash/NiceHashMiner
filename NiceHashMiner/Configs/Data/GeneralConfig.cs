@@ -1,6 +1,7 @@
 ﻿using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
+using NiceHashMiner.Switching;
 
 namespace NiceHashMiner.Configs.Data
 {
@@ -81,9 +82,11 @@ namespace NiceHashMiner.Configs.Data
         public int agreedWithTOS = 0;
 
         // normalization stuff
+        [Obsolete]
         public double IQROverFactor = 3.0;
-
+        [Obsolete]
         public int NormalizedProfitHistory = 15;
+        [Obsolete]
         public double IQRNormalizeFactor = 0.0;
 
         public bool CoolDownCheckEnabled = true;
@@ -93,6 +96,10 @@ namespace NiceHashMiner.Configs.Data
 
         // Overriding AMDOpenCLDeviceDetection returned Bus IDs (in case of driver error, e.g. 17.12.1)
         public string OverrideAMDBusIds = "";
+
+        public Interval SwitchSmaTimeChangeSeconds = new Interval(34, 55);
+        public Interval SwitchSmaTicksStable = new Interval(2, 3);
+        public Interval SwitchSmaTicksUnstable = new Interval(5, 13);
 
         // methods
         public void SetDefaults()
@@ -146,6 +153,9 @@ namespace NiceHashMiner.Configs.Data
             RunScriptOnCUDA_GPU_Lost = false;
             ForceSkipAMDNeoscryptLyraCheck = false;
             OverrideAMDBusIds = "";
+            SwitchSmaTimeChangeSeconds = new Interval(34, 55);
+            SwitchSmaTicksStable = new Interval(2, 3);
+            SwitchSmaTicksUnstable = new Interval(5, 13);
         }
 
         public void FixSettingBounds()
@@ -213,6 +223,10 @@ namespace NiceHashMiner.Configs.Data
             {
                 IQRNormalizeFactor = 0.0;
             }
+
+            SwitchSmaTimeChangeSeconds.FixRange();
+            SwitchSmaTicksStable.FixRange();
+            SwitchSmaTicksUnstable.FixRange();
         }
     }
 }
