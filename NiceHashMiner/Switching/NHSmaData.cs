@@ -149,6 +149,24 @@ namespace NiceHashMiner.Switching
             }
         }
 
+        public static Dictionary<AlgorithmType, double> FilteredCurrentProfits(bool stable)
+        {
+            var dict = new Dictionary<AlgorithmType, double>();
+
+            lock (_currentSma)
+            {
+                foreach (var kvp in _currentSma)
+                {
+                    if (_stableAlgorithms.Contains(kvp.Key) == stable)
+                    {
+                        dict[kvp.Key] = kvp.Value.paying;
+                    }
+                }
+            }
+
+            return dict;
+        }
+
         #endregion
 
         #region Obsolete

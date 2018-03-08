@@ -27,7 +27,7 @@ namespace NiceHashMiner
         private string _visitUrlNew = Links.VisitUrlNew;
 
         private Timer _minerStatsCheck;
-        private Timer _smaMinerCheck;
+        //private Timer _smaMinerCheck;
         private Timer _bitcoinExchangeCheck;
         private Timer _startupTimer;
         private Timer _idleCheck;
@@ -294,17 +294,17 @@ namespace NiceHashMiner
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
             _minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
 
-            _smaMinerCheck = new Timer();
-            _smaMinerCheck.Tick += SMAMinerCheck_Tick;
-            _smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
-                                      R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            if (ComputeDeviceManager.Group.ContainsAmdGpus)
-            {
-                _smaMinerCheck.Interval =
-                    (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
-                     ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
-                    R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            }
+            //_smaMinerCheck = new Timer();
+            //_smaMinerCheck.Tick += SMAMinerCheck_Tick;
+            //_smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
+            //                          R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+            //if (ComputeDeviceManager.Group.ContainsAmdGpus)
+            //{
+            //    _smaMinerCheck.Interval =
+            //        (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
+            //         ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
+            //        R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+            //}
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
@@ -475,28 +475,29 @@ namespace NiceHashMiner
             _startupTimer.Start();
         }
 
-        private async void SMAMinerCheck_Tick(object sender, EventArgs e)
-        {
-            _smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
-                                      R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            if (ComputeDeviceManager.Group.ContainsAmdGpus)
-            {
-                _smaMinerCheck.Interval =
-                    (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
-                     ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
-                    R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            }
+//        [Obsolete("Deprecated in favour of AlgorithmSwitchingManager timer")]
+//       private async void SMAMinerCheck_Tick(object sender, EventArgs e)
+//        {
+//            _smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
+//                                      R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+//            if (ComputeDeviceManager.Group.ContainsAmdGpus)
+//            {
+//                _smaMinerCheck.Interval =
+//                    (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
+//                     ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
+//                    R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+//            }
 
-#if (SWITCH_TESTING)
-            SMAMinerCheck.Interval = MiningDevice.SMAMinerCheckInterval;
-#endif
-            if (_isSmaUpdated)
-            {
-                // Don't bother checking for new profits unless SMA has changed
-                _isSmaUpdated = false;
-                await MinersManager.SwichMostProfitableGroupUpMethod();
-            }
-        }
+//#if (SWITCH_TESTING)
+//            SMAMinerCheck.Interval = MiningDevice.SMAMinerCheckInterval;
+//#endif
+//            if (_isSmaUpdated)
+//            {
+//                // Don't bother checking for new profits unless SMA has changed
+//                _isSmaUpdated = false;
+//                await MinersManager.SwichMostProfitableGroupUpMethod();
+//            }
+//        }
 
         private static async void MinerStatsCheck_Tick(object sender, EventArgs e)
         {
@@ -613,9 +614,19 @@ namespace NiceHashMiner
                 }
             }
 
-            label_NotProfitable.Visible = true;
-            label_NotProfitable.Text = msg;
-            label_NotProfitable.Invalidate();
+            if (InvokeRequired)
+            {
+                Invoke((Action) delegate
+                {
+                    ShowNotProfitable(msg);
+                });
+            }
+            else
+            {
+                label_NotProfitable.Visible = true;
+                label_NotProfitable.Text = msg;
+                label_NotProfitable.Invalidate();
+            }
         }
 
         public void HideNotProfitable()
@@ -629,8 +640,30 @@ namespace NiceHashMiner
                 }
             }
 
-            label_NotProfitable.Visible = false;
-            label_NotProfitable.Invalidate();
+            if (InvokeRequired)
+            {
+                Invoke((Action) HideNotProfitable);
+            }
+            else
+            {
+                label_NotProfitable.Visible = false;
+                label_NotProfitable.Invalidate();
+            }
+        }
+
+        public void ForceMinerStatsUpdate()
+        {
+            try
+            {
+                BeginInvoke((Action) (() =>
+                {
+                    MinerStatsCheck_Tick(null, null);
+                }));
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("NiceHash", e.ToString());
+            }
         }
 
         private void UpdateGlobalRate()
@@ -1106,8 +1139,8 @@ namespace NiceHashMiner
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
 
             _isSmaUpdated = true; // Always check profits on mining start
-            _smaMinerCheck.Interval = 100;
-            _smaMinerCheck.Start();
+            //_smaMinerCheck.Interval = 100;
+            //_smaMinerCheck.Start();
             _minerStatsCheck.Start();
 
             if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
@@ -1125,7 +1158,7 @@ namespace NiceHashMiner
         private void StopMining()
         {
             _minerStatsCheck.Stop();
-            _smaMinerCheck.Stop();
+            //_smaMinerCheck.Stop();
             _computeDevicesCheckTimer?.Stop();
 
             // Disable IFTTT notification before label call

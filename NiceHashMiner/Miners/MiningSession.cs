@@ -81,6 +81,7 @@ namespace NiceHashMiner.Miners
             _miningLocation = miningLocation;
 
             _switchingManager = new AlgorithmSwitchingManager();
+            _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
 
             _btcAdress = btcAdress;
             _worker = worker;
@@ -113,6 +114,8 @@ namespace NiceHashMiner.Miners
                 _preventSleepTimer.Start();
                 _internetCheckTimer.Start();
             }
+
+            _switchingManager.Start();
 
             _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
         }
@@ -157,6 +160,9 @@ namespace NiceHashMiner.Miners
                 _ethminerAmdPaused.End();
                 _ethminerAmdPaused = null;
             }
+
+            _switchingManager.Stop();
+
             _mainFormRatesComunication?.ClearRatesAll();
 
             // restroe/enable sleep
@@ -286,7 +292,7 @@ namespace NiceHashMiner.Miners
             return shouldMine;
         }
 
-        public async Task SwichMostProfitableGroupUpMethod(bool log = true)
+        private void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
         {
 #if (SWITCH_TESTING)
             MiningDevice.SetNextTest();
@@ -308,34 +314,31 @@ namespace NiceHashMiner.Miners
             }
 
             // print profit statuses
-            if (log)
+            var stringBuilderFull = new StringBuilder();
+            stringBuilderFull.AppendLine("Current device profits:");
+            foreach (var device in _miningDevices)
             {
-                var stringBuilderFull = new StringBuilder();
-                stringBuilderFull.AppendLine("Current device profits:");
-                foreach (var device in _miningDevices)
+                var stringBuilderDevice = new StringBuilder();
+                stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
+                foreach (var algo in device.Algorithms)
                 {
-                    var stringBuilderDevice = new StringBuilder();
-                    stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
-                    foreach (var algo in device.Algorithms)
-                    {
-                        stringBuilderDevice.AppendLine(
-                            $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
-                            $"\t(SPEED = {algo.AvaragedSpeed + (algo.IsDual() ? "/" + algo.SecondaryAveragedSpeed : "")}" +
-                            $"\t\t| NHSMA = {algo.CurNhmSmaDataVal + (algo.IsDual() ? "/" + algo.SecondaryCurNhmSmaDataVal : "")})" +
-                            $"\t[{algo.AlgorithmStringID}]"
-                        );
-                    }
-                    // most profitable
                     stringBuilderDevice.AppendLine(
-                        $"\t\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
-                    stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
+                        $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
+                        $"\t(SPEED = {algo.AvaragedSpeed + (algo.IsDual() ? "/" + algo.SecondaryAveragedSpeed : "")}" +
+                        $"\t\t| NHSMA = {algo.CurNhmSmaDataVal + (algo.IsDual() ? "/" + algo.SecondaryCurNhmSmaDataVal : "")})" +
+                        $"\t[{algo.AlgorithmStringID}]"
+                    );
                 }
-                Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
+                // most profitable
+                stringBuilderDevice.AppendLine(
+                    $"\t\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
+                stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
             }
+            Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
 
             // check if should mine
             // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
-            if (CheckIfShouldMine(currentProfit, log) == false)
+            if (CheckIfShouldMine(currentProfit) == false)
             {
                 foreach (var device in _miningDevices)
                 {
@@ -519,8 +522,10 @@ namespace NiceHashMiner.Miners
 
             // stats quick fix code
             //if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
-            await MinerStatsCheck();
+            //await MinerStatsCheck();
             //}
+
+            _mainFormRatesComunication?.ForceMinerStatsUpdate();
         }
 
         private static AlgorithmType GetMinerPairAlgorithmType(List<MiningPair> miningPairs)

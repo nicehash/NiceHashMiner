@@ -31,7 +31,7 @@ namespace NiceHashMiner.Switching
         {
             var count = 0;
 
-            for (var i = _history.Count - 1; i >= 0; i++)
+            for (var i = _history.Count - 1; i >= 0; i--)
             {
                 if (_history[i] > profit)
                 {

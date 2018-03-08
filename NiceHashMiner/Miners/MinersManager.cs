@@ -58,10 +58,11 @@ namespace NiceHashMiner.Miners
         /// Calculate profit for each supported algorithm per device and group.
         /// </summary>
         /// <param name="niceHashData"></param>
-        public static async Task SwichMostProfitableGroupUpMethod()
-        {
-            if (_curMiningSession != null) await _curMiningSession.SwichMostProfitableGroupUpMethod();
-        }
+        //[Obsolete("Deprecated in favour of AlgorithmSwitchingManager timer")]
+        //public static async Task SwichMostProfitableGroupUpMethod()
+        //{
+        //    if (_curMiningSession != null) await _curMiningSession.SwichMostProfitableGroupUpMethod();
+        //}
 
         public static async Task MinerStatsCheck()
         {
