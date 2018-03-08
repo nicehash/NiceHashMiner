@@ -74,6 +74,7 @@ namespace NiceHashMiner.Switching
         {
             var sb = new StringBuilder();
             sb.AppendLine("Updating stable algorithms");
+            var hasChange = false;
 
             lock (_stableAlgorithms)
             {
@@ -83,6 +84,7 @@ namespace NiceHashMiner.Switching
                     if (_stableAlgorithms.Add(algo))
                     {
                         sb.AppendLine($"\tADDED {algo}");
+                        hasChange = true;
                     }
                 }
 
@@ -91,11 +93,14 @@ namespace NiceHashMiner.Switching
                     if (algosEnumd.Contains(algo)) return false;
 
                     sb.AppendLine($"\tREMOVED {algo}");
+                    hasChange = true;
                     return true;
-
                 });
             }
-
+            if (!hasChange)
+            {
+                sb.AppendLine("\tNone changed");
+            }
             Helpers.ConsolePrint(Tag, sb.ToString());
         }
 
