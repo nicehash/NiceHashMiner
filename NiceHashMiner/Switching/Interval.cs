@@ -10,6 +10,7 @@ namespace NiceHashMiner.Switching
     /// <summary>
     /// A two point interval
     /// </summary>
+    [Serializable]
     public class Interval
     {
         /// <summary>

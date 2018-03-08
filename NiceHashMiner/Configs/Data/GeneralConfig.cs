@@ -27,8 +27,11 @@ namespace NiceHashMiner.Configs.Data
         //public int LessThreads;
         public CpuExtensionType ForceCPUExtension = CpuExtensionType.Automatic;
 
+        [Obsolete("Use SwitchSmaTimeChangeSeconds")]
         public int SwitchMinSecondsFixed = 90;
+        [Obsolete("Use SwitchSmaTimeChangeSeconds")]
         public int SwitchMinSecondsDynamic = 30;
+        [Obsolete("Use SwitchSmaTimeChangeSeconds")]
         public int SwitchMinSecondsAMD = 60;
         public double SwitchProfitabilityThreshold = 0.05; // percent
         public int MinerAPIQueryInterval = 5;

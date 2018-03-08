@@ -18,6 +18,7 @@ namespace NiceHashMiner
         }
 
         private static Language _selectedLanguage;
+        private static Language _english;
 
         private static List<Language> GetLanguages()
         {
@@ -60,7 +61,10 @@ namespace NiceHashMiner
                 {
                     Helpers.ConsolePrint("NICEHASH", "Selected language: " + lang.Name);
                     _selectedLanguage = lang;
-                    return;
+                }
+                if (lang.ID == LanguageType.En)
+                {
+                    _english = lang;
                 }
             }
 
@@ -88,6 +92,11 @@ namespace NiceHashMiner
         public static string GetText(string token)
         {
             if (_selectedLanguage == null || !_selectedLanguage.Entries.ContainsKey(token)) return "";
+            if (!_selectedLanguage.Entries.ContainsKey(token) && _english.Entries.ContainsKey(token))
+            {
+                // Default to English if no token for selected lang
+                return _english.Entries[token];
+            }
 
             return _selectedLanguage.Entries[token];
         }
