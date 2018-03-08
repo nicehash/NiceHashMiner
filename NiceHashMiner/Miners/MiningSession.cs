@@ -303,7 +303,7 @@ namespace NiceHashMiner.Miners
             foreach (var device in _miningDevices)
             {
                 // calculate profits
-                device.CalculateProfits();
+                device.CalculateProfits(e.NormalizedProfits);
                 // check if device has profitable algo
                 if (device.HasProfitableAlgo())
                 {
@@ -311,8 +311,7 @@ namespace NiceHashMiner.Miners
                     currentProfit += device.GetCurrentMostProfitValue;
                     prevStateProfit += device.GetPrevMostProfitValue;
                 }
-            }
-
+            }                                                        
             // print profit statuses
             var stringBuilderFull = new StringBuilder();
             stringBuilderFull.AppendLine("Current device profits:");
@@ -324,10 +323,17 @@ namespace NiceHashMiner.Miners
                 {
                     stringBuilderDevice.AppendLine(
                         $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
-                        $"\t(SPEED = {algo.AvaragedSpeed + (algo.IsDual() ? "/" + algo.SecondaryAveragedSpeed : "")}" +
-                        $"\t\t| NHSMA = {algo.CurNhmSmaDataVal + (algo.IsDual() ? "/" + algo.SecondaryCurNhmSmaDataVal : "")})" +
+                        $"\t(SPEED = {algo.AvaragedSpeed:e5}" +
+                        $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
                         $"\t[{algo.AlgorithmStringID}]"
                     );
+                    if (algo.IsDual())
+                    {
+                        stringBuilderDevice.AppendLine(
+                            $"\t\t\t\t\t  Secondary:\t\t {algo.SecondaryAveragedSpeed:e5}" +
+                            $"\t\t\t\t  {algo.SecondaryCurNhmSmaDataVal:e5}"
+                        );
+                    }
                 }
                 // most profitable
                 stringBuilderDevice.AppendLine(

@@ -146,7 +146,7 @@ namespace NiceHashMiner.Miners.Grouping
             MostProfitableMinerBaseType = MinerBaseType.NONE;
         }
 
-        public void CalculateProfits()
+        public void CalculateProfits(Dictionary<AlgorithmType, double> profits)
         {
             // save last state
             PrevProfitableAlgorithmType = MostProfitableAlgorithmType;
@@ -159,11 +159,11 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 var key = algo.NiceHashID;
                 var secondaryKey = algo.SecondaryNiceHashID;
-                if (NHSmaData.TryGetPayingWithTick("", key, out var paying))
+                if (profits.TryGetValue(key, out var paying))
                 {
                     algo.CurNhmSmaDataVal = paying;
                     algo.CurrentProfit = algo.CurNhmSmaDataVal * algo.AvaragedSpeed * 0.000000001;
-                    if (NHSmaData.TryGetPayingWithTick("", secondaryKey, out var secPaying))
+                    if (profits.TryGetValue(secondaryKey, out var secPaying))
                     {
                         algo.SecondaryCurNhmSmaDataVal = secPaying;
                         algo.CurrentProfit +=

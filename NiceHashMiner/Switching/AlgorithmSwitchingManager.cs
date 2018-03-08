@@ -12,7 +12,6 @@ namespace NiceHashMiner.Switching
     public class AlgorithmSwitchingManager
     {
         private const string Tag = "SwitchingManager";
-        private const int MaxHistory = 10;
 
         public event EventHandler<SmaUpdateEventArgs> SmaCheck;
 
@@ -24,9 +23,11 @@ namespace NiceHashMiner.Switching
         private double _smaCheckTime;
 
         // Simplify accessing config objects
-        private Interval _stableRange => ConfigManager.GeneralConfig.SwitchSmaTicksStable;
-        private Interval _unstableRange => ConfigManager.GeneralConfig.SwitchSmaTicksUnstable;
-        private Interval _smaCheckRange => ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds;
+        private static Interval StableRange => ConfigManager.GeneralConfig.SwitchSmaTicksStable;
+        private static Interval UnstableRange => ConfigManager.GeneralConfig.SwitchSmaTicksUnstable;
+        private static Interval SmaCheckRange => ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds;
+
+        private static int MaxHistory => Math.Max(StableRange.Upper, UnstableRange.Upper);
 
         private readonly Dictionary<AlgorithmType, AlgorithmHistory> _stableHistory;
         private readonly Dictionary<AlgorithmType, AlgorithmHistory> _unstableHistory;
@@ -96,18 +97,21 @@ namespace NiceHashMiner.Switching
                         if (i >= ticks)
                         {
                             _lastLegitPaying[algo] = paying;
-                            sb.AppendLine($"\tTAKEN: new profit {paying:e4} after {i} ticks for {algo}");
+                            sb.AppendLine($"\tTAKEN: new profit {paying:e5} after {i} ticks for {algo}");
                         }
                         else
                         {
-                            sb.AppendLine($"\tPOSTPONED: new profit {paying:e4}, higher for {i}/{ticks} ticks for {algo}. Last good profit {_lastLegitPaying[algo]:e4}");
+                            sb.AppendLine(
+                                $"\tPOSTPONED: new profit {paying:e5} (previously {_lastLegitPaying[algo]:e5})," +
+                                $" higher for {i}/{ticks} ticks for {algo}"
+                            );
                         }
+                    } 
+                    else
+                    {
+                        // Profit has gone down
+                        _lastLegitPaying[algo] = paying;
                     }
-                }
-                else
-                {
-                    // Profit has gone down
-                    _lastLegitPaying[algo] = paying;
                 }
             }
         }
@@ -118,9 +122,9 @@ namespace NiceHashMiner.Switching
             // Random breaks down when called from multiple threads
             lock (_random)
             {
-                _ticksForStable = _stableRange.RandomInt(_random);
-                _ticksForUnstable = _unstableRange.RandomInt(_random);
-                _smaCheckTime = _smaCheckRange.RandomInt(_random);
+                _ticksForStable = StableRange.RandomInt(_random);
+                _ticksForUnstable = UnstableRange.RandomInt(_random);
+                _smaCheckTime = SmaCheckRange.RandomInt(_random);
             }
         }
     }
