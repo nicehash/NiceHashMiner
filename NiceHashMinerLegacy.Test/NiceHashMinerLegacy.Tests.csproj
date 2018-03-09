@@ -48,6 +48,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Switching\AlgorithmSwitchingManagerTest.cs" />
     <Compile Include="Switching\NHSmaDataTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,18 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Timers;
 
 namespace NiceHashMiner.Switching
 {
+    /// <summary>
+    /// Handles profit switching within a mining session
+    /// </summary>
     public class AlgorithmSwitchingManager
     {
         private const string Tag = "SwitchingManager";
 
+        /// <summary>
+        /// Emitted when the profits are checked
+        /// </summary>
         public event EventHandler<SmaUpdateEventArgs> SmaCheck;
 
         private Timer _smaCheckTimer;
@@ -23,15 +27,18 @@ namespace NiceHashMiner.Switching
         private double _smaCheckTime;
 
         // Simplify accessing config objects
-        private static Interval StableRange => ConfigManager.GeneralConfig.SwitchSmaTicksStable;
-        private static Interval UnstableRange => ConfigManager.GeneralConfig.SwitchSmaTicksUnstable;
-        private static Interval SmaCheckRange => ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds;
+        public static Interval StableRange => ConfigManager.GeneralConfig.SwitchSmaTicksStable;
+        public static Interval UnstableRange => ConfigManager.GeneralConfig.SwitchSmaTicksUnstable;
+        public static Interval SmaCheckRange => ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds;
 
-        private static int MaxHistory => Math.Max(StableRange.Upper, UnstableRange.Upper);
+        public static int MaxHistory => Math.Max(StableRange.Upper, UnstableRange.Upper);
 
         private readonly Dictionary<AlgorithmType, AlgorithmHistory> _stableHistory;
         private readonly Dictionary<AlgorithmType, AlgorithmHistory> _unstableHistory;
 
+        /// <summary>
+        /// Currently used normalized profits
+        /// </summary>
         private readonly Dictionary<AlgorithmType, double> _lastLegitPaying;
 
         public AlgorithmSwitchingManager()
@@ -66,7 +73,10 @@ namespace NiceHashMiner.Switching
             _smaCheckTimer = null;
         }
 
-        private void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
+        /// <summary>
+        /// Checks profits and updates normalization based on ticks
+        /// </summary>
+        internal void SmaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
         {
             Randomize();
 
@@ -81,9 +91,14 @@ namespace NiceHashMiner.Switching
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
             SmaCheck?.Invoke(this, args);
 
-            _smaCheckTimer.Interval = _smaCheckTime * 1000;
+            // Will be null if manually called (in tests)
+            if (_smaCheckTimer != null)
+                _smaCheckTimer.Interval = _smaCheckTime * 1000;
         }
 
+        /// <summary>
+        /// Check profits for a history dict and update if profit has been higher for required ticks or if it is lower
+        /// </summary>
         private void UpdateProfits(Dictionary<AlgorithmType, AlgorithmHistory> history, int ticks, StringBuilder sb)
         {
             foreach (var algo in history.Keys)
@@ -127,8 +142,21 @@ namespace NiceHashMiner.Switching
                 _smaCheckTime = SmaCheckRange.RandomInt(_random);
             }
         }
+
+        #region Test methods
+
+        internal double LastPayingForAlgo(AlgorithmType algo)
+        {
+            return _lastLegitPaying[algo];
+        }
+
+        #endregion
     }
 
+    /// <inheritdoc />
+    /// <summary>
+    /// Event args used for reporting fresh normalized profits
+    /// </summary>
     public class SmaUpdateEventArgs : EventArgs
     {
         public readonly Dictionary<AlgorithmType, double> NormalizedProfits;
