@@ -2,7 +2,7 @@ To keep development of NiceHash Miner Legacy streamlined please make sure the fo
 
 **NOTE this issue tracker is for NiceHashMinerLegacy bugs/feature requests ONLY! If you need general help or have a support question related to NHM2 please look at https://www.nicehash.com/support first and open a ticket there if your issue is not specifically NHML related**
 
-For general help there are several community resources available, such as https://reddit.com/nicehash
+For general help there are several community resources available, such as https://reddit.com/r/nicehash
 
 - Please make requests in English
 - The issue has not already been reported.
