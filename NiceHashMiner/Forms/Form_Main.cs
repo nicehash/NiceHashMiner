@@ -51,7 +51,7 @@ namespace NiceHashMiner
         private bool _isManuallyStarted = false;
         private bool _isNotProfitable = false;
 
-        private bool _isSmaUpdated = false;
+        //private bool _isSmaUpdated = false;
 
         private double _factorTimeUnit = 1.0;
 
@@ -748,7 +748,7 @@ namespace NiceHashMiner
         private void SmaCallback(object sender, EventArgs e)
         {
             Helpers.ConsolePrint("NICEHASH", "SMA Update");
-            _isSmaUpdated = true;
+            //_isSmaUpdated = true;
         }
 
         private void VersionBurnCallback(object sender, SocketEventArgs e)
@@ -1143,7 +1143,7 @@ namespace NiceHashMiner
 
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
 
-            _isSmaUpdated = true; // Always check profits on mining start
+            //_isSmaUpdated = true; // Always check profits on mining start
             //_smaMinerCheck.Interval = 100;
             //_smaMinerCheck.Start();
             _minerStatsCheck.Start();
