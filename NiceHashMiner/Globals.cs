@@ -32,8 +32,8 @@ namespace NiceHashMiner
         {
             if (!NHSmaData.TryGetSma(algorithmType, out var sma)) return "";
 
-            var name = sma.name;
-            var nPort = sma.port;
+            var name = sma.Name;
+            var nPort = sma.Port;
             var sslPort = 30000 + nPort;
 
             // NHMConectionType.NONE

@@ -6,11 +6,17 @@ using System.Text;
 
 namespace NiceHashMiner.Switching
 {
+    /// <summary>
+    /// Maintains global registry of NH SMA
+    /// </summary>
     public static class NHSmaData
     {
         private const string Tag = "NHSMAData";
 
         public static bool Initialized { get; private set; }
+        /// <summary>
+        /// True iff there has been at least one SMA update
+        /// </summary>
         public static bool HasData { get; private set; }
 
         // private static Dictionary<AlgorithmType, List<double>> _recentPaying;
@@ -20,6 +26,7 @@ namespace NiceHashMiner.Switching
         // Global list of stable algorithms, should be accessed with a lock
         private static HashSet<AlgorithmType> _stableAlgorithms;
 
+        // Public for tests only
         public static void Initialize()
         {
             _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
@@ -32,10 +39,10 @@ namespace NiceHashMiner.Switching
                 {
                     _currentSma[algo] = new NiceHashSma
                     {
-                        port = (int) algo + 3333,
-                        name = algo.ToString().ToLower(),
-                        algo = (int) algo,
-                        paying = 0
+                        Port = (int) algo + 3333,
+                        Name = algo.ToString().ToLower(),
+                        Algo = (int) algo,
+                        Paying = 0
                     };
                     //_recentPaying[algo] = new List<double>
                     //{
@@ -54,15 +61,20 @@ namespace NiceHashMiner.Switching
 
         #region Update Methods
 
+        /// <summary>
+        /// Change SMA profits to new values
+        /// </summary>
+        /// <param name="newSma">Algorithm/profit dictionary with new values</param>
         public static void UpdateSmaPaying(Dictionary<AlgorithmType, double> newSma)
         {
+            CheckInit();
             lock (_currentSma)
             {
                 foreach (var algo in newSma.Keys)
                 {
                     if (_currentSma.ContainsKey(algo))
                     {
-                        _currentSma[algo].paying = newSma[algo];
+                        _currentSma[algo].Paying = newSma[algo];
                     }
                 }
             }
@@ -70,8 +82,29 @@ namespace NiceHashMiner.Switching
             HasData = true;
         }
 
+        /// <summary>
+        /// Change SMA profit for one algo
+        /// </summary>
+        internal static void UpdatePayingForAlgo(AlgorithmType algo, double paying)
+        {
+            CheckInit();
+            lock (_currentSma)
+            {
+                if (!_currentSma.ContainsKey(algo))
+                    throw new ArgumentException("Algo not setup in SMA");
+                _currentSma[algo].Paying = paying;
+            }
+
+            HasData = true;
+        }
+
+        /// <summary>
+        /// Update list of stable algorithms
+        /// </summary>
+        /// <param name="algorithms">Algorithms that are stable</param>
         public static void UpdateStableAlgorithms(IEnumerable<AlgorithmType> algorithms)
         {
+            CheckInit();
             var sb = new StringBuilder();
             sb.AppendLine("Updating stable algorithms");
             var hasChange = false;
@@ -108,8 +141,15 @@ namespace NiceHashMiner.Switching
 
         # region Get Methods
 
+        /// <summary>
+        /// Attempt to get SMA for an algorithm
+        /// </summary>
+        /// <param name="algo">Algorithm</param>
+        /// <param name="sma">Variable to place SMA in</param>
+        /// <returns>True iff we know about this algo</returns>
         public static bool TryGetSma(AlgorithmType algo, out NiceHashSma sma)
         {
+            CheckInit();
             lock (_currentSma)
             {
                 if (_currentSma.ContainsKey(algo))
@@ -122,12 +162,19 @@ namespace NiceHashMiner.Switching
             sma = null;
             return false;
         }
-
+        
+        /// <summary>
+        /// Attempt to get paying rate for an algorithm
+        /// </summary>
+        /// <param name="algo">Algorithm</param>
+        /// <param name="sma">Variable to place paying in</param>
+        /// <returns>True iff we know about this algo</returns>
         public static bool TryGetPaying(AlgorithmType algo, out double paying)
         {
+            CheckInit();
             if (TryGetSma(algo, out var sma))
             {
-                paying = sma.paying;
+                paying = sma.Paying;
                 return true;
             }
 
@@ -135,22 +182,27 @@ namespace NiceHashMiner.Switching
             return false;
         }
 
-        public static bool TryGetPayingWithTick(string devId, AlgorithmType algo, out double paying)
-        {
-            // TODO
-            return TryGetPaying(algo, out paying);
-        }
+        #endregion
+
+        #region Get Methods
 
         public static bool IsAlgorithmStable(AlgorithmType algo)
         {
+            CheckInit();
             lock (_stableAlgorithms)
             {
                 return _stableAlgorithms.Contains(algo);
             }
         }
 
+        /// <summary>
+        /// Filters SMA profits based on whether the algorithm is stable
+        /// </summary>
+        /// <param name="stable">True to get stable, false to get unstable</param>
+        /// <returns>Filtered Algorithm/double map</returns>
         public static Dictionary<AlgorithmType, double> FilteredCurrentProfits(bool stable)
         {
+            CheckInit();
             var dict = new Dictionary<AlgorithmType, double>();
 
             lock (_currentSma)
@@ -159,7 +211,7 @@ namespace NiceHashMiner.Switching
                 {
                     if (_stableAlgorithms.Contains(kvp.Key) == stable)
                     {
-                        dict[kvp.Key] = kvp.Value.paying;
+                        dict[kvp.Key] = kvp.Value.Paying;
                     }
                 }
             }
@@ -168,6 +220,15 @@ namespace NiceHashMiner.Switching
         }
 
         #endregion
+
+        /// <summary>
+        /// Helper to ensure initialization
+        /// </summary>
+        private static void CheckInit()
+        {
+            if (!Initialized)
+                throw new InvalidOperationException("NHSmaData cannot be used before initialization");
+        }
 
         #region Obsolete
 
