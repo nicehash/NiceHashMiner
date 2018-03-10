@@ -36,6 +36,8 @@ namespace NiceHashMiner.Switching
         private readonly Dictionary<AlgorithmType, AlgorithmHistory> _stableHistory;
         private readonly Dictionary<AlgorithmType, AlgorithmHistory> _unstableHistory;
 
+        private bool _hasStarted;
+
         /// <summary>
         /// Currently used normalized profits
         /// </summary>
@@ -80,27 +82,46 @@ namespace NiceHashMiner.Switching
         {
             Randomize();
 
-            var sb = new StringBuilder();
-            sb.AppendLine("Normalizing profits");
-
-            UpdateProfits(_stableHistory, _ticksForStable, sb);
-            UpdateProfits(_unstableHistory, _ticksForUnstable, sb);
-
-            Helpers.ConsolePrint(Tag, sb.ToString());
-
-            var args = new SmaUpdateEventArgs(_lastLegitPaying);
-            SmaCheck?.Invoke(this, args);
-
             // Will be null if manually called (in tests)
             if (_smaCheckTimer != null)
                 _smaCheckTimer.Interval = _smaCheckTime * 1000;
+
+            var sb = new StringBuilder();
+
+            if (_hasStarted)
+            {
+                sb.AppendLine("Normalizing profits");
+            }
+
+            var stableUpdated = UpdateProfits(_stableHistory, _ticksForStable, sb);
+            var unstableUpdated = UpdateProfits(_unstableHistory, _ticksForUnstable, sb);
+
+            if (!stableUpdated && !unstableUpdated && _hasStarted)
+            {
+                sb.AppendLine("No algos affected (one of No SMA update/No algos higher/Mining started");
+            }
+
+            if (_hasStarted)
+            {
+                Helpers.ConsolePrint(Tag, sb.ToString());
+            }
+            else
+            {
+                _hasStarted = true;
+            }
+
+            var args = new SmaUpdateEventArgs(_lastLegitPaying);
+            SmaCheck?.Invoke(this, args);
         }
 
         /// <summary>
         /// Check profits for a history dict and update if profit has been higher for required ticks or if it is lower
         /// </summary>
-        private void UpdateProfits(Dictionary<AlgorithmType, AlgorithmHistory> history, int ticks, StringBuilder sb)
+        /// <returns>True iff any profits were postponed or updated</returns>
+        private bool UpdateProfits(Dictionary<AlgorithmType, AlgorithmHistory> history, int ticks, StringBuilder sb)
         {
+            var updated = false;
+
             foreach (var algo in history.Keys)
             {
                 if (NHSmaData.TryGetPaying(algo, out var paying))
@@ -108,6 +129,7 @@ namespace NiceHashMiner.Switching
                     history[algo].Add(paying);
                     if (paying > _lastLegitPaying[algo])
                     {
+                        updated = true;
                         var i = history[algo].CountOverProfit(_lastLegitPaying[algo]);
                         if (i >= ticks)
                         {
@@ -129,6 +151,8 @@ namespace NiceHashMiner.Switching
                     }
                 }
             }
+
+            return updated;
         }
 
         private void Randomize()

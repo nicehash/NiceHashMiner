@@ -132,13 +132,7 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_General_AllowMultipleInstances_ToolTip"));
             toolTip1.SetToolTip(pictureBox_AllowMultipleInstances,
                 International.GetText("Form_Settings_General_AllowMultipleInstances_ToolTip"));
-
-
-            toolTip1.SetToolTip(textBox_SwitchMaxSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
-            toolTip1.SetToolTip(label_SwitchMinSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
-
+            
             toolTip1.SetToolTip(label_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
             toolTip1.SetToolTip(pictureBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
             toolTip1.SetToolTip(textBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
@@ -154,7 +148,7 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
             toolTip1.SetToolTip(label_SwitchMinSeconds,
                 International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
-            toolTip1.SetToolTip(label_SwitchMinSeconds,
+            toolTip1.SetToolTip(pictureBox_SwitchMinSeconds,
                 International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
 
             toolTip1.SetToolTip(textBox_MinerAPIQueryInterval,
