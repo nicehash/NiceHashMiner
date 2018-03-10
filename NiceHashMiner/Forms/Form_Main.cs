@@ -549,6 +549,11 @@ namespace NiceHashMiner
 
         public void ClearRates(int groupCount)
         {
+            if (InvokeRequired)
+            {
+                Invoke((Action) delegate { ClearRates(groupCount); });
+                return;
+            }
             if (_flowLayoutPanelVisibleCount != groupCount)
             {
                 _flowLayoutPanelVisibleCount = groupCount;
@@ -556,7 +561,7 @@ namespace NiceHashMiner
                 var hideIndex = 0;
                 foreach (var control in flowLayoutPanelRates.Controls)
                 {
-                    ((GroupProfitControl) control).Visible = hideIndex < groupCount ? true : false;
+                    ((GroupProfitControl) control).Visible = hideIndex < groupCount;
                     ++hideIndex;
                 }
             }
