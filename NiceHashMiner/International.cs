@@ -91,11 +91,16 @@ namespace NiceHashMiner
 
         public static string GetText(string token)
         {
-            if (_selectedLanguage == null || !_selectedLanguage.Entries.ContainsKey(token)) return "";
-            if (!_selectedLanguage.Entries.ContainsKey(token) && _english.Entries.ContainsKey(token))
+            if (_selectedLanguage == null) return "";
+            if (!_selectedLanguage.Entries.ContainsKey(token))
             {
-                // Default to English if no token for selected lang
-                return _english.Entries[token];
+                if (_english.Entries.ContainsKey(token))
+                {
+                    // Default to English if no token for selected lang
+                    return _english.Entries[token];
+                }
+
+                return "";
             }
 
             return _selectedLanguage.Entries[token];
