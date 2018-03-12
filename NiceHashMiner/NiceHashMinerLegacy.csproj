@@ -102,7 +102,7 @@
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
     <Compile Include="Enums\TimeUnitType.cs" />
     <Compile Include="IFTTT.cs" />
-    <Compile Include="ExchangeRateAPI.cs" />
+    <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\Equihash\Dtsm.cs" />
     <Compile Include="Miners\Ewbf.cs" />
