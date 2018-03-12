@@ -16,7 +16,6 @@ namespace NiceHashMiner
         public static int CurrentTosVer = 3;
 
         // Variables
-        public static double BitcoinUsdRate;
         public static JsonSerializerSettings JsonSettings = null;
 
         public static int ThreadsPerCpu;

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using Timer = System.Timers.Timer;
 
@@ -242,7 +243,7 @@ namespace NiceHashMiner.Miners
         private bool CheckIfProfitable(double currentProfit, bool log = true)
         {
             // TODO FOR NOW USD ONLY
-            var currentProfitUsd = (currentProfit * Globals.BitcoinUsdRate);
+            var currentProfitUsd = (currentProfit * ExchangeRateApi.GetUsdExchangeRate());
             _isProfitable =
                 _isMiningRegardlesOfProfit
                 || !_isMiningRegardlesOfProfit && currentProfitUsd >= ConfigManager.GeneralConfig.MinimumProfit;

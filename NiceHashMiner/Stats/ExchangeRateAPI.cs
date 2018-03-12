@@ -20,8 +20,11 @@ namespace NiceHashMiner.Stats
             private get => Interlocked.Exchange(ref _usdBtcRate, _usdBtcRate);
             set
             {
-                Interlocked.Exchange(ref _usdBtcRate, value); 
-                Helpers.ConsolePrint("NICEHASH", $"USD rate updated: {value} BTC");
+                if (value > 0)
+                {
+                    Interlocked.Exchange(ref _usdBtcRate, value);
+                    Helpers.ConsolePrint("NICEHASH", $"USD rate updated: {value} BTC");
+                }
             }
         }
         public static string ActiveDisplayCurrency = "USD";

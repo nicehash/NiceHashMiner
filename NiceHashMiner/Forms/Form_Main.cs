@@ -604,7 +604,7 @@ namespace NiceHashMiner
                 iApiData.AlgorithmName + apiGetExceptionString;
             var rateBtcString = FormatPayingOutput(paying);
             var rateCurrencyString = ExchangeRateApi
-                                         .ConvertToActiveCurrency(paying * Globals.BitcoinUsdRate * _factorTimeUnit)
+                                         .ConvertToActiveCurrency(paying * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
                                          .ToString("F2", CultureInfo.InvariantCulture)
                                      + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
@@ -703,7 +703,7 @@ namespace NiceHashMiner
             }
 
             toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
-                .ConvertToActiveCurrency((totalRate * _factorTimeUnit * Globals.BitcoinUsdRate))
+                .ConvertToActiveCurrency((totalRate * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
                 .ToString("F2", CultureInfo.InvariantCulture);
             toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                                                    International.GetText(
@@ -731,7 +731,7 @@ namespace NiceHashMiner
                 }
 
                 //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
-                var amount = (balance * Globals.BitcoinUsdRate);
+                var amount = (balance * ExchangeRateApi.GetUsdExchangeRate());
                 amount = ExchangeRateApi.ConvertToActiveCurrency(amount);
                 toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
                 toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
@@ -767,14 +767,13 @@ namespace NiceHashMiner
             var currencyRate = International.GetText("BenchmarkRatioRateN_A");
             if (br > 0)
             {
-                Globals.BitcoinUsdRate = br;
                 currencyRate = ExchangeRateApi.ConvertToActiveCurrency(br).ToString("F2");
             }
 
             toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
 
             Helpers.ConsolePrint("NICEHASH",
-                "Current Bitcoin rate: " + Globals.BitcoinUsdRate.ToString("F2", CultureInfo.InvariantCulture));
+                "Current Bitcoin rate: " + br.ToString("F2", CultureInfo.InvariantCulture));
         }
 
         private void SmaCallback(object sender, EventArgs e)
