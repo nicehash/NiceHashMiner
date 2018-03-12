@@ -43,6 +43,11 @@ namespace NiceHashMiner.Stats
             public string method = "devices.status";
             public List<JArray> devices;
         }
+        public class ExchangeRateJson
+        {
+            public List<Dictionary<string, string>> exchanges { get; set; }
+            public Dictionary<string, double> exchanges_fiat { get; set; }
+        }
 #pragma warning restore 649, IDE1006
         #endregion
 
@@ -95,29 +100,33 @@ namespace NiceHashMiner.Stats
                 {
                     Helpers.ConsolePrint("SOCKET", "Received: " + e.Data);
                     dynamic message = JsonConvert.DeserializeObject(e.Data);
-                    if (message.method == "sma")
+                    switch (message.method.Value)
                     {
-                        // Try in case stable is not sent, we still get updated paying rates
-                        try
-                        {
-                            var stable = JsonConvert.DeserializeObject(message.stable.Value);
-                            SetStableAlgorithms(stable);
-                        } 
-                        catch
-                        { }
-                        SetAlgorithmRates(message.data);
-                    } 
-                    else if (message.method == "balance")
-                    {
-                        SetBalance(message.value.Value);
-                    } 
-                    else if (message.method == "versions")
-                    {
-                        SetVersion(message.legacy.Value);
-                    }
-                    else if (message.method == "burn")
-                    {
-                        OnVersionBurn.Emit(null, new SocketEventArgs(message.message.Value));
+                        case "sma":
+                            {
+                                // Try in case stable is not sent, we still get updated paying rates
+                                try
+                                {
+                                    var stable = JsonConvert.DeserializeObject(message.stable.Value);
+                                    SetStableAlgorithms(stable);
+                                } catch
+                                { }
+                                SetAlgorithmRates(message.data);
+                                break;
+                            }
+
+                        case "balance":
+                            SetBalance(message.value.Value);
+                            break;
+                        case "versions":
+                            SetVersion(message.legacy.Value);
+                            break;
+                        case "burn":
+                            OnVersionBurn.Emit(null, new SocketEventArgs(message.message.Value));
+                            break;
+                        case "exchange_rates":
+                            SetExchangeRates(message.data.Value);
+                            break;
                     }
                 }
             } catch (Exception er)
@@ -185,6 +194,36 @@ namespace NiceHashMiner.Stats
         {
             Version = version;
             OnVersionUpdate.Emit(null, EventArgs.Empty);
+        }
+
+        private static void SetExchangeRates(string data)
+        {
+            try
+            {
+                var exchange = JsonConvert.DeserializeObject<ExchangeRateJson>(data);
+                if (exchange?.exchanges_fiat != null && exchange.exchanges != null)
+                {
+                    foreach (var exchangePair in exchange.exchanges)
+                    {
+                        if (exchangePair.TryGetValue("coin", out var coin) &&
+                            coin == "BTC" &&
+                            exchangePair.TryGetValue("USD", out var usd) &&
+                            double.TryParse(usd, out var usdD))
+                        {
+                            ExchangeRateApi.UsdBtcRate = usdD;
+                            break;
+                        }
+                    }
+
+                    ExchangeRateApi.UpdateExchangesFiat(exchange.exchanges_fiat);
+
+                    OnExchangeUpdate?.Invoke(null, EventArgs.Empty);
+                }
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("SOCKET", e.ToString());
+            }
         }
 
         #endregion

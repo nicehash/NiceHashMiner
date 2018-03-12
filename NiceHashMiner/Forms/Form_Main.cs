@@ -29,7 +29,7 @@ namespace NiceHashMiner
 
         private Timer _minerStatsCheck;
         //private Timer _smaMinerCheck;
-        private Timer _bitcoinExchangeCheck;
+        //private Timer _bitcoinExchangeCheck;
         private Timer _startupTimer;
         private Timer _idleCheck;
         private SystemTimer _computeDevicesCheckTimer;
@@ -329,21 +329,21 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
 
-            // Don't start timer if socket is giving data
-            if (ExchangeRateApi.ExchangesFiat == null)
-            {
-                // Wait a bit and check again
-                Thread.Sleep(1000);
-                if (ExchangeRateApi.ExchangesFiat == null)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "No exchange from socket yet, getting manually");
-                    _bitcoinExchangeCheck = new Timer();
-                    _bitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
-                    _bitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
-                    _bitcoinExchangeCheck.Start();
-                    BitcoinExchangeCheck_Tick(null, null);
-                }
-            }
+            //// Don't start timer if socket is giving data
+            //if (ExchangeRateApi.ExchangesFiat == null)
+            //{
+            //    // Wait a bit and check again
+            //    Thread.Sleep(1000);
+            //    if (ExchangeRateApi.ExchangesFiat == null)
+            //    {
+            //        Helpers.ConsolePrint("NICEHASH", "No exchange from socket yet, getting manually");
+            //        _bitcoinExchangeCheck = new Timer();
+            //        _bitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
+            //        _bitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
+            //        _bitcoinExchangeCheck.Start();
+            //        BitcoinExchangeCheck_Tick(null, null);
+            //    }
+            //}
 
             _loadingScreen.IncreaseLoadCounterAndMessage(
                 International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
@@ -739,19 +739,26 @@ namespace NiceHashMiner
         }
 
 
-        private void BitcoinExchangeCheck_Tick(object sender, EventArgs e)
-        {
-            Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
-            ExchangeRateApi.UpdateApi(textBoxWorkerName.Text.Trim());
-            UpdateExchange();
-        }
+        //private void BitcoinExchangeCheck_Tick(object sender, EventArgs e)
+        //{
+        //    Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
+        //    ExchangeRateApi.UpdateApi(textBoxWorkerName.Text.Trim());
+        //    UpdateExchange();
+        //}
 
         private void ExchangeCallback(object sender, EventArgs e)
         {
-            // We are getting data from socket so stop checking manually
-            _bitcoinExchangeCheck?.Stop();
-            Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
-            Invoke((MethodInvoker) UpdateExchange);
+            //// We are getting data from socket so stop checking manually
+            //_bitcoinExchangeCheck?.Stop();
+            //Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker) UpdateExchange);
+            }
+            else
+            {
+                UpdateExchange();
+            }
         }
 
         private void UpdateExchange()
