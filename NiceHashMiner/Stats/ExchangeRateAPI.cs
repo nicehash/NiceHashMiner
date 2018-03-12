@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json;
-using NiceHashMiner.Configs;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using NiceHashMiner.Stats;
+using Newtonsoft.Json;
+using NiceHashMiner.Configs;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Stats
 {
-    internal class ExchangeRateApi
+    internal static class ExchangeRateApi
     {
 #pragma warning disable IDE1006
         public class Result

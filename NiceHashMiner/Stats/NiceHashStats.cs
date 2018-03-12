@@ -61,6 +61,7 @@ namespace NiceHashMiner.Stats
         public static event EventHandler OnConnectionLost = delegate { };
         public static event EventHandler OnConnectionEstablished = delegate { };
         public static event EventHandler<SocketEventArgs> OnVersionBurn = delegate { };
+        public static event EventHandler OnExchangeUpdate;
 
         private static NiceHashSocket _socket;
         
