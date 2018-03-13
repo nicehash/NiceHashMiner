@@ -174,12 +174,19 @@ namespace NiceHashMiner.Stats
             }
             for (var i = 0; i < retries; i++)
             {
-                _webSocket.Connect();
-                Thread.Sleep(100);
-                if (IsAlive)
+                try
                 {
-                    _attemptingReconnect = false;
-                    return true;
+                    _webSocket.Connect();
+                    Thread.Sleep(100);
+                    if (IsAlive)
+                    {
+                        _attemptingReconnect = false;
+                        return true;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("SOCKET", $"Error while attempting reconnect: {e}");
                 }
                 Thread.Sleep(1000);
             }
