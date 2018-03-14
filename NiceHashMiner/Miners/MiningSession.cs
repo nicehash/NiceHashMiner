@@ -9,6 +9,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using NiceHashMiner.Stats;
+using NiceHashMiner.Switching;
 using Timer = System.Timers.Timer;
 
 namespace NiceHashMiner.Miners
@@ -27,6 +29,8 @@ namespace NiceHashMiner.Miners
         private readonly string _worker;
         private readonly List<MiningDevice> _miningDevices;
         private readonly IMainFormRatesComunication _mainFormRatesComunication;
+
+        private readonly AlgorithmSwitchingManager _switchingManager;
 
         // session varibles changing
         // GroupDevices hash code doesn't work correctly use string instead
@@ -78,6 +82,9 @@ namespace NiceHashMiner.Miners
             _mainFormRatesComunication = mainFormRatesComunication;
             _miningLocation = miningLocation;
 
+            _switchingManager = new AlgorithmSwitchingManager();
+            _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
+
             _btcAdress = btcAdress;
             _worker = worker;
 
@@ -109,6 +116,8 @@ namespace NiceHashMiner.Miners
                 _preventSleepTimer.Start();
                 _internetCheckTimer.Start();
             }
+
+            _switchingManager.Start();
 
             _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
         }
@@ -156,6 +165,8 @@ namespace NiceHashMiner.Miners
                 _ethminerAmdPaused.End();
                 _ethminerAmdPaused = null;
             }
+
+            _switchingManager.Stop();
 
             _mainFormRatesComunication?.ClearRatesAll();
 
@@ -241,7 +252,7 @@ namespace NiceHashMiner.Miners
         private bool CheckIfProfitable(double currentProfit, bool log = true)
         {
             // TODO FOR NOW USD ONLY
-            var currentProfitUsd = (currentProfit * Globals.BitcoinUsdRate);
+            var currentProfitUsd = (currentProfit * ExchangeRateApi.GetUsdExchangeRate());
             _isProfitable =
                 _isMiningRegardlesOfProfit
                 || !_isMiningRegardlesOfProfit && currentProfitUsd >= ConfigManager.GeneralConfig.MinimumProfit;
@@ -297,8 +308,7 @@ namespace NiceHashMiner.Miners
             return shouldMine;
         }
 
-        public async Task SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSma> niceHashData,
-            bool log = true)
+        private void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
         {
 #if (SWITCH_TESTING)
             MiningDevice.SetNextTest();
@@ -309,7 +319,7 @@ namespace NiceHashMiner.Miners
             foreach (var device in _miningDevices)
             {
                 // calculate profits
-                device.CalculateProfits(niceHashData);
+                device.CalculateProfits(e.NormalizedProfits);
                 // check if device has profitable algo
                 if (device.HasProfitableAlgo())
                 {
@@ -317,50 +327,39 @@ namespace NiceHashMiner.Miners
                     currentProfit += device.GetCurrentMostProfitValue;
                     prevStateProfit += device.GetPrevMostProfitValue;
                 }
-            }
-
-            // print profit statuses
-            if (log)
+            }                                                        
+            var stringBuilderFull = new StringBuilder();
+            stringBuilderFull.AppendLine("Current device profits:");
+            foreach (var device in _miningDevices)
             {
-                var stringBuilderFull = new StringBuilder();
-                stringBuilderFull.AppendLine("Current device profits:");
-                foreach (var device in _miningDevices)
+                var stringBuilderDevice = new StringBuilder();
+                stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
+                foreach (var algo in device.Algorithms)
                 {
-                    var stringBuilderDevice = new StringBuilder();
                     stringBuilderDevice.AppendLine(
-                        $"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
-                    foreach (var algo in device.Algorithms)
+                        $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
+                        $"\t(SPEED = {algo.AvaragedSpeed:e5}" +
+                        $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
+                        $"\t[{algo.AlgorithmStringID}]"
+                    );
+                    if (algo is DualAlgorithm dualAlg)
                     {
-                        var speed = algo.AvaragedSpeed.ToString(DoubleFormat);
-                        var paying = algo.CurNhmSmaDataVal.ToString(DoubleFormat);
-                        if (algo is DualAlgorithm dualAlgo)
-                        {
-                            speed += "/" + dualAlgo.SecondaryAveragedSpeed.ToString(DoubleFormat);
-                            if (dualAlgo.TuningEnabled)
-                                speed += " dcri:" + dualAlgo.MostProfitableIntensity;
-                            paying += "/" + dualAlgo.SecondaryCurNhmSmaDataVal;
-                        }
-
                         stringBuilderDevice.AppendLine(
-                            $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
-                            $"\t(SPEED = {speed}" +
-                            $"\t\t| NHSMA = {paying})" +
-                            $"\t[{algo.AlgorithmStringID}]"
+                            $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
+                            $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
                         );
                     }
-
-                    // most profitable
-                    stringBuilderDevice.AppendLine(
-                        $"\t\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
-                    stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
                 }
-
-                Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
+                // most profitable
+                stringBuilderDevice.AppendLine(
+                    $"\t\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
+                stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
             }
+            Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
 
             // check if should mine
             // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
-            if (CheckIfShouldMine(currentProfit, log) == false)
+            if (CheckIfShouldMine(currentProfit) == false)
             {
                 foreach (var device in _miningDevices)
                 {
@@ -565,8 +564,10 @@ namespace NiceHashMiner.Miners
 
             // stats quick fix code
             //if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
-            await MinerStatsCheck(niceHashData);
+            //await MinerStatsCheck();
             //}
+
+            _mainFormRatesComunication?.ForceMinerStatsUpdate();
         }
 
         private AlgorithmType GetMinerPairAlgorithmType(List<MiningPair> miningPairs)
@@ -579,7 +580,7 @@ namespace NiceHashMiner.Miners
             return AlgorithmType.NONE;
         }
 
-        public async Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSma> niceHashData)
+        public async Task MinerStatsCheck()
         {
             var currentProfit = 0.0d;
             _mainFormRatesComunication.ClearRates(_runningGroupMiners.Count);
@@ -602,13 +603,12 @@ namespace NiceHashMiner.Miners
                     }
 
                     // set rates
-                    if (niceHashData != null && ad != null)
+                    if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     {
-                        groupMiners.CurrentRate = niceHashData[ad.AlgorithmID].paying * ad.Speed * 0.000000001;
-                        if (niceHashData.ContainsKey(ad.SecondaryAlgorithmID))
+                        groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
+                        if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
                         {
-                            groupMiners.CurrentRate +=
-                                niceHashData[ad.SecondaryAlgorithmID].paying * ad.SecondarySpeed * 0.000000001;
+                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
                         }
                     }
                     else

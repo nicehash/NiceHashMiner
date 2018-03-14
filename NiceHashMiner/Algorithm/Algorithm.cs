@@ -1,5 +1,6 @@
 ﻿using NiceHashMiner.Enums;
 using System;
+using NiceHashMiner.Switching;
 
 namespace NiceHashMiner
 {
@@ -67,9 +68,9 @@ namespace NiceHashMiner
             get
             {
                 var ratio = International.GetText("BenchmarkRatioRateN_A");
-                if (Globals.NiceHashData != null)
+                if (NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
-                    ratio = Globals.NiceHashData[NiceHashID].paying.ToString("F8");
+                    ratio = paying.ToString("F8");
                 }
                 return ratio;
             }
@@ -80,13 +81,9 @@ namespace NiceHashMiner
             get
             {
                 var rate = International.GetText("BenchmarkRatioRateN_A");
-                var payingRate = 0.0d;
-                if (Globals.NiceHashData != null)
+                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
-                    if (BenchmarkSpeed > 0)
-                    {
-                        payingRate += BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
-                    }
+                    var payingRate = BenchmarkSpeed * paying * 0.000000001;
                     rate = payingRate.ToString("F8");
                 }
                 return rate;

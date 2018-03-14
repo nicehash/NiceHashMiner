@@ -2,6 +2,7 @@
 using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
+using NiceHashMiner.Switching;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -148,7 +149,7 @@ namespace NiceHashMiner.Miners.Grouping
             MostProfitableMinerBaseType = MinerBaseType.NONE;
         }
 
-        public void CalculateProfits(Dictionary<AlgorithmType, NiceHashSma> niceHashData)
+        public void CalculateProfits(Dictionary<AlgorithmType, double> profits)
         {
             // save last state
             PrevProfitableAlgorithmType = MostProfitableAlgorithmType;
@@ -161,9 +162,9 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 var key = algo.NiceHashID;
                 const double mult = 0.000000001;
-                if (niceHashData.ContainsKey(key))
+                if (profits.TryGetValue(key, out var paying))
                 {
-                    algo.CurNhmSmaDataVal = niceHashData[key].paying;
+                    algo.CurNhmSmaDataVal = paying;
                     if (algo is DualAlgorithm dualAlgo)
                     {
                         dualAlgo.IntensityUpToDate = false;
@@ -171,9 +172,9 @@ namespace NiceHashMiner.Miners.Grouping
                         dualAlgo.CurrentProfit = dualAlgo.CurNhmSmaDataVal * dualAlgo.BenchmarkSpeed * mult;
 
                         var secondaryKey = dualAlgo.SecondaryNiceHashID;
-                        if (niceHashData.ContainsKey(secondaryKey))
+                        if (profits.TryGetValue(secondaryKey, out var secPaying))
                         {
-                            dualAlgo.SecondaryCurNhmSmaDataVal = niceHashData[secondaryKey].paying;
+                            dualAlgo.SecondaryCurNhmSmaDataVal = secPaying;
                             dualAlgo.CurrentProfit +=
                                 dualAlgo.SecondaryCurNhmSmaDataVal * dualAlgo.SecondaryBenchmarkSpeed * mult;
                         }

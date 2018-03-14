@@ -104,7 +104,6 @@
     <Compile Include="Enums\TimeUnitType.cs" />
     <Compile Include="IFTTT.cs" />
     <Compile Include="Configs\Data\DualAlgorithmConfig.cs" />
-    <Compile Include="ExchangeRateAPI.cs" />
     <Compile Include="Forms\Form_DcriValues.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,6 +111,7 @@
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\Equihash\Dtsm.cs" />
     <Compile Include="Miners\Ewbf.cs" />
@@ -119,7 +119,12 @@
     <Compile Include="Miners\XmrStak\XmrStak.cs" />
     <Compile Include="Miners\XmrStak\XmrStakConfig.cs" />
     <Compile Include="Miners\Xmrig.cs" />
-    <Compile Include="NiceHashStats.cs" />
+    <Compile Include="Stats\NiceHashSocket.cs" />
+    <Compile Include="Stats\NiceHashStats.cs" />
+    <Compile Include="Switching\AlgorithmHistory.cs" />
+    <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
+    <Compile Include="Switching\Models.cs" />
+    <Compile Include="Switching\Interval.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
@@ -296,7 +301,7 @@
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="PInvoke\PInvokeHelpers.cs" />
-    <Compile Include="Utils\NiceHashSMA.cs" />
+    <Compile Include="Switching\NHSmaData.cs" />
     <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
