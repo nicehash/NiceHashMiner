@@ -2,11 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NiceHashMiner.Switching;
 
 namespace NiceHashMiner
 {
     public class DualAlgorithm : Algorithm
     {
+        private const double Mult = 0.000000001;
+
         public override AlgorithmType SecondaryNiceHashID { get; }
 
         public string SecondaryAlgorithmName;
@@ -170,9 +173,9 @@ namespace NiceHashMiner
             get
             {
                 var ratio = International.GetText("BenchmarkRatioRateN_A");
-                if (Globals.NiceHashData != null && Globals.NiceHashData.ContainsKey(SecondaryNiceHashID))
+                if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying))
                 {
-                    ratio = Globals.NiceHashData[SecondaryNiceHashID].paying.ToString("F8");
+                    ratio = paying.ToString("F8");
                 }
 
                 return ratio;
@@ -201,19 +204,16 @@ namespace NiceHashMiner
             {
                 var rate = International.GetText("BenchmarkRatioRateN_A");
                 var payingRate = 0.0d;
-                if (Globals.NiceHashData != null)
+
+                if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
-                    if (BenchmarkSpeed > 0)
-                    {
-                        payingRate += BenchmarkSpeed * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
-                    }
+                    payingRate += BenchmarkSpeed * paying * Mult;
+                    rate = payingRate.ToString("F8");
+                }
 
-                    if (SecondaryBenchmarkSpeed > 0)
-                    {
-                        payingRate += SecondaryBenchmarkSpeed * Globals.NiceHashData[SecondaryNiceHashID].paying *
-                                      0.000000001;
-                    }
-
+                if (SecondaryBenchmarkSpeed > 0 && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying))
+                {
+                    payingRate += SecondaryBenchmarkSpeed * secPaying * Mult;
                     rate = payingRate.ToString("F8");
                 }
 
@@ -250,8 +250,7 @@ namespace NiceHashMiner
 
         public void UpdateProfitableIntensity()
         {
-            var niceHashSma = Globals.NiceHashData;
-            if (niceHashSma == null)
+            if (!NHSmaData.HasData)
             {
                 _mostProfitableIntensity = -1;
                 IntensityUpToDate = true;
@@ -260,20 +259,23 @@ namespace NiceHashMiner
 
             var maxProfit = 0d;
             var intensity = -1;
-            var paying = niceHashSma[NiceHashID].paying;
-            var secondaryPaying = niceHashSma[SecondaryNiceHashID].paying;
-            foreach (var key in IntensitySpeeds.Keys)
+            // Max sure to use single | here so second expression evaluates
+            if (NHSmaData.TryGetPaying(NiceHashID, out var paying) |
+                NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying))
             {
-                var profit = IntensitySpeeds[key] * paying;
-                if (SecondaryIntensitySpeeds.ContainsKey(key))
+                foreach (var key in IntensitySpeeds.Keys)
                 {
-                    profit += SecondaryIntensitySpeeds[key] * secondaryPaying;
-                }
+                    var profit = IntensitySpeeds[key] * paying;
+                    if (SecondaryIntensitySpeeds.TryGetValue(key, out var speed))
+                    {
+                        profit += speed * secPaying;
+                    }
 
-                if (profit > maxProfit)
-                {
-                    maxProfit = profit;
-                    intensity = key;
+                    if (profit > maxProfit)
+                    {
+                        maxProfit = profit;
+                        intensity = key;
+                    }
                 }
             }
 
@@ -310,18 +312,17 @@ namespace NiceHashMiner
 
         public double ProfitForIntensity(int intensity)
         {
-            if (Globals.NiceHashData == null) return 0;
             var profit = 0d;
-            if (Globals.NiceHashData.ContainsKey(NiceHashID) && IntensitySpeeds.ContainsKey(intensity))
+            if (NHSmaData.TryGetPaying(NiceHashID, out var paying) && 
+                IntensitySpeeds.TryGetValue(intensity, out var speed))
             {
-                profit += IntensitySpeeds[intensity] * Globals.NiceHashData[NiceHashID].paying * 0.000000001;
+                profit += speed * paying * Mult;
             }
-
-            if (Globals.NiceHashData.ContainsKey(SecondaryNiceHashID) &&
-                SecondaryIntensitySpeeds.ContainsKey(intensity))
+            
+            if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secPaying) && 
+                SecondaryIntensitySpeeds.TryGetValue(intensity, out var secSpeed))
             {
-                profit += SecondaryIntensitySpeeds[intensity] * Globals.NiceHashData[SecondaryNiceHashID].paying *
-                          0.000000001;
+                profit += secSpeed * secPaying * Mult;
             }
 
             return profit;
