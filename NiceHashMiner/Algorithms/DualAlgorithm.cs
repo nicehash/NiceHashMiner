@@ -265,6 +265,18 @@ namespace NiceHashMiner.Algorithms
             return International.GetText("BenchmarkSpeedStringNone");
         }
 
+        public override void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
+        {
+            base.UpdateCurProfit(profits);
+            profits.TryGetValue(SecondaryNiceHashID, out var secPaying);
+            
+            SecondaryCurNhmSmaDataVal = secPaying;
+
+            CurrentProfit = (CurNhmSmaDataVal * BenchmarkSpeed + SecondaryCurNhmSmaDataVal * SecondaryBenchmarkSpeed) * Mult;
+
+            SubtractPowerFromProfit();
+        }
+
         #region ClaymoreDual Tuning
 
         public void SetIntensitySpeedsForCurrent(double speed, double secondarySpeed)

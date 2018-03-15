@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using NiceHashMiner.Enums;
+using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 
 namespace NiceHashMiner.Algorithms
@@ -38,8 +40,8 @@ namespace NiceHashMiner.Algorithms
         public string MinerBinaryPath = "";
 
         // these are changing (logging reasons)
-        public double CurrentProfit = 0;
-        public double CurNhmSmaDataVal = 0;
+        public double CurrentProfit { get; protected set; }
+        public double CurNhmSmaDataVal { get; protected set; }
         public virtual bool BenchmarkNeeded => BenchmarkSpeed <= 0;
 
         // Power switching
@@ -152,5 +154,23 @@ namespace NiceHashMiner.Algorithms
         public virtual AlgorithmType DualNiceHashID => NiceHashID;
 
         public virtual bool IsDual => false;
+
+        public virtual void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
+        {
+            profits.TryGetValue(NiceHashID, out var paying);
+            CurNhmSmaDataVal = paying;
+            CurrentProfit = CurNhmSmaDataVal * AvaragedSpeed * Mult;
+            SubtractPowerFromProfit();
+        }
+
+        protected void SubtractPowerFromProfit()
+        {
+            // This is power usage in BTC/hr
+            var power = PowerUsage / 1000 * ExchangeRateApi.GetKwhPriceInBtc();
+            // Now it is power usage in BTC/day
+            power *= 24;
+            // Now we subtract from profit, which may make profit negative
+            CurrentProfit -= power;
+        }
     }
 }

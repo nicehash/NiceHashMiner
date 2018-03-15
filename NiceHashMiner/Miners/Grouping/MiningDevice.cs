@@ -161,34 +161,7 @@ namespace NiceHashMiner.Miners.Grouping
             // calculate new profits
             foreach (var algo in Algorithms)
             {
-                var key = algo.NiceHashID;
-                const double mult = 0.000000001;
-                if (profits.TryGetValue(key, out var paying))
-                {
-                    algo.CurNhmSmaDataVal = paying;
-                    if (algo is DualAlgorithm dualAlgo)
-                    {
-                        dualAlgo.IntensityUpToDate = false;
-                        // Bypass averager for dual algos
-                        dualAlgo.CurrentProfit = dualAlgo.CurNhmSmaDataVal * dualAlgo.BenchmarkSpeed * mult;
-
-                        var secondaryKey = dualAlgo.SecondaryNiceHashID;
-                        if (profits.TryGetValue(secondaryKey, out var secPaying))
-                        {
-                            dualAlgo.SecondaryCurNhmSmaDataVal = secPaying;
-                            dualAlgo.CurrentProfit +=
-                                dualAlgo.SecondaryCurNhmSmaDataVal * dualAlgo.SecondaryBenchmarkSpeed * mult;
-                        }
-                    }
-                    else
-                    {
-                        algo.CurrentProfit = algo.CurNhmSmaDataVal * algo.AvaragedSpeed * mult;
-                    }
-                }
-                else
-                {
-                    algo.CurrentProfit = 0;
-                }
+                algo.UpdateCurProfit(profits);
             }
 
             // find max paying value and save key
