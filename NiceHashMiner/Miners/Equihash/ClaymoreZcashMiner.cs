@@ -1,4 +1,6 @@
-﻿namespace NiceHashMiner.Miners
+﻿using NiceHashMiner.Algorithms;
+
+namespace NiceHashMiner.Miners
 {
     public class ClaymoreZcashMiner : ClaymoreBaseMiner
     {

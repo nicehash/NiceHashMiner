@@ -1,11 +1,13 @@
-﻿using NiceHashMiner.Enums;
-using System;
+﻿using System;
+using NiceHashMiner.Enums;
 using NiceHashMiner.Switching;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Algorithms
 {
     public class Algorithm
     {
+        private const double Mult = 0.000000001;
+
         public string AlgorithmName { get; protected set; }
         public readonly string MinerBaseTypeName;
         public readonly AlgorithmType NiceHashID;
@@ -39,6 +41,12 @@ namespace NiceHashMiner
         public double CurrentProfit = 0;
         public double CurNhmSmaDataVal = 0;
         public virtual bool BenchmarkNeeded => BenchmarkSpeed <= 0;
+
+        // Power switching
+        /// <summary>
+        /// Power consumption of this algorithm, in Watts
+        /// </summary>
+        public virtual double PowerUsage { get; set; }
 
         public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName) 
         {
@@ -83,7 +91,7 @@ namespace NiceHashMiner
                 var rate = International.GetText("BenchmarkRatioRateN_A");
                 if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
-                    var payingRate = BenchmarkSpeed * paying * 0.000000001;
+                    var payingRate = BenchmarkSpeed * paying * Mult;
                     rate = payingRate.ToString("F8");
                 }
                 return rate;

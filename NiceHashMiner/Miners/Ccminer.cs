@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using NiceHashMiner.Algorithms;
 
 namespace NiceHashMiner.Miners
 {

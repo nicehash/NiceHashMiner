@@ -3,6 +3,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using NiceHashMiner.Algorithms;
 
 namespace NiceHashMiner.Miners
 {

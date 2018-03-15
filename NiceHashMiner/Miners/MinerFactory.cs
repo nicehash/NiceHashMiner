@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Devices;
+﻿using NiceHashMiner.Algorithms;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Equihash;
 

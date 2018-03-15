@@ -67,6 +67,30 @@ namespace NiceHashMiner.Stats
             return UsdBtcRate > 0 ? UsdBtcRate : 0.0;
         }
 
+        public static double GetKwhPriceInBtc()
+        {
+            var price = ConfigManager.GeneralConfig.KwhPrice;
+            if (price <= 0) return 0;
+            // Converting with 1/price will give us 1/usdPrice
+            var invertedUsdRate = ConvertToActiveCurrency(1 / price);
+            if (invertedUsdRate > 0)
+            {
+                // Should never happen, indicates error in ExchangesFiat
+                // Fall back with 0
+                Helpers.ConsolePrint("EXCHANGE", "Exchange for currency is 0, power switching disabled.");
+                return 0;
+            }
+            // Make price in USD
+            price = 1 / invertedUsdRate;
+            // Race condition not a problem since UsdBtcRate will never update to 0
+            if (UsdBtcRate <= 0)
+            {
+                Helpers.ConsolePrint("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
+                return 0;
+            }
+            return price / UsdBtcRate;
+        }
+
         //[Obsolete("UpdateApi is deprecated, use websocket method")]
         //public static void UpdateApi(string worker)
         //{

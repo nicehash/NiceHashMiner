@@ -14,6 +14,8 @@ namespace NiceHashMiner.Configs.Data
         public int TuningStart = 25;
         public int TuningEnd = 250;
         public int TuningInterval = 25;
+        public Dictionary<int, double> IntensityPowers = new Dictionary<int, double>();
+        public bool UseIntensityPowers = false;
 
         public void FixSettingsBounds()
         {

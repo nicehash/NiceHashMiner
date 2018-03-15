@@ -9,6 +9,8 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using System.Threading.Tasks;
+using NiceHashMiner.Algorithms;
+
 // Resharper disable All
 #pragma warning disable
 

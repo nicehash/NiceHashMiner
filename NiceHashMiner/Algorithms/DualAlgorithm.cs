@@ -1,10 +1,10 @@
-﻿using NiceHashMiner.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NiceHashMiner.Enums;
 using NiceHashMiner.Switching;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Algorithms
 {
     public class DualAlgorithm : Algorithm
     {
@@ -182,6 +182,32 @@ namespace NiceHashMiner
             }
         }
 
+        #region Power Switching
+
+        public Dictionary<int, double> IntensityPowers;
+        private Dictionary<int, double> _intensityPowersBack;
+
+        public bool UseIntensityPowers;
+        private bool _useIntensityPowersBack;
+
+        public override double PowerUsage
+        {
+            get
+            {
+                if (UseIntensityPowers &&
+                    MostProfitableIntensity > 0 &&
+                    IntensityPowers.TryGetValue(MostProfitableIntensity, out var power))
+                {
+                    return power;
+                }
+
+                return base.PowerUsage;
+            }
+            set => base.PowerUsage = value;
+        }
+
+        #endregion
+
 
         public DualAlgorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, AlgorithmType secondaryNiceHashID)
             : base(minerBaseType, niceHashID, "")
@@ -196,6 +222,7 @@ namespace NiceHashMiner
 
             IntensitySpeeds = new Dictionary<int, double>();
             SecondaryIntensitySpeeds = new Dictionary<int, double>();
+            IntensityPowers = new Dictionary<int, double>();
         }
 
         public override string CurPayingRate
@@ -362,6 +389,8 @@ namespace NiceHashMiner
             _tuningStartBack = TuningStart;
             _tuningEndBack = TuningEnd;
             _tuningIntervalBack = TuningInterval;
+            _intensityPowersBack = new Dictionary<int, double>(IntensityPowers);
+            _useIntensityPowersBack = UseIntensityPowers;
         }
 
         public void RestoreIntensityBackup()
@@ -372,6 +401,8 @@ namespace NiceHashMiner
             TuningStart = _tuningStartBack;
             TuningEnd = _tuningEndBack;
             TuningInterval = _tuningIntervalBack;
+            IntensityPowers = new Dictionary<int, double>(_intensityPowersBack);
+            UseIntensityPowers = _useIntensityPowersBack;
         }
 
         #endregion

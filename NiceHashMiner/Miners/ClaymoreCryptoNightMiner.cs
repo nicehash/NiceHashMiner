@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;

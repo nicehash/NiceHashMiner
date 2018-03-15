@@ -104,6 +104,11 @@ namespace NiceHashMiner.Configs.Data
         public Interval SwitchSmaTicksStable = new Interval(2, 3);
         public Interval SwitchSmaTicksUnstable = new Interval(5, 13);
 
+        /// <summary>
+        /// Cost of electricity in kW-h
+        /// </summary>
+        public double KwhPrice = 0;
+
         // methods
         public void SetDefaults()
         {

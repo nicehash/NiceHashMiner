@@ -2,6 +2,7 @@
 using NiceHashMiner.Enums;
 using System;
 using System.Windows.Forms;
+using NiceHashMiner.Algorithms;
 
 namespace NiceHashMiner.Forms.Components
 {

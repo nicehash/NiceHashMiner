@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Switching;
 
 namespace NiceHashMiner.Miners
