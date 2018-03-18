@@ -8,9 +8,15 @@ namespace NiceHashMiner.Algorithms
 {
     public class Algorithm
     {
-        private const double Mult = 0.000000001;
+        protected const double Mult = 0.000000001;
 
+        /// <summary>
+        /// Friendly display name for this algorithm
+        /// </summary>
         public string AlgorithmName { get; protected set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly string MinerBaseTypeName;
         public readonly AlgorithmType NiceHashID;
         // Useful placeholder for sorting/finding

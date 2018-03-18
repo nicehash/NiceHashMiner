@@ -33,10 +33,12 @@ namespace NiceHashMinerLegacy.Tests.Algorithms
         {
             // Use this to init exchange rates
             ExchangeRateApiTest.Initialize(context);
+            // Assume this is returning correct value because it's tested elsewhere
             _kwhInBtc = ExchangeRateApi.GetKwhPriceInBtc();
             _algorithm = new Algorithm(Miner, Algo, "")
             {
-                AvaragedSpeed = Speed
+                AvaragedSpeed = Speed,
+                PowerUsage = PowerUsage
             };
         }
 
@@ -44,9 +46,12 @@ namespace NiceHashMinerLegacy.Tests.Algorithms
         public void Algorithm_ShouldSubtractPower()
         {
             _algorithm.UpdateCurProfit(Profits);
-            var expectedProfit = Profits[Algo] * Speed * 0.000000001 -
-                                 _kwhInBtc / 1000 * PowerUsage * 24;
-            Assert.AreEqual(expectedProfit, _algorithm.CurrentProfit);
+            // How much is paid by mining
+            var expectedRevenue = Profits[Algo] * Speed * 0.000000001;
+            // How much is lost to elec prices
+            var expectedPowerCost = _kwhInBtc / 1000 * PowerUsage * 24;
+            // expected profit = revenue - power costs
+            Assert.AreEqual(expectedRevenue - expectedPowerCost, _algorithm.CurrentProfit);
         }
     }
 }

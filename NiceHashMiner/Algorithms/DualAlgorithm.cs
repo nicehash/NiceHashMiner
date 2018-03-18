@@ -8,8 +8,6 @@ namespace NiceHashMiner.Algorithms
 {
     public class DualAlgorithm : Algorithm
     {
-        private const double Mult = 0.000000001;
-
         public override AlgorithmType SecondaryNiceHashID { get; }
 
         public string SecondaryAlgorithmName;
