@@ -30,9 +30,6 @@ namespace NiceHashMinerLegacy.Tests.Stats
                 DisplayCurrency = Currency,
                 KwhPrice = KwhPrice
             };
-            // Make sure initial state is right
-            Assert.AreEqual(ExchangeRateApi.GetUsdExchangeRate(), 0);
-            Assert.AreEqual(ExchangeRateApi.GetKwhPriceInBtc(), 0);
 
             // Add exchange info
             ExchangeRateApi.UsdBtcRate = UsdBtcRate;
