@@ -246,7 +246,7 @@
     <Compile Include="Miners\Obsolete\eqm.cs" />
     <Compile Include="Miners\Equihash\NhEqBase.cs" />
     <Compile Include="Miners\Equihash\OptiminerZcashMiner.cs" />
-    <Compile Include="Miners\Excavator.cs" />
+    <Compile Include="Miners\Obsolete\Excavator.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
