@@ -1,6 +1,6 @@
 {
   "Name": "Français",
-  "ID": 9,
+  "ID": fr,
     "Entries": {
         "Global_Yes": "&Oui",
         "Global_No": "&Non",
