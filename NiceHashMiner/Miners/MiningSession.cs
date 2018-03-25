@@ -611,6 +611,9 @@ namespace NiceHashMiner.Miners
                         {
                             groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
                         }
+                        // Deduct power costs
+                        var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
+                        groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
                     }
                     else
                     {

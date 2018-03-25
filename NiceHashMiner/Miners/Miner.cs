@@ -29,6 +29,7 @@ namespace NiceHashMiner
         public string AlgorithmName;
         public double Speed;
         public double SecondarySpeed;
+        public double PowerUsage;
 
         public ApiData(AlgorithmType algorithmID, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)
         {
@@ -37,6 +38,7 @@ namespace NiceHashMiner
             AlgorithmName = AlgorithmNiceHashNames.GetName(DualAlgorithmID());
             Speed = 0.0;
             SecondarySpeed = 0.0;
+            PowerUsage = 0.0;
         }
 
         public AlgorithmType DualAlgorithmID()
