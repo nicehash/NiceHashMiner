@@ -220,8 +220,8 @@
         "Form_Settings_ToolTip_SwitchMinSecondsFixed": "Temps mini fixe (en secondes) avant que le mineur ne change d'algo.\nTemps total = SwitchMinSecondsFixed + SwitchMinSecondsDynamic.",
         "Form_Settings_ToolTip_SwitchMinSecondsDynamic": "Temps aléatoire mini (en secondes) avant que le mineur ne change d'algo.\nTemps total = SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nLa partie aléatoire est utilisée pour empecher tous les utilisateurs mondiaux d'avoir exactement le même schéma de changement.",
         "Form_Settings_ToolTip_SwitchMinSecondsAMD": "Temps mini fixe (en secondes) avant que le mineur ne change d'algo (Pour GPUs AMD).\nTemps total = SwitchMinSecondsFixed + SwitchMinSecondsAMD + SwitchMinSecondsDynamic.",
-        "Form_Settings_ToolTip_SwitchMaxSeconds": "Limite haute pour l'interval de vérification aléaoirede la profitabilité.\nLes profits peuvent être vérifiés plusieurs fois avant que le changement intervienne, ne le réglez donc pas trop haut.",
-        "Form_Settings_ToolTip_SwitchMinSeconds": "Lower bound for the randomly chosen profit check interval.\nDo not set too low.",
+        "Form_Settings_ToolTip_SwitchMaxSeconds": "Limite haute pour l'interval de vérification aléaoire de la profitabilité.\nLes profits peuvent être vérifiés plusieurs fois avant que le changement intervienne, ne le réglez donc pas trop haut.",
+        "Form_Settings_ToolTip_SwitchMinSeconds": "Limite basse pour l'interval de vérification aléaoire de la profitabilité.\nNe le réglez pas trop bas.",
 
 
         "Form_Settings_ToolTip_MinerAPIQueryInterval": "Interval d'interrogation de l'API pour ccminer, sgminer cpuminer et ethminer.",
