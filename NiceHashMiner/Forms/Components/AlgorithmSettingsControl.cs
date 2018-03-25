@@ -20,9 +20,9 @@ namespace NiceHashMiner.Forms.Components
             InitializeComponent();
             fieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
             secondaryFieldBoxBenchmarkSpeed.SetInputModeDoubleOnly();
-            field_LessThreads.SetInputModeIntOnly();
+            field_PowerUsage.SetInputModeDoubleOnly();
 
-            field_LessThreads.SetOnTextLeave(LessThreads_Leave);
+            field_PowerUsage.SetOnTextLeave(PowerUsage_Leave);
             fieldBoxBenchmarkSpeed.SetOnTextChanged(TextChangedBenchmarkSpeed);
             secondaryFieldBoxBenchmarkSpeed.SetOnTextChanged(SecondaryTextChangedBenchmarkSpeed);
             richTextBoxExtraLaunchParameters.TextChanged += TextChangedExtraLaunchParameters;
@@ -36,15 +36,15 @@ namespace NiceHashMiner.Forms.Components
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
             secondaryFieldBoxBenchmarkSpeed.EntryText = "";
-            field_LessThreads.EntryText = "";
+            field_PowerUsage.EntryText = "";
             richTextBoxExtraLaunchParameters.Text = "";
         }
 
         public void InitLocale(ToolTip toolTip1)
         {
-            field_LessThreads.InitLocale(toolTip1,
-                International.GetText("Form_Settings_General_CPU_LessThreads") + ":",
-                International.GetText("Form_Settings_ToolTip_CPU_LessThreads"));
+            field_PowerUsage.InitLocale(toolTip1,
+                International.GetText("Form_Settings_Algo_PowerUsage") + ":",
+                International.GetText("Form_Settings_ToolTip_PowerUsage"));
             fieldBoxBenchmarkSpeed.InitLocale(toolTip1,
                 International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
                 International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
@@ -85,15 +85,7 @@ namespace NiceHashMiner.Forms.Components
                     $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})");
                 ;
 
-                field_LessThreads.Enabled = false; //_computeDevice.DeviceGroupType == DeviceGroupType.CPU && algorithm.MinerBaseType == MinerBaseType.XmrStak;
-                if (field_LessThreads.Enabled) 
-                {
-                    field_LessThreads.EntryText = algorithm.LessThreads.ToString();
-                } 
-                else 
-                {
-                    field_LessThreads.EntryText = "";
-                }
+                field_PowerUsage.EntryText = ParseDoubleDefault(algorithm.PowerUsage);
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
                 if (algorithm is DualAlgorithm dualAlgo) 
@@ -105,7 +97,8 @@ namespace NiceHashMiner.Forms.Components
                 {
                     secondaryFieldBoxBenchmarkSpeed.Enabled = false;
                 }
-                this.Update();
+                
+                Update();
             } 
             else {
                 // TODO this should not be null
@@ -127,6 +120,7 @@ namespace NiceHashMiner.Forms.Components
                 if (lvi.Tag is Algorithm algorithm)
                 {
                     fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
+                    field_PowerUsage.EntryText = ParseDoubleDefault(algorithm.PowerUsage);
                     if (algorithm is DualAlgorithm dualAlgo) 
                     {
                         secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(dualAlgo.SecondaryBenchmarkSpeed);
@@ -177,30 +171,13 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private void LessThreads_Leave(object sender, EventArgs e)
+        private void PowerUsage_Leave(object sender, EventArgs e)
         {
-            var txtbox = (TextBox) sender;
-            if (int.TryParse(txtbox.Text, out var val))
+            if (!CanEdit()) return;
+
+            if (double.TryParse(field_PowerUsage.EntryText, out var value))
             {
-                if (Globals.ThreadsPerCpu - val < 1)
-                {
-                    MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMiningLessThreadMsg"),
-                        International.GetText("Warning_with_Exclamation"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else
-                {
-                    _currentlySelectedAlgorithm.LessThreads = val;
-                }
-                txtbox.Text = _currentlySelectedAlgorithm.LessThreads.ToString();
-            }
-            else
-            {
-                MessageBox.Show(International.GetText("Form_Settings_LessThreadWarningMsg"),
-                    International.GetText("Form_Settings_LessThreadWarningTitle"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtbox.Text = _currentlySelectedAlgorithm.LessThreads.ToString();
-                txtbox.Focus();
+                _currentlySelectedAlgorithm.PowerUsage = value;
             }
         }
 

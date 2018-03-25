@@ -119,11 +119,11 @@ namespace NiceHashMiner.Forms.Components
                 }
                 else
                 {
-                    name = String.Format("{0} ({1})", alg.AlgorithmName, alg.MinerBaseTypeName);
+                    name = $"{alg.AlgorithmName} ({alg.MinerBaseTypeName})";
                     payingRatio = alg.CurPayingRatio;
                 }
 
-                ListViewItem.ListViewSubItem sub = lvi.SubItems.Add(name);
+                lvi.SubItems.Add(name);
 
                 //sub.Tag = alg.Value;
                 lvi.SubItems.Add(alg.BenchmarkSpeedString());

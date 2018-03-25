@@ -231,6 +231,10 @@ namespace NiceHashMiner.Configs.Data
             {
                 IQRNormalizeFactor = 0.0;
             }
+            if (KwhPrice < 0)
+            {
+                KwhPrice = 0;
+            }
 
             SwitchSmaTimeChangeSeconds.FixRange();
             SwitchSmaTicksStable.FixRange();

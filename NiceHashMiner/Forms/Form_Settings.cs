@@ -304,6 +304,11 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(checkBox_MinimizeMiningWindows,
                 International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
 
+            // Electricity cost
+            toolTip1.SetToolTip(label_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
+            toolTip1.SetToolTip(textBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
+            toolTip1.SetToolTip(pictureBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
+
             Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
@@ -382,6 +387,8 @@ namespace NiceHashMiner.Forms
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
 
             label_IFTTTAPIKey.Text = International.GetText("Form_Settings_IFTTTAPIKey");
+
+            label_ElectricityCost.Text = International.GetText("Form_Settings_ElectricityCost");
 
             // Benchmark time limits
             // internationalization change
@@ -468,6 +475,7 @@ namespace NiceHashMiner.Forms
                 textBox_ethminerDefaultBlockHeight.Leave += GeneralTextBoxes_Leave;
                 textBox_APIBindPortStart.Leave += GeneralTextBoxes_Leave;
                 textBox_MinProfit.Leave += GeneralTextBoxes_Leave;
+                textBox_ElectricityCost.Leave += GeneralTextBoxes_Leave;
                 // set int only keypress
                 textBox_SwitchMaxSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 textBox_SwitchMinSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
@@ -479,6 +487,7 @@ namespace NiceHashMiner.Forms
                 textBox_APIBindPortStart.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 // set double only keypress
                 textBox_MinProfit.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                textBox_ElectricityCost.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -555,6 +564,7 @@ namespace NiceHashMiner.Forms
                     ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma;
                 textBox_SwitchProfitabilityThreshold.Text = ConfigManager.GeneralConfig.SwitchProfitabilityThreshold
                     .ToString("F2").Replace(',', '.'); // force comma;
+                textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
             }
 
             // set custom control referances
@@ -769,6 +779,8 @@ namespace NiceHashMiner.Forms
 
             ConfigManager.GeneralConfig.IFTTTKey = textBox_IFTTTKey.Text.Trim();
 
+            ConfigManager.GeneralConfig.KwhPrice = Helpers.ParseDouble(textBox_ElectricityCost.Text);
+
             // Fix bounds
             ConfigManager.GeneralConfig.FixSettingBounds();
             // update strings
@@ -784,6 +796,7 @@ namespace NiceHashMiner.Forms
             textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
             textBox_ethminerDefaultBlockHeight.Text = ConfigManager.GeneralConfig.ethminerDefaultBlockHeight.ToString();
             textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
+            textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e)
