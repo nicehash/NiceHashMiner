@@ -247,7 +247,8 @@ namespace NiceHashMiner.Devices
                             MinerBaseType.Xmrig,
                             new List<Algorithm>
                             {
-                                new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNight, "")
+                                new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNight, ""),
+                                new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightV7, "")
                             }
                         }
                     };
@@ -364,7 +365,8 @@ namespace NiceHashMiner.Devices
                                 new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia"),
                                 new Algorithm(MinerBaseType.ccminer, AlgorithmType.Nist5, "nist5"),
                                 new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
-                                new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk")
+                                new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk"),
+                                new Algorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNightV7, "cryptonight")
                             }
                         },
                         {
@@ -445,7 +447,8 @@ namespace NiceHashMiner.Devices
                             {
                                 AlgorithmType.NeoScrypt,
                                 AlgorithmType.Lyra2RE,
-                                AlgorithmType.Lyra2REv2
+                                AlgorithmType.Lyra2REv2,
+                                AlgorithmType.CryptoNightV7
                             });
                             toRemoveMinerTypes.AddRange(new[]
                             {

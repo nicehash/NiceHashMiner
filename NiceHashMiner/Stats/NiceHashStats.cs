@@ -180,9 +180,11 @@ namespace NiceHashMiner.Stats
         {
             try
             {
-                double.TryParse(balance, NumberStyles.Number, CultureInfo.InvariantCulture, out var bal);
-                Balance = bal;
-                OnBalanceUpdate.Emit(null, EventArgs.Empty);
+                if (double.TryParse(balance, NumberStyles.Float, CultureInfo.InvariantCulture, out var bal))
+                {
+                    Balance = bal;
+                    OnBalanceUpdate.Emit(null, EventArgs.Empty);
+                }
             }
             catch (Exception e)
             {
