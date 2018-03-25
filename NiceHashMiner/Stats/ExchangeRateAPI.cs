@@ -67,13 +67,17 @@ namespace NiceHashMiner.Stats
             return UsdBtcRate > 0 ? UsdBtcRate : 0.0;
         }
 
+        /// <summary>
+        /// Get price of kW-h in BTC if it is set and exchanges are working
+        /// Otherwise, returns 0
+        /// </summary>
         public static double GetKwhPriceInBtc()
         {
             var price = ConfigManager.GeneralConfig.KwhPrice;
             if (price <= 0) return 0;
             // Converting with 1/price will give us 1/usdPrice
             var invertedUsdRate = ConvertToActiveCurrency(1 / price);
-            if (invertedUsdRate > 0)
+            if (invertedUsdRate <= 0)
             {
                 // Should never happen, indicates error in ExchangesFiat
                 // Fall back with 0

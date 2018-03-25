@@ -342,8 +342,8 @@ namespace NiceHashMiner.Miners.Parsing
                         return MinerType.eqm_CUDA;
                     }
                     break;
-                case MinerBaseType.excavator:
-                    return MinerType.excavator;
+                //case MinerBaseType.excavator:
+                //    return MinerType.excavator;
                 case MinerBaseType.EWBF:
                     return MinerType.EWBF;
                 case MinerBaseType.Xmrig:

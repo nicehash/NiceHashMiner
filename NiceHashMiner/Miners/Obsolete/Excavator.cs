@@ -12,6 +12,7 @@ using NiceHashMiner.Algorithms;
 
 namespace NiceHashMiner.Miners
 {
+    [Obsolete("Excavator is deprecated")]
     public class Excavator : Miner
     {
 #pragma warning disable IDE1006

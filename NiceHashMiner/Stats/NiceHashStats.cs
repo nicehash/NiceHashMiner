@@ -264,8 +264,8 @@ namespace NiceHashMiner.Stats
                     };
                     var status = Convert.ToInt32(activeIDs.Contains(device.Index)) + ((int) device.DeviceType + 1) * 2;
                     array.Add(status);
-                    array.Add((uint) device.Load);
-                    array.Add((uint) device.Temp);
+                    array.Add((int) Math.Round(device.Load));
+                    array.Add((int) Math.Round(device.Temp));
                     array.Add(device.FanSpeed);
 
                     deviceList.Add(array);

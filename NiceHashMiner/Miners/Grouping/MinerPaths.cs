@@ -157,8 +157,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return AmdGroup.ClaymorePath(algoType);
                 case MinerBaseType.OptiminerAMD:
                     return Data.OptiminerZcashMiner;
-                case MinerBaseType.excavator:
-                    return Data.Excavator;
+                //case MinerBaseType.excavator:
+                //    return Data.Excavator;
                 case MinerBaseType.XmrStak:
                     return Data.XmrStak;
                 case MinerBaseType.ccminer_alexis:

@@ -59,9 +59,9 @@ namespace NiceHashMiner.Devices
         public string BenchmarkCopyUuid { get; set; }
         public string TuningCopyUuid { get; set; }
 
-        public virtual float Load => 0;
-        public virtual float Temp => 0;
-        public virtual uint FanSpeed => 0;
+        public virtual float Load => -1;
+        public virtual float Temp => -1;
+        public virtual int FanSpeed => -1;
 
         // Ambiguous constructor
         protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable,

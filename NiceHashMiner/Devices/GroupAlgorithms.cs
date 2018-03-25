@@ -392,14 +392,14 @@ namespace NiceHashMiner.Devices
                                 new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
                             }
                         },
-                        {
-                            MinerBaseType.excavator,
-                            new List<Algorithm>
-                            {
-                                new Algorithm(MinerBaseType.excavator, AlgorithmType.Equihash, "equihash"),
-                                new Algorithm(MinerBaseType.excavator, AlgorithmType.Pascal, "pascal")
-                            }
-                        },
+                        //{
+                        //    MinerBaseType.excavator,
+                        //    new List<Algorithm>
+                        //    {
+                        //        new Algorithm(MinerBaseType.excavator, AlgorithmType.Equihash, "equihash"),
+                        //        new Algorithm(MinerBaseType.excavator, AlgorithmType.Pascal, "pascal")
+                        //    }
+                        //},
                         {
                             MinerBaseType.EWBF,
                             new List<Algorithm>
@@ -453,7 +453,6 @@ namespace NiceHashMiner.Devices
                             toRemoveMinerTypes.AddRange(new[]
                             {
                                 MinerBaseType.eqm,
-                                MinerBaseType.excavator,
                                 MinerBaseType.EWBF,
                                 MinerBaseType.dtsm
                             });

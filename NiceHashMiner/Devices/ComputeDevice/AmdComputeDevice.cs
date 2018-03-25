@@ -8,7 +8,7 @@ namespace NiceHashMiner.Devices
     {
         private readonly int _adapterIndex; // For ADL
 
-        public override uint FanSpeed
+        public override int FanSpeed
         {
             get
             {
@@ -20,8 +20,9 @@ namespace NiceHashMiner.Devices
                 if (result != ADL.ADL_SUCCESS)
                 {
                     Helpers.ConsolePrint("ADL", "ADL fan getting failed with error code " + result);
+                    return -1;
                 }
-                return (uint) adlf.FanSpeed;
+                return adlf.FanSpeed;
             }
         }
 
@@ -34,6 +35,7 @@ namespace NiceHashMiner.Devices
                 if (result != ADL.ADL_SUCCESS)
                 {
                     Helpers.ConsolePrint("ADL", "ADL temp getting failed with error code " + result);
+                    return -1;
                 }
                 return adlt.Temperature * 0.001f;
             }
@@ -48,6 +50,7 @@ namespace NiceHashMiner.Devices
                 if (result != ADL.ADL_SUCCESS)
                 {
                     Helpers.ConsolePrint("ADL", "ADL load getting failed with error code " + result);
+                    return -1;
                 }
                 return adlp.ActivityPercent;
             }

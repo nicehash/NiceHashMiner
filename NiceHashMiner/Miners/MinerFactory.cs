@@ -58,8 +58,8 @@ namespace NiceHashMiner.Miners
                     return CreateClaymore(algorithm);
                 case MinerBaseType.OptiminerAMD:
                     return new OptiminerZcashMiner();
-                case MinerBaseType.excavator:
-                    return new Excavator();
+                //case MinerBaseType.excavator:
+                //    return new Excavator();
                 case MinerBaseType.XmrStak:
                     return new XmrStak();
                 case MinerBaseType.ccminer_alexis:

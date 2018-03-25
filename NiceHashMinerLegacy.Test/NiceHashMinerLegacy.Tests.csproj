@@ -48,6 +48,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Algorithms\AlgorithmTest.cs" />
+    <Compile Include="Stats\ExchangeRateApiTest.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManagerTest.cs" />
     <Compile Include="Switching\NHSmaDataTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,141 +8,23 @@ namespace NiceHashMiner.Algorithms
 {
     public class DualAlgorithm : Algorithm
     {
-        private const double Mult = 0.000000001;
+        #region Identity
 
+        /// <summary>
+        /// AlgorithmType used as the secondary for this algorithm
+        /// </summary>
         public override AlgorithmType SecondaryNiceHashID { get; }
-
-        public string SecondaryAlgorithmName;
-
-        // ClaymoreDual intensity tuning
-        public int CurrentIntensity = -1;
-
-        public Dictionary<int, double> IntensitySpeeds;
-        public Dictionary<int, double> SecondaryIntensitySpeeds;
-        public bool TuningEnabled;
-        public int TuningStart = 25;
-        public int TuningEnd = 200;
-
-        public int TuningInterval = 25;
-
-        // And backups
-        private Dictionary<int, double> _intensitySpeedsBack;
-        private Dictionary<int, double> _secondaryIntensitySpeedsBack;
-        private bool _tuningEnabledBack;
-        private int _tuningStartBack;
-        private int _tuningEndBack;
-        private int _tuningIntervalBack;
-
+        /// <summary>
+        /// Friendly name for secondary algorithm
+        /// </summary>
+        public readonly string SecondaryAlgorithmName;
+        /// <summary>
+        /// Current SMA profitability for the secondary algorithm type in BTC/GH/Day
+        /// </summary>
         public double SecondaryCurNhmSmaDataVal = 0;
-        public bool IntensityUpToDate;
-
-        public override double BenchmarkSpeed
-        {
-            get
-            {
-                if (MostProfitableIntensity > 0)
-                {
-                    try
-                    {
-                        return IntensitySpeeds[MostProfitableIntensity];
-                    }
-                    catch (Exception e)
-                    {
-                        Helpers.ConsolePrint("CDTUNING", e.ToString());
-                        IntensityUpToDate = false;
-                        return 0;
-                    }
-                }
-
-                return benchmarkSpeed;
-            }
-        }
-
-        private double _secondaryBenchmarkSpeed;
-
-        public double SecondaryBenchmarkSpeed
-        {
-            get
-            {
-                if (MostProfitableIntensity > 0)
-                {
-                    try
-                    {
-                        return SecondaryIntensitySpeeds[MostProfitableIntensity];
-                    }
-                    catch (Exception e)
-                    {
-                        Helpers.ConsolePrint("CDTUNING", e.ToString());
-                        IntensityUpToDate = false;
-                        return 0;
-                    }
-                }
-
-                return _secondaryBenchmarkSpeed;
-            }
-            set => _secondaryBenchmarkSpeed = value;
-        }
-
-        public double SecondaryAveragedSpeed { get; set; }
-
-        private int _mostProfitableIntensity = -1;
-
-        public int MostProfitableIntensity
-        {
-            get
-            {
-                if (!IntensityUpToDate) UpdateProfitableIntensity();
-                return _mostProfitableIntensity;
-            }
-        }
-
-        public SortedSet<int> SelectedIntensities
-        {
-            get
-            {
-                var list = new SortedSet<int>();
-                for (var i = TuningStart;
-                    i <= TuningEnd;
-                    i += TuningInterval)
-                {
-                    list.Add(i);
-                }
-
-                return list;
-            }
-        }
-
-        public SortedSet<int> AllIntensities
-        {
-            get
-            {
-                var list = new List<int>(IntensitySpeeds.Keys);
-                list.AddRange(SecondaryIntensitySpeeds.Keys);
-                list.AddRange(SelectedIntensities);
-                return new SortedSet<int>(list);
-            }
-        }
-
-        public override bool BenchmarkNeeded
-        {
-            get
-            {
-                if (TuningEnabled)
-                {
-                    if (SelectedIntensities.Any(IsIntensityEmpty)) return true;
-                }
-                else
-                {
-                    if (SecondaryBenchmarkSpeed <= 0 || BenchmarkSpeed <= 0)
-                    {
-                        return true;
-                    }
-                }
-
-                return false;
-            }
-        }
-
+        /// <summary>
+        /// AlgorithmType that uniquely identifies this choice of primary/secondary types
+        /// </summary>
         public override AlgorithmType DualNiceHashID
         {
             get
@@ -166,28 +48,204 @@ namespace NiceHashMiner.Algorithms
             }
         }
 
-        public override bool IsDual => true;
+        #endregion
 
-        public string SecondaryCurPayingRatio
+        #region Intensity tuning
+
+        /// <summary>
+        /// Current intensity while mining or benchmarking
+        /// </summary>
+        public int CurrentIntensity = -1;
+
+        /// <summary>
+        /// Lower bound for intensity tuning
+        /// </summary>
+        public int TuningStart = 25;
+        /// <summary>
+        /// Upper bound for intensity tuning
+        /// </summary>
+        public int TuningEnd = 200;
+        /// <summary>
+        /// Interval for intensity tuning
+        /// </summary>
+        public int TuningInterval = 25;
+
+        /// <summary>
+        /// Dictionary of intensity values to speeds in hashrates
+        /// </summary>
+        public Dictionary<int, double> IntensitySpeeds;
+        /// <summary>
+        /// Dictionary of intensity values to secondary speeds in hashrates
+        /// </summary>
+        public Dictionary<int, double> SecondaryIntensitySpeeds;
+        /// <summary>
+        /// Get or set whether intensity tuning is enabled
+        /// </summary>
+        public bool TuningEnabled;
+
+        // And backups
+        private Dictionary<int, double> _intensitySpeedsBack;
+        private Dictionary<int, double> _secondaryIntensitySpeedsBack;
+        private bool _tuningEnabledBack;
+        private int _tuningStartBack;
+        private int _tuningEndBack;
+        private int _tuningIntervalBack;
+
+        /// <summary>
+        /// Get or set whether intensity profitability is up to date
+        /// <para>This should generally be set to false if tuning speeds or SMA profits are changed</para>
+        /// </summary>
+        public bool IntensityUpToDate;
+
+        private int _mostProfitableIntensity = -1;
+        /// <summary>
+        /// Get the most profitable intensity value for this algorithm
+        /// <para>If IntensityUpToDate = false, intensity profit will be updated first</para>
+        /// </summary>
+        public int MostProfitableIntensity
         {
             get
             {
-                var ratio = International.GetText("BenchmarkRatioRateN_A");
-                if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying))
-                {
-                    ratio = paying.ToString("F8");
-                }
-
-                return ratio;
+                // UpdateProfitableIntensity() can take some time, so we store most profitable and only update when needed
+                if (!IntensityUpToDate) UpdateProfitableIntensity();
+                return _mostProfitableIntensity;
             }
         }
 
+        /// <summary>
+        /// Sorted list of intensities that are selected for tuning
+        /// </summary>
+        private SortedSet<int> SelectedIntensities
+        {
+            get
+            {
+                var list = new SortedSet<int>();
+                for (var i = TuningStart;
+                    i <= TuningEnd;
+                    i += TuningInterval)
+                {
+                    list.Add(i);
+                }
+
+                return list;
+            }
+        }
+
+        /// <summary>
+        /// Sorted list of all intensities that are selected for tuning or have speeds
+        /// </summary>
+        public SortedSet<int> AllIntensities
+        {
+            get
+            {
+                var list = new List<int>(IntensitySpeeds.Keys);
+                list.AddRange(SecondaryIntensitySpeeds.Keys);
+                list.AddRange(SelectedIntensities);
+                return new SortedSet<int>(list);
+            }
+        }
+
+        #endregion
+
+        #region Mining settings
+        
+        /// <summary>
+        /// Primary hashrate in H/s set by benchmark or user
+        /// <para>If tuning is enabled, returns the hashrate from the most profitable intensity</para>
+        /// </summary>
+        public override double BenchmarkSpeed
+        {
+            get
+            {
+                if (MostProfitableIntensity > 0)
+                {
+                    try
+                    {
+                        return IntensitySpeeds[MostProfitableIntensity];
+                    }
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint("CDTUNING", e.ToString());
+                        IntensityUpToDate = false;
+                        return 0;
+                    }
+                }
+
+                return base.BenchmarkSpeed;
+            }
+        }
+
+        private double _secondaryBenchmarkSpeed;
+        /// <summary>
+        /// Secondary hashrate in H/s set by benchmark or user
+        /// <para>If tuning is enabled, returns the hashrate from the most profitable intensity</para>
+        /// </summary>
+        public double SecondaryBenchmarkSpeed
+        {
+            get
+            {
+                if (MostProfitableIntensity > 0)
+                {
+                    try
+                    {
+                        return SecondaryIntensitySpeeds[MostProfitableIntensity];
+                    }
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint("CDTUNING", e.ToString());
+                        IntensityUpToDate = false;
+                        return 0;
+                    }
+                }
+
+                return _secondaryBenchmarkSpeed;
+            }
+            set => _secondaryBenchmarkSpeed = value;
+        }
+        
+        /// <summary>
+        /// Gets the secondary averaged speed for this algorithm in H/s
+        /// <para>When multiple devices of the same model are used, this will be set to their averaged hashrate</para>
+        /// </summary>
+        public double SecondaryAveragedSpeed { get; set; }
+        
+        /// <summary>
+        /// Indicates whether this algorithm requires a benchmark
+        /// </summary>
+        public override bool BenchmarkNeeded
+        {
+            get
+            {
+                if (TuningEnabled)
+                {
+                    if (SelectedIntensities.Any(IsIntensityEmpty)) return true;
+                }
+                else
+                {
+                    if (SecondaryBenchmarkSpeed <= 0 || BenchmarkSpeed <= 0)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
+        #endregion
+        
         #region Power Switching
 
+        /// <summary>
+        /// Dictionary of intensity values and power usage for each
+        /// </summary>
         public Dictionary<int, double> IntensityPowers;
-        private Dictionary<int, double> _intensityPowersBack;
-
+        /// <summary>
+        /// Get or set whether we should use different powers for intensities
+        /// </summary>
         public bool UseIntensityPowers;
+        // Backup of above
+        private Dictionary<int, double> _intensityPowersBack;
         private bool _useIntensityPowersBack;
 
         public override double PowerUsage
@@ -225,6 +283,8 @@ namespace NiceHashMiner.Algorithms
             IntensityPowers = new Dictionary<int, double>();
         }
 
+        #region Benchmark info
+
         public override string CurPayingRate
         {
             get
@@ -248,6 +308,20 @@ namespace NiceHashMiner.Algorithms
             }
         }
 
+        public string SecondaryCurPayingRatio
+        {
+            get
+            {
+                var ratio = International.GetText("BenchmarkRatioRateN_A");
+                if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying))
+                {
+                    ratio = paying.ToString("F8");
+                }
+
+                return ratio;
+            }
+        }
+
         public string SecondaryBenchmarkSpeedString()
         {
             const string dcriStatus = " (dcri:{0})";
@@ -265,6 +339,20 @@ namespace NiceHashMiner.Algorithms
             return International.GetText("BenchmarkSpeedStringNone");
         }
 
+        #endregion
+
+        public override void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
+        {
+            base.UpdateCurProfit(profits);
+            profits.TryGetValue(SecondaryNiceHashID, out var secPaying);
+            
+            SecondaryCurNhmSmaDataVal = secPaying;
+
+            CurrentProfit = (CurNhmSmaDataVal * BenchmarkSpeed + SecondaryCurNhmSmaDataVal * SecondaryBenchmarkSpeed) * Mult;
+
+            SubtractPowerFromProfit();
+        }
+
         #region ClaymoreDual Tuning
 
         public void SetIntensitySpeedsForCurrent(double speed, double secondarySpeed)
@@ -275,7 +363,7 @@ namespace NiceHashMiner.Algorithms
             IntensityUpToDate = false;
         }
 
-        public void UpdateProfitableIntensity()
+        private void UpdateProfitableIntensity()
         {
             if (!NHSmaData.HasData)
             {
