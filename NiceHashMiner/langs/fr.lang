@@ -380,7 +380,7 @@
 
         "Form_Settings_General_SwitchProfitabilityThreshold": "Seuil de changement de profitabilité",
         "Form_Settings_ToolTip_SwitchProfitabilityThreshold": "Le mineur ne changera pas d'algo si la profitabilité est en dessous de SeuilDeChangementDeProfitabilité. Valeur en pourcentage [0 - 1]",
-        "VirtualMemorySize_BAD": "NiceHash Miner Legacy recommande d'augmenter la taille de la mémoire virtuelle pour que tous les algorithmes fonctionnent bien.",
+        "VirtualMemorySize_BAD": "NiceHash Miner Legacy recommande d'augmenter la taille de la mémoire virtuelle pour que tous les algorithmes fonctionnent correctement.",
         "sgminer_precise_try": "Echec - Essayez Précis"
     }
 }
