@@ -111,13 +111,16 @@
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
+    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
+    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigPool.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\Equihash\Dtsm.cs" />
     <Compile Include="Miners\Ewbf.cs" />
     <Compile Include="Miners\Prospector.cs" />
     <Compile Include="Miners\XmrStak\XmrStak.cs" />
-    <Compile Include="Miners\XmrStak\XmrStakConfig.cs" />
+    <Compile Include="Miners\XmrStak\Configs\XmrStakConfig.cs" />
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />

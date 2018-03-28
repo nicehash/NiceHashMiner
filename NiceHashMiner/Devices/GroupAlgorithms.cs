@@ -240,7 +240,8 @@ namespace NiceHashMiner.Devices
                             MinerBaseType.XmrStak,
                             new List<Algorithm>
                             {
-                                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, "cryptonight")
+                                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, "cryptonight"),
+                                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7, "")
                             }
                         },
                         {
@@ -339,7 +340,8 @@ namespace NiceHashMiner.Devices
                         { 
                             MinerBaseType.XmrStak,
                             new List<Algorithm> {
-                                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, "")
+                                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, ""),
+                                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7, "")
                             }
                         }
                     };
@@ -428,7 +430,8 @@ namespace NiceHashMiner.Devices
                         { 
                             MinerBaseType.XmrStak,
                             new List<Algorithm> {
-                                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, "")
+                                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNight, ""),
+                                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7, "")
                             }
                         }
                     };
@@ -469,7 +472,8 @@ namespace NiceHashMiner.Devices
                         });
                         toRemoveMinerTypes.AddRange(new[]
                         {
-                            MinerBaseType.Claymore
+                            MinerBaseType.Claymore,
+                            MinerBaseType.XmrStak
                         });
                     }
 

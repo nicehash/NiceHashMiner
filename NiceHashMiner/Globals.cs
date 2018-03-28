@@ -34,15 +34,7 @@ namespace NiceHashMiner
             var name = sma.Name;
             var nPort = sma.Port;
             var sslPort = 30000 + nPort;
-
-            // V7 testing
-#if DEBUG
-            if (algorithmType == AlgorithmType.CryptoNightV7)
-            {
-                return "stratum+tcp://killallasics.moneroworld.com:3333";
-            }
-#endif
-
+            
             // NHMConectionType.NONE
             var prefix = "";
             var port = nPort;

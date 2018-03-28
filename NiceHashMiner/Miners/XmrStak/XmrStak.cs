@@ -10,16 +10,14 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMiner.Miners.XmrStak.Configs;
 
-// ReSharper disable All
-#pragma warning disable
-
-namespace NiceHashMiner.Miners
+namespace NiceHashMiner.Miners.XmrStak
 {
     public class XmrStak : Miner
     {
-        private const string _configName = "config_nh.txt";
-        private const string _defConfigName = "config.txt";
+        private const string ConfigName = "config_nh.txt";
+        private const string DefConfigName = "config.txt";
 
         private int _benchmarkCount;
         private double _benchmarkSum;
@@ -61,7 +59,7 @@ namespace NiceHashMiner.Miners
             }
 
             var devConfigs = PrepareConfigFiles(url, btcAdress, worker);
-            LastCommandLine = CreateLaunchCommand(_configName, devConfigs);
+            LastCommandLine = CreateLaunchCommand(ConfigName, devConfigs);
 
             ProcessHandle = _Start();
         }
@@ -70,7 +68,7 @@ namespace NiceHashMiner.Miners
         {
             var devs = devConfigs.Keys.Aggregate("",
                 (current, dev) => current + $"--{dev.ToString().ToLower()} {devConfigs[dev]} ");
-            return $"-c {configName} {devs} {DisableDevCmd(devConfigs.Keys)}";
+            return $"-c {configName} -C {GetPoolConfigName()} {devs} {DisableDevCmd(devConfigs.Keys)}";
         }
 
         protected virtual Dictionary<DeviceType, string> PrepareConfigFiles(string url, string btcAddress,
@@ -83,16 +81,19 @@ namespace NiceHashMiner.Miners
                 if (!types.Contains(pair.Device.DeviceType)) types.Add(pair.Device.DeviceType);
             }
 
-            var configName = bench ? GetBenchConfigName() : _configName;
-            var config = ParseJsonFile<XmrStakConfig>(filename: _defConfigName) ?? new XmrStakConfig();
-            config.SetupPools(url, GetUsername(btcAddress, worker));
+            var configName = bench ? GetBenchConfigName() : ConfigName;
+            var config = ParseJsonFile<XmrStakConfig>(filename: DefConfigName) ?? new XmrStakConfig();
             config.httpd_port = ApiPort;
             if (bench)
             {
                 config.SetBenchmarkOptions(GetLogFileName());
             }
 
-            WriteJsonFile(config, configName, _defConfigName);
+            WriteJsonFile(config, configName, DefConfigName);
+
+            var pools = new XmrStakConfigPool();
+            pools.SetupPools(url, GetUsername(btcAddress, worker));
+            WriteJsonFile(pools, GetPoolConfigName());
 
             foreach (var type in types)
             {
@@ -148,8 +149,9 @@ namespace NiceHashMiner.Miners
 
         protected string GetDevConfigFileName(DeviceType type)
         {
-            var ids = MiningSetup.MiningPairs.Where(pair => pair.Device.DeviceType == type)
-                .Select(pair => pair.Device.ID).ToList();
+            var ids = MiningSetup.MiningPairs
+                .Where(pair => pair.Device.DeviceType == type)
+                .Select(pair => pair.Device.ID);
             return $"{type}_{string.Join(",", ids)}.txt";
         }
 
@@ -162,6 +164,12 @@ namespace NiceHashMiner.Miners
         protected override string GetLogFileName()
         {
             return $"{(int) MiningSetup.MiningPairs[0].Device.DeviceType}-{base.GetLogFileName()}";
+        }
+
+        private string GetPoolConfigName()
+        {
+            var ids = MiningSetup.MiningPairs.Select(pair => $"{(int) pair.Device.DeviceType}-{pair.Device.ID}");
+            return $"pools_{string.Join(",", ids)}.txt";
         }
 
         #endregion
@@ -259,15 +267,10 @@ namespace NiceHashMiner.Miners
             {
                 // If from recursive call, don't try again
                 if (fallback) return default(T);
-                if (!File.Exists(WorkingDirectory + _defConfigName))
+                if (!File.Exists(WorkingDirectory + DefConfigName))
                 {
                     // Exception since xmr-stak won't passively generate general config
                     var config = new XmrStakConfig();
-                    // Dummy values for pools, won't load with an empty pool list
-                    var url = Globals.GetLocationUrl(AlgorithmType.CryptoNight,
-                        Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
-                    var worker = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
-                    config.SetupPools(url, worker);
                     WriteJsonFile(config, filename);
                 }
 
