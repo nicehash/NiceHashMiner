@@ -223,7 +223,8 @@ namespace NiceHashMiner.Miners.XmrStak
             var speeds = outdata.Split();
             foreach (var s in speeds)
             {
-                if (!double.TryParse(s, out var speed) || speed <= 0) continue;
+                if (!double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var speed) || speed <= 0) 
+                    continue;
                 _benchmarkSum += speed;
                 _benchmarkCount++;
                 break;
