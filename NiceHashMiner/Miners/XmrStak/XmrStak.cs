@@ -218,12 +218,12 @@ namespace NiceHashMiner.Miners.XmrStak
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            if (!outdata.Contains("Totals:")) return false;
+            if (!outdata.Contains("Totals (ALL):")) return false;
 
             var speeds = outdata.Split();
             foreach (var s in speeds)
             {
-                if (!double.TryParse(s, out var speed)) continue;
+                if (!double.TryParse(s, out var speed) || speed <= 0) continue;
                 _benchmarkSum += speed;
                 _benchmarkCount++;
                 break;

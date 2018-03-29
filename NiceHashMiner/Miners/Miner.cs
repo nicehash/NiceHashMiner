@@ -656,7 +656,7 @@ namespace NiceHashMiner
 
         protected virtual string GetFinalBenchmarkString()
         {
-            return BenchmarkSignalTimedout
+            return BenchmarkSignalTimedout && !TimeoutStandard
                 ? International.GetText("Benchmark_Timedout")
                 : International.GetText("Benchmark_Terminated");
         }
@@ -875,11 +875,11 @@ namespace NiceHashMiner
             // clean old logs
             try
             {
-                var dirInfo = new DirectoryInfo(this.WorkingDirectory);
+                var dirInfo = new DirectoryInfo(WorkingDirectory);
                 var deleteContains = GetLogFileName();
-                if (dirInfo != null && dirInfo.Exists)
+                if (dirInfo.Exists)
                 {
-                    foreach (FileInfo file in dirInfo.GetFiles())
+                    foreach (var file in dirInfo.GetFiles())
                     {
                         if (file.Name.Contains(deleteContains))
                         {

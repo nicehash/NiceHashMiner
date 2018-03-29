@@ -515,7 +515,7 @@ namespace NiceHashMiner.Miners.Parsing
                         break;
                     }
                 }
-                if (i > -1 && strings.Length < i)
+                if (i > -1 && strings.Length > i)
                 {
                     var numTr = cDev.Threads;
                     if (int.TryParse(strings[i], out numTr))
