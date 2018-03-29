@@ -28,10 +28,10 @@
             this.columnHeader0 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // listViewAlgorithms
@@ -48,10 +48,9 @@
             this.listViewAlgorithms.FullRowSelect = true;
             this.listViewAlgorithms.GridLines = true;
             this.listViewAlgorithms.Location = new System.Drawing.Point(0, 0);
-            this.listViewAlgorithms.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.listViewAlgorithms.MultiSelect = false;
             this.listViewAlgorithms.Name = "listViewAlgorithms";
-            this.listViewAlgorithms.Size = new System.Drawing.Size(808, 585);
+            this.listViewAlgorithms.Size = new System.Drawing.Size(539, 380);
             this.listViewAlgorithms.TabIndex = 11;
             this.listViewAlgorithms.UseCompatibleStateImageBehavior = false;
             this.listViewAlgorithms.View = System.Windows.Forms.View.Details;
@@ -73,6 +72,11 @@
             this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.columnHeader2.Width = 120;
             // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Secondary Speed";
+            this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // columnHeader4
             // 
             this.columnHeader4.Text = "Ratio BTC/GH/Day";
@@ -89,19 +93,14 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Secondary Speed";
-            this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
             // AlgorithmsListView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Control;
             this.Controls.Add(this.listViewAlgorithms);
-            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "AlgorithmsListView";
-            this.Size = new System.Drawing.Size(808, 585);
+            this.Size = new System.Drawing.Size(539, 380);
             this.ResumeLayout(false);
 
         }
