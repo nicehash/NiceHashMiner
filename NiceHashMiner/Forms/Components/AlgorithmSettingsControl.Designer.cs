@@ -25,7 +25,7 @@
         private void InitializeComponent() {
             this.groupBoxSelectedAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.field_LessThreads = new NiceHashMiner.Forms.Components.Field();
+            this.field_PowerUsage = new NiceHashMiner.Forms.Components.Field();
             this.fieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.secondaryFieldBoxBenchmarkSpeed = new NiceHashMiner.Forms.Components.Field();
             this.groupBoxExtraLaunchParameters = new System.Windows.Forms.GroupBox();
@@ -49,7 +49,7 @@
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.field_LessThreads);
+            this.flowLayoutPanel1.Controls.Add(this.field_PowerUsage);
             this.flowLayoutPanel1.Controls.Add(this.fieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.secondaryFieldBoxBenchmarkSpeed);
             this.flowLayoutPanel1.Controls.Add(this.groupBoxExtraLaunchParameters);
@@ -60,16 +60,16 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(223, 266);
             this.flowLayoutPanel1.TabIndex = 12;
             // 
-            // field_LessThreads
+            // field_PowerUsage
             // 
-            this.field_LessThreads.AutoSize = true;
-            this.field_LessThreads.BackColor = System.Drawing.Color.Transparent;
-            this.field_LessThreads.EntryText = "";
-            this.field_LessThreads.LabelText = "LessThreads:";
-            this.field_LessThreads.Location = new System.Drawing.Point(3, 3);
-            this.field_LessThreads.Name = "field_LessThreads";
-            this.field_LessThreads.Size = new System.Drawing.Size(220, 47);
-            this.field_LessThreads.TabIndex = 15;
+            this.field_PowerUsage.AutoSize = true;
+            this.field_PowerUsage.BackColor = System.Drawing.Color.Transparent;
+            this.field_PowerUsage.EntryText = "";
+            this.field_PowerUsage.LabelText = "Power Usage (W):";
+            this.field_PowerUsage.Location = new System.Drawing.Point(3, 3);
+            this.field_PowerUsage.Name = "field_PowerUsage";
+            this.field_PowerUsage.Size = new System.Drawing.Size(220, 47);
+            this.field_PowerUsage.TabIndex = 15;
             // 
             // fieldBoxBenchmarkSpeed
             // 
@@ -148,7 +148,7 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private Field fieldBoxBenchmarkSpeed;
         private Field secondaryFieldBoxBenchmarkSpeed;
-        private Field field_LessThreads;
+        private Field field_PowerUsage;
         private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

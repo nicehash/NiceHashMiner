@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
+//ReSharper disable All
+#pragma warning disable
 
 namespace NiceHashMiner
 {
@@ -35,7 +35,7 @@ namespace NiceHashMiner
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        struct STARTUPINFO
+        private struct STARTUPINFO
         {
             public Int32 cb;
             public string lpReserved;
@@ -86,18 +86,18 @@ namespace NiceHashMiner
         private static extern UInt32 WaitForSingleObject(IntPtr hHandle, UInt32 dwMilliseconds);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern IntPtr GetStdHandle(int nStdHandle);
+        private static extern IntPtr GetStdHandle(int nStdHandle);
 
         [DllImport("kernel32.dll")]
-        static extern bool CreatePipe(out IntPtr hReadPipe, out IntPtr hWritePipe,
-           ref SECURITY_ATTRIBUTES lpPipeAttributes, uint nSize);
+        private static extern bool CreatePipe(out IntPtr hReadPipe, out IntPtr hWritePipe,
+            ref SECURITY_ATTRIBUTES lpPipeAttributes, uint nSize);
 
         // ctrl+c
         [DllImport("kernel32.dll", SetLastError = true)]
-        static extern bool AttachConsole(uint dwProcessId);
+        private static extern bool AttachConsole(uint dwProcessId);
 
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-        static extern bool FreeConsole();
+        private static extern bool FreeConsole();
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool GenerateConsoleCtrlEvent(CtrlTypes dwCtrlEvent, uint dwProcessGroupId);
@@ -110,9 +110,10 @@ namespace NiceHashMiner
         public static extern bool AllocConsole();
 
         [DllImport("kernel32.dll")]
-        static extern uint GetLastError();
+        private static extern uint GetLastError();
 
-        enum CtrlTypes {
+        private enum CtrlTypes
+        {
             CTRL_C_EVENT = 0,
             CTRL_BREAK_EVENT,
             CTRL_CLOSE_EVENT,
@@ -131,9 +132,9 @@ namespace NiceHashMiner
         public uint ExitCode;
         public int Id;
 
-        private Thread tHandle;
-        private bool bRunning;
-        private IntPtr pHandle;
+        private Thread _tHandle;
+        private bool _bRunning;
+        private IntPtr _pHandle;
 
         public NiceHashProcess()
         {
@@ -142,31 +143,34 @@ namespace NiceHashMiner
 
         public bool Start()
         {
-            PROCESS_INFORMATION pInfo = new PROCESS_INFORMATION();
-            STARTUPINFO sInfo = new STARTUPINFO();
-            SECURITY_ATTRIBUTES pSec = new SECURITY_ATTRIBUTES();
-            SECURITY_ATTRIBUTES tSec = new SECURITY_ATTRIBUTES();
+            var pInfo = new PROCESS_INFORMATION();
+            var sInfo = new STARTUPINFO();
+            var pSec = new SECURITY_ATTRIBUTES();
+            var tSec = new SECURITY_ATTRIBUTES();
             pSec.nLength = Marshal.SizeOf(pSec);
             tSec.nLength = Marshal.SizeOf(tSec);
 
-            uint sflags = 0;
-            if (StartInfo.CreateNoWindow) {
+            uint sflags;
+            if (StartInfo.CreateNoWindow)
+            {
                 sflags = CREATE_NO_WINDOW;
             }
-            else if (StartInfo.WindowStyle == ProcessWindowStyle.Minimized) {
+            else if (StartInfo.WindowStyle == ProcessWindowStyle.Minimized)
+            {
                 sInfo.dwFlags = STARTF_USESHOWWINDOW;
                 sInfo.wShowWindow = SW_SHOWMINNOACTIVE;
                 sflags = CREATE_NEW_CONSOLE;
             }
-            else {
+            else
+            {
                 sflags = CREATE_NEW_CONSOLE;
             }
 
             string workDir = null;
-            if (StartInfo.WorkingDirectory != null && StartInfo.WorkingDirectory.Length > 0)
+            if (StartInfo.WorkingDirectory.Length > 0)
                 workDir = StartInfo.WorkingDirectory;
 
-            bool res = CreateProcess(StartInfo.FileName,
+            var res = CreateProcess(StartInfo.FileName,
                 " " + StartInfo.Arguments,
                 ref pSec,
                 ref tSec,
@@ -174,29 +178,29 @@ namespace NiceHashMiner
                 sflags | NORMAL_PRIORITY_CLASS,
                 IntPtr.Zero,
                 workDir,
-                ref sInfo, 
+                ref sInfo,
                 out pInfo);
 
             if (!res)
             {
-                int err = Marshal.GetLastWin32Error();
-                throw new Exception("Failed to start process, err=" + err.ToString());
+                var err = Marshal.GetLastWin32Error();
+                throw new Exception("Failed to start process, err=" + err);
             }
 
             CloseHandle(sInfo.hStdError);
             CloseHandle(sInfo.hStdInput);
             CloseHandle(sInfo.hStdOutput);
 
-            pHandle = pInfo.hProcess;
+            _pHandle = pInfo.hProcess;
             CloseHandle(pInfo.hThread);
 
             Id = pInfo.ProcessId;
 
             if (ExitEvent != null)
             {
-                bRunning = true;
-                tHandle = new Thread(cThread);
-                tHandle.Start();
+                _bRunning = true;
+                _tHandle = new Thread(CThread);
+                _tHandle.Start();
             }
 
             return true;
@@ -204,55 +208,61 @@ namespace NiceHashMiner
 
         public void Kill()
         {
-            if (pHandle == IntPtr.Zero) return;
+            if (_pHandle == IntPtr.Zero) return;
 
-            if (tHandle != null)
+            if (_tHandle != null)
             {
-                bRunning = false;
-                tHandle.Join();
+                _bRunning = false;
+                _tHandle.Join();
             }
 
-            TerminateProcess(pHandle, 0);
-            CloseHandle(pHandle);
-            pHandle = IntPtr.Zero;
+            TerminateProcess(_pHandle, 0);
+            CloseHandle(_pHandle);
+            _pHandle = IntPtr.Zero;
         }
 
         public void Close()
         {
-            if (pHandle == IntPtr.Zero) return;
+            if (_pHandle == IntPtr.Zero) return;
 
-            if (tHandle != null)
+            if (_tHandle != null)
             {
-                bRunning = false;
-                tHandle.Join();
+                _bRunning = false;
+                _tHandle.Join();
             }
 
-            CloseHandle(pHandle);
-            pHandle = IntPtr.Zero;
+            CloseHandle(_pHandle);
+            _pHandle = IntPtr.Zero;
         }
 
-        bool signalCtrl(uint thisConsoleId, uint dwProcessId, CtrlTypes dwCtrlEvent) {
-            bool success = false;
+        private bool SignalCtrl(uint thisConsoleId, uint dwProcessId, CtrlTypes dwCtrlEvent)
+        {
+            var success = false;
             //uint thisConsoleId = GetCurrentProcessId();
             // Leave current console if it exists
             // (otherwise AttachConsole will return ERROR_ACCESS_DENIED)
-            bool consoleDetached = (FreeConsole() != false);
+            var consoleDetached = FreeConsole();
 
-            if (AttachConsole(dwProcessId) != false) {
+            if (AttachConsole(dwProcessId))
+            {
                 // Add a fake Ctrl-C handler for avoid instant kill is this console
                 // WARNING: do not revert it or current program will be also killed
                 SetConsoleCtrlHandler(null, true);
-                success = (GenerateConsoleCtrlEvent(dwCtrlEvent, 0) != false);
+                success = GenerateConsoleCtrlEvent(dwCtrlEvent, 0);
                 FreeConsole();
                 // wait for termination so we don't terminate NHM
-                WaitForSingleObject(pHandle, 10000);
+                WaitForSingleObject(_pHandle, 10000);
             }
 
-            if (consoleDetached) {
+            if (consoleDetached)
+            {
                 // Create a new console if previous was deleted by OS
-                if (AttachConsole(thisConsoleId) == false) {
-                    uint errorCode = GetLastError();
-                    if (errorCode == 31) { // 31=ERROR_GEN_FAILURE
+                if (AttachConsole(thisConsoleId) == false)
+                {
+                    var errorCode = GetLastError();
+                    if (errorCode == 31)
+                    {
+                        // 31=ERROR_GEN_FAILURE
                         AllocConsole();
                     }
                 }
@@ -261,28 +271,30 @@ namespace NiceHashMiner
             return success;
         }
 
-        public void SendCtrlC(uint thisConsoleId) {
-            if (pHandle == IntPtr.Zero) return;
+        public void SendCtrlC(uint thisConsoleId)
+        {
+            if (_pHandle == IntPtr.Zero) return;
 
-            if (tHandle != null) {
-                bRunning = false;
-                tHandle.Join();
+            if (_tHandle != null)
+            {
+                _bRunning = false;
+                _tHandle.Join();
             }
-            signalCtrl(thisConsoleId, (uint)this.Id, CtrlTypes.CTRL_C_EVENT);
-            pHandle = IntPtr.Zero;
+            SignalCtrl(thisConsoleId, (uint) Id, CtrlTypes.CTRL_C_EVENT);
+            _pHandle = IntPtr.Zero;
         }
 
-        private void cThread()
+        private void CThread()
         {
-            while (bRunning)
+            while (_bRunning)
             {
-                if (WaitForSingleObject(pHandle, 10) == 0)
+                if (WaitForSingleObject(_pHandle, 10) == 0)
                 {
-                    GetExitCodeProcess(pHandle, out ExitCode);
+                    GetExitCodeProcess(_pHandle, out ExitCode);
                     if (ExitCode != STILL_ACTIVE)
                     {
-                        CloseHandle(pHandle);
-                        pHandle = IntPtr.Zero;
+                        CloseHandle(_pHandle);
+                        _pHandle = IntPtr.Zero;
                         ExitEvent();
                         return;
                     }

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums {
-    public enum MinerType {
+﻿namespace NiceHashMiner.Enums
+{
+    public enum MinerType
+    {
         NONE,
         ccminer,
         ccminer_CryptoNight,
@@ -23,6 +21,7 @@ namespace NiceHashMiner.Enums {
         ClaymoreDual,
         EWBF,
         Xmrig,
+        dtsm,
         END
     }
 }

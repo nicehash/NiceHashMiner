@@ -1,7 +1,5 @@
 ﻿using NiceHashMiner.Enums;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace NiceHashMiner.Configs.Data
 {
@@ -14,66 +12,60 @@ namespace NiceHashMiner.Configs.Data
     public class BenchmarkTimeLimitsConfig
     {
         #region CONSTANTS
-        [field: NonSerialized]
-        readonly static private int[] DEFAULT_CPU_NVIDIA = { 10, 20, 60 };
-        [field: NonSerialized]
-        readonly static private int[] DEFAULT_AMD = { 120, 180, 240 };
-        [field: NonSerialized]
-        readonly static public int SIZE = 3;
+
+        [field: NonSerialized] private static readonly int[] DefaultCpuNvidia = {10, 20, 60};
+        [field: NonSerialized] private static readonly int[] DefaultAmd = {120, 180, 240};
+        [field: NonSerialized] public static readonly int Size = 3;
+
         #endregion CONSTANTS
 
         #region PRIVATES
-        private int[] _benchmarkTimeLimitsCPU = MemoryHelper.DeepClone(DEFAULT_CPU_NVIDIA);
-        private int[] _benchmarkTimeLimitsNVIDIA = MemoryHelper.DeepClone(DEFAULT_CPU_NVIDIA);
-        private int[] _benchmarkTimeLimitsAMD = MemoryHelper.DeepClone(DEFAULT_AMD);
 
-        private bool isValid(int[] value) { return value != null && value.Length == SIZE; }
+        private int[] _benchmarkTimeLimitsCpu = MemoryHelper.DeepClone(DefaultCpuNvidia);
+        private int[] _benchmarkTimeLimitsNvidia = MemoryHelper.DeepClone(DefaultCpuNvidia);
+        private int[] _benchmarkTimeLimitsAmd = MemoryHelper.DeepClone(DefaultAmd);
+
+        private static bool IsValid(int[] value)
+        {
+            return value != null && value.Length == Size;
+        }
+
         #endregion PRIVATES
 
         #region PROPERTIES
-        public int[] CPU {
-            get { return _benchmarkTimeLimitsCPU; }
-            set {
-                if (isValid(value)) {
-                    _benchmarkTimeLimitsCPU = MemoryHelper.DeepClone(value);
-                }
-                else {
-                    _benchmarkTimeLimitsCPU = MemoryHelper.DeepClone(DEFAULT_CPU_NVIDIA);
-                }
-            }
+
+        public int[] CPU
+        {
+            get => _benchmarkTimeLimitsCpu;
+            set => _benchmarkTimeLimitsCpu = MemoryHelper.DeepClone(IsValid(value) ? value : DefaultCpuNvidia);
         }
-        public int[] NVIDIA {
-            get { return _benchmarkTimeLimitsNVIDIA; }
-            set {
-                if (isValid(value)) {
-                    _benchmarkTimeLimitsNVIDIA = MemoryHelper.DeepClone(value);
-                } else {
-                    _benchmarkTimeLimitsNVIDIA = MemoryHelper.DeepClone(DEFAULT_CPU_NVIDIA);
-                }
-            }
+
+        public int[] NVIDIA
+        {
+            get => _benchmarkTimeLimitsNvidia;
+            set => _benchmarkTimeLimitsNvidia = MemoryHelper.DeepClone(IsValid(value) ? value : DefaultCpuNvidia);
         }
-        public int[] AMD {
-            get { return _benchmarkTimeLimitsAMD; }
-            set {
-                if (isValid(value)) {
-                    _benchmarkTimeLimitsAMD = MemoryHelper.DeepClone(value);
-                } else {
-                    _benchmarkTimeLimitsAMD = MemoryHelper.DeepClone(DEFAULT_AMD);
-                }
-            }
+
+        public int[] AMD
+        {
+            get => _benchmarkTimeLimitsAmd;
+            set => _benchmarkTimeLimitsAmd = MemoryHelper.DeepClone(IsValid(value) ? value : DefaultAmd);
         }
+
         #endregion PROPERTIES
 
-        public int GetBenchamrktime(BenchmarkPerformanceType benchmarkPerformanceType, DeviceGroupType deviceGroupType) {
-            if (deviceGroupType == DeviceGroupType.CPU) {
-                return CPU[(int)benchmarkPerformanceType];
+        public int GetBenchamrktime(BenchmarkPerformanceType benchmarkPerformanceType, DeviceGroupType deviceGroupType)
+        {
+            if (deviceGroupType == DeviceGroupType.CPU)
+            {
+                return CPU[(int) benchmarkPerformanceType];
             }
-            if (deviceGroupType == DeviceGroupType.AMD_OpenCL) {
-                return AMD[(int)benchmarkPerformanceType];
+            if (deviceGroupType == DeviceGroupType.AMD_OpenCL)
+            {
+                return AMD[(int) benchmarkPerformanceType];
             }
 
-            return NVIDIA[(int)benchmarkPerformanceType];
+            return NVIDIA[(int) benchmarkPerformanceType];
         }
-
     }
 }

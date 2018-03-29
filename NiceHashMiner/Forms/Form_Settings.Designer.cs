@@ -75,6 +75,9 @@
             this.pictureBox_LogToFile = new System.Windows.Forms.PictureBox();
             this.checkBox_DebugConsole = new System.Windows.Forms.CheckBox();
             this.groupBox_Main = new System.Windows.Forms.GroupBox();
+            this.pictureBox_ElectricityCost = new System.Windows.Forms.PictureBox();
+            this.textBox_ElectricityCost = new System.Windows.Forms.TextBox();
+            this.label_ElectricityCost = new System.Windows.Forms.Label();
             this.pictureBox_TimeUnit = new System.Windows.Forms.PictureBox();
             this.label_TimeUnit = new System.Windows.Forms.Label();
             this.comboBox_TimeUnit = new System.Windows.Forms.ComboBox();
@@ -106,37 +109,34 @@
             this.label_displayCurrency = new System.Windows.Forms.Label();
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
             this.groupBox_Miners = new System.Windows.Forms.GroupBox();
-            this.pictureBox_SwitchMinSecondsFixed = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinerRestartDelayMS = new System.Windows.Forms.PictureBox();
             this.pictureBox_APIBindPortStart = new System.Windows.Forms.PictureBox();
-            this.pictureBox_SwitchMinSecondsDynamic = new System.Windows.Forms.PictureBox();
+            this.pictureBox_SwitchMaxSeconds = new System.Windows.Forms.PictureBox();
             this.pictureBox_SwitchProfitabilityThreshold = new System.Windows.Forms.PictureBox();
             this.pictureBox_ethminerDefaultBlockHeight = new System.Windows.Forms.PictureBox();
             this.pictureBox_DagGeneration = new System.Windows.Forms.PictureBox();
             this.pictureBox_CPU0_ForceCPUExtension = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinerAPIQueryInterval = new System.Windows.Forms.PictureBox();
-            this.pictureBox_SwitchMinSecondsAMD = new System.Windows.Forms.PictureBox();
+            this.pictureBox_SwitchMinSeconds = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinIdleSeconds = new System.Windows.Forms.PictureBox();
             this.comboBox_DagLoadMode = new System.Windows.Forms.ComboBox();
             this.label_DagGeneration = new System.Windows.Forms.Label();
             this.comboBox_CPU0_ForceCPUExtension = new System.Windows.Forms.ComboBox();
             this.label_CPU0_ForceCPUExtension = new System.Windows.Forms.Label();
             this.label_MinIdleSeconds = new System.Windows.Forms.Label();
-            this.label_SwitchMinSecondsFixed = new System.Windows.Forms.Label();
-            this.label_SwitchMinSecondsDynamic = new System.Windows.Forms.Label();
+            this.label_SwitchMaxSeconds = new System.Windows.Forms.Label();
             this.label_MinerAPIQueryInterval = new System.Windows.Forms.Label();
             this.label_MinerRestartDelayMS = new System.Windows.Forms.Label();
-            this.textBox_SwitchMinSecondsAMD = new System.Windows.Forms.TextBox();
+            this.textBox_SwitchMinSeconds = new System.Windows.Forms.TextBox();
             this.label_APIBindPortStart = new System.Windows.Forms.Label();
             this.textBox_SwitchProfitabilityThreshold = new System.Windows.Forms.TextBox();
             this.textBox_ethminerDefaultBlockHeight = new System.Windows.Forms.TextBox();
             this.label_SwitchProfitabilityThreshold = new System.Windows.Forms.Label();
             this.label_ethminerDefaultBlockHeight = new System.Windows.Forms.Label();
             this.textBox_APIBindPortStart = new System.Windows.Forms.TextBox();
-            this.label_SwitchMinSecondsAMD = new System.Windows.Forms.Label();
+            this.label_SwitchMinSeconds = new System.Windows.Forms.Label();
             this.textBox_MinIdleSeconds = new System.Windows.Forms.TextBox();
-            this.textBox_SwitchMinSecondsFixed = new System.Windows.Forms.TextBox();
-            this.textBox_SwitchMinSecondsDynamic = new System.Windows.Forms.TextBox();
+            this.textBox_SwitchMaxSeconds = new System.Windows.Forms.TextBox();
             this.textBox_MinerRestartDelayMS = new System.Windows.Forms.TextBox();
             this.textBox_MinerAPIQueryInterval = new System.Windows.Forms.TextBox();
             this.groupBoxBenchmarkTimeLimits = new System.Windows.Forms.GroupBox();
@@ -179,6 +179,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_LogMaxFileSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_LogToFile)).BeginInit();
             this.groupBox_Main.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TimeUnit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_UseIFTTT)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WorkerName)).BeginInit();
@@ -192,16 +193,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Language)).BeginInit();
             this.tabPageAdvanced.SuspendLayout();
             this.groupBox_Miners.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsFixed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerRestartDelayMS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_APIBindPortStart)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsDynamic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMaxSeconds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ethminerDefaultBlockHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DagGeneration)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_CPU0_ForceCPUExtension)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerAPIQueryInterval)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsAMD)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSeconds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinIdleSeconds)).BeginInit();
             this.groupBoxBenchmarkTimeLimits.SuspendLayout();
             this.tabPageDevicesAlgos.SuspendLayout();
@@ -211,7 +211,7 @@
             // toolTip1
             // 
             this.toolTip1.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
+            this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.ToolTip1_Popup);
             // 
             // tabControlGeneral
             // 
@@ -224,7 +224,7 @@
             this.tabControlGeneral.SelectedIndex = 0;
             this.tabControlGeneral.Size = new System.Drawing.Size(612, 440);
             this.tabControlGeneral.TabIndex = 0;
-            this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.tabControlGeneral_Selected);
+            this.tabControlGeneral.Selected += new System.Windows.Forms.TabControlEventHandler(this.TabControlGeneral_Selected);
             // 
             // tabPageGeneral
             // 
@@ -375,7 +375,7 @@
             this.checkBox_RunAtStartup.TabIndex = 366;
             this.checkBox_RunAtStartup.Text = "Start With Windows";
             this.checkBox_RunAtStartup.UseVisualStyleBackColor = true;
-            this.checkBox_RunAtStartup.CheckedChanged += new System.EventHandler(this.checkBox_RunAtStartup_CheckedChanged);
+            this.checkBox_RunAtStartup.CheckedChanged += new System.EventHandler(this.CheckBox_RunAtStartup_CheckedChanged);
             // 
             // checkBox_AllowMultipleInstances
             // 
@@ -387,7 +387,7 @@
             this.checkBox_AllowMultipleInstances.TabIndex = 365;
             this.checkBox_AllowMultipleInstances.Text = "Allow Multiple Instances";
             this.checkBox_AllowMultipleInstances.UseVisualStyleBackColor = true;
-            this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.checkBox_DisableDefaultOptimizations_CheckedChanged);
+            this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.CheckBox_DisableDefaultOptimizations_CheckedChanged);
             // 
             // checkBox_DisableDefaultOptimizations
             // 
@@ -399,7 +399,7 @@
             this.checkBox_DisableDefaultOptimizations.TabIndex = 365;
             this.checkBox_DisableDefaultOptimizations.Text = "Disable Default Optimizations";
             this.checkBox_DisableDefaultOptimizations.UseVisualStyleBackColor = true;
-            this.checkBox_DisableDefaultOptimizations.CheckedChanged += new System.EventHandler(this.checkBox_DisableDefaultOptimizations_CheckedChanged);
+            this.checkBox_DisableDefaultOptimizations.CheckedChanged += new System.EventHandler(this.CheckBox_DisableDefaultOptimizations_CheckedChanged);
             // 
             // checkBox_AMD_DisableAMDTempControl
             // 
@@ -411,7 +411,7 @@
             this.checkBox_AMD_DisableAMDTempControl.TabIndex = 365;
             this.checkBox_AMD_DisableAMDTempControl.Text = "DisableAMDTempControl";
             this.checkBox_AMD_DisableAMDTempControl.UseVisualStyleBackColor = true;
-            this.checkBox_AMD_DisableAMDTempControl.CheckedChanged += new System.EventHandler(this.checkBox_AMD_DisableAMDTempControl_CheckedChanged);
+            this.checkBox_AMD_DisableAMDTempControl.CheckedChanged += new System.EventHandler(this.CheckBox_AMD_DisableAMDTempControl_CheckedChanged);
             // 
             // checkBox_AutoStartMining
             // 
@@ -610,7 +610,7 @@
             this.checkBox_Use3rdPartyMiners.TabIndex = 319;
             this.checkBox_Use3rdPartyMiners.Text = "Enable3rdPartyMiners";
             this.checkBox_Use3rdPartyMiners.UseVisualStyleBackColor = true;
-            this.checkBox_Use3rdPartyMiners.CheckedChanged += new System.EventHandler(this.checkBox_Use3rdPartyMiners_CheckedChanged);
+            this.checkBox_Use3rdPartyMiners.CheckedChanged += new System.EventHandler(this.CheckBox_Use3rdPartyMiners_CheckedChanged);
             // 
             // checkBox_DisableDetectionNVIDIA
             // 
@@ -698,7 +698,7 @@
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogToFile);
             this.groupBox_Logging.Controls.Add(this.checkBox_DebugConsole);
-            this.groupBox_Logging.Location = new System.Drawing.Point(6, 297);
+            this.groupBox_Logging.Location = new System.Drawing.Point(4, 339);
             this.groupBox_Logging.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Logging.Name = "groupBox_Logging";
             this.groupBox_Logging.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -782,6 +782,9 @@
             // 
             // groupBox_Main
             // 
+            this.groupBox_Main.Controls.Add(this.pictureBox_ElectricityCost);
+            this.groupBox_Main.Controls.Add(this.textBox_ElectricityCost);
+            this.groupBox_Main.Controls.Add(this.label_ElectricityCost);
             this.groupBox_Main.Controls.Add(this.pictureBox_TimeUnit);
             this.groupBox_Main.Controls.Add(this.label_TimeUnit);
             this.groupBox_Main.Controls.Add(this.comboBox_TimeUnit);
@@ -807,10 +810,39 @@
             this.groupBox_Main.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Main.Name = "groupBox_Main";
             this.groupBox_Main.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Main.Size = new System.Drawing.Size(346, 214);
+            this.groupBox_Main.Size = new System.Drawing.Size(346, 256);
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
+            // 
+            // pictureBox_ElectricityCost
+            // 
+            this.pictureBox_ElectricityCost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ElectricityCost.Location = new System.Drawing.Point(130, 211);
+            this.pictureBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_ElectricityCost.Name = "pictureBox_ElectricityCost";
+            this.pictureBox_ElectricityCost.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ElectricityCost.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ElectricityCost.TabIndex = 375;
+            this.pictureBox_ElectricityCost.TabStop = false;
+            // 
+            // textBox_ElectricityCost
+            // 
+            this.textBox_ElectricityCost.Location = new System.Drawing.Point(10, 231);
+            this.textBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_ElectricityCost.Name = "textBox_ElectricityCost";
+            this.textBox_ElectricityCost.Size = new System.Drawing.Size(138, 20);
+            this.textBox_ElectricityCost.TabIndex = 373;
+            // 
+            // label_ElectricityCost
+            // 
+            this.label_ElectricityCost.AutoSize = true;
+            this.label_ElectricityCost.Location = new System.Drawing.Point(10, 211);
+            this.label_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_ElectricityCost.Name = "label_ElectricityCost";
+            this.label_ElectricityCost.Size = new System.Drawing.Size(117, 13);
+            this.label_ElectricityCost.TabIndex = 374;
+            this.label_ElectricityCost.Text = "Electricity Cost (/KWh):";
             // 
             // pictureBox_TimeUnit
             // 
@@ -1041,7 +1073,7 @@
             this.groupBox_Localization.Controls.Add(this.comboBox_Language);
             this.groupBox_Localization.Controls.Add(this.currencyConverterCombobox);
             this.groupBox_Localization.Controls.Add(this.label_displayCurrency);
-            this.groupBox_Localization.Location = new System.Drawing.Point(6, 226);
+            this.groupBox_Localization.Location = new System.Drawing.Point(4, 268);
             this.groupBox_Localization.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Localization.Name = "groupBox_Localization";
             this.groupBox_Localization.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1146,7 +1178,7 @@
             this.currencyConverterCombobox.Size = new System.Drawing.Size(122, 21);
             this.currencyConverterCombobox.Sorted = true;
             this.currencyConverterCombobox.TabIndex = 381;
-            this.currencyConverterCombobox.SelectedIndexChanged += new System.EventHandler(this.currencyConverterCombobox_SelectedIndexChanged);
+            this.currencyConverterCombobox.SelectedIndexChanged += new System.EventHandler(this.CurrencyConverterCombobox_SelectedIndexChanged);
             // 
             // label_displayCurrency
             // 
@@ -1173,37 +1205,34 @@
             // 
             // groupBox_Miners
             // 
-            this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchMinSecondsFixed);
             this.groupBox_Miners.Controls.Add(this.pictureBox_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.pictureBox_APIBindPortStart);
-            this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchMinSecondsDynamic);
+            this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchMaxSeconds);
             this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchProfitabilityThreshold);
             this.groupBox_Miners.Controls.Add(this.pictureBox_ethminerDefaultBlockHeight);
             this.groupBox_Miners.Controls.Add(this.pictureBox_DagGeneration);
             this.groupBox_Miners.Controls.Add(this.pictureBox_CPU0_ForceCPUExtension);
             this.groupBox_Miners.Controls.Add(this.pictureBox_MinerAPIQueryInterval);
-            this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchMinSecondsAMD);
+            this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchMinSeconds);
             this.groupBox_Miners.Controls.Add(this.pictureBox_MinIdleSeconds);
             this.groupBox_Miners.Controls.Add(this.comboBox_DagLoadMode);
             this.groupBox_Miners.Controls.Add(this.label_DagGeneration);
             this.groupBox_Miners.Controls.Add(this.comboBox_CPU0_ForceCPUExtension);
             this.groupBox_Miners.Controls.Add(this.label_CPU0_ForceCPUExtension);
             this.groupBox_Miners.Controls.Add(this.label_MinIdleSeconds);
-            this.groupBox_Miners.Controls.Add(this.label_SwitchMinSecondsFixed);
-            this.groupBox_Miners.Controls.Add(this.label_SwitchMinSecondsDynamic);
+            this.groupBox_Miners.Controls.Add(this.label_SwitchMaxSeconds);
             this.groupBox_Miners.Controls.Add(this.label_MinerAPIQueryInterval);
             this.groupBox_Miners.Controls.Add(this.label_MinerRestartDelayMS);
-            this.groupBox_Miners.Controls.Add(this.textBox_SwitchMinSecondsAMD);
+            this.groupBox_Miners.Controls.Add(this.textBox_SwitchMinSeconds);
             this.groupBox_Miners.Controls.Add(this.label_APIBindPortStart);
             this.groupBox_Miners.Controls.Add(this.textBox_SwitchProfitabilityThreshold);
             this.groupBox_Miners.Controls.Add(this.textBox_ethminerDefaultBlockHeight);
             this.groupBox_Miners.Controls.Add(this.label_SwitchProfitabilityThreshold);
             this.groupBox_Miners.Controls.Add(this.label_ethminerDefaultBlockHeight);
             this.groupBox_Miners.Controls.Add(this.textBox_APIBindPortStart);
-            this.groupBox_Miners.Controls.Add(this.label_SwitchMinSecondsAMD);
+            this.groupBox_Miners.Controls.Add(this.label_SwitchMinSeconds);
             this.groupBox_Miners.Controls.Add(this.textBox_MinIdleSeconds);
-            this.groupBox_Miners.Controls.Add(this.textBox_SwitchMinSecondsFixed);
-            this.groupBox_Miners.Controls.Add(this.textBox_SwitchMinSecondsDynamic);
+            this.groupBox_Miners.Controls.Add(this.textBox_SwitchMaxSeconds);
             this.groupBox_Miners.Controls.Add(this.textBox_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.textBox_MinerAPIQueryInterval);
             this.groupBox_Miners.Location = new System.Drawing.Point(6, 6);
@@ -1214,17 +1243,6 @@
             this.groupBox_Miners.TabIndex = 389;
             this.groupBox_Miners.TabStop = false;
             this.groupBox_Miners.Text = "Miners:";
-            // 
-            // pictureBox_SwitchMinSecondsFixed
-            // 
-            this.pictureBox_SwitchMinSecondsFixed.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_SwitchMinSecondsFixed.Location = new System.Drawing.Point(562, 15);
-            this.pictureBox_SwitchMinSecondsFixed.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_SwitchMinSecondsFixed.Name = "pictureBox_SwitchMinSecondsFixed";
-            this.pictureBox_SwitchMinSecondsFixed.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_SwitchMinSecondsFixed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_SwitchMinSecondsFixed.TabIndex = 385;
-            this.pictureBox_SwitchMinSecondsFixed.TabStop = false;
             // 
             // pictureBox_MinerRestartDelayMS
             // 
@@ -1240,7 +1258,7 @@
             // pictureBox_APIBindPortStart
             // 
             this.pictureBox_APIBindPortStart.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_APIBindPortStart.Location = new System.Drawing.Point(562, 59);
+            this.pictureBox_APIBindPortStart.Location = new System.Drawing.Point(555, 14);
             this.pictureBox_APIBindPortStart.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_APIBindPortStart.Name = "pictureBox_APIBindPortStart";
             this.pictureBox_APIBindPortStart.Size = new System.Drawing.Size(18, 18);
@@ -1248,21 +1266,21 @@
             this.pictureBox_APIBindPortStart.TabIndex = 385;
             this.pictureBox_APIBindPortStart.TabStop = false;
             // 
-            // pictureBox_SwitchMinSecondsDynamic
+            // pictureBox_SwitchMaxSeconds
             // 
-            this.pictureBox_SwitchMinSecondsDynamic.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(362, 59);
-            this.pictureBox_SwitchMinSecondsDynamic.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_SwitchMinSecondsDynamic.Name = "pictureBox_SwitchMinSecondsDynamic";
-            this.pictureBox_SwitchMinSecondsDynamic.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_SwitchMinSecondsDynamic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_SwitchMinSecondsDynamic.TabIndex = 385;
-            this.pictureBox_SwitchMinSecondsDynamic.TabStop = false;
+            this.pictureBox_SwitchMaxSeconds.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_SwitchMaxSeconds.Location = new System.Drawing.Point(362, 59);
+            this.pictureBox_SwitchMaxSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_SwitchMaxSeconds.Name = "pictureBox_SwitchMaxSeconds";
+            this.pictureBox_SwitchMaxSeconds.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_SwitchMaxSeconds.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_SwitchMaxSeconds.TabIndex = 385;
+            this.pictureBox_SwitchMaxSeconds.TabStop = false;
             // 
             // pictureBox_SwitchProfitabilityThreshold
             // 
             this.pictureBox_SwitchProfitabilityThreshold.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(560, 104);
+            this.pictureBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(555, 60);
             this.pictureBox_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_SwitchProfitabilityThreshold.Name = "pictureBox_SwitchProfitabilityThreshold";
             this.pictureBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(18, 18);
@@ -1315,16 +1333,16 @@
             this.pictureBox_MinerAPIQueryInterval.TabIndex = 385;
             this.pictureBox_MinerAPIQueryInterval.TabStop = false;
             // 
-            // pictureBox_SwitchMinSecondsAMD
+            // pictureBox_SwitchMinSeconds
             // 
-            this.pictureBox_SwitchMinSecondsAMD.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_SwitchMinSecondsAMD.Location = new System.Drawing.Point(168, 59);
-            this.pictureBox_SwitchMinSecondsAMD.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_SwitchMinSecondsAMD.Name = "pictureBox_SwitchMinSecondsAMD";
-            this.pictureBox_SwitchMinSecondsAMD.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_SwitchMinSecondsAMD.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_SwitchMinSecondsAMD.TabIndex = 385;
-            this.pictureBox_SwitchMinSecondsAMD.TabStop = false;
+            this.pictureBox_SwitchMinSeconds.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_SwitchMinSeconds.Location = new System.Drawing.Point(168, 59);
+            this.pictureBox_SwitchMinSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_SwitchMinSeconds.Name = "pictureBox_SwitchMinSeconds";
+            this.pictureBox_SwitchMinSeconds.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_SwitchMinSeconds.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_SwitchMinSeconds.TabIndex = 385;
+            this.pictureBox_SwitchMinSeconds.TabStop = false;
             // 
             // pictureBox_MinIdleSeconds
             // 
@@ -1379,7 +1397,7 @@
             this.comboBox_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(178, 21);
             this.comboBox_CPU0_ForceCPUExtension.TabIndex = 379;
             this.comboBox_CPU0_ForceCPUExtension.Visible = false;
-            this.comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged += new System.EventHandler(this.comboBox_CPU0_ForceCPUExtension_SelectedIndexChanged);
+            this.comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged += new System.EventHandler(this.ComboBox_CPU0_ForceCPUExtension_SelectedIndexChanged);
             // 
             // label_CPU0_ForceCPUExtension
             // 
@@ -1402,25 +1420,15 @@
             this.label_MinIdleSeconds.TabIndex = 356;
             this.label_MinIdleSeconds.Text = "MinIdleSeconds:";
             // 
-            // label_SwitchMinSecondsFixed
+            // label_SwitchMaxSeconds
             // 
-            this.label_SwitchMinSecondsFixed.AutoSize = true;
-            this.label_SwitchMinSecondsFixed.Location = new System.Drawing.Point(410, 15);
-            this.label_SwitchMinSecondsFixed.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_SwitchMinSecondsFixed.Name = "label_SwitchMinSecondsFixed";
-            this.label_SwitchMinSecondsFixed.Size = new System.Drawing.Size(126, 13);
-            this.label_SwitchMinSecondsFixed.TabIndex = 366;
-            this.label_SwitchMinSecondsFixed.Text = "SwitchMinSecondsFixed:";
-            // 
-            // label_SwitchMinSecondsDynamic
-            // 
-            this.label_SwitchMinSecondsDynamic.AutoSize = true;
-            this.label_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(210, 59);
-            this.label_SwitchMinSecondsDynamic.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_SwitchMinSecondsDynamic.Name = "label_SwitchMinSecondsDynamic";
-            this.label_SwitchMinSecondsDynamic.Size = new System.Drawing.Size(142, 13);
-            this.label_SwitchMinSecondsDynamic.TabIndex = 378;
-            this.label_SwitchMinSecondsDynamic.Text = "SwitchMinSecondsDynamic:";
+            this.label_SwitchMaxSeconds.AutoSize = true;
+            this.label_SwitchMaxSeconds.Location = new System.Drawing.Point(210, 59);
+            this.label_SwitchMaxSeconds.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_SwitchMaxSeconds.Name = "label_SwitchMaxSeconds";
+            this.label_SwitchMaxSeconds.Size = new System.Drawing.Size(86, 13);
+            this.label_SwitchMaxSeconds.TabIndex = 378;
+            this.label_SwitchMaxSeconds.Text = "SwitchMaxSecs:";
             // 
             // label_MinerAPIQueryInterval
             // 
@@ -1442,18 +1450,18 @@
             this.label_MinerRestartDelayMS.TabIndex = 375;
             this.label_MinerRestartDelayMS.Text = "MinerRestartDelayMS:";
             // 
-            // textBox_SwitchMinSecondsAMD
+            // textBox_SwitchMinSeconds
             // 
-            this.textBox_SwitchMinSecondsAMD.Location = new System.Drawing.Point(10, 78);
-            this.textBox_SwitchMinSecondsAMD.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_SwitchMinSecondsAMD.Name = "textBox_SwitchMinSecondsAMD";
-            this.textBox_SwitchMinSecondsAMD.Size = new System.Drawing.Size(178, 20);
-            this.textBox_SwitchMinSecondsAMD.TabIndex = 342;
+            this.textBox_SwitchMinSeconds.Location = new System.Drawing.Point(10, 78);
+            this.textBox_SwitchMinSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_SwitchMinSeconds.Name = "textBox_SwitchMinSeconds";
+            this.textBox_SwitchMinSeconds.Size = new System.Drawing.Size(178, 20);
+            this.textBox_SwitchMinSeconds.TabIndex = 342;
             // 
             // label_APIBindPortStart
             // 
             this.label_APIBindPortStart.AutoSize = true;
-            this.label_APIBindPortStart.Location = new System.Drawing.Point(410, 59);
+            this.label_APIBindPortStart.Location = new System.Drawing.Point(403, 14);
             this.label_APIBindPortStart.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_APIBindPortStart.Name = "label_APIBindPortStart";
             this.label_APIBindPortStart.Size = new System.Drawing.Size(118, 13);
@@ -1462,7 +1470,7 @@
             // 
             // textBox_SwitchProfitabilityThreshold
             // 
-            this.textBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(406, 123);
+            this.textBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(403, 78);
             this.textBox_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_SwitchProfitabilityThreshold.Name = "textBox_SwitchProfitabilityThreshold";
             this.textBox_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(172, 20);
@@ -1480,7 +1488,7 @@
             // label_SwitchProfitabilityThreshold
             // 
             this.label_SwitchProfitabilityThreshold.AutoSize = true;
-            this.label_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(406, 102);
+            this.label_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(401, 58);
             this.label_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_SwitchProfitabilityThreshold.Name = "label_SwitchProfitabilityThreshold";
             this.label_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(142, 13);
@@ -1499,21 +1507,21 @@
             // 
             // textBox_APIBindPortStart
             // 
-            this.textBox_APIBindPortStart.Location = new System.Drawing.Point(410, 78);
+            this.textBox_APIBindPortStart.Location = new System.Drawing.Point(403, 32);
             this.textBox_APIBindPortStart.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_APIBindPortStart.Name = "textBox_APIBindPortStart";
             this.textBox_APIBindPortStart.Size = new System.Drawing.Size(172, 20);
             this.textBox_APIBindPortStart.TabIndex = 334;
             // 
-            // label_SwitchMinSecondsAMD
+            // label_SwitchMinSeconds
             // 
-            this.label_SwitchMinSecondsAMD.AutoSize = true;
-            this.label_SwitchMinSecondsAMD.Location = new System.Drawing.Point(10, 59);
-            this.label_SwitchMinSecondsAMD.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_SwitchMinSecondsAMD.Name = "label_SwitchMinSecondsAMD";
-            this.label_SwitchMinSecondsAMD.Size = new System.Drawing.Size(125, 13);
-            this.label_SwitchMinSecondsAMD.TabIndex = 362;
-            this.label_SwitchMinSecondsAMD.Text = "SwitchMinSecondsAMD:";
+            this.label_SwitchMinSeconds.AutoSize = true;
+            this.label_SwitchMinSeconds.Location = new System.Drawing.Point(10, 59);
+            this.label_SwitchMinSeconds.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_SwitchMinSeconds.Name = "label_SwitchMinSeconds";
+            this.label_SwitchMinSeconds.Size = new System.Drawing.Size(83, 13);
+            this.label_SwitchMinSeconds.TabIndex = 362;
+            this.label_SwitchMinSeconds.Text = "SwitchMinSecs:";
             // 
             // textBox_MinIdleSeconds
             // 
@@ -1523,21 +1531,13 @@
             this.textBox_MinIdleSeconds.Size = new System.Drawing.Size(178, 20);
             this.textBox_MinIdleSeconds.TabIndex = 335;
             // 
-            // textBox_SwitchMinSecondsFixed
+            // textBox_SwitchMaxSeconds
             // 
-            this.textBox_SwitchMinSecondsFixed.Location = new System.Drawing.Point(410, 33);
-            this.textBox_SwitchMinSecondsFixed.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_SwitchMinSecondsFixed.Name = "textBox_SwitchMinSecondsFixed";
-            this.textBox_SwitchMinSecondsFixed.Size = new System.Drawing.Size(172, 20);
-            this.textBox_SwitchMinSecondsFixed.TabIndex = 332;
-            // 
-            // textBox_SwitchMinSecondsDynamic
-            // 
-            this.textBox_SwitchMinSecondsDynamic.Location = new System.Drawing.Point(210, 78);
-            this.textBox_SwitchMinSecondsDynamic.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_SwitchMinSecondsDynamic.Name = "textBox_SwitchMinSecondsDynamic";
-            this.textBox_SwitchMinSecondsDynamic.Size = new System.Drawing.Size(172, 20);
-            this.textBox_SwitchMinSecondsDynamic.TabIndex = 337;
+            this.textBox_SwitchMaxSeconds.Location = new System.Drawing.Point(210, 78);
+            this.textBox_SwitchMaxSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.textBox_SwitchMaxSeconds.Name = "textBox_SwitchMaxSeconds";
+            this.textBox_SwitchMaxSeconds.Size = new System.Drawing.Size(172, 20);
+            this.textBox_SwitchMaxSeconds.TabIndex = 337;
             // 
             // textBox_MinerRestartDelayMS
             // 
@@ -1668,7 +1668,7 @@
             this.buttonAllProfit.TabIndex = 394;
             this.buttonAllProfit.Text = "Check All Profitability";
             this.buttonAllProfit.UseVisualStyleBackColor = true;
-            this.buttonAllProfit.Click += new System.EventHandler(this.buttonAllProfit_Click);
+            this.buttonAllProfit.Click += new System.EventHandler(this.ButtonAllProfit_Click);
             // 
             // buttonSelectedProfit
             // 
@@ -1679,7 +1679,7 @@
             this.buttonSelectedProfit.TabIndex = 393;
             this.buttonSelectedProfit.Text = "Check Selected Profitability";
             this.buttonSelectedProfit.UseVisualStyleBackColor = true;
-            this.buttonSelectedProfit.Click += new System.EventHandler(this.buttonSelectedProfit_Click);
+            this.buttonSelectedProfit.Click += new System.EventHandler(this.ButtonSelectedProfit_Click);
             // 
             // buttonSaveClose
             // 
@@ -1691,7 +1691,7 @@
             this.buttonSaveClose.TabIndex = 44;
             this.buttonSaveClose.Text = "&Save and Close";
             this.buttonSaveClose.UseVisualStyleBackColor = true;
-            this.buttonSaveClose.Click += new System.EventHandler(this.buttonSaveClose_Click);
+            this.buttonSaveClose.Click += new System.EventHandler(this.ButtonSaveClose_Click);
             // 
             // buttonDefaults
             // 
@@ -1703,7 +1703,7 @@
             this.buttonDefaults.TabIndex = 43;
             this.buttonDefaults.Text = "&Defaults";
             this.buttonDefaults.UseVisualStyleBackColor = true;
-            this.buttonDefaults.Click += new System.EventHandler(this.buttonDefaults_Click);
+            this.buttonDefaults.Click += new System.EventHandler(this.ButtonDefaults_Click);
             // 
             // buttonCloseNoSave
             // 
@@ -1715,7 +1715,7 @@
             this.buttonCloseNoSave.TabIndex = 45;
             this.buttonCloseNoSave.Text = "&Close without Saving";
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
-            this.buttonCloseNoSave.Click += new System.EventHandler(this.buttonCloseNoSave_Click);
+            this.buttonCloseNoSave.Click += new System.EventHandler(this.ButtonCloseNoSave_Click);
             // 
             // Form_Settings
             // 
@@ -1762,6 +1762,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_LogToFile)).EndInit();
             this.groupBox_Main.ResumeLayout(false);
             this.groupBox_Main.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TimeUnit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_UseIFTTT)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WorkerName)).EndInit();
@@ -1777,16 +1778,15 @@
             this.tabPageAdvanced.ResumeLayout(false);
             this.groupBox_Miners.ResumeLayout(false);
             this.groupBox_Miners.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsFixed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerRestartDelayMS)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_APIBindPortStart)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsDynamic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMaxSeconds)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchProfitabilityThreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ethminerDefaultBlockHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DagGeneration)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_CPU0_ForceCPUExtension)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinerAPIQueryInterval)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSecondsAMD)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_SwitchMinSeconds)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinIdleSeconds)).EndInit();
             this.groupBoxBenchmarkTimeLimits.ResumeLayout(false);
             this.tabPageDevicesAlgos.ResumeLayout(false);
@@ -1826,19 +1826,17 @@
         private System.Windows.Forms.TabPage tabPageAdvanced;
         private System.Windows.Forms.GroupBox groupBox_Miners;
         private System.Windows.Forms.Label label_MinIdleSeconds;
-        private System.Windows.Forms.Label label_SwitchMinSecondsFixed;
-        private System.Windows.Forms.Label label_SwitchMinSecondsDynamic;
+        private System.Windows.Forms.Label label_SwitchMaxSeconds;
         private System.Windows.Forms.Label label_MinerAPIQueryInterval;
         private System.Windows.Forms.Label label_MinerRestartDelayMS;
-        private System.Windows.Forms.TextBox textBox_SwitchMinSecondsAMD;
+        private System.Windows.Forms.TextBox textBox_SwitchMinSeconds;
         private System.Windows.Forms.Label label_APIBindPortStart;
         private System.Windows.Forms.TextBox textBox_ethminerDefaultBlockHeight;
         private System.Windows.Forms.Label label_ethminerDefaultBlockHeight;
         private System.Windows.Forms.TextBox textBox_APIBindPortStart;
-        private System.Windows.Forms.Label label_SwitchMinSecondsAMD;
+        private System.Windows.Forms.Label label_SwitchMinSeconds;
         private System.Windows.Forms.TextBox textBox_MinIdleSeconds;
-        private System.Windows.Forms.TextBox textBox_SwitchMinSecondsFixed;
-        private System.Windows.Forms.TextBox textBox_SwitchMinSecondsDynamic;
+        private System.Windows.Forms.TextBox textBox_SwitchMaxSeconds;
         private System.Windows.Forms.TextBox textBox_MinerRestartDelayMS;
         private System.Windows.Forms.TextBox textBox_MinerAPIQueryInterval;
         private System.Windows.Forms.GroupBox groupBoxBenchmarkTimeLimits;
@@ -1885,13 +1883,12 @@
         private System.Windows.Forms.PictureBox pictureBox_Language;
         private Components.DevicesListViewEnableControl devicesListViewEnableControl1;
         private System.Windows.Forms.PictureBox pictureBox_MinIdleSeconds;
-        private System.Windows.Forms.PictureBox pictureBox_SwitchMinSecondsAMD;
+        private System.Windows.Forms.PictureBox pictureBox_SwitchMinSeconds;
         private System.Windows.Forms.PictureBox pictureBox_CPU0_ForceCPUExtension;
         private System.Windows.Forms.PictureBox pictureBox_MinerAPIQueryInterval;
-        private System.Windows.Forms.PictureBox pictureBox_SwitchMinSecondsFixed;
         private System.Windows.Forms.PictureBox pictureBox_MinerRestartDelayMS;
         private System.Windows.Forms.PictureBox pictureBox_APIBindPortStart;
-        private System.Windows.Forms.PictureBox pictureBox_SwitchMinSecondsDynamic;
+        private System.Windows.Forms.PictureBox pictureBox_SwitchMaxSeconds;
         private System.Windows.Forms.PictureBox pictureBox_ethminerDefaultBlockHeight;
         private System.Windows.Forms.PictureBox pictureBox_DagGeneration;
         private System.Windows.Forms.CheckBox checkBox_AutoStartMining;
@@ -1924,5 +1921,8 @@
         private System.Windows.Forms.PictureBox pictureBox_TimeUnit;
         private System.Windows.Forms.Label label_TimeUnit;
         private System.Windows.Forms.ComboBox comboBox_TimeUnit;
+        private System.Windows.Forms.PictureBox pictureBox_ElectricityCost;
+        private System.Windows.Forms.TextBox textBox_ElectricityCost;
+        private System.Windows.Forms.Label label_ElectricityCost;
     }
 }

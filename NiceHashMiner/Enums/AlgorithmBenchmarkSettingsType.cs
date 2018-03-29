@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums {
-    public enum AlgorithmBenchmarkSettingsType : int {
+﻿namespace NiceHashMiner.Enums
+{
+    public enum AlgorithmBenchmarkSettingsType
+    {
         SelectedUnbenchmarkedAlgorithms,
         UnbenchmarkedAlgorithms,
         ReBecnhSelectedAlgorithms,

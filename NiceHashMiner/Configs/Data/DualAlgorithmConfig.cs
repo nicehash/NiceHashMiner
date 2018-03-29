@@ -1,7 +1,6 @@
-﻿using System;
+﻿using NiceHashMiner.Enums;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using NiceHashMiner.Enums;
 
 namespace NiceHashMiner.Configs.Data
 {
@@ -15,14 +14,21 @@ namespace NiceHashMiner.Configs.Data
         public int TuningStart = 25;
         public int TuningEnd = 250;
         public int TuningInterval = 25;
+        public Dictionary<int, double> IntensityPowers = new Dictionary<int, double>();
+        public bool UseIntensityPowers = false;
 
-        public void FixSettingsBounds() {
-            if (TuningStart < 0 || TuningStart > TuningEnd) {
+        public void FixSettingsBounds()
+        {
+            if (TuningStart < 0 || TuningStart > TuningEnd)
+            {
                 TuningStart = 25;
             }
-            if (TuningInterval < 1) {
+
+            if (TuningInterval < 1)
+            {
                 TuningInterval = 25;
             }
+
             TuningEnd = Math.Max(TuningEnd, TuningStart);
         }
     }

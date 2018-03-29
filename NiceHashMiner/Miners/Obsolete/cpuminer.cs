@@ -9,6 +9,10 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using System.Threading.Tasks;
+using NiceHashMiner.Algorithms;
+
+// Resharper disable All
+#pragma warning disable
 
 namespace NiceHashMiner.Miners {
     public class cpuminer : Miner {
@@ -16,13 +20,13 @@ namespace NiceHashMiner.Miners {
             : base("cpuminer_CPU") {
         }        
 
-        protected override int GET_MAX_CooldownTimeInMilliseconds() {
+        protected override int GetMaxCooldownTimeInMilliseconds() {
             return 3600000; // 1hour
         }
 
         public override void Start(string url, string btcAdress, string worker) {
             if(!IsInit) {
-                Helpers.ConsolePrint(MinerTAG(), "MiningSetup is not initialized exiting Start()");
+                Helpers.ConsolePrint(MinerTag(), "MiningSetup is not initialized exiting Start()");
                 return;
             }
             string username = GetUsername(btcAdress, worker);
@@ -33,13 +37,13 @@ namespace NiceHashMiner.Miners {
                               ExtraLaunchParametersParser.ParseForMiningSetup(
                                                                 MiningSetup,
                                                                 DeviceType.CPU) +
-                              " --api-bind=" + APIPort.ToString();
+                              " --api-bind=" + ApiPort.ToString();
 
             ProcessHandle = _Start();
         }
 
-        public override Task<APIData> GetSummaryAsync() {
-            return GetSummaryCPU_CCMINERAsync();
+        public override Task<ApiData> GetSummaryAsync() {
+            return GetSummaryCpuCcminerAsync();
         }
 
         protected override void _Stop(MinerStopType willswitch) {
@@ -51,7 +55,7 @@ namespace NiceHashMiner.Miners {
 
             var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
             if (AffinityMask != 0 && P != null)
-                CPUID.AdjustAffinity(P.Id, AffinityMask);
+                CpuID.AdjustAffinity(P.Id, AffinityMask);
 
             return P;
         }
@@ -73,7 +77,7 @@ namespace NiceHashMiner.Miners {
 
             var AffinityMask = MiningSetup.MiningPairs[0].Device.AffinityMask;
             if (AffinityMask != 0 && BenchmarkHandle != null)
-                CPUID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
+                CpuID.AdjustAffinity(BenchmarkHandle.Id, AffinityMask);
 
             return BenchmarkHandle;
         }

@@ -1,15 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.IO;
-using Newtonsoft.Json;
-using System.Net;
-using System.Net.Sockets;
-using System.Windows.Forms;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Miners;
-using NiceHashMiner.Miners.Grouping;
+﻿using NiceHashMiner.Configs;
+using System;
+using NiceHashMiner.Stats;
 
 namespace NiceHashMiner
 {
@@ -146,11 +137,12 @@ namespace NiceHashMiner
 
         public static void GetCurrentBlock(string worker)
         {
-            string ret = NiceHashStats.GetNiceHashAPIData("https://etherchain.org/api/blocks/count", worker);
-            
+            var ret = NiceHashStats.GetNiceHashApiData("https://etherchain.org/api/blocks/count", worker);
+
             if (ret == null)
             {
-                Helpers.ConsolePrint(worker, String.Format("Failed to obtain current block, using default {0}.", ConfigManager.GeneralConfig.ethminerDefaultBlockHeight));
+                Helpers.ConsolePrint(worker,
+                    $"Failed to obtain current block, using default {ConfigManager.GeneralConfig.ethminerDefaultBlockHeight}.");
                 CurrentBlockNum = ConfigManager.GeneralConfig.ethminerDefaultBlockHeight.ToString();
             }
             else

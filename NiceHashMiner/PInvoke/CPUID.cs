@@ -6,7 +6,7 @@ using System.Diagnostics;
 
 namespace NiceHashMiner
 {
-    class CPUID
+    public class CpuID
     {
         [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr _GetCPUName();
@@ -29,21 +29,21 @@ namespace NiceHashMiner
         [DllImport("cpuid.dll", CallingConvention = CallingConvention.Cdecl)]
         public static extern int GetPhysicalProcessorCount();
 
-        public static string GetCPUName()
+        public static string GetCpuName()
         {
-            IntPtr a = _GetCPUName();
+            var a = _GetCPUName();
             return Marshal.PtrToStringAnsi(a);
         }
 
-        public static string GetCPUVendor()
+        public static string GetCpuVendor()
         {
-            IntPtr a = _GetCPUVendor();
+            var a = _GetCPUVendor();
             return Marshal.PtrToStringAnsi(a);
         }
 
         public static int GetVirtualCoresCount()
         {
-            int coreCount = 0;
+            var coreCount = 0;
 
             foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_ComputerSystem").Get())
             {
@@ -54,7 +54,7 @@ namespace NiceHashMiner
         }
 
         public static int GetNumberOfCores() {
-            int coreCount = 0;
+            var coreCount = 0;
 
             foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get()) {
                 coreCount += int.Parse(item["NumberOfCores"].ToString());
@@ -70,20 +70,25 @@ namespace NiceHashMiner
         public static ulong CreateAffinityMask(int index, int percpu)
         {
             ulong mask = 0;
-            ulong one = 0x0000000000000001;
-            for (int i = index * percpu; i < (index + 1) * percpu; i++)
+            const ulong one = 0x0000000000000001;
+            for (var i = index * percpu; i < (index + 1) * percpu; i++)
                 mask = mask | (one << i);
             return mask;
         }
 
         public static void AdjustAffinity(int pid, ulong mask)
         {
-            Process ProcessHandle = new Process();
-            ProcessHandle.StartInfo.FileName = "setcpuaff.exe";
-            ProcessHandle.StartInfo.Arguments = pid.ToString() + " " + mask.ToString();
-            ProcessHandle.StartInfo.CreateNoWindow = true;
-            ProcessHandle.StartInfo.UseShellExecute = false;
-            ProcessHandle.Start();
+            var processHandle = new Process
+            {
+                StartInfo =
+                {
+                    FileName = "setcpuaff.exe",
+                    Arguments = pid + " " + mask,
+                    CreateNoWindow = true,
+                    UseShellExecute = false
+                }
+            };
+            processHandle.Start();
         }
     }
 }

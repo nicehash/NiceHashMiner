@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NiceHashMiner.Enums
+﻿namespace NiceHashMiner.Enums
 {
-    public enum DeviceGroupType : int
+    public enum DeviceGroupType
     {
         NONE = -1,
         CPU = 0,

@@ -2,11 +2,13 @@
 using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Switching;
 
-namespace NiceHashMiner.Miners.Grouping {
-    public class MiningDevice {
-
+namespace NiceHashMiner.Miners.Grouping
+{
+    public class MiningDevice
+    {
         // switch testing quick and dirty, runtime versions 
 #if (SWITCH_TESTING)
         static List<AlgorithmType> testingAlgos = new List<AlgorithmType>() {
@@ -45,22 +47,28 @@ namespace NiceHashMiner.Miners.Grouping {
         public static bool ForcePerCardMiners = false;
 #endif
 
-        public MiningDevice(ComputeDevice device) {
+        public MiningDevice(ComputeDevice device)
+        {
             Device = device;
-            foreach (var algo in Device.GetAlgorithmSettings()) {
-                bool isAlgoMiningCapable = GroupSetupUtils.IsAlgoMiningCapable(algo);
-                bool isValidMinerPath = MinerPaths.IsValidMinerPath(algo.MinerBinaryPath);
-                if (isAlgoMiningCapable && isValidMinerPath) {
+            foreach (var algo in Device.GetAlgorithmSettings())
+            {
+                var isAlgoMiningCapable = GroupSetupUtils.IsAlgoMiningCapable(algo);
+                var isValidMinerPath = MinerPaths.IsValidMinerPath(algo.MinerBinaryPath);
+                if (isAlgoMiningCapable && isValidMinerPath)
+                {
                     Algorithms.Add(algo);
                 }
             }
+
             MostProfitableAlgorithmType = AlgorithmType.NONE;
             MostProfitableMinerBaseType = MinerBaseType.NONE;
         }
-        public ComputeDevice Device { get; private set; }
+
+        public ComputeDevice Device { get; }
         public List<Algorithm> Algorithms = new List<Algorithm>();
 
-        public string GetMostProfitableString() {
+        public string GetMostProfitableString()
+        {
             return
                 Enum.GetName(typeof(MinerBaseType), MostProfitableMinerBaseType)
                 + "_"
@@ -68,54 +76,73 @@ namespace NiceHashMiner.Miners.Grouping {
         }
 
         public AlgorithmType MostProfitableAlgorithmType { get; private set; }
+
         public MinerBaseType MostProfitableMinerBaseType { get; private set; }
+
         // prev state
         public AlgorithmType PrevProfitableAlgorithmType { get; private set; }
+
         public MinerBaseType PrevProfitableMinerBaseType { get; private set; }
 
-        private int GetMostProfitableIndex() {
-            return Algorithms.FindIndex((a) => a.DualNiceHashID == MostProfitableAlgorithmType && a.MinerBaseType == MostProfitableMinerBaseType);
+        private int GetMostProfitableIndex()
+        {
+            return Algorithms.FindIndex((a) =>
+                a.DualNiceHashID == MostProfitableAlgorithmType && a.MinerBaseType == MostProfitableMinerBaseType);
         }
 
-        private int GetPrevProfitableIndex() {
-            return Algorithms.FindIndex((a) => a.DualNiceHashID == PrevProfitableAlgorithmType && a.MinerBaseType == PrevProfitableMinerBaseType);
+        private int GetPrevProfitableIndex()
+        {
+            return Algorithms.FindIndex((a) =>
+                a.DualNiceHashID == PrevProfitableAlgorithmType && a.MinerBaseType == PrevProfitableMinerBaseType);
         }
 
-        public double GetCurrentMostProfitValue {
-            get {
-                int mostProfitableIndex = GetMostProfitableIndex();
-                if (mostProfitableIndex > -1) {
+        public double GetCurrentMostProfitValue
+        {
+            get
+            {
+                var mostProfitableIndex = GetMostProfitableIndex();
+                if (mostProfitableIndex > -1)
+                {
                     return Algorithms[mostProfitableIndex].CurrentProfit;
                 }
+
                 return 0;
             }
         }
 
-        public double GetPrevMostProfitValue {
-            get {
-                int mostProfitableIndex = GetPrevProfitableIndex();
-                if (mostProfitableIndex > -1) {
+        public double GetPrevMostProfitValue
+        {
+            get
+            {
+                var mostProfitableIndex = GetPrevProfitableIndex();
+                if (mostProfitableIndex > -1)
+                {
                     return Algorithms[mostProfitableIndex].CurrentProfit;
                 }
+
                 return 0;
             }
         }
 
-        public MiningPair GetMostProfitablePair() {
-            return new MiningPair(this.Device, Algorithms[GetMostProfitableIndex()]);
+        public MiningPair GetMostProfitablePair()
+        {
+            return new MiningPair(Device, Algorithms[GetMostProfitableIndex()]);
         }
 
-        public bool HasProfitableAlgo() {
+        public bool HasProfitableAlgo()
+        {
             return GetMostProfitableIndex() > -1;
         }
 
-        public void RestoreOldProfitsState() {
+        public void RestoreOldProfitsState()
+        {
             // restore last state
             MostProfitableAlgorithmType = PrevProfitableAlgorithmType;
             MostProfitableMinerBaseType = PrevProfitableMinerBaseType;
         }
 
-        public void SetNotMining() {
+        public void SetNotMining()
+        {
             // device isn't mining (e.g. below profit threshold) so set state to none
             PrevProfitableAlgorithmType = AlgorithmType.NONE;
             PrevProfitableMinerBaseType = MinerBaseType.NONE;
@@ -123,7 +150,8 @@ namespace NiceHashMiner.Miners.Grouping {
             MostProfitableMinerBaseType = MinerBaseType.NONE;
         }
 
-        public void CalculateProfits(Dictionary<AlgorithmType, NiceHashSMA> NiceHashData) {
+        public void CalculateProfits(Dictionary<AlgorithmType, double> profits)
+        {
             // save last state
             PrevProfitableAlgorithmType = MostProfitableAlgorithmType;
             PrevProfitableMinerBaseType = MostProfitableMinerBaseType;
@@ -131,33 +159,17 @@ namespace NiceHashMiner.Miners.Grouping {
             MostProfitableAlgorithmType = AlgorithmType.NONE;
             MostProfitableMinerBaseType = MinerBaseType.NONE;
             // calculate new profits
-            foreach (var algo in Algorithms) {
-                AlgorithmType key = algo.NiceHashID;
-                const double mult = 0.000000001;
-                if (NiceHashData.ContainsKey(key)) {
-                    algo.CurNhmSMADataVal = NiceHashData[key].paying;
-                    if (algo is DualAlgorithm dualAlgo) {
-                        dualAlgo.IntensityUpToDate = false;
-                        // Bypass averager for dual algos
-                        dualAlgo.CurrentProfit = dualAlgo.CurNhmSMADataVal * dualAlgo.BenchmarkSpeed * mult;
-
-                        var secondaryKey = dualAlgo.SecondaryNiceHashID;
-                        if (NiceHashData.ContainsKey(secondaryKey)) {
-                            dualAlgo.SecondaryCurNhmSMADataVal = NiceHashData[secondaryKey].paying;
-                            dualAlgo.CurrentProfit +=
-                                dualAlgo.SecondaryCurNhmSMADataVal * dualAlgo.SecondaryBenchmarkSpeed * mult;
-                        }
-                    } else {
-                        algo.CurrentProfit = algo.CurNhmSMADataVal * algo.AvaragedSpeed * mult;
-                    }
-                } else {
-                    algo.CurrentProfit = 0;
-                }
+            foreach (var algo in Algorithms)
+            {
+                algo.UpdateCurProfit(profits);
             }
+
             // find max paying value and save key
             double maxProfit = 0;
-            foreach (var algo in Algorithms) {
-                if (maxProfit < algo.CurrentProfit) {
+            foreach (var algo in Algorithms)
+            {
+                if (maxProfit < algo.CurrentProfit)
+                {
                     maxProfit = algo.CurrentProfit;
                     MostProfitableAlgorithmType = algo.DualNiceHashID;
                     MostProfitableMinerBaseType = algo.MinerBaseType;

@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
 
-namespace NiceHashMiner.Devices {
-    public static class CUDA_Unsupported {
-        private static List<string> SM_1_0 = new List<string>() {
+namespace NiceHashMiner.Devices
+{
+    public static class CudaUnsupported
+    {
+        private static readonly List<string> SM10 = new List<string>
+        {
             "GeForce 8800 Ultra",
             "GeForce 8800 GTX",
             "GeForce 8800 GTS",
@@ -15,7 +17,9 @@ namespace NiceHashMiner.Devices {
             "Tesla D870",
             "Tesla S870",
         };
-        private static List<string> SM_1_1 = new List<string>() {
+
+        private static readonly List<string> SM11 = new List<string>
+        {
             "GeForce GTS 250",
             "GeForce 9800 GX2",
             "GeForce 9800 GTX",
@@ -32,7 +36,8 @@ namespace NiceHashMiner.Devices {
             "GeForce 9300M GS",
             "GeForce 9200M GS",
             "GeForce 9100M G",
-            "GeForce 8400M GT","GeForce G105M",
+            "GeForce 8400M GT",
+            "GeForce G105M",
             "Quadro FX 4700 X2",
             "Quadro FX 3700",
             "Quadro FX 1800",
@@ -69,7 +74,9 @@ namespace NiceHashMiner.Devices {
             "Quadro NVS 420",
             "Quadro NVS 295",
         };
-        private static List<string> SM_1_2 = new List<string>() {
+
+        private static readonly List<string> SM12 = new List<string>
+        {
             "GeForce GT 340",
             "GeForce GT 330",
             "GeForce GT 320",
@@ -98,7 +105,9 @@ namespace NiceHashMiner.Devices {
             "NVS 2100M",
             "ION",
         };
-        private static List<string> SM_1_3 = new List<string>() {
+
+        private static readonly List<string> SM13 = new List<string>
+        {
             "GeForce GTX 295",
             "GTX 285",
             "GTX 280",
@@ -113,7 +122,9 @@ namespace NiceHashMiner.Devices {
             "Tesla S1070",
             "Tesla M1060",
         };
-        private static List<string> SM_2_0 = new List<string>() {
+
+        private static readonly List<string> SM20 = new List<string>
+        {
             "GeForce GTX 590",
             "GeForce GTX 580",
             "GeForce GTX 570",
@@ -136,33 +147,14 @@ namespace NiceHashMiner.Devices {
             "Tesla M2090",
         };
 
-        private static bool ContainsSM(List<string> list, string text) {
-            foreach(var el in list) {
-                if(text.Contains(el)) {
-                    return true;
-                }
-            }
-            return false;
+        private static bool ContainsSM(IEnumerable<string> list, string text)
+        {
+            return list.Any(text.Contains);
         }
 
-        public static bool IsSupported(string text) {
-            if (ContainsSM(SM_1_0, text)) {
-                return false;
-            }
-            if (ContainsSM(SM_1_1, text)) {
-                return false;
-            }
-            if (ContainsSM(SM_1_2, text)) {
-                return false;
-            }
-            if (ContainsSM(SM_1_3, text)) {
-                return false;
-            }
-            if (ContainsSM(SM_2_0, text)) {
-                return false;
-            }
-
-            return true;
+        public static bool IsSupported(string text)
+        {
+            return !ContainsSM(SM10, text) && !ContainsSM(SM11, text) && !ContainsSM(SM12, text) && !ContainsSM(SM13, text) && !ContainsSM(SM20, text);
         }
     }
 }
