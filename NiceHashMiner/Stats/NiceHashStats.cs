@@ -59,13 +59,13 @@ namespace NiceHashMiner.Stats
         public static bool IsAlive => _socket?.IsAlive ?? false;
 
         // Event handlers for socket
-        public static event EventHandler OnBalanceUpdate = delegate { };
+        public static event EventHandler OnBalanceUpdate;
 
-        public static event EventHandler OnSmaUpdate = delegate { };
-        public static event EventHandler OnVersionUpdate = delegate { };
-        public static event EventHandler OnConnectionLost = delegate { };
-        public static event EventHandler OnConnectionEstablished = delegate { };
-        public static event EventHandler<SocketEventArgs> OnVersionBurn = delegate { };
+        public static event EventHandler OnSmaUpdate;
+        public static event EventHandler OnVersionUpdate;
+        public static event EventHandler OnConnectionLost;
+        public static event EventHandler OnConnectionEstablished;
+        public static event EventHandler<SocketEventArgs> OnVersionBurn;
         public static event EventHandler OnExchangeUpdate;
 
         private static NiceHashSocket _socket;
@@ -122,7 +122,7 @@ namespace NiceHashMiner.Stats
                             SetVersion(message.legacy.Value);
                             break;
                         case "burn":
-                            OnVersionBurn.Emit(null, new SocketEventArgs(message.message.Value));
+                            OnVersionBurn?.Invoke(null, new SocketEventArgs(message.message.Value));
                             break;
                         case "exchange_rates":
                             SetExchangeRates(message.data.Value);
@@ -162,7 +162,7 @@ namespace NiceHashMiner.Stats
 
                 NHSmaData.UpdateSmaPaying(payingDict);
                 
-                OnSmaUpdate.Emit(null, EventArgs.Empty);
+                OnSmaUpdate?.Invoke(null, EventArgs.Empty);
             }
             catch (Exception e)
             {
@@ -183,7 +183,7 @@ namespace NiceHashMiner.Stats
                 if (double.TryParse(balance, NumberStyles.Float, CultureInfo.InvariantCulture, out var bal))
                 {
                     Balance = bal;
-                    OnBalanceUpdate.Emit(null, EventArgs.Empty);
+                    OnBalanceUpdate?.Invoke(null, EventArgs.Empty);
                 }
             }
             catch (Exception e)
@@ -195,7 +195,7 @@ namespace NiceHashMiner.Stats
         private static void SetVersion(string version)
         {
             Version = version;
-            OnVersionUpdate.Emit(null, EventArgs.Empty);
+            OnVersionUpdate?.Invoke(null, EventArgs.Empty);
         }
 
         private static void SetExchangeRates(string data)
