@@ -67,7 +67,7 @@ namespace NiceHashMiner.Miners
             _benchmarkTime = Math.Max(time, 60);
 
             return GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim()) +
-                   " --logfile=benchmark_log.txt";
+                   $" --logfile={GetLogFileName()}";
         }
 
         protected override void BenchmarkThreadRoutine(object commandLine)

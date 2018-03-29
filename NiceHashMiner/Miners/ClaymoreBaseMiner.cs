@@ -298,7 +298,7 @@ namespace NiceHashMiner.Miners
             if (_benchmarkReadCount > 0)
             {
                 var speed = _benchmarkSum / _benchmarkReadCount;
-                var secondarySpeed = _secondaryBenchmarkSum / _secondaryBenchmarkSum;
+                var secondarySpeed = _secondaryBenchmarkSum / _secondaryBenchmarkReadCount;
                 BenchmarkAlgorithm.BenchmarkSpeed = speed;
                 if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo)
                 {
