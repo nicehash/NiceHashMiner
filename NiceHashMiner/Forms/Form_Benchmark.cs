@@ -215,6 +215,8 @@ namespace NiceHashMiner.Forms
                 _currentMiner.BenchmarkSignalQuit = true;
                 _currentMiner.InvokeBenchmarkSignalQuit();
             }
+
+            _currentMiner = null;
         }
 
 
@@ -495,7 +497,7 @@ namespace NiceHashMiner.Forms
             progressBarBenchmarkSteps.Maximum = _benchmarkAlgorithmsCount;
             progressBarBenchmarkSteps.Value = 0;
             SetLabelBenchmarkSteps(0, _benchmarkAlgorithmsCount);
-            _bechmarkCurrentIndex = -1;
+            _bechmarkCurrentIndex = 0;
         }
 
         public bool InBenchmark { get; private set; }
@@ -866,12 +868,13 @@ namespace NiceHashMiner.Forms
 
         public void StepUpBenchmarkStepProgress()
         {
-            Invoke((MethodInvoker) delegate
+            if (InvokeRequired) Invoke((MethodInvoker) StepUpBenchmarkStepProgress);
+            else 
             {
                 _bechmarkCurrentIndex++;
                 SetLabelBenchmarkSteps(_bechmarkCurrentIndex, _benchmarkAlgorithmsCount);
                 progressBarBenchmarkSteps.Value = _bechmarkCurrentIndex;
-            });
+            }
         }
 
         private void ResetBenchmarkProgressStatus()
