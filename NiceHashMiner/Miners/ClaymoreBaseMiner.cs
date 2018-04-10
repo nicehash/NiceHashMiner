@@ -336,10 +336,10 @@ namespace NiceHashMiner.Miners
             try
             {
                 double mult = 1;
-                var speedStart = outdata.IndexOf(LOOK_FOR_START);
+                var speedStart = outdata.IndexOf(LOOK_FOR_START, StringComparison.Ordinal);
                 var speed = outdata.Substring(speedStart, outdata.Length - speedStart);
                 speed = speed.Replace(LOOK_FOR_START, "");
-                speed = speed.Substring(0, speed.IndexOf(LOOK_FOR_END));
+                speed = speed.Substring(0, speed.IndexOf(LOOK_FOR_END, StringComparison.Ordinal));
 
                 if (speed.Contains("k"))
                 {

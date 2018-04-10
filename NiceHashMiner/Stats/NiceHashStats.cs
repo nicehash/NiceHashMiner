@@ -209,7 +209,7 @@ namespace NiceHashMiner.Stats
                         if (exchangePair.TryGetValue("coin", out var coin) &&
                             coin == "BTC" &&
                             exchangePair.TryGetValue("USD", out var usd) &&
-                            double.TryParse(usd, out var usdD))
+                            double.TryParse(usd, NumberStyles.Float, CultureInfo.InvariantCulture, out var usdD))
                         {
                             ExchangeRateApi.UsdBtcRate = usdD;
                             break;
