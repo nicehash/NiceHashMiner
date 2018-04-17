@@ -93,7 +93,7 @@ namespace NiceHashMiner
                 {
                     payingRate += BenchmarkSpeed * paying * 0.000000001;
                 }
-                if (SecondaryBenchmarkSpeed > 0 && IsDual() && NHSmaData.TryGetPaying(NiceHashID, out var secondaryPaying))
+                if (SecondaryBenchmarkSpeed > 0 && IsDual() && NHSmaData.TryGetPaying(SecondaryNiceHashID, out var secondaryPaying))
                 {
                     payingRate += SecondaryBenchmarkSpeed * secondaryPaying * 0.000000001;
                 }
