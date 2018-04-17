@@ -27,12 +27,6 @@ namespace NiceHashMiner.Utils
             @"/nheqminer_v0.4b/nheqminer.exe",
             @"/sgminer-5-6-0-general/sgminer.exe",
             @"/sgminer-gm/sgminer.exe",
-            @"/xmr-stak-cpu/concrt140.dll",
-            @"/xmr-stak-cpu/libeay32.dll",
-            @"/xmr-stak-cpu/ssleay32.dll",
-            @"/xmr-stak-cpu/vccorlib140.dll",
-            @"/xmr-stak-cpu/xmr-stak-cpu.exe",
-            @"/xmrig/xmrig.exe",
         };
 
         #endregion //CODE_GEN STUFF // listFiles.py
