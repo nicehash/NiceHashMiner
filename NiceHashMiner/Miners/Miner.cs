@@ -858,7 +858,7 @@ namespace NiceHashMiner
                     break;
                 }
 
-                BenchmarkHandle.WaitForExit(10000);
+                BenchmarkHandle?.WaitForExit(10000);
                 // read file log
                 if (File.Exists(WorkingDirectory + latestLogFile))
                 {
