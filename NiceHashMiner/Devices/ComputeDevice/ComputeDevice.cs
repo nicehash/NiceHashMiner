@@ -433,5 +433,38 @@ namespace NiceHashMiner.Devices
         {
             return AlgorithmSettings != null;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((ComputeDevice) obj);
+        }
+
+        protected bool Equals(ComputeDevice other)
+        {
+            return ID == other.ID && DeviceGroupType == other.DeviceGroupType && DeviceType == other.DeviceType;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = ID;
+                hashCode = (hashCode * 397) ^ (int) DeviceGroupType;
+                hashCode = (hashCode * 397) ^ (int) DeviceType;
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(ComputeDevice left, ComputeDevice right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(ComputeDevice left, ComputeDevice right)
+        {
+            return !Equals(left, right);
+        }
     }
 }

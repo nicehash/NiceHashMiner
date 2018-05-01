@@ -39,14 +39,17 @@ namespace NiceHashMiner.Benchmarking
             _performanceType = performance;
 
             _benchmarkAlgorithmsCount = _benchmarkAlgorithmQueue.Count;
-
-            var thread = new Thread(NextBenchmark);
-            if (thread.Name == null)
-                thread.Name = $"dev_{device.ID}_benchmark";
-            thread.Start();
         }
 
         public ComputeDevice Device { get; }
+
+        public void Start()
+        {
+            var thread = new Thread(NextBenchmark);
+            if (thread.Name == null)
+                thread.Name = $"dev_{Device.DeviceType}-{Device.ID}_benchmark";
+            thread.Start();
+        }
 
         public void OnBenchmarkComplete(bool success, string status)
         {
