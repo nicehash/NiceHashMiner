@@ -92,9 +92,8 @@ namespace NiceHashMiner.Benchmarking
             }
 
             var dualAlgo = _currentAlgorithm as DualAlgorithm;
-            if (dualAlgo != null && dualAlgo.TuningEnabled)
-                if (dualAlgo.IncrementToNextEmptyIntensity())
-                    rebenchSame = true;
+            if (dualAlgo != null && dualAlgo.TuningEnabled && dualAlgo.IncrementToNextEmptyIntensity())
+                rebenchSame = true;
 
             if (!rebenchSame) _benchmarkForm.RemoveFromStatusCheck(Device, _currentAlgorithm);
 
