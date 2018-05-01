@@ -10,45 +10,21 @@ namespace NiceHashMiner.Miners
     {
         private const string _LookForStart = "XMR - Total Speed:";
         private const string LookForStartOld = "hashrate =";
-        private readonly bool _isOld;
 
-        public ClaymoreCryptoNightMiner(bool isOld = false)
-            : base("ClaymoreCryptoNightMiner", isOld ? LookForStartOld : _LookForStart)
-        {
-            _isOld = isOld;
-        }
+        public ClaymoreCryptoNightMiner()
+            : base("ClaymoreCryptoNightMiner", _LookForStart)
+        { }
 
         protected override double DevFee()
         {
-            return _isOld ? 2.0 : 1.0;
-        }
-
-        protected override string GetLogFileName()
-        {
-            return _isOld ? "*_log.txt" : base.GetLogFileName();
-        }
-
-        protected override string GetDevicesCommandString()
-        {
-            if (!_isOld) return base.GetDevicesCommandString();
-
-            var extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
-            var deviceStringCommand = " -di ";
-            var ids = MiningSetup.MiningPairs.Select(mPair => mPair.Device.ID).Select(id => id.ToString()).ToList();
-            deviceStringCommand += string.Join("", ids);
-
-            return deviceStringCommand + extraParams;
+            return 1.0;
         }
 
         public override void Start(string url, string btcAdress, string worker)
         {
             var username = GetUsername(btcAdress, worker);
-            if (_isOld)
-                LastCommandLine = " " + GetDevicesCommandString() + " -mport -" + ApiPort + " -o " + url +
-                                  " -u " + username + " -p x -dbg -1";
-            else
-                LastCommandLine = " " + GetDevicesCommandString() + " -mport 127.0.0.1:-" + ApiPort + " -xpool " +
-                                  url + " -xwal " + username + " -xpsw x -dbg -1";
+            LastCommandLine =
+                $" {GetDevicesCommandString()} -mport 127.0.0.1:-{ApiPort} -xpool {url} -xwal {username} -xpsw x -dbg -1";
             ProcessHandle = _Start();
         }
 
@@ -66,10 +42,8 @@ namespace NiceHashMiner.Miners
             var username = Globals.DemoUser;
             if (ConfigManager.GeneralConfig.WorkerName.Length > 0)
                 username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
-            var ret = _isOld
-                ? $" {GetDevicesCommandString()} -mport -{ApiPort} -o {url} -u {username} -p x -logfile {GetLogFileName()}"
-                : $" {GetDevicesCommandString()} -mport -{ApiPort} -xpool {url} -xwal {username} -xpsw x -logfile {GetLogFileName()}";
-            return ret;
+
+            return $" {GetDevicesCommandString()} -mport -{ApiPort} -xpool {url} -xwal {username} -xpsw x -logfile {GetLogFileName()}";
         }
     }
 }

@@ -72,8 +72,6 @@ namespace NiceHashMiner.Miners
                     return new Prospector();
                 case MinerBaseType.Xmrig:
                     return new Xmrig();
-                case MinerBaseType.Claymore_old:
-                    return new ClaymoreCryptoNightMiner(true);
                 case MinerBaseType.dtsm:
                     return new Dtsm();
             }

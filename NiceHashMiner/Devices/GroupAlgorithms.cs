@@ -315,13 +315,6 @@ namespace NiceHashMiner.Devices
                                 new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Sia)
                             }
                         },
-                        //{
-                        //    MinerBaseType.Claymore_old,
-                        //    new List<Algorithm>
-                        //    {
-                        //        new Algorithm(MinerBaseType.Claymore_old, AlgorithmType.CryptoNight, "old")
-                        //    }
-                        //},
                         {
                             MinerBaseType.OptiminerAMD,
                             new List<Algorithm>
