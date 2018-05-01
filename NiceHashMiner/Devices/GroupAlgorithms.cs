@@ -306,7 +306,7 @@ namespace NiceHashMiner.Devices
                             MinerBaseType.Claymore,
                             new List<Algorithm>
                             {
-                                //new Algorithm(MinerBaseType.Claymore, AlgorithmType.CryptoNight, "cryptonight"),
+                                new Algorithm(MinerBaseType.Claymore, AlgorithmType.CryptoNightV7, ""),
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.Equihash, "equihash"),
                                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
                                 new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred),

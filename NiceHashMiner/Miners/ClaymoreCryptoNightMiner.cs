@@ -24,7 +24,7 @@ namespace NiceHashMiner.Miners
         {
             var username = GetUsername(btcAdress, worker);
             LastCommandLine =
-                $" {GetDevicesCommandString()} -mport 127.0.0.1:-{ApiPort} -xpool {url} -xwal {username} -xpsw x -dbg -1";
+                $" {GetDevicesCommandString()} -mport 127.0.0.1:-{ApiPort} -xpool {url} -xwal {username} -xpsw x -dbg -1 -pow7 1";
             ProcessHandle = _Start();
         }
 
@@ -43,7 +43,7 @@ namespace NiceHashMiner.Miners
             if (ConfigManager.GeneralConfig.WorkerName.Length > 0)
                 username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
 
-            return $" {GetDevicesCommandString()} -mport -{ApiPort} -xpool {url} -xwal {username} -xpsw x -logfile {GetLogFileName()}";
+            return $" {GetDevicesCommandString()} -mport -{ApiPort} -xpool {url} -xwal {username} -xpsw x -logfile {GetLogFileName()} -pow7 1";
         }
     }
 }
