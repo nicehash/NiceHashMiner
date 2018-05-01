@@ -98,6 +98,9 @@
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithms\Algorithm.cs" />
     <Compile Include="Algorithms\DualAlgorithm.cs" />
+    <Compile Include="Benchmarking\BenchHelpers\CpuBenchHelper.cs" />
+    <Compile Include="Benchmarking\BenchmarkHandler.cs" />
+    <Compile Include="Benchmarking\BenchHelpers\ClaymoreZcashBenchHelper.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
