@@ -713,12 +713,12 @@ namespace NiceHashMiner
 
         protected virtual void BenchmarkThreadRoutine(object commandLine)
         {
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
+            
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             try
             {
@@ -776,12 +776,12 @@ namespace NiceHashMiner
         {
             CleanOldLogs();
 
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
+            
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             try
             {

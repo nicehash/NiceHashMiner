@@ -339,12 +339,12 @@ namespace NiceHashMiner.Miners
 
         protected override void BenchmarkThreadRoutine(object commandLine)
         {
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
+            
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             var startTime = DateTime.Now;
 

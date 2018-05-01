@@ -10,19 +10,16 @@ namespace NiceHashMiner.Miners
         private const string _LookForStart = "ETH - Total Speed:";
 
         public ClaymoreDual(AlgorithmType secondaryAlgorithmType)
-            : base("ClaymoreDual", _LookForStart)
+            : base("ClaymoreDual")
         {
             IgnoreZero = true;
             ApiReadMult = 1000;
             ConectionType = NhmConectionType.STRATUM_TCP;
             SecondaryAlgorithmType = secondaryAlgorithmType;
-        }
 
-        // eth-only: 1%
-        // eth-dual-mine: 2%
-        protected override double DevFee()
-        {
-            return IsDual() ? 2.0 : 1.0;
+            LookForStart = "eth - total speed:";
+            SecondaryLookForStart = SecondaryShortName() + " - total speed:";
+            DevFee = IsDual() ? 2.0 : 1.0;
         }
 
         // the short form the miner uses for secondary algo in cmd line and log
@@ -41,11 +38,6 @@ namespace NiceHashMiner.Miners
             }
 
             return "";
-        }
-
-        protected override string SecondaryLookForStart()
-        {
-            return (SecondaryShortName() + " - Total Speed:").ToLower();
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()

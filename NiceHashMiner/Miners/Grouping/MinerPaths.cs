@@ -108,9 +108,6 @@ namespace NiceHashMiner.Miners.Grouping
             public const string ClaymoreZcashMiner = Bin3rdParty + @"\claymore_zcash\ZecMiner64.exe";
             public const string ClaymoreCryptoNightMiner = Bin3rdParty + @"\claymore_cryptonight\NsGpuCNMiner.exe";
 
-            public const string ClaymoreCryptoNightMinerOld =
-                Bin3rdParty + @"\claymore_cryptonight_old\NsGpuCNMiner.exe";
-
             public const string OptiminerZcashMiner = Bin3rdParty + @"\optiminer_zcash_win\Optiminer.exe";
             public const string ClaymoreDual = Bin3rdParty + @"\claymore_dual\EthDcrMiner64.exe";
             public const string Ewbf = Bin3rdParty + @"\ewbf\miner.exe";
@@ -171,8 +168,6 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.Prospector;
                 case MinerBaseType.Xmrig:
                     return Data.Xmrig;
-                case MinerBaseType.Claymore_old:
-                    return Data.ClaymoreCryptoNightMinerOld;
                 case MinerBaseType.dtsm:
                     return Data.Dtsm;
             }
@@ -311,7 +306,7 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     case AlgorithmType.Equihash:
                         return Data.ClaymoreZcashMiner;
-                    case AlgorithmType.CryptoNight:
+                    case AlgorithmType.CryptoNightV7:
                         return Data.ClaymoreCryptoNightMiner;
                     case AlgorithmType.DaggerHashimoto:
                         return Data.ClaymoreDual;

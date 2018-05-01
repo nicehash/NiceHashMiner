@@ -38,10 +38,14 @@ namespace NiceHashMiner.Forms
         private int _dotCount;
 
         private bool _hasFailedAlgorithms;
-        private List<BenchmarkHandler> _runningBenchmarkThreads;
+        private List<BenchmarkHandler> _runningBenchmarkThreads = new List<BenchmarkHandler>();
         private Dictionary<ComputeDevice, Algorithm> _statusCheckAlgos;
 
         private readonly bool ExitWhenFinished;
+
+        public bool StartMining { get; private set; }
+
+        public bool InBenchmark { get; private set; }
 
         public Form_Benchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false)
@@ -113,7 +117,7 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        public bool StartMining { get; private set; }
+        #region IBenchmarkCalculation methods
 
         public void CalcBenchmarkDevicesAlgorithmQueue()
         {
@@ -161,7 +165,9 @@ namespace NiceHashMiner.Forms
             _bechmarkCurrentIndex = 0;
         }
 
-        public bool InBenchmark { get; private set; }
+        #endregion
+
+        #region IBenchmarkForm methods
 
         public void AddToStatusCheck(ComputeDevice device, Algorithm algorithm)
         {
@@ -182,9 +188,13 @@ namespace NiceHashMiner.Forms
         public void EndBenchmarkForDevice(ComputeDevice device, bool failedAlgos)
         {
             _hasFailedAlgorithms = failedAlgos || _hasFailedAlgorithms;
-            _runningBenchmarkThreads.RemoveAll(x => x.Device == device);
+            lock (_runningBenchmarkThreads)
+            {
+                _runningBenchmarkThreads.RemoveAll(x => x.Device == device);
 
-            if (_runningBenchmarkThreads.Count <= 0) EndBenchmark();
+                if (_runningBenchmarkThreads.Count <= 0) 
+                    EndBenchmark();
+            }
         }
 
 
@@ -195,6 +205,22 @@ namespace NiceHashMiner.Forms
                 algorithmsListView1.SetSpeedStatus(device, algorithm, status);
             });
         }
+
+        public void StepUpBenchmarkStepProgress()
+        {
+            if (InvokeRequired) Invoke((MethodInvoker) StepUpBenchmarkStepProgress);
+            else 
+            {
+                _bechmarkCurrentIndex++;
+                SetLabelBenchmarkSteps(_bechmarkCurrentIndex, _benchmarkAlgorithmsCount);
+                if (_bechmarkCurrentIndex <= progressBarBenchmarkSteps.Maximum)
+                    progressBarBenchmarkSteps.Value = _bechmarkCurrentIndex;
+            }
+        }
+
+        #endregion
+
+        #region IListItemCheckColorSetter methods
 
         public void LviSetColor(ListViewItem lvi)
         {
@@ -223,6 +249,8 @@ namespace NiceHashMiner.Forms
                 //}
             }
         }
+
+        #endregion
 
         private void CopyBenchmarks()
         {
@@ -274,6 +302,8 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Benchmark_checkbox_StartMiningAfterBenchmark");
         }
 
+        #region Start/Stop methods
+
         private void StartStopBtn_Click(object sender, EventArgs e)
         {
             if (InBenchmark)
@@ -323,7 +353,11 @@ namespace NiceHashMiner.Forms
             Helpers.ConsolePrint("FormBenchmark", "StopButonClick() benchmark routine stopped");
             //// copy benchmarked
             //CopyBenchmarks();
-            foreach (var handler in _runningBenchmarkThreads) handler.InvokeQuit();
+            lock (_runningBenchmarkThreads)
+            {
+                foreach (var handler in _runningBenchmarkThreads) handler.InvokeQuit();
+            }
+
             if (ExitWhenFinished) Close();
         }
 
@@ -356,7 +390,10 @@ namespace NiceHashMiner.Forms
 
             _hasFailedAlgorithms = false;
             _statusCheckAlgos = new Dictionary<ComputeDevice, Algorithm>();
-            _runningBenchmarkThreads = new List<BenchmarkHandler>();
+            lock (_runningBenchmarkThreads)
+            {
+                _runningBenchmarkThreads = new List<BenchmarkHandler>();
+            }
 
             // disable gui controls
             benchmarkOptions1.Enabled = false;
@@ -398,11 +435,18 @@ namespace NiceHashMiner.Forms
         private void StartBenchmark()
         {
             InBenchmark = true;
-            foreach (var device in _benchmarkDevicesAlgorithmQueue.Select(a => a.Item1))
+            lock (_runningBenchmarkThreads)
             {
-                var algos = _benchmarkDevicesAlgorithmQueue.Find(a => a.Item1 == device).Item2;
-                var handler = new BenchmarkHandler(device, algos, this, benchmarkOptions1.PerformanceType);
-                _runningBenchmarkThreads.Add(handler);
+                foreach (var pair in _benchmarkDevicesAlgorithmQueue)
+                {
+                    var handler = new BenchmarkHandler(pair.Item1, pair.Item2, this, benchmarkOptions1.PerformanceType);
+                    _runningBenchmarkThreads.Add(handler);
+                }
+                // Don't start until list is populated
+                foreach (var thread in _runningBenchmarkThreads)
+                {
+                    thread.Start();
+                }
             }
 
             _benchmarkingTimer.Start();
@@ -450,6 +494,8 @@ namespace NiceHashMiner.Forms
                 if (ExitWhenFinished || StartMining) Close();
             });
         }
+
+        #endregion
 
         private void CloseBtn_Click(object sender, EventArgs e)
         {
@@ -525,17 +571,6 @@ namespace NiceHashMiner.Forms
         {
             labelBenchmarkSteps.Text =
                 string.Format(International.GetText("FormBenchmark_Benchmark_Step"), current, max);
-        }
-
-        public void StepUpBenchmarkStepProgress()
-        {
-            if (InvokeRequired) Invoke((MethodInvoker) StepUpBenchmarkStepProgress);
-            else 
-            {
-                _bechmarkCurrentIndex++;
-                SetLabelBenchmarkSteps(_bechmarkCurrentIndex, _benchmarkAlgorithmsCount);
-                progressBarBenchmarkSteps.Value = _bechmarkCurrentIndex;
-            }
         }
 
         private void ResetBenchmarkProgressStatus()

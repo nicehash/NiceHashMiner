@@ -7,6 +7,9 @@ namespace NiceHashMiner.Devices
     {
         private readonly NvPhysicalGpuHandle _nvHandle; // For NVAPI
         private const int GpuCorePState = 0; // memcontroller = 1, videng = 2
+        
+        protected int SMMajor;
+        protected int SMMinor;
 
         public override float Load
         {

@@ -23,7 +23,7 @@ namespace NiceHashMiner.Miners
             {
                 case AlgorithmType.Equihash:
                     return new ClaymoreZcashMiner();
-                case AlgorithmType.CryptoNight:
+                case AlgorithmType.CryptoNightV7:
                     return new ClaymoreCryptoNightMiner();
                 case AlgorithmType.DaggerHashimoto:
                     return new ClaymoreDual(algorithm.SecondaryNiceHashID);
@@ -72,8 +72,6 @@ namespace NiceHashMiner.Miners
                     return new Prospector();
                 case MinerBaseType.Xmrig:
                     return new Xmrig();
-                case MinerBaseType.Claymore_old:
-                    return new ClaymoreCryptoNightMiner(true);
                 case MinerBaseType.dtsm:
                     return new Dtsm();
             }

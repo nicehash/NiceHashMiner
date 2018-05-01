@@ -93,72 +93,6 @@ namespace NiceHashMiner.Devices
             GpuRam = 0;
         }
 
-        // CPU 
-        public ComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int cpuCount)
-        {
-            ID = id;
-            Name = name;
-            Threads = threads;
-            AffinityMask = affinityMask;
-            Enabled = true;
-            DeviceGroupType = DeviceGroupType.CPU;
-            DeviceType = DeviceType.CPU;
-            NameCount = string.Format(International.GetText("ComputeDevice_Short_Name_CPU"), cpuCount);
-            Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
-            AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
-            IsEtherumCapale = false;
-            GpuRam = 0;
-        }
-
-        // GPU NVIDIA
-        protected int SMMajor = -1;
-
-        protected int SMMinor = -1;
-
-        public ComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int gpuCount)
-        {
-            SMMajor = cudaDevice.SM_major;
-            SMMinor = cudaDevice.SM_minor;
-            ID = (int) cudaDevice.DeviceID;
-            Name = cudaDevice.GetName();
-            Enabled = true;
-            DeviceGroupType = group;
-            IsEtherumCapale = cudaDevice.IsEtherumCapable();
-            DeviceType = DeviceType.NVIDIA;
-            NameCount = string.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), gpuCount);
-            Uuid = cudaDevice.UUID;
-            AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
-            GpuRam = cudaDevice.DeviceGlobalMemory;
-        }
-
-        public bool IsSM50()
-        {
-            return SMMajor == 5 && SMMinor == 0;
-        }
-
-        // GPU AMD
-        public ComputeDevice(AmdGpuDevice amdDevice, int gpuCount, bool isDetectionFallback)
-        {
-            ID = amdDevice.DeviceID;
-            BusID = amdDevice.BusID;
-            DeviceGroupType = DeviceGroupType.AMD_OpenCL;
-            Name = amdDevice.DeviceName;
-            Enabled = true;
-            IsEtherumCapale = amdDevice.IsEtherumCapable();
-            DeviceType = DeviceType.AMD;
-            NameCount = string.Format(International.GetText("ComputeDevice_Short_Name_AMD_GPU"), gpuCount);
-            Uuid = isDetectionFallback
-                ? GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType)
-                : amdDevice.UUID;
-            // sgminer extra
-            //IsOptimizedVersion = amdDevice.UseOptimizedVersion;
-            Codename = amdDevice.Codename;
-            InfSection = amdDevice.InfSection;
-            AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
-            DriverDisableAlgos = amdDevice.DriverDisableAlgos;
-            GpuRam = amdDevice.DeviceGlobalMemory;
-        }
-
         // combines long and short name
         public string GetFullName()
         {
@@ -432,6 +366,39 @@ namespace NiceHashMiner.Devices
         internal bool IsAlgorithmSettingsInitialized()
         {
             return AlgorithmSettings != null;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is null) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == GetType() && Equals((ComputeDevice) obj);
+        }
+
+        protected bool Equals(ComputeDevice other)
+        {
+            return ID == other.ID && DeviceGroupType == other.DeviceGroupType && DeviceType == other.DeviceType;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = ID;
+                hashCode = (hashCode * 397) ^ (int) DeviceGroupType;
+                hashCode = (hashCode * 397) ^ (int) DeviceType;
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(ComputeDevice left, ComputeDevice right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(ComputeDevice left, ComputeDevice right)
+        {
+            return !Equals(left, right);
         }
     }
 }
