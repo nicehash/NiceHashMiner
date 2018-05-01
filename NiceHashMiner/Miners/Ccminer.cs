@@ -119,10 +119,12 @@ namespace NiceHashMiner.Miners
                 }
                 if (_cryptonightTotalCount <= 0)
                 {
-                    var spd = _cryptonightTotal / (BenchmarkTimeInSeconds / CryptonightTotalDelim);
+                    var spd = _cryptonightTotal / ((double) BenchmarkTimeInSeconds / CryptonightTotalDelim);
                     BenchmarkAlgorithm.BenchmarkSpeed = spd;
                     BenchmarkSignalFinnished = true;
                 }
+
+                return false;
             }
 
             var lastSpeed = BenchmarkParseLine_cpu_ccminer_extra(outdata);

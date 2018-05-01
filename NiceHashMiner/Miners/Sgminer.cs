@@ -247,12 +247,12 @@ namespace NiceHashMiner.Miners
 
         protected override void BenchmarkThreadRoutine(object commandLine)
         {
-            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS * 3); // increase wait for sgminer
-
             BenchmarkSignalQuit = false;
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
+            
+            Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS * 3); // increase wait for sgminer
 
             try
             {
