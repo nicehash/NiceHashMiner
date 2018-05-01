@@ -21,8 +21,11 @@ namespace NiceHashMiner.Miners
         private double _benchmarkSum;
         private int _secondaryBenchmarkReadCount;
         private double _secondaryBenchmarkSum;
-        protected readonly string LookForStart;
-        private const string LookForEnd = "h/s";
+        protected string LookForStart;
+        protected string LookForEnd = "h/s";
+        protected string SecondaryLookForStart;
+
+        protected double DevFee;
 
         // only dagger change
         protected bool IgnoreZero = false;
@@ -33,19 +36,11 @@ namespace NiceHashMiner.Miners
         // CD intensity tuning
         protected const int defaultIntensity = 30;
 
-        protected ClaymoreBaseMiner(string minerDeviceName, string lookForStart)
+        protected ClaymoreBaseMiner(string minerDeviceName)
             : base(minerDeviceName)
         {
             ConectionType = NhmConectionType.STRATUM_SSL;
-            LookForStart = lookForStart.ToLower();
             IsKillAllUsedMinerProcs = true;
-        }
-
-        protected abstract double DevFee();
-
-        protected virtual string SecondaryLookForStart()
-        {
-            return "";
         }
 
         // return true if a secondary algo is being used
@@ -259,36 +254,20 @@ namespace NiceHashMiner.Miners
                     var lineLowered = line.ToLower();
                     if (lineLowered.Contains(LookForStart))
                     {
-                        if (IgnoreZero)
+                        var got = GetNumber(lineLowered);
+                        if (!IgnoreZero || got >= 0)
                         {
-                            var got = GetNumber(lineLowered);
-                            if (got != 0)
-                            {
-                                _benchmarkSum += got;
-                                ++_benchmarkReadCount;
-                            }
-                        }
-                        else
-                        {
-                            _benchmarkSum += GetNumber(lineLowered);
+                            _benchmarkSum += got;
                             ++_benchmarkReadCount;
                         }
                     }
-                    else if (!string.IsNullOrEmpty(SecondaryLookForStart()) &&
-                             lineLowered.Contains(SecondaryLookForStart()))
+                    else if (!string.IsNullOrEmpty(SecondaryLookForStart) &&
+                             lineLowered.Contains(SecondaryLookForStart))
                     {
-                        if (IgnoreZero)
+                        var got = GetNumber(lineLowered, SecondaryLookForStart, LookForEnd);
+                        if (IgnoreZero || got >= 0)
                         {
-                            var got = GetNumber(lineLowered, SecondaryLookForStart(), LookForEnd);
-                            if (got != 0)
-                            {
-                                _secondaryBenchmarkSum += got;
-                                ++_secondaryBenchmarkReadCount;
-                            }
-                        }
-                        else
-                        {
-                            _secondaryBenchmarkSum += GetNumber(lineLowered);
+                            _secondaryBenchmarkSum += got;
                             ++_secondaryBenchmarkReadCount;
                         }
                     }
@@ -354,7 +333,7 @@ namespace NiceHashMiner.Miners
 
                 //Helpers.ConsolePrint("speed", speed);
                 speed = speed.Trim();
-                return (double.Parse(speed, CultureInfo.InvariantCulture) * mult) * (1.0 - DevFee() * 0.01);
+                return (double.Parse(speed, CultureInfo.InvariantCulture) * mult) * (1.0 - DevFee * 0.01);
             }
             catch (Exception ex)
             {

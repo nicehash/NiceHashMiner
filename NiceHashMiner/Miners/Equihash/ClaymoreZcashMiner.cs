@@ -4,17 +4,12 @@ namespace NiceHashMiner.Miners
 {
     public class ClaymoreZcashMiner : ClaymoreBaseMiner
     {
-        private const string _LookForStart = "ZEC - Total Speed:";
-
         public ClaymoreZcashMiner()
-            : base("ClaymoreZcashMiner", _LookForStart)
+            : base("ClaymoreZcashMiner")
         {
             IgnoreZero = true;
-        }
-
-        protected override double DevFee()
-        {
-            return 2.0;
+            LookForStart = "zec - total speed:";
+            DevFee = 2.0;
         }
 
 
@@ -31,8 +26,7 @@ namespace NiceHashMiner.Miners
         {
             BenchmarkTimeWait = time / 3; // 3 times faster than sgminer
 
-            var ret = $" -mport 127.0.0.1:{ApiPort} -benchmark 1 -logfile {GetLogFileName()} {GetDevicesCommandString()}";
-            return ret;
+            return $" -mport 127.0.0.1:{ApiPort} -benchmark 1 -logfile {GetLogFileName()} {GetDevicesCommandString()}";
         }
     }
 }

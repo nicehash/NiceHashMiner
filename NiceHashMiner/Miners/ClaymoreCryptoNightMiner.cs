@@ -8,15 +8,11 @@ namespace NiceHashMiner.Miners
 {
     public class ClaymoreCryptoNightMiner : ClaymoreBaseMiner
     {
-        private const string _LookForStart = "XMR - Total Speed:";
-
         public ClaymoreCryptoNightMiner()
-            : base("ClaymoreCryptoNightMiner", _LookForStart)
-        { }
-
-        protected override double DevFee()
+            : base("ClaymoreCryptoNightMiner")
         {
-            return 1.0;
+            LookForStart = "xmr - total speed:";
+            // DevFee = 0
         }
 
         public override void Start(string url, string btcAdress, string worker)
