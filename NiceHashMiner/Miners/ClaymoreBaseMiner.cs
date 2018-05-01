@@ -298,10 +298,10 @@ namespace NiceHashMiner.Miners
             if (_benchmarkReadCount > 0)
             {
                 var speed = _benchmarkSum / _benchmarkReadCount;
-                var secondarySpeed = _secondaryBenchmarkSum / _secondaryBenchmarkReadCount;
                 BenchmarkAlgorithm.BenchmarkSpeed = speed;
                 if (BenchmarkAlgorithm is DualAlgorithm dualBenchAlgo)
                 {
+                    var secondarySpeed = _secondaryBenchmarkSum / Math.Max(1, _secondaryBenchmarkReadCount);
                     if (dualBenchAlgo.TuningEnabled)
                     {
                         dualBenchAlgo.SetIntensitySpeedsForCurrent(speed, secondarySpeed);

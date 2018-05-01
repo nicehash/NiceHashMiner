@@ -9,7 +9,6 @@ namespace NiceHashMiner.Miners
     public class ClaymoreCryptoNightMiner : ClaymoreBaseMiner
     {
         private const string _LookForStart = "XMR - Total Speed:";
-        private const string LookForStartOld = "hashrate =";
 
         public ClaymoreCryptoNightMiner()
             : base("ClaymoreCryptoNightMiner", _LookForStart)

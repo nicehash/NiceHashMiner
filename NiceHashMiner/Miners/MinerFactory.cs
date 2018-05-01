@@ -23,7 +23,7 @@ namespace NiceHashMiner.Miners
             {
                 case AlgorithmType.Equihash:
                     return new ClaymoreZcashMiner();
-                case AlgorithmType.CryptoNight:
+                case AlgorithmType.CryptoNightV7:
                     return new ClaymoreCryptoNightMiner();
                 case AlgorithmType.DaggerHashimoto:
                     return new ClaymoreDual(algorithm.SecondaryNiceHashID);
