@@ -17,7 +17,7 @@ namespace NiceHashMiner.Miners
 
             LookForStart = "eth - total speed:";
             SecondaryLookForStart = SecondaryShortName() + " - total speed:";
-            DevFee = IsDual() ? 2.0 : 1.0;
+            DevFee = IsDual() ? 1.5 : 1.0;
         }
 
         // the short form the miner uses for secondary algo in cmd line and log
