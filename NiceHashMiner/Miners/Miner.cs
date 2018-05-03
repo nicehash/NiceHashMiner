@@ -35,34 +35,10 @@ namespace NiceHashMiner
         {
             AlgorithmID = algorithmID;
             SecondaryAlgorithmID = secondaryAlgorithmID;
-            AlgorithmName = AlgorithmNiceHashNames.GetName(DualAlgorithmID());
+            AlgorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmID, secondaryAlgorithmID));
             Speed = 0.0;
             SecondarySpeed = 0.0;
             PowerUsage = 0.0;
-        }
-
-        public AlgorithmType DualAlgorithmID()
-        {
-            if (AlgorithmID == AlgorithmType.DaggerHashimoto)
-            {
-                switch (SecondaryAlgorithmID)
-                {
-                    case AlgorithmType.Decred:
-                        return AlgorithmType.DaggerDecred;
-                    case AlgorithmType.Lbry:
-                        return AlgorithmType.DaggerLbry;
-                    case AlgorithmType.Pascal:
-                        return AlgorithmType.DaggerPascal;
-                    case AlgorithmType.Sia:
-                        return AlgorithmType.DaggerSia;
-                    case AlgorithmType.Blake2s:
-                        return AlgorithmType.DaggerBlake2s;
-                    case AlgorithmType.Keccak:
-                        return AlgorithmType.DaggerKeccak;
-                }
-            }
-
-            return AlgorithmID;
         }
     }
 

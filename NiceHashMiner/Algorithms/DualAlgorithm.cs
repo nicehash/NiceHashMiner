@@ -25,32 +25,7 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// AlgorithmType that uniquely identifies this choice of primary/secondary types
         /// </summary>
-        public override AlgorithmType DualNiceHashID
-        {
-            get
-            {
-                if (NiceHashID == AlgorithmType.DaggerHashimoto)
-                {
-                    switch (SecondaryNiceHashID)
-                    {
-                        case AlgorithmType.Decred:
-                            return AlgorithmType.DaggerDecred;
-                        case AlgorithmType.Lbry:
-                            return AlgorithmType.DaggerLbry;
-                        case AlgorithmType.Pascal:
-                            return AlgorithmType.DaggerPascal;
-                        case AlgorithmType.Sia:
-                            return AlgorithmType.DaggerSia;
-                        case AlgorithmType.Blake2s:
-                            return AlgorithmType.DaggerBlake2s;
-                        case AlgorithmType.Keccak:
-                            return AlgorithmType.DaggerKeccak;
-                    }
-                }
-
-                return NiceHashID;
-            }
-        }
+        public override AlgorithmType DualNiceHashID => Helpers.DualAlgoFromAlgos(NiceHashID, SecondaryNiceHashID);
 
         #endregion
 
