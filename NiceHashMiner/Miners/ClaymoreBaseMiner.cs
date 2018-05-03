@@ -241,6 +241,11 @@ namespace NiceHashMiner.Miners
                     $"Starting benchmark for intensity {dualBenchAlgo.CurrentIntensity} out of {dualBenchAlgo.TuningEnd}");
             }
 
+            _benchmarkReadCount = 0;
+            _benchmarkSum = 0;
+            _secondaryBenchmarkReadCount = 0;
+            _secondaryBenchmarkSum = 0;
+
             BenchmarkThreadRoutineAlternate(commandLine, BenchmarkTimeWait);
         }
 
@@ -255,7 +260,7 @@ namespace NiceHashMiner.Miners
                     if (lineLowered.Contains(LookForStart))
                     {
                         var got = GetNumber(lineLowered);
-                        if (!IgnoreZero || got >= 0)
+                        if (!IgnoreZero || got > 0)
                         {
                             _benchmarkSum += got;
                             ++_benchmarkReadCount;
@@ -265,7 +270,7 @@ namespace NiceHashMiner.Miners
                              lineLowered.Contains(SecondaryLookForStart))
                     {
                         var got = GetNumber(lineLowered, SecondaryLookForStart, LookForEnd);
-                        if (IgnoreZero || got >= 0)
+                        if (IgnoreZero || got > 0)
                         {
                             _secondaryBenchmarkSum += got;
                             ++_secondaryBenchmarkReadCount;

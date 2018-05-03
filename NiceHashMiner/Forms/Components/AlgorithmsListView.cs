@@ -209,9 +209,17 @@ namespace NiceHashMiner.Forms.Components
                             // TODO handle numbers
                             lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
                             lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
-                            lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
+                            
                             if (algorithm is DualAlgorithm dualAlg)
+                            {
+                                lvi.SubItems[RATIO].Text = dualAlg.SecondaryCurPayingRatio;
                                 lvi.SubItems[SECSPEED].Text = dualAlg.SecondaryBenchmarkSpeedString();
+                            }
+                            else
+                            {
+                                lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
+                            }
+
                             _listItemCheckColorSetter.LviSetColor(lvi);
                             break;
                         }
