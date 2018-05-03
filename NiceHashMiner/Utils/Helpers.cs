@@ -378,7 +378,7 @@ namespace NiceHashMiner
         {
             if (primary == AlgorithmType.DaggerHashimoto)
             {
-                switch (primary)
+                switch (secondary)
                 {
                     case AlgorithmType.Decred:
                         return AlgorithmType.DaggerDecred;
@@ -395,7 +395,7 @@ namespace NiceHashMiner
                 }
             }
 
-            return secondary;
+            return primary;
         }
     }
 }
