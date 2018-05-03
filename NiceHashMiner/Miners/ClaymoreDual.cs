@@ -7,8 +7,6 @@ namespace NiceHashMiner.Miners
 {
     public class ClaymoreDual : ClaymoreBaseMiner
     {
-        private const string _LookForStart = "ETH - Total Speed:";
-
         public ClaymoreDual(AlgorithmType secondaryAlgorithmType)
             : base("ClaymoreDual")
         {
@@ -35,6 +33,10 @@ namespace NiceHashMiner.Miners
                     return "pasc";
                 case AlgorithmType.Sia:
                     return "sc";
+                case AlgorithmType.Blake2s:
+                    return "b2s";
+                case AlgorithmType.Keccak:
+                    return "kc";
             }
 
             return "";

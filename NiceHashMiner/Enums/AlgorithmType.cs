@@ -7,6 +7,8 @@
     public enum AlgorithmType
     {
         // dual algos for grouping
+        DaggerKeccak = -8,
+        DaggerBlake2s = -7,
         DaggerSia = -6,
         DaggerDecred = -5,
         DaggerLbry = -4,
