@@ -29,6 +29,7 @@ namespace NiceHashMiner.Miners.XmrStak
             ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
             TimeoutStandard = true;
+            IsMultiType = true;
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -72,7 +73,7 @@ namespace NiceHashMiner.Miners.XmrStak
             return $"-c {configName} -C {GetPoolConfigName()} {devs} {DisableDevCmd(devConfigs.Keys)}";
         }
 
-        protected virtual Dictionary<DeviceType, string> PrepareConfigFiles(string url, string btcAddress,
+        private Dictionary<DeviceType, string> PrepareConfigFiles(string url, string btcAddress,
             string worker, bool bench = false)
         {
             var configs = new Dictionary<DeviceType, string>();
@@ -148,7 +149,7 @@ namespace NiceHashMiner.Miners.XmrStak
 
         #region Filename Helpers
 
-        protected string GetDevConfigFileName(DeviceType type)
+        private string GetDevConfigFileName(DeviceType type)
         {
             var ids = MiningSetup.MiningPairs
                 .Where(pair => pair.Device.DeviceType == type)
@@ -158,19 +159,12 @@ namespace NiceHashMiner.Miners.XmrStak
 
         private string GetBenchConfigName()
         {
-            var dev = MiningSetup.MiningPairs[0].Device;
-            return $"bench_{(int) dev.DeviceType}-{dev.ID}.txt";
-        }
-
-        protected override string GetLogFileName()
-        {
-            return $"{(int) MiningSetup.MiningPairs[0].Device.DeviceType}-{base.GetLogFileName()}";
+            return $"bench_{GetDeviceID()}.txt";
         }
 
         private string GetPoolConfigName()
         {
-            var ids = MiningSetup.MiningPairs.Select(pair => $"{(int) pair.Device.DeviceType}-{pair.Device.ID}");
-            return $"pools_{string.Join(",", ids)}.txt";
+            return $"pools_{GetDeviceID()}.txt";
         }
 
         #endregion

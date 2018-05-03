@@ -158,6 +158,8 @@ namespace NiceHashMiner
 
         protected const string HttpHeaderDelimiter = "\r\n\r\n";
 
+        protected bool IsMultiType;
+
         protected Miner(string minerDeviceName)
         {
             ConectionType = NhmConectionType.STRATUM_TCP;
@@ -891,10 +893,24 @@ namespace NiceHashMiner
             catch { }
         }
 
-        protected virtual string GetLogFileName()
+        /// <summary>
+        /// When parallel benchmarking each device needs its own log files, so this uniquely identifies for the setup
+        /// </summary>
+        protected string GetDeviceID()
         {
-            var ids = MiningSetup.MiningPairs.Select(x => x.Device.Index);
-            return $"{string.Join(",", ids)}_log.txt";
+            var ids = MiningSetup.MiningPairs.Select(x => x.Device.ID);
+            var idStr = string.Join(",", ids);
+
+            if (!IsMultiType) return idStr;
+            
+            // Miners that use multiple dev types need to also discriminate based on that
+            var types = MiningSetup.MiningPairs.Select(x => (int) x.Device.DeviceType);
+            return $"{string.Join(",", types)}-{idStr}";
+        }
+
+        protected string GetLogFileName()
+        {
+            return $"{GetDeviceID()}_log.txt";
         }
 
         protected virtual void ProcessBenchLinesAlternate(string[] lines)
