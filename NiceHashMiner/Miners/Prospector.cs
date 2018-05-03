@@ -24,6 +24,8 @@ namespace NiceHashMiner.Miners
         public static int NVPlatform = -1;
         public static int AmdPlatform = -1;
 
+        public static object Lock = new object();
+
         public static int PlatformForDeviceType(DeviceType type)
         {
             if (IsInit)
@@ -99,11 +101,11 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            public sessions LastSession()
+            public sessions LastSession(string device)
             {
                 try
                 {
-                    return Table<sessions>().LastOrDefault();
+                    return Table<sessions>().LastOrDefault(s => QuerySpeedsForSessionDev(s.id, device).Any());
                 }
                 catch (Exception e)
                 {
@@ -154,7 +156,7 @@ namespace NiceHashMiner.Miners
 
         private string GetConfigFileName()
         {
-            return $"config_{MiningSetup.MiningPairs[0].Device.ID}.toml";
+            return $"config_{GetDeviceID()}.toml";
         }
 
         private void PrepareConfigFile(string pool, string wallet)
@@ -189,59 +191,70 @@ namespace NiceHashMiner.Miners
 
         private bool InitPlatforms()
         {
-            if (ProspectorPlatforms.IsInit) return true;
-
-            CleanAllOldLogs();
-            var handle = BenchmarkStartProcess(" list-devices");
-            handle.Start();
-
-            handle.WaitForExit(20 * 1000); // 20 seconds
-            handle = null;
-
-            try
+            // We need to lock the platforms class 
+            // If two devices start a prospector bench close together, the second one will delete the logs needed by the first
+            // Once the first one has finished getting platform defs, platforms class will be init so the lock only lasts one line
+            lock (ProspectorPlatforms.Lock)
             {
-                var latestLogFile = "";
-                var dirInfo = new DirectoryInfo(WorkingDirectory + "logs\\");
-                foreach (var file in dirInfo.GetFiles())
-                {
-                    latestLogFile = file.Name;
-                    break;
-                }
-                if (File.Exists(dirInfo + latestLogFile))
-                {
-                    var lines = File.ReadAllLines(dirInfo + latestLogFile);
-                    foreach (var line in lines)
-                    {
-                        if (line == null) continue;
-                        var lineLowered = line.ToLower();
-                        if (!lineLowered.Contains(PlatformStart)) continue;
-                        var platStart = lineLowered.IndexOf(PlatformStart);
-                        var plat = lineLowered.Substring(platStart, line.Length - platStart);
-                        plat = plat.Replace(PlatformStart, "");
-                        plat = plat.Substring(0, plat.IndexOf(PlatformEnd));
+                if (ProspectorPlatforms.IsInit) return true;
 
-                        if (!int.TryParse(plat, out var platIndex)) continue;
-                        if (lineLowered.Contains("nvidia"))
+                CleanAllOldLogs();
+                using (var handle = BenchmarkStartProcess(" list-devices"))
+                {
+                    handle.Start();
+
+                    handle.WaitForExit(20 * 1000); // 20 seconds
+                }
+
+                try
+                {
+                    var latestLogFile = "";
+                    var dirInfo = new DirectoryInfo(WorkingDirectory + "logs\\");
+                    foreach (var file in dirInfo.GetFiles())
+                    {
+                        latestLogFile = file.Name;
+                        break;
+                    }
+
+                    if (File.Exists(dirInfo + latestLogFile))
+                    {
+                        var lines = File.ReadAllLines(dirInfo + latestLogFile);
+                        foreach (var line in lines)
                         {
-                            Helpers.ConsolePrint(MinerTag(), "Setting nvidia platform: " + platIndex);
-                            ProspectorPlatforms.NVPlatform = platIndex;
-                            if (ProspectorPlatforms.AmdPlatform >= 0) break;
-                        }
-                        else if (lineLowered.Contains("amd"))
-                        {
-                            Helpers.ConsolePrint(MinerTag(), "Setting amd platform: " + platIndex);
-                            ProspectorPlatforms.AmdPlatform = platIndex;
-                            if (ProspectorPlatforms.NVPlatform >= 0) break;
+                            if (line == null) continue;
+                            var lineLowered = line.ToLower();
+                            if (!lineLowered.Contains(PlatformStart)) continue;
+                            var platStart = lineLowered.IndexOf(PlatformStart);
+                            var plat = lineLowered.Substring(platStart, line.Length - platStart);
+                            plat = plat.Replace(PlatformStart, "");
+                            plat = plat.Substring(0, plat.IndexOf(PlatformEnd));
+
+                            if (!int.TryParse(plat, out var platIndex)) continue;
+                            if (lineLowered.Contains("nvidia"))
+                            {
+                                Helpers.ConsolePrint(MinerTag(), "Setting nvidia platform: " + platIndex);
+                                ProspectorPlatforms.NVPlatform = platIndex;
+                                if (ProspectorPlatforms.AmdPlatform >= 0) break;
+                            }
+                            else if (lineLowered.Contains("amd"))
+                            {
+                                Helpers.ConsolePrint(MinerTag(), "Setting amd platform: " + platIndex);
+                                ProspectorPlatforms.AmdPlatform = platIndex;
+                                if (ProspectorPlatforms.NVPlatform >= 0) break;
+                            }
                         }
                     }
                 }
-            }
-            catch (Exception e) { Helpers.ConsolePrint(MinerTag(), e.ToString()); }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint(MinerTag(), e.ToString());
+                }
 
-            return ProspectorPlatforms.IsInit;
+                return ProspectorPlatforms.IsInit;
+            }
         }
 
-        protected void CleanAllOldLogs()
+        private void CleanAllOldLogs()
         {
             // clean old logs
             try
@@ -418,30 +431,32 @@ namespace NiceHashMiner.Miners
                     }
                     catch (Exception e) { Helpers.ConsolePrint(MinerTag(), e.ToString()); }
                 }
-
-                var session = _database.LastSession();
-                var sessionStart = Convert.ToDateTime(session.start);
-                if (sessionStart < startTime)
-                {
-                    throw new Exception("Session not recorded!");
-                }
-
+                
                 var dev = MiningSetup.MiningPairs[0].Device;
                 var devString = DeviceIDString(dev.ID, dev.DeviceType);
-                var hashrates = _database.QuerySpeedsForSessionDev(session.id, devString);
 
-                double speed = 0;
-                var speedRead = 0;
-                foreach (var hashrate in hashrates)
+                var session = _database.LastSession(devString);
+                if (session != null)
                 {
-                    if (hashrate.coin == MiningSetup.MinerName && hashrate.rate > 0)
+                    var sessionStart = Convert.ToDateTime(session.start);
+                    if (sessionStart >= startTime)
                     {
-                        speed += hashrate.rate;
-                        speedRead++;
+                        var hashrates = _database.QuerySpeedsForSessionDev(session.id, devString);
+
+                        double speed = 0;
+                        var speedRead = 0;
+                        foreach (var hashrate in hashrates)
+                        {
+                            if (hashrate.coin == MiningSetup.MinerName && hashrate.rate > 0)
+                            {
+                                speed += hashrate.rate;
+                                speedRead++;
+                            }
+                        }
+
+                        BenchmarkAlgorithm.BenchmarkSpeed = (speed / Math.Max(1, speedRead)) * (1 - DevFee);
                     }
                 }
-
-                BenchmarkAlgorithm.BenchmarkSpeed = (speed / Math.Max(1, speedRead)) * (1 - DevFee);
 
                 BenchmarkThreadRoutineFinish();
             }
