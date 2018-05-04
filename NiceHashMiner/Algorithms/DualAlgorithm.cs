@@ -327,6 +327,8 @@ namespace NiceHashMiner.Algorithms
             
             SecondaryCurNhmSmaDataVal = secPaying;
 
+            IntensityUpToDate = false;
+
             CurrentProfit = (CurNhmSmaDataVal * BenchmarkSpeed + SecondaryCurNhmSmaDataVal * SecondaryBenchmarkSpeed) * Mult;
 
             SubtractPowerFromProfit();
