@@ -713,7 +713,7 @@ namespace NiceHashMiner
                 //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
                 // don't use wait for it breaks everything
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
-                BenchmarkHandle.WaitForExit();
+                var exited = BenchmarkHandle.WaitForExit((BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds) + 20) * 1000);
                 if (BenchmarkSignalTimedout && !TimeoutStandard)
                 {
                     throw new Exception("Benchmark timedout");
@@ -729,9 +729,9 @@ namespace NiceHashMiner
                     throw new Exception("Termined by user request");
                 }
 
-                if (BenchmarkSignalHanged)
+                if (BenchmarkSignalHanged || !exited)
                 {
-                    throw new Exception("SGMiner is not responding");
+                    throw new Exception("Miner is not responding");
                 }
 
                 if (BenchmarkSignalFinnished)

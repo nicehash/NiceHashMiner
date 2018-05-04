@@ -213,6 +213,7 @@ namespace NiceHashMiner.Miners
             _benchmarkTimer.Start();
             // call base, read only outpus
             //BenchmarkHandle.BeginOutputReadLine();
+            base.BenchmarkThreadRoutineStartSettup();
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
@@ -264,47 +265,52 @@ namespace NiceHashMiner.Miners
                 //var exitSucces = BenchmarkHandle.WaitForExit(timeoutTime * 1000);
                 // don't use wait for it breaks everything
                 BenchmarkProcessStatus = BenchmarkProcessStatus.Running;
-                while (true)
+                //while (true)
+                //{
+                //    var outdata = BenchmarkHandle.StandardOutput.ReadLine();
+
+                //    BenchmarkOutputErrorDataReceivedImpl(outdata);
+                //    // terminate process situations
+                //    if (BenchmarkSignalQuit
+                //        || BenchmarkSignalFinnished
+                //        || BenchmarkSignalHanged
+                //        || BenchmarkSignalTimedout
+                //        || BenchmarkException != null)
+                //    {
+                //EndBenchmarkProcces();
+                // this is safe in a benchmark
+
+                var exited = BenchmarkHandle.WaitForExit((BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds) + 20) * 1000);
+
+                if (!exited) KillSgminer();
+
+                if (BenchmarkSignalTimedout)
                 {
-                    var outdata = BenchmarkHandle.StandardOutput.ReadLine();
-                    BenchmarkOutputErrorDataReceivedImpl(outdata);
-                    // terminate process situations
-                    if (BenchmarkSignalQuit
-                        || BenchmarkSignalFinnished
-                        || BenchmarkSignalHanged
-                        || BenchmarkSignalTimedout
-                        || BenchmarkException != null)
-                    {
-                        //EndBenchmarkProcces();
-                        // this is safe in a benchmark
-                        KillSgminer();
-                        if (BenchmarkSignalTimedout)
-                        {
-                            throw new Exception("Benchmark timedout");
-                        }
-                        if (BenchmarkException != null)
-                        {
-                            throw BenchmarkException;
-                        }
-                        if (BenchmarkSignalQuit)
-                        {
-                            throw new Exception("Termined by user request");
-                        }
-                        if (BenchmarkSignalHanged)
-                        {
-                            throw new Exception("SGMiner is not responding");
-                        }
-                        if (BenchmarkSignalFinnished)
-                        {
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        // wait a second reduce CPU load
-                        Thread.Sleep(1000);
-                    }
+                    throw new Exception("Benchmark timedout");
                 }
+                if (BenchmarkException != null)
+                {
+                    throw BenchmarkException;
+                }
+                if (BenchmarkSignalQuit)
+                {
+                    throw new Exception("Termined by user request");
+                }
+                if (BenchmarkSignalHanged || !exited)
+                {
+                    throw new Exception("SGMiner is not responding");
+                }
+                if (BenchmarkSignalFinnished)
+                {
+                    //break;
+                }
+                //    }
+                //    else
+                //    {
+                //        // wait a second reduce CPU load
+                //        Thread.Sleep(1000);
+                //    }
+                //}
             }
             catch (Exception ex)
             {
