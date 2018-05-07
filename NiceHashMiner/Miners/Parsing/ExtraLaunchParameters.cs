@@ -20,7 +20,8 @@ namespace NiceHashMiner.Miners.Parsing
                 MinerType.ccminer,
                 new List<MinerOption>
                 {
-                    new MinerOption("Intensity", "-i", "--intensity=", "0", MinerOptionFlagType.MultiParam, ",")
+                    new MinerOption("Intensity", "-i", "--intensity=", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ccminer_CUDA_Schedule", "--cuda-schedule=", "0", MinerOptionFlagType.Uni)
                 },
                 new List<MinerOption>()
             ),
@@ -290,6 +291,16 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Xmrig_nocolor", "--no-color", null, MinerOptionFlagType.Uni),
                     new MinerOption("Xmrig_maxusage", "--max-cpu-usage=", "75", MinerOptionFlagType.SingleParam),
                     new MinerOption("Xmrig_safe", "--safe", null, MinerOptionFlagType.Uni)
+                },
+                new List<MinerOption>()
+            ),
+            new MinerOptionPackage(
+                MinerType.dtsm,
+                new List<MinerOption>
+                {
+                    new MinerOption("dtsm_time", "--time", null, MinerOptionFlagType.Uni),
+                    new MinerOption("dtsm_noreconnect", "--noreconnect", null, MinerOptionFlagType.Uni),
+                    new MinerOption("dtsm_temp-target", "--temp-target", null, MinerOptionFlagType.SingleParam)
                 },
                 new List<MinerOption>())
         };

@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using NiceHashMiner.PInvoke;
+using NiceHashMiner.Enums;
 using System.Management;
 
 namespace NiceHashMiner
@@ -30,16 +32,21 @@ namespace NiceHashMiner
 
         public static void ConsolePrint(string grp, string text)
         {
-            // Console.WriteLine does nothing on x64 while debugging with VS, so use Debug. Console.WriteLine works when run from .exe
+            // try will prevent an error if something tries to print an invalid character
+            try
+            {
+                // Console.WriteLine does nothing on x64 while debugging with VS, so use Debug. Console.WriteLine works when run from .exe
 #if DEBUG
-            Debug.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
+                Debug.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
 #endif
 #if !DEBUG
             Console.WriteLine("[" +DateTime.Now.ToLongTimeString() + "] [" + grp + "] " + text);
 #endif
 
-            if (ConfigManager.GeneralConfig.LogToFile && Logger.IsInit)
-                Logger.Log.Info("[" + grp + "] " + text);
+                if (ConfigManager.GeneralConfig.LogToFile && Logger.IsInit)
+                    Logger.Log.Info("[" + grp + "] " + text);
+            }
+            catch { }  // Not gonna recursively call here in case something is seriously wrong
         }
 
         public static void ConsolePrint(string grp, string text, params object[] arg)
@@ -135,7 +142,7 @@ namespace NiceHashMiner
             return ret;
         }
 
-        public static string FormatDualSpeedOutput(AlgorithmType algorithmID, double primarySpeed, double secondarySpeed = 0)
+        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0, AlgorithmType algo = AlgorithmType.NONE) 
         {
             string ret;
             if (secondarySpeed > 0)
@@ -146,10 +153,8 @@ namespace NiceHashMiner
             {
                 ret = FormatSpeedOutput(primarySpeed);
             }
-
-            if (algorithmID == AlgorithmType.Equihash)
-                return ret + "Sols/s ";
-            return ret + "H/s ";
+            var unit = (algo == AlgorithmType.Equihash) ? "Sol/s " : "H/s ";
+            return ret + unit;
         }
 
         public static string GetMotherboardID()
@@ -367,6 +372,30 @@ namespace NiceHashMiner
             {
                 ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
             }
+        }
+
+        public static AlgorithmType DualAlgoFromAlgos(AlgorithmType primary, AlgorithmType secondary)
+        {
+            if (primary == AlgorithmType.DaggerHashimoto)
+            {
+                switch (secondary)
+                {
+                    case AlgorithmType.Decred:
+                        return AlgorithmType.DaggerDecred;
+                    case AlgorithmType.Lbry:
+                        return AlgorithmType.DaggerLbry;
+                    case AlgorithmType.Pascal:
+                        return AlgorithmType.DaggerPascal;
+                    case AlgorithmType.Sia:
+                        return AlgorithmType.DaggerSia;
+                    case AlgorithmType.Blake2s:
+                        return AlgorithmType.DaggerBlake2s;
+                    case AlgorithmType.Keccak:
+                        return AlgorithmType.DaggerKeccak;
+                }
+            }
+
+            return primary;
         }
     }
 }

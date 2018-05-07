@@ -9,9 +9,11 @@ namespace NiceHashMiner.Miners.Grouping
             var canGroup = IsGroupableMinerBaseType(a) && IsGroupableMinerBaseType(b);
             // group if same bin path and same algo type
             if (canGroup && IsSameBinPath(a, b) && IsSameAlgorithmType(a, b) &&
-                ((IsNotCpuGroups(a, b) && IsSameDeviceType(a, b))
-                 || (a.Algorithm.MinerBaseType == MinerBaseType.Prospector &&
-                     b.Algorithm.MinerBaseType == MinerBaseType.Prospector))) return true;
+                ((IsNotCpuGroups(a, b) && IsSameDeviceType(a, b)) ||
+                 (a.Algorithm.MinerBaseType == MinerBaseType.Prospector &&
+                 b.Algorithm.MinerBaseType == MinerBaseType.Prospector) ||
+                 a.Algorithm.MinerBaseType == MinerBaseType.XmrStak)) 
+                return true;
             return false;
         }
 
@@ -24,21 +26,18 @@ namespace NiceHashMiner.Miners.Grouping
         {
             return a.Algorithm.MinerBinaryPath == b.Algorithm.MinerBinaryPath;
         }
-
-        private static bool IsSameAlgorithmType(MiningPair a, MiningPair b)
+        private static bool IsSameAlgorithmType(MiningPair a, MiningPair b) 
         {
-            return a.Algorithm.DualNiceHashID() == b.Algorithm.DualNiceHashID();
+            return a.Algorithm.DualNiceHashID == b.Algorithm.DualNiceHashID;
         }
 
         private static bool IsSameDeviceType(MiningPair a, MiningPair b)
         {
             return a.Device.DeviceType == b.Device.DeviceType;
         }
-
-        private static bool IsGroupableMinerBaseType(MiningPair a)
+        private static bool IsGroupableMinerBaseType(MiningPair a) 
         {
-            return a.Algorithm.MinerBaseType != MinerBaseType.cpuminer
-                   && a.Algorithm.MinerBaseType != MinerBaseType.XmrStackCPU;
+            return a.Algorithm.MinerBaseType != MinerBaseType.cpuminer;
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using NiceHashMiner.Algorithms;
 
 namespace NiceHashMiner.Miners
 {
@@ -51,16 +52,9 @@ namespace NiceHashMiner.Miners
                 apiBind = " --api-bind=" + ApiPort;
             }
 
-            LastCommandLine = algo +
-                              " --url=" + url +
-                              " --userpass=" + username + ":x " +
-                              apiBind + " " +
-                              ExtraLaunchParametersParser.ParseForMiningSetup(
-                                  MiningSetup,
-                                  DeviceType.NVIDIA) +
-                              " --devices ";
-
-            LastCommandLine += GetDevicesCommandString();
+            LastCommandLine = $"{algo} --url={url} --userpass={username}:x {apiBind} " +
+                              $"--devices {GetDevicesCommandString()} " +
+                              $"{ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)} ";
 
             ProcessHandle = _Start();
         }
@@ -125,10 +119,12 @@ namespace NiceHashMiner.Miners
                 }
                 if (_cryptonightTotalCount <= 0)
                 {
-                    var spd = _cryptonightTotal / (BenchmarkTimeInSeconds / CryptonightTotalDelim);
+                    var spd = _cryptonightTotal / ((double) BenchmarkTimeInSeconds / CryptonightTotalDelim);
                     BenchmarkAlgorithm.BenchmarkSpeed = spd;
                     BenchmarkSignalFinnished = true;
                 }
+
+                return false;
             }
 
             var lastSpeed = BenchmarkParseLine_cpu_ccminer_extra(outdata);

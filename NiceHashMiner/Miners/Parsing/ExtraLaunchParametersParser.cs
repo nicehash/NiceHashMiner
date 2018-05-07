@@ -5,6 +5,7 @@ using NiceHashMiner.Miners.Grouping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NiceHashMiner.Algorithms;
 
 namespace NiceHashMiner.Miners.Parsing
 {
@@ -82,7 +83,7 @@ namespace NiceHashMiner.Miners.Parsing
         }
 
         private static string Parse(List<MiningPair> miningPairs, List<MinerOption> options, bool useIfDefaults = true,
-            List<MinerOption> ignoreLogOpions = null)
+            List<MinerOption> ignoreLogOpions = null, bool ignoreDcri = false)
         {
             const string ignoreParam = "Cannot parse \"{0}\", not supported, set to ignore, or wrong extra launch parameter settings";
             var optionsOrder = new List<string>();
@@ -118,6 +119,7 @@ namespace NiceHashMiner.Miners.Parsing
 
 
                 var currentFlag = MinerOptionTypeNone;
+                var ignoringNextOption = false;
                 foreach (var param in parameters)
                 {
                     if (param.Equals("")) continue;
@@ -130,26 +132,38 @@ namespace NiceHashMiner.Miners.Parsing
                             if (param.Equals(option.ShortName) || param.Equals(option.LongName))
                             {
                                 isIngored = false;
-                                if (option.FlagType == MinerOptionFlagType.Uni)
+                                if (ignoreDcri && option.Type.Equals("ClaymoreDual_dcri")) 
                                 {
-                                    isOptionExist[option.Type] = true;
-                                    cdevOptions[pair.Device.Uuid][option.Type] = "notNull"; // if Uni param is null it is not present
-                                }
-                                else
+                                    Helpers.ConsolePrint("CDTUNING", "Disabling dcri extra launch param");
+                                    ignoringNextOption = true;
+                                } 
+                                else 
                                 {
-                                    // Sinlge and Multi param
-                                    currentFlag = option.Type;
+                                    if (option.FlagType == MinerOptionFlagType.Uni) {
+                                        isOptionExist[option.Type] = true;
+                                        cdevOptions[pair.Device.Uuid][option.Type] = "notNull"; // if Uni param is null it is not present
+                                    } 
+                                    else 
+                                    { 
+                                        // Sinlge and Multi param
+                                        currentFlag = option.Type;
+                                    }
                                 }
                             }
                         }
-                        if (isIngored)
+                        if (isIngored) 
                         {
-                            // ignored
-                            IgnorePrintLog(param, ignoreParam, ignoreLogOpions);
+                            if (ignoringNextOption) 
+                            {
+                                // This is a paramater for an ignored option, silently ignore it
+                                ignoringNextOption = false;
+                            } else 
+                            {
+                                IgnorePrintLog(param, ignoreParam, ignoreLogOpions);
+                            }
                         }
-                    }
-                    else if (currentFlag != MinerOptionTypeNone)
-                    {
+                    } 
+                    else if (currentFlag != MinerOptionTypeNone) {
                         isOptionExist[currentFlag] = true;
                         cdevOptions[pair.Device.Uuid][currentFlag] = param;
                         currentFlag = MinerOptionTypeNone;
@@ -328,12 +342,14 @@ namespace NiceHashMiner.Miners.Parsing
                         return MinerType.eqm_CUDA;
                     }
                     break;
-                case MinerBaseType.excavator:
-                    return MinerType.excavator;
+                //case MinerBaseType.excavator:
+                //    return MinerType.excavator;
                 case MinerBaseType.EWBF:
                     return MinerType.EWBF;
                 case MinerBaseType.Xmrig:
                     return MinerType.Xmrig;
+                case MinerBaseType.dtsm:
+                    return MinerType.dtsm;
             }
 
             return MinerType.NONE;
@@ -345,6 +361,7 @@ namespace NiceHashMiner.Miners.Parsing
 
             var minerBaseType = MinerBaseType.NONE;
             var algorithmType = AlgorithmType.NONE;
+            var ignoreDcri = false;
             if (miningPairs.Count > 0)
             {
                 var algo = miningPairs[0].Algorithm;
@@ -352,6 +369,7 @@ namespace NiceHashMiner.Miners.Parsing
                 {
                     algorithmType = algo.NiceHashID;
                     minerBaseType = algo.MinerBaseType;
+                    if (algo is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled) ignoreDcri = true;
                 }
             }
 
@@ -443,7 +461,7 @@ namespace NiceHashMiner.Miners.Parsing
             }
 
             string ret;
-            var general = Parse(setMiningPairs, minerOptionPackage.GeneralOptions, false, minerOptionPackage.TemperatureOptions);
+            var general = Parse(setMiningPairs, minerOptionPackage.GeneralOptions, false, minerOptionPackage.TemperatureOptions, ignoreDcri);
             // temp control and parse
             if (ConfigManager.GeneralConfig.DisableAMDTempControl)
             {
@@ -454,7 +472,7 @@ namespace NiceHashMiner.Miners.Parsing
             {
                 LogParser("AMD parsing temperature control parameters");
                 // temp = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, true, minerOptionPackage.GeneralOptions);            
-                var temp = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, false, minerOptionPackage.GeneralOptions);
+                var temp = Parse(setMiningPairs, minerOptionPackage.TemperatureOptions, false, minerOptionPackage.GeneralOptions, ignoreDcri);
 
                 ret = general + "  " + temp;
             }
@@ -497,7 +515,7 @@ namespace NiceHashMiner.Miners.Parsing
                         break;
                     }
                 }
-                if (i > -1 && strings.Length < i)
+                if (i > -1 && strings.Length > i)
                 {
                     var numTr = cDev.Threads;
                     if (int.TryParse(strings[i], out numTr))

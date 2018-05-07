@@ -12,7 +12,10 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Management;
+using System.Threading;
 using System.Windows.Forms;
+using NiceHashMiner.Stats;
+using NiceHashMiner.Switching;
 using SystemTimer = System.Timers.Timer;
 using Timer = System.Windows.Forms.Timer;
 
@@ -25,8 +28,8 @@ namespace NiceHashMiner
         private string _visitUrlNew = Links.VisitUrlNew;
 
         private Timer _minerStatsCheck;
-        private Timer _smaMinerCheck;
-        private Timer _bitcoinExchangeCheck;
+        //private Timer _smaMinerCheck;
+        //private Timer _bitcoinExchangeCheck;
         private Timer _startupTimer;
         private Timer _idleCheck;
         private SystemTimer _computeDevicesCheckTimer;
@@ -49,7 +52,7 @@ namespace NiceHashMiner
         private bool _isManuallyStarted = false;
         private bool _isNotProfitable = false;
 
-        private bool _isSmaUpdated = false;
+        //private bool _isSmaUpdated = false;
 
         private double _factorTimeUnit = 1.0;
 
@@ -292,17 +295,17 @@ namespace NiceHashMiner
             _minerStatsCheck.Tick += MinerStatsCheck_Tick;
             _minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
 
-            _smaMinerCheck = new Timer();
-            _smaMinerCheck.Tick += SMAMinerCheck_Tick;
-            _smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
-                                      R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            if (ComputeDeviceManager.Group.ContainsAmdGpus)
-            {
-                _smaMinerCheck.Interval =
-                    (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
-                     ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
-                    R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            }
+            //_smaMinerCheck = new Timer();
+            //_smaMinerCheck.Tick += SMAMinerCheck_Tick;
+            //_smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
+            //                          R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+            //if (ComputeDeviceManager.Group.ContainsAmdGpus)
+            //{
+            //    _smaMinerCheck.Interval =
+            //        (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
+            //         ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
+            //        R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+            //}
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
@@ -312,6 +315,7 @@ namespace NiceHashMiner
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
             NiceHashStats.OnVersionBurn += VersionBurnCallback;
+            NiceHashStats.OnExchangeUpdate += ExchangeCallback;
             NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
             // increase timeout
@@ -325,11 +329,21 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
 
-            _bitcoinExchangeCheck = new Timer();
-            _bitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
-            _bitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
-            _bitcoinExchangeCheck.Start();
-            BitcoinExchangeCheck_Tick(null, null);
+            //// Don't start timer if socket is giving data
+            //if (ExchangeRateApi.ExchangesFiat == null)
+            //{
+            //    // Wait a bit and check again
+            //    Thread.Sleep(1000);
+            //    if (ExchangeRateApi.ExchangesFiat == null)
+            //    {
+            //        Helpers.ConsolePrint("NICEHASH", "No exchange from socket yet, getting manually");
+            //        _bitcoinExchangeCheck = new Timer();
+            //        _bitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
+            //        _bitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
+            //        _bitcoinExchangeCheck.Start();
+            //        BitcoinExchangeCheck_Tick(null, null);
+            //    }
+            //}
 
             _loadingScreen.IncreaseLoadCounterAndMessage(
                 International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
@@ -473,32 +487,33 @@ namespace NiceHashMiner
             _startupTimer.Start();
         }
 
-        private async void SMAMinerCheck_Tick(object sender, EventArgs e)
-        {
-            _smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
-                                      R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            if (ComputeDeviceManager.Group.ContainsAmdGpus)
-            {
-                _smaMinerCheck.Interval =
-                    (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
-                     ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
-                    R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            }
+//        [Obsolete("Deprecated in favour of AlgorithmSwitchingManager timer")]
+//       private async void SMAMinerCheck_Tick(object sender, EventArgs e)
+//        {
+//            _smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
+//                                      R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+//            if (ComputeDeviceManager.Group.ContainsAmdGpus)
+//            {
+//                _smaMinerCheck.Interval =
+//                    (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
+//                     ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
+//                    R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+//            }
 
-#if (SWITCH_TESTING)
-            SMAMinerCheck.Interval = MiningDevice.SMAMinerCheckInterval;
-#endif
-            if (_isSmaUpdated)
-            {
-                // Don't bother checking for new profits unless SMA has changed
-                _isSmaUpdated = false;
-                await MinersManager.SwichMostProfitableGroupUpMethod(Globals.NiceHashData);
-            }
-        }
+//#if (SWITCH_TESTING)
+//            SMAMinerCheck.Interval = MiningDevice.SMAMinerCheckInterval;
+//#endif
+//            if (_isSmaUpdated)
+//            {
+//                // Don't bother checking for new profits unless SMA has changed
+//                _isSmaUpdated = false;
+//                await MinersManager.SwichMostProfitableGroupUpMethod();
+//            }
+//        }
 
         private static async void MinerStatsCheck_Tick(object sender, EventArgs e)
         {
-            await MinersManager.MinerStatsCheck(Globals.NiceHashData);
+            await MinersManager.MinerStatsCheck();
         }
 
         private static void ComputeDevicesCheckTimer_Tick(object sender, EventArgs e)
@@ -546,6 +561,11 @@ namespace NiceHashMiner
 
         public void ClearRates(int groupCount)
         {
+            if (InvokeRequired)
+            {
+                Invoke((Action) delegate { ClearRates(groupCount); });
+                return;
+            }
             if (_flowLayoutPanelVisibleCount != groupCount)
             {
                 _flowLayoutPanelVisibleCount = groupCount;
@@ -553,7 +573,7 @@ namespace NiceHashMiner
                 var hideIndex = 0;
                 foreach (var control in flowLayoutPanelRates.Controls)
                 {
-                    ((GroupProfitControl) control).Visible = hideIndex < groupCount ? true : false;
+                    ((GroupProfitControl) control).Visible = hideIndex < groupCount;
                     ++hideIndex;
                 }
             }
@@ -580,11 +600,11 @@ namespace NiceHashMiner
             var apiGetExceptionString = isApiGetException ? "**" : "";
 
             var speedString =
-                Helpers.FormatDualSpeedOutput(iApiData.AlgorithmID, iApiData.Speed, iApiData.SecondarySpeed) +
+                Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
                 iApiData.AlgorithmName + apiGetExceptionString;
             var rateBtcString = FormatPayingOutput(paying);
             var rateCurrencyString = ExchangeRateApi
-                                         .ConvertToActiveCurrency(paying * Globals.BitcoinUsdRate * _factorTimeUnit)
+                                         .ConvertToActiveCurrency(paying * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
                                          .ToString("F2", CultureInfo.InvariantCulture)
                                      + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
@@ -611,9 +631,19 @@ namespace NiceHashMiner
                 }
             }
 
-            label_NotProfitable.Visible = true;
-            label_NotProfitable.Text = msg;
-            label_NotProfitable.Invalidate();
+            if (InvokeRequired)
+            {
+                Invoke((Action) delegate
+                {
+                    ShowNotProfitable(msg);
+                });
+            }
+            else
+            {
+                label_NotProfitable.Visible = true;
+                label_NotProfitable.Text = msg;
+                label_NotProfitable.Invalidate();
+            }
         }
 
         public void HideNotProfitable()
@@ -627,8 +657,30 @@ namespace NiceHashMiner
                 }
             }
 
-            label_NotProfitable.Visible = false;
-            label_NotProfitable.Invalidate();
+            if (InvokeRequired)
+            {
+                Invoke((Action) HideNotProfitable);
+            }
+            else
+            {
+                label_NotProfitable.Visible = false;
+                label_NotProfitable.Invalidate();
+            }
+        }
+
+        public void ForceMinerStatsUpdate()
+        {
+            try
+            {
+                BeginInvoke((Action) (() =>
+                {
+                    MinerStatsCheck_Tick(null, null);
+                }));
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("NiceHash", e.ToString());
+            }
         }
 
         private void UpdateGlobalRate()
@@ -651,7 +703,7 @@ namespace NiceHashMiner
             }
 
             toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
-                .ConvertToActiveCurrency((totalRate * _factorTimeUnit * Globals.BitcoinUsdRate))
+                .ConvertToActiveCurrency((totalRate * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
                 .ToString("F2", CultureInfo.InvariantCulture);
             toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                                                    International.GetText(
@@ -679,7 +731,7 @@ namespace NiceHashMiner
                 }
 
                 //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
-                var amount = (balance * Globals.BitcoinUsdRate);
+                var amount = (balance * ExchangeRateApi.GetUsdExchangeRate());
                 amount = ExchangeRateApi.ConvertToActiveCurrency(amount);
                 toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
                 toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
@@ -687,32 +739,47 @@ namespace NiceHashMiner
         }
 
 
-        private void BitcoinExchangeCheck_Tick(object sender, EventArgs e)
+        //private void BitcoinExchangeCheck_Tick(object sender, EventArgs e)
+        //{
+        //    Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
+        //    ExchangeRateApi.UpdateApi(textBoxWorkerName.Text.Trim());
+        //    UpdateExchange();
+        //}
+
+        private void ExchangeCallback(object sender, EventArgs e)
         {
-            Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
-            ExchangeRateApi.UpdateApi(textBoxWorkerName.Text.Trim());
+            //// We are getting data from socket so stop checking manually
+            //_bitcoinExchangeCheck?.Stop();
+            //Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker) UpdateExchange);
+            }
+            else
+            {
+                UpdateExchange();
+            }
+        }
+
+        private void UpdateExchange()
+        {
             var br = ExchangeRateApi.GetUsdExchangeRate();
             var currencyRate = International.GetText("BenchmarkRatioRateN_A");
             if (br > 0)
             {
-                Globals.BitcoinUsdRate = br;
                 currencyRate = ExchangeRateApi.ConvertToActiveCurrency(br).ToString("F2");
             }
 
             toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
 
             Helpers.ConsolePrint("NICEHASH",
-                "Current Bitcoin rate: " + Globals.BitcoinUsdRate.ToString("F2", CultureInfo.InvariantCulture));
+                "Current Bitcoin rate: " + br.ToString("F2", CultureInfo.InvariantCulture));
         }
 
         private void SmaCallback(object sender, EventArgs e)
         {
             Helpers.ConsolePrint("NICEHASH", "SMA Update");
-            _isSmaUpdated = true;
-            if (NiceHashStats.AlgorithmRates != null)
-            {
-                Globals.NiceHashData = NiceHashStats.AlgorithmRates;
-            }
+            //_isSmaUpdated = true;
         }
 
         private void VersionBurnCallback(object sender, SocketEventArgs e)
@@ -730,7 +797,7 @@ namespace NiceHashMiner
 
         private void ConnectionLostCallback(object sender, EventArgs e)
         {
-            if (Globals.NiceHashData == null && ConfigManager.GeneralConfig.ShowInternetConnectionWarning &&
+            if (!NHSmaData.HasData && ConfigManager.GeneralConfig.ShowInternetConnectionWarning &&
                 _showWarningNiceHashData)
             {
                 _showWarningNiceHashData = false;
@@ -1020,7 +1087,7 @@ namespace NiceHashMiner
             }
             else if (!VerifyMiningAddress(true)) return StartMiningReturnType.IgnoreMsg;
 
-            if (Globals.NiceHashData == null)
+            if (!NHSmaData.HasData)
             {
                 if (showWarnings)
                 {
@@ -1107,9 +1174,9 @@ namespace NiceHashMiner
 
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
 
-            _isSmaUpdated = true; // Always check profits on mining start
-            _smaMinerCheck.Interval = 100;
-            _smaMinerCheck.Start();
+            //_isSmaUpdated = true; // Always check profits on mining start
+            //_smaMinerCheck.Interval = 100;
+            //_smaMinerCheck.Start();
             _minerStatsCheck.Start();
 
             if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
@@ -1127,7 +1194,7 @@ namespace NiceHashMiner
         private void StopMining()
         {
             _minerStatsCheck.Stop();
-            _smaMinerCheck.Stop();
+            //_smaMinerCheck.Stop();
             _computeDevicesCheckTimer?.Stop();
 
             // Disable IFTTT notification before label call

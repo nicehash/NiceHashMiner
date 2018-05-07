@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
+using NiceHashMiner.Stats;
 
 namespace NiceHashMiner.Forms
 {
@@ -131,32 +132,24 @@ namespace NiceHashMiner.Forms
                 International.GetText("Form_Settings_General_AllowMultipleInstances_ToolTip"));
             toolTip1.SetToolTip(pictureBox_AllowMultipleInstances,
                 International.GetText("Form_Settings_General_AllowMultipleInstances_ToolTip"));
-
-
-            toolTip1.SetToolTip(textBox_SwitchMinSecondsFixed,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
-            toolTip1.SetToolTip(label_SwitchMinSecondsFixed,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
-            toolTip1.SetToolTip(pictureBox_SwitchMinSecondsFixed,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSecondsFixed"));
-
+            
             toolTip1.SetToolTip(label_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
             toolTip1.SetToolTip(pictureBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
             toolTip1.SetToolTip(textBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
 
-            toolTip1.SetToolTip(textBox_SwitchMinSecondsDynamic,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSecondsDynamic"));
-            toolTip1.SetToolTip(label_SwitchMinSecondsDynamic,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSecondsDynamic"));
-            toolTip1.SetToolTip(pictureBox_SwitchMinSecondsDynamic,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSecondsDynamic"));
+            toolTip1.SetToolTip(textBox_SwitchMaxSeconds,
+                International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
+            toolTip1.SetToolTip(label_SwitchMaxSeconds,
+                International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
+            toolTip1.SetToolTip(pictureBox_SwitchMaxSeconds,
+                International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
 
-            toolTip1.SetToolTip(textBox_SwitchMinSecondsAMD,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSecondsAMD"));
-            toolTip1.SetToolTip(label_SwitchMinSecondsAMD,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSecondsAMD"));
-            toolTip1.SetToolTip(pictureBox_SwitchMinSecondsAMD,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSecondsAMD"));
+            toolTip1.SetToolTip(textBox_SwitchMinSeconds,
+                International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
+            toolTip1.SetToolTip(label_SwitchMinSeconds,
+                International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
+            toolTip1.SetToolTip(pictureBox_SwitchMinSeconds,
+                International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
 
             toolTip1.SetToolTip(textBox_MinerAPIQueryInterval,
                 International.GetText("Form_Settings_ToolTip_MinerAPIQueryInterval"));
@@ -311,6 +304,11 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(checkBox_MinimizeMiningWindows,
                 International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
 
+            // Electricity cost
+            toolTip1.SetToolTip(label_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
+            toolTip1.SetToolTip(textBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
+            toolTip1.SetToolTip(pictureBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
+
             Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
@@ -374,12 +372,10 @@ namespace NiceHashMiner.Forms
             label_MinerAPIQueryInterval.Text =
                 International.GetText("Form_Settings_General_MinerAPIQueryInterval") + ":";
             label_LogMaxFileSize.Text = International.GetText("Form_Settings_General_LogMaxFileSize") + ":";
-
-            label_SwitchMinSecondsFixed.Text =
-                International.GetText("Form_Settings_General_SwitchMinSecondsFixed") + ":";
-            label_SwitchMinSecondsDynamic.Text =
-                International.GetText("Form_Settings_General_SwitchMinSecondsDynamic") + ":";
-            label_SwitchMinSecondsAMD.Text = International.GetText("Form_Settings_General_SwitchMinSecondsAMD") + ":";
+            
+            label_SwitchMaxSeconds.Text =
+                International.GetText("Form_Settings_General_SwitchMaxSeconds") + ":";
+            label_SwitchMinSeconds.Text = International.GetText("Form_Settings_General_SwitchMinSeconds") + ":";
 
             label_ethminerDefaultBlockHeight.Text =
                 International.GetText("Form_Settings_General_ethminerDefaultBlockHeight") + ":";
@@ -391,6 +387,8 @@ namespace NiceHashMiner.Forms
             label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
 
             label_IFTTTAPIKey.Text = International.GetText("Form_Settings_IFTTTAPIKey");
+
+            label_ElectricityCost.Text = International.GetText("Form_Settings_ElectricityCost");
 
             // Benchmark time limits
             // internationalization change
@@ -468,9 +466,8 @@ namespace NiceHashMiner.Forms
                 textBox_WorkerName.Leave += GeneralTextBoxes_Leave;
                 textBox_IFTTTKey.Leave += GeneralTextBoxes_Leave;
                 // these are ints only
-                textBox_SwitchMinSecondsFixed.Leave += GeneralTextBoxes_Leave;
-                textBox_SwitchMinSecondsDynamic.Leave += GeneralTextBoxes_Leave;
-                textBox_SwitchMinSecondsAMD.Leave += GeneralTextBoxes_Leave;
+                textBox_SwitchMaxSeconds.Leave += GeneralTextBoxes_Leave;
+                textBox_SwitchMinSeconds.Leave += GeneralTextBoxes_Leave;
                 textBox_MinerAPIQueryInterval.Leave += GeneralTextBoxes_Leave;
                 textBox_MinerRestartDelayMS.Leave += GeneralTextBoxes_Leave;
                 textBox_MinIdleSeconds.Leave += GeneralTextBoxes_Leave;
@@ -478,10 +475,10 @@ namespace NiceHashMiner.Forms
                 textBox_ethminerDefaultBlockHeight.Leave += GeneralTextBoxes_Leave;
                 textBox_APIBindPortStart.Leave += GeneralTextBoxes_Leave;
                 textBox_MinProfit.Leave += GeneralTextBoxes_Leave;
+                textBox_ElectricityCost.Leave += GeneralTextBoxes_Leave;
                 // set int only keypress
-                textBox_SwitchMinSecondsFixed.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
-                textBox_SwitchMinSecondsDynamic.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
-                textBox_SwitchMinSecondsAMD.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
+                textBox_SwitchMaxSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
+                textBox_SwitchMinSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 textBox_MinerAPIQueryInterval.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 textBox_MinerRestartDelayMS.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 textBox_MinIdleSeconds.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
@@ -490,6 +487,7 @@ namespace NiceHashMiner.Forms
                 textBox_APIBindPortStart.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 // set double only keypress
                 textBox_MinProfit.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                textBox_ElectricityCost.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -509,6 +507,7 @@ namespace NiceHashMiner.Forms
             {
                 comboBox_DagLoadMode.Items.Add(MinerEtherum.GetDagGenerationString((DagGenerationType) i));
             }
+
             // set selected
             comboBox_DagLoadMode.SelectedIndex = (int) ConfigManager.GeneralConfig.EthminerDagGenerationType;
         }
@@ -552,9 +551,8 @@ namespace NiceHashMiner.Forms
                 textBox_WorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
                 textBox_IFTTTKey.Text = ConfigManager.GeneralConfig.IFTTTKey;
                 textBox_IFTTTKey.Enabled = ConfigManager.GeneralConfig.UseIFTTT;
-                textBox_SwitchMinSecondsFixed.Text = ConfigManager.GeneralConfig.SwitchMinSecondsFixed.ToString();
-                textBox_SwitchMinSecondsDynamic.Text = ConfigManager.GeneralConfig.SwitchMinSecondsDynamic.ToString();
-                textBox_SwitchMinSecondsAMD.Text = ConfigManager.GeneralConfig.SwitchMinSecondsAMD.ToString();
+                textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
+                textBox_SwitchMinSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower.ToString();
                 textBox_MinerAPIQueryInterval.Text = ConfigManager.GeneralConfig.MinerAPIQueryInterval.ToString();
                 textBox_MinerRestartDelayMS.Text = ConfigManager.GeneralConfig.MinerRestartDelayMS.ToString();
                 textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
@@ -566,6 +564,7 @@ namespace NiceHashMiner.Forms
                     ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma;
                 textBox_SwitchProfitabilityThreshold.Text = ConfigManager.GeneralConfig.SwitchProfitabilityThreshold
                     .ToString("F2").Replace(',', '.'); // force comma;
+                textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
             }
 
             // set custom control referances
@@ -721,8 +720,7 @@ namespace NiceHashMiner.Forms
                     var deviceDefaultsAlgoSettings = GroupAlgorithms.CreateForDeviceList(cDev);
                     foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings)
                     {
-                        var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings.MinerBaseType,
-                            defaultAlgoSettings.NiceHashID, defaultAlgoSettings.SecondaryNiceHashID);
+                        var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings);
                         if (toSetAlgo != null)
                         {
                             toSetAlgo.ExtraLaunchParameters = defaultAlgoSettings.ExtraLaunchParameters;
@@ -751,6 +749,7 @@ namespace NiceHashMiner.Forms
             {
                 Helpers.ConsolePrint("REGISTRY", e.ToString());
             }
+
             return startVal == Application.ExecutablePath;
         }
 
@@ -762,11 +761,10 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.BitcoinAddress = textBox_BitcoinAddress.Text.Trim();
             if (ConfigManager.GeneralConfig.WorkerName != textBox_WorkerName.Text.Trim()) _isCredChange = true;
             ConfigManager.GeneralConfig.WorkerName = textBox_WorkerName.Text.Trim();
-
-            ConfigManager.GeneralConfig.SwitchMinSecondsFixed = Helpers.ParseInt(textBox_SwitchMinSecondsFixed.Text);
-            ConfigManager.GeneralConfig.SwitchMinSecondsDynamic =
-                Helpers.ParseInt(textBox_SwitchMinSecondsDynamic.Text);
-            ConfigManager.GeneralConfig.SwitchMinSecondsAMD = Helpers.ParseInt(textBox_SwitchMinSecondsAMD.Text);
+            
+            ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper =
+                Helpers.ParseInt(textBox_SwitchMaxSeconds.Text);
+            ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower = Helpers.ParseInt(textBox_SwitchMinSeconds.Text);
             ConfigManager.GeneralConfig.MinerAPIQueryInterval = Helpers.ParseInt(textBox_MinerAPIQueryInterval.Text);
             ConfigManager.GeneralConfig.MinerRestartDelayMS = Helpers.ParseInt(textBox_MinerRestartDelayMS.Text);
             ConfigManager.GeneralConfig.MinIdleSeconds = Helpers.ParseInt(textBox_MinIdleSeconds.Text);
@@ -781,6 +779,8 @@ namespace NiceHashMiner.Forms
 
             ConfigManager.GeneralConfig.IFTTTKey = textBox_IFTTTKey.Text.Trim();
 
+            ConfigManager.GeneralConfig.KwhPrice = Helpers.ParseDouble(textBox_ElectricityCost.Text);
+
             // Fix bounds
             ConfigManager.GeneralConfig.FixSettingBounds();
             // update strings
@@ -788,15 +788,15 @@ namespace NiceHashMiner.Forms
                 ConfigManager.GeneralConfig.MinimumProfit.ToString("F2").Replace(',', '.'); // force comma
             textBox_SwitchProfitabilityThreshold.Text = ConfigManager.GeneralConfig.SwitchProfitabilityThreshold
                 .ToString("F2").Replace(',', '.'); // force comma
-            textBox_SwitchMinSecondsFixed.Text = ConfigManager.GeneralConfig.SwitchMinSecondsFixed.ToString();
-            textBox_SwitchMinSecondsDynamic.Text = ConfigManager.GeneralConfig.SwitchMinSecondsDynamic.ToString();
-            textBox_SwitchMinSecondsAMD.Text = ConfigManager.GeneralConfig.SwitchMinSecondsAMD.ToString();
+            textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
+            textBox_SwitchMinSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower.ToString();
             textBox_MinerAPIQueryInterval.Text = ConfigManager.GeneralConfig.MinerAPIQueryInterval.ToString();
             textBox_MinerRestartDelayMS.Text = ConfigManager.GeneralConfig.MinerRestartDelayMS.ToString();
             textBox_MinIdleSeconds.Text = ConfigManager.GeneralConfig.MinIdleSeconds.ToString();
             textBox_LogMaxFileSize.Text = ConfigManager.GeneralConfig.LogMaxFileSize.ToString();
             textBox_ethminerDefaultBlockHeight.Text = ConfigManager.GeneralConfig.ethminerDefaultBlockHeight.ToString();
             textBox_APIBindPortStart.Text = ConfigManager.GeneralConfig.ApiBindPortPoolStart.ToString();
+            textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
         }
 
         private void GeneralComboBoxes_Leave(object sender, EventArgs e)
@@ -841,6 +841,7 @@ namespace NiceHashMiner.Forms
                     MessageBoxButtons.OK);
                 return;
             }
+
             var url = Links.NhmProfitCheck + _selectedComputeDevice.Name;
             foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettingsFastest())
             {
@@ -849,6 +850,7 @@ namespace NiceHashMiner.Forms
                            .GetFormatedSpeed(algorithm.BenchmarkSpeed, algorithm.NiceHashID)
                            .ToString("F2", CultureInfo.InvariantCulture);
             }
+
             url += "&nhmver=" + Application.ProductVersion; // Add version info
             url += "&cost=1&power=1"; // Set default power and cost to 1
             System.Diagnostics.Process.Start(url);
@@ -872,12 +874,14 @@ namespace NiceHashMiner.Forms
                     }
                 }
             }
+
             foreach (var algorithm in total)
             {
                 var id = (int) algorithm.Key;
                 url += "&speed" + id + "=" + ProfitabilityCalculator.GetFormatedSpeed(algorithm.Value, algorithm.Key)
                            .ToString("F2", CultureInfo.InvariantCulture);
             }
+
             url += "&nhmver=" + Application.ProductVersion; // Add version info
             url += "&cost=1&power=1"; // Set default power and cost to 1
             System.Diagnostics.Process.Start(url);

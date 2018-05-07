@@ -91,29 +91,46 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="websocket-sharp, Version=1.0.2.59611, Culture=neutral, PublicKeyToken=5660b08a1845a91e, processorArchitecture=MSIL">
-      <HintPath>..\packages\WebSocketSharp.1.0.3-rc11\lib\websocket-sharp.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="3rdParty\ADL.cs" />
     <Compile Include="3rdParty\NVAPI.cs" />
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
-    <Compile Include="Algorithm.cs" />
+    <Compile Include="Algorithms\Algorithm.cs" />
+    <Compile Include="Algorithms\DualAlgorithm.cs" />
+    <Compile Include="Benchmarking\BenchHelpers\CpuBenchHelper.cs" />
+    <Compile Include="Benchmarking\BenchmarkHandler.cs" />
+    <Compile Include="Benchmarking\BenchHelpers\ClaymoreZcashBenchHelper.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
     <Compile Include="Enums\TimeUnitType.cs" />
     <Compile Include="IFTTT.cs" />
-    <Compile Include="ExchangeRateAPI.cs" />
+    <Compile Include="Configs\Data\DualAlgorithmConfig.cs" />
+    <Compile Include="Forms\Form_DcriValues.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_DcriValues.Designer.cs">
+      <DependentUpon>Form_DcriValues.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
+    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
+    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigPool.cs" />
+    <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
+    <Compile Include="Miners\Equihash\Dtsm.cs" />
     <Compile Include="Miners\Ewbf.cs" />
     <Compile Include="Miners\Prospector.cs" />
     <Compile Include="Miners\XmrStak\XmrStak.cs" />
-    <Compile Include="Miners\XmrStak\XmrStakAMD.cs" />
-    <Compile Include="Miners\XmrStak\XmrStakConfig.cs" />
+    <Compile Include="Miners\XmrStak\Configs\XmrStakConfig.cs" />
     <Compile Include="Miners\Xmrig.cs" />
-    <Compile Include="NiceHashStats.cs" />
+    <Compile Include="Stats\NiceHashSocket.cs" />
+    <Compile Include="Stats\NiceHashStats.cs" />
+    <Compile Include="Switching\AlgorithmHistory.cs" />
+    <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
+    <Compile Include="Switching\Models.cs" />
+    <Compile Include="Switching\Interval.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
@@ -235,7 +252,7 @@
     <Compile Include="Miners\Obsolete\eqm.cs" />
     <Compile Include="Miners\Equihash\NhEqBase.cs" />
     <Compile Include="Miners\Equihash\OptiminerZcashMiner.cs" />
-    <Compile Include="Miners\Excavator.cs" />
+    <Compile Include="Miners\Obsolete\Excavator.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
@@ -256,7 +273,6 @@
     <Compile Include="Miners\Equihash\NhEqMiner.cs" />
     <Compile Include="Miners\MiningSession.cs" />
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
-    <Compile Include="Miners\XmrStak\XmrStackCPUMiner.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="Miners\Ccminer.cs" />
@@ -291,7 +307,7 @@
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="PInvoke\PInvokeHelpers.cs" />
-    <Compile Include="Utils\NiceHashSMA.cs" />
+    <Compile Include="Switching\NHSmaData.cs" />
     <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -335,6 +351,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_3rdParty_TOS.resx">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_DcriValues.resx">
+      <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
@@ -392,7 +411,9 @@
     <None Include="langs\zh_cn.lang">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -436,6 +457,10 @@
     <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Extension\MyDownloader.Extension.csproj">
       <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
       <Name>MyDownloader.Extension</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\3rdparty\websocket-sharp\websocket-sharp.csproj">
+      <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
+      <Name>websocket-sharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\MessageBoxManager\MessageBoxManager.csproj">
       <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>

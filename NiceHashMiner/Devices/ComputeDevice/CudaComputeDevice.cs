@@ -7,12 +7,15 @@ namespace NiceHashMiner.Devices
     {
         private readonly NvPhysicalGpuHandle _nvHandle; // For NVAPI
         private const int GpuCorePState = 0; // memcontroller = 1, videng = 2
+        
+        protected int SMMajor;
+        protected int SMMinor;
 
         public override float Load
         {
             get
             {
-                var load = 0;
+                var load = -1;
                 var pStates = new NvPStates
                 {
                     Version = NVAPI.GPU_PSTATES_VER,
@@ -38,7 +41,7 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                uint temp = 0;
+                var temp = -1f;
                 if (NVAPI.NvAPI_GPU_GetThermalSettings != null)
                 {
                     var settings = new NvGPUThermalSettings
@@ -68,21 +71,22 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public override uint FanSpeed
+        public override int FanSpeed
         {
             get
             {
-                var fanSpeed = 0;
+                var fanSpeed = -1;
                 if (NVAPI.NvAPI_GPU_GetTachReading != null)
                 {
                     var result = NVAPI.NvAPI_GPU_GetTachReading(_nvHandle, out fanSpeed);
                     if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
                     {
-                        // GPUs without fans are not uncommon, so don't treat as error and just return 0
+                        // GPUs without fans are not uncommon, so don't treat as error and just return -1
                         Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
+                        return -1;
                     }
                 }
-                return (uint) fanSpeed;
+                return fanSpeed;
             }
         }
 

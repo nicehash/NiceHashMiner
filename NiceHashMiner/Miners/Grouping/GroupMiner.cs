@@ -19,6 +19,8 @@ namespace NiceHashMiner.Miners.Grouping
         public string Key { get; }
         public List<int> DevIndexes { get; }
 
+        public double TotalPower { get; }
+
         // , string miningLocation, string btcAdress, string worker
         public GroupMiner(List<MiningPair> miningPairs, string key)
         {
@@ -39,6 +41,7 @@ namespace NiceHashMiner.Miners.Grouping
                     {
                         deviceNames.Add(pair.Device.NameCount);
                         DevIndexes.Add(pair.Device.Index);
+                        TotalPower += pair.Algorithm.PowerUsage;
                     }
                     DevicesInfoString = "{ " + string.Join(", ", deviceNames) + " }";
                 }
@@ -51,7 +54,7 @@ namespace NiceHashMiner.Miners.Grouping
                     {
                         Miner.InitMiningSetup(new MiningSetup(miningPairs));
                         AlgorithmType = mPair.Algorithm.NiceHashID;
-                        DualAlgorithmType = mPair.Algorithm.DualNiceHashID();
+                        DualAlgorithmType = mPair.Algorithm.DualNiceHashID;
                     }
                 }
             }

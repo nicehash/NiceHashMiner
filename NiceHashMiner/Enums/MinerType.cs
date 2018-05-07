@@ -21,6 +21,7 @@
         ClaymoreDual,
         EWBF,
         Xmrig,
+        dtsm,
         END
     }
 }

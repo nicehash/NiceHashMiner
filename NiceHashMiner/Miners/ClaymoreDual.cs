@@ -1,27 +1,25 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
 using System;
+using NiceHashMiner.Algorithms;
 
 namespace NiceHashMiner.Miners
 {
     public class ClaymoreDual : ClaymoreBaseMiner
     {
-        private const string _LookForStart = "ETH - Total Speed:";
-
         public ClaymoreDual(AlgorithmType secondaryAlgorithmType)
-            : base("ClaymoreDual", _LookForStart)
+            : base("ClaymoreDual")
         {
             IgnoreZero = true;
             ApiReadMult = 1000;
             ConectionType = NhmConectionType.STRATUM_TCP;
             SecondaryAlgorithmType = secondaryAlgorithmType;
-        }
 
-        // eth-only: 1%
-        // eth-dual-mine: 2%
-        protected override double DevFee()
-        {
-            return IsDual() ? 2.0 : 1.0;
+            LookForStart = "eth - total speed:";
+            SecondaryLookForStart = SecondaryShortName() + " - total speed:";
+            DevFee = IsDual() ? 1.5 : 1.0;
+
+            IsMultiType = true;
         }
 
         // the short form the miner uses for secondary algo in cmd line and log
@@ -37,13 +35,13 @@ namespace NiceHashMiner.Miners
                     return "pasc";
                 case AlgorithmType.Sia:
                     return "sc";
+                case AlgorithmType.Blake2s:
+                    return "b2s";
+                case AlgorithmType.Keccak:
+                    return "kc";
             }
-            return "";
-        }
 
-        protected override string SecondaryLookForStart()
-        {
-            return (SecondaryShortName() + " - Total Speed:").ToLower();
+            return "";
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -69,24 +67,29 @@ namespace NiceHashMiner.Miners
                         dual = AlgorithmType.Decred;
                         coinP = " -dcoin dcr ";
                     }
+
                     if (pair.CurrentExtraLaunchParameters.Contains("Siacoin"))
                     {
                         dual = AlgorithmType.Sia;
                         coinP = " -dcoin sc";
                     }
+
                     if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))
                     {
                         dual = AlgorithmType.Lbry;
                         coinP = " -dcoin lbc ";
                     }
+
                     if (pair.CurrentExtraLaunchParameters.Contains("Pascal"))
                     {
                         dual = AlgorithmType.Pascal;
                         coinP = " -dcoin pasc ";
                     }
+
                     if (dual != AlgorithmType.NONE)
                     {
-                        var urlSecond = Globals.GetLocationUrl(dual, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
+                        var urlSecond = Globals.GetLocationUrl(dual,
+                            Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                             ConectionType);
                         dualModeParams = $" {coinP} -dpool {urlSecond} -dwal {username}";
                         break;
@@ -102,13 +105,23 @@ namespace NiceHashMiner.Miners
 
             return " "
                    + GetDevicesCommandString()
-                   + $"  -epool {url} -ewal {username} -mport 127.0.0.1:{ApiPort} -esm 3 -epsw x -allpools 1"
+                   + $"  -epool {url} -ewal {username} -mport 127.0.0.1:-{ApiPort} -esm 3 -epsw x -allpools 1"
                    + dualModeParams;
         }
 
         public override void Start(string url, string btcAdress, string worker)
         {
-            var username = GetUsername(btcAdress, worker);
+            // Update to most profitable intensity
+            foreach (var mPair in MiningSetup.MiningPairs)
+            {
+                if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled)
+                {
+                    var intensity = algo.MostProfitableIntensity;
+                    if (intensity < 0) intensity = defaultIntensity;
+                    algo.CurrentIntensity = intensity;
+                }
+            }
+
             LastCommandLine = GetStartCommand(url, btcAdress, worker) + " -dbg -1";
             ProcessHandle = _Start();
         }
@@ -126,19 +139,20 @@ namespace NiceHashMiner.Miners
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             // network stub
-            var url = Globals.GetLocationUrl(algorithm.NiceHashID, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
-                ConectionType);
+            var url = GetServiceUrl(algorithm.NiceHashID);
             // demo for benchmark
-            var ret = GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim());
+            var ret = GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
+                         + " -logfile " + GetLogFileName();
             // local benhcmark
             if (!IsDual())
             {
                 BenchmarkTimeWait = time;
-                return ret + "  -benchmark 1";
+                return ret + "  -benchmark 1"; // benchmark 1 does not output secondary speeds
             }
-            BenchmarkTimeWait =
-                Math.Max(60, Math.Min(120, time * 3)); // dual seems to stop mining after this time if redirect output is true
-            return ret; // benchmark 1 does not output secondary speeds
+
+            // dual seems to stop mining after this time if redirect output is true
+            BenchmarkTimeWait = Math.Max(60, Math.Min(120, time * 3));
+            return ret;
         }
     }
 }

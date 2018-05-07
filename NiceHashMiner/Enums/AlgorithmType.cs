@@ -7,6 +7,8 @@
     public enum AlgorithmType
     {
         // dual algos for grouping
+        DaggerKeccak = -8,
+        DaggerBlake2s = -7,
         DaggerSia = -6,
         DaggerDecred = -5,
         DaggerLbry = -4,
@@ -76,7 +78,8 @@
         X11Gost = 26,
         Sia = 27,
         Blake2s = 28,
-        Skunk = 29
+        Skunk = 29,
+        CryptoNightV7 = 30
         #endregion // NiceHashAPI
     }
 }

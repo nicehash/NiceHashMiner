@@ -15,7 +15,7 @@
         Claymore,
         OptiminerAMD,
         excavator,
-        XmrStackCPU,
+        XmrStak,
         ccminer_alexis,
         experimental,
         EWBF,
@@ -23,6 +23,7 @@
         Xmrig,
         XmrStakAMD,
         Claymore_old,
+        dtsm,
         END
     }
 }

@@ -9,6 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Stats;
+using NiceHashMiner.Switching;
 using Timer = System.Timers.Timer;
 
 namespace NiceHashMiner.Miners
@@ -27,6 +30,8 @@ namespace NiceHashMiner.Miners
         private readonly string _worker;
         private readonly List<MiningDevice> _miningDevices;
         private readonly IMainFormRatesComunication _mainFormRatesComunication;
+
+        private readonly AlgorithmSwitchingManager _switchingManager;
 
         // session varibles changing
         // GroupDevices hash code doesn't work correctly use string instead
@@ -65,6 +70,7 @@ namespace NiceHashMiner.Miners
                         minerIDs.AddRange(miner.DevIndexes);
                     }
                 }
+
                 return minerIDs;
             }
         }
@@ -76,6 +82,9 @@ namespace NiceHashMiner.Miners
             // init fixed
             _mainFormRatesComunication = mainFormRatesComunication;
             _miningLocation = miningLocation;
+
+            _switchingManager = new AlgorithmSwitchingManager();
+            _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
 
             _btcAdress = btcAdress;
             _worker = worker;
@@ -109,6 +118,8 @@ namespace NiceHashMiner.Miners
                 _internetCheckTimer.Start();
             }
 
+            _switchingManager.Start();
+
             _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
         }
 
@@ -140,18 +151,24 @@ namespace NiceHashMiner.Miners
                 {
                     groupMiner.End();
                 }
+
                 _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
+
             if (_ethminerNvidiaPaused != null)
             {
                 _ethminerNvidiaPaused.End();
                 _ethminerNvidiaPaused = null;
             }
+
             if (_ethminerAmdPaused != null)
             {
                 _ethminerAmdPaused.End();
                 _ethminerAmdPaused = null;
             }
+
+            _switchingManager.Stop();
+
             _mainFormRatesComunication?.ClearRatesAll();
 
             // restroe/enable sleep
@@ -168,18 +185,22 @@ namespace NiceHashMiner.Miners
                 {
                     groupMiner.End();
                 }
+
                 _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
+
             if (_ethminerNvidiaPaused != null)
             {
                 _ethminerNvidiaPaused.End();
                 _ethminerNvidiaPaused = null;
             }
+
             if (_ethminerAmdPaused != null)
             {
                 _ethminerAmdPaused.End();
                 _ethminerAmdPaused = null;
             }
+
             _mainFormRatesComunication?.ClearRates(-1);
         }
 
@@ -207,6 +228,7 @@ namespace NiceHashMiner.Miners
                 uniqueMinerGroups.Add(GroupNames.GetNameGeneral(miningDevice.Device.DeviceType));
                 //}
             }
+
             if (uniqueMinerGroups.Count > 0 && _isProfitable)
             {
                 activeMinersGroup = string.Join("/", uniqueMinerGroups);
@@ -231,7 +253,7 @@ namespace NiceHashMiner.Miners
         private bool CheckIfProfitable(double currentProfit, bool log = true)
         {
             // TODO FOR NOW USD ONLY
-            var currentProfitUsd = (currentProfit * Globals.BitcoinUsdRate);
+            var currentProfitUsd = (currentProfit * ExchangeRateApi.GetUsdExchangeRate());
             _isProfitable =
                 _isMiningRegardlesOfProfit
                 || !_isMiningRegardlesOfProfit && currentProfitUsd >= ConfigManager.GeneralConfig.MinimumProfit;
@@ -241,7 +263,8 @@ namespace NiceHashMiner.Miners
                 if (!_isProfitable)
                 {
                     Helpers.ConsolePrint(Tag,
-                        "Current Global profit: NOT PROFITABLE MinProfit " + ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") +
+                        "Current Global profit: NOT PROFITABLE MinProfit " +
+                        ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") +
                         " USD/Day");
                 }
                 else
@@ -252,6 +275,7 @@ namespace NiceHashMiner.Miners
                     Helpers.ConsolePrint(Tag, "Current Global profit: IS PROFITABLE MinProfit " + profitabilityInfo);
                 }
             }
+
             return _isProfitable;
         }
 
@@ -269,19 +293,23 @@ namespace NiceHashMiner.Miners
                 {
                     // change msg
                     if (log) Helpers.ConsolePrint(Tag, "NO INTERNET!!! Stopping mining.");
-                    _mainFormRatesComunication.ShowNotProfitable(International.GetText("Form_Main_MINING_NO_INTERNET_CONNECTION"));
+                    _mainFormRatesComunication.ShowNotProfitable(
+                        International.GetText("Form_Main_MINING_NO_INTERNET_CONNECTION"));
                 }
                 else
                 {
-                    _mainFormRatesComunication.ShowNotProfitable(International.GetText("Form_Main_MINING_NOT_PROFITABLE"));
+                    _mainFormRatesComunication.ShowNotProfitable(
+                        International.GetText("Form_Main_MINING_NOT_PROFITABLE"));
                 }
+
                 // return don't group
                 StopAllMinersNonProfitable();
             }
+
             return shouldMine;
         }
 
-        public async Task SwichMostProfitableGroupUpMethod(Dictionary<AlgorithmType, NiceHashSma> niceHashData, bool log = true)
+        private void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
         {
 #if (SWITCH_TESTING)
             MiningDevice.SetNextTest();
@@ -292,7 +320,7 @@ namespace NiceHashMiner.Miners
             foreach (var device in _miningDevices)
             {
                 // calculate profits
-                device.CalculateProfits(niceHashData);
+                device.CalculateProfits(e.NormalizedProfits);
                 // check if device has profitable algo
                 if (device.HasProfitableAlgo())
                 {
@@ -300,42 +328,45 @@ namespace NiceHashMiner.Miners
                     currentProfit += device.GetCurrentMostProfitValue;
                     prevStateProfit += device.GetPrevMostProfitValue;
                 }
-            }
-
-            // print profit statuses
-            if (log)
+            }                                                        
+            var stringBuilderFull = new StringBuilder();
+            stringBuilderFull.AppendLine("Current device profits:");
+            foreach (var device in _miningDevices)
             {
-                var stringBuilderFull = new StringBuilder();
-                stringBuilderFull.AppendLine("Current device profits:");
-                foreach (var device in _miningDevices)
+                var stringBuilderDevice = new StringBuilder();
+                stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
+                foreach (var algo in device.Algorithms)
                 {
-                    var stringBuilderDevice = new StringBuilder();
-                    stringBuilderDevice.AppendLine($"\tProfits for {device.Device.Uuid} ({device.Device.GetFullName()}):");
-                    foreach (var algo in device.Algorithms)
+                    stringBuilderDevice.AppendLine(
+                        $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
+                        $"\t(SPEED = {algo.AvaragedSpeed:e5}" +
+                        $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
+                        $"\t[{algo.AlgorithmStringID}]"
+                    );
+                    if (algo is DualAlgorithm dualAlg)
                     {
                         stringBuilderDevice.AppendLine(
-                            $"\t\tPROFIT = {algo.CurrentProfit.ToString(DoubleFormat)}" +
-                            $"\t(SPEED = {algo.AvaragedSpeed + (algo.IsDual() ? "/" + algo.SecondaryAveragedSpeed : "")}" +
-                            $"\t\t| NHSMA = {algo.CurNhmSmaDataVal + (algo.IsDual() ? "/" + algo.SecondaryCurNhmSmaDataVal : "")})" +
-                            $"\t[{algo.AlgorithmStringID}]"
+                            $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
+                            $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
                         );
                     }
-                    // most profitable
-                    stringBuilderDevice.AppendLine(
-                        $"\t\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
-                    stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
                 }
-                Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
+                // most profitable
+                stringBuilderDevice.AppendLine(
+                    $"\t\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
+                stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
             }
+            Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
 
             // check if should mine
             // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
-            if (CheckIfShouldMine(currentProfit, log) == false)
+            if (CheckIfShouldMine(currentProfit) == false)
             {
                 foreach (var device in _miningDevices)
                 {
                     device.SetNotMining();
                 }
+
                 return;
             }
 
@@ -357,8 +388,10 @@ namespace NiceHashMiner.Miners
                     {
                         device.RestoreOldProfitsState();
                     }
+
                     return;
                 }
+
                 Helpers.ConsolePrint(Tag,
                     $"Will SWITCH profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
             }
@@ -394,6 +427,7 @@ namespace NiceHashMiner.Miners
                                 miningPairs.Add(profitableDevices[second]);
                             }
                         }
+
                         currentGroupedDevices.Add(newGroup);
                         newGroupedMiningPairs[CalcGroupedDevicesKey(newGroup)] = miningPairs;
                     }
@@ -420,8 +454,21 @@ namespace NiceHashMiner.Miners
                         var newAlgoType = GetMinerPairAlgorithmType(miningPairs);
                         if (newAlgoType != AlgorithmType.NONE && newAlgoType != AlgorithmType.INVALID)
                         {
+                            // Check if dcri optimal value has changed
+                            var dcriChanged = false;
+                            foreach (var mPair in _runningGroupMiners[runningGroupKey].Miner.MiningSetup.MiningPairs)
+                            {
+                                if (mPair.Algorithm is DualAlgorithm algo
+                                    && algo.TuningEnabled
+                                    && algo.MostProfitableIntensity != algo.CurrentIntensity)
+                                {
+                                    dcriChanged = true;
+                                    break;
+                                }
+                            }
+
                             // if algoType valid and different from currently running update
-                            if (newAlgoType != _runningGroupMiners[runningGroupKey].DualAlgorithmType)
+                            if (newAlgoType != _runningGroupMiners[runningGroupKey].DualAlgorithmType || dcriChanged)
                             {
                                 // remove current one and schedule to stop mining
                                 toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
@@ -433,15 +480,18 @@ namespace NiceHashMiner.Miners
                                     {
                                         newGroupMiner = _ethminerNvidiaPaused;
                                     }
+
                                     if (_ethminerAmdPaused != null && _ethminerAmdPaused.Key == runningGroupKey)
                                     {
                                         newGroupMiner = _ethminerAmdPaused;
                                     }
                                 }
+
                                 if (newGroupMiner == null)
                                 {
                                     newGroupMiner = new GroupMiner(miningPairs, runningGroupKey);
                                 }
+
                                 toRunNewGroupMiners[runningGroupKey] = newGroupMiner;
                             }
                             else
@@ -449,6 +499,7 @@ namespace NiceHashMiner.Miners
                         }
                     }
                 }
+
                 // check brand new
                 foreach (var kvp in newGroupedMiningPairs)
                 {
@@ -514,20 +565,23 @@ namespace NiceHashMiner.Miners
 
             // stats quick fix code
             //if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
-            await MinerStatsCheck(niceHashData);
+            //await MinerStatsCheck();
             //}
+
+            _mainFormRatesComunication?.ForceMinerStatsUpdate();
         }
 
-        private static AlgorithmType GetMinerPairAlgorithmType(List<MiningPair> miningPairs)
+        private AlgorithmType GetMinerPairAlgorithmType(List<MiningPair> miningPairs)
         {
             if (miningPairs.Count > 0)
             {
-                return miningPairs[0].Algorithm.DualNiceHashID();
+                return miningPairs[0].Algorithm.DualNiceHashID;
             }
+
             return AlgorithmType.NONE;
         }
 
-        public async Task MinerStatsCheck(Dictionary<AlgorithmType, NiceHashSma> niceHashData)
+        public async Task MinerStatsCheck()
         {
             var currentProfit = 0.0d;
             _mainFormRatesComunication.ClearRates(_runningGroupMiners.Count);
@@ -548,14 +602,18 @@ namespace NiceHashMiner.Miners
                     {
                         Helpers.ConsolePrint(m.MinerTag(), "GetSummary returned null..");
                     }
+
                     // set rates
-                    if (niceHashData != null && ad != null)
+                    if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     {
-                        groupMiners.CurrentRate = niceHashData[ad.AlgorithmID].paying * ad.Speed * 0.000000001;
-                        if (niceHashData.ContainsKey(ad.SecondaryAlgorithmID))
+                        groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
+                        if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
                         {
-                            groupMiners.CurrentRate += niceHashData[ad.SecondaryAlgorithmID].paying * ad.SecondarySpeed * 0.000000001;
+                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
                         }
+                        // Deduct power costs
+                        var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
+                        groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
                     }
                     else
                     {
@@ -563,9 +621,11 @@ namespace NiceHashMiner.Miners
                         // set empty
                         ad = new ApiData(groupMiners.AlgorithmType);
                     }
+
                     currentProfit += groupMiners.CurrentRate;
                     // Update GUI
-                    _mainFormRatesComunication.AddRateInfo(m.MinerTag(), groupMiners.DevicesInfoString, ad, groupMiners.CurrentRate,
+                    _mainFormRatesComunication.AddRateInfo(m.MinerTag(), groupMiners.DevicesInfoString, ad,
+                        groupMiners.CurrentRate,
                         m.IsApiReadException);
                 }
             }

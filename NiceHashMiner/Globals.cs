@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using NiceHashMiner.Enums;
 using System.Collections.Generic;
+using NiceHashMiner.Switching;
 
 namespace NiceHashMiner
 {
@@ -15,9 +16,6 @@ namespace NiceHashMiner
         public static int CurrentTosVer = 3;
 
         // Variables
-        public static Dictionary<AlgorithmType, NiceHashSma> NiceHashData = null;
-
-        public static double BitcoinUsdRate;
         public static JsonSerializerSettings JsonSettings = null;
 
         public static int ThreadsPerCpu;
@@ -31,12 +29,12 @@ namespace NiceHashMiner
 
         public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
         {
-            if (NiceHashData == null || !NiceHashData.ContainsKey(algorithmType)) return "";
+            if (!NHSmaData.TryGetSma(algorithmType, out var sma)) return "";
 
-            var name = NiceHashData[algorithmType].name;
-            var nPort = NiceHashData[algorithmType].port;
+            var name = sma.Name;
+            var nPort = sma.Port;
             var sslPort = 30000 + nPort;
-
+            
             // NHMConectionType.NONE
             var prefix = "";
             var port = nPort;
