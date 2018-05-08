@@ -244,14 +244,14 @@ namespace NiceHashMiner.Devices
                                 new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7, "")
                             }
                         },
-                        //{
-                        //    MinerBaseType.Xmrig,
-                        //    new List<Algorithm>
-                        //    {
-                        //        //new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNight, ""),
-                        //        //new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightV7, "")
-                        //    }
-                        //}
+                        {
+                            MinerBaseType.Xmrig,
+                            new List<Algorithm>
+                            {
+                                //new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNight, ""),
+                                new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightV7, "")
+                            }
+                        }
                     };
                 case DeviceGroupType.AMD_OpenCL:
                     // DisableAMDTempControl = false; TemperatureParam must be appended lastly
