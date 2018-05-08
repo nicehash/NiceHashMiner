@@ -98,7 +98,7 @@ namespace NiceHashMiner.Devices
                             }
                         };
                         P.Start();
-                        P.WaitForExit();
+                        P.WaitForExit(30 * 1000);
 
                         stdOut = P.StandardOutput.ReadToEnd();
                         stdErr = P.StandardError.ReadToEnd();
