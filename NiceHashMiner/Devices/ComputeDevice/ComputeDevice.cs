@@ -62,6 +62,7 @@ namespace NiceHashMiner.Devices
         public virtual float Load => -1;
         public virtual float Temp => -1;
         public virtual int FanSpeed => -1;
+        public virtual double PowerUsage => -1;
 
         // Ambiguous constructor
         protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable,

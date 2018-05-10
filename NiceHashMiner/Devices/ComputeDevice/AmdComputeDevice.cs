@@ -56,6 +56,15 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        public override double PowerUsage
+        {
+            get
+            {
+                // TODO
+                return -1;
+            }
+        }
+
         public AmdComputeDevice(AmdGpuDevice amdDevice, int gpuCount, bool isDetectionFallback)
             : base(amdDevice.DeviceID,
                 amdDevice.DeviceName,

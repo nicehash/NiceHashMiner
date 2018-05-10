@@ -90,6 +90,15 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        public override double PowerUsage
+        {
+            get
+            {
+                // TODO
+                return -1;
+            }
+        }
+
         public CudaComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int gpuCount,
             NvPhysicalGpuHandle nvHandle)
             : base((int) cudaDevice.DeviceID,
