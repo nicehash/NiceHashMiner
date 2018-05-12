@@ -1,11 +1,15 @@
-﻿using NiceHashMiner.Enums;
+﻿using System;
+using System.Runtime.InteropServices;
+using NiceHashMiner.Enums;
 using NVIDIA.NVAPI;
+using ManagedCuda.Nvml;
 
 namespace NiceHashMiner.Devices
 {
     internal class CudaComputeDevice : ComputeDevice
     {
         private readonly NvPhysicalGpuHandle _nvHandle; // For NVAPI
+        private readonly nvmlDevice _nvmlDevice; // For NVML
         private const int GpuCorePState = 0; // memcontroller = 1, videng = 2
         
         protected int SMMajor;
@@ -94,13 +98,26 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                // TODO
+                try
+                {
+                    var power = 0u;
+                    var ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref power);
+                    if (ret != nvmlReturn.Success)
+                        throw new Exception($"NVML power get failed with status: {ret}");
+
+                    return power * 0.001;
+                }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("NVML", e.ToString());
+                }
+
                 return -1;
             }
         }
 
         public CudaComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int gpuCount,
-            NvPhysicalGpuHandle nvHandle)
+            NvPhysicalGpuHandle nvHandle, nvmlDevice nvmlHandle)
             : base((int) cudaDevice.DeviceID,
                 cudaDevice.GetName(),
                 true,
@@ -118,6 +135,7 @@ namespace NiceHashMiner.Devices
             Index = ID + ComputeDeviceManager.Avaliable.AvailCpus; // increment by CPU count
 
             _nvHandle = nvHandle;
+            _nvmlDevice = nvmlHandle;
         }
     }
 }

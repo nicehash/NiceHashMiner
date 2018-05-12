@@ -4,6 +4,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Enums;
 using NiceHashMiner.Interfaces;
 using NVIDIA.NVAPI;
+using ManagedCuda.Nvml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -591,6 +592,19 @@ namespace NiceHashMiner.Devices
                             }
                         }
 
+                        var nvmlInit = false;
+                        try
+                        {
+                            var ret = NvmlNativeMethods.nvmlInit();
+                            if (ret != nvmlReturn.Success)
+                                throw new Exception($"NVML init failed with code {ret}");
+                            nvmlInit = true;
+                        }
+                        catch (Exception e)
+                        {
+                            Helpers.ConsolePrint("NVML", e.ToString());
+                        }
+
                         foreach (var cudaDev in _cudaDevices)
                         {
                             // check sm vesrions
@@ -636,9 +650,20 @@ namespace NiceHashMiner.Devices
                                         group = DeviceGroupType.NVIDIA_6_x;
                                         break;
                                 }
+
+                                var nvmlHandle = new nvmlDevice();
+
+                                if (nvmlInit)
+                                {
+                                    var ret = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(cudaDev.UUID, ref nvmlHandle);
+                                    stringBuilder.AppendLine(
+                                        "\t\tNVML HANDLE: " +
+                                        $"{(ret == nvmlReturn.Success ? nvmlHandle.Pointer.ToString() : $"Failed with code ret {ret}")}");
+                                }
+
                                 idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
                                 Avaliable.AllAvaliableDevices.Add(
-                                    new CudaComputeDevice(cudaDev, group, ++_gpuCount, handle)
+                                    new CudaComputeDevice(cudaDev, group, ++_gpuCount, handle, nvmlHandle)
                                 );
                             }
                         }

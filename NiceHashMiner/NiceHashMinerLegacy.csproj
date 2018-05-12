@@ -458,6 +458,10 @@
       <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
       <Name>MyDownloader.Extension</Name>
     </ProjectReference>
+    <ProjectReference Include="..\3rdparty\managedCuda\Nvml\Nvml.csproj">
+      <Project>{92d51a33-7bf0-47fd-9ece-d758ffe1691d}</Project>
+      <Name>Nvml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\3rdparty\websocket-sharp\websocket-sharp.csproj">
       <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
       <Name>websocket-sharp</Name>
