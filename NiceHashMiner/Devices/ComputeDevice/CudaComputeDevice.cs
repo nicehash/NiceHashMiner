@@ -1,8 +1,7 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using ManagedCuda.Nvml;
 using NiceHashMiner.Enums;
 using NVIDIA.NVAPI;
-using ManagedCuda.Nvml;
+using System;
 
 namespace NiceHashMiner.Devices
 {
@@ -20,23 +19,21 @@ namespace NiceHashMiner.Devices
             get
             {
                 var load = -1;
-                var pStates = new NvPStates
+
+                try
                 {
-                    Version = NVAPI.GPU_PSTATES_VER,
-                    PStates = new NvPState[NVAPI.MAX_PSTATES_PER_GPU]
-                };
-                if (NVAPI.NvAPI_GPU_GetPStates != null)
-                {
-                    var result = NVAPI.NvAPI_GPU_GetPStates(_nvHandle, ref pStates);
-                    if (result != NvStatus.OK)
-                    {
-                        Helpers.ConsolePrint("NVAPI", "Load get failed with status: " + result);
-                    }
-                    else if (pStates.PStates[GpuCorePState].Present)
-                    {
-                        load = pStates.PStates[GpuCorePState].Percentage;
-                    }
+                    var rates = new nvmlUtilization();
+                    var ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(_nvmlDevice, ref rates);
+                    if (ret != nvmlReturn.Success)
+                        throw new Exception($"NVML get load failed with code: {ret}");
+
+                    load = (int) rates.gpu;
                 }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("NVML", e.ToString());
+                }
+
                 return load;
             }
         }
@@ -46,31 +43,22 @@ namespace NiceHashMiner.Devices
             get
             {
                 var temp = -1f;
-                if (NVAPI.NvAPI_GPU_GetThermalSettings != null)
+
+                try
                 {
-                    var settings = new NvGPUThermalSettings
-                    {
-                        Version = NVAPI.GPU_THERMAL_SETTINGS_VER,
-                        Count = NVAPI.MAX_THERMAL_SENSORS_PER_GPU,
-                        Sensor = new NvSensor[NVAPI.MAX_THERMAL_SENSORS_PER_GPU]
-                    };
-                    var result = NVAPI.NvAPI_GPU_GetThermalSettings(_nvHandle, (int) NvThermalTarget.ALL, ref settings);
-                    if (result != NvStatus.OK)
-                    {
-                        Helpers.ConsolePrint("NVAPI", "Temp get failed with status: " + result);
-                    }
-                    else
-                    {
-                        foreach (var sensor in settings.Sensor)
-                        {
-                            if (sensor.Target == NvThermalTarget.GPU)
-                            {
-                                temp = sensor.CurrentTemp;
-                                break;
-                            }
-                        }
-                    }
+                    var utemp = 0u;
+                    var ret = NvmlNativeMethods.nvmlDeviceGetTemperature(_nvmlDevice, nvmlTemperatureSensors.Gpu,
+                        ref utemp);
+                    if (ret != nvmlReturn.Success)
+                        throw new Exception($"NVML get temp failed with code: {ret}");
+
+                    temp = utemp;
                 }
+                catch (Exception e)
+                {
+                    Helpers.ConsolePrint("NVML", e.ToString());
+                }
+
                 return temp;
             }
         }
