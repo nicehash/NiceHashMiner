@@ -49,6 +49,8 @@ namespace ATI.ADL {
     ///// <returns> retrun ADL Error Code</returns>
     internal delegate int ADL_Main_Control_Create(ADL_Main_Memory_Alloc callback, int enumConnectedAdapters);
 
+    internal delegate int ADL2_Main_Control_Create(ADL_Main_Memory_Alloc callback, int enumConnectedAdapters, ref IntPtr context);
+
     /// <summary> ADL Destroy Function to free up ADL Data</summary>
     /// <returns> retrun ADL Error Code</returns>
     internal delegate int ADL_Main_Control_Destroy();
@@ -84,6 +86,8 @@ namespace ATI.ADL {
     internal delegate int ADL_Overdrive5_Temperature_Get(int adapterIndex, int thermalControllerIndex, ref ADLTemperature temperature);
 
     internal delegate int ADL_Overdrive5_FanSpeed_Get(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedValue temperature);
+
+    internal delegate int ADL2_Overdrive6_CurrentPower_Get(IntPtr context, int iAdapterIndex, int iPowerType, ref int lpCurrentValue);
 
     #endregion Export Delegates
 
@@ -268,6 +272,9 @@ namespace ATI.ADL {
             internal static extern int ADL_Main_Control_Create(ADL_Main_Memory_Alloc callback, int enumConnectedAdapters);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL2_Main_Control_Create(ADL_Main_Memory_Alloc callback, int enumConnectedAdapters, ref IntPtr context);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Main_Control_Destroy();
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
@@ -296,6 +303,9 @@ namespace ATI.ADL {
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Overdrive5_FanSpeed_Get(int adapterIndex, int thermalControllerIndex, ref ADLFanSpeedValue fanSpeedValue);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL2_Overdrive6_CurrentPower_Get(IntPtr context, int iAdapterIndex, int iPowerType, ref int lpCurrentValue);
 
             #endregion DLLImport
         }
@@ -404,6 +414,26 @@ namespace ATI.ADL {
         private static ADL_Main_Control_Create ADL_Main_Control_Create_ = null;
         /// <summary> check flag to indicate the delegate has been checked</summary>
         private static bool ADL_Main_Control_Create_Check = false;
+        /// <summary> ADL_Main_Control_Create Delegates</summary>
+        internal static ADL2_Main_Control_Create ADL2_Main_Control_Create
+        {
+            get
+            {
+                if (!ADL2_Main_Control_Create_Check && null == ADL2_Main_Control_Create_)
+                {
+                    ADL2_Main_Control_Create_Check = true;
+                    if (ADLCheckLibrary.IsFunctionValid("ADL_Main_Control_Create"))
+                    {
+                        ADL2_Main_Control_Create_ = ADLImport.ADL2_Main_Control_Create;
+                    }
+                }
+                return ADL2_Main_Control_Create_;
+            }
+        }
+        /// <summary> Private Delegate</summary>
+        private static ADL2_Main_Control_Create ADL2_Main_Control_Create_ = null;
+        /// <summary> check flag to indicate the delegate has been checked</summary>
+        private static bool ADL2_Main_Control_Create_Check = false;
         #endregion ADL_Main_Control_Create
 
         #region ADL_Main_Control_Destroy
@@ -542,6 +572,26 @@ namespace ATI.ADL {
         }
         private static ADL_Overdrive5_FanSpeed_Get ADL_Overdrive5_FanSpeed_Get_ = null;
         private static bool ADL_Overdrive5_FanSpeed_Get_Check = false;
+
+        internal static ADL2_Overdrive6_CurrentPower_Get ADL2_Overdrive6_CurrentPower_Get
+        {
+            get
+            {
+                if (!ADL2_Overdrive6_CurrentPower_Get_Check && null == ADL2_Overdrive6_CurrentPower_Get_)
+                {
+                    ADL2_Overdrive6_CurrentPower_Get_Check = true;
+                    if (ADLCheckLibrary.IsFunctionValid("ADL2_Overdrive6_CurrentPower_Get"))
+                    {
+                        ADL2_Overdrive6_CurrentPower_Get_ = ADLImport.ADL2_Overdrive6_CurrentPower_Get;
+                    }
+                }
+
+                return ADL2_Overdrive6_CurrentPower_Get_;
+            }
+        }
+
+        private static ADL2_Overdrive6_CurrentPower_Get ADL2_Overdrive6_CurrentPower_Get_ = null;
+        private static bool ADL2_Overdrive6_CurrentPower_Get_Check = false;
 
         #endregion Export Functions
     }

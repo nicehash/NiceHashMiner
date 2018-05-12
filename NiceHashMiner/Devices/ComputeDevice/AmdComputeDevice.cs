@@ -7,6 +7,7 @@ namespace NiceHashMiner.Devices
     public class AmdComputeDevice : ComputeDevice
     {
         private readonly int _adapterIndex; // For ADL
+        private static IntPtr _adlContext;
 
         public override int FanSpeed
         {
@@ -60,8 +61,14 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                // TODO
-                return -1;
+                var power = -1;
+                var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex, 0, ref power);
+                if (result != ADL.ADL_SUCCESS)
+                {
+                    Helpers.ConsolePrint("ADL", "ADL power getting failed with code " + result);
+                }
+
+                return power;
             }
         }
 
@@ -85,6 +92,11 @@ namespace NiceHashMiner.Devices
             DriverDisableAlgos = amdDevice.DriverDisableAlgos;
             Index = ID + ComputeDeviceManager.Avaliable.AvailCpus + ComputeDeviceManager.Avaliable.AvailNVGpus;
             _adapterIndex = amdDevice.AdapterIndex;
+            
+            if (_adlContext == default(IntPtr))
+            {
+                ADL.ADL2_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);
+            }
         }
     }
 }
