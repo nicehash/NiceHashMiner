@@ -1,13 +1,16 @@
 ﻿using ATI.ADL;
 using NiceHashMiner.Enums;
 using System;
+using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace NiceHashMiner.Devices
 {
     public class AmdComputeDevice : ComputeDevice
     {
         private readonly int _adapterIndex; // For ADL
-        private static IntPtr _adlContext;
+        private readonly int _adapterIndex2; // For ADL2
+        private readonly IntPtr _adlContext;
 
         public override int FanSpeed
         {
@@ -62,17 +65,25 @@ namespace NiceHashMiner.Devices
             get
             {
                 var power = -1;
-                var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex, 0, ref power);
-                if (result != ADL.ADL_SUCCESS)
+                if (_adlContext != IntPtr.Zero && ADL.ADL2_Overdrive6_CurrentPower_Get != null)
                 {
-                    Helpers.ConsolePrint("ADL", "ADL power getting failed with code " + result);
+                    var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex2, 1, ref power);
+                    if (result == ADL.ADL_SUCCESS)
+                    {
+                        return (double) power / (1 << 8);
+                    }
+                    if (result != ADL.ADL_NOT_SUPPORTED)
+                    {
+                        // Don't alert if not supported
+                        Helpers.ConsolePrint("ADL", "ADL power getting failed with code " + result);
+                    }
                 }
 
                 return power;
             }
         }
 
-        public AmdComputeDevice(AmdGpuDevice amdDevice, int gpuCount, bool isDetectionFallback)
+        public AmdComputeDevice(AmdGpuDevice amdDevice, int gpuCount, bool isDetectionFallback, int adl2Index)
             : base(amdDevice.DeviceID,
                 amdDevice.DeviceName,
                 true,
@@ -92,11 +103,9 @@ namespace NiceHashMiner.Devices
             DriverDisableAlgos = amdDevice.DriverDisableAlgos;
             Index = ID + ComputeDeviceManager.Avaliable.AvailCpus + ComputeDeviceManager.Avaliable.AvailNVGpus;
             _adapterIndex = amdDevice.AdapterIndex;
-            
-            if (_adlContext == default(IntPtr))
-            {
-                ADL.ADL2_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);
-            }
+
+            ADL.ADL2_Main_Control_Create?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);
+            _adapterIndex2 = adl2Index;
         }
     }
 }
