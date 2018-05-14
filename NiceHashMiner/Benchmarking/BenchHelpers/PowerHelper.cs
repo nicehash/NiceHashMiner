@@ -19,13 +19,15 @@ namespace NiceHashMiner.Benchmarking.BenchHelpers
 
         private readonly ComputeDevice _device;
 
-        private double _interval;
+        private double _interval = 1000;
 
         public double Interval
         {
             get => _interval;
             set
             {
+                if (value <= 0) return;
+
                 _interval = value;
                 if (_timer != null)
                     _timer.Interval = value;
