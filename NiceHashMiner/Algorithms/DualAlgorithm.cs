@@ -344,6 +344,12 @@ namespace NiceHashMiner.Algorithms
             IntensityUpToDate = false;
         }
 
+        public void SetPowerForCurrent(double power)
+        {
+            IntensityPowers[CurrentIntensity] = power;
+            IntensityUpToDate = false;
+        }
+
         private void UpdateProfitableIntensity()
         {
             if (!NHSmaData.HasData)

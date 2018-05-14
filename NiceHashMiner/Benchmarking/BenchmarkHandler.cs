@@ -24,6 +24,9 @@ namespace NiceHashMiner.Benchmarking
         private ClaymoreZcashBenchHelper _claymoreZcashStatus;
 
         private CpuBenchHelper _cpuBenchmarkStatus;
+
+        private PowerHelper _powerHelper;
+
         // CPU sweet spots
         private readonly List<AlgorithmType> _cpuAlgos = new List<AlgorithmType>
         {
@@ -39,6 +42,7 @@ namespace NiceHashMiner.Benchmarking
             _performanceType = performance;
 
             _benchmarkAlgorithmsCount = _benchmarkAlgorithmQueue.Count;
+            _powerHelper = new PowerHelper(device);
         }
 
         public ComputeDevice Device { get; }
@@ -94,9 +98,20 @@ namespace NiceHashMiner.Benchmarking
                 }
             }
 
+            var power = _powerHelper.Stop();
+
             var dualAlgo = _currentAlgorithm as DualAlgorithm;
-            if (dualAlgo != null && dualAlgo.TuningEnabled && dualAlgo.IncrementToNextEmptyIntensity())
-                rebenchSame = true;
+            if (dualAlgo != null && dualAlgo.TuningEnabled)
+            {
+                dualAlgo.SetPowerForCurrent(power);
+
+                if (dualAlgo.IncrementToNextEmptyIntensity())
+                    rebenchSame = true;
+            }
+            else
+            {
+                _currentAlgorithm.PowerUsage = power;
+            }
 
             if (!rebenchSame) _benchmarkForm.RemoveFromStatusCheck(Device, _currentAlgorithm);
 
@@ -196,6 +211,7 @@ namespace NiceHashMiner.Benchmarking
                 _benchmarkForm.AddToStatusCheck(Device, _currentAlgorithm);
 
                 _currentMiner.BenchmarkStart(time, this);
+                _powerHelper.Start();
             }
             else
             {
