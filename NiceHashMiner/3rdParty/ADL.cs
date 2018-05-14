@@ -55,6 +55,8 @@ namespace ATI.ADL {
     /// <returns> retrun ADL Error Code</returns>
     internal delegate int ADL_Main_Control_Destroy();
 
+    internal delegate int ADL2_Main_Control_Destroy(IntPtr context);
+
     /// <summary> ADL Function to get the number of adapters</summary>
     /// <param name="numAdapters">return number of adapters</param>
     /// <returns> retrun ADL Error Code</returns>
@@ -65,6 +67,8 @@ namespace ATI.ADL {
     /// <param name="inputSize">the size of the GPU adapter struct</param>
     /// <returns> retrun ADL Error Code</returns>
     internal delegate int ADL_Adapter_AdapterInfo_Get(IntPtr info, int inputSize);
+
+    internal delegate int ADL2_Adapter_AdapterInfo_Get(IntPtr context, ref ADLAdapterInfoArray lpInfo, int iInputSize);
 
     /// <summary> Function to determine if the adapter is active or not.</summary>
     /// <remarks>The function is used to check if the adapter associated with iAdapterIndex is active</remarks>  
@@ -241,6 +245,7 @@ namespace ATI.ADL {
         internal const int ADL_SUCCESS = 0;
         /// <summary> Define the failure</summary>
         internal const int ADL_FAIL = -1;
+        internal const int ADL_NOT_SUPPORTED = -8;
         /// <summary> Define the driver ok</summary>
         internal const int ADL_DRIVER_OK = 0;
         /// <summary> Maximum number of GL-Sync ports on the GL-Sync module </summary>
@@ -278,6 +283,9 @@ namespace ATI.ADL {
             internal static extern int ADL_Main_Control_Destroy();
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL2_Main_Control_Destroy(IntPtr context);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Main_Control_IsFunctionValid(HMODULE module, string procName);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
@@ -288,6 +296,9 @@ namespace ATI.ADL {
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Adapter_AdapterInfo_Get(IntPtr info, int inputSize);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL2_Adapter_AdapterInfo_Get(IntPtr context, ref ADLAdapterInfoArray lpInfo, int iInputSize);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Adapter_Active_Get(int adapterIndex, ref int status);
@@ -453,6 +464,25 @@ namespace ATI.ADL {
         private static ADL_Main_Control_Destroy ADL_Main_Control_Destroy_ = null;
         /// <summary> check flag to indicate the delegate has been checked</summary>
         private static bool ADL_Main_Control_Destroy_Check = false;
+        internal static ADL2_Main_Control_Destroy ADL2_Main_Control_Destroy
+        {
+            get
+            {
+                if (!ADL2_Main_Control_Destroy_Check && null == ADL2_Main_Control_Destroy_)
+                {
+                    ADL2_Main_Control_Destroy_Check = true;
+                    if (ADLCheckLibrary.IsFunctionValid("ADL_Main_Control_Destroy"))
+                    {
+                        ADL2_Main_Control_Destroy_ = ADLImport.ADL2_Main_Control_Destroy;
+                    }
+                }
+                return ADL2_Main_Control_Destroy_;
+            }
+        }
+        /// <summary> Private Delegate</summary>
+        private static ADL2_Main_Control_Destroy ADL2_Main_Control_Destroy_ = null;
+        /// <summary> check flag to indicate the delegate has been checked</summary>
+        private static bool ADL2_Main_Control_Destroy_Check = false;
         #endregion ADL_Main_Control_Destroy
 
         #region ADL_Adapter_NumberOfAdapters_Get
@@ -491,6 +521,27 @@ namespace ATI.ADL {
         private static ADL_Adapter_AdapterInfo_Get ADL_Adapter_AdapterInfo_Get_ = null;
         /// <summary> check flag to indicate the delegate has been checked</summary>
         private static bool ADL_Adapter_AdapterInfo_Get_Check = false;
+
+        /// <summary> ADL_Adapter_AdapterInfo_Get Delegates</summary>
+        internal static ADL2_Adapter_AdapterInfo_Get ADL2_Adapter_AdapterInfo_Get
+        {
+            get
+            {
+                if (!ADL2_Adapter_AdapterInfo_Get_Check && null == ADL2_Adapter_AdapterInfo_Get_)
+                {
+                    ADL2_Adapter_AdapterInfo_Get_Check = true;
+                    if (ADLCheckLibrary.IsFunctionValid("ADL_Adapter_AdapterInfo_Get"))
+                    {
+                        ADL2_Adapter_AdapterInfo_Get_ = ADLImport.ADL2_Adapter_AdapterInfo_Get;
+                    }
+                }
+                return ADL2_Adapter_AdapterInfo_Get_;
+            }
+        }
+        /// <summary> Private Delegate</summary>
+        private static ADL2_Adapter_AdapterInfo_Get ADL2_Adapter_AdapterInfo_Get_ = null;
+        /// <summary> check flag to indicate the delegate has been checked</summary>
+        private static bool ADL2_Adapter_AdapterInfo_Get_Check = false;
         #endregion ADL_Adapter_AdapterInfo_Get
 
         #region ADL_Adapter_Active_Get

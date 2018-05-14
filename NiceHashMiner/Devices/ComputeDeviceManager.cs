@@ -944,13 +944,15 @@ namespace NiceHashMiner.Devices
                                 var isAdlInit = true;
                                 // ADL does not get devices in order map devices by bus number
                                 // bus id, <name, uuid>
-                                var busIDsInfo = new Dictionary<int, Tuple<string, string, string, int>>();
+                                var busIDsInfo = new Dictionary<int, Tuple<string, string, string, int, int>>();
                                 var amdDeviceName = new List<string>();
                                 var amdDeviceUuid = new List<string>();
                                 try
                                 {
                                     var adlRet = -1;
                                     var numberOfAdapters = 0;
+                                    var adl2Control = IntPtr.Zero;
+
                                     if (null != ADL.ADL_Main_Control_Create)
                                         // Second parameter is 1: Get only the present adapters
                                         adlRet = ADL.ADL_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 1);
@@ -973,6 +975,21 @@ namespace NiceHashMiner.Devices
                                                 if (null != ADL.ADL_Adapter_AdapterInfo_Get)
                                                 {
                                                     adlRet = ADL.ADL_Adapter_AdapterInfo_Get(adapterBuffer, size);
+
+                                                    var adl2Ret = -1;
+                                                    if (ADL.ADL2_Main_Control_Create != null)
+                                                        adl2Ret = ADL.ADL2_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 0, ref adl2Control);
+
+                                                    var adl2Info = new ADLAdapterInfoArray();
+                                                    if (adl2Ret == ADL.ADL_SUCCESS && ADL.ADL2_Adapter_AdapterInfo_Get != null)
+                                                    {
+                                                        adl2Ret = ADL.ADL2_Adapter_AdapterInfo_Get(adl2Control, ref adl2Info, Marshal.SizeOf(adl2Info));
+                                                    }
+                                                    else
+                                                    {
+                                                        adl2Ret = -1;
+                                                    }
+
                                                     if (ADL.ADL_SUCCESS == adlRet)
                                                     {
                                                         osAdapterInfoData =
@@ -1048,9 +1065,14 @@ namespace NiceHashMiner.Devices
                                                                         amdDeviceName.Add(devName);
                                                                         if (!busIDsInfo.ContainsKey(budId))
                                                                         {
+                                                                            var adl2Index = -1;
+                                                                            if (adl2Ret == ADL.ADL_SUCCESS)
+                                                                            {
+                                                                                adl2Index = adl2Info.ADLAdapterInfo.FirstOrDefault(a => a.UDID == osAdapterInfoData.ADLAdapterInfo[i].UDID).AdapterIndex;
+                                                                            }
                                                                             var nameUuid =
-                                                                                new Tuple<string, string, string, int>(
-                                                                                    devName, uuid, infSection, index);
+                                                                                new Tuple<string, string, string, int, int>(
+                                                                                    devName, uuid, infSection, index, adl2Index);
                                                                             busIDsInfo.Add(budId, nameUuid);
                                                                         }
                                                                     }
@@ -1074,6 +1096,10 @@ namespace NiceHashMiner.Devices
                                         if (null != ADL.ADL_Main_Control_Destroy && numberOfAdapters <= 0)
                                             // Close ADL if it found no AMD devices
                                             ADL.ADL_Main_Control_Destroy();
+                                        if (ADL.ADL2_Main_Control_Destroy != null && adl2Control != IntPtr.Zero)
+                                        {
+                                            ADL.ADL2_Main_Control_Destroy(adl2Control);
+                                        }
                                     }
                                     else
                                     {
@@ -1155,7 +1181,7 @@ namespace NiceHashMiner.Devices
                                             var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
                                             Avaliable.AllAvaliableDevices.Add(
-                                                new AmdComputeDevice(newAmdDev, ++_gpuCount, false));
+                                                new AmdComputeDevice(newAmdDev, ++_gpuCount, false, busIDsInfo[busID].Item5));
                                             // just in case 
                                             try
                                             {
@@ -1216,7 +1242,7 @@ namespace NiceHashMiner.Devices
                                         var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
                                         Avaliable.AllAvaliableDevices.Add(
-                                            new AmdComputeDevice(newAmdDev, ++_gpuCount, true));
+                                            new AmdComputeDevice(newAmdDev, ++_gpuCount, true, -1));
                                         // just in case 
                                         try
                                         {
