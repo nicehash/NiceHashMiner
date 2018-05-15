@@ -109,6 +109,11 @@ namespace NiceHashMiner.Configs.Data
         /// </summary>
         public double KwhPrice = 0;
 
+        /// <summary>
+        /// True if NHML should try to cache SMA values for next launch
+        /// </summary>
+        public bool UseSmaCache = true;
+
         // methods
         public void SetDefaults()
         {
@@ -164,6 +169,7 @@ namespace NiceHashMiner.Configs.Data
             SwitchSmaTimeChangeSeconds = new Interval(34, 55);
             SwitchSmaTicksStable = new Interval(2, 3);
             SwitchSmaTicksUnstable = new Interval(5, 13);
+            UseSmaCache = true;
         }
 
         public void FixSettingBounds()

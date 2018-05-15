@@ -479,17 +479,25 @@ namespace NiceHashMiner.Devices
 
                     if (!Helpers.Is64BitOperatingSystem)
                     {
-                        MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64bitMsg"),
-                            International.GetText("Warning_with_Exclamation"),
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
+                        {
+                            MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64bitMsg"),
+                                International.GetText("Warning_with_Exclamation"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+
                         Avaliable.CpusCount = 0;
                     }
 
                     if (threadsPerCpu * Avaliable.CpusCount > 64)
                     {
-                        MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64CoresMsg"),
-                            International.GetText("Warning_with_Exclamation"),
-                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
+                        {
+                            MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64CoresMsg"),
+                                International.GetText("Warning_with_Exclamation"),
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+
                         Avaliable.CpusCount = 0;
                     }
 

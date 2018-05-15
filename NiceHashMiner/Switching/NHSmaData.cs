@@ -1,8 +1,11 @@
 ﻿using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Switching
 {
@@ -12,6 +15,7 @@ namespace NiceHashMiner.Switching
     public static class NHSmaData
     {
         private const string Tag = "NHSMAData";
+        private const string CachedFile = "internals\\cached_sma.json";
 
         public static bool Initialized { get; private set; }
         /// <summary>
@@ -32,17 +36,35 @@ namespace NiceHashMiner.Switching
             _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
             _stableAlgorithms = new HashSet<AlgorithmType>();
 
-           // _recentPaying = new Dictionary<AlgorithmType, List<double>>();
+            Dictionary<AlgorithmType, double> cacheDict = null;
+            try
+            {
+                var cache = File.ReadAllText(CachedFile);
+                cacheDict = JsonConvert.DeserializeObject<Dictionary<AlgorithmType, double>>(cache);
+            }
+            catch (FileNotFoundException)
+            {
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint(Tag, e.ToString());
+            }
+
+            // _recentPaying = new Dictionary<AlgorithmType, List<double>>();
             foreach (AlgorithmType algo in Enum.GetValues(typeof(AlgorithmType)))
             {
                 if (algo >= 0)
                 {
+                    var paying = 0d;
+                    if (cacheDict?.TryGetValue(algo, out paying) ?? false)
+                        HasData = true;
+
                     _currentSma[algo] = new NiceHashSma
                     {
                         Port = (int) algo + 3333,
                         Name = algo.ToString().ToLower(),
                         Algo = (int) algo,
-                        Paying = 0
+                        Paying = paying
                     };
                     //_recentPaying[algo] = new List<double>
                     //{
@@ -75,6 +97,20 @@ namespace NiceHashMiner.Switching
                     if (_currentSma.ContainsKey(algo))
                     {
                         _currentSma[algo].Paying = newSma[algo];
+                    }
+                }
+
+                if (ConfigManager.GeneralConfig.UseSmaCache)
+                {
+                    // Cache while in lock so file is not accessed on multiple threads
+                    try
+                    {
+                        var cache = JsonConvert.SerializeObject(newSma);
+                        File.WriteAllText(CachedFile, cache);
+                    }
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint(Tag, e.ToString());
                     }
                 }
             }

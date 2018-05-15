@@ -41,6 +41,7 @@ namespace NiceHashMiner.Stats
 
         public void StartConnection()
         {
+            NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
             try
             {
@@ -70,7 +71,6 @@ namespace NiceHashMiner.Stats
         {
             try
             {
-                NHSmaData.InitializeIfNeeded();
                 //send login
                 var version = "NHML/" + Application.ProductVersion;
                 var login = new NicehashLogin
@@ -182,6 +182,16 @@ namespace NiceHashMiner.Stats
                     {
                         _attemptingReconnect = false;
                         return true;
+                    }
+                }
+                catch (InvalidOperationException e)
+                {
+                    if (e.Message == "A series of reconnecting has failed.")
+                    {
+                        // Need to recreate websocket
+                        _webSocket = null;
+                        StartConnection();
+                        break;
                     }
                 }
                 catch (Exception e)

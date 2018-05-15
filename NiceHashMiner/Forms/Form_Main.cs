@@ -457,7 +457,7 @@ namespace NiceHashMiner
             {
                 // well this is started manually as we want it to start at runtime
                 _isManuallyStarted = true;
-                if (StartMining(true) != StartMiningReturnType.StartMining)
+                if (StartMining(false) != StartMiningReturnType.StartMining)
                 {
                     _isManuallyStarted = false;
                     StopMining();
@@ -1082,13 +1082,26 @@ namespace NiceHashMiner
                 else
                 {
                     return StartMiningReturnType.IgnoreMsg;
-                    ;
                 }
             }
             else if (!VerifyMiningAddress(true)) return StartMiningReturnType.IgnoreMsg;
 
-            if (!NHSmaData.HasData)
+            var hasData = NHSmaData.HasData;
+
+            if (!showWarnings)
             {
+                for (var i = 0; i < 10; i++)
+                {
+                    if (hasData) break;
+                    Thread.Sleep(1000);
+                    hasData = NHSmaData.HasData;
+                    Helpers.ConsolePrint("NICEHASH", $"After {i}s has data: {hasData}");
+                }
+            }
+
+            if (!hasData)
+            {
+                Helpers.ConsolePrint("NICEHASH", "No data received within timeout");
                 if (showWarnings)
                 {
                     MessageBox.Show(International.GetText("Form_Main_msgbox_NullNiceHashDataMsg"),
