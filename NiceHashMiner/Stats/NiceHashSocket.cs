@@ -189,6 +189,7 @@ namespace NiceHashMiner.Stats
                     if (e.Message == "A series of reconnecting has failed.")
                     {
                         // Need to recreate websocket
+                        Helpers.ConsolePrint("SOCKET", "Recreating socket");
                         _webSocket = null;
                         StartConnection();
                         break;
