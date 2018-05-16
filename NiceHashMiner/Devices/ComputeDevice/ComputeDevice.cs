@@ -147,13 +147,13 @@ namespace NiceHashMiner.Devices
             {
                 if (GetAlgorithm(copyFromAlgo) is DualAlgorithm setAlgo)
                 {
-                    setAlgo.IntensitySpeeds = copyFromAlgo.IntensitySpeeds;
-                    setAlgo.SecondaryIntensitySpeeds = copyFromAlgo.SecondaryIntensitySpeeds;
+                    setAlgo.IntensitySpeeds = new Dictionary<int, double>(copyFromAlgo.IntensitySpeeds);
+                    setAlgo.SecondaryIntensitySpeeds = new Dictionary<int, double>(copyFromAlgo.SecondaryIntensitySpeeds);
                     setAlgo.TuningStart = copyFromAlgo.TuningStart;
                     setAlgo.TuningEnd = copyFromAlgo.TuningEnd;
                     setAlgo.TuningInterval = copyFromAlgo.TuningInterval;
                     setAlgo.TuningEnabled = copyFromAlgo.TuningEnabled;
-                    setAlgo.IntensityPowers = copyFromAlgo.IntensityPowers;
+                    setAlgo.IntensityPowers = new Dictionary<int, double>(copyFromAlgo.IntensityPowers);
                     setAlgo.UseIntensityPowers = copyFromAlgo.UseIntensityPowers;
                     setAlgo.IntensityUpToDate = false;
                 }
