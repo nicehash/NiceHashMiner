@@ -130,6 +130,8 @@ namespace NiceHashMiner.Benchmarking
 
             if (rebenchSame)
             {
+                _powerHelper.Start();
+
                 if (_cpuBenchmarkStatus != null)
                 {
                     _currentMiner.BenchmarkStart(_cpuBenchmarkStatus.Time, this);
