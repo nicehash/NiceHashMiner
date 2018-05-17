@@ -12,6 +12,7 @@ namespace NiceHashMiner.Forms
         private const int Speed = 1;
         private const int Secondaryspeed = 2;
         private const int Profit = 3;
+        private const int Power = 4;
         private bool _isChange;
 
         private bool _isInitFinished;
@@ -79,10 +80,12 @@ namespace NiceHashMiner.Forms
             foreach (var intensity in _algorithm.AllIntensities)
             {
                 var lvi = new ListViewItem(intensity.ToString());
+                _algorithm.IntensityPowers.TryGetValue(intensity, out var power);
 
                 lvi.SubItems.Add(_algorithm.SpeedStringForIntensity(intensity));
                 lvi.SubItems.Add(_algorithm.SecondarySpeedStringForIntensity(intensity));
                 lvi.SubItems.Add(_algorithm.ProfitForIntensity(intensity).ToString("F8"));
+                lvi.SubItems.Add(power.ToString("F2"));
                 lvi.Tag = intensity;
                 listView_Intensities.Items.Add(lvi);
             }
@@ -113,10 +116,12 @@ namespace NiceHashMiner.Forms
             field_TuningStart.Enabled = _algorithm.TuningEnabled;
             field_TuningEnd.Enabled = _algorithm.TuningEnabled;
             field_TuningInterval.Enabled = _algorithm.TuningEnabled;
+
             if (!_algorithm.TuningEnabled)
             {
                 field_Speed.Enabled = false;
                 field_SecondarySpeed.Enabled = false;
+                field_Power.Enabled = false;
             }
         }
 
@@ -125,9 +130,12 @@ namespace NiceHashMiner.Forms
             foreach (ListViewItem lvi in listView_Intensities.Items)
             {
                 var intensity = (int) lvi.Tag;
+                _algorithm.IntensityPowers.TryGetValue(intensity, out var power);
+
                 lvi.SubItems[Speed].Text = _algorithm.SpeedStringForIntensity(intensity);
                 lvi.SubItems[Secondaryspeed].Text = _algorithm.SecondarySpeedStringForIntensity(intensity);
                 lvi.SubItems[Profit].Text = _algorithm.ProfitForIntensity(intensity).ToString("F8");
+                lvi.SubItems[Power].Text = power.ToString("F2");
             }
         }
 

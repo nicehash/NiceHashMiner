@@ -38,7 +38,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.pictureBox_TuningEnabled = new System.Windows.Forms.PictureBox();
             this.columnHeader_Power = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.field1 = new NiceHashMiner.Forms.Components.Field();
+            this.field_Power = new NiceHashMiner.Forms.Components.Field();
             this.field_TuningEnd = new NiceHashMiner.Forms.Components.Field();
             this.field_TuningInterval = new NiceHashMiner.Forms.Components.Field();
             this.field_TuningStart = new NiceHashMiner.Forms.Components.Field();
@@ -153,18 +153,18 @@
             this.columnHeader_Power.Text = "Power";
             this.columnHeader_Power.Width = 76;
             // 
-            // field1
+            // field_Power
             // 
-            this.field1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.field1.AutoSize = true;
-            this.field1.BackColor = System.Drawing.Color.Transparent;
-            this.field1.EntryText = "";
-            this.field1.LabelText = "Tuning Interval";
-            this.field1.Location = new System.Drawing.Point(800, 552);
-            this.field1.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
-            this.field1.Name = "field1";
-            this.field1.Size = new System.Drawing.Size(440, 90);
-            this.field1.TabIndex = 366;
+            this.field_Power.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.field_Power.AutoSize = true;
+            this.field_Power.BackColor = System.Drawing.Color.Transparent;
+            this.field_Power.EntryText = "";
+            this.field_Power.LabelText = "Power Usage (W)";
+            this.field_Power.Location = new System.Drawing.Point(800, 552);
+            this.field_Power.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
+            this.field_Power.Name = "field_Power";
+            this.field_Power.Size = new System.Drawing.Size(440, 90);
+            this.field_Power.TabIndex = 366;
             // 
             // field_TuningEnd
             // 
@@ -238,7 +238,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 790);
-            this.Controls.Add(this.field1);
+            this.Controls.Add(this.field_Power);
             this.Controls.Add(this.pictureBox_TuningEnabled);
             this.Controls.Add(this.field_TuningEnd);
             this.Controls.Add(this.field_TuningInterval);
@@ -281,7 +281,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.PictureBox pictureBox_TuningEnabled;
-        private Components.Field field1;
+        private Components.Field field_Power;
         private System.Windows.Forms.ColumnHeader columnHeader_Power;
     }
 }
