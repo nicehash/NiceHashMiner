@@ -108,6 +108,7 @@ namespace NiceHashMiner.Forms
             field_TuningStart.SetOnTextChanged(TextChangedTuningStart);
             field_TuningEnd.SetOnTextChanged(TextChangedTuningEnd);
             field_TuningInterval.SetOnTextChanged(TextChangedTuningInterval);
+            field_Power.SetOnTextChanged(TextChangedPower);
         }
 
         private void UpdateEnabled()
@@ -200,10 +201,13 @@ namespace NiceHashMiner.Forms
             _isInitFinished = false;
             field_Speed.EntryText = _algorithm.SpeedForIntensity(intensity).ToString();
             field_SecondarySpeed.EntryText = _algorithm.SecondarySpeedForIntensity(intensity).ToString();
+            _algorithm.IntensityPowers.TryGetValue(intensity, out var power);
+            field_Power.EntryText = power.ToString();
             _isInitFinished = true;
 
             field_Speed.Enabled = true;
             field_SecondarySpeed.Enabled = true;
+            field_Power.Enabled = true;
         }
 
         private void Button_Close_Clicked(object sender, EventArgs e)
@@ -243,6 +247,17 @@ namespace NiceHashMiner.Forms
             {
                 IsChange = true;
                 _algorithm.SecondaryIntensitySpeeds[_currentlySelectedIntensity] = value;
+            }
+
+            UpdateIntensities();
+        }
+
+        private void TextChangedPower(object sender, EventArgs e)
+        {
+            if (double.TryParse(field_Power.EntryText, out var value))
+            {
+                IsChange = true;
+                _algorithm.IntensityPowers[_currentlySelectedIntensity] = value;
             }
 
             UpdateIntensities();
