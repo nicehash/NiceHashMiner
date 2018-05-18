@@ -97,6 +97,7 @@
     "Form_DcriValues_Title": "ClaymoreDual Tuning",
     "Form_DcriValues_Intensity": "Intensity",
     "Form_DcriValues_SecondarySpeed": "Secondary Speed",
+    "Form_DcriValues_Power":  "Power", 
     "Form_DcriValues_TuningEnabled": "Tuning Enabled",
     "Form_DcriValues_TuningStart": "Tuning Start",
     "Form_DcriValues_TuningEnd": "Tuning End",

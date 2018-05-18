@@ -47,6 +47,7 @@ namespace NiceHashMiner.Forms
             listView_Intensities.Columns[Speed].Text = International.GetText("AlgorithmsListView_Speed");
             listView_Intensities.Columns[Secondaryspeed].Text = International.GetText("Form_DcriValues_SecondarySpeed");
             listView_Intensities.Columns[Profit].Text = International.GetText("AlgorithmsListView_Rate");
+            listView_Intensities.Columns[Power].Text = International.GetText("Form_DcriValues_Power");
             Text = International.GetText("Form_DcriValues_Title");
             button_Close.Text = International.GetText("Form_Settings_buttonCloseNoSaveText");
             button_Save.Text = International.GetText("Form_Settings_buttonSaveText");
@@ -67,6 +68,9 @@ namespace NiceHashMiner.Forms
             field_TuningInterval.InitLocale(toolTip1,
                 International.GetText("Form_DcriValues_TuningInterval") + ":",
                 International.GetText("Form_DcriValues_ToolTip_TuningInterval"));
+            field_Power.InitLocale(toolTip1,
+                International.GetText("Form_Settings_Algo_PowerUsage") + ":",
+                International.GetText("Form_Settings_ToolTip_PowerUsage"));
 
             toolTip1.SetToolTip(checkBox_TuningEnabled, International.GetText("Form_DcriValues_ToolTip_TuningEnabled"));
             toolTip1.SetToolTip(pictureBox_TuningEnabled,
