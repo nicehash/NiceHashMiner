@@ -31,7 +31,7 @@ namespace NiceHashMiner.Utils
             @"/xmr-stak/libeay32.dll",
             @"/xmr-stak/ssleay32.dll",
             @"/xmr-stak/xmr-stak.exe",
-            //@"/xmrig/xmrig.exe",
+            @"/xmrig/xmrig.exe",
         };
 
         #endregion //CODE_GEN STUFF // listFiles.py
