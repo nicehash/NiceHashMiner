@@ -227,7 +227,7 @@ namespace NiceHashMiner.Devices
                     // #4 AMD query AMD from OpenCL devices, get serial and add devices
                     ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
                     var amd = new AmdQuery(AvaliableVideoControllers);
-                    amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
+                    AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
                 }
                 // #5 uncheck CPU if GPUs present, call it after we Query all devices
                 Group.UncheckedCpu();
