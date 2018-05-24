@@ -79,7 +79,10 @@
         Sia = 27,
         Blake2s = 28,
         Skunk = 29,
-        CryptoNightV7 = 30
+        CryptoNightV7 = 30,
+        // Tentative
+        CryptoNightHeavy = 31,
+        Lyra2z = 32
         #endregion // NiceHashAPI
     }
 }

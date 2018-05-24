@@ -364,6 +364,7 @@ namespace NiceHashMiner.Devices
                                 new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
                                 new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk"),
                                 //new Algorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNightV7, "cryptonight")
+                                new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2z, "lyra2z")
                             }
                         },
                         {
