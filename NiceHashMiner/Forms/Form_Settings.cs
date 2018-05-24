@@ -8,6 +8,7 @@ using NiceHashMiner.Miners.Parsing;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Security;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
 
@@ -33,8 +34,7 @@ namespace NiceHashMiner.Forms
 
         private ComputeDevice _selectedComputeDevice;
 
-        private readonly RegistryKey _rkStartup =
-            Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+        private readonly RegistryKey _rkStartup;
 
         private bool _isStartupChanged = false;
 
@@ -78,6 +78,18 @@ namespace NiceHashMiner.Forms
 
             // At the very end set to true
             _isInitFinished = true;
+
+            try
+            {
+                _rkStartup = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            }
+            catch (SecurityException)
+            {
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("SETTINGS", e.ToString());
+            }
         }
 
         #region Initializations
