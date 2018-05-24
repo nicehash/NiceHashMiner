@@ -755,7 +755,7 @@ namespace NiceHashMiner.Forms
             var startVal = "";
             try
             {
-                startVal = (string) _rkStartup.GetValue(Application.ProductName, "");
+                startVal = (string) _rkStartup?.GetValue(Application.ProductName, "");
             }
             catch (Exception e)
             {
@@ -984,11 +984,11 @@ namespace NiceHashMiner.Forms
                         if (checkBox_RunAtStartup.Checked)
                         {
                             // Add NHML to startup registry
-                            _rkStartup.SetValue(Application.ProductName, Application.ExecutablePath);
+                            _rkStartup?.SetValue(Application.ProductName, Application.ExecutablePath);
                         }
                         else
                         {
-                            _rkStartup.DeleteValue(Application.ProductName, false);
+                            _rkStartup?.DeleteValue(Application.ProductName, false);
                         }
                     }
                     catch (Exception er)
