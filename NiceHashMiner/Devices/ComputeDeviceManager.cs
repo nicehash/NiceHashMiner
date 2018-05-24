@@ -15,6 +15,7 @@ using System.Management;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Forms;
 
 namespace NiceHashMiner.Devices
@@ -71,9 +72,9 @@ namespace NiceHashMiner.Devices
             private static readonly NvidiaSmiDriver InvalidSmiDriver = new NvidiaSmiDriver(-1, -1);
 
             // naming purposes
-            private static int _cpuCount = 0;
+            public static int CpuCount = 0;
 
-            private static int _gpuCount = 0;
+            public static int GpuCount = 0;
 
             private static NvidiaSmiDriver GetNvidiaSmiDriver()
             {
@@ -224,7 +225,9 @@ namespace NiceHashMiner.Devices
                     ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
                     OpenCL.QueryOpenCLDevices();
                     // #4 AMD query AMD from OpenCL devices, get serial and add devices
-                    Amd.QueryAmd();
+                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
+                    var amd = new AmdQuery(AvaliableVideoControllers);
+                    amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
                 }
                 // #5 uncheck CPU if GPUs present, call it after we Query all devices
                 Group.UncheckedCpu();
@@ -290,7 +293,7 @@ namespace NiceHashMiner.Devices
                 }
 
                 // no devices found
-                if (Avaliable.AllAvaliableDevices.Count <= 0)
+                if (Available.Devices.Count <= 0)
                 {
                     var result = MessageBox.Show(International.GetText("Compute_Device_Query_Manager_No_Devices"),
                         International.GetText("Compute_Device_Query_Manager_No_Devices_Title"),
@@ -302,14 +305,14 @@ namespace NiceHashMiner.Devices
                 }
 
                 // create AMD bus ordering for Claymore
-                var amdDevices = Avaliable.AllAvaliableDevices.FindAll((a) => a.DeviceType == DeviceType.AMD);
+                var amdDevices = Available.Devices.FindAll((a) => a.DeviceType == DeviceType.AMD);
                 amdDevices.Sort((a, b) => a.BusID.CompareTo(b.BusID));
                 for (var i = 0; i < amdDevices.Count; i++)
                 {
                     amdDevices[i].IDByBus = i;
                 }
                 //create NV bus ordering for Claymore
-                var nvDevices = Avaliable.AllAvaliableDevices.FindAll((a) => a.DeviceType == DeviceType.NVIDIA);
+                var nvDevices = Available.Devices.FindAll((a) => a.DeviceType == DeviceType.NVIDIA);
                 nvDevices.Sort((a, b) => a.BusID.CompareTo(b.BusID));
                 for (var i = 0; i < nvDevices.Count; i++)
                 {
@@ -318,22 +321,22 @@ namespace NiceHashMiner.Devices
 
                 // get GPUs RAM sum
                 // bytes
-                Avaliable.NvidiaRamSum = 0;
-                Avaliable.AmdRamSum = 0;
-                foreach (var dev in Avaliable.AllAvaliableDevices)
+                Available.NvidiaRamSum = 0;
+                Available.AmdRamSum = 0;
+                foreach (var dev in Available.Devices)
                 {
                     if (dev.DeviceType == DeviceType.NVIDIA)
                     {
-                        Avaliable.NvidiaRamSum += dev.GpuRam;
+                        Available.NvidiaRamSum += dev.GpuRam;
                     }
                     else if (dev.DeviceType == DeviceType.AMD)
                     {
-                        Avaliable.AmdRamSum += dev.GpuRam;
+                        Available.AmdRamSum += dev.GpuRam;
                     }
                 }
                 // Make gpu ram needed not larger than 4GB per GPU
-                var totalGpuRam = Math.Min((Avaliable.NvidiaRamSum + Avaliable.AmdRamSum) * 0.6 / 1024,
-                    (double) Avaliable.AvailGpUs * 4 * 1024 * 1024);
+                var totalGpuRam = Math.Min((Available.NvidiaRamSum + Available.AmdRamSum) * 0.6 / 1024,
+                    (double) Available.AvailGpUs * 4 * 1024 * 1024);
                 double totalSysRam = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
                 // check
                 if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && totalSysRam < totalGpuRam)
@@ -353,17 +356,6 @@ namespace NiceHashMiner.Devices
             }
 
             #region Helpers
-
-            private class VideoControllerData
-            {
-                public string Name { get; set; }
-                public string Description { get; set; }
-                public string PnpDeviceID { get; set; }
-                public string DriverVersion { get; set; }
-                public string Status { get; set; }
-                public string InfSection { get; set; } // get arhitecture
-                public ulong AdapterRam { get; set; }
-            }
 
             private static readonly List<VideoControllerData> AvaliableVideoControllers =
                 new List<VideoControllerData>();
@@ -466,16 +458,16 @@ namespace NiceHashMiner.Devices
                 {
                     Helpers.ConsolePrint(Tag, "QueryCpus START");
                     // get all CPUs
-                    Avaliable.CpusCount = CpuID.GetPhysicalProcessorCount();
-                    Avaliable.IsHyperThreadingEnabled = CpuID.IsHypeThreadingEnabled();
+                    Available.CpusCount = CpuID.GetPhysicalProcessorCount();
+                    Available.IsHyperThreadingEnabled = CpuID.IsHypeThreadingEnabled();
 
                     Helpers.ConsolePrint(Tag,
-                        Avaliable.IsHyperThreadingEnabled
+                        Available.IsHyperThreadingEnabled
                             ? "HyperThreadingEnabled = TRUE"
                             : "HyperThreadingEnabled = FALSE");
 
                     // get all cores (including virtual - HT can benefit mining)
-                    var threadsPerCpu = CpuID.GetVirtualCoresCount() / Avaliable.CpusCount;
+                    var threadsPerCpu = CpuID.GetVirtualCoresCount() / Available.CpusCount;
 
                     if (!Helpers.Is64BitOperatingSystem)
                     {
@@ -486,10 +478,10 @@ namespace NiceHashMiner.Devices
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
-                        Avaliable.CpusCount = 0;
+                        Available.CpusCount = 0;
                     }
 
-                    if (threadsPerCpu * Avaliable.CpusCount > 64)
+                    if (threadsPerCpu * Available.CpusCount > 64)
                     {
                         if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
                         {
@@ -498,7 +490,7 @@ namespace NiceHashMiner.Devices
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
-                        Avaliable.CpusCount = 0;
+                        Available.CpusCount = 0;
                     }
 
                     // TODO important move this to settings
@@ -507,20 +499,20 @@ namespace NiceHashMiner.Devices
 
                     if (CpuUtils.IsCpuMiningCapable())
                     {
-                        if (Avaliable.CpusCount == 1)
+                        if (Available.CpusCount == 1)
                         {
-                            Avaliable.AllAvaliableDevices.Add(
+                            Available.Devices.Add(
                                 new CpuComputeDevice(0, "CPU0", CpuID.GetCpuName().Trim(), threadsPerCpu, 0,
-                                    ++_cpuCount)
+                                    ++CpuCount)
                             );
                         }
-                        else if (Avaliable.CpusCount > 1)
+                        else if (Available.CpusCount > 1)
                         {
-                            for (var i = 0; i < Avaliable.CpusCount; i++)
+                            for (var i = 0; i < Available.CpusCount; i++)
                             {
-                                Avaliable.AllAvaliableDevices.Add(
+                                Available.Devices.Add(
                                     new CpuComputeDevice(i, "CPU" + i, CpuID.GetCpuName().Trim(), threadsPerCpu,
-                                        CpuID.CreateAffinityMask(i, threadsPerCpuMask), ++_cpuCount)
+                                        CpuID.CreateAffinityMask(i, threadsPerCpuMask), ++CpuCount)
                                 );
                             }
                         }
@@ -556,7 +548,7 @@ namespace NiceHashMiner.Devices
 
                     if (_cudaDevices != null && _cudaDevices.Count != 0)
                     {
-                        Avaliable.HasNvidia = true;
+                        Available.HasNvidia = true;
                         var stringBuilder = new StringBuilder();
                         stringBuilder.AppendLine("");
                         stringBuilder.AppendLine("CudaDevicesDetection:");
@@ -670,8 +662,8 @@ namespace NiceHashMiner.Devices
                                 }
 
                                 idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
-                                Avaliable.AllAvaliableDevices.Add(
-                                    new CudaComputeDevice(cudaDev, group, ++_gpuCount, handle, nvmlHandle)
+                                Available.Devices.Add(
+                                    new CudaComputeDevice(cudaDev, group, ++GpuCount, handle, nvmlHandle)
                                 );
                             }
                         }
@@ -741,14 +733,7 @@ namespace NiceHashMiner.Devices
                 }
             }
 
-            private class OpenCLJsonData_t
-            {
-                public string PlatformName = "NONE";
-                public int PlatformNum = 0;
-                public List<OpenCLDevice> Devices = new List<OpenCLDevice>();
-            }
-
-            private static List<OpenCLJsonData_t> _openCLJsonData = new List<OpenCLJsonData_t>();
+            private static List<OpenCLJsonData> _openCLJsonData = new List<OpenCLJsonData>();
             private static bool _isOpenCLQuerySuccess = false;
 
             private static class OpenCL
@@ -809,7 +794,7 @@ namespace NiceHashMiner.Devices
                             try
                             {
                                 _openCLJsonData =
-                                    JsonConvert.DeserializeObject<List<OpenCLJsonData_t>>(_queryOpenCLDevicesString,
+                                    JsonConvert.DeserializeObject<List<OpenCLJsonData>>(_queryOpenCLDevicesString,
                                         Globals.JsonSettings);
                             }
                             catch
@@ -849,430 +834,6 @@ namespace NiceHashMiner.Devices
             }
 
             public static List<OpenCLDevice> AmdDevices = new List<OpenCLDevice>();
-
-            private static class Amd
-            {
-                public static void QueryAmd()
-                {
-                    const int amdVendorID = 1002;
-                    Helpers.ConsolePrint(Tag, "QueryAMD START");
-
-                    #region AMD driver check, ADL returns 0
-
-                    // check the driver version bool EnableOptimizedVersion = true;
-                    var deviceDriverOld = new Dictionary<string, bool>();
-                    var deviceDriverNoNeoscryptLyra2RE = new Dictionary<string, bool>();
-                    var showWarningDialog = false;
-
-                    foreach (var vidContrllr in AvaliableVideoControllers)
-                    {
-                        Helpers.ConsolePrint(Tag,
-                            $"Checking AMD device (driver): {vidContrllr.Name} ({vidContrllr.DriverVersion})");
-
-                        deviceDriverOld[vidContrllr.Name] = false;
-                        deviceDriverNoNeoscryptLyra2RE[vidContrllr.Name] = false;
-                        var sgminerNoNeoscryptLyra2RE = new Version("21.19.164.1");
-                        // TODO checking radeon drivers only?
-                        if ((vidContrllr.Name.Contains("AMD") || vidContrllr.Name.Contains("Radeon")) &&
-                            showWarningDialog == false)
-                        {
-                            var amdDriverVersion = new Version(vidContrllr.DriverVersion);
-
-                            if (!ConfigManager.GeneralConfig.ForceSkipAMDNeoscryptLyraCheck)
-                            {
-                                var greaterOrEqual = amdDriverVersion.CompareTo(sgminerNoNeoscryptLyra2RE) >= 0;
-                                if (greaterOrEqual)
-                                {
-                                    deviceDriverNoNeoscryptLyra2RE[vidContrllr.Name] = true;
-                                    Helpers.ConsolePrint(Tag,
-                                        "Driver version seems to be " + sgminerNoNeoscryptLyra2RE +
-                                        " or higher. NeoScrypt and Lyra2REv2 will be removed from list");
-                                }
-                            }
-
-
-                            if (amdDriverVersion.Major < 15)
-                            {
-                                showWarningDialog = true;
-                                deviceDriverOld[vidContrllr.Name] = true;
-                                Helpers.ConsolePrint(Tag,
-                                    "WARNING!!! Old AMD GPU driver detected! All optimized versions disabled, mining " +
-                                    "speed will not be optimal. Consider upgrading AMD GPU driver. Recommended AMD GPU driver version is 15.7.1.");
-                            }
-                        }
-                    }
-                    if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && showWarningDialog)
-                    {
-                        Form warningDialog = new DriverVersionConfirmationDialog();
-                        warningDialog.ShowDialog();
-                        warningDialog = null;
-                    }
-
-                    #endregion // AMD driver check
-
-                    // get platform version
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
-                    var amdOclDevices = new List<OpenCLDevice>();
-                    if (_isOpenCLQuerySuccess)
-                    {
-                        var amdPlatformNumFound = false;
-                        foreach (var oclEl in _openCLJsonData)
-                        {
-                            if (!oclEl.PlatformName.Contains("AMD") && !oclEl.PlatformName.Contains("amd")) continue;
-                            amdPlatformNumFound = true;
-                            var amdOpenCLPlatformStringKey = oclEl.PlatformName;
-                            Avaliable.AmdOpenCLPlatformNum = oclEl.PlatformNum;
-                            amdOclDevices = oclEl.Devices;
-                            Helpers.ConsolePrint(Tag,
-                                $"AMD platform found: Key: {amdOpenCLPlatformStringKey}, Num: {Avaliable.AmdOpenCLPlatformNum}");
-                            break;
-                        }
-                        if (amdPlatformNumFound)
-                        {
-                            // get only AMD gpus
-                            {
-                                foreach (var oclDev in amdOclDevices)
-                                {
-                                    if (oclDev._CL_DEVICE_TYPE.Contains("GPU"))
-                                    {
-                                        AmdDevices.Add(oclDev);
-                                    }
-                                }
-                            }
-
-                            if (AmdDevices.Count == 0)
-                            {
-                                Helpers.ConsolePrint(Tag, "AMD GPUs count is 0");
-                            }
-                            else
-                            {
-                                Helpers.ConsolePrint(Tag, "AMD GPUs count : " + AmdDevices.Count);
-                                Helpers.ConsolePrint(Tag, "AMD Getting device name and serial from ADL");
-                                // ADL
-                                var isAdlInit = true;
-                                // ADL does not get devices in order map devices by bus number
-                                // bus id, <name, uuid>
-                                var busIDsInfo = new Dictionary<int, Tuple<string, string, string, int, int>>();
-                                var amdDeviceName = new List<string>();
-                                var amdDeviceUuid = new List<string>();
-                                try
-                                {
-                                    var adlRet = -1;
-                                    var numberOfAdapters = 0;
-                                    var adl2Control = IntPtr.Zero;
-
-                                    if (null != ADL.ADL_Main_Control_Create)
-                                        // Second parameter is 1: Get only the present adapters
-                                        adlRet = ADL.ADL_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 1);
-                                    if (ADL.ADL_SUCCESS == adlRet)
-                                    {
-                                        ADL.ADL_Adapter_NumberOfAdapters_Get?.Invoke(ref numberOfAdapters);
-                                        Helpers.ConsolePrint(Tag, "Number Of Adapters: " + numberOfAdapters);
-
-                                        if (0 < numberOfAdapters)
-                                        {
-                                            // Get OS adpater info from ADL
-                                            var osAdapterInfoData = new ADLAdapterInfoArray();
-
-                                            if (null != ADL.ADL_Adapter_AdapterInfo_Get)
-                                            {
-                                                var size = Marshal.SizeOf(osAdapterInfoData);
-                                                var adapterBuffer = Marshal.AllocCoTaskMem(size);
-                                                Marshal.StructureToPtr(osAdapterInfoData, adapterBuffer, false);
-
-                                                if (null != ADL.ADL_Adapter_AdapterInfo_Get)
-                                                {
-                                                    adlRet = ADL.ADL_Adapter_AdapterInfo_Get(adapterBuffer, size);
-
-                                                    var adl2Ret = -1;
-                                                    if (ADL.ADL2_Main_Control_Create != null)
-                                                        adl2Ret = ADL.ADL2_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 0, ref adl2Control);
-
-                                                    var adl2Info = new ADLAdapterInfoArray();
-                                                    if (adl2Ret == ADL.ADL_SUCCESS && ADL.ADL2_Adapter_AdapterInfo_Get != null)
-                                                    {
-                                                        adl2Ret = ADL.ADL2_Adapter_AdapterInfo_Get(adl2Control, ref adl2Info, Marshal.SizeOf(adl2Info));
-                                                    }
-                                                    else
-                                                    {
-                                                        adl2Ret = -1;
-                                                    }
-
-                                                    if (ADL.ADL_SUCCESS == adlRet)
-                                                    {
-                                                        osAdapterInfoData =
-                                                            (ADLAdapterInfoArray) Marshal.PtrToStructure(adapterBuffer,
-                                                                osAdapterInfoData.GetType());
-                                                        var isActive = 0;
-
-                                                        for (var i = 0; i < numberOfAdapters; i++)
-                                                        {
-                                                            // Check if the adapter is active
-                                                            if (null != ADL.ADL_Adapter_Active_Get)
-                                                                adlRet = ADL.ADL_Adapter_Active_Get(
-                                                                    osAdapterInfoData.ADLAdapterInfo[i].AdapterIndex,
-                                                                    ref isActive);
-
-                                                            if (ADL.ADL_SUCCESS == adlRet)
-                                                            {
-                                                                // we are looking for amd
-                                                                // TODO check discrete and integrated GPU separation
-                                                                var vendorID = osAdapterInfoData.ADLAdapterInfo[i]
-                                                                    .VendorID;
-                                                                var devName = osAdapterInfoData.ADLAdapterInfo[i]
-                                                                    .AdapterName;
-                                                                if (vendorID == amdVendorID
-                                                                    || devName.ToLower().Contains("amd")
-                                                                    || devName.ToLower().Contains("radeon")
-                                                                    || devName.ToLower().Contains("firepro"))
-                                                                {
-                                                                    var pnpStr = osAdapterInfoData.ADLAdapterInfo[i]
-                                                                        .PNPString;
-                                                                    // find vi controller pnp
-                                                                    var infSection = "";
-                                                                    foreach (var vCtrl in AvaliableVideoControllers)
-                                                                    {
-                                                                        if (vCtrl.PnpDeviceID == pnpStr)
-                                                                        {
-                                                                            infSection = vCtrl.InfSection;
-                                                                        }
-                                                                    }
-
-                                                                    var backSlashLast = pnpStr.LastIndexOf('\\');
-                                                                    var serial = pnpStr.Substring(backSlashLast,
-                                                                        pnpStr.Length - backSlashLast);
-                                                                    var end0 = serial.IndexOf('&');
-                                                                    var end1 = serial.IndexOf('&', end0 + 1);
-                                                                    // get serial
-                                                                    serial = serial.Substring(end0 + 1,
-                                                                        (end1 - end0) - 1);
-
-                                                                    var udid = osAdapterInfoData.ADLAdapterInfo[i].UDID;
-                                                                    const int pciVenIDStrSize =
-                                                                        21; // PCI_VEN_XXXX&DEV_XXXX
-                                                                    var uuid = udid.Substring(0, pciVenIDStrSize) +
-                                                                               "_" + serial;
-                                                                    var budId = osAdapterInfoData.ADLAdapterInfo[i]
-                                                                        .BusNumber;
-                                                                    var index = osAdapterInfoData.ADLAdapterInfo[i]
-                                                                        .AdapterIndex;
-                                                                    if (!amdDeviceUuid.Contains(uuid))
-                                                                    {
-                                                                        try
-                                                                        {
-                                                                            Helpers.ConsolePrint(Tag,
-                                                                                $"ADL device added BusNumber:{budId}  NAME:{devName}  UUID:{uuid}");
-                                                                        }
-                                                                        catch (Exception e)
-                                                                        {
-                                                                            Helpers.ConsolePrint(Tag, e.Message);
-                                                                        }
-
-                                                                        amdDeviceUuid.Add(uuid);
-                                                                        //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
-                                                                        amdDeviceName.Add(devName);
-                                                                        if (!busIDsInfo.ContainsKey(budId))
-                                                                        {
-                                                                            var adl2Index = -1;
-                                                                            if (adl2Ret == ADL.ADL_SUCCESS)
-                                                                            {
-                                                                                adl2Index = adl2Info.ADLAdapterInfo.FirstOrDefault(a => a.UDID == osAdapterInfoData.ADLAdapterInfo[i].UDID).AdapterIndex;
-                                                                            }
-                                                                            var nameUuid =
-                                                                                new Tuple<string, string, string, int, int>(
-                                                                                    devName, uuid, infSection, index, adl2Index);
-                                                                            busIDsInfo.Add(budId, nameUuid);
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        Helpers.ConsolePrint(Tag,
-                                                            "ADL_Adapter_AdapterInfo_Get() returned error code " +
-                                                            adlRet);
-                                                        isAdlInit = false;
-                                                    }
-                                                }
-                                                // Release the memory for the AdapterInfo structure
-                                                if (IntPtr.Zero != adapterBuffer)
-                                                    Marshal.FreeCoTaskMem(adapterBuffer);
-                                            }
-                                        }
-                                        if (null != ADL.ADL_Main_Control_Destroy && numberOfAdapters <= 0)
-                                            // Close ADL if it found no AMD devices
-                                            ADL.ADL_Main_Control_Destroy();
-                                        if (ADL.ADL2_Main_Control_Destroy != null && adl2Control != IntPtr.Zero)
-                                        {
-                                            ADL.ADL2_Main_Control_Destroy(adl2Control);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        // TODO
-                                        Helpers.ConsolePrint(Tag,
-                                            "ADL_Main_Control_Create() returned error code " + adlRet);
-                                        Helpers.ConsolePrint(Tag, "Check if ADL is properly installed!");
-                                        isAdlInit = false;
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    Helpers.ConsolePrint(Tag, "AMD ADL exception: " + ex.Message);
-                                    isAdlInit = false;
-                                }
-
-                                var isBusIDOk = true;
-                                // check if buss ids are unique and different from -1
-                                {
-                                    var busIDs = new HashSet<int>();
-                                    // Override AMD bus IDs
-                                    var overrides = ConfigManager.GeneralConfig.OverrideAMDBusIds.Split(',');
-                                    for (var i = 0; i < AmdDevices.Count; i++)
-                                    {
-                                        var amdOclDev = AmdDevices[i];
-                                        if (overrides.Count() > i &&
-                                            int.TryParse(overrides[i], out var overrideBus) &&
-                                            overrideBus >= 0)
-                                        {
-                                            amdOclDev.AMD_BUS_ID = overrideBus;
-                                        }
-                                        if (amdOclDev.AMD_BUS_ID < 0 || !busIDsInfo.ContainsKey(amdOclDev.AMD_BUS_ID))
-                                        {
-                                            isBusIDOk = false;
-                                            break;
-                                        }
-                                        busIDs.Add(amdOclDev.AMD_BUS_ID);
-                                    }
-                                    // check if unique
-                                    isBusIDOk = isBusIDOk && busIDs.Count == AmdDevices.Count;
-                                }
-                                // print BUS id status
-                                Helpers.ConsolePrint(Tag,
-                                    isBusIDOk
-                                        ? "AMD Bus IDs are unique and valid. OK"
-                                        : "AMD Bus IDs IS INVALID. Using fallback AMD detection mode");
-
-                                ///////
-                                // AMD device creation (in NHM context)
-                                if (isAdlInit && isBusIDOk)
-                                {
-                                    Helpers.ConsolePrint(Tag, "Using AMD device creation DEFAULT Reliable mappings");
-                                    Helpers.ConsolePrint(Tag,
-                                        AmdDevices.Count == amdDeviceUuid.Count
-                                            ? "AMD OpenCL and ADL AMD query COUNTS GOOD/SAME"
-                                            : "AMD OpenCL and ADL AMD query COUNTS DIFFERENT/BAD");
-                                    var stringBuilder = new StringBuilder();
-                                    stringBuilder.AppendLine("");
-                                    stringBuilder.AppendLine("QueryAMD [DEFAULT query] devices: ");
-                                    foreach (var dev in AmdDevices)
-                                    {
-                                        Avaliable.HasAmd = true;
-
-                                        var busID = dev.AMD_BUS_ID;
-                                        if (busID != -1 && busIDsInfo.ContainsKey(busID))
-                                        {
-                                            var deviceName = busIDsInfo[busID].Item1;
-                                            var newAmdDev = new AmdGpuDevice(dev, deviceDriverOld[deviceName],
-                                                busIDsInfo[busID].Item3, deviceDriverNoNeoscryptLyra2RE[deviceName])
-                                            {
-                                                DeviceName = deviceName,
-                                                UUID = busIDsInfo[busID].Item2,
-                                                AdapterIndex = busIDsInfo[busID].Item4
-                                            };
-                                            var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection
-                                                .DisableDetectionAMD;
-                                            var skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
-                                            var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
-                                            var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
-
-                                            Avaliable.AllAvaliableDevices.Add(
-                                                new AmdComputeDevice(newAmdDev, ++_gpuCount, false, busIDsInfo[busID].Item5));
-                                            // just in case 
-                                            try
-                                            {
-                                                stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
-                                                stringBuilder.AppendLine($"\t\tID: {newAmdDev.DeviceID}");
-                                                stringBuilder.AppendLine($"\t\tNAME: {newAmdDev.DeviceName}");
-                                                stringBuilder.AppendLine($"\t\tCODE_NAME: {newAmdDev.Codename}");
-                                                stringBuilder.AppendLine($"\t\tUUID: {newAmdDev.UUID}");
-                                                stringBuilder.AppendLine(
-                                                    $"\t\tMEMORY: {newAmdDev.DeviceGlobalMemory}");
-                                                stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
-                                            }
-                                            catch { }
-                                        }
-                                        else
-                                        {
-                                            stringBuilder.AppendLine($"\tDevice not added, Bus No. {busID} not found:");
-                                        }
-                                    }
-                                    Helpers.ConsolePrint(Tag, stringBuilder.ToString());
-                                }
-                                else
-                                {
-                                    Helpers.ConsolePrint(Tag, "Using AMD device creation FALLBACK UnReliable mappings");
-                                    var stringBuilder = new StringBuilder();
-                                    stringBuilder.AppendLine("");
-                                    stringBuilder.AppendLine("QueryAMD [FALLBACK query] devices: ");
-
-                                    // get video AMD controllers and sort them by RAM
-                                    // (find a way to get PCI BUS Numbers from PNPDeviceID)
-                                    var amdVideoControllers = AvaliableVideoControllers.Where(vcd =>
-                                        vcd.Name.ToLower().Contains("amd") || vcd.Name.ToLower().Contains("radeon") ||
-                                        vcd.Name.ToLower().Contains("firepro")).ToList();
-                                    // sort by ram not ideal 
-                                    amdVideoControllers.Sort((a, b) => (int) (a.AdapterRam - b.AdapterRam));
-                                    AmdDevices.Sort((a, b) =>
-                                        (int) (a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
-                                    var minCount = Math.Min(amdVideoControllers.Count, AmdDevices.Count);
-
-                                    for (var i = 0; i < minCount; ++i)
-                                    {
-                                        Avaliable.HasAmd = true;
-
-                                        var deviceName = amdVideoControllers[i].Name;
-                                        if (amdVideoControllers[i].InfSection == null)
-                                            amdVideoControllers[i].InfSection = "";
-                                        var newAmdDev = new AmdGpuDevice(AmdDevices[i], deviceDriverOld[deviceName],
-                                            amdVideoControllers[i].InfSection,
-                                            deviceDriverNoNeoscryptLyra2RE[deviceName])
-                                        {
-                                            DeviceName = deviceName,
-                                            UUID = "UNUSED"
-                                        };
-                                        var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection
-                                            .DisableDetectionAMD;
-                                        var skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
-                                        var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
-                                        var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
-
-                                        Avaliable.AllAvaliableDevices.Add(
-                                            new AmdComputeDevice(newAmdDev, ++_gpuCount, true, -1));
-                                        // just in case 
-                                        try
-                                        {
-                                            stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
-                                            stringBuilder.AppendLine($"\t\tID: {newAmdDev.DeviceID}");
-                                            stringBuilder.AppendLine($"\t\tNAME: {newAmdDev.DeviceName}");
-                                            stringBuilder.AppendLine($"\t\tCODE_NAME: {newAmdDev.Codename}");
-                                            stringBuilder.AppendLine($"\t\tUUID: {newAmdDev.UUID}");
-                                            stringBuilder.AppendLine(
-                                                $"\t\tMEMORY: {newAmdDev.DeviceGlobalMemory}");
-                                            stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
-                                        }
-                                        catch { }
-                                    }
-                                    Helpers.ConsolePrint(Tag, stringBuilder.ToString());
-                                }
-                            }
-                        } // end is amdPlatformNumFound
-                    } // end is OpenCLSuccess
-                    Helpers.ConsolePrint(Tag, "QueryAMD END");
-                }
-            }
 
             #endregion Helpers
         }
@@ -1357,7 +918,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public static class Avaliable
+        public static class Available
         {
             public static bool HasNvidia = false;
             public static bool HasAmd = false;
@@ -1366,17 +927,17 @@ namespace NiceHashMiner.Devices
 
             public static int AvailCpus
             {
-                get { return AllAvaliableDevices.Count(d => d.DeviceType == DeviceType.CPU); }
+                get { return Devices.Count(d => d.DeviceType == DeviceType.CPU); }
             }
 
             public static int AvailNVGpus
             {
-                get { return AllAvaliableDevices.Count(d => d.DeviceType == DeviceType.NVIDIA); }
+                get { return Devices.Count(d => d.DeviceType == DeviceType.NVIDIA); }
             }
 
             public static int AvailAmdGpus
             {
-                get { return AllAvaliableDevices.Count(d => d.DeviceType == DeviceType.AMD); }
+                get { return Devices.Count(d => d.DeviceType == DeviceType.AMD); }
             }
 
             public static int AvailGpUs => AvailAmdGpus + AvailNVGpus;
@@ -1386,30 +947,30 @@ namespace NiceHashMiner.Devices
             public static ulong NvidiaRamSum = 0;
             public static ulong AmdRamSum = 0;
 
-            public static List<ComputeDevice> AllAvaliableDevices = new List<ComputeDevice>();
+            public static readonly List<ComputeDevice> Devices = new List<ComputeDevice>();
 
             // methods
             public static ComputeDevice GetDeviceWithUuid(string uuid)
             {
-                return AllAvaliableDevices.FirstOrDefault(dev => uuid == dev.Uuid);
+                return Devices.FirstOrDefault(dev => uuid == dev.Uuid);
             }
 
             public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUuid(string uuid)
             {
                 var compareDev = GetDeviceWithUuid(uuid);
-                return (from dev in AllAvaliableDevices
+                return (from dev in Devices
                     where uuid != dev.Uuid && compareDev.DeviceType == dev.DeviceType
                     select GetDeviceWithUuid(dev.Uuid)).ToList();
             }
 
             public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique)
             {
-                return AllAvaliableDevices[index];
+                return Devices[index];
             }
 
             public static int GetCountForType(DeviceType type)
             {
-                return AllAvaliableDevices.Count(device => device.DeviceType == type);
+                return Devices.Count(device => device.DeviceType == type);
             }
         }
 
@@ -1417,7 +978,7 @@ namespace NiceHashMiner.Devices
         {
             public static void DisableCpuGroup()
             {
-                foreach (var device in Avaliable.AllAvaliableDevices)
+                foreach (var device in Available.Devices)
                 {
                     if (device.DeviceType == DeviceType.CPU)
                     {
@@ -1428,14 +989,14 @@ namespace NiceHashMiner.Devices
 
             public static bool ContainsAmdGpus
             {
-                get { return Avaliable.AllAvaliableDevices.Any(device => device.DeviceType == DeviceType.AMD); }
+                get { return Available.Devices.Any(device => device.DeviceType == DeviceType.AMD); }
             }
 
             public static bool ContainsGpus
             {
                 get
                 {
-                    return Avaliable.AllAvaliableDevices.Any(device =>
+                    return Available.Devices.Any(device =>
                         device.DeviceType == DeviceType.NVIDIA || device.DeviceType == DeviceType.AMD);
                 }
             }

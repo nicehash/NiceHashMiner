@@ -190,7 +190,7 @@ namespace NiceHashMiner
 
             if (_isDeviceDetectionInitialized)
             {
-                devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
+                devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             }
         }
 
@@ -274,7 +274,7 @@ namespace NiceHashMiner
                 }
             }
 
-            // Query Avaliable ComputeDevices
+            // Query Available ComputeDevices
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
             _isDeviceDetectionInitialized = true;
 
@@ -284,7 +284,7 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SaveConfig"));
 
             // All devices settup should be initialized in AllDevices
-            devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
+            devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
 
@@ -540,7 +540,7 @@ namespace NiceHashMiner
         {
             flowLayoutPanelRates.Controls.Clear();
             // add for every cdev a 
-            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+            foreach (var cdev in ComputeDeviceManager.Available.Devices)
             {
                 if (cdev.Enabled)
                 {
@@ -1114,7 +1114,7 @@ namespace NiceHashMiner
 
             // Check if there are unbenchmakred algorithms
             var isBenchInit = true;
-            foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+            foreach (var cdev in ComputeDeviceManager.Available.Devices)
             {
                 if (cdev.Enabled)
                 {
@@ -1147,7 +1147,7 @@ namespace NiceHashMiner
                 else if (result == DialogResult.No)
                 {
                     // check devices without benchmarks
-                    foreach (var cdev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+                    foreach (var cdev in ComputeDeviceManager.Available.Devices)
                     {
                         if (cdev.Enabled)
                         {

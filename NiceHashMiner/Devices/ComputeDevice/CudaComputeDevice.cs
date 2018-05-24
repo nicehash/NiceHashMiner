@@ -120,7 +120,7 @@ namespace NiceHashMiner.Devices
             SMMinor = cudaDevice.SM_minor;
             Uuid = cudaDevice.UUID;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
-            Index = ID + ComputeDeviceManager.Avaliable.AvailCpus; // increment by CPU count
+            Index = ID + ComputeDeviceManager.Available.AvailCpus; // increment by CPU count
 
             _nvHandle = nvHandle;
             _nvmlDevice = nvmlHandle;

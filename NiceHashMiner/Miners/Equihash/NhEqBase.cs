@@ -47,7 +47,7 @@ namespace NiceHashMiner.Miners
         protected NhEqBase(string minerDeviceName)
             : base(minerDeviceName)
         {
-            AmdOclPlatform = ComputeDeviceManager.Avaliable.AmdOpenCLPlatformNum;
+            AmdOclPlatform = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
         }
 
         public override void InitMiningSetup(MiningSetup miningSetup)

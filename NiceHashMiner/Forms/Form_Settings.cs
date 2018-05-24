@@ -68,9 +68,9 @@ namespace NiceHashMiner.Forms
 
 
             // set first device selected {
-            if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0)
+            if (ComputeDeviceManager.Available.Devices.Count > 0)
             {
-                _selectedComputeDevice = ComputeDeviceManager.Avaliable.AllAvaliableDevices[0];
+                _selectedComputeDevice = ComputeDeviceManager.Available.Devices[0];
                 algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
                 groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
                     _selectedComputeDevice.Name);
@@ -574,7 +574,7 @@ namespace NiceHashMiner.Forms
                 benchmarkLimitControlAMD.TimeLimits = ConfigManager.GeneralConfig.BenchmarkTimeLimits.AMD;
 
                 // here we want all devices
-                devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Avaliable.AllAvaliableDevices);
+                devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Available.Devices);
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
                 devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
             }
@@ -672,7 +672,7 @@ namespace NiceHashMiner.Forms
             // indicate there has been a change
             IsChange = true;
             ConfigManager.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
-            foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+            foreach (var cDev in ComputeDeviceManager.Available.Devices)
             {
                 if (cDev.DeviceType == DeviceType.AMD)
                 {
@@ -698,7 +698,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.DisableDefaultOptimizations = checkBox_DisableDefaultOptimizations.Checked;
             if (ConfigManager.GeneralConfig.DisableDefaultOptimizations)
             {
-                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+                foreach (var cDev in ComputeDeviceManager.Available.Devices)
                 {
                     foreach (var algorithm in cDev.GetAlgorithmSettings())
                     {
@@ -714,7 +714,7 @@ namespace NiceHashMiner.Forms
             }
             else
             {
-                foreach (var cDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+                foreach (var cDev in ComputeDeviceManager.Available.Devices)
                 {
                     if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
                     var deviceDefaultsAlgoSettings = GroupAlgorithms.CreateForDeviceList(cDev);
@@ -826,7 +826,7 @@ namespace NiceHashMiner.Forms
             algorithmSettingsControl1.Deselect();
             // show algorithms
             _selectedComputeDevice =
-                ComputeDeviceManager.Avaliable.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
+                ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
             algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
             groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
                 _selectedComputeDevice.Name);
@@ -860,7 +860,7 @@ namespace NiceHashMiner.Forms
         {
             var url = Links.NhmProfitCheck + "CUSTOM";
             var total = new Dictionary<AlgorithmType, double>();
-            foreach (var curCDev in ComputeDeviceManager.Avaliable.AllAvaliableDevices)
+            foreach (var curCDev in ComputeDeviceManager.Available.Devices)
             {
                 foreach (var algorithm in curCDev.GetAlgorithmSettingsFastest())
                 {
@@ -1002,7 +1002,7 @@ namespace NiceHashMiner.Forms
         private void TabControlGeneral_Selected(object sender, TabControlEventArgs e)
         {
             // set first device selected {
-            if (ComputeDeviceManager.Avaliable.AllAvaliableDevices.Count > 0)
+            if (ComputeDeviceManager.Available.Devices.Count > 0)
             {
                 algorithmSettingsControl1.Deselect();
             }
