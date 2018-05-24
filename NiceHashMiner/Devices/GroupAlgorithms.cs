@@ -251,6 +251,13 @@ namespace NiceHashMiner.Devices
                                 //new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNight, ""),
                                 new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightV7, "")
                             }
+                        },
+                        {
+                            MinerBaseType.cpuminer,
+                            new List<Algorithm>
+                            {
+                                new Algorithm(MinerBaseType.cpuminer, AlgorithmType.Lyra2z, "lyra2z")
+                            }
                         }
                     };
                 case DeviceGroupType.AMD_OpenCL:

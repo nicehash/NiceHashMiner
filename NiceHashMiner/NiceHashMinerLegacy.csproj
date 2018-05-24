@@ -289,7 +289,7 @@
     <Compile Include="Miners\ethminer\Ethereum.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
-    <Compile Include="Miners\Obsolete\cpuminer.cs" />
+    <Compile Include="Miners\CpuMiner.cs" />
     <Compile Include="Forms\Form_Main.cs">
       <SubType>Form</SubType>
     </Compile>

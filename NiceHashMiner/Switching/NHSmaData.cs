@@ -59,6 +59,11 @@ namespace NiceHashMiner.Switching
                     if (cacheDict?.TryGetValue(algo, out paying) ?? false)
                         HasData = true;
 
+#if DEBUG
+                    if (algo == AlgorithmType.Lyra2z || algo == AlgorithmType.CryptoNightHeavy)
+                        paying = 1;
+#endif
+
                     _currentSma[algo] = new NiceHashSma
                     {
                         Port = (int) algo + 3333,

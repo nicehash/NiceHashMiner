@@ -100,6 +100,8 @@ namespace NiceHashMiner.Miners.Grouping
             public const string XmrStak = Bin + @"\xmr-stak\xmr-stak.exe";
             public const string Xmrig = Bin + @"\xmrig\xmrig.exe";
 
+            public const string CpuMiner = Bin + @"\cpuminer_opt\cpuminer-avx2.exe";
+
             public const string None = "";
 
             // root binary folder
@@ -170,6 +172,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.Xmrig;
                 case MinerBaseType.dtsm:
                     return Data.Dtsm;
+                case MinerBaseType.cpuminer:
+                    return Data.CpuMiner;
             }
             return Data.None;
         }

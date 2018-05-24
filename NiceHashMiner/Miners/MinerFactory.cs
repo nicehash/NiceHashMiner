@@ -5,7 +5,7 @@ using NiceHashMiner.Miners.Equihash;
 
 namespace NiceHashMiner.Miners
 {
-    public class MinerFactory
+    public static class MinerFactory
     {
         private static Miner CreateEthminer(DeviceType deviceType)
         {
@@ -74,6 +74,8 @@ namespace NiceHashMiner.Miners
                     return new Xmrig();
                 case MinerBaseType.dtsm:
                     return new Dtsm();
+                case MinerBaseType.cpuminer:
+                    return new CpuMiner();
             }
 
             return null;
