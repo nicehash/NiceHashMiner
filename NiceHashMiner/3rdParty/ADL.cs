@@ -66,7 +66,7 @@ namespace ATI.ADL {
     /// <param name="info">return GPU adapter information</param>
     /// <param name="inputSize">the size of the GPU adapter struct</param>
     /// <returns> retrun ADL Error Code</returns>
-    internal delegate int ADL_Adapter_AdapterInfo_Get(ref ADLAdapterInfoArray info, int inputSize);
+    internal delegate int ADL_Adapter_AdapterInfo_Get(IntPtr info, int inputSize);
 
     internal delegate int ADL2_Adapter_AdapterInfo_Get(IntPtr context, ref ADLAdapterInfoArray lpInfo, int iInputSize);
 
@@ -295,7 +295,7 @@ namespace ATI.ADL {
             internal static extern int ADL_Adapter_NumberOfAdapters_Get(ref int numAdapters);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
-            internal static extern int ADL_Adapter_AdapterInfo_Get(ref ADLAdapterInfoArray info, int inputSize);
+            internal static extern int ADL_Adapter_AdapterInfo_Get(IntPtr info, int inputSize);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL2_Adapter_AdapterInfo_Get(IntPtr context, ref ADLAdapterInfoArray lpInfo, int iInputSize);

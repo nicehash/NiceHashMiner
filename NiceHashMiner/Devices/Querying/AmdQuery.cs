@@ -323,11 +323,11 @@ namespace NiceHashMiner.Devices.Querying
 
                     if (null != ADL.ADL_Adapter_AdapterInfo_Get)
                     {
-                        //var size = Marshal.SizeOf(osAdapterInfoData);
-                        //var adapterBuffer = Marshal.AllocCoTaskMem(size);
-                        //Marshal.StructureToPtr(osAdapterInfoData, adapterBuffer, false);
+                        var size = Marshal.SizeOf(osAdapterInfoData);
+                        var adapterBuffer = Marshal.AllocCoTaskMem(size);
+                        Marshal.StructureToPtr(osAdapterInfoData, adapterBuffer, false);
                         
-                        adlRet = ADL.ADL_Adapter_AdapterInfo_Get(ref osAdapterInfoData, Marshal.SizeOf(osAdapterInfoData));
+                        adlRet = ADL.ADL_Adapter_AdapterInfo_Get(adapterBuffer, size);
 
                         var adl2Ret = -1;
                         if (ADL.ADL2_Main_Control_Create != null)
@@ -343,12 +343,12 @@ namespace NiceHashMiner.Devices.Querying
                             adl2Ret = -1;
                         }
 
-                        if (ADL.ADL_SUCCESS == adlRet)
-                        {
-                            //osAdapterInfoData =
-                            //    (ADLAdapterInfoArray)Marshal.PtrToStructure(adapterBuffer,
-                            //        osAdapterInfoData.GetType());
-                            var isActive = 0;
+                            if (ADL.ADL_SUCCESS == adlRet)
+                            {
+                                osAdapterInfoData =
+                                    (ADLAdapterInfoArray)Marshal.PtrToStructure(adapterBuffer,
+                                        osAdapterInfoData.GetType());
+                                var isActive = 0;
 
                             for (var i = 0; i < numberOfAdapters; i++)
                             {
@@ -435,8 +435,8 @@ namespace NiceHashMiner.Devices.Querying
                             isAdlInit = false;
                         }
                         // Release the memory for the AdapterInfo structure
-                        //if (IntPtr.Zero != adapterBuffer)
-                        //    Marshal.FreeCoTaskMem(adapterBuffer);
+                        if (IntPtr.Zero != adapterBuffer)
+                            Marshal.FreeCoTaskMem(adapterBuffer);
                     }
                 }
                 if (null != ADL.ADL_Main_Control_Destroy && numberOfAdapters <= 0)
