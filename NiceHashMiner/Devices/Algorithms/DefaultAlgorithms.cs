@@ -73,7 +73,7 @@ namespace NiceHashMiner.Devices.Algorithms
         #region AMD
 
         private const string RemDis = " --remove-disabled";
-        private static readonly string DefaultParam = RemDis + AmdGpuDevice.DefaultParam;
+        private const string DefaultParam = RemDis + AmdGpuDevice.DefaultParam;
 
         public static readonly Dictionary<MinerBaseType, List<Algorithm>> Amd = new Dictionary<MinerBaseType, List<Algorithm>>
         {
