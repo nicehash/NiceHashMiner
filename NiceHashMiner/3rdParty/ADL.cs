@@ -68,7 +68,7 @@ namespace ATI.ADL {
     /// <returns> retrun ADL Error Code</returns>
     internal delegate int ADL_Adapter_AdapterInfo_Get(IntPtr info, int inputSize);
 
-    internal delegate int ADL2_Adapter_AdapterInfo_Get(IntPtr context, ref ADLAdapterInfoArray lpInfo, int iInputSize);
+    internal delegate int ADL2_Adapter_AdapterInfo_Get(IntPtr context, IntPtr lpInfo, int iInputSize);
 
     /// <summary> Function to determine if the adapter is active or not.</summary>
     /// <remarks>The function is used to check if the adapter associated with iAdapterIndex is active</remarks>  
@@ -298,7 +298,7 @@ namespace ATI.ADL {
             internal static extern int ADL_Adapter_AdapterInfo_Get(IntPtr info, int inputSize);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
-            internal static extern int ADL2_Adapter_AdapterInfo_Get(IntPtr context, ref ADLAdapterInfoArray lpInfo, int iInputSize);
+            internal static extern int ADL2_Adapter_AdapterInfo_Get(IntPtr context, IntPtr lpInfo, int iInputSize);
 
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL_Adapter_Active_Get(int adapterIndex, ref int status);

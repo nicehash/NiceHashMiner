@@ -82,6 +82,7 @@ namespace NiceHashMiner.Devices.Querying
                     "WARNING!!! Old AMD GPU driver detected! All optimized versions disabled, mining " +
                     "speed will not be optimal. Consider upgrading AMD GPU driver. Recommended AMD GPU driver version is 15.7.1.");
             }
+
             if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && showWarningDialog)
             {
                 Form warningDialog = new DriverVersionConfirmationDialog();
@@ -156,13 +157,16 @@ namespace NiceHashMiner.Devices.Querying
                     {
                         amdOclDev.AMD_BUS_ID = overrideBus;
                     }
+
                     if (amdOclDev.AMD_BUS_ID < 0 || !_busIdInfos.ContainsKey(amdOclDev.AMD_BUS_ID))
                     {
                         isBusIDOk = false;
                         break;
                     }
+
                     busIDs.Add(amdOclDev.AMD_BUS_ID);
                 }
+
                 // check if unique
                 isBusIDOk = isBusIDOk && busIDs.Count == amdDevices.Count;
             }
@@ -214,7 +218,8 @@ namespace NiceHashMiner.Devices.Querying
                     var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
                     ComputeDeviceManager.Available.Devices.Add(
-                        new AmdComputeDevice(newAmdDev, ++ComputeDeviceManager.Query.GpuCount, false, _busIdInfos[busID].Adl2Index));
+                        new AmdComputeDevice(newAmdDev, ++ComputeDeviceManager.Query.GpuCount, false,
+                            _busIdInfos[busID].Adl2Index));
                     // just in case 
                     try
                     {
@@ -227,13 +232,16 @@ namespace NiceHashMiner.Devices.Querying
                             $"\t\tMEMORY: {newAmdDev.DeviceGlobalMemory}");
                         stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
                     }
-                    catch { }
+                    catch
+                    {
+                    }
                 }
                 else
                 {
                     stringBuilder.AppendLine($"\tDevice not added, Bus No. {busID} not found:");
                 }
             }
+
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
 
             return amdDevices;
@@ -252,9 +260,9 @@ namespace NiceHashMiner.Devices.Querying
                 vcd.Name.ToLower().Contains("amd") || vcd.Name.ToLower().Contains("radeon") ||
                 vcd.Name.ToLower().Contains("firepro")).ToList();
             // sort by ram not ideal 
-            amdVideoControllers.Sort((a, b) => (int)(a.AdapterRam - b.AdapterRam));
+            amdVideoControllers.Sort((a, b) => (int) (a.AdapterRam - b.AdapterRam));
             amdDevices.Sort((a, b) =>
-                (int)(a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
+                (int) (a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
             var minCount = Math.Min(amdVideoControllers.Count, amdDevices.Count);
 
             for (var i = 0; i < minCount; ++i)
@@ -291,8 +299,11 @@ namespace NiceHashMiner.Devices.Querying
                         $"\t\tMEMORY: {newAmdDev.DeviceGlobalMemory}");
                     stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
                 }
-                catch { }
+                catch
+                {
+                }
             }
+
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
 
             return amdDevices;
@@ -326,7 +337,7 @@ namespace NiceHashMiner.Devices.Querying
                         var size = Marshal.SizeOf(osAdapterInfoData);
                         var adapterBuffer = Marshal.AllocCoTaskMem(size);
                         Marshal.StructureToPtr(osAdapterInfoData, adapterBuffer, false);
-                        
+
                         adlRet = ADL.ADL_Adapter_AdapterInfo_Get(adapterBuffer, size);
 
                         var adl2Ret = -1;
@@ -334,27 +345,36 @@ namespace NiceHashMiner.Devices.Querying
                             adl2Ret = ADL.ADL2_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 0, ref adl2Control);
 
                         var adl2Info = new ADLAdapterInfoArray();
+                        var size2 = Marshal.SizeOf(adl2Info);
+                        var buffer = Marshal.AllocCoTaskMem(size2);
                         if (adl2Ret == ADL.ADL_SUCCESS && ADL.ADL2_Adapter_AdapterInfo_Get != null)
                         {
-                            adl2Ret = ADL.ADL2_Adapter_AdapterInfo_Get(adl2Control, ref adl2Info, Marshal.SizeOf(adl2Info));
+                            Marshal.StructureToPtr(adl2Info, buffer, false);
+                            adl2Ret = ADL.ADL2_Adapter_AdapterInfo_Get(adl2Control, buffer, Marshal.SizeOf(adl2Info));
                         }
                         else
                         {
                             adl2Ret = -1;
                         }
 
-                            if (ADL.ADL_SUCCESS == adlRet)
-                            {
-                                osAdapterInfoData =
-                                    (ADLAdapterInfoArray)Marshal.PtrToStructure(adapterBuffer,
-                                        osAdapterInfoData.GetType());
-                                var isActive = 0;
+                        if (adl2Ret == ADL.ADL_SUCCESS)
+                        {
+                            adl2Info = (ADLAdapterInfoArray) Marshal.PtrToStructure(buffer, adl2Info.GetType());
+                        }
+
+                        if (ADL.ADL_SUCCESS == adlRet)
+                        {
+                            osAdapterInfoData =
+                                (ADLAdapterInfoArray) Marshal.PtrToStructure(adapterBuffer,
+                                    osAdapterInfoData.GetType());
+                            var isActive = 0;
 
                             for (var i = 0; i < numberOfAdapters; i++)
                             {
                                 // Check if the adapter is active
                                 if (null != ADL.ADL_Adapter_Active_Get)
-                                    adlRet = ADL.ADL_Adapter_Active_Get(osAdapterInfoData.ADLAdapterInfo[i].AdapterIndex, ref isActive);
+                                    adlRet = ADL.ADL_Adapter_Active_Get(
+                                        osAdapterInfoData.ADLAdapterInfo[i].AdapterIndex, ref isActive);
 
                                 if (ADL.ADL_SUCCESS != adlRet) continue;
 
@@ -412,7 +432,9 @@ namespace NiceHashMiner.Devices.Querying
                                 var adl2Index = -1;
                                 if (adl2Ret == ADL.ADL_SUCCESS)
                                 {
-                                    adl2Index = adl2Info.ADLAdapterInfo.FirstOrDefault(a => a.UDID == osAdapterInfoData.ADLAdapterInfo[i].UDID).AdapterIndex;
+                                    adl2Index = adl2Info.ADLAdapterInfo
+                                        .FirstOrDefault(a => a.UDID == osAdapterInfoData.ADLAdapterInfo[i].UDID)
+                                        .AdapterIndex;
                                 }
 
                                 var info = new BusIdInfo
@@ -434,11 +456,15 @@ namespace NiceHashMiner.Devices.Querying
                                 adlRet);
                             isAdlInit = false;
                         }
+
                         // Release the memory for the AdapterInfo structure
                         if (IntPtr.Zero != adapterBuffer)
                             Marshal.FreeCoTaskMem(adapterBuffer);
+                        if (buffer != IntPtr.Zero)
+                            Marshal.FreeCoTaskMem(buffer);
                     }
                 }
+
                 if (null != ADL.ADL_Main_Control_Destroy && numberOfAdapters <= 0)
                     // Close ADL if it found no AMD devices
                     ADL.ADL_Main_Control_Destroy();
