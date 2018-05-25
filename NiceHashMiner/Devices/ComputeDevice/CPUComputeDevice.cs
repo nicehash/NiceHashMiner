@@ -1,7 +1,7 @@
-﻿using NiceHashMiner.Enums;
-using System;
+﻿using System;
 using System.Diagnostics;
 using NiceHashMiner.Devices.Algorithms;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Devices
 {

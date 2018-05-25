@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners
 {
