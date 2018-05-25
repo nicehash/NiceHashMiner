@@ -2,6 +2,7 @@
 using NiceHashMiner.Enums;
 using NVIDIA.NVAPI;
 using System;
+using NiceHashMiner.Devices.Algorithms;
 
 namespace NiceHashMiner.Devices
 {

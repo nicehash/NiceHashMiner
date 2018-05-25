@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Devices.Algorithms;
 
 namespace NiceHashMiner.Miners.Grouping
 {

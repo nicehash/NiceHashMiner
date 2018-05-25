@@ -3,6 +3,7 @@ using NiceHashMiner.Enums;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using NiceHashMiner.Devices.Algorithms;
 
 namespace NiceHashMiner.Devices
 {

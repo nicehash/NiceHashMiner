@@ -4,6 +4,7 @@ using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using System.Collections.Generic;
+using NiceHashMiner.Devices.Algorithms;
 
 namespace NiceHashMiner.Miners
 {

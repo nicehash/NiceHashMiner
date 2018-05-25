@@ -27,12 +27,12 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
             }
         }
 
-        public void SetupPools(string poolAddr, string wallet)
+        public void SetupPools(string poolAddr, string wallet, bool isHeavy)
         {
-            SetupPools(new List<string> {poolAddr}, wallet);
+            SetupPools(new List<string> {poolAddr}, wallet, isHeavy);
         }
 
-        public void SetupPools(List<string> poolAddrs, string wallet)
+        public void SetupPools(IEnumerable<string> poolAddrs, string wallet, bool isHeavy)
         {
             pool_list = new List<XmrStakPoolItem>();
             var i = 1;
@@ -41,6 +41,8 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
                 pool_list.Add(new XmrStakPoolItem(poolAddr, wallet, i));
                 i++;
             }
+
+            if (isHeavy) currency = "cryptonight_heavy";
         }
 
         /*
@@ -60,18 +62,29 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
         /*
          * Currency to mine. Supported values:
          *
-         *    aeon
-         *    cryptonight (try this if your coin is not listed)
-         *    cryptonight_lite
+         *    aeon7 (use this for Aeon's new PoW)
+         *    bbscoin (automatic switch with block version 3 to cryptonight_v7)
+         *    croat
          *    edollar
          *    electroneum
          *    graft
+         *    haven
          *    intense
          *    karbo
          *    monero7 (use this for Monero's new PoW)
-         *    sumokoin
+         *    sumokoin (automatic switch with block version 3 to cryptonight_heavy)
          *
+         * Native algorithms which not depends on any block versions:
+         *
+         *    # 1MiB scratchpad memory
+         *    cryptonight_lite
+         *    cryptonight_lite_v7
+         *    # 2MiB scratchpad memory
+         *    cryptonight
+         *    cryptonight_v7
+         *    # 4MiB scratchpad memory
+         *    cryptonight_heavy
          */
-        public readonly string currency = "monero7";
+        public string currency = "monero7";
     }
 }

@@ -102,6 +102,7 @@
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchHelpers\ClaymoreZcashBenchHelper.cs" />
+    <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
@@ -153,7 +154,7 @@
     <Compile Include="Devices\CPUUtils.cs" />
     <Compile Include="Devices\CudaDevice.cs" />
     <Compile Include="Devices\CUDA_Unsupported.cs" />
-    <Compile Include="Devices\GroupAlgorithms.cs" />
+    <Compile Include="Devices\Algorithms\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Devices\OpenCLDevice.cs" />
     <Compile Include="Enums\AlgorithmBenchmarkSettingsType.cs" />
@@ -473,6 +474,10 @@
     <ProjectReference Include="..\MessageBoxManager\MessageBoxManager.csproj">
       <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
       <Name>MessageBoxManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NiceHashMinerLegacy.Extensions\NiceHashMinerLegacy.Extensions.csproj">
+      <Project>{200498ff-f28e-4c9c-9c6f-535feee099db}</Project>
+      <Name>NiceHashMinerLegacy.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

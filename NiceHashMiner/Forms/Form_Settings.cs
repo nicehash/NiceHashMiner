@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Security;
 using System.Windows.Forms;
+using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Stats;
 
 namespace NiceHashMiner.Forms

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Devices.Algorithms;
 
 namespace NiceHashMiner.Devices
 {
