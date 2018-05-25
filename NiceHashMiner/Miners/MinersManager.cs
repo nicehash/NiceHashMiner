@@ -1,5 +1,4 @@
 ﻿using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;

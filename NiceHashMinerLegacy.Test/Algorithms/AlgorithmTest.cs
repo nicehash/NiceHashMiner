@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NiceHashMiner.Algorithms;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Tests.Stats;
 
 namespace NiceHashMinerLegacy.Tests.Algorithms

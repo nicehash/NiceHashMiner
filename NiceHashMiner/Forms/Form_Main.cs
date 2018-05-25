@@ -1,6 +1,5 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Interfaces;
@@ -16,6 +15,7 @@ using System.Threading;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
+using NiceHashMinerLegacy.Common.Enums;
 using SystemTimer = System.Timers.Timer;
 using Timer = System.Windows.Forms.Timer;
 

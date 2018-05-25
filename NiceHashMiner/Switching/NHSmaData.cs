@@ -1,11 +1,11 @@
-﻿using NiceHashMiner.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Switching
 {

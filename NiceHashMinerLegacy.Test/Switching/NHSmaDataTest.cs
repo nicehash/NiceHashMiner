@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Switching;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMinerLegacy.Tests.Switching
 {

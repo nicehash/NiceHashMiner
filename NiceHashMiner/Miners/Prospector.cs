@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
 using SQLite.Net;
 using SQLite.Net.Attributes;
 using SQLite.Net.Platform.Win32;
@@ -15,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners
 {

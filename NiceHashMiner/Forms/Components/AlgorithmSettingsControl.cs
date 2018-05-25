@@ -1,5 +1,4 @@
 ﻿using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
 using System;
 using System.Windows.Forms;
 using NiceHashMiner.Algorithms;

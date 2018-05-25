@@ -1,4 +1,4 @@
-﻿namespace NiceHashMiner.Enums
+﻿namespace NiceHashMinerLegacy.Common.Enums
 {
     /// <summary>
     /// Do not delete obsolete enums! Always add new ones before the END enum.

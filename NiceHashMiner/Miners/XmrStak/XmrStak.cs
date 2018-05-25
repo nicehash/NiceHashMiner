@@ -9,9 +9,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMiner.Miners.XmrStak.Configs;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.XmrStak
 {

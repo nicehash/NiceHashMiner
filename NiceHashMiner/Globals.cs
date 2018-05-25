@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
-using NiceHashMiner.Enums;
 using System.Collections.Generic;
 using NiceHashMiner.Switching;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner
 {

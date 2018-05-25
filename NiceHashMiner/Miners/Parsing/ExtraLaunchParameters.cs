@@ -1,7 +1,7 @@
 ﻿using NiceHashMiner.Configs.ConfigJsonFile;
-using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.Parsing
 {

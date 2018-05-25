@@ -1,5 +1,5 @@
-﻿using NiceHashMiner.Enums;
-using System;
+﻿using System;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Configs.Data
 {

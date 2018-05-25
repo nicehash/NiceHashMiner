@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Algorithms
 {

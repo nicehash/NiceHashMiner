@@ -1,8 +1,8 @@
 ﻿using ManagedCuda.Nvml;
-using NiceHashMiner.Enums;
 using NVIDIA.NVAPI;
 using System;
 using NiceHashMiner.Devices.Algorithms;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Devices
 {

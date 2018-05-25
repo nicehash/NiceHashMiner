@@ -1,7 +1,6 @@
 ﻿using ATI.ADL;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Interfaces;
 using NVIDIA.NVAPI;
 using ManagedCuda.Nvml;
@@ -17,6 +16,7 @@ using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Forms;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Devices
 {

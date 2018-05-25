@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
@@ -18,6 +17,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
+using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
 
 namespace NiceHashMiner

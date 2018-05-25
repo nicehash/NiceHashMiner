@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices.Algorithms;
-using NiceHashMiner.Enums;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMinerLegacy.Tests.Devices.Algorithms
 {

@@ -1,14 +1,13 @@
 ﻿using Microsoft.Win32;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Enums;
 using NiceHashMiner.PInvoke;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using NiceHashMiner.PInvoke;
-using NiceHashMiner.Enums;
 using System.Management;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner
 {

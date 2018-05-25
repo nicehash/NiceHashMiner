@@ -1,11 +1,11 @@
 ﻿using NiceHashMiner.Configs.ConfigJsonFile;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices.Algorithms;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.Grouping
 {

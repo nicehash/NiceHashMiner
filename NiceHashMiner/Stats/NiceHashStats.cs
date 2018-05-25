@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Switching;
 using System;
@@ -12,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NiceHashMinerLegacy.Common.Enums;
 using WebSocketSharp;
 
 namespace NiceHashMiner.Stats

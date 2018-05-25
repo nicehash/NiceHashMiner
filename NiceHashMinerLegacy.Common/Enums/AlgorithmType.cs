@@ -1,4 +1,4 @@
-﻿namespace NiceHashMiner.Enums
+﻿namespace NiceHashMinerLegacy.Common.Enums
 {
     /// <summary>
     /// AlgorithmType enum should/must mirror the values from https://www.nicehash.com/?p=api

@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
-using NiceHashMiner.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner
 {

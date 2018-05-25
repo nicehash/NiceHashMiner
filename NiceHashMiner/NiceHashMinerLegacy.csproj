@@ -109,7 +109,6 @@
     <Compile Include="Devices\Querying\AmdQuery.cs" />
     <Compile Include="Devices\Querying\OpenCLJsonData.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
-    <Compile Include="Enums\TimeUnitType.cs" />
     <Compile Include="IFTTT.cs" />
     <Compile Include="Configs\Data\DualAlgorithmConfig.cs" />
     <Compile Include="Forms\Form_DcriValues.cs">
@@ -157,23 +156,6 @@
     <Compile Include="Devices\Algorithms\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Devices\OpenCLDevice.cs" />
-    <Compile Include="Enums\AlgorithmBenchmarkSettingsType.cs" />
-    <Compile Include="Enums\AlgorithmType.cs" />
-    <Compile Include="Enums\BenchmarkPerformanceType.cs" />
-    <Compile Include="Enums\BenchmarkProcessStatus.cs" />
-    <Compile Include="Enums\CpuExtensionType.cs" />
-    <Compile Include="Enums\DagGenerationType.cs" />
-    <Compile Include="Enums\DeviceGroupType.cs" />
-    <Compile Include="Enums\DeviceMiningStatus.cs" />
-    <Compile Include="Enums\DeviceType.cs" />
-    <Compile Include="Enums\LanguageType.cs" />
-    <Compile Include="Enums\MinerApiReadStatus.cs" />
-    <Compile Include="Enums\MinerBaseType.cs" />
-    <Compile Include="Enums\MinerOptionFlagType.cs" />
-    <Compile Include="Enums\MinerStopType.cs" />
-    <Compile Include="Enums\MinerType.cs" />
-    <Compile Include="Enums\NhmConectionType.cs" />
-    <Compile Include="Enums\Use3rdPartyMiners.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -474,6 +456,10 @@
     <ProjectReference Include="..\MessageBoxManager\MessageBoxManager.csproj">
       <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
       <Name>MessageBoxManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
+      <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
+      <Name>NiceHashMinerLegacy.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\NiceHashMinerLegacy.Extensions\NiceHashMinerLegacy.Extensions.csproj">
       <Project>{200498ff-f28e-4c9c-9c6f-535feee099db}</Project>

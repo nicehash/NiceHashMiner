@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using NiceHashMiner.Enums;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.Parsing
 {

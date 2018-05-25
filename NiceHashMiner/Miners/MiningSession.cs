@@ -1,6 +1,5 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners.Grouping;
 using System;
@@ -12,6 +11,7 @@ using System.Timers;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
+using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
 
 namespace NiceHashMiner.Miners

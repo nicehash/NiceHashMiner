@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
-using NiceHashMiner.Enums;
+using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Devices.Algorithms

@@ -1,7 +1,7 @@
-﻿using NiceHashMiner.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using NiceHashMiner.Switching;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Configs.Data
 {

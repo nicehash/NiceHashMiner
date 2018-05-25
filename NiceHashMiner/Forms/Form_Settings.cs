@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Enums;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
@@ -12,6 +11,7 @@ using System.Security;
 using System.Windows.Forms;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Forms
 {

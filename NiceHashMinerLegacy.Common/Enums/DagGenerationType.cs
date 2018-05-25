@@ -1,4 +1,4 @@
-﻿namespace NiceHashMiner.Enums
+﻿namespace NiceHashMinerLegacy.Common.Enums
 {
     /// <summary>
     /// This is used for ethminers DAG generation mode

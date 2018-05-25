@@ -1,4 +1,4 @@
-﻿namespace NiceHashMiner.Enums
+﻿namespace NiceHashMinerLegacy.Common.Enums
 {
     public enum MinerStopType
     {

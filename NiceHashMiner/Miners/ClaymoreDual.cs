@@ -1,7 +1,7 @@
 ﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Enums;
 using System;
 using NiceHashMiner.Algorithms;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners
 {
