@@ -13,7 +13,7 @@ namespace NiceHashMiner.Devices.Algorithms
     {
         #region All
 
-        private static readonly Dictionary<MinerBaseType, List<Algorithm>> All = new Dictionary<MinerBaseType, List<Algorithm>>
+        private static Dictionary<MinerBaseType, List<Algorithm>> All => new Dictionary<MinerBaseType, List<Algorithm>>
         {
             {
                 MinerBaseType.XmrStak,
@@ -28,7 +28,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
         #region GPU
 
-        private static readonly Dictionary<MinerBaseType, List<Algorithm>> Gpu = new Dictionary<MinerBaseType, List<Algorithm>>
+        private static Dictionary<MinerBaseType, List<Algorithm>> Gpu => new Dictionary<MinerBaseType, List<Algorithm>>
         {
             {
                 MinerBaseType.Claymore,
@@ -49,7 +49,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
         #region CPU
 
-        public static readonly Dictionary<MinerBaseType, List<Algorithm>> Cpu = new Dictionary<MinerBaseType, List<Algorithm>>
+        public static Dictionary<MinerBaseType, List<Algorithm>> Cpu => new Dictionary<MinerBaseType, List<Algorithm>>
         {
             {
                 MinerBaseType.Xmrig,
@@ -75,7 +75,7 @@ namespace NiceHashMiner.Devices.Algorithms
         private const string RemDis = " --remove-disabled";
         private const string DefaultParam = RemDis + AmdGpuDevice.DefaultParam;
 
-        public static readonly Dictionary<MinerBaseType, List<Algorithm>> Amd = new Dictionary<MinerBaseType, List<Algorithm>>
+        public static Dictionary<MinerBaseType, List<Algorithm>> Amd => new Dictionary<MinerBaseType, List<Algorithm>>
         {
             {
                 MinerBaseType.sgminer,
@@ -142,7 +142,7 @@ namespace NiceHashMiner.Devices.Algorithms
 
         #region NVIDIA
 
-        public static readonly Dictionary<MinerBaseType, List<Algorithm>> Nvidia = new Dictionary<MinerBaseType, List<Algorithm>>
+        public static Dictionary<MinerBaseType, List<Algorithm>> Nvidia => new Dictionary<MinerBaseType, List<Algorithm>>
         {
             {
                 MinerBaseType.ccminer,
