@@ -100,6 +100,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string XmrStakAmd = Bin + @"\xmr-stak-amd\xmr-stak-amd.exe";
             public const string XmrStak = Bin + @"\xmr-stak\xmr-stak.exe";
             public const string Xmrig = Bin + @"\xmrig\xmrig.exe";
+            public const string XmrStakHeavy = Bin + @"\xmr-stak_heavy\xmr-stak.exe";
 
             public const string CpuMiner = Bin + @"\cpuminer_opt\cpuminer-avx2.exe";
 
@@ -143,6 +144,10 @@ namespace NiceHashMiner.Miners.Grouping
                     Helpers.ConsolePrint("PATHS", $"Path {path.Path} not found, using defaults");
                 }
             }
+            // Temp workaround
+            if (minerBaseType == MinerBaseType.XmrStak && algoType == AlgorithmType.CryptoNightHeavy)
+                return Data.XmrStakHeavy;
+
             switch (minerBaseType)
             {
                 case MinerBaseType.ccminer:

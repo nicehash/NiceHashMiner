@@ -19,6 +19,7 @@ namespace NiceHashMiner.Miners.XmrStak
     {
         private const string ConfigName = "config_nh.txt";
         private const string DefConfigName = "config.txt";
+        private const string DefPoolName = "pools.txt";
 
         private int _benchmarkCount;
         private double _benchmarkSum;
@@ -98,6 +99,7 @@ namespace NiceHashMiner.Miners.XmrStak
             var pools = new XmrStakConfigPool();
             pools.SetupPools(url, GetUsername(btcAddress, worker), isHeavy);
             WriteJsonFile(pools, GetPoolConfigName());
+            WriteJsonFile(pools, DefPoolName);
 
             foreach (var type in types)
             {
