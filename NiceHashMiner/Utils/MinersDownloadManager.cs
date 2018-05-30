@@ -3,7 +3,7 @@
     public static class MinersDownloadManager
     {
         public static DownloadSetup StandardDlSetup = new DownloadSetup(
-            "http://github.com/NiceHash/NiceHashMinerLegacy/releases/download/1.9.0.2/bin_1_9_0_2.zip",
+            "http://github.com/NiceHash/NiceHashMinerLegacy/releases/download/1.9.0.3/bin_1_9_0_3.zip",
             "bins.zip",
             "bin");
 
