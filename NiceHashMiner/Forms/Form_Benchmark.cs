@@ -92,7 +92,6 @@ namespace NiceHashMiner.Forms
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
 
             devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
-            devicesListViewEnableControl1.IsBenchmarkForm = true;
             devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
 
             ResetBenchmarkProgressStatus();

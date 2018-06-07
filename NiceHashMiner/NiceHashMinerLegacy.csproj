@@ -109,6 +109,18 @@
     <Compile Include="Devices\Querying\AmdQuery.cs" />
     <Compile Include="Devices\Querying\OpenCLJsonData.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
+    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.Designer.cs">
+      <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewSpeedControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewSpeedControl.Designer.cs">
+      <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="IFTTT.cs" />
     <Compile Include="Configs\Data\DualAlgorithmConfig.cs" />
     <Compile Include="Forms\Form_DcriValues.cs">
@@ -320,6 +332,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\DevicesListViewBenchmarkControl.resx">
+      <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\DevicesListViewSpeedControl.resx">
+      <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\DevicesListViewEnableControl.resx">
       <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>

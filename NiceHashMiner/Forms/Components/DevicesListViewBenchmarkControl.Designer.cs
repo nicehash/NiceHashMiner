@@ -1,5 +1,5 @@
 ﻿namespace NiceHashMiner.Forms.Components {
-    partial class DevicesListViewEnableControl {
+    partial class DevicesListViewBenchmarkControl {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
@@ -46,6 +46,7 @@
             this.listViewDevices.TabIndex = 5;
             this.listViewDevices.UseCompatibleStateImageBehavior = false;
             this.listViewDevices.View = System.Windows.Forms.View.Details;
+            this.listViewDevices.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListViewDevices_MouseClick);
             // 
             // columnHeader0
             // 

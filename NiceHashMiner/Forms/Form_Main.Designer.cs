@@ -55,7 +55,7 @@
             this.linkLabelChooseBTCWallet = new System.Windows.Forms.LinkLabel();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.labelDemoMode = new System.Windows.Forms.Label();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewSpeedControl();
             this.buttonHelp = new System.Windows.Forms.Button();
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
@@ -430,7 +430,7 @@
         private System.Windows.Forms.TextBox textBoxWorkerName;
         private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
         private System.Windows.Forms.Label labelDemoMode;
-        private Forms.Components.DevicesListViewEnableControl devicesListViewEnableControl1;
+        private Forms.Components.DevicesListViewSpeedControl devicesListViewEnableControl1;
         private System.Windows.Forms.Button buttonHelp;
         private System.Windows.Forms.LinkLabel linkLabelNewVersion;
         private System.Windows.Forms.ToolTip toolTip1;

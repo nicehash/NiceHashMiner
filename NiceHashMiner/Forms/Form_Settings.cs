@@ -589,7 +589,6 @@ namespace NiceHashMiner.Forms
                 // here we want all devices
                 devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Available.Devices);
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
-                devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
             }
 
             // Add language selections list

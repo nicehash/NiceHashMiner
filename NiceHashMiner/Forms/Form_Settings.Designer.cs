@@ -1617,10 +1617,7 @@
             // 
             // devicesListViewEnableControl1
             // 
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 6);
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
