@@ -333,14 +333,11 @@
     <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\DevicesListViewBenchmarkControl.resx">
-      <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Components\DevicesListViewEnableControl.resx">
+      <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\DevicesListViewSpeedControl.resx">
       <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\DevicesListViewEnableControl.resx">
-      <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>

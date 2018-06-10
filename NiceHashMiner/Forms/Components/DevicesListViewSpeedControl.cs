@@ -94,13 +94,13 @@ namespace NiceHashMiner.Forms.Components
             //listViewDevices.Columns[DEVICE].Text = International.GetText("ListView_Device");
         }
 
-        private void DevicesListViewEnableControl_Resize(object sender, EventArgs e)
+        protected override void DevicesListViewEnableControl_Resize(object sender, EventArgs e)
         {
             // only one 
-            foreach (ColumnHeader ch in listViewDevices.Columns)
-            {
-                ch.Width = Width - 10;
-            }
+            //foreach (ColumnHeader ch in listViewDevices.Columns)
+            //{
+            //    ch.Width = Width - 10;
+            //}
         }
     }
 }

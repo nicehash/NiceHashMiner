@@ -202,14 +202,5 @@ namespace NiceHashMiner.Forms.Components
         {
             ToolStripMenuItem_Click(sender, true);
         }
-
-        private void DevicesListViewEnableControl_Resize(object sender, EventArgs e)
-        {
-            // only one 
-            foreach (ColumnHeader ch in listViewDevices.Columns)
-            {
-                ch.Width = Width - 10;
-            }
-        }
     }
 }

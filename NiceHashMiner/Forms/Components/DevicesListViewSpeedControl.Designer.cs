@@ -1,5 +1,7 @@
-﻿namespace NiceHashMiner.Forms.Components {
-    partial class DevicesListViewSpeedControl {
+﻿namespace NiceHashMiner.Forms.Components
+{
+    partial class DevicesListViewSpeedControl
+    {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
@@ -9,8 +11,10 @@
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing) {
-            if (disposing && (components != null)) {
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
                 components.Dispose();
             }
             base.Dispose(disposing);
@@ -22,75 +26,58 @@
         /// Required method for Designer support - do not modify 
         /// the contents of this method with the code editor.
         /// </summary>
-        private void InitializeComponent() {
-            this.components = new System.ComponentModel.Container();
-            this.listViewDevices = new System.Windows.Forms.ListView();
-            this.columnHeader0 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItemEnable = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.contextMenuStrip1.SuspendLayout();
+        private void InitializeComponent()
+        {
+            this.speedHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.secondarySpeedHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.profitHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // listViewDevices
             // 
-            this.listViewDevices.CheckBoxes = true;
             this.listViewDevices.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader0});
-            this.listViewDevices.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listViewDevices.FullRowSelect = true;
-            this.listViewDevices.GridLines = true;
-            this.listViewDevices.Location = new System.Drawing.Point(0, 0);
-            this.listViewDevices.Name = "listViewDevices";
-            this.listViewDevices.Size = new System.Drawing.Size(374, 226);
-            this.listViewDevices.TabIndex = 5;
-            this.listViewDevices.UseCompatibleStateImageBehavior = false;
-            this.listViewDevices.View = System.Windows.Forms.View.Details;
+            this.speedHeader,
+            this.secondarySpeedHeader,
+            this.profitHeader});
+            this.listViewDevices.Size = new System.Drawing.Size(1294, 582);
             // 
-            // columnHeader0
+            // devicesHeader
             // 
-            this.columnHeader0.Text = "Enabled";
-            this.columnHeader0.Width = 350;
+            this.devicesHeader.Width = 300;
             // 
-            // contextMenuStrip1
+            // speedHeader
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItemEnable,
-            this.toolStripMenuItem1});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(197, 48);
+            this.speedHeader.DisplayIndex = 1;
+            this.speedHeader.Text = "Speed";
+            this.speedHeader.Width = 100;
             // 
-            // toolStripMenuItemEnable
+            // secondarySpeedHeader
             // 
-            this.toolStripMenuItemEnable.Name = "toolStripMenuItemEnable";
-            this.toolStripMenuItemEnable.Size = new System.Drawing.Size(196, 22);
-            this.toolStripMenuItemEnable.Text = "Enable Benchmark";
+            this.secondarySpeedHeader.DisplayIndex = 2;
+            this.secondarySpeedHeader.Text = "Secondary Speed";
+            this.secondarySpeedHeader.Width = 100;
             // 
-            // toolStripMenuItem1
+            // profitHeader
             // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(196, 22);
-            this.toolStripMenuItem1.Text = "Copy Benchmark From";
+            this.profitHeader.DisplayIndex = 3;
+            this.profitHeader.Text = "Profit";
+            this.profitHeader.Width = 100;
             // 
-            // DevicesListViewEnableControl
+            // DevicesListViewSpeedControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.listViewDevices);
-            this.Name = "DevicesListViewEnableControl";
-            this.Size = new System.Drawing.Size(374, 226);
-            this.Resize += new System.EventHandler(this.DevicesListViewEnableControl_Resize);
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.Name = "DevicesListViewSpeedControl";
+            this.Size = new System.Drawing.Size(1294, 582);
+            this.Controls.SetChildIndex(this.listViewDevices, 0);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ListView listViewDevices;
-        private System.Windows.Forms.ColumnHeader columnHeader0;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEnable;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ColumnHeader speedHeader;
+        private System.Windows.Forms.ColumnHeader secondarySpeedHeader;
+        private System.Windows.Forms.ColumnHeader profitHeader;
     }
 }

@@ -77,7 +77,7 @@
             // textBoxBTCAddress
             // 
             this.textBoxBTCAddress.Location = new System.Drawing.Point(226, 75);
-            this.textBoxBTCAddress.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.textBoxBTCAddress.Margin = new System.Windows.Forms.Padding(6);
             this.textBoxBTCAddress.Name = "textBoxBTCAddress";
             this.textBoxBTCAddress.Size = new System.Drawing.Size(470, 31);
             this.textBoxBTCAddress.TabIndex = 1;
@@ -105,7 +105,7 @@
             "India - Chennai",
             "Brazil - Sao Paulo"});
             this.comboBoxLocation.Location = new System.Drawing.Point(226, 23);
-            this.comboBoxLocation.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.comboBoxLocation.Margin = new System.Windows.Forms.Padding(6);
             this.comboBoxLocation.Name = "comboBoxLocation";
             this.comboBoxLocation.Size = new System.Drawing.Size(238, 33);
             this.comboBoxLocation.TabIndex = 0;
@@ -235,7 +235,7 @@
             // textBoxWorkerName
             // 
             this.textBoxWorkerName.Location = new System.Drawing.Point(226, 125);
-            this.textBoxWorkerName.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.textBoxWorkerName.Margin = new System.Windows.Forms.Padding(6);
             this.textBoxWorkerName.Name = "textBoxWorkerName";
             this.textBoxWorkerName.Size = new System.Drawing.Size(236, 31);
             this.textBoxWorkerName.TabIndex = 2;
@@ -286,7 +286,7 @@
             this.buttonLogo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonLogo.Image = global::NiceHashMiner.Properties.Resources.NHM_logo_xsmall_light;
             this.buttonLogo.Location = new System.Drawing.Point(1098, 15);
-            this.buttonLogo.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.buttonLogo.Margin = new System.Windows.Forms.Padding(6);
             this.buttonLogo.Name = "buttonLogo";
             this.buttonLogo.Size = new System.Drawing.Size(410, 100);
             this.buttonLogo.TabIndex = 11;
@@ -330,6 +330,7 @@
             this.devicesListViewEnableControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.devicesListViewEnableControl1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.devicesListViewEnableControl1.BenchmarkCalculation = null;
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
             this.devicesListViewEnableControl1.IsInBenchmark = false;
@@ -387,7 +388,7 @@
             this.Controls.Add(this.textBoxBTCAddress);
             this.Controls.Add(this.buttonStartMining);
             this.Enabled = false;
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(6);
             this.MinimumSize = new System.Drawing.Size(1126, 542);
             this.Name = "Form_Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

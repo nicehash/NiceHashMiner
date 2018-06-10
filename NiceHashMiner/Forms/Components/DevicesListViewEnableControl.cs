@@ -103,7 +103,7 @@ namespace NiceHashMiner.Forms.Components
             listViewDevices.ItemSelectionChanged += callback;
         }
 
-        private void DevicesListViewEnableControl_Resize(object sender, EventArgs e)
+        protected virtual void DevicesListViewEnableControl_Resize(object sender, EventArgs e)
         {
             // only one 
             foreach (ColumnHeader ch in listViewDevices.Columns)
