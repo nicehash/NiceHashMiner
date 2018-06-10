@@ -84,7 +84,7 @@ namespace NiceHashMiner
 
             //label_NotProfitable.Visible = false;
 
-            //InitMainConfigGuiData();
+            InitMainConfigGuiData();
 
             //// for resizing
             //InitFlowPanelStart();
