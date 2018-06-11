@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
 {
-    public partial class DevicesListViewSpeedControl : DevicesListViewEnableControl
+    public partial class DevicesListViewSpeedControl : DevicesListViewEnableControl, IRatesComunication
     {
         private const int ENABLED = 0;
         private const int DEVICE = 1;
@@ -102,5 +102,39 @@ namespace NiceHashMiner.Forms.Components
             //    ch.Width = Width - 10;
             //}
         }
+
+        #region IRatesCommunication Implementation
+
+        public void ClearRatesAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ShowNotProfitable(string msg)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void HideNotProfitable()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ForceMinerStatsUpdate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearRates(int groupCount)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

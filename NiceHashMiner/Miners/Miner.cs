@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
 
@@ -30,8 +31,9 @@ namespace NiceHashMiner
         public double Speed;
         public double SecondarySpeed;
         public double PowerUsage;
+        public List<int> DeviceIndices;
 
-        public ApiData(AlgorithmType algorithmID, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)
+        public ApiData(AlgorithmType algorithmID, List<int> indices, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)
         {
             AlgorithmID = algorithmID;
             SecondaryAlgorithmID = secondaryAlgorithmID;
@@ -39,7 +41,12 @@ namespace NiceHashMiner
             Speed = 0.0;
             SecondarySpeed = 0.0;
             PowerUsage = 0.0;
+            DeviceIndices = indices;
         }
+
+        public ApiData(AlgorithmType algo, IEnumerable<ComputeDevice> devices, AlgorithmType secondaryAlgo = AlgorithmType.NONE)
+            : this(algo, devices.Select(d => d.Index).ToList(), secondaryAlgo)
+        { }
     }
 
     // 
@@ -139,6 +146,8 @@ namespace NiceHashMiner
         protected const string HttpHeaderDelimiter = "\r\n\r\n";
 
         protected bool IsMultiType;
+
+        protected IEnumerable<ComputeDevice> Devices => MiningSetup.MiningPairs.Select(p => p.Device);
 
         protected Miner(string minerDeviceName)
         {
@@ -1129,7 +1138,7 @@ namespace NiceHashMiner
 
         protected async Task<ApiData> GetSummaryCpuAsync(string method = "", bool overrideLoop = false)
         {
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, Devices);
 
             try
             {
@@ -1198,7 +1207,7 @@ namespace NiceHashMiner
         {
             // TODO aname
             string aname = null;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, Devices);
 
             var dataToSend = GetHttpRequestNhmAgentStrin("summary");
 

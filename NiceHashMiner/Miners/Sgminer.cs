@@ -327,7 +327,7 @@ namespace NiceHashMiner.Miners
         // TODO _currentMinerReadStatus
         public override async Task<ApiData> GetSummaryAsync()
         {
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, Devices);
 
             var resp = await GetApiDataAsync(ApiPort, "summary");
             if (resp == null)

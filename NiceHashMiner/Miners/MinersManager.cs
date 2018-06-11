@@ -37,11 +37,11 @@ namespace NiceHashMiner.Miners
             return _curMiningSession?.GetTotalRate() ?? 0;
         }
 
-        public static bool StartInitialize(IMainFormRatesComunication mainFormRatesComunication,
+        public static bool StartInitialize(IRatesComunication ratesComunication,
             string miningLocation, string worker, string btcAdress)
         {
             _curMiningSession = new MiningSession(ComputeDeviceManager.Available.Devices,
-                mainFormRatesComunication, miningLocation, worker, btcAdress);
+                ratesComunication, miningLocation, worker, btcAdress);
 
             return _curMiningSession.IsMiningEnabled;
         }

@@ -23,7 +23,7 @@ namespace NiceHashMiner
 {
     using System.IO;
 
-    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
+    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller
     {
         private string _visitUrlNew = Links.VisitUrlNew;
 
@@ -1182,7 +1182,7 @@ namespace NiceHashMiner
             ClearRatesAll();
 
             var btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
-            var isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
+            var isMining = MinersManager.StartInitialize(devicesListViewEnableControl1, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
                 textBoxWorkerName.Text.Trim(), btcAdress);
 
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();

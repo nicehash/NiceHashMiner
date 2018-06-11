@@ -81,7 +81,7 @@ namespace NiceHashMiner.Miners.Equihash
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, Devices);
 
             if (_skipApiCheck == false)
             {
