@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
@@ -60,6 +61,14 @@ namespace NiceHashMiner.Stats
             Helpers.ConsolePrint("CurrencyConverter", "Unknown Currency Tag: " + ActiveDisplayCurrency + " falling back to USD rates");
             ActiveDisplayCurrency = "USD";
             return amount;
+        }
+
+        public static string GetCurrencyString(double amount)
+        {
+            return ConvertToActiveCurrency(amount * GetUsdExchangeRate())
+                       .ToString("F2", CultureInfo.InvariantCulture)
+                   + $" {ActiveDisplayCurrency}/"
+                   + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
         }
 
         public static double GetUsdExchangeRate()

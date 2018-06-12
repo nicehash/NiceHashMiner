@@ -100,7 +100,7 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        protected override void SetLvi(ListViewItem lvi)
+        protected override void SetLvi(ListViewItem lvi, int index)
         {
             _listItemCheckColorSetter.LviSetColor(lvi);
         }

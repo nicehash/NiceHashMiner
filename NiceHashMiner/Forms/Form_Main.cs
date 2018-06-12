@@ -64,6 +64,8 @@ namespace NiceHashMiner
             InitializeComponent();
             Icon = Properties.Resources.logo;
 
+            devicesListViewEnableControl1.FactorTimeUnit = _factorTimeUnit;
+
             InitLocalization();
 
             ComputeDeviceManager.SystemSpecs.QueryAndLog();

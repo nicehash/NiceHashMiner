@@ -41,7 +41,7 @@ namespace NiceHashMiner.Forms.Components
             _algorithmsListView = algorithmsListView;
         }
 
-        public void SetComputeDevices(List<ComputeDevice> computeDevices)
+        public virtual void SetComputeDevices(List<ComputeDevice> computeDevices)
         {
             // to not run callbacks when setting new
             var tmpSaveToGeneralConfig = SaveToGeneralConfig;
@@ -59,7 +59,7 @@ namespace NiceHashMiner.Forms.Components
                 };
                 //lvi.SubItems.Add(computeDevice.Name);
                 listViewDevices.Items.Add(lvi);
-                SetLvi(lvi);
+                SetLvi(lvi, computeDevice.Index);
             }
             listViewDevices.EndUpdate();
             listViewDevices.Invalidate(true);
@@ -67,7 +67,7 @@ namespace NiceHashMiner.Forms.Components
             SaveToGeneralConfig = tmpSaveToGeneralConfig;
         }
 
-        protected virtual void SetLvi(ListViewItem lvi)
+        protected virtual void SetLvi(ListViewItem lvi, int index)
         {
 
         }
