@@ -31,6 +31,7 @@
             this.speedHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.secondarySpeedHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.profitHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.fiatHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // listViewDevices
@@ -38,7 +39,9 @@
             this.listViewDevices.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.speedHeader,
             this.secondarySpeedHeader,
-            this.profitHeader});
+            this.profitHeader,
+            this.fiatHeader});
+            this.listViewDevices.Size = new System.Drawing.Size(970, 466);
             // 
             // devicesHeader
             // 
@@ -62,10 +65,16 @@
             this.profitHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.profitHeader.Width = 100;
             // 
+            // fiatHeader
+            // 
+            this.fiatHeader.Text = "USD/Day";
+            this.fiatHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
             // DevicesListViewSpeedControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "DevicesListViewSpeedControl";
             this.Controls.SetChildIndex(this.listViewDevices, 0);
             this.ResumeLayout(false);
@@ -77,5 +86,6 @@
         private System.Windows.Forms.ColumnHeader speedHeader;
         private System.Windows.Forms.ColumnHeader secondarySpeedHeader;
         private System.Windows.Forms.ColumnHeader profitHeader;
+        private System.Windows.Forms.ColumnHeader fiatHeader;
     }
 }

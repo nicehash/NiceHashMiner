@@ -63,6 +63,11 @@ namespace NiceHashMiner.Stats
             return amount;
         }
 
+        public static double ConvertFromBtc(double amount)
+        {
+            return ConvertToActiveCurrency(amount * GetUsdExchangeRate());
+        }
+
         public static string GetCurrencyString(double amount)
         {
             return ConvertToActiveCurrency(amount * GetUsdExchangeRate())

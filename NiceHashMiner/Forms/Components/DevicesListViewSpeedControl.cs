@@ -240,10 +240,11 @@ namespace NiceHashMiner.Forms.Components
                 {
                     try
                     {
-                        item.SubItems[Speed].Text = iApiData.Speed.ToString("F4");
+                        item.SubItems[Speed].Text = Helpers.FormatSpeedOutput(iApiData.Speed);
                         if (iApiData.SecondaryAlgorithmID != AlgorithmType.NONE)
-                            item.SubItems[SecSpeed].Text = iApiData.SecondarySpeed.ToString("F4");
+                            item.SubItems[SecSpeed].Text = Helpers.FormatSpeedOutput(iApiData.SecondarySpeed);
                         item.SubItems[Profit].Text = (paying * 1000).ToString("F4");
+                        item.SubItems[Fiat].Text = ExchangeRateApi.ConvertFromBtc(paying).ToString("F2");
                     }
                     catch { }
                 }
