@@ -213,6 +213,9 @@ namespace NiceHashMiner.Forms.Components
 
         public void ClearRatesAll()
         {
+            _indexTotals.Clear();
+            listViewDevices.Groups.Clear();
+            UpdateListView();
         }
 
         public void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
