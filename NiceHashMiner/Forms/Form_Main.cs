@@ -175,6 +175,7 @@ namespace NiceHashMiner
             }
 
             devicesListViewEnableControl1.SetPayingColumns();
+            devicesListViewEnableControl1.GlobalRates = this;
         }
 
         public void AfterLoadComplete()

@@ -88,9 +88,9 @@ namespace NiceHashMiner.Forms.Components
 
         private readonly List<List<int>> _indexTotals = new List<List<int>>();
 
-        private readonly IGlobalRatesUpdate _globalRates;
+        public IGlobalRatesUpdate GlobalRates;
 
-        public DevicesListViewSpeedControl(IGlobalRatesUpdate global)
+        public DevicesListViewSpeedControl()
         {
             InitializeComponent();
 
@@ -100,7 +100,6 @@ namespace NiceHashMiner.Forms.Components
             //listViewDevices.CheckBoxes = false;
             IsMining = false;
             BenchmarkCalculation = null;
-            _globalRates = global;
         }
 
         public override void InitLocale()
@@ -262,7 +261,7 @@ namespace NiceHashMiner.Forms.Components
                 }
             }
 
-            _globalRates.UpdateGlobalRate();
+            GlobalRates?.UpdateGlobalRate();
 
             //var header = AlgorithmNiceHashNames.GetName(iApiData.AlgorithmID) + $"    {Helpers.FormatSpeedOutput(iApiData.Speed)}";
             //if (iApiData.SecondaryAlgorithmID != AlgorithmType.NONE)

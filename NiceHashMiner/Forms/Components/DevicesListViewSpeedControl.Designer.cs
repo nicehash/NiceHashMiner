@@ -69,6 +69,7 @@
             // 
             this.fiatHeader.Text = "USD/Day";
             this.fiatHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.fiatHeader.Width = 100;
             // 
             // DevicesListViewSpeedControl
             // 
