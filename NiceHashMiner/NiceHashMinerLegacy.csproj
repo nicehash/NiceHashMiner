@@ -143,6 +143,7 @@
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
+    <Compile Include="Stats\TimeFactor.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
     <Compile Include="Switching\Models.cs" />

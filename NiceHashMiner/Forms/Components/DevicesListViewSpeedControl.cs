@@ -85,8 +85,6 @@ namespace NiceHashMiner.Forms.Components
 
         private List<ComputeDevice> _devices;
 
-        public double FactorTimeUnit;
-
         private readonly List<List<int>> _indexTotals = new List<List<int>>();
 
         public DevicesListViewSpeedControl()
@@ -198,10 +196,10 @@ namespace NiceHashMiner.Forms.Components
             string ret;
 
             if (ConfigManager.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
-                ret = (paying * 1000 * FactorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + " mBTC/" +
+                ret = (paying * 1000 * TimeFactor.TimeUnit).ToString("F5", CultureInfo.InvariantCulture) + " mBTC/" +
                       International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
             else
-                ret = (paying * FactorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) + " BTC/" +
+                ret = (paying * TimeFactor.TimeUnit).ToString("F6", CultureInfo.InvariantCulture) + " BTC/" +
                       International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
             return ret;
@@ -251,8 +249,8 @@ namespace NiceHashMiner.Forms.Components
                         item.SubItems[Speed].Text = Helpers.FormatSpeedOutput(iApiData.Speed);
                         if (iApiData.SecondaryAlgorithmID != AlgorithmType.NONE)
                             item.SubItems[SecSpeed].Text = Helpers.FormatSpeedOutput(iApiData.SecondarySpeed);
-                        item.SubItems[Profit].Text = (paying * 1000).ToString("F4");
-                        item.SubItems[Fiat].Text = ExchangeRateApi.ConvertFromBtc(paying).ToString("F2");
+                        item.SubItems[Profit].Text = (paying * 1000 * TimeFactor.TimeUnit).ToString("F4");
+                        item.SubItems[Fiat].Text = ExchangeRateApi.ConvertFromBtc(paying * TimeFactor.TimeUnit).ToString("F2");
                     }
                     catch { }
                 }

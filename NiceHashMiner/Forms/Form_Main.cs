@@ -54,8 +54,6 @@ namespace NiceHashMiner
 
         //private bool _isSmaUpdated = false;
 
-        private double _factorTimeUnit = 1.0;
-
         private readonly int _mainFormHeight = 0;
         private readonly int _emtpyGroupPanelHeight = 0;
 
@@ -63,8 +61,6 @@ namespace NiceHashMiner
         {
             InitializeComponent();
             Icon = Properties.Resources.logo;
-
-            devicesListViewEnableControl1.FactorTimeUnit = _factorTimeUnit;
 
             InitLocalization();
 
@@ -164,24 +160,7 @@ namespace NiceHashMiner
             ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
             // init factor for Time Unit
-            switch (ConfigManager.GeneralConfig.TimeUnit)
-            {
-                case TimeUnitType.Hour:
-                    _factorTimeUnit = 1.0 / 24.0;
-                    break;
-                case TimeUnitType.Day:
-                    _factorTimeUnit = 1;
-                    break;
-                case TimeUnitType.Week:
-                    _factorTimeUnit = 7;
-                    break;
-                case TimeUnitType.Month:
-                    _factorTimeUnit = 30;
-                    break;
-                case TimeUnitType.Year:
-                    _factorTimeUnit = 365;
-                    break;
-            }
+            TimeFactor.UpdateTimeUnit(ConfigManager.GeneralConfig.TimeUnit);
 
             toolStripStatusLabelBalanceDollarValue.Text = "(" + ExchangeRateApi.ActiveDisplayCurrency + ")";
             toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
@@ -606,9 +585,9 @@ namespace NiceHashMiner
             var speedString =
                 Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
                 iApiData.AlgorithmName + apiGetExceptionString;
-            var rateBtcString = FormatPayingOutput(paying);
+            //var rateBtcString = FormatPayingOutput(paying);
             var rateCurrencyString = ExchangeRateApi
-                                         .ConvertToActiveCurrency(paying * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
+                                         .ConvertToActiveCurrency(paying * ExchangeRateApi.GetUsdExchangeRate() * TimeFactor.TimeUnit)
                                          .ToString("F2", CultureInfo.InvariantCulture)
                                      + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
@@ -696,18 +675,18 @@ namespace NiceHashMiner
                 toolStripStatusLabelBTCDayText.Text =
                     "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 toolStripStatusLabelGlobalRateValue.Text =
-                    (totalRate * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
+                    (totalRate * 1000 * TimeFactor.TimeUnit).ToString("F5", CultureInfo.InvariantCulture);
             }
             else
             {
                 toolStripStatusLabelBTCDayText.Text =
                     "BTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 toolStripStatusLabelGlobalRateValue.Text =
-                    (totalRate * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture);
+                    (totalRate * TimeFactor.TimeUnit).ToString("F6", CultureInfo.InvariantCulture);
             }
 
             toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
-                .ConvertToActiveCurrency((totalRate * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
+                .ConvertToActiveCurrency((totalRate * TimeFactor.TimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
                 .ToString("F2", CultureInfo.InvariantCulture);
             toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                                                    International.GetText(
@@ -973,19 +952,19 @@ namespace NiceHashMiner
             StopMining();
         }
 
-        private string FormatPayingOutput(double paying)
-        {
-            string ret;
+        //private string FormatPayingOutput(double paying)
+        //{
+        //    string ret;
 
-            if (ConfigManager.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
-                ret = (paying * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + " mBTC/" +
-                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            else
-                ret = (paying * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) + " BTC/" +
-                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+        //    if (ConfigManager.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
+        //        ret = (paying * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + " mBTC/" +
+        //              International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+        //    else
+        //        ret = (paying * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) + " BTC/" +
+        //              International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
-            return ret;
-        }
+        //    return ret;
+        //}
 
 
         private void ButtonLogo_Click(object sender, EventArgs e)
