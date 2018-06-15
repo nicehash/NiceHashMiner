@@ -87,7 +87,7 @@ namespace NiceHashMiner.Forms.Components
 
         public double FactorTimeUnit;
 
-        private List<List<int>> _indexTotals = new List<List<int>>();
+        private readonly List<List<int>> _indexTotals = new List<List<int>>();
 
         public DevicesListViewSpeedControl()
         {
@@ -101,11 +101,9 @@ namespace NiceHashMiner.Forms.Components
             BenchmarkCalculation = null;
         }
 
-        public void InitLocale()
+        public override void InitLocale()
         {
-            listViewDevices.Columns[ENABLED].Text =
-                International.GetText("ListView_Device"); //International.GetText("ListView_Enabled");
-            //listViewDevices.Columns[DEVICE].Text = International.GetText("ListView_Device");
+            base.InitLocale();
         }
 
         protected override void DevicesListViewEnableControl_Resize(object sender, EventArgs e)
@@ -207,6 +205,13 @@ namespace NiceHashMiner.Forms.Components
                       International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
             return ret;
+        }
+
+        public void SetPayingColumns()
+        {
+            var timeUnit = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+            profitHeader.Text = $"mBTC/{timeUnit}";
+            fiatHeader.Text = $"{ExchangeRateApi.ActiveDisplayCurrency}/{timeUnit}";
         }
 
         #region IRatesCommunication Implementation

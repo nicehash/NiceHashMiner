@@ -194,6 +194,8 @@ namespace NiceHashMiner
             {
                 devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             }
+
+            devicesListViewEnableControl1.SetPayingColumns();
         }
 
         public void AfterLoadComplete()
