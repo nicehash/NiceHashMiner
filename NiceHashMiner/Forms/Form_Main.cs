@@ -23,7 +23,7 @@ namespace NiceHashMiner
 {
     using System.IO;
 
-    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller
+    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IGlobalRatesUpdate
     {
         private string _visitUrlNew = Links.VisitUrlNew;
 
@@ -666,7 +666,7 @@ namespace NiceHashMiner
             }
         }
 
-        private void UpdateGlobalRate()
+        public void UpdateGlobalRate()
         {
             var totalRate = MinersManager.GetTotalRate();
 

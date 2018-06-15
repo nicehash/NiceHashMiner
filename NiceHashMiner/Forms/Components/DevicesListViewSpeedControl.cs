@@ -13,7 +13,7 @@ using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Forms.Components
 {
-    public partial class DevicesListViewSpeedControl : DevicesListViewEnableControl, IRatesComunication
+    internal partial class DevicesListViewSpeedControl : DevicesListViewEnableControl, IRatesComunication
     {
         private const int ENABLED = 0;
         private const int Speed = 1;
@@ -80,6 +80,7 @@ namespace NiceHashMiner.Forms.Components
                     _isMining = false;
                     listViewDevices.CheckBoxes = true;
                 }
+                Enabled = !value;
             }
         }
 
@@ -87,7 +88,9 @@ namespace NiceHashMiner.Forms.Components
 
         private readonly List<List<int>> _indexTotals = new List<List<int>>();
 
-        public DevicesListViewSpeedControl()
+        private readonly IGlobalRatesUpdate _globalRates;
+
+        public DevicesListViewSpeedControl(IGlobalRatesUpdate global)
         {
             InitializeComponent();
 
@@ -97,6 +100,7 @@ namespace NiceHashMiner.Forms.Components
             //listViewDevices.CheckBoxes = false;
             IsMining = false;
             BenchmarkCalculation = null;
+            _globalRates = global;
         }
 
         public override void InitLocale()
@@ -223,6 +227,8 @@ namespace NiceHashMiner.Forms.Components
 
         public void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
         {
+            Enabled = true;
+
             var key = string.Join(",", iApiData.DeviceIndices);
             if (!_indexTotals.Any(l => iApiData.DeviceIndices.All(l.Contains)))
             {
@@ -255,6 +261,8 @@ namespace NiceHashMiner.Forms.Components
                     catch { }
                 }
             }
+
+            _globalRates.UpdateGlobalRate();
 
             //var header = AlgorithmNiceHashNames.GetName(iApiData.AlgorithmID) + $"    {Helpers.FormatSpeedOutput(iApiData.Speed)}";
             //if (iApiData.SecondaryAlgorithmID != AlgorithmType.NONE)
