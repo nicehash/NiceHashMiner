@@ -6,7 +6,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner
 {
-    internal class International
+    internal static class International
     {
         private class Language
         {
@@ -94,16 +94,16 @@ namespace NiceHashMiner
             if (_selectedLanguage == null) return "";
             if (!_selectedLanguage.Entries.ContainsKey(token))
             {
-                if (_english.Entries.ContainsKey(token))
-                {
-                    // Default to English if no token for selected lang
-                    return _english.Entries[token];
-                }
-
-                return "";
+                // Default to English if no token for selected lang
+                return _english.Entries.ContainsKey(token) ? _english.Entries[token] : "";
             }
 
             return _selectedLanguage.Entries[token];
+        }
+
+        public static string GetText(string token, params object[] args)
+        {
+            return string.Format(GetText(token), args);
         }
     }
 }
