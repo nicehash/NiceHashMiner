@@ -111,7 +111,7 @@ namespace NiceHashMiner.Forms.Components
             BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
         }
 
-        private void ListViewDevices_MouseClick(object sender, MouseEventArgs e)
+        protected override void ListViewDevices_MouseClick(object sender, MouseEventArgs e)
         {
             if (IsInBenchmark) return;
             if (IsMining) return;

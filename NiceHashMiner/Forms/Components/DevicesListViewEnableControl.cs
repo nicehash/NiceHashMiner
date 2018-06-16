@@ -109,5 +109,10 @@ namespace NiceHashMiner.Forms.Components
                 ch.Width = Width - 10;
             }
         }
+
+        protected virtual void ListViewDevices_MouseClick(object sender, MouseEventArgs e)
+        {
+
+        }
     }
 }

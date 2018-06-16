@@ -114,6 +114,9 @@ namespace NiceHashMiner.Configs.Data
         /// </summary>
         public bool UseSmaCache = true;
 
+        public bool ShowPowerColumns = false;
+        public bool ShowDiagColumns = true;
+
         // methods
         public void SetDefaults()
         {
@@ -170,6 +173,8 @@ namespace NiceHashMiner.Configs.Data
             SwitchSmaTicksStable = new Interval(2, 3);
             SwitchSmaTicksUnstable = new Interval(5, 13);
             UseSmaCache = true;
+            ShowPowerColumns = false;
+            ShowDiagColumns = true;
         }
 
         public void FixSettingBounds()

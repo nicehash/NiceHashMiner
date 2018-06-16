@@ -21,6 +21,9 @@ namespace NiceHashMiner.Forms.Components
         private const int Profit = 3;
         private const int Fiat = 4;
 
+        private const string PowerKey = "power";
+        private const string DiagKey = "diag";
+
         private class DefaultDevicesColorSeter : IListItemCheckColorSetter
         {
             private static readonly Color EnabledColor = Color.White;
@@ -90,6 +93,8 @@ namespace NiceHashMiner.Forms.Components
 
         public IGlobalRatesUpdate GlobalRates;
 
+        private readonly Timer _diagTimer = new Timer();
+
         public DevicesListViewSpeedControl()
         {
             InitializeComponent();
@@ -119,7 +124,14 @@ namespace NiceHashMiner.Forms.Components
         public override void SetComputeDevices(List<ComputeDevice> devices)
         {
             _devices = devices;
-            base.SetComputeDevices(devices);
+            UpdateListView();
+
+            if (ConfigManager.GeneralConfig.ShowDiagColumns)
+            {
+                _diagTimer.Interval = 2000;
+                _diagTimer.Tick += DiagTimerOnTick;
+                _diagTimer.Start();
+            }
         }
 
         private void UpdateListView()
@@ -129,7 +141,30 @@ namespace NiceHashMiner.Forms.Components
             SaveToGeneralConfig = false;
             listViewDevices.BeginUpdate();
             listViewDevices.Items.Clear();
-            // set devices
+
+            var numItems = 4;
+
+            RemoveOptionalHeaders(PowerKey);
+            RemoveOptionalHeaders(DiagKey);
+            if (ConfigManager.GeneralConfig.ShowPowerColumns)
+            {
+                SetOptionalHeaders(PowerKey);
+                numItems += 3;
+            }
+            else
+            {
+            }
+
+            if (ConfigManager.GeneralConfig.ShowDiagColumns)
+            { 
+                SetOptionalHeaders(DiagKey);
+                numItems += 3;
+            }
+            else
+            {
+            }
+
+        // set devices
             var lastIndex = 0;
             var allIndices = _indexTotals.SelectMany(i => i).ToList();
             var endIndex = -1;
@@ -150,8 +185,15 @@ namespace NiceHashMiner.Forms.Components
                     Text = computeDevice.GetFullName(),
                     Tag = computeDevice
                 };
+
+                for (var i = 0; i < numItems; i++)
+                {
+                    lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
+                }
+
                 //lvi.SubItems.Add(computeDevice.Name);
                 listViewDevices.Items.Add(lvi);
+
                 SetLvi(lvi, computeDevice.Index);
                 endIndex = computeDevice.Index;
             }
@@ -165,6 +207,25 @@ namespace NiceHashMiner.Forms.Components
             listViewDevices.Invalidate(true);
             // reset properties
             SaveToGeneralConfig = tmpSaveToGeneralConfig;
+        }
+
+        private void SetOptionalHeaders(string key)
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                if (listViewDevices.Columns.ContainsKey($"{key}{i}"))
+                    continue;
+
+                listViewDevices.Columns.Add($"{key}{i}", $"{key}{i}", 60, HorizontalAlignment.Right, "");
+            }
+        }
+
+        private void RemoveOptionalHeaders(string key)
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                listViewDevices.Columns.RemoveByKey($"{key}{i}");
+            }
         }
 
         private void SetTotalRow(List<int> indices, int index)
@@ -213,6 +274,70 @@ namespace NiceHashMiner.Forms.Components
             var timeUnit = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
             profitHeader.Text = $"mBTC/{timeUnit}";
             fiatHeader.Text = $"{ExchangeRateApi.ActiveDisplayCurrency}/{timeUnit}";
+        }
+
+        protected override void ListViewDevices_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+
+            contextMenuStrip1.Items.Clear();
+
+            var showPower = new ToolStripMenuItem("Show Power Info")
+            {
+                Tag = PowerKey
+            };
+            var showDiag = new ToolStripMenuItem("Show Diagnostic Info")
+            {
+                Tag = DiagKey
+            };
+
+            showPower.Click += SetPowerHeaders;
+            showDiag.Click += SetDiagHeaders;
+
+            contextMenuStrip1.Items.Add(showPower);
+            contextMenuStrip1.Items.Add(showDiag);
+            contextMenuStrip1.Show(Cursor.Position);
+        }
+
+        private void SetPowerHeaders(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ShowPowerColumns = !ConfigManager.GeneralConfig.ShowPowerColumns;
+            UpdateListView();
+        }
+
+        private void SetDiagHeaders(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.ShowDiagColumns = !ConfigManager.GeneralConfig.ShowDiagColumns;
+            UpdateListView();
+
+            if (ConfigManager.GeneralConfig.ShowDiagColumns)
+            {
+                _diagTimer.Start();
+            }
+            else
+            {
+                _diagTimer.Stop();
+            }
+        }
+
+        private void DiagTimerOnTick(object sender, EventArgs e)
+        {
+            foreach (var lvi in listViewDevices.Items)
+            {
+                if (!(lvi is ListViewItem item) || !(item.Tag is ComputeDevice dev)) continue;
+                
+                SetDiagText(item, 0, (int) dev.Load);
+                SetDiagText(item, 1, (int) dev.Temp);
+                SetDiagText(item, 2, dev.FanSpeed);
+            }
+        }
+
+        private void SetDiagText(ListViewItem item, int index, int value)
+        {
+            if (value < 0) return;
+
+            var start = ConfigManager.GeneralConfig.ShowPowerColumns ? 8 : 5;
+            item.SubItems[start + index].Text = value.ToString();
         }
 
         #region IRatesCommunication Implementation

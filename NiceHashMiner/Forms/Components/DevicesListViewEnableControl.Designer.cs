@@ -41,12 +41,13 @@
             this.listViewDevices.FullRowSelect = true;
             this.listViewDevices.GridLines = true;
             this.listViewDevices.Location = new System.Drawing.Point(0, 0);
-            this.listViewDevices.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.listViewDevices.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.listViewDevices.Name = "listViewDevices";
-            this.listViewDevices.Size = new System.Drawing.Size(1294, 582);
+            this.listViewDevices.Size = new System.Drawing.Size(970, 466);
             this.listViewDevices.TabIndex = 5;
             this.listViewDevices.UseCompatibleStateImageBehavior = false;
             this.listViewDevices.View = System.Windows.Forms.View.Details;
+            this.listViewDevices.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListViewDevices_MouseClick);
             // 
             // devicesHeader
             // 
@@ -60,28 +61,28 @@
             this.toolStripMenuItemEnable,
             this.toolStripMenuItem1});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(334, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(266, 64);
             // 
             // toolStripMenuItemEnable
             // 
             this.toolStripMenuItemEnable.Name = "toolStripMenuItemEnable";
-            this.toolStripMenuItemEnable.Size = new System.Drawing.Size(333, 36);
+            this.toolStripMenuItemEnable.Size = new System.Drawing.Size(265, 30);
             this.toolStripMenuItemEnable.Text = "Enable Benchmark";
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(333, 36);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(265, 30);
             this.toolStripMenuItem1.Text = "Copy Benchmark From";
             // 
             // DevicesListViewEnableControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.listViewDevices);
-            this.Margin = new System.Windows.Forms.Padding(6, 6, 6, 6);
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "DevicesListViewEnableControl";
-            this.Size = new System.Drawing.Size(1294, 582);
+            this.Size = new System.Drawing.Size(970, 466);
             this.Resize += new System.EventHandler(this.DevicesListViewEnableControl_Resize);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
