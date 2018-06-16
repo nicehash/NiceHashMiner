@@ -1152,7 +1152,7 @@ namespace NiceHashMiner
             buttonBenchmark.Enabled = false;
             buttonStartMining.Enabled = false;
             buttonSettings.Enabled = false;
-            devicesListViewEnableControl1.IsMining = true;
+            devicesListViewEnableControl1.SetIsMining(true);
             buttonStopMining.Enabled = true;
 
             // Disable profitable notification on start
@@ -1205,7 +1205,7 @@ namespace NiceHashMiner
             buttonBenchmark.Enabled = true;
             buttonStartMining.Enabled = true;
             buttonSettings.Enabled = true;
-            devicesListViewEnableControl1.IsMining = false;
+            devicesListViewEnableControl1.SetIsMining(false);
             buttonStopMining.Enabled = false;
 
             if (_demoMode)

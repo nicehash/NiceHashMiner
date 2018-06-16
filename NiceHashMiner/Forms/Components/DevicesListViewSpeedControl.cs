@@ -15,7 +15,6 @@ namespace NiceHashMiner.Forms.Components
 {
     internal partial class DevicesListViewSpeedControl : DevicesListViewEnableControl, IRatesComunication
     {
-        private const int ENABLED = 0;
         private const int Speed = 1;
         private const int SecSpeed = 2;
         private const int Profit = 3;
@@ -23,69 +22,6 @@ namespace NiceHashMiner.Forms.Components
 
         private const string PowerKey = "power";
         private const string DiagKey = "diag";
-
-        private class DefaultDevicesColorSeter : IListItemCheckColorSetter
-        {
-            private static readonly Color EnabledColor = Color.White;
-            private static readonly Color DisabledColor = Color.DarkGray;
-
-            public void LviSetColor(ListViewItem lvi)
-            {
-                if (lvi.Tag is ComputeDevice cdvo)
-                {
-                    lvi.BackColor = cdvo.Enabled ? EnabledColor : DisabledColor;
-                }
-            }
-        }
-
-        private IListItemCheckColorSetter _listItemCheckColorSetter = new DefaultDevicesColorSeter();
-
-        public IBenchmarkCalculation BenchmarkCalculation { get; set; }
-
-        private AlgorithmsListView _algorithmsListView;
-
-        // disable checkboxes when in benchmark mode
-        private bool _isInBenchmark;
-
-        // helper for benchmarking logic
-        public bool IsInBenchmark
-        {
-            get => _isInBenchmark;
-            set
-            {
-                if (value)
-                {
-                    _isInBenchmark = true;
-                    listViewDevices.CheckBoxes = false;
-                }
-                else
-                {
-                    _isInBenchmark = false;
-                    listViewDevices.CheckBoxes = true;
-                }
-            }
-        }
-
-        private bool _isMining;
-
-        public bool IsMining
-        {
-            get => _isMining;
-            set
-            {
-                if (value)
-                {
-                    _isMining = true;
-                    listViewDevices.CheckBoxes = false;
-                }
-                else
-                {
-                    _isMining = false;
-                    listViewDevices.CheckBoxes = true;
-                }
-                Enabled = !value;
-            }
-        }
 
         private List<ComputeDevice> _devices;
 
@@ -102,42 +38,35 @@ namespace NiceHashMiner.Forms.Components
             SaveToGeneralConfig = false;
             // intialize ListView callbacks
             listViewDevices.ItemChecked += ListViewDevicesItemChecked;
-            //listViewDevices.CheckBoxes = false;
-            IsMining = false;
-            BenchmarkCalculation = null;
+        }
+
+        public void SetIsMining(bool isMining)
+        {
+            listViewDevices.CheckBoxes = !isMining;
+            Enabled = !isMining;
         }
 
         public override void InitLocale()
         {
             base.InitLocale();
+            // TODO
         }
 
-        protected override void DevicesListViewEnableControl_Resize(object sender, EventArgs e)
-        {
-            // only one 
-            //foreach (ColumnHeader ch in listViewDevices.Columns)
-            //{
-            //    ch.Width = Width - 10;
-            //}
-        }
+        #region ListView updating
 
         public override void SetComputeDevices(List<ComputeDevice> devices)
         {
             _devices = devices;
             UpdateListView();
 
-            if (ConfigManager.GeneralConfig.ShowDiagColumns)
-            {
-                _diagTimer.Interval = 2000;
-                _diagTimer.Tick += DiagTimerOnTick;
-                _diagTimer.Start();
-            }
+            if (!ConfigManager.GeneralConfig.ShowDiagColumns) return;
+            _diagTimer.Interval = 2000;
+            _diagTimer.Tick += DiagTimerOnTick;
+            _diagTimer.Start();
         }
 
         private void UpdateListView()
         {
-            // to not run callbacks when setting new
-            var tmpSaveToGeneralConfig = SaveToGeneralConfig;
             SaveToGeneralConfig = false;
             listViewDevices.BeginUpdate();
             listViewDevices.Items.Clear();
@@ -151,20 +80,14 @@ namespace NiceHashMiner.Forms.Components
                 SetOptionalHeaders(PowerKey);
                 numItems += 3;
             }
-            else
-            {
-            }
 
             if (ConfigManager.GeneralConfig.ShowDiagColumns)
             { 
                 SetOptionalHeaders(DiagKey);
                 numItems += 3;
             }
-            else
-            {
-            }
 
-        // set devices
+            // set devices
             var lastIndex = 0;
             var allIndices = _indexTotals.SelectMany(i => i).ToList();
             var endIndex = -1;
@@ -206,26 +129,7 @@ namespace NiceHashMiner.Forms.Components
             listViewDevices.EndUpdate();
             listViewDevices.Invalidate(true);
             // reset properties
-            SaveToGeneralConfig = tmpSaveToGeneralConfig;
-        }
-
-        private void SetOptionalHeaders(string key)
-        {
-            for (var i = 0; i < 3; i++)
-            {
-                if (listViewDevices.Columns.ContainsKey($"{key}{i}"))
-                    continue;
-
-                listViewDevices.Columns.Add($"{key}{i}", $"{key}{i}", 60, HorizontalAlignment.Right, "");
-            }
-        }
-
-        private void RemoveOptionalHeaders(string key)
-        {
-            for (var i = 0; i < 3; i++)
-            {
-                listViewDevices.Columns.RemoveByKey($"{key}{i}");
-            }
+            SaveToGeneralConfig = true;
         }
 
         private void SetTotalRow(List<int> indices, int index)
@@ -255,26 +159,16 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private string FormatPayingOutput(double paying)
-        {
-            string ret;
-
-            if (ConfigManager.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
-                ret = (paying * 1000 * TimeFactor.TimeUnit).ToString("F5", CultureInfo.InvariantCulture) + " mBTC/" +
-                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            else
-                ret = (paying * TimeFactor.TimeUnit).ToString("F6", CultureInfo.InvariantCulture) + " BTC/" +
-                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-
-            return ret;
-        }
-
         public void SetPayingColumns()
         {
             var timeUnit = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
             profitHeader.Text = $"mBTC/{timeUnit}";
             fiatHeader.Text = $"{ExchangeRateApi.ActiveDisplayCurrency}/{timeUnit}";
         }
+
+        #endregion
+
+        #region Optional Headers
 
         protected override void ListViewDevices_MouseClick(object sender, MouseEventArgs e)
         {
@@ -332,13 +226,34 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private void SetDiagText(ListViewItem item, int index, int value)
+        private static void SetDiagText(ListViewItem item, int index, int value)
         {
             if (value < 0) return;
 
             var start = ConfigManager.GeneralConfig.ShowPowerColumns ? 8 : 5;
             item.SubItems[start + index].Text = value.ToString();
         }
+
+        private void SetOptionalHeaders(string key)
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                if (listViewDevices.Columns.ContainsKey($"{key}{i}"))
+                    continue;
+
+                listViewDevices.Columns.Add($"{key}{i}", $"{key}{i}", 60, HorizontalAlignment.Right, "");
+            }
+        }
+
+        private void RemoveOptionalHeaders(string key)
+        {
+            for (var i = 0; i < 3; i++)
+            {
+                listViewDevices.Columns.RemoveByKey($"{key}{i}");
+            }
+        }
+
+        #endregion
 
         #region IRatesCommunication Implementation
 
