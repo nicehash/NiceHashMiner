@@ -641,6 +641,7 @@ namespace NiceHashMiner.Forms
         private void InitializeDevicesCallbacks()
         {
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
+            minDeviceProfitField.Leave += MinDeviceProfitFieldLeft;
         }
 
         #endregion //Tab Devices
@@ -844,6 +845,17 @@ namespace NiceHashMiner.Forms
                 _selectedComputeDevice.Name);
             minDeviceProfitField.Enabled = true;
             minDeviceProfitField.EntryText = _selectedComputeDevice.MinimumProfit.ToString("F2").Replace(',', '.');
+        }
+
+        private void MinDeviceProfitFieldLeft(object sender, EventArgs e)
+        {
+            if (_selectedComputeDevice != null && 
+                double.TryParse(minDeviceProfitField.EntryText, out var min))
+            {
+                if (min < 0) min = 0;
+
+                _selectedComputeDevice.MinimumProfit = min;
+            }
         }
 
         private void ButtonSelectedProfit_Click(object sender, EventArgs e)
