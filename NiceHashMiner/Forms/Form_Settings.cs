@@ -842,6 +842,8 @@ namespace NiceHashMiner.Forms
             algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
             groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
                 _selectedComputeDevice.Name);
+            minDeviceProfitField.Enabled = true;
+            minDeviceProfitField.EntryText = _selectedComputeDevice.MinimumProfit.ToString("F2").Replace(',', '.');
         }
 
         private void ButtonSelectedProfit_Click(object sender, EventArgs e)
