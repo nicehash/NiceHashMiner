@@ -13,17 +13,18 @@ namespace NiceHashMiner.Miners
         public double Speed;
         public double SecondarySpeed;
         public double PowerUsage;
+        public readonly List<int> DeviceIndices;
 
-        public readonly List<ComputeDevice> Devices;
-
-        public IEnumerable<int> DeviceIndices => Devices.Select(d => d.Index);
+        public ApiData(AlgorithmType algorithmID, List<int> indices, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)
+        {
+            AlgorithmID = algorithmID;
+            SecondaryAlgorithmID = secondaryAlgorithmID;
+            AlgorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmID, secondaryAlgorithmID));
+            DeviceIndices = indices;
+        }
 
         public ApiData(AlgorithmType algo, IEnumerable<ComputeDevice> devices, AlgorithmType secondaryAlgo = AlgorithmType.NONE)
-        {
-            AlgorithmID = algo;
-            SecondaryAlgorithmID = secondaryAlgo;
-            AlgorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algo, secondaryAlgo));
-            Devices = (devices as List<ComputeDevice>) ?? devices.ToList();
-        }
+            : this(algo, devices.Select(d => d.Index).ToList(), secondaryAlgo)
+        { }
     }
 }

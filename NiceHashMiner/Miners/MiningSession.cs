@@ -618,7 +618,7 @@ namespace NiceHashMiner.Miners
                     {
                         groupMiners.CurrentRate = 0;
                         // set empty
-                        ad = new ApiData(groupMiners.AlgorithmType, groupMiners.Miner.MiningSetup.MiningPairs.Select(p => p.Device));
+                        ad = new ApiData(groupMiners.AlgorithmType, groupMiners.DevIndexes);
                     }
 
                     currentProfit += groupMiners.CurrentRate;
