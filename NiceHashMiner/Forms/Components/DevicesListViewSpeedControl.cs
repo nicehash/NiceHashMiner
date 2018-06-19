@@ -38,6 +38,9 @@ namespace NiceHashMiner.Forms.Components
             SaveToGeneralConfig = false;
             // intialize ListView callbacks
             listViewDevices.ItemChecked += ListViewDevicesItemChecked;
+
+            _diagTimer.Interval = 2000;
+            _diagTimer.Tick += DiagTimerOnTick;
         }
 
         public void SetIsMining(bool isMining)
@@ -60,8 +63,6 @@ namespace NiceHashMiner.Forms.Components
             UpdateListView();
 
             if (!ConfigManager.GeneralConfig.ShowDiagColumns) return;
-            _diagTimer.Interval = 2000;
-            _diagTimer.Tick += DiagTimerOnTick;
             _diagTimer.Start();
         }
 
@@ -182,11 +183,13 @@ namespace NiceHashMiner.Forms.Components
 
             var showPower = new ToolStripMenuItem("Show Power Info")
             {
-                Tag = PowerKey
+                Tag = PowerKey,
+                Checked = ConfigManager.GeneralConfig.ShowPowerColumns
             };
             var showDiag = new ToolStripMenuItem("Show Diagnostic Info")
             {
-                Tag = DiagKey
+                Tag = DiagKey,
+                Checked = ConfigManager.GeneralConfig.ShowDiagColumns
             };
 
             showPower.Click += SetPowerHeaders;
@@ -235,6 +238,7 @@ namespace NiceHashMiner.Forms.Components
             if (value < 0) return;
 
             var start = ConfigManager.GeneralConfig.ShowPowerColumns ? 8 : 5;
+            if (item.SubItems.Count <= start + index) return;
             item.SubItems[start + index].Text = value.ToString();
         }
 
