@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
@@ -43,6 +44,18 @@ namespace NiceHashMiner.Forms.Components
             _diagTimer.Tick += DiagTimerOnTick;
         }
 
+        private static bool ShowPowerCols
+        {
+            get => ConfigManager.GeneralConfig.ShowPowerColumns;
+            set => ConfigManager.GeneralConfig.ShowPowerColumns = value;
+        }
+
+        private static bool ShowDiagCols
+        {
+            get => ConfigManager.GeneralConfig.ShowDiagColumns;
+            set => ConfigManager.GeneralConfig.ShowDiagColumns = value;
+        }
+
         public void SetIsMining(bool isMining)
         {
             listViewDevices.CheckBoxes = !isMining;
@@ -62,7 +75,7 @@ namespace NiceHashMiner.Forms.Components
             _devices = devices;
             UpdateListView();
 
-            if (!ConfigManager.GeneralConfig.ShowDiagColumns) return;
+            if (!ShowDiagCols) return;
             _diagTimer.Start();
         }
 
@@ -76,13 +89,13 @@ namespace NiceHashMiner.Forms.Components
 
             RemoveOptionalHeaders(PowerKey);
             RemoveOptionalHeaders(DiagKey);
-            if (ConfigManager.GeneralConfig.ShowPowerColumns)
+            if (ShowPowerCols)
             {
                 SetOptionalHeaders(PowerKey);
                 numItems += 3;
             }
 
-            if (ConfigManager.GeneralConfig.ShowDiagColumns)
+            if (ShowDiagCols)
             { 
                 SetOptionalHeaders(DiagKey);
                 numItems += 3;
@@ -184,12 +197,12 @@ namespace NiceHashMiner.Forms.Components
             var showPower = new ToolStripMenuItem("Show Power Info")
             {
                 Tag = PowerKey,
-                Checked = ConfigManager.GeneralConfig.ShowPowerColumns
+                Checked = ShowPowerCols
             };
             var showDiag = new ToolStripMenuItem("Show Diagnostic Info")
             {
                 Tag = DiagKey,
-                Checked = ConfigManager.GeneralConfig.ShowDiagColumns
+                Checked = ShowDiagCols
             };
 
             showPower.Click += SetPowerHeaders;
@@ -202,16 +215,16 @@ namespace NiceHashMiner.Forms.Components
 
         private void SetPowerHeaders(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.ShowPowerColumns = !ConfigManager.GeneralConfig.ShowPowerColumns;
+            ShowPowerCols = !ShowPowerCols;
             UpdateListView();
         }
 
         private void SetDiagHeaders(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.ShowDiagColumns = !ConfigManager.GeneralConfig.ShowDiagColumns;
+            ShowDiagCols = !ShowDiagCols;
             UpdateListView();
 
-            if (ConfigManager.GeneralConfig.ShowDiagColumns)
+            if (ShowDiagCols)
             {
                 _diagTimer.Start();
             }
@@ -237,9 +250,16 @@ namespace NiceHashMiner.Forms.Components
         {
             if (value < 0) return;
 
-            var start = ConfigManager.GeneralConfig.ShowPowerColumns ? 8 : 5;
+            var start = ShowPowerCols ? 8 : 5;
             if (item.SubItems.Count <= start + index) return;
             item.SubItems[start + index].Text = value.ToString();
+        }
+
+        private void SetPowerText()
+        {
+            if (!ShowPowerCols) return;
+
+            
         }
 
         private void SetOptionalHeaders(string key)

@@ -1,4 +1,6 @@
-﻿namespace NiceHashMiner.Interfaces
+﻿using NiceHashMiner.Miners;
+
+namespace NiceHashMiner.Interfaces
 {
     public interface IRatesComunication
     {

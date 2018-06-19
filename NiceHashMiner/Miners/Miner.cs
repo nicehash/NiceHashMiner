@@ -23,32 +23,6 @@ using Timer = System.Timers.Timer;
 
 namespace NiceHashMiner
 {
-    public class ApiData
-    {
-        public AlgorithmType AlgorithmID;
-        public AlgorithmType SecondaryAlgorithmID;
-        public string AlgorithmName;
-        public double Speed;
-        public double SecondarySpeed;
-        public double PowerUsage;
-        public List<int> DeviceIndices;
-
-        public ApiData(AlgorithmType algorithmID, List<int> indices, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)
-        {
-            AlgorithmID = algorithmID;
-            SecondaryAlgorithmID = secondaryAlgorithmID;
-            AlgorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmID, secondaryAlgorithmID));
-            Speed = 0.0;
-            SecondarySpeed = 0.0;
-            PowerUsage = 0.0;
-            DeviceIndices = indices;
-        }
-
-        public ApiData(AlgorithmType algo, IEnumerable<ComputeDevice> devices, AlgorithmType secondaryAlgo = AlgorithmType.NONE)
-            : this(algo, devices.Select(d => d.Index).ToList(), secondaryAlgo)
-        { }
-    }
-
     // 
     public class MinerPidData
     {
