@@ -10,9 +10,13 @@ namespace NiceHashMiner.Miners
         public readonly AlgorithmType AlgorithmID;
         public readonly AlgorithmType SecondaryAlgorithmID;
         public readonly string AlgorithmName;
+
         public double Speed;
         public double SecondarySpeed;
         public double PowerUsage;
+        public double Profit;
+        public double Revenue;
+
         public readonly List<int> DeviceIndices;
 
         public ApiData(AlgorithmType algorithmID, List<int> indices, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)

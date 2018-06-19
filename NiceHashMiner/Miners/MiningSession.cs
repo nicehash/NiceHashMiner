@@ -610,8 +610,17 @@ namespace NiceHashMiner.Miners
                         {
                             groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
                         }
+
+                        ad.Revenue = groupMiners.CurrentRate;
+
                         // Deduct power costs
-                        var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
+                        double powerUsage;
+                        if (ad.PowerUsage > 0) powerUsage = ad.PowerUsage;
+                        else
+                        {
+                            powerUsage = groupMiners.TotalPower;
+                            ad.PowerUsage = groupMiners.TotalPower;
+                        }
                         groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
                     }
                     else
@@ -622,6 +631,8 @@ namespace NiceHashMiner.Miners
                     }
 
                     currentProfit += groupMiners.CurrentRate;
+                    ad.Profit = groupMiners.CurrentRate;
+
                     // Update GUI
                     _ratesComunication.AddRateInfo(ad, groupMiners.CurrentRate, m.IsApiReadException);
                 }

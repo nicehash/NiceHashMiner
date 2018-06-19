@@ -109,6 +109,11 @@ namespace NiceHashMiner.Stats
             return price / UsdBtcRate;
         }
 
+        public static double GetKwhPriceInFiat()
+        {
+            return ConvertFromBtc(GetKwhPriceInBtc());
+        }
+
         //[Obsolete("UpdateApi is deprecated, use websocket method")]
         //public static void UpdateApi(string worker)
         //{
