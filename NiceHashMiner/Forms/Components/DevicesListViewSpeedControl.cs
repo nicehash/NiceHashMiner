@@ -166,6 +166,10 @@ namespace NiceHashMiner.Forms.Components
             fiatHeader.Text = $"{ExchangeRateApi.ActiveDisplayCurrency}/{timeUnit}";
         }
 
+        protected override void DevicesListViewEnableControl_Resize(object sender, EventArgs e)
+        {
+        }
+
         #endregion
 
         #region Optional Headers
