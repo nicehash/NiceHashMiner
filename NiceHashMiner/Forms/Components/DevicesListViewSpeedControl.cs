@@ -114,7 +114,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (!_indexTotals[lastIndex].Contains(computeDevice.Index))
                     {
-                        SetTotalRow(_indexTotals[lastIndex], endIndex);
+                        SetTotalRow(_indexTotals[lastIndex], endIndex, numItems);
                         lastIndex++;
                     }
                 }
@@ -140,7 +140,7 @@ namespace NiceHashMiner.Forms.Components
 
             if (endIndex > 0 && _indexTotals.Count > lastIndex && allIndices.Contains(endIndex))
             {
-                SetTotalRow(_indexTotals[lastIndex], endIndex);
+                SetTotalRow(_indexTotals[lastIndex], endIndex, numItems);
             }
 
             listViewDevices.EndUpdate();
@@ -149,14 +149,14 @@ namespace NiceHashMiner.Forms.Components
             SaveToGeneralConfig = true;
         }
 
-        private void SetTotalRow(List<int> indices, int index)
+        private void SetTotalRow(List<int> indices, int index, int numSubs)
         {
             var total = new ListViewItem
             {
                 Text = "Total",
                 Tag = indices
             };
-            for (var i = 0; i < 4; i++)
+            for (var i = 0; i < numSubs; i++)
             {
                 total.SubItems.Add(new ListViewItem.ListViewSubItem());
             }
@@ -329,17 +329,18 @@ namespace NiceHashMiner.Forms.Components
                         item.SubItems[Speed].Text = Helpers.FormatSpeedOutput(iApiData.Speed);
                         if (iApiData.SecondaryAlgorithmID != AlgorithmType.NONE)
                             item.SubItems[SecSpeed].Text = Helpers.FormatSpeedOutput(iApiData.SecondarySpeed);
-                        item.SubItems[Profit].Text = (paying * 1000 * TimeFactor.TimeUnit).ToString("F4");
 
                         var fiat = ExchangeRateApi.ConvertFromBtc(paying * TimeFactor.TimeUnit);
                         if (ShowPowerCols)
                         {
+                            item.SubItems[Profit].Text = (iApiData.Revenue * 1000 * TimeFactor.TimeUnit).ToString("F4");
                             item.SubItems[Fiat].Text = ExchangeRateApi.ConvertFromBtc(iApiData.Revenue * TimeFactor.TimeUnit).ToString("F2");
                             var powerCost = ExchangeRateApi.ConvertFromBtc((iApiData.Revenue - iApiData.Profit) * TimeFactor.TimeUnit);
                             SetPowerText(item, iApiData.PowerUsage, powerCost, fiat);
                         }
                         else
                         {
+                            item.SubItems[Profit].Text = (paying * 1000 * TimeFactor.TimeUnit).ToString("F4");
                             item.SubItems[Fiat].Text = fiat.ToString("F2");
                         }
                     }
@@ -352,7 +353,7 @@ namespace NiceHashMiner.Forms.Components
                     // TODO fall back on entered values
                     if (power < 0) power = 0;
                     // Cost of electricity used in fiat currency
-                    var powerCost = ExchangeRateApi.GetKwhPriceInFiat() * power / 1000;
+                    var powerCost = ExchangeRateApi.GetKwhPriceInFiat() * power * 24 * TimeFactor.TimeUnit / 1000;
 
                     SetPowerText(item, power, powerCost, null);
                 }

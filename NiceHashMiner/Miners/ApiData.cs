@@ -27,8 +27,14 @@ namespace NiceHashMiner.Miners
             DeviceIndices = indices;
         }
 
-        public ApiData(AlgorithmType algo, IEnumerable<ComputeDevice> devices, AlgorithmType secondaryAlgo = AlgorithmType.NONE)
+        public ApiData(AlgorithmType algo, IEnumerable<ComputeDevice> devices,
+            AlgorithmType secondaryAlgo = AlgorithmType.NONE, double totalPower = -1)
             : this(algo, devices.Select(d => d.Index).ToList(), secondaryAlgo)
-        { }
+        {
+            if (totalPower < 0)
+            {
+                PowerUsage = devices.Sum(d => d.PowerUsage);
+            }
+        }
     }
 }

@@ -111,7 +111,8 @@ namespace NiceHashMiner.Stats
 
         public static double GetKwhPriceInFiat()
         {
-            return ConvertFromBtc(GetKwhPriceInBtc());
+            var price = ConfigManager.GeneralConfig.KwhPrice;
+            return price > 0 ? price : 0;
         }
 
         //[Obsolete("UpdateApi is deprecated, use websocket method")]
