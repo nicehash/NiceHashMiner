@@ -331,7 +331,8 @@ namespace NiceHashMiner.Forms.Components
             }
             if (listViewDevices.Groups[key] == null)
             {
-                var group = new ListViewGroup(key, AlgorithmNiceHashNames.GetName(iApiData.AlgorithmID))
+                var name = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(iApiData.AlgorithmID, iApiData.SecondaryAlgorithmID));
+                var group = new ListViewGroup(key, name)
                 {
                     Tag = iApiData.DeviceIndices
                 };
