@@ -60,6 +60,8 @@ namespace NiceHashMiner
         public Form_Main()
         {
             InitializeComponent();
+            Width = ConfigManager.GeneralConfig.MainFormSize.X;
+            Height = ConfigManager.GeneralConfig.MainFormSize.Y;
             Icon = Properties.Resources.logo;
 
             InitLocalization();
@@ -1215,6 +1217,12 @@ namespace NiceHashMiner
             }
 
             UpdateGlobalRate();
+        }
+
+        private void Form_Main_ResizeEnd(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.MainFormSize.X = Width;
+            ConfigManager.GeneralConfig.MainFormSize.Y = Height;
         }
     }
 }

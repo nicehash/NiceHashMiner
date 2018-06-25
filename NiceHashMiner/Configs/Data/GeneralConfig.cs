@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -116,6 +117,8 @@ namespace NiceHashMiner.Configs.Data
 
         public bool ShowPowerColumns = false;
         public bool ShowDiagColumns = true;
+
+        public Point MainFormSize = new Point(1682, 910);
 
         // methods
         public void SetDefaults()
