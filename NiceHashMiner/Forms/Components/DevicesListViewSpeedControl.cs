@@ -297,7 +297,7 @@ namespace NiceHashMiner.Forms.Components
                 if (listViewDevices.Columns.ContainsKey($"{key}{i}"))
                     continue;
 
-                listViewDevices.Columns.Add($"{key}{i}", $"{key}{i}", 60, HorizontalAlignment.Right, "");
+                listViewDevices.Columns.Add($"{key}{i}", GetHeaderName(key, i), 60, HorizontalAlignment.Right, "");
             }
         }
 
@@ -307,6 +307,36 @@ namespace NiceHashMiner.Forms.Components
             {
                 listViewDevices.Columns.RemoveByKey($"{key}{i}");
             }
+        }
+
+        private string GetHeaderName(string key, int index)
+        {
+            if (key == PowerKey)
+            {
+                switch (index)
+                {
+                    case 0:
+                        return "Power Usage (W)";
+                    case 1:
+                        return "Power Cost (USD/Day)";
+                    case 2:
+                        return "Profit (USD/Day)";
+                }
+            }
+            else
+            {
+                switch (index)
+                {
+                    case 0:
+                        return "Load (%)";
+                    case 1:
+                        return "Temp (C)";
+                    case 2:
+                        return "RPM";
+                }
+            }
+
+            return "";
         }
 
         #endregion
