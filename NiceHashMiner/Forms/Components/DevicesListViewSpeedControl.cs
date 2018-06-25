@@ -110,14 +110,14 @@ namespace NiceHashMiner.Forms.Components
             var endIndex = -1;
             foreach (var computeDevice in _devices)
             {
-                if (_indexTotals.Count > lastIndex && allIndices.Contains(computeDevice.Index))
-                {
-                    if (!_indexTotals[lastIndex].Contains(computeDevice.Index))
-                    {
-                        SetTotalRow(_indexTotals[lastIndex], endIndex, numItems);
-                        lastIndex++;
-                    }
-                }
+                //if (_indexTotals.Count > lastIndex && allIndices.Contains(computeDevice.Index))
+                //{
+                //    if (!_indexTotals[lastIndex].Contains(computeDevice.Index))
+                //    {
+                //        SetTotalRow(_indexTotals[lastIndex], endIndex, numItems);
+                //        lastIndex++;
+                //    }
+                //}
 
                 var lvi = new ListViewItem
                 {
@@ -134,13 +134,34 @@ namespace NiceHashMiner.Forms.Components
                 //lvi.SubItems.Add(computeDevice.Name);
                 listViewDevices.Items.Add(lvi);
 
-                SetLvi(lvi, computeDevice.Index);
+                //SetLvi(lvi, computeDevice.Index);
                 endIndex = computeDevice.Index;
             }
 
-            if (endIndex > 0 && _indexTotals.Count > lastIndex && allIndices.Contains(endIndex))
+            //if (endIndex > 0 && _indexTotals.Count > lastIndex && allIndices.Contains(endIndex))
+            //{
+            //    SetTotalRow(_indexTotals[lastIndex], endIndex, numItems);
+            //}
+
+            foreach (var group in listViewDevices.Groups)
             {
-                SetTotalRow(_indexTotals[lastIndex], endIndex, numItems);
+                if (group is ListViewGroup g && g.Tag is List<int> indices)
+                {
+                    foreach (var lvi in listViewDevices.Items)
+                    {
+                        if (lvi is ListViewItem item && item.Tag is ComputeDevice dev &&
+                            indices.Any(i => dev.Index == i))
+                        {
+                            g.Items.Add(item);
+                        }
+                    }
+
+                    if (g.Items.Count > 0)
+                    {
+                        var t = SetTotalRow(indices, endIndex++, numItems);
+                        g.Items.Add(t);
+                    }
+                }
             }
 
             listViewDevices.EndUpdate();
@@ -149,7 +170,7 @@ namespace NiceHashMiner.Forms.Components
             SaveToGeneralConfig = true;
         }
 
-        private void SetTotalRow(List<int> indices, int index, int numSubs)
+        private ListViewItem SetTotalRow(List<int> indices, int index, int numSubs)
         {
             var total = new ListViewItem
             {
@@ -161,7 +182,8 @@ namespace NiceHashMiner.Forms.Components
                 total.SubItems.Add(new ListViewItem.ListViewSubItem());
             }
             listViewDevices.Items.Add(total);
-            SetLvi(total, index);
+            return total;
+            //SetLvi(total, index);
         }
 
         protected override void SetLvi(ListViewItem lvi, int index)
