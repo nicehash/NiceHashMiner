@@ -111,6 +111,10 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.sgminer, AlgorithmType.Keccak, "keccak")
                     {
                         ExtraLaunchParameters = DefaultParam + "--intensity 15"
+                    },
+                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.X16r, "x16r")
+                    {
+                        ExtraLaunchParameters = "-X 256"
                     }
                 }
             },
