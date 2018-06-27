@@ -158,7 +158,8 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia"),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2z, "lyra2z")
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2z, "lyra2z"),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.X16r, "x16r")
                 }
             },
             {

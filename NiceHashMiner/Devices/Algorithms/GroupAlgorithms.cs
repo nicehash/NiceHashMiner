@@ -281,7 +281,8 @@ namespace NiceHashMiner.Devices.Algorithms
                             AlgorithmType.DaggerHashimoto,
                             //AlgorithmType.CryptoNight,
                             AlgorithmType.Pascal,
-                            AlgorithmType.X11Gost
+                            AlgorithmType.X11Gost,
+                            AlgorithmType.X16r
                         });
                         toRemoveMinerTypes.AddRange(new[]
                         {
