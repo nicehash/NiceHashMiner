@@ -121,6 +121,7 @@
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigPool.cs" />
+    <Compile Include="Eula.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\Equihash\Dtsm.cs" />
