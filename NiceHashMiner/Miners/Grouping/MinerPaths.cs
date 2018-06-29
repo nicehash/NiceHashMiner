@@ -93,6 +93,8 @@ namespace NiceHashMiner.Miners.Grouping
 
             public const string SgminerGm = Bin + @"\sgminer-gm\sgminer.exe";
 
+            public const string Avermore = Bin + @"\avermore\sgminer.exe";
+
             public const string NhEqMiner = Bin + @"\nheqminer_v0.4b\NhEqMiner.exe";
             public const string Excavator = Bin + @"\excavator\excavator.exe";
 
@@ -258,6 +260,7 @@ namespace NiceHashMiner.Miners.Grouping
                     case AlgorithmType.Skunk:
                     case AlgorithmType.Keccak:
                     case AlgorithmType.Lyra2z:
+                    case AlgorithmType.X16r:
                         return Data.CcminerTPruvot;
                     case AlgorithmType.Sia:
                     case AlgorithmType.Nist5:
@@ -304,11 +307,16 @@ namespace NiceHashMiner.Miners.Grouping
         {
             public static string SgminerPath(AlgorithmType type)
             {
-                if (AlgorithmType.CryptoNight == type || AlgorithmType.DaggerHashimoto == type)
+                switch (type)
                 {
-                    return Data.SgminerGm;
+                    case AlgorithmType.CryptoNight:
+                    case AlgorithmType.DaggerHashimoto:
+                        return Data.SgminerGm;
+                    case AlgorithmType.X16r:
+                        return Data.Avermore;
+                    default:
+                        return Data.Sgminer560General;
                 }
-                return Data.Sgminer560General;
             }
 
             public static string ClaymorePath(AlgorithmType type)
@@ -321,8 +329,9 @@ namespace NiceHashMiner.Miners.Grouping
                         return Data.ClaymoreCryptoNightMiner;
                     case AlgorithmType.DaggerHashimoto:
                         return Data.ClaymoreDual;
+                    default:
+                        return Data.None;
                 }
-                return Data.None; // should not happen
             }
         }
 
