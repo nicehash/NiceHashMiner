@@ -112,7 +112,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         ExtraLaunchParameters = DefaultParam + "--intensity 15"
                     },
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.X16r, "x16r")
+                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.X16R, "x16r")
                     {
                         ExtraLaunchParameters = "-X 256"
                     }
@@ -163,7 +163,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk"),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2z, "lyra2z"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.X16r, "x16r")
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.X16R, "x16r")
                 }
             },
             {

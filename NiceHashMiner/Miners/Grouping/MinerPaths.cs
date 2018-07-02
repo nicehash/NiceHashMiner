@@ -260,7 +260,7 @@ namespace NiceHashMiner.Miners.Grouping
                     case AlgorithmType.Skunk:
                     case AlgorithmType.Keccak:
                     case AlgorithmType.Lyra2z:
-                    case AlgorithmType.X16r:
+                    case AlgorithmType.X16R:
                         return Data.CcminerTPruvot;
                     case AlgorithmType.Sia:
                     case AlgorithmType.Nist5:
@@ -312,7 +312,7 @@ namespace NiceHashMiner.Miners.Grouping
                     case AlgorithmType.CryptoNight:
                     case AlgorithmType.DaggerHashimoto:
                         return Data.SgminerGm;
-                    case AlgorithmType.X16r:
+                    case AlgorithmType.X16R:
                         return Data.Avermore;
                     default:
                         return Data.Sgminer560General;

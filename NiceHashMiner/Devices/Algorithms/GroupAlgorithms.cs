@@ -282,7 +282,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             //AlgorithmType.CryptoNight,
                             AlgorithmType.Pascal,
                             AlgorithmType.X11Gost,
-                            AlgorithmType.X16r
+                            AlgorithmType.X16R
                         });
                         toRemoveMinerTypes.AddRange(new[]
                         {
