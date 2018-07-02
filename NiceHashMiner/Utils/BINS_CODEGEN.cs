@@ -17,13 +17,6 @@ namespace NiceHashMiner.Utils
             @"/ccminer_x11gost/ccminer.exe",
             @"/ethminer/ethminer.exe",
             @"/ethminer/libmicrohttpd-dll.dll",
-            @"/nheqminer_v0.4b/cpu_tromp_AVX.dll",
-            @"/nheqminer_v0.4b/cpu_tromp_SSE2.dll",
-            @"/nheqminer_v0.4b/cudart64_75.dll",
-            @"/nheqminer_v0.4b/cuda_tromp.dll",
-            @"/nheqminer_v0.4b/cuda_tromp_75.dll",
-            @"/nheqminer_v0.4b/equiw200k9.bin",
-            @"/nheqminer_v0.4b/nheqminer.exe",
             @"/sgminer-5-6-0-general/sgminer.exe",
             @"/sgminer-gm/sgminer.exe",
             @"/xmr-stak/xmrstak_cuda_backend.dll",
@@ -33,7 +26,8 @@ namespace NiceHashMiner.Utils
             @"/xmr-stak/xmr-stak.exe",
             @"/xmrig/xmrig.exe",
             @"/xmr-stak_heavy/xmr-stak.exe",
-            @"/cpuminer_opt/cpuminer.exe"
+            @"/cpuminer_opt/cpuminer.exe",
+            @"/avermore/sgminer.exe"
         };
 
         #endregion //CODE_GEN STUFF // listFiles.py
