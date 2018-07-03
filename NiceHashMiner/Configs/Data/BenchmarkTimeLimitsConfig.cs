@@ -13,7 +13,7 @@ namespace NiceHashMiner.Configs.Data
     {
         #region CONSTANTS
 
-        [field: NonSerialized] private static readonly int[] DefaultCpuNvidia = {10, 20, 60};
+        [field: NonSerialized] private static readonly int[] DefaultCpuNvidia = {20, 60, 120};
         [field: NonSerialized] private static readonly int[] DefaultAmd = {120, 180, 240};
         [field: NonSerialized] public static readonly int Size = 3;
 
