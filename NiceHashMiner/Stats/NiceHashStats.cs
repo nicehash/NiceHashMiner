@@ -102,20 +102,18 @@ namespace NiceHashMiner.Stats
                 {
                     isRpc = ProcessData(e.Data);
                 }
+
+                if (isRpc)
+                {
+                    SendExecuted();
+                }
             } catch (Exception er)
             {
                 Helpers.ConsolePrint("SOCKET", er.ToString());
                 if (isRpc)
                 {
-                    // TODO report RPC error
+                    // TODO report RPC error?
                 }
-
-                return;
-            }
-
-            if (isRpc)
-            {
-                // TODO report RPC success
             }
         }
 
@@ -345,6 +343,12 @@ namespace NiceHashMiner.Stats
             // This function is run every minute and sends data every run which has two auxiliary effects
             // Keeps connection alive and attempts reconnection if internet was dropped
             _socket?.SendData(sendData);
+        }
+
+        private static void SendExecuted(int code = 0, string message = null)
+        {
+            var data = new ExecutedCall(code, message).Serialize();
+            _socket?.SendData(data);
         }
 
         #endregion

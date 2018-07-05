@@ -51,6 +51,7 @@
     <Compile Include="Algorithms\AlgorithmTest.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithmsTest.cs" />
     <Compile Include="Stats\ExchangeRateApiTest.cs" />
+    <Compile Include="Stats\Models\ExecutedCallTest.cs" />
     <Compile Include="Stats\NiceHashStatsTest.cs" />
     <Compile Include="Stats\TestSocketCalls.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManagerTest.cs" />
