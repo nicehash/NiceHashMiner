@@ -32,6 +32,8 @@ namespace NiceHashMiner.Devices
         // UUID now used for saving
         public string Uuid { get; protected set; }
 
+        public string B64Uuid => Uuid; // TODO Placeholder
+
         // used for Claymore indexing
         public int BusID { get; protected set; } = -1;
         public int IDByBus = -1;

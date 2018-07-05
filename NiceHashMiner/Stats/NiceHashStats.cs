@@ -11,6 +11,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Stats.Models;
 using NiceHashMinerLegacy.Common.Enums;
 using WebSocketSharp;
 
@@ -26,7 +28,7 @@ namespace NiceHashMiner.Stats
         }
     }
 
-    internal static class NiceHashStats
+    public static class NiceHashStats
     {
         #region JSON Models
 #pragma warning disable 649, IDE1006
@@ -93,45 +95,95 @@ namespace NiceHashMiner.Stats
 
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
+            var isRpc = false;
             try
             {
                 if (e.IsText)
                 {
-                    Helpers.ConsolePrint("SOCKET", "Received: " + e.Data);
-                    dynamic message = JsonConvert.DeserializeObject(e.Data);
-                    switch (message.method.Value)
-                    {
-                        case "sma":
-                            {
-                                // Try in case stable is not sent, we still get updated paying rates
-                                try
-                                {
-                                    var stable = JsonConvert.DeserializeObject(message.stable.Value);
-                                    SetStableAlgorithms(stable);
-                                } catch
-                                { }
-                                SetAlgorithmRates(message.data);
-                                break;
-                            }
-
-                        case "balance":
-                            SetBalance(message.value.Value);
-                            break;
-                        case "versions":
-                            SetVersion(message.legacy.Value);
-                            break;
-                        case "burn":
-                            OnVersionBurn?.Invoke(null, new SocketEventArgs(message.message.Value));
-                            break;
-                        case "exchange_rates":
-                            SetExchangeRates(message.data.Value);
-                            break;
-                    }
+                    isRpc = ProcessData(e.Data);
                 }
             } catch (Exception er)
             {
                 Helpers.ConsolePrint("SOCKET", er.ToString());
+                if (isRpc)
+                {
+                    // TODO report RPC error
+                }
+
+                return;
             }
+
+            if (isRpc)
+            {
+                // TODO report RPC success
+            }
+        }
+
+        internal static bool ProcessData(string data)
+        {
+            Helpers.ConsolePrint("SOCKET", "Received: " + data);
+            dynamic message = JsonConvert.DeserializeObject(data);
+            switch (message.method.Value)
+            {
+                case "sma":
+                {
+                    // Try in case stable is not sent, we still get updated paying rates
+                    try
+                    {
+                        var stable = JsonConvert.DeserializeObject(message.stable.Value);
+                        SetStableAlgorithms(stable);
+                    }
+                    catch
+                    { }
+                    SetAlgorithmRates(message.data);
+                    break;
+                }
+
+                case "balance":
+                    SetBalance(message.value.Value);
+                    break;
+                case "versions":
+                    SetVersion(message.legacy.Value);
+                    break;
+                case "burn":
+                    OnVersionBurn?.Invoke(null, new SocketEventArgs(message.message.Value));
+                    break;
+                case "exchange_rates":
+                    SetExchangeRates(message.data.Value);
+                    break;
+                case "essentials":
+                    var ess = JsonConvert.DeserializeObject<EssentialsCall>(data);
+                    if (ess.Params.First()[1] is string ver)
+                    {
+                        SetVersion(ver);
+                    }
+
+                    break;
+                case "mining.set.username":
+                    var user = (string) message.username;
+
+                    if (!BitcoinAddress.ValidateBitcoinAddress(user))
+                        throw new RpcException("Bitcoin address invalid", 1);
+
+                    ConfigManager.GeneralConfig.BitcoinAddress = user;
+                    return true;
+                case "mining.set.worker":
+                    var worker = (string) message.worker;
+
+                    if (!BitcoinAddress.ValidateWorkerName(worker))
+                        throw new RpcException("Worker name invalid", 1);
+
+                    ConfigManager.GeneralConfig.WorkerName = worker;
+                    return true;
+                case "mining.enable":
+                    SetDevicesEnabled((string) message.device, true);
+                    return true;
+                case "mining.disable":
+                    SetDevicesEnabled((string) message.device, false);
+                    return true;
+            }
+
+            return false;
         }
 
         private static void SocketOnOnConnectionEstablished(object sender, EventArgs e)
@@ -202,29 +254,43 @@ namespace NiceHashMiner.Stats
             try
             {
                 var exchange = JsonConvert.DeserializeObject<ExchangeRateJson>(data);
-                if (exchange?.exchanges_fiat != null && exchange.exchanges != null)
+                if (exchange?.exchanges_fiat == null || exchange.exchanges == null) return;
+                foreach (var exchangePair in exchange.exchanges)
                 {
-                    foreach (var exchangePair in exchange.exchanges)
-                    {
-                        if (exchangePair.TryGetValue("coin", out var coin) &&
-                            coin == "BTC" &&
-                            exchangePair.TryGetValue("USD", out var usd) &&
-                            double.TryParse(usd, NumberStyles.Float, CultureInfo.InvariantCulture, out var usdD))
-                        {
-                            ExchangeRateApi.UsdBtcRate = usdD;
-                            break;
-                        }
-                    }
+                    if (!exchangePair.TryGetValue("coin", out var coin) || coin != "BTC" ||
+                        !exchangePair.TryGetValue("USD", out var usd) || 
+                        !double.TryParse(usd, NumberStyles.Float, CultureInfo.InvariantCulture, out var usdD))
+                        continue;
 
-                    ExchangeRateApi.UpdateExchangesFiat(exchange.exchanges_fiat);
-
-                    OnExchangeUpdate?.Invoke(null, EventArgs.Empty);
+                    ExchangeRateApi.UsdBtcRate = usdD;
+                    break;
                 }
+
+                ExchangeRateApi.UpdateExchangesFiat(exchange.exchanges_fiat);
+
+                OnExchangeUpdate?.Invoke(null, EventArgs.Empty);
             }
             catch (Exception e)
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
+        }
+
+        private static void SetDevicesEnabled(string devs, bool enabled)
+        {
+            var found = false;
+            if (!ComputeDeviceManager.Available.Devices.Any())
+                throw new RpcException("No devices to set", 1);
+
+            foreach (var dev in ComputeDeviceManager.Available.Devices)
+            {
+                if (devs != "*" && dev.B64Uuid != devs) continue;
+                found = true;
+                dev.Enabled = enabled;
+            }
+
+            if (!found)
+                throw new RpcException("Device not found", 1);
         }
 
         #endregion

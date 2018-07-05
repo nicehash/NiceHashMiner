@@ -1007,5 +1007,14 @@ namespace NiceHashMiner.Devices
                 if (ContainsGpus) DisableCpuGroup();
             }
         }
+
+        public static void InitFakeDevs()
+        {
+            var r = new Random();
+            for (var i = 0; i < 4; i++)
+            {
+                Available.Devices.Add(new ComputeDevice(r.Next()));
+            }
+        }
     }
 }
