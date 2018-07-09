@@ -80,6 +80,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string CcminerCryptonight = Bin + @"\ccminer_cryptonight\ccminer.exe";
             public const string CcminerX11Gost = Bin + @"\ccminer_x11gost\ccminer.exe";
             public const string CcminerKlausT = Bin + @"\ccminer_klaust\ccminer.exe";
+            public const string CcminerX16R = Bin + @"\ccminer_x16r\ccminer.exe";
 
             /// <summary>
             /// ethminers
@@ -260,12 +261,13 @@ namespace NiceHashMiner.Miners.Grouping
                     case AlgorithmType.Skunk:
                     case AlgorithmType.Keccak:
                     case AlgorithmType.Lyra2z:
-                    case AlgorithmType.X16R:
                         return Data.CcminerTPruvot;
                     case AlgorithmType.Sia:
                     case AlgorithmType.Nist5:
                     case AlgorithmType.NeoScrypt:
                         return Data.CcminerKlausT;
+                    case AlgorithmType.X16R:
+                        return Data.CcminerX16R;
                 }
 
                 return Data.CcminerSp;
