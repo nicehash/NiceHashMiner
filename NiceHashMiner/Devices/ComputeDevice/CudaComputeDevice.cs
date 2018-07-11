@@ -15,6 +15,8 @@ namespace NiceHashMiner.Devices
         protected int SMMajor;
         protected int SMMinor;
 
+        public readonly bool ShouldRunEthlargement;
+
         public override float Load
         {
             get
@@ -125,6 +127,8 @@ namespace NiceHashMiner.Devices
 
             _nvHandle = nvHandle;
             _nvmlDevice = nvmlHandle;
+
+            ShouldRunEthlargement = cudaDevice.DeviceName.Contains("1080") || cudaDevice.DeviceName.Contains("Titan Xp");
         }
     }
 }

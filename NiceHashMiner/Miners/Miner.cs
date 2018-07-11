@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
 
@@ -919,6 +920,24 @@ namespace NiceHashMiner
 
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
 
+        private bool ShouldRunEthlargement()
+        {
+            if (ConfigManager.GeneralConfig.Use3rdPartyMiners != Use3rdPartyMiners.YES)
+                return false;
+
+            return MiningSetup.MiningPairs.Any(p => p.CurrentExtraLaunchParameters.Contains("--ethlargement"));
+
+            foreach (var p in MiningSetup.MiningPairs)
+            {
+                if (p.Algorithm.NiceHashID == AlgorithmType.DaggerHashimoto &&
+                    p.Device is CudaComputeDevice cuda &&
+                    cuda.ShouldRunEthlargement)
+                    return true;
+            }
+
+            return false;
+        }
+
         protected virtual NiceHashProcess _Start()
         {
             // never start when ended
@@ -930,8 +949,7 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
 
-            if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES &&
-                MiningSetup.MiningPairs.Any(p => p.CurrentExtraLaunchParameters.Contains("--ethlargement")))
+            if (ShouldRunEthlargement())
             {
                 // Run ethlargement
                 var e = new NiceHashProcess();
