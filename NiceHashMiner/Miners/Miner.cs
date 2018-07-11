@@ -93,6 +93,7 @@ namespace NiceHashMiner
         protected NiceHashProcess ProcessHandle;
         private MinerPidData _currentPidData;
         private readonly List<MinerPidData> _allPidData = new List<MinerPidData>();
+        private MinerPidData _ethlargementPid;
 
         // Benchmark stuff
         public bool BenchmarkSignalQuit;
@@ -928,6 +929,60 @@ namespace NiceHashMiner
 
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
+
+            if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES &&
+                MiningSetup.MiningPairs.Any(p => p.CurrentExtraLaunchParameters.Contains("--ethlargement")))
+            {
+                // Run ethlargement
+                var e = new NiceHashProcess();
+                if (WorkingDirectory.Length > 1)
+                {
+                    e.StartInfo.WorkingDirectory = WorkingDirectory;
+                }
+
+                e.StartInfo.FileName = MinerPaths.Data.EthLargement;
+
+                if (IsNeverHideMiningWindow)
+                {
+                    e.StartInfo.CreateNoWindow = false;
+                    if (ConfigManager.GeneralConfig.HideMiningWindows || ConfigManager.GeneralConfig.MinimizeMiningWindows)
+                    {
+                        e.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+                        e.StartInfo.UseShellExecute = true;
+                    }
+                }
+                else
+                {
+                    e.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
+                }
+
+                e.StartInfo.UseShellExecute = false;
+
+                try
+                {
+                    if (e.Start())
+                    {
+                        Helpers.ConsolePrint("ETHLARGEMENT", "Starting ethlargement...");
+
+                        _ethlargementPid = new MinerPidData
+                        {
+                            MinerBinPath = e.StartInfo.FileName,
+                            Pid = e.Id
+                        };
+                        _allPidData.Add(_ethlargementPid);
+
+                        IsKillAllUsedMinerProcs = true;
+                    }
+                    else
+                    {
+                        Helpers.ConsolePrint("ETHLARGEMENT", "Couldn't start ethlargement");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Helpers.ConsolePrint("ETHLARGEMENT", ex.Message);
+                }
+            }
 
             var P = new NiceHashProcess();
 

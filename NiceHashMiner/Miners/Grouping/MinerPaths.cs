@@ -120,6 +120,8 @@ namespace NiceHashMiner.Miners.Grouping
             public const string Ewbf = Bin3rdParty + @"\ewbf\miner.exe";
             public const string Prospector = Bin3rdParty + @"\prospector\prospector.exe";
             public const string Dtsm = Bin3rdParty + @"\dtsm\zm.exe";
+
+            public const string EthLargement = Bin3rdParty + @"\ethlargement\OhGodAnETHlargementPill-r2.exe";
         }
 
         // NEW START
