@@ -1,55 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 
 namespace NiceHashMiner.Miners
 {
     public static class Ethlargement
     {
-        private static int _pid = -1;
+        private static Process _process;
 
-        private static object _lock = new object();
+        private static MiningSetup _cachedSetup;
 
-        public static bool Running => _pid != -1;
+        private static readonly object Lock = new object();
+
+        public static bool Running => _process != null && !_process.HasExited;
 
         public static void CheckAndStart(MiningSetup setup)
         {
-            lock (_lock)
+            lock (Lock)
             {
+                _cachedSetup = setup;
                 if (!ShouldRun(setup)) return;
-
-                // Run ethlargement
-                var e = new NiceHashProcess
+                _process = new Process
                 {
                     StartInfo =
                     {
                         FileName = MinerPaths.Data.EthLargement,
-                        CreateNoWindow = false
+                        //CreateNoWindow = false
                     }
                 };
 
                 if (ConfigManager.GeneralConfig.HideMiningWindows || ConfigManager.GeneralConfig.MinimizeMiningWindows)
                 {
-                    e.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-                    e.StartInfo.UseShellExecute = true;
+                    _process.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+                    //_process.StartInfo.UseShellExecute = true;
                 }
 
-                e.StartInfo.UseShellExecute = false;
+                //e.StartInfo.UseShellExecute = false;
+                _process.EnableRaisingEvents = true;
+                _process.Exited += ExitEvent;
 
                 try
                 {
-                    if (e.Start())
+                    if (_process.Start())
                     {
                         Helpers.ConsolePrint("ETHLARGEMENT", "Starting ethlargement...");
-
-                        _pid = e.Id;
                     }
                     else
                     {
@@ -63,14 +62,37 @@ namespace NiceHashMiner.Miners
             }
         }
 
+        private static void ExitEvent(object sender, EventArgs e)
+        {
+            Thread.Sleep(1000);
+            CheckAndStart(_cachedSetup);
+        }
+
         public static void Stop()
         {
+            _cachedSetup = null;
+            try
+            {
+                _process.CloseMainWindow();
+                if (!_process.WaitForExit(10 * 1000))
+                {
+                    _process.Kill();
+                }
 
+                _process.Close();
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("ETHLARGEMENT", e.Message);
+            }
+
+            _process = null;
         }
 
         private static bool ShouldRun(MiningSetup setup)
         {
-            if (Running || ConfigManager.GeneralConfig.Use3rdPartyMiners != Use3rdPartyMiners.YES)
+            if (Running || ConfigManager.GeneralConfig.Use3rdPartyMiners != Use3rdPartyMiners.YES ||
+                setup == null)
                 return false;
 
             return setup.MiningPairs.Any(p => p.CurrentExtraLaunchParameters.Contains("--ethlargement"));

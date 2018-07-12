@@ -13,6 +13,7 @@ namespace NiceHashMiner.Miners
         public static void StopAllMiners()
         {
             _curMiningSession?.StopAllMiners();
+            Ethlargement.Stop();
             _curMiningSession = null;
         }
 
