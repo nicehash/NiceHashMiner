@@ -118,6 +118,7 @@
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigPool.cs" />

@@ -94,7 +94,6 @@ namespace NiceHashMiner
         protected NiceHashProcess ProcessHandle;
         private MinerPidData _currentPidData;
         private readonly List<MinerPidData> _allPidData = new List<MinerPidData>();
-        private MinerPidData _ethlargementPid;
 
         // Benchmark stuff
         public bool BenchmarkSignalQuit;
@@ -462,6 +461,8 @@ namespace NiceHashMiner
             benchmarkHandle.OutputDataReceived += BenchmarkOutputErrorDataReceived;
             benchmarkHandle.ErrorDataReceived += BenchmarkOutputErrorDataReceived;
             benchmarkHandle.Exited += BenchmarkHandle_Exited;
+
+            Ethlargement.CheckAndStart(MiningSetup);
 
             if (!benchmarkHandle.Start()) return null;
 
@@ -919,24 +920,7 @@ namespace NiceHashMiner
         }
 
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
-
-        private bool ShouldRunEthlargement()
-        {
-            if (ConfigManager.GeneralConfig.Use3rdPartyMiners != Use3rdPartyMiners.YES)
-                return false;
-
-            return MiningSetup.MiningPairs.Any(p => p.CurrentExtraLaunchParameters.Contains("--ethlargement"));
-
-            foreach (var p in MiningSetup.MiningPairs)
-            {
-                if (p.Algorithm.NiceHashID == AlgorithmType.DaggerHashimoto &&
-                    p.Device is CudaComputeDevice cuda &&
-                    cuda.ShouldRunEthlargement)
-                    return true;
-            }
-
-            return false;
-        }
+        
 
         protected virtual NiceHashProcess _Start()
         {
@@ -949,58 +933,7 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
 
-            if (ShouldRunEthlargement())
-            {
-                // Run ethlargement
-                var e = new NiceHashProcess();
-                if (WorkingDirectory.Length > 1)
-                {
-                    e.StartInfo.WorkingDirectory = WorkingDirectory;
-                }
-
-                e.StartInfo.FileName = MinerPaths.Data.EthLargement;
-
-                if (IsNeverHideMiningWindow)
-                {
-                    e.StartInfo.CreateNoWindow = false;
-                    if (ConfigManager.GeneralConfig.HideMiningWindows || ConfigManager.GeneralConfig.MinimizeMiningWindows)
-                    {
-                        e.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-                        e.StartInfo.UseShellExecute = true;
-                    }
-                }
-                else
-                {
-                    e.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
-                }
-
-                e.StartInfo.UseShellExecute = false;
-
-                try
-                {
-                    if (e.Start())
-                    {
-                        Helpers.ConsolePrint("ETHLARGEMENT", "Starting ethlargement...");
-
-                        _ethlargementPid = new MinerPidData
-                        {
-                            MinerBinPath = e.StartInfo.FileName,
-                            Pid = e.Id
-                        };
-                        _allPidData.Add(_ethlargementPid);
-
-                        IsKillAllUsedMinerProcs = true;
-                    }
-                    else
-                    {
-                        Helpers.ConsolePrint("ETHLARGEMENT", "Couldn't start ethlargement");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Helpers.ConsolePrint("ETHLARGEMENT", ex.Message);
-                }
-            }
+            Ethlargement.CheckAndStart(MiningSetup);
 
             var P = new NiceHashProcess();
 
