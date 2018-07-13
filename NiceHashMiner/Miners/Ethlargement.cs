@@ -91,11 +91,23 @@ namespace NiceHashMiner.Miners
 
         private static bool ShouldRun(MiningSetup setup)
         {
-            if (Running || ConfigManager.GeneralConfig.Use3rdPartyMiners != Use3rdPartyMiners.YES ||
-                setup == null)
+            if (Running || setup == null || !ConfigManager.GeneralConfig.UseEthlargement)
                 return false;
 
-            return setup.MiningPairs.Any(p => p.CurrentExtraLaunchParameters.Contains("--ethlargement"));
+            Helpers.ConsolePrint("ETHLARGEMENT", "Checking if should run ethlargement...");
+
+            if (ConfigManager.GeneralConfig.Use3rdPartyMiners != Use3rdPartyMiners.YES)
+            {
+                Helpers.ConsolePrint("ETHLARGEMENT", "Ethlargement not started because 3rd party miners not enabled");
+                return false;
+            }
+
+            if (!Helpers.IsElevated())
+            {
+                Helpers.ConsolePrint("ETHLARGEMENT", "Ethlargement not started because NHML is not running as admin");
+            }
+
+            //return setup.MiningPairs.Any(p => p.CurrentExtraLaunchParameters.Contains("--ethlargement"));
 
             foreach (var p in setup.MiningPairs)
             {
@@ -104,6 +116,8 @@ namespace NiceHashMiner.Miners
                     cuda.ShouldRunEthlargement)
                     return true;
             }
+
+            Helpers.ConsolePrint("ETHLARGEMENT", "No ethlargement algorithm/device combos found. Not running");
 
             return false;
         }

@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using NiceHashMiner.PInvoke;
 using System.Management;
+using System.Security.Principal;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner
@@ -395,6 +396,15 @@ namespace NiceHashMiner
             }
 
             return primary;
+        }
+
+        public static bool IsElevated()
+        {
+            using (var identity = WindowsIdentity.GetCurrent())
+            {
+                var principal = new WindowsPrincipal(identity);
+                return principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
         }
     }
 }
