@@ -17,6 +17,18 @@ namespace NiceHashMiner
         private static readonly bool Is64BitProcess = (IntPtr.Size == 8);
         public static bool Is64BitOperatingSystem = Is64BitProcess || InternalCheckIsWow64();
 
+        public static readonly bool IsElevated;
+
+
+        static Helpers()
+        {
+            using (var identity = WindowsIdentity.GetCurrent())
+            {
+                var principal = new WindowsPrincipal(identity);
+                IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+        }
+
         public static bool InternalCheckIsWow64()
         {
             if ((Environment.OSVersion.Version.Major == 5 && Environment.OSVersion.Version.Minor >= 1) ||
@@ -396,15 +408,6 @@ namespace NiceHashMiner
             }
 
             return primary;
-        }
-
-        public static bool IsElevated()
-        {
-            using (var identity = WindowsIdentity.GetCurrent())
-            {
-                var principal = new WindowsPrincipal(identity);
-                return principal.IsInRole(WindowsBuiltInRole.Administrator);
-            }
         }
     }
 }

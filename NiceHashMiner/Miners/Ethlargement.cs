@@ -102,7 +102,7 @@ namespace NiceHashMiner.Miners
                 return false;
             }
 
-            if (!Helpers.IsElevated())
+            if (!Helpers.IsElevated)
             {
                 Helpers.ConsolePrint("ETHLARGEMENT", "Ethlargement not started because NHML is not running as admin");
                 return false;
