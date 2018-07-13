@@ -105,6 +105,7 @@ namespace NiceHashMiner.Miners
             if (!Helpers.IsElevated())
             {
                 Helpers.ConsolePrint("ETHLARGEMENT", "Ethlargement not started because NHML is not running as admin");
+                return false;
             }
 
             //return setup.MiningPairs.Any(p => p.CurrentExtraLaunchParameters.Contains("--ethlargement"));
