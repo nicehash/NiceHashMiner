@@ -114,7 +114,7 @@ namespace NiceHashMiner.Configs.Data
         /// </summary>
         public bool UseSmaCache = true;
 
-        public bool UseEthlargement = true;
+        public bool UseEthlargement = false;
 
         // methods
         public void SetDefaults()
@@ -172,7 +172,7 @@ namespace NiceHashMiner.Configs.Data
             SwitchSmaTicksStable = new Interval(2, 3);
             SwitchSmaTicksUnstable = new Interval(5, 13);
             UseSmaCache = true;
-            UseEthlargement = true;
+            UseEthlargement = false;
         }
 
         public void FixSettingBounds()
