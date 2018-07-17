@@ -71,6 +71,8 @@ namespace NiceHashMiner.Miners
         public static void Stop()
         {
             _cachedSetup = null;
+            if (_process == null) return;
+
             try
             {
                 _process.CloseMainWindow();
