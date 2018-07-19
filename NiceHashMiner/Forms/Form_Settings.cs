@@ -322,9 +322,19 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(textBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
             toolTip1.SetToolTip(pictureBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
 
+            SetToolTip("Form_Settings_ToolTip_RunEthlargement", checkBox_RunEthlargement, pictureBox_RunEthlargement);
+
             Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
+        }
+
+        private void SetToolTip(string internationalKey, params Control[] controls)
+        {
+            foreach (var control in controls)
+            {
+                toolTip1.SetToolTip(control, International.GetText(internationalKey));
+            }
         }
 
         #region Form this
@@ -449,6 +459,9 @@ namespace NiceHashMiner.Forms
 
             label_SwitchProfitabilityThreshold.Text =
                 International.GetText("Form_Settings_General_SwitchProfitabilityThreshold");
+
+            checkBox_RunEthlargement.Text = International.GetText("Form_Settings_General_RunEthlargement");
+            checkBox_RunEthlargement.Enabled = Helpers.IsElevated && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
         }
 
         private void InitializeGeneralTabCallbacks()
@@ -472,6 +485,7 @@ namespace NiceHashMiner.Forms
                 checkBox_MinimizeMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_UseIFTTT.CheckedChanged += CheckBox_UseIFTTT_CheckChanged;
                 checkBox_RunScriptOnCUDA_GPU_Lost.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_RunEthlargement.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -556,6 +570,7 @@ namespace NiceHashMiner.Forms
                 checkBox_MinimizeMiningWindows.Enabled = !ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
                 checkBox_RunScriptOnCUDA_GPU_Lost.Checked = ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost;
+                checkBox_RunEthlargement.Checked = ConfigManager.GeneralConfig.UseEthlargement;
             }
 
             // Textboxes
@@ -676,6 +691,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
             ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
+            ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
         }
 
         private void CheckBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e)
