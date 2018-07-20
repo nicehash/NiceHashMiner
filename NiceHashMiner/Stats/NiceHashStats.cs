@@ -151,7 +151,7 @@ namespace NiceHashMiner.Stats
                     break;
                 case "essentials":
                     var ess = JsonConvert.DeserializeObject<EssentialsCall>(data);
-                    if (ess.Params.First()[1] is string ver)
+                    if (ess?.Params?.First()[1] is string ver)
                     {
                         SetVersion(ver);
                     }
