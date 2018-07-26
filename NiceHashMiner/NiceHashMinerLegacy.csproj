@@ -135,6 +135,7 @@
     <Compile Include="Miners\Xmrig.cs" />
     <Compile Include="Stats\Models\EssentialsCall.cs" />
     <Compile Include="Stats\Models\ExecutedCall.cs" />
+    <Compile Include="Stats\Models\ExecutedInfo.cs" />
     <Compile Include="Stats\Models\RpcException.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />

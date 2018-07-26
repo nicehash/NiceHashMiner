@@ -815,7 +815,7 @@ namespace NiceHashMiner
         private void ConnectionEstablishedCallback(object sender, EventArgs e)
         {
             // send credentials
-            NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
+            // NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
         }
 
         private void VersionUpdateCallback(object sender, EventArgs e)

@@ -82,7 +82,7 @@ namespace NiceHashMiner.Stats
                 _socket.OnDataReceived += SocketOnOnDataReceived;
                 _socket.OnConnectionLost += SocketOnOnConnectionLost;
             }
-            _socket.StartConnection("", ""); // TODO
+            _socket.StartConnection(ConfigManager.GeneralConfig.BitcoinAddress, ConfigManager.GeneralConfig.WorkerName, ConfigManager.GeneralConfig.RigGroup);
             _deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_Tick, null, DeviceUpdateInterval, DeviceUpdateInterval);
         }
 
@@ -95,29 +95,32 @@ namespace NiceHashMiner.Stats
 
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
-            var isRpc = false;
+            ExecutedInfo info = null;
             try
             {
                 if (e.IsText)
                 {
-                    isRpc = ProcessData(e.Data);
+                    info = ProcessData(e.Data);
                 }
 
-                if (isRpc)
+                if (info != null)
                 {
-                    SendExecuted();
+                    SendExecuted(info);
                 }
-            } catch (Exception er)
+            }
+            catch (RpcException rEr)
+            {
+                Helpers.ConsolePrint("SOCKET", rEr.ToString());
+                if (info == null) return;
+                SendExecuted(info, rEr.Code, rEr.Message);
+            }
+            catch (Exception er)
             {
                 Helpers.ConsolePrint("SOCKET", er.ToString());
-                if (isRpc)
-                {
-                    // TODO report RPC error?
-                }
             }
         }
 
-        internal static bool ProcessData(string data)
+        internal static ExecutedInfo ProcessData(string data)
         {
             Helpers.ConsolePrint("SOCKET", "Received: " + data);
             dynamic message = JsonConvert.DeserializeObject(data);
@@ -164,7 +167,7 @@ namespace NiceHashMiner.Stats
                         throw new RpcException("Bitcoin address invalid", 1);
 
                     ConfigManager.GeneralConfig.BitcoinAddress = user;
-                    return true;
+                    return new ExecutedInfo();
                 case "mining.set.worker":
                     var worker = (string) message.worker;
 
@@ -172,16 +175,21 @@ namespace NiceHashMiner.Stats
                         throw new RpcException("Worker name invalid", 1);
 
                     ConfigManager.GeneralConfig.WorkerName = worker;
-                    return true;
+                    return new ExecutedInfo {NewWorker = worker};
+                case "mining.set.group":
+                    var group = (string) message.group;
+                    ConfigManager.GeneralConfig.RigGroup = group;
+
+                    return new ExecutedInfo {NewRig = group};
                 case "mining.enable":
                     SetDevicesEnabled((string) message.device, true);
-                    return true;
+                    return new ExecutedInfo();
                 case "mining.disable":
                     SetDevicesEnabled((string) message.device, false);
-                    return true;
+                    return new ExecutedInfo();
             }
 
-            return false;
+            return null;
         }
 
         private static void SocketOnOnConnectionEstablished(object sender, EventArgs e)
@@ -297,17 +305,14 @@ namespace NiceHashMiner.Stats
 
         public static void SetCredentials(string btc, string worker)
         {
-            var data = new NicehashCredentials
+            if (BitcoinAddress.ValidateBitcoinAddress(btc) && BitcoinAddress.ValidateWorkerName(worker))
             {
-                btc = btc,
-                worker = worker
-            };
-            if (BitcoinAddress.ValidateBitcoinAddress(data.btc) && BitcoinAddress.ValidateWorkerName(worker))
-            {
-                var sendData = JsonConvert.SerializeObject(data);
-
                 // Send as task since SetCredentials is called from UI threads
-                Task.Factory.StartNew(() => _socket?.SendData(sendData));
+                Task.Factory.StartNew(() =>
+                {
+                    DeviceStatus_Tick(null);
+                    _socket?.StartConnection(btc, worker);
+                });
             }
         }
 
@@ -345,10 +350,18 @@ namespace NiceHashMiner.Stats
             _socket?.SendData(sendData);
         }
 
-        private static void SendExecuted(int code = 0, string message = null)
+        private static void SendExecuted(ExecutedInfo info, int code = 0, string message = null)
         {
+            // First set status
+            DeviceStatus_Tick(null);
+            // Then executed
             var data = new ExecutedCall(code, message).Serialize();
             _socket?.SendData(data);
+            // Login if we have to
+            if (info.LoginNeeded)
+            {
+                _socket?.StartConnection(info.NewBtc, info.NewWorker, info.NewRig);
+            }
         }
 
         #endregion

@@ -20,7 +20,7 @@ namespace NiceHashMiner.Stats
             public int protocol = 1;
             public string btc;
             public string worker;
-            public string group = "NHM";
+            public string group;
             public string rig;
         }
         
@@ -62,7 +62,7 @@ namespace NiceHashMiner.Stats
             _address = address;
         }
 
-        public void StartConnection(string btc = null, string worker = null)
+        public void StartConnection(string btc = null, string worker = null, string group = null)
         {
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
@@ -76,7 +76,7 @@ namespace NiceHashMiner.Stats
                     _webSocket.Close();
                 }
 
-                _webSocket.OnOpen += (sender, args) => Login(btc, worker);
+                _webSocket.OnOpen += (sender, args) => Login(btc, worker, group);
                 _webSocket.OnMessage += ReceiveCallback;
                 _webSocket.OnError += ErrorCallback;
                 _webSocket.OnClose += CloseCallback;
@@ -107,12 +107,13 @@ namespace NiceHashMiner.Stats
             AttemptReconnect();
         }
 
-        public void Login(string btc, string worker)
+        private void Login(string btc, string worker, string group)
         {
             try
             {
                 if (btc != null) _login.btc = btc;
                 if (worker != null) _login.worker = worker;
+                if (group != null) _login.group = group;
                 _login.rig = RigID;
                 var loginJson = JsonConvert.SerializeObject(_login);
                 SendData(loginJson);
