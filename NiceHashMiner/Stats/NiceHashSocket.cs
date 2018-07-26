@@ -3,6 +3,7 @@ using NiceHashMiner.Switching;
 using System;
 using System.Threading;
 using System.Windows.Forms;
+using NiceHashMiner.Utils.Guid;
 using WebSocketSharp;
 
 namespace NiceHashMiner.Stats
@@ -38,6 +39,23 @@ namespace NiceHashMiner.Stats
         public event EventHandler OnConnectionEstablished;
         public event EventHandler<MessageEventArgs> OnDataReceived;
         public event EventHandler OnConnectionLost;
+
+        private static readonly string RigID;
+
+        static NiceHashSocket()
+        {
+            var guid = Helpers.GetMachineGuid();
+            if (guid == null)
+            {
+                // TODO
+                RigID = $"{0}-{Guid.NewGuid()}";
+                return;
+            }
+
+            var uuid = UUID.V5(UUID.Nil().AsGuid(), $"NHML{guid}");
+            var b64 = Convert.ToBase64String(uuid.AsGuid().ToByteArray());
+            RigID = $"{0}-{b64}";
+        }
 
         public NiceHashSocket(string address)
         {
@@ -95,6 +113,7 @@ namespace NiceHashMiner.Stats
             {
                 if (btc != null) _login.btc = btc;
                 if (worker != null) _login.worker = worker;
+                _login.rig = RigID;
                 var loginJson = JsonConvert.SerializeObject(_login);
                 SendData(loginJson);
 

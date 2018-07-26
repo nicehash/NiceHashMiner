@@ -396,5 +396,24 @@ namespace NiceHashMiner
 
             return primary;
         }
+
+        public static string GetMachineGuid()
+        {
+            const string hklm = "HKEY_LOCAL_MACHINE";
+            const string keyPath = hklm + @"\SOFTWARE\Microsoft\Cryptography";
+            const string value = "MachineGuid";
+
+            string guid = null;
+            try
+            {
+                guid = (string) Registry.GetValue(keyPath, value, new object());
+            }
+            catch (Exception e)
+            {
+                ConsolePrint("REGISTRY", e.Message);
+            }
+
+            return guid;
+        }
     }
 }
