@@ -12,11 +12,15 @@ namespace NiceHashMiner.Stats
         #region JSON Models
 #pragma warning disable 649, IDE1006
 
-        private class NicehashLogin
+        private class NiceHashLogin
         {
             public string method = "login";
             public string version;
             public int protocol = 1;
+            public string btc;
+            public string worker;
+            public string group = "NHM";
+            public string rig;
         }
         
 #pragma warning restore 649, IDE1006
@@ -29,6 +33,7 @@ namespace NiceHashMiner.Stats
         private bool _connectionEstablished;
         private readonly Random _random = new Random();
         private readonly string _address;
+        private readonly NiceHashLogin _login = new NiceHashLogin();
         
         public event EventHandler OnConnectionEstablished;
         public event EventHandler<MessageEventArgs> OnDataReceived;
@@ -39,7 +44,7 @@ namespace NiceHashMiner.Stats
             _address = address;
         }
 
-        public void StartConnection()
+        public void StartConnection(string btc = null, string worker = null)
         {
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
@@ -52,7 +57,8 @@ namespace NiceHashMiner.Stats
                 {
                     _webSocket.Close();
                 }
-                _webSocket.OnOpen += ConnectCallback;
+
+                _webSocket.OnOpen += (sender, args) => Login(btc, worker);
                 _webSocket.OnMessage += ReceiveCallback;
                 _webSocket.OnError += ErrorCallback;
                 _webSocket.OnClose += CloseCallback;
@@ -64,26 +70,6 @@ namespace NiceHashMiner.Stats
             } catch (Exception e)
             {
                 Helpers.ConsolePrint("SOCKET", e.ToString());
-            }
-        }
-
-        private void ConnectCallback(object sender, EventArgs e)
-        {
-            try
-            {
-                //send login
-                var version = "NHML/" + Application.ProductVersion;
-                var login = new NicehashLogin
-                {
-                    version = version
-                };
-                var loginJson = JsonConvert.SerializeObject(login);
-                SendData(loginJson);
-
-                OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
-            } catch (Exception er)
-            {
-                Helpers.ConsolePrint("SOCKET", er.ToString());
             }
         }
 
@@ -101,6 +87,22 @@ namespace NiceHashMiner.Stats
         {
             Helpers.ConsolePrint("SOCKET", $"Connection closed code {e.Code}: {e.Reason}");
             AttemptReconnect();
+        }
+
+        public void Login(string btc, string worker)
+        {
+            try
+            {
+                if (btc != null) _login.btc = btc;
+                if (worker != null) _login.worker = worker;
+                var loginJson = JsonConvert.SerializeObject(_login);
+                SendData(loginJson);
+
+                OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
+            } catch (Exception er)
+            {
+                Helpers.ConsolePrint("SOCKET", er.ToString());
+            }
         }
 
         // Don't call SendData on UI threads, since it will block the thread for a bit if a reconnect is needed

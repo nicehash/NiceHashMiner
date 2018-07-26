@@ -82,7 +82,7 @@ namespace NiceHashMiner.Stats
                 _socket.OnDataReceived += SocketOnOnDataReceived;
                 _socket.OnConnectionLost += SocketOnOnConnectionLost;
             }
-            _socket.StartConnection();
+            _socket.StartConnection("", ""); // TODO
             _deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_Tick, null, DeviceUpdateInterval, DeviceUpdateInterval);
         }
 
