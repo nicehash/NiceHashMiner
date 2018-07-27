@@ -140,18 +140,18 @@ namespace NiceHashMiner.Stats
                     catch
                     { }
                     SetAlgorithmRates(message.data);
-                    break;
+                    return null;
                 }
 
                 case "balance":
                     SetBalance(message.value.Value);
-                    break;
+                    return null;
                 case "burn":
                     OnVersionBurn?.Invoke(null, new SocketEventArgs(message.message.Value));
-                    break;
+                    return null;
                 case "exchange_rates":
                     SetExchangeRates(message.data.Value);
-                    break;
+                    return null;
                 case "essentials":
                     var ess = JsonConvert.DeserializeObject<EssentialsCall>(data);
                     if (ess?.Params?.First()[2] is string ver && ess.Params.First()[3] is string link)
@@ -159,7 +159,7 @@ namespace NiceHashMiner.Stats
                         SetVersion(ver, link);
                     }
 
-                    break;
+                    return null;
                 case "mining.set.username":
                     var user = (string) message.username;
 
@@ -189,7 +189,7 @@ namespace NiceHashMiner.Stats
                     return new ExecutedInfo(id);
             }
 
-            return null;
+            throw new RpcException("Operation not supported", 2);
         }
 
         private static void SocketOnOnConnectionEstablished(object sender, EventArgs e)
