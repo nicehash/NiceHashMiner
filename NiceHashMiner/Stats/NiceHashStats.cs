@@ -322,7 +322,7 @@ namespace NiceHashMiner.Stats
             var devices = ComputeDeviceManager.Available.Devices;
             var deviceList = new List<JToken>
             {
-                new JObject("BENCHMARKING")  // TODO
+                "BENCHMARKING"  // TODO
             };
             var activeIDs = MinersManager.GetActiveMinersIndexes();
             var benchIDs = new List<int>();  // TODO

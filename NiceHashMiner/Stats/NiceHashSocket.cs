@@ -16,8 +16,8 @@ namespace NiceHashMiner.Stats
         private class NiceHashLogin
         {
             public string method = "login";
-            public string version;
-            public int protocol = 1;
+            public string version = "NHML/" + Application.ProductVersion;
+            public int protocol = 3;
             public string btc;
             public string worker;
             public string group;
