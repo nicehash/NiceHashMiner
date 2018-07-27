@@ -827,10 +827,13 @@ namespace NiceHashMiner
             var onlineVersion = new Version(ver);
             var ret = programVersion.CompareTo(onlineVersion);
 
+            var link = NiceHashStats.VersionLink;
+            if (string.IsNullOrWhiteSpace(link)) return;
+
             if (ret < 0 || (ret == 0 && BetaAlphaPostfixString != ""))
             {
                 SetVersionLabel(string.Format(International.GetText("Form_Main_new_version_released"), ver));
-                _visitUrlNew = Links.VisitUrlNew + ver;
+                _visitUrlNew = link;
             }
         }
 

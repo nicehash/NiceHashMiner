@@ -57,6 +57,7 @@ namespace NiceHashMiner.Stats
         
         public static double Balance { get; private set; }
         public static string Version { get; private set; }
+        public static string VersionLink { get; private set; }
         public static bool IsAlive => _socket?.IsAlive ?? false;
 
         // Event handlers for socket
@@ -143,9 +144,6 @@ namespace NiceHashMiner.Stats
                 case "balance":
                     SetBalance(message.value.Value);
                     break;
-                case "versions":
-                    SetVersion(message.legacy.Value);
-                    break;
                 case "burn":
                     OnVersionBurn?.Invoke(null, new SocketEventArgs(message.message.Value));
                     break;
@@ -154,9 +152,9 @@ namespace NiceHashMiner.Stats
                     break;
                 case "essentials":
                     var ess = JsonConvert.DeserializeObject<EssentialsCall>(data);
-                    if (ess?.Params?.First()[1] is string ver)
+                    if (ess?.Params?.First()[2] is string ver && ess.Params.First()[3] is string link)
                     {
-                        SetVersion(ver);
+                        SetVersion(ver, link);
                     }
 
                     break;
@@ -249,9 +247,10 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        private static void SetVersion(string version)
+        private static void SetVersion(string version, string link)
         {
             Version = version;
+            VersionLink = link;
             OnVersionUpdate?.Invoke(null, EventArgs.Empty);
         }
 

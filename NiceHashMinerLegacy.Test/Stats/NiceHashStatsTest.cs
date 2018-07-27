@@ -26,7 +26,7 @@ namespace NiceHashMinerLegacy.Tests.Stats
         {
             NiceHashStats.ProcessData(TestSocketCalls.Data);
 
-            Assert.AreEqual("1.9.1.2", NiceHashStats.Version);
+            Assert.AreEqual("1.9.1.5", NiceHashStats.Version);
         }
 
         [TestMethod]
