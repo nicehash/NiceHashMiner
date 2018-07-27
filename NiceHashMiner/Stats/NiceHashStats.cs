@@ -41,8 +41,9 @@ namespace NiceHashMiner.Stats
 
         private class NicehashDeviceStatus
         {
-            public string method = "devices.status";
-            public List<JArray> devices;
+            public string method = "miner.status";
+            [JsonProperty("params")]
+            public List<JToken> param;
         }
         public class ExchangeRateJson
         {
@@ -84,7 +85,7 @@ namespace NiceHashMiner.Stats
                 _socket.OnConnectionLost += SocketOnOnConnectionLost;
             }
             _socket.StartConnection(ConfigManager.GeneralConfig.BitcoinAddress, ConfigManager.GeneralConfig.WorkerName, ConfigManager.GeneralConfig.RigGroup);
-            _deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_Tick, null, DeviceUpdateInterval, DeviceUpdateInterval);
+            _deviceUpdateTimer = new System.Threading.Timer(MinerStatus_Tick, null, DeviceUpdateInterval, DeviceUpdateInterval);
         }
 
         #region Socket Callbacks
@@ -192,7 +193,7 @@ namespace NiceHashMiner.Stats
 
         private static void SocketOnOnConnectionEstablished(object sender, EventArgs e)
         {
-            DeviceStatus_Tick(null); // Send device to populate rig stats
+            MinerStatus_Tick(null); // Send device to populate rig stats
 
             OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
         }
@@ -309,31 +310,56 @@ namespace NiceHashMiner.Stats
                 // Send as task since SetCredentials is called from UI threads
                 Task.Factory.StartNew(() =>
                 {
-                    DeviceStatus_Tick(null);
+                    MinerStatus_Tick(null);
                     _socket?.StartConnection(btc, worker);
                 });
             }
         }
 
-        private static void DeviceStatus_Tick(object state)
+        private static void MinerStatus_Tick(object state)
         {
             var devices = ComputeDeviceManager.Available.Devices;
-            var deviceList = new List<JArray>();
+            var deviceList = new List<JToken>
+            {
+                new JObject("BENCHMARKING")  // TODO
+            };
             var activeIDs = MinersManager.GetActiveMinersIndexes();
+            var benchIDs = new List<int>();  // TODO
+
             foreach (var device in devices)
             {
                 try
                 {
                     var array = new JArray
                     {
-                        device.Index,
-                        device.Name
+                        0,
+                        device.B64Uuid  // TODO
                     };
-                    var status = Convert.ToInt32(activeIDs.Contains(device.Index)) + ((int) device.DeviceType + 1) * 2;
+
+                    // Status (dev type and mining/benching/disabled
+                    var status = ((int) device.DeviceType + 1) << 2;
+
+                    if (activeIDs.Contains(device.Index))
+                        status += 2;
+                    else if (benchIDs.Contains(device.Index))
+                        status += 3;
+                    else if (device.Enabled)
+                        status += 1;
+
                     array.Add(status);
+
+                    // TODO algo speeds
+                    array.Add(new JArray());
+
+                    // Hardware monitoring
                     array.Add((int) Math.Round(device.Load));
                     array.Add((int) Math.Round(device.Temp));
                     array.Add(device.FanSpeed);
+                    array.Add((int) Math.Round(device.PowerUsage));
+
+                    // Power/intensity mode
+                    array.Add(0);
+                    array.Add(0);
 
                     deviceList.Add(array);
                 }
@@ -341,9 +367,10 @@ namespace NiceHashMiner.Stats
             }
             var data = new NicehashDeviceStatus
             {
-                devices = deviceList
+                param = deviceList
             };
             var sendData = JsonConvert.SerializeObject(data);
+
             // This function is run every minute and sends data every run which has two auxiliary effects
             // Keeps connection alive and attempts reconnection if internet was dropped
             _socket?.SendData(sendData);
@@ -352,7 +379,7 @@ namespace NiceHashMiner.Stats
         private static void SendExecuted(ExecutedInfo info, int code = 0, string message = null)
         {
             // First set status
-            DeviceStatus_Tick(null);
+            MinerStatus_Tick(null);
             // Then executed
             var data = new ExecutedCall(code, message).Serialize();
             _socket?.SendData(data);
