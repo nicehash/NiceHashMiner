@@ -39,7 +39,9 @@ namespace NiceHashMinerLegacy.Tests.Stats
         [TestMethod]
         public void SetValidWorkerShouldPrase()
         {
-            NiceHashStats.ProcessData(TestSocketCalls.ValidWorkerSet);
+            var ex = NiceHashStats.ProcessData(TestSocketCalls.ValidWorkerSet);
+            Assert.IsTrue(ex.LoginNeeded);
+            Assert.AreEqual("main", ex.NewWorker);
             Assert.AreEqual("main", ConfigManager.GeneralConfig.WorkerName);
         }
 
@@ -53,7 +55,9 @@ namespace NiceHashMinerLegacy.Tests.Stats
         [TestMethod]
         public void SetValidUserShouldParse()
         {
-            NiceHashStats.ProcessData(TestSocketCalls.ValidUserSet);
+            var ex = NiceHashStats.ProcessData(TestSocketCalls.ValidUserSet);
+            Assert.IsTrue(ex.LoginNeeded);
+            Assert.AreEqual("3KpWmp49Cdbswr23KhjagNbwqiwcFh8Br2", ex.NewBtc);
             Assert.AreEqual("3KpWmp49Cdbswr23KhjagNbwqiwcFh8Br2", ConfigManager.GeneralConfig.BitcoinAddress);
         }
 

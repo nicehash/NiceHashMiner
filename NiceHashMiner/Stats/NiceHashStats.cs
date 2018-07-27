@@ -165,7 +165,7 @@ namespace NiceHashMiner.Stats
                         throw new RpcException("Bitcoin address invalid", 1);
 
                     ConfigManager.GeneralConfig.BitcoinAddress = user;
-                    return new ExecutedInfo();
+                    return new ExecutedInfo {NewBtc = user};
                 case "mining.set.worker":
                     var worker = (string) message.worker;
 
