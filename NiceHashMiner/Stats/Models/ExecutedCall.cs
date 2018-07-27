@@ -11,10 +11,11 @@ namespace NiceHashMiner.Stats.Models
     {
         public readonly string method = "executed";
         [JsonProperty("params")]
-        public List<object> Params = new List<object> { 0 };  // TODO ID?
+        public List<object> Params = new List<object>();
 
-        public ExecutedCall(int code, string message)
+        public ExecutedCall(int id, int code, string message)
         {
+            Params.Add(id);
             Params.Add(code);
             if (message != null)
             {

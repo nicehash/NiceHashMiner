@@ -12,6 +12,13 @@ namespace NiceHashMiner.Stats.Models
         public string NewBtc = null;
         public string NewRig = null;
 
+        public int ID;
+
         public bool LoginNeeded => NewWorker != null || NewBtc != null || NewRig != null;
+
+        public ExecutedInfo(int id)
+        {
+            ID = id;
+        }
     }
 }

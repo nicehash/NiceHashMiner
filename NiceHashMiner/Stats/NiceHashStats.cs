@@ -126,6 +126,7 @@ namespace NiceHashMiner.Stats
         {
             Helpers.ConsolePrint("SOCKET", "Received: " + data);
             dynamic message = JsonConvert.DeserializeObject(data);
+            var id = (int?) message?.id?.Value ?? -1;
             switch (message.method.Value)
             {
                 case "sma":
@@ -166,7 +167,7 @@ namespace NiceHashMiner.Stats
                         throw new RpcException("Bitcoin address invalid", 1);
 
                     ConfigManager.GeneralConfig.BitcoinAddress = user;
-                    return new ExecutedInfo {NewBtc = user};
+                    return new ExecutedInfo(id) {NewBtc = user};
                 case "mining.set.worker":
                     var worker = (string) message.worker;
 
@@ -174,18 +175,18 @@ namespace NiceHashMiner.Stats
                         throw new RpcException("Worker name invalid", 1);
 
                     ConfigManager.GeneralConfig.WorkerName = worker;
-                    return new ExecutedInfo {NewWorker = worker};
+                    return new ExecutedInfo(id) {NewWorker = worker};
                 case "mining.set.group":
                     var group = (string) message.group;
                     ConfigManager.GeneralConfig.RigGroup = group;
 
-                    return new ExecutedInfo {NewRig = group};
+                    return new ExecutedInfo(id) {NewRig = group};
                 case "mining.enable":
                     SetDevicesEnabled((string) message.device, true);
-                    return new ExecutedInfo();
+                    return new ExecutedInfo(id);
                 case "mining.disable":
                     SetDevicesEnabled((string) message.device, false);
-                    return new ExecutedInfo();
+                    return new ExecutedInfo(id);
             }
 
             return null;
@@ -381,7 +382,7 @@ namespace NiceHashMiner.Stats
             // First set status
             MinerStatus_Tick(null);
             // Then executed
-            var data = new ExecutedCall(code, message).Serialize();
+            var data = new ExecutedCall(info.ID, code, message).Serialize();
             _socket?.SendData(data);
             // Login if we have to
             if (info.LoginNeeded)
