@@ -11,8 +11,9 @@ namespace NiceHashMiner.Miners
         public readonly AlgorithmType SecondaryAlgorithmID;
         public readonly string AlgorithmName;
 
-        public double Speed;
-        public double SecondarySpeed;
+        public virtual double Speed { get; set; }
+        public virtual double SecondarySpeed { get; set; }
+
         public double PowerUsage;
         public double Profit;
         public double Revenue;
@@ -35,6 +36,22 @@ namespace NiceHashMiner.Miners
             {
                 PowerUsage = devices.Sum(d => d.PowerUsage);
             }
+        }
+    }
+
+    public class SplitApiData : ApiData
+    {
+        public readonly Dictionary<int, double> Speeds;
+        public readonly Dictionary<int, double> SecondarySpeeds;
+
+        public override double Speed => Speeds.Values.Sum();
+        public override double SecondarySpeed => SecondarySpeeds.Values.Sum();
+
+        public SplitApiData(AlgorithmType algo, Dictionary<int, double> speeds, Dictionary<int, double> secondarySpeeds)
+            : base(algo, speeds.Keys.ToList())
+        {
+            Speeds = speeds;
+            SecondarySpeeds = secondarySpeeds;
         }
     }
 }

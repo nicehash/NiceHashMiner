@@ -137,7 +137,8 @@ namespace NiceHashMiner.Miners
         {
             var ad = new ApiData(MiningSetup.CurrentAlgorithmType, Devices);
 
-            var getSpeedStatus = GetSpeed(out var ismining, out ad.Speed);
+            var getSpeedStatus = GetSpeed(out var ismining, out var speed);
+            ad.Speed = speed;
             if (GetSpeedStatus.GOT == getSpeedStatus)
             {
                 // fix MH/s
