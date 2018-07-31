@@ -80,6 +80,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string CcminerCryptonight = Bin + @"\ccminer_cryptonight\ccminer.exe";
             public const string CcminerX11Gost = Bin + @"\ccminer_x11gost\ccminer.exe";
             public const string CcminerKlausT = Bin + @"\ccminer_klaust\ccminer.exe";
+            public const string CcminerX16R = Bin + @"\ccminer_x16r\ccminer.exe";
 
             /// <summary>
             /// ethminers
@@ -92,6 +93,8 @@ namespace NiceHashMiner.Miners.Grouping
             public const string Sgminer560General = Bin + @"\sgminer-5-6-0-general\sgminer.exe";
 
             public const string SgminerGm = Bin + @"\sgminer-gm\sgminer.exe";
+
+            public const string Avermore = Bin + @"\avermore\sgminer.exe";
 
             public const string NhEqMiner = Bin + @"\nheqminer_v0.4b\NhEqMiner.exe";
             public const string Excavator = Bin + @"\excavator\excavator.exe";
@@ -117,6 +120,8 @@ namespace NiceHashMiner.Miners.Grouping
             public const string Ewbf = Bin3rdParty + @"\ewbf\miner.exe";
             public const string Prospector = Bin3rdParty + @"\prospector\prospector.exe";
             public const string Dtsm = Bin3rdParty + @"\dtsm\zm.exe";
+
+            public const string EthLargement = Bin3rdParty + @"\ethlargement\OhGodAnETHlargementPill-r2.exe";
         }
 
         // NEW START
@@ -263,6 +268,8 @@ namespace NiceHashMiner.Miners.Grouping
                     case AlgorithmType.Nist5:
                     case AlgorithmType.NeoScrypt:
                         return Data.CcminerKlausT;
+                    case AlgorithmType.X16R:
+                        return Data.CcminerX16R;
                 }
 
                 return Data.CcminerSp;
@@ -304,11 +311,16 @@ namespace NiceHashMiner.Miners.Grouping
         {
             public static string SgminerPath(AlgorithmType type)
             {
-                if (AlgorithmType.CryptoNight == type || AlgorithmType.DaggerHashimoto == type)
+                switch (type)
                 {
-                    return Data.SgminerGm;
+                    case AlgorithmType.CryptoNight:
+                    case AlgorithmType.DaggerHashimoto:
+                        return Data.SgminerGm;
+                    case AlgorithmType.X16R:
+                        return Data.Avermore;
+                    default:
+                        return Data.Sgminer560General;
                 }
-                return Data.Sgminer560General;
             }
 
             public static string ClaymorePath(AlgorithmType type)
@@ -321,8 +333,9 @@ namespace NiceHashMiner.Miners.Grouping
                         return Data.ClaymoreCryptoNightMiner;
                     case AlgorithmType.DaggerHashimoto:
                         return Data.ClaymoreDual;
+                    default:
+                        return Data.None;
                 }
-                return Data.None; // should not happen
             }
         }
 

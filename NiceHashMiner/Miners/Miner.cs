@@ -444,6 +444,8 @@ namespace NiceHashMiner
             benchmarkHandle.ErrorDataReceived += BenchmarkOutputErrorDataReceived;
             benchmarkHandle.Exited += BenchmarkHandle_Exited;
 
+            Ethlargement.CheckAndStart(MiningSetup);
+
             if (!benchmarkHandle.Start()) return null;
 
             _currentPidData = new MinerPidData
@@ -900,6 +902,7 @@ namespace NiceHashMiner
         }
 
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
+        
 
         protected virtual NiceHashProcess _Start()
         {
@@ -911,6 +914,8 @@ namespace NiceHashMiner
 
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
+
+            Ethlargement.CheckAndStart(MiningSetup);
 
             var P = new NiceHashProcess();
 

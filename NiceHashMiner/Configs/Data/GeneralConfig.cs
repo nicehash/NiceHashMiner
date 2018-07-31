@@ -120,6 +120,8 @@ namespace NiceHashMiner.Configs.Data
 
         public Point MainFormSize = new Point(1682, 910);
 
+        public bool UseEthlargement = false;
+
         // methods
         public void SetDefaults()
         {
@@ -178,6 +180,7 @@ namespace NiceHashMiner.Configs.Data
             UseSmaCache = true;
             ShowPowerColumns = false;
             ShowDiagColumns = true;
+            UseEthlargement = false;
         }
 
         public void FixSettingBounds()

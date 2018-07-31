@@ -155,6 +155,8 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.buttonCloseNoSave = new System.Windows.Forms.Button();
+            this.pictureBox_RunEthlargement = new System.Windows.Forms.PictureBox();
+            this.checkBox_RunEthlargement = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -209,6 +211,7 @@
             this.tabPageDevicesAlgos.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunEthlargement)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -1214,6 +1217,8 @@
             // 
             // groupBox_Miners
             // 
+            this.groupBox_Miners.Controls.Add(this.pictureBox_RunEthlargement);
+            this.groupBox_Miners.Controls.Add(this.checkBox_RunEthlargement);
             this.groupBox_Miners.Controls.Add(this.pictureBox_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.pictureBox_APIBindPortStart);
             this.groupBox_Miners.Controls.Add(this.pictureBox_SwitchMaxSeconds);
@@ -1766,6 +1771,28 @@
             this.buttonCloseNoSave.UseVisualStyleBackColor = true;
             this.buttonCloseNoSave.Click += new System.EventHandler(this.ButtonCloseNoSave_Click);
             // 
+            // pictureBox_RunEthlargement
+            // 
+            this.pictureBox_RunEthlargement.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_RunEthlargement.Location = new System.Drawing.Point(1110, 233);
+            this.pictureBox_RunEthlargement.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.pictureBox_RunEthlargement.Name = "pictureBox_RunEthlargement";
+            this.pictureBox_RunEthlargement.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_RunEthlargement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_RunEthlargement.TabIndex = 387;
+            this.pictureBox_RunEthlargement.TabStop = false;
+            // 
+            // checkBox_RunEthlargement
+            // 
+            this.checkBox_RunEthlargement.AutoSize = true;
+            this.checkBox_RunEthlargement.Location = new System.Drawing.Point(806, 235);
+            this.checkBox_RunEthlargement.Margin = new System.Windows.Forms.Padding(4, 6, 4, 6);
+            this.checkBox_RunEthlargement.Name = "checkBox_RunEthlargement";
+            this.checkBox_RunEthlargement.Size = new System.Drawing.Size(216, 29);
+            this.checkBox_RunEthlargement.TabIndex = 386;
+            this.checkBox_RunEthlargement.Text = "Run Ethlargement";
+            this.checkBox_RunEthlargement.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
@@ -1842,6 +1869,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunEthlargement)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1977,5 +2005,7 @@
         private System.Windows.Forms.Label label_ElectricityCost;
         private System.Windows.Forms.GroupBox groupBox1;
         private Components.Field minDeviceProfitField;
+        private System.Windows.Forms.PictureBox pictureBox_RunEthlargement;
+        private System.Windows.Forms.CheckBox checkBox_RunEthlargement;
     }
 }

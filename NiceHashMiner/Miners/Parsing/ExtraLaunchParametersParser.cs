@@ -350,6 +350,8 @@ namespace NiceHashMiner.Miners.Parsing
                     return MinerType.Xmrig;
                 case MinerBaseType.dtsm:
                     return MinerType.dtsm;
+                case MinerBaseType.cpuminer:
+                    return MinerType.cpuminer_opt;
             }
 
             return MinerType.NONE;

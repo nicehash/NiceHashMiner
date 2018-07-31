@@ -185,15 +185,7 @@ namespace NiceHashMiner.Miners
             if ((willswitch == MinerStopType.FORCE_END || willswitch == MinerStopType.END) && ProcessHandle != null)
             {
                 IsPaused = false; // shutting down means it is not paused
-                try
-                {
-                    ProcessHandle.Kill();
-                }
-                catch { }
-                finally
-                {
-                    ProcessHandle = null;
-                }
+                Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
             }
         }
 
