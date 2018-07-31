@@ -350,6 +350,32 @@ namespace NiceHashMiner.Forms.Components
             UpdateListView();
         }
 
+        private void UpdateRowInfo(ListViewItem item, double speed, double secSpeed, double revenue, double profit,
+            double power, double powerUsage)
+        {
+            try
+            {
+                item.SubItems[Speed].Text = Helpers.FormatSpeedOutput(speed);
+                if (secSpeed > 0)
+                    item.SubItems[SecSpeed].Text = Helpers.FormatSpeedOutput(secSpeed);
+
+                var fiat = ExchangeRateApi.ConvertFromBtc(profit * TimeFactor.TimeUnit);
+                if (ShowPowerCols)
+                {
+                    item.SubItems[Profit].Text = (revenue * 1000 * TimeFactor.TimeUnit).ToString("F4");
+                    item.SubItems[Fiat].Text = ExchangeRateApi.ConvertFromBtc(revenue * TimeFactor.TimeUnit).ToString("F2");
+                    var powerCost = ExchangeRateApi.ConvertFromBtc(power * TimeFactor.TimeUnit);
+                    SetPowerText(item, powerUsage, powerCost, fiat);
+                }
+                else
+                {
+                    item.SubItems[Profit].Text = (profit * 1000 * TimeFactor.TimeUnit).ToString("F4");
+                    item.SubItems[Fiat].Text = fiat.ToString("F2");
+                }
+            }
+            catch { }
+        }
+
         public void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
         {
             Enabled = true;
@@ -377,38 +403,26 @@ namespace NiceHashMiner.Forms.Components
 
                 if (item.Tag is List<int> indices && indices.Same(iApiData.DeviceIndices))
                 {
-                    try
-                    {
-                        item.SubItems[Speed].Text = Helpers.FormatSpeedOutput(iApiData.Speed);
-                        if (iApiData.SecondaryAlgorithmID != AlgorithmType.NONE)
-                            item.SubItems[SecSpeed].Text = Helpers.FormatSpeedOutput(iApiData.SecondarySpeed);
-
-                        var fiat = ExchangeRateApi.ConvertFromBtc(paying * TimeFactor.TimeUnit);
-                        if (ShowPowerCols)
-                        {
-                            item.SubItems[Profit].Text = (iApiData.Revenue * 1000 * TimeFactor.TimeUnit).ToString("F4");
-                            item.SubItems[Fiat].Text = ExchangeRateApi.ConvertFromBtc(iApiData.Revenue * TimeFactor.TimeUnit).ToString("F2");
-                            var powerCost = ExchangeRateApi.ConvertFromBtc((iApiData.Revenue - iApiData.Profit) * TimeFactor.TimeUnit);
-                            SetPowerText(item, iApiData.PowerUsage, powerCost, fiat);
-                        }
-                        else
-                        {
-                            item.SubItems[Profit].Text = (paying * 1000 * TimeFactor.TimeUnit).ToString("F4");
-                            item.SubItems[Fiat].Text = fiat.ToString("F2");
-                        }
-                    }
-                    catch { }
+                    UpdateRowInfo(item, iApiData.Speed, iApiData.SecondarySpeed, iApiData.Revenue, iApiData.Profit, iApiData.PowerCost, iApiData.PowerUsage);
                 }
                 else if (item.Tag is ComputeDevice dev && iApiData.DeviceIndices.Any(i => i == dev.Index))
                 {
-                    // For now we don't know how much each device is making so just show power costs
-                    var power = dev.PowerUsage;
-                    // TODO fall back on entered values
-                    if (power < 0) power = 0;
-                    // Cost of electricity used in fiat currency
-                    var powerCost = ExchangeRateApi.GetKwhPriceInFiat() * power * 24 * TimeFactor.TimeUnit / 1000;
+                    iApiData.PowerMap.TryGetValue(dev.Index, out var power);
+                    var powerCostBtc = iApiData.PowerCostForIndex(dev.Index);
 
-                    SetPowerText(item, power, powerCost, null);
+                    if (iApiData is SplitApiData split)
+                    {
+                        split.Speeds.TryGetValue(dev.Index, out var speed);
+                        split.SecondarySpeeds.TryGetValue(dev.Index, out var secSpeed);
+
+                        UpdateRowInfo(item, speed, secSpeed, split.RevenueForIndex(dev.Index), split.ProfitForIndex(dev.Index), powerCostBtc, power);
+                    }
+                    else
+                    {
+                        var powerCost = ExchangeRateApi.ConvertFromBtc(powerCostBtc * TimeFactor.TimeUnit);
+
+                        SetPowerText(item, power, powerCost, null);
+                    }
                 }
             }
 

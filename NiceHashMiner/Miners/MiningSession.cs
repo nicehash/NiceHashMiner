@@ -582,7 +582,6 @@ namespace NiceHashMiner.Miners
 
         public async Task MinerStatsCheck()
         {
-            var currentProfit = 0.0d;
             _ratesComunication.ClearRates(_runningGroupMiners.Count);
             var checks = new List<GroupMiner>(_runningGroupMiners.Values);
             try
@@ -605,16 +604,11 @@ namespace NiceHashMiner.Miners
                     // set rates
                     if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     {
-                        groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
+                        ad.SmaVal = paying;
                         if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
                         {
-                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
+                            ad.SecondarySmaVal = secPaying;
                         }
-
-                        ad.Revenue = groupMiners.CurrentRate;
-
-                        // Deduct power costs
-                        groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * ad.PowerUsage * 24 / 1000;
                     }
                     else
                     {
@@ -622,9 +616,6 @@ namespace NiceHashMiner.Miners
                         // set empty
                         ad = new ApiData(groupMiners.AlgorithmType, groupMiners.DevIndexes);
                     }
-
-                    currentProfit += groupMiners.CurrentRate;
-                    ad.Profit = groupMiners.CurrentRate;
 
                     // Update GUI
                     _ratesComunication.AddRateInfo(ad, groupMiners.CurrentRate, m.IsApiReadException);

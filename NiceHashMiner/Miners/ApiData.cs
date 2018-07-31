@@ -2,12 +2,15 @@
 using System.Linq;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners
 {
     public class ApiData
     {
+        protected const double Mult = 0.000000001;
+
         public readonly AlgorithmType AlgorithmID;
         public readonly AlgorithmType SecondaryAlgorithmID;
         public readonly string AlgorithmName;
@@ -15,9 +18,13 @@ namespace NiceHashMiner.Miners
         public virtual double Speed { get; set; }
         public virtual double SecondarySpeed { get; set; }
         public double PowerUsage => PowerMap.Values.Sum();
+        
+        public double Revenue => (Speed * SmaVal + SecondarySpeed * SecondarySmaVal) * Mult;
+        public double PowerCost => ExchangeRateApi.GetKwhPriceInBtc() * PowerUsage * 24 / 1000;
+        public double Profit => Revenue - PowerCost;
 
-        public double Profit;
-        public double Revenue;
+        public double SmaVal;
+        public double SecondarySmaVal;
 
         public readonly List<int> DeviceIndices;
         public readonly Dictionary<int, double> PowerMap = new Dictionary<int, double>();
@@ -47,6 +54,12 @@ namespace NiceHashMiner.Miners
                 }
             }
         }
+
+        public double PowerCostForIndex(int index)
+        {
+            PowerMap.TryGetValue(index, out var pow);
+            return ExchangeRateApi.GetKwhPriceInBtc() * pow * 24 / 1000;
+        }
     }
 
     public class SplitApiData : ApiData
@@ -60,5 +73,18 @@ namespace NiceHashMiner.Miners
         public SplitApiData(MiningSetup setup)
             : base(setup)
         { }
+
+        public double RevenueForIndex(int index)
+        {
+            Speeds.TryGetValue(index, out var sp);
+            SecondarySpeeds.TryGetValue(index, out var ssp);
+
+            return (sp * SmaVal + ssp * SecondarySmaVal) * Mult;
+        }
+
+        public double ProfitForIndex(int index)
+        {
+            return RevenueForIndex(index) - PowerCostForIndex(index);
+        }
     }
 }
