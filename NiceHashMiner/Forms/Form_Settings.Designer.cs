@@ -1660,10 +1660,7 @@
             // 
             this.devicesListViewEnableControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(12, 11);
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(8, 10, 8, 10);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
