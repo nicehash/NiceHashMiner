@@ -70,7 +70,7 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            SplitApiData ad = null;
+            var ad = new SplitApiData(MiningSetup);
 
             JsonApiResponse resp = null;
             try
@@ -101,46 +101,43 @@ namespace NiceHashMiner.Miners
                     var secondarySpeeds = resp.result[5].Split(';');
 
                     var sortedDevs = SortedMiningPairs.Select(p => p.Device.Index).ToList();
-                    var speedMap = new Dictionary<int, double>();
-                    var secondarySpeedMap = IsDual() ? new Dictionary<int, double>() : null;
 
                     for (var i = 0; i < speeds.Length; i++)
                     {
                         //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "foreach (var speed in speeds) {");
-                        double tmpSpeed;
-                        double tmpSecSpeed;
+                        var tmpSpeed = 0d;
+                        var tmpSecSpeed = 0d;
                         try
                         {
                             tmpSpeed = double.Parse(speeds[i], CultureInfo.InvariantCulture);
-                            tmpSecSpeed = double.Parse(secondarySpeeds[i], CultureInfo.InvariantCulture);
+                            if (IsDual()) 
+                            {
+                                tmpSecSpeed = double.Parse(secondarySpeeds[i], CultureInfo.InvariantCulture);
+                            }
                         }
                         catch
-                        {
-                            tmpSpeed = 0;
-                            tmpSecSpeed = 0;
-                        }
+                        { }
 
                         if (sortedDevs.Count > i)
                         {
-                            speedMap[sortedDevs[i]] = tmpSpeed * ApiReadMult;
-                            if (secondarySpeedMap != null)
+                            ad.Speeds[sortedDevs[i]] = tmpSpeed * ApiReadMult;
+                            if (IsDual())
                             {
-                                secondarySpeedMap[sortedDevs[i]] = tmpSecSpeed * ApiReadMult;
+                                ad.SecondarySpeeds[sortedDevs[i]] = tmpSecSpeed * ApiReadMult;
                             }
                         } 
                     }
 
-                    ad = new SplitApiData(MiningSetup.CurrentAlgorithmType, speedMap, secondarySpeedMap);
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 }
 
-                if (ad?.Speed == 0)
+                if (ad.Speed == 0)
                 {
                     CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
                 }
 
                 // some clayomre miners have this issue reporting negative speeds in that case restart miner
-                if (ad?.Speed < 0)
+                if (ad.Speed < 0)
                 {
                     Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
                     Restart();

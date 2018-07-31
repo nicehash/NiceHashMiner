@@ -117,7 +117,7 @@ namespace NiceHashMiner.Miners
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
 
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, Devices);
+            var ad = new ApiData(MiningSetup);
             var request = JsonConvert.SerializeObject(new
             {
                 method = "getstat",

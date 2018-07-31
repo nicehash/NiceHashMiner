@@ -182,7 +182,7 @@ namespace NiceHashMiner.Miners
                     miningPair.Device.GetAlgorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight, AlgorithmType.NONE))
                 .Where(algo => algo != null).Sum(algo => algo.BenchmarkSpeed);
 
-            var cryptoNightData = new ApiData(MiningSetup.CurrentAlgorithmType, Devices)
+            var cryptoNightData = new ApiData(MiningSetup)
             {
                 Speed = totalSpeed
             };

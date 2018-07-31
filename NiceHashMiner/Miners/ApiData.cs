@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Miners.Grouping;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners
@@ -13,12 +14,13 @@ namespace NiceHashMiner.Miners
 
         public virtual double Speed { get; set; }
         public virtual double SecondarySpeed { get; set; }
+        public double PowerUsage => PowerMap.Values.Sum();
 
-        public double PowerUsage;
         public double Profit;
         public double Revenue;
 
         public readonly List<int> DeviceIndices;
+        public readonly Dictionary<int, double> PowerMap = new Dictionary<int, double>();
 
         public ApiData(AlgorithmType algorithmID, List<int> indices, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)
         {
@@ -28,30 +30,35 @@ namespace NiceHashMiner.Miners
             DeviceIndices = indices;
         }
 
-        public ApiData(AlgorithmType algo, IEnumerable<ComputeDevice> devices,
-            AlgorithmType secondaryAlgo = AlgorithmType.NONE, double totalPower = -1)
-            : this(algo, devices.Select(d => d.Index).ToList(), secondaryAlgo)
+        public ApiData(MiningSetup setup)
+            : this(setup.CurrentAlgorithmType, setup.MiningPairs.Select(p => p.Device.Index).ToList(), setup.CurrentSecondaryAlgorithmType)
         {
-            if (totalPower < 0)
+            foreach (var pair in setup.MiningPairs)
             {
-                PowerUsage = devices.Sum(d => d.PowerUsage);
+                var measuredUsage = pair.Device.PowerUsage;
+                if (measuredUsage >= 0)
+                {
+                    PowerMap[pair.Device.Index] = measuredUsage;
+                }
+                else
+                {
+                    // Fall back on user set vals
+                    PowerMap[pair.Device.Index] = pair.Algorithm.PowerUsage;
+                }
             }
         }
     }
 
     public class SplitApiData : ApiData
     {
-        public readonly Dictionary<int, double> Speeds;
-        public readonly Dictionary<int, double> SecondarySpeeds;
+        public readonly Dictionary<int, double> Speeds = new Dictionary<int, double>();
+        public readonly Dictionary<int, double> SecondarySpeeds = new Dictionary<int, double>();
 
         public override double Speed => Speeds.Values.Sum();
         public override double SecondarySpeed => SecondarySpeeds.Values.Sum();
 
-        public SplitApiData(AlgorithmType algo, Dictionary<int, double> speeds, Dictionary<int, double> secondarySpeeds)
-            : base(algo, speeds.Keys.ToList())
-        {
-            Speeds = speeds;
-            SecondarySpeeds = secondarySpeeds;
-        }
+        public SplitApiData(MiningSetup setup)
+            : base(setup)
+        { }
     }
 }

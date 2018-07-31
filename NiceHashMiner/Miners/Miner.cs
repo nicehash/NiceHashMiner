@@ -1117,7 +1117,7 @@ namespace NiceHashMiner
 
         protected async Task<ApiData> GetSummaryCpuAsync(string method = "", bool overrideLoop = false)
         {
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, Devices);
+            var ad = new ApiData(MiningSetup);
 
             try
             {
@@ -1186,7 +1186,7 @@ namespace NiceHashMiner
         {
             // TODO aname
             string aname = null;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, Devices);
+            var ad = new ApiData(MiningSetup);
 
             var dataToSend = GetHttpRequestNhmAgentStrin("summary");
 

@@ -135,7 +135,7 @@ namespace NiceHashMiner.Miners
 
         public override Task<ApiData> GetSummaryAsync()
         {
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, Devices);
+            var ad = new ApiData(MiningSetup);
 
             var getSpeedStatus = GetSpeed(out var ismining, out var speed);
             ad.Speed = speed;

@@ -614,14 +614,7 @@ namespace NiceHashMiner.Miners
                         ad.Revenue = groupMiners.CurrentRate;
 
                         // Deduct power costs
-                        double powerUsage;
-                        if (ad.PowerUsage > 0) powerUsage = ad.PowerUsage;
-                        else
-                        {
-                            powerUsage = groupMiners.TotalPower;
-                            ad.PowerUsage = groupMiners.TotalPower;
-                        }
-                        groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
+                        groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * ad.PowerUsage * 24 / 1000;
                     }
                     else
                     {
