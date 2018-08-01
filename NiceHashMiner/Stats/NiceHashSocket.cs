@@ -134,13 +134,13 @@ namespace NiceHashMiner.Stats
                 {
                     // Make sure connection is open
                     // Verify valid JSON and method
-                    dynamic dataJson = JsonConvert.DeserializeObject(data);
-                    if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "login")
-                    {
-                        Helpers.ConsolePrint("SOCKET", "Sending data: " + data);
-                        _webSocket.Send(data);
-                        return true;
-                    }
+                    //dynamic dataJson = JsonConvert.DeserializeObject(data);
+                    //if (dataJson.method == "credentials.set" || dataJson.method == "devices.status" || dataJson.method == "login")
+                    //{
+                    //}
+                    Helpers.ConsolePrint("SOCKET", "Sending data: " + data);
+                    _webSocket.Send(data);
+                    return true;
                 } else if (_webSocket != null)
                 {
                     if (AttemptReconnect() && !recurs)
