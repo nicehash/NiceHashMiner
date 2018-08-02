@@ -133,6 +133,7 @@
     <Compile Include="Miners\XmrStak\XmrStak.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfig.cs" />
     <Compile Include="Miners\Xmrig.cs" />
+    <Compile Include="Stats\Models\DeviceUpdateEventArgs.cs" />
     <Compile Include="Stats\Models\EssentialsCall.cs" />
     <Compile Include="Stats\Models\ExecutedCall.cs" />
     <Compile Include="Stats\Models\ExecutedInfo.cs" />

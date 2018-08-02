@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
+using NiceHashMiner.Stats.Models;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -154,18 +155,18 @@ namespace NiceHashMiner.Forms.Components
             SetComputeDevices(computeDevices);
         }
 
-        private void UpdateDevices(object sender, EventArgs e)
+        private void UpdateDevices(object sender, DeviceUpdateEventArgs e)
         {
             if (InvokeRequired)
             {
                 Invoke((Action) delegate
                 {
-                    SetComputeDevices(ComputeDeviceManager.Available.Devices);
+                    SetComputeDevices(e.Devices);
                 });
             }
             else
             {
-                SetComputeDevices(ComputeDeviceManager.Available.Devices);
+                SetComputeDevices(e.Devices);
             }
         }
 
