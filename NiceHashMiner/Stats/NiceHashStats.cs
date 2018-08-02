@@ -70,6 +70,7 @@ namespace NiceHashMiner.Stats
         public static event EventHandler OnConnectionEstablished;
         public static event EventHandler<SocketEventArgs> OnVersionBurn;
         public static event EventHandler OnExchangeUpdate;
+        public static event EventHandler OnDeviceUpdate;
 
         private static NiceHashSocket _socket;
         
@@ -298,6 +299,8 @@ namespace NiceHashMiner.Stats
 
             if (!found)
                 throw new RpcException("Device not found", 1);
+
+            OnDeviceUpdate?.Invoke(null, EventArgs.Empty);
         }
 
         #endregion
@@ -320,12 +323,14 @@ namespace NiceHashMiner.Stats
         private static void MinerStatus_Tick(object state)
         {
             var devices = ComputeDeviceManager.Available.Devices;
-            var deviceList = new List<JToken>
+            var paramList = new List<JToken>
             {
-                "BENCHMARKING"  // TODO
+                "STOPPED"  // TODO
             };
             var activeIDs = MinersManager.GetActiveMinersIndexes();
             var benchIDs = new List<int>();  // TODO
+
+            var deviceList = new JArray();
 
             foreach (var device in devices)
             {
@@ -349,11 +354,12 @@ namespace NiceHashMiner.Stats
 
                     array.Add(status);
 
+                    array.Add((int)Math.Round(device.Load));
+
                     // TODO algo speeds
                     array.Add(new JArray());
 
                     // Hardware monitoring
-                    array.Add((int) Math.Round(device.Load));
                     array.Add((int) Math.Round(device.Temp));
                     array.Add(device.FanSpeed);
                     array.Add((int) Math.Round(device.PowerUsage));
@@ -366,9 +372,12 @@ namespace NiceHashMiner.Stats
                 }
                 catch (Exception e) { Helpers.ConsolePrint("SOCKET", e.ToString()); }
             }
+
+            paramList.Add(deviceList);
+
             var data = new NicehashDeviceStatus
             {
-                param = deviceList
+                param = paramList
             };
             var sendData = JsonConvert.SerializeObject(data);
 

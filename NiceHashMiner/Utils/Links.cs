@@ -29,6 +29,6 @@
         public const string NhmProfitCheck = "https://api.nicehash.com/p=calc&name=";
 
         // SMA Socket
-        public const string NhmSocketAddress = "https://nhmws.nicehash.com/v2/nhm";
+        public const string NhmSocketAddress = "https://nhmws-test.nicehash.com/v3/nhm3";
     }
 }

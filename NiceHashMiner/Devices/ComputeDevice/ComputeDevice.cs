@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Configs;
+﻿using System;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Miners.Grouping;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices.Algorithms;
+using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Devices
@@ -32,7 +34,16 @@ namespace NiceHashMiner.Devices
         // UUID now used for saving
         public string Uuid { get; protected set; }
 
-        public string B64Uuid => Uuid; // TODO Placeholder
+        public string B64Uuid
+        {
+            get
+            {
+                var type = DeviceType == DeviceType.CPU ? 1 : 2;
+                var uuid = UUID.V5(UUID.Nil().AsGuid(), Uuid);
+                var b64 = Convert.ToBase64String(uuid.AsGuid().ToByteArray());
+                return $"{type}-{b64}";
+            }
+        }
 
         // used for Claymore indexing
         public int BusID { get; protected set; } = -1;

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using NiceHashMiner.Stats;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -100,6 +101,8 @@ namespace NiceHashMiner.Forms.Components
             //listViewDevices.CheckBoxes = false;
             IsMining = false;
             BenchmarkCalculation = null;
+
+            NiceHashStats.OnDeviceUpdate += UpdateDevices;
         }
 
         public void SetIListItemCheckColorSetter(IListItemCheckColorSetter listItemCheckColorSetter)
@@ -149,6 +152,21 @@ namespace NiceHashMiner.Forms.Components
         public void ResetComputeDevices(List<ComputeDevice> computeDevices)
         {
             SetComputeDevices(computeDevices);
+        }
+
+        private void UpdateDevices(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke((Action) delegate
+                {
+                    SetComputeDevices(ComputeDeviceManager.Available.Devices);
+                });
+            }
+            else
+            {
+                SetComputeDevices(ComputeDeviceManager.Available.Devices);
+            }
         }
 
         public void InitLocale()
