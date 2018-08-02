@@ -160,6 +160,21 @@ namespace NiceHashMiner.Stats
                         SetVersion(ver, link);
                     }
 
+                    if (ess?.Params?[2] != null)
+                    {
+                        foreach (var map in ess.Params[2])
+                        {
+                            if (!(map is JArray m && m.Count > 1)) continue;
+                            var name = m.Last().Value<string>();
+                            var i = m.First().Value<int>();
+
+                            foreach (var dev in ComputeDeviceManager.Available.Devices)
+                            {
+                                if (dev.Name == name) dev.TypeID = i;
+                            }
+                        }
+                    }
+
                     return null;
                 case "mining.set.username":
                     var user = (string) message.username;
@@ -338,7 +353,7 @@ namespace NiceHashMiner.Stats
                 {
                     var array = new JArray
                     {
-                        0,
+                        device.TypeID,
                         device.B64Uuid  // TODO
                     };
 
