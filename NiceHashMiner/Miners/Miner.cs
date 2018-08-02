@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
 
@@ -460,6 +461,8 @@ namespace NiceHashMiner
             benchmarkHandle.OutputDataReceived += BenchmarkOutputErrorDataReceived;
             benchmarkHandle.ErrorDataReceived += BenchmarkOutputErrorDataReceived;
             benchmarkHandle.Exited += BenchmarkHandle_Exited;
+
+            Ethlargement.CheckAndStart(MiningSetup);
 
             if (!benchmarkHandle.Start()) return null;
 
@@ -917,6 +920,7 @@ namespace NiceHashMiner
         }
 
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
+        
 
         protected virtual NiceHashProcess _Start()
         {
@@ -928,6 +932,8 @@ namespace NiceHashMiner
 
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
+
+            Ethlargement.CheckAndStart(MiningSetup);
 
             var P = new NiceHashProcess();
 

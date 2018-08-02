@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Globalization;
 using NiceHashMiner.PInvoke;
 using System.Management;
+using System.Security.Principal;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner
@@ -15,6 +16,18 @@ namespace NiceHashMiner
     {
         private static readonly bool Is64BitProcess = (IntPtr.Size == 8);
         public static bool Is64BitOperatingSystem = Is64BitProcess || InternalCheckIsWow64();
+
+        public static readonly bool IsElevated;
+
+
+        static Helpers()
+        {
+            using (var identity = WindowsIdentity.GetCurrent())
+            {
+                var principal = new WindowsPrincipal(identity);
+                IsElevated = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+        }
 
         public static bool InternalCheckIsWow64()
         {

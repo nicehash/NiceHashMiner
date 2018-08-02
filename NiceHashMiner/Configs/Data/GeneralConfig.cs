@@ -114,6 +114,8 @@ namespace NiceHashMiner.Configs.Data
         /// </summary>
         public bool UseSmaCache = true;
 
+        public bool UseEthlargement = false;
+
         public string RigGroup = "";
 
         // methods
@@ -172,6 +174,7 @@ namespace NiceHashMiner.Configs.Data
             SwitchSmaTicksStable = new Interval(2, 3);
             SwitchSmaTicksUnstable = new Interval(5, 13);
             UseSmaCache = true;
+            UseEthlargement = false;
             RigGroup = "";
         }
 

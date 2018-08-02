@@ -15,6 +15,7 @@ namespace NiceHashMiner.Utils
             @"/ccminer_sp/ccminer.exe",
             @"/ccminer_tpruvot/ccminer.exe",
             @"/ccminer_x11gost/ccminer.exe",
+            @"/ccminer_x16r/ccminer.exe",
             @"/ethminer/ethminer.exe",
             @"/ethminer/libmicrohttpd-dll.dll",
             @"/sgminer-5-6-0-general/sgminer.exe",
