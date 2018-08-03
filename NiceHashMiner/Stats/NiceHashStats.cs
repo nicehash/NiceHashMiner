@@ -99,23 +99,26 @@ namespace NiceHashMiner.Stats
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
             ExecutedInfo info = null;
+            var executed = false;
+            var id = -1;
             try
             {
                 if (e.IsText)
                 {
-                    info = ProcessData(e.Data);
+                    info = ProcessData(e.Data, out executed, out id);
                 }
 
-                if (info != null)
+                if (executed && info != null)
                 {
-                    SendExecuted(info);
+                    SendExecuted(info, id);
                 }
             }
             catch (RpcException rEr)
             {
                 Helpers.ConsolePrint("SOCKET", rEr.ToString());
-                if (info == null) return;
-                SendExecuted(info, rEr.Code, rEr.Message);
+                if (!executed) return;
+                Helpers.ConsolePrint("SOCKET", $"Sending executed response with code {rEr.Code}");
+                SendExecuted(info, rEr.Code, id, rEr.Message);
             }
             catch (Exception er)
             {
@@ -123,11 +126,13 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        internal static ExecutedInfo ProcessData(string data)
+        internal static ExecutedInfo ProcessData(string data, out bool executed, out int id)
         {
             Helpers.ConsolePrint("SOCKET", "Received: " + data);
             dynamic message = JsonConvert.DeserializeObject(data);
-            var id = (int?) message?.id?.Value ?? -1;
+            executed = false;
+
+            id = (int?) message?.id?.Value ?? -1;
             switch (message.method.Value)
             {
                 case "sma":
@@ -177,34 +182,39 @@ namespace NiceHashMiner.Stats
 
                     return null;
                 case "mining.set.username":
+                    executed = true;
                     var user = (string) message.username;
 
                     if (!BitcoinAddress.ValidateBitcoinAddress(user))
                         throw new RpcException("Bitcoin address invalid", 1);
 
                     ConfigManager.GeneralConfig.BitcoinAddress = user;
-                    return new ExecutedInfo(id) {NewBtc = user};
+                    return new ExecutedInfo {NewBtc = user};
                 case "mining.set.worker":
+                    executed = true;
                     var worker = (string) message.worker;
 
                     if (!BitcoinAddress.ValidateWorkerName(worker))
                         throw new RpcException("Worker name invalid", 1);
 
                     ConfigManager.GeneralConfig.WorkerName = worker;
-                    return new ExecutedInfo(id) {NewWorker = worker};
+                    return new ExecutedInfo {NewWorker = worker};
                 case "mining.set.group":
+                    executed = true;
                     var group = (string) message.group;
                     ConfigManager.GeneralConfig.RigGroup = group;
 
-                    return new ExecutedInfo(id) {NewRig = group};
+                    return new ExecutedInfo {NewRig = group};
                 case "mining.enable":
+                    executed = true;
                     SetDevicesEnabled((string) message.device, true);
-                    return new ExecutedInfo(id);
+                    return new ExecutedInfo();
                 case "mining.disable":
+                    executed = true;
                     SetDevicesEnabled((string) message.device, false);
-                    return new ExecutedInfo(id);
+                    return new ExecutedInfo();
             }
-
+            
             throw new RpcException("Operation not supported", 2);
         }
 
@@ -401,15 +411,15 @@ namespace NiceHashMiner.Stats
             _socket?.SendData(sendData);
         }
 
-        private static void SendExecuted(ExecutedInfo info, int code = 0, string message = null)
+        private static void SendExecuted(ExecutedInfo info, int id, int code = 0, string message = null)
         {
             // First set status
             MinerStatus_Tick(null);
             // Then executed
-            var data = new ExecutedCall(info.ID, code, message).Serialize();
+            var data = new ExecutedCall(id, code, message).Serialize();
             _socket?.SendData(data);
             // Login if we have to
-            if (info.LoginNeeded)
+            if (info?.LoginNeeded ?? false)
             {
                 _socket?.StartConnection(info.NewBtc, info.NewWorker, info.NewRig);
             }
