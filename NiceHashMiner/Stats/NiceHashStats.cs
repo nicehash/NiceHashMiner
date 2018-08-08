@@ -124,7 +124,7 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("SOCKET", rEr.ToString());
                 if (!executed) return;
                 Helpers.ConsolePrint("SOCKET", $"Sending executed response with code {rEr.Code}");
-                SendExecuted(info, rEr.Code, id, rEr.Message);
+                SendExecuted(info, id, rEr.Code, rEr.Message);
             }
             catch (Exception er)
             {
