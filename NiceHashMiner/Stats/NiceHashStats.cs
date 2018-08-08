@@ -223,6 +223,14 @@ namespace NiceHashMiner.Stats
                     executed = true;
                     SetDevicesEnabled((string) message.device, false);
                     return new ExecutedInfo();
+                case "mining.start":
+                    executed = true;
+                    // TODO
+                    break;
+                case "mining.stop":
+                    executed = true;
+                    // TODO
+                    break;
             }
             
             throw new RpcException("Operation not supported", 2);
