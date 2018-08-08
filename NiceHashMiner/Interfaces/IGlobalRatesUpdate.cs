@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Interfaces
 {
-    internal interface IGlobalRatesUpdate
+    public interface IGlobalRatesUpdate
     {
         void UpdateGlobalRate();
+
+        void StartMiningGui();
+        void StopMiningGui();
     }
 }

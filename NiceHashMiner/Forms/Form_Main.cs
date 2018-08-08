@@ -302,7 +302,7 @@ namespace NiceHashMiner
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
             NiceHashStats.OnVersionBurn += VersionBurnCallback;
             NiceHashStats.OnExchangeUpdate += ExchangeCallback;
-            NiceHashStats.StartConnection(Links.NhmSocketAddress, this);
+            NiceHashStats.StartConnection(Links.NhmSocketAddress, this, devicesListViewEnableControl1);
 
             // increase timeout
             if (Globals.IsFirstNetworkCheckTimeout)
@@ -1157,7 +1157,7 @@ namespace NiceHashMiner
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
             var btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
-            var isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
+            var isMining = MinersManager.StartInitialize(devicesListViewEnableControl1, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
                 textBoxWorkerName.Text.Trim(), btcAdress);
 
             StartMiningGui();
@@ -1185,7 +1185,7 @@ namespace NiceHashMiner
                 buttonBenchmark.Enabled = false;
                 buttonStartMining.Enabled = false;
                 buttonSettings.Enabled = false;
-                devicesListViewEnableControl1.IsMining = true;
+                devicesListViewEnableControl1.SetIsMining(true);
                 buttonStopMining.Enabled = true;
 
                 // Disable profitable notification on start
@@ -1231,7 +1231,7 @@ namespace NiceHashMiner
                 buttonBenchmark.Enabled = true;
                 buttonStartMining.Enabled = true;
                 buttonSettings.Enabled = true;
-                devicesListViewEnableControl1.IsMining = false;
+                devicesListViewEnableControl1.SetIsMining(false);
                 buttonStopMining.Enabled = false;
 
                 if (_demoMode)

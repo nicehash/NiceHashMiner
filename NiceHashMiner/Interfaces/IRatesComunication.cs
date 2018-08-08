@@ -17,9 +17,5 @@ namespace NiceHashMiner.Interfaces
         void ForceMinerStatsUpdate();
 
         void ClearRates(int groupCount);
-
-        void StartMiningGui();
-
-        void StopMiningGui();
     }
 }

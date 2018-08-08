@@ -78,11 +78,13 @@ namespace NiceHashMiner.Stats
         
         private static System.Threading.Timer _deviceUpdateTimer;
 
-        private static IMainFormRatesComunication _mainForm;
+        private static IGlobalRatesUpdate _mainForm;
+        private static IRatesComunication _ratesComunication;
 
-        public static void StartConnection(string address, IMainFormRatesComunication mainForm)
+        public static void StartConnection(string address, IGlobalRatesUpdate mainForm, IRatesComunication ratesComunication)
         {
             _mainForm = mainForm;
+            _ratesComunication = ratesComunication;
 
             if (_socket == null)
             {
@@ -376,7 +378,7 @@ namespace NiceHashMiner.Stats
 
             var loc = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
 
-            if (!MinersManager.StartInitialize(_mainForm, loc, ConfigManager.GeneralConfig.WorkerName,
+            if (!MinersManager.StartInitialize(_ratesComunication, loc, ConfigManager.GeneralConfig.WorkerName,
                 ConfigManager.GeneralConfig.BitcoinAddress))
                 throw new RpcException("Mining could not start", 42);
 
