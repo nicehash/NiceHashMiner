@@ -316,7 +316,7 @@ namespace NiceHashMiner
             NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
             NiceHashStats.OnVersionBurn += VersionBurnCallback;
             NiceHashStats.OnExchangeUpdate += ExchangeCallback;
-            NiceHashStats.StartConnection(Links.NhmSocketAddress);
+            NiceHashStats.StartConnection(Links.NhmSocketAddress, this);
 
             // increase timeout
             if (Globals.IsFirstNetworkCheckTimeout)
@@ -1165,75 +1165,97 @@ namespace NiceHashMiner
                 }
             }
 
-            textBoxBTCAddress.Enabled = false;
-            textBoxWorkerName.Enabled = false;
-            comboBoxLocation.Enabled = false;
-            buttonBenchmark.Enabled = false;
-            buttonStartMining.Enabled = false;
-            buttonSettings.Enabled = false;
-            devicesListViewEnableControl1.IsMining = true;
-            buttonStopMining.Enabled = true;
-
-            // Disable profitable notification on start
-            _isNotProfitable = false;
 
             ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
             ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
-            InitFlowPanelStart();
-            ClearRatesAll();
-
             var btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
             var isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
                 textBoxWorkerName.Text.Trim(), btcAdress);
+
+            StartMiningGui();
 
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
 
             //_isSmaUpdated = true; // Always check profits on mining start
             //_smaMinerCheck.Interval = 100;
             //_smaMinerCheck.Start();
-            _minerStatsCheck.Start();
 
-            if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
+            return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
+        }
+
+        public void StartMiningGui()
+        {
+            if (InvokeRequired)
             {
+                Invoke((Action) StartMiningGui);
+            }
+            else
+            {
+                textBoxBTCAddress.Enabled = false;
+                textBoxWorkerName.Enabled = false;
+                comboBoxLocation.Enabled = false;
+                buttonBenchmark.Enabled = false;
+                buttonStartMining.Enabled = false;
+                buttonSettings.Enabled = false;
+                devicesListViewEnableControl1.IsMining = true;
+                buttonStopMining.Enabled = true;
+
+                // Disable profitable notification on start
+                _isNotProfitable = false;
+
+                InitFlowPanelStart();
+                ClearRatesAll();
+
+                _minerStatsCheck.Start();
+
+                if (!ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost) return;
                 _computeDevicesCheckTimer = new SystemTimer();
                 _computeDevicesCheckTimer.Elapsed += ComputeDevicesCheckTimer_Tick;
                 _computeDevicesCheckTimer.Interval = 60000;
 
                 _computeDevicesCheckTimer.Start();
             }
-
-            return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
         }
 
         private void StopMining()
         {
-            _minerStatsCheck.Stop();
-            //_smaMinerCheck.Stop();
-            _computeDevicesCheckTimer?.Stop();
-
-            // Disable IFTTT notification before label call
-            _isNotProfitable = false;
-
             MinersManager.StopAllMiners();
+            StopMiningGui();
+        }
 
-            textBoxBTCAddress.Enabled = true;
-            textBoxWorkerName.Enabled = true;
-            comboBoxLocation.Enabled = true;
-            buttonBenchmark.Enabled = true;
-            buttonStartMining.Enabled = true;
-            buttonSettings.Enabled = true;
-            devicesListViewEnableControl1.IsMining = false;
-            buttonStopMining.Enabled = false;
-
-            if (_demoMode)
+        public void StopMiningGui()
+        {
+            if (InvokeRequired)
             {
-                _demoMode = false;
-                labelDemoMode.Visible = false;
+                Invoke((Action) StopMiningGui);
             }
+            else
+            {
+                _minerStatsCheck.Stop();
+                _computeDevicesCheckTimer?.Stop();
 
-            UpdateGlobalRate();
+                // Disable IFTTT notification before label call
+                _isNotProfitable = false;
+                
+                textBoxBTCAddress.Enabled = true;
+                textBoxWorkerName.Enabled = true;
+                comboBoxLocation.Enabled = true;
+                buttonBenchmark.Enabled = true;
+                buttonStartMining.Enabled = true;
+                buttonSettings.Enabled = true;
+                devicesListViewEnableControl1.IsMining = false;
+                buttonStopMining.Enabled = false;
+
+                if (_demoMode)
+                {
+                    _demoMode = false;
+                    labelDemoMode.Visible = false;
+                }
+
+                UpdateGlobalRate();
+            }
         }
     }
 }

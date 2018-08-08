@@ -252,5 +252,11 @@ namespace NiceHashMiner.Configs.Data
             SwitchSmaTicksStable.FixRange();
             SwitchSmaTicksUnstable.FixRange();
         }
+
+        public bool HasValidUserWorker()
+        {
+            return NiceHashMiner.BitcoinAddress.ValidateBitcoinAddress(BitcoinAddress) &&
+                   NiceHashMiner.BitcoinAddress.ValidateWorkerName(WorkerName);
+        }
     }
 }

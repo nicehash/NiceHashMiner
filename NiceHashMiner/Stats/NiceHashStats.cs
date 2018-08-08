@@ -12,6 +12,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Interfaces;
 using NiceHashMiner.Stats.Models;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
@@ -77,8 +78,12 @@ namespace NiceHashMiner.Stats
         
         private static System.Threading.Timer _deviceUpdateTimer;
 
-        public static void StartConnection(string address)
+        private static IMainFormRatesComunication _mainForm;
+
+        public static void StartConnection(string address, IMainFormRatesComunication mainForm)
         {
+            _mainForm = mainForm;
+
             if (_socket == null)
             {
                 _socket = new NiceHashSocket(address);
@@ -109,7 +114,7 @@ namespace NiceHashMiner.Stats
                     info = ProcessData(e.Data, out executed, out id);
                 }
 
-                if (executed && info != null)
+                if (executed)
                 {
                     SendExecuted(info, id);
                 }
@@ -191,15 +196,16 @@ namespace NiceHashMiner.Stats
                 case "mining.enable":
                     executed = true;
                     SetDevicesEnabled((string) message.device, true);
-                    return new ExecutedInfo();
+                    return null;
                 case "mining.disable":
                     executed = true;
                     SetDevicesEnabled((string) message.device, false);
-                    return new ExecutedInfo();
+                    return null;
                 case "mining.start":
                     executed = true;
                     // TODO
-                    break;
+                    StartMining("*");
+                    return null;
                 case "mining.stop":
                     executed = true;
                     // TODO
@@ -349,6 +355,28 @@ namespace NiceHashMiner.Stats
                 throw new RpcException("Device not found", 1);
 
             OnDeviceUpdate?.Invoke(null, new DeviceUpdateEventArgs(ComputeDeviceManager.Available.Devices));
+        }
+
+        private static void StartMining(string devs)
+        {
+            if (devs != "*")
+            {
+                // TODO
+            }
+
+            if (MinersManager.IsMiningEnabled())
+                throw new RpcException("Mining already enabled", 40);
+
+            if (!ConfigManager.GeneralConfig.HasValidUserWorker())
+                throw new RpcException("No valid worker and/or address set", 41);
+
+            var loc = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
+
+            if (!MinersManager.StartInitialize(_mainForm, loc, ConfigManager.GeneralConfig.WorkerName,
+                ConfigManager.GeneralConfig.BitcoinAddress))
+                throw new RpcException("Mining could not start", 42);
+
+            _mainForm?.StartMiningGui();
         }
 
         #endregion
