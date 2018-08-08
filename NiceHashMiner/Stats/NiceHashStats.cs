@@ -362,42 +362,48 @@ namespace NiceHashMiner.Stats
 
         private static void StartMining(string devs)
         {
-            if (devs != "*")
+            if (!ConfigManager.GeneralConfig.HasValidUserWorker())
+                throw new RpcException("No valid worker and/or address set", 41);
+
+            if (MinersManager.IsMiningEnabled())
             {
+                if (devs == "*")
+                    throw new RpcException("Mining already enabled", 40);
+
                 SetDevicesEnabled(devs, true);
                 MinersManager.UpdateUsedDevices(ComputeDeviceManager.Available.Devices);
             }
             else
             {
-                if (MinersManager.IsMiningEnabled())
-                    throw new RpcException("Mining already enabled", 40);
+                if (devs != "*")
+                {
+                    SetDevicesEnabled(devs, true);
+                }
+                var loc = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
+
+                if (!MinersManager.StartInitialize(_ratesComunication, loc, ConfigManager.GeneralConfig.WorkerName,
+                    ConfigManager.GeneralConfig.BitcoinAddress))
+                    throw new RpcException("Mining could not start", 42);
+
+                _mainForm?.StartMiningGui();
             }
-
-            if (!ConfigManager.GeneralConfig.HasValidUserWorker())
-                throw new RpcException("No valid worker and/or address set", 41);
-
-            var loc = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
-
-            if (!MinersManager.StartInitialize(_ratesComunication, loc, ConfigManager.GeneralConfig.WorkerName,
-                ConfigManager.GeneralConfig.BitcoinAddress))
-                throw new RpcException("Mining could not start", 42);
-
-            _mainForm?.StartMiningGui();
         }
 
         private static void StopMining(string devs)
         {
+            if (!MinersManager.IsMiningEnabled())
+                throw new RpcException("Mining already stopped", 50);
+
             if (devs != "*")
             {
                 SetDevicesEnabled(devs, false);
                 MinersManager.UpdateUsedDevices(ComputeDeviceManager.Available.Devices);
             }
-
-            if (!MinersManager.IsMiningEnabled())
-                throw new RpcException("Mining already stopped", 50);
-
-            MinersManager.StopAllMiners();
-            _mainForm?.StopMiningGui();
+            else
+            {
+                MinersManager.StopAllMiners();
+                _mainForm?.StopMiningGui();
+            }
         }
 
         #endregion

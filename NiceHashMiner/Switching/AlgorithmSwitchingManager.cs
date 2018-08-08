@@ -78,7 +78,9 @@ namespace NiceHashMiner.Switching
         public void ForceUpdate()
         {
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
-            SmaCheck?.Invoke(this, args);
+            Stop();
+            //SmaCheck?.Invoke(this, args);
+            Start();
         }
 
         /// <summary>

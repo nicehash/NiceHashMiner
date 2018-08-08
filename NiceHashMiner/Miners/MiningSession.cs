@@ -234,8 +234,9 @@ namespace NiceHashMiner.Miners
 
         public void UpdateUsedDevices(IEnumerable<ComputeDevice> devices)
         {
+            _switchingManager.Stop();
             SetUsedDevices(devices);
-            _switchingManager.ForceUpdate();
+            _switchingManager.Start();
         }
 
         private void SetUsedDevices(IEnumerable<ComputeDevice> devices)
