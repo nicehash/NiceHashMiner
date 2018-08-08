@@ -209,7 +209,8 @@ namespace NiceHashMiner.Stats
                 case "mining.stop":
                     executed = true;
                     // TODO
-                    break;
+                    StopMining("*");
+                    return null;
             }
             
             throw new RpcException("Operation not supported", 2);
@@ -377,6 +378,20 @@ namespace NiceHashMiner.Stats
                 throw new RpcException("Mining could not start", 42);
 
             _mainForm?.StartMiningGui();
+        }
+
+        private static void StopMining(string devs)
+        {
+            if (devs != "*")
+            {
+                // TODO
+            }
+
+            if (!MinersManager.IsMiningEnabled())
+                throw new RpcException("Mining already stopped", 50);
+
+            MinersManager.StopAllMiners();
+            _mainForm?.StopMiningGui();
         }
 
         #endregion
