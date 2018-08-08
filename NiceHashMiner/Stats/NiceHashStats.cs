@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Stats.Models;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Extensions;
 using WebSocketSharp;
 
 namespace NiceHashMiner.Stats
@@ -169,13 +170,22 @@ namespace NiceHashMiner.Stats
                     {
                         foreach (var map in ess.Params[2])
                         {
+                            // Hacky way temporary
+
                             if (!(map is JArray m && m.Count > 1)) continue;
                             var name = m.Last().Value<string>();
                             var i = m.First().Value<int>();
 
+                            var filterName = name.AfterFirstOccurence("GTX ");
+                            if (string.IsNullOrWhiteSpace(filterName))
+                                filterName = name.AfterFirstOccurence("NVIDIA ");
+                            if (string.IsNullOrWhiteSpace(filterName))
+                                continue;
+
                             foreach (var dev in ComputeDeviceManager.Available.Devices)
                             {
-                                if (dev.Name == name) dev.TypeID = i;
+                                if (dev.Name.Contains(filterName))
+                                    dev.TypeID = i;
                             }
                         }
                     }

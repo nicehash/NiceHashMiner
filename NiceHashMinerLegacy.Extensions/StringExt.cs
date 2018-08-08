@@ -9,9 +9,10 @@ namespace NiceHashMinerLegacy.Extensions
         public static string AfterFirstOccurence(this string s, string occ)
         {
             var i = occ.Length;
+            if (s.Length < i) return "";
             for (; i < s.Length; i++)
             {
-                if (s.Substring(i - occ.Length, i) == occ)
+                if (s.Substring(i - occ.Length, occ.Length) == occ)
                     break;
             }
 
