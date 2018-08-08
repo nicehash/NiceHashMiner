@@ -112,6 +112,18 @@
     <Compile Include="Devices\Querying\AmdQuery.cs" />
     <Compile Include="Devices\Querying\OpenCLJsonData.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
+    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.Designer.cs">
+      <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewSpeedControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewSpeedControl.Designer.cs">
+      <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="IFTTT.cs" />
     <Compile Include="Configs\Data\DualAlgorithmConfig.cs" />
     <Compile Include="Forms\Form_DcriValues.cs">
@@ -121,10 +133,12 @@
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="Interfaces\IGlobalRatesUpdate.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigPool.cs" />
+    <Compile Include="Miners\ApiData.cs" />
     <Compile Include="Eula.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
@@ -141,6 +155,7 @@
     <Compile Include="Stats\Models\RpcException.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
+    <Compile Include="Stats\TimeFactor.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
     <Compile Include="Switching\Models.cs" />
@@ -236,7 +251,7 @@
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
     <Compile Include="Interfaces\IBenchmarkComunicator.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
-    <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
+    <Compile Include="Interfaces\IRatesComunication.cs" />
     <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
     <Compile Include="International.cs" />
@@ -337,6 +352,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\DevicesListViewEnableControl.resx">
       <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\DevicesListViewSpeedControl.resx">
+      <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>

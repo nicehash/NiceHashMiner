@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -114,6 +115,11 @@ namespace NiceHashMiner.Configs.Data
         /// </summary>
         public bool UseSmaCache = true;
 
+        public bool ShowPowerColumns = false;
+        public bool ShowDiagColumns = true;
+
+        public Point MainFormSize = new Point(1682, 910);
+
         public bool UseEthlargement = false;
 
         public string RigGroup = "";
@@ -174,6 +180,8 @@ namespace NiceHashMiner.Configs.Data
             SwitchSmaTicksStable = new Interval(2, 3);
             SwitchSmaTicksUnstable = new Interval(5, 13);
             UseSmaCache = true;
+            ShowPowerColumns = false;
+            ShowDiagColumns = true;
             UseEthlargement = false;
             RigGroup = "";
         }

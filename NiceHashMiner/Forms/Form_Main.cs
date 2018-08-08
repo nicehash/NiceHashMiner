@@ -23,7 +23,7 @@ namespace NiceHashMiner
 {
     using System.IO;
 
-    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
+    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IGlobalRatesUpdate
     {
         private string _visitUrlNew = Links.VisitUrlNew;
 
@@ -54,14 +54,14 @@ namespace NiceHashMiner
 
         //private bool _isSmaUpdated = false;
 
-        private double _factorTimeUnit = 1.0;
-
         private readonly int _mainFormHeight = 0;
         private readonly int _emtpyGroupPanelHeight = 0;
 
         public Form_Main()
         {
             InitializeComponent();
+            Width = ConfigManager.GeneralConfig.MainFormSize.X;
+            Height = ConfigManager.GeneralConfig.MainFormSize.Y;
             Icon = Properties.Resources.logo;
 
             InitLocalization();
@@ -82,24 +82,24 @@ namespace NiceHashMiner
 
             Text += " v" + Application.ProductVersion + BetaAlphaPostfixString;
 
-            label_NotProfitable.Visible = false;
+            //label_NotProfitable.Visible = false;
 
             InitMainConfigGuiData();
 
-            // for resizing
-            InitFlowPanelStart();
+            //// for resizing
+            //InitFlowPanelStart();
 
-            if (groupBox1.Size.Height > 0 && Size.Height > 0)
-            {
-                _emtpyGroupPanelHeight = groupBox1.Size.Height;
-                _mainFormHeight = Size.Height - _emtpyGroupPanelHeight;
-            }
-            else
-            {
-                _emtpyGroupPanelHeight = 59;
-                _mainFormHeight = 330 - _emtpyGroupPanelHeight;
-            }
-            ClearRatesAll();
+            //if (groupBox1.Size.Height > 0 && Size.Height > 0)
+            //{
+            //    _emtpyGroupPanelHeight = groupBox1.Size.Height;
+            //    _mainFormHeight = Size.Height - _emtpyGroupPanelHeight;
+            //}
+            //else
+            //{
+            //    _emtpyGroupPanelHeight = 59;
+            //    _mainFormHeight = 330 - _emtpyGroupPanelHeight;
+            //}
+            //ClearRatesAll();
         }
 
         private void InitLocalization()
@@ -140,8 +140,8 @@ namespace NiceHashMiner
             buttonStopMining.Text = International.GetText("Form_Main_stop");
             buttonHelp.Text = International.GetText("Form_Main_help");
 
-            label_NotProfitable.Text = International.GetText("Form_Main_MINING_NOT_PROFITABLE");
-            groupBox1.Text = International.GetText("Form_Main_Group_Device_Rates");
+            //label_NotProfitable.Text = International.GetText("Form_Main_MINING_NOT_PROFITABLE");
+            //groupBox1.Text = International.GetText("Form_Main_Group_Device_Rates");
         }
 
         private void InitMainConfigGuiData()
@@ -162,24 +162,7 @@ namespace NiceHashMiner
             ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
             // init factor for Time Unit
-            switch (ConfigManager.GeneralConfig.TimeUnit)
-            {
-                case TimeUnitType.Hour:
-                    _factorTimeUnit = 1.0 / 24.0;
-                    break;
-                case TimeUnitType.Day:
-                    _factorTimeUnit = 1;
-                    break;
-                case TimeUnitType.Week:
-                    _factorTimeUnit = 7;
-                    break;
-                case TimeUnitType.Month:
-                    _factorTimeUnit = 30;
-                    break;
-                case TimeUnitType.Year:
-                    _factorTimeUnit = 365;
-                    break;
-            }
+            TimeFactor.UpdateTimeUnit(ConfigManager.GeneralConfig.TimeUnit);
 
             toolStripStatusLabelBalanceDollarValue.Text = "(" + ExchangeRateApi.ActiveDisplayCurrency + ")";
             toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
@@ -192,6 +175,9 @@ namespace NiceHashMiner
             {
                 devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             }
+
+            devicesListViewEnableControl1.SetPayingColumns();
+            devicesListViewEnableControl1.GlobalRates = this;
         }
 
         public void AfterLoadComplete()
@@ -538,19 +524,19 @@ namespace NiceHashMiner
 
         private void InitFlowPanelStart()
         {
-            flowLayoutPanelRates.Controls.Clear();
-            // add for every cdev a 
-            foreach (var cdev in ComputeDeviceManager.Available.Devices)
-            {
-                if (cdev.Enabled)
-                {
-                    var newGroupProfitControl = new GroupProfitControl
-                    {
-                        Visible = false
-                    };
-                    flowLayoutPanelRates.Controls.Add(newGroupProfitControl);
-                }
-            }
+            //flowLayoutPanelRates.Controls.Clear();
+            //// add for every cdev a 
+            //foreach (var cdev in ComputeDeviceManager.Available.Devices)
+            //{
+            //    if (cdev.Enabled)
+            //    {
+            //        var newGroupProfitControl = new GroupProfitControl
+            //        {
+            //            Visible = false
+            //        };
+            //        flowLayoutPanelRates.Controls.Add(newGroupProfitControl);
+            //    }
+            //}
         }
 
         public void ClearRatesAll()
@@ -561,37 +547,37 @@ namespace NiceHashMiner
 
         public void ClearRates(int groupCount)
         {
-            if (InvokeRequired)
-            {
-                Invoke((Action) delegate { ClearRates(groupCount); });
-                return;
-            }
-            if (_flowLayoutPanelVisibleCount != groupCount)
-            {
-                _flowLayoutPanelVisibleCount = groupCount;
-                // hide some Controls
-                var hideIndex = 0;
-                foreach (var control in flowLayoutPanelRates.Controls)
-                {
-                    ((GroupProfitControl) control).Visible = hideIndex < groupCount;
-                    ++hideIndex;
-                }
-            }
-            _flowLayoutPanelRatesIndex = 0;
-            var visibleGroupCount = 1;
-            if (groupCount > 0) visibleGroupCount += groupCount;
+            //if (InvokeRequired)
+            //{
+            //    Invoke((Action) delegate { ClearRates(groupCount); });
+            //    return;
+            //}
+            //if (_flowLayoutPanelVisibleCount != groupCount)
+            //{
+            //    _flowLayoutPanelVisibleCount = groupCount;
+            //    // hide some Controls
+            //    var hideIndex = 0;
+            //    foreach (var control in flowLayoutPanelRates.Controls)
+            //    {
+            //        ((GroupProfitControl) control).Visible = hideIndex < groupCount;
+            //        ++hideIndex;
+            //    }
+            //}
+            //_flowLayoutPanelRatesIndex = 0;
+            //var visibleGroupCount = 1;
+            //if (groupCount > 0) visibleGroupCount += groupCount;
 
-            var groupBox1Height = _emtpyGroupPanelHeight;
-            if (flowLayoutPanelRates.Controls.Count > 0)
-            {
-                var control = flowLayoutPanelRates.Controls[0];
-                var panelHeight = ((GroupProfitControl) control).Size.Height * 1.2f;
-                groupBox1Height = (int) ((visibleGroupCount) * panelHeight);
-            }
+            //var groupBox1Height = _emtpyGroupPanelHeight;
+            //if (flowLayoutPanelRates.Controls.Count > 0)
+            //{
+            //    var control = flowLayoutPanelRates.Controls[0];
+            //    var panelHeight = ((GroupProfitControl) control).Size.Height * 1.2f;
+            //    groupBox1Height = (int) ((visibleGroupCount) * panelHeight);
+            //}
 
-            groupBox1.Size = new Size(groupBox1.Size.Width, groupBox1Height);
-            // set new height
-            Size = new Size(Size.Width, _mainFormHeight + groupBox1Height);
+            //groupBox1.Size = new Size(groupBox1.Size.Width, groupBox1Height);
+            //// set new height
+            //Size = new Size(Size.Width, _mainFormHeight + groupBox1Height);
         }
 
         public void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying,
@@ -602,20 +588,20 @@ namespace NiceHashMiner
             var speedString =
                 Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
                 iApiData.AlgorithmName + apiGetExceptionString;
-            var rateBtcString = FormatPayingOutput(paying);
+            //var rateBtcString = FormatPayingOutput(paying);
             var rateCurrencyString = ExchangeRateApi
-                                         .ConvertToActiveCurrency(paying * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
+                                         .ConvertToActiveCurrency(paying * ExchangeRateApi.GetUsdExchangeRate() * TimeFactor.TimeUnit)
                                          .ToString("F2", CultureInfo.InvariantCulture)
                                      + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
                                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
-            try
-            {
-                // flowLayoutPanelRatesIndex may be OOB, so catch
-                ((GroupProfitControl) flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
-                    .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBtcString, rateCurrencyString);
-            }
-            catch { }
+            //try
+            //{
+            //    // flowLayoutPanelRatesIndex may be OOB, so catch
+            //    ((GroupProfitControl) flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
+            //        .UpdateProfitStats(groupName, deviceStringInfo, speedString, rateBtcString, rateCurrencyString);
+            //}
+            //catch { }
 
             UpdateGlobalRate();
         }
@@ -640,9 +626,9 @@ namespace NiceHashMiner
             }
             else
             {
-                label_NotProfitable.Visible = true;
-                label_NotProfitable.Text = msg;
-                label_NotProfitable.Invalidate();
+                //label_NotProfitable.Visible = true;
+                //label_NotProfitable.Text = msg;
+                //label_NotProfitable.Invalidate();
             }
         }
 
@@ -663,8 +649,8 @@ namespace NiceHashMiner
             }
             else
             {
-                label_NotProfitable.Visible = false;
-                label_NotProfitable.Invalidate();
+                //label_NotProfitable.Visible = false;
+                //label_NotProfitable.Invalidate();
             }
         }
 
@@ -683,7 +669,7 @@ namespace NiceHashMiner
             }
         }
 
-        private void UpdateGlobalRate()
+        public void UpdateGlobalRate()
         {
             var totalRate = MinersManager.GetTotalRate();
 
@@ -692,18 +678,18 @@ namespace NiceHashMiner
                 toolStripStatusLabelBTCDayText.Text =
                     "mBTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 toolStripStatusLabelGlobalRateValue.Text =
-                    (totalRate * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
+                    (totalRate * 1000 * TimeFactor.TimeUnit).ToString("F5", CultureInfo.InvariantCulture);
             }
             else
             {
                 toolStripStatusLabelBTCDayText.Text =
                     "BTC/" + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 toolStripStatusLabelGlobalRateValue.Text =
-                    (totalRate * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture);
+                    (totalRate * TimeFactor.TimeUnit).ToString("F6", CultureInfo.InvariantCulture);
             }
 
             toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
-                .ConvertToActiveCurrency((totalRate * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
+                .ConvertToActiveCurrency((totalRate * TimeFactor.TimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
                 .ToString("F2", CultureInfo.InvariantCulture);
             toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                                                    International.GetText(
@@ -972,19 +958,19 @@ namespace NiceHashMiner
             StopMining();
         }
 
-        private string FormatPayingOutput(double paying)
-        {
-            string ret;
+        //private string FormatPayingOutput(double paying)
+        //{
+        //    string ret;
 
-            if (ConfigManager.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
-                ret = (paying * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + " mBTC/" +
-                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            else
-                ret = (paying * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) + " BTC/" +
-                      International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+        //    if (ConfigManager.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
+        //        ret = (paying * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + " mBTC/" +
+        //              International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+        //    else
+        //        ret = (paying * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) + " BTC/" +
+        //              International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
-            return ret;
-        }
+        //    return ret;
+        //}
 
 
         private void ButtonLogo_Click(object sender, EventArgs e)
@@ -1256,6 +1242,12 @@ namespace NiceHashMiner
 
                 UpdateGlobalRate();
             }
+        }
+
+        private void Form_Main_ResizeEnd(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.MainFormSize.X = Width;
+            ConfigManager.GeneralConfig.MainFormSize.Y = Height;
         }
     }
 }

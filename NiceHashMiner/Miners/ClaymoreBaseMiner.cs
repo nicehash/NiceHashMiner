@@ -36,6 +36,10 @@ namespace NiceHashMiner.Miners
         // CD intensity tuning
         protected const int defaultIntensity = 30;
 
+        private IEnumerable<MiningPair> SortedMiningPairs => MiningSetup.MiningPairs
+            .OrderByDescending(pair => pair.Device.DeviceType)
+            .ThenBy(pair => pair.Device.IDByBus);
+
         protected ClaymoreBaseMiner(string minerDeviceName)
             : base(minerDeviceName)
         {
@@ -66,7 +70,7 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
+            var ad = new SplitApiData(MiningSetup);
 
             JsonApiResponse resp = null;
             try
@@ -94,42 +98,36 @@ namespace NiceHashMiner.Miners
                 {
                     //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp.result != null && resp.result.Count > 4");
                     var speeds = resp.result[3].Split(';');
-                    var secondarySpeeds = (IsDual()) ? resp.result[5].Split(';') : new string[0];
-                    ad.Speed = 0;
-                    ad.SecondarySpeed = 0;
-                    foreach (var speed in speeds)
+                    var secondarySpeeds = resp.result[5].Split(';');
+
+                    var sortedDevs = SortedMiningPairs.Select(p => p.Device.Index).ToList();
+
+                    for (var i = 0; i < speeds.Length; i++)
                     {
                         //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "foreach (var speed in speeds) {");
-                        double tmpSpeed;
+                        var tmpSpeed = 0d;
+                        var tmpSecSpeed = 0d;
                         try
                         {
-                            tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
+                            tmpSpeed = double.Parse(speeds[i], CultureInfo.InvariantCulture);
+                            if (IsDual()) 
+                            {
+                                tmpSecSpeed = double.Parse(secondarySpeeds[i], CultureInfo.InvariantCulture);
+                            }
                         }
                         catch
-                        {
-                            tmpSpeed = 0;
-                        }
+                        { }
 
-                        ad.Speed += tmpSpeed;
+                        if (sortedDevs.Count > i)
+                        {
+                            ad.Speeds[sortedDevs[i]] = tmpSpeed * ApiReadMult;
+                            if (IsDual())
+                            {
+                                ad.SecondarySpeeds[sortedDevs[i]] = tmpSecSpeed * ApiReadMult;
+                            }
+                        } 
                     }
 
-                    foreach (var speed in secondarySpeeds)
-                    {
-                        double tmpSpeed;
-                        try
-                        {
-                            tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
-                        }
-                        catch
-                        {
-                            tmpSpeed = 0;
-                        }
-
-                        ad.SecondarySpeed += tmpSpeed;
-                    }
-
-                    ad.Speed *= ApiReadMult;
-                    ad.SecondarySpeed *= ApiReadMult;
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 }
 
@@ -164,10 +162,7 @@ namespace NiceHashMiner.Miners
         protected override string GetDevicesCommandString()
         {
             // First by device type (AMD then NV), then by bus ID index
-            var sortedMinerPairs = MiningSetup.MiningPairs
-                .OrderByDescending(pair => pair.Device.DeviceType)
-                .ThenBy(pair => pair.Device.IDByBus)
-                .ToList();
+            var sortedMinerPairs = SortedMiningPairs.ToList();
             var extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
 
             var ids = new List<string>();

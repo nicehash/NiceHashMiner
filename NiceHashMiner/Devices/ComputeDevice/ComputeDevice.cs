@@ -72,6 +72,8 @@ namespace NiceHashMiner.Devices
 
         protected List<Algorithm> AlgorithmSettings;
 
+        public double MinimumProfit { get; set; }
+
         public string BenchmarkCopyUuid { get; set; }
         public string TuningCopyUuid { get; set; }
 
@@ -185,6 +187,7 @@ namespace NiceHashMiner.Devices
             if (config != null && config.UUID == Uuid)
             {
                 Enabled = config.Enabled;
+                MinimumProfit = config.MinimumProfit;
             }
         }
 
@@ -233,7 +236,8 @@ namespace NiceHashMiner.Devices
             {
                 Enabled = Enabled,
                 Name = Name,
-                UUID = Uuid
+                UUID = Uuid,
+                MinimumProfit = MinimumProfit
             };
             return ret;
         }

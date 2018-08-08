@@ -29,7 +29,7 @@ namespace NiceHashMiner.Miners
         private readonly string _btcAdress;
         private readonly string _worker;
         private List<MiningDevice> _miningDevices;
-        private readonly IMainFormRatesComunication _mainFormRatesComunication;
+        private readonly IRatesComunication _ratesComunication;
 
         private readonly AlgorithmSwitchingManager _switchingManager;
 
@@ -75,12 +75,11 @@ namespace NiceHashMiner.Miners
             }
         }
 
-        public MiningSession(List<ComputeDevice> devices,
-            IMainFormRatesComunication mainFormRatesComunication,
+        public MiningSession(List<ComputeDevice> devices, IRatesComunication ratesComunication,
             string miningLocation, string worker, string btcAdress)
         {
             // init fixed
-            _mainFormRatesComunication = mainFormRatesComunication;
+            _ratesComunication = ratesComunication;
             _miningLocation = miningLocation;
 
             _switchingManager = new AlgorithmSwitchingManager();
@@ -165,7 +164,7 @@ namespace NiceHashMiner.Miners
 
             _switchingManager.Stop();
 
-            _mainFormRatesComunication?.ClearRatesAll();
+            _ratesComunication?.ClearRatesAll();
 
             // restroe/enable sleep
             _preventSleepTimer.Stop();
@@ -197,7 +196,7 @@ namespace NiceHashMiner.Miners
                 _ethminerAmdPaused = null;
             }
 
-            _mainFormRatesComunication?.ClearRates(-1);
+            _ratesComunication?.ClearRates(-1);
         }
 
         #endregion Start/Stop
@@ -296,7 +295,7 @@ namespace NiceHashMiner.Miners
             var shouldMine = CheckIfProfitable(currentProfit, log) && _isConnectedToInternet;
             if (shouldMine)
             {
-                _mainFormRatesComunication.HideNotProfitable();
+                _ratesComunication.HideNotProfitable();
             }
             else
             {
@@ -304,12 +303,12 @@ namespace NiceHashMiner.Miners
                 {
                     // change msg
                     if (log) Helpers.ConsolePrint(Tag, "NO INTERNET!!! Stopping mining.");
-                    _mainFormRatesComunication.ShowNotProfitable(
+                    _ratesComunication.ShowNotProfitable(
                         International.GetText("Form_Main_MINING_NO_INTERNET_CONNECTION"));
                 }
                 else
                 {
-                    _mainFormRatesComunication.ShowNotProfitable(
+                    _ratesComunication.ShowNotProfitable(
                         International.GetText("Form_Main_MINING_NOT_PROFITABLE"));
                 }
 
@@ -579,7 +578,7 @@ namespace NiceHashMiner.Miners
             //await MinerStatsCheck();
             //}
 
-            _mainFormRatesComunication?.ForceMinerStatsUpdate();
+            _ratesComunication?.ForceMinerStatsUpdate();
         }
 
         private AlgorithmType GetMinerPairAlgorithmType(List<MiningPair> miningPairs)
@@ -594,8 +593,7 @@ namespace NiceHashMiner.Miners
 
         public async Task MinerStatsCheck()
         {
-            var currentProfit = 0.0d;
-            _mainFormRatesComunication.ClearRates(_runningGroupMiners.Count);
+            _ratesComunication.ClearRates(_runningGroupMiners.Count);
             var checks = new List<GroupMiner>(_runningGroupMiners.Values);
             try
             {
@@ -617,27 +615,21 @@ namespace NiceHashMiner.Miners
                     // set rates
                     if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     {
-                        groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
+                        ad.SmaVal = paying;
                         if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
                         {
-                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
+                            ad.SecondarySmaVal = secPaying;
                         }
-                        // Deduct power costs
-                        var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
-                        groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
                     }
                     else
                     {
                         groupMiners.CurrentRate = 0;
                         // set empty
-                        ad = new ApiData(groupMiners.AlgorithmType);
+                        ad = new ApiData(groupMiners.AlgorithmType, groupMiners.DevIndexes);
                     }
 
-                    currentProfit += groupMiners.CurrentRate;
                     // Update GUI
-                    _mainFormRatesComunication.AddRateInfo(m.MinerTag(), groupMiners.DevicesInfoString, ad,
-                        groupMiners.CurrentRate,
-                        m.IsApiReadException);
+                    _ratesComunication.AddRateInfo(ad, groupMiners.CurrentRate, m.IsApiReadException);
                 }
             }
             catch (Exception e) { Helpers.ConsolePrint(Tag, e.Message); }

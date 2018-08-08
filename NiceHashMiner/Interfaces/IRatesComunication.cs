@@ -1,12 +1,12 @@
-﻿namespace NiceHashMiner.Interfaces
+﻿using NiceHashMiner.Miners;
+
+namespace NiceHashMiner.Interfaces
 {
-    public interface IMainFormRatesComunication
+    public interface IRatesComunication
     {
         void ClearRatesAll();
 
-        void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying,
-            bool isApiGetException);
-        //void RaiseAlertSharesNotAccepted(string algoName);
+        void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException);
 
         // The following four must use an invoker since they may be called from non-UI thread
         

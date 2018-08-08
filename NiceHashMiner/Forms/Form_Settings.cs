@@ -604,7 +604,6 @@ namespace NiceHashMiner.Forms
                 // here we want all devices
                 devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Available.Devices);
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
-                devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
             }
 
             // Add language selections list
@@ -657,6 +656,7 @@ namespace NiceHashMiner.Forms
         private void InitializeDevicesCallbacks()
         {
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
+            minDeviceProfitField.Leave += MinDeviceProfitFieldLeft;
         }
 
         #endregion //Tab Devices
@@ -859,6 +859,19 @@ namespace NiceHashMiner.Forms
             algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
             groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
                 _selectedComputeDevice.Name);
+            minDeviceProfitField.Enabled = true;
+            minDeviceProfitField.EntryText = _selectedComputeDevice.MinimumProfit.ToString("F2").Replace(',', '.');
+        }
+
+        private void MinDeviceProfitFieldLeft(object sender, EventArgs e)
+        {
+            if (_selectedComputeDevice != null && 
+                double.TryParse(minDeviceProfitField.EntryText, out var min))
+            {
+                if (min < 0) min = 0;
+
+                _selectedComputeDevice.MinimumProfit = min;
+            }
         }
 
         private void ButtonSelectedProfit_Click(object sender, EventArgs e)

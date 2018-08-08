@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
@@ -62,6 +63,19 @@ namespace NiceHashMiner.Stats
             return amount;
         }
 
+        public static double ConvertFromBtc(double amount)
+        {
+            return ConvertToActiveCurrency(amount * GetUsdExchangeRate());
+        }
+
+        public static string GetCurrencyString(double amount)
+        {
+            return ConvertToActiveCurrency(amount * GetUsdExchangeRate())
+                       .ToString("F2", CultureInfo.InvariantCulture)
+                   + $" {ActiveDisplayCurrency}/"
+                   + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+        }
+
         public static double GetUsdExchangeRate()
         {
             return UsdBtcRate > 0 ? UsdBtcRate : 0.0;
@@ -93,6 +107,12 @@ namespace NiceHashMiner.Stats
                 return 0;
             }
             return price / UsdBtcRate;
+        }
+
+        public static double GetKwhPriceInFiat()
+        {
+            var price = ConfigManager.GeneralConfig.KwhPrice;
+            return price > 0 ? price : 0;
         }
 
         //[Obsolete("UpdateApi is deprecated, use websocket method")]

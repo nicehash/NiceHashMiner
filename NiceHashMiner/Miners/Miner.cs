@@ -23,26 +23,6 @@ using Timer = System.Timers.Timer;
 
 namespace NiceHashMiner
 {
-    public class ApiData
-    {
-        public AlgorithmType AlgorithmID;
-        public AlgorithmType SecondaryAlgorithmID;
-        public string AlgorithmName;
-        public double Speed;
-        public double SecondarySpeed;
-        public double PowerUsage;
-
-        public ApiData(AlgorithmType algorithmID, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)
-        {
-            AlgorithmID = algorithmID;
-            SecondaryAlgorithmID = secondaryAlgorithmID;
-            AlgorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmID, secondaryAlgorithmID));
-            Speed = 0.0;
-            SecondarySpeed = 0.0;
-            PowerUsage = 0.0;
-        }
-    }
-
     // 
     public class MinerPidData
     {
@@ -140,6 +120,8 @@ namespace NiceHashMiner
         protected const string HttpHeaderDelimiter = "\r\n\r\n";
 
         protected bool IsMultiType;
+
+        protected IEnumerable<ComputeDevice> Devices => MiningSetup.MiningPairs.Select(p => p.Device);
 
         protected Miner(string minerDeviceName)
         {
@@ -1135,7 +1117,7 @@ namespace NiceHashMiner
 
         protected async Task<ApiData> GetSummaryCpuAsync(string method = "", bool overrideLoop = false)
         {
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            var ad = new ApiData(MiningSetup);
 
             try
             {
@@ -1204,7 +1186,7 @@ namespace NiceHashMiner
         {
             // TODO aname
             string aname = null;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
+            var ad = new ApiData(MiningSetup);
 
             var dataToSend = GetHttpRequestNhmAgentStrin("summary");
 
