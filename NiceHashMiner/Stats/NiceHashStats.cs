@@ -161,34 +161,7 @@ namespace NiceHashMiner.Stats
                     return null;
                 case "essentials":
                     var ess = JsonConvert.DeserializeObject<EssentialsCall>(data);
-                    if (ess?.Params?.First()[2] is string ver && ess.Params.First()[3] is string link)
-                    {
-                        SetVersion(ver, link);
-                    }
-
-                    if (ess?.Params?[2] != null)
-                    {
-                        foreach (var map in ess.Params[2])
-                        {
-                            // Hacky way temporary
-
-                            if (!(map is JArray m && m.Count > 1)) continue;
-                            var name = m.Last().Value<string>();
-                            var i = m.First().Value<int>();
-
-                            var filterName = name.AfterFirstOccurence("GTX ");
-                            if (string.IsNullOrWhiteSpace(filterName))
-                                filterName = name.AfterFirstOccurence("NVIDIA ");
-                            if (string.IsNullOrWhiteSpace(filterName))
-                                continue;
-
-                            foreach (var dev in ComputeDeviceManager.Available.Devices)
-                            {
-                                if (dev.Name.Contains(filterName))
-                                    dev.TypeID = i;
-                            }
-                        }
-                    }
+                    ProcessEssentials(ess);
 
                     return null;
                 case "mining.set.username":
@@ -246,6 +219,38 @@ namespace NiceHashMiner.Stats
         #endregion
 
         #region Incoming socket calls
+
+        private static void ProcessEssentials(EssentialsCall ess)
+        {
+            if (ess?.Params?.First()[2] is string ver && ess.Params.First()[3] is string link)
+            {
+                SetVersion(ver, link);
+            }
+
+            if (ess?.Params?[2] != null)
+            {
+                foreach (var map in ess.Params[2])
+                {
+                    // Hacky way temporary
+
+                    if (!(map is JArray m && m.Count > 1)) continue;
+                    var name = m.Last().Value<string>();
+                    var i = m.First().Value<int>();
+
+                    var filterName = name.AfterFirstOccurence("GTX ");
+                    if (string.IsNullOrWhiteSpace(filterName))
+                        filterName = name.AfterFirstOccurence("NVIDIA ");
+                    if (string.IsNullOrWhiteSpace(filterName))
+                        continue;
+
+                    foreach (var dev in ComputeDeviceManager.Available.Devices)
+                    {
+                        if (dev.Name.Contains(filterName))
+                            dev.TypeID = i;
+                    }
+                }
+            }
+        }
 
         private static void SetAlgorithmRates(JArray data)
         {
