@@ -582,14 +582,9 @@ namespace NiceHashMiner.Miners
             _ratesComunication?.ForceMinerStatsUpdate();
         }
 
-        private AlgorithmType GetMinerPairAlgorithmType(List<MiningPair> miningPairs)
+        private static AlgorithmType GetMinerPairAlgorithmType(IEnumerable<MiningPair> miningPairs)
         {
-            if (miningPairs.Count > 0)
-            {
-                return miningPairs[0].Algorithm.DualNiceHashID;
-            }
-
-            return AlgorithmType.NONE;
+            return miningPairs.FirstOrDefault()?.Algorithm?.DualNiceHashID ?? AlgorithmType.NONE;
         }
 
         public async Task MinerStatsCheck()
