@@ -75,6 +75,12 @@ namespace NiceHashMiner.Switching
             _smaCheckTimer = null;
         }
 
+        public void ForceUpdate()
+        {
+            var args = new SmaUpdateEventArgs(_lastLegitPaying);
+            SmaCheck?.Invoke(this, args);
+        }
+
         /// <summary>
         /// Checks profits and updates normalization based on ticks
         /// </summary>

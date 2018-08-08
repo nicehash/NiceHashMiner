@@ -28,7 +28,7 @@ namespace NiceHashMiner.Miners
 
         private readonly string _btcAdress;
         private readonly string _worker;
-        private readonly List<MiningDevice> _miningDevices;
+        private List<MiningDevice> _miningDevices;
         private readonly IMainFormRatesComunication _mainFormRatesComunication;
 
         private readonly AlgorithmSwitchingManager _switchingManager;
@@ -90,11 +90,7 @@ namespace NiceHashMiner.Miners
             _worker = worker;
 
             // initial settup
-            _miningDevices = GroupSetupUtils.GetMiningDevices(devices, true);
-            if (_miningDevices.Count > 0)
-            {
-                GroupSetupUtils.AvarageSpeeds(_miningDevices);
-            }
+            SetUsedDevices(devices);
 
             // init timer stuff
             _preventSleepTimer = new Timer();
@@ -235,6 +231,21 @@ namespace NiceHashMiner.Miners
             }
 
             return activeMinersGroup;
+        }
+
+        public void UpdateUsedDevices(IEnumerable<ComputeDevice> devices)
+        {
+            SetUsedDevices(devices);
+            _switchingManager.ForceUpdate();
+        }
+
+        private void SetUsedDevices(IEnumerable<ComputeDevice> devices)
+        {
+            _miningDevices = GroupSetupUtils.GetMiningDevices(devices, true);
+            if (_miningDevices.Count > 0)
+            {
+                GroupSetupUtils.AvarageSpeeds(_miningDevices);
+            }
         }
 
         public double GetTotalRate()

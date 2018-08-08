@@ -52,6 +52,11 @@ namespace NiceHashMiner.Miners
             return _curMiningSession != null && _curMiningSession.IsMiningEnabled;
         }
 
+        public static void UpdateUsedDevices(IEnumerable<ComputeDevice> devices)
+        {
+            _curMiningSession?.UpdateUsedDevices(devices);
+        }
+
 
         /// <summary>
         /// SwichMostProfitable should check the best combination for most profit.

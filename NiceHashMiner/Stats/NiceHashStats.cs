@@ -204,12 +204,12 @@ namespace NiceHashMiner.Stats
                 case "mining.start":
                     executed = true;
                     // TODO
-                    StartMining("*");
+                    StartMining((string) message.device);
                     return null;
                 case "mining.stop":
                     executed = true;
                     // TODO
-                    StopMining("*");
+                    StopMining((string) message.device);
                     return null;
             }
             
@@ -362,11 +362,14 @@ namespace NiceHashMiner.Stats
         {
             if (devs != "*")
             {
-                // TODO
+                SetDevicesEnabled(devs, true);
+                MinersManager.UpdateUsedDevices(ComputeDeviceManager.Available.Devices);
             }
-
-            if (MinersManager.IsMiningEnabled())
-                throw new RpcException("Mining already enabled", 40);
+            else
+            {
+                if (MinersManager.IsMiningEnabled())
+                    throw new RpcException("Mining already enabled", 40);
+            }
 
             if (!ConfigManager.GeneralConfig.HasValidUserWorker())
                 throw new RpcException("No valid worker and/or address set", 41);
@@ -384,7 +387,8 @@ namespace NiceHashMiner.Stats
         {
             if (devs != "*")
             {
-                // TODO
+                SetDevicesEnabled(devs, false);
+                MinersManager.UpdateUsedDevices(ComputeDeviceManager.Available.Devices);
             }
 
             if (!MinersManager.IsMiningEnabled())
