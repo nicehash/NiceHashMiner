@@ -55,6 +55,11 @@ namespace NiceHashMiner.Benchmarking
             }
         }
 
+        public static IEnumerable<int> GetBenchmarkingDevices()
+        {
+            return BenchDevAlgoQueue.Select(t => t.Item1).Select(d => d.Index);
+        }
+
         #endregion
 
         #region Calculation methods

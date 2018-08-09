@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Stats.Models;
@@ -205,12 +206,10 @@ namespace NiceHashMiner.Stats
                     return null;
                 case "mining.start":
                     executed = true;
-                    // TODO
                     StartMining((string) message.device);
                     return null;
                 case "mining.stop":
                     executed = true;
-                    // TODO
                     StopMining((string) message.device);
                     return null;
             }
@@ -362,6 +361,8 @@ namespace NiceHashMiner.Stats
 
         private static void StartMining(string devs)
         {
+            if (BenchmarkManager.InBenchmark)
+                throw new RpcException("In benchmark", 43);
             if (!ConfigManager.GeneralConfig.HasValidUserWorker())
                 throw new RpcException("No valid worker and/or address set", 41);
 
@@ -426,12 +427,17 @@ namespace NiceHashMiner.Stats
         private static void MinerStatus_Tick(object state)
         {
             var devices = ComputeDeviceManager.Available.Devices;
+
+            var stat = "STOPPED";
+            if (BenchmarkManager.InBenchmark) stat = "BENCHMARKING";
+            else if (MinersManager.IsMiningEnabled()) stat = "MINING";
+
             var paramList = new List<JToken>
             {
-                "STOPPED"  // TODO
+                stat
             };
             var activeIDs = MinersManager.GetActiveMinersIndexes();
-            var benchIDs = new List<int>();  // TODO
+            var benchIDs = BenchmarkManager.GetBenchmarkingDevices().ToList();
 
             var deviceList = new JArray();
 
