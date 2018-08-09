@@ -22,14 +22,11 @@ namespace NiceHashMiner.Forms
         private static readonly Color DisabledColor = Color.DarkGray;
         private static readonly Color BenchmarkedColor = Color.LightGreen;
         private static readonly Color UnbenchmarkedColor = Color.LightBlue;
-        
-        
-        //private AlgorithmType _singleBenchmarkType = AlgorithmType.NONE;
 
         private readonly Timer _benchmarkingTimer;
         private int _dotCount;
 
-        private readonly bool ExitWhenFinished;
+        private readonly bool _exitWhenFinished;
 
         public bool StartMining { get; private set; }
 
@@ -60,23 +57,7 @@ namespace NiceHashMiner.Forms
 
             BenchmarkManager.OnAlgoStatusUpdate += SetCurrentStatus;
             BenchmarkManager.OnStepUp += StepUpBenchmarkStepProgress;
-
-            //// name, UUID
-            //Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
-            //// initialize benchmark settings for same cards to only copy settings
-            //foreach (var cDev in ComputeDeviceManager.Available.Devices) {
-            //    var plainDevName = cDev.Name;
-            //    if (benchNamesUUIDs.ContainsKey(plainDevName)) {
-            //        cDev.Enabled = false;
-            //        cDev.BenchmarkCopyUUID = benchNamesUUIDs[plainDevName];
-            //    } else if (cDev.Enabled == true) {
-            //        benchNamesUUIDs.Add(plainDevName, cDev.UUID);
-            //        //cDev.Enabled = true; // enable benchmark
-            //        cDev.BenchmarkCopyUUID = null;
-            //    }
-            //}
-
-            //groupBoxAlgorithmBenchmarkSettings.Enabled = _singleBenchmarkType == AlgorithmType.NONE;
+            
             devicesListViewEnableControl1.Enabled = true;
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
 
@@ -100,7 +81,7 @@ namespace NiceHashMiner.Forms
 
             if (autostart)
             {
-                ExitWhenFinished = true;
+                _exitWhenFinished = true;
                 StartStopBtn_Click(null, null);
             }
         }
@@ -119,9 +100,7 @@ namespace NiceHashMiner.Forms
 
         #endregion
 
-        #region IBenchmarkForm methods
-        
-        public void SetCurrentStatus(object sender, AlgoStatusEventArgs e)
+        private void SetCurrentStatus(object sender, AlgoStatusEventArgs e)
         {
             Invoke((MethodInvoker) delegate
             {
@@ -129,7 +108,7 @@ namespace NiceHashMiner.Forms
             });
         }
 
-        public void StepUpBenchmarkStepProgress(object sender, StepUpEventArgs e)
+        private void StepUpBenchmarkStepProgress(object sender, StepUpEventArgs e)
         {
             if (InvokeRequired)
             {
@@ -143,35 +122,18 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        #endregion
-
         #region IListItemCheckColorSetter methods
 
         public void LviSetColor(ListViewItem lvi)
         {
-            if (lvi.Tag is ComputeDevice cDevice && BenchmarkManager._benchDevAlgoStatus != null)
+            if (!(lvi.Tag is ComputeDevice cDevice)) return;
+
+            var uuid = cDevice.Uuid;
+            if (!cDevice.Enabled)
+                lvi.BackColor = DisabledColor;
+            else
             {
-                var uuid = cDevice.Uuid;
-                if (!cDevice.Enabled)
-                    lvi.BackColor = DisabledColor;
-                else
-                    switch (BenchmarkManager._benchDevAlgoStatus[uuid])
-                    {
-                        case BenchmarkSettingsStatus.TODO:
-                        case BenchmarkSettingsStatus.DISABLED_TODO:
-                            lvi.BackColor = UnbenchmarkedColor;
-                            break;
-                        case BenchmarkSettingsStatus.NONE:
-                        case BenchmarkSettingsStatus.DISABLED_NONE:
-                            lvi.BackColor = BenchmarkedColor;
-                            break;
-                    }
-                //// enable disable status, NOT needed
-                //if (cdvo.IsEnabled && _benchmarkDevicesAlgorithmStatus[uuid] >= BenchmarkSettingsStatus.DISABLED_NONE) {
-                //    _benchmarkDevicesAlgorithmStatus[uuid] -= 2;
-                //} else if (!cdvo.IsEnabled && _benchmarkDevicesAlgorithmStatus[uuid] <= BenchmarkSettingsStatus.TODO) {
-                //    _benchmarkDevicesAlgorithmStatus[uuid] += 2;
-                //}
+                lvi.BackColor = BenchmarkManager.IsDevBenchmarked(uuid) ? BenchmarkedColor : UnbenchmarkedColor;
             }
         }
 
@@ -195,7 +157,7 @@ namespace NiceHashMiner.Forms
 
         private void BenchmarkingTimer_Tick(object sender, EventArgs e)
         {
-            foreach (var check in BenchmarkManager.StatusCheckAlgos())
+            foreach (var check in BenchmarkManager.GetStatusCheckAlgos())
             {
                 algorithmsListView1.SetSpeedStatus(check.Item1, check.Item2, GetDotsWaitString());
             }
@@ -255,7 +217,7 @@ namespace NiceHashMiner.Forms
         private void BenchmarkStoppedGuiSettings()
         {
             StartStopBtn.Text = International.GetText("Form_Benchmark_buttonStartBenchmark");
-            foreach (var deviceAlgosTuple in BenchmarkManager._benchDevAlgoQueue)
+            foreach (var deviceAlgosTuple in BenchmarkManager.BenchDevAlgoQueue)
             {
                 foreach (var algo in deviceAlgosTuple.Item2) algo.ClearBenchmarkPending();
                 algorithmsListView1.RepaintStatus(deviceAlgosTuple.Item1.Enabled, deviceAlgosTuple.Item1.Uuid);
@@ -281,7 +243,7 @@ namespace NiceHashMiner.Forms
 
             BenchmarkManager.Stop();
 
-            if (ExitWhenFinished) Close();
+            if (_exitWhenFinished) Close();
         }
 
         private bool StartButonClick()
@@ -315,7 +277,7 @@ namespace NiceHashMiner.Forms
             algorithmsListView1.IsInBenchmark = true;
             devicesListViewEnableControl1.IsInBenchmark = true;
             // set benchmark pending status
-            foreach (var deviceAlgosTuple in BenchmarkManager._benchDevAlgoQueue)
+            foreach (var deviceAlgosTuple in BenchmarkManager.BenchDevAlgoQueue)
             {
                 foreach (var algo in deviceAlgosTuple.Item2) algo.SetBenchmarkPending();
                 if (deviceAlgosTuple.Item1 != null)
@@ -363,7 +325,7 @@ namespace NiceHashMiner.Forms
                     BenchmarkManager.DisableTodoAlgos();
                 }
 
-                if (ExitWhenFinished || StartMining) Close();
+                if (_exitWhenFinished || StartMining) Close();
             });
         }
 
@@ -409,7 +371,7 @@ namespace NiceHashMiner.Forms
 
         private void RadioButton_SelectedUnbenchmarked_CheckedChanged_1(object sender, EventArgs e)
         {
-            BenchmarkManager._algorithmOption = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
+            BenchmarkManager.AlgorithmOption = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
             algorithmsListView1.ResetListItemColors();
@@ -417,7 +379,7 @@ namespace NiceHashMiner.Forms
 
         private void RadioButton_RE_SelectedUnbenchmarked_CheckedChanged(object sender, EventArgs e)
         {
-            BenchmarkManager._algorithmOption = AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms;
+            BenchmarkManager.AlgorithmOption = AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms;
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
             algorithmsListView1.ResetListItemColors();

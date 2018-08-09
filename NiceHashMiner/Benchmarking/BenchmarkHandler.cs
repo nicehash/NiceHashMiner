@@ -17,7 +17,6 @@ namespace NiceHashMiner.Benchmarking
         private readonly int _benchmarkAlgorithmsCount;
         private int _benchmarkCurrentIndex = -1;
         private readonly List<string> _benchmarkFailedAlgo = new List<string>();
-        private readonly IBenchmarkForm _benchmarkForm;
         private Algorithm _currentAlgorithm;
         private Miner _currentMiner;
         private readonly BenchmarkPerformanceType _performanceType;
@@ -25,7 +24,7 @@ namespace NiceHashMiner.Benchmarking
 
         private CpuBenchHelper _cpuBenchmarkStatus;
 
-        private PowerHelper _powerHelper;
+        private readonly PowerHelper _powerHelper;
 
         // CPU sweet spots
         private readonly List<AlgorithmType> _cpuAlgos = new List<AlgorithmType>
@@ -111,7 +110,7 @@ namespace NiceHashMiner.Benchmarking
                 _currentAlgorithm.PowerUsage = power;
             }
 
-            if (!rebenchSame) BenchmarkManager.RemoveFromStatusCheck(Device, _currentAlgorithm);
+            if (!rebenchSame) BenchmarkManager.RemoveFromStatusCheck(Device);
 
             if (!success && !rebenchSame)
             {
