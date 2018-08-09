@@ -6,12 +6,23 @@ using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NiceHashMiner.Stats;
 
 namespace NiceHashMiner.Benchmarking
 {
     public static class BenchmarkManager
     {
-        public static bool InBenchmark { get; private set; }
+        private static bool _inBenchmark;
+
+        public static bool InBenchmark
+        {
+            get => _inBenchmark;
+            private set
+            {
+                _inBenchmark = value;
+                NiceHashStats.StateChanged();
+            }
+        }
 
         public static AlgorithmBenchmarkSettingsType AlgorithmOption =
             AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;

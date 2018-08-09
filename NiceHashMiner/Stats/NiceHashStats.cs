@@ -511,6 +511,11 @@ namespace NiceHashMiner.Stats
 
         #endregion
 
+        public static void StateChanged()
+        {
+            MinerStatus_Tick(null);
+        }
+
         public static string GetNiceHashApiData(string url, string worker)
         {
             var responseFromServer = "";

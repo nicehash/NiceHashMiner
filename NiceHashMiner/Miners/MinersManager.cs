@@ -2,6 +2,7 @@
 using NiceHashMiner.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 
 namespace NiceHashMiner.Miners
@@ -15,6 +16,7 @@ namespace NiceHashMiner.Miners
             _curMiningSession?.StopAllMiners();
             Ethlargement.Stop();
             _curMiningSession = null;
+            NiceHashStats.StateChanged();
         }
 
         public static void StopAllMinersNonProfitable()
@@ -43,6 +45,8 @@ namespace NiceHashMiner.Miners
         {
             _curMiningSession = new MiningSession(ComputeDeviceManager.Available.Devices,
                 ratesComunication, miningLocation, worker, btcAdress);
+
+            NiceHashStats.StateChanged();
 
             return _curMiningSession.IsMiningEnabled;
         }
