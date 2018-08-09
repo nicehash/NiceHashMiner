@@ -105,6 +105,7 @@
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchHelpers\ClaymoreZcashBenchHelper.cs" />
+    <Compile Include="Benchmarking\BenchmarkManager.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
