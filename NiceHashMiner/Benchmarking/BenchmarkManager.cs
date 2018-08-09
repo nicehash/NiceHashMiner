@@ -101,7 +101,7 @@ namespace NiceHashMiner.Benchmarking
 
                 foreach (var pair in _benchDevAlgoQueue)
                 {
-                    var handler = new BenchmarkHandler(pair.Item1, pair.Item2, this, perfType);
+                    var handler = new BenchmarkHandler(pair.Item1, pair.Item2, perfType);
                     _runningBenchmarkThreads.Add(handler);
                 }
                 // Don't start until list is populated

@@ -33,12 +33,10 @@ namespace NiceHashMiner.Benchmarking
             AlgorithmType.CryptoNight
         };
 
-        public BenchmarkHandler(ComputeDevice device, Queue<Algorithm> algorithms, IBenchmarkForm form,
-            BenchmarkPerformanceType performance)
+        public BenchmarkHandler(ComputeDevice device, Queue<Algorithm> algorithms, BenchmarkPerformanceType performance)
         {
             Device = device;
             _benchmarkAlgorithmQueue = algorithms;
-            _benchmarkForm = form;
             _performanceType = performance;
 
             _benchmarkAlgorithmsCount = _benchmarkAlgorithmQueue.Count;
@@ -57,7 +55,7 @@ namespace NiceHashMiner.Benchmarking
 
         public void OnBenchmarkComplete(bool success, string status)
         {
-            if (!_benchmarkForm.InBenchmark) return;
+            if (!BenchmarkManager.InBenchmark) return;
 
             var rebenchSame = false;
             if (success && _cpuBenchmarkStatus != null && _cpuAlgos.Contains(_currentAlgorithm.NiceHashID) &&
@@ -113,19 +111,19 @@ namespace NiceHashMiner.Benchmarking
                 _currentAlgorithm.PowerUsage = power;
             }
 
-            if (!rebenchSame) _benchmarkForm.RemoveFromStatusCheck(Device, _currentAlgorithm);
+            if (!rebenchSame) BenchmarkManager.RemoveFromStatusCheck(Device, _currentAlgorithm);
 
             if (!success && !rebenchSame)
             {
                 // add new failed list
                 _benchmarkFailedAlgo.Add(_currentAlgorithm.AlgorithmName);
-                _benchmarkForm.SetCurrentStatus(Device, _currentAlgorithm, status);
+                BenchmarkManager.SetCurrentStatus(Device, _currentAlgorithm, status);
             }
             else if (!rebenchSame)
             {
                 // set status to empty string it will return speed
                 _currentAlgorithm.ClearBenchmarkPending();
-                _benchmarkForm.SetCurrentStatus(Device, _currentAlgorithm, "");
+                BenchmarkManager.SetCurrentStatus(Device, _currentAlgorithm, "");
             }
 
             if (rebenchSame)
@@ -156,7 +154,7 @@ namespace NiceHashMiner.Benchmarking
         private void NextBenchmark()
         {
             ++_benchmarkCurrentIndex;
-            if (_benchmarkCurrentIndex > 0) _benchmarkForm.StepUpBenchmarkStepProgress();
+            if (_benchmarkCurrentIndex > 0) BenchmarkManager.StepUpBenchmarkStepProgress();
             if (_benchmarkCurrentIndex >= _benchmarkAlgorithmsCount)
             {
                 EndBenchmark();
@@ -210,7 +208,7 @@ namespace NiceHashMiner.Benchmarking
                 // dagger about 4 minutes
                 //var showWaitTime = _currentAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto ? 4 * 60 : time;
 
-                _benchmarkForm.AddToStatusCheck(Device, _currentAlgorithm);
+                BenchmarkManager.AddToStatusCheck(Device, _currentAlgorithm);
 
                 _currentMiner.BenchmarkStart(time, this);
                 _powerHelper.Start();
@@ -224,7 +222,7 @@ namespace NiceHashMiner.Benchmarking
         private void EndBenchmark()
         {
             _currentAlgorithm?.ClearBenchmarkPending();
-            _benchmarkForm.EndBenchmarkForDevice(Device, _benchmarkFailedAlgo.Count > 0);
+            BenchmarkManager.EndBenchmarkForDevice(Device, _benchmarkFailedAlgo.Count > 0);
         }
 
         public void InvokeQuit()
