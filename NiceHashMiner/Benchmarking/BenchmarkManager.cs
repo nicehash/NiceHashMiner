@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
+﻿using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NiceHashMiner.Benchmarking
 {
@@ -35,7 +33,7 @@ namespace NiceHashMiner.Benchmarking
         public static event EventHandler<StepUpEventArgs> OnStepUp;
         public static event EventHandler<AlgoStatusEventArgs> OnAlgoStatusUpdate;
 
-        public static bool HasWork => BenchDevAlgoStatus.Values.Any(s => s == BenchmarkSettingsStatus.TODO);
+        public static bool HasWork => BenchDevAlgoStatus.Values.Any(s => s == BenchmarkSettingsStatus.Todo);
 
         static BenchmarkManager()
         {
@@ -44,6 +42,22 @@ namespace NiceHashMiner.Benchmarking
             StatusCheckAlgos = new Dictionary<ComputeDevice, Algorithm>();
             RunningBenchmarkThreads = new List<BenchmarkHandler>();
         }
+
+        #region Public get helpers
+
+        public static IEnumerable<Tuple<ComputeDevice, Algorithm>> GetStatusCheckAlgos()
+        {
+            if (!InBenchmark) yield break;
+
+            foreach (var kvp in StatusCheckAlgos)
+            {
+                yield return new Tuple<ComputeDevice, Algorithm>(kvp.Key, kvp.Value);
+            }
+        }
+
+        #endregion
+
+        #region Calculation methods
 
         public static int CalcBenchDevAlgoQueue()
         {
@@ -69,7 +83,7 @@ namespace NiceHashMiner.Benchmarking
                 if (cDev.Enabled)
                 {
                     _benchAlgoCount += algorithmQueue.Count;
-                    status = algorithmQueue.Count == 0 ? BenchmarkSettingsStatus.NONE : BenchmarkSettingsStatus.TODO;
+                    status = algorithmQueue.Count == 0 ? BenchmarkSettingsStatus.None : BenchmarkSettingsStatus.Todo;
                     BenchDevAlgoQueue.Add(
                         new Tuple<ComputeDevice, Queue<Algorithm>>(cDev, algorithmQueue)
                     );
@@ -77,8 +91,8 @@ namespace NiceHashMiner.Benchmarking
                 else
                 {
                     status = algorithmQueue.Count == 0
-                        ? BenchmarkSettingsStatus.DISABLED_NONE
-                        : BenchmarkSettingsStatus.DISABLED_TODO;
+                        ? BenchmarkSettingsStatus.DisabledNone
+                        : BenchmarkSettingsStatus.DisabledTodo;
                 }
 
                 BenchDevAlgoStatus[cDev.Uuid] = status;
@@ -89,15 +103,28 @@ namespace NiceHashMiner.Benchmarking
             return _benchAlgoCount;
         }
 
-        public static IEnumerable<Tuple<ComputeDevice, Algorithm>> GetStatusCheckAlgos()
+        private static bool ShouldBenchmark(Algorithm algorithm)
         {
-            if (!InBenchmark) yield break;
-
-            foreach (var kvp in StatusCheckAlgos)
+            var isBenchmarked = !algorithm.BenchmarkNeeded;
+            switch (AlgorithmOption)
             {
-                yield return new Tuple<ComputeDevice, Algorithm>(kvp.Key, kvp.Value);
+                case AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms when !isBenchmarked &&
+                                                                                         algorithm.Enabled:
+                    return true;
+                case AlgorithmBenchmarkSettingsType.UnbenchmarkedAlgorithms when !isBenchmarked:
+                    return true;
+                case AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms when algorithm.Enabled:
+                    return true;
+                case AlgorithmBenchmarkSettingsType.AllAlgorithms:
+                    return true;
             }
+
+            return false;
         }
+
+        #endregion
+
+        #region Start/Stop methods
 
         public static void Start(BenchmarkPerformanceType perfType, IBenchmarkForm form)
         {
@@ -135,7 +162,7 @@ namespace NiceHashMiner.Benchmarking
             }
         }
 
-        public static void End()
+        private static void End()
         {
             InBenchmark = false;
             Ethlargement.Stop();
@@ -150,30 +177,15 @@ namespace NiceHashMiner.Benchmarking
                 a.Enabled = false;
         }
 
-        private static bool ShouldBenchmark(Algorithm algorithm)
-        {
-            var isBenchmarked = !algorithm.BenchmarkNeeded;
-            switch (AlgorithmOption)
-            {
-                case AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms when !isBenchmarked &&
-                                                                                         algorithm.Enabled:
-                    return true;
-                case AlgorithmBenchmarkSettingsType.UnbenchmarkedAlgorithms when !isBenchmarked:
-                    return true;
-                case AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms when algorithm.Enabled:
-                    return true;
-                case AlgorithmBenchmarkSettingsType.AllAlgorithms:
-                    return true;
-            }
+        #endregion
 
-            return false;
-        }
+        #region In-bench status updates
 
         public static bool IsDevBenchmarked(string uuid)
         {
             if (BenchDevAlgoStatus == null) return true;
             var status = BenchDevAlgoStatus[uuid];
-            return status == BenchmarkSettingsStatus.TODO || status == BenchmarkSettingsStatus.DISABLED_TODO;
+            return status == BenchmarkSettingsStatus.Todo || status == BenchmarkSettingsStatus.DisabledTodo;
         }
 
         public static void AddToStatusCheck(ComputeDevice device, Algorithm algorithm)
@@ -209,14 +221,16 @@ namespace NiceHashMiner.Benchmarking
             var args = new StepUpEventArgs(++_benchmarkCurrentIndex, _benchAlgoCount);
             OnStepUp?.Invoke(null, args);
         }
-    }
 
-    public enum BenchmarkSettingsStatus
-    {
-        NONE = 0,
-        TODO,
-        DISABLED_NONE,
-        DISABLED_TODO
+        #endregion
+        
+        private enum BenchmarkSettingsStatus
+        {
+            None = 0,
+            Todo,
+            DisabledNone,
+            DisabledTodo
+        }
     }
 
     public class StepUpEventArgs : EventArgs
