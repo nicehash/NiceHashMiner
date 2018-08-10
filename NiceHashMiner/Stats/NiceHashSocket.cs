@@ -54,7 +54,7 @@ namespace NiceHashMiner.Stats
 
             var uuid = UUID.V5(UUID.Nil().AsGuid(), $"NHML{guid}");
             var b64 = Convert.ToBase64String(uuid.AsGuid().ToByteArray());
-            RigID = $"{0}-{b64}";
+            RigID = $"{0}-{b64.Trim('=')}";
         }
 
         public NiceHashSocket(string address)
