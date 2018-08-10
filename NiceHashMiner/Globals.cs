@@ -52,8 +52,8 @@ namespace NiceHashMiner
             }
 
             return prefix
-                   + name
-                   + "." + miningLocation
+                   //+ name
+                   + "stratum-test" //+ miningLocation
                    + ".nicehash.com:"
                    + port;
         }
