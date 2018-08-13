@@ -5,6 +5,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Switching;
 using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner
 {
@@ -42,8 +43,7 @@ namespace NiceHashMiner
             }
 
             var uuid = UUID.V5(UUID.Nil().AsGuid(), $"NHML{guid}");
-            var b64 = Convert.ToBase64String(uuid.AsGuid().ToByteArray());
-            RigID = $"{0}-{b64.Trim('=')}";
+            RigID = $"{0}-{uuid.AsGuid().ToByteArray().ToBase64String()}";
         }
 
         public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
