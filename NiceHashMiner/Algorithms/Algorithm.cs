@@ -105,7 +105,7 @@ namespace NiceHashMiner.Algorithms
 
         #endregion
 
-        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName) 
+        public Algorithm(MinerBaseType minerBaseType, AlgorithmType niceHashID, string minerName = "") 
         {
             NiceHashID = niceHashID;
 

@@ -19,8 +19,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.XmrStak,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7, ""),
-                    new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightHeavy, "")
+                    new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7),
+                    new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightHeavy)
                 }
             }
         };
@@ -35,7 +35,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.Claymore,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, ""),
+                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto),
                     new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred),
                     new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Lbry),
                     new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal),
@@ -57,7 +57,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 new List<Algorithm>
                 {
                     //new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNight, ""),
-                    new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightV7, "")
+                    new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightV7)
                 }
             },
             {
@@ -122,7 +122,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.Claymore,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.CryptoNightV7, ""),
+                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.CryptoNightV7),
                     new Algorithm(MinerBaseType.Claymore, AlgorithmType.Equihash, "equihash")
                 }
             },
@@ -192,14 +192,14 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.EWBF,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.EWBF, AlgorithmType.Equihash, "")
+                    new Algorithm(MinerBaseType.EWBF, AlgorithmType.Equihash)
                 }
             },
             {
                 MinerBaseType.dtsm,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.dtsm, AlgorithmType.Equihash, "")
+                    new Algorithm(MinerBaseType.dtsm, AlgorithmType.Equihash)
                 }
             }
         }.ConcatDictList(All, Gpu);
