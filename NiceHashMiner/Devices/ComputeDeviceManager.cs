@@ -503,22 +503,43 @@ namespace NiceHashMiner.Devices
                         {
                             Available.Devices.Add(
                                 new CpuComputeDevice(0, "CPU0", CpuID.GetCpuName().Trim(), threadsPerCpu, 0,
-                                    ++CpuCount)
+                                    ++CpuCount, GetCpuInfo().FirstOrDefault())
                             );
                         }
                         else if (Available.CpusCount > 1)
                         {
+                            var infos = GetCpuInfo().ToList();
                             for (var i = 0; i < Available.CpusCount; i++)
                             {
+                                var info = infos.Count > i ? infos[i] : default(CpuInfo);
                                 Available.Devices.Add(
                                     new CpuComputeDevice(i, "CPU" + i, CpuID.GetCpuName().Trim(), threadsPerCpu,
-                                        CpuID.CreateAffinityMask(i, threadsPerCpuMask), ++CpuCount)
+                                        CpuID.CreateAffinityMask(i, threadsPerCpuMask), ++CpuCount, info)
                                 );
                             }
                         }
                     }
 
                     Helpers.ConsolePrint(Tag, "QueryCpus END");
+                }
+
+                private static IEnumerable<CpuInfo> GetCpuInfo()
+                {
+                    using (var proc = new ManagementObjectSearcher("select * from Win32_Processor"))
+                    {
+                        foreach (var obj in proc.Get())
+                        {
+                            var info = new CpuInfo
+                            {
+                                Family = obj["Family"].ToString(),
+                                VendorID = obj["Manufacturer"].ToString(),
+                                ModelName = obj["Name"].ToString(),
+                                PhysicalID = obj["ProcessorID"].ToString()
+                            };
+
+                            yield return info;
+                        }
+                    }
                 }
             }
 
