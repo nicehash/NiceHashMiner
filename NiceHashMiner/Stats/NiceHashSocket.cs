@@ -40,23 +40,6 @@ namespace NiceHashMiner.Stats
         public event EventHandler<MessageEventArgs> OnDataReceived;
         public event EventHandler OnConnectionLost;
 
-        private static readonly string RigID;
-
-        static NiceHashSocket()
-        {
-            var guid = Helpers.GetMachineGuid();
-            if (guid == null)
-            {
-                // TODO
-                RigID = $"{0}-{Guid.NewGuid()}";
-                return;
-            }
-
-            var uuid = UUID.V5(UUID.Nil().AsGuid(), $"NHML{guid}");
-            var b64 = Convert.ToBase64String(uuid.AsGuid().ToByteArray());
-            RigID = $"{0}-{b64.Trim('=')}";
-        }
-
         public NiceHashSocket(string address)
         {
             _address = address;
@@ -114,7 +97,7 @@ namespace NiceHashMiner.Stats
                 if (btc != null) _login.btc = btc;
                 if (worker != null) _login.worker = worker;
                 if (group != null) _login.group = group;
-                _login.rig = RigID;
+                _login.rig = Globals.RigID;
                 var loginJson = JsonConvert.SerializeObject(_login);
                 SendData(loginJson);
 

@@ -382,8 +382,7 @@ namespace NiceHashMiner.Stats
                 }
                 var loc = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
 
-                if (!MinersManager.StartInitialize(_ratesComunication, loc, ConfigManager.GeneralConfig.WorkerName,
-                    ConfigManager.GeneralConfig.BitcoinAddress))
+                if (!MinersManager.StartInitialize(_ratesComunication, loc, Globals.GetWorkerName(), Globals.GetBitcoinUser()))
                     throw new RpcException("Mining could not start", 42);
 
                 _mainForm?.StartMiningGui();

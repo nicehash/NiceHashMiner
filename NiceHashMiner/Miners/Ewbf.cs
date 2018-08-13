@@ -119,7 +119,7 @@ namespace NiceHashMiner.Miners
             var server = Globals.GetLocationUrl(algorithm.NiceHashID,
                 Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
             var ret = $" --log 2 --logfile {GetLogFileName()} " + GetStartCommand(server, Globals.GetBitcoinUser(),
-                          ConfigManager.GeneralConfig.WorkerName.Trim());
+                          Globals.GetWorkerName());
             _benchmarkTimeWait = Math.Max(time * 3, 90); // EWBF takes a long time to get started
             return ret;
         }

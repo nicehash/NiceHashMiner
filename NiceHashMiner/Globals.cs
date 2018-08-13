@@ -1,11 +1,14 @@
+using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Switching;
+using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner
 {
-    public class Globals
+    public static class Globals
     {
         // Constants
         public static string[] MiningLocation = {"eu", "usa", "hk", "jp", "in", "br"};
@@ -26,6 +29,22 @@ namespace NiceHashMiner
         public static int FirstNetworkCheckTimeoutTimeMs = 500;
         public static int FirstNetworkCheckTimeoutTries = 10;
 
+        public static readonly string RigID;
+
+        static Globals()
+        {
+            var guid = Helpers.GetMachineGuid();
+            if (guid == null)
+            {
+                // TODO
+                RigID = $"{0}-{Guid.NewGuid()}";
+                return;
+            }
+
+            var uuid = UUID.V5(UUID.Nil().AsGuid(), $"NHML{guid}");
+            var b64 = Convert.ToBase64String(uuid.AsGuid().ToByteArray());
+            RigID = $"{0}-{b64.Trim('=')}";
+        }
 
         public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
         {
@@ -60,9 +79,17 @@ namespace NiceHashMiner
 
         public static string GetBitcoinUser()
         {
-            return BitcoinAddress.ValidateBitcoinAddress(Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim())
-                ? Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim()
+            return BitcoinAddress.ValidateBitcoinAddress(ConfigManager.GeneralConfig.BitcoinAddress.Trim())
+                ? ConfigManager.GeneralConfig.BitcoinAddress.Trim()
                 : DemoUser;
+        }
+
+        public static string GetWorkerName()
+        {
+            var workername = BitcoinAddress.ValidateWorkerName(ConfigManager.GeneralConfig.WorkerName.Trim())
+                ? ConfigManager.GeneralConfig.WorkerName.Trim()
+                : "";
+            return $"{workername}:{RigID}";
         }
     }
 }

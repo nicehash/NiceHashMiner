@@ -52,7 +52,7 @@ namespace NiceHashMiner.Miners
                 apiBind = " --api-bind=" + ApiPort;
             }
 
-            LastCommandLine = $"{algo} --url={url} --userpass={username}:x {apiBind} " +
+            LastCommandLine = $"{algo} --url={url} --userpass={username} {apiBind} " +
                               $"--devices {GetDevicesCommandString()} " +
                               $"{ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA)} ";
 

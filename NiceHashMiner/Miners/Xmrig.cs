@@ -56,7 +56,7 @@ namespace NiceHashMiner.Miners
                 Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                 ConectionType);
             _benchmarkTimeWait = time;
-            return GetStartCommand(server, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
+            return GetStartCommand(server, Globals.GetBitcoinUser(), Globals.GetWorkerName())
                 + $" -l {GetLogFileName()} --print-time=2";
         }
 

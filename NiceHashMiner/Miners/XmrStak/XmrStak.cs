@@ -201,8 +201,7 @@ namespace NiceHashMiner.Miners.XmrStak
         {
             var url = Globals.GetLocationUrl(algorithm.NiceHashID,
                 Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
-            var configs = PrepareConfigFiles(url, Globals.GetBitcoinUser(),
-                ConfigManager.GeneralConfig.WorkerName.Trim(), true);
+            var configs = PrepareConfigFiles(url, Globals.GetBitcoinUser(), Globals.GetWorkerName(), true);
             _benchmarkCount = 0;
             _benchmarkSum = 0;
             BenchmarkTimeInSeconds = Math.Max(time, 60);

@@ -104,10 +104,7 @@ namespace NiceHashMiner.Miners
                 ConectionType);
 
             // demo for benchmark
-            var username = Globals.DemoUser;
-
-            if (ConfigManager.GeneralConfig.WorkerName.Length > 0)
-                username += "." + ConfigManager.GeneralConfig.WorkerName.Trim();
+            var username = Globals.DemoUser + "." + Globals.GetWorkerName();
 
             // cd to the cgminer for the process bins
             var commandLine = " /C \"cd /d " + WorkingDirectory + " && sgminer.exe " +
