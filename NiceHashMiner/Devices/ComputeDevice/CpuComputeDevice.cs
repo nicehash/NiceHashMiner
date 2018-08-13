@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
 using NiceHashMiner.Devices.Algorithms;
+using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Devices
 {
-    public class CpuComputeDevice : ComputeDevice
+    internal class CpuComputeDevice : ComputeDevice
     {
         private readonly PerformanceCounter _cpuCounter;
 
@@ -22,7 +23,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public CpuComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int cpuCount)
+        public CpuComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int cpuCount, CpuInfo info)
             : base(id,
                 name,
                 true,
@@ -34,9 +35,12 @@ namespace NiceHashMiner.Devices
         {
             Threads = threads;
             AffinityMask = affinityMask;
-            Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+            //Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             Index = ID; // Don't increment for CPU
+
+            var hashedInfo = $"{id}--{info.VendorID}--{info.Family}--{info.Model}--{info.PhysicalID}--{info.ModelName}";
+            Uuid = UUID.V5(UUID.Nil().AsGuid(), hashedInfo).AsGuid().ToString();
 
             _cpuCounter = new PerformanceCounter
             {
