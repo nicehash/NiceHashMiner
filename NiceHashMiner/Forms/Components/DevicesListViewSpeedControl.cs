@@ -200,9 +200,19 @@ namespace NiceHashMiner.Forms.Components
 
         public void SetPayingColumns()
         {
+            profitHeader.Text = FormatPerTimeUnit("mBTC");
+            fiatHeader.Text = CurrencyPerTimeUnit();
+        }
+
+        private static string CurrencyPerTimeUnit()
+        {
+            return FormatPerTimeUnit(ExchangeRateApi.ActiveDisplayCurrency);
+        }
+
+        private static string FormatPerTimeUnit(string unit)
+        {
             var timeUnit = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            profitHeader.Text = $"mBTC/{timeUnit}";
-            fiatHeader.Text = $"{ExchangeRateApi.ActiveDisplayCurrency}/{timeUnit}";
+            return $"{unit}/{timeUnit}";
         }
 
         protected override void DevicesListViewEnableControl_Resize(object sender, EventArgs e)
@@ -309,18 +319,20 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private string GetHeaderName(string key, int index)
+        private static string GetHeaderName(string key, int index)
         {
+            var langKey = "";
             if (key == PowerKey)
             {
                 switch (index)
                 {
                     case 0:
-                        return "Power Usage (W)";
+                        langKey = "Form_Settings_Algo_PowerUsage";
+                        break;
                     case 1:
-                        return "Power Cost (USD/Day)";
+                        return International.GetText("Form_DevicesListViewSpeed_PowerCost", CurrencyPerTimeUnit());
                     case 2:
-                        return "Profit (USD/Day)";
+                        return International.GetText("Form_DevicesListViewSpeed_Profit", CurrencyPerTimeUnit());
                 }
             }
             else
@@ -328,15 +340,18 @@ namespace NiceHashMiner.Forms.Components
                 switch (index)
                 {
                     case 0:
-                        return "Load (%)";
+                        langKey = "Form_DevicesListViewSpeed_Load";
+                        break;
                     case 1:
-                        return "Temp (C)";
+                        langKey = "Form_DevicesListViewSpeed_Temp";
+                        break;
                     case 2:
-                        return "RPM";
+                        langKey = "Form_DevicesListViewSpeed_RPM";
+                        break;
                 }
             }
 
-            return "";
+            return International.GetText(langKey);
         }
 
         #endregion

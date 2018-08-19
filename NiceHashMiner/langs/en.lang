@@ -403,6 +403,12 @@
         "Form_Settings_General_SwitchProfitabilityThreshold": "Switch Profitability Threshold",
         "Form_Settings_ToolTip_SwitchProfitabilityThreshold": "Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]",
         "VirtualMemorySize_BAD": "NiceHash Miner Legacy recommends increasing virtual memory size so that all algorithms would work fine.",
-        "sgminer_precise_try": "Failed - try Precise"
+        "sgminer_precise_try": "Failed - try Precise",
+
+        "Form_DevicesListViewSpeed_PowerCost": "Power Cost ({0})", 
+        "Form_DevicesListViewSpeed_Profit": "Profit ({0})",
+        "Form_DevicesListViewSpeed_Load": "Load (%)",
+        "Form_DevicesListViewSpeed_Temp": "Temp (C)",
+        "Form_DevicesListViewSpeed_RPM": "RPM" 
     }
 }
