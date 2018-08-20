@@ -37,13 +37,15 @@ namespace NiceHashMiner.Forms.Components
 
         private readonly Timer _diagTimer = new Timer();
 
+        private bool _ignoreChecks = false;
+
         public DevicesListViewSpeedControl()
         {
             InitializeComponent();
 
             SaveToGeneralConfig = false;
             // intialize ListView callbacks
-            listViewDevices.ItemChecked += ListViewDevicesItemChecked;
+            //listViewDevices.ItemChecked += ListViewDevicesItemChecked;
 
             _diagTimer.Interval = 2000;
             _diagTimer.Tick += DiagTimerOnTick;
@@ -63,8 +65,10 @@ namespace NiceHashMiner.Forms.Components
 
         public void SetIsMining(bool isMining)
         {
+            _ignoreChecks = true;
             listViewDevices.CheckBoxes = !isMining;
             Enabled = !isMining;
+            _ignoreChecks = false;
         }
 
         public override void InitLocale()
@@ -73,6 +77,12 @@ namespace NiceHashMiner.Forms.Components
 
             speedHeader.Text = International.GetText("Form_DevicesListViewSpeed_Hs");
             secondarySpeedHeader.Text = International.GetText("Form_DevicesListViewSpeed_SecondaryHs");
+        }
+
+        protected override void ListViewDevicesItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (_ignoreChecks) return;
+            base.ListViewDevicesItemChecked(sender, e);
         }
 
         #region ListView updating
@@ -423,8 +433,10 @@ namespace NiceHashMiner.Forms.Components
             // Ensure we have disabled group
             if (listViewDevices.Groups[DefaultKey] == null)
             {
+                _ignoreChecks = true;
                 listViewDevices.Groups.Clear();
                 listViewDevices.Groups.Add(CreateDefaultGroup());
+                _ignoreChecks = false;
             }
 
             var key = string.Join(",", iApiData.DeviceIndices);
