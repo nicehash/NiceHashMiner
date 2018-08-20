@@ -1,16 +1,13 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Forms;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
-using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -125,7 +122,6 @@ namespace NiceHashMiner.Forms.Components
             // set devices
             var allIndices = _indexTotals.SelectMany(i => i).ToList();
             var inactiveIndices = new List<int>();
-            var endIndex = -1;
             foreach (var computeDevice in _devices)
             {
                 var lvi = new ListViewItem
@@ -141,8 +137,6 @@ namespace NiceHashMiner.Forms.Components
                 }
                 
                 listViewDevices.Items.Add(lvi);
-                
-                endIndex = computeDevice.Index;
 
                 if (!allIndices.Contains(computeDevice.Index))
                     inactiveIndices.Add(computeDevice.Index);
@@ -150,7 +144,7 @@ namespace NiceHashMiner.Forms.Components
 
             foreach (var group in listViewDevices.Groups)
             {
-                if (!(@group is ListViewGroup g)) continue;
+                if (!(group is ListViewGroup g)) continue;
 
                 if (g.Tag is List<int> indices)
                 {
@@ -165,7 +159,7 @@ namespace NiceHashMiner.Forms.Components
 
                     if (g.Items.Count <= 0) continue;
 
-                    var t = SetTotalRow(indices, endIndex++, numItems);
+                    var t = SetTotalRow(indices, numItems);
                     g.Items.Add(t);
                 }
                 else if (g.Name == DefaultKey)
@@ -187,7 +181,7 @@ namespace NiceHashMiner.Forms.Components
             SaveToGeneralConfig = true;
         }
 
-        private ListViewItem SetTotalRow(List<int> indices, int index, int numSubs)
+        private ListViewItem SetTotalRow(List<int> indices, int numSubs)
         {
             var total = new ListViewItem
             {
@@ -200,7 +194,6 @@ namespace NiceHashMiner.Forms.Components
             }
             listViewDevices.Items.Add(total);
             return total;
-            //SetLvi(total, index);
         }
 
         protected override void SetLvi(ListViewItem lvi, int index)
