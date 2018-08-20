@@ -27,6 +27,8 @@ namespace NiceHashMiner.Forms.Components
         private const string PowerKey = "power";
         private const string DiagKey = "diag";
 
+        private const string DefaultKey = "default";
+
         private List<ComputeDevice> _devices;
 
         private readonly List<List<int>> _indexTotals = new List<List<int>>();
@@ -68,7 +70,9 @@ namespace NiceHashMiner.Forms.Components
         public override void InitLocale()
         {
             base.InitLocale();
-            // TODO
+
+            speedHeader.Text = International.GetText("Form_DevicesListViewSpeed_Hs");
+            secondarySpeedHeader.Text = International.GetText("Form_DevicesListViewSpeed_SecondaryHs");
         }
 
         #region ListView updating
@@ -107,6 +111,7 @@ namespace NiceHashMiner.Forms.Components
             // set devices
             var lastIndex = 0;
             var allIndices = _indexTotals.SelectMany(i => i).ToList();
+            var inactiveIndices = new List<int>();
             var endIndex = -1;
             foreach (var computeDevice in _devices)
             {
@@ -136,6 +141,9 @@ namespace NiceHashMiner.Forms.Components
 
                 //SetLvi(lvi, computeDevice.Index);
                 endIndex = computeDevice.Index;
+
+                if (!allIndices.Contains(computeDevice.Index))
+                    inactiveIndices.Add(computeDevice.Index);
             }
 
             //if (endIndex > 0 && _indexTotals.Count > lastIndex && allIndices.Contains(endIndex))
@@ -145,7 +153,9 @@ namespace NiceHashMiner.Forms.Components
 
             foreach (var group in listViewDevices.Groups)
             {
-                if (group is ListViewGroup g && g.Tag is List<int> indices)
+                if (!(@group is ListViewGroup g)) continue;
+
+                if (g.Tag is List<int> indices)
                 {
                     foreach (var lvi in listViewDevices.Items)
                     {
@@ -156,10 +166,20 @@ namespace NiceHashMiner.Forms.Components
                         }
                     }
 
-                    if (g.Items.Count > 0)
+                    if (g.Items.Count <= 0) continue;
+
+                    var t = SetTotalRow(indices, endIndex++, numItems);
+                    g.Items.Add(t);
+                }
+                else if (g.Name == DefaultKey)
+                {
+                    foreach (var lvi in listViewDevices.Items)
                     {
-                        var t = SetTotalRow(indices, endIndex++, numItems);
-                        g.Items.Add(t);
+                        if (lvi is ListViewItem item && item.Tag is ComputeDevice dev &&
+                            inactiveIndices.Contains(dev.Index))
+                        {
+                            g.Items.Add(item);
+                        }
                     }
                 }
             }
@@ -174,7 +194,7 @@ namespace NiceHashMiner.Forms.Components
         {
             var total = new ListViewItem
             {
-                Text = "Total",
+                Text = International.GetText("Form_DevicesListViewSpeed_Total"),
                 Tag = indices
             };
             for (var i = 0; i < numSubs; i++)
@@ -220,6 +240,11 @@ namespace NiceHashMiner.Forms.Components
         }
 
         #endregion
+
+        private static ListViewGroup CreateDefaultGroup()
+        {
+            return new ListViewGroup(DefaultKey, International.GetText("Form_DevicesListViewSpeed_Disabled"));
+        }
 
         #region Optional Headers
 
@@ -394,6 +419,13 @@ namespace NiceHashMiner.Forms.Components
         public void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
         {
             Enabled = true;
+
+            // Ensure we have disabled group
+            if (listViewDevices.Groups[DefaultKey] == null)
+            {
+                listViewDevices.Groups.Clear();
+                listViewDevices.Groups.Add(CreateDefaultGroup());
+            }
 
             var key = string.Join(",", iApiData.DeviceIndices);
             if (!_indexTotals.Any(l => iApiData.DeviceIndices.All(l.Contains)))

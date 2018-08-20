@@ -409,6 +409,10 @@
         "Form_DevicesListViewSpeed_Profit": "Profit ({0})",
         "Form_DevicesListViewSpeed_Load": "Load (%)",
         "Form_DevicesListViewSpeed_Temp": "Temp (C)",
-        "Form_DevicesListViewSpeed_RPM": "RPM" 
+        "Form_DevicesListViewSpeed_RPM": "RPM",
+        "Form_DevicesListViewSpeed_Hs": "H/s",
+        "Form_DevicesListViewSpeed_SecondaryHs": "H/s (Secondary)",
+        "Form_DevicesListViewSpeed_Total": "Total",
+        "Form_DevicesListViewSpeed_Disabled": "Disabled" 
     }
 }
