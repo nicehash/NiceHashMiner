@@ -605,6 +605,7 @@ namespace NiceHashMiner.Miners
                     if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
                     {
                         ad.SmaVal = paying;
+                        groupMiners.CurrentRate = ad.Profit;
                         if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
                         {
                             ad.SecondarySmaVal = secPaying;
