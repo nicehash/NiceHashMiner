@@ -14,6 +14,9 @@ using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Forms.Components
 {
+    /// <summary>
+    /// Displays devices with hashrates/profits and optional power/diag columns. During mining groups devices by miner/algo combo.
+    /// </summary>
     internal partial class DevicesListViewSpeedControl : DevicesListViewEnableControl, IRatesComunication
     {
         private const int Speed = 1;
@@ -108,6 +111,7 @@ namespace NiceHashMiner.Forms.Components
             RemoveOptionalHeaders(DiagKey);
             if (ShowPowerCols)
             {
+                // We always want power cols to be before diag, since they change the context of existing profit headers
                 SetOptionalHeaders(PowerKey);
                 numItems += 3;
             }
@@ -119,21 +123,11 @@ namespace NiceHashMiner.Forms.Components
             }
 
             // set devices
-            var lastIndex = 0;
             var allIndices = _indexTotals.SelectMany(i => i).ToList();
             var inactiveIndices = new List<int>();
             var endIndex = -1;
             foreach (var computeDevice in _devices)
             {
-                //if (_indexTotals.Count > lastIndex && allIndices.Contains(computeDevice.Index))
-                //{
-                //    if (!_indexTotals[lastIndex].Contains(computeDevice.Index))
-                //    {
-                //        SetTotalRow(_indexTotals[lastIndex], endIndex, numItems);
-                //        lastIndex++;
-                //    }
-                //}
-
                 var lvi = new ListViewItem
                 {
                     Checked = computeDevice.Enabled,
@@ -145,21 +139,14 @@ namespace NiceHashMiner.Forms.Components
                 {
                     lvi.SubItems.Add(new ListViewItem.ListViewSubItem());
                 }
-
-                //lvi.SubItems.Add(computeDevice.Name);
+                
                 listViewDevices.Items.Add(lvi);
-
-                //SetLvi(lvi, computeDevice.Index);
+                
                 endIndex = computeDevice.Index;
 
                 if (!allIndices.Contains(computeDevice.Index))
                     inactiveIndices.Add(computeDevice.Index);
             }
-
-            //if (endIndex > 0 && _indexTotals.Count > lastIndex && allIndices.Contains(endIndex))
-            //{
-            //    SetTotalRow(_indexTotals[lastIndex], endIndex, numItems);
-            //}
 
             foreach (var group in listViewDevices.Groups)
             {
@@ -234,27 +221,11 @@ namespace NiceHashMiner.Forms.Components
             fiatHeader.Text = CurrencyPerTimeUnit();
         }
 
-        private static string CurrencyPerTimeUnit()
-        {
-            return FormatPerTimeUnit(ExchangeRateApi.ActiveDisplayCurrency);
-        }
-
-        private static string FormatPerTimeUnit(string unit)
-        {
-            var timeUnit = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-            return $"{unit}/{timeUnit}";
-        }
-
         protected override void DevicesListViewEnableControl_Resize(object sender, EventArgs e)
         {
         }
 
         #endregion
-
-        private static ListViewGroup CreateDefaultGroup()
-        {
-            return new ListViewGroup(DefaultKey, International.GetText("Form_DevicesListViewSpeed_Disabled"));
-        }
 
         #region Optional Headers
 
@@ -325,7 +296,7 @@ namespace NiceHashMiner.Forms.Components
             item.SubItems[start + index].Text = value.ToString();
         }
 
-        private void SetPowerText(ListViewItem lvi, double powerUsage, double powerCost, double? profit)
+        private static void SetPowerText(ListViewItem lvi, double powerUsage, double powerCost, double? profit)
         {
             if (!ShowPowerCols) return;
             if (lvi.SubItems.Count <= 7) return;
@@ -400,32 +371,6 @@ namespace NiceHashMiner.Forms.Components
             UpdateListView();
         }
 
-        private void UpdateRowInfo(ListViewItem item, double speed, double secSpeed, double revenue, double profit,
-            double power, double powerUsage)
-        {
-            try
-            {
-                item.SubItems[Speed].Text = Helpers.FormatSpeedOutput(speed);
-                if (secSpeed > 0)
-                    item.SubItems[SecSpeed].Text = Helpers.FormatSpeedOutput(secSpeed);
-
-                var fiat = ExchangeRateApi.ConvertFromBtc(profit * TimeFactor.TimeUnit);
-                if (ShowPowerCols)
-                {
-                    item.SubItems[Profit].Text = (revenue * 1000 * TimeFactor.TimeUnit).ToString("F4");
-                    item.SubItems[Fiat].Text = ExchangeRateApi.ConvertFromBtc(revenue * TimeFactor.TimeUnit).ToString("F2");
-                    var powerCost = ExchangeRateApi.ConvertFromBtc(power * TimeFactor.TimeUnit);
-                    SetPowerText(item, powerUsage, powerCost, fiat);
-                }
-                else
-                {
-                    item.SubItems[Profit].Text = (profit * 1000 * TimeFactor.TimeUnit).ToString("F4");
-                    item.SubItems[Fiat].Text = fiat.ToString("F2");
-                }
-            }
-            catch { }
-        }
-
         public void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
         {
             Enabled = true;
@@ -433,17 +378,21 @@ namespace NiceHashMiner.Forms.Components
             // Ensure we have disabled group
             if (listViewDevices.Groups[DefaultKey] == null)
             {
-                _ignoreChecks = true;
+                _ignoreChecks = true;  // For some reason without this it will enable some checkboxes
                 listViewDevices.Groups.Clear();
-                listViewDevices.Groups.Add(CreateDefaultGroup());
+                var disGrp = new ListViewGroup(DefaultKey, International.GetText("Form_DevicesListViewSpeed_Disabled"));
+                listViewDevices.Groups.Add(disGrp);
                 _ignoreChecks = false;
             }
 
+            // ID for algo/miner combo
             var key = string.Join(",", iApiData.DeviceIndices);
+            // If index is not in any of the groups of indices
             if (!_indexTotals.Any(l => iApiData.DeviceIndices.All(l.Contains)))
             {
                 _indexTotals.Add(new List<int>(iApiData.DeviceIndices));
             }
+            // Make group for this algo/miner combo if not made already
             if (listViewDevices.Groups[key] == null)
             {
                 var name = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(iApiData.AlgorithmID, iApiData.SecondaryAlgorithmID));
@@ -462,15 +411,18 @@ namespace NiceHashMiner.Forms.Components
 
                 if (item.Tag is List<int> indices && indices.Same(iApiData.DeviceIndices))
                 {
+                    // This is a total row
                     UpdateRowInfo(item, iApiData.Speed, iApiData.SecondarySpeed, iApiData.Revenue, iApiData.Profit, iApiData.PowerCost, iApiData.PowerUsage);
                 }
                 else if (item.Tag is ComputeDevice dev && iApiData.DeviceIndices.Any(i => i == dev.Index))
                 {
+                    // This is a dev row
                     iApiData.PowerMap.TryGetValue(dev.Index, out var power);
                     var powerCostBtc = iApiData.PowerCostForIndex(dev.Index);
 
                     if (iApiData is SplitApiData split)
                     {
+                        // Here we know per-device profits from API
                         split.Speeds.TryGetValue(dev.Index, out var speed);
                         split.SecondarySpeeds.TryGetValue(dev.Index, out var secSpeed);
 
@@ -478,6 +430,7 @@ namespace NiceHashMiner.Forms.Components
                     }
                     else
                     {
+                        // Here we only know total profit from miner
                         var powerCost = ExchangeRateApi.ConvertFromBtc(powerCostBtc * TimeFactor.TimeUnit);
 
                         SetPowerText(item, power, powerCost, null);
@@ -486,18 +439,6 @@ namespace NiceHashMiner.Forms.Components
             }
 
             GlobalRates?.UpdateGlobalRate();
-
-            //var header = AlgorithmNiceHashNames.GetName(iApiData.AlgorithmID) + $"    {Helpers.FormatSpeedOutput(iApiData.Speed)}";
-            //if (iApiData.SecondaryAlgorithmID != AlgorithmType.NONE)
-            //{
-            //    header += $"    {Helpers.FormatSpeedOutput(iApiData.SecondarySpeed)}";
-            //}
-
-            //header += $"    {FormatPayingOutput(paying)}    {ExchangeRateApi.GetCurrencyString(paying * FactorTimeUnit)}";
-
-            //listViewDevices.BeginUpdate();
-            //listViewDevices.Groups[key].Header = header;
-            //listViewDevices.EndUpdate();
         }
 
         public void ShowNotProfitable(string msg)
@@ -514,6 +455,49 @@ namespace NiceHashMiner.Forms.Components
 
         public void ClearRates(int groupCount)
         {
+        }
+
+        #endregion
+
+        #region Helpers
+        
+        private static string CurrencyPerTimeUnit()
+        {
+            return FormatPerTimeUnit(ExchangeRateApi.ActiveDisplayCurrency);
+        }
+
+        private static string FormatPerTimeUnit(string unit)
+        {
+            var timeUnit = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+            return $"{unit}/{timeUnit}";
+        }
+        
+        private static void UpdateRowInfo(ListViewItem item, double speed, double secSpeed, double revenue, double profit,
+            double power, double powerUsage)
+        {
+            try
+            {
+                item.SubItems[Speed].Text = Helpers.FormatSpeedOutput(speed);
+                if (secSpeed > 0)
+                    item.SubItems[SecSpeed].Text = Helpers.FormatSpeedOutput(secSpeed);
+
+                var fiat = ExchangeRateApi.ConvertFromBtc(profit * TimeFactor.TimeUnit);
+                if (ShowPowerCols)
+                {
+                    // When showing power cols, the default "profit" header changes to revenue
+                    // The power headers then explain cost of power and real profit after subtracting this
+                    item.SubItems[Profit].Text = (revenue * 1000 * TimeFactor.TimeUnit).ToString("F4");
+                    item.SubItems[Fiat].Text = ExchangeRateApi.ConvertFromBtc(revenue * TimeFactor.TimeUnit).ToString("F2");
+                    var powerCost = ExchangeRateApi.ConvertFromBtc(power * TimeFactor.TimeUnit);
+                    SetPowerText(item, powerUsage, powerCost, fiat);
+                }
+                else
+                {
+                    item.SubItems[Profit].Text = (profit * 1000 * TimeFactor.TimeUnit).ToString("F4");
+                    item.SubItems[Fiat].Text = fiat.ToString("F2");
+                }
+            }
+            catch { }
         }
 
         #endregion
