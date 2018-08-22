@@ -118,7 +118,7 @@ namespace NiceHashMiner.Configs.Data
         public bool ShowPowerColumns = false;
         public bool ShowDiagColumns = true;
 
-        public Point MainFormSize = new Point(1682, 910);
+        public Point MainFormSize = new Point(1000, 400);
 
         public bool UseEthlargement = false;
 
