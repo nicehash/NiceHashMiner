@@ -47,6 +47,7 @@
             this.listViewAlgorithms.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listViewAlgorithms.FullRowSelect = true;
             this.listViewAlgorithms.GridLines = true;
+            this.listViewAlgorithms.HideSelection = false;
             this.listViewAlgorithms.Location = new System.Drawing.Point(0, 0);
             this.listViewAlgorithms.MultiSelect = false;
             this.listViewAlgorithms.Name = "listViewAlgorithms";

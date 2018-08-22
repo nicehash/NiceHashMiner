@@ -119,7 +119,7 @@
             this.richTextBoxExtraLaunchParameters.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBoxExtraLaunchParameters.Location = new System.Drawing.Point(3, 16);
             this.richTextBoxExtraLaunchParameters.Name = "richTextBoxExtraLaunchParameters";
-            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(211, 82);
+            this.richTextBoxExtraLaunchParameters.Size = new System.Drawing.Size(211, 76);
             this.richTextBoxExtraLaunchParameters.TabIndex = 0;
             this.richTextBoxExtraLaunchParameters.Text = "";
             // 
