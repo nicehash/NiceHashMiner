@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace NiceHashMiner.Benchmarking
 {
@@ -18,22 +20,28 @@ namespace NiceHashMiner.Benchmarking
         private const double MinDeviation = 0.05;  // 5%
         
         private readonly List<double> _measuredSpeeds;
+        private readonly Stopwatch _stopwatch;
 
         public BenchChecker()
         {
             _measuredSpeeds = new List<double>();
+            _stopwatch = new Stopwatch();
         }
 
         public void AppendSpeed(double speed)
         {
             _measuredSpeeds.Add(speed);
+            _stopwatch.Start();
         }
 
-        public BenchDeviationInfo FinalizeIsDeviant(double benchSpeed, double time, double prevWeight)
+        public void Stop() => _stopwatch.Stop();
+
+        public BenchDeviationInfo FinalizeIsDeviant(double benchSpeed, double prevWeight)
         {
+            Stop();
             // Ignore the first values if they are 0
             var speed = _measuredSpeeds.SkipWhile(s => s <= 0).Average();
-            var curWeight = Math.Min(time / MaxTime, 1);
+            var curWeight = Math.Min(_stopwatch.Elapsed.TotalSeconds / MaxTime, 1);
 
             if ((benchSpeed <= 0 || Math.Abs(speed / benchSpeed - 1) > MinDeviation) &&
                 (curWeight >= prevWeight || prevWeight > 1 || prevWeight < 0))

@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
@@ -57,6 +58,9 @@ namespace NiceHashMiner.Miners
         public bool IsMiningEnabled => _miningDevices.Count > 0;
 
         private bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
+
+        private readonly Dictionary<Algorithm, BenchChecker> _benchCheckers = new Dictionary<Algorithm, BenchChecker>();
+        private readonly Dictionary<DualAlgorithm, BenchChecker> _dualBenchCheckers = new Dictionary<DualAlgorithm, BenchChecker>();
 
         public List<int> ActiveDeviceIndexes
         {
@@ -536,6 +540,13 @@ namespace NiceHashMiner.Miners
                                 _ethminerAmdPaused = toStop;
                             }
                         }
+
+                        if (toStop.Miner.MiningSetup.MiningPairs.Count != 1) continue;
+                        var algo = toStop.Miner.MiningSetup.MiningPairs.First().Algorithm;
+                        if (_benchCheckers.TryGetValue(algo, out var checker))
+                            checker.Stop();
+                        if (algo is DualAlgorithm dual && _dualBenchCheckers.TryGetValue(dual, out var sChecker))
+                            sChecker.Stop();
                     }
 
                     // start new miners
@@ -616,6 +627,27 @@ namespace NiceHashMiner.Miners
                         groupMiners.CurrentRate = 0;
                         // set empty
                         ad = new ApiData(groupMiners.AlgorithmType, groupMiners.DevIndexes);
+                    }
+
+                    // Don't attempt unless card is mining alone
+                    if (m.MiningSetup.MiningPairs.Count == 1)
+                    {
+                        var algo = m.MiningSetup.MiningPairs[0].Algorithm;
+                        if (!_benchCheckers.TryGetValue(algo, out var checker))
+                        {
+                            checker = new BenchChecker();
+                            _benchCheckers[algo] = checker;
+                        }
+                        checker.AppendSpeed(ad.Speed);
+
+                        if (algo is DualAlgorithm dual)
+                        {
+                            if (!_dualBenchCheckers.TryGetValue(dual, out var sChecker)) {
+                                sChecker = new BenchChecker();
+                                _dualBenchCheckers[dual] = sChecker;
+                            }
+                            sChecker.AppendSpeed(ad.SecondarySpeed);
+                        }
                     }
 
                     // Update GUI
