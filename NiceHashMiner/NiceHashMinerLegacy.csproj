@@ -98,6 +98,8 @@
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithms\Algorithm.cs" />
     <Compile Include="Algorithms\DualAlgorithm.cs" />
+    <Compile Include="Benchmarking\BenchChecker.cs" />
+    <Compile Include="Benchmarking\BenchDeviationInfo.cs" />
     <Compile Include="Benchmarking\BenchHelpers\CpuBenchHelper.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
