@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Stats;
@@ -178,6 +179,32 @@ namespace NiceHashMiner.Miners
             _preventSleepTimer.Stop();
             _internetCheckTimer.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
+
+            foreach (var algo in _benchCheckers.Keys)
+            {
+                var info = _benchCheckers[algo].FinalizeIsDeviant(algo.BenchmarkSpeed, 0);
+                if (!info.IsDeviant) continue;
+                var result = MessageBox.Show(string.Format(
+                    "Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?",
+                    algo.NiceHashID, info.Deviation, algo.BenchmarkSpeed), "Deviant Algorithm", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    algo.BenchmarkSpeed = info.Deviation;
+                }
+            }
+
+            foreach (var algo in _dualBenchCheckers.Keys)
+            {
+                var info = _dualBenchCheckers[algo].FinalizeIsDeviant(algo.SecondaryBenchmarkSpeed, 0);
+                if (!info.IsDeviant) continue;
+                var result = MessageBox.Show(string.Format(
+                    "Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?",
+                    algo.DualNiceHashID, info.Deviation, algo.SecondaryBenchmarkSpeed), "Deviant Algorithm", MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    algo.SecondaryBenchmarkSpeed = info.Deviation;
+                }
+            }
         }
 
         public void StopAllMinersNonProfitable()
