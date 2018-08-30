@@ -184,9 +184,10 @@ namespace NiceHashMiner.Miners
             {
                 var info = _benchCheckers[algo].FinalizeIsDeviant(algo.BenchmarkSpeed, 0);
                 if (!info.IsDeviant) continue;
-                var result = MessageBox.Show(string.Format(
-                    "Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?",
-                    algo.NiceHashID, info.Deviation, algo.BenchmarkSpeed), "Deviant Algorithm", MessageBoxButtons.YesNo);
+                var result = MessageBox.Show(
+                    International.GetText("BenchChecker_SingleDeviant", algo.NiceHashID, info.Deviation, algo.BenchmarkSpeed), 
+                    International.GetText("BenchChecker_DeviantTitle"),
+                    MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
                     algo.BenchmarkSpeed = info.Deviation;
@@ -197,9 +198,10 @@ namespace NiceHashMiner.Miners
             {
                 var info = _dualBenchCheckers[algo].FinalizeIsDeviant(algo.SecondaryBenchmarkSpeed, 0);
                 if (!info.IsDeviant) continue;
-                var result = MessageBox.Show(string.Format(
-                    "Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?",
-                    algo.DualNiceHashID, info.Deviation, algo.SecondaryBenchmarkSpeed), "Deviant Algorithm", MessageBoxButtons.YesNo);
+                var result = MessageBox.Show(
+                    International.GetText("BenchChecker_DualDeviant", algo.DualNiceHashID, info.Deviation, algo.SecondaryBenchmarkSpeed), 
+                    International.GetText("BenchChecker_DeviantTitle"),
+                    MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
                     algo.SecondaryBenchmarkSpeed = info.Deviation;

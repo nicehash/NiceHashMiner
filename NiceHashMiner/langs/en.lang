@@ -413,6 +413,10 @@
         "Form_DevicesListViewSpeed_Hs": "H/s",
         "Form_DevicesListViewSpeed_SecondaryHs": "H/s (Secondary)",
         "Form_DevicesListViewSpeed_Total": "Total",
-        "Form_DevicesListViewSpeed_Disabled": "Disabled" 
+        "Form_DevicesListViewSpeed_Disabled": "Disabled",
+
+        "BenchChecker_SingleDeviant": "Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?",
+        "BenchChecker_DualDeviant": "Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?",
+        "BenchChecker_DeviantTitle": "Deviant Algorithm" 
     }
 }
