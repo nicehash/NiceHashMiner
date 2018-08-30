@@ -251,7 +251,7 @@
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
     <Compile Include="International.cs" />
     <Compile Include="Utils\Extensions.cs" />
-    <Compile Include="Miners\IdleChecking\IdleChecker.cs" />
+    <Compile Include="Miners\IdleChecking\IdleCheckerManager.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />

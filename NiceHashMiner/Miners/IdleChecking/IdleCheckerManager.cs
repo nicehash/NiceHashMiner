@@ -4,11 +4,11 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.IdleChecking
 {
-    internal static class IdleChecker
+    internal static class IdleCheckerManager
     {
         public static event EventHandler<IdleChangedEventArgs> IdleStatusChanged;
 
-        static IdleChecker()
+        static IdleCheckerManager()
         {
             //StartLockCheck();
         }
