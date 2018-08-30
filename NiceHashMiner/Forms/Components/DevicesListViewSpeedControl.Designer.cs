@@ -41,7 +41,8 @@
             this.secondarySpeedHeader,
             this.profitHeader,
             this.fiatHeader});
-            this.listViewDevices.Size = new System.Drawing.Size(970, 466);
+            this.listViewDevices.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listViewDevices.Size = new System.Drawing.Size(647, 303);
             // 
             // devicesHeader
             // 
@@ -73,9 +74,9 @@
             // 
             // DevicesListViewSpeedControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.Name = "DevicesListViewSpeedControl";
             this.Controls.SetChildIndex(this.listViewDevices, 0);
             this.ResumeLayout(false);
