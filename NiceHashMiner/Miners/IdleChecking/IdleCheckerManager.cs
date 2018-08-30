@@ -6,40 +6,20 @@ namespace NiceHashMiner.Miners.IdleChecking
 {
     internal static class IdleCheckerManager
     {
-        public static event EventHandler<IdleChangedEventArgs> IdleStatusChanged;
+        private static IdleChecker _checker;
 
         static IdleCheckerManager()
         {
             //StartLockCheck();
         }
 
-        public static void StartIdleCheck(IdleCheckType type)
+        public static void StartIdleCheck(IdleCheckType type, EventHandler<IdleChangedEventArgs> evnt)
         {
             if (type == IdleCheckType.SessionLock)
-                StartLockCheck();
-            else
-                StopLockCheck();
-        }
+                _checker = new SessionLockChecker();
 
-        private static void StartLockCheck()
-        {
-            SystemEvents.SessionSwitch += SystemEventsOnSessionSwitch;
-        }
-
-        private static void StopLockCheck()
-        {
-            SystemEvents.SessionSwitch -= SystemEventsOnSessionSwitch;
-        }
-
-        private static void SystemEventsOnSessionSwitch(object sender, SessionSwitchEventArgs e)
-        {
-            FireStatusEvent(e.Reason == SessionSwitchReason.SessionLock);
-        }
-
-        private static void FireStatusEvent(bool isIdle)
-        {
-            Helpers.ConsolePrint("[IDLE]", $"Idle status changed to idling = {isIdle}");
-            IdleStatusChanged?.Invoke(null, new IdleChangedEventArgs(isIdle));
+            _checker.IdleStatusChanged += evnt;
+            _checker.StartChecking();
         }
     }
 }

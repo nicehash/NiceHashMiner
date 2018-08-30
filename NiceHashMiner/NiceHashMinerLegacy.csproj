@@ -134,7 +134,9 @@
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Interfaces\IGlobalRatesUpdate.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
+    <Compile Include="Miners\IdleChecking\IdleChecker.cs" />
     <Compile Include="Miners\IdleChecking\IdleStatusEventArgs.cs" />
+    <Compile Include="Miners\IdleChecking\SessionLockChecker.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigPool.cs" />
