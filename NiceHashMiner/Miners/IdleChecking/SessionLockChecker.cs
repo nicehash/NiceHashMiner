@@ -21,6 +21,7 @@ namespace NiceHashMiner.Miners.IdleChecking
 
         protected override void Dispose(bool disposing)
         {
+            // This must be called to prevent mem leak
             SystemEvents.SessionSwitch -= SystemEventsOnSessionSwitch;
         }
     }

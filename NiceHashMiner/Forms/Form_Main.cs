@@ -13,6 +13,7 @@ using System.Linq;
 using System.Management;
 using System.Threading;
 using System.Windows.Forms;
+using NiceHashMiner.Miners.IdleChecking;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
@@ -185,22 +186,17 @@ namespace NiceHashMiner
             _loadingScreen = null;
             Enabled = true;
 
-            _idleCheck = new Timer();
-            _idleCheck.Tick += IdleCheck_Tick;
-            _idleCheck.Interval = 500;
-            _idleCheck.Start();
+            IdleCheckerManager.StartIdleCheck(IdleCheckType.SessionLock, IdleCheck);
         }
 
 
-        private void IdleCheck_Tick(object sender, EventArgs e)
+        private void IdleCheck(object sender, IdleChangedEventArgs e)
         {
             if (!ConfigManager.GeneralConfig.StartMiningWhenIdle || _isManuallyStarted) return;
 
-            var msIdle = Helpers.GetIdleTime();
-
             if (_minerStatsCheck.Enabled)
             {
-                if (msIdle < (ConfigManager.GeneralConfig.MinIdleSeconds * 1000))
+                if (!e.IsIdle)
                 {
                     StopMining();
                     Helpers.ConsolePrint("NICEHASH", "Resumed from idling");
@@ -208,7 +204,7 @@ namespace NiceHashMiner
             }
             else
             {
-                if (_benchmarkForm == null && (msIdle > (ConfigManager.GeneralConfig.MinIdleSeconds * 1000)))
+                if (_benchmarkForm == null && e.IsIdle)
                 {
                     Helpers.ConsolePrint("NICEHASH", "Entering idling state");
                     if (StartMining(false) != StartMiningReturnType.StartMining)
