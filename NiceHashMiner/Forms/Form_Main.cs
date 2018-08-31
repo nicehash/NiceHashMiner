@@ -186,7 +186,7 @@ namespace NiceHashMiner
             _loadingScreen = null;
             Enabled = true;
 
-            IdleCheckManager.StartIdleCheck(IdleCheckType.SessionLock, IdleCheck);
+            IdleCheckManager.StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
         }
 
 
@@ -928,6 +928,7 @@ namespace NiceHashMiner
             {
                 InitLocalization();
                 InitMainConfigGuiData();
+                AfterLoadComplete();
             }
         }
 
