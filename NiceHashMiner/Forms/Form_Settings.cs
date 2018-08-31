@@ -466,10 +466,9 @@ namespace NiceHashMiner.Forms
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
 
             label_IdleType.Text = International.GetText("Form_Settings_IdleType");
-            foreach (var type in Enum.GetValues(typeof(IdleCheckType)))
+            foreach (var type in Enum.GetNames(typeof(IdleCheckType)))
             {
-                var i = (int) type;
-                comboBox_IdleType.Items[i] = International.GetText($"Form_Settings_IdleType_{Enum.GetName(typeof(IdleCheckType), i)}");
+                comboBox_IdleType.Items.Add(International.GetText($"Form_Settings_IdleType_{type}"));
             }
             comboBox_IdleType.Enabled = ConfigManager.GeneralConfig.StartMiningWhenIdle;
         }
