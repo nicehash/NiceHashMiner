@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IdleChecking
 {
@@ -14,7 +10,7 @@ namespace NiceHashMiner.Miners.IdleChecking
 
         protected void FireStatusEvent(bool isIdle)
         {
-            Helpers.ConsolePrint("[IDLE]", $"Idle status changed to idling = {isIdle}");
+            Helpers.ConsolePrint("IDLE", $"Idle status changed to idling = {isIdle}");
             IdleStatusChanged?.Invoke(null, new IdleChangedEventArgs(isIdle));
         }
 

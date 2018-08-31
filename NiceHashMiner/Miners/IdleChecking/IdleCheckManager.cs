@@ -1,10 +1,9 @@
-﻿using System;
-using Microsoft.Win32;
-using NiceHashMinerLegacy.Common.Enums;
+﻿using NiceHashMinerLegacy.Common.Enums;
+using System;
 
 namespace NiceHashMiner.Miners.IdleChecking
 {
-    internal static class IdleCheckerManager
+    internal static class IdleCheckManager
     {
         private static IdleChecker _checker;
 

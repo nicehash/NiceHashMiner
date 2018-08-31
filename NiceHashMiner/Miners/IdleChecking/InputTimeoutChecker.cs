@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NiceHashMiner.Configs;
 using System.Timers;
-using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Miners.IdleChecking
 {

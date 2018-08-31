@@ -135,7 +135,7 @@
     <Compile Include="Interfaces\IGlobalRatesUpdate.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\IdleChecking\IdleChecker.cs" />
-    <Compile Include="Miners\IdleChecking\IdleStatusEventArgs.cs" />
+    <Compile Include="Miners\IdleChecking\IdleChangedEventArgs.cs" />
     <Compile Include="Miners\IdleChecking\InputTimeoutChecker.cs" />
     <Compile Include="Miners\IdleChecking\SessionLockChecker.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
@@ -254,7 +254,7 @@
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
     <Compile Include="International.cs" />
     <Compile Include="Utils\Extensions.cs" />
-    <Compile Include="Miners\IdleChecking\IdleCheckerManager.cs" />
+    <Compile Include="Miners\IdleChecking\IdleCheckManager.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />
