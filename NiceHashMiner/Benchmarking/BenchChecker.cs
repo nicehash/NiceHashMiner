@@ -40,7 +40,12 @@ namespace NiceHashMiner.Benchmarking
         {
             Stop();
             // Ignore the first values if they are 0
-            var speed = _measuredSpeeds.SkipWhile(s => s <= 0).Average();
+            var speeds = _measuredSpeeds.SkipWhile(s => s <= 0).ToList();
+
+            if (speeds.Count == 0) return new BenchDeviationInfo(prevWeight);
+
+            var speed = speeds.Average();
+
             var curWeight = Math.Min(_stopwatch.Elapsed.TotalSeconds / MaxTime, 1);
 
             if ((benchSpeed <= 0 || Math.Abs(speed / benchSpeed - 1) > MinDeviation) &&
