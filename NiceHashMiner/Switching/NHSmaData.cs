@@ -96,7 +96,7 @@ namespace NiceHashMiner.Switching
                 {
                     if (_currentSma.ContainsKey(algo))
                     {
-                        _currentSma[algo].Paying = newSma[algo];
+                        _currentSma[algo].Paying = 1;  // newSma[algo];
                     }
                 }
 

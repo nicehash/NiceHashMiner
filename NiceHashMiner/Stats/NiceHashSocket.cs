@@ -49,23 +49,28 @@ namespace NiceHashMiner.Stats
         {
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
+            if (btc != null) _login.btc = btc;
+            if (worker != null) _login.worker = worker;
+            if (group != null) _login.group = group;
+
             try
             {
                 if (_webSocket == null)
                 {
                     _webSocket = new WebSocket(_address, true);
-                } else
+
+                    _webSocket.OnOpen += Login;
+                    _webSocket.OnMessage += ReceiveCallback;
+                    _webSocket.OnError += ErrorCallback;
+                    _webSocket.OnClose += CloseCallback;
+                    _webSocket.Log.Level = LogLevel.Debug;
+                    _webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
+                    _webSocket.EnableRedirection = true;
+                }
+                else
                 {
                     _webSocket.Close();
                 }
-
-                _webSocket.OnOpen += (sender, args) => Login(btc, worker, group);
-                _webSocket.OnMessage += ReceiveCallback;
-                _webSocket.OnError += ErrorCallback;
-                _webSocket.OnClose += CloseCallback;
-                _webSocket.Log.Level = LogLevel.Debug;
-                _webSocket.Log.Output = (data, s) => Helpers.ConsolePrint("SOCKET", data.ToString());
-                _webSocket.EnableRedirection = true;
                 _webSocket.Connect();
                 _connectionEstablished = true;
             } catch (Exception e)
@@ -90,13 +95,10 @@ namespace NiceHashMiner.Stats
             AttemptReconnect();
         }
 
-        private void Login(string btc, string worker, string group)
+        private void Login(object sender, EventArgs e)
         {
             try
             {
-                if (btc != null) _login.btc = btc;
-                if (worker != null) _login.worker = worker;
-                if (group != null) _login.group = group;
                 _login.rig = Globals.RigID;
                 var loginJson = JsonConvert.SerializeObject(_login);
                 SendData(loginJson);
