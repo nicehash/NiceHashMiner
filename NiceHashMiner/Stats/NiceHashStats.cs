@@ -451,7 +451,7 @@ namespace NiceHashMiner.Stats
                     };
 
                     // Status (dev type and mining/benching/disabled
-                    var status = ((int) device.DeviceType + 1) << 2;
+                    var status = ((int) device.DeviceType + 1) << 3;
 
                     if (activeIDs.Contains(device.Index))
                         status += 2;

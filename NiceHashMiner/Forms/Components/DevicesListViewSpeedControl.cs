@@ -345,9 +345,16 @@ namespace NiceHashMiner.Forms.Components
 
         public void ClearRatesAll()
         {
-            _indexTotals.Clear();
-            listViewDevices.Groups.Clear();
-            UpdateListView();
+            if (InvokeRequired)
+            {
+                Invoke((Action) ClearRatesAll);
+            }
+            else
+            {
+                _indexTotals.Clear();
+                listViewDevices.Groups.Clear();
+                UpdateListView();
+            }
         }
 
         private void UpdateRowInfo(ListViewItem item, double speed, double secSpeed, double revenue, double profit,

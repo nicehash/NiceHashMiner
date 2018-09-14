@@ -41,7 +41,7 @@ namespace NiceHashMiner.Devices
                 var type = DeviceType == DeviceType.CPU ? 1 : 2;
                 var uuid = UUID.V5(UUID.Nil().AsGuid(), Uuid);
                 var b64 = Convert.ToBase64String(uuid.AsGuid().ToByteArray());
-                return $"{type}-{b64.Trim('=')}";
+                return $"{type}-{b64.Trim('=').Replace('/', '-')}";
             }
         }
 
