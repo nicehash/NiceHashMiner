@@ -348,6 +348,7 @@ namespace NiceHashMiner.Forms
             foreach (var cDev in ComputeDeviceManager.Available.Devices)
             foreach (var algorithm in cDev.GetAlgorithmSettings())
                 algorithm.ClearBenchmarkPending();
+            BenchmarkManager.BenchDevAlgoQueue.Clear();
 
             // save already benchmarked algorithms
             ConfigManager.CommitBenchmarks();
