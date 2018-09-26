@@ -371,31 +371,6 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        private void UpdateRowInfo(ListViewItem item, double speed, double secSpeed, double revenue, double profit,
-            double power, double powerUsage)
-        {
-            try
-            {
-                item.SubItems[Speed].Text = Helpers.FormatSpeedOutput(speed);
-                if (secSpeed > 0)
-                    item.SubItems[SecSpeed].Text = Helpers.FormatSpeedOutput(secSpeed);
-
-                var fiat = ExchangeRateApi.ConvertFromBtc(profit * TimeFactor.TimeUnit);
-                if (ShowPowerCols)
-                {
-                    item.SubItems[Profit].Text = (revenue * 1000 * TimeFactor.TimeUnit).ToString("F4");
-                    item.SubItems[Fiat].Text = ExchangeRateApi.ConvertFromBtc(revenue * TimeFactor.TimeUnit).ToString("F2");
-                    var powerCost = ExchangeRateApi.ConvertFromBtc(power * TimeFactor.TimeUnit);
-                    SetPowerText(item, powerUsage, powerCost, fiat);
-                }
-                else
-                {
-                    item.SubItems[Profit].Text = (profit * 1000 * TimeFactor.TimeUnit).ToString("F4");
-                    item.SubItems[Fiat].Text = fiat.ToString("F2");
-                }
-            }
-        }
-
         public void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
         {
             Enabled = true;
