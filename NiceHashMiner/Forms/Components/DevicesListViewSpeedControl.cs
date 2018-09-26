@@ -359,9 +359,16 @@ namespace NiceHashMiner.Forms.Components
 
         public void ClearRatesAll()
         {
-            _indexTotals.Clear();
-            listViewDevices.Groups.Clear();
-            UpdateListView();
+            if (InvokeRequired)
+            {
+                Invoke((Action) ClearRatesAll);
+            }
+            else
+            {
+                _indexTotals.Clear();
+                listViewDevices.Groups.Clear();
+                UpdateListView();
+            }
         }
 
         public void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
@@ -448,6 +455,7 @@ namespace NiceHashMiner.Forms.Components
 
         public void ClearRates(int groupCount)
         {
+            ClearRatesAll();
         }
 
         #endregion
@@ -471,8 +479,7 @@ namespace NiceHashMiner.Forms.Components
             try
             {
                 item.SubItems[Speed].Text = Helpers.FormatSpeedOutput(speed);
-                if (secSpeed > 0)
-                    item.SubItems[SecSpeed].Text = Helpers.FormatSpeedOutput(secSpeed);
+                item.SubItems[SecSpeed].Text = secSpeed > 0 ? Helpers.FormatSpeedOutput(secSpeed) : "";
 
                 var fiat = ExchangeRateApi.ConvertFromBtc(profit * TimeFactor.TimeUnit);
                 if (ShowPowerCols)

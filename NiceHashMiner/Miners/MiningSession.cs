@@ -233,7 +233,8 @@ namespace NiceHashMiner.Miners
                 _ethminerAmdPaused = null;
             }
 
-            _ratesComunication?.ClearRates(-1);
+            //_ratesComunication?.ClearRates(-1);
+            _ratesComunication?.ClearRatesAll();
         }
 
         #endregion Start/Stop
@@ -546,6 +547,9 @@ namespace NiceHashMiner.Miners
 
                 if ((toStopGroupMiners.Values.Count > 0) || (toRunNewGroupMiners.Values.Count > 0))
                 {
+                    // There is a change in algorithms, change GUI
+                    _ratesComunication?.ClearRatesAll();
+
                     var stringBuilderPreviousAlgo = new StringBuilder();
                     var stringBuilderCurrentAlgo = new StringBuilder();
                     var stringBuilderNoChangeAlgo = new StringBuilder();
@@ -622,7 +626,7 @@ namespace NiceHashMiner.Miners
 
         public async Task MinerStatsCheck()
         {
-            _ratesComunication.ClearRates(_runningGroupMiners.Count);
+            //_ratesComunication.ClearRates(_runningGroupMiners.Count);
             var checks = new List<GroupMiner>(_runningGroupMiners.Values);
             try
             {
