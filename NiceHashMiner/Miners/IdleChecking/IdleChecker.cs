@@ -1,0 +1,34 @@
+﻿using System;
+
+namespace NiceHashMiner.Miners.IdleChecking
+{
+    internal abstract class IdleChecker : IDisposable
+    {
+        public event EventHandler<IdleChangedEventArgs> IdleStatusChanged;
+
+        public abstract void StartChecking();
+
+        protected void FireStatusEvent(bool isIdle)
+        {
+            Helpers.ConsolePrint("IDLE", $"Idle status changed to idling = {isIdle}");
+            IdleStatusChanged?.Invoke(null, new IdleChangedEventArgs(isIdle));
+        }
+
+        #region IDisposable Implementation
+
+        protected abstract void Dispose(bool disposing);
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~IdleChecker()
+        {
+            Dispose(false);
+        }
+
+        #endregion
+    }
+}

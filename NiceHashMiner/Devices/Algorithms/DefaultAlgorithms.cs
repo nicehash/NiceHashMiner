@@ -82,7 +82,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.sgminer,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.NeoScrypt, "neoscrypt")
+                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.NeoScrypt, "neoscrypt", false)
                     {
                         ExtraLaunchParameters =
                             DefaultParam +
@@ -92,19 +92,19 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         ExtraLaunchParameters = RemDis + "--xintensity 512 -w 192 -g 1"
                     },
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.Decred, "decred")
+                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.Decred, "decred", false)
                     {
                         ExtraLaunchParameters = RemDis + "--gpu-threads 1 --xintensity 256 --lookup-gap 2 --worksize 64"
                     },
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.Lbry, "lbry")
+                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.Lbry, "lbry", false)
                     {
                         ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2"
                     },
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal")
+                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal", false)
                     {
                         ExtraLaunchParameters = DefaultParam + "--intensity 21 -w 64 -g 2"
                     },
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "sibcoin-mod")
+                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "sibcoin-mod", false)
                     {
                         ExtraLaunchParameters = DefaultParam + "--intensity 16 -w 64 -g 2"
                     },
@@ -137,8 +137,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.Prospector,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt"),
-                    new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia")
+                    new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt", false),
+                    new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia", false)
                 }
             }
         }.ConcatDictList(All, Gpu);
@@ -155,11 +155,11 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.NeoScrypt, "neoscrypt"),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv2, "lyra2v2"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Decred, "decred"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lbry, "lbry"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib"),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Decred, "decred", false),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lbry, "lbry", false),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib", false),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia"),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia", false),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk"),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2z, "lyra2z"),
@@ -170,7 +170,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.ccminer_alexis,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.X11Gost, "sib"),
+                    new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.X11Gost, "sib", false),
                     new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.Keccak, "keccak")
                 }
             },

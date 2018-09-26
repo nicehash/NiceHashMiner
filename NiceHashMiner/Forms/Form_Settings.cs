@@ -327,6 +327,8 @@ namespace NiceHashMiner.Forms
             Text = International.GetText("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
+
+            SetToolTip("Form_Settings_ToolTip_IdleType", comboBox_IdleType, label_IdleType, pictureBox_IdleType);
         }
 
         private void SetToolTip(string internationalKey, params Control[] controls)
@@ -462,6 +464,13 @@ namespace NiceHashMiner.Forms
 
             checkBox_RunEthlargement.Text = International.GetText("Form_Settings_General_RunEthlargement");
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+
+            label_IdleType.Text = International.GetText("Form_Settings_IdleType");
+            foreach (var type in Enum.GetNames(typeof(IdleCheckType)))
+            {
+                comboBox_IdleType.Items.Add(International.GetText($"Form_Settings_IdleType_{type}"));
+            }
+            comboBox_IdleType.Enabled = ConfigManager.GeneralConfig.StartMiningWhenIdle;
         }
 
         private void InitializeGeneralTabCallbacks()
@@ -477,7 +486,7 @@ namespace NiceHashMiner.Forms
                 checkBox_ShowDriverVersionWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_DisableWindowsErrorReporting.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_ShowInternetConnectionWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_StartMiningWhenIdle.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                checkBox_StartMiningWhenIdle.CheckedChanged += CheckBox_MineOnIdle_CheckChanged;
                 checkBox_NVIDIAP0State.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_LogToFile.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_AutoStartMining.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -522,6 +531,7 @@ namespace NiceHashMiner.Forms
                 comboBox_ServiceLocation.Leave += GeneralComboBoxes_Leave;
                 comboBox_TimeUnit.Leave += GeneralComboBoxes_Leave;
                 comboBox_DagLoadMode.Leave += GeneralComboBoxes_Leave;
+                comboBox_IdleType.Leave += GeneralComboBoxes_Leave;
             }
 
             // CPU exceptions
@@ -634,6 +644,7 @@ namespace NiceHashMiner.Forms
                 comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
                 comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
+                comboBox_IdleType.SelectedIndex = (int) ConfigManager.GeneralConfig.IdleCheckType;
             }
         }
 
@@ -680,7 +691,6 @@ namespace NiceHashMiner.Forms
                 checkBox_DisableDetectionNVIDIA.Checked;
             ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD = checkBox_DisableDetectionAMD.Checked;
             ConfigManager.GeneralConfig.AutoScaleBTCValues = checkBox_AutoScaleBTCValues.Checked;
-            ConfigManager.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
             ConfigManager.GeneralConfig.ShowDriverVersionWarning = checkBox_ShowDriverVersionWarning.Checked;
             ConfigManager.GeneralConfig.DisableWindowsErrorReporting = checkBox_DisableWindowsErrorReporting.Checked;
             ConfigManager.GeneralConfig.ShowInternetConnectionWarning = checkBox_ShowInternetConnectionWarning.Checked;
@@ -837,6 +847,7 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
             ConfigManager.GeneralConfig.EthminerDagGenerationType =
                 (DagGenerationType) comboBox_DagLoadMode.SelectedIndex;
+            ConfigManager.GeneralConfig.IdleCheckType = (IdleCheckType) comboBox_IdleType.SelectedIndex;
         }
 
         private void ComboBox_CPU0_ForceCPUExtension_SelectedIndexChanged(object sender, EventArgs e)
@@ -1083,6 +1094,14 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
 
             textBox_IFTTTKey.Enabled = checkBox_UseIFTTT.Checked;
+        }
+
+        private void CheckBox_MineOnIdle_CheckChanged(object sender, EventArgs e)
+        {
+            if (!_isInitFinished) return;
+            IsChange = true;
+            ConfigManager.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
+            comboBox_IdleType.Enabled = checkBox_StartMiningWhenIdle.Checked;
         }
     }
 }

@@ -403,6 +403,25 @@
         "Form_Settings_General_SwitchProfitabilityThreshold": "Switch Profitability Threshold",
         "Form_Settings_ToolTip_SwitchProfitabilityThreshold": "Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]",
         "VirtualMemorySize_BAD": "NiceHash Miner Legacy recommends increasing virtual memory size so that all algorithms would work fine.",
-        "sgminer_precise_try": "Failed - try Precise"
+        "sgminer_precise_try": "Failed - try Precise",
+
+        "Form_DevicesListViewSpeed_PowerCost": "Power Cost ({0})", 
+        "Form_DevicesListViewSpeed_Profit": "Profit ({0})",
+        "Form_DevicesListViewSpeed_Load": "Load (%)",
+        "Form_DevicesListViewSpeed_Temp": "Temp (C)",
+        "Form_DevicesListViewSpeed_RPM": "RPM",
+        "Form_DevicesListViewSpeed_Hs": "H/s",
+        "Form_DevicesListViewSpeed_SecondaryHs": "H/s (Secondary)",
+        "Form_DevicesListViewSpeed_Total": "Total",
+        "Form_DevicesListViewSpeed_Disabled": "Disabled",
+
+        "BenchChecker_SingleDeviant": "Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?",
+        "BenchChecker_DualDeviant": "Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?",
+        "BenchChecker_DeviantTitle": "Deviant Algorithm",
+
+        "Form_Settings_ToolTip_IdleType": "Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds.",
+        "Form_Settings_IdleType": "Idle Check Method",
+        "Form_Settings_IdleType_SessionLock": "Session Lock",
+        "Form_Settings_IdleType_InputTimeout": "Input Timeout" 
     }
 }

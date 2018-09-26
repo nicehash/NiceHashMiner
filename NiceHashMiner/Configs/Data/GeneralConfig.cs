@@ -47,9 +47,11 @@ namespace NiceHashMiner.Configs.Data
         public bool DisableDefaultOptimizations = false;
 
         public bool AutoScaleBTCValues = true;
-        public bool StartMiningWhenIdle = false;
 
+        public bool StartMiningWhenIdle = false;
+        public IdleCheckType IdleCheckType = IdleCheckType.SessionLock;
         public int MinIdleSeconds = 60;
+
         public bool LogToFile = true;
 
         // in bytes
@@ -118,7 +120,7 @@ namespace NiceHashMiner.Configs.Data
         public bool ShowPowerColumns = false;
         public bool ShowDiagColumns = true;
 
-        public Point MainFormSize = new Point(1682, 910);
+        public Point MainFormSize = new Point(1000, 400);
 
         public bool UseEthlargement = false;
 
@@ -165,6 +167,7 @@ namespace NiceHashMiner.Configs.Data
             DownloadInit = false;
             //ContinueMiningIfNoInternetAccess = false;
             IdleWhenNoInternetAccess = true;
+            IdleCheckType = IdleCheckType.SessionLock;
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
