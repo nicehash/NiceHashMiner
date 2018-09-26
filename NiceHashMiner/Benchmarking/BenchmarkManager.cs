@@ -199,8 +199,7 @@ namespace NiceHashMiner.Benchmarking
 
         public static bool IsDevBenchmarked(string uuid)
         {
-            if (BenchDevAlgoStatus == null) return true;
-            var status = BenchDevAlgoStatus[uuid];
+            if (BenchDevAlgoStatus == null || !BenchDevAlgoStatus.TryGetValue(uuid, out var status)) return true;
             return status == BenchmarkSettingsStatus.Todo || status == BenchmarkSettingsStatus.DisabledTodo;
         }
 
