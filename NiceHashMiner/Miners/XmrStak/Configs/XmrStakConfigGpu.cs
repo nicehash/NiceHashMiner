@@ -69,6 +69,7 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
         public int worksize = 8;
         public bool strided_index = true;
         public int mem_chunk = 2;
+        public int unroll = 8;
         public bool comp_mode = true;
 
         public XmrStakAmdItem(int index, bool affine)
