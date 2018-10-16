@@ -1,9 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
 
 namespace NiceHashMiner.Miners.XmrStak.Configs
 {
@@ -28,6 +24,7 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
                     {
                         low_power_mode = low_power_mode,
                         no_prefetch = no_prefetch,
+                        asm = "auto",
                         affine_to_cpu = i_cpu * 2
                     }));
                 }
@@ -42,6 +39,7 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
                         {
                             low_power_mode = low_power_mode,
                             no_prefetch = no_prefetch,
+                            asm = "auto",
                             affine_to_cpu = i_cpu
                         }));
                     }
@@ -51,6 +49,7 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
                         {
                             low_power_mode = low_power_mode,
                             no_prefetch = no_prefetch,
+                            asm = "auto",
                             affine_to_cpu = false
                         }));
                     }

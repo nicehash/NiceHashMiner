@@ -42,7 +42,7 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
                 i++;
             }
 
-            if (isHeavy) currency = "cryptonight_heavy";
+            currency = isHeavy ? "cryptonight_heavy" : "monero";
         }
 
         /*
