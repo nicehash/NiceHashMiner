@@ -85,6 +85,6 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
          *    # 4MiB scratchpad memory
          *    cryptonight_heavy
          */
-        public string currency = "monero7";
+        public string currency = "monero";
     }
 }
