@@ -69,6 +69,7 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
         public int worksize = 8;
         public bool strided_index = true;
         public int mem_chunk = 2;
+        public int unroll = 8;
         public bool comp_mode = true;
 
         public XmrStakAmdItem(int index, bool affine)
@@ -95,7 +96,23 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
         public int blocks = 60;
         public int bfactor = 8;
         public int bsleep = 100;
+
+        /*
+         * sync_mode     - method used to synchronize the device
+                  documentation: http://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__DEVICE.html#group__CUDART__DEVICE_1g69e73c7dda3fc05306ae7c811a690fac
+                  0 = cudaDeviceScheduleAuto
+                  1 = cudaDeviceScheduleSpin - create a high load on one cpu thread per gpu
+                  2 = cudaDeviceScheduleYield
+                  3 = cudaDeviceScheduleBlockingSync(default)
+        */
         public int sync_mode = 3;
+
+        /*
+           * mem_mode      - select the memory access pattern (this option has only a meaning for cryptonight_v8 and monero)
+                  0 = 64bit memory loads
+                  1 = 256bit memory loads 
+        */
+        public int mem_mode = 1;
 
         public XmrStakNvidiaItem(int index, bool affine)
             : base(index, affine)
