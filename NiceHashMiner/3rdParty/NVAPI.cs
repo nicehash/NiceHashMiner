@@ -153,6 +153,7 @@ namespace NVIDIA.NVAPI
     {
         public uint Version;
         public uint Flags;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = NVAPI.MAX_POWER_ENTRIES_PER_GPU)]
         public NvGPUPowerInfoEntry[] Entries;
     }
 
@@ -160,10 +161,13 @@ namespace NVIDIA.NVAPI
     internal struct NvGPUPowerInfoEntry
     {
         public uint PState;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public uint[] Unknown1;
         public uint MinPower;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public uint[] Unknown2;
         public uint DefPower;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 2)]
         public uint[] Unknown3;
         public uint MaxPower;
         public uint Unknown4;
@@ -174,7 +178,7 @@ namespace NVIDIA.NVAPI
     {
         public uint Version;
         public uint Flags;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = NVAPI.MAX_POWER_ENTRIES_PER_GPU)]
         public NvGPUPowerStatusEntry[] Entries;
     }
 
@@ -183,6 +187,9 @@ namespace NVIDIA.NVAPI
     {
         public uint Unknown1;
         public uint Unknown2;
+        /// <summary>
+        /// Power percentage * 1000 (e.g. 50% is 50000)
+        /// </summary>
         public uint Power;
         public uint Unknown4;
     }
@@ -195,10 +202,12 @@ namespace NVIDIA.NVAPI
         internal const int MAX_PSTATES_PER_GPU = 8;
         internal const int MAX_COOLER_PER_GPU = 20;
         internal const int MAX_THERMAL_SENSORS_PER_GPU = 3;
+        internal const int MAX_POWER_ENTRIES_PER_GPU = 4;
         
         public static readonly uint GPU_PSTATES_VER = (uint)Marshal.SizeOf(typeof(NvPStates)) | 0x10000;
         public static readonly uint GPU_THERMAL_SETTINGS_VER = (uint)Marshal.SizeOf(typeof(NvGPUThermalSettings)) | 0x10000;
         public static readonly uint GPU_POWER_STATUS_VER = (uint) Marshal.SizeOf(typeof(NvGPUPowerStatus)) | 0x10000;
+        public static readonly uint GPU_POWER_INFO_VER = (uint) Marshal.SizeOf(typeof(NvGPUPowerInfo)) | 0x10000;
 
         #region Delegates
         private delegate IntPtr nvapi_QueryInterfaceDelegate(uint id);

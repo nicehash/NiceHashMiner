@@ -1,6 +1,7 @@
 ﻿using ManagedCuda.Nvml;
 using NVIDIA.NVAPI;
 using System;
+using System.Diagnostics;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -19,6 +20,8 @@ namespace NiceHashMiner.Devices
 
         private readonly uint _minPowerLimit;
         private readonly uint _defaultPowerLimit;
+        private readonly uint _maxPowerLimit;
+
         public bool PowerLimitsEnabled { get; private set; }
 
         public override float Load
@@ -136,21 +139,27 @@ namespace NiceHashMiner.Devices
 
             try
             {
-                var maxPowerLimit = 0u;
-                var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(_nvmlDevice,
-                    ref _minPowerLimit, ref maxPowerLimit);
-                if (ret != nvmlReturn.Success)
-                    throw new Exception($"NVML min power limit failed with status: {ret}");
+                var powerInfo = new NvGPUPowerInfo
+                {
+                    Version = NVAPI.GPU_POWER_INFO_VER,
+                    Entries = new NvGPUPowerInfoEntry[4]
+                };
 
-                ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(_nvmlDevice, ref _defaultPowerLimit);
-                if (ret != nvmlReturn.Success)
-                    throw new Exception($"NVML def power limit failed with status: {ret}");
+                var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesGetInfo(nvHandle, ref powerInfo);
+                if (ret != NvStatus.OK)
+                    throw new Exception(ret.ToString());
+
+                Debug.Assert(powerInfo.Entries.Length == 4);
+
+                _minPowerLimit = powerInfo.Entries[0].MinPower;
+                _maxPowerLimit = powerInfo.Entries[0].MaxPower;
+                _defaultPowerLimit = powerInfo.Entries[0].DefPower;
 
                 PowerLimitsEnabled = true;
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("NVML", e.ToString());
+                Helpers.ConsolePrint("NVML", $"Getting power info failed with message \"{e.Message}\", disabling power setting");
                 PowerLimitsEnabled = false;
             }
         }
@@ -165,9 +174,11 @@ namespace NiceHashMiner.Devices
                 return false;
             }
 
-            var status = new NvGPUPowerStatus();
-            status.Flags = 1;
-            status.Entries = new NvGPUPowerStatusEntry[4];
+            var status = new NvGPUPowerStatus
+            {
+                Flags = 1,
+                Entries = new NvGPUPowerStatusEntry[4]
+            };
             status.Entries[0].Power = (uint) (percentDef * 100000);
             status.Version = NVAPI.GPU_POWER_STATUS_VER;
 
