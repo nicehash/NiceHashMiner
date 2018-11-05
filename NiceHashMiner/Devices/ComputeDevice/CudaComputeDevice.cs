@@ -17,6 +17,10 @@ namespace NiceHashMiner.Devices
 
         public readonly bool ShouldRunEthlargement;
 
+        private readonly uint _minPowerLimit;
+        private readonly uint _defaultPowerLimit;
+        public readonly bool PowerLimitsEnabled;
+
         public override float Load
         {
             get
@@ -129,6 +133,46 @@ namespace NiceHashMiner.Devices
             _nvmlDevice = nvmlHandle;
 
             ShouldRunEthlargement = cudaDevice.DeviceName.Contains("1080") || cudaDevice.DeviceName.Contains("Titan Xp");
+
+            try
+            {
+                var maxPowerLimit = 0u;
+                var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(_nvmlDevice,
+                    ref _minPowerLimit, ref maxPowerLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new Exception($"NVML min power limit failed with status: {ret}");
+
+                ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(_nvmlDevice, ref _defaultPowerLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new Exception($"NVML def power limit failed with status: {ret}");
+
+                PowerLimitsEnabled = true;
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("NVML", e.ToString());
+                PowerLimitsEnabled = false;
+            }
+        }
+
+        public bool SetPowerTarget(double percentDef)
+        {
+            if (!PowerLimitsEnabled) return false;
+
+            try
+            {
+                var value = (uint) (percentDef * _defaultPowerLimit);
+                var ret = NvmlNativeMethods.nvmlDeviceSetPowerManagementLimit(_nvmlDevice, value);
+                if (ret != nvmlReturn.Success)
+                    throw new Exception($"NVML set power limit failed with status {ret}");
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("NVML", e.ToString());
+                return false;
+            }
+
+            return true;
         }
     }
 }

@@ -148,6 +148,43 @@ namespace NVIDIA.NVAPI
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = NVAPI.MAX_THERMAL_SENSORS_PER_GPU)]
         public NvSensor[] Sensor;
     }
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct NvGPUPowerInfo
+    {
+        public uint Version;
+        public uint Flags;
+        public NvGPUPowerInfoEntry[] Entries;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct NvGPUPowerInfoEntry
+    {
+        public uint PState;
+        public uint[] Unknown1;
+        public uint MinPower;
+        public uint[] Unknown2;
+        public uint DefPower;
+        public uint[] Unknown3;
+        public uint MaxPower;
+        public uint Unknown4;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct NvGPUPowerStatus
+    {
+        public uint Version;
+        public uint Flags;
+        public NvGPUPowerStatusEntry[] Entries;
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 8)]
+    internal struct NvGPUPowerStatusEntry
+    {
+        public uint Unknown1;
+        public uint Unknown2;
+        public uint Power;
+        public uint Unknown4;
+    }
 
     #endregion
 
@@ -171,6 +208,11 @@ namespace NVIDIA.NVAPI
         internal delegate NvStatus NvAPI_GPU_GetPStatesDelegate(NvPhysicalGpuHandle gpuHandle, ref NvPStates nvPStates);
         internal delegate NvStatus NvAPI_GPU_GetThermalSettingsDelegate(NvPhysicalGpuHandle gpuHandle, int sensorIndex, ref NvGPUThermalSettings nvGPUThermalSettings);
 
+        internal delegate NvStatus NvAPI_DLL_ClientPowerPoliciesGetInfoDelegate(NvPhysicalGpuHandle gpuHandle, ref NvGPUPowerInfo info);
+        internal delegate NvStatus NvAPI_DLL_ClientPowerPoliciesGetStatusDelegate(NvPhysicalGpuHandle gpuHandle, ref NvGPUPowerStatus status);
+        internal delegate NvStatus NvAPI_DLL_ClientPowerPoliciesSetStatusDelegate(NvPhysicalGpuHandle gpuHandle, ref NvGPUPowerStatus status);
+
+
         private static readonly nvapi_QueryInterfaceDelegate nvapi_QueryInterface;
         private static readonly NvAPI_InitializeDelegate NvAPI_Initialize;
         private static readonly bool available;
@@ -180,6 +222,10 @@ namespace NVIDIA.NVAPI
         internal static readonly NvAPI_GPU_GetTachReadingDelegate NvAPI_GPU_GetTachReading;
         internal static readonly NvAPI_GPU_GetPStatesDelegate NvAPI_GPU_GetPStates;
         internal static readonly NvAPI_GPU_GetThermalSettingsDelegate NvAPI_GPU_GetThermalSettings;
+
+        internal static readonly NvAPI_DLL_ClientPowerPoliciesGetInfoDelegate NvAPI_DLL_ClientPowerPoliciesGetInfo;
+        internal static readonly NvAPI_DLL_ClientPowerPoliciesGetStatusDelegate NvAPI_DLL_ClientPowerPoliciesGetStatus;
+        internal static readonly NvAPI_DLL_ClientPowerPoliciesSetStatusDelegate NvAPI_DLL_ClientPowerPoliciesSetStatus;
 
         #endregion
 
