@@ -19,7 +19,7 @@ namespace NiceHashMiner.Devices
 
         private readonly uint _minPowerLimit;
         private readonly uint _defaultPowerLimit;
-        public readonly bool PowerLimitsEnabled;
+        public bool PowerLimitsEnabled { get; private set; }
 
         public override float Load
         {
@@ -158,17 +158,28 @@ namespace NiceHashMiner.Devices
         public bool SetPowerTarget(double percentDef)
         {
             if (!PowerLimitsEnabled) return false;
+            if (NVAPI.NvAPI_DLL_ClientPowerPoliciesSetStatus == null)
+            {
+                Helpers.ConsolePrint("NVAPI", "Missing power set delegate, disabling power");
+                PowerLimitsEnabled = false;
+                return false;
+            }
+
+            var status = new NvGPUPowerStatus();
+            status.Flags = 1;
+            status.Entries = new NvGPUPowerStatusEntry[4];
+            status.Entries[0].Power = (uint) (percentDef * 100000);
+            status.Version = NVAPI.GPU_POWER_STATUS_VER;
 
             try
             {
-                var value = (uint) (percentDef * _defaultPowerLimit);
-                var ret = NvmlNativeMethods.nvmlDeviceSetPowerManagementLimit(_nvmlDevice, value);
-                if (ret != nvmlReturn.Success)
-                    throw new Exception($"NVML set power limit failed with status {ret}");
+                var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesSetStatus(_nvHandle, ref status);
+                if (ret != NvStatus.OK)
+                    throw new Exception($"NVAPI failed with return {ret}");
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("NVML", e.ToString());
+                Helpers.ConsolePrint("NVAPI", e.ToString());
                 return false;
             }
 

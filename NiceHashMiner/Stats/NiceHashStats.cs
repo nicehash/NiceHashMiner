@@ -256,6 +256,10 @@ namespace NiceHashMiner.Stats
             {
                 try
                 {
+                    if (device is CudaComputeDevice cuda)
+                    {
+                        cuda.SetPowerTarget(0.5);
+                    }
                     var array = new JArray
                     {
                         device.Index,

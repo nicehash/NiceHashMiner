@@ -174,6 +174,7 @@ namespace NVIDIA.NVAPI
     {
         public uint Version;
         public uint Flags;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         public NvGPUPowerStatusEntry[] Entries;
     }
 
@@ -197,6 +198,7 @@ namespace NVIDIA.NVAPI
         
         public static readonly uint GPU_PSTATES_VER = (uint)Marshal.SizeOf(typeof(NvPStates)) | 0x10000;
         public static readonly uint GPU_THERMAL_SETTINGS_VER = (uint)Marshal.SizeOf(typeof(NvGPUThermalSettings)) | 0x10000;
+        public static readonly uint GPU_POWER_STATUS_VER = (uint) Marshal.SizeOf(typeof(NvGPUPowerStatus)) | 0x10000;
 
         #region Delegates
         private delegate IntPtr nvapi_QueryInterfaceDelegate(uint id);
@@ -259,11 +261,19 @@ namespace NVIDIA.NVAPI
                 GetDelegate(0xE3640A56, out NvAPI_GPU_GetThermalSettings);
                 GetDelegate(0xE5AC921F, out NvAPI_EnumPhysicalGPUs);
                 GetDelegate(0x1BE0B8E5, out NvAPI_GPU_GetBusID);
+                GetDelegate(0x34206D86, out NvAPI_DLL_ClientPowerPoliciesGetInfo);
+                GetDelegate(0x70916171, out NvAPI_DLL_ClientPowerPoliciesGetStatus);
+                GetDelegate(0xAD95F5ED, out NvAPI_DLL_ClientPowerPoliciesSetStatus);
             }
 
             available = true;
         }
 
         public static bool IsAvailable { get { return available; } }
+
+        public static uint MakeNVAPIVersion(object param, uint version)
+        {
+            return 72 | (version << 16);
+        }
     }
 }
