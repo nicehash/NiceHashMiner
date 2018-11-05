@@ -177,6 +177,12 @@ namespace NiceHashMiner.Devices
                 return false;
             }
 
+            // Check if given value is within bounds
+            if (nvPercent < _minPowerLimit)
+                throw new PowerOutOfRangeException(_minPowerLimit);
+            if (nvPercent > _maxPowerLimit)
+                throw new PowerOutOfRangeException(_maxPowerLimit);
+
             var status = new NvGPUPowerStatus
             {
                 Flags = 1,
