@@ -164,7 +164,10 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public bool SetPowerTarget(double percentDef)
+        // Will probably move this power stuff to its own class when refactoring NV into a diff project
+
+        // nvPercent in thousands of percent, e.g. 100000 for 100%
+        private bool SetPowerTarget(uint nvPercent)
         {
             if (!PowerLimitsEnabled) return false;
             if (NVAPI.NvAPI_DLL_ClientPowerPoliciesSetStatus == null)
@@ -179,7 +182,7 @@ namespace NiceHashMiner.Devices
                 Flags = 1,
                 Entries = new NvGPUPowerStatusEntry[4]
             };
-            status.Entries[0].Power = (uint) (percentDef * 100000);
+            status.Entries[0].Power = nvPercent;  // percent * 1000
             status.Version = NVAPI.GPU_POWER_STATUS_VER;
 
             try
@@ -195,6 +198,27 @@ namespace NiceHashMiner.Devices
             }
 
             return true;
+        }
+
+        public bool SetPowerTarget(PowerLevel level)
+        {
+            switch (level)
+            {
+                case PowerLevel.Low:
+                    return SetPowerTarget(_minPowerLimit);
+                case PowerLevel.Medium:
+                    return SetPowerTarget((uint) Math.Round((_minPowerLimit + _defaultPowerLimit) / 2d));
+                case PowerLevel.High:
+                    return SetPowerTarget(_defaultPowerLimit);
+            }
+
+            return false;
+        }
+
+        // percent is in hundreds, e.g. 100%
+        public bool SetPowerTarget(double percent)
+        {
+            return SetPowerTarget((uint) Math.Round(percent * 1000));
         }
     }
 }
