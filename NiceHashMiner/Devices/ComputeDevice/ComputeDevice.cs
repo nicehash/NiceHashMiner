@@ -167,7 +167,7 @@ namespace NiceHashMiner.Devices
 
         // settings
         // setters
-        public void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
+        public virtual void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
         {
             if (config != null && config.UUID == Uuid)
             {
@@ -215,7 +215,7 @@ namespace NiceHashMiner.Devices
         }
 
         // getters
-        public ComputeDeviceConfig GetComputeDeviceConfig()
+        public virtual ComputeDeviceConfig GetComputeDeviceConfig()
         {
             var ret = new ComputeDeviceConfig
             {

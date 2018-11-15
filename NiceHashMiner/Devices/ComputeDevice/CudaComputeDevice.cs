@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner.Configs.Data;
 
 namespace NiceHashMiner.Devices
 {
@@ -21,6 +22,8 @@ namespace NiceHashMiner.Devices
         private readonly uint _minPowerLimit;
         private readonly uint _defaultPowerLimit;
         private readonly uint _maxPowerLimit;
+
+        public double PowerTarget { get; private set; }
 
         public bool PowerLimitsEnabled { get; private set; }
 
@@ -225,6 +228,21 @@ namespace NiceHashMiner.Devices
         public bool SetPowerTarget(double percent)
         {
             return SetPowerTarget((uint) Math.Round(percent * 1000));
+        }
+
+        public override void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
+        {
+            base.SetFromComputeDeviceConfig(config);
+
+            PowerTarget = config.PowerTarget;
+        }
+
+        public override ComputeDeviceConfig GetComputeDeviceConfig()
+        {
+            var config =  base.GetComputeDeviceConfig();
+            config.PowerTarget = PowerTarget;
+
+            return config;
         }
     }
 }
