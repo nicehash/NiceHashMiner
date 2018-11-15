@@ -507,6 +507,7 @@ namespace NiceHashMiner.Stats
                         array.Add(0);
                     }
 
+                    // Intensity mode
                     array.Add(0);
 
                     deviceList.Add(array);
