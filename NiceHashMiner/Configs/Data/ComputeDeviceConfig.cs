@@ -9,5 +9,7 @@ namespace NiceHashMiner.Configs.Data
         public bool Enabled = true;
         public string UUID = "";
         public double MinimumProfit = 0;
+
+        public uint PowerTarget = uint.MinValue;
     }
 }

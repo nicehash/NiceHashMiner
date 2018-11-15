@@ -42,7 +42,7 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
                 i++;
             }
 
-            if (isHeavy) currency = "cryptonight_heavy";
+            currency = isHeavy ? "cryptonight_heavy" : "monero";
         }
 
         /*
@@ -85,6 +85,6 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
          *    # 4MiB scratchpad memory
          *    cryptonight_heavy
          */
-        public string currency = "monero7";
+        public string currency = "monero";
     }
 }
