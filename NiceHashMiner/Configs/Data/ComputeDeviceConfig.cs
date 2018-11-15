@@ -1,4 +1,5 @@
 ﻿using System;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Configs.Data
 {
@@ -11,5 +12,6 @@ namespace NiceHashMiner.Configs.Data
         public double MinimumProfit = 0;
 
         public uint PowerTarget = uint.MinValue;
+        public PowerLevel PowerLevel;
     }
 }

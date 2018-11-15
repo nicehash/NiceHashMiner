@@ -24,6 +24,7 @@ namespace NiceHashMiner.Devices
         private readonly uint _maxPowerLimit;
 
         public uint PowerTarget { get; private set; }
+        public PowerLevel PowerLevel { get; private set; }
 
         public bool PowerLimitsEnabled { get; private set; }
 
@@ -223,10 +224,13 @@ namespace NiceHashMiner.Devices
             switch (level)
             {
                 case PowerLevel.Low:
+                    PowerLevel = level;
                     return SetPowerTarget(_minPowerLimit);
                 case PowerLevel.Medium:
+                    PowerLevel = level;
                     return SetPowerTarget((uint) Math.Round((_minPowerLimit + _defaultPowerLimit) / 2d));
                 case PowerLevel.High:
+                    PowerLevel = level;
                     return SetPowerTarget(_defaultPowerLimit);
             }
 
@@ -243,13 +247,21 @@ namespace NiceHashMiner.Devices
         {
             base.SetFromComputeDeviceConfig(config);
 
-            SetPowerTarget(config.PowerTarget);
+            if (config.PowerLevel != PowerLevel.Custom)  // Placeholder
+            {
+                SetPowerTarget(config.PowerLevel);
+            }
+            else
+            {
+                SetPowerTarget(config.PowerTarget);
+            }
         }
 
         public override ComputeDeviceConfig GetComputeDeviceConfig()
         {
             var config =  base.GetComputeDeviceConfig();
             config.PowerTarget = PowerTarget;
+            config.PowerLevel = PowerLevel;
 
             return config;
         }

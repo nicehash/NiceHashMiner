@@ -8,6 +8,7 @@ namespace NiceHashMinerLegacy.Common.Enums
     {
         Low,
         Medium,
-        High
+        High,
+        Custom
     }
 }
