@@ -212,6 +212,10 @@ namespace NiceHashMiner.Stats
                     executed = true;
                     StopMining((string) message.device);
                     return null;
+                case "mining.set.power_mode":
+                    executed = true;
+                    SetPowerMode((string) message.device, (PowerLevel) message.power_mode);
+                    return null;
             }
             
             throw new RpcException("Operation not supported", 2);
@@ -406,6 +410,27 @@ namespace NiceHashMiner.Stats
             }
         }
 
+        private static void SetPowerMode(string device, PowerLevel level)
+        {
+            var devs = device == "*" ? 
+                ComputeDeviceManager.Available.Devices : 
+                ComputeDeviceManager.Available.Devices.Where(d => d.B64Uuid == device);
+
+            var found = false;
+
+            foreach (var dev in devs)
+            {
+                if (!(dev is CudaComputeDevice cuda)) continue;
+                cuda.SetPowerTarget(level);
+                found = true;
+            }
+
+            if (!found)
+            {
+                throw new RpcException("No devices settable devices found", 101);
+            }
+        }
+
         #endregion
 
         #region Outgoing socket calls
@@ -472,8 +497,16 @@ namespace NiceHashMiner.Stats
                     array.Add(device.FanSpeed);
                     array.Add((int) Math.Round(device.PowerUsage));
 
-                    // Power/intensity mode
-                    array.Add(0);
+                    // Power mode
+                    if (device is CudaComputeDevice cuda)
+                    {
+                        array.Add((int) cuda.PowerLevel);
+                    }
+                    else
+                    {
+                        array.Add(0);
+                    }
+
                     array.Add(0);
 
                     deviceList.Add(array);
