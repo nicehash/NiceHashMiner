@@ -23,7 +23,7 @@ namespace NiceHashMiner.Devices
         private readonly uint _defaultPowerLimit;
         private readonly uint _maxPowerLimit;
 
-        public double PowerTarget { get; private set; }
+        public uint PowerTarget { get; private set; }
 
         public bool PowerLimitsEnabled { get; private set; }
 
@@ -180,6 +180,13 @@ namespace NiceHashMiner.Devices
                 return false;
             }
 
+            // Value of 0 corresponds to not touching anything
+            if (nvPercent == uint.MinValue)
+            {
+                PowerTarget = nvPercent;
+                return true;
+            }
+
             // Check if given value is within bounds
             if (nvPercent < _minPowerLimit)
                 throw new PowerOutOfRangeException(_minPowerLimit);
@@ -205,6 +212,8 @@ namespace NiceHashMiner.Devices
                 Helpers.ConsolePrint("NVAPI", e.ToString());
                 return false;
             }
+
+            PowerTarget = nvPercent;
 
             return true;
         }
@@ -234,7 +243,7 @@ namespace NiceHashMiner.Devices
         {
             base.SetFromComputeDeviceConfig(config);
 
-            PowerTarget = config.PowerTarget;
+            SetPowerTarget(config.PowerTarget);
         }
 
         public override ComputeDeviceConfig GetComputeDeviceConfig()

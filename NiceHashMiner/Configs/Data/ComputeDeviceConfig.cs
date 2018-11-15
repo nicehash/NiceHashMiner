@@ -10,6 +10,6 @@ namespace NiceHashMiner.Configs.Data
         public string UUID = "";
         public double MinimumProfit = 0;
 
-        public double PowerTarget = -1;
+        public uint PowerTarget = uint.MinValue;
     }
 }
