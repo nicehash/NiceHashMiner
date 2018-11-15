@@ -12,6 +12,6 @@ namespace NiceHashMiner.Configs.Data
         public double MinimumProfit = 0;
 
         public uint PowerTarget = uint.MinValue;
-        public PowerLevel PowerLevel;
+        public PowerLevel PowerLevel = PowerLevel.High;
     }
 }
