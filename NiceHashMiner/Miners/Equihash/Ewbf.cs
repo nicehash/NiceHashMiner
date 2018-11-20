@@ -76,7 +76,7 @@ namespace NiceHashMiner.Miners.Equihash
             ProcessHandle = _Start();
         }
 
-        private string GetStartCommand(string url, string btcAddress, string worker)
+        protected virtual string GetStartCommand(string url, string btcAddress, string worker)
         {
             var ret = GetDevicesCommandString()
                       + " --server " + url.Split(':')[0]
