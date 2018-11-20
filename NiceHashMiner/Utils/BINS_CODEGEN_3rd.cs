@@ -855,7 +855,8 @@ namespace NiceHashMiner.Utils
             @"/claymore_cryptonight/Data1h1.bin",
             @"/claymore_cryptonight/Data1i1.bin",
             @"/claymore_cryptonight/NsGpuCNMiner.exe",
-            @"/ethlargement/OhGodAnETHlargementPill-r2.exe"
+            @"/ethlargement/OhGodAnETHlargementPill-r2.exe",
+            @"/ewbf_144/miner.exe"
         };
 
         #endregion //CODE_GEN STUFF // listFiles.py
