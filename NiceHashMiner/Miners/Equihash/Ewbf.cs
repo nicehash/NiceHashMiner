@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Miners.Grouping;
-using NiceHashMiner.Miners.Parsing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -12,10 +8,13 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 
-namespace NiceHashMiner.Miners
+namespace NiceHashMiner.Miners.Equihash
 {
     public class Ewbf : Miner
     {
@@ -50,7 +49,7 @@ namespace NiceHashMiner.Miners
         private const string LookForEnd = "sol/s";
         private const double DevFee = 2.0;
 
-        public Ewbf() : base("ewbf")
+        public Ewbf(string name = "ewbf") : base(name)
         {
             ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
