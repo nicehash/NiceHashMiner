@@ -182,7 +182,7 @@ namespace NiceHashMiner.Miners.Grouping
                     {
                         return Data.Ewbf;
                     }
-                    else if (algoType == AlgorithmType.Equihash144)
+                    else if (algoType == AlgorithmType.ZHash)
                     {
                         return Data.Ewbf144;
                     }

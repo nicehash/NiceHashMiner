@@ -48,7 +48,7 @@ namespace NiceHashMiner.Miners
             {
                 return new Ewbf();
             }
-            if (type == AlgorithmType.Equihash144)
+            if (type == AlgorithmType.ZHash)
             {
                 return new Ewbf144();
             }

@@ -194,7 +194,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 new List<Algorithm>
                 {
                     new Algorithm(MinerBaseType.EWBF, AlgorithmType.Equihash),
-                    new Algorithm(MinerBaseType.EWBF, AlgorithmType.Equihash144)
+                    new Algorithm(MinerBaseType.EWBF, AlgorithmType.ZHash)
                 }
             },
             {
