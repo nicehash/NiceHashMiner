@@ -304,7 +304,7 @@ namespace NiceHashMiner.Miners.Equihash
 
                 //Helpers.ConsolePrint("speed", speed);
                 speed = speed.Trim();
-                return double.Parse(speed, CultureInfo.InvariantCulture) * mult * (1.0 - DevFee * 0.01);
+                return double.Parse(speed, CultureInfo.InvariantCulture) * mult;
             }
             catch (Exception ex)
             {
