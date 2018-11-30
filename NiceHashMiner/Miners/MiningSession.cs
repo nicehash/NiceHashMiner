@@ -143,7 +143,7 @@ namespace NiceHashMiner.Miners
 
         #region Start/Stop
 
-        public void StopAllMiners()
+        public void StopAllMiners(bool headless)
         {
             if (_runningGroupMiners != null)
             {
@@ -175,6 +175,8 @@ namespace NiceHashMiner.Miners
             _preventSleepTimer.Stop();
             _internetCheckTimer.Stop();
             Helpers.AllowMonitorPowerdownAndSleep();
+
+            if (headless) return;
 
             foreach (var algo in _benchCheckers.Keys)
             {

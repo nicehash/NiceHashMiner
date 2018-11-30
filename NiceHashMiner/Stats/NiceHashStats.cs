@@ -344,23 +344,31 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        private static void SetDevicesEnabled(string devs, bool enabled)
+        private static bool SetDevicesEnabled(string devs, bool enabled)
         {
             var found = false;
             if (!ComputeDeviceManager.Available.Devices.Any())
                 throw new RpcException("No devices to set", 1);
 
+            var anyStillRunning = false;
+
             foreach (var dev in ComputeDeviceManager.Available.Devices)
             {
-                if (devs != "*" && dev.B64Uuid != devs) continue;
-                found = true;
-                dev.Enabled = enabled;
+                if (devs == "*" || dev.B64Uuid == devs)
+                {
+                    found = true;
+                    dev.Enabled = enabled;
+                }
+
+                anyStillRunning = anyStillRunning || dev.Enabled;
             }
 
             if (!found)
                 throw new RpcException("Device not found", 1);
 
             OnDeviceUpdate?.Invoke(null, new DeviceUpdateEventArgs(ComputeDeviceManager.Available.Devices));
+
+            return anyStillRunning;
         }
 
         private static void StartMining(string devs)
@@ -400,12 +408,20 @@ namespace NiceHashMiner.Stats
 
             if (devs != "*")
             {
-                SetDevicesEnabled(devs, false);
-                MinersManager.UpdateUsedDevices(ComputeDeviceManager.Available.Devices);
+                if (SetDevicesEnabled(devs, false))
+                {
+                    MinersManager.UpdateUsedDevices(ComputeDeviceManager.Available.Devices);
+                }
+                else
+                {
+                    // No devices are left enabled, stop all mining
+                    MinersManager.StopAllMiners(true);
+                    _mainForm?.StopMiningGui();
+                }
             }
             else
             {
-                MinersManager.StopAllMiners();
+                MinersManager.StopAllMiners(true);
                 _mainForm?.StopMiningGui();
             }
         }

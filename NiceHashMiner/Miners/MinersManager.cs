@@ -11,9 +11,9 @@ namespace NiceHashMiner.Miners
     {
         private static MiningSession _curMiningSession;
 
-        public static void StopAllMiners()
+        public static void StopAllMiners(bool headless)
         {
-            _curMiningSession?.StopAllMiners();
+            _curMiningSession?.StopAllMiners(headless);
             Ethlargement.Stop();
             _curMiningSession = null;
             NiceHashStats.StateChanged();

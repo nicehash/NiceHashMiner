@@ -198,7 +198,7 @@ namespace NiceHashMiner
             {
                 if (!e.IsIdle)
                 {
-                    StopMining();
+                    StopMining(true);
                     Helpers.ConsolePrint("NICEHASH", "Resumed from idling");
                 }
             }
@@ -209,7 +209,7 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Entering idling state");
                     if (StartMining(false) != StartMiningReturnType.StartMining)
                     {
-                        StopMining();
+                        StopMining(true);
                     }
                 }
             }
@@ -442,7 +442,7 @@ namespace NiceHashMiner
                 if (StartMining(false) != StartMiningReturnType.StartMining)
                 {
                     _isManuallyStarted = false;
-                    StopMining();
+                    StopMining(true);
                 }
             }
         }
@@ -768,7 +768,7 @@ namespace NiceHashMiner
         {
             BeginInvoke((Action) (() =>
             {
-                StopMining();
+                StopMining(true);
                 _benchmarkForm?.StopBenchmark();
                 var dialogResult = MessageBox.Show(e.Message, International.GetText("Error_with_Exclamation"),
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -882,7 +882,7 @@ namespace NiceHashMiner
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            MinersManager.StopAllMiners();
+            MinersManager.StopAllMiners(true);
 
             MessageBoxManager.Unregister();
         }
@@ -941,7 +941,7 @@ namespace NiceHashMiner
             if (StartMining(true) == StartMiningReturnType.ShowNoMining)
             {
                 _isManuallyStarted = false;
-                StopMining();
+                StopMining(false);
                 MessageBox.Show(International.GetText("Form_Main_StartMiningReturnedFalse"),
                     International.GetText("Warning_with_Exclamation"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -952,7 +952,7 @@ namespace NiceHashMiner
         private void ButtonStopMining_Click(object sender, EventArgs e)
         {
             _isManuallyStarted = false;
-            StopMining();
+            StopMining(false);
         }
 
         //private string FormatPayingOutput(double paying)
@@ -1202,9 +1202,9 @@ namespace NiceHashMiner
             }
         }
 
-        private void StopMining()
+        private void StopMining(bool headless)
         {
-            MinersManager.StopAllMiners();
+            MinersManager.StopAllMiners(headless);
             StopMiningGui();
         }
 
