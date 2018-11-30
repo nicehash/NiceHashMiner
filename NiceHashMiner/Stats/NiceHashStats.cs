@@ -384,6 +384,11 @@ namespace NiceHashMiner.Stats
             {
                 if (devs != "*")
                 {
+                    // Only mine with the one selected
+                    foreach (var dev in ComputeDeviceManager.Available.Devices)
+                    {
+                        dev.Enabled = false;
+                    }
                     SetDevicesEnabled(devs, true);
                 }
                 var loc = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
@@ -492,8 +497,8 @@ namespace NiceHashMiner.Stats
                         status += 2;
                     else if (benchIDs.Contains(device.Index))
                         status += 3;
-                    //else if (device.Enabled)
-                    status += 1;
+                    else //if (device.Enabled)
+                        status += 1;
 
                     array.Add(status);
 
