@@ -234,14 +234,14 @@ namespace NiceHashMiner.Stats
 
         private static void ProcessEssentials(EssentialsCall ess)
         {
-            if (ess?.Params?.First()[2] is string ver && ess.Params.First()[3] is string link)
+            if (ess?.Versions?.Count > 1 && ess.Versions[1].Count == 2)
             {
-                SetVersion(ver, link);
+                SetVersion(ess.Versions[1][0], ess.Versions[1][1]);
             }
 
-            if (ess?.Params?[2] != null)
+            if (ess?.Devices != null)
             {
-                foreach (var map in ess.Params[2])
+                foreach (var map in ess.Devices)
                 {
                     // Hacky way temporary
 
@@ -249,15 +249,9 @@ namespace NiceHashMiner.Stats
                     var name = m.Last().Value<string>();
                     var i = m.First().Value<int>();
 
-                    var filterName = name.AfterFirstOccurence("GTX ");
-                    if (string.IsNullOrWhiteSpace(filterName))
-                        filterName = name.AfterFirstOccurence("NVIDIA ");
-                    if (string.IsNullOrWhiteSpace(filterName))
-                        continue;
-
                     foreach (var dev in ComputeDeviceManager.Available.Devices)
                     {
-                        if (dev.Name.Contains(filterName))
+                        if (dev.Name.Contains(name))
                             dev.TypeID = i;
                     }
                 }
