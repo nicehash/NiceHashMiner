@@ -492,8 +492,8 @@ namespace NiceHashMiner.Stats
                         status += 2;
                     else if (benchIDs.Contains(device.Index))
                         status += 3;
-                    else if (device.Enabled)
-                        status += 1;
+                    //else if (device.Enabled)
+                    status += 1;
 
                     array.Add(status);
 
