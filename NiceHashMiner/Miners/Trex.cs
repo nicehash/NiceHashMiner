@@ -12,6 +12,9 @@ namespace NiceHashMiner.Miners
 {
     public class Trex : Miner
     {
+        private double _benchHashes;
+        private int _benchIters;
+
         private class ApiSummary
         {
             [JsonProperty("hashrate")]
@@ -28,14 +31,12 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+            var api = new ApiData(MiningSetup.CurrentAlgorithmType);
             try
             {
                 var data = await _client.GetStringAsync($"http://127.0.0.1:{ApiPort}/summary");
                 var summary = JsonConvert.DeserializeObject<ApiSummary>(data);
-                var api = new ApiData(MiningSetup.CurrentAlgorithmType)
-                {
-                    Speed = summary.Hashrate
-                };
+                api.Speed = summary.Hashrate;
                 CurrentMinerReadStatus =
                     api.Speed <= 0 ? MinerApiReadStatus.READ_SPEED_ZERO : MinerApiReadStatus.GOT_READ;
                 return api;
@@ -46,7 +47,7 @@ namespace NiceHashMiner.Miners
                 Helpers.ConsolePrint(MinerTag(), e.Message);
             }
 
-            return null;
+            return api;
         }
 
         public override void Start(string url, string btcAdress, string worker)
@@ -68,9 +69,6 @@ namespace NiceHashMiner.Miners
         {
             CheckOutdata(outdata);
         }
-
-        private double _benchHashes;
-        private int _benchIters;
 
         protected override bool BenchmarkParseLine(string outdata)
         {
@@ -110,6 +108,11 @@ namespace NiceHashMiner.Miners
             if (_benchIters != 0 && BenchmarkAlgorithm != null)
             {
                 BenchmarkAlgorithm.BenchmarkSpeed = _benchHashes / _benchIters;
+                if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.X16R)
+                {
+                    // Quick adjustment, x16r speeds are overestimated by around 3.5
+                    BenchmarkAlgorithm.BenchmarkSpeed /= 3.5;
+                }
             }
 
             base.BenchmarkThreadRoutineFinish();
