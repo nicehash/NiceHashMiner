@@ -90,6 +90,8 @@ namespace NiceHashMiner.Miners
                     return new Dtsm();
                 case MinerBaseType.cpuminer:
                     return new CpuMiner();
+                case MinerBaseType.trex:
+                    return new Trex();
             }
 
             return null;

@@ -124,6 +124,8 @@ namespace NiceHashMiner.Miners.Grouping
             public const string EthLargement = Bin3rdParty + @"\ethlargement\OhGodAnETHlargementPill-r2.exe";
 
             public const string Ewbf144 = Bin3rdParty + @"\ewbf_144\miner.exe";
+
+            public const string Trex = Bin3rdParty + @"\trex\t-rex.exe";
         }
 
         // NEW START
@@ -196,6 +198,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.Dtsm;
                 case MinerBaseType.cpuminer:
                     return Data.CpuMiner;
+                case MinerBaseType.trex:
+                    return Data.Trex;
             }
             return Data.None;
         }

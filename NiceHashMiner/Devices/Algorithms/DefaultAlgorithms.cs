@@ -203,6 +203,13 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     new Algorithm(MinerBaseType.dtsm, AlgorithmType.Equihash)
                 }
+            },
+            {
+                MinerBaseType.trex,
+                new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.trex, AlgorithmType.Skunk)
+                }
             }
         }.ConcatDictList(All, Gpu);
 
