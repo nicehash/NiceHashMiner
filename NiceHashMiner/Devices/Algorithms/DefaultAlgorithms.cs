@@ -208,7 +208,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.trex,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.trex, AlgorithmType.Skunk)
+                    new Algorithm(MinerBaseType.trex, AlgorithmType.Skunk, "skunk")
                 }
             }
         }.ConcatDictList(All, Gpu);

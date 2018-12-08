@@ -646,7 +646,7 @@ namespace NiceHashMiner
                 : International.GetText("Benchmark_Terminated");
         }
 
-        protected void BenchmarkThreadRoutineFinish()
+        protected virtual void BenchmarkThreadRoutineFinish()
         {
             var status = BenchmarkProcessStatus.Finished;
 
