@@ -27,12 +27,12 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
             }
         }
 
-        public void SetupPools(string poolAddr, string wallet, bool isHeavy)
+        public void SetupPools(string poolAddr, string wallet, string curr)
         {
-            SetupPools(new List<string> {poolAddr}, wallet, isHeavy);
+            SetupPools(new List<string> {poolAddr}, wallet, curr);
         }
 
-        public void SetupPools(IEnumerable<string> poolAddrs, string wallet, bool isHeavy)
+        public void SetupPools(IEnumerable<string> poolAddrs, string wallet, string curr)
         {
             pool_list = new List<XmrStakPoolItem>();
             var i = 1;
@@ -42,7 +42,7 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
                 i++;
             }
 
-            currency = isHeavy ? "cryptonight_heavy" : "monero";
+            currency = curr;
         }
 
         /*

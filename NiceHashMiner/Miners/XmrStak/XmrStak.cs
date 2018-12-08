@@ -97,7 +97,7 @@ namespace NiceHashMiner.Miners.XmrStak
             WriteJsonFile(config, configName, DefConfigName);
 
             var pools = new XmrStakConfigPool();
-            pools.SetupPools(url, GetUsername(btcAddress, worker), isHeavy);
+            pools.SetupPools(url, GetUsername(btcAddress, worker), MiningSetup.MinerName);
             WriteJsonFile(pools, GetPoolConfigName());
             WriteJsonFile(pools, DefPoolName);
 
