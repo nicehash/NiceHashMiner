@@ -100,7 +100,7 @@ namespace NiceHashMiner.Devices
                             }
                         };
                         P.Start();
-                        P.WaitForExit(30 * 1000);
+                        P.WaitForExit(15 * 1000);
 
                         stdOut = P.StandardOutput.ReadToEnd();
                         stdErr = P.StandardError.ReadToEnd();
