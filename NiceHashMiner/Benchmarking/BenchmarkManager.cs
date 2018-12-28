@@ -14,6 +14,37 @@ namespace NiceHashMiner.Benchmarking
     {
         private static bool _inBenchmark;
 
+        private static int _benchmarkCurrentIndex;
+
+        private static bool _hasFailedAlgorithms;
+
+        private static int _benchAlgoCount;
+        private static readonly Dictionary<string, BenchmarkSettingsStatus> _benchDevAlgoStatus;
+
+        private static readonly Dictionary<ComputeDevice, Algorithm> _statusCheckAlgos;
+
+        private static readonly List<BenchmarkHandler> _runningBenchmarkThreads;
+
+        private static IBenchmarkForm _benchForm;
+
+        private static readonly List<Tuple<ComputeDevice, Queue<Algorithm>>> _benchDevAlgoQueue;
+
+        public static event EventHandler<StepUpEventArgs> OnStepUp;
+        public static event EventHandler<AlgoStatusEventArgs> OnAlgoStatusUpdate;
+
+        public static AlgorithmBenchmarkSettingsType AlgorithmOption { get; set; }
+
+        public static IReadOnlyList<Tuple<ComputeDevice, Queue<Algorithm>>> BenchDevAlgoQueue
+        {
+            get
+            {
+                lock (_benchDevAlgoQueue)
+                {
+                    return _benchDevAlgoQueue;
+                }
+            }
+        }
+
         public static bool InBenchmark
         {
             get => _inBenchmark;
@@ -24,34 +55,24 @@ namespace NiceHashMiner.Benchmarking
             }
         }
 
-        public static AlgorithmBenchmarkSettingsType AlgorithmOption =
-            AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
-
-        private static int _benchmarkCurrentIndex;
-
-        private static bool _hasFailedAlgorithms;
-
-        private static int _benchAlgoCount;
-        private static readonly Dictionary<string, BenchmarkSettingsStatus> BenchDevAlgoStatus;
-        public static readonly List<Tuple<ComputeDevice, Queue<Algorithm>>> BenchDevAlgoQueue;
-
-        private static readonly Dictionary<ComputeDevice, Algorithm> StatusCheckAlgos;
-
-        private static readonly List<BenchmarkHandler> RunningBenchmarkThreads;
-
-        private static IBenchmarkForm _benchForm;
-
-        public static event EventHandler<StepUpEventArgs> OnStepUp;
-        public static event EventHandler<AlgoStatusEventArgs> OnAlgoStatusUpdate;
-
-        public static bool HasWork => BenchDevAlgoStatus.Values.Any(s => s == BenchmarkSettingsStatus.Todo);
+        public static bool HasWork
+        {
+            get
+            {
+                lock (_benchDevAlgoStatus)
+                { 
+                    return _benchDevAlgoStatus.Values.Any(s => s == BenchmarkSettingsStatus.Todo);
+                }
+            }
+        }
 
         static BenchmarkManager()
         {
-            BenchDevAlgoStatus = new Dictionary<string, BenchmarkSettingsStatus>();
-            BenchDevAlgoQueue = new List<Tuple<ComputeDevice, Queue<Algorithm>>>();
-            StatusCheckAlgos = new Dictionary<ComputeDevice, Algorithm>();
-            RunningBenchmarkThreads = new List<BenchmarkHandler>();
+            AlgorithmOption = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
+            _benchDevAlgoStatus = new Dictionary<string, BenchmarkSettingsStatus>();
+            _benchDevAlgoQueue = new List<Tuple<ComputeDevice, Queue<Algorithm>>>();
+            _statusCheckAlgos = new Dictionary<ComputeDevice, Algorithm>();
+            _runningBenchmarkThreads = new List<BenchmarkHandler>();
         }
 
         #region Public get helpers
@@ -60,9 +81,12 @@ namespace NiceHashMiner.Benchmarking
         {
             if (!InBenchmark) yield break;
 
-            foreach (var kvp in StatusCheckAlgos)
+            lock (_statusCheckAlgos)
             {
-                yield return new Tuple<ComputeDevice, Algorithm>(kvp.Key, kvp.Value);
+                foreach (var kvp in _statusCheckAlgos)
+                {
+                    yield return new Tuple<ComputeDevice, Algorithm>(kvp.Key, kvp.Value);
+                }
             }
         }
 
@@ -78,40 +102,48 @@ namespace NiceHashMiner.Benchmarking
         public static int CalcBenchDevAlgoQueue()
         {
             _benchAlgoCount = 0;
-            BenchDevAlgoStatus.Clear();
-            BenchDevAlgoQueue.Clear();
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            lock (_benchDevAlgoQueue)
+            lock (_benchDevAlgoStatus)
             {
-                var algorithmQueue = new Queue<Algorithm>();
-                foreach (var algo in cDev.GetAlgorithmSettings())
-                    if (ShouldBenchmark(algo))
+                _benchDevAlgoStatus.Clear();
+                _benchDevAlgoQueue.Clear();
+                foreach (var cDev in ComputeDeviceManager.Available.Devices)
+                {
+                    var algorithmQueue = new Queue<Algorithm>();
+                    foreach (var algo in cDev.GetAlgorithmSettings())
                     {
-                        algorithmQueue.Enqueue(algo);
-                        algo.SetBenchmarkPendingNoMsg();
+                        if (ShouldBenchmark(algo))
+                        {
+                            algorithmQueue.Enqueue(algo);
+                            algo.SetBenchmarkPendingNoMsg();
+                        }
+                        else
+                        {
+                            algo.ClearBenchmarkPending();
+                        }
+                    }
+
+
+                    BenchmarkSettingsStatus status;
+                    if (cDev.Enabled)
+                    {
+                        _benchAlgoCount += algorithmQueue.Count;
+                        status = algorithmQueue.Count == 0
+                            ? BenchmarkSettingsStatus.None
+                            : BenchmarkSettingsStatus.Todo;
+                        _benchDevAlgoQueue.Add(
+                            new Tuple<ComputeDevice, Queue<Algorithm>>(cDev, algorithmQueue)
+                        );
                     }
                     else
                     {
-                        algo.ClearBenchmarkPending();
+                        status = algorithmQueue.Count == 0
+                            ? BenchmarkSettingsStatus.DisabledNone
+                            : BenchmarkSettingsStatus.DisabledTodo;
                     }
 
-
-                BenchmarkSettingsStatus status;
-                if (cDev.Enabled)
-                {
-                    _benchAlgoCount += algorithmQueue.Count;
-                    status = algorithmQueue.Count == 0 ? BenchmarkSettingsStatus.None : BenchmarkSettingsStatus.Todo;
-                    BenchDevAlgoQueue.Add(
-                        new Tuple<ComputeDevice, Queue<Algorithm>>(cDev, algorithmQueue)
-                    );
+                    _benchDevAlgoStatus[cDev.Uuid] = status;
                 }
-                else
-                {
-                    status = algorithmQueue.Count == 0
-                        ? BenchmarkSettingsStatus.DisabledNone
-                        : BenchmarkSettingsStatus.DisabledTodo;
-                }
-
-                BenchDevAlgoStatus[cDev.Uuid] = status;
             }
 
             _benchmarkCurrentIndex = 0;
@@ -146,35 +178,34 @@ namespace NiceHashMiner.Benchmarking
         {
             _benchForm = form;
             _hasFailedAlgorithms = false;
-            StatusCheckAlgos.Clear();
-            lock (RunningBenchmarkThreads)
+            lock (_runningBenchmarkThreads)
+            lock (_statusCheckAlgos)
             {
-                RunningBenchmarkThreads.Clear();
+                _statusCheckAlgos.Clear();
+                _runningBenchmarkThreads.Clear();
 
                 foreach (var pair in BenchDevAlgoQueue)
                 {
                     var handler = new BenchmarkHandler(pair.Item1, pair.Item2, perfType);
-                    RunningBenchmarkThreads.Add(handler);
+                    _runningBenchmarkThreads.Add(handler);
                 }
                 // Don't start until list is populated
-                foreach (var thread in RunningBenchmarkThreads)
+                foreach (var thread in _runningBenchmarkThreads)
                 {
                     thread.Start();
                 }
             }
 
             InBenchmark = true;
-
-
         }
 
         public static void Stop()
         {
             InBenchmark = false;
 
-            lock (RunningBenchmarkThreads)
+            lock (_runningBenchmarkThreads)
             {
-                foreach (var handler in RunningBenchmarkThreads) handler.InvokeQuit();
+                foreach (var handler in _runningBenchmarkThreads) handler.InvokeQuit();
             }
         }
 
@@ -189,8 +220,20 @@ namespace NiceHashMiner.Benchmarking
         {
             CalcBenchDevAlgoQueue();
             foreach (var q in BenchDevAlgoQueue.Select(q => q.Item2))
-            foreach (var a in q)
-                a.Enabled = false;
+            {
+                foreach (var a in q)
+                {
+                    a.Enabled = false;
+                }
+            }
+        }
+
+        public static void ClearQueue()
+        {
+            lock (_benchDevAlgoQueue)
+            {
+                _benchDevAlgoQueue.Clear();
+            }
         }
 
         #endregion
@@ -199,28 +242,34 @@ namespace NiceHashMiner.Benchmarking
 
         public static bool IsDevBenchmarked(string uuid)
         {
-            if (BenchDevAlgoStatus == null || !BenchDevAlgoStatus.TryGetValue(uuid, out var status)) return true;
+            if (_benchDevAlgoStatus == null || !_benchDevAlgoStatus.TryGetValue(uuid, out var status)) return true;
             return status == BenchmarkSettingsStatus.Todo || status == BenchmarkSettingsStatus.DisabledTodo;
         }
 
         public static void AddToStatusCheck(ComputeDevice device, Algorithm algorithm)
         {
-            StatusCheckAlgos[device] = algorithm;
+            lock (_statusCheckAlgos)
+            {
+                _statusCheckAlgos[device] = algorithm;
+            }
         }
 
         public static void RemoveFromStatusCheck(ComputeDevice device)
         {
-            StatusCheckAlgos.Remove(device);
+            lock (_statusCheckAlgos)
+            {
+                _statusCheckAlgos.Remove(device);
+            }
         }
 
         public static void EndBenchmarkForDevice(ComputeDevice device, bool failedAlgos)
         {
             _hasFailedAlgorithms = failedAlgos || _hasFailedAlgorithms;
-            lock (RunningBenchmarkThreads)
+            lock (_runningBenchmarkThreads)
             {
-                RunningBenchmarkThreads.RemoveAll(x => x.Device == device);
+                _runningBenchmarkThreads.RemoveAll(x => x.Device == device);
 
-                if (RunningBenchmarkThreads.Count <= 0)
+                if (_runningBenchmarkThreads.Count <= 0)
                     End();
             }
         }
@@ -250,8 +299,8 @@ namespace NiceHashMiner.Benchmarking
 
     public class StepUpEventArgs : EventArgs
     {
-        public readonly int CurrentIndex;
-        public readonly int AlgorithmCount;
+        public int CurrentIndex { get; }
+        public int AlgorithmCount { get; }
 
         public StepUpEventArgs(int index, int count)
         {
@@ -262,9 +311,9 @@ namespace NiceHashMiner.Benchmarking
 
     public class AlgoStatusEventArgs : EventArgs
     {
-        public readonly ComputeDevice Device;
-        public readonly Algorithm Algorithm;
-        public readonly string Status;
+        public ComputeDevice Device { get; }
+        public Algorithm Algorithm { get; }
+        public string Status { get; }
 
         public AlgoStatusEventArgs(ComputeDevice dev, Algorithm algo, string status)
         {

@@ -346,19 +346,26 @@ namespace NiceHashMiner.Forms
 
             // disable all pending benchmark
             foreach (var cDev in ComputeDeviceManager.Available.Devices)
-            foreach (var algorithm in cDev.GetAlgorithmSettings())
-                algorithm.ClearBenchmarkPending();
-            BenchmarkManager.BenchDevAlgoQueue.Clear();
+            {
+                foreach (var algorithm in cDev.GetAlgorithmSettings())
+                {
+                    algorithm.ClearBenchmarkPending();
+                }
+            }
+
+            BenchmarkManager.ClearQueue();
 
             // save already benchmarked algorithms
             ConfigManager.CommitBenchmarks();
             // check devices without benchmarks
             foreach (var cdev in ComputeDeviceManager.Available.Devices)
+            {
                 if (cdev.Enabled)
                 {
                     var enabled = cdev.GetAlgorithmSettings().Any(algo => algo.BenchmarkSpeed > 0);
                     cdev.Enabled = enabled;
                 }
+            }
         }
 
         private void DevicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
