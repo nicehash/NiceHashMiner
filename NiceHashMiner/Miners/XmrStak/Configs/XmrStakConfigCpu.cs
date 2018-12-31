@@ -7,6 +7,10 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
     {
         private readonly int cpu_thread_num;
 
+        public XmrStakConfigCpu()
+            : this(0)
+        { }
+
         public XmrStakConfigCpu(int numberOfthreads)
         {
             cpu_thread_num = numberOfthreads;

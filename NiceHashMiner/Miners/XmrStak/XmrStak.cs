@@ -209,11 +209,12 @@ namespace NiceHashMiner.Miners.XmrStak
                 Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
             var configs = PrepareConfigFiles(url, Globals.GetBitcoinUser(),
                 ConfigManager.GeneralConfig.WorkerName.Trim(), true);
+            var user = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName);
             _benchmarkCount = 0;
             _benchmarkSum = 0;
             BenchmarkTimeInSeconds = Math.Max(time, 60);
             CleanOldLogs();
-            return CreateLaunchCommand(GetBenchConfigName(), configs);
+            return CreateLaunchCommand(GetBenchConfigName(), configs, url, user);
         }
 
         protected override void FinishUpBenchmark()
