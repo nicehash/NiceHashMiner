@@ -85,27 +85,27 @@ namespace NiceHashMiner.Miners.XmrStak
         {
             var configs = new Dictionary<DeviceType, string>();
             var types = new List<DeviceType>();
-            var isHeavy = false;
+            //var isHeavy = false;
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (!types.Contains(pair.Device.DeviceType)) types.Add(pair.Device.DeviceType);
-                if (pair.Algorithm.NiceHashID == AlgorithmType.CryptoNightHeavy) isHeavy = true;
+                //if (pair.Algorithm.NiceHashID == AlgorithmType.CryptoNightHeavy) isHeavy = true;
             }
 
-            var configName = bench ? GetBenchConfigName() : ConfigName;
-            var config = ParseJsonFile<XmrStakConfig>(filename: DefConfigName) ?? new XmrStakConfig();
-            config.httpd_port = ApiPort;
-            if (bench)
-            {
-                config.SetBenchmarkOptions(GetLogFileName());
-            }
+            //var configName = bench ? GetBenchConfigName() : ConfigName;
+            //var config = ParseJsonFile<XmrStakConfig>(filename: DefConfigName) ?? new XmrStakConfig();
+            //config.httpd_port = ApiPort;
+            //if (bench)
+            //{
+            //    config.SetBenchmarkOptions(GetLogFileName());
+            //}
 
-            WriteJsonFile(config, configName, DefConfigName);
+            //WriteJsonFile(config, configName, DefConfigName);
 
-            var pools = new XmrStakConfigPool();
-            pools.SetupPools(url, GetUsername(btcAddress, worker), MiningSetup.MinerName);
-            WriteJsonFile(pools, GetPoolConfigName());
-            WriteJsonFile(pools, DefPoolName);
+            //var pools = new XmrStakConfigPool();
+            //pools.SetupPools(url, GetUsername(btcAddress, worker), MiningSetup.MinerName);
+            //WriteJsonFile(pools, GetPoolConfigName());
+            //WriteJsonFile(pools, DefPoolName);
 
             foreach (var type in types)
             {
@@ -248,6 +248,7 @@ namespace NiceHashMiner.Miners.XmrStak
         #region JSON Helpers
 
         private T ParseJsonFile<T>(DeviceType type = DeviceType.CPU, string filename = "", bool fallback = false)
+            where T : new()
         {
             if (filename == "") filename = $"{type.ToString().ToLower()}.txt";
             var json = default(T);
@@ -269,20 +270,20 @@ namespace NiceHashMiner.Miners.XmrStak
             if (json == null)
             {
                 // If from recursive call, don't try again
-                if (fallback) return default(T);
-                if (!File.Exists(WorkingDirectory + DefConfigName))
-                {
-                    // Exception since xmr-stak won't passively generate general config
-                    var config = new XmrStakConfig();
-                    WriteJsonFile(config, filename);
-                }
+                if (fallback) return new T();
+                //if (!File.Exists(WorkingDirectory + DefConfigName))
+                //{
+                //    // Exception since xmr-stak won't passively generate general config
+                //    var config = new XmrStakConfig();
+                //    WriteJsonFile(config, filename);
+                //}
 
                 if (typeof(T) != typeof(XmrStakConfig))
                 {
                     // Try running xmr-stak to create default configs
-                    var handle = BenchmarkStartProcess(DisableDevCmd(type) + " --generate-configs ");
-                    var timer = new Stopwatch();
-                    timer.Start();
+                    var handle = BenchmarkStartProcess(DisableDevCmd(type));
+                    //var timer = new Stopwatch();
+                    //timer.Start();
                     handle.Start();
                     try
                     {
