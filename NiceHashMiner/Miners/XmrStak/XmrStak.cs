@@ -62,16 +62,17 @@ namespace NiceHashMiner.Miners.XmrStak
             }
 
             var devConfigs = PrepareConfigFiles(url, btcAdress, worker);
-            LastCommandLine = CreateLaunchCommand(ConfigName, devConfigs);
+            LastCommandLine = CreateLaunchCommand(ConfigName, devConfigs, url, GetUsername(btcAdress, worker));
 
             ProcessHandle = _Start();
         }
 
-        private string CreateLaunchCommand(string configName, Dictionary<DeviceType, string> devConfigs)
+        private string CreateLaunchCommand(string configName, Dictionary<DeviceType, string> devConfigs, string url, string user)
         {
-            var devs = devConfigs.Keys.Aggregate("",
-                (current, dev) => current + $"--{dev.ToString().ToLower()} {devConfigs[dev]} ");
-            return $"-c {configName} -C {GetPoolConfigName()} {devs} {DisableDevCmd(devConfigs.Keys)}";
+            var devs = devConfigs.Keys.Aggregate("", (current, dev) => current + $"--{dev.ToString().ToLower()} {devConfigs[dev]} ");
+
+            return $"-o {url} -u {user} --currency {MiningSetup.MinerName} -i {ApiPort} " +
+                   $"--use-nicehash -p x -r x {devs} {DisableDevCmd(devConfigs.Keys)} --noUAC";
         }
 
         private Dictionary<DeviceType, string> PrepareConfigFiles(string url, string btcAddress,
