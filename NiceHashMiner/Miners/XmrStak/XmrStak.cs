@@ -64,7 +64,12 @@ namespace NiceHashMiner.Miners.XmrStak
             var devConfigs = PrepareConfigFiles(url, btcAdress, worker);
             LastCommandLine = CreateLaunchCommand(ConfigName, devConfigs, url, GetUsername(btcAdress, worker));
 
-            ProcessHandle = _Start();
+            var envs = new Dictionary<string, string>
+            {
+                { "XMRSTAK_NOWAIT", "1" }
+            };
+
+            ProcessHandle = _Start(envs);
         }
 
         private string CreateLaunchCommand(string configName, Dictionary<DeviceType, string> devConfigs, string url, string user)
