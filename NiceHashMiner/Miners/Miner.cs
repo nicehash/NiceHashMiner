@@ -6,6 +6,7 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -328,8 +329,21 @@ namespace NiceHashMiner
         {
             foreach (var process in Process.GetProcessesByName(exeName))
             {
-                try { process.Kill(); }
-                catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+                try
+                {
+                    process.Kill();
+                }
+                catch (Exception e)
+                {
+                    unchecked
+                    {
+                        // Suppress reporting of Access Denied error
+                        if (!(e is Win32Exception w && w.HResult != (int) 0x80004005))
+                        {
+                            Helpers.ConsolePrint(MinerDeviceName, e.ToString());
+                        }
+                    }
+                }
             }
         }
 
