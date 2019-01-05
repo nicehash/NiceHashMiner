@@ -28,7 +28,7 @@ namespace NiceHashMiner.Forms
 
         private readonly bool _exitWhenFinished;
 
-        public bool StartMining { get; private set; }
+        public bool StartMiningOnFinish { get; private set; }
 
         public Form_Benchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false)
@@ -36,7 +36,7 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
             Icon = Resources.logo;
 
-            StartMining = false;
+            StartMiningOnFinish = false;
 
             // clear prev pending statuses
             foreach (var dev in ComputeDeviceManager.Available.Devices)
@@ -301,14 +301,14 @@ namespace NiceHashMiner.Forms
 
                 BenchmarkStoppedGuiSettings();
                 // check if all ok
-                if (!hasFailedAlgos && StartMining == false)
+                if (!hasFailedAlgos && StartMiningOnFinish == false)
                 {
                     MessageBox.Show(
                         International.GetText("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
                         International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
                         MessageBoxButtons.OK);
                 }
-                else if (StartMining == false)
+                else if (StartMiningOnFinish == false)
                 {
                     var result = MessageBox.Show(
                         International.GetText("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
@@ -325,7 +325,7 @@ namespace NiceHashMiner.Forms
                     BenchmarkManager.DisableTodoAlgos();
                 }
 
-                if (_exitWhenFinished || StartMining) Close();
+                if (_exitWhenFinished || StartMiningOnFinish) Close();
             });
         }
 
@@ -395,7 +395,7 @@ namespace NiceHashMiner.Forms
 
         private void CheckBox_StartMiningAfterBenchmark_CheckedChanged(object sender, EventArgs e)
         {
-            StartMining = checkBox_StartMiningAfterBenchmark.Checked;
+            StartMiningOnFinish = checkBox_StartMiningAfterBenchmark.Checked;
         }
 
 
