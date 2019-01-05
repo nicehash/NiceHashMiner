@@ -109,7 +109,7 @@ namespace NiceHashMiner.Stats
         {
             ExecutedInfo info = null;
             var executed = false;
-            var id = -1;
+            int? id = null;
             try
             {
                 if (e.IsText)
@@ -135,13 +135,16 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        internal static ExecutedInfo ProcessData(string data, out bool executed, out int id)
+        internal static ExecutedInfo ProcessData(string data, out bool executed, out int? id)
         {
             Helpers.ConsolePrint("SOCKET", "Received: " + data);
             dynamic message = JsonConvert.DeserializeObject(data);
             executed = false;
 
-            id = (int?) message?.id?.Value ?? -1;
+            if (message == null)
+                throw new RpcException("No message found", 34);
+
+            id = (int?) message.id;
             switch (message.method.Value)
             {
                 case "sma":
@@ -543,12 +546,12 @@ namespace NiceHashMiner.Stats
             _socket?.SendData(sendData);
         }
 
-        private static void SendExecuted(ExecutedInfo info, int id, int code = 0, string message = null)
+        private static void SendExecuted(ExecutedInfo info, int? id, int code = 0, string message = null)
         {
             // First set status
             MinerStatus_Tick(null);
             // Then executed
-            var data = new ExecutedCall(id, code, message).Serialize();
+            var data = new ExecutedCall(id ?? -1, code, message).Serialize();
             _socket?.SendData(data);
             // Login if we have to
             if (info?.LoginNeeded ?? false)

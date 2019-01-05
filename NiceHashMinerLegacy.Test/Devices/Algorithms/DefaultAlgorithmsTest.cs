@@ -29,7 +29,7 @@ namespace NiceHashMinerLegacy.Tests.Devices.Algorithms
         {
             Assert.IsTrue(algos.ContainsKey(MinerBaseType.XmrStak));
             var xrmStakAlgos = algos[MinerBaseType.XmrStak];
-            Assert.AreEqual(2, xrmStakAlgos.Count);
+            Assert.AreEqual(3, xrmStakAlgos.Count);
 
             AssertAlgorithmsEqual(xrmStakAlgos[0], MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7);
         }

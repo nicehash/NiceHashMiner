@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Stats.Models;
-using WebSocketSharp;
+using System.Linq;
 
 namespace NiceHashMinerLegacy.Tests.Stats
 {
@@ -24,41 +19,47 @@ namespace NiceHashMinerLegacy.Tests.Stats
         [TestMethod]
         public void VersionUpdateShouldParse()
         {
-            NiceHashStats.ProcessData(TestSocketCalls.Data);
+            NiceHashStats.ProcessData(TestSocketCalls.Essentials, out var ex, out var id);
 
-            Assert.AreEqual("1.9.1.5", NiceHashStats.Version);
+            Assert.AreEqual("1.9.1.2", NiceHashStats.Version);
+            Assert.IsFalse(ex);
+            Assert.IsNull(id);
         }
 
         [TestMethod]
         [ExpectedException(typeof(RpcException))]
         public void SetInvalidWorkerShouldThrow()
         {
-            NiceHashStats.ProcessData(TestSocketCalls.InvalidWorkerSet);
+            NiceHashStats.ProcessData(TestSocketCalls.InvalidWorkerSet, out _, out _);
         }
 
         [TestMethod]
         public void SetValidWorkerShouldPrase()
         {
-            var ex = NiceHashStats.ProcessData(TestSocketCalls.ValidWorkerSet);
-            Assert.IsTrue(ex.LoginNeeded);
-            Assert.AreEqual("main", ex.NewWorker);
+            var set = NiceHashStats.ProcessData(TestSocketCalls.ValidWorkerSet, out var ex, out var id);
+            Assert.IsTrue(set.LoginNeeded);
+            Assert.AreEqual("main", set.NewWorker);
             Assert.AreEqual("main", ConfigManager.GeneralConfig.WorkerName);
+            Assert.IsTrue(ex);
+            Assert.AreEqual(12, id);
         }
 
         [TestMethod]
         [ExpectedException(typeof(RpcException))]
         public void SetInvalidUserShouldThrow()
         {
-            NiceHashStats.ProcessData(TestSocketCalls.InvalidUserSet);
+            NiceHashStats.ProcessData(TestSocketCalls.InvalidUserSet, out _, out _);
         }
 
         [TestMethod]
         public void SetValidUserShouldParse()
         {
-            var ex = NiceHashStats.ProcessData(TestSocketCalls.ValidUserSet);
+            var ex = NiceHashStats.ProcessData(TestSocketCalls.ValidUserSet, out var e, out var id);
             Assert.IsTrue(ex.LoginNeeded);
             Assert.AreEqual("3KpWmp49Cdbswr23KhjagNbwqiwcFh8Br2", ex.NewBtc);
             Assert.AreEqual("3KpWmp49Cdbswr23KhjagNbwqiwcFh8Br2", ConfigManager.GeneralConfig.BitcoinAddress);
+            Assert.IsTrue(e);
+            Assert.AreEqual(15, id);
         }
 
         [TestMethod]
@@ -73,7 +74,10 @@ namespace NiceHashMinerLegacy.Tests.Stats
 
             var first = devs.First();
 
-            NiceHashStats.ProcessData(string.Format(TestSocketCalls.EnableOne, first.B64Uuid));
+            NiceHashStats.ProcessData(string.Format(TestSocketCalls.EnableOne, first.B64Uuid), out var e, out var id);
+
+            Assert.IsTrue(e);
+            Assert.AreEqual(89, id);
 
             foreach (var dev in devs)
             {
@@ -83,13 +87,19 @@ namespace NiceHashMinerLegacy.Tests.Stats
                     Assert.IsTrue(dev.Enabled);
             }
 
-            NiceHashStats.ProcessData(TestSocketCalls.EnableAll);
+            NiceHashStats.ProcessData(TestSocketCalls.EnableAll, out e, out id);
+
+            Assert.IsTrue(e);
+            Assert.AreEqual(89, id);
 
             Assert.IsTrue(devs.All(d => d.Enabled));
 
             var last = devs.Last();
 
-            NiceHashStats.ProcessData(string.Format(TestSocketCalls.DisableOne, last.B64Uuid));
+            NiceHashStats.ProcessData(string.Format(TestSocketCalls.DisableOne, last.B64Uuid), out e, out id);
+
+            Assert.IsTrue(e);
+            Assert.AreEqual(89, id);
 
             foreach (var dev in devs)
             {
@@ -99,7 +109,10 @@ namespace NiceHashMinerLegacy.Tests.Stats
                     Assert.IsFalse(dev.Enabled);
             }
 
-            NiceHashStats.ProcessData(TestSocketCalls.DisableAll);
+            NiceHashStats.ProcessData(TestSocketCalls.DisableAll, out e, out id);
+
+            Assert.IsTrue(e);
+            Assert.AreEqual(89, id);
 
             Assert.IsFalse(devs.Any(d => d.Enabled));
         }
@@ -108,14 +121,14 @@ namespace NiceHashMinerLegacy.Tests.Stats
         [ExpectedException(typeof(RpcException))]
         public void InvalidEnableShouldThrow()
         {
-            NiceHashStats.ProcessData(TestSocketCalls.InvalidEnableOne);
+            NiceHashStats.ProcessData(TestSocketCalls.InvalidEnableOne, out _, out _);
         }
 
         [TestMethod]
         [ExpectedException(typeof(RpcException))]
         public void InvalidDisableShouldThrow()
         {
-            NiceHashStats.ProcessData(TestSocketCalls.InvalidDisableOne);
+            NiceHashStats.ProcessData(TestSocketCalls.InvalidDisableOne, out _, out _);
         }
     }
 }
