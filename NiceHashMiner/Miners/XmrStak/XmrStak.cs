@@ -18,6 +18,8 @@ namespace NiceHashMiner.Miners.XmrStak
 {
     public class XmrStak : Miner
     {
+        private static readonly object _fileLock = new object();
+
         public XmrStak(string name = "")
             : base("XmrStak")
         {
@@ -80,61 +82,65 @@ namespace NiceHashMiner.Miners.XmrStak
 
         private Dictionary<DeviceType, string> PrepareConfigFiles()
         {
-            var configs = new Dictionary<DeviceType, string>();
-            var types = new List<DeviceType>();
-            foreach (var pair in MiningSetup.MiningPairs)
+            lock (_fileLock)
             {
-                if (!types.Contains(pair.Device.DeviceType)) types.Add(pair.Device.DeviceType);
-            }
-
-            foreach (var type in types)
-            {
-                if (type == DeviceType.CPU)
+                var configs = new Dictionary<DeviceType, string>();
+                var types = new List<DeviceType>();
+                foreach (var pair in MiningSetup.MiningPairs)
                 {
-                    var cpuPair = MiningSetup.MiningPairs.Find(p => p.Device.DeviceType == type);
-                    var isHyperThreadingEnabled = cpuPair.CurrentExtraLaunchParameters.Contains("enable_ht=true");
-                    var numTr = ExtraLaunchParametersParser.GetThreadsNumber(cpuPair);
-                    var noPrefetch = ExtraLaunchParametersParser.GetNoPrefetch(cpuPair);
-                    if (isHyperThreadingEnabled)
-                    {
-                        numTr /= 2;
-                    }
-
-                    // Fallback on classic config if haven't been able to open 
-                    var configCpu = ParseJsonFile<XmrStakConfigCpu>(type) ?? new XmrStakConfigCpu(numTr);
-                    if (configCpu.cpu_threads_conf.Count == 0)
-                    {
-                        // No thread count would prevent CPU from mining, so fill with estimates
-                        // Otherwise use values set by xmr-stak/user
-                        configCpu.InitCpuThreads(false, noPrefetch, false, isHyperThreadingEnabled);
-                    }
-
-                    configs[type] = WriteJsonFile(configCpu, type);
+                    if (!types.Contains(pair.Device.DeviceType)) types.Add(pair.Device.DeviceType);
                 }
-                else
-                {
-                    var ids = MiningSetup.MiningPairs.Where(p => p.Device.DeviceType == type).Select(p => p.Device.ID);
 
-                    if (type == DeviceType.AMD)
+                foreach (var type in types)
+                {
+                    if (type == DeviceType.CPU)
                     {
-                        var configGpu = ParseJsonFile<XmrStakConfigAmd>(type) ?? new XmrStakConfigAmd();
-                        configGpu.SetupThreads(ids);
-                        configs[type] = WriteJsonFile(configGpu, type);
+                        var cpuPair = MiningSetup.MiningPairs.Find(p => p.Device.DeviceType == type);
+                        var isHyperThreadingEnabled = cpuPair.CurrentExtraLaunchParameters.Contains("enable_ht=true");
+                        var numTr = ExtraLaunchParametersParser.GetThreadsNumber(cpuPair);
+                        var noPrefetch = ExtraLaunchParametersParser.GetNoPrefetch(cpuPair);
+                        if (isHyperThreadingEnabled)
+                        {
+                            numTr /= 2;
+                        }
+
+                        // Fallback on classic config if haven't been able to open 
+                        var configCpu = ParseJsonFile<XmrStakConfigCpu>(type) ?? new XmrStakConfigCpu(numTr);
+                        if (configCpu.cpu_threads_conf.Count == 0)
+                        {
+                            // No thread count would prevent CPU from mining, so fill with estimates
+                            // Otherwise use values set by xmr-stak/user
+                            configCpu.InitCpuThreads(false, noPrefetch, false, isHyperThreadingEnabled);
+                        }
+
+                        configs[type] = WriteJsonFile(configCpu, type);
                     }
                     else
                     {
-                        var keepBVals = MiningSetup.MiningPairs.Any(p =>
-                            p.CurrentExtraLaunchParameters.Contains("--keep-b") && p.Device.DeviceType == type);
-                        var configGpu = ParseJsonFile<XmrStakConfigNvidia>(type) ?? new XmrStakConfigNvidia();
-                        // B values do not seem to work on many nv setups, workaround by forcing higher vals unless user opts out
-                        configGpu.SetupThreads(ids);
-                        if (!keepBVals) configGpu.OverrideBVals();
-                        configs[type] = WriteJsonFile(configGpu, type);
+                        var ids = MiningSetup.MiningPairs.Where(p => p.Device.DeviceType == type)
+                            .Select(p => p.Device.ID);
+
+                        if (type == DeviceType.AMD)
+                        {
+                            var configGpu = ParseJsonFile<XmrStakConfigAmd>(type) ?? new XmrStakConfigAmd();
+                            configGpu.SetupThreads(ids);
+                            configs[type] = WriteJsonFile(configGpu, type);
+                        }
+                        else
+                        {
+                            var keepBVals = MiningSetup.MiningPairs.Any(p =>
+                                p.CurrentExtraLaunchParameters.Contains("--keep-b") && p.Device.DeviceType == type);
+                            var configGpu = ParseJsonFile<XmrStakConfigNvidia>(type) ?? new XmrStakConfigNvidia();
+                            // B values do not seem to work on many nv setups, workaround by forcing higher vals unless user opts out
+                            configGpu.SetupThreads(ids);
+                            if (!keepBVals) configGpu.OverrideBVals();
+                            configs[type] = WriteJsonFile(configGpu, type);
+                        }
                     }
                 }
-            }
 
-            return configs;
+                return configs;
+            }
         }
 
         #region Filename Helpers
