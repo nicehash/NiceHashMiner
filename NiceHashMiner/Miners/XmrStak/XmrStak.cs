@@ -7,9 +7,11 @@ using NiceHashMiner.Miners.XmrStak.Configs;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using NiceHashMinerLegacy.Extensions;
 
@@ -297,22 +299,29 @@ namespace NiceHashMiner.Miners.XmrStak
                 //    WriteJsonFile(config, filename);
                 //}
 
-                // Try running xmr-stak to create default configs
-                var handle = BenchmarkStartProcess(GetBenchmarkCommandLine(MiningSetup.CurrentAlgorithmType, 10, null));
-                //var timer = new Stopwatch();
-                //timer.Start();
+
+                var timer = new Stopwatch();
 
                 Helpers.ConsolePrint(MinerTag(), "Launching xmr-stak to generate configs, this can take up to 30s");
 
-                handle.Start();
+                // Try running xmr-stak to create default configs
+                var handle = BenchmarkStartProcess(GetBenchmarkCommandLine(MiningSetup.CurrentAlgorithmType, 10, null));
+
+                timer.Start();
                 try
                 {
-                    if (!handle.WaitForExit(30 * 1000))
+                    while (timer.Elapsed.TotalSeconds < 30)
                     {
-                        handle.Kill(); // Should have exited already
-                        handle.WaitForExit(20 * 1000);
-                        handle.Close();
+                        if (File.Exists(WorkingDirectory + filename))
+                            break;
+
+                        Thread.Sleep(500);
                     }
+
+                    handle.WaitForExit(1000);
+                    handle.Kill();
+                    handle.WaitForExit(20 * 1000);
+                    handle.Close();
                 }
                 catch { }
 
