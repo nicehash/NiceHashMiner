@@ -11,6 +11,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Miners.XmrStak
 {
@@ -225,26 +226,31 @@ namespace NiceHashMiner.Miners.XmrStak
             return CreateLaunchCommand(devConfigs, url, user) + $" --benchmark 0 --benchwork {time} --benchwait 5";
         }
 
-        protected override void FinishUpBenchmark()
-        {
-            BenchmarkAlgorithm.BenchmarkSpeed = _benchmarkSum / Math.Max(1, _benchmarkCount);
-        }
+        //protected override void FinishUpBenchmark()
+        //{
+        //    BenchmarkAlgorithm.BenchmarkSpeed = _benchmarkSum / Math.Max(1, _benchmarkCount);
+        //}
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            if (!outdata.Contains("Totals (ALL):")) return false;
+            if (!outdata.Contains("Benchmark Total:")) return false;
 
-            var speeds = outdata.Split();
-            foreach (var s in speeds)
-            {
-                if (!double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var speed) || speed <= 0) 
-                    continue;
-                _benchmarkSum += speed;
-                _benchmarkCount++;
-                break;
-            }
+            //var speeds = outdata.Split();
+            //foreach (var s in speeds)
+            //{
+            //    if (!double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var speed) || speed <= 0) 
+            //        continue;
+            //    _benchmarkSum += speed;
+            //    _benchmarkCount++;
+            //    break;
+            //}
 
-            return false;
+            //return false;
+
+            var hash = outdata.GetHashrateAfter("Benchmark Total:");
+            if (hash == null) return false;
+            BenchmarkAlgorithm.BenchmarkSpeed = hash.Value;
+            return true;
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
