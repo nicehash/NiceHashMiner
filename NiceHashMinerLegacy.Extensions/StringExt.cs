@@ -13,7 +13,7 @@ namespace NiceHashMinerLegacy.Extensions
             var numString = new string(afterString
                 .ToCharArray()
                 .SkipWhile(c => !char.IsDigit(c))
-                .TakeWhile(char.IsDigit)
+                .TakeWhile(c => char.IsDigit(c) || c == '.')
                 .ToArray());
 
             if (!double.TryParse(numString, out var hash))
