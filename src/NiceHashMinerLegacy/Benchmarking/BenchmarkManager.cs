@@ -52,7 +52,7 @@ namespace NiceHashMiner.Benchmarking
             {
                 _inBenchmark = value;
                 // If starting mining after, don't update for STOPPED status
-                if (!value && (!_benchForm?.StartMiningOnFinish ?? true))
+                if (value || (!_benchForm?.StartMiningOnFinish ?? true))
                 {
                     NiceHashStats.StateChanged();
                 }

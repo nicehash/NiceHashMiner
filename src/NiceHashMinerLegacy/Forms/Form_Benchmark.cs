@@ -102,10 +102,14 @@ namespace NiceHashMiner.Forms
 
         private void SetCurrentStatus(object sender, AlgoStatusEventArgs e)
         {
-            Invoke((MethodInvoker) delegate
+            if (InvokeRequired)
+            {
+                Invoke((MethodInvoker) delegate{ SetCurrentStatus(sender, e); });
+            }
+            else
             {
                 algorithmsListView1.SetSpeedStatus(e.Device, e.Algorithm, e.Status);
-            });
+            }
         }
 
         private void StepUpBenchmarkStepProgress(object sender, StepUpEventArgs e)
