@@ -5,33 +5,24 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMiner.Miners.XmrStak.Configs;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Miners.XmrStak
 {
     public class XmrStak : Miner
     {
-        private const string ConfigName = "config_nh.txt";
-        private const string DefConfigName = "config.txt";
-        private const string DefPoolName = "pools.txt";
-
-        private int _benchmarkCount;
-        private double _benchmarkSum;
-
         public XmrStak(string name = "")
             : base("XmrStak")
         {
             ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
-            //TimeoutStandard = true;
             IsMultiType = true;
         }
 
@@ -91,27 +82,10 @@ namespace NiceHashMiner.Miners.XmrStak
         {
             var configs = new Dictionary<DeviceType, string>();
             var types = new List<DeviceType>();
-            //var isHeavy = false;
             foreach (var pair in MiningSetup.MiningPairs)
             {
                 if (!types.Contains(pair.Device.DeviceType)) types.Add(pair.Device.DeviceType);
-                //if (pair.Algorithm.NiceHashID == AlgorithmType.CryptoNightHeavy) isHeavy = true;
             }
-
-            //var configName = bench ? GetBenchConfigName() : ConfigName;
-            //var config = ParseJsonFile<XmrStakConfig>(filename: DefConfigName) ?? new XmrStakConfig();
-            //config.httpd_port = ApiPort;
-            //if (bench)
-            //{
-            //    config.SetBenchmarkOptions(GetLogFileName());
-            //}
-
-            //WriteJsonFile(config, configName, DefConfigName);
-
-            //var pools = new XmrStakConfigPool();
-            //pools.SetupPools(url, GetUsername(btcAddress, worker), MiningSetup.MinerName);
-            //WriteJsonFile(pools, GetPoolConfigName());
-            //WriteJsonFile(pools, DefPoolName);
 
             foreach (var type in types)
             {
@@ -173,22 +147,12 @@ namespace NiceHashMiner.Miners.XmrStak
             return $"{type}_{string.Join(",", ids)}.txt";
         }
 
-        private string GetBenchConfigName()
-        {
-            return $"bench_{GetDeviceID()}.txt";
-        }
-
-        private string GetPoolConfigName()
-        {
-            return $"pools_{GetDeviceID()}.txt";
-        }
-
         #endregion
 
         #region Commandline helpers
 
         // Return command to disable unused devices
-        private string DisableDevCmd(ICollection<DeviceType> usedDevs)
+        private static string DisableDevCmd(ICollection<DeviceType> usedDevs)
         {
             var devTypes = new List<DeviceType>
             {
@@ -198,11 +162,6 @@ namespace NiceHashMiner.Miners.XmrStak
             };
             return devTypes.FindAll(d => !usedDevs.Contains(d))
                 .Aggregate("", (current, dev) => current + $"--no{dev} ");
-        }
-
-        private string DisableDevCmd(DeviceType usedDev)
-        {
-            return DisableDevCmd(new List<DeviceType> {usedDev});
         }
 
         #endregion
@@ -218,36 +177,16 @@ namespace NiceHashMiner.Miners.XmrStak
         {
             var url = Globals.GetLocationUrl(algorithm,
                 Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
-            //var configs = PrepareConfigFiles(url, Globals.GetBitcoinUser(),
-            //    ConfigManager.GeneralConfig.WorkerName.Trim(), true);
             var user = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName);
-            _benchmarkCount = 0;
-            _benchmarkSum = 0;
+
             BenchmarkTimeInSeconds = Math.Min(60, Math.Max(time, 10));
-            CleanOldLogs();
+            
             return CreateLaunchCommand(devConfigs, url, user) + $" --benchmark 0 --benchwork {time} --benchwait 5";
         }
-
-        //protected override void FinishUpBenchmark()
-        //{
-        //    BenchmarkAlgorithm.BenchmarkSpeed = _benchmarkSum / Math.Max(1, _benchmarkCount);
-        //}
 
         protected override bool BenchmarkParseLine(string outdata)
         {
             if (!outdata.Contains("Benchmark Total:")) return false;
-
-            //var speeds = outdata.Split();
-            //foreach (var s in speeds)
-            //{
-            //    if (!double.TryParse(s, NumberStyles.Number, CultureInfo.InvariantCulture, out var speed) || speed <= 0) 
-            //        continue;
-            //    _benchmarkSum += speed;
-            //    _benchmarkCount++;
-            //    break;
-            //}
-
-            //return false;
 
             var hash = outdata.GetHashrateAfter("Benchmark Total:");
             if (hash == null) return false;
@@ -292,13 +231,6 @@ namespace NiceHashMiner.Miners.XmrStak
                     Helpers.ConsolePrint(MinerTag(), "xmr-stak did not generate configs, using default values");
                     return new T();
                 }
-                //if (!File.Exists(WorkingDirectory + DefConfigName))
-                //{
-                //    // Exception since xmr-stak won't passively generate general config
-                //    var config = new XmrStakConfig();
-                //    WriteJsonFile(config, filename);
-                //}
-
 
                 var timer = new Stopwatch();
 
