@@ -155,6 +155,11 @@ namespace NiceHashMiner.Devices
 
                 Debug.Assert(powerInfo.Entries.Length == 4);
 
+                if (powerInfo.Entries[0].MinPower == 0 || powerInfo.Entries[0].MaxPower == 0)
+                {
+                    throw new Exception("Power control not available!");
+                }
+
                 _minPowerLimit = powerInfo.Entries[0].MinPower;
                 _maxPowerLimit = powerInfo.Entries[0].MaxPower;
                 _defaultPowerLimit = powerInfo.Entries[0].DefPower;

@@ -894,7 +894,7 @@ namespace NiceHashMiner
             _benchmarkForm = new Form_Benchmark();
             SetChildFormCenter(_benchmarkForm);
             _benchmarkForm.ShowDialog();
-            var startMining = _benchmarkForm.StartMining;
+            var startMining = _benchmarkForm.StartMiningOnFinish;
             _benchmarkForm = null;
 
             InitMainConfigGuiData();
