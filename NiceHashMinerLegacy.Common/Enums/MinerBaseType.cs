@@ -24,6 +24,7 @@
         XmrStakAMD,
         Claymore_old,
         dtsm,
+        trex,
         END
     }
 }

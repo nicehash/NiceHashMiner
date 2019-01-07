@@ -56,8 +56,13 @@ namespace NiceHashMiner.Switching
                 if (algo >= 0)
                 {
                     var paying = 0d;
+
                     if (cacheDict?.TryGetValue(algo, out paying) ?? false)
                         HasData = true;
+
+#if FILLSMA
+                    paying = 1;
+#endif
 
                     _currentSma[algo] = new NiceHashSma
                     {

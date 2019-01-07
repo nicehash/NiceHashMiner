@@ -642,7 +642,7 @@ namespace NiceHashMiner
                 : International.GetText("Benchmark_Terminated");
         }
 
-        protected void BenchmarkThreadRoutineFinish()
+        protected virtual void BenchmarkThreadRoutineFinish()
         {
             var status = BenchmarkProcessStatus.Finished;
 
@@ -918,7 +918,7 @@ namespace NiceHashMiner
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
         
 
-        protected virtual NiceHashProcess _Start()
+        protected virtual NiceHashProcess _Start(IReadOnlyDictionary<string, string> envVariables = null)
         {
             // never start when ended
             if (_isEnded)
@@ -945,6 +945,14 @@ namespace NiceHashMiner
                     var envName = kvp.Key;
                     var envValue = kvp.Value;
                     P.StartInfo.EnvironmentVariables[envName] = envValue;
+                }
+            }
+
+            if (envVariables != null)
+            {
+                foreach (var kvp in envVariables)
+                {
+                    P.StartInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
                 }
             }
 
