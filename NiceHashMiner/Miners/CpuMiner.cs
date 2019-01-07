@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Miners.Parsing;
@@ -49,7 +50,7 @@ namespace NiceHashMiner.Miners
             Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
         }
 
-        protected override NiceHashProcess _Start()
+        protected override NiceHashProcess _Start(IReadOnlyDictionary<string, string> envVariables = null)
         {
             var p = base._Start();
 

@@ -42,6 +42,20 @@ namespace NiceHashMiner.Miners
             return null;
         }
 
+        private static Miner CreateEwbf(AlgorithmType type)
+        {
+            if (type == AlgorithmType.Equihash)
+            {
+                return new Ewbf();
+            }
+            if (type == AlgorithmType.ZHash)
+            {
+                return new Ewbf144();
+            }
+
+            return null;
+        }
+
         public static Miner CreateMiner(DeviceType deviceType, Algorithm algorithm)
         {
             switch (algorithm.MinerBaseType)
@@ -67,7 +81,7 @@ namespace NiceHashMiner.Miners
                 case MinerBaseType.experimental:
                     return CreateExperimental(deviceType, algorithm.NiceHashID);
                 case MinerBaseType.EWBF:
-                    return new Ewbf();
+                    return CreateEwbf(algorithm.NiceHashID);
                 case MinerBaseType.Prospector:
                     return new Prospector();
                 case MinerBaseType.Xmrig:
@@ -76,6 +90,8 @@ namespace NiceHashMiner.Miners
                     return new Dtsm();
                 case MinerBaseType.cpuminer:
                     return new CpuMiner();
+                case MinerBaseType.trex:
+                    return new Trex();
             }
 
             return null;

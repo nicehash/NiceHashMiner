@@ -122,6 +122,10 @@ namespace NiceHashMiner.Miners.Grouping
             public const string Dtsm = Bin3rdParty + @"\dtsm\zm.exe";
 
             public const string EthLargement = Bin3rdParty + @"\ethlargement\OhGodAnETHlargementPill-r2.exe";
+
+            public const string Ewbf144 = Bin3rdParty + @"\ewbf_144\miner.exe";
+
+            public const string Trex = Bin3rdParty + @"\trex\t-rex.exe";
         }
 
         // NEW START
@@ -176,7 +180,16 @@ namespace NiceHashMiner.Miners.Grouping
                 case MinerBaseType.experimental:
                     return Experimental.GetPath(algoType, devGroupType);
                 case MinerBaseType.EWBF:
-                    return Data.Ewbf;
+                    if (algoType == AlgorithmType.Equihash)
+                    {
+                        return Data.Ewbf;
+                    }
+                    else if (algoType == AlgorithmType.ZHash)
+                    {
+                        return Data.Ewbf144;
+                    }
+
+                    break;
                 case MinerBaseType.Prospector:
                     return Data.Prospector;
                 case MinerBaseType.Xmrig:
@@ -185,6 +198,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.Dtsm;
                 case MinerBaseType.cpuminer:
                     return Data.CpuMiner;
+                case MinerBaseType.trex:
+                    return Data.Trex;
             }
             return Data.None;
         }

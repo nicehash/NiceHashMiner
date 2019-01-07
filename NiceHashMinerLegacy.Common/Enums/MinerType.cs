@@ -22,6 +22,7 @@
         EWBF,
         Xmrig,
         dtsm,
+        trex,
         END
     }
 }
