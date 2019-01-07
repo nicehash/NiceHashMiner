@@ -94,7 +94,7 @@ namespace NiceHashMiner.Miners.XmrStak
                     var cpuPair = MiningSetup.MiningPairs.Find(p => p.Device.DeviceType == type);
                     var isHyperThreadingEnabled = cpuPair.CurrentExtraLaunchParameters.Contains("enable_ht=true");
                     var numTr = ExtraLaunchParametersParser.GetThreadsNumber(cpuPair);
-                    var no_prefetch = ExtraLaunchParametersParser.GetNoPrefetch(cpuPair);
+                    var noPrefetch = ExtraLaunchParametersParser.GetNoPrefetch(cpuPair);
                     if (isHyperThreadingEnabled)
                     {
                         numTr /= 2;
@@ -106,7 +106,7 @@ namespace NiceHashMiner.Miners.XmrStak
                     {
                         // No thread count would prevent CPU from mining, so fill with estimates
                         // Otherwise use values set by xmr-stak/user
-                        configCpu.Inti_cpu_threads_conf(false, no_prefetch, false, isHyperThreadingEnabled);
+                        configCpu.InitCpuThreads(false, noPrefetch, false, isHyperThreadingEnabled);
                     }
 
                     configs[type] = WriteJsonFile(configCpu, type);

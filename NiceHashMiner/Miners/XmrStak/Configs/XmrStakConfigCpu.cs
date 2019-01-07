@@ -16,43 +16,42 @@ namespace NiceHashMiner.Miners.XmrStak.Configs
             cpu_thread_num = numberOfthreads;
         }
 
-        public void Inti_cpu_threads_conf(bool low_power_mode, bool no_prefetch, bool affine_to_cpu,
-            bool isHyperThreading)
+        public void InitCpuThreads(bool lowPowerMode, bool noPrefetch, bool affineToCpu, bool isHyperThreading)
         {
             cpu_threads_conf = new List<JObject>();
             if (isHyperThreading)
             {
-                for (int i_cpu = 0; i_cpu < cpu_thread_num; ++i_cpu)
+                for (var i = 0; i < cpu_thread_num; ++i)
                 {
                     cpu_threads_conf.Add(JObject.FromObject(new
                     {
-                        low_power_mode = low_power_mode,
-                        no_prefetch = no_prefetch,
+                        low_power_mode = lowPowerMode,
+                        no_prefetch = noPrefetch,
                         asm = "auto",
-                        affine_to_cpu = i_cpu * 2
+                        affine_to_cpu = i * 2
                     }));
                 }
             }
             else
             {
-                for (int i_cpu = 0; i_cpu < cpu_thread_num; ++i_cpu)
+                for (var i = 0; i < cpu_thread_num; ++i)
                 {
-                    if (affine_to_cpu)
+                    if (affineToCpu)
                     {
                         cpu_threads_conf.Add(JObject.FromObject(new
                         {
-                            low_power_mode = low_power_mode,
-                            no_prefetch = no_prefetch,
+                            low_power_mode = lowPowerMode,
+                            no_prefetch = noPrefetch,
                             asm = "auto",
-                            affine_to_cpu = i_cpu
+                            affine_to_cpu = i
                         }));
                     }
                     else
                     {
                         cpu_threads_conf.Add(JObject.FromObject(new
                         {
-                            low_power_mode = low_power_mode,
-                            no_prefetch = no_prefetch,
+                            low_power_mode = lowPowerMode,
+                            no_prefetch = noPrefetch,
                             asm = "auto",
                             affine_to_cpu = false
                         }));
