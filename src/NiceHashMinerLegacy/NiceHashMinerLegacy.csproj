@@ -424,7 +424,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="MyDownloader.Core.csproj" />
     <Content Include="Resources\info_black_18.png" />
     <Content Include="Resources\info_black_36.png" />
     <Content Include="Resources\logo.ico" />
