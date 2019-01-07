@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMiner.Miners.XmrStak.Configs;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.XmrStak
 {
@@ -29,7 +28,7 @@ namespace NiceHashMiner.Miners.XmrStak
         {
             ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
-            TimeoutStandard = true;
+            //TimeoutStandard = true;
             IsMultiType = true;
         }
 
@@ -61,8 +60,8 @@ namespace NiceHashMiner.Miners.XmrStak
                 return;
             }
 
-            var devConfigs = PrepareConfigFiles(url, btcAdress, worker);
-            LastCommandLine = CreateLaunchCommand(ConfigName, devConfigs, url, GetUsername(btcAdress, worker));
+            var devConfigs = PrepareConfigFiles();
+            LastCommandLine = CreateLaunchCommand(devConfigs, url, GetUsername(btcAdress, worker));
 
             var envs = new Dictionary<string, string>
             {
@@ -72,16 +71,20 @@ namespace NiceHashMiner.Miners.XmrStak
             ProcessHandle = _Start(envs);
         }
 
-        private string CreateLaunchCommand(string configName, Dictionary<DeviceType, string> devConfigs, string url, string user)
+        private string CreateLaunchCommand(Dictionary<DeviceType, string> devConfigs, string url, string user)
         {
-            var devs = devConfigs.Keys.Aggregate("", (current, dev) => current + $"--{dev.ToString().ToLower()} {devConfigs[dev]} ");
+            var devs = "";
+            if (devConfigs != null)
+            {
+                devs = devConfigs.Keys.Aggregate("", (current, dev) => current + $"--{dev.ToString().ToLower()} {devConfigs[dev]} ") +
+                    DisableDevCmd(devConfigs.Keys);
+            }
 
             return $"-o {url} -u {user} --currency {MiningSetup.MinerName} -i {ApiPort} " +
-                   $"--use-nicehash -p x -r x {devs} {DisableDevCmd(devConfigs.Keys)} --noUAC";
+                   $"--use-nicehash -p x -r x {devs} --noUAC";
         }
 
-        private Dictionary<DeviceType, string> PrepareConfigFiles(string url, string btcAddress,
-            string worker, bool bench = false)
+        private Dictionary<DeviceType, string> PrepareConfigFiles()
         {
             var configs = new Dictionary<DeviceType, string>();
             var types = new List<DeviceType>();
@@ -205,16 +208,21 @@ namespace NiceHashMiner.Miners.XmrStak
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            var url = Globals.GetLocationUrl(algorithm.NiceHashID,
+            return GetBenchmarkCommandLine(algorithm.NiceHashID, time, PrepareConfigFiles());
+        }
+
+        private string GetBenchmarkCommandLine(AlgorithmType algorithm, int time, Dictionary<DeviceType, string> devConfigs)
+        {
+            var url = Globals.GetLocationUrl(algorithm,
                 Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
-            var configs = PrepareConfigFiles(url, Globals.GetBitcoinUser(),
-                ConfigManager.GeneralConfig.WorkerName.Trim(), true);
+            //var configs = PrepareConfigFiles(url, Globals.GetBitcoinUser(),
+            //    ConfigManager.GeneralConfig.WorkerName.Trim(), true);
             var user = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName);
             _benchmarkCount = 0;
             _benchmarkSum = 0;
-            BenchmarkTimeInSeconds = Math.Max(time, 60);
+            BenchmarkTimeInSeconds = Math.Min(60, Math.Max(time, 10));
             CleanOldLogs();
-            return CreateLaunchCommand(GetBenchConfigName(), configs, url, user);
+            return CreateLaunchCommand(devConfigs, url, user) + $" --benchmark 0 --benchwork {time} --benchwait 5";
         }
 
         protected override void FinishUpBenchmark()
@@ -271,7 +279,11 @@ namespace NiceHashMiner.Miners.XmrStak
             if (json == null)
             {
                 // If from recursive call, don't try again
-                if (fallback) return new T();
+                if (fallback)
+                {
+                    Helpers.ConsolePrint(MinerTag(), "xmr-stak did not generate configs, using default values");
+                    return new T();
+                }
                 //if (!File.Exists(WorkingDirectory + DefConfigName))
                 //{
                 //    // Exception since xmr-stak won't passively generate general config
@@ -279,26 +291,26 @@ namespace NiceHashMiner.Miners.XmrStak
                 //    WriteJsonFile(config, filename);
                 //}
 
-                if (typeof(T) != typeof(XmrStakConfig))
-                {
-                    // Try running xmr-stak to create default configs
-                    var handle = BenchmarkStartProcess(DisableDevCmd(type));
-                    //var timer = new Stopwatch();
-                    //timer.Start();
-                    handle.Start();
-                    try
-                    {
-                        if (!handle.WaitForExit(20 * 1000))
-                        {
-                            handle.Kill(); // Should have exited already if using right xmr-stak ver
-                            handle.WaitForExit(20 * 1000);
-                            handle.Close();
-                        }
-                    }
-                    catch { }
+                // Try running xmr-stak to create default configs
+                var handle = BenchmarkStartProcess(GetBenchmarkCommandLine(MiningSetup.CurrentAlgorithmType, 10, null));
+                //var timer = new Stopwatch();
+                //timer.Start();
 
-                    json = ParseJsonFile<T>(type, filename, true);
+                Helpers.ConsolePrint(MinerTag(), "Launching xmr-stak to generate configs, this can take up to 30s");
+
+                handle.Start();
+                try
+                {
+                    if (!handle.WaitForExit(30 * 1000))
+                    {
+                        handle.Kill(); // Should have exited already
+                        handle.WaitForExit(20 * 1000);
+                        handle.Close();
+                    }
                 }
+                catch { }
+
+                json = ParseJsonFile<T>(type, filename, true);
             }
 
             return json;
