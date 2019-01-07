@@ -161,7 +161,7 @@ namespace NiceHashMiner.Miners
             return Task.FromResult<ApiData>(null);
         }
 
-        protected override NiceHashProcess _Start()
+        protected override NiceHashProcess _Start(IReadOnlyDictionary<string, string> envVariables = null)
         {
             SetEthminerAPI(ApiPort);
             return base._Start();

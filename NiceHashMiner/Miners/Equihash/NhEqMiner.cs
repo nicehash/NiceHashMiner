@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Miners.Parsing;
+﻿using System.Collections.Generic;
+using NiceHashMiner.Miners.Parsing;
 using System.Diagnostics;
 using System.Linq;
 using NiceHashMinerLegacy.Common.Enums;
@@ -14,7 +15,7 @@ namespace NiceHashMiner.Miners
         }
 
         // CPU aff set from NHM
-        protected override NiceHashProcess _Start()
+        protected override NiceHashProcess _Start(IReadOnlyDictionary<string, string> envVariables = null)
         {
             var P = base._Start();
             if (CpuSetup.IsInit && P != null)
