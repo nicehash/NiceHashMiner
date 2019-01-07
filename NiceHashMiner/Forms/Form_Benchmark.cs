@@ -372,7 +372,7 @@ namespace NiceHashMiner.Forms
 
         private void RadioButton_SelectedUnbenchmarked_CheckedChanged_1(object sender, EventArgs e)
         {
-            BenchmarkManager.AlgorithmOption = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
+            BenchmarkManager.Selection = BenchmarkSelection.SelectedUnbenchmarkedAlgorithms;
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
             algorithmsListView1.ResetListItemColors();
@@ -380,7 +380,7 @@ namespace NiceHashMiner.Forms
 
         private void RadioButton_RE_SelectedUnbenchmarked_CheckedChanged(object sender, EventArgs e)
         {
-            BenchmarkManager.AlgorithmOption = AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms;
+            BenchmarkManager.Selection = BenchmarkSelection.ReBecnhSelectedAlgorithms;
             CalcBenchmarkDevicesAlgorithmQueue();
             devicesListViewEnableControl1.ResetListItemColors();
             algorithmsListView1.ResetListItemColors();

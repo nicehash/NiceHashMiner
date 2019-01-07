@@ -24,8 +24,8 @@ namespace NiceHashMiner.Benchmarking
             }
         }
 
-        public static AlgorithmBenchmarkSettingsType AlgorithmOption =
-            AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
+        public static BenchmarkSelection Selection { private get; set; } =
+            BenchmarkSelection.SelectedUnbenchmarkedAlgorithms;
 
         private static int _benchmarkCurrentIndex;
 
@@ -122,16 +122,16 @@ namespace NiceHashMiner.Benchmarking
         private static bool ShouldBenchmark(Algorithm algorithm)
         {
             var isBenchmarked = !algorithm.BenchmarkNeeded;
-            switch (AlgorithmOption)
+            switch (Selection)
             {
-                case AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms when !isBenchmarked &&
+                case BenchmarkSelection.SelectedUnbenchmarkedAlgorithms when !isBenchmarked &&
                                                                                          algorithm.Enabled:
                     return true;
-                case AlgorithmBenchmarkSettingsType.UnbenchmarkedAlgorithms when !isBenchmarked:
+                case BenchmarkSelection.UnbenchmarkedAlgorithms when !isBenchmarked:
                     return true;
-                case AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms when algorithm.Enabled:
+                case BenchmarkSelection.ReBecnhSelectedAlgorithms when algorithm.Enabled:
                     return true;
-                case AlgorithmBenchmarkSettingsType.AllAlgorithms:
+                case BenchmarkSelection.AllAlgorithms:
                     return true;
             }
 

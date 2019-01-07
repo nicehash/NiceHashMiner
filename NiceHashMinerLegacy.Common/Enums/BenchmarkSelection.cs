@@ -1,6 +1,6 @@
 ﻿namespace NiceHashMinerLegacy.Common.Enums
 {
-    public enum AlgorithmBenchmarkSettingsType
+    public enum BenchmarkSelection
     {
         SelectedUnbenchmarkedAlgorithms,
         UnbenchmarkedAlgorithms,
