@@ -14,5 +14,12 @@ namespace NiceHashMinerLegacy.Extensions.Tests
             var hash = "[2019-01-06 21:18:33] : Benchmark Total: 756.2 H/S".GetHashrateAfter("Benchmark Total:");
             Assert.AreEqual(756.2, hash);
         }
+
+        [TestMethod]
+        public void GetHashrateAfterShouldReturnNull()
+        {
+            var hash = "[2019-01-06 21:18:33] : Benchmark Total: --- H/S".GetHashrateAfter("Benchmark Total:");
+            Assert.IsNull(hash);
+        }
     }
 }
