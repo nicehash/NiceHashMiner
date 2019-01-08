@@ -28,8 +28,8 @@ namespace NiceHashMiner.Miners
         // session varibles fixed
         private readonly string _miningLocation;
 
-        private readonly string _btcAdress;
-        private readonly string _worker;
+        private string _btcAdress;
+        private string _worker;
         private List<MiningDevice> _miningDevices;
         private readonly IRatesComunication _ratesComunication;
 
@@ -273,6 +273,31 @@ namespace NiceHashMiner.Miners
             _switchingManager.Stop();
             SetUsedDevices(devices);
             _switchingManager.Start();
+        }
+
+        private void RestartRunningGroupMiners()
+        {
+            foreach (var key in _runningGroupMiners.Keys)
+            {
+                _runningGroupMiners[key].Stop();
+                _runningGroupMiners[key].Start(_miningLocation, _btcAdress, _worker);
+            }
+        }
+
+        public void UpdateBTC(string btc)
+        {
+            _switchingManager.Stop(); // TODO NOT SURE?
+            _btcAdress = btc;
+            RestartRunningGroupMiners();
+            _switchingManager.Start(); // TODO NOT SURE?
+        }
+
+        public void UpdateWorker(string worker)
+        {
+            _switchingManager.Stop();  // TODO NOT SURE?
+            _worker = worker;
+            RestartRunningGroupMiners();
+            _switchingManager.Start();  // TODO NOT SURE?
         }
 
         private void SetUsedDevices(IEnumerable<ComputeDevice> devices)
