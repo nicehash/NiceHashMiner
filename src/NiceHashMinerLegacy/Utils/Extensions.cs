@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace NiceHashMiner
 {
+    // TODO Should this be deleted? These extensions seem to be unused / dead code.
     public static class EnumerableExtensions
     {
         public static double GetMedian(this IEnumerable<double> source)
