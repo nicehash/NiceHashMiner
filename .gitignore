@@ -278,3 +278,6 @@ _Pvt_Extensions
 
 # VS2015 db files
 *.VC.db
+
+#IntelliJ IDEA
+.idea
