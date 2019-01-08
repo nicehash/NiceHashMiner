@@ -84,10 +84,7 @@ namespace NiceHashMiner
 
                 // init active display currency after config load
                 ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
-
-                // #2 then parse args
-                var commandLineArgs = new CommandLineParser(argv);
-
+                
                 Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
 
                 if (!pathSet)
@@ -96,7 +93,7 @@ namespace NiceHashMiner
                 }
 
                 var tosChecked = ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer;
-                if (!tosChecked || !ConfigManager.GeneralConfigIsFileExist() && !commandLineArgs.IsLang)
+                if (!tosChecked)
                 {
                     Helpers.ConsolePrint("NICEHASH",
                         "No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
@@ -105,13 +102,6 @@ namespace NiceHashMiner
 
                 // Init languages
                 International.Initialize(ConfigManager.GeneralConfig.Language);
-
-                if (commandLineArgs.IsLang)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Language is overwritten by command line parameter (-lang).");
-                    International.Initialize(commandLineArgs.LangValue);
-                    ConfigManager.GeneralConfig.Language = commandLineArgs.LangValue;
-                }
 
                 // check WMI
                 if (Helpers.IsWmiEnabled())
