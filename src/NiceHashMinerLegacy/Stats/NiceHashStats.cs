@@ -226,7 +226,8 @@ namespace NiceHashMiner.Stats
 
         private static void SocketOnOnConnectionEstablished(object sender, EventArgs e)
         {
-            MinerStatus_Tick(null); // Send device to populate rig stats
+            // Send device to populate rig stats, and send device names
+            SendMinerStatus(true);
 
             OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
         }
@@ -460,13 +461,13 @@ namespace NiceHashMiner.Stats
                 // Send as task since SetCredentials is called from UI threads
                 Task.Factory.StartNew(() =>
                 {
-                    MinerStatus_Tick(null);
+                    SendMinerStatus(false);
                     _socket?.StartConnection(btc, worker);
                 });
             }
         }
 
-        private static void MinerStatus_Tick(object state)
+        private static void SendMinerStatus(bool sendDeviceNames)
         {
             var devices = ComputeDeviceManager.Available.Devices;
 
@@ -489,7 +490,7 @@ namespace NiceHashMiner.Stats
                 {
                     var array = new JArray
                     {
-                        device.TypeID,
+                        sendDeviceNames ? device.Name : "",
                         device.B64Uuid  // TODO
                     };
 
@@ -546,10 +547,15 @@ namespace NiceHashMiner.Stats
             _socket?.SendData(sendData);
         }
 
+        private static void MinerStatus_Tick(object state)
+        {
+            SendMinerStatus(false);
+        }
+
         private static void SendExecuted(ExecutedInfo info, int? id, int code = 0, string message = null)
         {
             // First set status
-            MinerStatus_Tick(null);
+            SendMinerStatus(false);
             // Then executed
             var data = new ExecutedCall(id ?? -1, code, message).Serialize();
             _socket?.SendData(data);
@@ -564,7 +570,7 @@ namespace NiceHashMiner.Stats
 
         public static void StateChanged()
         {
-            MinerStatus_Tick(null);
+            SendMinerStatus(false);
         }
 
         public static string GetNiceHashApiData(string url, string worker)
