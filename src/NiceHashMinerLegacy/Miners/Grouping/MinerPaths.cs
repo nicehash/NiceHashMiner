@@ -126,6 +126,8 @@ namespace NiceHashMiner.Miners.Grouping
             public const string Ewbf144 = Bin3rdParty + @"\ewbf_144\miner.exe";
 
             public const string Trex = Bin3rdParty + @"\trex\t-rex.exe";
+
+            public const string Phoenix = Bin3rdParty + @"\phoenix\PhoenixMiner.exe";
         }
 
         // NEW START
@@ -200,6 +202,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.CpuMiner;
                 case MinerBaseType.trex:
                     return Data.Trex;
+                case MinerBaseType.Phoenix:
+                    return Data.Phoenix;
             }
             return Data.None;
         }

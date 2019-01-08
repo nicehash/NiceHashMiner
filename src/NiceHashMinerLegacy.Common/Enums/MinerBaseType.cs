@@ -25,6 +25,7 @@
         Claymore_old,
         dtsm,
         trex,
+        Phoenix,
         END
     }
 }

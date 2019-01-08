@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
+﻿using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
+using System.Collections.Generic;
 
 namespace NiceHashMiner.Devices.Algorithms
 {
@@ -45,6 +41,13 @@ namespace NiceHashMiner.Devices.Algorithms
                     new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak)
                 }
             },
+            {
+                MinerBaseType.Phoenix,
+                new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto)
+                }
+            }
         };
 
         #endregion

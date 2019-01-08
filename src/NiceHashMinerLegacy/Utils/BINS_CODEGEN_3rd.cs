@@ -857,7 +857,8 @@ namespace NiceHashMiner.Utils
             @"/claymore_cryptonight/NsGpuCNMiner.exe",
             @"/ethlargement/OhGodAnETHlargementPill-r2.exe",
             @"/ewbf_144/miner.exe",
-            @"/trex/t-rex.exe"
+            @"/trex/t-rex.exe",
+            @"/phoenix/PhoenixMiner.exe"
         };
 
         #endregion //CODE_GEN STUFF // listFiles.py
