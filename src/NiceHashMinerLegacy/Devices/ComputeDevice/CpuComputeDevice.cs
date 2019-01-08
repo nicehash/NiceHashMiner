@@ -40,7 +40,8 @@ namespace NiceHashMiner.Devices
             Index = ID; // Don't increment for CPU
 
             var hashedInfo = $"{id}--{info.VendorID}--{info.Family}--{info.Model}--{info.PhysicalID}--{info.ModelName}";
-            Uuid = UUID.V5(UUID.Nil().AsGuid(), hashedInfo).AsGuid().ToString();
+            var uuidHEX = UUID.V5(UUID.Nil().AsGuid(), hashedInfo).AsGuid().ToString();
+            Uuid = $"CPU-{uuidHEX}";
 
             _cpuCounter = new PerformanceCounter
             {
