@@ -72,14 +72,15 @@ namespace NiceHashMiner.Miners
             try
             {
                 var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"miner_getstat1\"}\n");
-                var client = new TcpClient("127.0.0.1", ApiPort);
-                var nwStream = client.GetStream();
-                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                var bytesToRead = new byte[client.ReceiveBufferSize];
-                var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
-                client.Close();
+                using (var client = new TcpClient("127.0.0.1", ApiPort))
+                using (var nwStream = client.GetStream())
+                {
+                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
+                    var bytesToRead = new byte[client.ReceiveBufferSize];
+                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
+                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
+                    resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr, Globals.JsonSettings);
+                }
                 //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", respStr);
             }
             catch (Exception ex)
