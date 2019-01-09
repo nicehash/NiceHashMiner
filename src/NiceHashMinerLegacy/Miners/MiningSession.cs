@@ -286,18 +286,18 @@ namespace NiceHashMiner.Miners
 
         public void UpdateBTC(string btc)
         {
-            _switchingManager.Stop(); // TODO NOT SURE?
+            _switchingManager.Stop();
             _btcAdress = btc;
             RestartRunningGroupMiners();
-            _switchingManager.Start(); // TODO NOT SURE?
+            _switchingManager.Start();
         }
 
         public void UpdateWorker(string worker)
         {
-            _switchingManager.Stop();  // TODO NOT SURE?
+            _switchingManager.Stop();
             _worker = worker;
             RestartRunningGroupMiners();
-            _switchingManager.Start();  // TODO NOT SURE?
+            _switchingManager.Start();
         }
 
         private void SetUsedDevices(IEnumerable<ComputeDevice> devices)
