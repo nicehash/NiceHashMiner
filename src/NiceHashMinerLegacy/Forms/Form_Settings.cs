@@ -12,10 +12,11 @@ using System.Windows.Forms;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner.Interfaces.DataVisualizer;
 
 namespace NiceHashMiner.Forms
 {
-    public partial class Form_Settings : Form
+    public partial class Form_Settings : Form, IDataVisualizer, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer
     {
         private readonly bool _isInitFinished = false;
         private bool _isChange = false;
@@ -39,9 +40,15 @@ namespace NiceHashMiner.Forms
 
         private bool _isStartupChanged = false;
 
+        ~Form_Settings()
+        {
+            ApplicationStateManager.UnsubscribeStateDisplayer(this);
+        }
+
         public Form_Settings()
         {
             InitializeComponent();
+            ApplicationStateManager.SubscribeStateDisplayer(this);
             Icon = Properties.Resources.logo;
 
             //ret = 1; // default
@@ -498,8 +505,8 @@ namespace NiceHashMiner.Forms
             }
             // Add EventHandler for all the general tab's textboxes
             {
-                textBox_BitcoinAddress.Leave += GeneralTextBoxes_Leave;
-                textBox_WorkerName.Leave += GeneralTextBoxes_Leave;
+                textBox_BitcoinAddress.Leave += textBox_BitcoinAddress_Leave;
+                textBox_WorkerName.Leave += textBox_WorkerName_Leave;
                 textBox_IFTTTKey.Leave += GeneralTextBoxes_Leave;
                 // these are ints only
                 textBox_SwitchMaxSeconds.Leave += GeneralTextBoxes_Leave;
@@ -528,7 +535,7 @@ namespace NiceHashMiner.Forms
             // Add EventHandler for all the general tab's textboxes
             {
                 comboBox_Language.Leave += GeneralComboBoxes_Leave;
-                comboBox_ServiceLocation.Leave += GeneralComboBoxes_Leave;
+                comboBox_ServiceLocation.SelectedIndexChanged += comboBox_ServiceLocation_SelectedIndexChanged;
                 comboBox_TimeUnit.Leave += GeneralComboBoxes_Leave;
                 comboBox_DagLoadMode.Leave += GeneralComboBoxes_Leave;
                 comboBox_IdleType.Leave += GeneralComboBoxes_Leave;
@@ -792,6 +799,60 @@ namespace NiceHashMiner.Forms
             return startVal == Application.ExecutablePath;
         }
 
+        // TODO copy paste from Form_Main
+        private void textBox_BitcoinAddress_Leave(object sender, EventArgs e)
+        {
+            var trimmedBtcText = textBox_BitcoinAddress.Text.Trim();
+            var result = ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
+            // TODO get back to this
+            switch (result)
+            {
+                case ApplicationStateManager.SetResult.INVALID:
+                    break;
+                case ApplicationStateManager.SetResult.CHANGED:
+                    _isCredChange = true;
+                    break;
+                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
+                    break;
+            }
+        }
+
+        // TODO copy paste from Form_Main
+        private void textBox_WorkerName_Leave(object sender, EventArgs e)
+        {
+            var trimmedWorkerNameText = textBox_WorkerName.Text.Trim();
+            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
+            // TODO GUI stuff get back to this
+            switch (result)
+            {
+                case ApplicationStateManager.SetResult.INVALID:
+                    // TODO workername invalid handling
+                    break;
+                case ApplicationStateManager.SetResult.CHANGED:
+                    _isCredChange = true;
+                    break;
+                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
+                    break;
+            }
+        }
+
+        private void comboBox_ServiceLocation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var locationIndex = comboBox_ServiceLocation.SelectedIndex;
+            var result = ApplicationStateManager.SetServiceLocationIfValidOrDifferent(locationIndex);
+            // TODO GUI stuff get back to this, here we can't really break anything
+            switch (result)
+            {
+                case ApplicationStateManager.SetResult.INVALID:
+                    break;
+                case ApplicationStateManager.SetResult.CHANGED:
+                    _isCredChange = true;
+                    break;
+                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
+                    break;
+            }
+        }
+
         private void GeneralTextBoxes_Leave(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
@@ -843,7 +904,7 @@ namespace NiceHashMiner.Forms
             if (!_isInitFinished) return;
             IsChange = true;
             ConfigManager.GeneralConfig.Language = (LanguageType) comboBox_Language.SelectedIndex;
-            ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
+            //ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
             ConfigManager.GeneralConfig.EthminerDagGenerationType =
                 (DagGenerationType) comboBox_DagLoadMode.SelectedIndex;
@@ -1102,6 +1163,30 @@ namespace NiceHashMiner.Forms
             IsChange = true;
             ConfigManager.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
             comboBox_IdleType.Enabled = checkBox_StartMiningWhenIdle.Checked;
+        }
+
+        void IBTCDisplayer.DisplayBTC(string btc)
+        {
+            FormHelpers.SafeInvoke(this, () =>
+            {
+                textBox_BitcoinAddress.Text = btc;
+            });
+        }
+
+        void IWorkerNameDisplayer.DisplayWorkerName(string workerName)
+        {
+            FormHelpers.SafeInvoke(this, () =>
+            {
+                textBox_WorkerName.Text = workerName;
+            });
+        }
+
+        void IServiceLocationDisplayer.DisplayServiceLocation(int serviceLocation)
+        {
+            FormHelpers.SafeInvoke(this, () =>
+            {
+                comboBox_ServiceLocation.SelectedIndex = serviceLocation;
+            });
         }
     }
 }

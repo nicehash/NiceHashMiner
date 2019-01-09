@@ -9,8 +9,16 @@ namespace NiceHashMiner
     {
         // Constants
         public static string[] MiningLocation = {"eu", "usa", "hk", "jp", "in", "br"};
+        public static object[] MiningLocationNames = new object[] {
+            "Europe - Amsterdam",
+            "USA - San Jose",
+            "China - Hong Kong",
+            "Japan - Tokyo",
+            "India - Chennai",
+            "Brazil - Sao Paulo"
+        };
 
-        public static readonly string DemoUser = "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
+    public static readonly string DemoUser = "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
 
         // change this if TOS changes
         public const int CurrentTosVer = 4;

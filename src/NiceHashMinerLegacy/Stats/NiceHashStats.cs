@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NiceHashMinerLegacy.Common.Enums;
 using WebSocketSharp;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Stats
 {
@@ -52,7 +53,7 @@ namespace NiceHashMiner.Stats
 
         private const int DeviceUpdateLaunchDelay = 20 * 1000;
         private const int DeviceUpdateInterval = 60 * 1000;
-        
+
         public static double Balance { get; private set; }
         public static string Version { get; private set; }
         public static bool IsAlive => _socket?.IsAlive ?? false;
@@ -61,9 +62,7 @@ namespace NiceHashMiner.Stats
         public static event EventHandler OnBalanceUpdate;
 
         public static event EventHandler OnSmaUpdate;
-        public static event EventHandler OnVersionUpdate;
         public static event EventHandler OnConnectionLost;
-        public static event EventHandler OnConnectionEstablished;
         public static event EventHandler<SocketEventArgs> OnVersionBurn;
         public static event EventHandler OnExchangeUpdate;
 
@@ -137,8 +136,8 @@ namespace NiceHashMiner.Stats
         private static void SocketOnOnConnectionEstablished(object sender, EventArgs e)
         {
             DeviceStatus_Tick(null); // Send device to populate rig stats
-
-            OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
+            // send credentials
+            SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress, ConfigManager.GeneralConfig.WorkerName);
         }
 
         #endregion
@@ -194,7 +193,7 @@ namespace NiceHashMiner.Stats
         private static void SetVersion(string version)
         {
             Version = version;
-            OnVersionUpdate?.Invoke(null, EventArgs.Empty);
+            ApplicationStateManager.OnVersionUpdate(version);
         }
 
         private static void SetExchangeRates(string data)
