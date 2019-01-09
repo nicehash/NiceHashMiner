@@ -61,6 +61,16 @@ namespace NiceHashMiner.Miners
             _curMiningSession?.UpdateUsedDevices(devices);
         }
 
+        public static void UpdateBTC(string btc)
+        {
+            _curMiningSession?.UpdateBTC(btc);
+        }
+
+        public static void UpdateWorker(string worker)
+        {
+            _curMiningSession?.UpdateWorker(worker);
+        }
+
 
         /// <summary>
         /// SwichMostProfitable should check the best combination for most profit.

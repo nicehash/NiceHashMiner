@@ -177,22 +177,24 @@ namespace NiceHashMiner.Stats
                     return null;
                 case "mining.set.username":
                     executed = true;
-                    var user = (string) message.username;
+                    var user = (string)message.username;
 
                     if (!BitcoinAddress.ValidateBitcoinAddress(user))
                         throw new RpcException("Bitcoin address invalid", 1);
 
                     ConfigManager.GeneralConfig.BitcoinAddress = user;
-                    return new ExecutedInfo {NewBtc = user};
+                    MinersManager.UpdateBTC(user);
+                    return new ExecutedInfo { NewBtc = user };
                 case "mining.set.worker":
                     executed = true;
-                    var worker = (string) message.worker;
+                    var worker = (string)message.worker;
 
                     if (!BitcoinAddress.ValidateWorkerName(worker))
                         throw new RpcException("Worker name invalid", 1);
 
                     ConfigManager.GeneralConfig.WorkerName = worker;
-                    return new ExecutedInfo {NewWorker = worker};
+                    MinersManager.UpdateWorker(worker);
+                    return new ExecutedInfo { NewWorker = worker };
                 case "mining.set.group":
                     executed = true;
                     var group = (string) message.group;
