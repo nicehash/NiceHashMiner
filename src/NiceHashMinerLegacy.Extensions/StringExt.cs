@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace NiceHashMinerLegacy.Extensions
 {
@@ -39,7 +40,7 @@ namespace NiceHashMinerLegacy.Extensions
 
         public static string GetStringAfter(this string s, string after)
         {
-            var index = s.IndexOf(after);
+            var index = s.IndexOf(after, StringComparison.Ordinal);
             return s.Substring(index);
         }
     }
