@@ -177,7 +177,6 @@
     <Compile Include="StratumService.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
-    <Compile Include="Switching\Models.cs" />
     <Compile Include="Switching\Interval.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />

@@ -26,14 +26,14 @@ namespace NiceHashMiner.Switching
         // private static Dictionary<AlgorithmType, List<double>> _recentPaying;
 
         // Global list of SMA data, should be accessed with a lock since callbacks/timers update it
-        private static Dictionary<AlgorithmType, NiceHashSma> _currentSma;
+        private static Dictionary<AlgorithmType, double> _currentPayingRates;
         // Global list of stable algorithms, should be accessed with a lock
         private static HashSet<AlgorithmType> _stableAlgorithms;
 
         // Public for tests only
         public static void Initialize()
         {
-            _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
+            _currentPayingRates = new Dictionary<AlgorithmType, double>();
             _stableAlgorithms = new HashSet<AlgorithmType>();
 
             Dictionary<AlgorithmType, double> cacheDict = null;
@@ -64,17 +64,7 @@ namespace NiceHashMiner.Switching
                     paying = 1;
 #endif
 
-                    _currentSma[algo] = new NiceHashSma
-                    {
-                        Port = (int) algo + 3333,
-                        Name = algo.ToString().ToLower(),
-                        Algo = (int) algo,
-                        Paying = paying
-                    };
-                    //_recentPaying[algo] = new List<double>
-                    //{
-                    //    0
-                    //};
+                    _currentPayingRates[algo] = paying;
                 }
             }
 
@@ -88,6 +78,7 @@ namespace NiceHashMiner.Switching
 
         #region Update Methods
 
+        // TODO maybe just swap the dictionaries???
         /// <summary>
         /// Change SMA profits to new values
         /// </summary>
@@ -95,13 +86,13 @@ namespace NiceHashMiner.Switching
         public static void UpdateSmaPaying(Dictionary<AlgorithmType, double> newSma)
         {
             CheckInit();
-            lock (_currentSma)
+            lock (_currentPayingRates)
             {
                 foreach (var algo in newSma.Keys)
                 {
-                    if (_currentSma.ContainsKey(algo))
+                    if (_currentPayingRates.ContainsKey(algo))
                     {
-                        _currentSma[algo].Paying = newSma[algo];
+                        _currentPayingRates[algo] = newSma[algo];
                     }
                 }
 
@@ -129,11 +120,11 @@ namespace NiceHashMiner.Switching
         internal static void UpdatePayingForAlgo(AlgorithmType algo, double paying)
         {
             CheckInit();
-            lock (_currentSma)
+            lock (_currentPayingRates)
             {
-                if (!_currentSma.ContainsKey(algo))
+                if (!_currentPayingRates.ContainsKey(algo))
                     throw new ArgumentException("Algo not setup in SMA");
-                _currentSma[algo].Paying = paying;
+                _currentPayingRates[algo] = paying;
             }
 
             HasData = true;
@@ -181,28 +172,6 @@ namespace NiceHashMiner.Switching
         #endregion
 
         # region Get Methods
-
-        /// <summary>
-        /// Attempt to get SMA for an algorithm
-        /// </summary>
-        /// <param name="algo">Algorithm</param>
-        /// <param name="sma">Variable to place SMA in</param>
-        /// <returns>True iff we know about this algo</returns>
-        public static bool TryGetSma(AlgorithmType algo, out NiceHashSma sma)
-        {
-            CheckInit();
-            lock (_currentSma)
-            {
-                if (_currentSma.ContainsKey(algo))
-                {
-                    sma = _currentSma[algo];
-                    return true;
-                }
-            }
-
-            sma = null;
-            return false;
-        }
         
         /// <summary>
         /// Attempt to get paying rate for an algorithm
@@ -213,9 +182,10 @@ namespace NiceHashMiner.Switching
         public static bool TryGetPaying(AlgorithmType algo, out double paying)
         {
             CheckInit();
-            if (TryGetSma(algo, out var sma))
+            // TODO no more sma struct this can be probably simplified ??
+            if (_currentPayingRates.TryGetValue(algo, out var paying2))
             {
-                paying = sma.Paying;
+                paying = paying2;
                 return true;
             }
 
@@ -246,14 +216,12 @@ namespace NiceHashMiner.Switching
             CheckInit();
             var dict = new Dictionary<AlgorithmType, double>();
 
-            lock (_currentSma)
+            lock (_currentPayingRates)
             {
-                foreach (var kvp in _currentSma)
+                var filtered = _currentPayingRates.Where(kvp => _stableAlgorithms.Contains(kvp.Key) == stable); 
+                foreach (var kvp in filtered)
                 {
-                    if (_stableAlgorithms.Contains(kvp.Key) == stable)
-                    {
-                        dict[kvp.Key] = kvp.Value.Paying;
-                    }
+                    dict[kvp.Key] = kvp.Value;
                 }
             }
 
