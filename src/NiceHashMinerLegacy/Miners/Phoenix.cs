@@ -1,4 +1,6 @@
-﻿using NiceHashMinerLegacy.Common.Enums;
+﻿using System;
+using NiceHashMiner.Algorithms;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners
 {
@@ -8,6 +10,18 @@ namespace NiceHashMiner.Miners
         public Phoenix() : base(AlgorithmType.NONE)
         {
             LookForStart = "main eth speed: ";
+        }
+
+        protected override void _Stop(MinerStopType willSwitch)
+        {
+            ShutdownMiner(true);
+        }
+
+        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
+        {
+            var cl = base.BenchmarkCreateCommandLine(algorithm, time);
+            BenchmarkTimeWait = Math.Max(time, 60);
+            return cl;
         }
     }
 }

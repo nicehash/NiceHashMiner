@@ -30,7 +30,7 @@ namespace NiceHashMiner.Miners
 
         protected override void _Stop(MinerStopType willswitch)
         {
-            Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
+            ShutdownMiner();
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()

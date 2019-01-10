@@ -321,7 +321,7 @@ namespace NiceHashMiner
             Stop(MinerStopType.FORCE_END);
         }
 
-        protected void Stop_cpu_ccminer_sgminer_nheqminer(MinerStopType willswitch)
+        protected void ShutdownMiner(bool withCrtlC = false)
         {
             if (IsRunning)
             {
@@ -330,10 +330,19 @@ namespace NiceHashMiner
 
             if (ProcessHandle != null)
             {
-                try { ProcessHandle.Kill(); }
+                try
+                {
+                    if (withCrtlC)
+                    {
+                        ProcessHandle.SendCtrlC((uint) Process.GetCurrentProcess().Id);
+                    }
+                    else
+                    {
+                        ProcessHandle.Kill();
+                    }
+                }
                 catch { }
 
-                //try { ProcessHandle.SendCtrlC((uint)Process.GetCurrentProcess().Id); } catch { }
                 ProcessHandle.Close();
                 ProcessHandle = null;
 

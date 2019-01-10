@@ -35,7 +35,7 @@ namespace NiceHashMiner.Miners.XmrStak
 
         protected override void _Stop(MinerStopType willswitch)
         {
-            Stop_cpu_ccminer_sgminer_nheqminer(willswitch);
+            ShutdownMiner();
         }
 
         public override async Task<ApiData> GetSummaryAsync()
