@@ -110,7 +110,7 @@ namespace NiceHashMiner
         [Flags]
         public enum CredentialsValidState : uint
         {
-            VALID = 0,
+            VALID,
             INVALID_BTC,
             INVALID_WORKER,
             INVALID_BTC_AND_WORKER // composed state
@@ -123,17 +123,11 @@ namespace NiceHashMiner
 
             if (!BitcoinAddress.ValidateBitcoinAddress(ConfigManager.GeneralConfig.BitcoinAddress))
             {
-                ret = CredentialsValidState.INVALID_BTC;
+                ret |= CredentialsValidState.INVALID_BTC;
             }
             if (!BitcoinAddress.ValidateWorkerName(ConfigManager.GeneralConfig.WorkerName))
             {
-                if (ret == CredentialsValidState.INVALID_BTC)
-                {
-                    ret = CredentialsValidState.INVALID_BTC_AND_WORKER;
-                } else
-                {
-                    ret = CredentialsValidState.INVALID_WORKER;
-                }
+                ret |= CredentialsValidState.INVALID_WORKER;
             }
 
             return ret;
