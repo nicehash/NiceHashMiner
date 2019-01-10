@@ -18,7 +18,7 @@ namespace NiceHashMiner
             "Brazil - Sao Paulo"
         };
 
-    public static readonly string DemoUser = "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
+        public static readonly string DemoUser = "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
 
         // change this if TOS changes
         public const int CurrentTosVer = 4;
