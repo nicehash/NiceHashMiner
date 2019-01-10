@@ -192,11 +192,8 @@ namespace NiceHashMiner.Miners.XmrStak
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            if (!outdata.Contains("Benchmark Total:")) return false;
-
-            var hash = outdata.GetHashrateAfter("Benchmark Total:");
-            if (hash == null) return false;
-            BenchmarkAlgorithm.BenchmarkSpeed = hash.Value;
+            if (!outdata.TryGetHashrateAfter("Benchmark Total:", out var hash)) return false;
+            BenchmarkAlgorithm.BenchmarkSpeed = hash;
             return true;
         }
 

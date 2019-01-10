@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Miners
 {
@@ -61,6 +62,8 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
+            _benchHashes = 0;
+            _benchIters = 0;
             var devices = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.ID));
             return $" -a {algorithm.MinerName} -B -d {devices}";
         }
@@ -72,32 +75,13 @@ namespace NiceHashMiner.Miners
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            if (!outdata.Contains("Total:"))
+            if (!outdata.TryGetHashrateAfter("Total:", out var hashrate) ||
+                hashrate <= 0)
+            {
                 return false;
-            var numStart = outdata.IndexOf("Total: ", StringComparison.Ordinal) + 7;
-            var data = outdata.ToLower().Substring(numStart);
-
-            var mult = 1d;
-
-            if (data.Contains("k"))
-            {
-                mult = 1000;
-            }
-            else if (data.Contains("m"))
-            {
-                mult = 1000000;
-            }
-            else if (data.Contains("g"))
-            {
-                mult = 1000000000;
             }
 
-            var hashString = new string(data.TakeWhile(c => char.IsDigit(c) || c == '.').ToArray());
-
-            if (!double.TryParse(hashString, out var hashrate) || hashrate <= 0)
-                return false;
-
-            _benchHashes += hashrate * mult;
+            _benchHashes += hashrate;
             _benchIters++;
 
             return false;
