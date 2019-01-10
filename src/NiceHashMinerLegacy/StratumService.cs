@@ -67,11 +67,19 @@ namespace NiceHashMiner
                     break;
             }
 
+#if TESTNET
+            return prefix
+                   + name
+                   + "-test." + miningLocation
+                   + ".nicehash.com:"
+                   + port;
+#else
             return prefix
                    + name
                    + "." + miningLocation
                    + ".nicehash.com:"
                    + port;
+#endif
         }
     }
 }
