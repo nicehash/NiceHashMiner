@@ -7,17 +7,6 @@ namespace NiceHashMiner
 {
     public class Globals
     {
-        // Constants
-        public static string[] MiningLocation = {"eu", "usa", "hk", "jp", "in", "br"};
-        public static object[] MiningLocationNames = new object[] {
-            "Europe - Amsterdam",
-            "USA - San Jose",
-            "China - Hong Kong",
-            "Japan - Tokyo",
-            "India - Chennai",
-            "Brazil - Sao Paulo"
-        };
-
         public static readonly string DemoUser = "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
 
         // change this if TOS changes
@@ -33,38 +22,6 @@ namespace NiceHashMiner
 
         public static int FirstNetworkCheckTimeoutTimeMs = 500;
         public static int FirstNetworkCheckTimeoutTries = 10;
-
-
-        public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
-        {
-            if (!NHSmaData.TryGetSma(algorithmType, out var sma)) return "";
-
-            var name = sma.Name;
-            var nPort = sma.Port;
-            var sslPort = 30000 + nPort;
-            
-            // NHMConectionType.NONE
-            var prefix = "";
-            var port = nPort;
-            switch (conectionType)
-            {
-                case NhmConectionType.LOCKED:
-                    return miningLocation;
-                case NhmConectionType.STRATUM_TCP:
-                    prefix = "stratum+tcp://";
-                    break;
-                case NhmConectionType.STRATUM_SSL:
-                    prefix = "stratum+ssl://";
-                    port = sslPort;
-                    break;
-            }
-
-            return prefix
-                   + name
-                   + "." + miningLocation
-                   + ".nicehash.com:"
-                   + port;
-        }
 
         public static string GetBitcoinUser()
         {

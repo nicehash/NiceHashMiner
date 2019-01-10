@@ -95,7 +95,7 @@
             // 
             this.comboBoxLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLocation.FormattingEnabled = true;
-            this.comboBoxLocation.Items.AddRange(Globals.MiningLocationNames);
+            this.comboBoxLocation.Items.AddRange(StratumService.MiningLocationNames);
             this.comboBoxLocation.Location = new System.Drawing.Point(113, 12);
             this.comboBoxLocation.Name = "comboBoxLocation";
             this.comboBoxLocation.Size = new System.Drawing.Size(121, 21);

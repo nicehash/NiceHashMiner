@@ -181,8 +181,7 @@ namespace NiceHashMiner.Miners.XmrStak
 
         private string GetBenchmarkCommandLine(AlgorithmType algorithm, int time, Dictionary<DeviceType, string> devConfigs)
         {
-            var url = Globals.GetLocationUrl(algorithm,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
+            var url = ApplicationStateManager.GetSelectedServiceLocationLocationUrl(algorithm, ConectionType);
             var user = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName);
 
             BenchmarkTimeInSeconds = Math.Min(60, Math.Max(time, 10));

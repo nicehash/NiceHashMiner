@@ -1,6 +1,7 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces.DataVisualizer;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -157,15 +158,22 @@ namespace NiceHashMiner
             CHANGED
         }
 
-        #region ServiceLocation setter
-        // make sure to pass in trimmedBtc
+        #region ServiceLocation
+
+        public static string GetSelectedServiceLocationLocationUrl(AlgorithmType algorithmType, NhmConectionType conectionType)
+        {
+            // TODO make sure the ServiceLocation index is always valid
+            var location = StratumService.MiningLocations[ConfigManager.GeneralConfig.ServiceLocation];
+            return StratumService.GetLocationUrl(algorithmType, location, conectionType);
+        }
+
         public static SetResult SetServiceLocationIfValidOrDifferent(int serviceLocation)
         {
             if (serviceLocation == ConfigManager.GeneralConfig.ServiceLocation)
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
-            if (serviceLocation >= 0 && serviceLocation < Globals.MiningLocation.Length)
+            if (serviceLocation >= 0 && serviceLocation < StratumService.MiningLocations.Length)
             {
                 SetServiceLocation(serviceLocation);
                 return SetResult.CHANGED;

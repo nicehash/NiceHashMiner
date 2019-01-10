@@ -121,8 +121,9 @@ namespace NiceHashMiner
 
             labelServiceLocation.Text = International.GetText("Service_Location") + ":";
             {
+                // TODO keep in mind the localizations
                 var i = 0;
-                foreach (var loc in Globals.MiningLocation)
+                foreach (var loc in StratumService.MiningLocations)
                     comboBoxLocation.Items[i++] = International.GetText("LocationName_" + loc);
             }
             labelBitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
@@ -1160,7 +1161,7 @@ namespace NiceHashMiner
             ClearRatesAll();
 
             var btcAdress = _demoMode ? Globals.DemoUser : ConfigManager.GeneralConfig.BitcoinAddress;
-            var isMining = MinersManager.StartInitialize(devicesListViewEnableControl1, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
+            var isMining = MinersManager.StartInitialize(devicesListViewEnableControl1, StratumService.MiningLocations[comboBoxLocation.SelectedIndex],
                 textBoxWorkerName.Text.Trim(), btcAdress);
 
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();

@@ -396,7 +396,7 @@ namespace NiceHashMiner.Forms
             label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
             {
                 var i = 0;
-                foreach (var loc in Globals.MiningLocation)
+                foreach (var loc in StratumService.MiningLocations)
                     comboBox_ServiceLocation.Items[i++] = International.GetText("LocationName_" + loc);
             }
             label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";

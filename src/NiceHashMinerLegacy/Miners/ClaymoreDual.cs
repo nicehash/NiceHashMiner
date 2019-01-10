@@ -88,9 +88,7 @@ namespace NiceHashMiner.Miners
 
                     if (dual != AlgorithmType.NONE)
                     {
-                        var urlSecond = Globals.GetLocationUrl(dual,
-                            Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
-                            ConectionType);
+                        var urlSecond = ApplicationStateManager.GetSelectedServiceLocationLocationUrl(dual, ConectionType);
                         dualModeParams = $" {coinP} -dpool {urlSecond} -dwal {username}";
                         break;
                     }
@@ -98,8 +96,7 @@ namespace NiceHashMiner.Miners
             }
             else
             {
-                var urlSecond = Globals.GetLocationUrl(SecondaryAlgorithmType,
-                    Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
+                var urlSecond = ApplicationStateManager.GetSelectedServiceLocationLocationUrl(SecondaryAlgorithmType, ConectionType);
                 dualModeParams = $" -dcoin {SecondaryShortName()} -dpool {urlSecond} -dwal {username} -dpsw x";
             }
 
