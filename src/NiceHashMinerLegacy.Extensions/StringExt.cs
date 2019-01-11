@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 
 namespace NiceHashMinerLegacy.Extensions
@@ -20,7 +21,7 @@ namespace NiceHashMinerLegacy.Extensions
                 .TakeWhile(c => char.IsDigit(c) || c == '.')
                 .ToArray());
 
-            if (!double.TryParse(numString, out var hash))
+            if (!double.TryParse(numString, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
             {
                 hashrate = default(double);
                 return false;
