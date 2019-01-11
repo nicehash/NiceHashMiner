@@ -51,21 +51,21 @@ namespace NiceHashMiner.Forms.Components
         {
             // TODO old implementation has textBox tooltips that don't work
             toolTip.SetToolTip(labelQuick,
-                string.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"),
-                    International.GetText("Quick"), groupTypeName) + ".");
+                string.Format(Translations.Tr("Amount of time (in seconds) for {0} benchmarking the {1}"),
+                    Translations.Tr("Quick"), groupTypeName) + ".");
             toolTip.SetToolTip(labelStandard,
-                string.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"),
-                    International.GetText("Standard"), groupTypeName) + ".");
+                string.Format(Translations.Tr("Amount of time (in seconds) for {0} benchmarking the {1}"),
+                    Translations.Tr("Standard"), groupTypeName) + ".");
             toolTip.SetToolTip(labelPrecise,
-                string.Format(International.GetText("Form_Settings_ToolTip_BenchmarkTimeLimits"),
-                    International.GetText("Standard"), groupTypeName) + ".");
+                string.Format(Translations.Tr("Amount of time (in seconds) for {0} benchmarking the {1}"),
+                    Translations.Tr("Precise"), groupTypeName) + ".");
         }
 
         public void InitLocale()
         {
-            labelQuick.Text = International.GetText("Quick") + ":";
-            labelStandard.Text = International.GetText("Standard") + ":";
-            labelPrecise.Text = International.GetText("Precise") + ":";
+            labelQuick.Text = Translations.Tr("Quick") + ":";
+            labelStandard.Text = Translations.Tr("Standard") + ":";
+            labelPrecise.Text = Translations.Tr("Precise") + ":";
         }
 
         // TODO replace  TextChanged Events with TextBox exit events

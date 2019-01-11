@@ -71,7 +71,7 @@ namespace NiceHashMiner.Stats
             return ConvertToActiveCurrency(amount * GetUsdExchangeRate())
                        .ToString("F2", CultureInfo.InvariantCulture)
                    + $" {ActiveDisplayCurrency}/"
-                   + International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                   + Translations.Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
         }
 
         public static double GetUsdExchangeRate()

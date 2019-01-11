@@ -63,12 +63,16 @@ namespace NiceHashMiner
                     {
                         try
                         {
-                            _entries = JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, string>>>(
+                            var tmp = JsonConvert.DeserializeObject<List<TrMetaInfo>>(
                                 File.ReadAllText(fi.FullName)); // TODO , Globals.JsonSettings not sure since data must be localized
+                            foreach (var el in tmp)
+                            {
+                                _metaData[el.ID] = el;
+                            }
                         }
                         catch (Exception ex)
                         {
-                            Helpers.ConsolePrint("NICEHASH", "Lang error: " + ex.Message);
+                            Helpers.ConsolePrint("NICEHASH", "Meta data Lang error: " + ex.Message);
                         }
                     }
                 }

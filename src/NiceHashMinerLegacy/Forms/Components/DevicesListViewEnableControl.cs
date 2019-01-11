@@ -97,7 +97,7 @@ namespace NiceHashMiner.Forms.Components
         
         public virtual void InitLocale()
         {
-            devicesHeader.Text = International.GetText("ListView_Device");
+            devicesHeader.Text = Translations.Tr("Device");
         }
 
         protected virtual void ListViewDevicesItemChecked(object sender, ItemCheckedEventArgs e)

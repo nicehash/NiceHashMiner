@@ -183,8 +183,8 @@ namespace NiceHashMiner.Miners
                 var info = _benchCheckers[algo].FinalizeIsDeviant(algo.BenchmarkSpeed, 0);
                 if (!info.IsDeviant) continue;
                 var result = MessageBox.Show(
-                    International.GetText("BenchChecker_SingleDeviant", algo.NiceHashID, info.Deviation, algo.BenchmarkSpeed), 
-                    International.GetText("BenchChecker_DeviantTitle"),
+                    Translations.Tr("Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?", algo.NiceHashID, info.Deviation, algo.BenchmarkSpeed), 
+                    Translations.Tr("Deviant Algorithm"),
                     MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
@@ -197,8 +197,8 @@ namespace NiceHashMiner.Miners
                 var info = _dualBenchCheckers[algo].FinalizeIsDeviant(algo.SecondaryBenchmarkSpeed, 0);
                 if (!info.IsDeviant) continue;
                 var result = MessageBox.Show(
-                    International.GetText("BenchChecker_DualDeviant", algo.DualNiceHashID, info.Deviation, algo.SecondaryBenchmarkSpeed), 
-                    International.GetText("BenchChecker_DeviantTitle"),
+                    Translations.Tr("Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?", algo.DualNiceHashID, info.Deviation, algo.SecondaryBenchmarkSpeed), 
+                    Translations.Tr("Deviant Algorithm"),
                     MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
@@ -366,12 +366,12 @@ namespace NiceHashMiner.Miners
                     // change msg
                     if (log) Helpers.ConsolePrint(Tag, "NO INTERNET!!! Stopping mining.");
                     _ratesComunication.ShowNotProfitable(
-                        International.GetText("Form_Main_MINING_NO_INTERNET_CONNECTION"));
+                        Translations.Tr("CURRENTLY NOT MINING. NO INTERNET CONNECTION."));
                 }
                 else
                 {
                     _ratesComunication.ShowNotProfitable(
-                        International.GetText("Form_Main_MINING_NOT_PROFITABLE"));
+                        Translations.Tr("CURRENTLY MINING NOT PROFITABLE."));
                 }
 
                 // return don't group
