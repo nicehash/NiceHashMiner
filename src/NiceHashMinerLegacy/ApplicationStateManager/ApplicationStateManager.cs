@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
-    static class ApplicationStateManager
+    static partial class ApplicationStateManager
     {
         #region StateDisplayers boilerplate
         static List<IDataVisualizer> _stateDisplayers = new List<IDataVisualizer>();
@@ -266,5 +266,14 @@ namespace NiceHashMiner
             }
         }
         #endregion
+
+
+        // StartMining function should be called only if all mining requirements are met, btc or demo, valid workername, and sma data
+        // don't call this function ever unless credentials are valid or if we will be using Demo mining
+        // And if there are missing mining requirements
+        public static void StartMining()
+        {
+
+        }
     }
 }

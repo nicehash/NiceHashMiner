@@ -111,7 +111,9 @@
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithms\Algorithm.cs" />
     <Compile Include="Algorithms\DualAlgorithm.cs" />
-    <Compile Include="ApplicationStateManager.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Init.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Program.cs" />
     <Compile Include="Benchmarking\BenchChecker.cs" />
     <Compile Include="Benchmarking\BenchDeviationInfo.cs" />
     <Compile Include="Benchmarking\BenchHelpers\CpuBenchHelper.cs" />

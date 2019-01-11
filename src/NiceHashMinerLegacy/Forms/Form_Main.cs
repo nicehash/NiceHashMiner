@@ -363,15 +363,7 @@ namespace NiceHashMiner
                     {
                         ConfigManager.GeneralConfig.DownloadInit = false;
                         ConfigManager.GeneralConfigFileCommit();
-                        var pHandle = new Process
-                        {
-                            StartInfo =
-                            {
-                                FileName = Application.ExecutablePath
-                            }
-                        };
-                        pHandle.Start();
-                        Close();
+                        ApplicationStateManager.RestartProgram();
                         return;
                     }
                 }
@@ -405,15 +397,7 @@ namespace NiceHashMiner
                         {
                             ConfigManager.GeneralConfig.DownloadInit3rdParty = false;
                             ConfigManager.GeneralConfigFileCommit();
-                            var pHandle = new Process
-                            {
-                                StartInfo =
-                                {
-                                    FileName = Application.ExecutablePath
-                                }
-                            };
-                            pHandle.Start();
-                            Close();
+                            ApplicationStateManager.RestartProgram();
                             return;
                         }
                     }
@@ -874,15 +858,7 @@ namespace NiceHashMiner
                     International.GetText("Form_Main_Restart_Required_Msg"),
                     International.GetText("Form_Main_Restart_Required_Title"),
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
-                var pHandle = new Process
-                {
-                    StartInfo =
-                    {
-                        FileName = Application.ExecutablePath
-                    }
-                };
-                pHandle.Start();
-                Close();
+                ApplicationStateManager.RestartProgram();
             }
             else if (settings.IsChange && settings.IsChangeSaved)
             {
