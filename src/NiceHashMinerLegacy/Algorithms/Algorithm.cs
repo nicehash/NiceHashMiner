@@ -132,7 +132,7 @@ namespace NiceHashMiner.Algorithms
         {
             get
             {
-                var ratio = International.GetText("BenchmarkRatioRateN_A");
+                var ratio = Translations.Tr("N/A");
                 if (NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
                     ratio = paying.ToString("F8");
@@ -145,7 +145,7 @@ namespace NiceHashMiner.Algorithms
         {
             get
             {
-                var rate = International.GetText("BenchmarkRatioRateN_A");
+                var rate = Translations.Tr("N/A");
                 if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
                 {
                     var payingRate = BenchmarkSpeed * paying * Mult;
@@ -162,7 +162,7 @@ namespace NiceHashMiner.Algorithms
         public void SetBenchmarkPending()
         {
             IsBenchmarkPending = true;
-            BenchmarkStatus = International.GetText("Algorithm_Waiting_Benchmark");
+            BenchmarkStatus = Translations.Tr("Waiting benchmark");
         }
 
         public void SetBenchmarkPendingNoMsg()
@@ -172,7 +172,7 @@ namespace NiceHashMiner.Algorithms
 
         private bool IsPendingString()
         {
-            return BenchmarkStatus == International.GetText("Algorithm_Waiting_Benchmark")
+            return BenchmarkStatus == Translations.Tr("Waiting benchmark")
                    || BenchmarkStatus == "."
                    || BenchmarkStatus == ".."
                    || BenchmarkStatus == "...";
@@ -207,7 +207,7 @@ namespace NiceHashMiner.Algorithms
             {
                 return BenchmarkStatus;
             }
-            return International.GetText("BenchmarkSpeedStringNone");
+            return Translations.Tr("none");
         }
 
         #endregion

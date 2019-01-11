@@ -3329,16 +3329,6 @@
 		"ru": "Предупреждение!",
 		"zh_cn": "警告！"
 	},
-	"Warning! Algorithm {0} is reporting 0 shares accepted. Please disable this algorithm in Benchmark/Settings and report this issue to https://github.com/nicehash/NiceHashMinerLegacy/issues!": {
-		"bg": "Внимание! Алгоритъмът {0} докладва нулево количество приети дялове. Изключете този алгоритъм от Тестове за скорост/Настройки и докладвайте проблема на support@nicehash.com!",
-		"es": "¡Advertencia! El algoritmo {0} indica 0 acciones aceptadas. Deshabilite este algoritmo en Benchmark / Configuración e informe este problema a support@nicehash.com.",
-		"it": "Attenzione! L'algoritmo {0} sta riportando 0 parti accettate. Disabilita questo algoritmo in Impostazioni/Benchmark e segnala questo problema a https://github.com/nicehash/NiceHashMinerLegacy/issues!",
-		"pl": "Uwaga! Algorytm {0} raportuje 0 shares accepted. Wyłącz ten algorytm w ustawieniach lub benchmarkach i napisz raport na https://github.com/nicehash/NiceHashMinerLegacy/issues (prosimy)",
-		"pt": "Warning! Algorithm {0} is reporting 0 shares accepted. Please disable this algorithm in Benchmark/Settings and report this issue to support@nicehash.com!",
-		"ro": "Avertizare! Algoritmul {0} raportează 0 share acceptate. Vă rugăm să dezactivați acest algoritm în Benchmark/Setări și să raportați această problemă la https://github.com/nicehash/NiceHashMinerLegacy/issues!",
-		"ru": "Предупреждение! Алгоритм {0} сообщает 0 принятых шар. Отключите, пожалуйста, этот алгоритм в Бенчмарке/Настройках и сообщите о данной проблеме на support-ru@nicehash.com!",
-		"zh_cn": "警告！算法{0}报告其计算所得并没有被矿池服务器接受。请在基准测试/设置中禁用此算法并前往问题反馈页面汇报此问题 https://github.com/nicehash/NiceHashMinerLegacy/issues！"
-	},
 	"Warning! Video Controller not operating correctly": {
 		"bg": "Внимание! Видео контролерът не е изправен",
 		"es": "¡Alerta! El driver de vídeo no está bien",

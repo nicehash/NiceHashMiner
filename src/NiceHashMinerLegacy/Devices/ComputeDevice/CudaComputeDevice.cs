@@ -126,7 +126,7 @@ namespace NiceHashMiner.Devices
                 group,
                 cudaDevice.IsEtherumCapable(),
                 DeviceType.NVIDIA,
-                string.Format(International.GetText("ComputeDevice_Short_Name_NVIDIA_GPU"), gpuCount),
+                string.Format(Translations.Tr("GPU#{0}"), gpuCount),
                 cudaDevice.DeviceGlobalMemory)
         {
             BusID = cudaDevice.pciBusID;

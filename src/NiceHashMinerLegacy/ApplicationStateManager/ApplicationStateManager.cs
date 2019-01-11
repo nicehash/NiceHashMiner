@@ -88,7 +88,7 @@ namespace NiceHashMiner
             // not sure why BetaAlphaPostfixString is being checked
             if (ret < 0 || (ret == 0 && BetaAlphaPostfixString != ""))
             {
-                var displayNewVer = string.Format(International.GetText("Form_Main_new_version_released"), version);
+                var displayNewVer = string.Format(Translations.Tr("IMPORTANT! New version v{0} has\r\nbeen released. Click here to download it."), version);
                 // display new version
                 // notify all components
                 foreach (var s in _stateDisplayers)
