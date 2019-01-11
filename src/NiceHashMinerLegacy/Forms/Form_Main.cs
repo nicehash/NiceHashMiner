@@ -27,17 +27,12 @@ namespace NiceHashMiner
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IGlobalRatesUpdate, IDataVisualizer, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer
     {
-        private Timer _minerStatsCheck;
-        //private Timer _smaMinerCheck;
-        //private Timer _bitcoinExchangeCheck;
         private Timer _startupTimer;
         private Timer _idleCheck;
         private SystemTimer _computeDevicesCheckTimer;
 
         private bool _showWarningNiceHashData;
         private bool _demoMode;
-
-        private readonly Random R;
 
         private Form_Loading _loadingScreen;
         private Form_Benchmark _benchmarkForm;
@@ -79,8 +74,6 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("NICEHASH", "Total RAM: " + totalRam + "MB");
                 Helpers.ConsolePrint("NICEHASH", "Page File Size: " + pageFileSize + "MB");
             }
-
-            R = new Random((int) DateTime.Now.Ticks);
 
             Text += ApplicationStateManager.Title;
 
@@ -178,7 +171,8 @@ namespace NiceHashMiner
         {
             if (!ConfigManager.GeneralConfig.StartMiningWhenIdle || _isManuallyStarted) return;
 
-            if (_minerStatsCheck.Enabled)
+            // TODO set is mining here
+            if (ApplicationStateManager.IsCurrentlyMining)
             {
                 if (!e.IsIdle)
                 {
@@ -186,15 +180,12 @@ namespace NiceHashMiner
                     Helpers.ConsolePrint("NICEHASH", "Resumed from idling");
                 }
             }
-            else
+            else if (_benchmarkForm == null && e.IsIdle)
             {
-                if (_benchmarkForm == null && e.IsIdle)
+                Helpers.ConsolePrint("NICEHASH", "Entering idling state");
+                if (StartMining(false) != StartMiningReturnType.StartMining)
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Entering idling state");
-                    if (StartMining(false) != StartMiningReturnType.StartMining)
-                    {
-                        StopMining(true);
-                    }
+                    StopMining(true);
                 }
             }
         }
@@ -256,11 +247,7 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(
                 International.GetText("Form_Main_loadtext_CheckLatestVersion"));
-
-            _minerStatsCheck = new Timer();
-            _minerStatsCheck.Tick += MinerStatsCheck_Tick;
-            _minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
-
+            
             //_smaMinerCheck = new Timer();
             //_smaMinerCheck.Tick += SMAMinerCheck_Tick;
             //_smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
@@ -275,7 +262,6 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
-            NiceHashStats.OnSmaUpdate += SmaCallback;
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnVersionBurn += VersionBurnCallback;
             NiceHashStats.OnExchangeUpdate += ExchangeCallback;
@@ -420,6 +406,7 @@ namespace NiceHashMiner
 
         private void Form_Main_Shown(object sender, EventArgs e)
         {
+            new StateDumpForm().Show();
             // general loading indicator
             const int totalLoadSteps = 11;
             _loadingScreen = new Form_Loading(this,
@@ -457,11 +444,6 @@ namespace NiceHashMiner
 //                await MinersManager.SwichMostProfitableGroupUpMethod();
 //            }
 //        }
-
-        private static async void MinerStatsCheck_Tick(object sender, EventArgs e)
-        {
-            await MinersManager.MinerStatsCheck();
-        }
 
         private static void ComputeDevicesCheckTimer_Tick(object sender, EventArgs e)
         {
@@ -583,9 +565,9 @@ namespace NiceHashMiner
         {
             try
             {
-                BeginInvoke((Action) (() =>
+                BeginInvoke((Action) (async () =>
                 {
-                    MinerStatsCheck_Tick(null, null);
+                    await MinersManager.MinerStatsCheck();
                 }));
             }
             catch (Exception e)
@@ -650,12 +632,6 @@ namespace NiceHashMiner
 
             Helpers.ConsolePrint("NICEHASH",
                 "Current Bitcoin rate: " + br.ToString("F2", CultureInfo.InvariantCulture));
-        }
-
-        private void SmaCallback(object sender, EventArgs e)
-        {
-            Helpers.ConsolePrint("NICEHASH", "SMA Update");
-            //_isSmaUpdated = true;
         }
 
         private void VersionBurnCallback(object sender, SocketEventArgs e)
@@ -1024,12 +1000,8 @@ namespace NiceHashMiner
                 textBoxWorkerName.Text.Trim(), btcAdress);
 
             StartMiningGui();
-
-            if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
-
-            //_isSmaUpdated = true; // Always check profits on mining start
-            //_smaMinerCheck.Interval = 100;
-            //_smaMinerCheck.Start();
+            // TODO TEMP
+            ApplicationStateManager.StartMining();
 
             return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
         }
@@ -1057,7 +1029,7 @@ namespace NiceHashMiner
                 InitFlowPanelStart();
                 ClearRatesAll();
 
-                _minerStatsCheck.Start();
+                //_minerStatsCheck.Start();
 
                 if (!ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost) return;
                 _computeDevicesCheckTimer = new SystemTimer();
@@ -1072,6 +1044,8 @@ namespace NiceHashMiner
         {
             MinersManager.StopAllMiners(headless);
             StopMiningGui();
+            // TODO TEMP
+            ApplicationStateManager.StopMining();
         }
 
         public void StopMiningGui()
@@ -1082,7 +1056,7 @@ namespace NiceHashMiner
             }
             else
             {
-                _minerStatsCheck.Stop();
+                //_minerStatsCheck.Stop();
                 _computeDevicesCheckTimer?.Stop();
 
                 // Disable IFTTT notification before label call

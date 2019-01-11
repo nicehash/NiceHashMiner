@@ -1,5 +1,6 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces.DataVisualizer;
+using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
@@ -297,15 +298,29 @@ namespace NiceHashMiner
         }
         #endregion
 
+
+        public static bool IsCurrentlyMining { get; private set; }
         // StartMining function should be called only if all mining requirements are met, btc or demo, valid workername, and sma data
         // don't call this function ever unless credentials are valid or if we will be using Demo mining
         // And if there are missing mining requirements
         public static bool StartMining()
         {
+            IsCurrentlyMining = true;
+            StartMinerStatsCheckTimer();
+            return false;
         }
 
-        public static bool StartDemoMining()
+        //public static bool StartDemoMining()
+        //{
+        //    StopMinerStatsCheckTimer();
+        //    return false;
+        //}
+
+        public static bool StopMining()
         {
+            IsCurrentlyMining = false;
+            StopMinerStatsCheckTimer();
+            return false;
         }
     }
 }
