@@ -302,6 +302,29 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("dtsm_noreconnect", "--noreconnect", null, MinerOptionFlagType.Uni),
                     new MinerOption("dtsm_temp-target", "--temp-target", null, MinerOptionFlagType.SingleParam)
                 },
+                new List<MinerOption>()
+            ),
+            new MinerOptionPackage(
+                MinerType.Phoenix,
+                new List<MinerOption>
+                {
+                    new MinerOption("phoenix_mi", "-mi", "12", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_gt", "-gt", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_sci", "-sci", "30", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_clKernel", "-clKernel", "1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_clgreen", "-clgreen", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_clNew", "-clNew", "1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_clf", "-clf", "1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_nvNew", "-nvNew", "1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_nvf", "-nvf", "1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_eres", "-eres", "2", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_lidag", "-lidag", "0", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_gser", "-gser", "0", MinerOptionFlagType.SingleParam),
+                    new MinerOption("phoenix_altinit", "-altinit", null, MinerOptionFlagType.Uni),
+                    new MinerOption("phoenix_gpow", "-gpow", "100", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_li", "-li", "0", MinerOptionFlagType.MultiParam, ",")
+
+                },
                 new List<MinerOption>())
         };
 

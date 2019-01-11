@@ -23,6 +23,7 @@
         Xmrig,
         dtsm,
         trex,
+        Phoenix,
         END
     }
 }
