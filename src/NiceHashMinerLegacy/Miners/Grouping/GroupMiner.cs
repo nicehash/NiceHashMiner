@@ -85,7 +85,7 @@ namespace NiceHashMiner.Miners.Grouping
             }
             // Wait before new start
             System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-            var locationUrl = Globals.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
+            var locationUrl = StratumService.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
             Miner.Start(locationUrl, btcAdress, worker);
         }
     }

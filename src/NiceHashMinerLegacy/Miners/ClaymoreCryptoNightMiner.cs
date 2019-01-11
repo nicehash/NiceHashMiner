@@ -29,9 +29,7 @@ namespace NiceHashMiner.Miners
             BenchmarkTimeWait = time; // Takes longer as of v10
 
             // network workaround
-            var url = Globals.GetLocationUrl(algorithm.NiceHashID,
-                Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
-                ConectionType);
+            var url = ApplicationStateManager.GetSelectedServiceLocationLocationUrl(algorithm.NiceHashID, ConectionType);
             // demo for benchmark
             var username = Globals.DemoUser;
             if (ConfigManager.GeneralConfig.WorkerName.Length > 0)
