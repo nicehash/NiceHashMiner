@@ -200,37 +200,6 @@ namespace NiceHashMiner
             // TODO add loading step
             MinersSettingsManager.Init();
 
-            if (!Helpers.Is45NetOrHigher())
-            {
-                MessageBox.Show(International.GetText("NET45_Not_Installed_msg"),
-                    International.GetText("Warning_with_Exclamation"),
-                    MessageBoxButtons.OK);
-
-                Close();
-                return;
-            }
-
-            if (!Helpers.Is64BitOperatingSystem)
-            {
-                MessageBox.Show(International.GetText("Form_Main_x64_Support_Only"),
-                    International.GetText("Warning_with_Exclamation"),
-                    MessageBoxButtons.OK);
-
-                Close();
-                return;
-            }
-
-            // 3rdparty miners check scope #1
-            {
-                // check if setting set
-                if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET)
-                {
-                    // Show TOS
-                    Form tos = new Form_3rdParty_TOS();
-                    tos.ShowDialog(this);
-                }
-            }
-
             // Query Available ComputeDevices
             ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
             _isDeviceDetectionInitialized = true;
@@ -247,18 +216,6 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(
                 International.GetText("Form_Main_loadtext_CheckLatestVersion"));
-            
-            //_smaMinerCheck = new Timer();
-            //_smaMinerCheck.Tick += SMAMinerCheck_Tick;
-            //_smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
-            //                          R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            //if (ComputeDeviceManager.Group.ContainsAmdGpus)
-            //{
-            //    _smaMinerCheck.Interval =
-            //        (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
-            //         ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
-            //        R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
-            //}
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
@@ -277,23 +234,6 @@ namespace NiceHashMiner
             }
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetBTCRate"));
-
-            //// Don't start timer if socket is giving data
-            //if (ExchangeRateApi.ExchangesFiat == null)
-            //{
-            //    // Wait a bit and check again
-            //    Thread.Sleep(1000);
-            //    if (ExchangeRateApi.ExchangesFiat == null)
-            //    {
-            //        Helpers.ConsolePrint("NICEHASH", "No exchange from socket yet, getting manually");
-            //        _bitcoinExchangeCheck = new Timer();
-            //        _bitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
-            //        _bitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
-            //        _bitcoinExchangeCheck.Start();
-            //        BitcoinExchangeCheck_Tick(null, null);
-            //    }
-            //}
-
             _loadingScreen.IncreaseLoadCounterAndMessage(
                 International.GetText("Form_Main_loadtext_SetEnvironmentVariable"));
             Helpers.SetDefaultEnvironmentVariables();

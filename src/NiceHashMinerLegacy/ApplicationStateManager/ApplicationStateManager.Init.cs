@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMiner.Miners;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,19 +10,17 @@ namespace NiceHashMiner
 {
     static partial class ApplicationStateManager
     {
-        delegate bool InitStep();
-        internal class ActionWithMessage
+        delegate void InitStep();
+        class ActionWithMessage
         {
-            InitStep initStep;
-            string message;
+            public InitStep initStep { get; set; }
+            public string message { get; set; }
         }
 
         // TODO add init stuff here
-        public static void InitializeManagersAndMiners()
+        public static async void InitializeManagersAndMiners()
         {
             var initSteps = new List<ActionWithMessage>();
         }
-
-        
     }
 }

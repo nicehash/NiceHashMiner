@@ -10,6 +10,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner
 {
@@ -53,7 +54,6 @@ namespace NiceHashMiner
             ConfigManager.InitializeConfig();
 
             // #2 check if multiple instances are allowed
-            var startProgram = true;
             if (ConfigManager.GeneralConfig.AllowMultipleInstances == false)
             {
                 try
@@ -63,61 +63,58 @@ namespace NiceHashMiner
                     {
                         if (process.Id != current.Id)
                         {
-                            startProgram = false;
+                            // already running instance, return from Main
+                            return;
                         }
                     }
                 }
                 catch { }
             }
 
-            if (startProgram)
+            // start program
+            if (ConfigManager.GeneralConfig.LogToFile)
             {
-                if (ConfigManager.GeneralConfig.LogToFile)
-                {
-                    Logger.ConfigureWithFile();
-                }
-
-                if (ConfigManager.GeneralConfig.DebugConsole)
-                {
-                    PInvokeHelpers.AllocConsole();
-                }
-
-                // init active display currency after config load
-                ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
-                
-                Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
-
-                if (!pathSet)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Path not set to executable");
-                }
-
-                var tosChecked = ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer;
-                if (!tosChecked)
-                {
-                    Helpers.ConsolePrint("NICEHASH",
-                        "No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
-                    Application.Run(new Form_ChooseLanguage());
-                }
-
-                // Init languages
-                International.Initialize(ConfigManager.GeneralConfig.Language);
-
-                // check WMI
-                if (Helpers.IsWmiEnabled())
-                {
-                    if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
-                    {
-                        Application.Run(new Form_Main());
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(International.GetText("Program_WMI_Error_Text"),
-                        International.GetText("Program_WMI_Error_Title"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                Logger.ConfigureWithFile();
             }
+
+            if (ConfigManager.GeneralConfig.DebugConsole)
+            {
+                PInvokeHelpers.AllocConsole();
+            }
+
+            // init active display currency after config load
+            ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
+                
+            Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
+
+            if (!pathSet)
+            {
+                Helpers.ConsolePrint("NICEHASH", "Path not set to executable");
+            }
+            
+            var tosChecked = ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer;
+            if (!tosChecked)
+            {
+                Helpers.ConsolePrint("NICEHASH",
+                    "No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
+                Application.Run(new Form_ChooseLanguage());
+            }
+            // Init languages
+            International.Initialize(ConfigManager.GeneralConfig.Language);
+            // 3rdparty miners TOS check if setting set
+            if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET)
+            {
+                Application.Run(new Form_3rdParty_TOS());
+            }
+
+            // if system requirements are not ensured it will fail the program
+            var canRun = ApplicationStateManager.SystemRequirementsEnsured();
+            // make an ensure TOS
+            if (canRun && ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
+            {
+                Application.Run(new Form_Main());
+            }
+            
         }
     }
 }
