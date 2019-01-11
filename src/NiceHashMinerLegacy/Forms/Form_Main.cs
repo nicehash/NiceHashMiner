@@ -25,7 +25,7 @@ namespace NiceHashMiner
 {
     using System.IO;
 
-    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IGlobalRatesUpdate, IDataVisualizer, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer, IVersionDisplayer
+    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IGlobalRatesUpdate, IDataVisualizer, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer
     {
         private Timer _minerStatsCheck;
         //private Timer _smaMinerCheck;
@@ -169,7 +169,7 @@ namespace NiceHashMiner
                                                    International.GetText(
                                                        ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
                                                    International.GetText("Form_Main_balance") + ":";
-            BalanceCallback(null, null); // update currency changes
+            //BalanceCallback(null, null); // update currency changes
 
             if (_isDeviceDetectionInitialized)
             {
@@ -290,7 +290,6 @@ namespace NiceHashMiner
 
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_GetNiceHashSMA"));
             // Init ws connection
-            NiceHashStats.OnBalanceUpdate += BalanceCallback;
             NiceHashStats.OnSmaUpdate += SmaCallback;
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
             NiceHashStats.OnVersionBurn += VersionBurnCallback;
@@ -674,41 +673,6 @@ namespace NiceHashMiner
                                                    International.GetText("Form_Main_balance") + ":";
         }
 
-
-        private void BalanceCallback(object sender, EventArgs e)
-        {
-            Helpers.ConsolePrint("NICEHASH", "Balance update");
-            var balance = NiceHashStats.Balance;
-            if (balance > 0)
-            {
-                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && balance < 0.1)
-                {
-                    toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
-                    toolStripStatusLabelBalanceBTCValue.Text =
-                        (balance * 1000).ToString("F5", CultureInfo.InvariantCulture);
-                }
-                else
-                {
-                    toolStripStatusLabelBalanceBTCCode.Text = "BTC";
-                    toolStripStatusLabelBalanceBTCValue.Text = balance.ToString("F6", CultureInfo.InvariantCulture);
-                }
-
-                //Helpers.ConsolePrint("CurrencyConverter", "Using CurrencyConverter" + ConfigManager.Instance.GeneralConfig.DisplayCurrency);
-                var amount = (balance * ExchangeRateApi.GetUsdExchangeRate());
-                amount = ExchangeRateApi.ConvertToActiveCurrency(amount);
-                toolStripStatusLabelBalanceDollarText.Text = amount.ToString("F2", CultureInfo.InvariantCulture);
-                toolStripStatusLabelBalanceDollarValue.Text = $"({ExchangeRateApi.ActiveDisplayCurrency})";
-            }
-        }
-
-
-        //private void BitcoinExchangeCheck_Tick(object sender, EventArgs e)
-        //{
-        //    Helpers.ConsolePrint("NICEHASH", "Bitcoin rate get");
-        //    ExchangeRateApi.UpdateApi(textBoxWorkerName.Text.Trim());
-        //    UpdateExchange();
-        //}
-
         private void ExchangeCallback(object sender, EventArgs e)
         {
             //// We are getting data from socket so stop checking manually
@@ -881,27 +845,11 @@ namespace NiceHashMiner
             }
         }
 
-
         private void ButtonStopMining_Click(object sender, EventArgs e)
         {
             _isManuallyStarted = false;
             StopMining(false);
         }
-
-        //private string FormatPayingOutput(double paying)
-        //{
-        //    string ret;
-
-        //    if (ConfigManager.GeneralConfig.AutoScaleBTCValues && paying < 0.1)
-        //        ret = (paying * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture) + " mBTC/" +
-        //              International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-        //    else
-        //        ret = (paying * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture) + " BTC/" +
-        //              International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
-
-        //    return ret;
-        //}
-
 
         private void ButtonLogo_Click(object sender, EventArgs e)
         {
@@ -1246,6 +1194,34 @@ namespace NiceHashMiner
             FormHelpers.SafeInvoke(this, () =>
             {
                 linkLabelNewVersion.Text = version;
+            });
+        }
+
+        // TODO this might need some formatters?
+        void IBalanceBTCDisplayer.DisplayBTCBalance(double btcBalance)
+        {
+            FormHelpers.SafeInvoke(this, () =>
+            {
+                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && btcBalance < 0.1)
+                {
+                    toolStripStatusLabelBalanceBTCCode.Text = "mBTC";
+                    toolStripStatusLabelBalanceBTCValue.Text =
+                        (btcBalance * 1000).ToString("F5", CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    toolStripStatusLabelBalanceBTCCode.Text = "BTC";
+                    toolStripStatusLabelBalanceBTCValue.Text = btcBalance.ToString("F6", CultureInfo.InvariantCulture);
+                }
+            });
+        }
+
+        void IBalanceFiatDisplayer.DisplayFiatBalance(double fiatBalance, string fiatCurrencySymbol)
+        {
+            FormHelpers.SafeInvoke(this, () =>
+            {
+                toolStripStatusLabelBalanceDollarText.Text = fiatBalance.ToString("F2", CultureInfo.InvariantCulture);
+                toolStripStatusLabelBalanceDollarValue.Text = $"({fiatCurrencySymbol})";
             });
         }
     }

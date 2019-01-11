@@ -60,14 +60,12 @@ namespace NiceHashMiner.Stats
         private const int DeviceUpdateLaunchDelay = 20 * 1000;
         private const int DeviceUpdateInterval = 60 * 1000;
 
-        public static double Balance { get; private set; }
+        //public static double Balance { get; private set; }
         public static string Version { get; private set; }
         public static string VersionLink { get; private set; }
         public static bool IsAlive => _socket?.IsAlive ?? false;
 
         // Event handlers for socket
-        public static event EventHandler OnBalanceUpdate;
-
         public static event EventHandler OnSmaUpdate;
         public static event EventHandler OnConnectionLost;
         public static event EventHandler<SocketEventArgs> OnVersionBurn;
@@ -297,8 +295,7 @@ namespace NiceHashMiner.Stats
             {
                 if (double.TryParse(balance, NumberStyles.Float, CultureInfo.InvariantCulture, out var bal))
                 {
-                    Balance = bal;
-                    OnBalanceUpdate?.Invoke(null, EventArgs.Empty);
+                    ApplicationStateManager.OnBalanceUpdate(bal);
                 }
             }
             catch (Exception e)

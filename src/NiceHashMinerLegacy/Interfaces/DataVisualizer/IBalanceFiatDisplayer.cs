@@ -8,5 +8,6 @@ namespace NiceHashMiner.Interfaces.DataVisualizer
 {
     interface IBalanceFiatDisplayer
     {
+        void DisplayFiatBalance(double fiatBalance, string fiatCurrencySymbol);
     }
 }

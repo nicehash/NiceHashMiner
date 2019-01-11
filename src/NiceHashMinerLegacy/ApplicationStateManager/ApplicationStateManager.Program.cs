@@ -15,9 +15,9 @@ namespace NiceHashMiner
             var pHandle = new Process
             {
                 StartInfo =
-                                {
-                                    FileName = Application.ExecutablePath
-                                }
+                {
+                    FileName = Application.ExecutablePath
+                }
             };
             pHandle.Start();
             Application.Exit();

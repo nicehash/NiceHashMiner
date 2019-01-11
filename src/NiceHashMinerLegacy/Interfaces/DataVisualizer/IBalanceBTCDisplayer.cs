@@ -8,5 +8,6 @@ namespace NiceHashMiner.Interfaces.DataVisualizer
 {
     interface IBalanceBTCDisplayer
     {
+        void DisplayBTCBalance(double btcBalance);
     }
 }

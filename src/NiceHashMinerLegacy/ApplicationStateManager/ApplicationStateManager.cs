@@ -33,6 +33,14 @@ namespace NiceHashMiner
             {
                 sServiceLocationDisplayer.DisplayServiceLocation(ConfigManager.GeneralConfig.ServiceLocation);
             }
+            if (stateDisplayer is IBalanceBTCDisplayer sBalanceBTCDisplayer)
+            {
+                sBalanceBTCDisplayer.DisplayBTCBalance(0);
+            }
+            if (stateDisplayer is IBalanceFiatDisplayer sBalanceFiatDisplayer)
+            {
+                sBalanceFiatDisplayer.DisplayFiatBalance(0, ExchangeRateApi.ActiveDisplayCurrency);
+            }
         }
 
         public static void UnsubscribeStateDisplayer(IDataVisualizer stateDisplayer)
@@ -106,6 +114,28 @@ namespace NiceHashMiner
 
         #region Balance
         public static double Balance { get; private set; }
+        public static void OnBalanceUpdate(double btcBalance)
+        {
+            Balance = btcBalance;
+            var usdAmount = (Balance * ExchangeRateApi.GetUsdExchangeRate());
+            var fiatBalance = ExchangeRateApi.ConvertToActiveCurrency(usdAmount);
+            // btc
+            foreach (var s in _stateDisplayers)
+            {
+                if (s is IBalanceBTCDisplayer sBalanceBTCDisplayer)
+                {
+                    sBalanceBTCDisplayer.DisplayBTCBalance(Balance);
+                }
+            }
+            // fiat
+            foreach (var s in _stateDisplayers)
+            {
+                if (s is IBalanceFiatDisplayer sBalanceFiatDisplayer)
+                {
+                    sBalanceFiatDisplayer.DisplayFiatBalance(fiatBalance, ExchangeRateApi.ActiveDisplayCurrency);
+                }
+            }
+        }
         #endregion
 
         [Flags]
@@ -267,13 +297,15 @@ namespace NiceHashMiner
         }
         #endregion
 
-
         // StartMining function should be called only if all mining requirements are met, btc or demo, valid workername, and sma data
         // don't call this function ever unless credentials are valid or if we will be using Demo mining
         // And if there are missing mining requirements
-        public static void StartMining()
+        public static bool StartMining()
         {
+        }
 
+        public static bool StartDemoMining()
+        {
         }
     }
 }
