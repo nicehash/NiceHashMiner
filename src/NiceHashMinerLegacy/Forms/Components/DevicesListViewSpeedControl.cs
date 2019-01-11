@@ -453,11 +453,6 @@ namespace NiceHashMiner.Forms.Components
         {
         }
 
-        public void ClearRates(int groupCount)
-        {
-            ClearRatesAll();
-        }
-
         #endregion
 
         #region Helpers

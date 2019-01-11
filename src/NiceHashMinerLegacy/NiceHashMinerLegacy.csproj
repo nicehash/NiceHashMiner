@@ -37,7 +37,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TESTNET</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -247,12 +247,6 @@
     <Compile Include="Forms\Components\Field.Designer.cs">
       <DependentUpon>Field.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\GroupProfitControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\GroupProfitControl.Designer.cs">
-      <DependentUpon>GroupProfitControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Form_Benchmark.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -387,9 +381,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
-      <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Benchmark.resx">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>

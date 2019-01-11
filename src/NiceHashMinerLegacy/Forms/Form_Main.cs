@@ -87,21 +87,6 @@ namespace NiceHashMiner
             //label_NotProfitable.Visible = false;
 
             InitMainConfigGuiData();
-
-            //// for resizing
-            //InitFlowPanelStart();
-
-            //if (groupBox1.Size.Height > 0 && Size.Height > 0)
-            //{
-            //    _emtpyGroupPanelHeight = groupBox1.Size.Height;
-            //    _mainFormHeight = Size.Height - _emtpyGroupPanelHeight;
-            //}
-            //else
-            //{
-            //    _emtpyGroupPanelHeight = 59;
-            //    _mainFormHeight = 330 - _emtpyGroupPanelHeight;
-            //}
-            //ClearRatesAll();
         }
 
         ~Form_Main()
@@ -518,42 +503,6 @@ namespace NiceHashMiner
         public void ClearRatesAll()
         {
             HideNotProfitable();
-            ClearRates(-1);
-        }
-
-        public void ClearRates(int groupCount)
-        {
-            //if (InvokeRequired)
-            //{
-            //    Invoke((Action) delegate { ClearRates(groupCount); });
-            //    return;
-            //}
-            //if (_flowLayoutPanelVisibleCount != groupCount)
-            //{
-            //    _flowLayoutPanelVisibleCount = groupCount;
-            //    // hide some Controls
-            //    var hideIndex = 0;
-            //    foreach (var control in flowLayoutPanelRates.Controls)
-            //    {
-            //        ((GroupProfitControl) control).Visible = hideIndex < groupCount;
-            //        ++hideIndex;
-            //    }
-            //}
-            //_flowLayoutPanelRatesIndex = 0;
-            //var visibleGroupCount = 1;
-            //if (groupCount > 0) visibleGroupCount += groupCount;
-
-            //var groupBox1Height = _emtpyGroupPanelHeight;
-            //if (flowLayoutPanelRates.Controls.Count > 0)
-            //{
-            //    var control = flowLayoutPanelRates.Controls[0];
-            //    var panelHeight = ((GroupProfitControl) control).Size.Height * 1.2f;
-            //    groupBox1Height = (int) ((visibleGroupCount) * panelHeight);
-            //}
-
-            //groupBox1.Size = new Size(groupBox1.Size.Width, groupBox1Height);
-            //// set new height
-            //Size = new Size(Size.Width, _mainFormHeight + groupBox1Height);
         }
 
         public void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying,

@@ -15,7 +15,5 @@ namespace NiceHashMiner.Interfaces
         void HideNotProfitable();
 
         void ForceMinerStatsUpdate();
-
-        void ClearRates(int groupCount);
     }
 }
