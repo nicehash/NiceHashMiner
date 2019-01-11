@@ -91,12 +91,12 @@ namespace NiceHashMiner.Forms.Components
 
         public void InitLocale()
         {
-            listViewAlgorithms.Columns[ENABLED].Text = International.GetText("AlgorithmsListView_Enabled");
-            listViewAlgorithms.Columns[ALGORITHM].Text = International.GetText("AlgorithmsListView_Algorithm");
-            listViewAlgorithms.Columns[SPEED].Text = International.GetText("AlgorithmsListView_Speed");
-            listViewAlgorithms.Columns[SECSPEED].Text = International.GetText("Form_DcriValues_SecondarySpeed");
-            listViewAlgorithms.Columns[RATIO].Text = International.GetText("AlgorithmsListView_Ratio");
-            listViewAlgorithms.Columns[RATE].Text = International.GetText("AlgorithmsListView_Rate");
+            listViewAlgorithms.Columns[ENABLED].Text = Translations.Tr("AlgorithmsListView_Enabled");
+            listViewAlgorithms.Columns[ALGORITHM].Text = Translations.Tr("AlgorithmsListView_Algorithm");
+            listViewAlgorithms.Columns[SPEED].Text = Translations.Tr("AlgorithmsListView_Speed");
+            listViewAlgorithms.Columns[SECSPEED].Text = Translations.Tr("Form_DcriValues_SecondarySpeed");
+            listViewAlgorithms.Columns[RATIO].Text = Translations.Tr("AlgorithmsListView_Ratio");
+            listViewAlgorithms.Columns[RATE].Text = Translations.Tr("AlgorithmsListView_Rate");
         }
 
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled)
@@ -238,7 +238,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     var disableAllItems = new ToolStripMenuItem
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_DisableAll")
+                        Text = Translations.Tr("AlgorithmsListView_ContextMenu_DisableAll")
                     };
                     disableAllItems.Click += ToolStripMenuItemDisableAll_Click;
                     contextMenuStrip1.Items.Add(disableAllItems);
@@ -247,7 +247,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     var enableAllItems = new ToolStripMenuItem
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_EnableAll")
+                        Text = Translations.Tr("AlgorithmsListView_ContextMenu_EnableAll")
                     };
                     enableAllItems.Click += ToolStripMenuItemEnableAll_Click;
                     contextMenuStrip1.Items.Add(enableAllItems);
@@ -256,7 +256,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     var testItem = new ToolStripMenuItem
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_TestItem")
+                        Text = Translations.Tr("AlgorithmsListView_ContextMenu_TestItem")
                     };
                     testItem.Click += ToolStripMenuItemTest_Click;
                     contextMenuStrip1.Items.Add(testItem);
@@ -265,7 +265,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     var enableBenchedItem = new ToolStripMenuItem
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_EnableBenched")
+                        Text = Translations.Tr("AlgorithmsListView_ContextMenu_EnableBenched")
                     };
                     enableBenchedItem.Click += ToolStripMenuItemEnableBenched_Click;
                     contextMenuStrip1.Items.Add(enableBenchedItem);
@@ -274,7 +274,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     var clearItem = new ToolStripMenuItem
                     {
-                        Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem")
+                        Text = Translations.Tr("AlgorithmsListView_ContextMenu_ClearItem")
                     };
                     clearItem.Click += ToolStripMenuItemClear_Click;
                     contextMenuStrip1.Items.Add(clearItem);
@@ -283,7 +283,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     var dcriMenu = new ToolStripMenuItem
                     {
-                        Text = International.GetText("Form_DcriValues_Title")
+                        Text = Translations.Tr("Form_DcriValues_Title")
                     };
 
                     if (listViewAlgorithms.SelectedItems.Count > 0
@@ -293,14 +293,14 @@ namespace NiceHashMiner.Forms.Components
 
                         var openDcri = new ToolStripMenuItem
                         {
-                            Text = International.GetText("AlgorithmsListView_ContextMenu_OpenDcri")
+                            Text = Translations.Tr("AlgorithmsListView_ContextMenu_OpenDcri")
                         };
                         openDcri.Click += toolStripMenuItemOpenDcri_Click;
                         dcriMenu.DropDownItems.Add(openDcri);
 
                         var tuningEnabled = new ToolStripMenuItem
                         {
-                            Text = International.GetText("Form_DcriValues_TuningEnabled"),
+                            Text = Translations.Tr("Form_DcriValues_TuningEnabled"),
                             CheckOnClick = true,
                             Checked = dualAlg.TuningEnabled
                         };

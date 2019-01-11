@@ -13,14 +13,14 @@ namespace NiceHashMiner
             InitializeComponent();
 
             DisableDetection = false;
-            Text = International.GetText("MinerFileNotFoundDialog_title");
-            linkLabelError.Text = string.Format(International.GetText("MinerFileNotFoundDialog_linkLabelError"),
-                minerDeviceName, path, International.GetText("MinerFileNotFoundDialog_link"));
+            Text = Translations.Tr("File not found!");
+            linkLabelError.Text = string.Format(Translations.Tr("MinerFileNotFoundDialog_linkLabelError"),
+                minerDeviceName, path, Translations.Tr("MinerFileNotFoundDialog_link"));
             linkLabelError.LinkArea =
-                new LinkArea(linkLabelError.Text.IndexOf(International.GetText("MinerFileNotFoundDialog_link")),
-                    International.GetText("MinerFileNotFoundDialog_link").Length);
-            chkBoxDisableDetection.Text = International.GetText("MinerFileNotFoundDialog_chkBoxDisableDetection");
-            buttonOK.Text = International.GetText("Global_OK");
+                new LinkArea(linkLabelError.Text.IndexOf(Translations.Tr("MinerFileNotFoundDialog_link")),
+                    Translations.Tr("MinerFileNotFoundDialog_link").Length);
+            chkBoxDisableDetection.Text = Translations.Tr("MinerFileNotFoundDialog_chkBoxDisableDetection");
+            buttonOK.Text = Translations.Tr("&OK");
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)

@@ -80,7 +80,7 @@ namespace NiceHashMiner.Forms
             {
                 _selectedComputeDevice = ComputeDeviceManager.Available.Devices[0];
                 algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
-                groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
+                groupBoxAlgorithmSettings.Text = string.Format(Translations.Tr("FormSettings_AlgorithmsSettings"),
                     _selectedComputeDevice.Name);
             }
 
@@ -105,244 +105,244 @@ namespace NiceHashMiner.Forms
         private void InitializeToolTip()
         {
             // Setup Tooltips
-            toolTip1.SetToolTip(comboBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
-            toolTip1.SetToolTip(label_Language, International.GetText("Form_Settings_ToolTip_Language"));
-            toolTip1.SetToolTip(pictureBox_Language, International.GetText("Form_Settings_ToolTip_Language"));
+            toolTip1.SetToolTip(comboBox_Language, Translations.Tr("Form_Settings_ToolTip_Language"));
+            toolTip1.SetToolTip(label_Language, Translations.Tr("Form_Settings_ToolTip_Language"));
+            toolTip1.SetToolTip(pictureBox_Language, Translations.Tr("Form_Settings_ToolTip_Language"));
 
             toolTip1.SetToolTip(checkBox_DebugConsole,
-                International.GetText("Form_Settings_ToolTip_checkBox_DebugConsole"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_DebugConsole"));
             toolTip1.SetToolTip(pictureBox_DebugConsole,
-                International.GetText("Form_Settings_ToolTip_checkBox_DebugConsole"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_DebugConsole"));
 
-            toolTip1.SetToolTip(textBox_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
-            toolTip1.SetToolTip(label_BitcoinAddress, International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
+            toolTip1.SetToolTip(textBox_BitcoinAddress, Translations.Tr("Form_Settings_ToolTip_BitcoinAddress"));
+            toolTip1.SetToolTip(label_BitcoinAddress, Translations.Tr("Form_Settings_ToolTip_BitcoinAddress"));
             toolTip1.SetToolTip(pictureBox_Info_BitcoinAddress,
-                International.GetText("Form_Settings_ToolTip_BitcoinAddress"));
+                Translations.Tr("Form_Settings_ToolTip_BitcoinAddress"));
 
-            toolTip1.SetToolTip(textBox_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
-            toolTip1.SetToolTip(label_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
-            toolTip1.SetToolTip(pictureBox_WorkerName, International.GetText("Form_Settings_ToolTip_WorkerName"));
+            toolTip1.SetToolTip(textBox_WorkerName, Translations.Tr("Form_Settings_ToolTip_WorkerName"));
+            toolTip1.SetToolTip(label_WorkerName, Translations.Tr("Form_Settings_ToolTip_WorkerName"));
+            toolTip1.SetToolTip(pictureBox_WorkerName, Translations.Tr("Form_Settings_ToolTip_WorkerName"));
 
             toolTip1.SetToolTip(comboBox_ServiceLocation,
-                International.GetText("Form_Settings_ToolTip_ServiceLocation"));
-            toolTip1.SetToolTip(label_ServiceLocation, International.GetText("Form_Settings_ToolTip_ServiceLocation"));
+                Translations.Tr("Form_Settings_ToolTip_ServiceLocation"));
+            toolTip1.SetToolTip(label_ServiceLocation, Translations.Tr("Form_Settings_ToolTip_ServiceLocation"));
             toolTip1.SetToolTip(pictureBox_ServiceLocation,
-                International.GetText("Form_Settings_ToolTip_ServiceLocation"));
+                Translations.Tr("Form_Settings_ToolTip_ServiceLocation"));
 
-            toolTip1.SetToolTip(comboBox_TimeUnit, International.GetText("Form_Settings_ToolTip_TimeUnit"));
-            toolTip1.SetToolTip(label_TimeUnit, International.GetText("Form_Settings_ToolTip_TimeUnit"));
-            toolTip1.SetToolTip(pictureBox_TimeUnit, International.GetText("Form_Settings_ToolTip_TimeUnit"));
+            toolTip1.SetToolTip(comboBox_TimeUnit, Translations.Tr("Form_Settings_ToolTip_TimeUnit"));
+            toolTip1.SetToolTip(label_TimeUnit, Translations.Tr("Form_Settings_ToolTip_TimeUnit"));
+            toolTip1.SetToolTip(pictureBox_TimeUnit, Translations.Tr("Form_Settings_ToolTip_TimeUnit"));
 
             toolTip1.SetToolTip(checkBox_HideMiningWindows,
-                International.GetText("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
             toolTip1.SetToolTip(pictureBox_HideMiningWindows,
-                International.GetText("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_HideMiningWindows"));
 
             toolTip1.SetToolTip(checkBox_MinimizeToTray,
-                International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
             toolTip1.SetToolTip(pictureBox_MinimizeToTray,
-                International.GetText("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_MinimizeToTray"));
 
             toolTip1.SetToolTip(checkBox_Use3rdPartyMiners,
-                International.GetText("Form_Settings_General_3rdparty_ToolTip"));
+                Translations.Tr("Form_Settings_General_3rdparty_ToolTip"));
             toolTip1.SetToolTip(pictureBox_Use3rdPartyMiners,
-                International.GetText("Form_Settings_General_3rdparty_ToolTip"));
+                Translations.Tr("Form_Settings_General_3rdparty_ToolTip"));
 
             toolTip1.SetToolTip(checkBox_AllowMultipleInstances,
-                International.GetText("Form_Settings_General_AllowMultipleInstances_ToolTip"));
+                Translations.Tr("Form_Settings_General_AllowMultipleInstances_ToolTip"));
             toolTip1.SetToolTip(pictureBox_AllowMultipleInstances,
-                International.GetText("Form_Settings_General_AllowMultipleInstances_ToolTip"));
+                Translations.Tr("Form_Settings_General_AllowMultipleInstances_ToolTip"));
             
-            toolTip1.SetToolTip(label_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
-            toolTip1.SetToolTip(pictureBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
-            toolTip1.SetToolTip(textBox_MinProfit, International.GetText("Form_Settings_ToolTip_MinimumProfit"));
+            toolTip1.SetToolTip(label_MinProfit, Translations.Tr("Form_Settings_ToolTip_MinimumProfit"));
+            toolTip1.SetToolTip(pictureBox_MinProfit, Translations.Tr("Form_Settings_ToolTip_MinimumProfit"));
+            toolTip1.SetToolTip(textBox_MinProfit, Translations.Tr("Form_Settings_ToolTip_MinimumProfit"));
 
             toolTip1.SetToolTip(textBox_SwitchMaxSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
+                Translations.Tr("Form_Settings_ToolTip_SwitchMaxSeconds"));
             toolTip1.SetToolTip(label_SwitchMaxSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
+                Translations.Tr("Form_Settings_ToolTip_SwitchMaxSeconds"));
             toolTip1.SetToolTip(pictureBox_SwitchMaxSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMaxSeconds"));
+                Translations.Tr("Form_Settings_ToolTip_SwitchMaxSeconds"));
 
             toolTip1.SetToolTip(textBox_SwitchMinSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
+                Translations.Tr("Form_Settings_ToolTip_SwitchMinSeconds"));
             toolTip1.SetToolTip(label_SwitchMinSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
+                Translations.Tr("Form_Settings_ToolTip_SwitchMinSeconds"));
             toolTip1.SetToolTip(pictureBox_SwitchMinSeconds,
-                International.GetText("Form_Settings_ToolTip_SwitchMinSeconds"));
+                Translations.Tr("Form_Settings_ToolTip_SwitchMinSeconds"));
 
             toolTip1.SetToolTip(textBox_MinerAPIQueryInterval,
-                International.GetText("Form_Settings_ToolTip_MinerAPIQueryInterval"));
+                Translations.Tr("Form_Settings_ToolTip_MinerAPIQueryInterval"));
             toolTip1.SetToolTip(label_MinerAPIQueryInterval,
-                International.GetText("Form_Settings_ToolTip_MinerAPIQueryInterval"));
+                Translations.Tr("Form_Settings_ToolTip_MinerAPIQueryInterval"));
             toolTip1.SetToolTip(pictureBox_MinerAPIQueryInterval,
-                International.GetText("Form_Settings_ToolTip_MinerAPIQueryInterval"));
+                Translations.Tr("Form_Settings_ToolTip_MinerAPIQueryInterval"));
 
             toolTip1.SetToolTip(textBox_MinerRestartDelayMS,
-                International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
+                Translations.Tr("Form_Settings_ToolTip_MinerRestartDelayMS"));
             toolTip1.SetToolTip(label_MinerRestartDelayMS,
-                International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
+                Translations.Tr("Form_Settings_ToolTip_MinerRestartDelayMS"));
             toolTip1.SetToolTip(pictureBox_MinerRestartDelayMS,
-                International.GetText("Form_Settings_ToolTip_MinerRestartDelayMS"));
+                Translations.Tr("Form_Settings_ToolTip_MinerRestartDelayMS"));
 
             toolTip1.SetToolTip(textBox_APIBindPortStart,
-                International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
+                Translations.Tr("Form_Settings_ToolTip_APIBindPortStart"));
             toolTip1.SetToolTip(label_APIBindPortStart,
-                International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
+                Translations.Tr("Form_Settings_ToolTip_APIBindPortStart"));
             toolTip1.SetToolTip(pictureBox_APIBindPortStart,
-                International.GetText("Form_Settings_ToolTip_APIBindPortStart"));
+                Translations.Tr("Form_Settings_ToolTip_APIBindPortStart"));
 
-            toolTip1.SetToolTip(comboBox_DagLoadMode, International.GetText("Form_Settings_ToolTip_DagGeneration"));
-            toolTip1.SetToolTip(label_DagGeneration, International.GetText("Form_Settings_ToolTip_DagGeneration"));
-            toolTip1.SetToolTip(pictureBox_DagGeneration, International.GetText("Form_Settings_ToolTip_DagGeneration"));
+            toolTip1.SetToolTip(comboBox_DagLoadMode, Translations.Tr("Form_Settings_ToolTip_DagGeneration"));
+            toolTip1.SetToolTip(label_DagGeneration, Translations.Tr("Form_Settings_ToolTip_DagGeneration"));
+            toolTip1.SetToolTip(pictureBox_DagGeneration, Translations.Tr("Form_Settings_ToolTip_DagGeneration"));
 
             benchmarkLimitControlCPU.SetToolTip(ref toolTip1, "CPUs");
             benchmarkLimitControlNVIDIA.SetToolTip(ref toolTip1, "NVIDIA GPUs");
             benchmarkLimitControlAMD.SetToolTip(ref toolTip1, "AMD GPUs");
 
             toolTip1.SetToolTip(checkBox_DisableDetectionNVIDIA,
-                string.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA"));
+                string.Format(Translations.Tr("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA"));
             toolTip1.SetToolTip(checkBox_DisableDetectionAMD,
-                string.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "AMD"));
+                string.Format(Translations.Tr("Form_Settings_ToolTip_checkBox_DisableDetection"), "AMD"));
             toolTip1.SetToolTip(pictureBox_DisableDetectionNVIDIA,
-                string.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA"));
+                string.Format(Translations.Tr("Form_Settings_ToolTip_checkBox_DisableDetection"), "NVIDIA"));
             toolTip1.SetToolTip(pictureBox_DisableDetectionAMD,
-                string.Format(International.GetText("Form_Settings_ToolTip_checkBox_DisableDetection"), "AMD"));
+                string.Format(Translations.Tr("Form_Settings_ToolTip_checkBox_DisableDetection"), "AMD"));
 
             toolTip1.SetToolTip(checkBox_AutoScaleBTCValues,
-                International.GetText("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
             toolTip1.SetToolTip(pictureBox_AutoScaleBTCValues,
-                International.GetText("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_AutoScaleBTCValues"));
 
             toolTip1.SetToolTip(checkBox_StartMiningWhenIdle,
-                International.GetText("Form_Settings_ToolTip_checkBox_StartMiningWhenIdle"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_StartMiningWhenIdle"));
             toolTip1.SetToolTip(pictureBox_StartMiningWhenIdle,
-                International.GetText("Form_Settings_ToolTip_checkBox_StartMiningWhenIdle"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_StartMiningWhenIdle"));
 
-            toolTip1.SetToolTip(textBox_MinIdleSeconds, International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
-            toolTip1.SetToolTip(label_MinIdleSeconds, International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
+            toolTip1.SetToolTip(textBox_MinIdleSeconds, Translations.Tr("Form_Settings_ToolTip_MinIdleSeconds"));
+            toolTip1.SetToolTip(label_MinIdleSeconds, Translations.Tr("Form_Settings_ToolTip_MinIdleSeconds"));
             toolTip1.SetToolTip(pictureBox_MinIdleSeconds,
-                International.GetText("Form_Settings_ToolTip_MinIdleSeconds"));
+                Translations.Tr("Form_Settings_ToolTip_MinIdleSeconds"));
 
-            toolTip1.SetToolTip(checkBox_LogToFile, International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
+            toolTip1.SetToolTip(checkBox_LogToFile, Translations.Tr("Form_Settings_ToolTip_checkBox_LogToFile"));
             toolTip1.SetToolTip(pictureBox_LogToFile,
-                International.GetText("Form_Settings_ToolTip_checkBox_LogToFile"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_LogToFile"));
 
 
-            toolTip1.SetToolTip(textBox_LogMaxFileSize, International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
-            toolTip1.SetToolTip(label_LogMaxFileSize, International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
+            toolTip1.SetToolTip(textBox_LogMaxFileSize, Translations.Tr("Form_Settings_ToolTip_LogMaxFileSize"));
+            toolTip1.SetToolTip(label_LogMaxFileSize, Translations.Tr("Form_Settings_ToolTip_LogMaxFileSize"));
             toolTip1.SetToolTip(pictureBox_LogMaxFileSize,
-                International.GetText("Form_Settings_ToolTip_LogMaxFileSize"));
+                Translations.Tr("Form_Settings_ToolTip_LogMaxFileSize"));
 
             toolTip1.SetToolTip(checkBox_ShowDriverVersionWarning,
-                International.GetText("Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning"));
             toolTip1.SetToolTip(pictureBox_ShowDriverVersionWarning,
-                International.GetText("Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_ShowDriverVersionWarning"));
 
             toolTip1.SetToolTip(checkBox_DisableWindowsErrorReporting,
-                International.GetText("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
             toolTip1.SetToolTip(pictureBox_DisableWindowsErrorReporting,
-                International.GetText("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_DisableWindowsErrorReporting"));
 
             toolTip1.SetToolTip(checkBox_ShowInternetConnectionWarning,
-                International.GetText("Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning"));
             toolTip1.SetToolTip(pictureBox_ShowInternetConnectionWarning,
-                International.GetText("Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_ShowInternetConnectionWarning"));
 
             toolTip1.SetToolTip(checkBox_NVIDIAP0State,
-                International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
             toolTip1.SetToolTip(pictureBox_NVIDIAP0State,
-                International.GetText("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_NVIDIAP0State"));
 
             toolTip1.SetToolTip(checkBox_RunScriptOnCUDA_GPU_Lost,
-                International.GetText("Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost"));
             toolTip1.SetToolTip(pictureBox_RunScriptOnCUDA_GPU_Lost,
-                International.GetText("Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_RunScriptOnCUDA_GPU_Lost"));
 
             toolTip1.SetToolTip(checkBox_RunAtStartup,
-                International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_RunAtStartup"));
             toolTip1.SetToolTip(pictureBox_RunAtStartup,
-                International.GetText("Form_Settings_ToolTip_checkBox_RunAtStartup"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_RunAtStartup"));
 
 
             toolTip1.SetToolTip(checkBox_AutoStartMining,
-                International.GetText("Form_Settings_ToolTip_checkBox_AutoStartMining"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_AutoStartMining"));
             toolTip1.SetToolTip(pictureBox_AutoStartMining,
-                International.GetText("Form_Settings_ToolTip_checkBox_AutoStartMining"));
+                Translations.Tr("Form_Settings_ToolTip_checkBox_AutoStartMining"));
 
 
             toolTip1.SetToolTip(textBox_ethminerDefaultBlockHeight,
-                International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
+                Translations.Tr("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(label_ethminerDefaultBlockHeight,
-                International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
+                Translations.Tr("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
             toolTip1.SetToolTip(pictureBox_ethminerDefaultBlockHeight,
-                International.GetText("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
+                Translations.Tr("Form_Settings_ToolTip_ethminerDefaultBlockHeight"));
 
-            toolTip1.SetToolTip(label_displayCurrency, International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
+            toolTip1.SetToolTip(label_displayCurrency, Translations.Tr("Form_Settings_ToolTip_DisplayCurrency"));
             toolTip1.SetToolTip(pictureBox_displayCurrency,
-                International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
+                Translations.Tr("Form_Settings_ToolTip_DisplayCurrency"));
             toolTip1.SetToolTip(currencyConverterCombobox,
-                International.GetText("Form_Settings_ToolTip_DisplayCurrency"));
+                Translations.Tr("Form_Settings_ToolTip_DisplayCurrency"));
 
             // Setup Tooltips CPU
             toolTip1.SetToolTip(comboBox_CPU0_ForceCPUExtension,
-                International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
+                Translations.Tr("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
             toolTip1.SetToolTip(label_CPU0_ForceCPUExtension,
-                International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
+                Translations.Tr("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
             toolTip1.SetToolTip(pictureBox_CPU0_ForceCPUExtension,
-                International.GetText("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
+                Translations.Tr("Form_Settings_ToolTip_CPU_ForceCPUExtension"));
 
             // amd disable temp control
             toolTip1.SetToolTip(checkBox_AMD_DisableAMDTempControl,
-                International.GetText("Form_Settings_ToolTip_DisableAMDTempControl"));
+                Translations.Tr("Form_Settings_ToolTip_DisableAMDTempControl"));
             toolTip1.SetToolTip(pictureBox_AMD_DisableAMDTempControl,
-                International.GetText("Form_Settings_ToolTip_DisableAMDTempControl"));
+                Translations.Tr("Form_Settings_ToolTip_DisableAMDTempControl"));
 
             // disable default optimizations
             toolTip1.SetToolTip(checkBox_DisableDefaultOptimizations,
-                International.GetText("Form_Settings_ToolTip_DisableDefaultOptimizations"));
+                Translations.Tr("Form_Settings_ToolTip_DisableDefaultOptimizations"));
             toolTip1.SetToolTip(pictureBox_DisableDefaultOptimizations,
-                International.GetText("Form_Settings_ToolTip_DisableDefaultOptimizations"));
+                Translations.Tr("Form_Settings_ToolTip_DisableDefaultOptimizations"));
 
             // internet connection mining check
             toolTip1.SetToolTip(checkBox_IdleWhenNoInternetAccess,
-                International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
+                Translations.Tr("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
             toolTip1.SetToolTip(pictureBox_IdleWhenNoInternetAccess,
-                International.GetText("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
+                Translations.Tr("Form_Settings_ToolTip_ContinueMiningIfNoInternetAccess"));
 
             // IFTTT notification check
-            toolTip1.SetToolTip(checkBox_UseIFTTT, International.GetText("Form_Settings_ToolTip_UseIFTTT"));
-            toolTip1.SetToolTip(pictureBox_UseIFTTT, International.GetText("Form_Settings_ToolTip_UseIFTTT"));
+            toolTip1.SetToolTip(checkBox_UseIFTTT, Translations.Tr("Form_Settings_ToolTip_UseIFTTT"));
+            toolTip1.SetToolTip(pictureBox_UseIFTTT, Translations.Tr("Form_Settings_ToolTip_UseIFTTT"));
 
             toolTip1.SetToolTip(pictureBox_SwitchProfitabilityThreshold,
-                International.GetText("Form_Settings_ToolTip_SwitchProfitabilityThreshold"));
+                Translations.Tr("Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]"));
             toolTip1.SetToolTip(label_SwitchProfitabilityThreshold,
-                International.GetText("Form_Settings_ToolTip_SwitchProfitabilityThreshold"));
+                Translations.Tr("Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]"));
 
             toolTip1.SetToolTip(pictureBox_MinimizeMiningWindows,
-                International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
+                Translations.Tr("Form_Settings_ToolTip_MinimizeMiningWindows"));
             toolTip1.SetToolTip(checkBox_MinimizeMiningWindows,
-                International.GetText("Form_Settings_ToolTip_MinimizeMiningWindows"));
+                Translations.Tr("Form_Settings_ToolTip_MinimizeMiningWindows"));
 
             // Electricity cost
-            toolTip1.SetToolTip(label_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
-            toolTip1.SetToolTip(textBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
-            toolTip1.SetToolTip(pictureBox_ElectricityCost, International.GetText("Form_Settings_ToolTip_ElectricityCost"));
+            toolTip1.SetToolTip(label_ElectricityCost, Translations.Tr("Form_Settings_ToolTip_ElectricityCost"));
+            toolTip1.SetToolTip(textBox_ElectricityCost, Translations.Tr("Form_Settings_ToolTip_ElectricityCost"));
+            toolTip1.SetToolTip(pictureBox_ElectricityCost, Translations.Tr("Form_Settings_ToolTip_ElectricityCost"));
 
             SetToolTip("Form_Settings_ToolTip_RunEthlargement", checkBox_RunEthlargement, pictureBox_RunEthlargement);
 
-            Text = International.GetText("Form_Settings_Title");
+            Text = Translations.Tr("Form_Settings_Title");
 
             algorithmSettingsControl1.InitLocale(toolTip1);
 
-            SetToolTip("Form_Settings_ToolTip_IdleType", comboBox_IdleType, label_IdleType, pictureBox_IdleType);
+            SetToolTip("Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds.", comboBox_IdleType, label_IdleType, pictureBox_IdleType);
         }
 
         private void SetToolTip(string internationalKey, params Control[] controls)
         {
             foreach (var control in controls)
             {
-                toolTip1.SetToolTip(control, International.GetText(internationalKey));
+                toolTip1.SetToolTip(control, Translations.Tr(internationalKey));
             }
         }
 
@@ -350,9 +350,9 @@ namespace NiceHashMiner.Forms
 
         private void InitializeFormTranslations()
         {
-            buttonDefaults.Text = International.GetText("Form_Settings_buttonDefaultsText");
-            buttonSaveClose.Text = International.GetText("Form_Settings_buttonSaveText");
-            buttonCloseNoSave.Text = International.GetText("Form_Settings_buttonCloseNoSaveText");
+            buttonDefaults.Text = Translations.Tr("Form_Settings_buttonDefaultsText");
+            buttonSaveClose.Text = Translations.Tr("Form_Settings_buttonSaveText");
+            buttonCloseNoSave.Text = Translations.Tr("Form_Settings_buttonCloseNoSaveText");
         }
 
         #endregion //Form this
@@ -361,77 +361,80 @@ namespace NiceHashMiner.Forms
 
         private void InitializeGeneralTabTranslations()
         {
-            checkBox_DebugConsole.Text = International.GetText("Form_Settings_General_DebugConsole");
-            checkBox_AutoStartMining.Text = International.GetText("Form_Settings_General_AutoStartMining");
-            checkBox_HideMiningWindows.Text = International.GetText("Form_Settings_General_HideMiningWindows");
-            checkBox_MinimizeToTray.Text = International.GetText("Form_Settings_General_MinimizeToTray");
+            checkBox_DebugConsole.Text = Translations.Tr("Form_Settings_General_DebugConsole");
+            checkBox_AutoStartMining.Text = Translations.Tr("Form_Settings_General_AutoStartMining");
+            checkBox_HideMiningWindows.Text = Translations.Tr("Form_Settings_General_HideMiningWindows");
+            checkBox_MinimizeToTray.Text = Translations.Tr("Form_Settings_General_MinimizeToTray");
             checkBox_DisableDetectionNVIDIA.Text =
-                string.Format(International.GetText("Form_Settings_General_DisableDetection"), "NVIDIA");
+                string.Format(Translations.Tr("Form_Settings_General_DisableDetection"), "NVIDIA");
             checkBox_DisableDetectionAMD.Text =
-                string.Format(International.GetText("Form_Settings_General_DisableDetection"), "AMD");
-            checkBox_AutoScaleBTCValues.Text = International.GetText("Form_Settings_General_AutoScaleBTCValues");
-            checkBox_StartMiningWhenIdle.Text = International.GetText("Form_Settings_General_StartMiningWhenIdle");
+                string.Format(Translations.Tr("Form_Settings_General_DisableDetection"), "AMD");
+            checkBox_AutoScaleBTCValues.Text = Translations.Tr("Form_Settings_General_AutoScaleBTCValues");
+            checkBox_StartMiningWhenIdle.Text = Translations.Tr("Form_Settings_General_StartMiningWhenIdle");
             checkBox_ShowDriverVersionWarning.Text =
-                International.GetText("Form_Settings_General_ShowDriverVersionWarning");
+                Translations.Tr("Form_Settings_General_ShowDriverVersionWarning");
             checkBox_DisableWindowsErrorReporting.Text =
-                International.GetText("Form_Settings_General_DisableWindowsErrorReporting");
+                Translations.Tr("Form_Settings_General_DisableWindowsErrorReporting");
             checkBox_ShowInternetConnectionWarning.Text =
-                International.GetText("Form_Settings_General_ShowInternetConnectionWarning");
-            checkBox_Use3rdPartyMiners.Text = International.GetText("Form_Settings_General_3rdparty_Text");
-            checkBox_NVIDIAP0State.Text = International.GetText("Form_Settings_General_NVIDIAP0State");
-            checkBox_LogToFile.Text = International.GetText("Form_Settings_General_LogToFile");
+                Translations.Tr("Form_Settings_General_ShowInternetConnectionWarning");
+            checkBox_Use3rdPartyMiners.Text = Translations.Tr("Form_Settings_General_3rdparty_Text");
+            checkBox_NVIDIAP0State.Text = Translations.Tr("Form_Settings_General_NVIDIAP0State");
+            checkBox_LogToFile.Text = Translations.Tr("Form_Settings_General_LogToFile");
             checkBox_AMD_DisableAMDTempControl.Text =
-                International.GetText("Form_Settings_General_DisableAMDTempControl");
+                Translations.Tr("Form_Settings_General_DisableAMDTempControl");
             checkBox_AllowMultipleInstances.Text =
-                International.GetText("Form_Settings_General_AllowMultipleInstances_Text");
-            checkBox_RunAtStartup.Text = International.GetText("Form_Settings_General_RunAtStartup");
-            checkBox_MinimizeMiningWindows.Text = International.GetText("Form_Settings_General_MinimizeMiningWindows");
-            checkBox_UseIFTTT.Text = International.GetText("Form_Settings_General_UseIFTTT");
+                Translations.Tr("Form_Settings_General_AllowMultipleInstances_Text");
+            checkBox_RunAtStartup.Text = Translations.Tr("Form_Settings_General_RunAtStartup");
+            checkBox_MinimizeMiningWindows.Text = Translations.Tr("Form_Settings_General_MinimizeMiningWindows");
+            checkBox_UseIFTTT.Text = Translations.Tr("Form_Settings_General_UseIFTTT");
             checkBox_RunScriptOnCUDA_GPU_Lost.Text =
-                International.GetText("Form_Settings_General_RunScriptOnCUDA_GPU_Lost");
+                Translations.Tr("Form_Settings_General_RunScriptOnCUDA_GPU_Lost");
 
-            label_Language.Text = International.GetText("Form_Settings_General_Language") + ":";
-            label_BitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
-            label_WorkerName.Text = International.GetText("WorkerName") + ":";
-            label_ServiceLocation.Text = International.GetText("Service_Location") + ":";
+            label_Language.Text = Translations.Tr("Form_Settings_General_Language") + ":";
+            label_BitcoinAddress.Text = Translations.Tr("Bitcoin Address") + ":";
+            label_WorkerName.Text = Translations.Tr("Worker Name") + ":";
+            label_ServiceLocation.Text = Translations.Tr("Service location") + ":";
             {
                 var i = 0;
                 foreach (var loc in StratumService.MiningLocations)
-                    comboBox_ServiceLocation.Items[i++] = International.GetText("LocationName_" + loc);
+                {
+                    comboBox_ServiceLocation.Items[i] = Translations.Tr((string)StratumService.MiningLocationNames[i]);
+                    i++;
+                }    
             }
-            label_MinIdleSeconds.Text = International.GetText("Form_Settings_General_MinIdleSeconds") + ":";
-            label_MinerRestartDelayMS.Text = International.GetText("Form_Settings_General_MinerRestartDelayMS") + ":";
+            label_MinIdleSeconds.Text = Translations.Tr("Form_Settings_General_MinIdleSeconds") + ":";
+            label_MinerRestartDelayMS.Text = Translations.Tr("Form_Settings_General_MinerRestartDelayMS") + ":";
             label_MinerAPIQueryInterval.Text =
-                International.GetText("Form_Settings_General_MinerAPIQueryInterval") + ":";
-            label_LogMaxFileSize.Text = International.GetText("Form_Settings_General_LogMaxFileSize") + ":";
+                Translations.Tr("Form_Settings_General_MinerAPIQueryInterval") + ":";
+            label_LogMaxFileSize.Text = Translations.Tr("Form_Settings_General_LogMaxFileSize") + ":";
             
             label_SwitchMaxSeconds.Text =
-                International.GetText("Form_Settings_General_SwitchMaxSeconds") + ":";
-            label_SwitchMinSeconds.Text = International.GetText("Form_Settings_General_SwitchMinSeconds") + ":";
+                Translations.Tr("Form_Settings_General_SwitchMaxSeconds") + ":";
+            label_SwitchMinSeconds.Text = Translations.Tr("Form_Settings_General_SwitchMinSeconds") + ":";
 
             label_ethminerDefaultBlockHeight.Text =
-                International.GetText("Form_Settings_General_ethminerDefaultBlockHeight") + ":";
-            label_DagGeneration.Text = International.GetText("Form_Settings_DagGeneration") + ":";
-            label_APIBindPortStart.Text = International.GetText("Form_Settings_APIBindPortStart") + ":";
+                Translations.Tr("Form_Settings_General_ethminerDefaultBlockHeight") + ":";
+            label_DagGeneration.Text = Translations.Tr("Form_Settings_DagGeneration") + ":";
+            label_APIBindPortStart.Text = Translations.Tr("Form_Settings_APIBindPortStart") + ":";
 
-            label_MinProfit.Text = International.GetText("Form_Settings_General_MinimumProfit") + ":";
+            label_MinProfit.Text = Translations.Tr("Form_Settings_General_MinimumProfit") + ":";
 
-            label_displayCurrency.Text = International.GetText("Form_Settings_DisplayCurrency");
+            label_displayCurrency.Text = Translations.Tr("Form_Settings_DisplayCurrency");
 
-            label_IFTTTAPIKey.Text = International.GetText("Form_Settings_IFTTTAPIKey");
+            label_IFTTTAPIKey.Text = Translations.Tr("Form_Settings_IFTTTAPIKey");
 
-            label_ElectricityCost.Text = International.GetText("Form_Settings_ElectricityCost");
+            label_ElectricityCost.Text = Translations.Tr("Form_Settings_ElectricityCost");
 
             // Benchmark time limits
             // internationalization change
             groupBoxBenchmarkTimeLimits.Text =
-                International.GetText("Form_Settings_General_BenchmarkTimeLimits_Title") + ":";
+                Translations.Tr("Form_Settings_General_BenchmarkTimeLimits_Title") + ":";
             benchmarkLimitControlCPU.GroupName =
-                International.GetText("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
+                Translations.Tr("Form_Settings_General_BenchmarkTimeLimitsCPU_Group") + ":";
             benchmarkLimitControlNVIDIA.GroupName =
-                International.GetText("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group") + ":";
+                Translations.Tr("Form_Settings_General_BenchmarkTimeLimitsNVIDIA_Group") + ":";
             benchmarkLimitControlAMD.GroupName =
-                International.GetText("Form_Settings_General_BenchmarkTimeLimitsAMD_Group") + ":";
+                Translations.Tr("Form_Settings_General_BenchmarkTimeLimitsAMD_Group") + ":";
             // moved from constructor because of editor
             benchmarkLimitControlCPU.InitLocale();
             benchmarkLimitControlNVIDIA.InitLocale();
@@ -443,39 +446,39 @@ namespace NiceHashMiner.Forms
 
             // Setup Tooltips CPU
             label_CPU0_ForceCPUExtension.Text =
-                International.GetText("Form_Settings_General_CPU_ForceCPUExtension") + ":";
+                Translations.Tr("Form_Settings_General_CPU_ForceCPUExtension") + ":";
             // new translations
-            tabControlGeneral.TabPages[0].Text = International.GetText("FormSettings_Tab_General");
-            tabControlGeneral.TabPages[1].Text = International.GetText("FormSettings_Tab_Advanced");
-            tabControlGeneral.TabPages[2].Text = International.GetText("FormSettings_Tab_Devices_Algorithms");
-            groupBox_Main.Text = International.GetText("FormSettings_Tab_General_Group_Main");
-            groupBox_Localization.Text = International.GetText("FormSettings_Tab_General_Group_Localization");
-            groupBox_Logging.Text = International.GetText("FormSettings_Tab_General_Group_Logging");
-            groupBox_Misc.Text = International.GetText("FormSettings_Tab_General_Group_Misc");
+            tabControlGeneral.TabPages[0].Text = Translations.Tr("FormSettings_Tab_General");
+            tabControlGeneral.TabPages[1].Text = Translations.Tr("FormSettings_Tab_Advanced");
+            tabControlGeneral.TabPages[2].Text = Translations.Tr("FormSettings_Tab_Devices_Algorithms");
+            groupBox_Main.Text = Translations.Tr("FormSettings_Tab_General_Group_Main");
+            groupBox_Localization.Text = Translations.Tr("FormSettings_Tab_General_Group_Localization");
+            groupBox_Logging.Text = Translations.Tr("FormSettings_Tab_General_Group_Logging");
+            groupBox_Misc.Text = Translations.Tr("FormSettings_Tab_General_Group_Misc");
             // advanced
-            groupBox_Miners.Text = International.GetText("FormSettings_Tab_Advanced_Group_Miners");
+            groupBox_Miners.Text = Translations.Tr("FormSettings_Tab_Advanced_Group_Miners");
             groupBoxBenchmarkTimeLimits.Text =
-                International.GetText("FormSettings_Tab_Advanced_Group_BenchmarkTimeLimits");
+                Translations.Tr("FormSettings_Tab_Advanced_Group_BenchmarkTimeLimits");
 
-            buttonAllProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_ALLProfitability");
+            buttonAllProfit.Text = Translations.Tr("FormSettings_Tab_Devices_Algorithms_Check_ALLProfitability");
             buttonSelectedProfit.Text =
-                International.GetText("FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability");
+                Translations.Tr("FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability");
 
             checkBox_DisableDefaultOptimizations.Text =
-                International.GetText("Form_Settings_Text_DisableDefaultOptimizations");
+                Translations.Tr("Form_Settings_Text_DisableDefaultOptimizations");
             checkBox_IdleWhenNoInternetAccess.Text =
-                International.GetText("Form_Settings_Text_ContinueMiningIfNoInternetAccess");
+                Translations.Tr("Form_Settings_Text_ContinueMiningIfNoInternetAccess");
 
             label_SwitchProfitabilityThreshold.Text =
-                International.GetText("Form_Settings_General_SwitchProfitabilityThreshold");
+                Translations.Tr("Switch Profitability Threshold");
 
-            checkBox_RunEthlargement.Text = International.GetText("Form_Settings_General_RunEthlargement");
+            checkBox_RunEthlargement.Text = Translations.Tr("Form_Settings_General_RunEthlargement");
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
 
-            label_IdleType.Text = International.GetText("Form_Settings_IdleType");
+            label_IdleType.Text = Translations.Tr("Idle Check Method");
             foreach (var type in Enum.GetNames(typeof(IdleCheckType)))
             {
-                comboBox_IdleType.Items.Add(International.GetText($"Form_Settings_IdleType_{type}"));
+                comboBox_IdleType.Items.Add(Translations.Tr($"Form_Settings_IdleType_{type}"));
             }
             comboBox_IdleType.Enabled = ConfigManager.GeneralConfig.StartMiningWhenIdle;
         }
@@ -625,7 +628,7 @@ namespace NiceHashMiner.Forms
 
             // Add language selections list
             {
-                var lang = International.GetAvailableLanguages();
+                var lang = Translations.GetAvailableLanguages();
 
                 comboBox_Language.Items.Clear();
                 for (var i = 0; i < lang.Count; i++)
@@ -640,7 +643,7 @@ namespace NiceHashMiner.Forms
 
                 foreach (TimeUnitType timeunit in Enum.GetValues(typeof(TimeUnitType)))
                 {
-                    timeunits.Add(timeunit, International.GetText(timeunit.ToString()));
+                    timeunits.Add(timeunit, Translations.Tr(timeunit.ToString()));
                     comboBox_TimeUnit.Items.Add(timeunits[timeunit]);
                 }
             }
@@ -649,7 +652,7 @@ namespace NiceHashMiner.Forms
             {
                 comboBox_Language.SelectedIndex = (int) ConfigManager.GeneralConfig.Language;
                 comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
-                comboBox_TimeUnit.SelectedItem = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+                comboBox_TimeUnit.SelectedItem = Translations.Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
                 comboBox_IdleType.SelectedIndex = (int) ConfigManager.GeneralConfig.IdleCheckType;
             }
@@ -929,7 +932,7 @@ namespace NiceHashMiner.Forms
             _selectedComputeDevice =
                 ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
             algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
-            groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
+            groupBoxAlgorithmSettings.Text = string.Format(Translations.Tr("FormSettings_AlgorithmsSettings"),
                 _selectedComputeDevice.Name);
             minDeviceProfitField.Enabled = true;
             minDeviceProfitField.EntryText = _selectedComputeDevice.MinimumProfit.ToString("F2").Replace(',', '.');
@@ -950,8 +953,8 @@ namespace NiceHashMiner.Forms
         {
             if (_selectedComputeDevice == null)
             {
-                MessageBox.Show(International.GetText("FormSettings_ButtonProfitSingle"),
-                    International.GetText("Warning_with_Exclamation"),
+                MessageBox.Show(Translations.Tr("FormSettings_ButtonProfitSingle"),
+                    Translations.Tr("Warning!"),
                     MessageBoxButtons.OK);
                 return;
             }
@@ -1006,15 +1009,15 @@ namespace NiceHashMiner.Forms
 
         private void ToolTip1_Popup(object sender, PopupEventArgs e)
         {
-            toolTip1.ToolTipTitle = International.GetText("Form_Settings_ToolTip_Explaination");
+            toolTip1.ToolTipTitle = Translations.Tr("Form_Settings_ToolTip_Explaination");
         }
 
         #region Form Buttons
 
         private void ButtonDefaults_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show(International.GetText("Form_Settings_buttonDefaultsMsg"),
-                International.GetText("Form_Settings_buttonDefaultsTitle"),
+            var result = MessageBox.Show(Translations.Tr("Form_Settings_buttonDefaultsMsg"),
+                Translations.Tr("Form_Settings_buttonDefaultsTitle"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
             if (result == DialogResult.Yes)
@@ -1023,7 +1026,7 @@ namespace NiceHashMiner.Forms
                 IsChangeSaved = true;
                 ConfigManager.GeneralConfig.SetDefaults();
 
-                International.Initialize(ConfigManager.GeneralConfig.Language);
+                Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
                 InitializeGeneralTabFieldValuesReferences();
                 InitializeGeneralTabTranslations();
             }
@@ -1031,8 +1034,8 @@ namespace NiceHashMiner.Forms
 
         private void ButtonSaveClose_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(International.GetText("Form_Settings_buttonSaveMsg"),
-                International.GetText("Form_Settings_buttonSaveTitle"),
+            MessageBox.Show(Translations.Tr("Form_Settings_buttonSaveMsg"),
+                Translations.Tr("Form_Settings_buttonSaveTitle"),
                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             IsChange = true;
             IsChangeSaved = true;
@@ -1058,8 +1061,8 @@ namespace NiceHashMiner.Forms
         {
             if (IsChange && !IsChangeSaved)
             {
-                var result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
-                    International.GetText("Form_Settings_buttonCloseNoSaveTitle"),
+                var result = MessageBox.Show(Translations.Tr("Form_Settings_buttonCloseNoSaveMsg"),
+                    Translations.Tr("Form_Settings_buttonCloseNoSaveTitle"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (result == DialogResult.No)
@@ -1076,7 +1079,7 @@ namespace NiceHashMiner.Forms
             {
                 ConfigManager.GeneralConfigFileCommit();
                 ConfigManager.CommitBenchmarks();
-                International.Initialize(ConfigManager.GeneralConfig.Language);
+                Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
 
                 if (_isStartupChanged)
                 {

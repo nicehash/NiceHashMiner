@@ -43,38 +43,38 @@ namespace NiceHashMiner.Forms
 
         private void InitLocale()
         {
-            listView_Intensities.Columns[Intensity].Text = International.GetText("Form_DcriValues_Intensity");
-            listView_Intensities.Columns[Speed].Text = International.GetText("AlgorithmsListView_Speed");
-            listView_Intensities.Columns[Secondaryspeed].Text = International.GetText("Form_DcriValues_SecondarySpeed");
-            listView_Intensities.Columns[Profit].Text = International.GetText("AlgorithmsListView_Rate");
-            listView_Intensities.Columns[Power].Text = International.GetText("Form_DcriValues_Power");
-            Text = International.GetText("Form_DcriValues_Title");
-            button_Close.Text = International.GetText("Form_Settings_buttonCloseNoSaveText");
-            button_Save.Text = International.GetText("Form_Settings_buttonSaveText");
-            checkBox_TuningEnabled.Text = International.GetText("Form_DcriValues_TuningEnabled");
+            listView_Intensities.Columns[Intensity].Text = Translations.Tr("Form_DcriValues_Intensity");
+            listView_Intensities.Columns[Speed].Text = Translations.Tr("AlgorithmsListView_Speed");
+            listView_Intensities.Columns[Secondaryspeed].Text = Translations.Tr("Form_DcriValues_SecondarySpeed");
+            listView_Intensities.Columns[Profit].Text = Translations.Tr("AlgorithmsListView_Rate");
+            listView_Intensities.Columns[Power].Text = Translations.Tr("Form_DcriValues_Power");
+            Text = Translations.Tr("Form_DcriValues_Title");
+            button_Close.Text = Translations.Tr("Form_Settings_buttonCloseNoSaveText");
+            button_Save.Text = Translations.Tr("Form_Settings_buttonSaveText");
+            checkBox_TuningEnabled.Text = Translations.Tr("Form_DcriValues_TuningEnabled");
 
             field_Speed.InitLocale(toolTip1,
-                International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
-                International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
+                Translations.Tr("Form_Settings_Algo_BenchmarkSpeed") + ":",
+                Translations.Tr("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
             field_SecondarySpeed.InitLocale(toolTip1,
-                International.GetText("Form_Settings_Algo_SecondaryBenchmarkSpeed") + ":",
-                International.GetText("Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed"));
+                Translations.Tr("Form_Settings_Algo_SecondaryBenchmarkSpeed") + ":",
+                Translations.Tr("Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed"));
             field_TuningStart.InitLocale(toolTip1,
-                International.GetText("Form_DcriValues_TuningStart") + ":",
-                International.GetText("Form_DcriValues_ToolTip_TuningStart"));
+                Translations.Tr("Form_DcriValues_TuningStart") + ":",
+                Translations.Tr("Form_DcriValues_ToolTip_TuningStart"));
             field_TuningEnd.InitLocale(toolTip1,
-                International.GetText("Form_DcriValues_TuningEnd") + ":",
-                International.GetText("Form_DcriValues_ToolTip_TuningEnd"));
+                Translations.Tr("Form_DcriValues_TuningEnd") + ":",
+                Translations.Tr("Form_DcriValues_ToolTip_TuningEnd"));
             field_TuningInterval.InitLocale(toolTip1,
-                International.GetText("Form_DcriValues_TuningInterval") + ":",
-                International.GetText("Form_DcriValues_ToolTip_TuningInterval"));
+                Translations.Tr("Form_DcriValues_TuningInterval") + ":",
+                Translations.Tr("Form_DcriValues_ToolTip_TuningInterval"));
             field_Power.InitLocale(toolTip1,
-                International.GetText("Form_Settings_Algo_PowerUsage") + ":",
-                International.GetText("Form_Settings_ToolTip_PowerUsage"));
+                Translations.Tr("Form_Settings_Algo_PowerUsage") + ":",
+                Translations.Tr("Form_Settings_ToolTip_PowerUsage"));
 
-            toolTip1.SetToolTip(checkBox_TuningEnabled, International.GetText("Form_DcriValues_ToolTip_TuningEnabled"));
+            toolTip1.SetToolTip(checkBox_TuningEnabled, Translations.Tr("Form_DcriValues_ToolTip_TuningEnabled"));
             toolTip1.SetToolTip(pictureBox_TuningEnabled,
-                International.GetText("Form_DcriValues_ToolTip_TuningEnabled"));
+                Translations.Tr("Form_DcriValues_ToolTip_TuningEnabled"));
         }
 
         private void SetIntensities()
@@ -174,8 +174,8 @@ namespace NiceHashMiner.Forms
         {
             if (IsChange && !_isChangeSaved)
             {
-                var result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
-                    International.GetText("Form_Settings_buttonCloseNoSaveTitle"),
+                var result = MessageBox.Show(Translations.Tr("Form_Settings_buttonCloseNoSaveMsg"),
+                    Translations.Tr("Form_Settings_buttonCloseNoSaveTitle"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (result == DialogResult.No)
@@ -307,7 +307,7 @@ namespace NiceHashMiner.Forms
                 contextMenuStrip1.Items.Clear();
                 var clearItem = new ToolStripMenuItem
                 {
-                    Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem")
+                    Text = Translations.Tr("AlgorithmsListView_ContextMenu_ClearItem")
                 };
                 clearItem.Click += ToolStripMenuItemClear_Click;
                 contextMenuStrip1.Items.Add(clearItem);

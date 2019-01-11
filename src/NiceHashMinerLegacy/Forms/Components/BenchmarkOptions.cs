@@ -38,10 +38,10 @@ namespace NiceHashMiner.Forms.Components
 
         public void InitLocale()
         {
-            groupBox1.Text = International.GetText("BenchmarkOptions_Benchmark_Type");
-            radioButton_QuickBenchmark.Text = International.GetText("Form_Benchmark_radioButton_QuickBenchmark");
-            radioButton_StandardBenchmark.Text = International.GetText("Form_Benchmark_radioButton_StandardBenchmark");
-            radioButton_PreciseBenchmark.Text = International.GetText("Form_Benchmark_radioButton_PreciseBenchmark");
+            groupBox1.Text = Translations.Tr("BenchmarkOptions_Benchmark_Type");
+            radioButton_QuickBenchmark.Text = Translations.Tr("Form_Benchmark_radioButton_QuickBenchmark");
+            radioButton_StandardBenchmark.Text = Translations.Tr("Form_Benchmark_radioButton_StandardBenchmark");
+            radioButton_PreciseBenchmark.Text = Translations.Tr("Form_Benchmark_radioButton_PreciseBenchmark");
         }
 
         private void RadioButton_QuickBenchmark_CheckedChanged(object sender, EventArgs e)

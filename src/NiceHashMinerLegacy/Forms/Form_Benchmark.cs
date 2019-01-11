@@ -176,22 +176,22 @@ namespace NiceHashMiner.Forms
 
         private void InitLocale()
         {
-            Text = International.GetText("Form_Benchmark_title"); //International.GetText("SubmitResultDialog_title");
-            //labelInstruction.Text = International.GetText("SubmitResultDialog_labelInstruction");
-            StartStopBtn.Text = International.GetText("SubmitResultDialog_StartBtn");
-            CloseBtn.Text = International.GetText("SubmitResultDialog_CloseBtn");
+            Text = Translations.Tr("Benchmark"); //Translations.Tr("SubmitResultDialog_title");
+            //labelInstruction.Text = Translations.Tr("SubmitResultDialog_labelInstruction");
+            StartStopBtn.Text = Translations.Tr("SubmitResultDialog_StartBtn");
+            CloseBtn.Text = Translations.Tr("SubmitResultDialog_CloseBtn");
 
             // TODO fix locale for benchmark enabled label
             devicesListViewEnableControl1.InitLocale();
             benchmarkOptions1.InitLocale();
             algorithmsListView1.InitLocale();
-            groupBoxBenchmarkProgress.Text = International.GetText("FormBenchmark_Benchmark_GroupBoxStatus");
+            groupBoxBenchmarkProgress.Text = Translations.Tr("FormBenchmark_Benchmark_GroupBoxStatus");
             radioButton_SelectedUnbenchmarked.Text =
-                International.GetText("FormBenchmark_Benchmark_All_Selected_Unbenchmarked");
+                Translations.Tr("FormBenchmark_Benchmark_All_Selected_Unbenchmarked");
             radioButton_RE_SelectedUnbenchmarked.Text =
-                International.GetText("FormBenchmark_Benchmark_All_Selected_ReUnbenchmarked");
+                Translations.Tr("FormBenchmark_Benchmark_All_Selected_ReUnbenchmarked");
             checkBox_StartMiningAfterBenchmark.Text =
-                International.GetText("Form_Benchmark_checkbox_StartMiningAfterBenchmark");
+                Translations.Tr("Form_Benchmark_checkbox_StartMiningAfterBenchmark");
         }
 
         #region Start/Stop methods
@@ -205,7 +205,7 @@ namespace NiceHashMiner.Forms
             }
             else if (StartButonClick())
             {
-                StartStopBtn.Text = International.GetText("Form_Benchmark_buttonStopBenchmark");
+                StartStopBtn.Text = Translations.Tr("St&op benchmark");
             }
         }
 
@@ -220,7 +220,7 @@ namespace NiceHashMiner.Forms
 
         private void BenchmarkStoppedGuiSettings()
         {
-            StartStopBtn.Text = International.GetText("Form_Benchmark_buttonStartBenchmark");
+            StartStopBtn.Text = Translations.Tr("Start &benchmark");
             foreach (var deviceAlgosTuple in BenchmarkManager.BenchDevAlgoQueue)
             {
                 foreach (var algo in deviceAlgosTuple.Item2) algo.ClearBenchmarkPending();
@@ -258,8 +258,8 @@ namespace NiceHashMiner.Forms
                 var noneSelected = ComputeDeviceManager.Available.Devices.All(cDev => !cDev.Enabled);
                 if (noneSelected)
                 {
-                    MessageBox.Show(International.GetText("FormBenchmark_No_Devices_Selected_Msg"),
-                        International.GetText("FormBenchmark_No_Devices_Selected_Title"),
+                    MessageBox.Show(Translations.Tr("FormBenchmark_No_Devices_Selected_Msg"),
+                        Translations.Tr("FormBenchmark_No_Devices_Selected_Title"),
                         MessageBoxButtons.OK);
                     return false;
                 }
@@ -268,8 +268,8 @@ namespace NiceHashMiner.Forms
             {
                 if (!BenchmarkManager.HasWork)
                 {
-                    MessageBox.Show(International.GetText("FormBenchmark_Nothing_to_Benchmark_Msg"),
-                        International.GetText("FormBenchmark_Nothing_to_Benchmark_Title"),
+                    MessageBox.Show(Translations.Tr("FormBenchmark_Nothing_to_Benchmark_Msg"),
+                        Translations.Tr("FormBenchmark_Nothing_to_Benchmark_Title"),
                         MessageBoxButtons.OK);
                     return false;
                 }
@@ -308,15 +308,15 @@ namespace NiceHashMiner.Forms
                 if (!hasFailedAlgos && StartMiningOnFinish == false)
                 {
                     MessageBox.Show(
-                        International.GetText("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
-                        International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
+                        Translations.Tr("FormBenchmark_Benchmark_Finish_Succes_MsgBox_Msg"),
+                        Translations.Tr("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
                         MessageBoxButtons.OK);
                 }
                 else if (StartMiningOnFinish == false)
                 {
                     var result = MessageBox.Show(
-                        International.GetText("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
-                        International.GetText("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
+                        Translations.Tr("FormBenchmark_Benchmark_Finish_Fail_MsgBox_Msg"),
+                        Translations.Tr("FormBenchmark_Benchmark_Finish_MsgBox_Title"),
                         MessageBoxButtons.RetryCancel);
 
                     if (result == DialogResult.Retry)
@@ -408,7 +408,7 @@ namespace NiceHashMiner.Forms
         private void SetLabelBenchmarkSteps(int current, int max)
         {
             labelBenchmarkSteps.Text =
-                string.Format(International.GetText("FormBenchmark_Benchmark_Step"), current, max);
+                string.Format(Translations.Tr("FormBenchmark_Benchmark_Step"), current, max);
         }
 
         private void ResetBenchmarkProgressStatus()
