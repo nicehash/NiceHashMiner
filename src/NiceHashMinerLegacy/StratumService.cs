@@ -15,8 +15,10 @@ namespace NiceHashMiner
         //public static string SelectedService { get; private set; } = "eu";
 
         // Constants
-        public static string[] MiningLocations = { "eu", "usa", "hk", "jp", "in", "br" };
-        public static object[] MiningLocationNames = new object[] {
+        public static IReadOnlyList<string> MiningLocations { get; } = 
+            new [] { "eu", "usa", "hk", "jp", "in", "br" };
+
+        public static readonly object[] MiningLocationNames = new object[] {
             "Europe - Amsterdam",
             "USA - San Jose",
             "China - Hong Kong",

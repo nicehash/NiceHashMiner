@@ -173,7 +173,7 @@ namespace NiceHashMiner
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
-            if (serviceLocation >= 0 && serviceLocation < StratumService.MiningLocations.Length)
+            if (serviceLocation >= 0 && serviceLocation < StratumService.MiningLocations.Count)
             {
                 SetServiceLocation(serviceLocation);
                 return SetResult.CHANGED;
