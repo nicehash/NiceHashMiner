@@ -1,0 +1,47 @@
+[
+	{
+		"Name": "English",
+		"ID": 0,
+		"Code": "en"
+	},
+	{
+		"Name": "Русский",
+		"ID": 1,
+		"Code": "ru"
+	},
+	{
+		"Name": "Español",
+		"ID": 2,
+		"Code": "es"
+	},
+	{
+		"Name": "Português",
+		"ID": 3,
+		"Code": "pt"
+	},
+	{
+		"Name": "Български",
+		"ID": 4,
+		"Code": "bg"
+	},
+	{
+		"Name": "Italiano",
+		"ID": 5,
+		"Code": "it"
+	},
+	{
+		"Name": "Polski",
+		"ID": 6,
+		"Code": "pl"
+	},
+	{
+		"Name": "简体中文",
+		"ID": 7,
+		"Code": "zh_cn"
+	},
+	{
+		"Name": "Română",
+		"ID": 8,
+		"Code": "ro"
+	}
+]
