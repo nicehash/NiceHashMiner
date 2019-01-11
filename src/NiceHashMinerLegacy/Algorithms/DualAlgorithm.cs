@@ -402,7 +402,7 @@ namespace NiceHashMiner.Algorithms
         public bool StartTuning()
         {
             // Return false if no benchmark needed
-            CurrentIntensity = TuningStart;
+            CurrentIntensity = -1;
             return IncrementToNextEmptyIntensity();
         }
 
