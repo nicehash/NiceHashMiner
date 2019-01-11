@@ -18,6 +18,7 @@ using NiceHashMiner.Stats.Models;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
 using WebSocketSharp;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Stats
 {
@@ -58,7 +59,7 @@ namespace NiceHashMiner.Stats
 
         private const int DeviceUpdateLaunchDelay = 20 * 1000;
         private const int DeviceUpdateInterval = 60 * 1000;
-        
+
         public static double Balance { get; private set; }
         public static string Version { get; private set; }
         public static string VersionLink { get; private set; }
@@ -68,9 +69,7 @@ namespace NiceHashMiner.Stats
         public static event EventHandler OnBalanceUpdate;
 
         public static event EventHandler OnSmaUpdate;
-        public static event EventHandler OnVersionUpdate;
         public static event EventHandler OnConnectionLost;
-        public static event EventHandler OnConnectionEstablished;
         public static event EventHandler<SocketEventArgs> OnVersionBurn;
         public static event EventHandler OnExchangeUpdate;
         public static event EventHandler<DeviceUpdateEventArgs> OnDeviceUpdate;
@@ -230,8 +229,6 @@ namespace NiceHashMiner.Stats
         {
             // Send device to populate rig stats, and send device names
             SendMinerStatus(true);
-
-            OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
         }
 
         #endregion
@@ -314,7 +311,7 @@ namespace NiceHashMiner.Stats
         {
             Version = version;
             VersionLink = link;
-            OnVersionUpdate?.Invoke(null, EventArgs.Empty);
+            ApplicationStateManager.OnVersionUpdate(version);
         }
 
         private static void SetExchangeRates(string data)
@@ -397,7 +394,8 @@ namespace NiceHashMiner.Stats
                     }
                     SetDevicesEnabled(devs, true);
                 }
-                var loc = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
+                // TODO this will all go out
+                var loc = "eu";//Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
 
                 if (!MinersManager.StartInitialize(_ratesComunication, loc, Globals.GetWorkerName(), Globals.GetBitcoinUser()))
                     throw new RpcException("Mining could not start", 42);

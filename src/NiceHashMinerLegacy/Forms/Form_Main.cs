@@ -3,6 +3,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Interfaces;
+using NiceHashMiner.Interfaces.DataVisualizer;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Utils;
 using System;
@@ -24,10 +25,8 @@ namespace NiceHashMiner
 {
     using System.IO;
 
-    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IGlobalRatesUpdate
+    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IGlobalRatesUpdate, IDataVisualizer, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer, IVersionDisplayer
     {
-        private string _visitUrlNew = Links.VisitUrlNew;
-
         private Timer _minerStatsCheck;
         //private Timer _smaMinerCheck;
         //private Timer _bitcoinExchangeCheck;
@@ -46,7 +45,7 @@ namespace NiceHashMiner
         private int _flowLayoutPanelVisibleCount = 0;
         private int _flowLayoutPanelRatesIndex = 0;
 
-        private const string BetaAlphaPostfixString = " - Alpha";
+        
 
         private bool _isDeviceDetectionInitialized = false;
 
@@ -61,6 +60,8 @@ namespace NiceHashMiner
         public Form_Main()
         {
             InitializeComponent();
+            ApplicationStateManager.SubscribeStateDisplayer(this);
+
             Width = ConfigManager.GeneralConfig.MainFormSize.X;
             Height = ConfigManager.GeneralConfig.MainFormSize.Y;
             Icon = Properties.Resources.logo;
@@ -81,7 +82,7 @@ namespace NiceHashMiner
 
             R = new Random((int) DateTime.Now.Ticks);
 
-            Text += " v" + Application.ProductVersion + BetaAlphaPostfixString;
+            Text += ApplicationStateManager.Title;
 
             //label_NotProfitable.Visible = false;
 
@@ -103,6 +104,11 @@ namespace NiceHashMiner
             //ClearRatesAll();
         }
 
+        ~Form_Main()
+        {
+            ApplicationStateManager.UnsubscribeStateDisplayer(this);
+        }
+
         private void InitLocalization()
         {
             MessageBoxManager.Unregister();
@@ -115,8 +121,9 @@ namespace NiceHashMiner
 
             labelServiceLocation.Text = International.GetText("Service_Location") + ":";
             {
+                // TODO keep in mind the localizations
                 var i = 0;
-                foreach (var loc in Globals.MiningLocation)
+                foreach (var loc in StratumService.MiningLocations)
                     comboBoxLocation.Items[i++] = International.GetText("LocationName_" + loc);
             }
             labelBitcoinAddress.Text = International.GetText("BitcoinAddress") + ":";
@@ -145,17 +152,9 @@ namespace NiceHashMiner
             //groupBox1.Text = International.GetText("Form_Main_Group_Device_Rates");
         }
 
+        // InitMainConfigGuiData gets called after settings are changed and whatnot but this is a crude and tightly coupled way of doing things
         private void InitMainConfigGuiData()
         {
-            if (ConfigManager.GeneralConfig.ServiceLocation >= 0 &&
-                ConfigManager.GeneralConfig.ServiceLocation < Globals.MiningLocation.Length)
-                comboBoxLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
-            else
-                comboBoxLocation.SelectedIndex = 0;
-
-            textBoxBTCAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
-            textBoxWorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
-
             _showWarningNiceHashData = true;
             _demoMode = false;
 
@@ -293,9 +292,7 @@ namespace NiceHashMiner
             // Init ws connection
             NiceHashStats.OnBalanceUpdate += BalanceCallback;
             NiceHashStats.OnSmaUpdate += SmaCallback;
-            NiceHashStats.OnVersionUpdate += VersionUpdateCallback;
             NiceHashStats.OnConnectionLost += ConnectionLostCallback;
-            NiceHashStats.OnConnectionEstablished += ConnectionEstablishedCallback;
             NiceHashStats.OnVersionBurn += VersionBurnCallback;
             NiceHashStats.OnExchangeUpdate += ExchangeCallback;
             NiceHashStats.StartConnection(Links.NhmSocketAddress, this, devicesListViewEnableControl1);
@@ -794,46 +791,6 @@ namespace NiceHashMiner
             }
         }
 
-        private void ConnectionEstablishedCallback(object sender, EventArgs e)
-        {
-            // send credentials
-            // NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
-        }
-
-        private void VersionUpdateCallback(object sender, EventArgs e)
-        {
-            var ver = NiceHashStats.Version;
-            if (ver == null) return;
-
-            var programVersion = new Version(Application.ProductVersion);
-            var onlineVersion = new Version(ver);
-            var ret = programVersion.CompareTo(onlineVersion);
-
-            var link = NiceHashStats.VersionLink;
-            if (string.IsNullOrWhiteSpace(link)) return;
-
-            if (ret < 0 || (ret == 0 && BetaAlphaPostfixString != ""))
-            {
-                SetVersionLabel(string.Format(International.GetText("Form_Main_new_version_released"), ver));
-                _visitUrlNew = link;
-            }
-        }
-
-        private delegate void SetVersionLabelCallback(string text);
-
-        private void SetVersionLabel(string text)
-        {
-            if (linkLabelNewVersion.InvokeRequired)
-            {
-                var d = new SetVersionLabelCallback(SetVersionLabel);
-                Invoke(d, new object[] {text});
-            }
-            else
-            {
-                linkLabelNewVersion.Text = text;
-            }
-        }
-
         private bool VerifyMiningAddress(bool showError)
         {
             if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress.Text.Trim()) && showError)
@@ -876,7 +833,7 @@ namespace NiceHashMiner
 
         private void LinkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start(_visitUrlNew);
+            ApplicationStateManager.VisitNewVersionUrl();
         }
 
 
@@ -995,21 +952,60 @@ namespace NiceHashMiner
             statusStrip1.Cursor = Cursors.Default;
         }
 
-        private void TextBoxCheckBoxMain_Leave(object sender, EventArgs e)
+        private void textBoxBTCAddress_Leave(object sender, EventArgs e)
         {
-            if (VerifyMiningAddress(false))
+            var trimmedBtcText = textBoxBTCAddress.Text.Trim();
+            var result = ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
+            // TODO GUI stuff get back to this
+            switch (result)
             {
-                if (ConfigManager.GeneralConfig.BitcoinAddress != textBoxBTCAddress.Text.Trim()
-                    || ConfigManager.GeneralConfig.WorkerName != textBoxWorkerName.Text.Trim())
-                {
-                    // Reset credentials
-                    NiceHashStats.SetCredentials(textBoxBTCAddress.Text.Trim(), textBoxWorkerName.Text.Trim());
-                }
-                // Commit to config.json
-                ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
-                ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
-                ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-                ConfigManager.GeneralConfigFileCommit();
+                case ApplicationStateManager.SetResult.INVALID:
+                    //var dialogResult = MessageBox.Show(International.GetText("Form_Main_msgbox_InvalidBTCAddressMsg"),
+                    //International.GetText("Error_with_Exclamation"),
+                    //MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+
+                    //if (dialogResult == DialogResult.Yes)
+                    //    Process.Start(Links.NhmBtcWalletFaq);
+
+                    //textBoxBTCAddress.Focus();
+                    break;
+                case ApplicationStateManager.SetResult.CHANGED:
+                    break;
+                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
+                    break;
+            }
+        }
+
+        private void textBoxWorkerName_Leave(object sender, EventArgs e)
+        {
+            var trimmedWorkerNameText = textBoxWorkerName.Text.Trim();
+            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
+            // TODO GUI stuff get back to this
+            switch (result)
+            {
+                case ApplicationStateManager.SetResult.INVALID:
+                    // TODO workername invalid handling
+                    break;
+                case ApplicationStateManager.SetResult.CHANGED:
+                    break;
+                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
+                    break;
+            }
+        }
+
+        private void comboBoxLocation_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var locationIndex = comboBoxLocation.SelectedIndex;
+            var result = ApplicationStateManager.SetServiceLocationIfValidOrDifferent(locationIndex);
+            // TODO GUI stuff get back to this, here we can't really break anything
+            switch (result)
+            {
+                case ApplicationStateManager.SetResult.INVALID:
+                    break;
+                case ApplicationStateManager.SetResult.CHANGED:
+                    break;
+                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
+                    break;
             }
         }
 
@@ -1044,9 +1040,10 @@ namespace NiceHashMiner
             IgnoreMsg
         }
 
+        // TODO this will be moved outside of GUI code, replace textBoxBTCAddress.Text with ConfigManager.GeneralConfig.BitcoinAddress
         private StartMiningReturnType StartMining(bool showWarnings)
         {
-            if (textBoxBTCAddress.Text.Equals(""))
+            if (ConfigManager.GeneralConfig.BitcoinAddress.Equals(""))
             {
                 if (showWarnings)
                 {
@@ -1148,14 +1145,10 @@ namespace NiceHashMiner
                 }
             }
 
-
-            ConfigManager.GeneralConfig.BitcoinAddress = textBoxBTCAddress.Text.Trim();
-            ConfigManager.GeneralConfig.WorkerName = textBoxWorkerName.Text.Trim();
-            ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
-
-            var btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
-            var isMining = MinersManager.StartInitialize(devicesListViewEnableControl1, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
-                Globals.GetWorkerName(), btcAdress);
+            // TODO Globals.GetWorkerName(), Globals.GetBitcoinUser()
+            var btcAdress = _demoMode ? Globals.DemoUser : ConfigManager.GeneralConfig.BitcoinAddress;
+            var isMining = MinersManager.StartInitialize(devicesListViewEnableControl1, StratumService.MiningLocations[comboBoxLocation.SelectedIndex],
+                textBoxWorkerName.Text.Trim(), btcAdress);
 
             StartMiningGui();
 
@@ -1245,6 +1238,39 @@ namespace NiceHashMiner
         {
             ConfigManager.GeneralConfig.MainFormSize.X = Width;
             ConfigManager.GeneralConfig.MainFormSize.Y = Height;
+        }
+
+        // StateDisplay interfaces
+        void IBTCDisplayer.DisplayBTC(string btc)
+        {
+            FormHelpers.SafeInvoke(this, () =>
+            {
+                textBoxBTCAddress.Text = btc;
+            });
+        }
+
+        void IWorkerNameDisplayer.DisplayWorkerName(string workerName)
+        {
+            FormHelpers.SafeInvoke(this, () =>
+            {
+                textBoxWorkerName.Text = workerName;
+            });
+        }
+
+        void IServiceLocationDisplayer.DisplayServiceLocation(int serviceLocation)
+        {
+            FormHelpers.SafeInvoke(this, () =>
+            {
+                comboBoxLocation.SelectedIndex = serviceLocation;
+            });
+        }
+
+        void IVersionDisplayer.DisplayVersion(string version)
+        {
+            FormHelpers.SafeInvoke(this, () =>
+            {
+                linkLabelNewVersion.Text = version;
+            });
         }
     }
 }

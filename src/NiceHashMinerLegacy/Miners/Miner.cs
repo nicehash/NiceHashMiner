@@ -899,8 +899,7 @@ namespace NiceHashMiner
 
         protected string GetServiceUrl(AlgorithmType algo)
         {
-            return Globals.GetLocationUrl(algo, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
-                ConectionType);
+            return ApplicationStateManager.GetSelectedServiceLocationLocationUrl(algo, ConectionType);
         }
 
         protected bool IsActiveProcess(int pid)

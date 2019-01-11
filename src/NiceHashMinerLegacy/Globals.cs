@@ -11,9 +11,6 @@ namespace NiceHashMiner
 {
     public static class Globals
     {
-        // Constants
-        public static string[] MiningLocation = {"eu", "usa", "hk", "jp", "in", "br"};
-
         public static readonly string DemoUser = "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
 
         // change this if TOS changes
@@ -44,37 +41,6 @@ namespace NiceHashMiner
 
             var uuid = UUID.V5(UUID.Nil().AsGuid(), $"NHML{guid}");
             RigID = $"{0}-{uuid.AsGuid().ToByteArray().ToBase64String()}";
-        }
-
-        public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
-        {
-            if (!NHSmaData.TryGetSma(algorithmType, out var sma)) return "";
-
-            var name = sma.Name;
-            var nPort = sma.Port;
-            var sslPort = 30000 + nPort;
-            
-            // NHMConectionType.NONE
-            var prefix = "";
-            var port = nPort;
-            switch (conectionType)
-            {
-                case NhmConectionType.LOCKED:
-                    return miningLocation;
-                case NhmConectionType.STRATUM_TCP:
-                    prefix = "stratum+tcp://";
-                    break;
-                case NhmConectionType.STRATUM_SSL:
-                    prefix = "stratum+ssl://";
-                    port = sslPort;
-                    break;
-            }
-
-            return prefix
-                   + name
-                   + "-test." + miningLocation
-                   + ".nicehash.com:"
-                   + port;
         }
 
         public static string GetBitcoinUser()
