@@ -10,6 +10,7 @@ namespace NiceHashMiner.Miners
         public Phoenix() : base(AlgorithmType.NONE)
         {
             LookForStart = "main eth speed: ";
+            DevFee = 0.65;
         }
 
         protected override void _Stop(MinerStopType willSwitch)

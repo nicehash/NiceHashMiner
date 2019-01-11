@@ -17,7 +17,7 @@ namespace NiceHashMiner.Miners
 
             LookForStart = "eth - total speed:";
             SecondaryLookForStart = SecondaryShortName() + " - total speed:";
-            DevFee = IsDual() ? 1.5 : 1.0;
+            DevFee = 1.0;
 
             IsMultiType = true;
         }
