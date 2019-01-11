@@ -177,25 +177,16 @@ namespace NiceHashMiner.Switching
         /// Attempt to get paying rate for an algorithm
         /// </summary>
         /// <param name="algo">Algorithm</param>
-        /// <param name="sma">Variable to place paying in</param>
+        /// <param name="paying">Variable to place paying in</param>
         /// <returns>True iff we know about this algo</returns>
         public static bool TryGetPaying(AlgorithmType algo, out double paying)
         {
             CheckInit();
-            // TODO no more sma struct this can be probably simplified ??
-            if (_currentPayingRates.TryGetValue(algo, out var paying2))
+            lock (_currentPayingRates)
             {
-                paying = paying2;
-                return true;
+                return _currentPayingRates.TryGetValue(algo, out paying);
             }
-
-            paying = default(double);
-            return false;
         }
-
-        #endregion
-
-        #region Get Methods
 
         public static bool IsAlgorithmStable(AlgorithmType algo)
         {
