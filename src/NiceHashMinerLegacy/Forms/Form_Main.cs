@@ -130,7 +130,7 @@ namespace NiceHashMiner
             buttonHelp.Text = Translations.Tr("&Help");
 
             //label_NotProfitable.Text = Translations.Tr("CURRENTLY MINING NOT PROFITABLE.");
-            //groupBox1.Text = Translations.Tr("Form_Main_Group_Device_Rates");
+            //groupBox1.Text = Translations.Tr("Group/Device Rates:");
         }
 
         // InitMainConfigGuiData gets called after settings are changed and whatnot but this is a crude and tightly coupled way of doing things
@@ -269,7 +269,7 @@ namespace NiceHashMiner
                 // check if files are mising
                 if (!MinersExistanceChecker.IsMinersBinsInit())
                 {
-                    var result = MessageBox.Show(Translations.Tr("Form_Main_bins_folder_files_missing"),
+                    var result = MessageBox.Show(Translations.Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue."),
                         Translations.Tr("Warning!"),
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     if (result == DialogResult.Yes)
@@ -303,7 +303,7 @@ namespace NiceHashMiner
                     // check if files are mising
                     if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit())
                     {
-                        var result = MessageBox.Show(Translations.Tr("Form_Main_bins_folder_files_missing"),
+                        var result = MessageBox.Show(Translations.Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue."),
                             Translations.Tr("Warning!"),
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (result == DialogResult.Yes)
@@ -596,8 +596,8 @@ namespace NiceHashMiner
                 _showWarningNiceHashData)
             {
                 _showWarningNiceHashData = false;
-                var dialogResult = MessageBox.Show(Translations.Tr("Form_Main_msgbox_NoInternetMsg"),
-                    Translations.Tr("Form_Main_msgbox_NoInternetTitle"),
+                var dialogResult = MessageBox.Show(Translations.Tr("NiceHash Miner Legacy requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner Legacy. Would you like to continue?"),
+                    Translations.Tr("Check internet connection"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
                 if (dialogResult == DialogResult.Yes)
@@ -611,7 +611,7 @@ namespace NiceHashMiner
         {
             if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress.Text.Trim()) && showError)
             {
-                var result = MessageBox.Show(Translations.Tr("Form_Main_msgbox_InvalidBTCAddressMsg"),
+                var result = MessageBox.Show(Translations.Tr("Invalid Bitcoin address!\n\nPlease enter a valid Bitcoin address or choose Yes to create one."),
                     Translations.Tr("Error!"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
@@ -623,7 +623,7 @@ namespace NiceHashMiner
             }
             if (!BitcoinAddress.ValidateWorkerName(textBoxWorkerName.Text.Trim()) && showError)
             {
-                var result = MessageBox.Show(Translations.Tr("Form_Main_msgbox_InvalidWorkerNameMsg"),
+                var result = MessageBox.Show(Translations.Tr("Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long)."),
                     Translations.Tr("Error!"),
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -707,7 +707,7 @@ namespace NiceHashMiner
             {
                 _isManuallyStarted = false;
                 StopMining(false);
-                MessageBox.Show(Translations.Tr("Form_Main_StartMiningReturnedFalse"),
+                MessageBox.Show(Translations.Tr("NiceHash Miner Legacy cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm."),
                     Translations.Tr("Warning!"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -752,7 +752,7 @@ namespace NiceHashMiner
             switch (result)
             {
                 case ApplicationStateManager.SetResult.INVALID:
-                    //var dialogResult = MessageBox.Show(Translations.Tr("Form_Main_msgbox_InvalidBTCAddressMsg"),
+                    //var dialogResult = MessageBox.Show(Translations.Tr("Invalid Bitcoin address!\n\nPlease enter a valid Bitcoin address or choose Yes to create one."),
                     //Translations.Tr("Error!"),
                     //MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
@@ -879,7 +879,7 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("NICEHASH", "No data received within timeout");
                 if (showWarnings)
                 {
-                    MessageBox.Show(Translations.Tr("Form_Main_msgbox_NullNiceHashDataMsg"),
+                    MessageBox.Show(Translations.Tr("Unable to get NiceHash profitability data. If you are connected to internet, try again later."),
                         Translations.Tr("Error!"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -905,7 +905,7 @@ namespace NiceHashMiner
                 var result = DialogResult.No;
                 if (showWarnings)
                 {
-                    result = MessageBox.Show(Translations.Tr("EnabledUnbenchmarkedAlgorithmsWarning"),
+                    result = MessageBox.Show(Translations.Tr("There are unbenchmarked algorithms for selected enabled devices. Click Yes to benchmark and start mining, No to skip benchmark and continue mining, Cancel to abort"),
                         Translations.Tr("Warning!"),
                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning);
                 }

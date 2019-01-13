@@ -326,7 +326,7 @@ namespace NiceHashMiner.Forms.Components
                 switch (index)
                 {
                     case 0:
-                        langKey = "Form_Settings_Algo_PowerUsage";
+                        langKey = "Power Usage (W)";
                         break;
                     case 1:
                         return Translations.Tr("Power Cost ({0})", CurrencyPerTimeUnit());
