@@ -109,12 +109,11 @@ namespace NiceHashMiner
         public static string Tr(string text)
         {
             // if other language search for it
-            if (selectedLanguage != "en" && _entries.ContainsKey(text) && _entries[text].ContainsKey(selectedLanguage))
+            if (_entries.ContainsKey(text) && _entries[text].ContainsKey(selectedLanguage))
             {
                 return _entries[text][selectedLanguage];
             }
-
-            // didn't find other language so use English
+            // didn't find text with language key so just return the text 
             return text;
         }
 
