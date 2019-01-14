@@ -150,6 +150,7 @@ namespace NiceHashMiner
 
         public static CredentialsValidState GetCredentialsValidState()
         {
+            var (btc, worker, _) = ConfigManager.GeneralConfig.GetCredentials();
             // assume it is valid
             var ret = CredentialsValidState.VALID;
 
@@ -167,14 +168,15 @@ namespace NiceHashMiner
 
         // TODO this function is probably not at the right place now
         // We call this when we change BTC and Workername and this is most likely wrong
-        private static void ResetNiceHashStatsCredentials()
+        public static void ResetNiceHashStatsCredentials()
         {
             // check if we have valid credentials
             var state = GetCredentialsValidState();
             if (state == CredentialsValidState.VALID)
             {
                 // Reset credentials
-                NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress, ConfigManager.GeneralConfig.WorkerName);
+                var (btc, worker, group) = ConfigManager.GeneralConfig.GetCredentials();
+                NiceHashStats.SetCredentials(btc, worker, group);
             }
             else
             {
@@ -233,7 +235,7 @@ namespace NiceHashMiner
         #region BTC setter
 
         // make sure to pass in trimmedBtc
-        public static SetResult SetBTCIfValidOrDifferent(string btc)
+        public static SetResult SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
         {
             if (btc == ConfigManager.GeneralConfig.BitcoinAddress)
             {
@@ -244,7 +246,10 @@ namespace NiceHashMiner
                 return SetResult.INVALID;
             }
             SetBTC(btc);
-            ResetNiceHashStatsCredentials();
+            if (!skipCredentialsSet)
+            {
+                ResetNiceHashStatsCredentials();
+            }
             return SetResult.CHANGED;
         }
 
@@ -253,6 +258,11 @@ namespace NiceHashMiner
             // change in memory and save changes to file
             ConfigManager.GeneralConfig.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
+            if (IsCurrentlyMining)
+            {
+                MinersManager.UpdateBTC(btc);
+            }
+            
             // notify all components
             foreach (var s in _stateDisplayers)
             {
@@ -267,7 +277,8 @@ namespace NiceHashMiner
         #region Worker setter
 
         // make sure to pass in trimmed workerName
-        public static SetResult SetWorkerIfValidOrDifferent(string workerName)
+        // skipCredentialsSet when calling from RPC, workaround so RPC will work
+        public static SetResult SetWorkerIfValidOrDifferent(string workerName, bool skipCredentialsSet = false)
         {
             if (workerName == ConfigManager.GeneralConfig.WorkerName)
             {
@@ -278,7 +289,11 @@ namespace NiceHashMiner
                 return SetResult.INVALID;
             }
             SetWorker(workerName);
-            ResetNiceHashStatsCredentials();
+            if (!skipCredentialsSet)
+            {
+                ResetNiceHashStatsCredentials();
+            }
+            
             return SetResult.CHANGED;
         }
 
@@ -287,12 +302,58 @@ namespace NiceHashMiner
             // change in memory and save changes to file
             ConfigManager.GeneralConfig.WorkerName = workerName;
             ConfigManager.GeneralConfigFileCommit();
+            // if mining update the mining manager
+            if (IsCurrentlyMining)
+            {
+                MinersManager.UpdateWorker(workerName);
+            }
             // notify all components
             foreach (var s in _stateDisplayers)
             {
                 if (s is IWorkerNameDisplayer sWorkerNameDisplayer)
                 {
                     sWorkerNameDisplayer.DisplayWorkerName(workerName);
+                }
+            }
+        }
+        #endregion
+
+        #region Group setter
+
+        // make sure to pass in trimmed GroupName
+        // skipCredentialsSet when calling from RPC, workaround so RPC will work
+        public static SetResult SetGroupIfValidOrDifferent(string groupName, bool skipCredentialsSet = false)
+        {
+            if (groupName == ConfigManager.GeneralConfig.RigGroup)
+            {
+                return SetResult.NOTHING_TO_CHANGE;
+            }
+            // TODO group validator
+            var groupValid = true; /*!BitcoinAddress.ValidateGroupName(GroupName)*/
+            if (!groupValid)
+            {
+                return SetResult.INVALID;
+            }
+            SetGroup(groupName);
+            if (!skipCredentialsSet)
+            {
+                ResetNiceHashStatsCredentials();
+            }
+
+            return SetResult.CHANGED;
+        }
+
+        private static void SetGroup(string groupName)
+        {
+            // change in memory and save changes to file
+            ConfigManager.GeneralConfig.RigGroup = groupName;
+            ConfigManager.GeneralConfigFileCommit();
+            // notify all components
+            foreach (var s in _stateDisplayers)
+            {
+                if (s is IGroupDisplayer sGroupDisplayer)
+                {
+                    sGroupDisplayer.DisplayGroup(groupName);
                 }
             }
         }

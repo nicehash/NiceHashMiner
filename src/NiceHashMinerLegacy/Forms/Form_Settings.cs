@@ -1043,8 +1043,7 @@ namespace NiceHashMiner.Forms
 
             if (_isCredChange)
             {
-                NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress.Trim(),
-                    ConfigManager.GeneralConfig.WorkerName.Trim());
+                ApplicationStateManager.ResetNiceHashStatsCredentials();
             }
 
             Close();

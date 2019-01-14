@@ -269,5 +269,10 @@ namespace NiceHashMiner.Configs.Data
             return NiceHashMiner.BitcoinAddress.ValidateBitcoinAddress(BitcoinAddress) &&
                    NiceHashMiner.BitcoinAddress.ValidateWorkerName(WorkerName);
         }
+
+        public (string btc, string worker, string group) GetCredentials()
+        {
+            return (BitcoinAddress.Trim(), WorkerName.Trim(), RigGroup.Trim());
+        }
     }
 }
