@@ -12,7 +12,7 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
 
             // Add language selections list
-            var lang = International.GetAvailableLanguages();
+            var lang = Translations.GetAvailableLanguages();
 
             comboBox_Languages.Items.Clear();
             for (var i = 0; i < lang.Count; i++)

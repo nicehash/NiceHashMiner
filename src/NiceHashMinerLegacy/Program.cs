@@ -100,7 +100,7 @@ namespace NiceHashMiner
                 Application.Run(new Form_ChooseLanguage());
             }
             // Init languages
-            International.Initialize(ConfigManager.GeneralConfig.Language);
+            Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
             // 3rdparty miners TOS check if setting set
             if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET)
             {

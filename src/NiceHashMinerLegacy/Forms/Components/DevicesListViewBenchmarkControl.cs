@@ -153,8 +153,8 @@ namespace NiceHashMiner.Forms.Components
                                         copyTuningItem.DropDownItems.Add(copyTuningDropDownItem);
                                     }
                                 }
-                                copyBenchItem.Text = International.GetText("DeviceListView_ContextMenu_CopySettings");
-                                copyTuningItem.Text = International.GetText("DeviceListView_ContectMenu_CopyTuning");
+                                copyBenchItem.Text = Translations.Tr("Copy Settings From (Benchmarks, algorithm parameters, ...)");
+                                copyTuningItem.Text = Translations.Tr("Copy tuning settings only");
                                 contextMenuStrip1.Items.Add(copyBenchItem);
                                 contextMenuStrip1.Items.Add(copyTuningItem);
                             }
@@ -172,9 +172,9 @@ namespace NiceHashMiner.Forms.Components
 
                 var result = MessageBox.Show(
                     string.Format(
-                        International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Msg"),
+                        Translations.Tr("Are you sure you want to copy settings from {0} to {1}?"),
                         copyBenchCDev.GetFullName(), CDevice.GetFullName()),
-                    International.GetText("DeviceListView_ContextMenu_CopySettings_Confirm_Dialog_Title"),
+                    Translations.Tr("Confirm Settings Copy"),
                     MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes) 
                 {

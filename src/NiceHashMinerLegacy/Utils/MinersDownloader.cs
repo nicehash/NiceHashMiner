@@ -70,7 +70,7 @@ namespace NiceHashMiner.Utils
             _lastProgress = 0;
             _ticksSinceUpdate = 0;
 
-            _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Downloading"));
+            _minerUpdateIndicator.SetTitle(Translations.Tr("Downloading miners"));
 
             DownloadManager.Instance.DownloadEnded += DownloadCompleted;
 
@@ -159,7 +159,7 @@ namespace NiceHashMiner.Utils
         {
             try
             {
-                _minerUpdateIndicator.SetTitle(International.GetText("MinersDownloadManager_Title_Settup"));
+                _minerUpdateIndicator.SetTitle(Translations.Tr("Setting up miners"));
             }
             catch { }
             _unzipThread = new Thread(UnzipThreadRoutine);
@@ -190,7 +190,7 @@ namespace NiceHashMiner.Utils
 
                             var prog = sizeCount / (double) fileArchive.Length * 100;
                             _minerUpdateIndicator.SetProgressValueAndMsg((int) prog,
-                                string.Format(International.GetText("MinersDownloadManager_Title_Settup_Unzipping"), prog.ToString("F2")));
+                                string.Format(Translations.Tr("Unzipping {0} %"), prog.ToString("F2")));
                         }
                     }
                     archive.Dispose();

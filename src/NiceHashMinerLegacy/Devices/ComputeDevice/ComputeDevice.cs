@@ -115,7 +115,7 @@ namespace NiceHashMiner.Devices
         // combines long and short name
         public string GetFullName()
         {
-            return string.Format(International.GetText("ComputeDevice_Full_Device_Name"), NameCount, Name);
+            return string.Format(Translations.Tr("{0} {1}"), NameCount, Name);
         }
 
         public Algorithm GetAlgorithm(Algorithm modelAlgo)

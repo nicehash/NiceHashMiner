@@ -75,8 +75,8 @@ namespace NiceHashMiner.Forms.Components
         {
             base.InitLocale();
 
-            speedHeader.Text = International.GetText("Form_DevicesListViewSpeed_Hs");
-            secondarySpeedHeader.Text = International.GetText("Form_DevicesListViewSpeed_SecondaryHs");
+            speedHeader.Text = Translations.Tr("H/s");
+            secondarySpeedHeader.Text = Translations.Tr("H/s (Secondary)");
         }
 
         protected override void ListViewDevicesItemChecked(object sender, ItemCheckedEventArgs e)
@@ -185,7 +185,7 @@ namespace NiceHashMiner.Forms.Components
         {
             var total = new ListViewItem
             {
-                Text = International.GetText("Form_DevicesListViewSpeed_Total"),
+                Text = Translations.Tr("Total"),
                 Tag = indices
             };
             for (var i = 0; i < numSubs; i++)
@@ -326,12 +326,12 @@ namespace NiceHashMiner.Forms.Components
                 switch (index)
                 {
                     case 0:
-                        langKey = "Form_Settings_Algo_PowerUsage";
+                        langKey = "Power Usage (W)";
                         break;
                     case 1:
-                        return International.GetText("Form_DevicesListViewSpeed_PowerCost", CurrencyPerTimeUnit());
+                        return Translations.Tr("Power Cost ({0})", CurrencyPerTimeUnit());
                     case 2:
-                        return International.GetText("Form_DevicesListViewSpeed_Profit", CurrencyPerTimeUnit());
+                        return Translations.Tr("Profit ({0})", CurrencyPerTimeUnit());
                 }
             }
             else
@@ -339,18 +339,18 @@ namespace NiceHashMiner.Forms.Components
                 switch (index)
                 {
                     case 0:
-                        langKey = "Form_DevicesListViewSpeed_Load";
+                        langKey = "Load (%)";
                         break;
                     case 1:
-                        langKey = "Form_DevicesListViewSpeed_Temp";
+                        langKey = "Temp (C)";
                         break;
                     case 2:
-                        langKey = "Form_DevicesListViewSpeed_RPM";
+                        langKey = "RPM";
                         break;
                 }
             }
 
-            return International.GetText(langKey);
+            return Translations.Tr(langKey);
         }
 
         #endregion
@@ -380,7 +380,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 _ignoreChecks = true;  // For some reason without this it will enable some checkboxes
                 listViewDevices.Groups.Clear();
-                var disGrp = new ListViewGroup(DefaultKey, International.GetText("Form_DevicesListViewSpeed_Disabled"));
+                var disGrp = new ListViewGroup(DefaultKey, Translations.Tr("Disabled"));
                 listViewDevices.Groups.Add(disGrp);
                 _ignoreChecks = false;
             }
@@ -464,7 +464,7 @@ namespace NiceHashMiner.Forms.Components
 
         private static string FormatPerTimeUnit(string unit)
         {
-            var timeUnit = International.GetText(ConfigManager.GeneralConfig.TimeUnit.ToString());
+            var timeUnit = Translations.Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
             return $"{unit}/{timeUnit}";
         }
         

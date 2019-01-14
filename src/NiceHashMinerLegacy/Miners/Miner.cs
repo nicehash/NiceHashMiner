@@ -638,8 +638,8 @@ namespace NiceHashMiner
         protected virtual string GetFinalBenchmarkString()
         {
             return BenchmarkSignalTimedout && !TimeoutStandard
-                ? International.GetText("Benchmark_Timedout")
-                : International.GetText("Benchmark_Terminated");
+                ? Translations.Tr("Timed out")
+                : Translations.Tr("Terminated");
         }
 
         protected virtual void BenchmarkThreadRoutineFinish()

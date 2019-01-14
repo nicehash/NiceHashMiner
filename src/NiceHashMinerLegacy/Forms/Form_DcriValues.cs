@@ -43,38 +43,38 @@ namespace NiceHashMiner.Forms
 
         private void InitLocale()
         {
-            listView_Intensities.Columns[Intensity].Text = International.GetText("Form_DcriValues_Intensity");
-            listView_Intensities.Columns[Speed].Text = International.GetText("AlgorithmsListView_Speed");
-            listView_Intensities.Columns[Secondaryspeed].Text = International.GetText("Form_DcriValues_SecondarySpeed");
-            listView_Intensities.Columns[Profit].Text = International.GetText("AlgorithmsListView_Rate");
-            listView_Intensities.Columns[Power].Text = International.GetText("Form_DcriValues_Power");
-            Text = International.GetText("Form_DcriValues_Title");
-            button_Close.Text = International.GetText("Form_Settings_buttonCloseNoSaveText");
-            button_Save.Text = International.GetText("Form_Settings_buttonSaveText");
-            checkBox_TuningEnabled.Text = International.GetText("Form_DcriValues_TuningEnabled");
+            listView_Intensities.Columns[Intensity].Text = Translations.Tr("Intensity");
+            listView_Intensities.Columns[Speed].Text = Translations.Tr("Speed");
+            listView_Intensities.Columns[Secondaryspeed].Text = Translations.Tr("Secondary Speed");
+            listView_Intensities.Columns[Profit].Text = Translations.Tr("BTC/Day");
+            listView_Intensities.Columns[Power].Text = Translations.Tr("Power");
+            Text = Translations.Tr("ClaymoreDual Tuning");
+            button_Close.Text = Translations.Tr("&Close without Saving");
+            button_Save.Text = Translations.Tr("&Save and Close");
+            checkBox_TuningEnabled.Text = Translations.Tr("Tuning Enabled");
 
             field_Speed.InitLocale(toolTip1,
-                International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
-                International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
+                Translations.Tr("Benchmark Speed (H/s)") + ":",
+                Translations.Tr("Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm."));
             field_SecondarySpeed.InitLocale(toolTip1,
-                International.GetText("Form_Settings_Algo_SecondaryBenchmarkSpeed") + ":",
-                International.GetText("Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed"));
+                Translations.Tr("Secondary Benchmark Speed (H/s)") + ":",
+                Translations.Tr("Speed for the secondary algorithm when using dual algo mining."));
             field_TuningStart.InitLocale(toolTip1,
-                International.GetText("Form_DcriValues_TuningStart") + ":",
-                International.GetText("Form_DcriValues_ToolTip_TuningStart"));
+                Translations.Tr("Tuning Start") + ":",
+                Translations.Tr("The first dcri value to use for tuning"));
             field_TuningEnd.InitLocale(toolTip1,
-                International.GetText("Form_DcriValues_TuningEnd") + ":",
-                International.GetText("Form_DcriValues_ToolTip_TuningEnd"));
+                Translations.Tr("Tuning End") + ":",
+                Translations.Tr("The last dcri value to use for tuning"));
             field_TuningInterval.InitLocale(toolTip1,
-                International.GetText("Form_DcriValues_TuningInterval") + ":",
-                International.GetText("Form_DcriValues_ToolTip_TuningInterval"));
+                Translations.Tr("Tuning Interval") + ":",
+                Translations.Tr("The interval for dcri values to use for tuning"));
             field_Power.InitLocale(toolTip1,
-                International.GetText("Form_Settings_Algo_PowerUsage") + ":",
-                International.GetText("Form_Settings_ToolTip_PowerUsage"));
+                Translations.Tr("Power Usage (W)") + ":",
+                Translations.Tr("The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0."));
 
-            toolTip1.SetToolTip(checkBox_TuningEnabled, International.GetText("Form_DcriValues_ToolTip_TuningEnabled"));
+            toolTip1.SetToolTip(checkBox_TuningEnabled, Translations.Tr("If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater."));
             toolTip1.SetToolTip(pictureBox_TuningEnabled,
-                International.GetText("Form_DcriValues_ToolTip_TuningEnabled"));
+                Translations.Tr("If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater."));
         }
 
         private void SetIntensities()
@@ -174,8 +174,8 @@ namespace NiceHashMiner.Forms
         {
             if (IsChange && !_isChangeSaved)
             {
-                var result = MessageBox.Show(International.GetText("Form_Settings_buttonCloseNoSaveMsg"),
-                    International.GetText("Form_Settings_buttonCloseNoSaveTitle"),
+                var result = MessageBox.Show(Translations.Tr("Warning! You are choosing to close settings without saving. Are you sure you would like to continue?"),
+                    Translations.Tr("Warning!"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
                 if (result == DialogResult.No)
@@ -307,7 +307,7 @@ namespace NiceHashMiner.Forms
                 contextMenuStrip1.Items.Clear();
                 var clearItem = new ToolStripMenuItem
                 {
-                    Text = International.GetText("AlgorithmsListView_ContextMenu_ClearItem")
+                    Text = Translations.Tr("Clear Algorithm Speed")
                 };
                 clearItem.Click += ToolStripMenuItemClear_Click;
                 contextMenuStrip1.Items.Add(clearItem);

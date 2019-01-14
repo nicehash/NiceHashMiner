@@ -1,0 +1,12 @@
+search for
+Translations.Tr($
+
+
+
+// TODO make Translations use 'en' key when included 
+"Form_Settings_IdleType_SessionLock"
+"Session Lock"
+
+"Form_Settings_IdleType_InputTimeout"
+"Input Timeout" 
+
