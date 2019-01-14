@@ -478,8 +478,8 @@ namespace NiceHashMiner.Forms
             label_IdleType.Text = Translations.Tr("Idle Check Method");
             foreach (var type in Enum.GetNames(typeof(IdleCheckType)))
             {
-                // TODO fix translations
-                comboBox_IdleType.Items.Add(Translations.Tr($"Form_Settings_IdleType_{type}"));
+                // translations will handle enum names
+                comboBox_IdleType.Items.Add(Translations.Tr(type));
             }
             comboBox_IdleType.Enabled = ConfigManager.GeneralConfig.StartMiningWhenIdle;
         }
