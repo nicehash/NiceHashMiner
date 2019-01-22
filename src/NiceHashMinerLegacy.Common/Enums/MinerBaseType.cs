@@ -26,6 +26,7 @@
         dtsm,
         trex,
         Phoenix,
+        GMiner,
         END
     }
 }

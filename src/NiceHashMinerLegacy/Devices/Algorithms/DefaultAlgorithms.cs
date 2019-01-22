@@ -47,6 +47,13 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto)
                 }
+            },
+            {
+                MinerBaseType.GMiner,
+                new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam)
+                }
             }
         };
 
