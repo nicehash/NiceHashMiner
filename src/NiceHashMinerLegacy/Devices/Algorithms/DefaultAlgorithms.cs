@@ -52,7 +52,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.GMiner,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam)
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam),
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash)
                 }
             }
         };

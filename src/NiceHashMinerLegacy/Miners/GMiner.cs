@@ -26,10 +26,10 @@ namespace NiceHashMiner.Miners
             }
         }
 
-        private string Personalization => "auto";
-
         public GMiner() : base("gminer")
-        { }
+        {
+            ConectionType = NhmConectionType.NONE;
+        }
 
         protected override int GetMaxCooldownTimeInMilliseconds()
         {
@@ -42,6 +42,11 @@ namespace NiceHashMiner.Miners
             var devs = string.Join(",", MiningSetup.DeviceIDs);
             LastCommandLine = $"-a {AlgoName} -s {split[0]} -n {split[1]} " +
                               $"-u {btcAdress}.{worker} -d {devs} --api {ApiPort}";
+
+            if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
+            {
+                LastCommandLine += " --pers auto";
+            }
 
             ProcessHandle = _Start();
         }
