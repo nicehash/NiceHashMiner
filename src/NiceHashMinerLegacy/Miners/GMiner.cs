@@ -69,7 +69,7 @@ namespace NiceHashMiner.Miners
 
         protected override void _Stop(MinerStopType willswitch)
         {
-            ShutdownMiner();
+            ShutdownMiner(true);
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
