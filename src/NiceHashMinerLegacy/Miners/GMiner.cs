@@ -15,6 +15,8 @@ namespace NiceHashMiner.Miners
 {
     public class GMiner : Miner
     {
+        private const double DevFee = 2.0;
+
         private readonly HttpClient _httpClient;
 
         private int _benchIters;
@@ -124,7 +126,7 @@ namespace NiceHashMiner.Miners
         {
             if (_benchIters != 0 && BenchmarkAlgorithm != null)
             {
-                BenchmarkAlgorithm.BenchmarkSpeed = _benchHashes / _benchIters;
+                BenchmarkAlgorithm.BenchmarkSpeed = (_benchHashes / _benchIters) * (100 - DevFee);
             }
 
             base.BenchmarkThreadRoutineFinish();
