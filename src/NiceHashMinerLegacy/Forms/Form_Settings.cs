@@ -448,10 +448,6 @@ namespace NiceHashMiner.Forms
             groupBoxBenchmarkTimeLimits.Text =
                 International.GetText("FormSettings_Tab_Advanced_Group_BenchmarkTimeLimits");
 
-            buttonAllProfit.Text = International.GetText("FormSettings_Tab_Devices_Algorithms_Check_ALLProfitability");
-            buttonSelectedProfit.Text =
-                International.GetText("FormSettings_Tab_Devices_Algorithms_Check_SingleProfitability");
-
             checkBox_DisableDefaultOptimizations.Text =
                 International.GetText("Form_Settings_Text_DisableDefaultOptimizations");
             checkBox_IdleWhenNoInternetAccess.Text =
@@ -859,61 +855,6 @@ namespace NiceHashMiner.Forms
             algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
             groupBoxAlgorithmSettings.Text = string.Format(International.GetText("FormSettings_AlgorithmsSettings"),
                 _selectedComputeDevice.Name);
-        }
-
-        private void ButtonSelectedProfit_Click(object sender, EventArgs e)
-        {
-            if (_selectedComputeDevice == null)
-            {
-                MessageBox.Show(International.GetText("FormSettings_ButtonProfitSingle"),
-                    International.GetText("Warning_with_Exclamation"),
-                    MessageBoxButtons.OK);
-                return;
-            }
-
-            var url = Links.NhmProfitCheck + _selectedComputeDevice.Name;
-            foreach (var algorithm in _selectedComputeDevice.GetAlgorithmSettingsFastest())
-            {
-                var id = (int) algorithm.NiceHashID;
-                url += "&speed" + id + "=" + ProfitabilityCalculator
-                           .GetFormatedSpeed(algorithm.BenchmarkSpeed, algorithm.NiceHashID)
-                           .ToString("F2", CultureInfo.InvariantCulture);
-            }
-
-            url += "&nhmver=" + Application.ProductVersion; // Add version info
-            url += "&cost=1&power=1"; // Set default power and cost to 1
-            System.Diagnostics.Process.Start(url);
-        }
-
-        private void ButtonAllProfit_Click(object sender, EventArgs e)
-        {
-            var url = Links.NhmProfitCheck + "CUSTOM";
-            var total = new Dictionary<AlgorithmType, double>();
-            foreach (var curCDev in ComputeDeviceManager.Available.Devices)
-            {
-                foreach (var algorithm in curCDev.GetAlgorithmSettingsFastest())
-                {
-                    if (total.ContainsKey(algorithm.NiceHashID))
-                    {
-                        total[algorithm.NiceHashID] += algorithm.BenchmarkSpeed;
-                    }
-                    else
-                    {
-                        total[algorithm.NiceHashID] = algorithm.BenchmarkSpeed;
-                    }
-                }
-            }
-
-            foreach (var algorithm in total)
-            {
-                var id = (int) algorithm.Key;
-                url += "&speed" + id + "=" + ProfitabilityCalculator.GetFormatedSpeed(algorithm.Value, algorithm.Key)
-                           .ToString("F2", CultureInfo.InvariantCulture);
-            }
-
-            url += "&nhmver=" + Application.ProductVersion; // Add version info
-            url += "&cost=1&power=1"; // Set default power and cost to 1
-            System.Diagnostics.Process.Start(url);
         }
 
         #endregion //Tab Device
