@@ -66,21 +66,6 @@ namespace NiceHashMiner
             ConsolePrint(grp, string.Format(text, arg));
         }
 
-        public static void ConsolePrint(string grp, string text, object arg0)
-        {
-            ConsolePrint(grp, string.Format(text, arg0));
-        }
-
-        public static void ConsolePrint(string grp, string text, object arg0, object arg1)
-        {
-            ConsolePrint(grp, string.Format(text, arg0, arg1));
-        }
-
-        public static void ConsolePrint(string grp, string text, object arg0, object arg1, object arg2)
-        {
-            ConsolePrint(grp, string.Format(text, arg0, arg1, arg2));
-        }
-
         public static uint GetIdleTime()
         {
             var lastInPut = new LASTINPUTINFO();
