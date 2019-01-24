@@ -352,6 +352,12 @@ namespace NiceHashMiner.Miners.Parsing
                     return MinerType.dtsm;
                 case MinerBaseType.cpuminer:
                     return MinerType.cpuminer_opt;
+                case MinerBaseType.trex:
+                    return MinerType.trex;
+                case MinerBaseType.Phoenix:
+                    return MinerType.Phoenix;
+                case MinerBaseType.GMiner:
+                    return MinerType.GMiner;
             }
 
             return MinerType.NONE;
