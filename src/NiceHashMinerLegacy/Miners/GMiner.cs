@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
 
@@ -18,6 +19,7 @@ namespace NiceHashMiner.Miners
 
         private int _benchIters;
         private double _benchHashes;
+        private int _targetBenchIters;
 
         private class JsonModel
         {
@@ -50,7 +52,6 @@ namespace NiceHashMiner.Miners
         {
             ConectionType = NhmConectionType.NONE;
             _httpClient = new HttpClient();
-            TimeoutStandard = true;
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -70,7 +71,9 @@ namespace NiceHashMiner.Miners
             var split = url.Split(':');
             var devs = string.Join(",", MiningSetup.DeviceIDs);
             var cmd = $"-a {AlgoName} -s {split[0]} -n {split[1]} " +
-                              $"-u {btcAddress}.{worker} -d {devs} --api {ApiPort}";
+                              $"-u {btcAddress}.{worker} -d {devs} --api {ApiPort} ";
+
+            cmd += ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
@@ -89,14 +92,13 @@ namespace NiceHashMiner.Miners
         {
             _benchHashes = 0;
             _benchIters = 0;
-
-            BenchmarkTimeInSeconds = Math.Max(time, 65);
+            _targetBenchIters = Math.Max(1, (int) Math.Floor(time / 30d));
             
             var url = GetServiceUrl(algorithm.NiceHashID);
             var btc = Globals.GetBitcoinUser();
             var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
 
-            return CreateCommandLine(url, btc, worker);
+            return CreateCommandLine(url, btc, worker) + " -w 0";
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
@@ -115,7 +117,7 @@ namespace NiceHashMiner.Miners
             _benchHashes += hashrate;
             _benchIters++;
 
-            return false;
+            return _benchIters >= _targetBenchIters;
         }
 
         protected override void BenchmarkThreadRoutineFinish()

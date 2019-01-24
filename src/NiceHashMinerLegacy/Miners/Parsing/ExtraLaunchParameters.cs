@@ -325,6 +325,16 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("phoenix_li", "-li", "0", MinerOptionFlagType.MultiParam, ",")
 
                 },
+                new List<MinerOption>()
+            ),
+            new MinerOptionPackage(
+                MinerType.GMiner,
+                new List<MinerOption>
+                {
+                    new MinerOption("gminer_templimit", "-t", "--templimit", "90", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("gminer_pec", "--pec", "1", MinerOptionFlagType.SingleParam),
+                    new MinerOption("gminer_electricity", "--electricity_cost", null, MinerOptionFlagType.SingleParam)
+                }, 
                 new List<MinerOption>())
         };
 
