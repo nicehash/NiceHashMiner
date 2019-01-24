@@ -6,13 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Miners
 {
     public class GMiner : Miner
     {
         private readonly HttpClient _httpClient;
+
+        private int _benchIters;
+        private double _benchHashes;
 
         private class JsonModel
         {
@@ -32,9 +37,9 @@ namespace NiceHashMiner.Miners
                 switch (MiningSetup.CurrentAlgorithmType)
                 {
                     case AlgorithmType.ZHash:
-                        return "equihash144_5";
+                        return "144_5";
                     case AlgorithmType.Beam:
-                        return "equihash150_5";
+                        return "150_5";
                     default:
                         return "";
                 }
@@ -45,6 +50,7 @@ namespace NiceHashMiner.Miners
         {
             ConectionType = NhmConectionType.NONE;
             _httpClient = new HttpClient();
+            TimeoutStandard = true;
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -54,17 +60,24 @@ namespace NiceHashMiner.Miners
 
         public override void Start(string url, string btcAdress, string worker)
         {
+            LastCommandLine = CreateCommandLine(url, btcAdress, worker);
+
+            ProcessHandle = _Start();
+        }
+
+        private string CreateCommandLine(string url, string btcAddress, string worker)
+        {
             var split = url.Split(':');
             var devs = string.Join(",", MiningSetup.DeviceIDs);
-            LastCommandLine = $"-a {AlgoName} -s {split[0]} -n {split[1]} " +
-                              $"-u {btcAdress}.{worker} -d {devs} --api {ApiPort}";
+            var cmd = $"-a {AlgoName} -s {split[0]} -n {split[1]} " +
+                              $"-u {btcAddress}.{worker} -d {devs} --api {ApiPort}";
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
-                LastCommandLine += " --pers auto";
+                cmd += " --pers auto";
             }
 
-            ProcessHandle = _Start();
+            return cmd;
         }
 
         protected override void _Stop(MinerStopType willswitch)
@@ -74,17 +87,45 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            throw new NotImplementedException();
+            _benchHashes = 0;
+            _benchIters = 0;
+
+            BenchmarkTimeInSeconds = Math.Max(time, 65);
+            
+            var url = GetServiceUrl(algorithm.NiceHashID);
+            var btc = Globals.GetBitcoinUser();
+            var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
+
+            return CreateCommandLine(url, btc, worker);
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
-            throw new NotImplementedException();
+            CheckOutdata(outdata);
         }
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            throw new NotImplementedException();
+            if (!outdata.TryGetHashrateAfter("Total Speed:", out var hashrate) ||
+                hashrate <= 0)
+            {
+                return false;
+            }
+
+            _benchHashes += hashrate;
+            _benchIters++;
+
+            return false;
+        }
+
+        protected override void BenchmarkThreadRoutineFinish()
+        {
+            if (_benchIters != 0 && BenchmarkAlgorithm != null)
+            {
+                BenchmarkAlgorithm.BenchmarkSpeed = _benchHashes / _benchIters;
+            }
+
+            base.BenchmarkThreadRoutineFinish();
         }
 
         public override async Task<ApiData> GetSummaryAsync()
