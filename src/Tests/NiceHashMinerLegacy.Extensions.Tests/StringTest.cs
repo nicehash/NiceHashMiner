@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NiceHashMinerLegacy.Extensions.Tests
 {
@@ -23,6 +20,11 @@ namespace NiceHashMinerLegacy.Extensions.Tests
             // T-rex
             "20190109 23:53:41 Total: 71.89 MH/s".TryGetHashrateAfter("Total:", out hash);
             Assert.AreEqual(71890000, hash);
+
+            // GMiner
+            "15:14:18 Total Speed: 27 Sol/s Shares Accepted: 0 Rejected: 0 Power: 199W 0.14 Sol/W"
+                .TryGetHashrateAfter("Total Speed:", out hash);
+            Assert.AreEqual(27, hash);
         }
 
         [TestMethod]
