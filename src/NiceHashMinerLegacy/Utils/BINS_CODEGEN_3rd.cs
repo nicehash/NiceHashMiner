@@ -858,7 +858,8 @@ namespace NiceHashMiner.Utils
             @"/ethlargement/OhGodAnETHlargementPill-r2.exe",
             @"/ewbf_144/miner.exe",
             @"/trex/t-rex.exe",
-            @"/phoenix/PhoenixMiner.exe"
+            @"/phoenix/PhoenixMiner.exe",
+            @"/gminer/miner.exe"
         };
 
         #endregion //CODE_GEN STUFF // listFiles.py
