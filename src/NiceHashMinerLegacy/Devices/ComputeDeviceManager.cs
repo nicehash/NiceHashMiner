@@ -176,27 +176,6 @@ namespace NiceHashMiner.Devices
 
             public static void QueryDevices(IMessageNotifier messageNotifier)
             {
-                // check NVIDIA nvml.dll and copy over scope
-                {
-                    var nvmlPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                                   "\\NVIDIA Corporation\\NVSMI\\nvml.dll";
-                    if (nvmlPath.Contains(" (x86)")) nvmlPath = nvmlPath.Replace(" (x86)", "");
-                    if (File.Exists(nvmlPath))
-                    {
-                        var copyToPath = Directory.GetCurrentDirectory() + "\\nvml.dll";
-                        try
-                        {
-                            File.Copy(nvmlPath, copyToPath, true);
-                            Helpers.ConsolePrint(Tag, $"Copy from {nvmlPath} to {copyToPath} done");
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint(Tag, "Copy nvml.dll failed: " + e.Message);
-                        }
-                    }
-                }
-
-
                 MessageNotifier = messageNotifier;
                 // #0 get video controllers, used for cross checking
                 WindowsDisplayAdapters.QueryVideoControllers();
@@ -625,7 +604,7 @@ namespace NiceHashMiner.Devices
                             stringBuilder.AppendLine($"\t\tNAME: {cudaDev.GetName()}");
                             stringBuilder.AppendLine($"\t\tVENDOR: {cudaDev.VendorName}");
                             stringBuilder.AppendLine($"\t\tUUID: {cudaDev.UUID}");
-                            stringBuilder.AppendLine($"\t\tSM: {cudaDev.SMVersionString}");
+                            stringBuilder.AppendLine($"\t\tSM: {cudaDev.SM_major}.{cudaDev.SM_minor}");
                             stringBuilder.AppendLine($"\t\tMEMORY: {cudaDev.DeviceGlobalMemory}");
                             stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
 
@@ -718,9 +697,9 @@ namespace NiceHashMiner.Devices
                         {
                             try
                             {
-                                cudaDevices =
-                                    JsonConvert.DeserializeObject<List<CudaDevice>>(_queryCudaDevicesString,
+                                var cudaQueryResult = JsonConvert.DeserializeObject<CudaDeviceDetectionResult>(_queryCudaDevicesString,
                                         Globals.JsonSettings);
+                                cudaDevices = cudaQueryResult.CudaDevices;
                             }
                             catch { }
 
