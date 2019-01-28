@@ -61,7 +61,10 @@ namespace NiceHashMinerLegacy.Tests.Miners
 
             _gMiner.FinishBenchmark();
 
-            Assert.AreEqual(31, _beamAlgo.BenchmarkSpeed);
+            // Minus 2% devfee
+            const double expected = 31 * 0.98;
+
+            Assert.AreEqual(expected, _beamAlgo.BenchmarkSpeed);
         }
 
         private const string BenchmarkOutput = @"+----------------------------------------------------------------+

@@ -126,7 +126,7 @@ namespace NiceHashMiner.Miners
         {
             if (_benchIters != 0 && BenchmarkAlgorithm != null)
             {
-                BenchmarkAlgorithm.BenchmarkSpeed = (_benchHashes / _benchIters) * (100 - DevFee);
+                BenchmarkAlgorithm.BenchmarkSpeed = (_benchHashes / _benchIters) * (1 - DevFee * 0.01);
             }
 
             base.BenchmarkThreadRoutineFinish();
