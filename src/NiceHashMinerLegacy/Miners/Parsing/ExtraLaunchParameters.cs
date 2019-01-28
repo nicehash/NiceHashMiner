@@ -331,7 +331,7 @@ namespace NiceHashMiner.Miners.Parsing
                 MinerType.GMiner,
                 new List<MinerOption>
                 {
-                    new MinerOption("gminer_templimit", "-t", "--templimit", "90", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("gminer_templimit", "-t", "--templimit", "90", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("gminer_pec", "--pec", "1", MinerOptionFlagType.SingleParam),
                     new MinerOption("gminer_electricity", "--electricity_cost", null, MinerOptionFlagType.SingleParam)
                 }, 
