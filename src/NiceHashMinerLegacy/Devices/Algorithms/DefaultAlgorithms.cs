@@ -223,6 +223,13 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam),
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash)
                 }
+            },
+            {
+                MinerBaseType.BMiner,
+                new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.ZHash, "equihash1445")
+                }
             }
         }.ConcatDictList(All, Gpu);
 
