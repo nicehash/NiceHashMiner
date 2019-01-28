@@ -2,22 +2,26 @@
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Miners
 {
     public class BMiner : Miner
     {
-        public class EquiSpeedInfo
+        private class EquiSpeedInfo
         {
             public double nonce_rate { get; set; }
             public double solution_rate { get; set; }
         }
 
-        public class GenericSpeedInfo
+        private class GenericSpeedInfo
         {
             public double hash_rate { get; set; }
         }
@@ -32,6 +36,10 @@ namespace NiceHashMiner.Miners
 
             public List<Solver<T>> solvers { get; set; }
         }
+
+        private readonly HttpClient _httpClient;
+
+        private Process _process;
 
         private bool IsEquihash
         {
@@ -51,6 +59,7 @@ namespace NiceHashMiner.Miners
         public BMiner() : base("bminer")
         {
             ConectionType = NhmConectionType.NONE;
+            _httpClient = new HttpClient();
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -69,7 +78,7 @@ namespace NiceHashMiner.Miners
             }));
 
             var cmd = $"-uri {MiningSetup.MinerName}://{user}@{url} -api 127.0.0.1:{ApiPort} " +
-                      $"-devices {devs}";
+                      $"-devices {devs} -watchdog=false";
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
@@ -83,12 +92,82 @@ namespace NiceHashMiner.Miners
         {
             LastCommandLine = CreateCommandLine(url, btcAdress, worker);
 
-            ProcessHandle = _Start();
+            _Start();
+        }
+
+        // BMiner throws a fit if started with NiceHashProcess so use System.Diagnostics.Process instead
+        // WARNING ProcessHandle will be null so do not call methods that access it (currently _Stop() is the only
+        // one and it is overridden here)
+        // TODO is NiceHashProcess necessary or can we use System.Diagnostics.Process everywhere?
+        protected override NiceHashProcess _Start(IReadOnlyDictionary<string, string> envVariables = null)
+        {
+            if (_isEnded)
+            {
+                return null;
+            }
+
+            _process = new Process();
+
+            var nhmlDirectory = Directory.GetCurrentDirectory();
+            _process.StartInfo.WorkingDirectory = System.IO.Path.Combine(nhmlDirectory, WorkingDirectory);
+            _process.StartInfo.FileName = System.IO.Path.Combine(nhmlDirectory, Path);
+            _process.StartInfo.Arguments = LastCommandLine;
+            _process.Exited += (sender, args) =>
+            {
+                Miner_Exited();
+            };
+            _process.EnableRaisingEvents = true;
+            _process.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
+
+            _process.StartInfo.UseShellExecute = false;
+
+            try
+            {
+                if (_process.Start())
+                {
+                    IsRunning = true;
+
+                    _currentPidData = new MinerPidData
+                    {
+                        MinerBinPath = Path,
+                        Pid = _process.Id
+                    };
+                    _allPidData.Add(_currentPidData);
+
+                    Helpers.ConsolePrint(MinerTag(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
+
+                    StartCoolDownTimerChecker();
+                }
+                else
+                {
+                    Helpers.ConsolePrint(MinerTag(), "NOT STARTED " + ProcessTag() + " " + LastCommandLine);
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " _Start: " + ex.Message);
+            }
+
+            return null;
         }
 
         protected override void _Stop(MinerStopType willswitch)
         {
-            ShutdownMiner(true);
+            if (IsRunning)
+            {
+                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Shutting down miner");
+            }
+
+            if (_process == null) return;
+
+            try
+            {
+                _process.Kill();
+            }
+            catch { }
+
+            _process.Close();
+            _process = null;
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
@@ -106,9 +185,25 @@ namespace NiceHashMiner.Miners
             throw new NotImplementedException();
         }
 
-        public override Task<ApiData> GetSummaryAsync()
+        public override async Task<ApiData> GetSummaryAsync()
         {
-            return null;
+            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+            var api = new ApiData(MiningSetup.CurrentAlgorithmType);
+            try
+            {
+                var data = await _httpClient.GetStringAsync($"http://127.0.0.1:{ApiPort}/api/v1/status/solver");
+                api.Speed = ParseApi(data);
+                CurrentMinerReadStatus =
+                    api.Speed <= 0 ? MinerApiReadStatus.READ_SPEED_ZERO : MinerApiReadStatus.GOT_READ;
+                return api;
+            }
+            catch (Exception e)
+            {
+                CurrentMinerReadStatus = MinerApiReadStatus.NETWORK_EXCEPTION;
+                Helpers.ConsolePrint(MinerTag(), e.Message);
+            }
+
+            return api;
         }
 
         internal double ParseApi(string data)

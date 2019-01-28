@@ -92,8 +92,8 @@ namespace NiceHashMiner
 
         protected string MinerExeName { get; private set; }
         protected NiceHashProcess ProcessHandle;
-        private MinerPidData _currentPidData;
-        private readonly List<MinerPidData> _allPidData = new List<MinerPidData>();
+        protected MinerPidData _currentPidData;
+        protected readonly List<MinerPidData> _allPidData = new List<MinerPidData>();
 
         // Benchmark stuff
         public bool BenchmarkSignalQuit;
@@ -133,7 +133,7 @@ namespace NiceHashMiner
         private const int IsCooldownCheckTimerAliveCap = 15;
         private bool _needsRestart;
 
-        private bool _isEnded;
+        public bool _isEnded { get; private set; }
 
         public bool IsUpdatingApi = false;
 
