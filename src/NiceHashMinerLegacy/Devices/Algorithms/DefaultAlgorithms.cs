@@ -229,7 +229,10 @@ namespace NiceHashMiner.Devices.Algorithms
                 new List<Algorithm>
                 {
                     new Algorithm(MinerBaseType.BMiner, AlgorithmType.ZHash, "equihash1445"),
-                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto, "ethstratum")
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto, "ethstratum"),
+                    // TODO BMiner only supports Beam over SSL
+                    //new Algorithm(MinerBaseType.BMiner, AlgorithmType.Beam, "beam"),
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.Equihash, "stratum")
                 }
             }
         }.ConcatDictList(All, Gpu);

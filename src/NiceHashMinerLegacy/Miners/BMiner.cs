@@ -52,6 +52,7 @@ namespace NiceHashMiner.Miners
             {
                 switch (MiningSetup.CurrentAlgorithmType)
                 {
+                    case AlgorithmType.Equihash:
                     case AlgorithmType.Beam:
                     case AlgorithmType.ZHash:
                         return true;
@@ -67,6 +68,7 @@ namespace NiceHashMiner.Miners
             {
                 switch (MiningSetup.CurrentAlgorithmType)
                 {
+                    case AlgorithmType.Equihash:
                     case AlgorithmType.Beam:
                     case AlgorithmType.ZHash:
                         return 2;
