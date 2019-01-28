@@ -23,7 +23,9 @@ namespace NiceHashMiner.Miners
         private string CreateCommandLine(string url, string btcAddress, string worker)
         {
             var user = GetUsername(btcAddress, worker);
-            var cmd = $"-uri {MiningSetup.MinerName}://{user}@{url} -api 127.0.0.1:{ApiPort}";
+            var devs = string.Join(",", MiningSetup.DeviceIDs);
+            var cmd = $"-uri {MiningSetup.MinerName}://{user}@{url} -api 127.0.0.1:{ApiPort} " +
+                      $"-devices {devs}";
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
