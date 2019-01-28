@@ -130,6 +130,8 @@ namespace NiceHashMiner.Miners
 
             _process = new Process();
 
+            Ethlargement.CheckAndStart(MiningSetup);
+
             var nhmlDirectory = Directory.GetCurrentDirectory();
             _process.StartInfo.WorkingDirectory = System.IO.Path.Combine(nhmlDirectory, WorkingDirectory);
             _process.StartInfo.FileName = System.IO.Path.Combine(nhmlDirectory, Path);

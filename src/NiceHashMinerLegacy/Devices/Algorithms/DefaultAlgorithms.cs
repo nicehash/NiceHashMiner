@@ -228,7 +228,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.BMiner,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.ZHash, "equihash1445")
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.ZHash, "equihash1445"),
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto, "ethstratum")
                 }
             }
         }.ConcatDictList(All, Gpu);

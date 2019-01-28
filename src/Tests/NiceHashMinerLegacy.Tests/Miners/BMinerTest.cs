@@ -85,6 +85,23 @@ namespace NiceHashMinerLegacy.Tests.Miners
             Assert.AreEqual(expected, _zHashAlgo.BenchmarkSpeed);
         }
 
+        [TestMethod]
+        public void EthBenchShouldParse()
+        {
+            var benchLines = BenchOutputEth.Split('\n');
+            var command = _ethashBMiner.GetBenchCommandLine(_etHashAlgo, 20);
+
+            for (var i = 0; i < benchLines.Length; i++)
+            {
+                var done = _ethashBMiner.ParseBenchLine(benchLines[i]);
+                Assert.AreEqual(i == 18, done);
+            }
+
+            _ethashBMiner.FinishBenchmark();
+            const double expected = 32.3 * 1000000 * 0.9935;
+            Assert.AreEqual(expected, _etHashAlgo.BenchmarkSpeed);
+        }
+
         private const string ApiData1 = @"{
   ""devices"": {
     ""0"": {
@@ -127,5 +144,31 @@ namespace NiceHashMinerLegacy.Tests.Miners
 [INFO] [2019-01-28T16:11:27-05:00] [GPU 0] Speed: 57.47 Sol/s 29.80 Nonce/s Temp: 75C Fan: 57% Power: 287W 0.20 Sol/J
 [INFO] [2019-01-28T16:11:30-05:00] Total 57.47 Sol/s 29.80 Nonce/s Accepted shares 1 Rejected shares 0
 [INFO] [2019-01-28T16:11:32-05:00] Received new job 000001839cde6d8b";
+
+        private const string BenchOutputEth =
+            @"[INFO] [2019-01-28T16:42:40-05:00] Bminer: When Crypto-mining Made Fast (v14.0.0-41bef22)
+[INFO] [2019-01-28T16:42:40-05:00] Watchdog has started.
+[INFO] [2019-01-28T16:42:40-05:00] Starting miner on 1 devices
+[INFO] [2019-01-28T16:42:40-05:00] Starting the management API at 127.0.0.1:8085
+[INFO] [2019-01-28T16:42:40-05:00] Starting miner on device 0...
+[INFO] [2019-01-28T16:42:40-05:00] Connected to daggerhashimoto.eu.nicehash.com:3353
+[INFO] [2019-01-28T16:42:40-05:00] Started miner on device 0
+[INFO] [2019-01-28T16:42:40-05:00] Subscribed to stratum server
+[INFO] [2019-01-28T16:42:40-05:00] Set nonce to 11f558
+[INFO] [2019-01-28T16:42:40-05:00] Authorized
+[INFO] [2019-01-28T16:42:40-05:00] Set diff to 2.00 (target to 000000007fff8000)
+[INFO] [2019-01-28T16:42:40-05:00] Received new job 000000f5473ca2b0
+[INFO] [2019-01-28T16:42:40-05:00] [D0] Creating DAG
+[INFO] [2019-01-28T16:42:42-05:00] Received new job 000000f5473d20e6
+[INFO] [2019-01-28T16:42:52-05:00] Received new job 000000f5473dbab2
+[INFO] [2019-01-28T16:42:52-05:00] [D0] DAG has been created
+[INFO] [2019-01-28T16:43:02-05:00] Received new job 000000f5473e77ca
+[INFO] [2019-01-28T16:43:10-05:00] [GPU 0] Speed: 32.30 MH/s Temp: 70C Fan: 71% Power: 65W 0.50 MH/J
+[INFO] [2019-01-28T16:43:10-05:00] Total 32.30 MH/s Accepted shares 0 Rejected shares 0
+[INFO] [2019-01-28T16:43:12-05:00] Received new job 000000f5473f23ce
+[INFO] [2019-01-28T16:43:22-05:00] Received new job 000000f547401046
+[INFO] [2019-01-28T16:43:29-05:00] Accepted share #5
+[INFO] [2019-01-28T16:43:32-05:00] Received new job 000000f54740e409
+[INFO] [2019-01-28T16:43:33-05:00] Received new job 000000f547416c8b";
     }
 }
