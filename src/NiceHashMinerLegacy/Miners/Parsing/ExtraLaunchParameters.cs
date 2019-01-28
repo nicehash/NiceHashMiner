@@ -22,8 +22,7 @@ namespace NiceHashMiner.Miners.Parsing
                 {
                     new MinerOption("Intensity", "-i", "--intensity=", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("ccminer_CUDA_Schedule", "--cuda-schedule=", "0", MinerOptionFlagType.Uni)
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.ccminer_CryptoNight,
@@ -32,8 +31,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Launch", "-l", "--launch=", "8x20", MinerOptionFlagType.MultiParam, ","), // default is 8x20
                     new MinerOption("Bfactor", "", "--bfactor=", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("Bsleep", "", "--bsleep=", "0", MinerOptionFlagType.MultiParam, ",") // TODO check default
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.ethminer_OCL,
@@ -41,8 +39,7 @@ namespace NiceHashMiner.Miners.Parsing
                 {
                     new MinerOption("LocalWork", "", "--cl-local-work", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("GlobalWork", "", "--cl-global-work", "0", MinerOptionFlagType.MultiParam, ","),
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.ethminer_CUDA,
@@ -50,8 +47,7 @@ namespace NiceHashMiner.Miners.Parsing
                 {
                     new MinerOption("CudaBlockSize", "", "--cuda-block-size", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("CudaGridSize", "", "--cuda-grid-size", "0", MinerOptionFlagType.MultiParam, ","),
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.sgminer,
@@ -93,16 +89,14 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Threads", "-t", "--threads=", "-1", MinerOptionFlagType.MultiParam, ","), // default none
                     new MinerOption("CpuAffinity", "", "--cpu-affinity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
                     new MinerOption("CpuPriority", "", "--cpu-priority", "-1", MinerOptionFlagType.MultiParam, ",") // default 
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.nheqminer_CPU,
                 new List<MinerOption>
                 {
                     new MinerOption("Threads", "-t", "-t", "-1", MinerOptionFlagType.SingleParam, " "), // default none
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.nheqminer_CUDA,
@@ -111,16 +105,14 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Solver_Version", "-cv", "-cv", "0", MinerOptionFlagType.SingleParam, " "), // default 0
                     new MinerOption("Solver_Block", "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
                     new MinerOption("Solver_Thread", "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.eqm_CUDA,
                 new List<MinerOption>
                 {
                     new MinerOption("Solver_Mode", "-cm", "-cm", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.ClaymoreZcash,
@@ -190,8 +182,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("nodevfee", "--nodevfee", "--nodevfee", null, MinerOptionFlagType.Uni),
                     new MinerOption("Intensity", "-i", "--intensity", "0", MinerOptionFlagType.DuplicateMultiParam),
                     new MinerOption("PciMode", "--pci-mode", "--pci-mode", "", MinerOptionFlagType.SingleParam),
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.excavator,
@@ -204,8 +195,7 @@ namespace NiceHashMiner.Miners.Parsing
                     // Overclocking not supported from NHM
                     //new MinerOption("Overclocking_os", "-os", "-os", "", MinerOptionFlagType.MultiParam, " "),
                     //new MinerOption("Overclocking_od", "-od", "-od", "2", MinerOptionFlagType.MultiParam, " "),
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.ClaymoreDual,
@@ -275,8 +265,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("EWBF_solver", "--solver", "--solver", "0", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("EWBF_intensity", "--intensity", "--intensity", "64", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("EWBF_powercalc", "--pec", "--pec", null, MinerOptionFlagType.Uni, " "),
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.Xmrig,
@@ -291,8 +280,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Xmrig_nocolor", "--no-color", null, MinerOptionFlagType.Uni),
                     new MinerOption("Xmrig_maxusage", "--max-cpu-usage=", "75", MinerOptionFlagType.SingleParam),
                     new MinerOption("Xmrig_safe", "--safe", null, MinerOptionFlagType.Uni)
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.dtsm,
@@ -301,8 +289,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("dtsm_time", "--time", null, MinerOptionFlagType.Uni),
                     new MinerOption("dtsm_noreconnect", "--noreconnect", null, MinerOptionFlagType.Uni),
                     new MinerOption("dtsm_temp-target", "--temp-target", null, MinerOptionFlagType.SingleParam)
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.Phoenix,
@@ -324,8 +311,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("phoenix_gpow", "-gpow", "100", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("phoenix_li", "-li", "0", MinerOptionFlagType.MultiParam, ",")
 
-                },
-                new List<MinerOption>()
+                }
             ),
             new MinerOptionPackage(
                 MinerType.GMiner,
@@ -334,8 +320,15 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("gminer_templimit", "-t", "--templimit", "90", MinerOptionFlagType.MultiParam, " "),
                     new MinerOption("gminer_pec", "--pec", "1", MinerOptionFlagType.SingleParam),
                     new MinerOption("gminer_electricity", "--electricity_cost", null, MinerOptionFlagType.SingleParam)
-                }, 
-                new List<MinerOption>())
+                }
+            ),
+            new MinerOptionPackage(
+                MinerType.BMiner,
+                new List<MinerOption>
+                {
+                    new MinerOption("bminer_max_temp", "-max-temperature", "85", MinerOptionFlagType.MultiParam),
+                    new MinerOption("bminer_nofee", "-nofee", null, MinerOptionFlagType.Uni)
+                })
         };
 
         private static readonly List<MinerOptionPackage> MinerOptionPackages = new List<MinerOptionPackage>();

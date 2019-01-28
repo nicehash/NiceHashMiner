@@ -18,5 +18,9 @@ namespace NiceHashMiner.Miners.Parsing
             TemperatureOptions = iTemperatureOptions;
             Name = Enum.GetName(typeof(MinerType), iType);
         }
+
+        public MinerOptionPackage(MinerType iType, List<MinerOption> iGeneralOptions)
+            : this(iType, iGeneralOptions, new List<MinerOption>())
+        { }
     }
 }
