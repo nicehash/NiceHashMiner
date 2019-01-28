@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Miners
 {
@@ -41,6 +42,10 @@ namespace NiceHashMiner.Miners
 
         private Process _process;
 
+        private double _benchHashes = 0;
+        private int _benchIters = 0;
+        private int _targetBenchIters;
+
         private bool IsEquihash
         {
             get
@@ -52,6 +57,23 @@ namespace NiceHashMiner.Miners
                         return true;
                     default:
                         return false;
+                }
+            }
+        }
+
+        private double DevFee
+        {
+            get
+            {
+                switch (MiningSetup.CurrentAlgorithmType)
+                {
+                    case AlgorithmType.Beam:
+                    case AlgorithmType.ZHash:
+                        return 2;
+                    case AlgorithmType.DaggerHashimoto:
+                        return 0.65;
+                    default:
+                        return 0;
                 }
             }
         }
@@ -172,17 +194,44 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            throw new NotImplementedException();
+            _benchHashes = 0;
+            _benchIters = 0;
+            _targetBenchIters = Math.Max(1, (int) Math.Floor(time / 30d));
+
+            var url = GetServiceUrl(algorithm.NiceHashID);
+            var btc = Globals.GetBitcoinUser();
+            var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
+
+            return CreateCommandLine(url, btc, worker);
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
-            throw new NotImplementedException();
+            CheckOutdata(outdata);
         }
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            throw new NotImplementedException();
+            if (!outdata.TryGetHashrateAfter("Total ", out var hashrate) ||
+                hashrate <= 0)
+            {
+                return false;
+            }
+
+            _benchHashes += hashrate;
+            _benchIters++;
+
+            return _benchIters >= _targetBenchIters;
+        }
+
+        protected override void BenchmarkThreadRoutineFinish()
+        {
+            if (_benchIters != 0 && BenchmarkAlgorithm != null)
+            {
+                BenchmarkAlgorithm.BenchmarkSpeed = (_benchHashes / _benchIters) * (1 - DevFee * 0.01);
+            }
+
+            base.BenchmarkThreadRoutineFinish();
         }
 
         public override async Task<ApiData> GetSummaryAsync()
