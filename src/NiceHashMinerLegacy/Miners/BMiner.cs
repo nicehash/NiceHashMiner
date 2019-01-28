@@ -23,7 +23,13 @@ namespace NiceHashMiner.Miners
         private string CreateCommandLine(string url, string btcAddress, string worker)
         {
             var user = GetUsername(btcAddress, worker);
-            var devs = string.Join(",", MiningSetup.DeviceIDs);
+
+            var devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device).Select(d =>
+            {
+                var prefix = d.DeviceType == DeviceType.AMD ? "amd:" : "";
+                return prefix + d.ID;
+            }));
+
             var cmd = $"-uri {MiningSetup.MinerName}://{user}@{url} -api 127.0.0.1:{ApiPort} " +
                       $"-devices {devs}";
 
