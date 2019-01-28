@@ -19,6 +19,7 @@ namespace NiceHashMiner.Miners.Grouping
         {
             IsInit = false;
             CurrentAlgorithmType = AlgorithmType.NONE;
+            CurrentSecondaryAlgorithmType = AlgorithmType.NONE;
             if (miningPairs == null || miningPairs.Count <= 0) return;
             MiningPairs = miningPairs;
             MiningPairs.Sort((a, b) => a.Device.ID - b.Device.ID);

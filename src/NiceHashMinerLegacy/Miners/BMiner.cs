@@ -16,6 +16,7 @@ namespace NiceHashMiner.Miners
 {
     public class BMiner : Miner
     {
+        #region JSON Models
         private class EquiSpeedInfo
         {
             public double nonce_rate { get; set; }
@@ -37,6 +38,8 @@ namespace NiceHashMiner.Miners
 
             public List<Solver<T>> solvers { get; set; }
         }
+
+        #endregion
 
         private readonly HttpClient _httpClient;
 
@@ -80,10 +83,33 @@ namespace NiceHashMiner.Miners
             }
         }
 
+        private bool IsDual => MiningSetup.CurrentSecondaryAlgorithmType != AlgorithmType.NONE;
+
         public BMiner() : base("bminer")
         {
             ConectionType = NhmConectionType.NONE;
             _httpClient = new HttpClient();
+        }
+
+        private static string GetScheme(AlgorithmType algo)
+        {
+            switch (algo)
+            {
+                case AlgorithmType.Beam:
+                    return "beam";
+                case AlgorithmType.Equihash:
+                    return "stratum";
+                case AlgorithmType.ZHash:
+                    return "equihash1445";
+                case AlgorithmType.DaggerHashimoto:
+                    return "ethstratum";
+                case AlgorithmType.Decred:
+                    return "blake14r";
+                case AlgorithmType.Blake2s:
+                    return "blake2s";
+                default:
+                    return null;
+            }
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -101,12 +127,22 @@ namespace NiceHashMiner.Miners
                 return prefix + d.ID;
             }));
 
-            var cmd = $"-uri {MiningSetup.MinerName}://{user}@{url} -api 127.0.0.1:{ApiPort} " +
-                      $"-devices {devs} -watchdog=false";
+            var scheme = GetScheme(MiningSetup.CurrentAlgorithmType);
+
+            var cmd = $"-uri {scheme}://{user}@{url} -api 127.0.0.1:{ApiPort} " +
+                      $"-devices {devs} -watchdog=false ";
 
             if (MiningSetup.CurrentAlgorithmType == AlgorithmType.ZHash)
             {
-                cmd += " -pers auto";
+                cmd += "-pers auto ";
+            }
+
+            if (IsDual)
+            {
+                var secondUrl = GetServiceUrl(MiningSetup.CurrentSecondaryAlgorithmType);
+                var secondScheme = GetScheme(MiningSetup.CurrentSecondaryAlgorithmType);
+
+                cmd += $"-uri2 {secondScheme}://{user}@{secondUrl} ";
             }
 
             return cmd;
