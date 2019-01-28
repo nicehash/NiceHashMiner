@@ -53,10 +53,8 @@ namespace NiceHashMinerLegacy.Tests.Miners
             for (var i = 0; i < benchLines.Length; i++)
             {
                 var done = _gMiner.ParseBenchLine(benchLines[i]);
-                if (i == 34)
-                {
-                    Assert.IsTrue(done);
-                }
+                // Benchmark should be completed on 35th line
+                Assert.AreEqual(i == 34, done);
             }
 
             _gMiner.FinishBenchmark();
