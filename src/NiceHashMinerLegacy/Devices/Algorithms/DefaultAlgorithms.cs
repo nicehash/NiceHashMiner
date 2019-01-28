@@ -220,7 +220,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.GMiner,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Equihash1505),
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam),
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash)
                 }
             }

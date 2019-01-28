@@ -86,7 +86,7 @@
         X16R = 33,
         CryptoNightV8 = 34,
         ZHash = 36,
-        Equihash1505 = 37
+        Beam = 37
         #endregion // NiceHashAPI
     }
 }

@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Algorithms\AlgorithmTest.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithmsTest.cs" />
+    <Compile Include="Miners\GMinerTest.cs" />
     <Compile Include="Stats\ExchangeRateApiTest.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManagerTest.cs" />
     <Compile Include="Switching\NHSmaDataTest.cs" />

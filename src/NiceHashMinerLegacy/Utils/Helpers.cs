@@ -153,7 +153,7 @@ namespace NiceHashMiner
 
             var useSols = algo == AlgorithmType.Equihash ||
                           algo == AlgorithmType.ZHash ||
-                          algo == AlgorithmType.Equihash1505;
+                          algo == AlgorithmType.Beam;
 
             var unit = useSols ? "Sol/s " : "H/s ";
             return ret + unit;

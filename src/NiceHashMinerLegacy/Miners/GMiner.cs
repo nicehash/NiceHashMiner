@@ -42,7 +42,7 @@ namespace NiceHashMiner.Miners
                 {
                     case AlgorithmType.ZHash:
                         return "144_5";
-                    case AlgorithmType.Equihash1505:
+                    case AlgorithmType.Beam:
                         return "150_5";
                     default:
                         return "";
