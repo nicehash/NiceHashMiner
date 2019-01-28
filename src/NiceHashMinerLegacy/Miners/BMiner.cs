@@ -17,26 +17,36 @@ namespace NiceHashMiner.Miners
     public class BMiner : Miner
     {
         #region JSON Models
-        private class EquiSpeedInfo
+
+        private interface ISpeedInfo
+        {
+            double Hashrate { get; }
+        }
+
+        private class EquiSpeedInfo : ISpeedInfo
         {
             public double nonce_rate { get; set; }
             public double solution_rate { get; set; }
+
+            public double Hashrate => solution_rate;
         }
 
-        private class GenericSpeedInfo
+        private class GenericSpeedInfo : ISpeedInfo
         {
             public double hash_rate { get; set; }
+
+            public double Hashrate => hash_rate;
         }
 
-        private class JsonModel<T>
+        private class JsonModel<T> where T : ISpeedInfo
         {
-            public class Solver<T>
+            public class Solver
             {
                 public string algorithm { get; set; }
                 public T speed_info { get; set; }
             }
 
-            public List<Solver<T>> solvers { get; set; }
+            public List<Solver> solvers { get; set; }
         }
 
         #endregion
@@ -308,17 +318,18 @@ namespace NiceHashMiner.Miners
 
             foreach (var dev in devs.PropertyValues())
             {
+                ISpeedInfo speedInfo;
+
                 if (IsEquihash)
                 {
-                    var obj = dev.ToObject<JsonModel<EquiSpeedInfo>>();
-                    hashrate += obj.solvers[0].speed_info.solution_rate;
+                    speedInfo = dev.ToObject<JsonModel<EquiSpeedInfo>>().solvers[0].speed_info;
                 }
-
                 else
                 {
-                    var obj = dev.ToObject<JsonModel<GenericSpeedInfo>>();
-                    hashrate += obj.solvers[0].speed_info.hash_rate;
+                    speedInfo = dev.ToObject<JsonModel<GenericSpeedInfo>>().solvers[0].speed_info;
                 }
+
+                hashrate += speedInfo.Hashrate;
             }
 
             return hashrate;
