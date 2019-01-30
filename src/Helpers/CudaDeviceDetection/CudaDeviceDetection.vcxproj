@@ -72,8 +72,8 @@
       <LinkStatus>true</LinkStatus>
     </Link>
     <PostBuildEvent>
-      <Command>REM the path is absolute maybe fix
-copy /Y "C:\Program Files\NVIDIA Corporation\NVSMI\nvml.dll" "$(SolutionDir)$(Configuration)\nvml.dll"</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -121,6 +121,7 @@ copy /Y "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\VC\Redis
   <ItemGroup>
     <ClCompile Include="CudaDetection.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="nvidia_nvml_helper.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

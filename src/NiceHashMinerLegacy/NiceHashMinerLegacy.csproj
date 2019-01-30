@@ -116,6 +116,7 @@
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
+    <Compile Include="Devices\CudaDeviceDetectionResult.cs" />
     <Compile Include="Devices\Querying\AmdQuery.cs" />
     <Compile Include="Devices\Querying\OpenCLJsonData.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />

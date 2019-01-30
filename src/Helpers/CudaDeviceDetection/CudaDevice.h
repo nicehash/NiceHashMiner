@@ -8,7 +8,6 @@ struct CudaDevice {
 	int pciBusID;
 	std::string VendorName;
 	std::string DeviceName;
-	std::string SMVersionString;
 	int SM_major;
 	int SM_minor;
 	std::string UUID;
@@ -17,5 +16,6 @@ struct CudaDevice {
 	unsigned int pciSubSystemId; //!< The 32-bit Sub System Device ID
 	int SMX;
 	int VendorID;
+	int HasMonitorConnected = 0;
 };
 

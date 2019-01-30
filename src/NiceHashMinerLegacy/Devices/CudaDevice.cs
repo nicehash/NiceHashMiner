@@ -10,7 +10,7 @@ namespace NiceHashMiner.Devices
         public int VendorID;
         public string VendorName;
         public string DeviceName;
-        public string SMVersionString;
+        public int HasMonitorConnected;
         public int SM_major;
         public int SM_minor;
         public string UUID;
