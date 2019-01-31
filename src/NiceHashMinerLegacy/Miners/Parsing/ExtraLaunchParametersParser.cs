@@ -358,6 +358,8 @@ namespace NiceHashMiner.Miners.Parsing
                     return MinerType.Phoenix;
                 case MinerBaseType.GMiner:
                     return MinerType.GMiner;
+                case MinerBaseType.BMiner:
+                    return MinerType.BMiner;
             }
 
             return MinerType.NONE;

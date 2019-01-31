@@ -80,13 +80,14 @@
         Blake2s = 28,
         Skunk = 29,
         CryptoNightV7 = 30,
-        // Tentative
         CryptoNightHeavy = 31,
         Lyra2z = 32,
         X16R = 33,
         CryptoNightV8 = 34,
         ZHash = 36,
-        Beam = 37
+        Beam = 37,
+        // Tentative
+        Grin = 38
         #endregion // NiceHashAPI
     }
 }

@@ -96,6 +96,8 @@ namespace NiceHashMiner.Miners
                     return new Phoenix();
                 case MinerBaseType.GMiner:
                     return new GMiner();
+                case MinerBaseType.BMiner:
+                    return new BMiner(algorithm.NiceHashID);
             }
 
             return null;

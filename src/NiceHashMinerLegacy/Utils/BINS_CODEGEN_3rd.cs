@@ -859,7 +859,8 @@ namespace NiceHashMiner.Utils
             @"/ewbf_144/miner.exe",
             @"/trex/t-rex.exe",
             @"/phoenix/PhoenixMiner.exe",
-            @"/gminer/miner.exe"
+            @"/gminer/miner.exe",
+            @"/bminer/bminer.exe"
         };
 
         #endregion //CODE_GEN STUFF // listFiles.py
