@@ -84,6 +84,22 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        /// <summary>
+        /// Get whether AMD device is GCN 4th gen or higher (400/500/Vega)
+        /// </summary>
+        public bool IsGcn4
+        {
+            get
+            {
+                if (Name.Contains("Vega"))
+                    return true;
+                if (InfSection.ToLower().Contains("polaris"))
+                    return true;
+
+                return false;
+            }
+        }
+
         public AmdComputeDevice(AmdGpuDevice amdDevice, int gpuCount, bool isDetectionFallback, int adl2Index)
             : base(amdDevice.DeviceID,
                 amdDevice.DeviceName,

@@ -14,7 +14,7 @@ namespace NiceHashMiner.Devices.Algorithms
             if (device == null) return null;
             var algoSettings = CreateDefaultsForGroup(device.DeviceGroupType);
             if (algoSettings == null) return null;
-            if (device.DeviceType == DeviceType.AMD)
+            if (device.DeviceType == DeviceType.AMD && device is AmdComputeDevice amd)
             {
                 // sgminer stuff
                 if (algoSettings.ContainsKey(MinerBaseType.sgminer))
@@ -163,6 +163,12 @@ namespace NiceHashMiner.Devices.Algorithms
                     //        }
                     //    }
                     //}
+                }
+
+                // Remove Beam on GCN 3rd gen or lower (300 series or lower)
+                if (!amd.IsGcn4)
+                {
+                    algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType> { AlgorithmType.Beam });
                 }
             } // END AMD case
 
