@@ -33,7 +33,6 @@ namespace NiceHashMiner
 
             var name = sma.Name;
             var nPort = sma.Port;
-            var sslPort = 30000 + nPort;
             
             // NHMConectionType.NONE
             var prefix = "";
@@ -47,7 +46,9 @@ namespace NiceHashMiner
                     break;
                 case NhmConectionType.STRATUM_SSL:
                     prefix = "stratum+ssl://";
-                    port = sslPort;
+                    goto case NhmConectionType.SSL;
+                case NhmConectionType.SSL:
+                    port += 30000;
                     break;
             }
 

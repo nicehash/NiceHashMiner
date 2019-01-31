@@ -97,7 +97,7 @@ namespace NiceHashMiner.Miners
                 case MinerBaseType.GMiner:
                     return new GMiner();
                 case MinerBaseType.BMiner:
-                    return new BMiner();
+                    return new BMiner(algorithm.NiceHashID);
             }
 
             return null;

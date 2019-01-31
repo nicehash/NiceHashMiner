@@ -18,6 +18,10 @@ namespace NiceHashMinerLegacy.Tests.Miners
     {
         private class TestBMiner : BMiner
         {
+            public TestBMiner(AlgorithmType algo)
+                : base(algo)
+            { }
+
             public bool ParseBenchLine(string line)
             {
                 return BenchmarkParseLine(line);
@@ -43,12 +47,12 @@ namespace NiceHashMinerLegacy.Tests.Miners
         [ClassInitialize]
         public static void Initialize(TestContext context)
         {
-            _zHashBMiner = new TestBMiner();
+            _zHashBMiner = new TestBMiner(AlgorithmType.ZHash);
             _zHashAlgo = new Algorithm(MinerBaseType.BMiner, AlgorithmType.ZHash);
             var dev = new ComputeDevice(0);
             _zHashBMiner.InitBenchmarkSetup(new MiningPair(dev, _zHashAlgo));
 
-            _ethashBMiner = new TestBMiner();
+            _ethashBMiner = new TestBMiner(AlgorithmType.DaggerHashimoto);
             _etHashAlgo = new Algorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto);
             _ethashBMiner.InitBenchmarkSetup(new MiningPair(dev, _etHashAlgo));
 

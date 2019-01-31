@@ -144,6 +144,13 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt", false),
                     new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia", false)
                 }
+            },
+            {
+                MinerBaseType.BMiner,
+                new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.Beam)
+                }
             }
         }.ConcatDictList(All, Gpu);
 
@@ -230,8 +237,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     new Algorithm(MinerBaseType.BMiner, AlgorithmType.ZHash),
                     new Algorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto),
-                    // TODO BMiner only supports Beam over SSL
-                    //new Algorithm(MinerBaseType.BMiner, AlgorithmType.Beam, "beam"),
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.Beam),
                     new Algorithm(MinerBaseType.BMiner, AlgorithmType.Equihash),
                     // TODO Only getting CUDA errors when dual mining
                     //new DualAlgorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s)

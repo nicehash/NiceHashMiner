@@ -97,9 +97,11 @@ namespace NiceHashMiner.Miners
 
         private bool IsDual => MiningSetup.CurrentSecondaryAlgorithmType != AlgorithmType.NONE;
 
-        public BMiner() : base("bminer")
+        public BMiner(AlgorithmType algo) : base("bminer")
         {
-            ConectionType = NhmConectionType.NONE;
+            ConectionType = algo == AlgorithmType.Beam ?
+                NhmConectionType.SSL : NhmConectionType.NONE;
+
             _httpClient = new HttpClient();
         }
 
@@ -108,7 +110,7 @@ namespace NiceHashMiner.Miners
             switch (algo)
             {
                 case AlgorithmType.Beam:
-                    return "beam";
+                    return "beam+ssl";
                 case AlgorithmType.Equihash:
                     return "stratum";
                 case AlgorithmType.ZHash:
