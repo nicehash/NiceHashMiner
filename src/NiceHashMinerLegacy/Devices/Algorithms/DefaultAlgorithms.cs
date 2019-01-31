@@ -241,7 +241,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.BMiner, AlgorithmType.Equihash),
                     // TODO Only getting CUDA errors when dual mining
                     //new DualAlgorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s)
-                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.Grin)
+                    //new Algorithm(MinerBaseType.BMiner, AlgorithmType.Grin)
                 }
             }
         }.ConcatDictList(All, Gpu);
