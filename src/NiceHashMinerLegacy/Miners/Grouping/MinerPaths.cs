@@ -289,6 +289,7 @@ namespace NiceHashMiner.Miners.Grouping
                     case AlgorithmType.Skunk:
                     case AlgorithmType.Keccak:
                     case AlgorithmType.Lyra2z:
+                    case AlgorithmType.Lyra2REv3:
                         return Data.CcminerTPruvot;
                     case AlgorithmType.Sia:
                     case AlgorithmType.Nist5:
