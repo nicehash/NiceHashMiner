@@ -270,7 +270,8 @@ namespace NiceHashMiner.Devices.Algorithms
                                 AlgorithmType.NeoScrypt,
                                 AlgorithmType.Lyra2RE,
                                 AlgorithmType.Lyra2REv2,
-                                AlgorithmType.CryptoNightV7
+                                AlgorithmType.CryptoNightV7,
+                                AlgorithmType.Lyra2REv3
                             });
                             toRemoveMinerTypes.AddRange(new[]
                             {
