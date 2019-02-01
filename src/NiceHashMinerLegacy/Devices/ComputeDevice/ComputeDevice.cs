@@ -344,6 +344,7 @@ namespace NiceHashMiner.Devices
                 MinerBaseType.dtsm,
                 MinerBaseType.trex,
                 MinerBaseType.Phoenix,
+                MinerBaseType.GMiner,
                 MinerBaseType.BMiner
             };
 
