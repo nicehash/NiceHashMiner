@@ -13,6 +13,8 @@ using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Miners
 {
+    // NOTE: GMiner will NOT run if the VS debugger is attached to NHML. 
+    // Detach the debugger to use GMiner.
     public class GMiner : Miner
     {
         private const double DevFee = 2.0;
