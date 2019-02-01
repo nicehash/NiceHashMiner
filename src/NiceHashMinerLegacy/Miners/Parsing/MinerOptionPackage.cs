@@ -22,5 +22,9 @@ namespace NiceHashMiner.Miners.Parsing
         public MinerOptionPackage(MinerType iType, List<MinerOption> iGeneralOptions)
             : this(iType, iGeneralOptions, new List<MinerOption>())
         { }
+
+        // For JSON deserialization
+        public MinerOptionPackage()
+        { }
     }
 }
