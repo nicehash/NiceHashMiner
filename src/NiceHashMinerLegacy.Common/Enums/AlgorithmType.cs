@@ -87,7 +87,8 @@
         ZHash = 36,
         Beam = 37,
         // Tentative
-        Grin = 38
+        Grin = 38,
+        Lyra2REv3 = 40
         #endregion // NiceHashAPI
     }
 }
