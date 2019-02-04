@@ -219,6 +219,21 @@ namespace NiceHashMiner.Devices.Algorithms
                     });
                 }
             }
+            // disable by default
+            {
+                var minerBases = new List<MinerBaseType>
+                    {
+                        MinerBaseType.BMiner
+                    };
+                foreach (var minerKey in minerBases)
+                {
+                    if (!algoSettings.ContainsKey(minerKey)) continue;
+                    foreach (var algo in algoSettings[minerKey])
+                    {
+                        algo.Enabled = false;
+                    }
+                }
+            }
             return algoSettings;
         }
 

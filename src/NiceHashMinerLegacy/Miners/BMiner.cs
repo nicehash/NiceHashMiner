@@ -87,7 +87,7 @@ namespace NiceHashMiner.Miners
                         return 2;
                     case AlgorithmType.DaggerHashimoto:
                         return 0.65;
-                    case AlgorithmType.Grin:
+                    case AlgorithmType.GrinCuckaroo29:
                         return 1;
                     default:
                         return 0;
@@ -121,7 +121,7 @@ namespace NiceHashMiner.Miners
                     return "blake14r";
                 case AlgorithmType.Blake2s:
                     return "blake2s";
-                case AlgorithmType.Grin:
+                case AlgorithmType.GrinCuckaroo29:
                     return "cuckaroo29";
                 default:
                     return null;
