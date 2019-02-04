@@ -229,7 +229,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 new List<Algorithm>
                 {
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam),
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash)
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash),
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckaroo29)
                 }
             },
             {
@@ -242,7 +243,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.BMiner, AlgorithmType.Equihash),
                     // TODO Only getting CUDA errors when dual mining
                     //new DualAlgorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s)
-                    //new Algorithm(MinerBaseType.BMiner, AlgorithmType.Grin)
+                    //new Algorithm(MinerBaseType.BMiner, AlgorithmType.GrinCuckaroo29)
                 }
             }
         }.ConcatDictList(All, Gpu);

@@ -136,7 +136,8 @@ namespace NiceHashMiner.Devices.Algorithms
                     var minerBases = new List<MinerBaseType>
                     {
                         MinerBaseType.ethminer,
-                        MinerBaseType.OptiminerAMD
+                        MinerBaseType.OptiminerAMD,
+                        MinerBaseType.BMiner
                     };
                     foreach (var minerKey in minerBases)
                     {

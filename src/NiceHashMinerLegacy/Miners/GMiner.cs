@@ -46,6 +46,8 @@ namespace NiceHashMiner.Miners
                         return "144_5";
                     case AlgorithmType.Beam:
                         return "150_5";
+                    case AlgorithmType.GrinCuckaroo29:
+                        return "grin29";
                     default:
                         return "";
                 }
