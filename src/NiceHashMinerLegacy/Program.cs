@@ -116,10 +116,26 @@ namespace NiceHashMiner
                 // check WMI
                 if (Helpers.IsWmiEnabled())
                 {
-                    if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
+                    if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer) return;
+
+                    if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "")
                     {
+                        var dialogSwitch = new EnterBTCDialogSwitch();
+                        Application.Run(dialogSwitch);
+                        if (dialogSwitch.IsLogin)
+                        {
+                            var loginForm = new LoginForm();
+                            Application.Run(loginForm);
+                            if (BitcoinAddress.ValidateBitcoinAddress(loginForm.Btc))
+                            {
+                                ConfigManager.GeneralConfig.BitcoinAddress = loginForm.Btc;
+                                ConfigManager.GeneralConfigFileCommit();
+                            }
+                        }
+
                         Application.Run(new Form_Main());
                     }
+
                 }
                 else
                 {
