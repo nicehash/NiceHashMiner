@@ -134,7 +134,6 @@ namespace NiceHashMiner
                         }
                     }
                     Application.Run(new Form_Main());
-
                 }
                 else
                 {

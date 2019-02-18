@@ -26,7 +26,8 @@ namespace NiceHashMiner
 
             try
             {
-                var di = new DirectoryInfo("langs");
+                var langsDir = Path.Combine(Environment.CurrentDirectory, "langs");
+                var di = new DirectoryInfo(langsDir);
                 var files = di.GetFiles("*.lang");
 
                 foreach (var fi in files)
