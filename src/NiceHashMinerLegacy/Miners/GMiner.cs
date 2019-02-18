@@ -75,7 +75,7 @@ namespace NiceHashMiner.Miners
         private string CreateCommandLine(string url, string btcAddress, string worker)
         {
             var split = url.Split(':');
-            var devs = string.Join(" ", MiningSetup.DeviceIDs);
+            var devs = string.Join(" ", MiningSetup.MiningPairs.Select(pair => pair.Device.IDByBus.ToString()));
             var cmd = $"-a {AlgoName} -s {split[0]} -n {split[1]} " +
                               $"-u {btcAddress}.{worker} -d {devs} --api {ApiPort} ";
 
