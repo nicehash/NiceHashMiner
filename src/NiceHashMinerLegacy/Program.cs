@@ -132,9 +132,8 @@ namespace NiceHashMiner
                                 ConfigManager.GeneralConfigFileCommit();
                             }
                         }
-
-                        Application.Run(new Form_Main());
                     }
+                    Application.Run(new Form_Main());
 
                 }
                 else
