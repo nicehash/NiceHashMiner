@@ -8,15 +8,15 @@ namespace NiceHashMiner.Forms.Components
         {
             InitializeComponent();
 
-            labelSpeedIndicator.Text = International.GetText("ListView_Speed");
-            labelBTCRateIndicator.Text = International.GetText("Rate");
+            labelSpeedIndicator.Text = Translations.Tr("Speed");
+            labelBTCRateIndicator.Text = Translations.Tr("Rate");
         }
 
 
         public void UpdateProfitStats(string groupName, string deviceStringInfo,
             string speedString, string btcRateString, string currencyRateString)
         {
-            groupBoxMinerGroup.Text = string.Format(International.GetText("Form_Main_MiningDevices"), deviceStringInfo);
+            groupBoxMinerGroup.Text = string.Format(Translations.Tr("Mining Devices {0}:"), deviceStringInfo);
             labelSpeedValue.Text = speedString;
             labelBTCRateValue.Text = btcRateString;
             labelCurentcyPerDayVaue.Text = currencyRateString;

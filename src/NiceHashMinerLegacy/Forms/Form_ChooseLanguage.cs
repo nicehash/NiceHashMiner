@@ -12,12 +12,12 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
 
             // Add language selections list
-            var lang = International.GetAvailableLanguages();
+            var langs = Translations.GetAvailableLanguagesNames();
 
             comboBox_Languages.Items.Clear();
-            for (var i = 0; i < lang.Count; i++)
+            foreach(var lang in langs)
             {
-                comboBox_Languages.Items.Add(lang[(LanguageType) i]);
+                comboBox_Languages.Items.Add(lang);
             }
 
             comboBox_Languages.SelectedIndex = 0;
@@ -31,7 +31,7 @@ namespace NiceHashMiner.Forms
 
         private void Button_OK_Click(object sender, EventArgs e)
         {
-            ConfigManager.GeneralConfig.Language = (LanguageType) comboBox_Languages.SelectedIndex;
+            ConfigManager.GeneralConfig.Language = Translations.GetLanguageCodeFromIndex(comboBox_Languages.SelectedIndex);
             ConfigManager.GeneralConfigFileCommit();
             Close();
         }

@@ -9,7 +9,7 @@ namespace NiceHashMiner.Configs.Data
     public class GeneralConfig
     {
         public Version ConfigFileVersion;
-        public LanguageType Language = LanguageType.En;
+        public string Language = "en";
         public string DisplayCurrency = "USD";
 
         public bool DebugConsole = false;
@@ -120,7 +120,7 @@ namespace NiceHashMiner.Configs.Data
         public void SetDefaults()
         {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            Language = LanguageType.En;
+            Language = "en";
             ForceCPUExtension = CpuExtensionType.Automatic;
             BitcoinAddress = "";
             WorkerName = "worker1";
@@ -243,6 +243,26 @@ namespace NiceHashMiner.Configs.Data
             if (KwhPrice < 0)
             {
                 KwhPrice = 0;
+            }
+            // for backward compatibility fix the new setting to language codes
+            var langCodes = new Dictionary<string, string> {
+                { "0", "en" },
+                { "1", "ru" },
+                { "2", "es" },
+                { "3", "pt" },
+                { "4", "bg" },
+                { "5", "it" },
+                { "6", "pl" },
+                { "7", "zh_cn" },
+                { "8", "ro" },
+            };
+            if (Language == null)
+            {
+                Language = "en";
+            }
+            else if (langCodes.ContainsKey(Language))
+            {
+                Language = langCodes[Language];
             }
 
             SwitchSmaTimeChangeSeconds.FixRange();

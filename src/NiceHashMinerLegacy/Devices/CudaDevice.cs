@@ -24,7 +24,7 @@ namespace NiceHashMiner.Devices
         {
             if (VendorName == "UNKNOWN")
             {
-                VendorName = string.Format(International.GetText("ComputeDevice_UNKNOWN_VENDOR_REPLACE"), VendorID);
+                VendorName = string.Format(Translations.Tr("V_ID_{0}"), VendorID);
             }
             return $"{VendorName} {DeviceName}";
         }

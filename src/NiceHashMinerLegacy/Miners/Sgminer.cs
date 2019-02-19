@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerTranslations.Devices;
 
 namespace NiceHashMiner.Miners
 {
@@ -240,8 +241,8 @@ namespace NiceHashMiner.Miners
         {
             if (BenchmarkAlgorithm.BenchmarkSpeed <= 0)
             {
-                Helpers.ConsolePrint("sgminer_GetFinalBenchmarkString", International.GetText("sgminer_precise_try"));
-                return International.GetText("sgminer_precise_try");
+                Helpers.ConsolePrint("sgminer_GetFinalBenchmarkString", Translations.Tr("Failed - try Precise"));
+                return Translations.Tr("Failed - try Precise");
             }
             return base.GetFinalBenchmarkString();
         }

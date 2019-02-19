@@ -30,8 +30,8 @@ namespace NiceHashMiner.Forms.Components
         public void Deselect()
         {
             _selected = false;
-            groupBoxSelectedAlgorithmSettings.Text = string.Format(International.GetText("AlgorithmsListView_GroupBox"),
-                International.GetText("AlgorithmsListView_GroupBox_NONE"));
+            groupBoxSelectedAlgorithmSettings.Text = string.Format(Translations.Tr("Selected Algorithm: {0}"),
+                Translations.Tr("NONE"));
             Enabled = false;
             fieldBoxBenchmarkSpeed.EntryText = "";
             secondaryFieldBoxBenchmarkSpeed.EntryText = "";
@@ -42,18 +42,18 @@ namespace NiceHashMiner.Forms.Components
         public void InitLocale(ToolTip toolTip1)
         {
             field_PowerUsage.InitLocale(toolTip1,
-                International.GetText("Form_Settings_Algo_PowerUsage") + ":",
-                International.GetText("Form_Settings_ToolTip_PowerUsage"));
+                Translations.Tr("Power Usage (W)") + ":",
+                Translations.Tr("The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0."));
             fieldBoxBenchmarkSpeed.InitLocale(toolTip1,
-                International.GetText("Form_Settings_Algo_BenchmarkSpeed") + ":",
-                International.GetText("Form_Settings_ToolTip_AlgoBenchmarkSpeed"));
+                Translations.Tr("Benchmark Speed (H/s)") + ":",
+                Translations.Tr("Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm."));
             secondaryFieldBoxBenchmarkSpeed.InitLocale(toolTip1,
-                International.GetText("Form_Settings_Algo_SecondaryBenchmarkSpeed") + ":",
-                International.GetText("Form_Settings_ToolTip_AlgoSecondaryBenchmarkSpeed"));
-            groupBoxExtraLaunchParameters.Text = International.GetText("Form_Settings_General_ExtraLaunchParameters");
+                Translations.Tr("Secondary Benchmark Speed (H/s)") + ":",
+                Translations.Tr("Speed for the secondary algorithm when using dual algo mining."));
+            groupBoxExtraLaunchParameters.Text = Translations.Tr("Extra Launch Parameters");
             toolTip1.SetToolTip(groupBoxExtraLaunchParameters,
-                International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
-            toolTip1.SetToolTip(pictureBox1, International.GetText("Form_Settings_ToolTip_AlgoExtraLaunchParameters"));
+                Translations.Tr("Additional launch parameters when launching miner and this algorithm."));
+            toolTip1.SetToolTip(pictureBox1, Translations.Tr("Additional launch parameters when launching miner and this algorithm."));
         }
 
         private static string ParseStringDefault(string value)
@@ -80,7 +80,7 @@ namespace NiceHashMiner.Forms.Components
                 Enabled = lvi.Checked;
 
                 groupBoxSelectedAlgorithmSettings.Text = string.Format(
-                    International.GetText("AlgorithmsListView_GroupBox"),
+                    Translations.Tr("Selected Algorithm: {0}"),
                     $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})");
                 ;
 
