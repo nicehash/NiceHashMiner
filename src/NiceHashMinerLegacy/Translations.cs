@@ -25,13 +25,6 @@ namespace NiceHashMiner
             public string Name { get; set; }
         }
 
-        [Serializable]
-        private class Translation
-        {
-            public string text { get; set; }
-            public Dictionary<string, string> langTranslation { get; set; }
-        }
-
         static Translations()
         {
             // always have english
@@ -58,33 +51,35 @@ namespace NiceHashMiner
             }
         }
 
-        private static string selectedLanguage;
+        private static string _selectedLanguage = "en";
         private static Dictionary<string, Dictionary<string, string>> _entries = new Dictionary<string, Dictionary<string, string>>();
         public static List<Language> AvailableLanguages = new List<Language>();
         private static TranslationFile _translations;
 
         public static void TryInitFromFiles()
         {
-                var transFilePath = "C:\\Users\\Domen\\Desktop\\nhmlDevelop\\NiceHashMinerLegacy\\src\\NiceHashMinerLegacy\\langs\\translations.json";
-                    try
-                    {
-                        _translations = JsonConvert.DeserializeObject<TranslationFile>(File.ReadAllText(transFilePath, Encoding.UTF8));
-                    // TODO null checks
-                    AvailableLanguages = _translations.Languages.Select(pair => new Language { Code = pair.Key, Name = pair.Value} ).ToList();
-                    _entries = _translations.Translations;
-                } catch (Exception e)
-                    {
-                        Helpers.ConsolePrint("NICEHASH", "Lang error: " + e.Message);
-                    }
+            var transFilePath = @"langs\translations.json";
+            try
+            {
+                _translations = JsonConvert.DeserializeObject<TranslationFile>(File.ReadAllText(transFilePath, Encoding.UTF8));
+                // TODO null checks
+                AvailableLanguages = _translations.Languages.Select(pair => new Language { Code = pair.Key, Name = pair.Value} ).ToList();
+                _entries = _translations.Translations;
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("NICEHASH", "Lang error: " + e.Message);
+            }
         }
 
-        public static void SetLanguage(string lName)
+        public static void SetLanguage(string langCode)
         {
             foreach(var lang in AvailableLanguages)
             {
-                if (lang.Name == lName)
+                if (lang.Code == langCode)
                 {
-                    selectedLanguage = lang.Code;
+                    _selectedLanguage = lang.Code;
+                    break;
                 }
             }
         }
@@ -106,9 +101,9 @@ namespace NiceHashMiner
         public static string Tr(string text)
         {
             // if other language search for it
-            if (!string.IsNullOrEmpty(selectedLanguage) && _entries.ContainsKey(text) && _entries[text].ContainsKey(selectedLanguage))
+            if (!string.IsNullOrEmpty(_selectedLanguage) && _entries.ContainsKey(text) && _entries[text].ContainsKey(_selectedLanguage))
             {
-                return _entries[text][selectedLanguage];
+                return _entries[text][_selectedLanguage];
             }
             // didn't find text with language key so just return the text 
             return text;

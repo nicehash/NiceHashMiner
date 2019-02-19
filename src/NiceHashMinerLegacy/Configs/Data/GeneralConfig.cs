@@ -244,9 +244,25 @@ namespace NiceHashMiner.Configs.Data
             {
                 KwhPrice = 0;
             }
+            // for backward compatibility fix the new setting to language codes
+            var langCodes = new Dictionary<string, string> {
+                { "0", "en" },
+                { "1", "ru" },
+                { "2", "es" },
+                { "3", "pt" },
+                { "4", "bg" },
+                { "5", "it" },
+                { "6", "pl" },
+                { "7", "zh_cn" },
+                { "8", "ro" },
+            };
             if (Language == null)
             {
                 Language = "en";
+            }
+            else if (langCodes.ContainsKey(Language))
+            {
+                Language = langCodes[Language];
             }
 
             SwitchSmaTimeChangeSeconds.FixRange();

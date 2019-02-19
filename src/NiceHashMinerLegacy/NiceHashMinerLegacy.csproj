@@ -163,6 +163,7 @@
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
     <Compile Include="Switching\Models.cs" />
     <Compile Include="Switching\Interval.cs" />
+    <Compile Include="Translations.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
     <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
@@ -257,7 +258,6 @@
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
     <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
-    <Compile Include="International.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
@@ -402,35 +402,9 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="langs\bg.lang">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="langs\en.lang">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="langs\es.lang">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="langs\it.lang">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="langs\pl.lang">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="langs\pt.lang">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="langs\ro.lang">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="langs\ru.lang">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="langs\translations.json" />
     <None Include="OnGPUsLost.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="langs\zh_cn.lang">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
