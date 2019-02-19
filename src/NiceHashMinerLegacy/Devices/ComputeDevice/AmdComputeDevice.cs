@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerTranslations.Devices;
 
 namespace NiceHashMiner.Devices
 {
@@ -107,7 +108,7 @@ namespace NiceHashMiner.Devices
                 DeviceGroupType.AMD_OpenCL,
                 amdDevice.IsEtherumCapable(),
                 DeviceType.AMD,
-                string.Format(International.GetText("ComputeDevice_Short_Name_AMD_GPU"), gpuCount),
+                string.Format(Translations.Tr("GPU#{0}"), gpuCount),
                 amdDevice.DeviceGlobalMemory)
         {
             Uuid = isDetectionFallback

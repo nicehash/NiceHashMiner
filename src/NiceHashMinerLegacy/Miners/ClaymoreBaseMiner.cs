@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerTranslations.Devices;
 
 namespace NiceHashMiner.Miners
 {

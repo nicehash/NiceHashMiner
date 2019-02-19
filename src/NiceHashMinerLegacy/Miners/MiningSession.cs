@@ -294,12 +294,12 @@ namespace NiceHashMiner.Miners
                     // change msg
                     if (log) Helpers.ConsolePrint(Tag, "NO INTERNET!!! Stopping mining.");
                     _mainFormRatesComunication.ShowNotProfitable(
-                        International.GetText("Form_Main_MINING_NO_INTERNET_CONNECTION"));
+                        Translations.Tr("CURRENTLY NOT MINING. NO INTERNET CONNECTION."));
                 }
                 else
                 {
                     _mainFormRatesComunication.ShowNotProfitable(
-                        International.GetText("Form_Main_MINING_NOT_PROFITABLE"));
+                        Translations.Tr("CURRENTLY MINING NOT PROFITABLE."));
                 }
 
                 // return don't group

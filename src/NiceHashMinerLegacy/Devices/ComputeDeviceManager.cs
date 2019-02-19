@@ -1,5 +1,4 @@
-﻿using ATI.ADL;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
 using NVIDIA.NVAPI;
@@ -11,14 +10,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Devices.Querying;
-using NiceHashMiner.Forms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner;
+using static NiceHashMiner.Translations;
+using NiceHashMiner.Devices;
 
-namespace NiceHashMiner.Devices
+namespace NiceHashMinerTranslations.Devices
 {
     /// <summary>
     /// ComputeDeviceManager class is used to query ComputeDevices avaliable on the system.
@@ -189,22 +189,22 @@ namespace NiceHashMiner.Devices
                 }
                 else
                 {
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
+                    ShowMessageAndStep(Tr("Querying CUDA devices"));
                     Nvidia.QueryCudaDevices();
                 }
                 // OpenCL and AMD
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
                 {
                     Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
+                    ShowMessageAndStep(Tr("Skip check for AMD OpenCL GPUs"));
                 }
                 else
                 {
                     // #3 OpenCL
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
+                    ShowMessageAndStep(Tr("Querying OpenCL devices"));
                     OpenCL.QueryOpenCLDevices();
                     // #4 AMD query AMD from OpenCL devices, get serial and add devices
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
+                    ShowMessageAndStep(Tr("Checking AMD OpenCL GPUs"));
                     var amd = new AmdQuery(AvaliableVideoControllers);
                     AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
                 }
@@ -247,11 +247,11 @@ namespace NiceHashMiner.Devices
                 {
                     isNvidiaErrorShown = true;
                     var minDriver = NvidiaMinDetectionDriver.ToString();
-                    var recomendDrvier = NvidiaRecomendedDriver.ToString();
+                    var recomendDriver = NvidiaRecomendedDriver.ToString();
                     MessageBox.Show(string.Format(
-                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Detection"),
-                            minDriver, recomendDrvier),
-                        International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
+                            Tr("We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner Legacy to work correctly you should upgrade your drivers to recommended {1} or newer. If you still see this warning after updating the driver please uninstall all your Nvidia drivers and make a clean install of the latest official driver from http://www.nvidia.com."),
+                            minDriver, recomendDriver),
+                        Tr("Nvidia Recomended driver"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 // recomended driver
@@ -261,21 +261,21 @@ namespace NiceHashMiner.Devices
                     var recomendDrvier = NvidiaRecomendedDriver.ToString();
                     var nvdriverString = _currentNvidiaSmiDriver.LeftPart > -1
                         ? string.Format(
-                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"),
+                            Tr(" (current {0})"),
                             _currentNvidiaSmiDriver)
                         : "";
                     MessageBox.Show(string.Format(
-                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended"),
+                           Tr("We have detected that your Nvidia Driver is older than {0}{1}. We recommend you to update to {2} or newer."),
                             recomendDrvier, nvdriverString, recomendDrvier),
-                        International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
+                        Tr("Nvidia Recomended driver"),
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 // no devices found
                 if (Available.Devices.Count <= 0)
                 {
-                    var result = MessageBox.Show(International.GetText("Compute_Device_Query_Manager_No_Devices"),
-                        International.GetText("Compute_Device_Query_Manager_No_Devices_Title"),
+                    var result = MessageBox.Show(Tr("No supported devices are found. Select the OK button for help or cancel to continue."),
+                        Tr("No Supported Devices"),
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                     if (result == DialogResult.OK)
                     {
@@ -321,8 +321,8 @@ namespace NiceHashMiner.Devices
                 if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && totalSysRam < totalGpuRam)
                 {
                     Helpers.ConsolePrint(Tag, "virtual memory size BAD");
-                    MessageBox.Show(International.GetText("VirtualMemorySize_BAD"),
-                        International.GetText("Warning_with_Exclamation"),
+                    MessageBox.Show(Tr("NiceHash Miner Legacy recommends increasing virtual memory size so that all algorithms would work fine."),
+                        Tr("Warning!"),
                         MessageBoxButtons.OK);
                 }
                 else
@@ -407,19 +407,19 @@ namespace NiceHashMiner.Devices
                     {
                         if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK)
                         {
-                            var msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
+                            var msg = Tr("We have detected a Video Controller that is not working properly. NiceHash Miner Legacy will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
                             foreach (var vc in avaliableVideoControllers)
                             {
                                 if (!vc.Status.ToLower().Equals("ok"))
                                 {
                                     msg += Environment.NewLine
                                            + string.Format(
-                                               International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg_Append"),
+                                               Tr("Name: {0}, Status {1}, PNPDeviceID {2}"),
                                                vc.Name, vc.Status, vc.PnpDeviceID);
                                 }
                             }
                             MessageBox.Show(msg,
-                                International.GetText("QueryVideoControllers_NOT_ALL_OK_Title"),
+                               Tr("Warning! Video Controller not operating correctly"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
@@ -452,8 +452,8 @@ namespace NiceHashMiner.Devices
                     {
                         if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
                         {
-                            MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64bitMsg"),
-                                International.GetText("Warning_with_Exclamation"),
+                            MessageBox.Show(Tr("NiceHash Miner Legacy works only on 64-bit version of OS for CPU mining. CPU mining will be disabled."),
+                                Tr("Warning!"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
@@ -464,8 +464,8 @@ namespace NiceHashMiner.Devices
                     {
                         if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
                         {
-                            MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64CoresMsg"),
-                                International.GetText("Warning_with_Exclamation"),
+                            MessageBox.Show(Tr("NiceHash Miner Legacy does not support more than 64 virtual cores. CPU mining will be disabled."),
+                               Tr("Warning!"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 

@@ -3,6 +3,7 @@ using NiceHashMiner.Miners.Parsing;
 using System.Collections.Generic;
 using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerTranslations.Devices;
 
 namespace NiceHashMiner.Miners
 {
