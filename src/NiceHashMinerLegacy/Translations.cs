@@ -12,7 +12,7 @@ namespace NiceHashMiner
     public static class Translations
     {
         [Serializable]
-        public class TranslationFile
+        private class TranslationFile
         {
             public Dictionary<string, string> Languages { get; set; }
             public Dictionary<string, Dictionary<string, string>> Translations { get; set; }
@@ -33,12 +33,12 @@ namespace NiceHashMiner
                 Code = "en",
                 Name = "English",
             };
-            AvailableLanguages = new List<Language>();
+            _availableLanguages = new List<Language>();
 
             // try init
-            TryInitFromFiles();
+            TryInitTranslations();
             bool flag = false;
-            foreach(var lang in AvailableLanguages)
+            foreach(var lang in _availableLanguages)
             {
                 if (lang.Code == "en")
                 {
@@ -47,24 +47,35 @@ namespace NiceHashMiner
             }
             if (!flag)
             {
-                AvailableLanguages.Add(enMetaData);
+                _availableLanguages.Add(enMetaData);
             }
         }
 
         private static string _selectedLanguage = "en";
         private static Dictionary<string, Dictionary<string, string>> _entries = new Dictionary<string, Dictionary<string, string>>();
-        public static List<Language> AvailableLanguages = new List<Language>();
-        private static TranslationFile _translations;
+        public static List<Language> _availableLanguages = new List<Language>();
 
-        public static void TryInitFromFiles()
+        private static void TryInitTranslations()
         {
-            var transFilePath = @"langs\translations.json";
+            // file in binary root path
+            var transFilePath = "translations.json";
             try
             {
-                _translations = JsonConvert.DeserializeObject<TranslationFile>(File.ReadAllText(transFilePath, Encoding.UTF8));
-                // TODO null checks
-                AvailableLanguages = _translations.Languages.Select(pair => new Language { Code = pair.Key, Name = pair.Value} ).ToList();
-                _entries = _translations.Translations;
+                TranslationFile translations = JsonConvert.DeserializeObject<TranslationFile>(File.ReadAllText(transFilePath, Encoding.UTF8));
+                if (translations == null) return;
+
+                if (translations.Languages != null)
+                {
+                    _availableLanguages = translations.Languages.Select(pair => new Language { Code = pair.Key, Name = pair.Value }).ToList();
+                    foreach (var kvp in _availableLanguages)
+                    {
+                        Helpers.ConsolePrint("NICEHASH", $"Found language: code: {kvp.Code}, name: {kvp.Name}");
+                    }
+                } 
+                if (translations.Translations != null)
+                {
+                    _entries = translations.Translations;
+                }
             }
             catch (Exception e)
             {
@@ -74,7 +85,7 @@ namespace NiceHashMiner
 
         public static void SetLanguage(string langCode)
         {
-            foreach(var lang in AvailableLanguages)
+            foreach(var lang in _availableLanguages)
             {
                 if (lang.Code == langCode)
                 {
@@ -84,17 +95,42 @@ namespace NiceHashMiner
             }
         }
 
-        public static Dictionary<string, string> GetAvailableLanguages()
+        public static List<string> GetAvailableLanguagesNames()
         {
-            var retdict = new Dictionary<string, string>();
-
-            foreach (var kvp in AvailableLanguages)
+            var langNames = new List<string>();
+            foreach (var kvp in _availableLanguages) 
             {
-                Helpers.ConsolePrint("NICEHASH", "Found language: " + kvp.Name);
-                retdict.Add(kvp.Code, kvp.Name);
+                langNames.Add(kvp.Name);
             }
+            return langNames;
+        }
 
-            return retdict;
+        public static string GetLanguageCodeFromName(string name)
+        {
+            foreach (var kvp in _availableLanguages)
+            {
+                if (kvp.Name == name) return kvp.Code;
+            }
+            return "";
+        }
+
+        public static string GetLanguageCodeFromIndex(int index)
+        {
+            if (index < _availableLanguages.Count)
+            {
+                return _availableLanguages[index].Code;
+            }
+            return "";
+        }
+
+        public static int GetLanguageIndexFromCode(string code)
+        {
+            for (var i = 0; i < _availableLanguages.Count; i++)
+            {
+                var kvp = _availableLanguages[i];
+                if (kvp.Code == code) return i;
+            }
+            return 0;
         }
 
         // Tr Short for translate
