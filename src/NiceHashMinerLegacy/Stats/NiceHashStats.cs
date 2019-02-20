@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NiceHashMinerLegacy.Common.Enums;
 using WebSocketSharp;
-using NiceHashMinerTranslations.Devices;
 
 namespace NiceHashMiner.Stats
 {

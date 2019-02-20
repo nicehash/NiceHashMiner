@@ -1,7 +1,6 @@
 ﻿using NiceHashMiner.Configs.ConfigJsonFile;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices;
-using NiceHashMinerTranslations.Devices;
 using System.Collections.Generic;
 
 namespace NiceHashMiner.Configs

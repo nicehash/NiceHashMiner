@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using ATI.ADL;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
-using NiceHashMinerTranslations.Devices;
 
 namespace NiceHashMiner.Devices.Querying
 {
