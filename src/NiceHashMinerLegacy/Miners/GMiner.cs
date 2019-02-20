@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
-using NiceHashMinerTranslations.Devices;
 
 namespace NiceHashMiner.Miners
 {
