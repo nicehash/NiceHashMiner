@@ -1241,19 +1241,19 @@ namespace NiceHashMiner
 
         private void TextBoxBTCAddress_Enter(object sender, EventArgs e)
         {
-            var btc = ConfigManager.GeneralConfig.BitcoinAddress.Trim();
-            if (btc == "")
-            {
-                var loginForm = new LoginForm();
-                this.SetChildFormCenter(loginForm);
-                loginForm.ShowDialog();
-                if (BitcoinAddress.ValidateBitcoinAddress(loginForm.Btc))
-                {
-                    ConfigManager.GeneralConfig.BitcoinAddress = loginForm.Btc;
-                    ConfigManager.GeneralConfigFileCommit();
-                    this.textBoxBTCAddress.Text = loginForm.Btc;
-                }
-            }
+            //var btc = ConfigManager.GeneralConfig.BitcoinAddress.Trim();
+            //if (btc == "")
+            //{
+            //    var loginForm = new LoginForm();
+            //    this.SetChildFormCenter(loginForm);
+            //    loginForm.ShowDialog();
+            //    if (BitcoinAddress.ValidateBitcoinAddress(loginForm.Btc))
+            //    {
+            //        ConfigManager.GeneralConfig.BitcoinAddress = loginForm.Btc;
+            //        ConfigManager.GeneralConfigFileCommit();
+            //        this.textBoxBTCAddress.Text = loginForm.Btc;
+            //    }
+            //}
         }
     }
 }
