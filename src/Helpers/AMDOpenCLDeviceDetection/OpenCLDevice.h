@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 // This will list OpenCL devices, but AMD will only have aditional BusID
 struct OpenCLDevice {
@@ -14,3 +15,9 @@ struct OpenCLDevice {
 	int AMD_BUS_ID = -1; // -1 indicates that it is not set
 };
 
+// rename this to platform
+struct JsonLog {
+	std::string PlatformName;
+	int PlatformNum;
+	std::vector<OpenCLDevice> Devices;
+};

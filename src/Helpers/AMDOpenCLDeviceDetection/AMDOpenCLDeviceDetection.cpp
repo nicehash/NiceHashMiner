@@ -1,8 +1,13 @@
 #include "AMDOpenCLDeviceDetection.h"
 
+#include <algorithm>
 #include <iostream>
 #include <stdexcept>
 #include <utility>
+
+#include <sstream>
+
+#include "JSONHelpers.h"
 
 using namespace std;
 using namespace cl;
@@ -51,6 +56,7 @@ bool AMDOpenCLDeviceDetection::QueryDevices() {
 		// get platforms
 		auto platforms = getPlatforms();
 		if (platforms.empty()) {
+			_statusString = "No OpenCL platforms found";
 			cout << "No OpenCL platforms found" << endl;
 			return false;
 		}
@@ -108,77 +114,36 @@ bool AMDOpenCLDeviceDetection::QueryDevices() {
 	}
 	catch (exception &ex) {
 		// TODO
-		cout << "AMDOpenCLDeviceDetection::QueryDevices() exception: " << ex.what() << endl;
+		stringstream ss;
+
+		ss << "AMDOpenCLDeviceDetection::QueryDevices() exception: " << ex.what();
+		_errorString = ss.str();
+		_statusString = "Error";
+		cout << _errorString << endl;;
+
 		return false;
 	}
 
 	return true;
 }
 
-#define COMMA(num) ((--num > 0 ? "," : ""))
-
-// this function is hardcoded and horrable
 void AMDOpenCLDeviceDetection::PrintDevicesJson() {
-	cout << "[" << endl;
-
-	{
-		int devPlatformsComma = _devicesPlatformsDevices.size();
-		for (const auto &jsonLog : _devicesPlatformsDevices) {
-			cout << "\t{" << endl;
-			cout << "\t\t\"PlatformName\": \"" << jsonLog.PlatformName << "\"" << "," << endl;
-			cout << "\t\t\"PlatformNum\": " << jsonLog.PlatformNum << "," << endl;
-			cout << "\t\t\"Devices\" : [" << endl;
-			// device print
-			int devComma = jsonLog.Devices.size();
-			for (const auto &dev : jsonLog.Devices) {
-				cout << "\t\t\t{" << endl;
-				cout << "\t\t\t\t\"" << "DeviceID" << "\" : " << dev.DeviceID << "," << endl; // num
-				cout << "\t\t\t\t\"" << "AMD_BUS_ID" << "\" : " << dev.AMD_BUS_ID << "," << endl; // num
-				cout << "\t\t\t\t\"" << "_CL_DEVICE_NAME" << "\" : \"" << dev._CL_DEVICE_NAME << "\"," << endl;
-				cout << "\t\t\t\t\"" << "_CL_DEVICE_TYPE" << "\" : \"" << dev._CL_DEVICE_TYPE << "\"," << endl; 
-				cout << "\t\t\t\t\"" << "_CL_DEVICE_GLOBAL_MEM_SIZE" << "\" : " << dev._CL_DEVICE_GLOBAL_MEM_SIZE << "," << endl; // num
-				cout << "\t\t\t\t\"" << "_CL_DEVICE_VENDOR" << "\" : \"" << dev._CL_DEVICE_VENDOR << "\"," << endl;
-				cout << "\t\t\t\t\"" << "_CL_DEVICE_VERSION" << "\" : \"" << dev._CL_DEVICE_VERSION << "\"," << endl;
-				cout << "\t\t\t\t\"" << "_CL_DRIVER_VERSION" << "\" : \"" << dev._CL_DRIVER_VERSION << "\"" << endl;
-				cout << "\t\t\t}" << COMMA(devComma) << endl;
-			}
-			cout << "\t\t]" << endl;
-			cout << "\t}" << COMMA(devPlatformsComma) << endl;
-		}
-	}
-
-	cout << "]" << endl;
+	cout << JSONHelpers::GetPlatformDevicesJsonStringPretty(_devicesPlatformsDevices, _statusString, _errorString);
 }
 
 
 void AMDOpenCLDeviceDetection::PrintDevicesJsonDirty() {
-	cout << "[";
+	cout << JSONHelpers::GetPlatformDevicesJsonString(_devicesPlatformsDevices, _statusString, _errorString);
+}
 
-	{
-		int devPlatformsComma = _devicesPlatformsDevices.size();
-		for (const auto &jsonLog : _devicesPlatformsDevices) {
-			cout << "{";
-			cout << "\"PlatformName\": \"" << jsonLog.PlatformName << "\"" << ",";
-			cout << "\"PlatformNum\": " << jsonLog.PlatformNum << ",";
-			cout << "\"Devices\" : [";
-			// device print
-			int devComma = jsonLog.Devices.size();
-			for (const auto &dev : jsonLog.Devices) {
-				cout << "{";
-				cout << "\"" << "DeviceID" << "\" : " << dev.DeviceID << ","; // num
-				cout << "\"" << "AMD_BUS_ID" << "\" : " << dev.AMD_BUS_ID << ","; // num
-				cout << "\"" << "_CL_DEVICE_NAME" << "\" : \"" << dev._CL_DEVICE_NAME << "\",";
-				cout << "\"" << "_CL_DEVICE_TYPE" << "\" : \"" << dev._CL_DEVICE_TYPE << "\",";
-				cout << "\"" << "_CL_DEVICE_GLOBAL_MEM_SIZE" << "\" : " << dev._CL_DEVICE_GLOBAL_MEM_SIZE << ","; // num
-				cout << "\"" << "_CL_DEVICE_VENDOR" << "\" : \"" << dev._CL_DEVICE_VENDOR << "\",";
-				cout << "\"" << "_CL_DEVICE_VERSION" << "\" : \"" << dev._CL_DEVICE_VERSION << "\",";
-				cout << "\"" << "_CL_DRIVER_VERSION" << "\" : \"" << dev._CL_DRIVER_VERSION << "\"";
-				cout << "}" << COMMA(devComma);
-			}
-			cout << "]";
-			cout << "}" << COMMA(devPlatformsComma);
-		}
-	}
+string AMDOpenCLDeviceDetection::GetDevicesJsonString() {
+	return JSONHelpers::GetPlatformDevicesJsonString(_devicesPlatformsDevices, _statusString, _errorString);
+}
 
-	cout << "]" << endl;
+string AMDOpenCLDeviceDetection::GetDevicesJsonStringPretty() {
+    return JSONHelpers::GetPlatformDevicesJsonStringPretty(_devicesPlatformsDevices, _statusString, _errorString);
+}
+
+string AMDOpenCLDeviceDetection::GetErrorString() {
+	return _errorString;
 }
