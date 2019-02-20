@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using ATI.ADL;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices.OpenCL;
 using NiceHashMiner.Forms;
 
 namespace NiceHashMiner.Devices.Querying
@@ -28,7 +29,7 @@ namespace NiceHashMiner.Devices.Querying
             _availableControllers = availControllers;
         }
 
-        public List<OpenCLDevice> QueryAmd(bool openCLSuccess, IEnumerable<OpenCLJsonData> openCLData)
+        public List<OpenCLDevice> QueryAmd(bool openCLSuccess, OpenCLDeviceDetectionResult openCLData)
         {
             Helpers.ConsolePrint(Tag, "QueryAMD START");
 
@@ -91,13 +92,13 @@ namespace NiceHashMiner.Devices.Querying
             }
         }
 
-        private List<OpenCLDevice> ProcessDevices(IEnumerable<OpenCLJsonData> openCLData)
+        private List<OpenCLDevice> ProcessDevices(OpenCLDeviceDetectionResult openCLData)
         {
             var amdOclDevices = new List<OpenCLDevice>();
             var amdDevices = new List<OpenCLDevice>();
 
             var amdPlatformNumFound = false;
-            foreach (var oclEl in openCLData)
+            foreach (var oclEl in openCLData.Platforms)
             {
                 if (!oclEl.PlatformName.Contains("AMD") && !oclEl.PlatformName.Contains("amd")) continue;
                 amdPlatformNumFound = true;

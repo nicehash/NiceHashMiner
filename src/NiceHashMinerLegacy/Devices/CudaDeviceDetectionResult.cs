@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace NiceHashMiner.Devices
 {
     [Serializable]
-    class CudaDeviceDetectionResult
+    internal class CudaDeviceDetectionResult
     {
         public List<CudaDevice> CudaDevices;
         public string DriverVersion;

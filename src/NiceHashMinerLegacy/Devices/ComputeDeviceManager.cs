@@ -15,6 +15,8 @@ using System.Windows.Forms;
 using NiceHashMiner.Devices.Querying;
 using NiceHashMinerLegacy.Common.Enums;
 using static NiceHashMiner.Translations;
+using NiceHashMiner.Devices.OpenCL;
+using NiceHashMiner.PInvoke;
 
 namespace NiceHashMiner.Devices
 {
@@ -204,7 +206,7 @@ namespace NiceHashMiner.Devices
                     // #4 AMD query AMD from OpenCL devices, get serial and add devices
                     ShowMessageAndStep(Tr("Checking AMD OpenCL GPUs"));
                     var amd = new AmdQuery(AvaliableVideoControllers);
-                    AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
+                    AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLQueryResult);
                 }
                 // #5 uncheck CPU if GPUs present, call it after we Query all devices
                 Group.UncheckedCpu();
@@ -521,14 +523,6 @@ namespace NiceHashMiner.Devices
                     }
                 }
 
-                private static void QueryCudaDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e)
-                {
-                    if (e.Data != null)
-                    {
-                        _queryCudaDevicesString += e.Data;
-                    }
-                }
-
                 public static bool IsSkipNvidia()
                 {
                     return ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
@@ -669,36 +663,17 @@ namespace NiceHashMiner.Devices
                 public static void QueryCudaDevices(ref List<CudaDevice> cudaDevices)
                 {
                     _queryCudaDevicesString = "";
-
-                    var cudaDevicesDetection = new Process
-                    {
-                        StartInfo =
-                        {
-                            FileName = "CudaDeviceDetection.exe",
-                            UseShellExecute = false,
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true,
-                            CreateNoWindow = true
-                        }
-                    };
-                    cudaDevicesDetection.OutputDataReceived += QueryCudaDevicesOutputErrorDataReceived;
-                    cudaDevicesDetection.ErrorDataReceived += QueryCudaDevicesOutputErrorDataReceived;
-
-                    const int waitTime = 30 * 1000; // 30seconds
                     try
                     {
-                        if (!cudaDevicesDetection.Start())
+                        _queryCudaDevicesString = DeviceDetection.GetCUDADevices();
+                        var cudaQueryResult = JsonConvert.DeserializeObject<CudaDeviceDetectionResult>(_queryCudaDevicesString,
+                                        Globals.JsonSettings);
+                        cudaDevices = cudaQueryResult.CudaDevices;
+                        if (_cudaDevices == null || _cudaDevices.Count == 0)
                         {
-                            Helpers.ConsolePrint(Tag, "CudaDevicesDetection process could not start");
-                        }
-                        else
-                        {
-                            cudaDevicesDetection.BeginErrorReadLine();
-                            cudaDevicesDetection.BeginOutputReadLine();
-                            if (cudaDevicesDetection.WaitForExit(waitTime))
-                            {
-                                cudaDevicesDetection.Close();
-                            }
+                            Helpers.ConsolePrint(Tag,
+                                "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +
+                                _queryCudaDevicesString);
                         }
                     }
                     catch (Exception ex)
@@ -706,111 +681,45 @@ namespace NiceHashMiner.Devices
                         // TODO
                         Helpers.ConsolePrint(Tag, "CudaDevicesDetection threw Exception: " + ex.Message);
                     }
-                    finally
-                    {
-                        if (_queryCudaDevicesString != "")
-                        {
-                            try
-                            {
-                                var cudaQueryResult = JsonConvert.DeserializeObject<CudaDeviceDetectionResult>(_queryCudaDevicesString,
-                                        Globals.JsonSettings);
-                                cudaDevices = cudaQueryResult.CudaDevices;
-                            }
-                            catch { }
-
-                            if (_cudaDevices == null || _cudaDevices.Count == 0)
-                                Helpers.ConsolePrint(Tag,
-                                    "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +
-                                    _queryCudaDevicesString);
-                        }
-                    }
                 }
             }
 
-            private static List<OpenCLJsonData> _openCLJsonData = new List<OpenCLJsonData>();
+            private static OpenCLDeviceDetectionResult _openCLQueryResult;
             private static bool _isOpenCLQuerySuccess = false;
 
             private static class OpenCL
             {
-                private static string _queryOpenCLDevicesString = "";
-
-                private static void QueryOpenCLDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e)
-                {
-                    if (e.Data != null)
-                    {
-                        _queryOpenCLDevicesString += e.Data;
-                    }
-                }
-
                 public static void QueryOpenCLDevices()
                 {
-                    Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
-                    var openCLDevicesDetection = new Process
-                    {
-                        StartInfo =
-                        {
-                            FileName = "AMDOpenCLDeviceDetection.exe",
-                            UseShellExecute = false,
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true,
-                            CreateNoWindow = true
-                        }
-                    };
-                    openCLDevicesDetection.OutputDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
-                    openCLDevicesDetection.ErrorDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
 
-                    const int waitTime = 30 * 1000; // 30seconds
+                    Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
+
+                    string _queryOpenCLDevicesString = "";
                     try
                     {
-                        if (!openCLDevicesDetection.Start())
-                        {
-                            Helpers.ConsolePrint(Tag, "AMDOpenCLDeviceDetection process could not start");
-                        }
-                        else
-                        {
-                            openCLDevicesDetection.BeginErrorReadLine();
-                            openCLDevicesDetection.BeginOutputReadLine();
-                            if (openCLDevicesDetection.WaitForExit(waitTime))
-                            {
-                                openCLDevicesDetection.Close();
-                            }
-                        }
+                        _queryOpenCLDevicesString = DeviceDetection.GetOpenCLDevices();
+                        _openCLQueryResult = JsonConvert.DeserializeObject<OpenCLDeviceDetectionResult>(_queryOpenCLDevicesString, Globals.JsonSettings);
                     }
                     catch (Exception ex)
                     {
-                        // TODO
+                        // TODO print AMD detection string
                         Helpers.ConsolePrint(Tag, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
-                    }
-                    finally
-                    {
-                        if (_queryOpenCLDevicesString != "")
-                        {
-                            try
-                            {
-                                _openCLJsonData =
-                                    JsonConvert.DeserializeObject<List<OpenCLJsonData>>(_queryOpenCLDevicesString,
-                                        Globals.JsonSettings);
-                            }
-                            catch
-                            {
-                                _openCLJsonData = null;
-                            }
-                        }
+                        _openCLQueryResult = null;
                     }
 
-                    if (_openCLJsonData == null)
+                    if (_openCLQueryResult == null)
                     {
                         Helpers.ConsolePrint(Tag,
                             "AMDOpenCLDeviceDetection found no devices. AMDOpenCLDeviceDetection returned: " +
                             _queryOpenCLDevicesString);
                     }
-                    else
+                    else /*if(_openCLQueryResult.ErrorString == "" || _openCLQueryResult.Status == "OK")*/
                     {
                         _isOpenCLQuerySuccess = true;
                         var stringBuilder = new StringBuilder();
                         stringBuilder.AppendLine("");
                         stringBuilder.AppendLine("AMDOpenCLDeviceDetection found devices success:");
-                        foreach (var oclElem in _openCLJsonData)
+                        foreach (var oclElem in _openCLQueryResult.Platforms)
                         {
                             stringBuilder.AppendLine($"\tFound devices for platform: {oclElem.PlatformName}");
                             foreach (var oclDev in oclElem.Devices)
