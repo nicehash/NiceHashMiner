@@ -12,7 +12,6 @@ using System.Windows.Forms;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerTranslations.Devices;
 using static NiceHashMiner.Translations;
 
 namespace NiceHashMiner.Forms

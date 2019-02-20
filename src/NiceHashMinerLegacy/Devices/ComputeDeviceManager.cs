@@ -14,11 +14,9 @@ using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Devices.Querying;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner;
 using static NiceHashMiner.Translations;
-using NiceHashMiner.Devices;
 
-namespace NiceHashMinerTranslations.Devices
+namespace NiceHashMiner.Devices
 {
     /// <summary>
     /// ComputeDeviceManager class is used to query ComputeDevices avaliable on the system.

@@ -22,7 +22,6 @@ using static NiceHashMiner.Translations;
 
 namespace NiceHashMiner
 {
-    using NiceHashMinerTranslations.Devices;
     using System.IO;
 
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication

@@ -2,8 +2,6 @@
 using NiceHashMiner.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NiceHashMiner.Switching;
-using NiceHashMinerTranslations.Devices;
 
 namespace NiceHashMiner.Miners
 {

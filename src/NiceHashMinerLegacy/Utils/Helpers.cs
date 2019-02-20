@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using NiceHashMiner.PInvoke;
 using System.Management;
 using System.Security.Principal;
 using NiceHashMinerLegacy.Common.Enums;
