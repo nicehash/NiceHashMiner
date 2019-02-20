@@ -13,7 +13,6 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Properties;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerTranslations.Devices;
 using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner.Forms

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerTranslations.Devices;
 
 namespace NiceHashMiner.Devices
 {

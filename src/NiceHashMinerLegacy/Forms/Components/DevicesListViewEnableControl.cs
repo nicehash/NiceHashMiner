@@ -1,7 +1,6 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
-using NiceHashMinerTranslations.Devices;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
