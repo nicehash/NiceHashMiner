@@ -19,6 +19,7 @@ public:
 	void PrintDevicesJson();
 	void PrintDevicesJson_d();
 	std::string GetDevicesJsonString();
+    std::string GetDevicesJsonStringPretty();
 	std::string GetErrorString();
 
 	void PrintDriverVersion();
