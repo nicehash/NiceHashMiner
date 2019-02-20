@@ -47,7 +47,16 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto)
                 }
-            }
+            },
+            {
+                MinerBaseType.GMiner,
+                new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam), // BEAM added for NVIDIA and AMD check GPU section
+                    //new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash),
+                    //new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckaroo29)
+                }
+            },
         };
 
         #endregion
@@ -68,7 +77,8 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.cpuminer,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.cpuminer, AlgorithmType.Lyra2z, "lyra2z")
+                    new Algorithm(MinerBaseType.cpuminer, AlgorithmType.Lyra2z, "lyra2z"),
+                    //new Algorithm(MinerBaseType.cpuminer, AlgorithmType.MTP, "mtp")
                 }
             }
         }.ConcatDict(All);
@@ -119,6 +129,10 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.sgminer, AlgorithmType.X16R, "x16r")
                     {
                         ExtraLaunchParameters = "-X 256"
+                    },
+                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.MTP, "mtp")
+                    {
+                        ExtraLaunchParameters = "--worksize 256 --intensity 18"
                     }
                 }
             },
@@ -175,7 +189,8 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk"),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2z, "lyra2z"),
                     new Algorithm(MinerBaseType.ccminer, AlgorithmType.X16R, "x16r"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv3, "lyra2v3")
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv3, "lyra2v3"),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.MTP, "mtp"),
                 }
             },
             {
@@ -228,7 +243,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.GMiner,
                 new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam),
+                    //new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam), // BEAM added for NVIDIA and AMD check GPU section
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash),
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckaroo29)
                 }

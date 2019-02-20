@@ -81,6 +81,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string CcminerX11Gost = Bin + @"\ccminer_x11gost\ccminer.exe";
             public const string CcminerKlausT = Bin + @"\ccminer_klaust\ccminer.exe";
             public const string CcminerX16R = Bin + @"\ccminer_x16r\ccminer.exe";
+            public const string CcminerZCoinOfficial = Bin + @"\ccminer_mtp\ccminer.exe";
 
             /// <summary>
             /// ethminers
@@ -95,6 +96,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string SgminerGm = Bin + @"\sgminer-gm\sgminer.exe";
 
             public const string Avermore = Bin + @"\avermore\sgminer.exe";
+            public const string SgminerZcoinofficial = Bin + @"\sgminer_zcoinofficial\sgminer.exe";
 
             public const string NhEqMiner = Bin + @"\nheqminer_v0.4b\NhEqMiner.exe";
             public const string Excavator = Bin + @"\excavator\excavator.exe";
@@ -106,6 +108,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string XmrStakHeavy = Bin + @"\xmr-stak_heavy\xmr-stak.exe";
 
             public const string CpuMiner = Bin + @"\cpuminer_opt\cpuminer.exe";
+            public const string CpuMinerZCoin = Bin + @"\cpuminer_zcoinofficial\cpuminer.exe";
 
             public const string None = "";
 
@@ -161,6 +164,20 @@ namespace NiceHashMiner.Miners.Grouping
             // Temp workaround
             if (minerBaseType == MinerBaseType.XmrStak && algoType == AlgorithmType.CryptoNightHeavy)
                 return Data.XmrStakHeavy;
+
+            if (AlgorithmType.MTP == algoType)
+            {
+                switch(minerBaseType)
+                {
+                    case MinerBaseType.ccminer:
+                        return Data.CcminerZCoinOfficial;
+                    case MinerBaseType.sgminer:
+                        return Data.SgminerZcoinofficial;
+                    case MinerBaseType.cpuminer:
+                        return Data.CpuMinerZCoin;
+                }
+                return Data.None;
+            }
 
             switch (minerBaseType)
             {
