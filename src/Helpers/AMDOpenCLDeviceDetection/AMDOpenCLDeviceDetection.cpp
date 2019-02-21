@@ -103,6 +103,7 @@ bool AMDOpenCLDeviceDetection::QueryDevices() {
 							if (topology.raw.type == CL_DEVICE_TOPOLOGY_TYPE_PCIE_AMD) {
 								curDevice.AMD_BUS_ID = (int)topology.pcie.bus;
 							}
+                            curDevice._CL_DEVICE_BOARD_NAME_AMD = clDevs[i_devId].getInfo<CL_DEVICE_BOARD_NAME_AMD>();
 						}
 
 						current.Devices.push_back(curDevice);

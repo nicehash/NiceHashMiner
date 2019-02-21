@@ -17,7 +17,8 @@ namespace amd_json {
 				{ "_CL_DEVICE_GLOBAL_MEM_SIZE", dev._CL_DEVICE_GLOBAL_MEM_SIZE },
 				{ "_CL_DEVICE_VENDOR", dev._CL_DEVICE_VENDOR },
 				{ "_CL_DEVICE_VERSION", dev._CL_DEVICE_VERSION },
-				{ "_CL_DRIVER_VERSION", dev._CL_DRIVER_VERSION }
+				{ "_CL_DRIVER_VERSION", dev._CL_DRIVER_VERSION },
+				{ "_CL_DEVICE_BOARD_NAME_AMD", dev._CL_DEVICE_BOARD_NAME_AMD},
 			});
 		}
 		return retArr;

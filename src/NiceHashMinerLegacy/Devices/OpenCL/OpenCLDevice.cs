@@ -13,5 +13,6 @@ namespace NiceHashMiner.Devices.OpenCL
         public string _CL_DEVICE_VENDOR { get; set; }
         public string _CL_DEVICE_VERSION { get; set; }
         public string _CL_DRIVER_VERSION { get; set; }
+        public string _CL_DEVICE_BOARD_NAME_AMD { get; set; }
     }
 }

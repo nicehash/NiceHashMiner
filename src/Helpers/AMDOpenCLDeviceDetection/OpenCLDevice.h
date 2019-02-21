@@ -13,6 +13,7 @@ struct OpenCLDevice {
 	std::string _CL_DEVICE_VERSION;
 	std::string _CL_DRIVER_VERSION;
 	int AMD_BUS_ID = -1; // -1 indicates that it is not set
+	std::string _CL_DEVICE_BOARD_NAME_AMD;
 };
 
 // rename this to platform
