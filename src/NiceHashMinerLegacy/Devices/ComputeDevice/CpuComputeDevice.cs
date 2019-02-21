@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using NiceHashMiner.Devices.Algorithms;
+using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Devices
@@ -34,7 +35,8 @@ namespace NiceHashMiner.Devices
         {
             Threads = threads;
             AffinityMask = affinityMask;
-            Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+            var uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+            Uuid = uuid;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             Index = ID; // Don't increment for CPU
 
@@ -44,6 +46,10 @@ namespace NiceHashMiner.Devices
                 CounterName = "% Processor Time",
                 InstanceName = "_Total"
             };
+
+            // plugin device
+            var bd = new BaseDevice(DeviceType.CPU, uuid, name, ID); // TODO UUID
+            PluginDevice = new CPUDevice(bd, threads, true, affinityMask); // TODO hyperthreading 
         }
     }
 }

@@ -98,6 +98,8 @@ namespace NiceHashMiner.Miners
                     return new GMiner();
                 case MinerBaseType.BMiner:
                     return new BMiner(algorithm.NiceHashID);
+                case MinerBaseType.PLUGIN:
+                    return CreateMinerFromPlugin(algorithm);
             }
 
             return null;
@@ -111,6 +113,15 @@ namespace NiceHashMiner.Miners
                 return CreateMiner(device.DeviceType, algorithm);
             }
 
+            return null;
+        }
+
+        private static MinerFromPlugin CreateMinerFromPlugin(Algorithm algorithm)
+        {
+            if (algorithm is PluginAlgorithm pAlgo)
+            {
+                return new MinerFromPlugin(pAlgo.BaseAlgo.MinerID);
+            }
             return null;
         }
     }

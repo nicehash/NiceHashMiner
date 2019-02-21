@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NiceHashMiner</RootNamespace>
     <AssemblyName>NiceHashMinerLegacy</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -108,10 +108,12 @@
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithms\Algorithm.cs" />
     <Compile Include="Algorithms\DualAlgorithm.cs" />
+    <Compile Include="Algorithms\PluginAlgorithm.cs" />
     <Compile Include="Benchmarking\BenchHelpers\CpuBenchHelper.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchHelpers\ClaymoreZcashBenchHelper.cs" />
+    <Compile Include="Benchmarking\BenchmarkHandler2.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
@@ -129,10 +131,12 @@
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="MinerPluginsManager.cs" />
     <Compile Include="Miners\BMiner.cs" />
     <Compile Include="Miners\Equihash\Ewbf144.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\GMiner.cs" />
+    <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="Miners\Phoenix.cs" />
     <Compile Include="Miners\Trex.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
@@ -471,6 +475,14 @@
     <ProjectReference Include="..\Helpers\MessageBoxManager\MessageBoxManager.csproj">
       <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
       <Name>MessageBoxManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\MinerPluginLoader\MinerPluginLoader.csproj">
+      <Project>{2c35f83c-aa75-49c0-98e8-082e329b6491}</Project>
+      <Name>MinerPluginLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\MinerPlugin\MinerPlugin.csproj">
+      <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
+      <Name>MinerPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>

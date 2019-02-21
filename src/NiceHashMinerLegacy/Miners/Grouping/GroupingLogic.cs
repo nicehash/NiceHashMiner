@@ -1,4 +1,5 @@
 ﻿using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner.Algorithms;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -6,6 +7,12 @@ namespace NiceHashMiner.Miners.Grouping
     {
         public static bool ShouldGroup(MiningPair a, MiningPair b)
         {
+            // plugin case
+            if (IsPluginAlgorithm(a) && IsPluginAlgorithm(b))
+            {
+                return CheckPluginCanGroup(a, b);
+            }
+
             var canGroup = IsGroupableMinerBaseType(a) && IsGroupableMinerBaseType(b);
             // group if same bin path and same algo type
             if (canGroup && IsSameBinPath(a, b) && IsSameAlgorithmType(a, b) &&
@@ -38,6 +45,24 @@ namespace NiceHashMiner.Miners.Grouping
         private static bool IsGroupableMinerBaseType(MiningPair a) 
         {
             return a.Algorithm.MinerBaseType != MinerBaseType.cpuminer;
+        }
+
+        // PLUGIN stuff 
+        private static bool IsPluginAlgorithm(MiningPair a)
+        {
+            return a.Algorithm.MinerBaseType == MinerBaseType.PLUGIN && a.Algorithm is PluginAlgorithm;
+        }
+        private static bool CheckPluginCanGroup(MiningPair a, MiningPair b)
+        {
+            var pluginA = (device: a.Device.PluginDevice, algorithm: ((PluginAlgorithm)a.Algorithm).BaseAlgo);
+            var pluginB = (device: b.Device.PluginDevice, algorithm: ((PluginAlgorithm)b.Algorithm).BaseAlgo);
+
+            if (pluginA.algorithm.MinerID != pluginB.algorithm.MinerID) return false;
+
+            var plugin = MinerPluginsManager.GetPluginWithUuid(pluginA.algorithm.MinerID);
+            // TODO can plugin be null?
+            var canGroup = plugin.CanGroup(pluginA, pluginB);
+            return canGroup;
         }
     }
 }

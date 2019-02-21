@@ -33,7 +33,7 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 var hasEnabledAlgo = device.GetAlgorithmSettings().Aggregate(false,
                     (current, algo) =>
-                        current | (IsAlgoMiningCapable(algo) && MinerPaths.IsValidMinerPath(algo.MinerBinaryPath)));
+                        current | (IsAlgoMiningCapable(algo) && MinerPaths.IsValidMinerPath(algo.MinerBinaryPath) || algo is PluginAlgorithm));
                 if (hasEnabledAlgo == false)
                 {
                     status = DeviceMiningStatus.NoEnabledAlgorithms;

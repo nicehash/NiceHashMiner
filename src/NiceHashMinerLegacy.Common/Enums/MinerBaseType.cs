@@ -28,6 +28,7 @@
         Phoenix,
         GMiner,
         BMiner,
-        END
+        END,
+        PLUGIN // make PLUGIN outside of end
     }
 }

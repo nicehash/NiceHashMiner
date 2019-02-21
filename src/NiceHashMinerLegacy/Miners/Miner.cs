@@ -391,6 +391,36 @@ namespace NiceHashMiner
         // TODO remove algorithm
         protected abstract string BenchmarkCreateCommandLine(Algorithm algorithm, int time);
 
+        public class BenchmarkResult
+        {
+            public bool Success { get; set; }
+            public string Status { get; set; }
+        }
+
+        // todo 
+        public class BenchmarkResultTask : TaskCompletionSource<BenchmarkResult>, IBenchmarkComunicator
+        {
+            public void OnBenchmarkComplete(bool success, string status)
+            {
+                this.SetResult(new BenchmarkResult
+                {
+                    Status = status,
+                    Success = success
+                });
+            }
+        }
+
+        public Task<BenchmarkResult> BenchmarkStartAsync(int time, CancellationToken stop)
+        {
+            var tcs = new BenchmarkResultTask();
+            BenchmarkStart(time, tcs);
+            stop.Register(() => {
+                BenchmarkSignalQuit = true;
+                InvokeBenchmarkSignalQuit();
+            });
+            return tcs.Task;
+        }
+
         // The benchmark config and algorithm must guarantee that they are compatible with miner
         // we guarantee algorithm is supported
         // we will not have empty benchmark configs, all benchmark configs will have device list

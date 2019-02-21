@@ -58,6 +58,10 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     Algorithms.Add(algo);
                 }
+                else if (isAlgoMiningCapable && algo is PluginAlgorithm)
+                {
+                    Algorithms.Add(algo);
+                }
             }
 
             MostProfitableAlgorithmType = AlgorithmType.NONE;

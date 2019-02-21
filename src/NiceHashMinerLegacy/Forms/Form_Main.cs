@@ -283,6 +283,9 @@ namespace NiceHashMiner
             ConfigManager.AfterDeviceQueryInitialization();
             _loadingScreen.IncreaseLoadCounterAndMessage(International.GetText("Form_Main_loadtext_SaveConfig"));
 
+            // Plugin Loading
+            MinerPluginsManager.LoadMinerPlugins();
+
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
             // set properties after

@@ -8,11 +8,15 @@ using System.Text;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Common.Device;
 
 namespace NiceHashMiner.Devices
 {
     public class ComputeDevice
     {
+        // migrate ComputeDevice to BaseDevice
+        public BaseDevice PluginDevice { get; protected set; }
+
         public readonly int ID;
 
         public int Index { get; protected set; } // For socket control, unique
@@ -122,6 +126,13 @@ namespace NiceHashMiner.Devices
         //    }
         //    return null;
         //}
+
+         
+        public void UpdatePluginAlgorithms(string pluginUuid, IList<PluginAlgorithm> pluginAlgos)
+        {
+            // TODO check and swap if there are already existing ones
+            this.AlgorithmSettings.AddRange(pluginAlgos);
+        }
 
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)
         {
