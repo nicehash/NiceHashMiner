@@ -31,39 +31,65 @@ namespace NiceHashMiner.Devices
             private const string Tag = "ComputeDeviceManager.Query";
 
             // format 372.54;
-            private class NvidiaSmiDriver
+            private struct NvidiaSmiDriver : IComparable<NvidiaSmiDriver>
             {
+                public int LeftPart { get; }
+
+                private readonly int _rightPart;
+                public int RightPart
+                {
+                    get
+                    {
+                        if (_rightPart >= 10)
+                        {
+                            return _rightPart;
+                        }
+
+                        return _rightPart * 10;
+                    }
+                }
+
                 public NvidiaSmiDriver(int left, int right)
                 {
                     LeftPart = left;
                     _rightPart = right;
                 }
 
-                public bool IsLesserVersionThan(NvidiaSmiDriver b)
-                {
-                    if (LeftPart < b.LeftPart)
-                    {
-                        return true;
-                    }
-                    return LeftPart == b.LeftPart && GetRightVal(_rightPart) < GetRightVal(b._rightPart);
-                }
-
                 public override string ToString()
                 {
-                    return $"{LeftPart}.{_rightPart}";
+                    return $"{LeftPart}.{RightPart}";
                 }
 
-                public readonly int LeftPart;
-                private readonly int _rightPart;
+                #region IComparable implementation
 
-                private static int GetRightVal(int val)
+                public int CompareTo(NvidiaSmiDriver other)
                 {
-                    if (val >= 10)
-                    {
-                        return val;
-                    }
-                    return val * 10;
+                    var leftPartComparison = LeftPart.CompareTo(other.LeftPart);
+                    if (leftPartComparison != 0) return leftPartComparison;
+                    return RightPart.CompareTo(other.RightPart);
                 }
+
+                public static bool operator <(NvidiaSmiDriver left, NvidiaSmiDriver right)
+                {
+                    return left.CompareTo(right) < 0;
+                }
+
+                public static bool operator >(NvidiaSmiDriver left, NvidiaSmiDriver right)
+                {
+                    return left.CompareTo(right) > 0;
+                }
+
+                public static bool operator <=(NvidiaSmiDriver left, NvidiaSmiDriver right)
+                {
+                    return left.CompareTo(right) <= 0;
+                }
+
+                public static bool operator >=(NvidiaSmiDriver left, NvidiaSmiDriver right)
+                {
+                    return left.CompareTo(right) >= 0;
+                }
+
+                #endregion
             }
 
             private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(372, 54); // 372.54;
@@ -255,8 +281,7 @@ namespace NiceHashMiner.Devices
                 var isNvidiaErrorShown = false; // to prevent showing twice
                 var showWarning = ConfigManager.GeneralConfig.ShowDriverVersionWarning &&
                                   WindowsDisplayAdapters.HasNvidiaVideoController();
-                if (showWarning && nvCountMatched &&
-                    _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaMinDetectionDriver))
+                if (showWarning && nvCountMatched && _currentNvidiaSmiDriver < NvidiaMinDetectionDriver)
                 {
                     isNvidiaErrorShown = true;
                     var minDriver = NvidiaMinDetectionDriver.ToString();
@@ -268,7 +293,7 @@ namespace NiceHashMiner.Devices
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 // recomended driver
-                if (showWarning && _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaRecomendedDriver) &&
+                if (showWarning && _currentNvidiaSmiDriver < NvidiaRecomendedDriver &&
                     !isNvidiaErrorShown && _currentNvidiaSmiDriver.LeftPart > -1)
                 {
                     var recomendDrvier = NvidiaRecomendedDriver.ToString();
