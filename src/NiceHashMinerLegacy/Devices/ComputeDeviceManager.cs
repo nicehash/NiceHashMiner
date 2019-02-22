@@ -33,11 +33,6 @@ namespace NiceHashMiner.Devices
             private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(372, 54); // 372.54;
             private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
 
-            // naming purposes
-            public static int CpuCount = 0;
-
-            public static int GpuCount = 0;
-
             private static void ShowMessageAndStep(string infoMsg)
             {
                 MessageNotifier?.SetMessageAndIncrementStep(infoMsg);
@@ -90,6 +85,7 @@ namespace NiceHashMiner.Devices
                 // #1 CPU
                 Cpu.QueryCpus();
                 // #2 CUDA
+                var numDevs = 0;
                 NvidiaQuery nvQuery = null;
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
                 {
@@ -114,7 +110,7 @@ namespace NiceHashMiner.Devices
                     OpenCL.QueryOpenCLDevices();
                     // #4 AMD query AMD from OpenCL devices, get serial and add devices
                     ShowMessageAndStep(Tr("Checking AMD OpenCL GPUs"));
-                    var amd = new AmdQuery(AvaliableVideoControllers);
+                    var amd = new AmdQuery(AvaliableVideoControllers, numDevs);
                     AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLQueryResult);
                 }
                 // #5 uncheck CPU if GPUs present, call it after we Query all devices
@@ -122,7 +118,7 @@ namespace NiceHashMiner.Devices
 
                 // TODO update this to report undetected hardware
                 // #6 check NVIDIA, AMD devices count
-                var nvCountMatched = false;
+                bool nvCountMatched;
                 {
                     var amdCount = 0;
                     var nvidiaCount = 0;
@@ -201,20 +197,8 @@ namespace NiceHashMiner.Devices
                     }
                 }
 
-                // create AMD bus ordering for Claymore
-                var amdDevices = AvailableDevices.Devices.FindAll((a) => a.DeviceType == DeviceType.AMD);
-                amdDevices.Sort((a, b) => a.BusID.CompareTo(b.BusID));
-                for (var i = 0; i < amdDevices.Count; i++)
-                {
-                    amdDevices[i].IDByBus = i;
-                }
-                //create NV bus ordering for Claymore
-                var nvDevices = AvailableDevices.Devices.FindAll((a) => a.DeviceType == DeviceType.NVIDIA);
-                nvDevices.Sort((a, b) => a.BusID.CompareTo(b.BusID));
-                for (var i = 0; i < nvDevices.Count; i++)
-                {
-                    nvDevices[i].IDByBus = i;
-                }
+                SortBusIDs(DeviceType.NVIDIA);
+                SortBusIDs(DeviceType.AMD);
 
                 // get GPUs RAM sum
                 // bytes
@@ -253,6 +237,17 @@ namespace NiceHashMiner.Devices
             }
 
             #region Helpers
+
+            private static void SortBusIDs(DeviceType type)
+            {
+                var devs = AvailableDevices.Devices.Where(d => d.DeviceType == type);
+                var sortedDevs = devs.OrderBy(d => d.BusID).ToList();
+
+                for (var i = 0; i < sortedDevs.Count; i++)
+                {
+                    sortedDevs[i].IDByBus = i;
+                }
+            }
 
             private static readonly List<VideoControllerData> AvaliableVideoControllers =
                 new List<VideoControllerData>();
@@ -348,78 +343,6 @@ namespace NiceHashMiner.Devices
                     return AvaliableVideoControllers.Any(vctrl => vctrl.Name.ToLower().Contains("nvidia"));
                 }
             }
-
-            private static class Cpu
-            {
-                public static void QueryCpus()
-                {
-                    Helpers.ConsolePrint(Tag, "QueryCpus START");
-                    // get all CPUs
-                    AvailableDevices.CpusCount = CpuID.GetPhysicalProcessorCount();
-                    AvailableDevices.IsHyperThreadingEnabled = CpuID.IsHypeThreadingEnabled();
-
-                    Helpers.ConsolePrint(Tag,
-                        AvailableDevices.IsHyperThreadingEnabled
-                            ? "HyperThreadingEnabled = TRUE"
-                            : "HyperThreadingEnabled = FALSE");
-
-                    // get all cores (including virtual - HT can benefit mining)
-                    var threadsPerCpu = CpuID.GetVirtualCoresCount() / AvailableDevices.CpusCount;
-
-                    if (!Helpers.Is64BitOperatingSystem)
-                    {
-                        if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
-                        {
-                            MessageBox.Show(Tr("NiceHash Miner Legacy works only on 64-bit version of OS for CPU mining. CPU mining will be disabled."),
-                                Tr("Warning!"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-
-                        AvailableDevices.CpusCount = 0;
-                    }
-
-                    if (threadsPerCpu * AvailableDevices.CpusCount > 64)
-                    {
-                        if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
-                        {
-                            MessageBox.Show(Tr("NiceHash Miner Legacy does not support more than 64 virtual cores. CPU mining will be disabled."),
-                               Tr("Warning!"),
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-
-                        AvailableDevices.CpusCount = 0;
-                    }
-
-                    // TODO important move this to settings
-                    var threadsPerCpuMask = threadsPerCpu;
-                    Globals.ThreadsPerCpu = threadsPerCpu;
-
-                    if (CpuUtils.IsCpuMiningCapable())
-                    {
-                        if (AvailableDevices.CpusCount == 1)
-                        {
-                            AvailableDevices.Devices.Add(
-                                new CpuComputeDevice(0, "CPU0", CpuID.GetCpuName().Trim(), threadsPerCpu, 0,
-                                    ++CpuCount)
-                            );
-                        }
-                        else if (AvailableDevices.CpusCount > 1)
-                        {
-                            for (var i = 0; i < AvailableDevices.CpusCount; i++)
-                            {
-                                AvailableDevices.Devices.Add(
-                                    new CpuComputeDevice(i, "CPU" + i, CpuID.GetCpuName().Trim(), threadsPerCpu,
-                                        CpuID.CreateAffinityMask(i, threadsPerCpuMask), ++CpuCount)
-                                );
-                            }
-                        }
-                    }
-
-                    Helpers.ConsolePrint(Tag, "QueryCpus END");
-                }
-            }
-
-            //private static List<CudaDevice> _cudaDevices = new List<CudaDevice>();
 
             private static OpenCLDeviceDetectionResult _openCLQueryResult;
             private static bool _isOpenCLQuerySuccess = false;

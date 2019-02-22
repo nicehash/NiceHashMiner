@@ -146,23 +146,8 @@ namespace NiceHashMiner.Configs
         public static void AfterDeviceQueryInitialization()
         {
             // extra check (probably will never happen but just in case)
-            {
-                var invalidDevices = new List<ComputeDevice>();
-                foreach (var cDev in AvailableDevices.Devices)
-                {
-                    if (cDev.IsAlgorithmSettingsInitialized() == false)
-                    {
-                        Helpers.ConsolePrint(Tag,
-                            "CRITICAL ISSUE!!! Device has AlgorithmSettings == null. Will remove");
-                        invalidDevices.Add(cDev);
-                    }
-                }
-                // remove invalids
-                foreach (var invalid in invalidDevices)
-                {
-                    AvailableDevices.Devices.Remove(invalid);
-                }
-            }
+            AvailableDevices.RemoveInvalidDevs();
+
             // set enabled/disabled devs
             foreach (var cDev in AvailableDevices.Devices)
             {

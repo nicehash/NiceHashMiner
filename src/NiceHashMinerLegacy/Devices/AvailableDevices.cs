@@ -6,7 +6,10 @@ namespace NiceHashMiner.Devices
 {
     public static class AvailableDevices
     {
-        public static readonly List<ComputeDevice> Devices = new List<ComputeDevice>();
+        private const string Tag = "AvailableDevices";
+
+        private static readonly List<ComputeDevice> _devices = new List<ComputeDevice>();
+        public static IReadOnlyList<ComputeDevice> Devices => _devices;
 
         public static bool HasNvidia => Devices.Any(d => d.DeviceType == DeviceType.NVIDIA);
         public static bool HasAmd => Devices.Any(d => d.DeviceType == DeviceType.AMD);
@@ -23,6 +26,11 @@ namespace NiceHashMiner.Devices
 
         public static int AmdOpenCLPlatformNum { get; internal set; } = -1;
         public static bool IsHyperThreadingEnabled { get; internal set; } = false;
+
+        internal static void AddDevice(ComputeDevice dev)
+        {
+            _devices.Add(dev);
+        }
         
         public static ComputeDevice GetDeviceWithUuid(string uuid)
         {
@@ -54,6 +62,23 @@ namespace NiceHashMiner.Devices
             foreach (var dev in Devices.Where(d => d.DeviceType == DeviceType.CPU))
             {
                 dev.Enabled = false;
+            }
+        }
+
+        public static void RemoveInvalidDevs()
+        {
+            var invalidDevices = new List<ComputeDevice>();
+            foreach (var cDev in Devices)
+            {
+                if (cDev.IsAlgorithmSettingsInitialized()) continue;
+
+                Helpers.ConsolePrint(Tag, "CRITICAL ISSUE!!! Device has AlgorithmSettings == null. Will remove");
+                invalidDevices.Add(cDev);
+            }
+            // remove invalids
+            foreach (var invalid in invalidDevices)
+            {
+                _devices.Remove(invalid);
             }
         }
     }

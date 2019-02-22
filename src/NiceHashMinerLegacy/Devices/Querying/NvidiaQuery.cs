@@ -23,14 +23,14 @@ namespace NiceHashMiner.Devices.Querying
 
         #region Query devices
 
-        public void QueryCudaDevices()
+        public int QueryCudaDevices()
         {
             Helpers.ConsolePrint(Tag, "QueryCudaDevices START");
 
             if (!TryQueryCudaDevices(out var cudaDevs))
             {
                 Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
-                return;
+                return 0;
             }
             
             var stringBuilder = new StringBuilder();
@@ -42,6 +42,8 @@ namespace NiceHashMiner.Devices.Querying
 
             tryAddNvmlToEnvPath();
             var nvmlInit = InitNvml();
+
+            var numDevs = 0;
 
             foreach (var cudaDev in cudaDevs)
             {
@@ -91,8 +93,8 @@ namespace NiceHashMiner.Devices.Querying
                 }
 
                 idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
-                AvailableDevices.Devices.Add(
-                    new CudaComputeDevice(cudaDev, group, ++ComputeDeviceManager.Query.GpuCount, handle, nvmlHandle)
+                AvailableDevices.AddDevice(
+                    new CudaComputeDevice(cudaDev, group, ++numDevs, handle, nvmlHandle)
                 );
             }
 
@@ -101,6 +103,8 @@ namespace NiceHashMiner.Devices.Querying
             CudaDevices = cudaDevs;
             
             Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
+
+            return numDevs;
         }
 
         private Dictionary<int, NvPhysicalGpuHandle> InitNvapi()

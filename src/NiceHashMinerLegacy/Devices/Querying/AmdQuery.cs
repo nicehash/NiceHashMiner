@@ -22,10 +22,12 @@ namespace NiceHashMiner.Devices.Querying
         private readonly Dictionary<int, BusIdInfo> _busIdInfos = new Dictionary<int, BusIdInfo>();
         private readonly List<string> _amdDeviceUuid = new List<string>();
 
+        private int _numDevs;
 
-        public AmdQuery(List<VideoControllerData> availControllers)
+        public AmdQuery(List<VideoControllerData> availControllers, int numDevs)
         {
             _availableControllers = availControllers;
+            _numDevs = numDevs;
         }
 
         public List<OpenCLDevice> QueryAmd(bool openCLSuccess, OpenCLDeviceDetectionResult openCLData)
@@ -215,8 +217,8 @@ namespace NiceHashMiner.Devices.Querying
                     var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
                     var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
-                    AvailableDevices.Devices.Add(
-                        new AmdComputeDevice(newAmdDev, ++ComputeDeviceManager.Query.GpuCount, false,
+                    AvailableDevices.AddDevice(
+                        new AmdComputeDevice(newAmdDev, ++_numDevs, false,
                             _busIdInfos[busID].Adl2Index));
                     // just in case 
                     try
@@ -281,8 +283,8 @@ namespace NiceHashMiner.Devices.Querying
                 var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
                 var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
-                AvailableDevices.Devices.Add(
-                    new AmdComputeDevice(newAmdDev, ++ComputeDeviceManager.Query.GpuCount, true, -1));
+                AvailableDevices.AddDevice(
+                    new AmdComputeDevice(newAmdDev, ++_numDevs, true, -1));
                 // just in case 
                 try
                 {

@@ -122,6 +122,7 @@
     <Compile Include="Devices\OpenCL\OpenCLDeviceDetectionResult.cs" />
     <Compile Include="Devices\OpenCL\OpenCLPlatform.cs" />
     <Compile Include="Devices\Querying\NvidiaQuery.cs" />
+    <Compile Include="Devices\Querying\QueryCpu.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
     <Compile Include="Forms\EnterBTCDialogSwitch.cs">
       <SubType>Form</SubType>

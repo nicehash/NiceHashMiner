@@ -120,7 +120,7 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        public void SetComputeDevices(List<ComputeDevice> computeDevices)
+        public void SetComputeDevices(IEnumerable<ComputeDevice> computeDevices)
         {
             // to not run callbacks when setting new
             var tmpSaveToGeneralConfig = SaveToGeneralConfig;
@@ -146,7 +146,7 @@ namespace NiceHashMiner.Forms.Components
             SaveToGeneralConfig = tmpSaveToGeneralConfig;
         }
 
-        public void ResetComputeDevices(List<ComputeDevice> computeDevices)
+        public void ResetComputeDevices(IEnumerable<ComputeDevice> computeDevices)
         {
             SetComputeDevices(computeDevices);
         }

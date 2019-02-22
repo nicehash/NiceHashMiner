@@ -44,7 +44,7 @@ namespace NiceHashMiner.Miners.Grouping
         }
 
         private static Tuple<List<MiningDevice>, List<Tuple<ComputeDevice, DeviceMiningStatus>>>
-            GetMiningAndNonMiningDevices(List<ComputeDevice> devices)
+            GetMiningAndNonMiningDevices(IEnumerable<ComputeDevice> devices)
         {
             var nonMiningDevStatuses = new List<Tuple<ComputeDevice, DeviceMiningStatus>>();
             var miningDevices = new List<MiningDevice>();
@@ -121,7 +121,7 @@ namespace NiceHashMiner.Miners.Grouping
             }
         }
 
-        public static List<MiningDevice> GetMiningDevices(List<ComputeDevice> devices, bool log)
+        public static List<MiningDevice> GetMiningDevices(IEnumerable<ComputeDevice> devices, bool log)
         {
             var miningNonMiningDevs = GetMiningAndNonMiningDevices(devices);
             if (log)
