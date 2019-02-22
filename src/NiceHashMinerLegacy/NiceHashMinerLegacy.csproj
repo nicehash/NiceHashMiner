@@ -124,6 +124,7 @@
     <Compile Include="Devices\Querying\NvidiaQuery.cs" />
     <Compile Include="Devices\Querying\QueryCpu.cs" />
     <Compile Include="Devices\Querying\QueryOpenCL.cs" />
+    <Compile Include="Devices\Querying\QueryResult.cs" />
     <Compile Include="Devices\Querying\SystemSpecs.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
     <Compile Include="Forms\EnterBTCDialogSwitch.cs">
