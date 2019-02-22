@@ -98,6 +98,7 @@ namespace NiceHashMiner.Devices
                     nvQuery.QueryCudaDevices();
                 }
                 // OpenCL and AMD
+                List<OpenCLDevice> amdDevs = null;
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
                 {
                     Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
@@ -107,11 +108,11 @@ namespace NiceHashMiner.Devices
                 {
                     // #3 OpenCL
                     ShowMessageAndStep(Tr("Querying OpenCL devices"));
-                    OpenCL.QueryOpenCLDevices();
+                    var openCLQuerySuccess = QueryOpenCL.TryQueryOpenCLDevices(out var openCLResult);
                     // #4 AMD query AMD from OpenCL devices, get serial and add devices
                     ShowMessageAndStep(Tr("Checking AMD OpenCL GPUs"));
                     var amd = new AmdQuery(numDevs);
-                    AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLQueryResult);
+                    amdDevs = amd.QueryAmd(openCLQuerySuccess, openCLResult);
                 }
                 // #5 uncheck CPU if GPUs present, call it after we Query all devices
                 AvailableDevices.UncheckCpuIfGpu();
@@ -143,7 +144,7 @@ namespace NiceHashMiner.Devices
                             ? "Cuda NVIDIA/CUDA device count GOOD"
                             : "Cuda NVIDIA/CUDA device count BAD!!!");
                     Helpers.ConsolePrint(Tag,
-                        amdCount == AmdDevices.Count ? "AMD GPU device count GOOD" : "AMD GPU device count BAD!!!");
+                        amdCount == amdDevs?.Count ? "AMD GPU device count GOOD" : "AMD GPU device count BAD!!!");
                 }
                 // allerts
                 // TODO: Too much GUI code here, should return list of errors to caller instead
@@ -248,60 +249,6 @@ namespace NiceHashMiner.Devices
                     sortedDevs[i].IDByBus = i;
                 }
             }
-
-            private static OpenCLDeviceDetectionResult _openCLQueryResult;
-            private static bool _isOpenCLQuerySuccess = false;
-
-            private static class OpenCL
-            {
-                public static void QueryOpenCLDevices()
-                {
-
-                    Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
-
-                    string _queryOpenCLDevicesString = "";
-                    try
-                    {
-                        _queryOpenCLDevicesString = DeviceDetection.GetOpenCLDevices();
-                        _openCLQueryResult = JsonConvert.DeserializeObject<OpenCLDeviceDetectionResult>(_queryOpenCLDevicesString, Globals.JsonSettings);
-                    }
-                    catch (Exception ex)
-                    {
-                        // TODO print AMD detection string
-                        Helpers.ConsolePrint(Tag, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
-                        _openCLQueryResult = null;
-                    }
-
-                    if (_openCLQueryResult == null)
-                    {
-                        Helpers.ConsolePrint(Tag,
-                            "AMDOpenCLDeviceDetection found no devices. AMDOpenCLDeviceDetection returned: " +
-                            _queryOpenCLDevicesString);
-                    }
-                    else /*if(_openCLQueryResult.ErrorString == "" || _openCLQueryResult.Status == "OK")*/
-                    {
-                        _isOpenCLQuerySuccess = true;
-                        var stringBuilder = new StringBuilder();
-                        stringBuilder.AppendLine("");
-                        stringBuilder.AppendLine("AMDOpenCLDeviceDetection found devices success:");
-                        foreach (var oclElem in _openCLQueryResult.Platforms)
-                        {
-                            stringBuilder.AppendLine($"\tFound devices for platform: {oclElem.PlatformName}");
-                            foreach (var oclDev in oclElem.Devices)
-                            {
-                                stringBuilder.AppendLine("\t\tDevice:");
-                                stringBuilder.AppendLine($"\t\t\tDevice ID {oclDev.DeviceID}");
-                                stringBuilder.AppendLine($"\t\t\tDevice NAME {oclDev._CL_DEVICE_NAME}");
-                                stringBuilder.AppendLine($"\t\t\tDevice TYPE {oclDev._CL_DEVICE_TYPE}");
-                            }
-                        }
-                        Helpers.ConsolePrint(Tag, stringBuilder.ToString());
-                    }
-                    Helpers.ConsolePrint(Tag, "QueryOpenCLDevices END");
-                }
-            }
-
-            public static List<OpenCLDevice> AmdDevices = new List<OpenCLDevice>();
 
             #endregion Helpers
         }
