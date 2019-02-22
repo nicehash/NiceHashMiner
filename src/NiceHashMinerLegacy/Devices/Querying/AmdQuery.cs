@@ -1,14 +1,13 @@
-﻿using System;
+﻿using ATI.ADL;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Devices.OpenCL;
+using NiceHashMiner.Forms;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using ATI.ADL;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Devices.OpenCL;
-using NiceHashMiner.Forms;
 
 namespace NiceHashMiner.Devices.Querying
 {
@@ -103,10 +102,10 @@ namespace NiceHashMiner.Devices.Querying
                 if (!oclEl.PlatformName.Contains("AMD") && !oclEl.PlatformName.Contains("amd")) continue;
                 amdPlatformNumFound = true;
                 var amdOpenCLPlatformStringKey = oclEl.PlatformName;
-                ComputeDeviceManager.Available.AmdOpenCLPlatformNum = oclEl.PlatformNum;
+                AvailableDevices.AmdOpenCLPlatformNum = oclEl.PlatformNum;
                 amdOclDevices = oclEl.Devices;
                 Helpers.ConsolePrint(Tag,
-                    $"AMD platform found: Key: {amdOpenCLPlatformStringKey}, Num: {ComputeDeviceManager.Available.AmdOpenCLPlatformNum}");
+                    $"AMD platform found: Key: {amdOpenCLPlatformStringKey}, Num: {AvailableDevices.AmdOpenCLPlatformNum}");
                 break;
             }
 
@@ -199,8 +198,6 @@ namespace NiceHashMiner.Devices.Querying
             stringBuilder.AppendLine("QueryAMD [DEFAULT query] devices: ");
             foreach (var dev in amdDevices)
             {
-                ComputeDeviceManager.Available.HasAmd = true;
-
                 var busID = dev.AMD_BUS_ID;
                 if (busID != -1 && _busIdInfos.ContainsKey(busID))
                 {
@@ -218,7 +215,7 @@ namespace NiceHashMiner.Devices.Querying
                     var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
                     var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
-                    ComputeDeviceManager.Available.Devices.Add(
+                    AvailableDevices.Devices.Add(
                         new AmdComputeDevice(newAmdDev, ++ComputeDeviceManager.Query.GpuCount, false,
                             _busIdInfos[busID].Adl2Index));
                     // just in case 
@@ -268,8 +265,6 @@ namespace NiceHashMiner.Devices.Querying
 
             for (var i = 0; i < minCount; ++i)
             {
-                ComputeDeviceManager.Available.HasAmd = true;
-
                 var deviceName = amdVideoControllers[i].Name;
                 if (amdVideoControllers[i].InfSection == null)
                     amdVideoControllers[i].InfSection = "";
@@ -286,7 +281,7 @@ namespace NiceHashMiner.Devices.Querying
                 var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
                 var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
 
-                ComputeDeviceManager.Available.Devices.Add(
+                AvailableDevices.Devices.Add(
                     new AmdComputeDevice(newAmdDev, ++ComputeDeviceManager.Query.GpuCount, true, -1));
                 // just in case 
                 try

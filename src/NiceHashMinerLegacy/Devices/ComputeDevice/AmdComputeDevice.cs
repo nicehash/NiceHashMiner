@@ -118,7 +118,7 @@ namespace NiceHashMiner.Devices
             InfSection = amdDevice.InfSection;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             DriverDisableAlgos = amdDevice.DriverDisableAlgos;
-            Index = ID + ComputeDeviceManager.Available.AvailCpus + ComputeDeviceManager.Available.AvailNVGpus;
+            Index = ID + AvailableDevices.AvailCpus + AvailableDevices.AvailNVGpus;
             _adapterIndex = amdDevice.AdapterIndex;
 
             ADL.ADL2_Main_Control_Create?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);

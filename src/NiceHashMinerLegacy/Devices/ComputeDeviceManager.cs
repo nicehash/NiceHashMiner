@@ -215,7 +215,7 @@ namespace NiceHashMiner.Devices
                     AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLQueryResult);
                 }
                 // #5 uncheck CPU if GPUs present, call it after we Query all devices
-                Group.UncheckedCpu();
+                AvailableDevices.UncheckCpuIfGpu();
 
                 // TODO update this to report undetected hardware
                 // #6 check NVIDIA, AMD devices count
@@ -285,7 +285,7 @@ namespace NiceHashMiner.Devices
                 }
 
                 // no devices found
-                if (Available.Devices.Count <= 0)
+                if (AvailableDevices.Devices.Count <= 0)
                 {
                     var result = MessageBox.Show(Tr("No supported devices are found. Select the OK button for help or cancel to continue."),
                         Tr("No Supported Devices"),
@@ -297,14 +297,14 @@ namespace NiceHashMiner.Devices
                 }
 
                 // create AMD bus ordering for Claymore
-                var amdDevices = Available.Devices.FindAll((a) => a.DeviceType == DeviceType.AMD);
+                var amdDevices = AvailableDevices.Devices.FindAll((a) => a.DeviceType == DeviceType.AMD);
                 amdDevices.Sort((a, b) => a.BusID.CompareTo(b.BusID));
                 for (var i = 0; i < amdDevices.Count; i++)
                 {
                     amdDevices[i].IDByBus = i;
                 }
                 //create NV bus ordering for Claymore
-                var nvDevices = Available.Devices.FindAll((a) => a.DeviceType == DeviceType.NVIDIA);
+                var nvDevices = AvailableDevices.Devices.FindAll((a) => a.DeviceType == DeviceType.NVIDIA);
                 nvDevices.Sort((a, b) => a.BusID.CompareTo(b.BusID));
                 for (var i = 0; i < nvDevices.Count; i++)
                 {
@@ -313,22 +313,22 @@ namespace NiceHashMiner.Devices
 
                 // get GPUs RAM sum
                 // bytes
-                Available.NvidiaRamSum = 0;
-                Available.AmdRamSum = 0;
-                foreach (var dev in Available.Devices)
+                AvailableDevices.NvidiaRamSum = 0;
+                AvailableDevices.AmdRamSum = 0;
+                foreach (var dev in AvailableDevices.Devices)
                 {
                     if (dev.DeviceType == DeviceType.NVIDIA)
                     {
-                        Available.NvidiaRamSum += dev.GpuRam;
+                        AvailableDevices.NvidiaRamSum += dev.GpuRam;
                     }
                     else if (dev.DeviceType == DeviceType.AMD)
                     {
-                        Available.AmdRamSum += dev.GpuRam;
+                        AvailableDevices.AmdRamSum += dev.GpuRam;
                     }
                 }
                 // Make gpu ram needed not larger than 4GB per GPU
-                var totalGpuRam = Math.Min((Available.NvidiaRamSum + Available.AmdRamSum) * 0.6 / 1024,
-                    (double) Available.AvailGpUs * 4 * 1024 * 1024);
+                var totalGpuRam = Math.Min((AvailableDevices.NvidiaRamSum + AvailableDevices.AmdRamSum) * 0.6 / 1024,
+                    (double) AvailableDevices.AvailGpUs * 4 * 1024 * 1024);
                 double totalSysRam = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
                 // check
                 if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && totalSysRam < totalGpuRam)
@@ -450,16 +450,16 @@ namespace NiceHashMiner.Devices
                 {
                     Helpers.ConsolePrint(Tag, "QueryCpus START");
                     // get all CPUs
-                    Available.CpusCount = CpuID.GetPhysicalProcessorCount();
-                    Available.IsHyperThreadingEnabled = CpuID.IsHypeThreadingEnabled();
+                    AvailableDevices.CpusCount = CpuID.GetPhysicalProcessorCount();
+                    AvailableDevices.IsHyperThreadingEnabled = CpuID.IsHypeThreadingEnabled();
 
                     Helpers.ConsolePrint(Tag,
-                        Available.IsHyperThreadingEnabled
+                        AvailableDevices.IsHyperThreadingEnabled
                             ? "HyperThreadingEnabled = TRUE"
                             : "HyperThreadingEnabled = FALSE");
 
                     // get all cores (including virtual - HT can benefit mining)
-                    var threadsPerCpu = CpuID.GetVirtualCoresCount() / Available.CpusCount;
+                    var threadsPerCpu = CpuID.GetVirtualCoresCount() / AvailableDevices.CpusCount;
 
                     if (!Helpers.Is64BitOperatingSystem)
                     {
@@ -470,10 +470,10 @@ namespace NiceHashMiner.Devices
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
-                        Available.CpusCount = 0;
+                        AvailableDevices.CpusCount = 0;
                     }
 
-                    if (threadsPerCpu * Available.CpusCount > 64)
+                    if (threadsPerCpu * AvailableDevices.CpusCount > 64)
                     {
                         if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
                         {
@@ -482,7 +482,7 @@ namespace NiceHashMiner.Devices
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
-                        Available.CpusCount = 0;
+                        AvailableDevices.CpusCount = 0;
                     }
 
                     // TODO important move this to settings
@@ -491,18 +491,18 @@ namespace NiceHashMiner.Devices
 
                     if (CpuUtils.IsCpuMiningCapable())
                     {
-                        if (Available.CpusCount == 1)
+                        if (AvailableDevices.CpusCount == 1)
                         {
-                            Available.Devices.Add(
+                            AvailableDevices.Devices.Add(
                                 new CpuComputeDevice(0, "CPU0", CpuID.GetCpuName().Trim(), threadsPerCpu, 0,
                                     ++CpuCount)
                             );
                         }
-                        else if (Available.CpusCount > 1)
+                        else if (AvailableDevices.CpusCount > 1)
                         {
-                            for (var i = 0; i < Available.CpusCount; i++)
+                            for (var i = 0; i < AvailableDevices.CpusCount; i++)
                             {
-                                Available.Devices.Add(
+                                AvailableDevices.Devices.Add(
                                     new CpuComputeDevice(i, "CPU" + i, CpuID.GetCpuName().Trim(), threadsPerCpu,
                                         CpuID.CreateAffinityMask(i, threadsPerCpuMask), ++CpuCount)
                                 );
@@ -650,96 +650,6 @@ namespace NiceHashMiner.Devices
                     Helpers.ConsolePrint("SystemSpecs", $"TotalVirtualMemorySize = {TotalVirtualMemorySize}");
                     Helpers.ConsolePrint("SystemSpecs", $"TotalVisibleMemorySize = {TotalVisibleMemorySize}");
                 }
-            }
-        }
-
-        public static class Available
-        {
-            public static bool HasNvidia = false;
-            public static bool HasAmd = false;
-            public static bool HasCpu = false;
-            public static int CpusCount = 0;
-
-            public static int AvailCpus
-            {
-                get { return Devices.Count(d => d.DeviceType == DeviceType.CPU); }
-            }
-
-            public static int AvailNVGpus
-            {
-                get { return Devices.Count(d => d.DeviceType == DeviceType.NVIDIA); }
-            }
-
-            public static int AvailAmdGpus
-            {
-                get { return Devices.Count(d => d.DeviceType == DeviceType.AMD); }
-            }
-
-            public static int AvailGpUs => AvailAmdGpus + AvailNVGpus;
-            public static int AmdOpenCLPlatformNum = -1;
-            public static bool IsHyperThreadingEnabled = false;
-
-            public static ulong NvidiaRamSum = 0;
-            public static ulong AmdRamSum = 0;
-
-            public static readonly List<ComputeDevice> Devices = new List<ComputeDevice>();
-
-            // methods
-            public static ComputeDevice GetDeviceWithUuid(string uuid)
-            {
-                return Devices.FirstOrDefault(dev => uuid == dev.Uuid);
-            }
-
-            public static List<ComputeDevice> GetSameDevicesTypeAsDeviceWithUuid(string uuid)
-            {
-                var compareDev = GetDeviceWithUuid(uuid);
-                return (from dev in Devices
-                    where uuid != dev.Uuid && compareDev.DeviceType == dev.DeviceType
-                    select GetDeviceWithUuid(dev.Uuid)).ToList();
-            }
-
-            public static ComputeDevice GetCurrentlySelectedComputeDevice(int index, bool unique)
-            {
-                return Devices[index];
-            }
-
-            public static int GetCountForType(DeviceType type)
-            {
-                return Devices.Count(device => device.DeviceType == type);
-            }
-        }
-
-        public static class Group
-        {
-            public static void DisableCpuGroup()
-            {
-                foreach (var device in Available.Devices)
-                {
-                    if (device.DeviceType == DeviceType.CPU)
-                    {
-                        device.Enabled = false;
-                    }
-                }
-            }
-
-            public static bool ContainsAmdGpus
-            {
-                get { return Available.Devices.Any(device => device.DeviceType == DeviceType.AMD); }
-            }
-
-            public static bool ContainsGpus
-            {
-                get
-                {
-                    return Available.Devices.Any(device =>
-                        device.DeviceType == DeviceType.NVIDIA || device.DeviceType == DeviceType.AMD);
-                }
-            }
-
-            public static void UncheckedCpu()
-            {
-                // Auto uncheck CPU if any GPU is found
-                if (ContainsGpus) DisableCpuGroup();
             }
         }
     }

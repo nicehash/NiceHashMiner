@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ManagedCuda.Nvml;
+﻿using ManagedCuda.Nvml;
 using Newtonsoft.Json;
-using NiceHashMiner.Configs;
 using NiceHashMiner.PInvoke;
 using NiceHashMinerLegacy.Common.Enums;
 using NVIDIA.NVAPI;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace NiceHashMiner.Devices.Querying
 {
@@ -45,7 +42,6 @@ namespace NiceHashMiner.Devices.Querying
                 return;
             }
             
-            ComputeDeviceManager.Available.HasNvidia = true;
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine("");
             stringBuilder.AppendLine("CudaDevicesDetection:");
@@ -104,7 +100,7 @@ namespace NiceHashMiner.Devices.Querying
                 }
 
                 idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
-                ComputeDeviceManager.Available.Devices.Add(
+                AvailableDevices.Devices.Add(
                     new CudaComputeDevice(cudaDev, group, ++ComputeDeviceManager.Query.GpuCount, handle, nvmlHandle)
                 );
             }
