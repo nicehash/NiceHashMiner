@@ -161,17 +161,21 @@ namespace NiceHashMiner.Devices
                 */
 
                 // check CUDA devices
-                var currentCudaDevices = new List<CudaDevice>();
-                if (!Nvidia.IsSkipNvidia())
-                    Nvidia.QueryCudaDevices(ref currentCudaDevices);
 
-                var gpusOld = _cudaDevices.Count;
-                var gpusNew = currentCudaDevices.Count;
+                // TODO
+                return false;
 
-                Helpers.ConsolePrint("ComputeDeviceManager.CheckCount",
-                    "CUDA GPUs count: Old: " + gpusOld + " / New: " + gpusNew);
+                //var currentCudaDevices = new List<CudaDevice>();
+                //if (!Nvidia.IsSkipNvidia())
+                //    Nvidia.QueryCudaDevices(ref currentCudaDevices);
 
-                return (gpusNew < gpusOld);
+                //var gpusOld = _cudaDevices.Count;
+                //var gpusNew = currentCudaDevices.Count;
+
+                //Helpers.ConsolePrint("ComputeDeviceManager.CheckCount",
+                //    "CUDA GPUs count: Old: " + gpusOld + " / New: " + gpusNew);
+
+                //return (gpusNew < gpusOld);
             }
 
             public static void QueryDevices(IMessageNotifier messageNotifier)
@@ -183,14 +187,16 @@ namespace NiceHashMiner.Devices
                 // #1 CPU
                 Cpu.QueryCpus();
                 // #2 CUDA
-                if (Nvidia.IsSkipNvidia())
+                NvidiaQuery nvQuery = null;
+                if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
                 {
                     Helpers.ConsolePrint(Tag, "Skipping NVIDIA device detection, settings are set to disabled");
                 }
                 else
                 {
                     ShowMessageAndStep(Tr("Querying CUDA devices"));
-                    Nvidia.QueryCudaDevices();
+                    nvQuery = new NvidiaQuery();
+                    nvQuery.QueryCudaDevices();
                 }
                 // OpenCL and AMD
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
@@ -213,9 +219,10 @@ namespace NiceHashMiner.Devices
 
                 // TODO update this to report undetected hardware
                 // #6 check NVIDIA, AMD devices count
-                var nvidiaCount = 0;
+                var nvCountMatched = false;
                 {
                     var amdCount = 0;
+                    var nvidiaCount = 0;
                     foreach (var vidCtrl in AvaliableVideoControllers)
                     {
                         if (vidCtrl.Name.ToLower().Contains("nvidia") && CudaUnsupported.IsSupported(vidCtrl.Name))
@@ -229,8 +236,11 @@ namespace NiceHashMiner.Devices
                         }
                         amdCount += (vidCtrl.Name.ToLower().Contains("amd")) ? 1 : 0;
                     }
+
+                    nvCountMatched = nvidiaCount == nvQuery?.CudaDevices?.Count;
+
                     Helpers.ConsolePrint(Tag,
-                        nvidiaCount == _cudaDevices.Count
+                        nvCountMatched
                             ? "Cuda NVIDIA/CUDA device count GOOD"
                             : "Cuda NVIDIA/CUDA device count BAD!!!");
                     Helpers.ConsolePrint(Tag,
@@ -238,11 +248,14 @@ namespace NiceHashMiner.Devices
                 }
                 // allerts
                 _currentNvidiaSmiDriver = GetNvidiaSmiDriver();
+
+                // TODO: Too much GUI code here, should return list of errors to caller instead
+
                 // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
                 var isNvidiaErrorShown = false; // to prevent showing twice
                 var showWarning = ConfigManager.GeneralConfig.ShowDriverVersionWarning &&
                                   WindowsDisplayAdapters.HasNvidiaVideoController();
-                if (showWarning && _cudaDevices.Count != nvidiaCount &&
+                if (showWarning && nvCountMatched &&
                     _currentNvidiaSmiDriver.IsLesserVersionThan(NvidiaMinDetectionDriver))
                 {
                     isNvidiaErrorShown = true;
@@ -501,188 +514,7 @@ namespace NiceHashMiner.Devices
                 }
             }
 
-            private static List<CudaDevice> _cudaDevices = new List<CudaDevice>();
-
-            private static class Nvidia
-            {
-                private static string _queryCudaDevicesString = "";
-
-                private static bool tryAddNvmlToEnvPathCalled = false;
-                private static void tryAddNvmlToEnvPath()
-                {
-                    if (tryAddNvmlToEnvPathCalled) return;
-                    tryAddNvmlToEnvPathCalled = true; // call this ONLY ONCE AND NEVER AGAIN
-                    var nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                                   "\\NVIDIA Corporation\\NVSMI";
-                    if (Directory.Exists(nvmlRootPath))
-                    {
-                        // Add to env so it can find nvml.dll
-                        var pathVar = Environment.GetEnvironmentVariable("PATH");
-                        pathVar += ";" + nvmlRootPath;
-                        Environment.SetEnvironmentVariable("PATH", pathVar);
-                    }
-                }
-
-                public static bool IsSkipNvidia()
-                {
-                    return ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
-                }
-
-                public static void QueryCudaDevices()
-                {
-                    Helpers.ConsolePrint(Tag, "QueryCudaDevices START");
-                    QueryCudaDevices(ref _cudaDevices);
-
-                    if (_cudaDevices != null && _cudaDevices.Count != 0)
-                    {
-                        Available.HasNvidia = true;
-                        var stringBuilder = new StringBuilder();
-                        stringBuilder.AppendLine("");
-                        stringBuilder.AppendLine("CudaDevicesDetection:");
-
-                        // Enumerate NVAPI handles and map to busid
-                        var idHandles = new Dictionary<int, NvPhysicalGpuHandle>();
-                        if (NVAPI.IsAvailable)
-                        {
-                            var handles = new NvPhysicalGpuHandle[NVAPI.MAX_PHYSICAL_GPUS];
-                            if (NVAPI.NvAPI_EnumPhysicalGPUs == null)
-                            {
-                                Helpers.ConsolePrint("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable");
-                            }
-                            else
-                            {
-                                var status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out var _);
-                                if (status != NvStatus.OK)
-                                {
-                                    Helpers.ConsolePrint("NVAPI", "Enum physical GPUs failed with status: " + status);
-                                }
-                                else
-                                {
-                                    foreach (var handle in handles)
-                                    {
-                                        var idStatus = NVAPI.NvAPI_GPU_GetBusID(handle, out var id);
-                                        if (idStatus != NvStatus.EXPECTED_PHYSICAL_GPU_HANDLE)
-                                        {
-                                            if (idStatus != NvStatus.OK)
-                                            {
-                                                Helpers.ConsolePrint("NVAPI",
-                                                    "Bus ID get failed with status: " + idStatus);
-                                            }
-                                            else
-                                            {
-                                                Helpers.ConsolePrint("NVAPI", "Found handle for busid " + id);
-                                                idHandles[id] = handle;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        tryAddNvmlToEnvPath();
-                        var nvmlInit = false;
-                        try
-                        {
-                            var ret = NvmlNativeMethods.nvmlInit();
-                            if (ret != nvmlReturn.Success)
-                                throw new Exception($"NVML init failed with code {ret}");
-                            nvmlInit = true;
-                        }
-                        catch (Exception e)
-                        {
-                            Helpers.ConsolePrint("NVML", e.ToString());
-                        }
-
-                        foreach (var cudaDev in _cudaDevices)
-                        {
-                            // check sm vesrions
-                            bool isUnderSM21;
-                            {
-                                var isUnderSM2Major = cudaDev.SM_major < 2;
-                                var isUnderSM1Minor = cudaDev.SM_minor < 1;
-                                isUnderSM21 = isUnderSM2Major && isUnderSM1Minor;
-                            }
-                            //bool isOverSM6 = cudaDev.SM_major > 6;
-                            var skip = isUnderSM21;
-                            var skipOrAdd = skip ? "SKIPED" : "ADDED";
-                            const string isDisabledGroupStr = ""; // TODO remove
-                            var etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
-                            stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
-                            stringBuilder.AppendLine($"\t\tID: {cudaDev.DeviceID}");
-                            stringBuilder.AppendLine($"\t\tBusID: {cudaDev.pciBusID}");
-                            stringBuilder.AppendLine($"\t\tNAME: {cudaDev.GetName()}");
-                            stringBuilder.AppendLine($"\t\tVENDOR: {cudaDev.VendorName}");
-                            stringBuilder.AppendLine($"\t\tUUID: {cudaDev.UUID}");
-                            stringBuilder.AppendLine($"\t\tSM: {cudaDev.SM_major}.{cudaDev.SM_minor}");
-                            stringBuilder.AppendLine($"\t\tMEMORY: {cudaDev.DeviceGlobalMemory}");
-                            stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
-
-                            if (!skip)
-                            {
-                                DeviceGroupType group;
-                                switch (cudaDev.SM_major)
-                                {
-                                    case 2:
-                                        group = DeviceGroupType.NVIDIA_2_1;
-                                        break;
-                                    case 3:
-                                        group = DeviceGroupType.NVIDIA_3_x;
-                                        break;
-                                    case 5:
-                                        group = DeviceGroupType.NVIDIA_5_x;
-                                        break;
-                                    case 6:
-                                        group = DeviceGroupType.NVIDIA_6_x;
-                                        break;
-                                    default:
-                                        group = DeviceGroupType.NVIDIA_6_x;
-                                        break;
-                                }
-
-                                var nvmlHandle = new nvmlDevice();
-
-                                if (nvmlInit)
-                                {
-                                    var ret = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(cudaDev.UUID, ref nvmlHandle);
-                                    stringBuilder.AppendLine(
-                                        "\t\tNVML HANDLE: " +
-                                        $"{(ret == nvmlReturn.Success ? nvmlHandle.Pointer.ToString() : $"Failed with code ret {ret}")}");
-                                }
-
-                                idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
-                                Available.Devices.Add(
-                                    new CudaComputeDevice(cudaDev, group, ++GpuCount, handle, nvmlHandle)
-                                );
-                            }
-                        }
-                        Helpers.ConsolePrint(Tag, stringBuilder.ToString());
-                    }
-                    Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
-                }
-
-                public static void QueryCudaDevices(ref List<CudaDevice> cudaDevices)
-                {
-                    _queryCudaDevicesString = "";
-                    try
-                    {
-                        _queryCudaDevicesString = DeviceDetection.GetCUDADevices();
-                        var cudaQueryResult = JsonConvert.DeserializeObject<CudaDeviceDetectionResult>(_queryCudaDevicesString,
-                                        Globals.JsonSettings);
-                        cudaDevices = cudaQueryResult.CudaDevices;
-                        if (_cudaDevices == null || _cudaDevices.Count == 0)
-                        {
-                            Helpers.ConsolePrint(Tag,
-                                "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +
-                                _queryCudaDevicesString);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        // TODO
-                        Helpers.ConsolePrint(Tag, "CudaDevicesDetection threw Exception: " + ex.Message);
-                    }
-                }
-            }
+            //private static List<CudaDevice> _cudaDevices = new List<CudaDevice>();
 
             private static OpenCLDeviceDetectionResult _openCLQueryResult;
             private static bool _isOpenCLQuerySuccess = false;
