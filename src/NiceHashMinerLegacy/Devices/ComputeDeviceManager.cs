@@ -313,23 +313,23 @@ namespace NiceHashMiner.Devices
 
                 // get GPUs RAM sum
                 // bytes
-                AvailableDevices.NvidiaRamSum = 0;
-                AvailableDevices.AmdRamSum = 0;
+                var nvRamSum = 0ul;
+                var amdRamSum = 0ul;
                 foreach (var dev in AvailableDevices.Devices)
                 {
                     if (dev.DeviceType == DeviceType.NVIDIA)
                     {
-                        AvailableDevices.NvidiaRamSum += dev.GpuRam;
+                        nvRamSum += dev.GpuRam;
                     }
                     else if (dev.DeviceType == DeviceType.AMD)
                     {
-                        AvailableDevices.AmdRamSum += dev.GpuRam;
+                        amdRamSum += dev.GpuRam;
                     }
                 }
                 // Make gpu ram needed not larger than 4GB per GPU
-                var totalGpuRam = Math.Min((AvailableDevices.NvidiaRamSum + AvailableDevices.AmdRamSum) * 0.6 / 1024,
-                    (double) AvailableDevices.AvailGpUs * 4 * 1024 * 1024);
-                double totalSysRam = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
+                var totalGpuRam = Math.Min((ulong) ((nvRamSum + amdRamSum) * 0.6 / 1024),
+                    (ulong) AvailableDevices.AvailGpUs * 4 * 1024 * 1024);
+                var totalSysRam = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
                 // check
                 if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && totalSysRam < totalGpuRam)
                 {

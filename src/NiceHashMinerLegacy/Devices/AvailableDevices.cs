@@ -23,9 +23,6 @@ namespace NiceHashMiner.Devices
 
         public static int AmdOpenCLPlatformNum { get; internal set; } = -1;
         public static bool IsHyperThreadingEnabled { get; internal set; } = false;
-
-        public static ulong NvidiaRamSum { get; internal set; } = 0;
-        public static ulong AmdRamSum { get; internal set; } = 0;
         
         public static ComputeDevice GetDeviceWithUuid(string uuid)
         {
