@@ -19,8 +19,9 @@ namespace NiceHashMiner.Miners.Grouping
                 ((IsNotCpuGroups(a, b) && IsSameDeviceType(a, b)) ||
                  (a.Algorithm.MinerBaseType == MinerBaseType.Prospector &&
                  b.Algorithm.MinerBaseType == MinerBaseType.Prospector) ||
-                 a.Algorithm.MinerBaseType == MinerBaseType.XmrStak)) 
+                 a.Algorithm.MinerBaseType == MinerBaseType.XmrStak || a.Algorithm.MinerBaseType == MinerBaseType.GMiner)) 
                 return true;
+
             return false;
         }
 

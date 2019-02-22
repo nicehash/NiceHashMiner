@@ -30,7 +30,7 @@ namespace NiceHashMiner.Devices
                 DeviceGroupType.CPU,
                 false,
                 DeviceType.CPU,
-                string.Format(International.GetText("ComputeDevice_Short_Name_CPU"), cpuCount),
+                string.Format(Translations.Tr("CPU#{0}"), cpuCount),
                 0)
         {
             Threads = threads;

@@ -103,28 +103,43 @@ namespace NiceHashMiner
                     Application.Run(new Form_ChooseLanguage());
                 }
 
-                // Init languages
-                International.Initialize(ConfigManager.GeneralConfig.Language);
+                
+                Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
 
                 if (commandLineArgs.IsLang)
                 {
                     Helpers.ConsolePrint("NICEHASH", "Language is overwritten by command line parameter (-lang).");
-                    International.Initialize(commandLineArgs.LangValue);
+                    Translations.SetLanguage(commandLineArgs.LangValue);
                     ConfigManager.GeneralConfig.Language = commandLineArgs.LangValue;
                 }
+
 
                 // check WMI
                 if (Helpers.IsWmiEnabled())
                 {
-                    if (ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
+                    if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer) return;
+
+                    if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "")
                     {
-                        Application.Run(new Form_Main());
+                        var dialogSwitch = new EnterBTCDialogSwitch();
+                        Application.Run(dialogSwitch);
+                        if (dialogSwitch.IsLogin)
+                        {
+                            var loginForm = new LoginForm();
+                            Application.Run(loginForm);
+                            if (BitcoinAddress.ValidateBitcoinAddress(loginForm.Btc))
+                            {
+                                ConfigManager.GeneralConfig.BitcoinAddress = loginForm.Btc;
+                                ConfigManager.GeneralConfigFileCommit();
+                            }
+                        }
                     }
+                    Application.Run(new Form_Main());
                 }
                 else
                 {
-                    MessageBox.Show(International.GetText("Program_WMI_Error_Text"),
-                        International.GetText("Program_WMI_Error_Title"),
+                    MessageBox.Show(Translations.Tr("NiceHash Miner Legacy cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner Legacy to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner Legacy."),
+                        Translations.Tr("Windows Management Instrumentation Error"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

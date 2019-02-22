@@ -1,5 +1,4 @@
-﻿using ATI.ADL;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
 using NVIDIA.NVAPI;
@@ -11,12 +10,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using NiceHashMiner.Devices.Querying;
-using NiceHashMiner.Forms;
 using NiceHashMinerLegacy.Common.Enums;
+using static NiceHashMiner.Translations;
+using NiceHashMiner.Devices.OpenCL;
+using NiceHashMiner.PInvoke;
 
 namespace NiceHashMiner.Devices
 {
@@ -189,24 +189,24 @@ namespace NiceHashMiner.Devices
                 }
                 else
                 {
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_CUDA_Query"));
+                    ShowMessageAndStep(Tr("Querying CUDA devices"));
                     Nvidia.QueryCudaDevices();
                 }
                 // OpenCL and AMD
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
                 {
                     Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query_Skip"));
+                    ShowMessageAndStep(Tr("Skip check for AMD OpenCL GPUs"));
                 }
                 else
                 {
                     // #3 OpenCL
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_OpenCL_Query"));
+                    ShowMessageAndStep(Tr("Querying OpenCL devices"));
                     OpenCL.QueryOpenCLDevices();
                     // #4 AMD query AMD from OpenCL devices, get serial and add devices
-                    ShowMessageAndStep(International.GetText("Compute_Device_Query_Manager_AMD_Query"));
+                    ShowMessageAndStep(Tr("Checking AMD OpenCL GPUs"));
                     var amd = new AmdQuery(AvaliableVideoControllers);
-                    AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLJsonData);
+                    AmdDevices = amd.QueryAmd(_isOpenCLQuerySuccess, _openCLQueryResult);
                 }
                 // #5 uncheck CPU if GPUs present, call it after we Query all devices
                 Group.UncheckedCpu();
@@ -247,11 +247,11 @@ namespace NiceHashMiner.Devices
                 {
                     isNvidiaErrorShown = true;
                     var minDriver = NvidiaMinDetectionDriver.ToString();
-                    var recomendDrvier = NvidiaRecomendedDriver.ToString();
+                    var recomendDriver = NvidiaRecomendedDriver.ToString();
                     MessageBox.Show(string.Format(
-                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Detection"),
-                            minDriver, recomendDrvier),
-                        International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
+                            Tr("We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner Legacy to work correctly you should upgrade your drivers to recommended {1} or newer. If you still see this warning after updating the driver please uninstall all your Nvidia drivers and make a clean install of the latest official driver from http://www.nvidia.com."),
+                            minDriver, recomendDriver),
+                        Tr("Nvidia Recomended driver"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 // recomended driver
@@ -261,21 +261,21 @@ namespace NiceHashMiner.Devices
                     var recomendDrvier = NvidiaRecomendedDriver.ToString();
                     var nvdriverString = _currentNvidiaSmiDriver.LeftPart > -1
                         ? string.Format(
-                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended_PART"),
+                            Tr(" (current {0})"),
                             _currentNvidiaSmiDriver)
                         : "";
                     MessageBox.Show(string.Format(
-                            International.GetText("Compute_Device_Query_Manager_NVIDIA_Driver_Recomended"),
+                           Tr("We have detected that your Nvidia Driver is older than {0}{1}. We recommend you to update to {2} or newer."),
                             recomendDrvier, nvdriverString, recomendDrvier),
-                        International.GetText("Compute_Device_Query_Manager_NVIDIA_RecomendedDriver_Title"),
+                        Tr("Nvidia Recomended driver"),
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 // no devices found
                 if (Available.Devices.Count <= 0)
                 {
-                    var result = MessageBox.Show(International.GetText("Compute_Device_Query_Manager_No_Devices"),
-                        International.GetText("Compute_Device_Query_Manager_No_Devices_Title"),
+                    var result = MessageBox.Show(Tr("No supported devices are found. Select the OK button for help or cancel to continue."),
+                        Tr("No Supported Devices"),
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
                     if (result == DialogResult.OK)
                     {
@@ -321,8 +321,8 @@ namespace NiceHashMiner.Devices
                 if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && totalSysRam < totalGpuRam)
                 {
                     Helpers.ConsolePrint(Tag, "virtual memory size BAD");
-                    MessageBox.Show(International.GetText("VirtualMemorySize_BAD"),
-                        International.GetText("Warning_with_Exclamation"),
+                    MessageBox.Show(Tr("NiceHash Miner Legacy recommends increasing virtual memory size so that all algorithms would work fine."),
+                        Tr("Warning!"),
                         MessageBoxButtons.OK);
                 }
                 else
@@ -407,19 +407,19 @@ namespace NiceHashMiner.Devices
                     {
                         if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && !allVideoContollersOK)
                         {
-                            var msg = International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg");
+                            var msg = Tr("We have detected a Video Controller that is not working properly. NiceHash Miner Legacy will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
                             foreach (var vc in avaliableVideoControllers)
                             {
                                 if (!vc.Status.ToLower().Equals("ok"))
                                 {
                                     msg += Environment.NewLine
                                            + string.Format(
-                                               International.GetText("QueryVideoControllers_NOT_ALL_OK_Msg_Append"),
+                                               Tr("Name: {0}, Status {1}, PNPDeviceID {2}"),
                                                vc.Name, vc.Status, vc.PnpDeviceID);
                                 }
                             }
                             MessageBox.Show(msg,
-                                International.GetText("QueryVideoControllers_NOT_ALL_OK_Title"),
+                               Tr("Warning! Video Controller not operating correctly"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
@@ -452,8 +452,8 @@ namespace NiceHashMiner.Devices
                     {
                         if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
                         {
-                            MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64bitMsg"),
-                                International.GetText("Warning_with_Exclamation"),
+                            MessageBox.Show(Tr("NiceHash Miner Legacy works only on 64-bit version of OS for CPU mining. CPU mining will be disabled."),
+                                Tr("Warning!"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
@@ -464,8 +464,8 @@ namespace NiceHashMiner.Devices
                     {
                         if (ConfigManager.GeneralConfig.ShowDriverVersionWarning)
                         {
-                            MessageBox.Show(International.GetText("Form_Main_msgbox_CPUMining64CoresMsg"),
-                                International.GetText("Warning_with_Exclamation"),
+                            MessageBox.Show(Tr("NiceHash Miner Legacy does not support more than 64 virtual cores. CPU mining will be disabled."),
+                               Tr("Warning!"),
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
@@ -520,14 +520,6 @@ namespace NiceHashMiner.Devices
                         var pathVar = Environment.GetEnvironmentVariable("PATH");
                         pathVar += ";" + nvmlRootPath;
                         Environment.SetEnvironmentVariable("PATH", pathVar);
-                    }
-                }
-
-                private static void QueryCudaDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e)
-                {
-                    if (e.Data != null)
-                    {
-                        _queryCudaDevicesString += e.Data;
                     }
                 }
 
@@ -671,36 +663,17 @@ namespace NiceHashMiner.Devices
                 public static void QueryCudaDevices(ref List<CudaDevice> cudaDevices)
                 {
                     _queryCudaDevicesString = "";
-
-                    var cudaDevicesDetection = new Process
-                    {
-                        StartInfo =
-                        {
-                            FileName = "CudaDeviceDetection.exe",
-                            UseShellExecute = false,
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true,
-                            CreateNoWindow = true
-                        }
-                    };
-                    cudaDevicesDetection.OutputDataReceived += QueryCudaDevicesOutputErrorDataReceived;
-                    cudaDevicesDetection.ErrorDataReceived += QueryCudaDevicesOutputErrorDataReceived;
-
-                    const int waitTime = 30 * 1000; // 30seconds
                     try
                     {
-                        if (!cudaDevicesDetection.Start())
+                        _queryCudaDevicesString = DeviceDetection.GetCUDADevices();
+                        var cudaQueryResult = JsonConvert.DeserializeObject<CudaDeviceDetectionResult>(_queryCudaDevicesString,
+                                        Globals.JsonSettings);
+                        cudaDevices = cudaQueryResult.CudaDevices;
+                        if (_cudaDevices == null || _cudaDevices.Count == 0)
                         {
-                            Helpers.ConsolePrint(Tag, "CudaDevicesDetection process could not start");
-                        }
-                        else
-                        {
-                            cudaDevicesDetection.BeginErrorReadLine();
-                            cudaDevicesDetection.BeginOutputReadLine();
-                            if (cudaDevicesDetection.WaitForExit(waitTime))
-                            {
-                                cudaDevicesDetection.Close();
-                            }
+                            Helpers.ConsolePrint(Tag,
+                                "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +
+                                _queryCudaDevicesString);
                         }
                     }
                     catch (Exception ex)
@@ -708,111 +681,45 @@ namespace NiceHashMiner.Devices
                         // TODO
                         Helpers.ConsolePrint(Tag, "CudaDevicesDetection threw Exception: " + ex.Message);
                     }
-                    finally
-                    {
-                        if (_queryCudaDevicesString != "")
-                        {
-                            try
-                            {
-                                var cudaQueryResult = JsonConvert.DeserializeObject<CudaDeviceDetectionResult>(_queryCudaDevicesString,
-                                        Globals.JsonSettings);
-                                cudaDevices = cudaQueryResult.CudaDevices;
-                            }
-                            catch { }
-
-                            if (_cudaDevices == null || _cudaDevices.Count == 0)
-                                Helpers.ConsolePrint(Tag,
-                                    "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +
-                                    _queryCudaDevicesString);
-                        }
-                    }
                 }
             }
 
-            private static List<OpenCLJsonData> _openCLJsonData = new List<OpenCLJsonData>();
+            private static OpenCLDeviceDetectionResult _openCLQueryResult;
             private static bool _isOpenCLQuerySuccess = false;
 
             private static class OpenCL
             {
-                private static string _queryOpenCLDevicesString = "";
-
-                private static void QueryOpenCLDevicesOutputErrorDataReceived(object sender, DataReceivedEventArgs e)
-                {
-                    if (e.Data != null)
-                    {
-                        _queryOpenCLDevicesString += e.Data;
-                    }
-                }
-
                 public static void QueryOpenCLDevices()
                 {
-                    Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
-                    var openCLDevicesDetection = new Process
-                    {
-                        StartInfo =
-                        {
-                            FileName = "AMDOpenCLDeviceDetection.exe",
-                            UseShellExecute = false,
-                            RedirectStandardError = true,
-                            RedirectStandardOutput = true,
-                            CreateNoWindow = true
-                        }
-                    };
-                    openCLDevicesDetection.OutputDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
-                    openCLDevicesDetection.ErrorDataReceived += QueryOpenCLDevicesOutputErrorDataReceived;
 
-                    const int waitTime = 30 * 1000; // 30seconds
+                    Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
+
+                    string _queryOpenCLDevicesString = "";
                     try
                     {
-                        if (!openCLDevicesDetection.Start())
-                        {
-                            Helpers.ConsolePrint(Tag, "AMDOpenCLDeviceDetection process could not start");
-                        }
-                        else
-                        {
-                            openCLDevicesDetection.BeginErrorReadLine();
-                            openCLDevicesDetection.BeginOutputReadLine();
-                            if (openCLDevicesDetection.WaitForExit(waitTime))
-                            {
-                                openCLDevicesDetection.Close();
-                            }
-                        }
+                        _queryOpenCLDevicesString = DeviceDetection.GetOpenCLDevices();
+                        _openCLQueryResult = JsonConvert.DeserializeObject<OpenCLDeviceDetectionResult>(_queryOpenCLDevicesString, Globals.JsonSettings);
                     }
                     catch (Exception ex)
                     {
-                        // TODO
+                        // TODO print AMD detection string
                         Helpers.ConsolePrint(Tag, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
-                    }
-                    finally
-                    {
-                        if (_queryOpenCLDevicesString != "")
-                        {
-                            try
-                            {
-                                _openCLJsonData =
-                                    JsonConvert.DeserializeObject<List<OpenCLJsonData>>(_queryOpenCLDevicesString,
-                                        Globals.JsonSettings);
-                            }
-                            catch
-                            {
-                                _openCLJsonData = null;
-                            }
-                        }
+                        _openCLQueryResult = null;
                     }
 
-                    if (_openCLJsonData == null)
+                    if (_openCLQueryResult == null)
                     {
                         Helpers.ConsolePrint(Tag,
                             "AMDOpenCLDeviceDetection found no devices. AMDOpenCLDeviceDetection returned: " +
                             _queryOpenCLDevicesString);
                     }
-                    else
+                    else /*if(_openCLQueryResult.ErrorString == "" || _openCLQueryResult.Status == "OK")*/
                     {
                         _isOpenCLQuerySuccess = true;
                         var stringBuilder = new StringBuilder();
                         stringBuilder.AppendLine("");
                         stringBuilder.AppendLine("AMDOpenCLDeviceDetection found devices success:");
-                        foreach (var oclElem in _openCLJsonData)
+                        foreach (var oclElem in _openCLQueryResult.Platforms)
                         {
                             stringBuilder.AppendLine($"\tFound devices for platform: {oclElem.PlatformName}");
                             foreach (var oclDev in oclElem.Devices)

@@ -106,6 +106,11 @@ string CudaDetection::GetDevicesJsonString() {
 	return j.dump();
 }
 
+string CudaDetection::GetDevicesJsonStringPretty() {
+    json j = createJsonObj();
+    return j.dump();
+}
+
 string CudaDetection::GetErrorString() {
 	return _errorString;
 }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
@@ -75,7 +76,12 @@ namespace NiceHashMiner.Miners
         private string CreateCommandLine(string url, string btcAddress, string worker)
         {
             var split = url.Split(':');
-            var devs = string.Join(" ", MiningSetup.DeviceIDs);
+            // FOR AMD BEAM
+            var amdStart = ComputeDeviceManager.Available.AvailNVGpus;
+            var devs = string.Join(" ", MiningSetup.MiningPairs.Select(pair => {
+                var busID = pair.Device.DeviceType == DeviceType.NVIDIA ? pair.Device.IDByBus : amdStart + pair.Device.IDByBus;
+                return busID.ToString();
+            }));
             var cmd = $"-a {AlgoName} -s {split[0]} -n {split[1]} " +
                               $"-u {btcAddress}.{worker} -d {devs} --api {ApiPort} ";
 

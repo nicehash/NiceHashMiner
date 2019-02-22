@@ -268,7 +268,7 @@ namespace NiceHashMiner.Algorithms
         {
             get
             {
-                var rate = International.GetText("BenchmarkRatioRateN_A");
+                var rate = Translations.Tr("N/A");
                 var payingRate = 0.0d;
 
                 if (BenchmarkSpeed > 0 && NHSmaData.TryGetPaying(NiceHashID, out var paying))
@@ -291,7 +291,7 @@ namespace NiceHashMiner.Algorithms
         {
             get
             {
-                var ratio = International.GetText("BenchmarkRatioRateN_A");
+                var ratio = Translations.Tr("N/A");
                 if (NHSmaData.TryGetPaying(SecondaryNiceHashID, out var paying))
                 {
                     ratio = paying.ToString("F8");
@@ -315,7 +315,7 @@ namespace NiceHashMiner.Algorithms
                        + ((TuningEnabled) ? string.Format(dcriStatus, MostProfitableIntensity) : "");
             }
 
-            return International.GetText("BenchmarkSpeedStringNone");
+            return Translations.Tr("none");
         }
 
         #endregion
@@ -446,14 +446,14 @@ namespace NiceHashMiner.Algorithms
         {
             var speed = SpeedForIntensity(intensity);
             if (speed > 0) return Helpers.FormatSpeedOutput(speed) + "H/s";
-            return International.GetText("BenchmarkSpeedStringNone");
+            return Translations.Tr("none");
         }
 
         public string SecondarySpeedStringForIntensity(int intensity)
         {
             var speed = SecondarySpeedForIntensity(intensity);
             if (speed > 0) return Helpers.FormatSpeedOutput(speed) + "H/s";
-            return International.GetText("BenchmarkSpeedStringNone");
+            return Translations.Tr("none");
         }
 
         public void MakeIntensityBackup()
