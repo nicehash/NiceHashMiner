@@ -17,6 +17,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using static NiceHashMiner.Translations;
 using NiceHashMiner.Devices.OpenCL;
 using NiceHashMiner.PInvoke;
+using NiceHashMinerLegacy.Common.Device;
 
 namespace NiceHashMiner.Devices
 {
@@ -669,6 +670,8 @@ namespace NiceHashMiner.Devices
                         var cudaQueryResult = JsonConvert.DeserializeObject<CudaDeviceDetectionResult>(_queryCudaDevicesString,
                                         Globals.JsonSettings);
                         cudaDevices = cudaQueryResult.CudaDevices;
+                        var verArray = cudaQueryResult.DriverVersion.Split('.').Select(strNum => Int32.Parse(strNum)).ToArray();
+                        CUDADevice.INSTALLED_NVIDIA_DRIVERS = new Version(verArray[0], verArray[1]);
                         if (_cudaDevices == null || _cudaDevices.Count == 0)
                         {
                             Helpers.ConsolePrint(Tag,

@@ -28,9 +28,16 @@ namespace CCMinerTpruvotCuda10
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            // TODO add a check for driver version and cuda versions
-            var cudaGpus = devices.Where(dev => dev is CUDADevice).Select(dev => (CUDADevice)dev);
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+            // 410.48
+            var minimumNVIDIADriver = new Version(410, 48);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minimumNVIDIADriver)
+            {
+                // TODO log
+                return supported; // return emtpy
+            }
+            // SM3.+ and CUDA 10 drivers
+            var cudaGpus = devices.Where(dev => dev is CUDADevice cudaDev && cudaDev.SM_major >= 3).Select(dev => (CUDADevice)dev);
 
             foreach (var gpu in cudaGpus)
             {

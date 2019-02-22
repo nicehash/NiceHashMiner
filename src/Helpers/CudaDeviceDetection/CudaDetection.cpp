@@ -108,7 +108,7 @@ string CudaDetection::GetDevicesJsonString() {
 
 string CudaDetection::GetDevicesJsonStringPretty() {
     json j = createJsonObj();
-    return j.dump();
+    return j.dump(4);
 }
 
 string CudaDetection::GetErrorString() {

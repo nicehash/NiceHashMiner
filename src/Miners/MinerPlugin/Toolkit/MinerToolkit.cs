@@ -178,6 +178,8 @@ namespace MinerPlugin.Toolkit
                 }
                 catch (OperationCanceledException)
                 {
+                    // TODO this block is redundant
+                    //add finally ??
                     if (timeout.IsCancellationRequested)
                     {
                         Console.WriteLine("Operation timed out.");
