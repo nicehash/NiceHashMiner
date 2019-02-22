@@ -23,11 +23,6 @@ namespace NiceHashMiner.Devices.Querying
         public static IReadOnlyList<CudaDevice> CudaDevices { get; private set; }
 
         private static Timer _cudaCheckTimer;
-        private static bool _isInit;
-
-        static NvidiaQuery()
-        {
-        }
 
         #region Query devices
 
@@ -109,7 +104,6 @@ namespace NiceHashMiner.Devices.Querying
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
 
             CudaDevices = cudaDevs;
-            _isInit = true;
             
             Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
 

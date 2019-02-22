@@ -46,7 +46,7 @@ namespace NiceHashMiner.Devices
             else
             {
                 ShowMessageAndStep(Tr("Querying CUDA devices"));
-                NvidiaQuery.QueryCudaDevices();
+                numDevs = NvidiaQuery.QueryCudaDevices();
             }
             // OpenCL and AMD
             List<OpenCLDevice> amdDevs = null;
@@ -106,7 +106,7 @@ namespace NiceHashMiner.Devices
 
             var result = new QueryResult(NvidiaMinDetectionDriver.ToString(), NvidiaRecomendedDriver.ToString());
 
-            var ramBad = CheckRam();
+            var ramOK = CheckRam();
 
             if (!ConfigManager.GeneralConfig.ShowDriverVersionWarning) return result;
 
@@ -122,7 +122,7 @@ namespace NiceHashMiner.Devices
 
             result.NoDevices = AvailableDevices.Devices.Count <= 0;
 
-            result.FailedRamCheck = ramBad;
+            result.FailedRamCheck = !ramOK;
 
             return result;
         }
@@ -157,8 +157,8 @@ namespace NiceHashMiner.Devices
             }
 
             // Make gpu ram needed not larger than 4GB per GPU
-            var totalGpuRam = Math.Min((ulong)((nvRamSum + amdRamSum) * 0.6 / 1024),
-                (ulong)AvailableDevices.AvailGpUs * 4 * 1024 * 1024);
+            var totalGpuRam = Math.Min((ulong) ((nvRamSum + amdRamSum) * 0.6 / 1024),
+                (ulong) AvailableDevices.AvailGpUs * 4 * 1024 * 1024);
             var totalSysRam = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
             
 
