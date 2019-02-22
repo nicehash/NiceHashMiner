@@ -1,23 +1,13 @@
-﻿using Newtonsoft.Json;
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Devices.OpenCL;
+using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Interfaces;
-using NVIDIA.NVAPI;
-using ManagedCuda.Nvml;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Management;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using NiceHashMiner.Devices.Querying;
-using NiceHashMinerLegacy.Common.Enums;
 using static NiceHashMiner.Translations;
-using NiceHashMiner.Devices.OpenCL;
-using NiceHashMiner.PInvoke;
 
 namespace NiceHashMiner.Devices
 {
@@ -39,42 +29,6 @@ namespace NiceHashMiner.Devices
 
         public static IMessageNotifier MessageNotifier { get; private set; }
 
-        public static bool CheckVideoControllersCountMismath()
-        {
-            // this function checks if count of CUDA devices is same as it was on application start, reason for that is
-            // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
-            // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
-
-            /* commented because when GPU is "lost" windows still see all of them
-            // first check windows video controlers
-            List<VideoControllerData> currentAvaliableVideoControllers = new List<VideoControllerData>();
-            WindowsDisplayAdapters.QueryVideoControllers(currentAvaliableVideoControllers, false);
-            
-
-            int GPUsOld = AvailableVideoControllers.Count;
-            int GPUsNew = currentAvaliableVideoControllers.Count;
-
-            Helpers.ConsolePrint("ComputeDeviceManager.CheckCount", "Video controlers GPUsOld: " + GPUsOld.ToString() + " GPUsNew:" + GPUsNew.ToString());
-            */
-
-            // check CUDA devices
-
-            // TODO
-            return false;
-
-            //var currentCudaDevices = new List<CudaDevice>();
-            //if (!Nvidia.IsSkipNvidia())
-            //    Nvidia.QueryCudaDevices(ref currentCudaDevices);
-
-            //var gpusOld = _cudaDevices.Count;
-            //var gpusNew = currentCudaDevices.Count;
-
-            //Helpers.ConsolePrint("ComputeDeviceManager.CheckCount",
-            //    "CUDA GPUs count: Old: " + gpusOld + " / New: " + gpusNew);
-
-            //return (gpusNew < gpusOld);
-        }
-
         public static async Task<QueryResult> QueryDevicesAsync(IMessageNotifier messageNotifier)
         {
             MessageNotifier = messageNotifier;
@@ -85,7 +39,6 @@ namespace NiceHashMiner.Devices
             Cpu.QueryCpus();
             // #2 CUDA
             var numDevs = 0;
-            NvidiaQuery nvQuery = null;
             if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
             {
                 Helpers.ConsolePrint(Tag, "Skipping NVIDIA device detection, settings are set to disabled");
@@ -93,8 +46,7 @@ namespace NiceHashMiner.Devices
             else
             {
                 ShowMessageAndStep(Tr("Querying CUDA devices"));
-                nvQuery = new NvidiaQuery();
-                nvQuery.QueryCudaDevices();
+                NvidiaQuery.QueryCudaDevices();
             }
             // OpenCL and AMD
             List<OpenCLDevice> amdDevs = null;
@@ -136,7 +88,7 @@ namespace NiceHashMiner.Devices
                     amdCount += (vidCtrl.Name.ToLower().Contains("amd")) ? 1 : 0;
                 }
 
-                nvCountMatched = nvidiaCount == nvQuery?.CudaDevices?.Count;
+                nvCountMatched = nvidiaCount == NvidiaQuery.CudaDevices?.Count;
 
                 Helpers.ConsolePrint(Tag,
                     nvCountMatched

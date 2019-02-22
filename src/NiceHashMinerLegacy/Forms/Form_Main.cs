@@ -34,7 +34,6 @@ namespace NiceHashMiner
         //private Timer _bitcoinExchangeCheck;
         private Timer _startupTimer;
         private Timer _idleCheck;
-        private SystemTimer _computeDevicesCheckTimer;
 
         private bool _showWarningNiceHashData;
         private bool _demoMode;
@@ -563,26 +562,6 @@ namespace NiceHashMiner
         private static async void MinerStatsCheck_Tick(object sender, EventArgs e)
         {
             await MinersManager.MinerStatsCheck();
-        }
-
-        private static void ComputeDevicesCheckTimer_Tick(object sender, EventArgs e)
-        {
-            if (ComputeDeviceManager.CheckVideoControllersCountMismath())
-            {
-                // less GPUs than before, ACT!
-                try
-                {
-                    var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
-                    {
-                        WindowStyle = ProcessWindowStyle.Minimized
-                    };
-                    Process.Start(onGpusLost);
-                }
-                catch (Exception ex)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "OnGPUsMismatch.bat error: " + ex.Message);
-                }
-            }
         }
 
         private void InitFlowPanelStart()
@@ -1241,14 +1220,7 @@ namespace NiceHashMiner
             //_smaMinerCheck.Start();
             _minerStatsCheck.Start();
 
-            if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
-            {
-                _computeDevicesCheckTimer = new SystemTimer();
-                _computeDevicesCheckTimer.Elapsed += ComputeDevicesCheckTimer_Tick;
-                _computeDevicesCheckTimer.Interval = 60000;
-
-                _computeDevicesCheckTimer.Start();
-            }
+            NvidiaQuery.StartDeviceCheck();
 
             return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
         }
@@ -1257,7 +1229,7 @@ namespace NiceHashMiner
         {
             _minerStatsCheck.Stop();
             //_smaMinerCheck.Stop();
-            _computeDevicesCheckTimer?.Stop();
+            NvidiaQuery.StopDeviceCheck();
 
             // Disable IFTTT notification before label call
             _isNotProfitable = false;

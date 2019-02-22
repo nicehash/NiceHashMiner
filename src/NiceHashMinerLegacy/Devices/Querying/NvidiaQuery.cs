@@ -1,29 +1,37 @@
 ﻿using ManagedCuda.Nvml;
 using Newtonsoft.Json;
+using NiceHashMiner.Configs;
 using NiceHashMiner.PInvoke;
 using NiceHashMinerLegacy.Common.Enums;
 using NVIDIA.NVAPI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace NiceHashMiner.Devices.Querying
 {
-    internal class NvidiaQuery
+    internal static class NvidiaQuery
     {
         private const string Tag = "NvidiaQuery";
 
         private static bool tryAddNvmlToEnvPathCalled = false;
 
-        public IReadOnlyList<CudaDevice> CudaDevices { get; private set; }
+        public static IReadOnlyList<CudaDevice> CudaDevices { get; private set; }
+
+        private static Timer _cudaCheckTimer;
+        private static bool _isInit;
+
+        static NvidiaQuery()
+        {
+        }
 
         #region Query devices
 
-        public int QueryCudaDevices()
+        public static int QueryCudaDevices()
         {
             Helpers.ConsolePrint(Tag, "QueryCudaDevices START");
 
@@ -101,13 +109,14 @@ namespace NiceHashMiner.Devices.Querying
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
 
             CudaDevices = cudaDevs;
+            _isInit = true;
             
             Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
 
             return numDevs;
         }
 
-        private Dictionary<int, NvPhysicalGpuHandle> InitNvapi()
+        private static Dictionary<int, NvPhysicalGpuHandle> InitNvapi()
         {
             var idHandles = new Dictionary<int, NvPhysicalGpuHandle>();
             if (!NVAPI.IsAvailable)
@@ -168,7 +177,7 @@ namespace NiceHashMiner.Devices.Querying
             }
         }
 
-        public static bool TryQueryCudaDevices(out List<CudaDevice> cudaDevices)
+        private static bool TryQueryCudaDevices(out List<CudaDevice> cudaDevices)
         {
             try
             {
@@ -258,6 +267,57 @@ namespace NiceHashMiner.Devices.Querying
             }
 
             return new NvidiaSmiDriver(-1, -1);
+        }
+
+        public static void StartDeviceCheck()
+        {
+            if (!ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
+                return;
+
+            _cudaCheckTimer = new Timer(60 * 1000);
+            _cudaCheckTimer.Elapsed += CudaCheckTimerOnElapsed;
+            _cudaCheckTimer.Start();
+        }
+
+        public static void StopDeviceCheck()
+        {
+            _cudaCheckTimer.Stop();
+        }
+
+        private static bool CheckDevicesMistmatch()
+        {
+            // this function checks if count of CUDA devices is same as it was on application start, reason for that is
+            // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
+            // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
+
+            var gpusOld = CudaDevices.Count;
+
+            var querySuccess = TryQueryCudaDevices(out var currentDevs);
+            
+            var gpusNew = currentDevs.Count;
+
+            Helpers.ConsolePrint("ComputeDeviceManager.CheckCount",
+                "CUDA GPUs count: Old: " + gpusOld + " / New: " + gpusNew);
+
+            return gpusNew < gpusOld || !querySuccess;
+        }
+
+        private static void CudaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (!CheckDevicesMistmatch()) return;
+
+            try
+            {
+                var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
+                {
+                    WindowStyle = ProcessWindowStyle.Minimized
+                };
+                Process.Start(onGpusLost);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint("NICEHASH", "OnGPUsMismatch.bat error: " + ex.Message);
+            }
         }
     }
 
