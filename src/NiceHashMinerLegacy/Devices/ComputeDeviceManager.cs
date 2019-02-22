@@ -30,136 +30,13 @@ namespace NiceHashMiner.Devices
         {
             private const string Tag = "ComputeDeviceManager.Query";
 
-            // format 372.54;
-            private struct NvidiaSmiDriver : IComparable<NvidiaSmiDriver>
-            {
-                public int LeftPart { get; }
-
-                private readonly int _rightPart;
-                public int RightPart
-                {
-                    get
-                    {
-                        if (_rightPart >= 10)
-                        {
-                            return _rightPart;
-                        }
-
-                        return _rightPart * 10;
-                    }
-                }
-
-                public NvidiaSmiDriver(int left, int right)
-                {
-                    LeftPart = left;
-                    _rightPart = right;
-                }
-
-                public override string ToString()
-                {
-                    return $"{LeftPart}.{RightPart}";
-                }
-
-                #region IComparable implementation
-
-                public int CompareTo(NvidiaSmiDriver other)
-                {
-                    var leftPartComparison = LeftPart.CompareTo(other.LeftPart);
-                    if (leftPartComparison != 0) return leftPartComparison;
-                    return RightPart.CompareTo(other.RightPart);
-                }
-
-                public static bool operator <(NvidiaSmiDriver left, NvidiaSmiDriver right)
-                {
-                    return left.CompareTo(right) < 0;
-                }
-
-                public static bool operator >(NvidiaSmiDriver left, NvidiaSmiDriver right)
-                {
-                    return left.CompareTo(right) > 0;
-                }
-
-                public static bool operator <=(NvidiaSmiDriver left, NvidiaSmiDriver right)
-                {
-                    return left.CompareTo(right) <= 0;
-                }
-
-                public static bool operator >=(NvidiaSmiDriver left, NvidiaSmiDriver right)
-                {
-                    return left.CompareTo(right) >= 0;
-                }
-
-                #endregion
-            }
-
             private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(372, 54); // 372.54;
             private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
-            private static NvidiaSmiDriver _currentNvidiaSmiDriver = new NvidiaSmiDriver(-1, -1);
-            private static readonly NvidiaSmiDriver InvalidSmiDriver = new NvidiaSmiDriver(-1, -1);
 
             // naming purposes
             public static int CpuCount = 0;
 
             public static int GpuCount = 0;
-
-            private static NvidiaSmiDriver GetNvidiaSmiDriver()
-            {
-                if (WindowsDisplayAdapters.HasNvidiaVideoController())
-                {
-                    string stdErr;
-                    string args;
-                    var stdOut = stdErr = args = string.Empty;
-                    var smiPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                                  "\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe";
-                    if (smiPath.Contains(" (x86)")) smiPath = smiPath.Replace(" (x86)", "");
-                    try
-                    {
-                        var P = new Process
-                        {
-                            StartInfo =
-                            {
-                                FileName = smiPath,
-                                UseShellExecute = false,
-                                RedirectStandardOutput = true,
-                                RedirectStandardError = true,
-                                CreateNoWindow = true
-                            }
-                        };
-                        P.Start();
-                        P.WaitForExit(15 * 1000);
-
-                        stdOut = P.StandardOutput.ReadToEnd();
-                        stdErr = P.StandardError.ReadToEnd();
-
-                        const string findString = "Driver Version: ";
-                        using (var reader = new StringReader(stdOut))
-                        {
-                            var line = string.Empty;
-                            do
-                            {
-                                line = reader.ReadLine();
-                                if (line != null && line.Contains(findString))
-                                {
-                                    var start = line.IndexOf(findString);
-                                    var driverVer = line.Substring(start, start + 7);
-                                    driverVer = driverVer.Replace(findString, "").Substring(0, 7).Trim();
-                                    var drVerDouble = double.Parse(driverVer, CultureInfo.InvariantCulture);
-                                    var dot = driverVer.IndexOf(".");
-                                    var leftPart = int.Parse(driverVer.Substring(0, 3));
-                                    var rightPart = int.Parse(driverVer.Substring(4, 2));
-                                    return new NvidiaSmiDriver(leftPart, rightPart);
-                                }
-                            } while (line != null);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint(Tag, "GetNvidiaSMIDriver Exception: " + ex.Message);
-                        return InvalidSmiDriver;
-                    }
-                }
-                return InvalidSmiDriver;
-            }
 
             private static void ShowMessageAndStep(string infoMsg)
             {
@@ -273,40 +150,43 @@ namespace NiceHashMiner.Devices
                         amdCount == AmdDevices.Count ? "AMD GPU device count GOOD" : "AMD GPU device count BAD!!!");
                 }
                 // allerts
-                _currentNvidiaSmiDriver = GetNvidiaSmiDriver();
-
                 // TODO: Too much GUI code here, should return list of errors to caller instead
 
-                // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
-                var isNvidiaErrorShown = false; // to prevent showing twice
-                var showWarning = ConfigManager.GeneralConfig.ShowDriverVersionWarning &&
-                                  WindowsDisplayAdapters.HasNvidiaVideoController();
-                if (showWarning && nvCountMatched && _currentNvidiaSmiDriver < NvidiaMinDetectionDriver)
+                if (WindowsDisplayAdapters.HasNvidiaVideoController())
                 {
-                    isNvidiaErrorShown = true;
-                    var minDriver = NvidiaMinDetectionDriver.ToString();
-                    var recomendDriver = NvidiaRecomendedDriver.ToString();
-                    MessageBox.Show(string.Format(
-                            Tr("We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner Legacy to work correctly you should upgrade your drivers to recommended {1} or newer. If you still see this warning after updating the driver please uninstall all your Nvidia drivers and make a clean install of the latest official driver from http://www.nvidia.com."),
-                            minDriver, recomendDriver),
-                        Tr("Nvidia Recomended driver"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                // recomended driver
-                if (showWarning && _currentNvidiaSmiDriver < NvidiaRecomendedDriver &&
-                    !isNvidiaErrorShown && _currentNvidiaSmiDriver.LeftPart > -1)
-                {
-                    var recomendDrvier = NvidiaRecomendedDriver.ToString();
-                    var nvdriverString = _currentNvidiaSmiDriver.LeftPart > -1
-                        ? string.Format(
-                            Tr(" (current {0})"),
-                            _currentNvidiaSmiDriver)
-                        : "";
-                    MessageBox.Show(string.Format(
-                           Tr("We have detected that your Nvidia Driver is older than {0}{1}. We recommend you to update to {2} or newer."),
-                            recomendDrvier, nvdriverString, recomendDrvier),
-                        Tr("Nvidia Recomended driver"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    var currentDriver = NvidiaQuery.GetNvSmiDriverAsync().Result;
+
+                    // if we have nvidia cards but no CUDA devices tell the user to upgrade driver
+                    var isNvidiaErrorShown = false; // to prevent showing twice
+                    var showWarning = ConfigManager.GeneralConfig.ShowDriverVersionWarning;
+                    if (showWarning && !nvCountMatched && currentDriver < NvidiaMinDetectionDriver)
+                    {
+                        isNvidiaErrorShown = true;
+                        var minDriver = NvidiaMinDetectionDriver.ToString();
+                        var recomendDriver = NvidiaRecomendedDriver.ToString();
+                        MessageBox.Show(string.Format(
+                                Tr(
+                                    "We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner Legacy to work correctly you should upgrade your drivers to recommended {1} or newer. If you still see this warning after updating the driver please uninstall all your Nvidia drivers and make a clean install of the latest official driver from http://www.nvidia.com."),
+                                minDriver, recomendDriver),
+                            Tr("Nvidia Recomended driver"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    // recomended driver
+                    if (showWarning && currentDriver < NvidiaRecomendedDriver &&
+                        !isNvidiaErrorShown && currentDriver.LeftPart > -1)
+                    {
+                        var recomendDrvier = NvidiaRecomendedDriver.ToString();
+                        var nvdriverString = currentDriver.LeftPart > -1
+                            ? string.Format(Tr(" (current {0})"), currentDriver)
+                            : "";
+                        MessageBox.Show(string.Format(
+                                Tr(
+                                    "We have detected that your Nvidia Driver is older than {0}{1}. We recommend you to update to {2} or newer."),
+                                recomendDrvier, nvdriverString, recomendDrvier),
+                            Tr("Nvidia Recomended driver"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
 
                 // no devices found

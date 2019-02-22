@@ -5,8 +5,11 @@ using NiceHashMinerLegacy.Common.Enums;
 using NVIDIA.NVAPI;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices.Querying
 {
@@ -14,23 +17,11 @@ namespace NiceHashMiner.Devices.Querying
     {
         private const string Tag = "NvidiaQuery";
 
+        private static bool tryAddNvmlToEnvPathCalled = false;
+
         public IReadOnlyList<CudaDevice> CudaDevices { get; private set; }
 
-        private static bool tryAddNvmlToEnvPathCalled = false;
-        private static void tryAddNvmlToEnvPath()
-        {
-            if (tryAddNvmlToEnvPathCalled) return;
-            tryAddNvmlToEnvPathCalled = true; // call this ONLY ONCE AND NEVER AGAIN
-            var nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                           "\\NVIDIA Corporation\\NVSMI";
-            if (Directory.Exists(nvmlRootPath))
-            {
-                // Add to env so it can find nvml.dll
-                var pathVar = Environment.GetEnvironmentVariable("PATH");
-                pathVar += ";" + nvmlRootPath;
-                Environment.SetEnvironmentVariable("PATH", pathVar);
-            }
-        }
+        #region Query devices
 
         public void QueryCudaDevices()
         {
@@ -198,5 +189,133 @@ namespace NiceHashMiner.Devices.Querying
                 return false;
             }
         }
+
+        private static void tryAddNvmlToEnvPath()
+        {
+            if (tryAddNvmlToEnvPathCalled) return;
+            tryAddNvmlToEnvPathCalled = true; // call this ONLY ONCE AND NEVER AGAIN
+            var nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
+                               "\\NVIDIA Corporation\\NVSMI";
+            if (Directory.Exists(nvmlRootPath))
+            {
+                // Add to env so it can find nvml.dll
+                var pathVar = Environment.GetEnvironmentVariable("PATH");
+                pathVar += ";" + nvmlRootPath;
+                Environment.SetEnvironmentVariable("PATH", pathVar);
+            }
+        }
+
+        #endregion
+
+        public static async Task<NvidiaSmiDriver> GetNvSmiDriverAsync()
+        {
+            var smiPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
+                          "\\NVIDIA Corporation\\NVSMI\\nvidia-smi.exe";
+            if (smiPath.Contains(" (x86)")) smiPath = smiPath.Replace(" (x86)", "");
+            try
+            {
+                using (var p = new Process
+                {
+                    StartInfo =
+                    {
+                        FileName = smiPath,
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        CreateNoWindow = true
+                    }
+                })
+                {
+                    p.Start();
+                    p.WaitForExit(15 * 1000);
+
+                    const string findString = "Driver Version: ";
+
+                    string line;
+
+                    do
+                    {
+                        line = await p.StandardOutput.ReadLineAsync();
+
+                        if (line == null || !line.Contains(findString)) continue;
+
+                        var start = line.IndexOf(findString);
+                        var driverVer = line.Substring(start, start + 7);
+                        driverVer = driverVer.Replace(findString, "").Substring(0, 7).Trim();
+                        var leftPart = int.Parse(driverVer.Substring(0, 3));
+                        var rightPart = int.Parse(driverVer.Substring(4, 2));
+                        return new NvidiaSmiDriver(leftPart, rightPart);
+                    } while (line != null);
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.ConsolePrint(Tag, "GetNvidiaSMIDriver Exception: " + ex.Message);
+            }
+
+            return new NvidiaSmiDriver(-1, -1);
+        }
+    }
+
+    // format 372.54;
+    internal struct NvidiaSmiDriver : IComparable<NvidiaSmiDriver>
+    {
+        public int LeftPart { get; }
+
+        private readonly int _rightPart;
+        public int RightPart
+        {
+            get
+            {
+                if (_rightPart >= 10)
+                {
+                    return _rightPart;
+                }
+
+                return _rightPart * 10;
+            }
+        }
+
+        public NvidiaSmiDriver(int left, int right)
+        {
+            LeftPart = left;
+            _rightPart = right;
+        }
+
+        public override string ToString()
+        {
+            return $"{LeftPart}.{RightPart}";
+        }
+
+        #region IComparable implementation
+
+        public int CompareTo(NvidiaSmiDriver other)
+        {
+            var leftPartComparison = LeftPart.CompareTo(other.LeftPart);
+            if (leftPartComparison != 0) return leftPartComparison;
+            return RightPart.CompareTo(other.RightPart);
+        }
+
+        public static bool operator <(NvidiaSmiDriver left, NvidiaSmiDriver right)
+        {
+            return left.CompareTo(right) < 0;
+        }
+
+        public static bool operator >(NvidiaSmiDriver left, NvidiaSmiDriver right)
+        {
+            return left.CompareTo(right) > 0;
+        }
+
+        public static bool operator <=(NvidiaSmiDriver left, NvidiaSmiDriver right)
+        {
+            return left.CompareTo(right) <= 0;
+        }
+
+        public static bool operator >=(NvidiaSmiDriver left, NvidiaSmiDriver right)
+        {
+            return left.CompareTo(right) >= 0;
+        }
+
+        #endregion
     }
 }
