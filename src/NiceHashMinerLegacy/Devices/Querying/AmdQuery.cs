@@ -15,8 +15,7 @@ namespace NiceHashMiner.Devices.Querying
     {
         private const string Tag = "AmdQuery";
         private const int AmdVendorID = 1002;
-
-        private readonly List<VideoControllerData> _availableControllers;
+        
         private readonly Dictionary<string, bool> _driverOld = new Dictionary<string, bool>();
         private readonly Dictionary<string, bool> _noNeoscryptLyra2 = new Dictionary<string, bool>();
         private readonly Dictionary<int, BusIdInfo> _busIdInfos = new Dictionary<int, BusIdInfo>();
@@ -24,9 +23,8 @@ namespace NiceHashMiner.Devices.Querying
 
         private int _numDevs;
 
-        public AmdQuery(List<VideoControllerData> availControllers, int numDevs)
+        public AmdQuery(int numDevs)
         {
-            _availableControllers = availControllers;
             _numDevs = numDevs;
         }
 
@@ -48,7 +46,7 @@ namespace NiceHashMiner.Devices.Querying
             // check the driver version bool EnableOptimizedVersion = true;
             var showWarningDialog = false;
 
-            foreach (var vidContrllr in _availableControllers)
+            foreach (var vidContrllr in SystemSpecs.AvailableVideoControllers)
             {
                 Helpers.ConsolePrint(Tag,
                     $"Checking AMD device (driver): {vidContrllr.Name} ({vidContrllr.DriverVersion})");
@@ -256,7 +254,7 @@ namespace NiceHashMiner.Devices.Querying
 
             // get video AMD controllers and sort them by RAM
             // (find a way to get PCI BUS Numbers from PNPDeviceID)
-            var amdVideoControllers = _availableControllers.Where(vcd =>
+            var amdVideoControllers = SystemSpecs.AvailableVideoControllers.Where(vcd =>
                 vcd.Name.ToLower().Contains("amd") || vcd.Name.ToLower().Contains("radeon") ||
                 vcd.Name.ToLower().Contains("firepro")).ToList();
             // sort by ram not ideal 
@@ -388,7 +386,7 @@ namespace NiceHashMiner.Devices.Querying
                                 var pnpStr = osAdapterInfoData.ADLAdapterInfo[i].PNPString;
                                 // find vi controller pnp
                                 var infSection = "";
-                                foreach (var vCtrl in _availableControllers)
+                                foreach (var vCtrl in SystemSpecs.AvailableVideoControllers)
                                 {
                                     if (vCtrl.PnpDeviceID == pnpStr)
                                     {

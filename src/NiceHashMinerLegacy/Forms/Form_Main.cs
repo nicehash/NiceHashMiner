@@ -13,6 +13,7 @@ using System.Linq;
 using System.Management;
 using System.Threading;
 using System.Windows.Forms;
+using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
@@ -66,8 +67,6 @@ namespace NiceHashMiner
             Icon = Properties.Resources.logo;
 
             InitLocalization();
-
-            ComputeDeviceManager.SystemSpecs.QueryAndLog();
 
             // Log the computer's amount of Total RAM and Page File Size
             var moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
