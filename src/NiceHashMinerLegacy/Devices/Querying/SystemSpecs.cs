@@ -9,25 +9,8 @@ namespace NiceHashMiner.Devices.Querying
     {
         private const string Tag = "SystemSpecs";
 
-        public static ulong FreePhysicalMemory;
-        public static ulong FreeSpaceInPagingFiles;
-        public static ulong FreeVirtualMemory;
-        public static uint LargeSystemCache;
-        public static uint MaxNumberOfProcesses;
-        public static ulong MaxProcessMemorySize;
-
-        public static uint NumberOfLicensedUsers;
-        public static uint NumberOfProcesses;
-        public static uint NumberOfUsers;
-        public static uint OperatingSystemSKU;
-
-        public static ulong SizeStoredInPagingFiles;
-
-        public static uint SuiteMask;
-
-        public static ulong TotalSwapSpaceSize;
-        public static ulong TotalVirtualMemorySize;
-        public static ulong TotalVisibleMemorySize;
+        public static ulong FreePhysicalMemory { get; }
+        public static ulong FreeVirtualMemory { get; }
 
         internal static IReadOnlyList<VideoControllerData> AvailableVideoControllers { get; private set; }
 
@@ -35,11 +18,6 @@ namespace NiceHashMiner.Devices.Querying
             AvailableVideoControllers.Any(vctrl => vctrl.Name.ToLower().Contains("nvidia"));
 
         static SystemSpecs()
-        {
-            QueryAndLog();
-        }
-
-        private static void QueryAndLog()
         {
             var winQuery = new ObjectQuery("SELECT * FROM Win32_OperatingSystem");
 
@@ -49,53 +27,16 @@ namespace NiceHashMiner.Devices.Querying
                 {
                     if (!(obj is ManagementObject item)) continue;
 
-                    if (item["FreePhysicalMemory"] != null)
-                        ulong.TryParse(item["FreePhysicalMemory"].ToString(), out FreePhysicalMemory);
-                    if (item["FreeSpaceInPagingFiles"] != null)
-                        ulong.TryParse(item["FreeSpaceInPagingFiles"].ToString(), out FreeSpaceInPagingFiles);
-                    if (item["FreeVirtualMemory"] != null)
-                        ulong.TryParse(item["FreeVirtualMemory"].ToString(), out FreeVirtualMemory);
-                    if (item["LargeSystemCache"] != null)
-                        uint.TryParse(item["LargeSystemCache"].ToString(), out LargeSystemCache);
-                    if (item["MaxNumberOfProcesses"] != null)
-                        uint.TryParse(item["MaxNumberOfProcesses"].ToString(), out MaxNumberOfProcesses);
-                    if (item["MaxProcessMemorySize"] != null)
-                        ulong.TryParse(item["MaxProcessMemorySize"].ToString(), out MaxProcessMemorySize);
-                    if (item["NumberOfLicensedUsers"] != null)
-                        uint.TryParse(item["NumberOfLicensedUsers"].ToString(), out NumberOfLicensedUsers);
-                    if (item["NumberOfProcesses"] != null)
-                        uint.TryParse(item["NumberOfProcesses"].ToString(), out NumberOfProcesses);
-                    if (item["NumberOfUsers"] != null)
-                        uint.TryParse(item["NumberOfUsers"].ToString(), out NumberOfUsers);
-                    if (item["OperatingSystemSKU"] != null)
-                        uint.TryParse(item["OperatingSystemSKU"].ToString(), out OperatingSystemSKU);
-                    if (item["SizeStoredInPagingFiles"] != null)
-                        ulong.TryParse(item["SizeStoredInPagingFiles"].ToString(), out SizeStoredInPagingFiles);
-                    if (item["SuiteMask"] != null) uint.TryParse(item["SuiteMask"].ToString(), out SuiteMask);
-                    if (item["TotalSwapSpaceSize"] != null)
-                        ulong.TryParse(item["TotalSwapSpaceSize"].ToString(), out TotalSwapSpaceSize);
-                    if (item["TotalVirtualMemorySize"] != null)
-                        ulong.TryParse(item["TotalVirtualMemorySize"].ToString(), out TotalVirtualMemorySize);
-                    if (item["TotalVisibleMemorySize"] != null)
-                        ulong.TryParse(item["TotalVisibleMemorySize"].ToString(), out TotalVisibleMemorySize);
-                    // log
-                    Helpers.ConsolePrint("SystemSpecs", $"FreePhysicalMemory = {FreePhysicalMemory}");
-                    Helpers.ConsolePrint("SystemSpecs", $"FreeSpaceInPagingFiles = {FreeSpaceInPagingFiles}");
-                    Helpers.ConsolePrint("SystemSpecs", $"FreeVirtualMemory = {FreeVirtualMemory}");
-                    Helpers.ConsolePrint("SystemSpecs", $"LargeSystemCache = {LargeSystemCache}");
-                    Helpers.ConsolePrint("SystemSpecs", $"MaxNumberOfProcesses = {MaxNumberOfProcesses}");
-                    Helpers.ConsolePrint("SystemSpecs", $"MaxProcessMemorySize = {MaxProcessMemorySize}");
-                    Helpers.ConsolePrint("SystemSpecs", $"NumberOfLicensedUsers = {NumberOfLicensedUsers}");
-                    Helpers.ConsolePrint("SystemSpecs", $"NumberOfProcesses = {NumberOfProcesses}");
-                    Helpers.ConsolePrint("SystemSpecs", $"NumberOfUsers = {NumberOfUsers}");
-                    Helpers.ConsolePrint("SystemSpecs", $"OperatingSystemSKU = {OperatingSystemSKU}");
-                    Helpers.ConsolePrint("SystemSpecs", $"SizeStoredInPagingFiles = {SizeStoredInPagingFiles}");
-                    Helpers.ConsolePrint("SystemSpecs", $"SuiteMask = {SuiteMask}");
-                    Helpers.ConsolePrint("SystemSpecs", $"TotalSwapSpaceSize = {TotalSwapSpaceSize}");
-                    Helpers.ConsolePrint("SystemSpecs", $"TotalVirtualMemorySize = {TotalVirtualMemorySize}");
-                    Helpers.ConsolePrint("SystemSpecs", $"TotalVisibleMemorySize = {TotalVisibleMemorySize}");
+                    // We only ever use these two values, so others are deleted for cleanup
+                    // If we need them later we can revert this commit
+                    FreePhysicalMemory = item["FreePhysicalMemory"] as ulong? ?? FreePhysicalMemory;
+                    FreeVirtualMemory = item["FreeVirtualMemory"] as ulong? ?? FreeVirtualMemory;
                 }
             }
+
+            // log
+            Helpers.ConsolePrint("SystemSpecs", $"FreePhysicalMemory = {FreePhysicalMemory}");
+            Helpers.ConsolePrint("SystemSpecs", $"FreeVirtualMemory = {FreeVirtualMemory}");
         }
 
         private static string SafeGetProperty(ManagementBaseObject mbo, string key)
