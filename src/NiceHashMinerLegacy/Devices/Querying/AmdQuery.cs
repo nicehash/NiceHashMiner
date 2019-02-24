@@ -266,8 +266,7 @@ namespace NiceHashMiner.Devices.Querying
             for (var i = 0; i < minCount; ++i)
             {
                 var deviceName = amdVideoControllers[i].Name;
-                if (amdVideoControllers[i].InfSection == null)
-                    amdVideoControllers[i].InfSection = "";
+                amdVideoControllers[i].SetInfSectionEmptyIfNull();
                 var newAmdDev = new AmdGpuDevice(amdDevices[i], _driverOld[deviceName],
                     amdVideoControllers[i].InfSection,
                     _noNeoscryptLyra2[deviceName])

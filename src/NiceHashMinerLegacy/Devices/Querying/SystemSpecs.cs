@@ -101,6 +101,7 @@ namespace NiceHashMiner.Devices.Querying
                 }
             }
         }
+
         private static string SafeGetProperty(ManagementBaseObject mbo, string key)
         {
             try
@@ -130,26 +131,20 @@ namespace NiceHashMiner.Devices.Querying
             {
                 foreach (var manObj in moc)
                 {
-                    //Int16 ram_Str = manObj["ProtocolSupported"] as Int16; manObj["AdapterRAM"] as string
                     ulong.TryParse(SafeGetProperty(manObj, "AdapterRAM"), out var memTmp);
                     var vidController = new VideoControllerData
-                    {
-                        Name = SafeGetProperty(manObj, "Name"),
-                        Description = SafeGetProperty(manObj, "Description"),
-                        PnpDeviceID = SafeGetProperty(manObj, "PNPDeviceID"),
-                        DriverVersion = SafeGetProperty(manObj, "DriverVersion"),
-                        Status = SafeGetProperty(manObj, "Status"),
-                        InfSection = SafeGetProperty(manObj, "InfSection"),
-                        AdapterRam = memTmp
-                    };
+                    (
+                        SafeGetProperty(manObj, "Name"),
+                        SafeGetProperty(manObj, "Description"),
+                        SafeGetProperty(manObj, "PNPDeviceID"),
+                        SafeGetProperty(manObj, "DriverVersion"),
+                        SafeGetProperty(manObj, "Status"),
+                        SafeGetProperty(manObj, "InfSection"),
+                        memTmp
+                    );
+
                     stringBuilder.AppendLine("\tWin32_VideoController detected:");
-                    stringBuilder.AppendLine($"\t\tName {vidController.Name}");
-                    stringBuilder.AppendLine($"\t\tDescription {vidController.Description}");
-                    stringBuilder.AppendLine($"\t\tPNPDeviceID {vidController.PnpDeviceID}");
-                    stringBuilder.AppendLine($"\t\tDriverVersion {vidController.DriverVersion}");
-                    stringBuilder.AppendLine($"\t\tStatus {vidController.Status}");
-                    stringBuilder.AppendLine($"\t\tInfSection {vidController.InfSection}");
-                    stringBuilder.AppendLine($"\t\tAdapterRAM {vidController.AdapterRam}");
+                    stringBuilder.AppendLine($"\t\tName {vidController.GetFormattedString()}");
 
                     // check if controller ok
                     if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok"))
