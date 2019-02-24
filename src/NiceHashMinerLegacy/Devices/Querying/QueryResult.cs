@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NiceHashMiner.Devices.Querying
+﻿namespace NiceHashMiner.Devices.Querying
 {
     public class QueryResult
     {
@@ -17,6 +11,9 @@ namespace NiceHashMiner.Devices.Querying
 
         public bool NoDevices { get; internal set; }
         public bool FailedRamCheck { get; internal set; }
+
+        public bool FailedVidControllerStatus { get; internal set; }
+        public string FailedVidControllerInfo { get; internal set; }
 
         public QueryResult(string minDriverString, string recDriverString)
         {

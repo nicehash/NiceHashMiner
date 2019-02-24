@@ -26,7 +26,7 @@ namespace NiceHashMiner.Devices
         public static async Task<QueryResult> QueryDevicesAsync()
         {
             // #0 get video controllers, used for cross checking
-            SystemSpecs.QueryVideoControllers();
+            var badVidCtrls = SystemSpecs.QueryVideoControllers();
             // Order important CPU Query must be first
             // #1 CPU
             Cpu.QueryCpus();
@@ -113,6 +113,13 @@ namespace NiceHashMiner.Devices
             result.NoDevices = AvailableDevices.Devices.Count <= 0;
 
             result.FailedRamCheck = !ramOK;
+
+            foreach (var failedVc in badVidCtrls)
+            {
+                result.FailedVidControllerStatus = true;
+                result.FailedVidControllerInfo +=
+                    $"{Tr("Name: {0}, Status {1}, PNPDeviceID {2}", failedVc.Name, failedVc.Status, failedVc.PnpDeviceID)}\n";
+            }
 
             return result;
         }

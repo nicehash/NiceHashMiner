@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using System.Text;
-using System.Windows.Forms;
-using NiceHashMiner.Configs;
-using static NiceHashMiner.Translations;
 
 namespace NiceHashMiner.Devices.Querying
 {
@@ -117,7 +113,7 @@ namespace NiceHashMiner.Devices.Querying
             return "key is null";
         }
 
-        internal static void QueryVideoControllers(bool warningsEnabled = true)
+        internal static IEnumerable<VideoControllerData> QueryVideoControllers()
         {
             var vidControllers = new List<VideoControllerData>();
             var allVideoContollersOK = true;
@@ -144,7 +140,7 @@ namespace NiceHashMiner.Devices.Querying
                     );
 
                     stringBuilder.AppendLine("\tWin32_VideoController detected:");
-                    stringBuilder.AppendLine($"\t\tName {vidController.GetFormattedString()}");
+                    stringBuilder.AppendLine($"{vidController.GetFormattedString()}");
 
                     // check if controller ok
                     if (allVideoContollersOK && !vidController.Status.ToLower().Equals("ok"))
@@ -160,23 +156,9 @@ namespace NiceHashMiner.Devices.Querying
 
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
 
-            if (!warningsEnabled || !ConfigManager.GeneralConfig.ShowDriverVersionWarning || 
-                allVideoContollersOK) return;
+            if (allVideoContollersOK) return Enumerable.Empty<VideoControllerData>();
 
-            var msg = Tr("We have detected a Video Controller that is not working properly. NiceHash Miner Legacy will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
-            foreach (var vc in vidControllers)
-            {
-                if (!vc.Status.ToLower().Equals("ok"))
-                {
-                    msg += Environment.NewLine
-                           + string.Format(
-                               Tr("Name: {0}, Status {1}, PNPDeviceID {2}"),
-                               vc.Name, vc.Status, vc.PnpDeviceID);
-                }
-            }
-            MessageBox.Show(msg,
-                Tr("Warning! Video Controller not operating correctly"),
-                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return vidControllers.Where(vc => vc.Status.ToLower() != "ok");
         }
     }
 }

@@ -513,6 +513,15 @@ namespace NiceHashMiner
                     Tr("Warning!"),
                     MessageBoxButtons.OK);
             }
+
+            if (query.FailedVidControllerStatus)
+            {
+                var msg = Tr("We have detected a Video Controller that is not working properly. NiceHash Miner Legacy will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
+                msg += '\n' + query.FailedVidControllerInfo;
+                MessageBox.Show(msg,
+                    Tr("Warning! Video Controller not operating correctly"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void SetChildFormCenter(Form form)
