@@ -69,16 +69,22 @@ namespace NiceHashMiner.Devices
                 var nvidiaCount = 0;
                 foreach (var vidCtrl in SystemSpecs.AvailableVideoControllers)
                 {
-                    if (vidCtrl.Name.ToLower().Contains("nvidia") && CudaUnsupported.IsSupported(vidCtrl.Name))
+                    if (vidCtrl.IsNvidia)
                     {
-                        nvidiaCount += 1;
+                        if (CudaUnsupported.IsSupported(vidCtrl.Name))
+                        {
+                            nvidiaCount++;
+                        }
+                        else
+                        {
+                            Helpers.ConsolePrint(Tag,
+                                "Device not supported NVIDIA/CUDA device not supported " + vidCtrl.Name);
+                        }
                     }
-                    else if (vidCtrl.Name.ToLower().Contains("nvidia"))
+                    else if (vidCtrl.IsAmd)
                     {
-                        Helpers.ConsolePrint(Tag,
-                            "Device not supported NVIDIA/CUDA device not supported " + vidCtrl.Name);
+                        amdCount++;
                     }
-                    amdCount += (vidCtrl.Name.ToLower().Contains("amd")) ? 1 : 0;
                 }
 
                 nvCountMatched = nvidiaCount == NvidiaQuery.CudaDevices?.Count;

@@ -10,6 +10,9 @@
         public string InfSection { get; private set; } // get arhitecture
         public ulong AdapterRam { get; }
 
+        public bool IsNvidia { get; }
+        public bool IsAmd { get; }
+
         public VideoControllerData(string name,
             string desc,
             string pnpID,
@@ -25,6 +28,11 @@
             Status = status;
             InfSection = infSection;
             AdapterRam = ram;
+
+            var lowerName = name.ToLower();
+
+            IsNvidia = lowerName.Contains("nvidia");
+            IsAmd = lowerName.Contains("amd") || lowerName.Contains("radeon") || lowerName.Contains("firepro");
         }
 
         public void SetInfSectionEmptyIfNull()

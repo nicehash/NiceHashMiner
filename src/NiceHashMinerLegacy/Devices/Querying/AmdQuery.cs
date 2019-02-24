@@ -56,8 +56,7 @@ namespace NiceHashMiner.Devices.Querying
                 var sgminerNoNeoscryptLyra2RE = new Version("21.19.164.1");
 
                 // TODO checking radeon drivers only?
-                if ((!vidContrllr.Name.Contains("AMD") && !vidContrllr.Name.Contains("Radeon")) ||
-                    showWarningDialog) continue;
+                if (!vidContrllr.IsAmd || showWarningDialog) continue;
 
                 var amdDriverVersion = new Version(vidContrllr.DriverVersion);
 
@@ -254,9 +253,7 @@ namespace NiceHashMiner.Devices.Querying
 
             // get video AMD controllers and sort them by RAM
             // (find a way to get PCI BUS Numbers from PNPDeviceID)
-            var amdVideoControllers = SystemSpecs.AvailableVideoControllers.Where(vcd =>
-                vcd.Name.ToLower().Contains("amd") || vcd.Name.ToLower().Contains("radeon") ||
-                vcd.Name.ToLower().Contains("firepro")).ToList();
+            var amdVideoControllers = SystemSpecs.AvailableVideoControllers.Where(vcd => vcd.IsAmd).ToList();
             // sort by ram not ideal 
             amdVideoControllers.Sort((a, b) => (int) (a.AdapterRam - b.AdapterRam));
             amdDevices.Sort((a, b) =>

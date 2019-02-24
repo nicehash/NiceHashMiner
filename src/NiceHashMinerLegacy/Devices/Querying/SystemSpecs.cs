@@ -15,7 +15,7 @@ namespace NiceHashMiner.Devices.Querying
         internal static IReadOnlyList<VideoControllerData> AvailableVideoControllers { get; private set; }
 
         internal static bool HasNvidiaVideoController =>
-            AvailableVideoControllers.Any(vctrl => vctrl.Name.ToLower().Contains("nvidia"));
+            AvailableVideoControllers.Any(vctrl => vctrl.IsNvidia);
 
         static SystemSpecs()
         {
