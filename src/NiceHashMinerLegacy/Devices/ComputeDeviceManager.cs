@@ -1,7 +1,6 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.OpenCL;
 using NiceHashMiner.Devices.Querying;
-using NiceHashMiner.Interfaces;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -22,16 +21,10 @@ namespace NiceHashMiner.Devices
         private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(372, 54); // 372.54;
         private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
 
-        private static void ShowMessageAndStep(string infoMsg)
+        public static event EventHandler<string> OnProgressUpdate;
+        
+        public static async Task<QueryResult> QueryDevicesAsync()
         {
-            MessageNotifier?.SetMessageAndIncrementStep(infoMsg);
-        }
-
-        public static IMessageNotifier MessageNotifier { get; private set; }
-
-        public static async Task<QueryResult> QueryDevicesAsync(IMessageNotifier messageNotifier)
-        {
-            MessageNotifier = messageNotifier;
             // #0 get video controllers, used for cross checking
             SystemSpecs.QueryVideoControllers();
             // Order important CPU Query must be first
@@ -45,7 +38,7 @@ namespace NiceHashMiner.Devices
             }
             else
             {
-                ShowMessageAndStep(Tr("Querying CUDA devices"));
+                OnProgressUpdate?.Invoke(null, Tr("Querying CUDA devices"));
                 numDevs = NvidiaQuery.QueryCudaDevices();
             }
             // OpenCL and AMD
@@ -53,15 +46,15 @@ namespace NiceHashMiner.Devices
             if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
             {
                 Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
-                ShowMessageAndStep(Tr("Skip check for AMD OpenCL GPUs"));
+                OnProgressUpdate?.Invoke(null, Tr("Skip check for AMD OpenCL GPUs"));
             }
             else
             {
                 // #3 OpenCL
-                ShowMessageAndStep(Tr("Querying OpenCL devices"));
+                OnProgressUpdate?.Invoke(null, Tr("Querying OpenCL devices"));
                 var openCLQuerySuccess = QueryOpenCL.TryQueryOpenCLDevices(out var openCLResult);
                 // #4 AMD query AMD from OpenCL devices, get serial and add devices
-                ShowMessageAndStep(Tr("Checking AMD OpenCL GPUs"));
+                OnProgressUpdate?.Invoke(null, Tr("Checking AMD OpenCL GPUs"));
                 var amd = new AmdQuery(numDevs);
                 amdDevs = amd.QueryAmd(openCLQuerySuccess, openCLResult);
             }
@@ -97,9 +90,6 @@ namespace NiceHashMiner.Devices
                 Helpers.ConsolePrint(Tag,
                     amdCount == amdDevs?.Count ? "AMD GPU device count GOOD" : "AMD GPU device count BAD!!!");
             }
-
-            // #x remove reference
-            MessageNotifier = null;
 
             SortBusIDs(DeviceType.NVIDIA);
             SortBusIDs(DeviceType.AMD);

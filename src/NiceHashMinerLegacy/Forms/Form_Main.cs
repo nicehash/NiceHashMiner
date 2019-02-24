@@ -278,7 +278,9 @@ namespace NiceHashMiner
             }
 
             // Query Available ComputeDevices
-            var query = await ComputeDeviceManager.QueryDevicesAsync(_loadingScreen);
+            ComputeDeviceManager.OnProgressUpdate += _loadingScreen.SetMessageAndIncrementStep;
+            var query = await ComputeDeviceManager.QueryDevicesAsync();
+            ComputeDeviceManager.OnProgressUpdate -= _loadingScreen.SetMessageAndIncrementStep;
             ShowQueryWarnings(query);
 
             _isDeviceDetectionInitialized = true;
