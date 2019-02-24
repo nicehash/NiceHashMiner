@@ -15,6 +15,8 @@
         public bool FailedVidControllerStatus { get; internal set; }
         public string FailedVidControllerInfo { get; internal set; }
 
+        public bool FailedAmdDriverCheck { get; internal set; }
+
         public QueryResult(string minDriverString, string recDriverString)
         {
             MinDriverString = minDriverString;

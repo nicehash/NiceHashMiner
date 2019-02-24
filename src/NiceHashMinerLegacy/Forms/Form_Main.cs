@@ -522,6 +522,12 @@ namespace NiceHashMiner
                     Tr("Warning! Video Controller not operating correctly"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+
+            if (query.FailedAmdDriverCheck)
+            {
+                var warningDialog = new DriverVersionConfirmationDialog();
+                warningDialog.ShowDialog();
+            }
         }
 
         private void SetChildFormCenter(Form form)

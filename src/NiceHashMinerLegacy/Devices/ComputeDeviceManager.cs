@@ -43,6 +43,7 @@ namespace NiceHashMiner.Devices
             }
             // OpenCL and AMD
             List<OpenCLDevice> amdDevs = null;
+            var failedAmdDriverCheck = false;
             if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
             {
                 Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
@@ -56,7 +57,7 @@ namespace NiceHashMiner.Devices
                 // #4 AMD query AMD from OpenCL devices, get serial and add devices
                 OnProgressUpdate?.Invoke(null, Tr("Checking AMD OpenCL GPUs"));
                 var amd = new AmdQuery(numDevs);
-                amdDevs = amd.QueryAmd(openCLQuerySuccess, openCLResult);
+                amdDevs = amd.QueryAmd(openCLQuerySuccess, openCLResult, out failedAmdDriverCheck);
             }
             // #5 uncheck CPU if GPUs present, call it after we Query all devices
             AvailableDevices.UncheckCpuIfGpu();
@@ -126,6 +127,8 @@ namespace NiceHashMiner.Devices
                 result.FailedVidControllerInfo +=
                     $"{Tr("Name: {0}, Status {1}, PNPDeviceID {2}", failedVc.Name, failedVc.Status, failedVc.PnpDeviceID)}\n";
             }
+
+            result.FailedAmdDriverCheck = failedAmdDriverCheck;
 
             return result;
         }

@@ -1,13 +1,11 @@
 ﻿using ATI.ADL;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.OpenCL;
-using NiceHashMiner.Forms;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 
 namespace NiceHashMiner.Devices.Querying
 {
@@ -28,11 +26,11 @@ namespace NiceHashMiner.Devices.Querying
             _numDevs = numDevs;
         }
 
-        public List<OpenCLDevice> QueryAmd(bool openCLSuccess, OpenCLDeviceDetectionResult openCLData)
+        public List<OpenCLDevice> QueryAmd(bool openCLSuccess, OpenCLDeviceDetectionResult openCLData, out bool failedDriverCheck)
         {
             Helpers.ConsolePrint(Tag, "QueryAMD START");
 
-            DriverCheck();
+            failedDriverCheck = DriverCheck();
 
             var amdDevices = openCLSuccess ? ProcessDevices(openCLData) : new List<OpenCLDevice>();
 
@@ -41,53 +39,47 @@ namespace NiceHashMiner.Devices.Querying
             return amdDevices;
         }
 
-        private void DriverCheck()
+        private bool DriverCheck()
         {
             // check the driver version bool EnableOptimizedVersion = true;
             var showWarningDialog = false;
+            var sgminerNoNeoscryptLyra2RE = new Version("21.19.164.1");
 
             foreach (var vidContrllr in SystemSpecs.AvailableVideoControllers)
             {
+                if (!vidContrllr.IsAmd) continue;
+
                 Helpers.ConsolePrint(Tag,
                     $"Checking AMD device (driver): {vidContrllr.Name} ({vidContrllr.DriverVersion})");
 
                 _driverOld[vidContrllr.Name] = false;
                 _noNeoscryptLyra2[vidContrllr.Name] = false;
-                var sgminerNoNeoscryptLyra2RE = new Version("21.19.164.1");
-
-                // TODO checking radeon drivers only?
-                if (!vidContrllr.IsAmd || showWarningDialog) continue;
-
+                
                 var amdDriverVersion = new Version(vidContrllr.DriverVersion);
 
-                if (!ConfigManager.GeneralConfig.ForceSkipAMDNeoscryptLyraCheck)
+                if (!ConfigManager.GeneralConfig.ForceSkipAMDNeoscryptLyraCheck &&
+                    amdDriverVersion >= sgminerNoNeoscryptLyra2RE)
                 {
-                    var greaterOrEqual = amdDriverVersion.CompareTo(sgminerNoNeoscryptLyra2RE) >= 0;
-                    if (greaterOrEqual)
-                    {
-                        _noNeoscryptLyra2[vidContrllr.Name] = true;
-                        Helpers.ConsolePrint(Tag,
-                            "Driver version seems to be " + sgminerNoNeoscryptLyra2RE +
-                            " or higher. NeoScrypt and Lyra2REv2 will be removed from list");
-                    }
+                    _noNeoscryptLyra2[vidContrllr.Name] = true;
+                    Helpers.ConsolePrint(Tag,
+                        "Driver version seems to be " + sgminerNoNeoscryptLyra2RE +
+                        " or higher. NeoScrypt and Lyra2REv2 will be removed from list");
                 }
-
 
                 if (amdDriverVersion.Major >= 15) continue;
 
                 showWarningDialog = true;
                 _driverOld[vidContrllr.Name] = true;
+            }
+
+            if (showWarningDialog)
+            {
                 Helpers.ConsolePrint(Tag,
                     "WARNING!!! Old AMD GPU driver detected! All optimized versions disabled, mining " +
                     "speed will not be optimal. Consider upgrading AMD GPU driver. Recommended AMD GPU driver version is 15.7.1.");
             }
 
-            if (ConfigManager.GeneralConfig.ShowDriverVersionWarning && showWarningDialog)
-            {
-                Form warningDialog = new DriverVersionConfirmationDialog();
-                warningDialog.ShowDialog();
-                warningDialog = null;
-            }
+            return showWarningDialog;
         }
 
         private List<OpenCLDevice> ProcessDevices(OpenCLDeviceDetectionResult openCLData)
