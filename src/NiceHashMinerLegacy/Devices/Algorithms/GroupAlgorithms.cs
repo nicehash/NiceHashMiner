@@ -196,6 +196,37 @@ namespace NiceHashMiner.Devices.Algorithms
                     unstableAlgo.Enabled = false;
                 }
             }
+            // GMiner filters
+            if (algoSettings.ContainsKey(MinerBaseType.GMiner))
+            {
+                var filterAlgos = new List<AlgorithmType>{};
+                const ulong MinZHashMemory = 1879047230; // 1.75GB
+                if (device.GpuRam > MinZHashMemory == false) filterAlgos.Add(AlgorithmType.ZHash);
+                
+                const ulong MinBeamMemory = 3113849695; // 2.9GB
+                if (device.GpuRam > MinBeamMemory == false) filterAlgos.Add(AlgorithmType.Beam);
+
+                const ulong MinGrinCuckaroo29Memory = 6012951136; // 5.6GB
+                if (device.GpuRam > MinGrinCuckaroo29Memory == false) filterAlgos.Add(AlgorithmType.GrinCuckaroo29);
+
+                if (filterAlgos.Count > 0) algoSettings = FilterMinerAlgos(algoSettings, filterAlgos);
+            }
+            // GMiner filters
+            if (algoSettings.ContainsKey(MinerBaseType.TTMiner))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.TTMiner])
+                {
+                    algo.Enabled = false;
+                }
+            }
+            // Disable all MTP algorithms by default
+            foreach (var algos in algoSettings.Values)
+            {
+                foreach (var algo in algos)
+                {
+                    if (algo.NiceHashID == AlgorithmType.MTP) algo.Enabled = false;
+                }
+            }
 
             // This is not needed anymore after excavator v1.1.4a
             //if (device.IsSM50() && algoSettings.ContainsKey(MinerBaseType.excavator)) {

@@ -134,6 +134,8 @@ namespace NiceHashMiner.Miners.Grouping
 
             public const string GMiner = Bin3rdParty + @"\gminer\miner.exe";
             public const string BMiner = Bin3rdParty + @"\bminer\bminer.exe";
+
+            public const string TTMiner = Bin3rdParty + @"\ttminer\TT-Miner.exe";
         }
 
         // NEW START
@@ -175,12 +177,16 @@ namespace NiceHashMiner.Miners.Grouping
                         return Data.SgminerZcoinofficial;
                     case MinerBaseType.cpuminer:
                         return Data.CpuMinerZCoin;
+                    case MinerBaseType.TTMiner:
+                        return Data.TTMiner;
                 }
                 return Data.None;
             }
 
             switch (minerBaseType)
             {
+                case MinerBaseType.TTMiner:
+                    return Data.TTMiner;
                 case MinerBaseType.ccminer:
                     return NvidiaGroups.Ccminer_path(algoType, devGroupType);
                 case MinerBaseType.sgminer:

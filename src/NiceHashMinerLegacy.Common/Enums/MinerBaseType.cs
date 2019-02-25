@@ -28,6 +28,7 @@
         Phoenix,
         GMiner,
         BMiner,
+        TTMiner,
         END
     }
 }
