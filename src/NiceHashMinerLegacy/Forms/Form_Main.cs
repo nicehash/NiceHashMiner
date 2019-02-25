@@ -14,6 +14,7 @@ using System.Management;
 using System.Threading;
 using System.Windows.Forms;
 using NiceHashMiner.Devices.Querying;
+using NiceHashMiner.Devices.Querying.Nvidia;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;

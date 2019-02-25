@@ -1,11 +1,10 @@
-﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Devices.OpenCL;
-using NiceHashMiner.Devices.Querying.Amd;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Devices.OpenCL;
 
-namespace NiceHashMiner.Devices.Querying
+namespace NiceHashMiner.Devices.Querying.Amd
 {
     public class AmdQuery
     {

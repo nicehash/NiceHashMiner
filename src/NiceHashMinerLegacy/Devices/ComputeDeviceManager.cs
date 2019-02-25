@@ -1,6 +1,7 @@
 ﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Devices.OpenCL;
 using NiceHashMiner.Devices.Querying;
+using NiceHashMiner.Devices.Querying.Amd;
+using NiceHashMiner.Devices.Querying.Nvidia;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;

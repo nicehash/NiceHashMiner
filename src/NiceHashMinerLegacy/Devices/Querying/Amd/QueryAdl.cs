@@ -1,11 +1,10 @@
-﻿using ATI.ADL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using NiceHashMiner.Devices.Querying.Amd;
+using ATI.ADL;
 
-namespace NiceHashMiner.Devices.Querying
+namespace NiceHashMiner.Devices.Querying.Amd
 {
     internal static class QueryAdl
     {
