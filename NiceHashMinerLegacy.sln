@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MessageBoxManager", "src\He
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLegacy", "src\NiceHashMinerLegacy\NiceHashMinerLegacy.csproj", "{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceDetectionPrinter", "DeviceDetectionPrinter\DeviceDetectionPrinter.csproj", "{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Ubuntu|Any CPU = Debug_Ubuntu|Any CPU
@@ -603,6 +605,46 @@ Global
 		{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}.Release|Win32.Build.0 = Release|Any CPU
 		{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}.Release|x64.ActiveCfg = Release|Any CPU
 		{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}.Release|x64.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug_Ubuntu|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug_Ubuntu|Mixed Platforms.Build.0 = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug_Ubuntu|Win32.ActiveCfg = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug_Ubuntu|Win32.Build.0 = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug_Ubuntu|x64.ActiveCfg = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug_Ubuntu|x64.Build.0 = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug|Win32.Build.0 = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Debug|x64.Build.0 = Debug|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.FillSMA|Any CPU.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.FillSMA|Any CPU.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.FillSMA|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.FillSMA|Mixed Platforms.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.FillSMA|Win32.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.FillSMA|Win32.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.FillSMA|x64.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.FillSMA|x64.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release_Ubuntu|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release_Ubuntu|Mixed Platforms.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release_Ubuntu|Win32.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release_Ubuntu|Win32.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release_Ubuntu|x64.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release_Ubuntu|x64.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release|Win32.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release|Win32.Build.0 = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release|x64.ActiveCfg = Release|Any CPU
+		{304F63A2-55EC-43B5-BFE3-5D949BAC7C28}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMiner.Devices.OpenCL;
+using System;
 
 namespace NiceHashMiner.Devices
 {

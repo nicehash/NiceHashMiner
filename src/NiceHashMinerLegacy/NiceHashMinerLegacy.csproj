@@ -14,6 +14,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -28,8 +30,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -118,7 +118,8 @@
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
     <Compile Include="Devices\CudaDeviceDetectionResult.cs" />
     <Compile Include="Devices\Querying\AmdQuery.cs" />
-    <Compile Include="Devices\Querying\OpenCLJsonData.cs" />
+    <Compile Include="Devices\OpenCL\OpenCLDeviceDetectionResult.cs" />
+    <Compile Include="Devices\OpenCL\OpenCLPlatform.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
     <Compile Include="Forms\EnterBTCDialogSwitch.cs">
       <SubType>Form</SubType>
@@ -147,9 +148,11 @@
     <Compile Include="Miners\GMiner.cs" />
     <Compile Include="Miners\Phoenix.cs" />
     <Compile Include="Miners\Trex.cs" />
+    <Compile Include="Miners\Ttminer.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="Eula.cs" />
+    <Compile Include="PInvoke\DeviceDetection.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\Equihash\Dtsm.cs" />
@@ -184,7 +187,7 @@
     <Compile Include="Devices\CUDA_Unsupported.cs" />
     <Compile Include="Devices\Algorithms\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />
-    <Compile Include="Devices\OpenCLDevice.cs" />
+    <Compile Include="Devices\OpenCL\OpenCLDevice.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
     </Compile>

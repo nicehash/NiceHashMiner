@@ -260,7 +260,16 @@ namespace NiceHashMiner.Devices.Algorithms
                     //new DualAlgorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s)
                     //new Algorithm(MinerBaseType.BMiner, AlgorithmType.GrinCuckaroo29)
                 }
+            },
+            {
+                MinerBaseType.TTMiner,
+                new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.TTMiner, AlgorithmType.MTP),
+                    new Algorithm(MinerBaseType.TTMiner, AlgorithmType.Lyra2REv3),
+                }
             }
+            
         }.ConcatDictList(All, Gpu);
 
         #endregion

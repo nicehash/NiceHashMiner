@@ -1402,6 +1402,7 @@ namespace cl {
     F(cl_device_info, CL_DEVICE_PREFERRED_INTEROP_USER_SYNC, ::size_t) \
     F(cl_device_info, CL_DEVICE_PARTITION_AFFINITY_DOMAIN, cl_device_affinity_domain) \
 	F(cl_device_info, CL_DEVICE_TOPOLOGY_AMD, cl_device_topology_amd) \
+    F(cl_device_info, CL_DEVICE_BOARD_NAME_AMD, STRING_CLASS) \
     F(cl_device_info, CL_DEVICE_BUILT_IN_KERNELS, STRING_CLASS)
 #endif // #if defined(CL_VERSION_1_2)
 
