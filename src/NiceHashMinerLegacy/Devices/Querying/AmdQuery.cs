@@ -122,7 +122,7 @@ namespace NiceHashMiner.Devices.Querying
             Helpers.ConsolePrint(Tag, "AMD GPUs count : " + amdDevices.Count);
             Helpers.ConsolePrint(Tag, "AMD Getting device name and serial from ADL");
             // ADL
-            var isAdlInit = true;
+            bool isAdlInit;
             try
             {
                 isAdlInit = QueryAdl();
@@ -297,176 +297,168 @@ namespace NiceHashMiner.Devices.Querying
         {
             // ADL does not get devices in order map devices by bus number
             // bus id, <name, uuid>
-            var isAdlInit = true;
 
-            var adlRet = -1;
             var numberOfAdapters = 0;
-            var adl2Control = IntPtr.Zero;
 
-            if (null != ADL.ADL_Main_Control_Create)
-                // Second parameter is 1: Get only the present adapters
-                adlRet = ADL.ADL_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 1);
-            if (ADL.ADL_SUCCESS == adlRet)
+            var adapterBuffer = IntPtr.Zero;
+
+            try
             {
-                ADL.ADL_Adapter_NumberOfAdapters_Get?.Invoke(ref numberOfAdapters);
+                var adlRet = ADL.ADL_Main_Control_Create?.Invoke(ADL.ADL_Main_Memory_Alloc, 1);
+                AdlThrowIfException(adlRet, nameof(ADL.ADL_Main_Control_Create));
+
+                adlRet = ADL.ADL_Adapter_NumberOfAdapters_Get?.Invoke(ref numberOfAdapters);
+                AdlThrowIfException(adlRet, nameof(ADL.ADL_Adapter_NumberOfAdapters_Get));
                 Helpers.ConsolePrint(Tag, "Number Of Adapters: " + numberOfAdapters);
 
-                if (0 < numberOfAdapters)
-                {
-                    // Get OS adpater info from ADL
-                    var osAdapterInfoData = new ADLAdapterInfoArray();
+                if (numberOfAdapters <= 0)
+                    throw new Exception("Did not find any ADL adapters");
 
-                    if (null != ADL.ADL_Adapter_AdapterInfo_Get)
+                // Get OS adpater info from ADL
+                var osAdapterInfoData = new ADLAdapterInfoArray();
+
+                var size = Marshal.SizeOf(osAdapterInfoData);
+                adapterBuffer = Marshal.AllocCoTaskMem(size);
+                Marshal.StructureToPtr(osAdapterInfoData, adapterBuffer, false);
+
+                adlRet = ADL.ADL_Adapter_AdapterInfo_Get?.Invoke(adapterBuffer, size);
+                AdlThrowIfException(adlRet, nameof(ADL.ADL_Adapter_AdapterInfo_Get));
+
+                osAdapterInfoData = (ADLAdapterInfoArray)Marshal.PtrToStructure(adapterBuffer,
+                    osAdapterInfoData.GetType());
+
+                var adl2Info = TryGetAdl2AdapterInfo();
+
+                var isActive = 0;
+
+                for (var i = 0; i < numberOfAdapters; i++)
+                {
+                    var adapter = osAdapterInfoData.ADLAdapterInfo[i];
+
+                    // Check if the adapter is active
+                    adlRet = ADL.ADL_Adapter_Active_Get?.Invoke(adapter.AdapterIndex, ref isActive);
+
+                    if (ADL.ADL_SUCCESS != adlRet) continue;
+
+                    // we are looking for amd
+                    // TODO check discrete and integrated GPU separation
+                    var vendorID = adapter.VendorID;
+                    var devName = adapter.AdapterName;
+
+                    if (vendorID != AmdVendorID && !devName.ToLower().Contains("amd") &&
+                        !devName.ToLower().Contains("radeon") &&
+                        !devName.ToLower().Contains("firepro")) continue;
+
+                    var pnpStr = adapter.PNPString;
+                    // find vi controller pnp
+                    var infSection = SystemSpecs.AvailableVideoControllers
+                        .FirstOrDefault(vc => vc.PnpDeviceID == pnpStr)?
+                        .InfSection ?? "";
+
+                    var backSlashLast = pnpStr.LastIndexOf('\\');
+                    var serial = pnpStr.Substring(backSlashLast, pnpStr.Length - backSlashLast);
+                    var end0 = serial.IndexOf('&');
+                    var end1 = serial.IndexOf('&', end0 + 1);
+                    // get serial
+                    serial = serial.Substring(end0 + 1, end1 - end0 - 1);
+
+                    var udid = adapter.UDID;
+                    const int pciVenIDStrSize = 21; // PCI_VEN_XXXX&DEV_XXXX
+                    var uuid = udid.Substring(0, pciVenIDStrSize) + "_" + serial;
+                    var busId = adapter.BusNumber;
+                    var index = adapter.AdapterIndex;
+
+                    if (_amdDeviceUuid.Contains(uuid)) continue;
+                    
+                    Helpers.ConsolePrint(Tag, $"ADL device added BusNumber:{busId}  NAME:{devName}  UUID:{uuid}");
+
+                    _amdDeviceUuid.Add(uuid);
+
+                    if (_busIdInfos.ContainsKey(busId)) continue;
+
+                    var adl2Index = -1;
+                    if (adl2Info != null)
                     {
-                        var size = Marshal.SizeOf(osAdapterInfoData);
-                        var adapterBuffer = Marshal.AllocCoTaskMem(size);
-                        Marshal.StructureToPtr(osAdapterInfoData, adapterBuffer, false);
-
-                        adlRet = ADL.ADL_Adapter_AdapterInfo_Get(adapterBuffer, size);
-
-                        var adl2Ret = -1;
-                        if (ADL.ADL2_Main_Control_Create != null)
-                            adl2Ret = ADL.ADL2_Main_Control_Create(ADL.ADL_Main_Memory_Alloc, 0, ref adl2Control);
-
-                        var adl2Info = new ADLAdapterInfoArray();
-                        var size2 = Marshal.SizeOf(adl2Info);
-                        var buffer = Marshal.AllocCoTaskMem(size2);
-                        if (adl2Ret == ADL.ADL_SUCCESS && ADL.ADL2_Adapter_AdapterInfo_Get != null)
-                        {
-                            Marshal.StructureToPtr(adl2Info, buffer, false);
-                            adl2Ret = ADL.ADL2_Adapter_AdapterInfo_Get(adl2Control, buffer, Marshal.SizeOf(adl2Info));
-                        }
-                        else
-                        {
-                            adl2Ret = -1;
-                        }
-
-                        if (adl2Ret == ADL.ADL_SUCCESS)
-                        {
-                            adl2Info = (ADLAdapterInfoArray) Marshal.PtrToStructure(buffer, adl2Info.GetType());
-                        }
-
-                        if (ADL.ADL_SUCCESS == adlRet)
-                        {
-                            osAdapterInfoData =
-                                (ADLAdapterInfoArray) Marshal.PtrToStructure(adapterBuffer,
-                                    osAdapterInfoData.GetType());
-                            var isActive = 0;
-
-                            for (var i = 0; i < numberOfAdapters; i++)
-                            {
-                                // Check if the adapter is active
-                                if (null != ADL.ADL_Adapter_Active_Get)
-                                    adlRet = ADL.ADL_Adapter_Active_Get(
-                                        osAdapterInfoData.ADLAdapterInfo[i].AdapterIndex, ref isActive);
-
-                                if (ADL.ADL_SUCCESS != adlRet) continue;
-
-                                // we are looking for amd
-                                // TODO check discrete and integrated GPU separation
-                                var vendorID = osAdapterInfoData.ADLAdapterInfo[i].VendorID;
-                                var devName = osAdapterInfoData.ADLAdapterInfo[i].AdapterName;
-
-                                if (vendorID != AmdVendorID && !devName.ToLower().Contains("amd") &&
-                                    !devName.ToLower().Contains("radeon") &&
-                                    !devName.ToLower().Contains("firepro")) continue;
-
-                                var pnpStr = osAdapterInfoData.ADLAdapterInfo[i].PNPString;
-                                // find vi controller pnp
-                                var infSection = "";
-                                foreach (var vCtrl in SystemSpecs.AvailableVideoControllers)
-                                {
-                                    if (vCtrl.PnpDeviceID == pnpStr)
-                                    {
-                                        infSection = vCtrl.InfSection;
-                                    }
-                                }
-
-                                var backSlashLast = pnpStr.LastIndexOf('\\');
-                                var serial = pnpStr.Substring(backSlashLast, pnpStr.Length - backSlashLast);
-                                var end0 = serial.IndexOf('&');
-                                var end1 = serial.IndexOf('&', end0 + 1);
-                                // get serial
-                                serial = serial.Substring(end0 + 1, end1 - end0 - 1);
-
-                                var udid = osAdapterInfoData.ADLAdapterInfo[i].UDID;
-                                const int pciVenIDStrSize = 21; // PCI_VEN_XXXX&DEV_XXXX
-                                var uuid = udid.Substring(0, pciVenIDStrSize) + "_" + serial;
-                                var budId = osAdapterInfoData.ADLAdapterInfo[i].BusNumber;
-                                var index = osAdapterInfoData.ADLAdapterInfo[i].AdapterIndex;
-
-                                if (_amdDeviceUuid.Contains(uuid)) continue;
-
-                                try
-                                {
-                                    Helpers.ConsolePrint(Tag,
-                                        $"ADL device added BusNumber:{budId}  NAME:{devName}  UUID:{uuid}");
-                                }
-                                catch (Exception e)
-                                {
-                                    Helpers.ConsolePrint(Tag, e.Message);
-                                }
-
-                                _amdDeviceUuid.Add(uuid);
-                                //_busIds.Add(OSAdapterInfoData.ADLAdapterInfo[i].BusNumber);
-                                //_amdDeviceName.Add(devName);
-
-                                if (_busIdInfos.ContainsKey(budId)) continue;
-
-                                var adl2Index = -1;
-                                if (adl2Ret == ADL.ADL_SUCCESS)
-                                {
-                                    adl2Index = adl2Info.ADLAdapterInfo
-                                        .FirstOrDefault(a => a.UDID == osAdapterInfoData.ADLAdapterInfo[i].UDID)
-                                        .AdapterIndex;
-                                }
-
-                                var info = new BusIdInfo
-                                {
-                                    Name = devName,
-                                    Uuid = uuid,
-                                    InfSection = infSection,
-                                    Adl1Index = index,
-                                    Adl2Index = adl2Index
-                                };
-
-                                _busIdInfos.Add(budId, info);
-                            }
-                        }
-                        else
-                        {
-                            Helpers.ConsolePrint(Tag,
-                                "ADL_Adapter_AdapterInfo_Get() returned error code " +
-                                adlRet);
-                            isAdlInit = false;
-                        }
-
-                        // Release the memory for the AdapterInfo structure
-                        if (IntPtr.Zero != adapterBuffer)
-                            Marshal.FreeCoTaskMem(adapterBuffer);
-                        if (buffer != IntPtr.Zero)
-                            Marshal.FreeCoTaskMem(buffer);
+                        adl2Index = adl2Info
+                            .FirstOrDefault(a => a.UDID == adapter.UDID)
+                            .AdapterIndex;
                     }
+
+                    var info = new BusIdInfo
+                    {
+                        Name = devName,
+                        Uuid = uuid,
+                        InfSection = infSection,
+                        Adl1Index = index,
+                        Adl2Index = adl2Index
+                    };
+
+                    _busIdInfos[busId] = info;
                 }
 
-                if (null != ADL.ADL_Main_Control_Destroy && numberOfAdapters <= 0)
-                    // Close ADL if it found no AMD devices
-                    ADL.ADL_Main_Control_Destroy();
-                if (ADL.ADL2_Main_Control_Destroy != null && adl2Control != IntPtr.Zero)
-                {
-                    ADL.ADL2_Main_Control_Destroy(adl2Control);
-                }
+                return true;
             }
-            else
+            catch (Exception e)
             {
-                // TODO
-                Helpers.ConsolePrint(Tag,
-                    "ADL_Main_Control_Create() returned error code " + adlRet);
+                Helpers.ConsolePrint(Tag, e.Message);
                 Helpers.ConsolePrint(Tag, "Check if ADL is properly installed!");
-                isAdlInit = false;
+                return false;
+            }
+            finally
+            {
+                if (adapterBuffer != IntPtr.Zero)
+                    Marshal.FreeCoTaskMem(adapterBuffer);
+            }
+        }
+
+        private static List<ADLAdapterInfo> TryGetAdl2AdapterInfo()
+        {
+            var context = IntPtr.Zero;
+            var buffer = IntPtr.Zero;
+
+            try
+            {
+                var adl2Ret = ADL.ADL2_Main_Control_Create?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref context);
+                AdlThrowIfException(adl2Ret, nameof(ADL.ADL2_Main_Control_Create));
+
+                var adl2Info = new ADLAdapterInfoArray();
+                var size2 = Marshal.SizeOf(adl2Info);
+                buffer = Marshal.AllocCoTaskMem(size2);
+
+                Marshal.StructureToPtr(adl2Info, buffer, false);
+                adl2Ret = ADL.ADL2_Adapter_AdapterInfo_Get?.Invoke(context, buffer, Marshal.SizeOf(adl2Info));
+                AdlThrowIfException(adl2Ret, nameof(ADL.ADL2_Adapter_AdapterInfo_Get));
+                
+                adl2Info = (ADLAdapterInfoArray) Marshal.PtrToStructure(buffer, adl2Info.GetType());
+
+                return new List<ADLAdapterInfo>(adl2Info.ADLAdapterInfo);
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint(Tag, e.Message);
+            }
+            finally
+            {
+                if (context != IntPtr.Zero)
+                {
+                    ADL.ADL2_Main_Control_Destroy?.Invoke(context);
+                }
+
+                if (buffer != IntPtr.Zero)
+                {
+                    Marshal.FreeCoTaskMem(buffer);
+                }
             }
 
-            return isAdlInit;
+            return null;
+        }
+
+        private static void AdlThrowIfException(int? adlCode, string adlFunction)
+        {
+            if (adlCode != ADL.ADL_SUCCESS)
+            {
+                throw new AdlException(adlCode, adlFunction);
+            }
         }
 
         private struct BusIdInfo
@@ -476,6 +468,19 @@ namespace NiceHashMiner.Devices.Querying
             public string InfSection;
             public int Adl1Index;
             public int Adl2Index;
+        }
+
+        private class AdlException : Exception
+        {
+            public int? AdlCode { get; }
+            public string AdlFunction { get; }
+
+            public AdlException(int? adlCode, string adlFunction)
+                : base($"{adlFunction} {(adlCode == null ? "is null" : $"returned error code {adlCode}")}")
+            {
+                AdlCode = adlCode;
+                AdlFunction = adlFunction;
+            }
         }
     }
 }
