@@ -60,6 +60,11 @@ namespace NiceHashMiner
             catch { }  // Not gonna recursively call here in case something is seriously wrong
         }
 
+        public static void ConsolePrint(string grp, object obj)
+        {
+            ConsolePrint(grp, obj.ToString());
+        }
+
         public static void ConsolePrint(string grp, string text, params object[] arg)
         {
             ConsolePrint(grp, string.Format(text, arg));

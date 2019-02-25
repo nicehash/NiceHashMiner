@@ -42,8 +42,8 @@ namespace NiceHashMiner.Devices
                 numDevs = NvidiaQuery.QueryCudaDevices();
             }
             // OpenCL and AMD
-            List<OpenCLDevice> amdDevs = null;
             var failedAmdDriverCheck = false;
+            List<AmdComputeDevice> amdDevs = null;
             if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
             {
                 Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
@@ -58,6 +58,7 @@ namespace NiceHashMiner.Devices
                 OnProgressUpdate?.Invoke(null, Tr("Checking AMD OpenCL GPUs"));
                 var amd = new AmdQuery(numDevs);
                 amdDevs = amd.QueryAmd(openCLQuerySuccess, openCLResult, out failedAmdDriverCheck);
+                AvailableDevices.AddDevices(amdDevs);
             }
             // #5 uncheck CPU if GPUs present, call it after we Query all devices
             AvailableDevices.UncheckCpuIfGpu();

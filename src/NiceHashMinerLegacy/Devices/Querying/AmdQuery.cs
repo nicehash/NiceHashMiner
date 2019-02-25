@@ -1,17 +1,16 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.OpenCL;
+using NiceHashMiner.Devices.Querying.Amd;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace NiceHashMiner.Devices.Querying
 {
     public class AmdQuery
     {
         private const string Tag = "AmdQuery";
-
-        private readonly Dictionary<string, bool> _driverOld = new Dictionary<string, bool>();
+        
         private readonly Dictionary<string, bool> _noNeoscryptLyra2 = new Dictionary<string, bool>();
 
         private int _numDevs;
@@ -21,13 +20,13 @@ namespace NiceHashMiner.Devices.Querying
             _numDevs = numDevs;
         }
 
-        public List<OpenCLDevice> QueryAmd(bool openCLSuccess, OpenCLDeviceDetectionResult openCLData, out bool failedDriverCheck)
+        public List<AmdComputeDevice> QueryAmd(bool openCLSuccess, OpenCLDeviceDetectionResult openCLData, out bool failedDriverCheck)
         {
             Helpers.ConsolePrint(Tag, "QueryAMD START");
 
             failedDriverCheck = DriverCheck();
 
-            var amdDevices = openCLSuccess ? ProcessDevices(openCLData) : new List<OpenCLDevice>();
+            var amdDevices = openCLSuccess ? ProcessDevices(openCLData) : null;
 
             Helpers.ConsolePrint(Tag, "QueryAMD END");
 
@@ -46,8 +45,7 @@ namespace NiceHashMiner.Devices.Querying
 
                 Helpers.ConsolePrint(Tag,
                     $"Checking AMD device (driver): {vidContrllr.Name} ({vidContrllr.DriverVersion})");
-
-                _driverOld[vidContrllr.Name] = false;
+                
                 _noNeoscryptLyra2[vidContrllr.Name] = false;
                 
                 var amdDriverVersion = new Version(vidContrllr.DriverVersion);
@@ -64,7 +62,6 @@ namespace NiceHashMiner.Devices.Querying
                 if (amdDriverVersion.Major >= 15) continue;
 
                 showWarningDialog = true;
-                _driverOld[vidContrllr.Name] = true;
             }
 
             if (showWarningDialog)
@@ -77,7 +74,7 @@ namespace NiceHashMiner.Devices.Querying
             return showWarningDialog;
         }
 
-        private List<OpenCLDevice> ProcessDevices(OpenCLDeviceDetectionResult openCLData)
+        private List<AmdComputeDevice> ProcessDevices(OpenCLDeviceDetectionResult openCLData)
         {
             var amdOclDevices = new List<OpenCLDevice>();
             var amdDevices = new List<OpenCLDevice>();
@@ -95,7 +92,7 @@ namespace NiceHashMiner.Devices.Querying
                 break;
             }
 
-            if (!amdPlatformNumFound) return amdDevices;
+            if (!amdPlatformNumFound) return null;
 
             // get only AMD gpus
             {
@@ -111,7 +108,7 @@ namespace NiceHashMiner.Devices.Querying
             if (amdDevices.Count == 0)
             {
                 Helpers.ConsolePrint(Tag, "AMD GPUs count is 0");
-                return amdDevices;
+                return null;
             }
 
             Helpers.ConsolePrint(Tag, "AMD GPUs count : " + amdDevices.Count);
@@ -155,130 +152,17 @@ namespace NiceHashMiner.Devices.Querying
 
             ///////
             // AMD device creation (in NHM context)
+            AmdDeviceCreation devCreator;
             if (isAdlInit && isBusIDOk)
             {
-                return AmdDeviceCreationPrimary(amdDevices, busIdInfos, numDevs);
+                devCreator = new AmdDeviceCreationPrimary(busIdInfos);
             }
-
-            return AmdDeviceCreationFallback(amdDevices);
-        }
-
-        private List<OpenCLDevice> AmdDeviceCreationPrimary(List<OpenCLDevice> amdDevices, 
-            IReadOnlyDictionary<int, QueryAdl.BusIdInfo> busIdInfos, 
-            int numDevs)
-        {
-            Helpers.ConsolePrint(Tag, "Using AMD device creation DEFAULT Reliable mappings");
-            Helpers.ConsolePrint(Tag,
-                amdDevices.Count == numDevs
-                    ? "AMD OpenCL and ADL AMD query COUNTS GOOD/SAME"
-                    : "AMD OpenCL and ADL AMD query COUNTS DIFFERENT/BAD");
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("");
-            stringBuilder.AppendLine("QueryAMD [DEFAULT query] devices: ");
-            foreach (var dev in amdDevices)
+            else
             {
-                var busID = dev.AMD_BUS_ID;
-                if (busID != -1 && busIdInfos.ContainsKey(busID))
-                {
-                    var deviceName = busIdInfos[busID].Name;
-                    var newAmdDev = new AmdGpuDevice(dev, _driverOld[deviceName],
-                        busIdInfos[busID].InfSection, _noNeoscryptLyra2[deviceName])
-                    {
-                        DeviceName = deviceName,
-                        UUID = busIdInfos[busID].Uuid,
-                        AdapterIndex = busIdInfos[busID].Adl1Index
-                    };
-                    var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection
-                        .DisableDetectionAMD;
-                    var skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
-                    var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
-                    var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
-
-                    AvailableDevices.AddDevice(
-                        new AmdComputeDevice(newAmdDev, ++_numDevs, false,
-                            busIdInfos[busID].Adl2Index));
-                    // just in case 
-                    try
-                    {
-                        stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
-                        stringBuilder.AppendLine($"\t\tID: {newAmdDev.DeviceID}");
-                        stringBuilder.AppendLine($"\t\tNAME: {newAmdDev.DeviceName}");
-                        stringBuilder.AppendLine($"\t\tCODE_NAME: {newAmdDev.Codename}");
-                        stringBuilder.AppendLine($"\t\tUUID: {newAmdDev.UUID}");
-                        stringBuilder.AppendLine(
-                            $"\t\tMEMORY: {newAmdDev.DeviceGlobalMemory}");
-                        stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
-                    }
-                    catch
-                    {
-                    }
-                }
-                else
-                {
-                    stringBuilder.AppendLine($"\tDevice not added, Bus No. {busID} not found:");
-                }
+                devCreator = new AmdDeviceCreationFallback();
             }
 
-            Helpers.ConsolePrint(Tag, stringBuilder.ToString());
-
-            return amdDevices;
-        }
-
-        private List<OpenCLDevice> AmdDeviceCreationFallback(List<OpenCLDevice> amdDevices)
-        {
-            Helpers.ConsolePrint(Tag, "Using AMD device creation FALLBACK UnReliable mappings");
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("");
-            stringBuilder.AppendLine("QueryAMD [FALLBACK query] devices: ");
-
-            // get video AMD controllers and sort them by RAM
-            // (find a way to get PCI BUS Numbers from PNPDeviceID)
-            var amdVideoControllers = SystemSpecs.AvailableVideoControllers.Where(vcd => vcd.IsAmd).ToList();
-            // sort by ram not ideal 
-            amdVideoControllers.Sort((a, b) => (int) (a.AdapterRam - b.AdapterRam));
-            amdDevices.Sort((a, b) =>
-                (int) (a._CL_DEVICE_GLOBAL_MEM_SIZE - b._CL_DEVICE_GLOBAL_MEM_SIZE));
-            var minCount = Math.Min(amdVideoControllers.Count, amdDevices.Count);
-
-            for (var i = 0; i < minCount; ++i)
-            {
-                var deviceName = amdVideoControllers[i].Name;
-                amdVideoControllers[i].SetInfSectionEmptyIfNull();
-                var newAmdDev = new AmdGpuDevice(amdDevices[i], _driverOld[deviceName],
-                    amdVideoControllers[i].InfSection,
-                    _noNeoscryptLyra2[deviceName])
-                {
-                    DeviceName = deviceName,
-                    UUID = "UNUSED"
-                };
-                var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection
-                    .DisableDetectionAMD;
-                var skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
-                var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
-                var etherumCapableStr = newAmdDev.IsEtherumCapable() ? "YES" : "NO";
-
-                AvailableDevices.AddDevice(
-                    new AmdComputeDevice(newAmdDev, ++_numDevs, true, -1));
-                // just in case 
-                try
-                {
-                    stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
-                    stringBuilder.AppendLine($"\t\tID: {newAmdDev.DeviceID}");
-                    stringBuilder.AppendLine($"\t\tNAME: {newAmdDev.DeviceName}");
-                    stringBuilder.AppendLine($"\t\tCODE_NAME: {newAmdDev.Codename}");
-                    stringBuilder.AppendLine($"\t\tUUID: {newAmdDev.UUID}");
-                    stringBuilder.AppendLine(
-                        $"\t\tMEMORY: {newAmdDev.DeviceGlobalMemory}");
-                    stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
-                }
-                catch
-                {
-                }
-            }
-
-            Helpers.ConsolePrint(Tag, stringBuilder.ToString());
-
-            return amdDevices;
+            return devCreator.CreateDevices(_numDevs, amdDevices, _noNeoscryptLyra2);
         }
     }
 }

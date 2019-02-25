@@ -28,7 +28,9 @@ namespace NiceHashMiner.Devices
 
         public int AdapterIndex; // init this with the ADL
 
-        public AmdGpuDevice(OpenCLDevice openClSubset, bool isOldDriver, string infSection, bool driverDisableAlgo)
+        public int Adl2Index;
+
+        public AmdGpuDevice(OpenCLDevice openClSubset, string infSection, bool driverDisableAlgo)
         {
             DriverDisableAlgos = driverDisableAlgo;
             InfSection = infSection;

@@ -31,6 +31,11 @@ namespace NiceHashMiner.Devices
         {
             _devices.Add(dev);
         }
+
+        internal static void AddDevices(IEnumerable<ComputeDevice> devs)
+        {
+            _devices.AddRange(devs);
+        }
         
         public static ComputeDevice GetDeviceWithUuid(string uuid)
         {
