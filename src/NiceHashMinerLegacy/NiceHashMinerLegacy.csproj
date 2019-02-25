@@ -121,6 +121,7 @@
     <Compile Include="Devices\Querying\AmdQuery.cs" />
     <Compile Include="Devices\OpenCL\OpenCLDeviceDetectionResult.cs" />
     <Compile Include="Devices\OpenCL\OpenCLPlatform.cs" />
+    <Compile Include="Devices\Querying\Amd\AmdBusIDInfo.cs" />
     <Compile Include="Devices\Querying\Amd\AmdDeviceCreation.cs" />
     <Compile Include="Devices\Querying\Amd\AmdDeviceCreationFallback.cs" />
     <Compile Include="Devices\Querying\Amd\AmdDeviceCreationPrimary.cs" />

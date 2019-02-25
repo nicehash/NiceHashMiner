@@ -5,11 +5,11 @@ namespace NiceHashMiner.Devices.Querying.Amd
 {
     internal class AmdDeviceCreationPrimary : AmdDeviceCreation
     {
-        private readonly IReadOnlyDictionary<int, QueryAdl.BusIdInfo> _busIDInfos;
+        private readonly IReadOnlyDictionary<int, AmdBusIDInfo> _busIDInfos;
 
         protected override bool IsFallback => false;
 
-        public AmdDeviceCreationPrimary(IReadOnlyDictionary<int, QueryAdl.BusIdInfo> busIDInfos)
+        public AmdDeviceCreationPrimary(IReadOnlyDictionary<int, AmdBusIDInfo> busIDInfos)
         {
             _busIDInfos = busIDInfos;
         }
@@ -25,12 +25,9 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 {
                     var deviceName = _busIDInfos[busID].Name;
                     var newAmdDev = new AmdGpuDevice(dev,
-                        _busIDInfos[busID].InfSection, disableAlgos[deviceName])
-                    {
-                        DeviceName = deviceName,
-                        UUID = _busIDInfos[busID].Uuid,
-                        AdapterIndex = _busIDInfos[busID].Adl1Index
-                    };
+                        disableAlgos[deviceName],
+                        deviceName,
+                        _busIDInfos[busID]);
 
                     yield return newAmdDev;
                 }

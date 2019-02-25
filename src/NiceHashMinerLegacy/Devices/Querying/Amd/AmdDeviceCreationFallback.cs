@@ -28,11 +28,9 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 amdVideoControllers[i].SetInfSectionEmptyIfNull();
                 var newAmdDev = new AmdGpuDevice(amdDevices[i], 
                     amdVideoControllers[i].InfSection,
-                    disableAlgos[deviceName])
-                {
-                    DeviceName = deviceName,
-                    UUID = "UNUSED"
-                };
+                    disableAlgos[deviceName],
+                    deviceName,
+                    "UNUSED");
 
                 yield return newAmdDev;
             }
