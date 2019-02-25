@@ -130,10 +130,10 @@ namespace NiceHashMiner.Devices.Algorithms
                     {
                         ExtraLaunchParameters = "-X 256"
                     },
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.MTP, "mtp")
-                    {
-                        ExtraLaunchParameters = "--worksize 256 --intensity 18"
-                    }
+                    //new Algorithm(MinerBaseType.sgminer, AlgorithmType.MTP, "mtp")
+                    //{
+                    //    ExtraLaunchParameters = "--worksize 256 --intensity 18"
+                    //}
                 }
             },
             {
