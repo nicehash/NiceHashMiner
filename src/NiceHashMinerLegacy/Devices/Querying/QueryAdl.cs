@@ -11,7 +11,7 @@ namespace NiceHashMiner.Devices.Querying
         private const string Tag = "QueryADL";
         private const int AmdVendorID = 1002;
 
-        public static bool TryQuery(out Dictionary<int, QueryAdl.BusIdInfo> busIdInfos, out int numDevs)
+        public static bool TryQuery(out Dictionary<int, BusIdInfo> busIdInfos, out int numDevs)
         {
             // ADL does not get devices in order map devices by bus number
             // bus id, <name, uuid>
@@ -20,7 +20,7 @@ namespace NiceHashMiner.Devices.Querying
 
             var adapterBuffer = IntPtr.Zero;
 
-            busIdInfos = new Dictionary<int, QueryAdl.BusIdInfo>();
+            busIdInfos = new Dictionary<int, BusIdInfo>();
             var amdDeviceUuids = new HashSet<string>();
 
             try
@@ -103,14 +103,7 @@ namespace NiceHashMiner.Devices.Querying
                             .AdapterIndex;
                     }
 
-                    var info = new QueryAdl.BusIdInfo
-                    {
-                        Name = devName,
-                        Uuid = uuid,
-                        InfSection = infSection,
-                        Adl1Index = index,
-                        Adl2Index = adl2Index
-                    };
+                    var info = new BusIdInfo(devName, uuid, infSection, index, adl2Index);
 
                     busIdInfos[busId] = info;
                 }
@@ -203,11 +196,20 @@ namespace NiceHashMiner.Devices.Querying
 
         public struct BusIdInfo
         {
-            public string Name;
-            public string Uuid;
-            public string InfSection;
-            public int Adl1Index;
-            public int Adl2Index;
+            public string Name { get; }
+            public string Uuid { get; }
+            public string InfSection { get; }
+            public int Adl1Index { get; }
+            public int Adl2Index { get; }
+
+            public BusIdInfo(string name, string uuid, string infSect, int adl1Indx, int adl2Indx)
+            {
+                Name = name;
+                Uuid = uuid;
+                InfSection = infSect;
+                Adl1Index = adl1Indx;
+                Adl2Index = adl2Indx;
+            }
         }
     }
 }
