@@ -5,18 +5,23 @@ using NiceHashMiner.PInvoke;
 
 namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
 {
-    internal static class QueryOpenCL
+    internal class QueryOpenCL
     {
         private const string Tag = "QueryOpenCL";
 
-        public static bool TryQueryOpenCLDevices(out OpenCLDeviceDetectionResult result)
+        protected virtual string GetQueryString()
+        {
+            return DeviceDetection.GetOpenCLDevices();
+        }
+
+        public bool TryQueryOpenCLDevices(out OpenCLDeviceDetectionResult result)
         {
             Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
 
             var queryOpenCLDevicesString = "";
             try
             {
-                queryOpenCLDevicesString = DeviceDetection.GetOpenCLDevices();
+                queryOpenCLDevicesString = GetQueryString();
                 result = JsonConvert.DeserializeObject<OpenCLDeviceDetectionResult>(queryOpenCLDevicesString, Globals.JsonSettings);
             }
             catch (Exception ex)

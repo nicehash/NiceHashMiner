@@ -17,14 +17,17 @@ namespace NiceHashMiner.Devices.Querying.Amd
         private bool _openCLSuccess;
         private OpenCLDeviceDetectionResult _openCLResult;
 
+        protected QueryOpenCL OclQuery;
+
         public AmdQuery(int numCudaDevs)
         {
             _numDevs = numCudaDevs;
+            OclQuery = new QueryOpenCL();
         }
 
         public void QueryOpenCLDevices()
         {
-            _openCLSuccess = QueryOpenCL.TryQueryOpenCLDevices(out _openCLResult);
+            _openCLSuccess = OclQuery.TryQueryOpenCLDevices(out _openCLResult);
         }
 
         public List<AmdComputeDevice> QueryAmd(out bool failedDriverCheck)
