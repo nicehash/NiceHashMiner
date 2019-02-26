@@ -5,7 +5,6 @@ using NiceHashMiner.Devices.Querying.Nvidia;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using static NiceHashMiner.Translations;
 
@@ -55,13 +54,13 @@ namespace NiceHashMiner.Devices
             }
             else
             {
+                var amd = new AmdQuery(numCudaDevs);
                 // #3 OpenCL
                 OnProgressUpdate?.Invoke(null, Tr("Querying OpenCL devices"));
-                var openCLQuerySuccess = QueryOpenCL.TryQueryOpenCLDevices(out var openCLResult);
+                amd.QueryOpenCLDevices();
                 // #4 AMD query AMD from OpenCL devices, get serial and add devices
                 OnProgressUpdate?.Invoke(null, Tr("Checking AMD OpenCL GPUs"));
-                var amd = new AmdQuery(numCudaDevs);
-                amdDevs = amd.QueryAmd(openCLQuerySuccess, openCLResult, out failedAmdDriverCheck);
+                amdDevs = amd.QueryAmd(out failedAmdDriverCheck);
                 AvailableDevices.AddDevices(amdDevs);
             }
             // #5 uncheck CPU if GPUs present, call it after we Query all devices

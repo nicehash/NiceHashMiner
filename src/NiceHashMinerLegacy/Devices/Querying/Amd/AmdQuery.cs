@@ -14,22 +14,30 @@ namespace NiceHashMiner.Devices.Querying.Amd
 
         private readonly int _numDevs;
 
+        private bool _openCLSuccess;
+        private OpenCLDeviceDetectionResult _openCLResult;
+
         public AmdQuery(int numCudaDevs)
         {
             _numDevs = numCudaDevs;
         }
 
-        public List<AmdComputeDevice> QueryAmd(bool openCLSuccess, OpenCLDeviceDetectionResult openCLData, out bool failedDriverCheck)
+        public void QueryOpenCLDevices()
+        {
+            _openCLSuccess = QueryOpenCL.TryQueryOpenCLDevices(out _openCLResult);
+        }
+
+        public List<AmdComputeDevice> QueryAmd(out bool failedDriverCheck)
         {
             Helpers.ConsolePrint(Tag, "QueryAMD START");
 
             failedDriverCheck = DriverCheck();
 
-            var amdDevices = openCLSuccess ? ProcessDevices(openCLData) : null;
+            var amdDevices = _openCLSuccess ? ProcessDevices(_openCLResult) : null;
 
             Helpers.ConsolePrint(Tag, "QueryAMD END");
 
-            SortBusIDs(amdDevices);
+            if (amdDevices != null) SortBusIDs(amdDevices);
 
             return amdDevices;
         }
