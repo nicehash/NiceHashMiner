@@ -132,6 +132,7 @@
     <Compile Include="Devices\Querying\Nvidia\NvidiaSmiDriver.cs" />
     <Compile Include="Devices\Querying\QueryCpu.cs" />
     <Compile Include="Devices\Querying\Amd\QueryOpenCL.cs" />
+    <Compile Include="Devices\Querying\QueryGpu.cs" />
     <Compile Include="Devices\Querying\QueryResult.cs" />
     <Compile Include="Devices\Querying\SystemSpecs.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />

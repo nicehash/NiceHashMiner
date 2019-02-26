@@ -103,9 +103,6 @@ namespace NiceHashMiner.Devices
                     amdCount == amdDevs?.Count ? "AMD GPU device count GOOD" : "AMD GPU device count BAD!!!");
             }
 
-            SortBusIDs(DeviceType.NVIDIA);
-            SortBusIDs(DeviceType.AMD);
-
             var result = new QueryResult(NvidiaMinDetectionDriver.ToString(), NvidiaRecomendedDriver.ToString());
 
             var ramOK = CheckRam();
@@ -139,17 +136,6 @@ namespace NiceHashMiner.Devices
         }
 
         #region Helpers
-
-        private static void SortBusIDs(DeviceType type)
-        {
-            var devs = AvailableDevices.Devices.Where(d => d.DeviceType == type);
-            var sortedDevs = devs.OrderBy(d => d.BusID).ToList();
-
-            for (var i = 0; i < sortedDevs.Count; i++)
-            {
-                sortedDevs[i].IDByBus = i;
-            }
-        }
 
         private static bool CheckRam()
         {

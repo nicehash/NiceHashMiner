@@ -6,17 +6,17 @@ using NiceHashMiner.Devices.OpenCL;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
-    public class AmdQuery
+    internal class AmdQuery : QueryGpu
     {
         private const string Tag = "AmdQuery";
         
         private readonly Dictionary<string, bool> _noNeoscryptLyra2 = new Dictionary<string, bool>();
 
-        private int _numDevs;
+        private readonly int _numDevs;
 
-        public AmdQuery(int numDevs)
+        public AmdQuery(int numCudaDevs)
         {
-            _numDevs = numDevs;
+            _numDevs = numCudaDevs;
         }
 
         public List<AmdComputeDevice> QueryAmd(bool openCLSuccess, OpenCLDeviceDetectionResult openCLData, out bool failedDriverCheck)
@@ -28,6 +28,8 @@ namespace NiceHashMiner.Devices.Querying.Amd
             var amdDevices = openCLSuccess ? ProcessDevices(openCLData) : null;
 
             Helpers.ConsolePrint(Tag, "QueryAMD END");
+
+            SortBusIDs(amdDevices);
 
             return amdDevices;
         }

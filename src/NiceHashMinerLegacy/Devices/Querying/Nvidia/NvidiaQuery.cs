@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices.Querying.Nvidia
 {
-    internal class NvidiaQuery
+    internal class NvidiaQuery : QueryGpu
     {
         private const string Tag = "NvidiaQuery";
 
@@ -103,6 +103,8 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
             
             Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
+
+            SortBusIDs(compDevs);
 
             return compDevs;
         }
