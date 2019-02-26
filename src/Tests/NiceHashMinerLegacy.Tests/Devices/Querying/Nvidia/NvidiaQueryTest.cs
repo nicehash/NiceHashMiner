@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NiceHashMiner.Devices.Querying.Nvidia;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMinerLegacy.Tests.Devices.Querying.Nvidia
 {
     [TestClass]
-    public class CudaQueryTest
+    public class NvidiaQueryTest
     {
         private class NvidiaQueryDummy : NvidiaQuery
         {
