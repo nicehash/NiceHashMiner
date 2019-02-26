@@ -22,6 +22,9 @@ namespace NiceHashMiner.Devices
 
         public static int AvailGpUs => AvailAmdGpus + AvailNVGpus;
 
+        public static int NumDetectedNvDevs { get; internal set; }
+        public static int NumDetectedAmdDevs { get; internal set; }
+
         public static int AmdOpenCLPlatformNum { get; internal set; } = -1;
 
         internal static void AddDevice(ComputeDevice dev)
