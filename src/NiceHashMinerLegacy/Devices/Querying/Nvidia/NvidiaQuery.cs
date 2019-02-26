@@ -10,26 +10,31 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices.Querying.Nvidia
 {
-    internal static class NvidiaQuery
+    internal class NvidiaQuery
     {
         private const string Tag = "NvidiaQuery";
 
         private static bool tryAddNvmlToEnvPathCalled = false;
 
-        public static IReadOnlyList<CudaDevice> CudaDevices { get; private set; }
+        protected CudaQuery CudaQuery;
+
+        public NvidiaQuery()
+        {
+            CudaQuery = new CudaQuery();
+        }
 
         #region Query devices
 
-        public static int QueryCudaDevices()
+        public List<CudaComputeDevice> QueryCudaDevices()
         {
             Helpers.ConsolePrint(Tag, "QueryCudaDevices START");
 
-            var cudaQuery = new CudaQuery();
+            var compDevs = new List<CudaComputeDevice>();
 
-            if (!cudaQuery.TryQueryCudaDevices(out var cudaDevs))
+            if (!CudaQuery.TryQueryCudaDevices(out var cudaDevs))
             {
                 Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
-                return 0;
+                return compDevs;
             }
             
             var stringBuilder = new StringBuilder();
@@ -92,18 +97,14 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 }
 
                 idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
-                AvailableDevices.AddDevice(
-                    new CudaComputeDevice(cudaDev, group, ++numDevs, handle, nvmlHandle)
-                );
+                compDevs.Add(new CudaComputeDevice(cudaDev, group, ++numDevs, handle, nvmlHandle));
             }
 
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
-
-            CudaDevices = cudaDevs;
             
             Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
 
-            return numDevs;
+            return compDevs;
         }
 
         private static Dictionary<int, NvPhysicalGpuHandle> InitNvapi()

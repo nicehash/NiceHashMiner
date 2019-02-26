@@ -32,7 +32,7 @@ namespace NiceHashMiner.Devices
             // #1 CPU
             Cpu.QueryCpus();
             // #2 CUDA
-            var numDevs = 0;
+            var numCudaDevs = 0;
             if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
             {
                 Helpers.ConsolePrint(Tag, "Skipping NVIDIA device detection, settings are set to disabled");
@@ -40,7 +40,10 @@ namespace NiceHashMiner.Devices
             else
             {
                 OnProgressUpdate?.Invoke(null, Tr("Querying CUDA devices"));
-                numDevs = NvidiaQuery.QueryCudaDevices();
+                var nv = new NvidiaQuery();
+                var nvDevs = nv.QueryCudaDevices();
+                numCudaDevs = nvDevs.Count;
+                AvailableDevices.AddDevices(nvDevs);
             }
             // OpenCL and AMD
             var failedAmdDriverCheck = false;
@@ -57,7 +60,7 @@ namespace NiceHashMiner.Devices
                 var openCLQuerySuccess = QueryOpenCL.TryQueryOpenCLDevices(out var openCLResult);
                 // #4 AMD query AMD from OpenCL devices, get serial and add devices
                 OnProgressUpdate?.Invoke(null, Tr("Checking AMD OpenCL GPUs"));
-                var amd = new AmdQuery(numDevs);
+                var amd = new AmdQuery(numCudaDevs);
                 amdDevs = amd.QueryAmd(openCLQuerySuccess, openCLResult, out failedAmdDriverCheck);
                 AvailableDevices.AddDevices(amdDevs);
             }
@@ -90,7 +93,7 @@ namespace NiceHashMiner.Devices
                     }
                 }
 
-                nvCountMatched = nvidiaCount == NvidiaQuery.CudaDevices?.Count;
+                nvCountMatched = nvidiaCount == numCudaDevs;
 
                 Helpers.ConsolePrint(Tag,
                     nvCountMatched
