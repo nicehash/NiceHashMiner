@@ -29,7 +29,8 @@ namespace NiceHashMiner.Devices
             var badVidCtrls = SystemSpecs.QueryVideoControllers();
             // Order important CPU Query must be first
             // #1 CPU
-            Cpu.QueryCpus();
+            var cpuDevs = CpuQuery.QueryCpus(out var failed64Bit, out var failedCpuCount);
+            AvailableDevices.AddDevices(cpuDevs);
             // #2 CUDA
             var numCudaDevs = 0;
             if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
@@ -130,6 +131,9 @@ namespace NiceHashMiner.Devices
             }
 
             result.FailedAmdDriverCheck = failedAmdDriverCheck;
+
+            result.FailedCpu64Bit = failed64Bit;
+            result.FailedCpuCount = failedCpuCount;
 
             return result;
         }

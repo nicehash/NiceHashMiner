@@ -1,10 +1,14 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Stats;
+using NiceHashMiner.Switching;
 using NiceHashMiner.Utils;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -13,19 +17,11 @@ using System.Linq;
 using System.Management;
 using System.Threading;
 using System.Windows.Forms;
-using NiceHashMiner.Devices.Querying;
-using NiceHashMiner.Devices.Querying.Nvidia;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
-using SystemTimer = System.Timers.Timer;
-using Timer = System.Windows.Forms.Timer;
 using static NiceHashMiner.Translations;
+using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner
 {
-    using System.IO;
-
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         private string _visitUrlNew = Links.VisitUrlNew;
@@ -530,6 +526,20 @@ namespace NiceHashMiner
             {
                 var warningDialog = new DriverVersionConfirmationDialog();
                 warningDialog.ShowDialog();
+            }
+
+            if (query.FailedCpu64Bit)
+            {
+                MessageBox.Show(Tr("NiceHash Miner Legacy works only on 64-bit version of OS for CPU mining. CPU mining will be disabled."),
+                    Tr("Warning!"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            if (query.FailedCpuCount)
+            {
+                MessageBox.Show(Tr("NiceHash Miner Legacy does not support more than 64 virtual cores. CPU mining will be disabled."),
+                    Tr("Warning!"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
