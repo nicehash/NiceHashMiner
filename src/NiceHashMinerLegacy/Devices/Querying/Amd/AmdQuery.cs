@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices.OpenCL;
+using NiceHashMiner.Devices.Querying.Amd.OpenCL;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {

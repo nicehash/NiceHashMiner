@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace NiceHashMiner.Devices.OpenCL
+namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
 {
     [Serializable]
     public class OpenCLPlatform

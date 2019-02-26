@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using NiceHashMiner.Devices.OpenCL;
-using NiceHashMiner.PInvoke;
-using System;
+﻿using System;
 using System.Text;
+using Newtonsoft.Json;
+using NiceHashMiner.PInvoke;
 
-namespace NiceHashMiner.Devices.Querying
+namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
 {
     internal static class QueryOpenCL
     {

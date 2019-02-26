@@ -1,6 +1,6 @@
-﻿using NiceHashMiner.Devices.OpenCL;
-using NiceHashMiner.Devices.Querying.Amd;
+﻿using NiceHashMiner.Devices.Querying.Amd;
 using System;
+using NiceHashMiner.Devices.Querying.Amd.OpenCL;
 
 namespace NiceHashMiner.Devices
 {

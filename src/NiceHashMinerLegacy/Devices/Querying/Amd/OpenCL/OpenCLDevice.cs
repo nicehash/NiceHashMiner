@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NiceHashMiner.Devices.OpenCL
+namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
 {
     [Serializable]
     public class OpenCLDevice

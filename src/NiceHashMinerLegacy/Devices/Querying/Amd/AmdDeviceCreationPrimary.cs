@@ -1,5 +1,5 @@
-﻿using NiceHashMiner.Devices.OpenCL;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NiceHashMiner.Devices.Querying.Amd.OpenCL;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
