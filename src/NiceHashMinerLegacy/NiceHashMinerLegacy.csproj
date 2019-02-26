@@ -117,6 +117,7 @@
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
+    <Compile Include="Devices\CudaDeviceChecker.cs" />
     <Compile Include="Devices\CudaDeviceDetectionResult.cs" />
     <Compile Include="Devices\Querying\Amd\AmdQuery.cs" />
     <Compile Include="Devices\OpenCL\OpenCLDeviceDetectionResult.cs" />
@@ -125,6 +126,7 @@
     <Compile Include="Devices\Querying\Amd\AmdDeviceCreation.cs" />
     <Compile Include="Devices\Querying\Amd\AmdDeviceCreationFallback.cs" />
     <Compile Include="Devices\Querying\Amd\AmdDeviceCreationPrimary.cs" />
+    <Compile Include="Devices\Querying\Nvidia\CudaQuery.cs" />
     <Compile Include="Devices\Querying\Nvidia\NvidiaQuery.cs" />
     <Compile Include="Devices\Querying\Amd\QueryAdl.cs" />
     <Compile Include="Devices\Querying\Nvidia\NvidiaSmiDriver.cs" />

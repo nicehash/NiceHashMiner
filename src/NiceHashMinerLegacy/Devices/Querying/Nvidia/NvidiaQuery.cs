@@ -1,16 +1,12 @@
-﻿using System;
+﻿using ManagedCuda.Nvml;
+using NiceHashMinerLegacy.Common.Enums;
+using NVIDIA.NVAPI;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using System.Timers;
-using ManagedCuda.Nvml;
-using Newtonsoft.Json;
-using NiceHashMiner.Configs;
-using NiceHashMiner.PInvoke;
-using NiceHashMinerLegacy.Common.Enums;
-using NVIDIA.NVAPI;
 
 namespace NiceHashMiner.Devices.Querying.Nvidia
 {
@@ -22,15 +18,15 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
 
         public static IReadOnlyList<CudaDevice> CudaDevices { get; private set; }
 
-        private static Timer _cudaCheckTimer;
-
         #region Query devices
 
         public static int QueryCudaDevices()
         {
             Helpers.ConsolePrint(Tag, "QueryCudaDevices START");
 
-            if (!TryQueryCudaDevices(out var cudaDevs))
+            var cudaQuery = new CudaQuery();
+
+            if (!cudaQuery.TryQueryCudaDevices(out var cudaDevs))
             {
                 Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
                 return 0;
@@ -171,32 +167,6 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
             }
         }
 
-        private static bool TryQueryCudaDevices(out List<CudaDevice> cudaDevices)
-        {
-            try
-            {
-                var queryCudaDevicesString = DeviceDetection.GetCUDADevices();
-                var cudaQueryResult = JsonConvert.DeserializeObject<CudaDeviceDetectionResult>(queryCudaDevicesString,
-                                Globals.JsonSettings);
-                cudaDevices = cudaQueryResult.CudaDevices;
-
-                if (cudaDevices != null && cudaDevices.Count != 0) return true;
-
-                Helpers.ConsolePrint(Tag,
-                    "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +
-                    queryCudaDevicesString);
-
-                return false;
-            }
-            catch (Exception ex)
-            {
-                // TODO
-                Helpers.ConsolePrint(Tag, "CudaDevicesDetection threw Exception: " + ex.Message);
-                cudaDevices = null;
-                return false;
-            }
-        }
-
         private static void tryAddNvmlToEnvPath()
         {
             if (tryAddNvmlToEnvPathCalled) return;
@@ -262,61 +232,6 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
 
             return new NvidiaSmiDriver(-1, -1);
         }
-
-        #region Lost device checker
-
-        public static void StartDeviceCheck()
-        {
-            if (!ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
-                return;
-
-            _cudaCheckTimer = new Timer(60 * 1000);
-            _cudaCheckTimer.Elapsed += CudaCheckTimerOnElapsed;
-            _cudaCheckTimer.Start();
-        }
-
-        public static void StopDeviceCheck()
-        {
-            _cudaCheckTimer.Stop();
-        }
-
-        private static bool CheckDevicesMistmatch()
-        {
-            // this function checks if count of CUDA devices is same as it was on application start, reason for that is
-            // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
-            // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
-
-            var gpusOld = CudaDevices.Count;
-
-            var querySuccess = TryQueryCudaDevices(out var currentDevs);
-            
-            var gpusNew = currentDevs.Count;
-
-            Helpers.ConsolePrint("ComputeDeviceManager.CheckCount",
-                "CUDA GPUs count: Old: " + gpusOld + " / New: " + gpusNew);
-
-            return gpusNew < gpusOld || !querySuccess;
-        }
-
-        private static void CudaCheckTimerOnElapsed(object sender, ElapsedEventArgs e)
-        {
-            if (!CheckDevicesMistmatch()) return;
-
-            try
-            {
-                var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
-                {
-                    WindowStyle = ProcessWindowStyle.Minimized
-                };
-                Process.Start(onGpusLost);
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("NICEHASH", "OnGPUsMismatch.bat error: " + ex.Message);
-            }
-        }
-
-        #endregion
     }
 
 }

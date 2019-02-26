@@ -61,6 +61,8 @@ namespace NiceHashMiner
         private readonly int _mainFormHeight = 0;
         private readonly int _emtpyGroupPanelHeight = 0;
 
+        private CudaDeviceChecker _cudaChecker;
+
         public Form_Main()
         {
             InitializeComponent();
@@ -1238,7 +1240,12 @@ namespace NiceHashMiner
             //_smaMinerCheck.Start();
             _minerStatsCheck.Start();
 
-            NvidiaQuery.StartDeviceCheck();
+            // TODO move this
+            if (_cudaChecker == null && ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
+            {
+                _cudaChecker = new CudaDeviceChecker();
+                _cudaChecker.Start();
+            }
 
             return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
         }
@@ -1247,7 +1254,7 @@ namespace NiceHashMiner
         {
             _minerStatsCheck.Stop();
             //_smaMinerCheck.Stop();
-            NvidiaQuery.StopDeviceCheck();
+            _cudaChecker?.Stop();
 
             // Disable IFTTT notification before label call
             _isNotProfitable = false;
