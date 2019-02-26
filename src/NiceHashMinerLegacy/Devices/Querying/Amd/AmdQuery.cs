@@ -18,11 +18,13 @@ namespace NiceHashMiner.Devices.Querying.Amd
         private OpenCLDeviceDetectionResult _openCLResult;
 
         protected QueryOpenCL OclQuery;
+        protected QueryAdl AdlQuery;
 
         public AmdQuery(int numCudaDevs)
         {
             _numDevs = numCudaDevs;
             OclQuery = new QueryOpenCL();
+            AdlQuery = new QueryAdl();
         }
 
         public void QueryOpenCLDevices()
@@ -126,7 +128,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
             Helpers.ConsolePrint(Tag, "AMD GPUs count : " + amdDevices.Count);
             Helpers.ConsolePrint(Tag, "AMD Getting device name and serial from ADL");
             // ADL
-            var isAdlInit = QueryAdl.TryQuery(out var busIdInfos, out var numDevs);
+            var isAdlInit = AdlQuery.TryQuery(out var busIdInfos, out var numDevs);
 
             var isBusIDOk = true;
             // check if buss ids are unique and different from -1

@@ -6,12 +6,12 @@ using ATI.ADL;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
-    internal static class QueryAdl
+    internal class QueryAdl
     {
         private const string Tag = "QueryADL";
         private const int AmdVendorID = 1002;
 
-        public static bool TryQuery(out Dictionary<int, AmdBusIDInfo> busIdInfos, out int numDevs)
+        public virtual bool TryQuery(out Dictionary<int, AmdBusIDInfo> busIdInfos, out int numDevs)
         {
             // ADL does not get devices in order map devices by bus number
             // bus id, <name, uuid>

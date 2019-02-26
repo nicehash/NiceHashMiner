@@ -1,4 +1,6 @@
-﻿namespace NiceHashMinerLegacy.Tests.Devices.Querying.Amd
+﻿using System.Collections.Generic;
+
+namespace NiceHashMinerLegacy.Tests.Devices.Querying.Amd
 {
     internal static class OclTestData
     {
@@ -65,5 +67,14 @@
     ],
     ""Status"": ""OK""
 }";
+
+        public static List<int> TestData1BusIDs = new List<int>
+        {
+            13,
+            8,
+            7,
+            12,
+            11
+        };
     }
 }

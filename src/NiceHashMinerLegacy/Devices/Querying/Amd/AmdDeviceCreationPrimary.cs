@@ -24,8 +24,9 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 if (busID != -1 && _busIDInfos.ContainsKey(busID))
                 {
                     var deviceName = _busIDInfos[busID].Name;
+                    disableAlgos.TryGetValue(deviceName, out var disableAlgo);
                     var newAmdDev = new AmdGpuDevice(dev,
-                        disableAlgos[deviceName],
+                        disableAlgo,
                         deviceName,
                         _busIDInfos[busID]);
 
