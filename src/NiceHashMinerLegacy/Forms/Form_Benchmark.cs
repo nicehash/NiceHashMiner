@@ -56,7 +56,7 @@ namespace NiceHashMiner.Forms
             StartMining = false;
 
             // clear prev pending statuses
-            foreach (var dev in ComputeDeviceManager.Available.Devices)
+            foreach (var dev in AvailableDevices.Devices)
             foreach (var algo in dev.GetAlgorithmSettings())
                 algo.ClearBenchmarkPendingFirst();
 
@@ -64,7 +64,7 @@ namespace NiceHashMiner.Forms
 
             // benchmark only unique devices
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
-            devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Available.Devices);
+            devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices);
 
             InitLocale();
 
@@ -75,7 +75,7 @@ namespace NiceHashMiner.Forms
             //// name, UUID
             //Dictionary<string, string> benchNamesUUIDs = new Dictionary<string, string>();
             //// initialize benchmark settings for same cards to only copy settings
-            //foreach (var cDev in ComputeDeviceManager.Available.Devices) {
+            //foreach (var cDev in AvailableDevices.Devices) {
             //    var plainDevName = cDev.Name;
             //    if (benchNamesUUIDs.ContainsKey(plainDevName)) {
             //        cDev.Enabled = false;
@@ -104,9 +104,9 @@ namespace NiceHashMiner.Forms
             algorithmsListView1.BenchmarkCalculation = this;
 
             // set first device selected {
-            if (ComputeDeviceManager.Available.Devices.Count > 0)
+            if (AvailableDevices.Devices.Count > 0)
             {
-                var firstComputedevice = ComputeDeviceManager.Available.Devices[0];
+                var firstComputedevice = AvailableDevices.Devices[0];
                 algorithmsListView1.SetAlgorithms(firstComputedevice, firstComputedevice.Enabled);
             }
 
@@ -124,7 +124,7 @@ namespace NiceHashMiner.Forms
             _benchmarkAlgorithmsCount = 0;
             _benchmarkDevicesAlgorithmStatus = new Dictionary<string, BenchmarkSettingsStatus>();
             _benchmarkDevicesAlgorithmQueue = new List<Tuple<ComputeDevice, Queue<Algorithm>>>();
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
             {
                 var algorithmQueue = new Queue<Algorithm>();
                 foreach (var algo in cDev.GetAlgorithmSettings())
@@ -255,11 +255,11 @@ namespace NiceHashMiner.Forms
         private void CopyBenchmarks()
         {
             Helpers.ConsolePrint("CopyBenchmarks", "Checking for benchmarks to copy");
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
                 // check if copy
                 if (!cDev.Enabled && cDev.BenchmarkCopyUuid != null)
                 {
-                    var copyCdevSettings = ComputeDeviceManager.Available.GetDeviceWithUuid(cDev.BenchmarkCopyUuid);
+                    var copyCdevSettings = AvailableDevices.GetDeviceWithUuid(cDev.BenchmarkCopyUuid);
                     if (copyCdevSettings != null)
                     {
                         Helpers.ConsolePrint("CopyBenchmarks", $"Copy from {cDev.Uuid} to {cDev.BenchmarkCopyUuid}");
@@ -366,7 +366,7 @@ namespace NiceHashMiner.Forms
             CalcBenchmarkDevicesAlgorithmQueue();
             // device selection check scope
             {
-                var noneSelected = ComputeDeviceManager.Available.Devices.All(cDev => !cDev.Enabled);
+                var noneSelected = AvailableDevices.Devices.All(cDev => !cDev.Enabled);
                 if (noneSelected)
                 {
                     MessageBox.Show(Translations.Tr("No device has been selected there is nothing to benchmark"),
@@ -512,14 +512,14 @@ namespace NiceHashMiner.Forms
             }
 
             // disable all pending benchmark
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
             foreach (var algorithm in cDev.GetAlgorithmSettings())
                 algorithm.ClearBenchmarkPending();
 
             // save already benchmarked algorithms
             ConfigManager.CommitBenchmarks();
             // check devices without benchmarks
-            foreach (var cdev in ComputeDeviceManager.Available.Devices)
+            foreach (var cdev in AvailableDevices.Devices)
                 if (cdev.Enabled)
                 {
                     var enabled = cdev.GetAlgorithmSettings().Any(algo => algo.BenchmarkSpeed > 0);
@@ -532,7 +532,7 @@ namespace NiceHashMiner.Forms
             //algorithmSettingsControl1.Deselect();
             // show algorithms
             var selectedComputeDevice =
-                ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
+                AvailableDevices.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
             algorithmsListView1.SetAlgorithms(selectedComputeDevice, selectedComputeDevice.Enabled);
         }
 

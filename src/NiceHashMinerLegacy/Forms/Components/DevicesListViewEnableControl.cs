@@ -120,7 +120,7 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        public void SetComputeDevices(List<ComputeDevice> computeDevices)
+        public void SetComputeDevices(IEnumerable<ComputeDevice> computeDevices)
         {
             // to not run callbacks when setting new
             var tmpSaveToGeneralConfig = SaveToGeneralConfig;
@@ -146,7 +146,7 @@ namespace NiceHashMiner.Forms.Components
             SaveToGeneralConfig = tmpSaveToGeneralConfig;
         }
 
-        public void ResetComputeDevices(List<ComputeDevice> computeDevices)
+        public void ResetComputeDevices(IEnumerable<ComputeDevice> computeDevices)
         {
             SetComputeDevices(computeDevices);
         }
@@ -193,7 +193,7 @@ namespace NiceHashMiner.Forms.Components
                         if (listViewDevices.FocusedItem.Tag is ComputeDevice cDevice)
                         {
                             var sameDevTypes =
-                                ComputeDeviceManager.Available.GetSameDevicesTypeAsDeviceWithUuid(cDevice.Uuid);
+                                AvailableDevices.GetSameDevicesTypeAsDeviceWithUuid(cDevice.Uuid);
                             if (sameDevTypes.Count > 0)
                             {
                                 var copyBenchItem = new ToolStripMenuItem();
@@ -236,7 +236,7 @@ namespace NiceHashMiner.Forms.Components
         private void ToolStripMenuItem_Click(object sender, bool justTuning) {
             if (sender is ToolStripMenuItem item && item.Tag is string uuid
                 && listViewDevices.FocusedItem.Tag is ComputeDevice CDevice) {
-                var copyBenchCDev = ComputeDeviceManager.Available.GetDeviceWithUuid(uuid);
+                var copyBenchCDev = AvailableDevices.GetDeviceWithUuid(uuid);
 
                 var result = MessageBox.Show(
                     string.Format(

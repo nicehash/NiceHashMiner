@@ -60,6 +60,8 @@ namespace NiceHashMiner.Miners
         {
             switch (algorithm.MinerBaseType)
             {
+                case MinerBaseType.TTMiner:
+                    return new Ttminer();
                 case MinerBaseType.ccminer:
                     return new Ccminer();
                 case MinerBaseType.sgminer:

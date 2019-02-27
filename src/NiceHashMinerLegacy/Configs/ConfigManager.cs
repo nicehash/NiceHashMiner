@@ -74,7 +74,7 @@ namespace NiceHashMiner.Configs
         {
             _generalConfigBackup = MemoryHelper.DeepClone(GeneralConfig);
             _benchmarkConfigsBackup = new Dictionary<string, DeviceBenchmarkConfig>();
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
             {
                 _benchmarkConfigsBackup[cDev.Uuid] = cDev.GetAlgorithmDeviceConfig();
             }
@@ -86,7 +86,7 @@ namespace NiceHashMiner.Configs
             GeneralConfig = _generalConfigBackup;
             if (GeneralConfig.LastDevicesSettup != null)
             {
-                foreach (var cDev in ComputeDeviceManager.Available.Devices)
+                foreach (var cDev in AvailableDevices.Devices)
                 {
                     foreach (var conf in GeneralConfig.LastDevicesSettup)
                     {
@@ -95,7 +95,7 @@ namespace NiceHashMiner.Configs
                 }
             }
             // restore benchmarks
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
             {
                 if (_benchmarkConfigsBackup != null && _benchmarkConfigsBackup.ContainsKey(cDev.Uuid))
                 {
@@ -119,7 +119,7 @@ namespace NiceHashMiner.Configs
         public static void GeneralConfigFileCommit()
         {
             GeneralConfig.LastDevicesSettup.Clear();
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
             {
                 GeneralConfig.LastDevicesSettup.Add(cDev.GetComputeDeviceConfig());
             }
@@ -128,7 +128,7 @@ namespace NiceHashMiner.Configs
 
         public static void CommitBenchmarks()
         {
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
             {
                 var devUuid = cDev.Uuid;
                 if (BenchmarkConfigFiles.ContainsKey(devUuid))
@@ -146,25 +146,10 @@ namespace NiceHashMiner.Configs
         public static void AfterDeviceQueryInitialization()
         {
             // extra check (probably will never happen but just in case)
-            {
-                var invalidDevices = new List<ComputeDevice>();
-                foreach (var cDev in ComputeDeviceManager.Available.Devices)
-                {
-                    if (cDev.IsAlgorithmSettingsInitialized() == false)
-                    {
-                        Helpers.ConsolePrint(Tag,
-                            "CRITICAL ISSUE!!! Device has AlgorithmSettings == null. Will remove");
-                        invalidDevices.Add(cDev);
-                    }
-                }
-                // remove invalids
-                foreach (var invalid in invalidDevices)
-                {
-                    ComputeDeviceManager.Available.Devices.Remove(invalid);
-                }
-            }
+            AvailableDevices.RemoveInvalidDevs();
+
             // set enabled/disabled devs
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
             {
                 foreach (var devConf in GeneralConfig.LastDevicesSettup)
                 {
@@ -172,7 +157,7 @@ namespace NiceHashMiner.Configs
                 }
             }
             // create/init device benchmark configs files and configs
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
             {
                 var keyUuid = cDev.Uuid;
                 BenchmarkConfigFiles[keyUuid] = new DeviceBenchmarkConfigFile(keyUuid);

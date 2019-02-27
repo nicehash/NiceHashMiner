@@ -19,7 +19,7 @@ namespace NiceHashMiner
         {
             MinerPluginHost.LoadPlugins(PluginsPath);
             // get devices
-            var allDevs = ComputeDeviceManager.Available.Devices;
+            var allDevs = AvailableDevices.Devices;
             var baseDevices = allDevs.Select(dev => dev.PluginDevice);
             // examine all plugins and what to use
             foreach (var kvp in MinerPluginHost.MinerPlugin)
@@ -32,7 +32,7 @@ namespace NiceHashMiner
                 {
                     var bd = pair.Key;
                     var algos = pair.Value;
-                    var dev = ComputeDeviceManager.Available.GetDeviceWithUuid(bd.UUID);
+                    var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
                     var pluginAlgos = algos.Select(a => new PluginAlgorithm(a)).ToList();
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                 }

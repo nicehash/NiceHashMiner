@@ -278,3 +278,10 @@ _Pvt_Extensions
 
 # VS2015 db files
 *.VC.db
+
+!pre_compiled_libs/*
+
+# localbuilds
+_ONLINE
+_LOCAL_RELEASES
+.idea
