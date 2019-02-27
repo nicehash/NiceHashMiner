@@ -12,13 +12,13 @@ using System.IO;
 
 namespace GMinerPlugin
 {
-    public class GMinerPlugin : IMinerPlugin, IInstalablePlugin
+    public class GMinerPlugin : IMinerPlugin
     {
-        public string PluginUUID => "066745f3-6738-4b65-adbb-0d1e153ed873";
+        public string PluginUUID => Shared.UUID;
 
-        public Version Version => throw new NotImplementedException();
+        public Version Version => new Version(1, 0);
 
-        public string Name => throw new NotImplementedException();
+        public string Name => "GMinerCuda9.0+";
 
         public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)
         {
@@ -50,16 +50,25 @@ namespace GMinerPlugin
         //   - Equihash 150,5 ~2.9GB VRAM
         //   - Equihash 192,7 ~2.75GB VRAM
         //   - Equihash 210,9 ~1GB VRAM
-        //   - CUDA 9.0+ // check the driver version for this one
+        //   - CUDA 9.0+ 
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            // we filter CUDA 5.0+
-            var cudaGpus = devices.Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 5).Select(dev => (CUDADevice)dev);
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+            //CUDA 9.0+: minimum drivers 384.xx
+            var minDrivers = new Version(384, 0);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
+            // we filter CUDA SM5.0+ and order them by PCIe IDs
+            var cudaGpus = devices
+                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 5)
+                .Select(dev => (CUDADevice)dev)
+                .OrderBy(dev => dev.PCIeBusID);
+            var pcieId = 0; // GMiner takes CUDA devices by 
             foreach (var gpu in cudaGpus)
             {
+                Shared.MappedCudaIds[gpu.ID] = pcieId;
+                ++pcieId;
                 var algorithms = GetSupportedAlgorithms(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, GetSupportedAlgorithms(gpu));
             }
@@ -77,29 +86,12 @@ namespace GMinerPlugin
             if (gpu.GpuRam > MinBeamMemory) {
                 algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.Beam));
             }
-            const ulong MinGrinCuckaroo29Memory = 6012951136; // 5.6
+            const ulong MinGrinCuckaroo29Memory = 6012951136; // 5.6GB
             if (gpu.GpuRam > MinGrinCuckaroo29Memory) {
                 algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29));
             }
 
             return algorithms;
         }
-
-        #region IInstalablePlugin
-        public Task<bool> Install()
-        {
-            var minerExe = Path.Combine(Paths.MinerPlugins, PluginUUID, "miner.exe");
-            // check if already installed
-            if (File.Exists(minerExe))
-            {
-
-            }
-        }
-
-        public Task<bool> Uninstall()
-        {
-            throw new NotImplementedException();
-        }
-        #endregion IInstalablePlugin
     }
 }

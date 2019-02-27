@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using MinerPluginLoader;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
 
+// TODO fix up the namespace
 namespace NiceHashMiner
 {
     public static class MinerPluginsManager
@@ -17,7 +19,7 @@ namespace NiceHashMiner
 
         public static void LoadMinerPlugins()
         {
-            MinerPluginHost.LoadPlugins(PluginsPath);
+            MinerPluginHost.LoadPlugins(PluginsPath, SearchOption.AllDirectories);
             // get devices
             var allDevs = AvailableDevices.Devices;
             var baseDevices = allDevs.Select(dev => dev.PluginDevice);

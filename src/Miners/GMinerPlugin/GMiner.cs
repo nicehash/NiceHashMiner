@@ -8,9 +8,11 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-
+using NiceHashMinerLegacy.Common.Device;
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
 using static MinerPlugin.Toolkit.MinersApiPortsManager;
+using System.IO;
+using NiceHashMinerLegacy.Common;
 
 namespace GMinerPlugin
 {
@@ -151,11 +153,12 @@ namespace GMinerPlugin
             return await t;
         }
 
-        // TODO this PATH IS temporary FIXED
         protected override (string, string) GetBinAndCwdPaths()
         {
-            var binPath = @"D:\Programming\NiceHashMinerLegacy\Release\bin_3rdparty\gminer\miner.exe";
-            var binCwd = @"D:\Programming\NiceHashMinerLegacy\Release\bin_3rdparty\gminer\";
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), Shared.UUID);
+            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var binPath = Path.Combine(pluginRootBins, "miner.exe");
+            var binCwd = pluginRootBins;
             return (binPath, binCwd);
         }
 
@@ -167,7 +170,10 @@ namespace GMinerPlugin
             // all good continue on
 
             // init command line params parts
-            var deviceIds = MinerToolkit.GetDevicesIDsInOrder(_miningPairs);
+            var deviceIds = _miningPairs
+                .Select(pair => Shared.MappedCudaIds[pair.device.ID])
+                .OrderBy(id => id)
+                .Select(id => id.ToString());
             _devices = $"-d {string.Join(" ", deviceIds)}";
             // TODO implement this later
             //_extraLaunchParameters;

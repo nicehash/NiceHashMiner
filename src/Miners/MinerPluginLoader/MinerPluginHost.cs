@@ -12,16 +12,22 @@ namespace MinerPluginLoader
         public static Dictionary<string, IMinerPlugin> MinerPlugin { get; } = new Dictionary<string, IMinerPlugin>();
         private static Type pluginType = typeof(IMinerPlugin);
 
-        public static void LoadPlugins(string dirPath)
+        public static void LoadPlugins(string dirPath, SearchOption searchOption)
         {
             if (!Directory.Exists(dirPath)) {
                 // TODO directory doesn't exist
                 return;
             }
 
-            var dllFiles = Directory.GetFiles(dirPath, "*.dll");
+            var dllFiles = Directory.GetFiles(dirPath, "*.dll", searchOption);
             var pluginTypes = dllFiles
-                .Select(dllFile => Assembly.LoadFrom(dllFile))
+                .Select(dllFile => {
+                    try {
+                        return Assembly.LoadFrom(dllFile);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                })
                 .Where(assembly => assembly != null)
                 .SelectMany(assembly => {
                     var concreteTypes = assembly.GetTypes().Where(type => !type.IsInterface && !type.IsAbstract);
@@ -31,7 +37,14 @@ namespace MinerPluginLoader
             foreach (var pluginType in pluginTypes)
             {
                 var plugin = (IMinerPlugin)Activator.CreateInstance(pluginType);
-                MinerPlugin.Add(plugin.PluginUUID, plugin);
+                if (MinerPlugin.ContainsKey(plugin.PluginUUID))
+                {
+                    var existingPlugin = MinerPlugin[plugin.PluginUUID];
+                    Console.WriteLine($"contains key {plugin.PluginUUID}");
+                    Console.WriteLine($"existing {existingPlugin.Name} v{existingPlugin.Version}");
+                    Console.WriteLine($"new {plugin.Name} v{plugin.Version}");
+                }
+                MinerPlugin[plugin.PluginUUID] = plugin;
             }
         }
     }

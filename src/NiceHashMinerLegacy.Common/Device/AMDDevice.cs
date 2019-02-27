@@ -15,6 +15,7 @@ namespace NiceHashMinerLegacy.Common.Device
         }
 
         // TODO does it make sense to set static OpenCLPlatform ID
+        public static int OpenCLPlatformID = -1;
         // and does it make sense to set static AMD driver version
 
         public int PCIeBusID { get; }

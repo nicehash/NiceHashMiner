@@ -12,6 +12,8 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 return CheckPluginCanGroup(a, b);
             }
+            // no mixinng of plugin and non plugin algorithms
+            if (IsPluginAlgorithm(a) != IsPluginAlgorithm(b)) return false;
 
             var canGroup = IsGroupableMinerBaseType(a) && IsGroupableMinerBaseType(b);
             // group if same bin path and same algo type
