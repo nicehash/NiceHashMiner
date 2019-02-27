@@ -5,7 +5,7 @@ namespace NiceHashMiner.PInvoke
 {
     public static class DeviceDetection
     {
-        [DllImport("CudaDeviceDetection.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("cuda_device_detection.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr _GetCUDADevices(bool prettyString);
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace NiceHashMiner.PInvoke
             return ret;
         }
 
-        [DllImport("AMDOpenCLDeviceDetection.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("opencl_device_detection.dll", CallingConvention = CallingConvention.Cdecl)]
         private static extern IntPtr _GetOpenCLDevices(bool prettyString);
 
 
