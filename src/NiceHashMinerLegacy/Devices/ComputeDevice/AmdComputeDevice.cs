@@ -105,21 +105,21 @@ namespace NiceHashMiner.Devices
                 amdDevice.DeviceName,
                 true,
                 DeviceGroupType.AMD_OpenCL,
-                amdDevice.IsEtherumCapable(),
+                amdDevice.IsEtherumCapable,
                 DeviceType.AMD,
                 string.Format(Translations.Tr("GPU#{0}"), gpuCount),
                 amdDevice.DeviceGlobalMemory)
         {
             Uuid = isDetectionFallback
                 ? GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType)
-                : amdDevice.UUID;
+                : amdDevice.Uuid;
             BusID = amdDevice.BusID;
             Codename = amdDevice.Codename;
             InfSection = amdDevice.InfSection;
             AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
             DriverDisableAlgos = amdDevice.DriverDisableAlgos;
-            Index = ID + ComputeDeviceManager.Available.AvailCpus + ComputeDeviceManager.Available.AvailNVGpus;
-            _adapterIndex = amdDevice.AdapterIndex;
+            Index = ID + AvailableDevices.AvailCpus + AvailableDevices.AvailNVGpus;
+            _adapterIndex = amdDevice.Adl1Index;
 
             ADL.ADL2_Main_Control_Create?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);
             _adapterIndex2 = adl2Index;

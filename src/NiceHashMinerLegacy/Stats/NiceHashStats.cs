@@ -249,7 +249,7 @@ namespace NiceHashMiner.Stats
 
         private static void DeviceStatus_Tick(object state)
         {
-            var devices = ComputeDeviceManager.Available.Devices;
+            var devices = AvailableDevices.Devices;
             var deviceList = new List<JArray>();
             var activeIDs = MinersManager.GetActiveMinersIndexes();
             foreach (var device in devices)

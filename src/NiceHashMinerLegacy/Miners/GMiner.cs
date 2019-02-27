@@ -77,7 +77,7 @@ namespace NiceHashMiner.Miners
         {
             var split = url.Split(':');
             // FOR AMD BEAM
-            var amdStart = ComputeDeviceManager.Available.AvailNVGpus;
+            var amdStart = AvailableDevices.NumDetectedNvDevs;
             var devs = string.Join(" ", MiningSetup.MiningPairs.Select(pair => {
                 var busID = pair.Device.DeviceType == DeviceType.NVIDIA ? pair.Device.IDByBus : amdStart + pair.Device.IDByBus;
                 return busID.ToString();

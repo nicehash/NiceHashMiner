@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NiceHashMiner.Devices.OpenCL
+namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
 {
     [Serializable]
     public class OpenCLDeviceDetectionResult

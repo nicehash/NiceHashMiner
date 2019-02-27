@@ -1,10 +1,14 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Stats;
+using NiceHashMiner.Switching;
 using NiceHashMiner.Utils;
+using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -13,17 +17,11 @@ using System.Linq;
 using System.Management;
 using System.Threading;
 using System.Windows.Forms;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
-using SystemTimer = System.Timers.Timer;
-using Timer = System.Windows.Forms.Timer;
 using static NiceHashMiner.Translations;
+using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner
 {
-    using System.IO;
-
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
         private string _visitUrlNew = Links.VisitUrlNew;
@@ -33,7 +31,6 @@ namespace NiceHashMiner
         //private Timer _bitcoinExchangeCheck;
         private Timer _startupTimer;
         private Timer _idleCheck;
-        private SystemTimer _computeDevicesCheckTimer;
 
         private bool _showWarningNiceHashData;
         private bool _demoMode;
@@ -60,14 +57,14 @@ namespace NiceHashMiner
         private readonly int _mainFormHeight = 0;
         private readonly int _emtpyGroupPanelHeight = 0;
 
+        private CudaDeviceChecker _cudaChecker;
+
         public Form_Main()
         {
             InitializeComponent();
             Icon = Properties.Resources.logo;
 
             InitLocalization();
-
-            ComputeDeviceManager.SystemSpecs.QueryAndLog();
 
             // Log the computer's amount of Total RAM and Page File Size
             var moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
@@ -195,7 +192,7 @@ namespace NiceHashMiner
 
             if (_isDeviceDetectionInitialized)
             {
-                devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
+                devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices);
             }
         }
 
@@ -239,7 +236,7 @@ namespace NiceHashMiner
         }
 
         // This is a single shot _benchmarkTimer
-        private void StartupTimer_Tick(object sender, EventArgs e)
+        private async void StartupTimer_Tick(object sender, EventArgs e)
         {
             _startupTimer.Stop();
             _startupTimer = null;
@@ -280,7 +277,11 @@ namespace NiceHashMiner
             }
 
             // Query Available ComputeDevices
-            ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
+            ComputeDeviceManager.OnProgressUpdate += _loadingScreen.SetMessageAndIncrementStep;
+            var query = await ComputeDeviceManager.QueryDevicesAsync();
+            ComputeDeviceManager.OnProgressUpdate -= _loadingScreen.SetMessageAndIncrementStep;
+            ShowQueryWarnings(query);
+
             _isDeviceDetectionInitialized = true;
 
             /////////////////////////////////////////////
@@ -289,7 +290,7 @@ namespace NiceHashMiner
             _loadingScreen.IncreaseLoadCounterAndMessage(Tr("Saving config..."));
 
             // All devices settup should be initialized in AllDevices
-            devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
+            devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices);
             // set properties after
             devicesListViewEnableControl1.SaveToGeneralConfig = true;
 
@@ -470,6 +471,78 @@ namespace NiceHashMiner
             }
         }
 
+        private void ShowQueryWarnings(QueryResult query)
+        {
+            if (query.FailedMinNVDriver)
+            {
+                MessageBox.Show(string.Format(
+                        Tr(
+                            "We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner Legacy to work correctly you should upgrade your drivers to recommended {1} or newer. If you still see this warning after updating the driver please uninstall all your Nvidia drivers and make a clean install of the latest official driver from http://www.nvidia.com."),
+                        query.MinDriverString,
+                        query.RecommendedDriverString),
+                    Tr("Nvidia Recomended driver"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else if (query.FailedRecommendedNVDriver)
+            {
+                MessageBox.Show(string.Format(
+                        Tr(
+                            "We have detected that your Nvidia Driver is older than {0}{1}. We recommend you to update to {2} or newer."),
+                        query.RecommendedDriverString,
+                        query.CurrentDriverString,
+                        query.RecommendedDriverString),
+                    Tr("Nvidia Recomended driver"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            if (query.NoDevices)
+            {
+                var result = MessageBox.Show(Tr("No supported devices are found. Select the OK button for help or cancel to continue."),
+                    Tr("No Supported Devices"),
+                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning);
+                if (result == DialogResult.OK)
+                {
+                    Process.Start(Links.NhmNoDevHelp);
+                }
+            }
+
+            if (query.FailedRamCheck)
+            {
+                MessageBox.Show(Tr("NiceHash Miner Legacy recommends increasing virtual memory size so that all algorithms would work fine."),
+                    Tr("Warning!"),
+                    MessageBoxButtons.OK);
+            }
+
+            if (query.FailedVidControllerStatus)
+            {
+                var msg = Tr("We have detected a Video Controller that is not working properly. NiceHash Miner Legacy will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
+                msg += '\n' + query.FailedVidControllerInfo;
+                MessageBox.Show(msg,
+                    Tr("Warning! Video Controller not operating correctly"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            if (query.FailedAmdDriverCheck)
+            {
+                var warningDialog = new DriverVersionConfirmationDialog();
+                warningDialog.ShowDialog();
+            }
+
+            if (query.FailedCpu64Bit)
+            {
+                MessageBox.Show(Tr("NiceHash Miner Legacy works only on 64-bit version of OS for CPU mining. CPU mining will be disabled."),
+                    Tr("Warning!"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            if (query.FailedCpuCount)
+            {
+                MessageBox.Show(Tr("NiceHash Miner Legacy does not support more than 64 virtual cores. CPU mining will be disabled."),
+                    Tr("Warning!"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
         private void SetChildFormCenter(Form form)
         {
             form.StartPosition = FormStartPosition.Manual;
@@ -521,31 +594,11 @@ namespace NiceHashMiner
             await MinersManager.MinerStatsCheck();
         }
 
-        private static void ComputeDevicesCheckTimer_Tick(object sender, EventArgs e)
-        {
-            if (ComputeDeviceManager.Query.CheckVideoControllersCountMismath())
-            {
-                // less GPUs than before, ACT!
-                try
-                {
-                    var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
-                    {
-                        WindowStyle = ProcessWindowStyle.Minimized
-                    };
-                    Process.Start(onGpusLost);
-                }
-                catch (Exception ex)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "OnGPUsMismatch.bat error: " + ex.Message);
-                }
-            }
-        }
-
         private void InitFlowPanelStart()
         {
             flowLayoutPanelRates.Controls.Clear();
             // add for every cdev a 
-            foreach (var cdev in ComputeDeviceManager.Available.Devices)
+            foreach (var cdev in AvailableDevices.Devices)
             {
                 if (cdev.Enabled)
                 {
@@ -1119,7 +1172,7 @@ namespace NiceHashMiner
 
             // Check if there are unbenchmakred algorithms
             var isBenchInit = true;
-            foreach (var cdev in ComputeDeviceManager.Available.Devices)
+            foreach (var cdev in AvailableDevices.Devices)
             {
                 if (cdev.Enabled)
                 {
@@ -1152,7 +1205,7 @@ namespace NiceHashMiner
                 else if (result == DialogResult.No)
                 {
                     // check devices without benchmarks
-                    foreach (var cdev in ComputeDeviceManager.Available.Devices)
+                    foreach (var cdev in AvailableDevices.Devices)
                     {
                         if (cdev.Enabled)
                         {
@@ -1197,13 +1250,11 @@ namespace NiceHashMiner
             //_smaMinerCheck.Start();
             _minerStatsCheck.Start();
 
-            if (ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
+            // TODO move this
+            if (_cudaChecker == null && ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
             {
-                _computeDevicesCheckTimer = new SystemTimer();
-                _computeDevicesCheckTimer.Elapsed += ComputeDevicesCheckTimer_Tick;
-                _computeDevicesCheckTimer.Interval = 60000;
-
-                _computeDevicesCheckTimer.Start();
+                _cudaChecker = new CudaDeviceChecker();
+                _cudaChecker.Start();
             }
 
             return isMining ? StartMiningReturnType.StartMining : StartMiningReturnType.ShowNoMining;
@@ -1213,7 +1264,7 @@ namespace NiceHashMiner
         {
             _minerStatsCheck.Stop();
             //_smaMinerCheck.Stop();
-            _computeDevicesCheckTimer?.Stop();
+            _cudaChecker?.Stop();
 
             // Disable IFTTT notification before label call
             _isNotProfitable = false;

@@ -50,6 +50,9 @@
   <ItemGroup>
     <Compile Include="Algorithms\AlgorithmTest.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithmsTest.cs" />
+    <Compile Include="Devices\Querying\Amd\AmdQueryTest.cs" />
+    <Compile Include="Devices\Querying\Amd\OclTestData.cs" />
+    <Compile Include="Devices\Querying\Nvidia\NvidiaQueryTest.cs" />
     <Compile Include="Miners\BMinerTest.cs" />
     <Compile Include="Miners\GMinerTest.cs" />
     <Compile Include="Stats\ExchangeRateApiTest.cs" />

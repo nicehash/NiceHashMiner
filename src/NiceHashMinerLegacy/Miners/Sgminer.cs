@@ -21,7 +21,7 @@ namespace NiceHashMiner.Miners
         public Sgminer()
             : base("sgminer_AMD")
         {
-            _gpuPlatformNumber = ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
+            _gpuPlatformNumber = AvailableDevices.AmdOpenCLPlatformNum;
             IsKillAllUsedMinerProcs = true;
         }
 

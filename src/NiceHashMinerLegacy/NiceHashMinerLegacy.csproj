@@ -113,13 +113,28 @@
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchHelpers\ClaymoreZcashBenchHelper.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
+    <Compile Include="Devices\AvailableDevices.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
+    <Compile Include="Devices\CudaDeviceChecker.cs" />
     <Compile Include="Devices\CudaDeviceDetectionResult.cs" />
-    <Compile Include="Devices\Querying\AmdQuery.cs" />
-    <Compile Include="Devices\OpenCL\OpenCLDeviceDetectionResult.cs" />
-    <Compile Include="Devices\OpenCL\OpenCLPlatform.cs" />
+    <Compile Include="Devices\Querying\Amd\AmdQuery.cs" />
+    <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLDeviceDetectionResult.cs" />
+    <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLPlatform.cs" />
+    <Compile Include="Devices\Querying\Amd\AmdBusIDInfo.cs" />
+    <Compile Include="Devices\Querying\Amd\AmdDeviceCreation.cs" />
+    <Compile Include="Devices\Querying\Amd\AmdDeviceCreationFallback.cs" />
+    <Compile Include="Devices\Querying\Amd\AmdDeviceCreationPrimary.cs" />
+    <Compile Include="Devices\Querying\Nvidia\CudaQuery.cs" />
+    <Compile Include="Devices\Querying\Nvidia\NvidiaQuery.cs" />
+    <Compile Include="Devices\Querying\Amd\QueryAdl.cs" />
+    <Compile Include="Devices\Querying\Nvidia\NvidiaSmiDriver.cs" />
+    <Compile Include="Devices\Querying\QueryCpu.cs" />
+    <Compile Include="Devices\Querying\Amd\OpenCL\QueryOpenCL.cs" />
+    <Compile Include="Devices\Querying\QueryGpu.cs" />
+    <Compile Include="Devices\Querying\QueryResult.cs" />
+    <Compile Include="Devices\Querying\SystemSpecs.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
     <Compile Include="Forms\EnterBTCDialogSwitch.cs">
       <SubType>Form</SubType>
@@ -186,7 +201,7 @@
     <Compile Include="Devices\CUDA_Unsupported.cs" />
     <Compile Include="Devices\Algorithms\GroupAlgorithms.cs" />
     <Compile Include="Devices\GroupNames.cs" />
-    <Compile Include="Devices\OpenCL\OpenCLDevice.cs" />
+    <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLDevice.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -258,7 +273,6 @@
     <Compile Include="Interfaces\IBenchmarkComunicator.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
-    <Compile Include="Interfaces\IMessageNotifier.cs" />
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\Links.cs" />
