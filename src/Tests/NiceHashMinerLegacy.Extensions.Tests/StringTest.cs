@@ -25,6 +25,11 @@ namespace NiceHashMinerLegacy.Extensions.Tests
             "15:14:18 Total Speed: 27 Sol/s Shares Accepted: 0 Rejected: 0 Power: 199W 0.14 Sol/W"
                 .TryGetHashrateAfter("Total Speed:", out hash);
             Assert.AreEqual(27, hash);
+
+            // TTminer
+            "14:39:00 GPU[1]: 2.442 MH/s  CClk:1.670 GHz MClk:3.802 GHz 70C 100% [A2:R0 0.0%]  LastShare: 00:01:26"
+                .TryGetHashrateAfter("]:", out hash);
+            Assert.AreEqual(2442000, hash);
         }
 
         [TestMethod]
