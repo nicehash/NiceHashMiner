@@ -7,6 +7,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MinerSmokeTest
@@ -40,6 +41,7 @@ namespace MinerSmokeTest
         private async void FormShown(object sender, EventArgs e)
         {
             MinerPaths.InitializePackages();
+            ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
             await ComputeDeviceManager.QueryDevicesAsync();
             var devices = AvailableDevices.Devices;
 
@@ -116,59 +118,43 @@ namespace MinerSmokeTest
 
         private async void btn_startTest_Click(object sender, EventArgs e)
         {
+            foreach(var device in AvailableDevices.Devices)
+            {
+                if (device.Enabled == true)
+                {
+                    foreach(var algorithm in device.GetAlgorithmSettings())
+                    {
+                        if (algorithm.Enabled == true)
+                        {
 
-            //if(lv_minerList.Items.Count == 0)
-            //{
-            //    MessageBox.Show("Miner list is empty.\nPlease add miners!");
-            //}
-            //else
-            //{
+                            var miner = NiceHashMiner.Miners.MinerFactory.CreateMiner(device.DeviceType, algorithm);
 
+                            List<MiningPair> pair = new List<MiningPair>();
+                            pair.Add(new MiningPair(device, algorithm));
+                            MiningSetup setup = new MiningSetup(pair);
 
-            //    foreach (var minerExe in lv_minerList.Items)
-            //    {
-            //        //vzami checkbox za izbiro minerja pa vse not zafilaj
-            //        var miner = new NiceHashMiner.Miners.GMiner();
+                            miner.InitMiningSetup(setup);
+                            var url = StratumHelpers.GetLocationUrl(algorithm.NiceHashID, "eu", miner.ConectionType);
 
-            //        foreach (var device in devices)
-            //        {
-            //            MinerPaths.InitializePackages();
-            //            ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
-            //            var algorithmList = device.GetAlgorithmSettings();
+                            lbl_status.Text = "TESTING";
+                            lbl_minerName.Text = algorithm.MinerBaseTypeName;
+                            lbl_testingMinerVersion.Text = "unknown";
+                            lbl_algoName.Text = algorithm.AlgorithmName;
 
-            //            foreach (var algo in algorithmList)
-            //            {
-            //                if (algo.MinerBaseType != MinerBaseType.GMiner || algo.AlgorithmName != "ZHash")
-            //                {
-            //                    continue;
-            //                } else
-            //                {
-            //                    List<MiningPair> pairs = new List<MiningPair>();
-            //                    MiningPair pair = new MiningPair(device, algo);
-            //                    pairs.Add(pair);
+                            miner.Start(url, Globals.DemoUser, "test");
 
-            //                    MiningSetup setup = new MiningSetup(pairs);
-            //                    miner.InitMiningSetup(setup);
+                            await Task.Delay(1000 * 30);
+                            miner.Stop();
+                            await Task.Delay(1000 * 5);
 
-            //                    var url = StratumHelpers.GetLocationUrl(algo.NiceHashID, "eu", miner.ConectionType);
-            //                    miner.Start(url, Globals.DemoUser, "test");
-
-            //                    Thread.Sleep(10 * 1000);
-            //                    miner.Stop();
-
-            //                    Thread.Sleep(10 * 1000);
-            //                }
-
-
-            //            }
-
-            //        }
-
-
-
-            //    }
-            //}
+                            lbl_status.Text = "NOT TESTING";
+                            lbl_minerName.Text = "";
+                            lbl_testingMinerVersion.Text = "";
+                            lbl_algoName.Text = "";
+                        }
+                    }
+                } 
+            }
         }
-
     }
 }
