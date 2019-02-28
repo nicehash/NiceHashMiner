@@ -83,7 +83,7 @@ namespace NiceHashMiner.Miners
                 return busID.ToString();
             }));
             var cmd = $"-a {AlgoName} -s {split[0]} -n {split[1]} " +
-                              $"-u {btcAddress}.{worker} -d {devs} --api {ApiPort} ";
+                              $"-u {btcAddress}.{worker} -d {devs} --api {ApiPort} -w 0"; // worker doesn't fix instant start/stop
 
             cmd += ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
 
@@ -97,7 +97,8 @@ namespace NiceHashMiner.Miners
 
         protected override void _Stop(MinerStopType willswitch)
         {
-            ShutdownMiner(true);
+            // TODO fixes instant start/stop
+            ShutdownMiner(false);
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)

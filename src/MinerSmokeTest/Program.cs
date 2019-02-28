@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMiner;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,6 +33,7 @@ namespace MinerSmokeTest
             pathVar += ";" + Path.Combine(Environment.CurrentDirectory, "common");
             Environment.SetEnvironmentVariable("PATH", pathVar);
 
+            Logger.ConfigureWithFile();
             Application.Run(new Form1());
         }
     }

@@ -53,6 +53,13 @@ namespace MinerSmokeTest
                 var newRow = dgv_devices.Rows[dgv_devices.Rows.Count - 1];
                 newRow.Tag = device;
             }
+            // disable/enable all by default 
+            foreach (var device in devices)
+            {
+                foreach (var algo in device.GetAlgorithmSettings()) {
+                    algo.Enabled = true;
+                }
+            }
         }
 
 
@@ -121,7 +128,7 @@ namespace MinerSmokeTest
         {
             //var miningTime = TimeSpan.FromSeconds(30);
             var miningTime = TimeSpan.FromMilliseconds(30);
-            var stopDelayTime = TimeSpan.FromSeconds(5);
+            var stopDelayTime = TimeSpan.FromMilliseconds(500); //TimeSpan.FromSeconds(1);
             var enabledDevs = AvailableDevices.Devices.Where(dev => dev.Enabled);
 
             var testSteps = enabledDevs.Select(dev => dev.GetAlgorithmSettings().Where(algo => algo.Enabled).Count()).Sum();
@@ -154,7 +161,9 @@ namespace MinerSmokeTest
 
                         await Task.Delay(miningTime);
                         tbx_info.Text += $"Stopping" + Environment.NewLine;
-                        miner.Stop();
+                        //miner.Stop();
+                        miner.End();
+                        miner.End();
                         tbx_info.Text += $"Delay after stop {stopDelayTime.ToString()}" + Environment.NewLine;
                         await Task.Delay(stopDelayTime);
                         tbx_info.Text += $"DONE" + Environment.NewLine + Environment.NewLine;
