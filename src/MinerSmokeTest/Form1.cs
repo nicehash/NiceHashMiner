@@ -29,7 +29,7 @@ namespace MinerSmokeTest
 
         public static object[] GetDeviceRowData(ComputeDevice d)
         {
-            object[] rowData = { d.Enabled, d.ID, d.GetFullName() };
+            object[] rowData = { d.Enabled, d.GetFullName() };
             return rowData;
         }
 
@@ -119,40 +119,45 @@ namespace MinerSmokeTest
 
         private async void btn_startTest_Click(object sender, EventArgs e)
         {
+            //var miningTime = TimeSpan.FromSeconds(30);
+            var miningTime = TimeSpan.FromMilliseconds(30);
+            var stopDelayTime = TimeSpan.FromSeconds(5);
             var enabledDevs = AvailableDevices.Devices.Where(dev => dev.Enabled);
+
+            var testSteps = enabledDevs.Select(dev => dev.GetAlgorithmSettings().Where(algo => algo.Enabled).Count()).Sum();
+            var step = 0;
             foreach (var device in enabledDevs)
             {
                 var enabledAlgorithms = device.GetAlgorithmSettings().Where(algo => algo.Enabled);
                 foreach (var algorithm in enabledAlgorithms)
                 {
+                    step++;
                     try {
                         var miner = NiceHashMiner.Miners.MinerFactory.CreateMiner(device.DeviceType, algorithm);
 
-                        List<MiningPair> pair = new List<MiningPair>();
-                        pair.Add(new MiningPair(device, algorithm));
-                        MiningSetup setup = new MiningSetup(pair);
+                        var pair = new List<MiningPair> { new MiningPair(device, algorithm) };
+                        var miningSetup = new MiningSetup(pair);
 
-                        miner.InitMiningSetup(setup);
+                        miner.InitMiningSetup(miningSetup);
                         var url = StratumHelpers.GetLocationUrl(algorithm.NiceHashID, "eu", miner.ConectionType);
 
-                        tbx_info.Text += $"TESTING: path: {algorithm.MinerBinaryPath}, miner: {algorithm.MinerBaseTypeName}, algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
-                        lbl_status.Text = "TESTING";
-                        lbl_minerName.Text = algorithm.MinerBaseTypeName;
-                        lbl_testingMinerVersion.Text = "unknown";
-                        lbl_algoName.Text = algorithm.AlgorithmName;
+                        tbx_info.Text += $"TESTING: {Environment.NewLine}";
+                        tbx_info.Text += $"Device: {device.GetFullName()} {Environment.NewLine}";
+                        tbx_info.Text += $"Miner path: {algorithm.MinerBinaryPath}" + Environment.NewLine;
+                        tbx_info.Text += $"Miner base: {algorithm.MinerBaseTypeName}" + Environment.NewLine;
+                        tbx_info.Text += $"Algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
 
+                        label1.Text = $"{step} / {testSteps}";
+
+                        tbx_info.Text += $"Starting miner running for {miningTime.ToString()}" + Environment.NewLine;
                         miner.Start(url, Globals.DemoUser, "test");
 
-                        await Task.Delay(1000 * 30);
+                        await Task.Delay(miningTime);
+                        tbx_info.Text += $"Stopping" + Environment.NewLine;
                         miner.Stop();
-                        await Task.Delay(1000 * 5);
-
-                        lbl_status.Text = "NOT TESTING";
-                        lbl_minerName.Text = "";
-                        lbl_testingMinerVersion.Text = "";
-                        lbl_algoName.Text = "";
-                        tbx_info.Text += $"FINISHED: path: {algorithm.MinerBinaryPath}, miner: {algorithm.MinerBaseTypeName}, algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
-                        tbx_info.Text += $"FINISHED: path: {algorithm.MinerBinaryPath}, miner: {algorithm.MinerBaseTypeName}, algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
+                        tbx_info.Text += $"Delay after stop {stopDelayTime.ToString()}" + Environment.NewLine;
+                        await Task.Delay(stopDelayTime);
+                        tbx_info.Text += $"DONE" + Environment.NewLine + Environment.NewLine;
                     } catch (Exception ex)
                     {
                         tbx_info.Text += $"Exception {ex}" + Environment.NewLine;
