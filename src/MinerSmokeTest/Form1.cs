@@ -5,6 +5,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -118,40 +119,43 @@ namespace MinerSmokeTest
 
         private async void btn_startTest_Click(object sender, EventArgs e)
         {
-            foreach(var device in AvailableDevices.Devices)
+            var enabledDevs = AvailableDevices.Devices.Where(dev => dev.Enabled);
+            foreach (var device in enabledDevs)
             {
-                if (device.Enabled == true)
+                var enabledAlgorithms = device.GetAlgorithmSettings().Where(algo => algo.Enabled);
+                foreach (var algorithm in enabledAlgorithms)
                 {
-                    foreach(var algorithm in device.GetAlgorithmSettings())
+                    try {
+                        var miner = NiceHashMiner.Miners.MinerFactory.CreateMiner(device.DeviceType, algorithm);
+
+                        List<MiningPair> pair = new List<MiningPair>();
+                        pair.Add(new MiningPair(device, algorithm));
+                        MiningSetup setup = new MiningSetup(pair);
+
+                        miner.InitMiningSetup(setup);
+                        var url = StratumHelpers.GetLocationUrl(algorithm.NiceHashID, "eu", miner.ConectionType);
+
+                        tbx_info.Text += $"TESTING: path: {algorithm.MinerBinaryPath}, miner: {algorithm.MinerBaseTypeName}, algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
+                        lbl_status.Text = "TESTING";
+                        lbl_minerName.Text = algorithm.MinerBaseTypeName;
+                        lbl_testingMinerVersion.Text = "unknown";
+                        lbl_algoName.Text = algorithm.AlgorithmName;
+
+                        miner.Start(url, Globals.DemoUser, "test");
+
+                        await Task.Delay(1000 * 30);
+                        miner.Stop();
+                        await Task.Delay(1000 * 5);
+
+                        lbl_status.Text = "NOT TESTING";
+                        lbl_minerName.Text = "";
+                        lbl_testingMinerVersion.Text = "";
+                        lbl_algoName.Text = "";
+                        tbx_info.Text += $"FINISHED: path: {algorithm.MinerBinaryPath}, miner: {algorithm.MinerBaseTypeName}, algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
+                        tbx_info.Text += $"FINISHED: path: {algorithm.MinerBinaryPath}, miner: {algorithm.MinerBaseTypeName}, algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
+                    } catch (Exception ex)
                     {
-                        if (algorithm.Enabled == true)
-                        {
-
-                            var miner = NiceHashMiner.Miners.MinerFactory.CreateMiner(device.DeviceType, algorithm);
-
-                            List<MiningPair> pair = new List<MiningPair>();
-                            pair.Add(new MiningPair(device, algorithm));
-                            MiningSetup setup = new MiningSetup(pair);
-
-                            miner.InitMiningSetup(setup);
-                            var url = StratumHelpers.GetLocationUrl(algorithm.NiceHashID, "eu", miner.ConectionType);
-
-                            lbl_status.Text = "TESTING";
-                            lbl_minerName.Text = algorithm.MinerBaseTypeName;
-                            lbl_testingMinerVersion.Text = "unknown";
-                            lbl_algoName.Text = algorithm.AlgorithmName;
-
-                            miner.Start(url, Globals.DemoUser, "test");
-
-                            await Task.Delay(1000 * 30);
-                            miner.Stop();
-                            await Task.Delay(1000 * 5);
-
-                            lbl_status.Text = "NOT TESTING";
-                            lbl_minerName.Text = "";
-                            lbl_testingMinerVersion.Text = "";
-                            lbl_algoName.Text = "";
-                        }
+                        tbx_info.Text += $"Exception {ex}" + Environment.NewLine;
                     }
                 } 
             }

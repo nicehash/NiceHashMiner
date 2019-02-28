@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,6 +17,21 @@ namespace MinerSmokeTest
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // Set working directory to exe
+            var pathSet = false;
+            var path = Path.GetDirectoryName(Application.ExecutablePath);
+            if (path != null)
+            {
+                Environment.CurrentDirectory = path;
+                pathSet = true;
+            }
+
+            // Add common folder to path for launched processes
+            var pathVar = Environment.GetEnvironmentVariable("PATH");
+            pathVar += ";" + Path.Combine(Environment.CurrentDirectory, "common");
+            Environment.SetEnvironmentVariable("PATH", pathVar);
+
             Application.Run(new Form1());
         }
     }
