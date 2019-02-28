@@ -16,6 +16,12 @@ namespace MinerSmokeTest
         public Form1()
         {
             InitializeComponent();
+            this.dgv_algo.Rows.Clear();
+            this.dgv_devices.Rows.Clear();
+
+            dgv_devices.CellContentClick += dgv_devices_CellContentClick;
+            dgv_algo.CellContentClick += dgv_algo_CellContentClick;
+
             this.Shown += new EventHandler(this.FormShown);
         }
 
@@ -27,7 +33,7 @@ namespace MinerSmokeTest
 
         public static object[] GetAlgorithmRowData(Algorithm a)
         {
-            object[] rowData = { a.Enabled, a.AlgorithmName };
+            object[] rowData = { a.Enabled, a.AlgorithmName, a.MinerBaseTypeName };
             return rowData;
         }
 
@@ -36,15 +42,13 @@ namespace MinerSmokeTest
             MinerPaths.InitializePackages();
             await ComputeDeviceManager.QueryDevicesAsync();
             var devices = AvailableDevices.Devices;
-            dgv_algo.Columns.Add("algoEnabled", "Enabled");
-            dgv_algo.Columns.Add("algoName", "Name");
 
             foreach(var device in devices)
             {
                 dgv_devices.Rows.Add(GetDeviceRowData(device));
 
-                var newRow = dgv_devices.Rows[dgv_devices.Rows.Count - 2];
-                newRow.Tag = device.Name;
+                var newRow = dgv_devices.Rows[dgv_devices.Rows.Count - 1];
+                newRow.Tag = device;
             }
         }
 
@@ -52,22 +56,61 @@ namespace MinerSmokeTest
         private void dgv_devices_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             dgv_algo.Rows.Clear();
+            if (!(e.RowIndex >= 0)) return;
 
             var senderGrid = (DataGridView)sender;
             var row = senderGrid.Rows[e.RowIndex];
 
-            var devices = AvailableDevices.Devices;
-            foreach(var device in devices)
+            ComputeDevice device;
+            if (row.Tag is ComputeDevice dev) {
+                device = dev;
+            } else
             {
-                if (device.Name == (string)row.Tag)
-                {
-                    var algorithms = device.GetAlgorithmSettings();
-                    foreach(var algo in algorithms)
-                    {
-                        dgv_algo.Rows.Add(GetAlgorithmRowData(algo));
-                    }
-                }
+                // TAG is not device type
+                return;
+            }
 
+            var cellItem = row.Cells[e.ColumnIndex];
+            if (cellItem is DataGridViewCheckBoxCell checkbox)
+            {
+                var deviceEnabled = checkbox.Value != null && (bool)checkbox.Value;
+                checkbox.Value = !deviceEnabled;
+                device.Enabled = !deviceEnabled;
+            }
+            var algorithms = device.GetAlgorithmSettings();
+            foreach (var algo in algorithms)
+            {
+                dgv_algo.Rows.Add(GetAlgorithmRowData(algo));
+
+                var newRow = dgv_algo.Rows[dgv_algo.Rows.Count - 1];
+                newRow.Tag = algo;
+            }
+        }
+
+        private void dgv_algo_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (!(e.RowIndex >= 0)) return;
+
+            var senderGrid = (DataGridView)sender;
+            var row = senderGrid.Rows[e.RowIndex];
+
+            Algorithm algo;
+            if (row.Tag is Algorithm a)
+            {
+                algo = a;
+            }
+            else
+            {
+                // TAG is not algo type
+                return;
+            }
+
+            var cellItem = row.Cells[e.ColumnIndex];
+            if (cellItem is DataGridViewCheckBoxCell checkbox)
+            {
+                var deviceEnabled = checkbox.Value != null && (bool)checkbox.Value;
+                checkbox.Value = !deviceEnabled;
+                algo.Enabled = !deviceEnabled;
             }
         }
 

@@ -36,10 +36,13 @@
             this.lbl_testingMinerVersion = new System.Windows.Forms.Label();
             this.lbl_minerName = new System.Windows.Forms.Label();
             this.dgv_devices = new System.Windows.Forms.DataGridView();
-            this.dgv_algo = new System.Windows.Forms.DataGridView();
             this.dgv_deviceEnabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.dgv_ID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dgv_deviceName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dgv_algo = new System.Windows.Forms.DataGridView();
+            this.Enabled = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.Algorithm = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Miner = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_devices)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_algo)).BeginInit();
             this.SuspendLayout();
@@ -107,30 +110,28 @@
             // 
             // dgv_devices
             // 
+            this.dgv_devices.AllowUserToAddRows = false;
+            this.dgv_devices.AllowUserToDeleteRows = false;
             this.dgv_devices.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_devices.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.dgv_deviceEnabled,
             this.dgv_ID,
             this.dgv_deviceName});
+            this.dgv_devices.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgv_devices.Location = new System.Drawing.Point(13, 13);
             this.dgv_devices.Name = "dgv_devices";
+            this.dgv_devices.ReadOnly = true;
+            this.dgv_devices.RowHeadersVisible = false;
+            this.dgv_devices.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgv_devices.Size = new System.Drawing.Size(358, 255);
             this.dgv_devices.TabIndex = 12;
-            this.dgv_devices.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_devices_CellContentClick);
-            // 
-            // dgv_algo
-            // 
-            this.dgv_algo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgv_algo.Location = new System.Drawing.Point(377, 12);
-            this.dgv_algo.Name = "dgv_algo";
-            this.dgv_algo.Size = new System.Drawing.Size(437, 256);
-            this.dgv_algo.TabIndex = 13;
             // 
             // dgv_deviceEnabled
             // 
             this.dgv_deviceEnabled.FalseValue = "\"NO\"";
             this.dgv_deviceEnabled.HeaderText = "Enabled";
             this.dgv_deviceEnabled.Name = "dgv_deviceEnabled";
+            this.dgv_deviceEnabled.ReadOnly = true;
             this.dgv_deviceEnabled.Width = 50;
             // 
             // dgv_ID
@@ -146,6 +147,37 @@
             this.dgv_deviceName.Name = "dgv_deviceName";
             this.dgv_deviceName.ReadOnly = true;
             this.dgv_deviceName.Width = 200;
+            // 
+            // dgv_algo
+            // 
+            this.dgv_algo.AllowUserToAddRows = false;
+            this.dgv_algo.AllowUserToDeleteRows = false;
+            this.dgv_algo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgv_algo.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Enabled,
+            this.Algorithm,
+            this.Miner});
+            this.dgv_algo.Location = new System.Drawing.Point(377, 12);
+            this.dgv_algo.Name = "dgv_algo";
+            this.dgv_algo.ReadOnly = true;
+            this.dgv_algo.RowHeadersVisible = false;
+            this.dgv_algo.Size = new System.Drawing.Size(437, 256);
+            this.dgv_algo.TabIndex = 13;
+            // 
+            // Enabled
+            // 
+            this.Enabled.HeaderText = "Enabled";
+            this.Enabled.Name = "Enabled";
+            // 
+            // Algorithm
+            // 
+            this.Algorithm.HeaderText = "Algorithm";
+            this.Algorithm.Name = "Algorithm";
+            // 
+            // Miner
+            // 
+            this.Miner.HeaderText = "Miner";
+            this.Miner.Name = "Miner";
             // 
             // Form1
             // 
@@ -183,6 +215,9 @@
         private System.Windows.Forms.DataGridViewCheckBoxColumn dgv_deviceEnabled;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgv_ID;
         private System.Windows.Forms.DataGridViewTextBoxColumn dgv_deviceName;
+        private System.Windows.Forms.DataGridViewCheckBoxColumn Enabled;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Algorithm;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Miner;
     }
 }
 
