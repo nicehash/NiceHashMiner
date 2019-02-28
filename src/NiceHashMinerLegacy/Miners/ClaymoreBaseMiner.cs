@@ -174,7 +174,7 @@ namespace NiceHashMiner.Miners
             var ids = new List<string>();
             var intensities = new List<string>();
 
-            var amdDeviceCount = ComputeDeviceManager.Query.AmdDevices.Count;
+            var amdDeviceCount = AvailableDevices.NumDetectedAmdDevs;
             Helpers.ConsolePrint("ClaymoreIndexing", $"Found {amdDeviceCount} AMD devices");
 
             foreach (var mPair in sortedMinerPairs)

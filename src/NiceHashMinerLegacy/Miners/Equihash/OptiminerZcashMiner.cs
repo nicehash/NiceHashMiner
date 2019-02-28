@@ -70,7 +70,7 @@ namespace NiceHashMiner.Miners.Equihash
         protected override string GetDevicesCommandString()
         {
             var extraParams = ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
-            var deviceStringCommand = " -c " + ComputeDeviceManager.Available.AmdOpenCLPlatformNum;
+            var deviceStringCommand = " -c " + AvailableDevices.AmdOpenCLPlatformNum;
             deviceStringCommand += " ";
             var ids = MiningSetup.MiningPairs.Select(mPair => "-d " + mPair.Device.ID.ToString()).ToList();
             deviceStringCommand += string.Join(" ", ids);

@@ -40,7 +40,7 @@ namespace NiceHashMiner.Miners
         public static bool StartInitialize(IMainFormRatesComunication mainFormRatesComunication,
             string miningLocation, string worker, string btcAdress)
         {
-            _curMiningSession = new MiningSession(ComputeDeviceManager.Available.Devices,
+            _curMiningSession = new MiningSession(AvailableDevices.Devices,
                 mainFormRatesComunication, miningLocation, worker, btcAdress);
 
             return _curMiningSession.IsMiningEnabled;

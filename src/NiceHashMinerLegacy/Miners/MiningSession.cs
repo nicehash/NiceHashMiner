@@ -75,7 +75,7 @@ namespace NiceHashMiner.Miners
             }
         }
 
-        public MiningSession(List<ComputeDevice> devices,
+        public MiningSession(IEnumerable<ComputeDevice> devices,
             IMainFormRatesComunication mainFormRatesComunication,
             string miningLocation, string worker, string btcAdress)
         {
