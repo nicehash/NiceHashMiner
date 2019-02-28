@@ -120,7 +120,7 @@ namespace CPUMinerBase
         protected override void Init()
         {
             bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
 
             var cpuDevice = _miningPairs.Select(kvp => kvp.device).FirstOrDefault();
@@ -148,7 +148,7 @@ namespace CPUMinerBase
         public void AfterStartMining()
         {
             int pid = -1;
-            if (_miningProcess != null && _miningProcess.Handle != null) {
+            if (_miningProcess?.Handle != null) {
                 pid = _miningProcess.Handle.Id;
             }
             // TODO C# can have this shorter

@@ -22,7 +22,10 @@ namespace NiceHashMiner
             MinerPluginHost.LoadPlugins(PluginsPath, SearchOption.AllDirectories);
             // get devices
             var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+
+            // Micro-optimization: without caching as list, the selector will iterate fully 
+            // in each iteration of the foreach
+            var baseDevices = allDevs.Select(dev => dev.PluginDevice).ToList();
             // examine all plugins and what to use
             foreach (var kvp in MinerPluginHost.MinerPlugin)
             {

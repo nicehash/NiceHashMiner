@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MinerPlugin.Toolkit
 {
-    public class MiningProcess
+    public class MiningProcess : IDisposable
     {
         public MiningProcess(Process handle)
         {
@@ -13,5 +13,11 @@ namespace MinerPlugin.Toolkit
         }
         // TODO make ProcessLibrary swappable
         public Process Handle { get; }
+
+        public void Dispose()
+        {
+            // Process handles should be disposed, the OS has a limited number available
+            Handle?.Dispose();
+        }
     }
 }

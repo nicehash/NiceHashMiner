@@ -12,6 +12,7 @@ using System.Globalization;
 
 namespace CCMinerBase
 {
+    // Some common comments here since it's the first class I've gone over
     public abstract class CCMinerBase : MinerBase
     {
         // ccminer can mine only one algorithm at a given time
@@ -22,7 +23,9 @@ namespace CCMinerBase
         private int _apiPort;
         // lazy init
         //private HttpClient _httpClient = null; // throws exceptions
-        private ApiDataHelper apiReader = new ApiDataHelper(); // consider replacing with HttpClient
+        private ApiDataHelper apiReader = new ApiDataHelper(); // consider replacing with HttpClient - probably a good idea
+        // Some miners only interface over TCP (Claymore comes to mind) but most work with HTTP
+        // HttpClient much less messy in those cases (e.g. GMiner)
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -152,7 +155,7 @@ namespace CCMinerBase
 
             // TODO implement fallback average, final benchmark 
             bp.CheckData = (string data) => {
-                return MinerToolkit.TryGetHashrateAfter(data, "Benchmark:"); // TODO add option to read totals
+                return data.TryGetHashrateAfter("Benchmark:"); // TODO add option to read totals
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
@@ -172,12 +175,13 @@ namespace CCMinerBase
         protected override void Init()
         {
             bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            // Small readability change to use extension version of method
+            (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
             // init command line params parts
-            var deviceIds = MinerToolkit.GetDevicesIDsInOrder(_miningPairs);
+            var deviceIds = _miningPairs.GetDevicesIDsInOrder();
             _devices = $"--devices {string.Join(",", deviceIds)}";
             // TODO implement this later
             //_extraLaunchParameters;

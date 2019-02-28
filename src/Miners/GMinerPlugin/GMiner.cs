@@ -23,6 +23,8 @@ namespace GMinerPlugin
     public class GMiner : MinerBase
     {
         private const double DevFee = 2.0;
+        // For future reference, having HttpClient as a class variable is best practice
+        // Instantiating one in a using every request will exhaust OS sockets
         private HttpClient _httpClient;
         private int _apiPort;
 
@@ -87,7 +89,7 @@ namespace GMinerPlugin
                 var totalPowerUsage = 0;
                 foreach (var gpu in gpus)
                 {
-                    var currentDevStats = summary.devices.Where(devStats => devStats.gpu_id == gpu.ID).FirstOrDefault();
+                    var currentDevStats = summary.devices.FirstOrDefault(devStats => devStats.gpu_id == gpu.ID);
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed;
                     perDeviceSpeedInfo.Add((gpu.UUID, new List<(AlgorithmType, double)>() { (_algorithmType, currentDevStats.speed) }));
@@ -134,7 +136,7 @@ namespace GMinerPlugin
             int targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 30d));
             // TODO implement fallback average, final benchmark 
             bp.CheckData = (string data) => {
-                var (hashrate, found) = MinerToolkit.TryGetHashrateAfter(data, "Total Speed:");
+                var (hashrate, found) = data.TryGetHashrateAfter("Total Speed:");
                 if (!found) return (benchHashResult, false);
 
                 // sum and return
@@ -165,7 +167,7 @@ namespace GMinerPlugin
         protected override void Init()
         {
             bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
@@ -182,6 +184,12 @@ namespace GMinerPlugin
         protected override string MiningCreateCommandLine()
         {
             return CreateCommandLine(_username);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) _httpClient?.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

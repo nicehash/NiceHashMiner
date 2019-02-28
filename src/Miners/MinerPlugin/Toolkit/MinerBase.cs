@@ -97,5 +97,24 @@ namespace MinerPlugin.Toolkit
             await Task.Delay(500);
             StartMining();
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            // TODO consider forcing the miner to close here (whether or not disposing == true)
+            // Then call Dispose(false) from finalizer
+            // That way if some error has a MinerBase dereferenced without stopping the miner, it will still be stopped
+            // See https://github.com/nicehash/NiceHashMinerLegacy/blob/nhmws2-dev-bench-cleanup/src/NiceHashMinerLegacy/Miners/Miner.cs#L993
+
+            if (disposing)
+            {
+                _miningProcess?.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

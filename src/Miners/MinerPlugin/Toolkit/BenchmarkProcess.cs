@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace MinerPlugin.Toolkit
 {
     // This one just reads from std out and err
-    public class BenchmarkProcess
+    public class BenchmarkProcess : IDisposable
     {
         public BenchmarkProcess(Process p)
         {
@@ -98,6 +98,11 @@ namespace MinerPlugin.Toolkit
             });
 
             return tcs.Task;
+        }
+
+        public void Dispose()
+        {
+            Handle?.Dispose();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace MinerPlugin
     /// <summary>
     /// IMiner is the mandatory interface for all miners
     /// </summary>
-    public interface IMiner
+    public interface IMiner : IDisposable
     {
         //// might not need it
         //bool IsRunning { get; } // this one whould be temp or in a different version

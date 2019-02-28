@@ -197,12 +197,12 @@ namespace CCMinerTpruvotCuda10
         protected override void Init()
         {
             bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
             // init command line params parts
-            var deviceIds = MinerToolkit.GetDevicesIDsInOrder(_miningPairs);
+            var deviceIds = _miningPairs.GetDevicesIDsInOrder();
             _devices = $"--devices {string.Join(",", deviceIds)}";
             // TODO implement this later
             //_extraLaunchParameters;

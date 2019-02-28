@@ -38,55 +38,55 @@ namespace MinerPlugin.Toolkit
             string responseFromServer = null;
             try
             {
-                var tcpc = new TcpClient("127.0.0.1", port);
-                var nwStream = tcpc.GetStream();
-
-                var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);
-                await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-
-                var incomingBuffer = new byte[tcpc.ReceiveBufferSize];
-                var prevOffset = -1;
-                var offset = 0;
-                var fin = false;
-
-                while (!fin && tcpc.Client.Connected)
+                using (var tcpc = new TcpClient("127.0.0.1", port))
+                using (var nwStream = tcpc.GetStream())
                 {
-                    var r = await nwStream.ReadAsync(incomingBuffer, offset, tcpc.ReceiveBufferSize - offset);
-                    for (var i = offset; i < offset + r; i++)
+
+                    var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);
+                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
+
+                    var incomingBuffer = new byte[tcpc.ReceiveBufferSize];
+                    var prevOffset = -1;
+                    var offset = 0;
+                    var fin = false;
+
+                    while (!fin && tcpc.Client.Connected)
                     {
-                        if (incomingBuffer[i] == 0x7C || incomingBuffer[i] == 0x00
-                                                      || (i > 2 && IsApiEof(incomingBuffer[i - 2],
-                                                              incomingBuffer[i - 1], incomingBuffer[i]))
-                                                      || overrideLoop)
+                        var r = await nwStream.ReadAsync(incomingBuffer, offset, tcpc.ReceiveBufferSize - offset);
+                        for (var i = offset; i < offset + r; i++)
                         {
-                            fin = true;
-                            break;
+                            if (incomingBuffer[i] == 0x7C || incomingBuffer[i] == 0x00
+                                                          || (i > 2 && IsApiEof(incomingBuffer[i - 2],
+                                                                  incomingBuffer[i - 1], incomingBuffer[i]))
+                                                          || overrideLoop)
+                            {
+                                fin = true;
+                                break;
+                            }
+
+                            // Not working
+                            //if (IncomingBuffer[i] == 0x5d || IncomingBuffer[i] == 0x5e) {
+                            //    fin = true;
+                            //    break;
+                            //}
                         }
 
-                        // Not working
-                        //if (IncomingBuffer[i] == 0x5d || IncomingBuffer[i] == 0x5e) {
-                        //    fin = true;
-                        //    break;
-                        //}
-                    }
-
-                    offset += r;
-                    if (exitHack)
-                    {
-                        if (prevOffset == offset)
+                        offset += r;
+                        if (exitHack)
                         {
-                            fin = true;
-                            break;
-                        }
+                            if (prevOffset == offset)
+                            {
+                                fin = true;
+                                break;
+                            }
 
-                        prevOffset = offset;
+                            prevOffset = offset;
+                        }
                     }
+
+                    if (offset > 0)
+                        responseFromServer = Encoding.ASCII.GetString(incomingBuffer);
                 }
-
-                tcpc.Close();
-
-                if (offset > 0)
-                    responseFromServer = Encoding.ASCII.GetString(incomingBuffer);
             }
             catch (Exception ex)
             {
