@@ -8,9 +8,10 @@ namespace NiceHashMiner
     /// </summary>
     public static class AlgorithmNiceHashNames
     {
+        public static readonly string NOT_FOUND = "NameNotFound type not supported";
         public static string GetName(AlgorithmType type)
         {
-            return Enum.GetName(typeof(AlgorithmType), type) ?? "NameNotFound type not supported";
+            return Enum.GetName(typeof(AlgorithmType), type) ?? NOT_FOUND;
         }
     }
 }
