@@ -29,38 +29,51 @@
         private void InitializeComponent()
         {
             this.buttonOK = new System.Windows.Forms.Button();
-            this.linkToDriverDownloadPage = new System.Windows.Forms.LinkLabel();
+            this.LinkButtonEnterBTCManually = new System.Windows.Forms.LinkLabel();
+            this.LinkButtonRegister = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(86, 12);
+            this.buttonOK.Location = new System.Drawing.Point(60, 12);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(117, 23);
+            this.buttonOK.Size = new System.Drawing.Size(165, 23);
             this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "&Login with NiceHash";
             this.buttonOK.UseCompatibleTextRendering = true;
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOK_Click);
             // 
-            // linkToDriverDownloadPage
+            // LinkButtonEnterBTCManually
             // 
-            this.linkToDriverDownloadPage.AutoSize = true;
-            this.linkToDriverDownloadPage.Location = new System.Drawing.Point(64, 52);
-            this.linkToDriverDownloadPage.Name = "linkToDriverDownloadPage";
-            this.linkToDriverDownloadPage.Size = new System.Drawing.Size(168, 13);
-            this.linkToDriverDownloadPage.TabIndex = 1;
-            this.linkToDriverDownloadPage.TabStop = true;
-            this.linkToDriverDownloadPage.Text = "&(or enter Bitcoin address manually)";
-            this.linkToDriverDownloadPage.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkToDriverDownloadPage_LinkClicked);
+            this.LinkButtonEnterBTCManually.AutoSize = true;
+            this.LinkButtonEnterBTCManually.Location = new System.Drawing.Point(58, 76);
+            this.LinkButtonEnterBTCManually.Name = "LinkButtonEnterBTCManually";
+            this.LinkButtonEnterBTCManually.Size = new System.Drawing.Size(168, 13);
+            this.LinkButtonEnterBTCManually.TabIndex = 1;
+            this.LinkButtonEnterBTCManually.TabStop = true;
+            this.LinkButtonEnterBTCManually.Text = "&(or enter Bitcoin address manually)";
+            this.LinkButtonEnterBTCManually.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkButtonEnterBTCManually_LinkClicked);
+            // 
+            // LinkButtonRegister
+            // 
+            this.LinkButtonRegister.AutoSize = true;
+            this.LinkButtonRegister.Location = new System.Drawing.Point(46, 49);
+            this.LinkButtonRegister.Name = "LinkButtonRegister";
+            this.LinkButtonRegister.Size = new System.Drawing.Size(194, 13);
+            this.LinkButtonRegister.TabIndex = 2;
+            this.LinkButtonRegister.TabStop = true;
+            this.LinkButtonRegister.Text = "&(Don\'t have an account? Register here)";
+            this.LinkButtonRegister.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkButtonRegister_LinkClicked);
             // 
             // EnterBTCDialogSwitch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(285, 81);
-            this.Controls.Add(this.linkToDriverDownloadPage);
+            this.ClientSize = new System.Drawing.Size(285, 108);
+            this.Controls.Add(this.LinkButtonRegister);
+            this.Controls.Add(this.LinkButtonEnterBTCManually);
             this.Controls.Add(this.buttonOK);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ForeColor = System.Drawing.SystemColors.InfoText;
@@ -80,6 +93,7 @@
 
         #endregion
         private System.Windows.Forms.Button buttonOK;
-        private System.Windows.Forms.LinkLabel linkToDriverDownloadPage;
+        private System.Windows.Forms.LinkLabel LinkButtonEnterBTCManually;
+        private System.Windows.Forms.LinkLabel LinkButtonRegister;
     }
 }
