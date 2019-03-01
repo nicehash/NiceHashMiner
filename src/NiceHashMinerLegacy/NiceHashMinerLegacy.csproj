@@ -275,16 +275,13 @@
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
-    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />
     <Compile Include="Miners\ClaymoreCryptoNightMiner.cs" />
     <Compile Include="Miners\Equihash\ClaymoreZcashMiner.cs" />
-    <Compile Include="Miners\Obsolete\eqm.cs" />
     <Compile Include="Miners\Equihash\NhEqBase.cs" />
     <Compile Include="Miners\Equihash\OptiminerZcashMiner.cs" />
-    <Compile Include="Miners\Obsolete\Excavator.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
@@ -340,7 +337,6 @@
     </Compile>
     <Compile Include="PInvoke\PInvokeHelpers.cs" />
     <Compile Include="Switching\NHSmaData.cs" />
-    <Compile Include="Utils\ProfitabilityCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Miners\Sgminer.cs" />

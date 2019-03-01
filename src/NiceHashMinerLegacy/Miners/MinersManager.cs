@@ -21,12 +21,6 @@ namespace NiceHashMiner.Miners
             _curMiningSession?.StopAllMinersNonProfitable();
         }
 
-        public static string GetActiveMinersGroup()
-        {
-            // if no session it is idle
-            return _curMiningSession != null ? _curMiningSession.GetActiveMinersGroup() : "IDLE";
-        }
-
         public static List<int> GetActiveMinersIndexes()
         {
             return _curMiningSession != null ? _curMiningSession.ActiveDeviceIndexes : new List<int>();
