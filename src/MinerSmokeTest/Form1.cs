@@ -127,8 +127,19 @@ namespace MinerSmokeTest
         private async void btn_startTest_Click(object sender, EventArgs e)
         {
             //var miningTime = TimeSpan.FromSeconds(30);
-            var miningTime = TimeSpan.FromMilliseconds(30);
-            var stopDelayTime = TimeSpan.FromMilliseconds(500); //TimeSpan.FromSeconds(1);
+            int minM, minS, minMS;
+            int.TryParse(tbx_minTimeM.Text, out minM);
+            int.TryParse(tbx_minTimeS.Text, out minS);
+            int.TryParse(tbx_minTimeMS.Text, out minMS);
+            int minTime = (60 * minM * 1000) + (1000 * minS) + minMS;
+            var miningTime = TimeSpan.FromMilliseconds(minTime);
+
+            int delayM, delayS, delayMS;
+            int.TryParse(tbx_stopDelayM.Text, out delayM);
+            int.TryParse(tbx_stopDelayS.Text, out delayS);
+            int.TryParse(tbx_stopDelayMS.Text, out delayMS);
+            int delayTime = (60 * delayM * 1000) + (1000 * delayS) + delayMS;
+            var stopDelayTime = TimeSpan.FromMilliseconds(delayTime); //TimeSpan.FromSeconds(1);
             var enabledDevs = AvailableDevices.Devices.Where(dev => dev.Enabled);
 
             var testSteps = enabledDevs.Select(dev => dev.GetAlgorithmSettings().Where(algo => algo.Enabled).Count()).Sum();
@@ -161,9 +172,16 @@ namespace MinerSmokeTest
 
                         await Task.Delay(miningTime);
                         tbx_info.Text += $"Stopping" + Environment.NewLine;
-                        //miner.Stop();
-                        miner.End();
-                        miner.End();
+                        var checkedButton = gb_stopMiningBy.Controls.OfType<RadioButton>()
+                                      .FirstOrDefault(r => r.Checked);
+                        if(checkedButton.Name == "rb_endMining")
+                        {
+                            miner.End();
+                        } else
+                        {
+                            miner.Stop();
+                        }
+
                         tbx_info.Text += $"Delay after stop {stopDelayTime.ToString()}" + Environment.NewLine;
                         await Task.Delay(stopDelayTime);
                         tbx_info.Text += $"DONE" + Environment.NewLine + Environment.NewLine;
