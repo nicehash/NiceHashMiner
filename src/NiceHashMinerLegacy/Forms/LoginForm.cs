@@ -19,7 +19,8 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
             CenterToScreen();
             Icon = Properties.Resources.logo;
-            webBrowser1.Navigate("https://www.nicehash.com/login-app");
+            //webBrowser1.Navigate("https://www.nicehash.com/login-app");
+            webBrowser1.Navigate("https://www.nicehash.com/login-app?back");
             webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
             //webBrowser1.SizeChanged += WebBrowser1_SizeChanged;
         }
@@ -36,6 +37,12 @@ namespace NiceHashMiner.Forms
             webBrowser1.Size = new Size(600, 400); // webBrowser1.Document.Body.ScrollRectangle.Size;
             var center = new Point(webBrowser1.Document.Body.ScrollRectangle.Size.Width / 2, webBrowser1.Document.Body.ScrollRectangle.Size.Height / 2);
             webBrowser1.Document.Body.ScrollTop = center.Y;
+
+            if (webBrowser1.DocumentText.Contains("<PRE>back</PRE>"))
+            {
+                this.Close();
+                return;
+            }
 
             string btc = BtcParser.FindBtcInText(webBrowser1.DocumentText);
             Console.WriteLine($"btc is {btc}");

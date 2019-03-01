@@ -53,7 +53,6 @@ namespace NiceHashMiner
             ConfigManager.InitializeConfig();
 
             // #2 check if multiple instances are allowed
-            var startProgram = true;
             if (ConfigManager.GeneralConfig.AllowMultipleInstances == false)
             {
                 try
@@ -63,85 +62,79 @@ namespace NiceHashMiner
                     {
                         if (process.Id != current.Id)
                         {
-                            startProgram = false;
+                            // already running instance, return from Main
+                            return;
                         }
                     }
                 }
                 catch { }
             }
 
-            if (startProgram)
+            // start program
+            if (ConfigManager.GeneralConfig.LogToFile)
             {
-                if (ConfigManager.GeneralConfig.LogToFile)
-                {
-                    Logger.ConfigureWithFile();
+                Logger.ConfigureWithFile();
+            }
+
+            if (ConfigManager.GeneralConfig.DebugConsole)
+            {
+                PInvokeHelpers.AllocConsole();
+            }
+
+            // init active display currency after config load
+            ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
+
+            Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
+
+            if (!pathSet)
+            {
+                Helpers.ConsolePrint("NICEHASH", "Path not set to executable");
+            }
+
+            // check TOS
+            if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer)
+            {
+                Helpers.ConsolePrint("NICEHASH", $"TOS differs! agreed: ${ConfigManager.GeneralConfig.agreedWithTOS} != Current ${Globals.CurrentTosVer}. Showing TOS Form.");
+                Application.Run(new Form_ChooseLanguage()); // TODO rename this 
+                // check TOS after 
+                if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer) {
+                    Helpers.ConsolePrint("NICEHASH", $"TOS differs AFTER TOS confirmation FORM");
+                    // TOS not confirmed return from Main
+                    return;
                 }
-
-                if (ConfigManager.GeneralConfig.DebugConsole)
-                {
-                    PInvokeHelpers.AllocConsole();
-                }
-
-                // init active display currency after config load
-                ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
-
-                // #2 then parse args
-                var commandLineArgs = new CommandLineParser(argv);
-
-                Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
-
-                if (!pathSet)
-                {
-                    Helpers.ConsolePrint("NICEHASH", "Path not set to executable");
-                }
-
-                var tosChecked = ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer;
-                if (!tosChecked || !ConfigManager.GeneralConfigIsFileExist() && !commandLineArgs.IsLang)
-                {
-                    Helpers.ConsolePrint("NICEHASH",
-                        "No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
-                    Application.Run(new Form_ChooseLanguage());
-                }
+            }
 
                 
-                Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
+            Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
+            
 
-                if (commandLineArgs.IsLang)
+            // check WMI
+            if (Helpers.IsWmiEnabled())
+            {
+                
+
+                if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "")
                 {
-                    Helpers.ConsolePrint("NICEHASH", "Language is overwritten by command line parameter (-lang).");
-                    Translations.SetLanguage(commandLineArgs.LangValue);
-                    ConfigManager.GeneralConfig.Language = commandLineArgs.LangValue;
-                }
-
-
-                // check WMI
-                if (Helpers.IsWmiEnabled())
-                {
-                    if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer) return;
-
-                    if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "")
+                    var dialogSwitch = new EnterBTCDialogSwitch();
+                    Application.Run(dialogSwitch);
+                    if (dialogSwitch.IsLogin)
                     {
-                        var dialogSwitch = new EnterBTCDialogSwitch();
-                        Application.Run(dialogSwitch);
-                        if (dialogSwitch.IsLogin)
+                        var loginForm = new LoginForm();
+                        Application.Run(loginForm);
+                        if (BitcoinAddress.ValidateBitcoinAddress(loginForm.Btc))
                         {
-                            var loginForm = new LoginForm();
-                            Application.Run(loginForm);
-                            if (BitcoinAddress.ValidateBitcoinAddress(loginForm.Btc))
-                            {
-                                ConfigManager.GeneralConfig.BitcoinAddress = loginForm.Btc;
-                                ConfigManager.GeneralConfigFileCommit();
-                            }
+                            ConfigManager.GeneralConfig.BitcoinAddress = loginForm.Btc;
+                            ConfigManager.GeneralConfigFileCommit();
                         }
                     }
-                    Application.Run(new Form_Main());
                 }
-                else
-                {
-                    MessageBox.Show(Translations.Tr("NiceHash Miner Legacy cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner Legacy to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner Legacy."),
-                        Translations.Tr("Windows Management Instrumentation Error"),
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                Application.Run(new Form_Main());
+            }
+            else
+            {
+                MessageBox.Show(Translations.Tr("NiceHash Miner Legacy cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner Legacy to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner Legacy."),
+                    Translations.Tr("Windows Management Instrumentation Error"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
