@@ -142,6 +142,12 @@
     <Compile Include="Forms\EnterBTCDialogSwitch.Designer.cs">
       <DependentUpon>EnterBTCDialogSwitch.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormEula.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormEula.Designer.cs">
+      <DependentUpon>FormEula.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -166,7 +172,6 @@
     <Compile Include="Miners\Ttminer.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
-    <Compile Include="Eula.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
@@ -373,6 +378,9 @@
     <EmbeddedResource Include="Forms\EnterBTCDialogSwitch.resx">
       <DependentUpon>EnterBTCDialogSwitch.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormEula.resx">
+      <DependentUpon>FormEula.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Benchmark.resx">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </EmbeddedResource>
@@ -429,6 +437,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="Resources\Eula.rtf" />
     <None Include="translations.json" />
   </ItemGroup>
   <ItemGroup>

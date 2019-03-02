@@ -62,6 +62,7 @@ namespace NiceHashMiner
         public Form_Main()
         {
             InitializeComponent();
+            CenterToScreen();
             Icon = Properties.Resources.logo;
 
             InitLocalization();
