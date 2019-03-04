@@ -36,15 +36,22 @@ namespace MinerPluginLoader
 
             foreach (var pluginType in pluginTypes)
             {
-                var plugin = (IMinerPlugin)Activator.CreateInstance(pluginType);
-                if (MinerPlugin.ContainsKey(plugin.PluginUUID))
+                try
                 {
-                    var existingPlugin = MinerPlugin[plugin.PluginUUID];
-                    Console.WriteLine($"contains key {plugin.PluginUUID}");
-                    Console.WriteLine($"existing {existingPlugin.Name} v{existingPlugin.Version}");
-                    Console.WriteLine($"new {plugin.Name} v{plugin.Version}");
+                    var plugin = (IMinerPlugin)Activator.CreateInstance(pluginType);
+                    if (MinerPlugin.ContainsKey(plugin.PluginUUID))
+                    {
+                        var existingPlugin = MinerPlugin[plugin.PluginUUID];
+                        Console.WriteLine($"contains key {plugin.PluginUUID}");
+                        Console.WriteLine($"existing {existingPlugin.Name} v{existingPlugin.Version}");
+                        Console.WriteLine($"new {plugin.Name} v{plugin.Version}");
+                    }
+                    MinerPlugin[plugin.PluginUUID] = plugin;
                 }
-                MinerPlugin[plugin.PluginUUID] = plugin;
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Exception while loading plugin {e}");
+                }
             }
         }
     }
