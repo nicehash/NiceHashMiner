@@ -113,23 +113,9 @@ namespace NiceHashMiner
             // check WMI
             if (Helpers.IsWmiEnabled())
             {
-                
-
-                if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "")
-                {
-                    var dialogSwitch = new EnterBTCDialogSwitch();
-                    Application.Run(dialogSwitch);
-                    if (dialogSwitch.IsLogin)
-                    {
-                        var loginForm = new LoginForm();
-                        Application.Run(loginForm);
-                        if (BitcoinAddress.ValidateBitcoinAddress(loginForm.Btc))
-                        {
-                            ConfigManager.GeneralConfig.BitcoinAddress = loginForm.Btc;
-                            ConfigManager.GeneralConfigFileCommit();
-                        }
-                    }
-                }
+                // if no BTC address show login/register form
+                if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "") Application.Run(new EnterBTCDialogSwitch());
+                // finally run
                 Application.Run(new Form_Main());
             }
             else
