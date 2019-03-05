@@ -2332,7 +2332,7 @@
       "pl": "",
       "pt": "",
       "ro": "",
-      "ru": "",
+      "ru": "Запустите Ethlargement для алгоритмов Dagger, когда присутствуют поддерживаемые видеокарты.\nТребует запуска от имени администратора и включения сторонних майнеров.",
       "zh_cn": ""
     },
     "Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners.": {
@@ -2342,7 +2342,7 @@
       "pl": "",
       "pt": "",
       "ro": "",
-      "ru": "",
+      "ru": "Запустить Ethlargement",
       "zh_cn": ""
     },
     "Run With Windows": {
