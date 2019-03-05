@@ -124,7 +124,7 @@ namespace NiceHashMiner.Miners
 
         protected virtual int GetIDOffsetForType(DeviceType type)
         {
-            return type == DeviceType.NVIDIA ? AvailableDevices.AvailAmdGpus : 0;
+            return type == DeviceType.NVIDIA ? AvailableDevices.NumDetectedAmdDevs : 0;
         }
 
         private static int GetPlatformIDForType(DeviceType type)
