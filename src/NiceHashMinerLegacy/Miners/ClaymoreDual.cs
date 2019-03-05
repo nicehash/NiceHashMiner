@@ -180,7 +180,7 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            var deviceStringCommand = string.Join("", ids);
+            var deviceStringCommand = "-di " + string.Join("", ids);
             if (!hasMixedDevs)
             {
                 deviceStringCommand += $" -platform {GetPlatformIDForType(firstDevType)} ";

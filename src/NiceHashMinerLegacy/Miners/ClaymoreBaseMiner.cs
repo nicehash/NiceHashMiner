@@ -189,7 +189,7 @@ namespace NiceHashMiner.Miners
                 .Select(p => p.Device.IDByBus)
                 .Select(GetAlphanumericID);
 
-            var deviceStringCommand = string.Join("", ids);
+            var deviceStringCommand = "-di " + string.Join("", ids);
 
             return deviceStringCommand + extraParams;
         }

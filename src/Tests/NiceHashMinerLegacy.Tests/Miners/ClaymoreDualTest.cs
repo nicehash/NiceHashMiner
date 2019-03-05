@@ -72,7 +72,7 @@ namespace NiceHashMinerLegacy.Tests.Miners
 
             var devCmd = cd.GetDevCmd();
 
-            Assert.AreEqual("01234", devCmd);
+            Assert.AreEqual("-di 01234", devCmd);
         }
 
         [TestMethod]
@@ -81,7 +81,7 @@ namespace NiceHashMinerLegacy.Tests.Miners
             var cd = new ClaymoreDualDummy();
             cd.InitMiningSetup(CreateMiningSetupAndInit(d => d.ID != 1));
 
-            Assert.AreEqual("124", cd.GetDevCmd());
+            Assert.AreEqual("-di 124", cd.GetDevCmd());
         }
 
         [TestMethod]
@@ -90,7 +90,7 @@ namespace NiceHashMinerLegacy.Tests.Miners
             var cd = new ClaymoreDualDummy();
             cd.InitMiningSetup(CreateMiningSetupAndInit(d => d.DeviceType == DeviceType.AMD));
 
-            Assert.AreEqual("01 -platform 1 ", cd.GetDevCmd());
+            Assert.AreEqual("-di 01 -platform 1 ", cd.GetDevCmd());
         }
 
         [TestMethod]
@@ -99,7 +99,7 @@ namespace NiceHashMinerLegacy.Tests.Miners
             var cd = new ClaymoreDualDummy();
             cd.InitMiningSetup(CreateMiningSetupAndInit(d => d.DeviceType == DeviceType.NVIDIA));
 
-            Assert.AreEqual("012 -platform 2 ", cd.GetDevCmd());
+            Assert.AreEqual("-di 012 -platform 2 ", cd.GetDevCmd());
         }
     }
 }
