@@ -32,7 +32,7 @@ namespace NiceHashMiner.Plugin
         /// <summary>
         /// A list of supported devices. 
         /// </summary>
-        public List<string> SupportedDevices { get; set; }
+        public Dictionary<string, List<string>> SupportedDevicesAlgorithms { get; set; }
         
         ///// <summary>
         ///// A list of supported devices. 

@@ -26,7 +26,10 @@ namespace NiceHashMiner.Forms
             PluginAuthor = "S74nk0@NiceHash",
             PluginDescription = "Plugin that runs GMiner",
             MinerPackageURL = "https://github.com/develsoftware/GMinerRelease/releases/download/1.34/gminer_1_34_minimal_windows64.zip",
-            SupportedDevices = new List<string> { "NVIDIA SM5.0+" },
+            SupportedDevicesAlgorithms= new Dictionary<string, List<string>> {
+                { "NVIDIA", new List<string>{ "Beam", "ZHash", "GrinCuckaroo29"} },
+                { "AMD", new List<string>{ "Beam"} },
+            },
             PluginPackageURL = "N/A",
         };
 
