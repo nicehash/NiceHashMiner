@@ -160,22 +160,68 @@ namespace NiceHashMiner.Miners
             return " -di ";
         }
 
+        protected virtual IEnumerable<MiningPair> SortDeviceList(IEnumerable<MiningPair> startingList)
+        {
+            // Default case, sort device type (AMD first) then by bus ID
+            return startingList
+                .OrderByDescending(pair => pair.Device.DeviceType)
+                .ThenBy(pair => pair.Device.IDByBus);
+        }
+
+        protected virtual int GetIDOffsetForType(DeviceType type)
+        {
+            return 0;
+        }
+
+        private static int GetPlatformIDForType(DeviceType type)
+        {
+            if (type == DeviceType.AMD)
+            {
+                return 1;
+            }
+
+            if (type == DeviceType.NVIDIA)
+            {
+                return 2;
+            }
+
+            return 3;
+        }
+
+        protected string GetAlphanumericID(int id)
+        {
+            if (id > 9)
+            {
+                // New >10 GPU support in CD9.8
+                if (id < 36)
+                {
+                    // CD supports 0-9 and a-z indexes, so 36 GPUs
+                    var idchar = (char) (id + 87); // 10 = 97(a), 11 - 98(b), etc
+                    return idchar.ToString();
+                }
+                else
+                {
+                    Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
+                }
+            }
+
+            return id.ToString();
+        }
+
         // This method now overridden in ClaymoreCryptoNightMiner 
         // Following logic for ClaymoreDual and ClaymoreZcash
         protected override string GetDevicesCommandString()
         {
             // First by device type (AMD then NV), then by bus ID index
-            var sortedMinerPairs = MiningSetup.MiningPairs
-                .OrderByDescending(pair => pair.Device.DeviceType)
-                .ThenBy(pair => pair.Device.IDByBus)
+            var sortedMinerPairs = SortDeviceList(MiningSetup.MiningPairs)
                 .ToList();
             var extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
 
             var ids = new List<string>();
             var intensities = new List<string>();
-
-            var amdDeviceCount = AvailableDevices.NumDetectedAmdDevs;
-            Helpers.ConsolePrint("ClaymoreIndexing", $"Found {amdDeviceCount} AMD devices");
+            
+            var firstDevType = sortedMinerPairs.First().Device.DeviceType;
+            var hasMixedDevs = sortedMinerPairs.Skip(1).Any(p => p.Device.DeviceType != firstDevType);
 
             foreach (var mPair in sortedMinerPairs)
             {
@@ -187,30 +233,14 @@ namespace NiceHashMiner.Miners
                     continue;
                 }
 
-                if (mPair.Device.DeviceType == DeviceType.NVIDIA)
+                if (hasMixedDevs)
                 {
-                    Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount);
-                    id += amdDeviceCount;
+                    var offset = GetIDOffsetForType(mPair.Device.DeviceType);
+                    Helpers.ConsolePrint("ClaymoreIndexing", $"Increasing index by {offset}");
+                    id += offset;
                 }
 
-                if (id > 9)
-                {
-                    // New >10 GPU support in CD9.8
-                    if (id < 36)
-                    {
-                        // CD supports 0-9 and a-z indexes, so 36 GPUs
-                        var idchar = (char) (id + 87); // 10 = 97(a), 11 - 98(b), etc
-                        ids.Add(idchar.ToString());
-                    }
-                    else
-                    {
-                        Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
-                    }
-                }
-                else
-                {
-                    ids.Add(id.ToString());
-                }
+                ids.Add(GetAlphanumericID(id));
 
                 if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled)
                 {
@@ -218,7 +248,11 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            var deviceStringCommand = DeviceCommand(amdDeviceCount) + string.Join("", ids);
+            var deviceStringCommand = string.Join("", ids);
+            if (!hasMixedDevs)
+            {
+                deviceStringCommand += $" -platform {GetPlatformIDForType(firstDevType)} ";
+            }
             var intensityStringCommand = "";
             if (intensities.Count > 0)
             {
