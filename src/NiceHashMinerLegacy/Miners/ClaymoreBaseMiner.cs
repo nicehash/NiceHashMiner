@@ -155,40 +155,7 @@ namespace NiceHashMiner.Miners
             ShutdownMiner();
         }
 
-        protected virtual string DeviceCommand(int amdCount = 1)
-        {
-            return " -di ";
-        }
-
-        protected virtual IEnumerable<MiningPair> SortDeviceList(IEnumerable<MiningPair> startingList)
-        {
-            // Default case, sort device type (AMD first) then by bus ID
-            return startingList
-                .OrderByDescending(pair => pair.Device.DeviceType)
-                .ThenBy(pair => pair.Device.IDByBus);
-        }
-
-        protected virtual int GetIDOffsetForType(DeviceType type)
-        {
-            return 0;
-        }
-
-        private static int GetPlatformIDForType(DeviceType type)
-        {
-            if (type == DeviceType.AMD)
-            {
-                return 1;
-            }
-
-            if (type == DeviceType.NVIDIA)
-            {
-                return 2;
-            }
-
-            return 3;
-        }
-
-        protected string GetAlphanumericID(int id)
+        protected static string GetAlphanumericID(int id)
         {
             if (id > 9)
             {
@@ -208,58 +175,23 @@ namespace NiceHashMiner.Miners
             return id.ToString();
         }
 
-        // This method now overridden in ClaymoreCryptoNightMiner 
-        // Following logic for ClaymoreDual and ClaymoreZcash
+        // This method now overridden in ClaymoreDual
+        // Following logic for ClaymoreCryptoNightMiner and ClaymoreZcash
         protected override string GetDevicesCommandString()
         {
-            // First by device type (AMD then NV), then by bus ID index
-            var sortedMinerPairs = SortDeviceList(MiningSetup.MiningPairs)
+            // Order by bus ID index
+            var sortedMinerPairs = MiningSetup.MiningPairs
+                .OrderBy(pair => pair.Device.IDByBus)
                 .ToList();
             var extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
 
-            var ids = new List<string>();
-            var intensities = new List<string>();
-            
-            var firstDevType = sortedMinerPairs.First().Device.DeviceType;
-            var hasMixedDevs = sortedMinerPairs.Skip(1).Any(p => p.Device.DeviceType != firstDevType);
-
-            foreach (var mPair in sortedMinerPairs)
-            {
-                var id = mPair.Device.IDByBus;
-                if (id < 0)
-                {
-                    // should never happen
-                    Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id + " skipping device");
-                    continue;
-                }
-
-                if (hasMixedDevs)
-                {
-                    var offset = GetIDOffsetForType(mPair.Device.DeviceType);
-                    Helpers.ConsolePrint("ClaymoreIndexing", $"Increasing index by {offset}");
-                    id += offset;
-                }
-
-                ids.Add(GetAlphanumericID(id));
-
-                if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled)
-                {
-                    intensities.Add(algo.CurrentIntensity.ToString());
-                }
-            }
+            var ids = sortedMinerPairs
+                .Select(p => p.Device.IDByBus)
+                .Select(GetAlphanumericID);
 
             var deviceStringCommand = string.Join("", ids);
-            if (!hasMixedDevs)
-            {
-                deviceStringCommand += $" -platform {GetPlatformIDForType(firstDevType)} ";
-            }
-            var intensityStringCommand = "";
-            if (intensities.Count > 0)
-            {
-                intensityStringCommand = " -dcri " + string.Join(",", intensities);
-            }
 
-            return deviceStringCommand + intensityStringCommand + extraParams;
+            return deviceStringCommand + extraParams;
         }
 
         // benchmark stuff

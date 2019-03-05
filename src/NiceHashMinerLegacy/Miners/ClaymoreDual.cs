@@ -1,6 +1,11 @@
 ﻿using NiceHashMiner.Configs;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners
@@ -109,6 +114,87 @@ namespace NiceHashMiner.Miners
                    + dualModeParams;
         }
 
+        protected virtual IEnumerable<MiningPair> SortDeviceList(IEnumerable<MiningPair> startingList)
+        {
+            // CD case, sort device type (AMD first) then by bus ID
+            return startingList
+                .OrderByDescending(pair => pair.Device.DeviceType)
+                .ThenBy(pair => pair.Device.IDByBus);
+        }
+
+        protected virtual int GetIDOffsetForType(DeviceType type)
+        {
+            return type == DeviceType.NVIDIA ? AvailableDevices.AvailAmdGpus : 0;
+        }
+
+        private static int GetPlatformIDForType(DeviceType type)
+        {
+            switch (type)
+            {
+                case DeviceType.AMD:
+                    return 1;
+                case DeviceType.NVIDIA:
+                    return 2;
+                default:
+                    return 3;
+            }
+        }
+
+        // This method now overridden in ClaymoreCryptoNightMiner 
+        // Following logic for ClaymoreDual and ClaymoreZcash
+        protected override string GetDevicesCommandString()
+        {
+            // First by device type (AMD then NV), then by bus ID index
+            var sortedMinerPairs = SortDeviceList(MiningSetup.MiningPairs)
+                .ToList();
+            var extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
+
+            var ids = new List<string>();
+            var intensities = new List<string>();
+
+            var firstDevType = sortedMinerPairs.First().Device.DeviceType;
+            var hasMixedDevs = sortedMinerPairs.Skip(1).Any(p => p.Device.DeviceType != firstDevType);
+
+            foreach (var mPair in sortedMinerPairs)
+            {
+                var id = mPair.Device.IDByBus;
+                if (id < 0)
+                {
+                    // should never happen
+                    Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id + " skipping device");
+                    continue;
+                }
+
+                if (hasMixedDevs)
+                {
+                    var offset = GetIDOffsetForType(mPair.Device.DeviceType);
+                    Helpers.ConsolePrint("ClaymoreIndexing", $"Increasing index by {offset}");
+                    id += offset;
+                }
+
+                ids.Add(GetAlphanumericID(id));
+
+                if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled)
+                {
+                    intensities.Add(algo.CurrentIntensity.ToString());
+                }
+            }
+
+            var deviceStringCommand = string.Join("", ids);
+            if (!hasMixedDevs)
+            {
+                deviceStringCommand += $" -platform {GetPlatformIDForType(firstDevType)} ";
+            }
+
+            var intensityStringCommand = "";
+            if (intensities.Count > 0)
+            {
+                intensityStringCommand = " -dcri " + string.Join(",", intensities);
+            }
+
+            return deviceStringCommand + intensityStringCommand + extraParams;
+        }
+
         public override void Start(string url, string btcAdress, string worker)
         {
             // Update to most profitable intensity
@@ -124,14 +210,6 @@ namespace NiceHashMiner.Miners
 
             LastCommandLine = GetStartCommand(url, btcAdress, worker) + " -dbg -1";
             ProcessHandle = _Start();
-        }
-
-        protected override string DeviceCommand(int amdCount = 1)
-        {
-            // If no AMD cards loaded, instruct CD to only regard NV cards for indexing
-            // This will allow proper indexing if AMD GPUs or APUs are present in the system but detection disabled
-            var ret = (amdCount == 0) ? " -platform 2" : "";
-            return ret + base.DeviceCommand(amdCount);
         }
 
         // benchmark stuff
