@@ -39,7 +39,7 @@ namespace NiceHashMiner.Miners
 
         protected override int GetIDOffsetForType(DeviceType type)
         {
-            return type == DeviceType.AMD ? AvailableDevices.AvailNVGpus : 0;
+            return type == DeviceType.AMD ? AvailableDevices.NumDetectedNvDevs : 0;
         }
     }
 }

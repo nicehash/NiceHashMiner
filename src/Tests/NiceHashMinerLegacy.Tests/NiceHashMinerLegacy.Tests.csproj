@@ -56,6 +56,7 @@
     <Compile Include="Miners\BMinerTest.cs" />
     <Compile Include="Miners\ClaymoreDualTest.cs" />
     <Compile Include="Miners\GMinerTest.cs" />
+    <Compile Include="Miners\PhoenixTest.cs" />
     <Compile Include="Stats\ExchangeRateApiTest.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManagerTest.cs" />
     <Compile Include="Switching\NHSmaDataTest.cs" />
