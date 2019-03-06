@@ -148,6 +148,7 @@
     <Compile Include="Forms\FormEula.Designer.cs">
       <DependentUpon>FormEula.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FormHelpers.cs" />
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>

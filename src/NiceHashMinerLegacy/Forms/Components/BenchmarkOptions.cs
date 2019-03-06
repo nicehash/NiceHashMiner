@@ -36,14 +36,6 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        public void InitLocale()
-        {
-            groupBox1.Text = Translations.Tr("Benchmark Type:");
-            radioButton_QuickBenchmark.Text = Translations.Tr("&Quick (can be inaccurate)");
-            radioButton_StandardBenchmark.Text = Translations.Tr("&Standard");
-            radioButton_PreciseBenchmark.Text = Translations.Tr("&Precise (will take longer)");
-        }
-
         private void RadioButton_QuickBenchmark_CheckedChanged(object sender, EventArgs e)
         {
             PerformanceType = BenchmarkPerformanceType.Quick;

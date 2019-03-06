@@ -14,6 +14,7 @@ namespace NiceHashMiner.Forms
             CenterToScreen();
             Icon = Properties.Resources.logo;
             Text += " v" + Application.ProductVersion;
+            FormHelpers.TranslateFormControls(this);
         }
 
         private void SetChildFormCenter(Form form)

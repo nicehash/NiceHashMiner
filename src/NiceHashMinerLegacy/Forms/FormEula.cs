@@ -14,6 +14,7 @@ namespace NiceHashMiner.Forms
             CenterToScreen();
             Icon = Properties.Resources.logo;
             InitializeTosComponent();
+            FormHelpers.TranslateFormControls(this);
         }
 
         private void InitializeTosComponent()

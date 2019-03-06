@@ -40,7 +40,7 @@
             this.groupBox1.Size = new System.Drawing.Size(198, 103);
             this.groupBox1.TabIndex = 12;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Benchmark Type";
+            this.groupBox1.Text = "Benchmark Type:";
             // 
             // radioButton_PreciseBenchmark
             // 
