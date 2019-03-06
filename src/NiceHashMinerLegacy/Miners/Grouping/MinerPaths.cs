@@ -137,7 +137,7 @@ namespace NiceHashMiner.Miners.Grouping
 
             public const string TTMiner = Bin3rdParty + @"\ttminer\TT-Miner.exe";
 
-            public const string NBMiner = Bin3rdParty + @"nbminer\nbminer.exe";
+            public const string NBMiner = Bin3rdParty + @"\nbminer\nbminer.exe";
         }
 
         // NEW START
