@@ -115,6 +115,8 @@ namespace NiceHashMiner.Forms
                 ExitWhenFinished = true;
                 StartStopBtn_Click(null, null);
             }
+
+            FormHelpers.TranslateFormControls(this);
         }
 
         #region IBenchmarkCalculation methods
@@ -284,22 +286,9 @@ namespace NiceHashMiner.Forms
 
         private void InitLocale()
         {
-            Text = Translations.Tr("Benchmark"); //International.GetText("SubmitResultDialog_title");
-            //labelInstruction.Text = International.GetText("SubmitResultDialog_labelInstruction");
-            StartStopBtn.Text = Translations.Tr("&Start");
-            CloseBtn.Text = Translations.Tr("&Close");
-
             // TODO fix locale for benchmark enabled label
             devicesListViewEnableControl1.InitLocale();
-            benchmarkOptions1.InitLocale();
             algorithmsListView1.InitLocale();
-            groupBoxBenchmarkProgress.Text = Translations.Tr("Benchmark progress status:");
-            radioButton_SelectedUnbenchmarked.Text =
-                Translations.Tr("Benchmark Selected Unbenchmarked Algorithms");
-            radioButton_RE_SelectedUnbenchmarked.Text =
-                Translations.Tr("Benchmark All Selected Algorithms");
-            checkBox_StartMiningAfterBenchmark.Text =
-                Translations.Tr("Start mining after benchmark");
         }
 
         #region Start/Stop methods

@@ -7,9 +7,7 @@ namespace NiceHashMiner.Forms.Components
         public GroupProfitControl()
         {
             InitializeComponent();
-
-            labelSpeedIndicator.Text = Translations.Tr("Speed");
-            labelBTCRateIndicator.Text = Translations.Tr("Rate");
+            FormHelpers.TranslateFormControls(this);
         }
 
 

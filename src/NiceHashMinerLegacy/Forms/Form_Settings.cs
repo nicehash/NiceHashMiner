@@ -52,9 +52,6 @@ namespace NiceHashMiner.Forms
             // backup settings
             ConfigManager.CreateBackup();
 
-            // initialize form
-            InitializeFormTranslations();
-
             // Initialize toolTip
             InitializeToolTip();
 
@@ -92,6 +89,7 @@ namespace NiceHashMiner.Forms
             {
                 Helpers.ConsolePrint("SETTINGS", e.ToString());
             }
+            FormHelpers.TranslateFormControls(this);
         }
 
         #region Initializations
@@ -323,9 +321,7 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(textBox_ElectricityCost, Tr("Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality."));
             toolTip1.SetToolTip(pictureBox_ElectricityCost, Tr("Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality."));
 
-            SetToolTip("Form_Settings_ToolTip_RunEthlargement", checkBox_RunEthlargement, pictureBox_RunEthlargement);
-
-            Text = Tr("Settings");
+            SetToolTip(Tr("Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners."), checkBox_RunEthlargement, pictureBox_RunEthlargement);
 
             algorithmSettingsControl1.InitLocale(toolTip1);
         }
@@ -338,54 +334,15 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        #region Form this
-
-        private void InitializeFormTranslations()
-        {
-            buttonDefaults.Text = Tr("&Defaults");
-            buttonSaveClose.Text = Tr("&Save and Close");
-            buttonCloseNoSave.Text = Tr("&Close without Saving");
-        }
-
-        #endregion //Form this
-
         #region Tab General
 
         private void InitializeGeneralTabTranslations()
         {
-            checkBox_DebugConsole.Text = Tr("Debug Console");
-            checkBox_AutoStartMining.Text = Tr("Autostart Mining");
-            checkBox_HideMiningWindows.Text = Tr("Hide Mining Windows");
-            checkBox_MinimizeToTray.Text = Tr("Minimize To Tray");
             checkBox_DisableDetectionNVIDIA.Text =
                 string.Format(Tr("Disable Detection of {0}"), "NVIDIA");
             checkBox_DisableDetectionAMD.Text =
                 string.Format(Tr("Disable Detection of {0}"), "AMD");
-            checkBox_AutoScaleBTCValues.Text = Tr("Autoscale BTC Values");
-            checkBox_StartMiningWhenIdle.Text = Tr("Start Mining When Idle");
-            checkBox_ShowDriverVersionWarning.Text =
-                Tr("Show Driver Version Warning");
-            checkBox_DisableWindowsErrorReporting.Text =
-                Tr("Disable Windows Error Reporting");
-            checkBox_ShowInternetConnectionWarning.Text =
-                Tr("Show Internet Connection Warning");
-            checkBox_Use3rdPartyMiners.Text = Tr("Enable 3rd Party Miners");
-            checkBox_NVIDIAP0State.Text = Tr("NVIDIA P0 State");
-            checkBox_LogToFile.Text = Tr("Log To File");
-            checkBox_AMD_DisableAMDTempControl.Text =
-                Tr("Disable AMD Temperature Control");
-            checkBox_AllowMultipleInstances.Text =
-                Tr("Allow Multiple Instances");
-            checkBox_RunAtStartup.Text = Tr("Run With Windows");
-            checkBox_MinimizeMiningWindows.Text = Tr("Minimize Mining Windows");
-            checkBox_UseIFTTT.Text = Tr("Use IFTTT");
-            checkBox_RunScriptOnCUDA_GPU_Lost.Text =
-                Tr("Run script when CUDA GPU is lost");
 
-            label_Language.Text = Tr("Language") + ":";
-            label_BitcoinAddress.Text = Tr("Bitcoin Address") + ":";
-            label_WorkerName.Text = Tr("Worker Name") + ":";
-            label_ServiceLocation.Text = Tr("Service location") + ":";
             {
                 comboBox_ServiceLocation.Items[0] = Tr("Europe - Amsterdam");
                 comboBox_ServiceLocation.Items[1] = Tr("USA - San Jose");
@@ -394,73 +351,25 @@ namespace NiceHashMiner.Forms
                 comboBox_ServiceLocation.Items[4] = Tr("India - Chennai");
                 comboBox_ServiceLocation.Items[5] = Tr("Brazil - Sao Paulo");
             }
-            label_MinIdleSeconds.Text = Tr("Minimum Idle [s]") + ":";
-            label_MinerRestartDelayMS.Text = Tr("Miner Restart Delay [ms]") + ":";
-            label_MinerAPIQueryInterval.Text =
-                Tr("Miner API Query Interval [s]") + ":";
-            label_LogMaxFileSize.Text = Tr("Log Max File Size [bytes]") + ":";
-            
-            label_SwitchMaxSeconds.Text =
-                Tr("Switch Maximum [s]") + ":";
-            label_SwitchMinSeconds.Text = Tr("Switch Minimum [s]") + ":";
-
-            label_ethminerDefaultBlockHeight.Text =
-                Tr("Ethminer Default Block Height") + ":";
-            label_DagGeneration.Text = Tr("Dag Load Mode") + ":";
-            label_APIBindPortStart.Text = Tr("API Bind port pool start") + ":";
-
-            label_MinProfit.Text = Tr("Minimum Profit ($/day)") + ":";
-
-            label_displayCurrency.Text = Tr("Display Currency");
-
-            label_IFTTTAPIKey.Text = Tr("IFTTT API Key");
-
-            label_ElectricityCost.Text = Tr("Electricity Cost (/KWh)");
 
             // Benchmark time limits
             // internationalization change
-            groupBoxBenchmarkTimeLimits.Text =
-                Tr("Benchmark Time Limits") + ":";
             benchmarkLimitControlCPU.GroupName =
-                Tr("(CPU) [s]") + ":";
+                Tr("(CPU) [s]:");
             benchmarkLimitControlNVIDIA.GroupName =
-                Tr("(NVIDIA) [s]") + ":";
+                Tr("(NVIDIA) [s]:");
             benchmarkLimitControlAMD.GroupName =
-                Tr("(AMD) [s]") + ":";
-            // moved from constructor because of editor
-            benchmarkLimitControlCPU.InitLocale();
-            benchmarkLimitControlNVIDIA.InitLocale();
-            benchmarkLimitControlAMD.InitLocale();
+                Tr("(AMD) [s]:");
 
             // device enabled listview translation
             devicesListViewEnableControl1.InitLocale();
             algorithmsListView1.InitLocale();
 
-            // Setup Tooltips CPU
-            label_CPU0_ForceCPUExtension.Text =
-                Tr("Force CPU Extension") + ":";
             // new translations
             tabControlGeneral.TabPages[0].Text = Tr("General");
             tabControlGeneral.TabPages[1].Text = Tr("Advanced");
             tabControlGeneral.TabPages[2].Text = Tr("Devices/Algorithms");
-            groupBox_Main.Text = Tr("Main");
-            groupBox_Localization.Text = Tr("Localization");
-            groupBox_Logging.Text = Tr("Logging");
-            groupBox_Misc.Text = Tr("Misc");
-            // advanced
-            groupBox_Miners.Text = Tr("Miners");
-            groupBoxBenchmarkTimeLimits.Text =
-                Tr("Benchmark Time Limits:");
 
-            checkBox_DisableDefaultOptimizations.Text =
-                Tr("Disable Default Optimizations");
-            checkBox_IdleWhenNoInternetAccess.Text =
-                Tr("Idle When No Internet Access");
-
-            label_SwitchProfitabilityThreshold.Text =
-                Tr("Switch Profitability Threshold");
-
-            checkBox_RunEthlargement.Text = Tr("Run Ethlargement");
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
         }
 
