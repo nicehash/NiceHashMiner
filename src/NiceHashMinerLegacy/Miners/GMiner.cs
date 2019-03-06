@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using NiceHashMiner.Algorithms;
+﻿using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -20,8 +17,6 @@ namespace NiceHashMiner.Miners
     public class GMiner : Miner
     {
         private const double DevFee = 2.0;
-
-        private readonly HttpClient _httpClient;
 
         private int _benchIters;
         private double _benchHashes;
@@ -63,7 +58,6 @@ namespace NiceHashMiner.Miners
         public GMiner() : base("gminer")
         {
             ConectionType = NhmConectionType.NONE;
-            _httpClient = new HttpClient();
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()

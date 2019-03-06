@@ -1,13 +1,11 @@
 ﻿using NiceHashMiner.Algorithms;
+using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Miners
 {
@@ -31,8 +29,6 @@ namespace NiceHashMiner.Miners
 
             public double? TotalHashrate => miner?.total_hashrate;
         }
-
-        private readonly HttpClient _http = new HttpClient();
 
         private string AlgoName
         {
