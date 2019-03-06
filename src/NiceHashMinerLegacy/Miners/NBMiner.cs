@@ -52,6 +52,11 @@ namespace NiceHashMiner.Miners
             _Start();
         }
 
+        protected override void _Stop(MinerStopType willswitch)
+        {
+            KillProspectorClaymoreMinerBase(MinerExeName.Replace(".exe", ""));
+        }
+
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
             throw new NotImplementedException();

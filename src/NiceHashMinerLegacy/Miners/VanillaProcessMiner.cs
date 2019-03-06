@@ -88,7 +88,10 @@ namespace NiceHashMiner.Miners
             {
                 _process.Kill();
             }
-            catch { }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint(MinerTag(), e.Message);
+            }
 
             _process.Close();
             _process = null;
