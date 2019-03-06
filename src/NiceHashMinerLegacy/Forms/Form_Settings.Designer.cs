@@ -339,9 +339,9 @@
             this.checkBox_MinimizeMiningWindows.Location = new System.Drawing.Point(6, 61);
             this.checkBox_MinimizeMiningWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_MinimizeMiningWindows.Name = "checkBox_MinimizeMiningWindows";
-            this.checkBox_MinimizeMiningWindows.Size = new System.Drawing.Size(141, 17);
+            this.checkBox_MinimizeMiningWindows.Size = new System.Drawing.Size(147, 17);
             this.checkBox_MinimizeMiningWindows.TabIndex = 368;
-            this.checkBox_MinimizeMiningWindows.Text = "MinimizeMiningWindows";
+            this.checkBox_MinimizeMiningWindows.Text = "Minimize Mining Windows";
             this.checkBox_MinimizeMiningWindows.UseVisualStyleBackColor = true;
             // 
             // pictureBox_MinimizeMiningWindows
@@ -372,9 +372,9 @@
             this.checkBox_RunAtStartup.Location = new System.Drawing.Point(6, 339);
             this.checkBox_RunAtStartup.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_RunAtStartup.Name = "checkBox_RunAtStartup";
-            this.checkBox_RunAtStartup.Size = new System.Drawing.Size(120, 17);
+            this.checkBox_RunAtStartup.Size = new System.Drawing.Size(118, 17);
             this.checkBox_RunAtStartup.TabIndex = 366;
-            this.checkBox_RunAtStartup.Text = "Start With Windows";
+            this.checkBox_RunAtStartup.Text = "Run With Windows";
             this.checkBox_RunAtStartup.UseVisualStyleBackColor = true;
             this.checkBox_RunAtStartup.CheckedChanged += new System.EventHandler(this.CheckBox_RunAtStartup_CheckedChanged);
             // 
@@ -408,9 +408,9 @@
             this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(6, 275);
             this.checkBox_AMD_DisableAMDTempControl.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_AMD_DisableAMDTempControl.Name = "checkBox_AMD_DisableAMDTempControl";
-            this.checkBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(145, 17);
+            this.checkBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(187, 17);
             this.checkBox_AMD_DisableAMDTempControl.TabIndex = 365;
-            this.checkBox_AMD_DisableAMDTempControl.Text = "DisableAMDTempControl";
+            this.checkBox_AMD_DisableAMDTempControl.Text = "Disable AMD Temperature Control";
             this.checkBox_AMD_DisableAMDTempControl.UseVisualStyleBackColor = true;
             this.checkBox_AMD_DisableAMDTempControl.CheckedChanged += new System.EventHandler(this.CheckBox_AMD_DisableAMDTempControl_CheckedChanged);
             // 
@@ -431,9 +431,9 @@
             this.checkBox_HideMiningWindows.Location = new System.Drawing.Point(6, 41);
             this.checkBox_HideMiningWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_HideMiningWindows.Name = "checkBox_HideMiningWindows";
-            this.checkBox_HideMiningWindows.Size = new System.Drawing.Size(123, 17);
+            this.checkBox_HideMiningWindows.Size = new System.Drawing.Size(129, 17);
             this.checkBox_HideMiningWindows.TabIndex = 315;
-            this.checkBox_HideMiningWindows.Text = "HideMiningWindows";
+            this.checkBox_HideMiningWindows.Text = "Hide Mining Windows";
             this.checkBox_HideMiningWindows.UseVisualStyleBackColor = true;
             // 
             // pictureBox_AllowMultipleInstances
@@ -453,9 +453,9 @@
             this.checkBox_MinimizeToTray.Location = new System.Drawing.Point(6, 83);
             this.checkBox_MinimizeToTray.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_MinimizeToTray.Name = "checkBox_MinimizeToTray";
-            this.checkBox_MinimizeToTray.Size = new System.Drawing.Size(100, 17);
+            this.checkBox_MinimizeToTray.Size = new System.Drawing.Size(106, 17);
             this.checkBox_MinimizeToTray.TabIndex = 316;
-            this.checkBox_MinimizeToTray.Text = "MinimizeToTray";
+            this.checkBox_MinimizeToTray.Text = "Minimize To Tray";
             this.checkBox_MinimizeToTray.UseVisualStyleBackColor = true;
             // 
             // pictureBox_DisableDefaultOptimizations
@@ -607,9 +607,9 @@
             this.checkBox_Use3rdPartyMiners.Location = new System.Drawing.Point(6, 104);
             this.checkBox_Use3rdPartyMiners.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_Use3rdPartyMiners.Name = "checkBox_Use3rdPartyMiners";
-            this.checkBox_Use3rdPartyMiners.Size = new System.Drawing.Size(129, 17);
+            this.checkBox_Use3rdPartyMiners.Size = new System.Drawing.Size(138, 17);
             this.checkBox_Use3rdPartyMiners.TabIndex = 319;
-            this.checkBox_Use3rdPartyMiners.Text = "Enable3rdPartyMiners";
+            this.checkBox_Use3rdPartyMiners.Text = "Enable 3rd Party Miners";
             this.checkBox_Use3rdPartyMiners.UseVisualStyleBackColor = true;
             this.checkBox_Use3rdPartyMiners.CheckedChanged += new System.EventHandler(this.CheckBox_Use3rdPartyMiners_CheckedChanged);
             // 
@@ -641,9 +641,9 @@
             this.checkBox_NVIDIAP0State.Location = new System.Drawing.Point(6, 253);
             this.checkBox_NVIDIAP0State.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_NVIDIAP0State.Name = "checkBox_NVIDIAP0State";
-            this.checkBox_NVIDIAP0State.Size = new System.Drawing.Size(100, 17);
+            this.checkBox_NVIDIAP0State.Size = new System.Drawing.Size(106, 17);
             this.checkBox_NVIDIAP0State.TabIndex = 326;
-            this.checkBox_NVIDIAP0State.Text = "NVIDIAP0State";
+            this.checkBox_NVIDIAP0State.Text = "NVIDIA P0 State";
             this.checkBox_NVIDIAP0State.UseVisualStyleBackColor = true;
             // 
             // checkBox_AutoScaleBTCValues
@@ -652,9 +652,9 @@
             this.checkBox_AutoScaleBTCValues.Location = new System.Drawing.Point(6, 167);
             this.checkBox_AutoScaleBTCValues.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_AutoScaleBTCValues.Name = "checkBox_AutoScaleBTCValues";
-            this.checkBox_AutoScaleBTCValues.Size = new System.Drawing.Size(128, 17);
+            this.checkBox_AutoScaleBTCValues.Size = new System.Drawing.Size(132, 17);
             this.checkBox_AutoScaleBTCValues.TabIndex = 321;
-            this.checkBox_AutoScaleBTCValues.Text = "AutoScaleBTCValues";
+            this.checkBox_AutoScaleBTCValues.Text = "Autoscale BTC Values";
             this.checkBox_AutoScaleBTCValues.UseVisualStyleBackColor = true;
             // 
             // checkBox_DisableWindowsErrorReporting
@@ -663,9 +663,9 @@
             this.checkBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(6, 232);
             this.checkBox_DisableWindowsErrorReporting.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_DisableWindowsErrorReporting.Name = "checkBox_DisableWindowsErrorReporting";
-            this.checkBox_DisableWindowsErrorReporting.Size = new System.Drawing.Size(173, 17);
+            this.checkBox_DisableWindowsErrorReporting.Size = new System.Drawing.Size(182, 17);
             this.checkBox_DisableWindowsErrorReporting.TabIndex = 324;
-            this.checkBox_DisableWindowsErrorReporting.Text = "DisableWindowsErrorReporting";
+            this.checkBox_DisableWindowsErrorReporting.Text = "Disable Windows Error Reporting";
             this.checkBox_DisableWindowsErrorReporting.UseVisualStyleBackColor = true;
             // 
             // checkBox_StartMiningWhenIdle
@@ -674,9 +674,9 @@
             this.checkBox_StartMiningWhenIdle.Location = new System.Drawing.Point(6, 189);
             this.checkBox_StartMiningWhenIdle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_StartMiningWhenIdle.Name = "checkBox_StartMiningWhenIdle";
-            this.checkBox_StartMiningWhenIdle.Size = new System.Drawing.Size(125, 17);
+            this.checkBox_StartMiningWhenIdle.Size = new System.Drawing.Size(134, 17);
             this.checkBox_StartMiningWhenIdle.TabIndex = 322;
-            this.checkBox_StartMiningWhenIdle.Text = "StartMiningWhenIdle";
+            this.checkBox_StartMiningWhenIdle.Text = "Start Mining When Idle";
             this.checkBox_StartMiningWhenIdle.UseVisualStyleBackColor = true;
             // 
             // checkBox_ShowDriverVersionWarning
@@ -685,9 +685,9 @@
             this.checkBox_ShowDriverVersionWarning.Location = new System.Drawing.Point(6, 211);
             this.checkBox_ShowDriverVersionWarning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_ShowDriverVersionWarning.Name = "checkBox_ShowDriverVersionWarning";
-            this.checkBox_ShowDriverVersionWarning.Size = new System.Drawing.Size(156, 17);
+            this.checkBox_ShowDriverVersionWarning.Size = new System.Drawing.Size(165, 17);
             this.checkBox_ShowDriverVersionWarning.TabIndex = 323;
-            this.checkBox_ShowDriverVersionWarning.Text = "ShowDriverVersionWarning";
+            this.checkBox_ShowDriverVersionWarning.Text = "Show Driver Version Warning";
             this.checkBox_ShowDriverVersionWarning.UseVisualStyleBackColor = true;
             // 
             // groupBox_Logging
@@ -714,9 +714,9 @@
             this.label_LogMaxFileSize.Location = new System.Drawing.Point(174, 19);
             this.label_LogMaxFileSize.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_LogMaxFileSize.Name = "label_LogMaxFileSize";
-            this.label_LogMaxFileSize.Size = new System.Drawing.Size(84, 13);
+            this.label_LogMaxFileSize.Size = new System.Drawing.Size(127, 13);
             this.label_LogMaxFileSize.TabIndex = 357;
-            this.label_LogMaxFileSize.Text = "LogMaxFileSize:";
+            this.label_LogMaxFileSize.Text = "Log Max File Size [bytes]:";
             // 
             // textBox_LogMaxFileSize
             // 
@@ -732,9 +732,9 @@
             this.checkBox_LogToFile.Location = new System.Drawing.Point(6, 19);
             this.checkBox_LogToFile.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_LogToFile.Name = "checkBox_LogToFile";
-            this.checkBox_LogToFile.Size = new System.Drawing.Size(72, 17);
+            this.checkBox_LogToFile.Size = new System.Drawing.Size(79, 17);
             this.checkBox_LogToFile.TabIndex = 327;
-            this.checkBox_LogToFile.Text = "Log to file";
+            this.checkBox_LogToFile.Text = "Log To File";
             this.checkBox_LogToFile.UseVisualStyleBackColor = true;
             // 
             // pictureBox_DebugConsole
@@ -776,9 +776,9 @@
             this.checkBox_DebugConsole.Location = new System.Drawing.Point(6, 42);
             this.checkBox_DebugConsole.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_DebugConsole.Name = "checkBox_DebugConsole";
-            this.checkBox_DebugConsole.Size = new System.Drawing.Size(96, 17);
+            this.checkBox_DebugConsole.Size = new System.Drawing.Size(99, 17);
             this.checkBox_DebugConsole.TabIndex = 313;
-            this.checkBox_DebugConsole.Text = "DebugConsole";
+            this.checkBox_DebugConsole.Text = "Debug Console";
             this.checkBox_DebugConsole.UseVisualStyleBackColor = true;
             // 
             // groupBox_Main
@@ -923,9 +923,9 @@
             this.checkBox_IdleWhenNoInternetAccess.Location = new System.Drawing.Point(10, 149);
             this.checkBox_IdleWhenNoInternetAccess.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_IdleWhenNoInternetAccess.Name = "checkBox_IdleWhenNoInternetAccess";
-            this.checkBox_IdleWhenNoInternetAccess.Size = new System.Drawing.Size(205, 17);
+            this.checkBox_IdleWhenNoInternetAccess.Size = new System.Drawing.Size(169, 17);
             this.checkBox_IdleWhenNoInternetAccess.TabIndex = 365;
-            this.checkBox_IdleWhenNoInternetAccess.Text = "Continue Mining If No Internet Access";
+            this.checkBox_IdleWhenNoInternetAccess.Text = "Idle When No Internet Access";
             this.checkBox_IdleWhenNoInternetAccess.UseVisualStyleBackColor = true;
             this.checkBox_IdleWhenNoInternetAccess.CheckedChanged += new System.EventHandler(this.GeneralCheckBoxes_CheckedChanged);
             // 
@@ -998,9 +998,9 @@
             this.label_BitcoinAddress.Location = new System.Drawing.Point(10, 16);
             this.label_BitcoinAddress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_BitcoinAddress.Name = "label_BitcoinAddress";
-            this.label_BitcoinAddress.Size = new System.Drawing.Size(80, 13);
+            this.label_BitcoinAddress.Size = new System.Drawing.Size(83, 13);
             this.label_BitcoinAddress.TabIndex = 355;
-            this.label_BitcoinAddress.Text = "BitcoinAddress:";
+            this.label_BitcoinAddress.Text = "Bitcoin Address:";
             // 
             // label_MinProfit
             // 
@@ -1018,9 +1018,9 @@
             this.label_WorkerName.Location = new System.Drawing.Point(10, 59);
             this.label_WorkerName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_WorkerName.Name = "label_WorkerName";
-            this.label_WorkerName.Size = new System.Drawing.Size(73, 13);
+            this.label_WorkerName.Size = new System.Drawing.Size(76, 13);
             this.label_WorkerName.TabIndex = 354;
-            this.label_WorkerName.Text = "WorkerName:";
+            this.label_WorkerName.Text = "Worker Name:";
             // 
             // label_ServiceLocation
             // 
@@ -1028,9 +1028,9 @@
             this.label_ServiceLocation.Location = new System.Drawing.Point(160, 59);
             this.label_ServiceLocation.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_ServiceLocation.Name = "label_ServiceLocation";
-            this.label_ServiceLocation.Size = new System.Drawing.Size(87, 13);
+            this.label_ServiceLocation.Size = new System.Drawing.Size(86, 13);
             this.label_ServiceLocation.TabIndex = 363;
-            this.label_ServiceLocation.Text = "ServiceLocation:";
+            this.label_ServiceLocation.Text = "Service location:";
             // 
             // comboBox_ServiceLocation
             // 
@@ -1430,9 +1430,9 @@
             this.label_CPU0_ForceCPUExtension.Location = new System.Drawing.Point(10, 149);
             this.label_CPU0_ForceCPUExtension.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_CPU0_ForceCPUExtension.Name = "label_CPU0_ForceCPUExtension";
-            this.label_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(105, 13);
+            this.label_CPU0_ForceCPUExtension.Size = new System.Drawing.Size(111, 13);
             this.label_CPU0_ForceCPUExtension.TabIndex = 382;
-            this.label_CPU0_ForceCPUExtension.Text = "ForceCPUExtension:";
+            this.label_CPU0_ForceCPUExtension.Text = "Force CPU Extension:";
             this.label_CPU0_ForceCPUExtension.Visible = false;
             // 
             // label_MinIdleSeconds
@@ -1441,9 +1441,9 @@
             this.label_MinIdleSeconds.Location = new System.Drawing.Point(10, 15);
             this.label_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_MinIdleSeconds.Name = "label_MinIdleSeconds";
-            this.label_MinIdleSeconds.Size = new System.Drawing.Size(86, 13);
+            this.label_MinIdleSeconds.Size = new System.Drawing.Size(85, 13);
             this.label_MinIdleSeconds.TabIndex = 356;
-            this.label_MinIdleSeconds.Text = "MinIdleSeconds:";
+            this.label_MinIdleSeconds.Text = "Minimum Idle [s]:";
             // 
             // label_SwitchMaxSeconds
             // 
@@ -1451,9 +1451,9 @@
             this.label_SwitchMaxSeconds.Location = new System.Drawing.Point(210, 59);
             this.label_SwitchMaxSeconds.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_SwitchMaxSeconds.Name = "label_SwitchMaxSeconds";
-            this.label_SwitchMaxSeconds.Size = new System.Drawing.Size(86, 13);
+            this.label_SwitchMaxSeconds.Size = new System.Drawing.Size(103, 13);
             this.label_SwitchMaxSeconds.TabIndex = 378;
-            this.label_SwitchMaxSeconds.Text = "SwitchMaxSecs:";
+            this.label_SwitchMaxSeconds.Text = "Switch Maximum [s]:";
             // 
             // label_MinerAPIQueryInterval
             // 
@@ -1461,9 +1461,9 @@
             this.label_MinerAPIQueryInterval.Location = new System.Drawing.Point(10, 100);
             this.label_MinerAPIQueryInterval.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_MinerAPIQueryInterval.Name = "label_MinerAPIQueryInterval";
-            this.label_MinerAPIQueryInterval.Size = new System.Drawing.Size(116, 13);
+            this.label_MinerAPIQueryInterval.Size = new System.Drawing.Size(139, 13);
             this.label_MinerAPIQueryInterval.TabIndex = 376;
-            this.label_MinerAPIQueryInterval.Text = "MinerAPIQueryInterval:";
+            this.label_MinerAPIQueryInterval.Text = "Miner API Query Interval [s]:";
             // 
             // label_MinerRestartDelayMS
             // 
@@ -1471,9 +1471,9 @@
             this.label_MinerRestartDelayMS.Location = new System.Drawing.Point(210, 15);
             this.label_MinerRestartDelayMS.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_MinerRestartDelayMS.Name = "label_MinerRestartDelayMS";
-            this.label_MinerRestartDelayMS.Size = new System.Drawing.Size(113, 13);
+            this.label_MinerRestartDelayMS.Size = new System.Drawing.Size(125, 13);
             this.label_MinerRestartDelayMS.TabIndex = 375;
-            this.label_MinerRestartDelayMS.Text = "MinerRestartDelayMS:";
+            this.label_MinerRestartDelayMS.Text = "Miner Restart Delay [ms]:";
             // 
             // textBox_SwitchMinSeconds
             // 
@@ -1516,9 +1516,9 @@
             this.label_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(402, 58);
             this.label_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_SwitchProfitabilityThreshold.Name = "label_SwitchProfitabilityThreshold";
-            this.label_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(142, 13);
+            this.label_SwitchProfitabilityThreshold.Size = new System.Drawing.Size(145, 13);
             this.label_SwitchProfitabilityThreshold.TabIndex = 361;
-            this.label_SwitchProfitabilityThreshold.Text = "ethminerDefaultBlockHeight:";
+            this.label_SwitchProfitabilityThreshold.Text = "Switch Profitability Threshold:";
             // 
             // label_ethminerDefaultBlockHeight
             // 
@@ -1526,9 +1526,9 @@
             this.label_ethminerDefaultBlockHeight.Location = new System.Drawing.Point(210, 100);
             this.label_ethminerDefaultBlockHeight.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_ethminerDefaultBlockHeight.Name = "label_ethminerDefaultBlockHeight";
-            this.label_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(142, 13);
+            this.label_ethminerDefaultBlockHeight.Size = new System.Drawing.Size(152, 13);
             this.label_ethminerDefaultBlockHeight.TabIndex = 361;
-            this.label_ethminerDefaultBlockHeight.Text = "ethminerDefaultBlockHeight:";
+            this.label_ethminerDefaultBlockHeight.Text = "Ethminer Default Block Height:";
             // 
             // textBox_APIBindPortStart
             // 
@@ -1544,9 +1544,9 @@
             this.label_SwitchMinSeconds.Location = new System.Drawing.Point(10, 59);
             this.label_SwitchMinSeconds.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_SwitchMinSeconds.Name = "label_SwitchMinSeconds";
-            this.label_SwitchMinSeconds.Size = new System.Drawing.Size(83, 13);
+            this.label_SwitchMinSeconds.Size = new System.Drawing.Size(100, 13);
             this.label_SwitchMinSeconds.TabIndex = 362;
-            this.label_SwitchMinSeconds.Text = "SwitchMinSecs:";
+            this.label_SwitchMinSeconds.Text = "Switch Minimum [s]:";
             // 
             // textBox_MinIdleSeconds
             // 

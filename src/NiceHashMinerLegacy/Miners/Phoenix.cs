@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Miners.Grouping;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners
@@ -23,6 +27,25 @@ namespace NiceHashMiner.Miners
             var cl = base.BenchmarkCreateCommandLine(algorithm, time);
             BenchmarkTimeWait = Math.Max(time, 60);
             return cl;
+        }
+
+        protected override IEnumerable<MiningPair> SortDeviceList(IEnumerable<MiningPair> startingList)
+        {
+            // first by dev type (NV first), then by bus ID
+            return startingList
+                .OrderBy(pair => pair.Device.DeviceType)
+                .ThenBy(pair => pair.Device.IDByBus);
+        }
+
+        protected override int GetIDOffsetForType(DeviceType type)
+        {
+            return type == DeviceType.AMD ? AvailableDevices.NumDetectedNvDevs : 0;
+        }
+
+        protected override string GetBenchmarkOption()
+        {
+            // Phoenix sets a bad DAG epoch when -benchmark switch is used
+            return "";
         }
     }
 }

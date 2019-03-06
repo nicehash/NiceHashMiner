@@ -9,13 +9,7 @@ namespace NiceHashMiner.Forms
         public DriverVersionConfirmationDialog()
         {
             InitializeComponent();
-
-            Text = Translations.Tr("Update AMD Driver Recommended");
-            labelWarning.Text = Translations.Tr("You're not using the optimal AMD Driver version. The most stable driver for mining is the 15.7.1 version.\nWe strongly suggest you to use this driver version.");
-            linkToDriverDownloadPage.Text =
-                Translations.Tr("&Link to Driver Download Page");
-            chkBoxDontShowAgain.Text = Translations.Tr("&Do not show this warning again");
-            buttonOK.Text = Translations.Tr("&OK");
+            FormHelpers.TranslateFormControls(this);
         }
 
         private void ButtonOK_Click(object sender, EventArgs e)
