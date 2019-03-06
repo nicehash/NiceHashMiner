@@ -108,7 +108,7 @@
             this.button_Close.Name = "button_Close";
             this.button_Close.Size = new System.Drawing.Size(134, 23);
             this.button_Close.TabIndex = 1;
-            this.button_Close.Text = "Close";
+            this.button_Close.Text = "&Close without Saving";
             this.button_Close.UseVisualStyleBackColor = true;
             this.button_Close.Click += new System.EventHandler(this.Button_Close_Clicked);
             // 
@@ -120,7 +120,7 @@
             this.button_Save.Name = "button_Save";
             this.button_Save.Size = new System.Drawing.Size(134, 23);
             this.button_Save.TabIndex = 2;
-            this.button_Save.Text = "Save";
+            this.button_Save.Text = "&Save and Close";
             this.button_Save.UseVisualStyleBackColor = true;
             this.button_Save.Click += new System.EventHandler(this.Button_Save_Clicked);
             // 
@@ -130,9 +130,9 @@
             this.checkBox_TuningEnabled.Location = new System.Drawing.Point(8, 8);
             this.checkBox_TuningEnabled.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBox_TuningEnabled.Name = "checkBox_TuningEnabled";
-            this.checkBox_TuningEnabled.Size = new System.Drawing.Size(136, 27);
+            this.checkBox_TuningEnabled.Size = new System.Drawing.Size(101, 17);
             this.checkBox_TuningEnabled.TabIndex = 3;
-            this.checkBox_TuningEnabled.Text = "Dcri Tuning Enabled";
+            this.checkBox_TuningEnabled.Text = "Tuning Enabled";
             this.checkBox_TuningEnabled.UseVisualStyleBackColor = true;
             this.checkBox_TuningEnabled.CheckedChanged += new System.EventHandler(this.CheckBox_TuningEnabledCheckedChanged);
             // 
@@ -256,7 +256,7 @@
             this.Name = "FormDcriValues";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Dcri Values";
+            this.Text = "ClaymoreDual Tuning";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_DcriValues_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TuningEnabled)).EndInit();
             this.ResumeLayout(false);

@@ -34,6 +34,7 @@ namespace NiceHashMiner.Forms
             NiceHashStats.OnSmaUpdate += UpdateProfits;
 
             _isInitFinished = true;
+            FormHelpers.TranslateFormControls(this);
         }
 
         private bool IsChange
@@ -49,10 +50,6 @@ namespace NiceHashMiner.Forms
             listView_Intensities.Columns[Secondaryspeed].Text = Tr("Secondary Speed");
             listView_Intensities.Columns[Profit].Text = Tr("BTC/Day");
             listView_Intensities.Columns[Power].Text = Tr("Power");
-            Text = Tr("ClaymoreDual Tuning");
-            button_Close.Text = Tr("&Close without Saving");
-            button_Save.Text = Tr("&Save and Close");
-            checkBox_TuningEnabled.Text = Tr("Tuning Enabled");
 
             field_Speed.InitLocale(toolTip1,
                 Tr("Benchmark Speed (H/s)") + ":",

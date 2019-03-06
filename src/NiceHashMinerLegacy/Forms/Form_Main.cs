@@ -62,6 +62,7 @@ namespace NiceHashMiner
         public Form_Main()
         {
             InitializeComponent();
+            CenterToScreen();
             Icon = Properties.Resources.logo;
 
             InitLocalization();
@@ -98,6 +99,8 @@ namespace NiceHashMiner
                 _mainFormHeight = 330 - _emtpyGroupPanelHeight;
             }
             ClearRatesAll();
+
+            FormHelpers.TranslateFormControls(this);
         }
 
         private void InitLocalization()
@@ -111,7 +114,6 @@ namespace NiceHashMiner
             MessageBoxManager.Register();
 
             //todo make this dinamically
-            labelServiceLocation.Text = Tr("Service location") + ":";
             {
                 comboBoxLocation.Items[0] = Tr("Europe - Amsterdam");
                 comboBoxLocation.Items[1] = Tr("USA - San Jose");
@@ -120,13 +122,10 @@ namespace NiceHashMiner
                 comboBoxLocation.Items[4] = Tr("India - Chennai");
                 comboBoxLocation.Items[5] = Tr("Brazil - Sao Paulo");
             }
-            labelBitcoinAddress.Text = Tr("Bitcoin Address") + ":";
-            labelWorkerName.Text = Tr("Worker Name") + ":";
 
-            linkLabelCheckStats.Text = Tr("Check my stats online!");
-            linkLabelChooseBTCWallet.Text = Tr("Help me choose my Bitcoin wallet");
+            //??? doesn't get translated if we don't translate it directly????
+            toolStripStatusLabelGlobalRateText.Text = Tr("Global rate:");
 
-            toolStripStatusLabelGlobalRateText.Text = Tr("Global rate") + ":";
             toolStripStatusLabelBTCDayText.Text =
                 "BTC/" + Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
             toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
@@ -135,15 +134,6 @@ namespace NiceHashMiner
                                                    Tr("Balance") + ":";
 
             devicesListViewEnableControl1.InitLocale();
-
-            buttonBenchmark.Text = Tr("&Benchmark");
-            buttonSettings.Text = Tr("S&ettings");
-            buttonStartMining.Text = Tr("&Start");
-            buttonStopMining.Text = Tr("St&op");
-            buttonHelp.Text = Tr("&Help");
-
-            label_NotProfitable.Text = Tr("CURRENTLY MINING NOT PROFITABLE.");
-            groupBox1.Text = Tr("Group/Device Rates:");
         }
 
         private void InitMainConfigGuiData()
@@ -661,7 +651,7 @@ namespace NiceHashMiner
             var apiGetExceptionString = isApiGetException ? "**" : "";
 
             var speedString =
-                Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
+                Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) + " " +
                 iApiData.AlgorithmName + apiGetExceptionString;
             var rateBtcString = FormatPayingOutput(paying);
             var rateCurrencyString = ExchangeRateApi
@@ -1133,7 +1123,6 @@ namespace NiceHashMiner
                     {
                         _demoMode = true;
                         labelDemoMode.Visible = true;
-                        labelDemoMode.Text = Tr("NiceHash Miner Legacy is running in DEMO mode!");
                     }
                     else
                     {

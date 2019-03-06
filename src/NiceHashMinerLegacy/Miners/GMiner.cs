@@ -49,6 +49,8 @@ namespace NiceHashMiner.Miners
                         return "150_5";
                     case AlgorithmType.GrinCuckaroo29:
                         return "grin29";
+                    case AlgorithmType.GrinCuckatoo31:
+                        return "grin31";
                     default:
                         return "";
                 }

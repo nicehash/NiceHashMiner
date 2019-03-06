@@ -41,8 +41,8 @@
             this.labelWarning.Name = "labelWarning";
             this.labelWarning.Size = new System.Drawing.Size(488, 30);
             this.labelWarning.TabIndex = 99;
-            this.labelWarning.Text = "You\'re not using optimal AMD Driver version. Most stable driver for mining is the" +
-    " 15.7.1 version.\r\nWe strongly suggest you to use this driver version.";
+            this.labelWarning.Text = "You\'re not using the optimal AMD Driver version. The most stable driver for minin" +
+    "g is the 15.7.1 version.\nWe strongly suggest you to use this driver version.";
             this.labelWarning.UseCompatibleTextRendering = true;
             this.labelWarning.UseMnemonic = false;
             // 

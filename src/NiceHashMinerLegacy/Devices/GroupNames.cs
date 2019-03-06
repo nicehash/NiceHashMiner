@@ -26,19 +26,5 @@ namespace NiceHashMiner.Devices
             }
             return "UnknownGroup";
         }
-
-        public static string GetNameGeneral(DeviceType type)
-        {
-            switch (type)
-            {
-                case DeviceType.CPU:
-                    return "CPU";
-                case DeviceType.NVIDIA:
-                    return "NVIDIA";
-                case DeviceType.AMD:
-                    return "AMD";
-            }
-            return "UnknownDeviceType";
-        }
     }
 }

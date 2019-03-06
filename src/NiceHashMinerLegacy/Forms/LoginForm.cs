@@ -23,6 +23,7 @@ namespace NiceHashMiner.Forms
             webBrowser1.Navigate("https://www.nicehash.com/login-app?back");
             webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
             //webBrowser1.SizeChanged += WebBrowser1_SizeChanged;
+            FormHelpers.TranslateFormControls(this);
         }
 
         private void WebBrowser1_SizeChanged(object sender, EventArgs e)

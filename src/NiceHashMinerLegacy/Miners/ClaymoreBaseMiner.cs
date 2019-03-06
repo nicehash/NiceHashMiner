@@ -155,77 +155,43 @@ namespace NiceHashMiner.Miners
             ShutdownMiner();
         }
 
-        protected virtual string DeviceCommand(int amdCount = 1)
+        protected static string GetAlphanumericID(int id)
         {
-            return " -di ";
-        }
-
-        // This method now overridden in ClaymoreCryptoNightMiner 
-        // Following logic for ClaymoreDual and ClaymoreZcash
-        protected override string GetDevicesCommandString()
-        {
-            // First by device type (AMD then NV), then by bus ID index
-            var sortedMinerPairs = MiningSetup.MiningPairs
-                .OrderByDescending(pair => pair.Device.DeviceType)
-                .ThenBy(pair => pair.Device.IDByBus)
-                .ToList();
-            var extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
-
-            var ids = new List<string>();
-            var intensities = new List<string>();
-
-            var amdDeviceCount = AvailableDevices.NumDetectedAmdDevs;
-            Helpers.ConsolePrint("ClaymoreIndexing", $"Found {amdDeviceCount} AMD devices");
-
-            foreach (var mPair in sortedMinerPairs)
+            if (id > 9)
             {
-                var id = mPair.Device.IDByBus;
-                if (id < 0)
+                // New >10 GPU support in CD9.8
+                if (id < 36)
                 {
-                    // should never happen
-                    Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id + " skipping device");
-                    continue;
-                }
-
-                if (mPair.Device.DeviceType == DeviceType.NVIDIA)
-                {
-                    Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount);
-                    id += amdDeviceCount;
-                }
-
-                if (id > 9)
-                {
-                    // New >10 GPU support in CD9.8
-                    if (id < 36)
-                    {
-                        // CD supports 0-9 and a-z indexes, so 36 GPUs
-                        var idchar = (char) (id + 87); // 10 = 97(a), 11 - 98(b), etc
-                        ids.Add(idchar.ToString());
-                    }
-                    else
-                    {
-                        Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
-                    }
+                    // CD supports 0-9 and a-z indexes, so 36 GPUs
+                    var idchar = (char) (id + 87); // 10 = 97(a), 11 - 98(b), etc
+                    return idchar.ToString();
                 }
                 else
                 {
-                    ids.Add(id.ToString());
-                }
-
-                if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled)
-                {
-                    intensities.Add(algo.CurrentIntensity.ToString());
+                    Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
                 }
             }
 
-            var deviceStringCommand = DeviceCommand(amdDeviceCount) + string.Join("", ids);
-            var intensityStringCommand = "";
-            if (intensities.Count > 0)
-            {
-                intensityStringCommand = " -dcri " + string.Join(",", intensities);
-            }
+            return id.ToString();
+        }
 
-            return deviceStringCommand + intensityStringCommand + extraParams;
+        // This method now overridden in ClaymoreDual
+        // Following logic for ClaymoreCryptoNightMiner and ClaymoreZcash
+        protected override string GetDevicesCommandString()
+        {
+            // Order by bus ID index
+            var sortedMinerPairs = MiningSetup.MiningPairs
+                .OrderBy(pair => pair.Device.IDByBus)
+                .ToList();
+            var extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
+
+            var ids = sortedMinerPairs
+                .Select(p => p.Device.IDByBus)
+                .Select(GetAlphanumericID);
+
+            var deviceStringCommand = "-di " + string.Join("", ids);
+
+            return deviceStringCommand + extraParams;
         }
 
         // benchmark stuff
