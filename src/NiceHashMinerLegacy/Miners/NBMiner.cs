@@ -2,13 +2,38 @@
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Miners
 {
     public class NBMiner : VanillaProcessMiner
     {
+        private class JsonModel : IApiResult
+        {
+            public class MinerModel
+            {
+                public class DeviceModel
+                {
+                    public double hashrate { get; set; }
+                }
+
+                public List<DeviceModel> devices { get; set; }
+
+                public double total_hashrate { get; set; }
+            }
+
+            public MinerModel miner { get; set; }
+
+            public double? TotalHashrate => miner?.total_hashrate;
+        }
+
+        private readonly HttpClient _http = new HttpClient();
+
         private string AlgoName
         {
             get
@@ -72,9 +97,9 @@ namespace NiceHashMiner.Miners
             throw new NotImplementedException();
         }
 
-        public override async Task<ApiData> GetSummaryAsync()
+        public override Task<ApiData> GetSummaryAsync()
         {
-            return null;
+            return GetHttpSummaryAsync<JsonModel>("api/v1/status");
         }
     }
 }

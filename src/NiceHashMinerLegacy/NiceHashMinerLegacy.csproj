@@ -163,6 +163,7 @@
     <Compile Include="Forms\Form_DcriValues.Designer.cs">
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IApiResult.cs" />
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Miners\BMiner.cs" />
     <Compile Include="Miners\Equihash\Ewbf144.cs" />
