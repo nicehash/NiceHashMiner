@@ -61,13 +61,6 @@ namespace NiceHashMiner.Forms.Components
                     Translations.Tr("Standard"), groupTypeName) + ".");
         }
 
-        public void InitLocale()
-        {
-            labelQuick.Text = Translations.Tr("Quick") + ":";
-            labelStandard.Text = Translations.Tr("Standard") + ":";
-            labelPrecise.Text = Translations.Tr("Precise") + ":";
-        }
-
         // TODO replace  TextChanged Events with TextBox exit events
 
         #region Events

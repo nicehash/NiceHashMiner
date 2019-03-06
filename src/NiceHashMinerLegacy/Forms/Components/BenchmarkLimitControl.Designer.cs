@@ -86,9 +86,9 @@
             this.labelQuick.AutoSize = true;
             this.labelQuick.Location = new System.Drawing.Point(3, 9);
             this.labelQuick.Name = "labelQuick";
-            this.labelQuick.Size = new System.Drawing.Size(35, 13);
+            this.labelQuick.Size = new System.Drawing.Size(38, 13);
             this.labelQuick.TabIndex = 384;
-            this.labelQuick.Text = "Quick";
+            this.labelQuick.Text = "Quick:";
             // 
             // panel3
             // 
@@ -113,9 +113,9 @@
             this.labelStandard.AutoSize = true;
             this.labelStandard.Location = new System.Drawing.Point(3, 9);
             this.labelStandard.Name = "labelStandard";
-            this.labelStandard.Size = new System.Drawing.Size(50, 13);
+            this.labelStandard.Size = new System.Drawing.Size(53, 13);
             this.labelStandard.TabIndex = 384;
-            this.labelStandard.Text = "Standard";
+            this.labelStandard.Text = "Standard:";
             // 
             // panel2
             // 
@@ -140,9 +140,9 @@
             this.labelPrecise.AutoSize = true;
             this.labelPrecise.Location = new System.Drawing.Point(3, 9);
             this.labelPrecise.Name = "labelPrecise";
-            this.labelPrecise.Size = new System.Drawing.Size(42, 13);
+            this.labelPrecise.Size = new System.Drawing.Size(45, 13);
             this.labelPrecise.TabIndex = 384;
-            this.labelPrecise.Text = "Precise";
+            this.labelPrecise.Text = "Precise:";
             // 
             // BenchmarkLimitControl
             // 

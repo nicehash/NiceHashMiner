@@ -85,7 +85,7 @@
             this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "File not found!!";
+            this.Text = "File not found!";
             this.ResumeLayout(false);
             this.PerformLayout();
 

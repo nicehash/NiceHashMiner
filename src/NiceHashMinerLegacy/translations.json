@@ -21,6 +21,12 @@
       "ru": " (текущий {0})",
       "zh_cn": "(当前 {0})"
     },
+    "&(Don't have an account? Register here)":{
+      "ru": "&(Нет аккаунта? Зарегистрируйтесь здесь)"
+    },
+    "&(or enter Bitcoin address manually)":{
+      "ru": "&(или введите Биткоин-адрес вручную)"
+    },
     "&Benchmark": {
       "bg": "&Тест скорост",
       "es": "&Benchmark",
@@ -110,6 +116,9 @@
       "ro": "&Link la Pagina de Descărcare Driver",
       "ru": "&Ссылка на страницу загрузки драйвера",
       "zh_cn": "驱动下载页面链接 (&L)"
+    },
+    "&Login with NiceHash":{
+      "ru": "&Войти с помощью NiceHash"
     },
     "&No": {
       "bg": "&Не",
@@ -221,35 +230,35 @@
       "ru": "&Да",
       "zh_cn": "是 (&Y)"
     },
-    "(AMD) [s]": {
-      "bg": "AMD [s]",
-      "es": "(AMD) [s]",
-      "it": "(AMD) [s]",
-      "pl": "(AMD) [s]",
-      "pt": "(AMD) [s]",
-      "ro": "(AMD) [uri]",
-      "ru": "(AMD) [с]",
-      "zh_cn": "(AMD) [秒]"
+    "(AMD) [s]:": {
+      "bg": "AMD [s]:",
+      "es": "(AMD) [s]:",
+      "it": "(AMD) [s]:",
+      "pl": "(AMD) [s]:",
+      "pt": "(AMD) [s]:",
+      "ro": "(AMD) [uri]:",
+      "ru": "(AMD) [с]:",
+      "zh_cn": "(AMD) [秒]:"
     },
-    "(CPU) [s]": {
-      "bg": "Процесор [s]",
-      "es": "(CPU) [s]",
-      "it": "(CPU) [s]",
-      "pl": "(CPU) [s]",
-      "pt": "(CPU) [s]",
-      "ro": "(CPU) [uri]",
-      "ru": "(CPU) [с]",
-      "zh_cn": "(CPU) [秒]"
+    "(CPU) [s]:": {
+      "bg": "Процесор [s]:",
+      "es": "(CPU) [s]:",
+      "it": "(CPU) [s]:",
+      "pl": "(CPU) [s]:",
+      "pt": "(CPU) [s]:",
+      "ro": "(CPU) [uri]:",
+      "ru": "(CPU) [с]:",
+      "zh_cn": "(CPU) [秒]:"
     },
-    "(NVIDIA) [s]": {
-      "bg": "NVIDIA [s]",
-      "es": "(NVIDIA) [s]",
-      "it": "(NVIDIA) [s]",
-      "pl": "(NVIDIA) [s]",
-      "pt": "(NVIDIA) [s]",
-      "ro": "(NVIDIA) [uri]",
-      "ru": "(NVIDIA) [с]",
-      "zh_cn": "(NVIDIA) [秒]"
+    "(NVIDIA) [s]:": {
+      "bg": "NVIDIA [s]:",
+      "es": "(NVIDIA) [s]:",
+      "it": "(NVIDIA) [s]:",
+      "pl": "(NVIDIA) [s]:",
+      "pt": "(NVIDIA) [s]:",
+      "ro": "(NVIDIA) [uri]:",
+      "ru": "(NVIDIA) [с]:",
+      "zh_cn": "(NVIDIA) [秒]:"
     },
     "AMD Miner API Grace [s]": {
       "bg": "AMD Miner API Grace [s]",
@@ -271,15 +280,15 @@
       "ru": "Порт связи API",
       "zh_cn": "API绑定端口"
     },
-    "API Bind port pool start": {
-      "bg": "Начален порт за API връзка",
-      "es": "Puertos disponibles para la API",
-      "it": "Numero porta bind API per pool",
-      "pl": "Numer portu API",
-      "pt": "API Bind port pool start",
-      "ro": "Poer API Bind start pool",
-      "ru": "Начальный порт связи API",
-      "zh_cn": "API绑定端口池下限"
+    "API Bind port pool start:": {
+      "bg": "Начален порт за API връзка:",
+      "es": "Puertos disponibles para la API:",
+      "it": "Numero porta bind API per pool:",
+      "pl": "Numer portu API:",
+      "pt": "API Bind port pool start:",
+      "ro": "Poer API Bind start pool:",
+      "ru": "Начальный порт связи API:",
+      "zh_cn": "API绑定端口池下限:"
     },
     "API port that will be used by ethminer for {0} GPUs.": {
       "bg": "API порт, използван от ethminer за {0} видеокарти.",
@@ -521,25 +530,15 @@
       "ru": "Бенчмарк выбранных непротестированных алгоритмов",
       "zh_cn": "仅测试未经测试的启用算法"
     },
-    "Benchmark Speed (H/s)": {
-      "bg": "Тествана скорост (H/s)",
-      "es": "Velocidad del benchmark (H/s)",
-      "it": "Velocità Benchmark (H/s)",
-      "pl": "Zmierzone tempo (H/s)",
-      "pt": "Velocidade de Benchmark (H/s)",
-      "ro": "Viteză Benchmark (H/s)",
-      "ru": "Скорость бенчмарка (H/s)",
-      "zh_cn": "测得速率 (H/s)"
-    },
-    "Benchmark Time Limits": {
-      "bg": "Лимити на времената за тестване",
-      "es": "Límites de tiempo de benchmark",
-      "it": "Limite di tempo dei benchmark",
-      "pl": "Limity czasów benchmarków",
-      "pt": "Tempo limite para Benchmark",
-      "ro": "Limite Timp Benchmark",
-      "ru": "Лимит времени бенчмарка",
-      "zh_cn": "基准测试时限"
+    "Benchmark Speed (H/s):": {
+      "bg": "Тествана скорост (H/s):",
+      "es": "Velocidad del benchmark (H/s):",
+      "it": "Velocità Benchmark (H/s):",
+      "pl": "Zmierzone tempo (H/s):",
+      "pt": "Velocidade de Benchmark (H/s):",
+      "ro": "Viteză Benchmark (H/s):",
+      "ru": "Скорость бенчмарка (H/s):",
+      "zh_cn": "测得速率 (H/s):"
     },
     "Benchmark Time Limits:": {
       "bg": "Лимити на време за тестовете:",
@@ -587,7 +586,7 @@
       "it": "Stato benchmark ( {0} / {1} )",
       "pl": "Benchmark nr {0} z {1}",
       "pt": "Etapa do Benchmark ( {0} / {1} )",
-      "ro": "Pas Benchmark ( {0} / {1} )",
+      "ro": "Pas Benchmark ( {0} / {1} )",  
       "ru": "Шаг бенчмарка ( {0} / {1} )",
       "zh_cn": "测试进度 ( {0} / {1} )"
     },
@@ -601,15 +600,15 @@
       "ru": "Бенчмарк (2-4 минуты)…",
       "zh_cn": "正在测试（大约需2-4分钟）..."
     },
-    "Bitcoin Address": {
-      "bg": "Bitcoin адрес",
-      "es": "Dirección Bitcoin",
-      "it": "Indirizzo Bitcoin",
-      "pl": "Addres Bitcoin",
-      "pt": "Endereço Bitcoin",
-      "ro": "Adresă Bitcoin",
-      "ru": "Биткоин-адрес",
-      "zh_cn": "比特币提现地址"
+    "Bitcoin Address:": {
+      "bg": "Bitcoin адрес:",
+      "es": "Dirección Bitcoin:",
+      "it": "Indirizzo Bitcoin:",
+      "pl": "Addres Bitcoin:",
+      "pt": "Endereço Bitcoin:",
+      "ro": "Adresă Bitcoin:",
+      "ru": "Биткоин-адрес:",
+      "zh_cn": "比特币提现地址:"
     },
     "Brazil - Sao Paulo": {
       "bg": "Brazil - Sao Paulo",
@@ -772,7 +771,7 @@
       "zh_cn": "选择此处保存控制台输出至日志文件。"
     },
     "Check my stats online!": {
-      "bg": "Онлайн проверка на резултата",
+      "bg": "Онлайн проверка на резултата!",
       "es": "¡&Ver mis estadísticas!",
       "it": "Controlla le mie statistiche online!",
       "pl": "Sprawdź statystyki online!",
@@ -901,15 +900,15 @@
       "ru": "Текущие настройки бенчмарка уже тестировались. Нечего выполнять.",
       "zh_cn": "现有设置的基准测试已全部执行完毕，无需进行更多测试。"
     },
-    "Dag Load Mode": {
-      "bg": "Режим на зареждане на DAG",
-      "es": "Modo de carga del DAG",
-      "it": "Modalità Caricamento DAG",
-      "pl": "Tryb ładowania DAG",
-      "pt": "Dag Load Mode",
-      "ro": "Mod Încărcare Dag",
-      "ru": "Режим загрузки Dag",
-      "zh_cn": "DAG加载模式"
+    "Dag Load Mode:": {
+      "bg": "Режим на зареждане на DAG:",
+      "es": "Modo de carga del DAG:",
+      "it": "Modalità Caricamento DAG:",
+      "pl": "Tryb ładowania DAG:",
+      "pt": "Dag Load Mode:",
+      "ro": "Mod Încărcare Dag:",
+      "ru": "Режим загрузки Dag:",
+      "zh_cn": "DAG加载模式:"
     },
     "Dagger Hashimoto Generate Device": {
       "bg": "Dagger Hashimoto Generate Device",
@@ -1041,15 +1040,15 @@
       "ru": "Отказ от ответственности за стороннее ПО",
       "zh_cn": "第三方挖矿程序免责声明"
     },
-    "Display Currency": {
+    "Display Currency:": {
       "bg": "Валута:",
-      "es": "Mostrar divisa",
-      "it": "Valuta",
-      "pl": "Wyświetlana waluta",
-      "pt": "Mostrar Moeda",
-      "ro": "Moneda afișată",
+      "es": "Mostrar divisa:",
+      "it": "Valuta:",
+      "pl": "Wyświetlana waluta:",
+      "pt": "Mostrar Moeda:",
+      "ro": "Moneda afișată:",
       "ru": "Валюта:",
-      "zh_cn": "显示货币"
+      "zh_cn": "显示货币:"
     },
     "Downloading miners": {
       "bg": "Сваляне на изчислителни програми",
@@ -1071,15 +1070,8 @@
       "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается, в связи с плохой конфигурацией, вы можете сбросить ее удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
       "zh_cn": "编辑进阶设置适用于资深用户。\r\n\r如遇 {0} 因配置不当而奔溃，您可以通过删除“config.json”文件来恢复正确的配置。是否继续编辑进阶设置？"
     },
-    "Electricity Cost (/KWh)": {
-      "bg": "",
-      "es": "",
-      "it": "",
-      "pl": "",
-      "pt": "",
-      "ro": "",
-      "ru": "",
-      "zh_cn": ""
+    "Electricity Cost (/KWh):": {
+      "ru": "Расходы на электроэнергию (/кВт⋅ч):"
     },
     "Enable 3rd Party Miners": {
       "bg": "Активиране на софтуер от трети лица",
@@ -1221,15 +1213,15 @@
       "ru": "Ethminer API порт NVIDIA",
       "zh_cn": "Ethminer API端口 (NVIDIA)"
     },
-    "Ethminer Default Block Height": {
-      "bg": "Ethminer Default Block Height",
-      "es": "Bloque de Ethminer",
-      "it": "Altezza Default Blocco Eth",
-      "pl": "Domyślny rozmiar bloku Ethminer",
-      "pt": "Ethminer Default Block Height",
-      "ro": "Înălțime Bloc Implicită Ethminer",
-      "ru": "Высота блока ethminer",
-      "zh_cn": "Ethminer默认区块高度"
+    "Ethminer Default Block Height:": {
+      "bg": "Ethminer Default Block Height:",
+      "es": "Bloque de Ethminer:",
+      "it": "Altezza Default Blocco Eth:",
+      "pl": "Domyślny rozmiar bloku Ethminer:",
+      "pt": "Ethminer Default Block Height:",
+      "ro": "Înălțime Bloc Implicită Ethminer:",
+      "ru": "Высота блока ethminer:",
+      "zh_cn": "Ethminer默认区块高度:"
     },
     "Europe - Amsterdam": {
       "bg": "Europe - Amsterdam",
@@ -1263,7 +1255,6 @@
     },
     "Failed - try Precise": {
       "bg": "Неуспешен опит - опитайте прецизен тест",
-      "es": "",
       "it": "Fallito - prova Preciso",
       "pl": "Nie wyszło, daj Dokładny",
       "pt": "Falhou - tente o modo Preciso",
@@ -1311,15 +1302,15 @@
       "ru": "Фиксированная часть минимального времени в секундах перед переключением алгоритма майнером. \nОбщее время складывается из \"Мин. переключение фикс.\" + \"Мин. переключение дин.\".",
       "zh_cn": "调整算法之前挖矿程序保持运行的最小静态部分时间（秒）。\n挖矿程序在调整算法之前将至少保持运行（最小静态切换间隔 + 最小动态切换间隔）秒。"
     },
-    "Force CPU Extension": {
-      "bg": "Force CPU Extension",
-      "es": "Forzar extensión CPU",
-      "it": "Forza l'estensione CPU",
-      "pl": "Wymuś rozszerzenia CPU",
-      "pt": "Force CPU Extension",
-      "ro": "Forțează Extensia CPU",
-      "ru": "Технология CPU принудительно",
-      "zh_cn": "强制启用CPU指令集扩展"
+    "Force CPU Extension:": {
+      "bg": "Force CPU Extension:",
+      "es": "Forzar extensión CPU:",
+      "it": "Forza l'estensione CPU:",
+      "pl": "Wymuś rozszerzenia CPU:",
+      "pt": "Force CPU Extension:",
+      "ro": "Forțează Extensia CPU:",
+      "ru": "Технология CPU принудительно:",
+      "zh_cn": "强制启用CPU指令集扩展:"
     },
     "Force certain CPU extension miner.": {
       "bg": "Принудително използване на определена изчислителна програма при използване на процесора.",
@@ -1381,15 +1372,15 @@
       "ru": "Получение баланса NiceHash…",
       "zh_cn": "正在获取NiceHash账户金额..."
     },
-    "Global rate": {
-      "bg": "Общо доход",
-      "es": "Ratio global",
-      "it": "Rateo",
-      "pl": "Tempo łączne",
-      "pt": "Taxa global",
-      "ro": "Rată globală",
-      "ru": "Ставка",
-      "zh_cn": "全局收益"
+    "Global rate:": {
+      "bg": "Общо доход:",
+      "es": "Ratio global:",
+      "it": "Rateo:",
+      "pl": "Tempo łączne:",
+      "pt": "Taxa global:",
+      "ro": "Rată globală:",
+      "ru": "Ставка:",
+      "zh_cn": "全局收益:"
     },
     "Group": {
       "bg": "Група",
@@ -1461,15 +1452,15 @@
       "ru": "Я отказываюсь",
       "zh_cn": "我拒绝"
     },
-    "IFTTT API Key": {
-      "bg": "API ключ за IFTTT",
-      "es": "Clave API IFTTT",
-      "it": "API Key IFTTT",
-      "pl": "Klucz API IFTTT",
-      "pt": "Chave da API IFTTT",
-      "ro": "Cheie API IFTTT",
-      "ru": "Ключ API IFTTT",
-      "zh_cn": "IFTTT API密钥"
+    "IFTTT API Key:": {
+      "bg": "API ключ за IFTTT:",
+      "es": "Clave API IFTTT:",
+      "it": "API Key IFTTT:",
+      "pl": "Klucz API IFTTT:",
+      "pt": "Chave da API IFTTT:",
+      "ro": "Cheie API IFTTT:",
+      "ru": "Ключ API IFTTT:",
+      "zh_cn": "IFTTT API密钥:"
     },
     "IMPORTANT! New version v{0} has\r\nbeen released. Click here to download it.": {
       "bg": "ВАЖНО! Публикувана е нова версия v{0}.\r\n Кликнете тук, за да я свалите.",
@@ -1483,7 +1474,6 @@
     },
     "Idle When No Internet Access": {
       "bg": "Спиране на работа при липса на интернет достъп",
-      "es": "",
       "it": "Idle in assenza di Internet",
       "pl": "Zatrzymaj kiedy brak internetu",
       "pt": "Inativo Quando não Tiver Acesso a Internet",
@@ -1493,7 +1483,6 @@
     },
     "If enabled NiceHash Miner Legacy will stop mining without internet connectivity": {
       "bg": "Ако тази опция е активна, NiceHash Miner Legacy ще прекрати изчисленията при липса на интернет свързаност",
-      "es": "",
       "it": "Se attivato NiceHash Miner Legacy smetterà di minare in assenza di Internet",
       "pl": "Kiedy zaznaczone, NiceHash Miner Legacy przerwie pracę po stwierdzeniu braku połączenia z internetem",
       "pt": "Se habilitado, o NiceHash Miner Legacy irá parar a mineração quando o computador não estiver conectado a internet.",
@@ -1651,15 +1640,15 @@
       "ru": "Япония - Токио",
       "zh_cn": "日本 - 东京"
     },
-    "Language": {
-      "bg": "Език",
-      "es": "Lenguaje",
-      "it": "Lingua",
-      "pl": "Język",
-      "pt": "Idioma",
-      "ro": "Limba",
-      "ru": "Язык",
-      "zh_cn": "语言"
+    "Language:": {
+      "bg": "Език:",
+      "es": "Lenguaje:",
+      "it": "Lingua:",
+      "pl": "Język:",
+      "pt": "Idioma:",
+      "ro": "Limba:",
+      "ru": "Язык:",
+      "zh_cn": "语言:"
     },
     "Less Threads": {
       "bg": "Свободни нишки",
@@ -1711,15 +1700,15 @@
       "ru": "Локализация:",
       "zh_cn": "本土化:"
     },
-    "Log Max File Size [bytes]": {
-      "bg": "Лимит [байтове]",
-      "es": "Tamaño máximo del registro [bytes]",
-      "it": "Lunghezza log [bytes]",
-      "pl": "Maks. rozmiar logu [bajty]",
-      "pt": "Tamanho Maximo [bytes]",
-      "ro": "Dimensiune Fișier Log Maximă [bytes]",
-      "ru": "Размер лог-файла [байт]",
-      "zh_cn": "最大日志文件大小 [字节]"
+    "Log Max File Size [bytes]:": {
+      "bg": "Лимит [байтове]:",
+      "es": "Tamaño máximo del registro [bytes]:",
+      "it": "Lunghezza log [bytes]:",
+      "pl": "Maks. rozmiar logu [bajty]:",
+      "pt": "Tamanho Maximo [bytes]:",
+      "ro": "Dimensiune Fișier Log Maximă [bytes]:",
+      "ru": "Размер лог-файла [байт]:",
+      "zh_cn": "最大日志文件大小 [字节]:"
     },
     "Log To File": {
       "bg": "Запис на журнала във файл",
@@ -1742,14 +1731,7 @@
       "zh_cn": "日志:"
     },
     "Lower bound for the randomly chosen profit check interval.\nDo not set too low.": {
-      "bg": "",
-      "es": "",
-      "it": "",
-      "pl": "",
-      "pt": "",
-      "ro": "",
-      "ru": "",
-      "zh_cn": ""
+      "ru": "Нижняя граница случайно выбранного интервала проверки прибыли.\nНе указывайте слишком низкое значение."
     },
     "Main:": {
       "bg": "Основни параметри:",
@@ -1771,25 +1753,25 @@
       "ru": "Ожидание API [с]",
       "zh_cn": "矿工API宽限 [秒]"
     },
-    "Miner API Query Interval [s]": {
-      "bg": "Miner API Query Interval [s]",
-      "es": "Intervalo API del minero [s]",
-      "it": "Intervallo richiesta API Miner [s]",
-      "pl": "Interwał API górnika [s]",
-      "pt": "Miner API Query Interval [s]",
-      "ro": "Interval Interogare API Miner [s]",
-      "ru": "Интервал запросов API [с]",
-      "zh_cn": "矿工API请求间隔 [秒]"
+    "Miner API Query Interval [s]:": {
+      "bg": "Miner API Query Interval [s]:",
+      "es": "Intervalo API del minero [s]:",
+      "it": "Intervallo richiesta API Miner [s]:",
+      "pl": "Interwał API górnika [s]:",
+      "pt": "Miner API Query Interval [s]:",
+      "ro": "Interval Interogare API Miner [s]:",
+      "ru": "Интервал запросов API [с]:",
+      "zh_cn": "矿工API请求间隔 [秒]:"
     },
-    "Miner Restart Delay [ms]": {
-      "bg": "Miner Restart Delay [ms]",
-      "es": "Retraso reinicio de minero[ms]",
-      "it": "Ritardo riavvio del miner [ms]",
-      "pl": "Opóźnienie startu kopania [ms]",
-      "pt": "Delay Minimo pra Reiniciar [ms]",
-      "ro": "Întârziere Repornire Miner [ms]",
-      "ru": "Перезапуск майнера [мс]",
-      "zh_cn": "矿工重启延迟 [毫秒]"
+    "Miner Restart Delay [ms]:": {
+      "bg": "Miner Restart Delay [ms]:",
+      "es": "Retraso reinicio de minero[ms]:",
+      "it": "Ritardo riavvio del miner [ms]:",
+      "pl": "Opóźnienie startu kopania [ms]:",
+      "pt": "Delay Minimo pra Reiniciar [ms]:",
+      "ro": "Întârziere Repornire Miner [ms]:",
+      "ru": "Перезапуск майнера [мс]:",
+      "zh_cn": "矿工重启延迟 [毫秒]:"
     },
     "Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]": {
       "bg": "Програмата няма да превключи, ако печалбата е под прага на рентабилност. Стойността е в проценти [0 - 1]",
@@ -1831,25 +1813,25 @@
       "ru": "Свернуть в трей",
       "zh_cn": "最小化至托盘"
     },
-    "Minimum Idle [s]": {
-      "bg": "Minimum Idle [s]",
-      "es": "Tiempo mínimo detenido [s]",
-      "it": "Tempo minimo di Idle [s]",
-      "pl": "Min. czas bezczynności [s]",
-      "pt": "Tempo Minimo Ocioso [s]",
-      "ro": "Inactiv Minim [s]",
-      "ru": "Минимальный простой [с]",
-      "zh_cn": "最小空闲时间 [秒]"
+    "Minimum Idle [s]:": {
+      "bg": "Minimum Idle [s]:",
+      "es": "Tiempo mínimo detenido [s]:",
+      "it": "Tempo minimo di Idle [s]:",
+      "pl": "Min. czas bezczynności [s]:",
+      "pt": "Tempo Minimo Ocioso [s]:",
+      "ro": "Inactiv Minim [s]:",
+      "ru": "Минимальный простой [с]:",
+      "zh_cn": "最小空闲时间 [秒]:"
     },
-    "Minimum Profit ($/day)": {
-      "bg": "Минимална доходност ($/day)",
-      "es": "Benefícios mínimas ($/día)",
-      "it": "Profitto minimo ($/Giorno)",
-      "pl": "Minimalny zysk dzienny",
-      "pt": "Lucro mínimo ($/day)",
-      "ro": "Profit Minim ($/zi)",
-      "ru": "Мин. прибыль ($/сут)",
-      "zh_cn": "最小收益（USD/天）"
+    "Minimum Profit ($/day):": {
+      "bg": "Минимална доходност ($/day):",
+      "es": "Benefícios mínimas ($/día):",
+      "it": "Profitto minimo ($/Giorno):",
+      "pl": "Minimalny zysk dzienny:",
+      "pt": "Lucro mínimo ($/day):",
+      "ro": "Profit Minim ($/zi):",
+      "ru": "Мин. прибыль ($/сут):",
+      "zh_cn": "最小收益（USD/天）:"
     },
     "Mining Devices {0}:": {
       "bg": "Изчислителни устройства {0}:",
@@ -1973,7 +1955,6 @@
     },
     "NiceHash Miner Legacy recommends increasing virtual memory size so that all algorithms would work fine.": {
       "bg": "NiceHash Miner Legacy препоръчва увеличаване на размера на виртуалната памет за правилната работа на  всички алгоритми.",
-      "es": "",
       "it": "NiceHash Miner Legacy raccomanda di aumentare la dimensione della memoria virtuale così che tutti gli algoritmi possano lavorare correttamente.",
       "pl": "NiceHash Miner Legacy zaleca zwiększenie pamięci wirtualnej, aby algorytmy mogły działać sprawnie.",
       "pt": "O NiceHash Miner Legacy recomenda aumentar o tamanho da memória virtual para que todos os algoritmos funcionem bem.",
@@ -2028,7 +2009,6 @@
       "pl": "Licencja użytkownika NiceHash Miner Legacy: NiceHash pracuje jako serwis dostarczający mocy  obliczeniowej od właścicieli tej mocy do jej kupców. NiceHash nie dostarcza jej bezpośrednio. Będziemy robić co w naszej mocy, aby dostarczać stabilną, bezpieczną, i pełną obsługę serwisu. Nie bierzemy odpowiedzialności za żadne straty mocy obliczeniowej i nie bierzemy za nie odpowiedzialności finansowej, materialnej, prawnej ani żadnych innych odpowiedzialności za jakiekolwiek błędy podczas użytkownaia NiceHash Miner Legacy. Serwis NiceHash oraz jego produkty (NiceHash Miner Legacy, itd.) jest ciągle w opracowaniu, więc błędy i problemy mogą się przydarzyć. Będziemy ciężko pracować, aby naprawić wszelkie stwierdzone problemy i błędy oraz naprawiać je niezwłocznie, a także dodawać nowe funkcje służące do poprawy naszego serwisu. NiceHash zastrzega sobie prawo do odebrania zarobku w przypadku podejrzenia nielegalnej działalności takiej jak botnety, wyłudzanie pieniędzy, próby włamań, itp.\r\n\r\nJako użytkownik NiceHash Miner Legacy, dostarczasz swoją moc obliczeniową (jesteś sprzedawcą) do odbiorców tej mocy poprzez giełdę NiceHash. Zarabiasz bitcoiny ze sprzedaży tej mocy za każdy poprawny udział (share) wygenerowany przez Twojego górnika (miner) zaakceptowany przez serwis Nicehash. W niektórych przypadkach żadne udziały nie są przesyłane albo akceptowane przez serwis NiceHash. Takie przypadki są rzadkie i wynikają z problemów z pracą sprzętu, nieprawidłową pracą oprogramowania, połączenia internetowego i podobnych problemów. W tych przypadkach nie otrzymasz wynagrodzenia od serwisu Nicehash w formie bitcoinów. Wypłaty są zautomatyzowane i płacone w bitcoinach na Twój adres BTC użyty w programie NiceHash Miner Legacy. Harmonogram płatności jest opisany w dziale FAQ na naszej stronie i może podlegać zmianom. Zawsze możesz monitorować swoje statystyki na stronie: https://www.nicehash.com/?p=myminer\r\n\r\nJeśli masz pytania dotyczace liczencji użytkowania, swoich praw i obowiązków wynikających z tej licencji lub użytkowania serwisu NiceHash, lub jakiejkolwiek innej sprawie, skontaktuj się z naszym działem pomocy support@nicehash.com.",
       "pt": "Termos de Uso dos Mineradores NiceHash \r\n\r\nO NiceHash opera como um serviço intermediário, fornecendo o poder de hashing dos proprietários para compradores de poder de hashing. NiceHash não fornece diretamente seu próprio poder de hashing. Faremos o nosso melhor para fornecer serviços estáveis, seguros e funcional. Nós não assumimos a responsabilidade por qualquer tipo de perda de poder de hashing ou perda de fundos e não assumimos qualquer tipo de responsabilidades financeiras, materiais, legais ou outras por quaisquer problemas que surja do uso do NiceHash Miner Legacy. O serviço NiceHash e seus produtos (NiceHash Miner Legacy, etc.) ainda estão em desenvolvimento, portanto, alguns bugs ou outros problemas podem surgir. Vamos trabalhar duro para corrigir quaisquer problemas o mais rápido possível, adicionar novas funcionalidades e melhorar o nosso serviço. NiceHash reserva o direito de apreender quaisquer fundos de actividade ilegal suspeita, como de mineração com botnets, lavagem de dinheiro, tentativas de invasão, etc.\r\n\r\nComo um usuário de NiceHash Miner Legacy, você está fornecendo seu poder de hashing (você é um vendedor) para os compradores de poder de hashing no mercado do NiceHash. Você ganha a Bitcoins vender seu poder de hashing para cada compartilhamento válido que seu mineiro gera e é aceito pelo serviço NiceHash. Em alguns casos, nenhum compartilhamento é enviado ou aceito pelo serviço NiceHash. Estes casos são raros e incluem o uso de erros de hardware, software ou rede mais lentos ou similares. Nesses casos (sem ações geradas e aceitas pelo serviço NiceHash) nenhuma recompensa na forma de Bitcoins pode ser contabilizada para você. Os pagamentos são automáticos e são pagos ao endereço BTC, usado no mineiro NiceHash. O cronograma de pagamento pode ser encontrado em FAQ em nosso site e está sujeito a alterações. Você sempre pode monitorar suas estatísticas neste site:https://www.nicehash.com/?p=myminer\r\n\r\nSe você tiver alguma dúvida relacionada com estes Termos de Uso, seus direitos e obrigações decorrentes destes Termos e / ou o uso do serviço NiceHash, ou qualquer outro assunto, entre em contato conosco (em inglês) em support@nicehash.com.",
       "ro": "Termenii de utilizare NiceHash Miner Legacy NiceHash opereaza ca un serviciu intermediar furnizând putere de hash de la proprietarii de putere de hash către cumpărătorii de putere de hash. NiceHash nu furnizează direct propria putere de hash. Facem tot posibilul pentru a furniza un serviciu stabil, sigur și plin de funcționalități. Nu ne asumăm nici o responsabilitate pentru nici o pierdere de putere de hash sau pierdere de fonduri și nu ne asumăm nici o răspundere financiară, materială, legală sau de orice altă natură pentru nici o problemă care poate apărea din utilizarea NiceHash Miner Legacy. Serviciul NiceHash și produsele sale (NiceHash Miner Legacy, etc.) sunt încă în dezvoltare și deci pot apărea buguri sau alte probleme. Vom lucra din greu pentru remedierea problemelor cât mai repede posibil, să adaugăm noi funcționalități și să îmbunătățim serviciul nostru. NiceHash își rezervă dreptul să rețină orice fonduri rezultate din activități ilegale cum ar fi minarea cu botnet, spălarea de bani, tentative de hack, etc.\r\n\r\nCa utilizator al NiceHash Miner Legacy, vă furnizați puterea de hash (sunteți vânzător) către cumpărătorii de putere de hash prin piața de putere de hash a NiceHash. Câștigați Bitcoini prin vânzarea de putere de hash pentru fiecare share valid pe care minerul dumneavoastră îl generează și este acceptat de serviciul NiceHash. În unele cazuri nici un share nu este trimis către sau acceptat de serviciul NiceHash. Aceste cazuri sunt rare și includ utilizarea de hardware lent, software, erori de rețea sau similar. În aceste cazuri (nici un share generat și acceptat de serviciul NiceHash) nici o răsplată sub forma de Bitcoini nu poate fi contabilizată către dumneavoastră. plățile sunt automare și se fac către adresa BTC folosită în NiceHash Miner Legacy. Programul de plăți poate fi găsit în secțiunea FAQ pe websiteul nostru și poate fi modificată. Puteți să monitorizați oricând statisticile dumneavoastră pe acest site: https://www.nicehash.com/?p=myminer\r\n\r\nDacă aveți orice întrebări legate de acești Termeni de Utilizare, drepturile și obligațiile dumneavoastră care reies din acesti Termeni și/sau utilizarea serviciului NiceHash, sau orice alt subiect, vă rugăm să ne contactați la support@nicehash.com.",
-      "ru": "",
       "zh_cn": "NiceHash Miner Legacy 使用条款 NiceHash operates as in intermediate service by providing hashing power from hashing power owners to hashing power buyers. NiceHash does not directly provide it's own hashing power. We will do our best to provide stable, secure, and feature full service. We do not take responsibility for any kind of hashing power loss or funds loss and do not take any kind of financial, material, legal, or other responsibilities for any issues that my arise from using NiceHash Miner Legacy. NiceHash service and it's products (NiceHash Miner Legacy, etc.) is still in development, therefore some bugs or other issues may arise. We will work hard to fix any issues as soon as possible, add new features and overall improve our service. NiceHash reserves the rights to seize any funds of suspicious illegal activity such as mining with botnets, money laundering, hacking attempts, etc.\r\n\r\nAs a user of NiceHash Miner Legacy, you are providing your hashing power (your are a seller) to the hashing power buyers though NiceHash's hashing power marketplace. You earn Bitcoins from selling your hashing power for every valid share your miner generates and is accepted by NiceHash service. In some cases no shares are sent to or are accepted by NiceHash service. These cases are rare and includes usage of slower hardware, software, network errors, or simmilar. In these cases (no shares generated and accepted by NiceHash service) no reward in form of Bitcoins can be accounted to you. Payouts are automatic and are paid to BTC address, used in NiceHash Miner Legacy. Payment schedule can be found in FAQ on our website and is subject to change. You can always monitor your statistics on this site: https://www.nicehash.com/?p=myminer\r\n\r\nIf you have any questions relating to these Terms of Use, your rights and obligations arising from these Terms and/or your use of the NiceHash service, or any other matter, please contact us at support@nicehash.com."
     },
     "No Supported Devices": {
@@ -2173,17 +2153,18 @@
     },
     "Power": {
     },
-    "Power Usage (W)": {
+    "Power Usage (W):": {
+      "ru": "Потребление мощности (Вт):"
     },
-    "Precise": {
-      "bg": "прецизен",
-      "es": "Preciso",
-      "it": "Preciso",
-      "pl": "Dokładny",
-      "pt": "Preciso",
-      "ro": "Precis",
-      "ru": "Точного",
-      "zh_cn": "精确"
+    "Precise:": {
+      "bg": "прецизен:",
+      "es": "Preciso:",
+      "it": "Preciso:",
+      "pl": "Dokładny:",
+      "pt": "Preciso:",
+      "ro": "Precis:",
+      "ru": "Точного:",
+      "zh_cn": "精确:"
     },
     "Querying AMD OpenCL devices...": {
       "bg": "Проверка на AMD OpenCL устройства...",
@@ -2255,15 +2236,15 @@
       "ru": "Проверка устройств OpenCL",
       "zh_cn": "正在检测OpenCL设备"
     },
-    "Quick": {
-      "bg": "бърз",
-      "es": "Rápido",
-      "it": "Veloce",
-      "pl": "Szybki",
-      "pt": "Rápido",
-      "ro": "Rapid",
-      "ru": "Быстрого",
-      "zh_cn": "快速"
+    "Quick:": {
+      "bg": "бърз:",
+      "es": "Rápido:",
+      "it": "Veloce:",
+      "pl": "Szybki:",
+      "pt": "Rápido:",
+      "ro": "Rapid:",
+      "ru": "Быстрого:",
+      "zh_cn": "快速:"
     },
     "Random part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nRandom part is used to prevent all world-wide NiceHash Miner Legacy users to have the exact same switching pattern.": {
       "bg": "Случайна компонента на минималния интервал време в секунди) преди програмата да превключи изчислителния алгоритъм.\nОбщият интервал е SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nСлучайната компонента е необходима, за да се избегне възможността всички потребители на NiceHash Miner Legacy в целия свят да имат еднакъв ритъм на превключване на алгоритмите.",
@@ -2275,15 +2256,15 @@
       "ru": "Случайная часть минимального времени в секундах перед переключением алгоритма майнером. \nОбщее время складывается из \"Мин. переключение фикс.\" + \"Мин. переключение дин.\". \nСлучайная часть используется для предотвращения наличия одинакового шаблона переключения\nдля всех пользователей NiceHash Miner Legacy.",
       "zh_cn": "调整算法之前挖矿程序保持运行的最小动态/随机部分时间（秒）。\n挖矿程序在调整算法之前将至少保持运行（最小静态切换间隔 + 最小动态切换间隔）秒。\n此间隔被设置为随机，以防止所有的NiceHash Miner Legacy用户拥有完全相同的算法切换规律。"
     },
-    "Rate": {
-      "bg": "Доход",
-      "es": "Ratio",
-      "it": "Rateo",
-      "pl": "Kurs",
-      "pt": "Taxa",
-      "ro": "Rată",
-      "ru": "Ставка",
-      "zh_cn": "收益"
+    "Rate:": {
+      "bg": "Доход:",
+      "es": "Ratio:",
+      "it": "Rateo:",
+      "pl": "Kurs:",
+      "pt": "Taxa:",
+      "ro": "Rată:",
+      "ru": "Ставка:",
+      "zh_cn": "收益:"
     },
     "Ratio BTC/GH/Day": {
       "bg": "Отн. BTC/GH/ден",
@@ -2326,24 +2307,10 @@
       "zh_cn": "正在重启 {0}"
     },
     "Run Ethlargement": {
-      "bg": "",
-      "es": "",
-      "it": "",
-      "pl": "",
-      "pt": "",
-      "ro": "",
-      "ru": "Запустите Ethlargement для алгоритмов Dagger, когда присутствуют поддерживаемые видеокарты.\nТребует запуска от имени администратора и включения сторонних майнеров.",
-      "zh_cn": ""
+      "ru": "Запустить Ethlargement"
     },
     "Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners.": {
-      "bg": "",
-      "es": "",
-      "it": "",
-      "pl": "",
-      "pt": "",
-      "ro": "",
-      "ru": "Запустить Ethlargement",
-      "zh_cn": ""
+      "ru": "Запустите Ethlargement для алгоритмов Dagger, когда присутствуют поддерживаемые видеокарты.\nТребует запуска от имени администратора и включения сторонних майнеров."
     },
     "Run With Windows": {
       "bg": "Стартирайте с Windows",
@@ -2385,15 +2352,15 @@
       "ru": "Сохранение конфигурации…",
       "zh_cn": "正在保存设置..."
     },
-    "Secondary Benchmark Speed (H/s)": {
-      "bg": "Вторична тествана скорост (H/s)",
-      "es": "Velocidad de referencia secundaria (H/s)",
-      "it": "Velocità Benchmark Secondaria (H/s)",
-      "pl": "Zmierzone tempo dodatkowe (H/s)",
-      "pt": "Velocidade de Benchmark Secundária (H/s)",
-      "ro": "Viteză Secundară Benchmark (H/s)",
-      "ru": "Средняя контрольная скорость",
-      "zh_cn": "第二测得速率 (H/s)"
+    "Secondary Benchmark Speed (H/s):": {
+      "bg": "Вторична тествана скорост (H/s):",
+      "es": "Velocidad de referencia secundaria (H/s):",
+      "it": "Velocità Benchmark Secondaria (H/s):",
+      "pl": "Zmierzone tempo dodatkowe (H/s):",
+      "pt": "Velocidade de Benchmark Secundária (H/s):",
+      "ro": "Viteză Secundară Benchmark (H/s):",
+      "ru": "Средняя контрольная скорость (H/s):",
+      "zh_cn": "第二测得速率 (H/s):"
     },
     "Secondary Speed": {
       "bg": "Secondary Speed",
@@ -2425,15 +2392,15 @@
       "ru": "Выбранный алгоритм: {0}",
       "zh_cn": "已选择算法：{0}"
     },
-    "Service location": {
-      "bg": "Избор на локация",
-      "es": "Servidor",
-      "it": "Luogo server",
-      "pl": "Lokalizacja serwisu",
-      "pt": "Local do Servidor",
-      "ro": "Locație serviciu",
-      "ru": "Локация",
-      "zh_cn": "服务器地址"
+    "Service location:": {
+      "bg": "Избор на локация:",
+      "es": "Servidor:",
+      "it": "Luogo server:",
+      "pl": "Lokalizacja serwisu:",
+      "pt": "Local do Servidor:",
+      "ro": "Locație serviciu:",
+      "ru": "Локация:",
+      "zh_cn": "服务器地址:"
     },
     "Set default settings?": {
       "bg": "Установяване на стойности по подразбиране?",
@@ -2456,14 +2423,7 @@
       "zh_cn": "矿机API将绑定不低于此端口号的端口来侦听通讯。"
     },
     "Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.": {
-      "bg": "",
-      "es": "",
-      "it": "",
-      "pl": "",
-      "pt": "",
-      "ro": "",
-      "ru": "",
-      "zh_cn": ""
+      "ru": "Укажите положительное значение для учета затрат на электроэнергию при переключении.\nЭто значение — затраты на кВт⋅ч в выбранной вами валюте отображения.\nУкажите 0 для отключения функции переключения в зависимости от мощности."
     },
     "Sets Dag Load Mode for ethminers.": {
       "bg": "Задава начина, по който ethminer зарежда DAG таблицата.",
@@ -2632,8 +2592,18 @@
       "pl": "Tempo",
       "pt": "Velocidade",
       "ro": "Viteză",
-      "ru": "Скор.",
+      "ru": "Скор",
       "zh_cn": "速率"
+    },
+    "Speed:": {
+      "bg": "Темпо:",
+      "es": "Velocidad:",
+      "it": "Velocità:",
+      "pl": "Tempo:",
+      "pt": "Velocidade:",
+      "ro": "Viteză:",
+      "ru": "Скор:",
+      "zh_cn": "速率:"
     },
     "Speed for the secondary algorithm when using dual algo mining.": {
       "bg": "Speed for the secondary algorithm when using dual algo mining.",
@@ -2665,15 +2635,15 @@
       "ru": "Ст&оп",
       "zh_cn": "停止测试 (&o)"
     },
-    "Standard": {
-      "bg": "нормален",
-      "es": "Normal",
-      "it": "Standard",
-      "pl": "Zwykły",
-      "pt": "Normal",
-      "ro": "Standard",
-      "ru": "Стандарт.",
-      "zh_cn": "普通"
+    "Standard:": {
+      "bg": "нормален:",
+      "es": "Normal:",
+      "it": "Standard:",
+      "pl": "Zwykły:",
+      "pt": "Normal:",
+      "ro": "Standard:",
+      "ru": "Стандарт:",
+      "zh_cn": "普通:"
     },
     "Start &benchmark": {
       "bg": "&Тестване",
@@ -2745,15 +2715,15 @@
       "ru": "Отправить результаты бенчмарка",
       "zh_cn": "提交基准测试结果"
     },
-    "Switch Maximum [s]": {
-      "bg": "Switch Maximum [s]",
-      "es": "Cambiar máximo [s]",
-      "it": "Passaggio massimo [s]",
-      "pl": "Czas maksymalny [s]",
-      "pt": "Mudar Máximo [s]",
-      "ro": "Comută Maxim [s]",
-      "ru": "Мак. переключение [s]",
-      "zh_cn": "切换最大值 [s]"
+    "Switch Maximum [s]:": {
+      "bg": "Switch Maximum [s]:",
+      "es": "Cambiar máximo [s]:",
+      "it": "Passaggio massimo [s]:",
+      "pl": "Czas maksymalny [s]:",
+      "pt": "Mudar Máximo [s]:",
+      "ro": "Comută Maxim [s]:",
+      "ru": "Мак. переключение [s]:",
+      "zh_cn": "切换最大值 [s]:"
     },
     "Switch Minimum AMD [s]": {
       "bg": "Switch Minimum AMD [s]",
@@ -2785,25 +2755,25 @@
       "ru": "Мин. переключение фикс. [с]",
       "zh_cn": "最小静态切换间隔 [秒]"
     },
-    "Switch Minimum [s]": {
-      "bg": "Switch Minimum [s]",
-      "es": "Cambiar mínimo [s]",
-      "it": "Passaggio minimo [s]",
-      "pl": "Czas przełączania [s]",
-      "pt": "Mudar Mínimo [s]",
-      "ro": "Comută Minim [s]",
-      "ru": "Мин. переключение [s]",
-      "zh_cn": "开关最小 [s]"
+    "Switch Minimum [s]:": {
+      "bg": "Switch Minimum [s]:",
+      "es": "Cambiar mínimo [s]:",
+      "it": "Passaggio minimo [s]:",
+      "pl": "Czas przełączania [s]:",
+      "pt": "Mudar Mínimo [s]:",
+      "ro": "Comută Minim [s]:",
+      "ru": "Мин. переключение [s]:",
+      "zh_cn": "开关最小 [s]:"
     },
-    "Switch Profitability Threshold": {
-      "bg": "Промяна праг рентабилност",
-      "es": "Umbral de rentabilidad",
-      "it": "Cambia Soglia di Profitto",
-      "pl": "Próg przełączenia zyskowności",
-      "pt": "SwitchProfitabilityThreshold",
-      "ro": "Prag Schimb Profitabilitate",
+    "Switch Profitability Threshold:": {
+      "bg": "Промяна праг рентабилност:",
+      "es": "Umbral de rentabilidad:",
+      "it": "Cambia Soglia di Profitto:",
+      "pl": "Próg przełączenia zyskowności:",
+      "pt": "SwitchProfitabilityThreshold:",
+      "ro": "Prag Schimb Profitabilitate:",
       "ru": "Порог переключ. прибыльн.:",
-      "zh_cn": "切换收益阈值"
+      "zh_cn": "切换收益阈值:"
     },
     "Terminated": {
       "bg": "Прекратен",
@@ -2846,14 +2816,6 @@
       "zh_cn": "The last dcri value to use for tuning"
     },
     "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
-      "bg": "",
-      "es": "",
-      "it": "",
-      "pl": "",
-      "pt": "",
-      "ro": "",
-      "ru": "",
-      "zh_cn": ""
     },
     "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue.": {
       "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. NiceHash Miner Legacy няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно NiceHash Miner Legacy и да опитате да поправите този проблем.",
@@ -3016,14 +2978,7 @@
       "zh_cn": "建议更新AMD驱动程序"
     },
     "Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high.": {
-      "bg": "",
-      "es": "",
-      "it": "",
-      "pl": "",
-      "pt": "",
-      "ro": "",
-      "ru": "",
-      "zh_cn": ""
+      "ru": "Верхняя граница случайно выбранного интервала проверки прибыли.\nПрибыль может быть проверена несколько раз, прежде чем переключение будет разрешено, поэтому не указывайте слишком высокое значение."
     },
     "Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility.": {
       "bg": "Използване на софтуер със затворен код, разработен от трети лица, с цел по-висока доходност. Използвайте на собствена отговорност.",
@@ -3405,15 +3360,15 @@
       "ru": "Ошибка Инструментария управления Windows",
       "zh_cn": "Windows Management Instrumentation错误"
     },
-    "Worker Name": {
-      "bg": "Име на машината",
-      "es": "Nombre del minero",
-      "it": "Nome del lavoratore",
-      "pl": "Identyfikator",
-      "pt": "Nome do Worker",
-      "ro": "Nume muncitor",
-      "ru": "Имя компьютера",
-      "zh_cn": "矿工名"
+    "Worker Name:": {
+      "bg": "Име на машината:",
+      "es": "Nombre del minero:",
+      "it": "Nome del lavoratore:",
+      "pl": "Identyfikator:",
+      "pt": "Nome do Worker:",
+      "ro": "Nume muncitor:",
+      "ru": "Имя компьютера:",
+      "zh_cn": "矿工名:"
     },
     "Year": {
       "bg": "година",

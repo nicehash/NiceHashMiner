@@ -97,7 +97,7 @@
             this.radioButton_SelectedUnbenchmarked.Size = new System.Drawing.Size(260, 17);
             this.radioButton_SelectedUnbenchmarked.TabIndex = 110;
             this.radioButton_SelectedUnbenchmarked.TabStop = true;
-            this.radioButton_SelectedUnbenchmarked.Text = "Benchmark Selected Unbenchmarked Algorithms ";
+            this.radioButton_SelectedUnbenchmarked.Text = "Benchmark Selected Unbenchmarked Algorithms";
             this.radioButton_SelectedUnbenchmarked.UseVisualStyleBackColor = true;
             this.radioButton_SelectedUnbenchmarked.CheckedChanged += new System.EventHandler(this.RadioButton_SelectedUnbenchmarked_CheckedChanged_1);
             // 
@@ -109,7 +109,7 @@
             this.radioButton_RE_SelectedUnbenchmarked.Name = "radioButton_RE_SelectedUnbenchmarked";
             this.radioButton_RE_SelectedUnbenchmarked.Size = new System.Drawing.Size(192, 17);
             this.radioButton_RE_SelectedUnbenchmarked.TabIndex = 110;
-            this.radioButton_RE_SelectedUnbenchmarked.Text = "Benchmark All Selected Algorithms ";
+            this.radioButton_RE_SelectedUnbenchmarked.Text = "Benchmark All Selected Algorithms";
             this.radioButton_RE_SelectedUnbenchmarked.UseVisualStyleBackColor = true;
             this.radioButton_RE_SelectedUnbenchmarked.CheckedChanged += new System.EventHandler(this.RadioButton_RE_SelectedUnbenchmarked_CheckedChanged);
             // 

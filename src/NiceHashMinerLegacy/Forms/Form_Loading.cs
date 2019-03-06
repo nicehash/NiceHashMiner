@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Interfaces;
+﻿using NiceHashMiner.Forms;
+using NiceHashMiner.Interfaces;
 using NiceHashMiner.Utils;
 using System;
 using System.Drawing;
@@ -36,6 +37,7 @@ namespace NiceHashMiner
             progressBar1.Value = 0;
 
             SetInfoMsg(startInfoMsg);
+            FormHelpers.TranslateFormControls(this);
         }
 
         // download miners constructor
