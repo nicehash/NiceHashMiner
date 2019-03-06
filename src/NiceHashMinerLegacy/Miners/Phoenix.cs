@@ -41,5 +41,11 @@ namespace NiceHashMiner.Miners
         {
             return type == DeviceType.AMD ? AvailableDevices.NumDetectedNvDevs : 0;
         }
+
+        protected override string GetBenchmarkOption()
+        {
+            // Phoenix sets a bad DAG epoch when -benchmark switch is used
+            return "";
+        }
     }
 }

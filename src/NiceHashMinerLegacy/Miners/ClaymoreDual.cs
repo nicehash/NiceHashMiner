@@ -225,12 +225,17 @@ namespace NiceHashMiner.Miners
             if (!IsDual())
             {
                 BenchmarkTimeWait = time;
-                return ret + "  -benchmark 1"; // benchmark 1 does not output secondary speeds
+                return $"{ret} {GetBenchmarkOption()}"; // benchmark 1 does not output secondary speeds
             }
 
             // dual seems to stop mining after this time if redirect output is true
             BenchmarkTimeWait = Math.Max(60, Math.Min(120, time * 3));
             return ret;
+        }
+
+        protected virtual string GetBenchmarkOption()
+        {
+            return "-benchmark 1";
         }
     }
 }
