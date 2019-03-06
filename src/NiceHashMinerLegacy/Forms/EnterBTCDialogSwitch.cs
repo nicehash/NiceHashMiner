@@ -12,6 +12,7 @@ namespace NiceHashMiner.Forms
         {
             InitializeComponent();
             CenterToScreen();
+            Icon = Properties.Resources.logo;
             Text += " v" + Application.ProductVersion;
         }
 

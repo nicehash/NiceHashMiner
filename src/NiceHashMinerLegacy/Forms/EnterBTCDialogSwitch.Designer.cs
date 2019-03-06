@@ -35,9 +35,9 @@
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(60, 12);
+            this.buttonOK.Location = new System.Drawing.Point(110, 12);
             this.buttonOK.Name = "buttonOK";
-            this.buttonOK.Size = new System.Drawing.Size(165, 23);
+            this.buttonOK.Size = new System.Drawing.Size(165, 35);
             this.buttonOK.TabIndex = 0;
             this.buttonOK.Text = "&Login with NiceHash";
             this.buttonOK.UseCompatibleTextRendering = true;
@@ -47,9 +47,9 @@
             // LinkButtonEnterBTCManually
             // 
             this.LinkButtonEnterBTCManually.AutoSize = true;
-            this.LinkButtonEnterBTCManually.Location = new System.Drawing.Point(58, 76);
+            this.LinkButtonEnterBTCManually.Location = new System.Drawing.Point(75, 89);
             this.LinkButtonEnterBTCManually.Name = "LinkButtonEnterBTCManually";
-            this.LinkButtonEnterBTCManually.Size = new System.Drawing.Size(168, 13);
+            this.LinkButtonEnterBTCManually.Size = new System.Drawing.Size(229, 17);
             this.LinkButtonEnterBTCManually.TabIndex = 1;
             this.LinkButtonEnterBTCManually.TabStop = true;
             this.LinkButtonEnterBTCManually.Text = "&(or enter Bitcoin address manually)";
@@ -58,9 +58,9 @@
             // LinkButtonRegister
             // 
             this.LinkButtonRegister.AutoSize = true;
-            this.LinkButtonRegister.Location = new System.Drawing.Point(46, 49);
+            this.LinkButtonRegister.Location = new System.Drawing.Point(60, 61);
             this.LinkButtonRegister.Name = "LinkButtonRegister";
-            this.LinkButtonRegister.Size = new System.Drawing.Size(194, 13);
+            this.LinkButtonRegister.Size = new System.Drawing.Size(258, 17);
             this.LinkButtonRegister.TabIndex = 2;
             this.LinkButtonRegister.TabStop = true;
             this.LinkButtonRegister.Text = "&(Don\'t have an account? Register here)";
@@ -68,10 +68,10 @@
             // 
             // EnterBTCDialogSwitch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(285, 108);
+            this.ClientSize = new System.Drawing.Size(380, 130);
             this.Controls.Add(this.LinkButtonRegister);
             this.Controls.Add(this.LinkButtonEnterBTCManually);
             this.Controls.Add(this.buttonOK);
@@ -82,8 +82,6 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "EnterBTCDialogSwitch";
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "NiceHash Miner Legacy";
             this.ResumeLayout(false);

@@ -48,7 +48,6 @@ namespace NiceHashMiner
                 MissingMemberHandling = MissingMemberHandling.Ignore,
                 Culture = CultureInfo.InvariantCulture
             };
-
             // #1 first initialize config
             ConfigManager.InitializeConfig();
 
@@ -95,7 +94,7 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer)
             {
                 Helpers.ConsolePrint("NICEHASH", $"TOS differs! agreed: ${ConfigManager.GeneralConfig.agreedWithTOS} != Current ${Globals.CurrentTosVer}. Showing TOS Form.");
-                Application.Run(new Form_ChooseLanguage()); // TODO rename this 
+                Application.Run(new FormEula()); 
                 // check TOS after 
                 if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer) {
                     Helpers.ConsolePrint("NICEHASH", $"TOS differs AFTER TOS confirmation FORM");
@@ -103,11 +102,21 @@ namespace NiceHashMiner
                     return;
                 }
             }
-
-                
+            // if config created show language select
+            if (string.IsNullOrEmpty(ConfigManager.GeneralConfig.Language))
+            {
+                if (Translations.GetAvailableLanguagesNames().Count > 1)
+                {
+                    Application.Run(new Form_ChooseLanguage());
+                }
+                else
+                {
+                    ConfigManager.GeneralConfig.Language = "en";
+                    ConfigManager.GeneralConfigFileCommit();
+                }
+            }
             Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
             
-
             // check WMI
             if (Helpers.IsWmiEnabled())
             {
