@@ -246,7 +246,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     //new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam), // BEAM added for NVIDIA and AMD check GPU section
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash),
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckaroo29),
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31)
+                    //new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31)
                 }
             },
             {
