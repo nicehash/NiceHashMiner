@@ -658,7 +658,7 @@ namespace NiceHashMiner
             var apiGetExceptionString = isApiGetException ? "**" : "";
 
             var speedString =
-                Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) +
+                Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) + " " +
                 iApiData.AlgorithmName + apiGetExceptionString;
             var rateBtcString = FormatPayingOutput(paying);
             var rateCurrencyString = ExchangeRateApi
