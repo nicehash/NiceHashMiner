@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
+﻿using NiceHashMiner.Algorithms;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
-    public class NBMiner : Miner
+    public class NBMiner : VanillaProcessMiner
     {
         private string AlgoName
         {
@@ -51,12 +49,7 @@ namespace NiceHashMiner.Miners
         {
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
 
-            ProcessHandle = _Start();
-        }
-
-        protected override void _Stop(MinerStopType willswitch)
-        {
-            ShutdownMiner(true);
+            _Start();
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)

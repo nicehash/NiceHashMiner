@@ -172,6 +172,7 @@
     <Compile Include="Miners\Phoenix.cs" />
     <Compile Include="Miners\Trex.cs" />
     <Compile Include="Miners\Ttminer.cs" />
+    <Compile Include="Miners\VanillaProcessMiner.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
