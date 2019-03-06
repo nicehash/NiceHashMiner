@@ -188,13 +188,17 @@ namespace NiceHashMiner.Forms
         public void EndBenchmarkForDevice(ComputeDevice device, bool failedAlgos)
         {
             _hasFailedAlgorithms = failedAlgos || _hasFailedAlgorithms;
+            var endBench = false;
             lock (_runningBenchmarkThreads)
             {
                 _runningBenchmarkThreads.RemoveAll(x => x.Device == device);
 
-                if (_runningBenchmarkThreads.Count <= 0) 
-                    EndBenchmark();
+                if (_runningBenchmarkThreads.Count <= 0)
+                    endBench = true;
             }
+
+            if (endBench)
+                EndBenchmark();
         }
 
 
