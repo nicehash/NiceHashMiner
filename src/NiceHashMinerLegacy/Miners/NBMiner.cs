@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Miners
 {
@@ -30,6 +32,10 @@ namespace NiceHashMiner.Miners
             public double? TotalHashrate => miner?.total_hashrate;
         }
 
+        private double _benchHashes;
+        private int _benchIters;
+        private int _targetBenchIters;
+
         private string AlgoName
         {
             get
@@ -44,6 +50,23 @@ namespace NiceHashMiner.Miners
                         return "ethash";
                     default:
                         return "";
+                }
+            }
+        }
+
+        private double DevFee
+        {
+            get
+            {
+                switch (MiningSetup.CurrentAlgorithmType)
+                {
+                    case AlgorithmType.GrinCuckaroo29:
+                    case AlgorithmType.GrinCuckatoo31:
+                        return 2.0;
+                    case AlgorithmType.DaggerHashimoto:
+                        return 0.65;
+                    default:
+                        return 0;
                 }
             }
         }
@@ -80,17 +103,50 @@ namespace NiceHashMiner.Miners
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
         {
-            throw new NotImplementedException();
+            _benchHashes = 0;
+            _benchIters = 0;
+            _targetBenchIters = Math.Max(1, (int) Math.Floor(time / 20d));
+
+            var url = GetServiceUrl(algorithm.NiceHashID);
+            var btc = Globals.GetBitcoinUser();
+            var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
+
+            return GetStartCommand(url, btc, worker);
+        }
+
+        public override void InvokeBenchmarkSignalQuit()
+        {
+            _Stop(MinerStopType.END);
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
-            throw new NotImplementedException();
+            CheckOutdata(outdata);
         }
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            throw new NotImplementedException();
+            var id = MiningSetup.MiningPairs.First().Device.ID;
+            if (!outdata.TryGetHashrateAfter($" - {id}: ", out var hashrate) ||
+                hashrate <= 0)
+            {
+                return false;
+            }
+
+            _benchHashes += hashrate;
+            _benchIters++;
+
+            return _benchIters >= _targetBenchIters;
+        }
+
+        protected override void FinishUpBenchmark()
+        {
+            if (_benchIters != 0 && BenchmarkAlgorithm != null)
+            {
+                BenchmarkAlgorithm.BenchmarkSpeed = (_benchHashes / _benchIters) * (1 - DevFee * 0.01);
+            }
+
+            _Stop(MinerStopType.END);
         }
 
         public override Task<ApiData> GetSummaryAsync()
