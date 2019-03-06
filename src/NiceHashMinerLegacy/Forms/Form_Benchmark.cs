@@ -485,7 +485,7 @@ namespace NiceHashMiner.Forms
 
                     if (result == DialogResult.Retry)
                     {
-                        StartButonClick();
+                        StartStopBtn_Click(this, EventArgs.Empty);
                         return;
                     }
 
