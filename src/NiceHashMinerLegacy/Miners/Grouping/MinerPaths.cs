@@ -136,6 +136,8 @@ namespace NiceHashMiner.Miners.Grouping
             public const string BMiner = Bin3rdParty + @"\bminer\bminer.exe";
 
             public const string TTMiner = Bin3rdParty + @"\ttminer\TT-Miner.exe";
+
+            public const string NBMiner = Bin3rdParty + @"\nbminer\nbminer.exe";
         }
 
         // NEW START
@@ -234,6 +236,8 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.GMiner;
                 case MinerBaseType.BMiner:
                     return Data.BMiner;
+                case MinerBaseType.NBMiner:
+                    return Data.NBMiner;
             }
             return Data.None;
         }

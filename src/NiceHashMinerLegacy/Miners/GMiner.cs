@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using NiceHashMiner.Algorithms;
+﻿using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -20,13 +18,11 @@ namespace NiceHashMiner.Miners
     {
         private const double DevFee = 2.0;
 
-        private readonly HttpClient _httpClient;
-
         private int _benchIters;
         private double _benchHashes;
         private int _targetBenchIters;
 
-        private class JsonModel
+        private class JsonModel : IApiResult
         {
             public class DeviceEntry
             {
@@ -35,6 +31,8 @@ namespace NiceHashMiner.Miners
             }
 
             public List<DeviceEntry> devices;
+
+            public double? TotalHashrate => devices?.Sum(d => d.speed);
         }
 
         private string AlgoName
@@ -60,7 +58,6 @@ namespace NiceHashMiner.Miners
         public GMiner() : base("gminer")
         {
             ConectionType = NhmConectionType.NONE;
-            _httpClient = new HttpClient();
         }
 
         protected override int GetMaxCooldownTimeInMilliseconds()
@@ -145,25 +142,9 @@ namespace NiceHashMiner.Miners
             base.BenchmarkThreadRoutineFinish();
         }
 
-        public override async Task<ApiData> GetSummaryAsync()
+        public override Task<ApiData> GetSummaryAsync()
         {
-            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            var api = new ApiData(MiningSetup.CurrentAlgorithmType);
-            try
-            {
-                var result = await _httpClient.GetStringAsync($"http://127.0.0.1:{ApiPort}/stat");
-                var summary = JsonConvert.DeserializeObject<JsonModel>(result);
-                api.Speed = summary.devices.Sum(d => d.speed);
-                CurrentMinerReadStatus =
-                    api.Speed <= 0 ? MinerApiReadStatus.READ_SPEED_ZERO : MinerApiReadStatus.GOT_READ;
-            }
-            catch (Exception e)
-            {
-                CurrentMinerReadStatus = MinerApiReadStatus.NETWORK_EXCEPTION;
-                Helpers.ConsolePrint(MinerTag(), e.Message);
-            }
-
-            return api;
+            return GetHttpSummaryAsync<JsonModel>("stat");
         }
     }
 }
