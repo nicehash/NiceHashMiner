@@ -2,22 +2,25 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPlugin.Toolkit;
+using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NBMiner
 {
-    public class NBMiner : MinerBase
+    public class NBMiner : MinerBase, IDisposable
     {
         private int _apiPort;
         private readonly string _uuid;
         private AlgorithmType _algorithmType;
         private readonly Dictionary<int, int> _cudaIDMap;
+        private readonly HttpClient _http = new HttpClient();
 
         private string AlgoName
         {
@@ -70,10 +73,21 @@ namespace NBMiner
             var devs = string.Join(",", _miningPairs.Select(p => _cudaIDMap[p.device.ID]));
             return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} -d {devs} -RUN ";
         }
-
-        public override Task<ApiData> GetMinerStatsDataAsync()
+        
+        public override async Task<ApiData> GetMinerStatsDataAsync()
         {
-            throw new NotImplementedException();
+            var api = new ApiData();
+            try
+            {
+                var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/api/v1/status");
+                var summary = JsonConvert.DeserializeObject<NBMinerJsonResponse>(result);
+                api.AlgorithmSpeedsTotal = new[] { (_algorithmType, summary.TotalHashrate ?? 0) };
+            }
+            catch (Exception e)
+            {
+            }
+
+            return api;
         }
 
         protected override void Init()
@@ -81,6 +95,11 @@ namespace NBMiner
             bool ok;
             (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+        }
+
+        public void Dispose()
+        {
+            _http.Dispose();
         }
     }
 }
