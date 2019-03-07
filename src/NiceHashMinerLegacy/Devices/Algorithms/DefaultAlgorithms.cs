@@ -269,6 +269,14 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.TTMiner, AlgorithmType.MTP),
                     new Algorithm(MinerBaseType.TTMiner, AlgorithmType.Lyra2REv3),
                 }
+            },
+            {
+                MinerBaseType.NBMiner,
+                new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckaroo29),
+                    new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31)
+                }
             }
             
         }.ConcatDictList(All, Gpu);

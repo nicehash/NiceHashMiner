@@ -47,7 +47,7 @@ namespace MinerPlugin.Toolkit
         public static string GetStringAfter(this string s, string after)
         {
             var index = s.IndexOf(after, StringComparison.Ordinal);
-            return s.Substring(index);
+            return s.Substring(index + after.Length);
         }
 
         public static (double, bool) TryGetHashrateAfter(this string s, string after)
