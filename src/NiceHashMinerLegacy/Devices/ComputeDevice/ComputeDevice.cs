@@ -345,7 +345,9 @@ namespace NiceHashMiner.Devices
                 MinerBaseType.trex,
                 MinerBaseType.Phoenix,
                 MinerBaseType.GMiner,
-                MinerBaseType.BMiner
+                MinerBaseType.BMiner,
+                MinerBaseType.TTMiner,
+                MinerBaseType.NBMiner
             };
 
             return AlgorithmSettings.FindAll(a => thirdPartyMiners.IndexOf(a.MinerBaseType) == -1);
