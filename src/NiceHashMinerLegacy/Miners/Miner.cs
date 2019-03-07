@@ -449,11 +449,6 @@ namespace NiceHashMiner
             }
             else
             {
-                if (this is NBMiner)
-                {
-                    benchmarkHandle.StartInfo.FileName =
-                        System.IO.Path.Combine(Environment.CurrentDirectory, MiningSetup.MinerPath);
-                }
                 BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
                 benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;

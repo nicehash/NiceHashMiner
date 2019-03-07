@@ -83,7 +83,7 @@ namespace NiceHashMiner.Miners
         {
             var user = GetUsername(btcAddress, worker);
             var devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
-            var cmd = $"-a {AlgoName} -o {url} -u {user} --api 127.0.0.1:{ApiPort} -d {devs} ";
+            var cmd = $"-a {AlgoName} -o {url} -u {user} --api 127.0.0.1:{ApiPort} -d {devs} -RUN ";
             cmd += ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
 
             return cmd;
@@ -94,11 +94,6 @@ namespace NiceHashMiner.Miners
             LastCommandLine = GetStartCommand(url, btcAdress, worker);
 
             _Start();
-        }
-
-        protected override void _Stop(MinerStopType willswitch)
-        {
-            KillProspectorClaymoreMinerBase(MinerExeName.Replace(".exe", ""));
         }
 
         protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
@@ -112,11 +107,6 @@ namespace NiceHashMiner.Miners
             var worker = ConfigManager.GeneralConfig.WorkerName.Trim();
 
             return GetStartCommand(url, btc, worker);
-        }
-
-        public override void InvokeBenchmarkSignalQuit()
-        {
-            _Stop(MinerStopType.END);
         }
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
@@ -145,8 +135,6 @@ namespace NiceHashMiner.Miners
             {
                 BenchmarkAlgorithm.BenchmarkSpeed = (_benchHashes / _benchIters) * (1 - DevFee * 0.01);
             }
-
-            _Stop(MinerStopType.END);
         }
 
         public override Task<ApiData> GetSummaryAsync()
