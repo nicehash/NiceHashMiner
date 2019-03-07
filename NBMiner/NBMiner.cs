@@ -40,15 +40,73 @@ namespace NBMiner
             }
         }
 
+        private double DevFee
+        {
+            get
+            {
+                switch (_algorithmType)
+                {
+                    case AlgorithmType.GrinCuckaroo29:
+                    case AlgorithmType.GrinCuckatoo31:
+                        return 2.0;
+                    case AlgorithmType.DaggerHashimoto:
+                        return 0.65;
+                    default:
+                        return 0;
+                }
+            }
+        }
+
         public NBMiner(string uuid, Dictionary<int, int> cudaIDMap)
         {
             _uuid = uuid;
             _cudaIDMap = cudaIDMap;
         }
 
-        public override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public override async Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            throw new NotImplementedException();
+            int benchTime;
+            switch (benchmarkType)
+            {
+                case BenchmarkPerformanceType.Quick:
+                    benchTime = 20;
+                    break;
+                case BenchmarkPerformanceType.Precise:
+                    benchTime = 120;
+                    break;
+                default:
+                    benchTime = 60;
+                    break;
+            }
+
+            var cl = CreateCommandLine(MinerToolkit.DemoUser);
+            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var bp = new BenchmarkProcess(binPath, binCwd, cl);
+
+            var benchHashes = 0d;
+            var benchIters = 0;
+            var benchHashResult = 0d;  // Not too sure what this is..
+            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchTime / 20d));
+
+            bp.CheckData = (data) =>
+            {
+                var id = _cudaIDMap.Values.First();
+                var (hashrate, found) = data.TryGetHashrateAfter($" - {id}: ");
+
+                if (!found) return (benchHashResult, false);
+
+                benchHashes += hashrate;
+                benchIters++;
+
+                benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+
+                return (benchHashResult, benchIters >= targetBenchIters);
+            };
+
+            var timeout = TimeSpan.FromSeconds(benchTime + 5);
+            var benchWait = TimeSpan.FromMilliseconds(500);
+            var t = MinerToolkit.WaitBenchmarkResult(bp, timeout, benchWait, stop);
+            return await t;
         }
 
         protected override (string binPath, string binCwd) GetBinAndCwdPaths()
