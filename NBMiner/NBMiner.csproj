@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\Miners\MinerPlugin\MinerPlugin.csproj" />
+    <ProjectReference Include="..\src\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj" />
+  </ItemGroup>
+
+</Project>
