@@ -57,7 +57,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeviceDetectionPrinter", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinerSmokeTest", "src\Tools\MinerSmokeTest\MinerSmokeTest.csproj", "{D69B02E9-3FAF-438C-BC26-86A9451E5CDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBMiner", "NBMiner\NBMiner.csproj", "{A4B0CDCB-D1D7-4563-9888-D58E0B36D0F8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBMiner", "src\Miners\NBMiner\NBMiner.csproj", "{A4B0CDCB-D1D7-4563-9888-D58E0B36D0F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
