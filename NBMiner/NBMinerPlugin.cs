@@ -15,7 +15,7 @@ namespace NBMiner
 
         public string PluginUUID => "139935b0-7b7e-4016-855a-272ace00ce8a";
 
-        private Dictionary<int, int> _mappedCudaIDs = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> _mappedCudaIDs = new Dictionary<int, int>();
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -55,7 +55,7 @@ namespace NBMiner
 
         public IMiner CreateMiner()
         {
-            throw new NotImplementedException();
+            return new NBMiner(PluginUUID, _mappedCudaIDs);
         }
 
         public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)
