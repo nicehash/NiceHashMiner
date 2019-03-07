@@ -29,6 +29,7 @@
         GMiner,
         BMiner,
         TTMiner,
+        NBMiner,
         END,
         PLUGIN // make PLUGIN outside of end
     }

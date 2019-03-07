@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -140,6 +141,8 @@ namespace NiceHashMiner
         protected const string HttpHeaderDelimiter = "\r\n\r\n";
 
         protected bool IsMultiType;
+
+        private readonly Lazy<HttpClient> _httpClient = new Lazy<HttpClient>();
 
         protected Miner(string minerDeviceName)
         {
@@ -588,7 +591,7 @@ namespace NiceHashMiner
             }
         }
 
-        public void InvokeBenchmarkSignalQuit()
+        public virtual void InvokeBenchmarkSignalQuit()
         {
             KillAllUsedMinerProcesses();
         }
@@ -1179,6 +1182,28 @@ namespace NiceHashMiner
         }
 
         public abstract Task<ApiData> GetSummaryAsync();
+
+        protected async Task<ApiData> GetHttpSummaryAsync<TJsonModel>(string endpoint)
+            where TJsonModel : IApiResult
+        {
+            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
+            var api = new ApiData(MiningSetup.CurrentAlgorithmType);
+            try
+            {
+                var result = await _httpClient.Value.GetStringAsync($"http://127.0.0.1:{ApiPort}/{endpoint}");
+                var summary = JsonConvert.DeserializeObject<TJsonModel>(result);
+                api.Speed = summary.TotalHashrate ?? 0;
+                CurrentMinerReadStatus =
+                    api.Speed <= 0 ? MinerApiReadStatus.READ_SPEED_ZERO : MinerApiReadStatus.GOT_READ;
+            }
+            catch (Exception e)
+            {
+                CurrentMinerReadStatus = MinerApiReadStatus.NETWORK_EXCEPTION;
+                Helpers.ConsolePrint(MinerTag(), e.Message);
+            }
+
+            return api;
+        }
 
         protected async Task<ApiData> GetSummaryCpuAsync(string method = "", bool overrideLoop = false)
         {

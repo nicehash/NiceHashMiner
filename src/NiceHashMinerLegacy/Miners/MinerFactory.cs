@@ -100,6 +100,8 @@ namespace NiceHashMiner.Miners
                     return new GMiner();
                 case MinerBaseType.BMiner:
                     return new BMiner(algorithm.NiceHashID);
+                case MinerBaseType.NBMiner:
+                    return new NBMiner();
                 case MinerBaseType.PLUGIN:
                     return CreateMinerFromPlugin(algorithm);
             }
