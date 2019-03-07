@@ -82,7 +82,7 @@ namespace NiceHashMiner.Miners
         private string GetStartCommand(string url, string btcAddress, string worker)
         {
             var user = GetUsername(btcAddress, worker);
-            var devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.ID));
+            var devs = string.Join(",", MiningSetup.MiningPairs.Select(p => p.Device.IDByBus));
             var cmd = $"-a {AlgoName} -o {url} -u {user} --api 127.0.0.1:{ApiPort} -d {devs} ";
             cmd += ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
 
@@ -126,7 +126,7 @@ namespace NiceHashMiner.Miners
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            var id = MiningSetup.MiningPairs.First().Device.ID;
+            var id = MiningSetup.MiningPairs.First().Device.IDByBus;
             if (!outdata.TryGetHashrateAfter($" - {id}: ", out var hashrate) ||
                 hashrate <= 0)
             {
