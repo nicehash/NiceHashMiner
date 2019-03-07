@@ -161,49 +161,49 @@ namespace MinerPlugin.Toolkit
         {
             var retTuple = (speed: 0.0, success: false, msg: ""); 
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            var timeoutSource = new CancellationTokenSource();
-            var timeout = timeoutSource.Token;
             var timeoutTimerTime = timeoutTime + delayTime;
-            using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeout, stop))
-            using (var timeoutTimer = new TimersTimer(timeoutTime.TotalMilliseconds)) // timeoutTimer is single shot
-            {
-                timeoutTimer.Elapsed += (s, e) => timeoutSource.Cancel(); // we can only cancel here so we are fine
-                timeoutTimer.AutoReset = false; // single shot
-                timeoutTimer.Start();
 
-                try
+            using (var timeoutSource = new CancellationTokenSource(timeoutTimerTime))
+            {
+                var timeout = timeoutSource.Token;
+                using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeout, stop))
                 {
-                    await Task.Delay(delayTime, linkedCts.Token);
-                    (retTuple.speed, retTuple.success) = await benchmarkProcess.Execute(linkedCts.Token);
-                }
-                catch (OperationCanceledException)
-                {
-                    // TODO this block is redundant
-                    //add finally ??
-                    if (timeout.IsCancellationRequested)
+                    try
                     {
-                        Console.WriteLine("Operation timed out.");
-                        return (0, false, "Operation timed out.");
+                        await Task.Delay(delayTime, linkedCts.Token);
+                        (retTuple.speed, retTuple.success) = await benchmarkProcess.Execute(linkedCts.Token);
                     }
-                    else if (stop.IsCancellationRequested)
+                    catch (OperationCanceledException)
                     {
-                        Console.WriteLine("Cancelling per user request.");
-                        stop.ThrowIfCancellationRequested();
-                        return (0, false, "Cancelling per user request.");
+                        // TODO this block is redundant
+                        //add finally ??
+                        if (timeout.IsCancellationRequested)
+                        {
+                            Console.WriteLine("Operation timed out.");
+                            return (0, false, "Operation timed out.");
+                        }
+                        else if (stop.IsCancellationRequested)
+                        {
+                            Console.WriteLine("Cancelling per user request.");
+                            stop.ThrowIfCancellationRequested();
+                            return (0, false, "Cancelling per user request.");
+                        }
                     }
+
                 }
 
+                if (timeout.IsCancellationRequested)
+                {
+                    Console.WriteLine("Operation timed out.");
+                    return (0, false, "Operation timed out.");
+                }
+                else if (stop.IsCancellationRequested)
+                {
+                    Console.WriteLine("Cancelling per user request.");
+                    return (0, false, "Cancelling per user request.");
+                }
             }
-            if (timeout.IsCancellationRequested)
-            {
-                Console.WriteLine("Operation timed out.");
-                return (0, false, "Operation timed out.");
-            }
-            else if (stop.IsCancellationRequested)
-            {
-                Console.WriteLine("Cancelling per user request.");
-                return (0, false, "Cancelling per user request.");
-            }
+
             return retTuple;
         }
     }
