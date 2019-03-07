@@ -159,6 +159,12 @@
       <DependentUpon>FormEula.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormHelpers.cs" />
+    <Compile Include="Forms\Form_MinerPlugins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_MinerPlugins.Designer.cs">
+      <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -409,6 +415,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_DcriValues.resx">
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_MinerPlugins.resx">
+      <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
