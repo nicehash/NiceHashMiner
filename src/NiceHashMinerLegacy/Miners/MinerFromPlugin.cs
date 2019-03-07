@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using NiceHashMinerLegacy.Common.Device;
 using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
+using NiceHashMiner.Plugin;
 
 namespace NiceHashMiner.Miners
 {

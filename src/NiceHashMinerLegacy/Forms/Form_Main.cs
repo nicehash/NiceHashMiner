@@ -5,6 +5,7 @@ using NiceHashMiner.Forms;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Plugin;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMiner.Utils;
@@ -1042,7 +1043,10 @@ namespace NiceHashMiner
 
         private void ButtonHelp_Click(object sender, EventArgs e)
         {
-            Process.Start(Links.NhmHelp);
+            //Process.Start(Links.NhmHelp);
+            var pluginsForm = new Form_MinerPlugins();
+            SetChildFormCenter(pluginsForm);
+            pluginsForm.ShowDialog();
         }
 
         private void ToolStripStatusLabel10_Click(object sender, EventArgs e)

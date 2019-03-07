@@ -15,6 +15,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Common.Device;
 using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
 using MinerPlugin;
+using NiceHashMiner.Plugin;
 
 namespace NiceHashMiner.Benchmarking
 {

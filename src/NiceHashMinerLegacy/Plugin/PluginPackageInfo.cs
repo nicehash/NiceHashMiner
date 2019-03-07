@@ -15,6 +15,11 @@ namespace NiceHashMiner.Plugin
         public string PluginUUID { get; set; }
 
         /// <summary>
+        /// Name of the plugin. Usualy the name of the underlying miner.
+        /// </summary>
+        public string PluginName { get; set; }
+
+        /// <summary>
         /// Plugin package version. Use this to compare versions for updating or downgrading.
         /// </summary>
         public Version PluginVersion { get; set; }
