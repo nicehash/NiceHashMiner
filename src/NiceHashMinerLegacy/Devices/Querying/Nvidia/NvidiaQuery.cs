@@ -51,7 +51,7 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
 
             foreach (var cudaDev in cudaDevs)
             {
-                var skip = cudaDev.SM_major < 2 || cudaDev.SM_minor < 1;
+                var skip = cudaDev.SM_major < 2 && cudaDev.SM_minor < 1;
                 var skipOrAdd = skip ? "SKIPED" : "ADDED";
                 var etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
                 stringBuilder.AppendLine($"\t{skipOrAdd} device:");
