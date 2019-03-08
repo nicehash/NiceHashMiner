@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -134,6 +135,26 @@ namespace NiceHashMiner.Devices.Algorithms
                     AlgorithmType.DaggerHashimoto
                 });
             }
+
+            if (algoSettings.ContainsKey(MinerBaseType.NBMiner))
+            {
+                if (device is CudaComputeDevice cudaDev)
+                {
+                    // Only SM 6.1
+                    // check the ram
+                    const ulong minGrin29Mem = 5 << 30;
+                    const ulong minGrin31Mem = 8 << 30;
+                    var isSM61 = cudaDev.SMMajor == 6 && cudaDev.SMMinor == 1;
+                    if (isSM61 == false || cudaDev.GpuRam < minGrin29Mem)
+                    {
+                        algoSettings.Remove(MinerBaseType.NBMiner);
+                    }
+                    else if (isSM61 && cudaDev.GpuRam < minGrin31Mem) 
+                    {
+                        algoSettings[MinerBaseType.NBMiner] = algoSettings[MinerBaseType.NBMiner].Where(a => a.NiceHashID != AlgorithmType.GrinCuckatoo31).ToList();
+                    }
+                }
+            } 
 
             if (algoSettings.ContainsKey(MinerBaseType.ccminer_alexis))
             {
