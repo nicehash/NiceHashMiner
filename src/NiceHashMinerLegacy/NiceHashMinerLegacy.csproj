@@ -518,7 +518,8 @@ If NOT exist "$(SolutionDir)$(Configuration)\cpuid.dll" copy /Y "$(SolutionDir)\
 If NOT exist "$(SolutionDir)$(Configuration)\cuda_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cuda_device_detection.dll" "$(SolutionDir)$(Configuration)\cuda_device_detection.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcp120.dll" "$(SolutionDir)$(Configuration)\msvcp120.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcr120.dll" "$(SolutionDir)$(Configuration)\msvcr120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL.dll"
+REM OpenCL.dll can cause problems don't copy it over
+REM If NOT exist "$(SolutionDir)$(Configuration)\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\opencl_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\opencl_device_detection.dll" "$(SolutionDir)$(Configuration)\opencl_device_detection.dll"
 
 

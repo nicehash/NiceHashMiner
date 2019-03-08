@@ -61,7 +61,7 @@ namespace NiceHashMiner.Miners
             {
                 switch (MiningSetup.CurrentAlgorithmType)
                 {
-                    case AlgorithmType.Equihash:
+                    //case AlgorithmType.Equihash:
                     case AlgorithmType.Beam:
                     case AlgorithmType.ZHash:
                         return true;
@@ -77,7 +77,7 @@ namespace NiceHashMiner.Miners
             {
                 switch (MiningSetup.CurrentAlgorithmType)
                 {
-                    case AlgorithmType.Equihash:
+                    //case AlgorithmType.Equihash:
                     case AlgorithmType.Beam:
                     case AlgorithmType.ZHash:
                         return 2;
@@ -106,15 +106,15 @@ namespace NiceHashMiner.Miners
             switch (algo)
             {
                 case AlgorithmType.Beam:
-                    return "beam+ssl";
-                case AlgorithmType.Equihash:
-                    return "stratum";
+                    return "beam";
+                //case AlgorithmType.Equihash:
+                //    return "stratum";
                 case AlgorithmType.ZHash:
                     return "equihash1445";
                 case AlgorithmType.DaggerHashimoto:
                     return "ethstratum";
-                case AlgorithmType.Decred:
-                    return "blake14r";
+                //case AlgorithmType.Decred:
+                //    return "blake14r";
                 case AlgorithmType.Blake2s:
                     return "blake2s";
                 case AlgorithmType.GrinCuckaroo29:

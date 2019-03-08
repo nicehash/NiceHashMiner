@@ -16,7 +16,7 @@ namespace NiceHashMinerLegacy.Tests.Algorithms
     {
         // All arbitrary
         private const double PowerUsage = 245.80;
-        private const AlgorithmType Algo = AlgorithmType.Equihash;
+        private const AlgorithmType Algo = AlgorithmType.Equihash_UNUSED;
         private const MinerBaseType Miner = MinerBaseType.EWBF;
         private const double Speed = 3654181.233518;
 
