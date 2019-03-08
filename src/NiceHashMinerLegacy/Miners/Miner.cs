@@ -383,10 +383,10 @@ namespace NiceHashMiner
                 return 5 * 60 + 120; // 5 minutes plus two minutes
             }
 
-            if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight)
-            {
-                return 5 * 60 + 120; // 5 minutes plus two minutes
-            }
+            //if (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight)
+            //{
+            //    return 5 * 60 + 120; // 5 minutes plus two minutes
+            //}
 
             return timeInSeconds + 120; // wait time plus two minutes
         }

@@ -282,14 +282,14 @@ namespace NiceHashMiner.Miners.Parsing
             //}
             switch (minerBaseType)
             {
-                case MinerBaseType.OptiminerAMD:
-                    return MinerType.OptiminerZcash;
+                //case MinerBaseType.OptiminerAMD:
+                //    return MinerType.OptiminerZcash;
                 case MinerBaseType.sgminer:
                     return MinerType.sgminer;
                 case MinerBaseType.ccminer:
                 case MinerBaseType.ccminer_alexis:
                 case MinerBaseType.experimental:
-                    if (AlgorithmType.CryptoNight == algorithmType)
+                    if (AlgorithmType.CryptoNight_UNUSED == algorithmType)
                     {
                         return MinerType.ccminer_CryptoNight;
                     }
@@ -297,16 +297,16 @@ namespace NiceHashMiner.Miners.Parsing
                 case MinerBaseType.Claymore:
                     switch (algorithmType)
                     {
-                        case AlgorithmType.CryptoNight:
+                        case AlgorithmType.CryptoNight_UNUSED:
                             return MinerType.ClaymoreCryptoNight;
-                        case AlgorithmType.Equihash:
-                            return MinerType.ClaymoreZcash;
+                        //case AlgorithmType.Equihash:
+                        //    return MinerType.ClaymoreZcash;
                         case AlgorithmType.DaggerHashimoto:
                             return MinerType.ClaymoreDual;
                     }
                     break;
                 case MinerBaseType.Claymore_old:
-                    if (AlgorithmType.CryptoNight == algorithmType)
+                    if (AlgorithmType.CryptoNight_UNUSED == algorithmType)
                     {
                         return MinerType.ClaymoreCryptoNight;
                     }
@@ -321,37 +321,37 @@ namespace NiceHashMiner.Miners.Parsing
                         return MinerType.ethminer_CUDA;
                     }
                     break;
-                case MinerBaseType.nheqminer:
-                    switch (deviceType)
-                    {
-                        case DeviceType.CPU:
-                            return MinerType.nheqminer_CPU;
-                        case DeviceType.AMD:
-                            return MinerType.nheqminer_AMD;
-                        case DeviceType.NVIDIA:
-                            return MinerType.nheqminer_CUDA;
-                    }
-                    break;
-                case MinerBaseType.eqm:
-                    if (DeviceType.CPU == deviceType)
-                    {
-                        return MinerType.eqm_CPU;
-                    }
-                    if (DeviceType.NVIDIA == deviceType)
-                    {
-                        return MinerType.eqm_CUDA;
-                    }
-                    break;
+                //case MinerBaseType.nheqminer:
+                //    switch (deviceType)
+                //    {
+                //        case DeviceType.CPU:
+                //            return MinerType.nheqminer_CPU;
+                //        case DeviceType.AMD:
+                //            return MinerType.nheqminer_AMD;
+                //        case DeviceType.NVIDIA:
+                //            return MinerType.nheqminer_CUDA;
+                //    }
+                //    break;
+                //case MinerBaseType.eqm:
+                //    if (DeviceType.CPU == deviceType)
+                //    {
+                //        return MinerType.eqm_CPU;
+                //    }
+                //    if (DeviceType.NVIDIA == deviceType)
+                //    {
+                //        return MinerType.eqm_CUDA;
+                //    }
+                //    break;
                 //case MinerBaseType.excavator:
                 //    return MinerType.excavator;
                 case MinerBaseType.EWBF:
                     return MinerType.EWBF;
-                case MinerBaseType.Xmrig:
-                    return MinerType.Xmrig;
-                case MinerBaseType.dtsm:
-                    return MinerType.dtsm;
-                case MinerBaseType.cpuminer:
-                    return MinerType.cpuminer_opt;
+                //case MinerBaseType.Xmrig:
+                //    return MinerType.Xmrig;
+                //case MinerBaseType.dtsm:
+                //    return MinerType.dtsm;
+                //case MinerBaseType.cpuminer:
+                //    return MinerType.cpuminer_opt;
                 case MinerBaseType.trex:
                     return MinerType.trex;
                 case MinerBaseType.Phoenix:
