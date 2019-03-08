@@ -91,7 +91,7 @@
         GrinCuckatoo31 = 39,
         Lyra2REv3 = 40,
         MTP = 41,
-        CryptonightR = 42,
+        CryptoNightR = 42,
         #endregion // NiceHashAPI
     }
 }
