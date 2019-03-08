@@ -159,7 +159,7 @@ namespace NiceHashMiner
 
             switch (algo)
             {
-                case AlgorithmType.Equihash:
+                //case AlgorithmType.Equihash:
                 case AlgorithmType.ZHash:
                 case AlgorithmType.Beam:
                     unit = "Sol/s";
@@ -400,13 +400,13 @@ namespace NiceHashMiner
                 switch (secondary)
                 {
                     case AlgorithmType.Decred:
-                        return AlgorithmType.DaggerDecred;
-                    case AlgorithmType.Lbry:
-                        return AlgorithmType.DaggerLbry;
-                    case AlgorithmType.Pascal:
-                        return AlgorithmType.DaggerPascal;
-                    case AlgorithmType.Sia:
-                        return AlgorithmType.DaggerSia;
+                       return AlgorithmType.DaggerDecred;
+                    //case AlgorithmType.Lbry:
+                    //    return AlgorithmType.DaggerLbry;
+                    //case AlgorithmType.Pascal:
+                    //    return AlgorithmType.DaggerPascal;
+                    //case AlgorithmType.Sia:
+                    //    return AlgorithmType.DaggerSia;
                     case AlgorithmType.Blake2s:
                         return AlgorithmType.DaggerBlake2s;
                     case AlgorithmType.Keccak:

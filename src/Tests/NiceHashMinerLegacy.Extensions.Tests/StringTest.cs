@@ -30,14 +30,25 @@ namespace NiceHashMinerLegacy.Extensions.Tests
             "14:39:00 GPU[1]: 2.442 MH/s  CClk:1.670 GHz MClk:3.802 GHz 70C 100% [A2:R0 0.0%]  LastShare: 00:01:26"
                 .TryGetHashrateAfter("]:", out hash);
             Assert.AreEqual(2442000, hash);
+
+            // NBMiner
+            "[13:11:57] INFO - cuckatoo - 1: 1.47 g/s".TryGetHashrateAfter(" - 1: ", out hash);
+            Assert.AreEqual(1.47, hash);
         }
 
         [TestMethod]
-        public void GetHashrateAfterShouldReturnNull()
+        public void GetHashrateAfterShouldReturnZero()
         {
             Assert.IsFalse("[2019-01-06 21:18:33] : Benchmark Total: --- H/S"
                 .TryGetHashrateAfter("Benchmark Total:", out var hash));
             Assert.AreEqual(0, hash);
+        }
+
+        [TestMethod]
+        public void GetStringAfterShouldExcludeAfter()
+        {
+            var after = "[13:11:57] INFO - cuckatoo - 1: 1.47 g/s".GetStringAfter(" - 1: ");
+            Assert.AreEqual("1.47 g/s", after);
         }
     }
 }

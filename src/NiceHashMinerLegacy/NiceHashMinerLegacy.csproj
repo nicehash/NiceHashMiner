@@ -179,6 +179,7 @@
     <Compile Include="Forms\Form_DcriValues.Designer.cs">
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IApiResult.cs" />
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="Miners\BMiner.cs" />
@@ -186,9 +187,11 @@
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\GMiner.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
+    <Compile Include="Miners\NBMiner.cs" />
     <Compile Include="Miners\Phoenix.cs" />
     <Compile Include="Miners\Trex.cs" />
     <Compile Include="Miners\Ttminer.cs" />
+    <Compile Include="Miners\VanillaProcessMiner.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
@@ -545,7 +548,8 @@ If NOT exist "$(SolutionDir)$(Configuration)\cpuid.dll" copy /Y "$(SolutionDir)\
 If NOT exist "$(SolutionDir)$(Configuration)\cuda_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cuda_device_detection.dll" "$(SolutionDir)$(Configuration)\cuda_device_detection.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcp120.dll" "$(SolutionDir)$(Configuration)\msvcp120.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcr120.dll" "$(SolutionDir)$(Configuration)\msvcr120.dll"
-If NOT exist "$(SolutionDir)$(Configuration)\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL.dll"
+REM OpenCL.dll can cause problems don't copy it over
+REM If NOT exist "$(SolutionDir)$(Configuration)\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\opencl_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\opencl_device_detection.dll" "$(SolutionDir)$(Configuration)\opencl_device_detection.dll"
 
 

@@ -21,10 +21,10 @@ namespace NiceHashMiner.Miners
         {
             switch (algorithm.NiceHashID)
             {
-                case AlgorithmType.Equihash:
-                    return new ClaymoreZcashMiner();
-                case AlgorithmType.CryptoNightV7:
-                    return new ClaymoreCryptoNightMiner();
+                //case AlgorithmType.Equihash:
+                //    return new ClaymoreZcashMiner();
+                //case AlgorithmType.CryptoNightV7:
+                //    return new ClaymoreCryptoNightMiner();
                 case AlgorithmType.DaggerHashimoto:
                     return new ClaymoreDual(algorithm.SecondaryNiceHashID);
             }
@@ -44,10 +44,10 @@ namespace NiceHashMiner.Miners
 
         private static Miner CreateEwbf(AlgorithmType type)
         {
-            if (type == AlgorithmType.Equihash)
-            {
-                return new Ewbf();
-            }
+            //if (type == AlgorithmType.Equihash)
+            //{
+            //    return new Ewbf();
+            //}
             if (type == AlgorithmType.ZHash)
             {
                 return new Ewbf144();
@@ -102,6 +102,8 @@ namespace NiceHashMiner.Miners
                     return new BMiner(algorithm.NiceHashID);
                 case MinerBaseType.PLUGIN:
                     return CreateMinerFromPlugin(algorithm);
+                case MinerBaseType.NBMiner:
+                    return new NBMiner();
             }
 
             return null;

@@ -42,7 +42,7 @@ namespace NiceHashMiner.Benchmarking
         // CPU sweet spots
         private readonly List<AlgorithmType> _cpuAlgos = new List<AlgorithmType>
         {
-            AlgorithmType.CryptoNight
+            AlgorithmType.CryptoNight_UNUSED
         };
 
         public BenchmarkHandler2(ComputeDevice device, Queue<Algorithm> algorithms, IBenchmarkForm form,

@@ -31,7 +31,7 @@ namespace NiceHashMiner.Benchmarking
         // CPU sweet spots
         private readonly List<AlgorithmType> _cpuAlgos = new List<AlgorithmType>
         {
-            AlgorithmType.CryptoNight
+            AlgorithmType.CryptoNight_UNUSED
         };
 
         public BenchmarkHandler(ComputeDevice device, Queue<Algorithm> algorithms, IBenchmarkForm form,
@@ -74,9 +74,9 @@ namespace NiceHashMiner.Benchmarking
                     _currentAlgorithm.LessThreads = _cpuBenchmarkStatus.GetLessThreads();
                 }
             }
-
+            // this looks like dead code
             if (_claymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.Claymore &&
-                _currentAlgorithm.NiceHashID == AlgorithmType.Equihash)
+                _currentAlgorithm.NiceHashID == AlgorithmType.Equihash_UNUSED)
             {
                 if (_claymoreZcashStatus.HasTest())
                 {
@@ -183,7 +183,7 @@ namespace NiceHashMiner.Benchmarking
                 _cpuBenchmarkStatus = null;
 
                 if (_currentAlgorithm.MinerBaseType == MinerBaseType.Claymore &&
-                    _currentAlgorithm.NiceHashID == AlgorithmType.Equihash &&
+                    _currentAlgorithm.NiceHashID == AlgorithmType.Equihash_UNUSED &&
                     _currentAlgorithm.ExtraLaunchParameters != null &&
                     !_currentAlgorithm.ExtraLaunchParameters.Contains("-asm"))
                 {

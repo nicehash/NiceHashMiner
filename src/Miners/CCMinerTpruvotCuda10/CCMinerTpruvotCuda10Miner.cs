@@ -31,15 +31,15 @@ namespace CCMinerTpruvotCuda10
             switch (algorithmType)
             {
                 case AlgorithmType.NeoScrypt: return "neoscrypt";
-                case AlgorithmType.Lyra2REv2: return "lyra2v2";
+                //case AlgorithmType.Lyra2REv2_UNUSED: return "lyra2v2";
                 case AlgorithmType.Decred: return "decred";
-                case AlgorithmType.Lbry: return "lbry";
-                case AlgorithmType.X11Gost: return "sib";
+                //case AlgorithmType.Lbry_UNUSED: return "lbry";
+                //case AlgorithmType.X11Gost_UNUSED: return "sib";
                 case AlgorithmType.Blake2s: return "blake2s";
-                case AlgorithmType.Sia: return "sia";
+                //case AlgorithmType.Sia_UNUSED: return "sia";
                 case AlgorithmType.Keccak: return "keccak";
                 case AlgorithmType.Skunk: return "skunk";
-                case AlgorithmType.Lyra2z: return "lyra2z";
+                //case AlgorithmType.Lyra2z_UNUSED: return "lyra2z";
                 case AlgorithmType.X16R: return "x16r";
                 case AlgorithmType.Lyra2REv3: return "lyra2v3";
             }

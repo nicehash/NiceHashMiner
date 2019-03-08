@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -20,17 +21,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 if (algoSettings.ContainsKey(MinerBaseType.sgminer))
                 {
                     var sgminerAlgos = algoSettings[MinerBaseType.sgminer];
-                    var lyra2REv2Index = sgminerAlgos.FindIndex(el => el.NiceHashID == AlgorithmType.Lyra2REv2);
                     var neoScryptIndex = sgminerAlgos.FindIndex(el => el.NiceHashID == AlgorithmType.NeoScrypt);
-                    var cryptoNightIndex = sgminerAlgos.FindIndex(el => el.NiceHashID == AlgorithmType.CryptoNight);
-
-                    // Check for optimized version
-                    if (lyra2REv2Index > -1)
-                    {
-                        sgminerAlgos[lyra2REv2Index].ExtraLaunchParameters =
-                            AmdGpuDevice.DefaultParam +
-                            "--nfactor 10 --xintensity 64 --thread-concurrency 0 --worksize 64 --gpu-threads 2";
-                    }
                     if (!device.Codename.Contains("Tahiti") && neoScryptIndex > -1)
                     {
                         sgminerAlgos[neoScryptIndex].ExtraLaunchParameters =
@@ -40,47 +31,19 @@ namespace NiceHashMiner.Devices.Algorithms
                             "The GPU detected (" + device.Codename +
                             ") is not Tahiti. Changing default gpu-threads to 2.");
                     }
-                    if (cryptoNightIndex > -1)
-                    {
-                        if (device.Codename.Contains("Hawaii"))
-                        {
-                            sgminerAlgos[cryptoNightIndex].ExtraLaunchParameters = "--rawintensity 640 -w 8 -g 2";
-                        }
-                        else if (device.Name.Contains("Vega"))
-                        {
-                            sgminerAlgos[cryptoNightIndex].ExtraLaunchParameters =
-                                AmdGpuDevice.DefaultParam + " --rawintensity 1850 -w 8 -g 2";
-                        }
-                    }
                 }
 
-                // Ellesmere, Polaris
-                // Ellesmere sgminer workaround, keep this until sgminer is fixed to work with Ellesmere
-                if (device.Codename.Contains("Ellesmere") || device.InfSection.ToLower().Contains("polaris"))
-                {
-                    foreach (var algosInMiner in algoSettings)
-                    {
-                        foreach (var algo in algosInMiner.Value)
-                        {
-                            // disable all algos in list
-                            if (algo.NiceHashID == AlgorithmType.Decred || algo.NiceHashID == AlgorithmType.Lbry)
-                            {
-                                algo.Enabled = false;
-                            }
-                        }
-                    }
-                }
-                // non sgminer optimizations
+                // non sgminer optimizations, this looks like dead code to me
                 if (algoSettings.ContainsKey(MinerBaseType.Claymore_old) &&
                     algoSettings.ContainsKey(MinerBaseType.Claymore))
                 {
                     var claymoreOldAlgos = algoSettings[MinerBaseType.Claymore_old];
                     var cryptoNightOldIndex =
-                        claymoreOldAlgos.FindIndex(el => el.NiceHashID == AlgorithmType.CryptoNight);
+                        claymoreOldAlgos.FindIndex(el => el.NiceHashID == AlgorithmType.CryptoNight_UNUSED);
 
                     var claymoreNewAlgos = algoSettings[MinerBaseType.Claymore];
                     var cryptoNightNewIndex =
-                        claymoreNewAlgos.FindIndex(el => el.NiceHashID == AlgorithmType.CryptoNight);
+                        claymoreNewAlgos.FindIndex(el => el.NiceHashID == AlgorithmType.CryptoNight_UNUSED);
 
                     if (cryptoNightOldIndex > -1 && cryptoNightNewIndex > -1)
                     {
@@ -127,7 +90,6 @@ namespace NiceHashMiner.Devices.Algorithms
                     algoSettings = FilterMinerAlgos(algoSettings, new List<AlgorithmType>
                     {
                         AlgorithmType.NeoScrypt,
-                        AlgorithmType.Lyra2REv2
                     });
                 }
 
@@ -136,7 +98,6 @@ namespace NiceHashMiner.Devices.Algorithms
                     var minerBases = new List<MinerBaseType>
                     {
                         MinerBaseType.ethminer,
-                        MinerBaseType.OptiminerAMD,
                         MinerBaseType.BMiner
                     };
                     foreach (var minerKey in minerBases)
@@ -157,13 +118,6 @@ namespace NiceHashMiner.Devices.Algorithms
                             }
                         }
                     }
-                    //if (algoSettings.ContainsKey(MinerBaseType.Claymore)) {
-                    //    foreach (var algo in algoSettings[MinerBaseType.Claymore]) {
-                    //        if (algo.NiceHashID == AlgorithmType.CryptoNight) {
-                    //            algo.Enabled = false;
-                    //        }
-                    //    }
-                    //}
                 }
 
                 // Remove Beam on GCN 3rd gen or lower (300 series or lower)
@@ -181,6 +135,26 @@ namespace NiceHashMiner.Devices.Algorithms
                     AlgorithmType.DaggerHashimoto
                 });
             }
+
+            if (algoSettings.ContainsKey(MinerBaseType.NBMiner))
+            {
+                if (device is CudaComputeDevice cudaDev)
+                {
+                    // Only SM 6.1
+                    // check the ram
+                    const ulong minGrin29Mem = 5 << 30;
+                    const ulong minGrin31Mem = 8 << 30;
+                    var isSM61 = cudaDev.SMMajor == 6 && cudaDev.SMMinor == 1;
+                    if (isSM61 == false || cudaDev.GpuRam < minGrin29Mem)
+                    {
+                        algoSettings.Remove(MinerBaseType.NBMiner);
+                    }
+                    else if (isSM61 && cudaDev.GpuRam < minGrin31Mem) 
+                    {
+                        algoSettings[MinerBaseType.NBMiner] = algoSettings[MinerBaseType.NBMiner].Where(a => a.NiceHashID != AlgorithmType.GrinCuckatoo31).ToList();
+                    }
+                }
+            } 
 
             if (algoSettings.ContainsKey(MinerBaseType.ccminer_alexis))
             {
@@ -220,36 +194,16 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
             // Disable all MTP algorithms by default
+            // and all dual algorithms
             foreach (var algos in algoSettings.Values)
             {
                 foreach (var algo in algos)
                 {
                     if (algo.NiceHashID == AlgorithmType.MTP) algo.Enabled = false;
+                    if (algo is DualAlgorithm) algo.Enabled = false;
                 }
             }
 
-            // This is not needed anymore after excavator v1.1.4a
-            //if (device.IsSM50() && algoSettings.ContainsKey(MinerBaseType.excavator)) {
-            //    int Equihash_index = algoSettings[MinerBaseType.excavator].FindIndex((algo) => algo.NiceHashID == AlgorithmType.Equihash);
-            //    if (Equihash_index > -1) {
-            //        // -c1 1 needed for SM50 to work ATM
-            //        algoSettings[MinerBaseType.excavator][Equihash_index].ExtraLaunchParameters = "-c1 1";
-            //    }
-            //}
-            // NhEqMiner exceptions scope
-            {
-                const MinerBaseType minerBaseKey = MinerBaseType.nheqminer;
-                if (algoSettings.ContainsKey(minerBaseKey) && device.Name.Contains("GTX")
-                    && (device.Name.Contains("560") || device.Name.Contains("650") || device.Name.Contains("680") ||
-                        device.Name.Contains("770"))
-                )
-                {
-                    algoSettings = FilterMinerBaseTypes(algoSettings, new List<MinerBaseType>
-                    {
-                        minerBaseKey
-                    });
-                }
-            }
             // disable by default
             {
                 var minerBases = new List<MinerBaseType>
@@ -315,9 +269,6 @@ namespace NiceHashMiner.Devices.Algorithms
                             toRemoveAlgoTypes.AddRange(new[]
                             {
                                 AlgorithmType.NeoScrypt,
-                                AlgorithmType.Lyra2RE,
-                                AlgorithmType.Lyra2REv2,
-                                AlgorithmType.CryptoNightV7,
                                 AlgorithmType.Lyra2REv3
                             });
                             toRemoveMinerTypes.AddRange(new[]
@@ -335,7 +286,7 @@ namespace NiceHashMiner.Devices.Algorithms
                             AlgorithmType.DaggerHashimoto,
                             //AlgorithmType.CryptoNight,
                             AlgorithmType.Pascal,
-                            AlgorithmType.X11Gost,
+                            //AlgorithmType.X11Gost,
                             AlgorithmType.X16R
                         });
                         toRemoveMinerTypes.AddRange(new[]

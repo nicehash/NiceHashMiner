@@ -31,7 +31,7 @@ namespace CPUMinerBase
         {
             switch (algorithmType)
             {
-                case AlgorithmType.Lyra2z: return "lyra2z";
+                case AlgorithmType.Lyra2z_UNUSED: return "lyra2z";
             }
             // TODO throw exception
             return "";

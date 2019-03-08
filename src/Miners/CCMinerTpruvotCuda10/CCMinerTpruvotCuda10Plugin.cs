@@ -51,15 +51,15 @@ namespace CCMinerTpruvotCuda10
         {
             return new List<Algorithm>{
                 new Algorithm(PluginUUID, AlgorithmType.NeoScrypt),
-                new Algorithm(PluginUUID, AlgorithmType.Lyra2REv2),
+                //new Algorithm(PluginUUID, AlgorithmType.Lyra2REv2_UNUSED),
                 new Algorithm(PluginUUID, AlgorithmType.Decred),
-                new Algorithm(PluginUUID, AlgorithmType.Lbry),
-                new Algorithm(PluginUUID, AlgorithmType.X11Gost),
+                //new Algorithm(PluginUUID, AlgorithmType.Lbry_UNUSED),
+                //new Algorithm(PluginUUID, AlgorithmType.X11Gost_UNUSED),
                 new Algorithm(PluginUUID, AlgorithmType.Blake2s),
-                new Algorithm(PluginUUID, AlgorithmType.Sia),
+                //new Algorithm(PluginUUID, AlgorithmType.Sia_UNUSED),
                 new Algorithm(PluginUUID, AlgorithmType.Keccak),
                 new Algorithm(PluginUUID, AlgorithmType.Skunk),
-                new Algorithm(PluginUUID, AlgorithmType.Lyra2z),
+                //new Algorithm(PluginUUID, AlgorithmType.Lyra2z_UNUSED),
                 new Algorithm(PluginUUID, AlgorithmType.X16R),
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
             };

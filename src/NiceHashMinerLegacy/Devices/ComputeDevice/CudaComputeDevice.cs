@@ -13,8 +13,8 @@ namespace NiceHashMiner.Devices
         private readonly nvmlDevice _nvmlDevice; // For NVML
         private const int GpuCorePState = 0; // memcontroller = 1, videng = 2
         
-        protected int SMMajor;
-        protected int SMMinor;
+        public int SMMajor { get; protected set; }
+        public int SMMinor { get; protected set; }
 
         public readonly bool ShouldRunEthlargement;
 
