@@ -70,9 +70,6 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 DeviceGroupType group;
                 switch (cudaDev.SM_major)
                 {
-                    case 2:
-                        group = DeviceGroupType.NVIDIA_2_1;
-                        break;
                     case 3:
                         group = DeviceGroupType.NVIDIA_3_x;
                         break;

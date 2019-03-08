@@ -27,60 +27,7 @@ namespace NiceHashMiner.Devices.Algorithms
                         sgminerAlgos[neoScryptIndex].ExtraLaunchParameters =
                             AmdGpuDevice.DefaultParam +
                             "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
-                        Helpers.ConsolePrint("ComputeDevice",
-                            "The GPU detected (" + device.Codename +
-                            ") is not Tahiti. Changing default gpu-threads to 2.");
-                    }
-                }
-
-                // non sgminer optimizations, this looks like dead code to me
-                if (algoSettings.ContainsKey(MinerBaseType.Claymore_old) &&
-                    algoSettings.ContainsKey(MinerBaseType.Claymore))
-                {
-                    var claymoreOldAlgos = algoSettings[MinerBaseType.Claymore_old];
-                    var cryptoNightOldIndex =
-                        claymoreOldAlgos.FindIndex(el => el.NiceHashID == AlgorithmType.CryptoNight_UNUSED);
-
-                    var claymoreNewAlgos = algoSettings[MinerBaseType.Claymore];
-                    var cryptoNightNewIndex =
-                        claymoreNewAlgos.FindIndex(el => el.NiceHashID == AlgorithmType.CryptoNight_UNUSED);
-
-                    if (cryptoNightOldIndex > -1 && cryptoNightNewIndex > -1)
-                    {
-                        //string regex_a_3 = "[5|6][0-9][0-9][0-9]";
-                        var a4 = new List<string>
-                        {
-                            "270",
-                            "270x",
-                            "280",
-                            "280x",
-                            "290",
-                            "290x",
-                            "370",
-                            "380",
-                            "390",
-                            "470",
-                            "480"
-                        };
-                        foreach (var namePart in a4)
-                        {
-                            if (!device.Name.Contains(namePart)) continue;
-                            claymoreOldAlgos[cryptoNightOldIndex].ExtraLaunchParameters = "-a 4";
-                            break;
-                        }
-
-                        var old = new List<string>
-                        {
-                            "Verde",
-                            "Oland",
-                            "Bonaire"
-                        };
-                        foreach (var codeName in old)
-                        {
-                            var isOld = device.Codename.Contains(codeName);
-                            claymoreOldAlgos[cryptoNightOldIndex].Enabled = isOld;
-                            claymoreNewAlgos[cryptoNightNewIndex].Enabled = !isOld;
-                        }
+                        Helpers.ConsolePrint("ComputeDevice", $"The GPU detected ({device.Codename}) is not Tahiti. Changing default gpu-threads to 2.");
                     }
                 }
 
@@ -172,13 +119,6 @@ namespace NiceHashMiner.Devices.Algorithms
                     unstableAlgo.Enabled = false;
                 }
             }
-            if (algoSettings.ContainsKey(MinerBaseType.experimental))
-            {
-                foreach (var unstableAlgo in algoSettings[MinerBaseType.experimental])
-                {
-                    unstableAlgo.Enabled = false;
-                }
-            }
             // GMiner filters
             if (algoSettings.ContainsKey(MinerBaseType.GMiner))
             {
@@ -245,6 +185,21 @@ namespace NiceHashMiner.Devices.Algorithms
             return ret;
         }
 
+        // WORK IN PROGRESS
+        public static List<Algorithm> CreateForDeviceList_Rewrite(ComputeDevice device)
+        {
+            var ret = new List<Algorithm>();
+            var retDict = CreateForDevice(device);
+            if (retDict != null)
+            {
+                foreach (var kvp in retDict)
+                {
+                    ret.AddRange(kvp.Value);
+                }
+            }
+            return ret;
+        }
+
         public static Dictionary<MinerBaseType, List<Algorithm>> CreateDefaultsForGroup(DeviceGroupType deviceGroupType)
         {
             switch (deviceGroupType)
@@ -255,7 +210,6 @@ namespace NiceHashMiner.Devices.Algorithms
                 case DeviceGroupType.AMD_OpenCL:
                     return DefaultAlgorithms.Amd;
                     
-                case DeviceGroupType.NVIDIA_2_1:
                 case DeviceGroupType.NVIDIA_3_x:
                 case DeviceGroupType.NVIDIA_5_x:
                 case DeviceGroupType.NVIDIA_6_x:
@@ -266,14 +220,6 @@ namespace NiceHashMiner.Devices.Algorithms
 
                     switch (deviceGroupType)
                     {
-                        case DeviceGroupType.NVIDIA_6_x:
-                        case DeviceGroupType.NVIDIA_5_x:
-                            toRemoveMinerTypes.AddRange(new[]
-                            {
-                                MinerBaseType.nheqminer
-                            });
-                            break;
-                        case DeviceGroupType.NVIDIA_2_1:
                         case DeviceGroupType.NVIDIA_3_x:
                             toRemoveAlgoTypes.AddRange(new[]
                             {
@@ -282,27 +228,9 @@ namespace NiceHashMiner.Devices.Algorithms
                             });
                             toRemoveMinerTypes.AddRange(new[]
                             {
-                                MinerBaseType.eqm,
                                 MinerBaseType.EWBF,
-                                MinerBaseType.dtsm
                             });
                             break;
-                    }
-                    if (DeviceGroupType.NVIDIA_2_1 == deviceGroupType)
-                    {
-                        toRemoveAlgoTypes.AddRange(new[]
-                        {
-                            AlgorithmType.DaggerHashimoto,
-                            //AlgorithmType.CryptoNight,
-                            AlgorithmType.Pascal,
-                            //AlgorithmType.X11Gost,
-                            AlgorithmType.X16R
-                        });
-                        toRemoveMinerTypes.AddRange(new[]
-                        {
-                            MinerBaseType.Claymore,
-                            MinerBaseType.XmrStak
-                        });
                     }
 
                     // filter unused

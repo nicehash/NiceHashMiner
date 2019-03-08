@@ -23,6 +23,19 @@ namespace NiceHashMiner.Devices.Algorithms
             }
         };
 
+
+        private static List<Algorithm> XmrStakAlgorithmsForDevice(ComputeDevice dev)
+        {
+            // multiple OpenCL GPUs seem to freeze the whole system
+            var CryptoNightR_Enabled = dev.DeviceType == DeviceType.AMD;
+            return new List<Algorithm>
+            {
+                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightHeavy, "cryptonight_heavy"),
+                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV8, "cryptonight_v8"),
+                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightR, "cryptonight_r") { Enabled = CryptoNightR_Enabled },
+            };
+        }
+
         #endregion
 
         #region GPU
@@ -59,6 +72,34 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             },
         };
+
+        private static List<Algorithm> ClaymoreDualAlgorithmsForDevice(ComputeDevice dev)
+        {
+            if (dev.DeviceType == DeviceType.CPU) return null;
+            return new List<Algorithm> {
+                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto),
+                // duals disabled by default
+                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred) { Enabled = false },
+                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s) { Enabled = false },
+                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak) { Enabled = false }
+            };
+        }
+
+        private static List<Algorithm> PhoenixAlgorithmsForDevice(ComputeDevice dev)
+        {
+            if (dev.DeviceType == DeviceType.CPU) return null;
+            return new List<Algorithm> {
+                new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto)
+            };
+        }
+
+        private static List<Algorithm> GMinerAlgorithmsForDevice(ComputeDevice dev)
+        {
+            if (dev.DeviceType == DeviceType.CPU) return null;
+            return new List<Algorithm> {
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam), // BEAM added for NVIDIA and AMD check GPU section
+            };
+        }
 
         #endregion
 
@@ -198,7 +239,6 @@ namespace NiceHashMiner.Devices.Algorithms
                 MinerBaseType.ccminer_alexis,
                 new List<Algorithm>
                 {
-                    //new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.X11Gost, "sib", false),
                     new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.Keccak, "keccak")
                 }
             },
@@ -209,13 +249,6 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto")
                 }
             },
-            //{
-            //    MinerBaseType.nheqminer,
-            //    new List<Algorithm>
-            //    {
-            //        new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
-            //    }
-            //},
             {
                 MinerBaseType.EWBF,
                 new List<Algorithm>
@@ -224,13 +257,6 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.EWBF, AlgorithmType.ZHash)
                 }
             },
-            //{
-            //    MinerBaseType.dtsm,
-            //    new List<Algorithm>
-            //    {
-            //        new Algorithm(MinerBaseType.dtsm, AlgorithmType.Equihash)
-            //    }
-            //},
             {
                 MinerBaseType.trex,
                 new List<Algorithm>
@@ -281,6 +307,27 @@ namespace NiceHashMiner.Devices.Algorithms
             }
             
         }.ConcatDictList(All, Gpu);
+
+        private static List<Algorithm> CCminerAlgorithmsForDevice(ComputeDevice dev)
+        {
+            if (dev is CudaComputeDevice cudaDev)
+            {
+                return new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.NeoScrypt, "neoscrypt"),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s"),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk"),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.X16R, "x16r"),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv3, "lyra2v3"),
+                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.MTP, "mtp"),
+                    // ccminer_alexis unstable disable it by default
+                    new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.Keccak, "keccak") { Enabled = false }
+                };
+            }
+            // not CUDA dev return null
+            return null;
+        }
 
         #endregion
     }
