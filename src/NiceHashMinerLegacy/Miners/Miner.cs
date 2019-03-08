@@ -545,6 +545,8 @@ namespace NiceHashMiner
                 BenchmarkException = new Exception("Unknown error");
             if (outdata.Contains("No servers could be used! Exiting."))
                 BenchmarkException = new Exception("No pools or work can be used for benchmarking");
+            if (outdata.Contains("Error CL_INVALID_KERNEL"))
+                BenchmarkException = new Exception("Error CL_INVALID_KERNEL");
             //if (outdata.Contains("error") || outdata.Contains("Error"))
             //    BenchmarkException = new Exception("Unknown error #2");
             // Ethminer
