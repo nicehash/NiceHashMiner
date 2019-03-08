@@ -185,7 +185,7 @@ namespace NiceHashMiner.Miners.XmrStak
                 Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
             var user = GetUsername(Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName);
 
-            BenchmarkTimeInSeconds = Math.Min(60, Math.Max(time, 10));
+            BenchmarkTimeInSeconds = Math.Min(60, Math.Max(time, 10)) + 20;
             
             return CreateLaunchCommand(devConfigs, url, user) + $" --benchmark 10 --benchwork {time} --benchwait 5";
         }
