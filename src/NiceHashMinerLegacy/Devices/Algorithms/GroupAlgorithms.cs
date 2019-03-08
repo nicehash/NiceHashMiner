@@ -154,7 +154,16 @@ namespace NiceHashMiner.Devices.Algorithms
                         algoSettings[MinerBaseType.NBMiner] = algoSettings[MinerBaseType.NBMiner].Where(a => a.NiceHashID != AlgorithmType.GrinCuckatoo31).ToList();
                     }
                 }
-            } 
+            }
+
+            // disable CryptoNightR on AMD by default
+            if (device.DeviceType == DeviceType.AMD && algoSettings.ContainsKey(MinerBaseType.XmrStak))
+            {
+                foreach (var algo in algoSettings[MinerBaseType.XmrStak])
+                {
+                    if (algo.NiceHashID == AlgorithmType.CryptoNightR) algo.Enabled = false;
+                }
+            }
 
             if (algoSettings.ContainsKey(MinerBaseType.ccminer_alexis))
             {
