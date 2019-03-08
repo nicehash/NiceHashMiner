@@ -194,11 +194,13 @@ namespace NiceHashMiner.Devices.Algorithms
                 }
             }
             // Disable all MTP algorithms by default
+            // and all dual algorithms
             foreach (var algos in algoSettings.Values)
             {
                 foreach (var algo in algos)
                 {
                     if (algo.NiceHashID == AlgorithmType.MTP) algo.Enabled = false;
+                    if (algo is DualAlgorithm) algo.Enabled = false;
                 }
             }
 

@@ -47,9 +47,9 @@
             // LinkButtonEnterBTCManually
             // 
             this.LinkButtonEnterBTCManually.AutoSize = true;
-            this.LinkButtonEnterBTCManually.Location = new System.Drawing.Point(75, 89);
+            this.LinkButtonEnterBTCManually.Location = new System.Drawing.Point(112, 89);
             this.LinkButtonEnterBTCManually.Name = "LinkButtonEnterBTCManually";
-            this.LinkButtonEnterBTCManually.Size = new System.Drawing.Size(229, 17);
+            this.LinkButtonEnterBTCManually.Size = new System.Drawing.Size(168, 13);
             this.LinkButtonEnterBTCManually.TabIndex = 1;
             this.LinkButtonEnterBTCManually.TabStop = true;
             this.LinkButtonEnterBTCManually.Text = "&(or enter Bitcoin address manually)";
@@ -58,9 +58,9 @@
             // LinkButtonRegister
             // 
             this.LinkButtonRegister.AutoSize = true;
-            this.LinkButtonRegister.Location = new System.Drawing.Point(60, 61);
+            this.LinkButtonRegister.Location = new System.Drawing.Point(97, 61);
             this.LinkButtonRegister.Name = "LinkButtonRegister";
-            this.LinkButtonRegister.Size = new System.Drawing.Size(258, 17);
+            this.LinkButtonRegister.Size = new System.Drawing.Size(194, 13);
             this.LinkButtonRegister.TabIndex = 2;
             this.LinkButtonRegister.TabStop = true;
             this.LinkButtonRegister.Text = "&(Don\'t have an account? Register here)";
@@ -68,7 +68,7 @@
             // 
             // EnterBTCDialogSwitch
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(380, 130);
