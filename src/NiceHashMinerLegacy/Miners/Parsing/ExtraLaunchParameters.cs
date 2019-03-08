@@ -282,15 +282,15 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("Xmrig_safe", "--safe", null, MinerOptionFlagType.Uni)
                 }
             ),
-            new MinerOptionPackage(
-                MinerType.dtsm,
-                new List<MinerOption>
-                {
-                    new MinerOption("dtsm_time", "--time", null, MinerOptionFlagType.Uni),
-                    new MinerOption("dtsm_noreconnect", "--noreconnect", null, MinerOptionFlagType.Uni),
-                    new MinerOption("dtsm_temp-target", "--temp-target", null, MinerOptionFlagType.SingleParam)
-                }
-            ),
+            //new MinerOptionPackage(
+            //    MinerType.dtsm,
+            //    new List<MinerOption>
+            //    {
+            //        new MinerOption("dtsm_time", "--time", null, MinerOptionFlagType.Uni),
+            //        new MinerOption("dtsm_noreconnect", "--noreconnect", null, MinerOptionFlagType.Uni),
+            //        new MinerOption("dtsm_temp-target", "--temp-target", null, MinerOptionFlagType.SingleParam)
+            //    }
+            //),
             new MinerOptionPackage(
                 MinerType.Phoenix,
                 new List<MinerOption>

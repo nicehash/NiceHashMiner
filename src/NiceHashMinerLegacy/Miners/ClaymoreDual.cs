@@ -32,14 +32,14 @@ namespace NiceHashMiner.Miners
         {
             switch (SecondaryAlgorithmType)
             {
-                case AlgorithmType.Decred:
-                    return "dcr";
-                case AlgorithmType.Lbry:
-                    return "lbc";
+                //case AlgorithmType.Decred:
+                //    return "dcr";
+                //case AlgorithmType.Lbry:
+                //    return "lbc";
                 case AlgorithmType.Pascal:
                     return "pasc";
-                case AlgorithmType.Sia:
-                    return "sc";
+                //case AlgorithmType.Sia:
+                //    return "sc";
                 case AlgorithmType.Blake2s:
                     return "b2s";
                 case AlgorithmType.Keccak:
@@ -67,23 +67,23 @@ namespace NiceHashMiner.Miners
                     if (!pair.CurrentExtraLaunchParameters.Contains("-dual=")) continue;
                     var dual = AlgorithmType.NONE;
                     var coinP = "";
-                    if (pair.CurrentExtraLaunchParameters.Contains("Decred"))
-                    {
-                        dual = AlgorithmType.Decred;
-                        coinP = " -dcoin dcr ";
-                    }
+                    //if (pair.CurrentExtraLaunchParameters.Contains("Decred"))
+                    //{
+                    //    dual = AlgorithmType.Decred;
+                    //    coinP = " -dcoin dcr ";
+                    //}
 
-                    if (pair.CurrentExtraLaunchParameters.Contains("Siacoin"))
-                    {
-                        dual = AlgorithmType.Sia;
-                        coinP = " -dcoin sc";
-                    }
+                    //if (pair.CurrentExtraLaunchParameters.Contains("Siacoin"))
+                    //{
+                    //    dual = AlgorithmType.Sia;
+                    //    coinP = " -dcoin sc";
+                    //}
 
-                    if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))
-                    {
-                        dual = AlgorithmType.Lbry;
-                        coinP = " -dcoin lbc ";
-                    }
+                    //if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))
+                    //{
+                    //    dual = AlgorithmType.Lbry;
+                    //    coinP = " -dcoin lbc ";
+                    //}
 
                     if (pair.CurrentExtraLaunchParameters.Contains("Pascal"))
                     {

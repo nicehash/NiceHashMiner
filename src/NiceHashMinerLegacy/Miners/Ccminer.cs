@@ -21,8 +21,7 @@ namespace NiceHashMiner.Miners
         private double _cryptonightTotal = 0;
         private const int CryptonightTotalDelim = 2;
 
-        private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.CcminerCryptonight
-                                           || MiningSetup.MinerPath == MinerPaths.Data.CcminerKlausT;
+        private bool _benchmarkException => MiningSetup.MinerPath == MinerPaths.Data.CcminerKlausT;
 
         protected override int GetMaxCooldownTimeInMilliseconds()
         {
@@ -42,7 +41,7 @@ namespace NiceHashMiner.Miners
             }
             var username = GetUsername(btcAdress, worker);
 
-            IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.CcminerCryptonight;
+            //IsApiReadException = MiningSetup.MinerPath == MinerPaths.Data.CcminerCryptonight;
 
             var algo = "";
             var apiBind = "";
@@ -93,7 +92,7 @@ namespace NiceHashMiner.Miners
             // cryptonight exception
             if (_benchmarkException)
             {
-                var speedLength = (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight) ? 6 : 8;
+                var speedLength = (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight_UNUSED) ? 6 : 8;
                 if (outdata.Contains("Total: "))
                 {
                     var st = outdata.IndexOf("Total:") + 7;
@@ -179,7 +178,7 @@ namespace NiceHashMiner.Miners
 
             var totalSpeed = MiningSetup.MiningPairs
                 .Select(miningPair =>
-                    miningPair.Device.GetAlgorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight, AlgorithmType.NONE))
+                    miningPair.Device.GetAlgorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight_UNUSED, AlgorithmType.NONE))
                 .Where(algo => algo != null).Sum(algo => algo.BenchmarkSpeed);
 
             var cryptoNightData = new ApiData(MiningSetup.CurrentAlgorithmType)

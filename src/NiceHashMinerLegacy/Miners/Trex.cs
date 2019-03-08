@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Interfaces;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
@@ -16,39 +13,20 @@ namespace NiceHashMiner.Miners
         private double _benchHashes;
         private int _benchIters;
 
-        private class ApiSummary
+        private class ApiSummary : IApiResult
         {
             [JsonProperty("hashrate")]
-            public double Hashrate;
+            public double? TotalHashrate { get; set; }
         }
-
-        private readonly HttpClient _client = new HttpClient();
 
         public Trex() : base("trex")
         {
             TimeoutStandard = true;
         }
 
-        public override async Task<ApiData> GetSummaryAsync()
+        public override Task<ApiData> GetSummaryAsync()
         {
-            CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            var api = new ApiData(MiningSetup.CurrentAlgorithmType);
-            try
-            {
-                var data = await _client.GetStringAsync($"http://127.0.0.1:{ApiPort}/summary");
-                var summary = JsonConvert.DeserializeObject<ApiSummary>(data);
-                api.Speed = summary.Hashrate;
-                CurrentMinerReadStatus =
-                    api.Speed <= 0 ? MinerApiReadStatus.READ_SPEED_ZERO : MinerApiReadStatus.GOT_READ;
-                return api;
-            }
-            catch (Exception e)
-            {
-                CurrentMinerReadStatus = MinerApiReadStatus.NETWORK_EXCEPTION;
-                Helpers.ConsolePrint(MinerTag(), e.Message);
-            }
-
-            return api;
+            return GetHttpSummaryAsync<ApiSummary>("summary");
         }
 
         public override void Start(string url, string btcAdress, string worker)
