@@ -177,7 +177,7 @@ namespace NiceHashMiner.Devices
         {
             if (config != null && config.DeviceUUID == Uuid && config.AlgorithmSettings != null)
             {
-                AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
+                AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
                 foreach (var conf in config.AlgorithmSettings)
                 {
                     var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID, conf.SecondaryNiceHashID);

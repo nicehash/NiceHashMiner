@@ -148,21 +148,22 @@ namespace NiceHashMiner.Miners.Grouping
         public static string GetPathFor(MinerBaseType minerBaseType, AlgorithmType algoType,
             DeviceGroupType devGroupType, bool def = false)
         {
-            if (!def & ConfigurableMiners.Contains(minerBaseType))
-            {
-                // Override with internals
-                var path = MinerPathPackages.Find(p => p.DeviceType == devGroupType)
-                    .MinerTypes.Find(p => p.Type == minerBaseType)
-                    .Algorithms.Find(p => p.Algorithm == algoType);
-                if (path != null)
-                {
-                    if (File.Exists(path.Path))
-                    {
-                        return path.Path;
-                    }
-                    Helpers.ConsolePrint("PATHS", $"Path {path.Path} not found, using defaults");
-                }
-            }
+            // TODO feature obsolete
+            //if (!def & ConfigurableMiners.Contains(minerBaseType))
+            //{
+            //    // Override with internals
+            //    var path = MinerPathPackages.Find(p => p.DeviceType == devGroupType)
+            //        .MinerTypes.Find(p => p.Type == minerBaseType)
+            //        .Algorithms.Find(p => p.Algorithm == algoType);
+            //    if (path != null)
+            //    {
+            //        if (File.Exists(path.Path))
+            //        {
+            //            return path.Path;
+            //        }
+            //        Helpers.ConsolePrint("PATHS", $"Path {path.Path} not found, using defaults");
+            //    }
+            //}
 
             switch (minerBaseType)
             {

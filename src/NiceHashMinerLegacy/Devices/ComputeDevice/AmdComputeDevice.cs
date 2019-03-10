@@ -116,7 +116,7 @@ namespace NiceHashMiner.Devices
             BusID = amdDevice.BusID;
             Codename = amdDevice.Codename;
             InfSection = amdDevice.InfSection;
-            AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
+            AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
             DriverDisableAlgos = amdDevice.DriverDisableAlgos;
             Index = ID + AvailableDevices.AvailCpus + AvailableDevices.AvailNVGpus;
             _adapterIndex = amdDevice.Adl1Index;
