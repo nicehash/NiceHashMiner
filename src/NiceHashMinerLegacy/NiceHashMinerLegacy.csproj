@@ -108,10 +108,8 @@
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithms\Algorithm.cs" />
     <Compile Include="Algorithms\DualAlgorithm.cs" />
-    <Compile Include="Benchmarking\BenchHelpers\CpuBenchHelper.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
-    <Compile Include="Benchmarking\BenchHelpers\ClaymoreZcashBenchHelper.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
@@ -186,7 +184,6 @@
     <Compile Include="Stats\NiceHashStats.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
-    <Compile Include="Switching\Models.cs" />
     <Compile Include="Switching\Interval.cs" />
     <Compile Include="Translations.cs" />
     <Compile Include="Utils\AlgorithmNiceHashNames.cs" />
@@ -285,7 +282,6 @@
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />
-    <Compile Include="Miners\ClaymoreCryptoNightMiner.cs" />
     <Compile Include="Miners\Equihash\ClaymoreZcashMiner.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />

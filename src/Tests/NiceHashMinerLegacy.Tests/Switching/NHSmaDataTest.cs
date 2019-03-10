@@ -22,7 +22,7 @@ namespace NiceHashMinerLegacy.Tests.Switching
             var testZero = new List<AlgorithmType>
             {
                 AlgorithmType.Keccak,
-                AlgorithmType.Equihash_UNUSED,
+                AlgorithmType.Equihash,
                 AlgorithmType.Pascal
             };
 
@@ -61,20 +61,20 @@ namespace NiceHashMinerLegacy.Tests.Switching
                 new List<AlgorithmType>
                 {
                     AlgorithmType.Keccak,
-                    AlgorithmType.Equihash_UNUSED,
+                    AlgorithmType.Equihash,
                     AlgorithmType.Pascal
                 },
                 new List<AlgorithmType>
                 {
                     AlgorithmType.Keccak,
-                    AlgorithmType.Equihash_UNUSED,
+                    AlgorithmType.Equihash,
                     AlgorithmType.Pascal,
                     AlgorithmType.Blake2s
                 },
                 new List<AlgorithmType>
                 {
                     AlgorithmType.DaggerHashimoto,
-                    AlgorithmType.Equihash_UNUSED,
+                    AlgorithmType.Equihash,
                     AlgorithmType.Pascal
                 }
             };

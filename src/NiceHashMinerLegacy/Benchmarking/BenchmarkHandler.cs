@@ -21,17 +21,8 @@ namespace NiceHashMiner.Benchmarking
         private Algorithm _currentAlgorithm;
         private Miner _currentMiner;
         private readonly BenchmarkPerformanceType _performanceType;
-        private ClaymoreZcashBenchHelper _claymoreZcashStatus;
-
-        private CpuBenchHelper _cpuBenchmarkStatus;
 
         private PowerHelper _powerHelper;
-
-        // CPU sweet spots
-        private readonly List<AlgorithmType> _cpuAlgos = new List<AlgorithmType>
-        {
-            AlgorithmType.CryptoNight_UNUSED
-        };
 
         public BenchmarkHandler(ComputeDevice device, Queue<Algorithm> algorithms, IBenchmarkForm form,
             BenchmarkPerformanceType performance)
@@ -60,44 +51,6 @@ namespace NiceHashMiner.Benchmarking
             if (!_benchmarkForm.InBenchmark) return;
 
             var rebenchSame = false;
-            if (success && _cpuBenchmarkStatus != null && _cpuAlgos.Contains(_currentAlgorithm.NiceHashID) &&
-                _currentAlgorithm.MinerBaseType == MinerBaseType.XmrStak)
-            {
-                _cpuBenchmarkStatus.SetNextSpeed(_currentAlgorithm.BenchmarkSpeed);
-                rebenchSame = _cpuBenchmarkStatus.HasTest();
-                _currentAlgorithm.LessThreads = _cpuBenchmarkStatus.LessTreads;
-                if (rebenchSame == false)
-                {
-                    _cpuBenchmarkStatus.FindFastest();
-                    _currentAlgorithm.BenchmarkSpeed = _cpuBenchmarkStatus.GetBestSpeed();
-                    _currentAlgorithm.LessThreads = _cpuBenchmarkStatus.GetLessThreads();
-                }
-            }
-            // this looks like dead code
-            if (_claymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.Claymore &&
-                _currentAlgorithm.NiceHashID == AlgorithmType.Equihash_UNUSED)
-            {
-                if (_claymoreZcashStatus.HasTest())
-                {
-                    _currentMiner = MinerFactory.CreateMiner(Device, _currentAlgorithm);
-                    rebenchSame = true;
-                    //System.Threading.Thread.Sleep(1000*60*5);
-                    _claymoreZcashStatus.SetSpeed(_currentAlgorithm.BenchmarkSpeed);
-                    _claymoreZcashStatus.SetNext();
-                    _currentAlgorithm.ExtraLaunchParameters = _claymoreZcashStatus.GetTestExtraParams();
-                    Helpers.ConsolePrint("ClaymoreAMD_Equihash", _currentAlgorithm.ExtraLaunchParameters);
-                    _currentMiner.InitBenchmarkSetup(new MiningPair(Device, _currentAlgorithm));
-                }
-
-                if (_claymoreZcashStatus.HasTest() == false)
-                {
-                    rebenchSame = false;
-                    // set fastest mode
-                    _currentAlgorithm.BenchmarkSpeed = _claymoreZcashStatus.GetFastestTime();
-                    _currentAlgorithm.ExtraLaunchParameters = _claymoreZcashStatus.GetFastestExtraParams();
-                }
-            }
-
             var power = _powerHelper.Stop();
 
             var dualAlgo = _currentAlgorithm as DualAlgorithm;
@@ -132,15 +85,7 @@ namespace NiceHashMiner.Benchmarking
             {
                 _powerHelper.Start();
 
-                if (_cpuBenchmarkStatus != null)
-                {
-                    _currentMiner.BenchmarkStart(_cpuBenchmarkStatus.Time, this);
-                }
-                else if (_claymoreZcashStatus != null)
-                {
-                    _currentMiner.BenchmarkStart(_claymoreZcashStatus.Time, this);
-                }
-                else if (dualAlgo != null && dualAlgo.TuningEnabled)
+                if (dualAlgo != null && dualAlgo.TuningEnabled)
                 {
                     var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
                         .GetBenchamrktime(_performanceType, Device.DeviceGroupType);
@@ -169,31 +114,6 @@ namespace NiceHashMiner.Benchmarking
             if (Device != null && _currentAlgorithm != null)
             {
                 _currentMiner = MinerFactory.CreateMiner(Device, _currentAlgorithm);
-                /*
-                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStak && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight 
-                    && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters) 
-                    && _currentAlgorithm.ExtraLaunchParameters.Contains("enable_ht=true") == false) {
-                    _cpuBenchmarkStatus = new CPUBenchmarkStatus(Globals.ThreadsPerCPU);
-                    _currentAlgorithm.LessThreads = _cpuBenchmarkStatus.LessTreads;
-                } else {
-                    _cpuBenchmarkStatus = null;
-                }
-                */
-                _cpuBenchmarkStatus = null;
-
-                if (_currentAlgorithm.MinerBaseType == MinerBaseType.Claymore &&
-                    _currentAlgorithm.NiceHashID == AlgorithmType.Equihash_UNUSED &&
-                    _currentAlgorithm.ExtraLaunchParameters != null &&
-                    !_currentAlgorithm.ExtraLaunchParameters.Contains("-asm"))
-                {
-                    _claymoreZcashStatus = new ClaymoreZcashBenchHelper(_currentAlgorithm.ExtraLaunchParameters);
-                    _currentAlgorithm.ExtraLaunchParameters = _claymoreZcashStatus.GetTestExtraParams();
-                }
-                else
-                {
-                    _claymoreZcashStatus = null;
-                }
-
                 if (_currentAlgorithm is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled) dualAlgo.StartTuning();
             }
 
@@ -204,8 +124,6 @@ namespace NiceHashMiner.Benchmarking
                 var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
                     .GetBenchamrktime(_performanceType, Device.DeviceGroupType);
                 //currentConfig.TimeLimit = time;
-                if (_cpuBenchmarkStatus != null) _cpuBenchmarkStatus.Time = time;
-                if (_claymoreZcashStatus != null) _claymoreZcashStatus.Time = time;
 
                 // dagger about 4 minutes
                 //var showWaitTime = _currentAlgorithm.NiceHashID == AlgorithmType.DaggerHashimoto ? 4 * 60 : time;

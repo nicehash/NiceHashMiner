@@ -295,9 +295,6 @@ namespace NiceHashMiner.Miners.Grouping
                     //    return CcminerSM21(algorithmType);
                     case DeviceGroupType.NVIDIA_3_x:
                         return CcminerSM3X(algorithmType);
-                    // CN exception
-                    case DeviceGroupType.NVIDIA_6_x when algorithmType == AlgorithmType.CryptoNight_UNUSED:
-                        return Data.CcminerTPruvot;
                     // sm5x and sm6x have same settings otherwise
                     case DeviceGroupType.NVIDIA_5_x:
                     case DeviceGroupType.NVIDIA_6_x:

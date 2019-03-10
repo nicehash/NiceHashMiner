@@ -47,7 +47,9 @@ namespace NiceHashMiner.Devices.Algorithms
                 new List<Algorithm>
                 {
                     new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto),
+                    #pragma warning disable 0618
                     new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred),
+                    #pragma warning restore 0618
                     //new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Lbry),
                     //new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal),
                     //new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Sia),
@@ -79,7 +81,9 @@ namespace NiceHashMiner.Devices.Algorithms
             return new List<Algorithm> {
                 new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto),
                 // duals disabled by default
+                #pragma warning disable 0618
                 new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred) { Enabled = false },
+                #pragma warning restore 0618
                 new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s) { Enabled = false },
                 new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak) { Enabled = false }
             };

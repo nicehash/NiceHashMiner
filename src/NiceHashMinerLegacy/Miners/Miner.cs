@@ -229,6 +229,7 @@ namespace NiceHashMiner
                 benchmarkPair
             }));
             BenchmarkAlgorithm = benchmarkPair.Algorithm;
+            BenchmarkAlgorithm.AvaragedSpeed = 0; // reset this to zero because we might have it from prev mining session
         }
 
         // TAG for identifying miner
@@ -504,7 +505,16 @@ namespace NiceHashMiner
                      BenchmarkTimeoutInSeconds(BenchmarkTimeInSeconds))
             {
                 _benchmarkTimeOutStopWatch.Stop();
-                BenchmarkSignalTimedout = true;
+                if (BenchmarkAlgorithm.AvaragedSpeed > 0)
+                {
+                    // fallback to this one
+                    BenchmarkAlgorithm.BenchmarkSpeed = BenchmarkAlgorithm.AvaragedSpeed;
+                    BenchmarkSignalFinnished = true;
+                }
+                else
+                {
+                    BenchmarkSignalTimedout = true;
+                }
             }
 
             var outdata = e.Data;
