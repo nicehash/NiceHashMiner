@@ -54,7 +54,6 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 // We support SM3.0+
                 var skip = cudaDev.SM_major < 3;
                 var skipOrAdd = skip ? "SKIPED" : "ADDED";
-                var etherumCapableStr = cudaDev.IsEtherumCapable() ? "YES" : "NO";
                 stringBuilder.AppendLine($"\t{skipOrAdd} device:");
                 stringBuilder.AppendLine($"\t\tID: {cudaDev.DeviceID}");
                 stringBuilder.AppendLine($"\t\tBusID: {cudaDev.pciBusID}");
@@ -63,7 +62,6 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 stringBuilder.AppendLine($"\t\tUUID: {cudaDev.UUID}");
                 stringBuilder.AppendLine($"\t\tSM: {cudaDev.SM_major}.{cudaDev.SM_minor}");
                 stringBuilder.AppendLine($"\t\tMEMORY: {cudaDev.DeviceGlobalMemory}");
-                stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
 
                 if (skip) continue;
 

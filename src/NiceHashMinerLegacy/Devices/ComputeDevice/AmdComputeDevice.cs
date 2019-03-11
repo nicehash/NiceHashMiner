@@ -105,7 +105,6 @@ namespace NiceHashMiner.Devices
                 amdDevice.DeviceName,
                 true,
                 DeviceGroupType.AMD_OpenCL,
-                amdDevice.IsEtherumCapable,
                 DeviceType.AMD,
                 string.Format(Translations.Tr("GPU#{0}"), gpuCount),
                 amdDevice.DeviceGlobalMemory)

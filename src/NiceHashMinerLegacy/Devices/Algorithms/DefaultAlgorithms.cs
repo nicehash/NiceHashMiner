@@ -67,8 +67,8 @@ namespace NiceHashMiner.Devices.Algorithms
         // NVIDIA and AMD
         private static List<Algorithm> ClaymoreDualAlgorithmsForDevice(ComputeDevice dev)
         {
-            if (dev.IsEtherumCapale == false) return null;
             if (dev.DeviceType == DeviceType.CPU) return null;
+            // SM5.0+
             if (dev is CudaComputeDevice cudaDev && cudaDev.SMMajor < 5) return null;
 
             var algos = new List<Algorithm>
@@ -89,8 +89,8 @@ namespace NiceHashMiner.Devices.Algorithms
         // NVIDIA and AMD
         private static List<Algorithm> PhoenixAlgorithmsForDevice(ComputeDevice dev)
         {
-            if (dev.IsEtherumCapale == false) return null;
             if (dev.DeviceType == DeviceType.CPU) return null;
+            // SM5.0+
             if (dev is CudaComputeDevice cudaDev && cudaDev.SMMajor < 5) return null;
 
             var algos = new List<Algorithm> {
@@ -231,8 +231,12 @@ namespace NiceHashMiner.Devices.Algorithms
             var cudaDev = dev as CudaComputeDevice;
             // CUDA SM3.0+
             if (cudaDev == null || cudaDev.SMMajor < 3 ) return null;
-            if (dev.IsEtherumCapale == false) return null;
-            if (dev.Name.Contains("750") && dev.Name.Contains("Ti")) return null;
+            if (dev.Name.Contains("750") && dev.Name.Contains("Ti")) {
+                Helpers.ConsolePrint("DefaultAlgorithms-ethminer",
+                        "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
+                return null;
+            }
+            
 
             const bool enabledByDefault = false;
             var algos = new List<Algorithm>

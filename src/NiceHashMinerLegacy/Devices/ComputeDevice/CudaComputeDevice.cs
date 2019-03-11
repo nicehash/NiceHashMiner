@@ -113,7 +113,6 @@ namespace NiceHashMiner.Devices
                 cudaDevice.GetName(),
                 true,
                 group,
-                cudaDevice.IsEtherumCapable(),
                 DeviceType.NVIDIA,
                 string.Format(Translations.Tr("GPU#{0}"), gpuCount),
                 cudaDevice.DeviceGlobalMemory)

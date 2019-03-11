@@ -28,7 +28,7 @@ namespace NiceHashMinerLegacy.Tests.Miners
         {
             public ComputeDevDummy(int id, DeviceType type, int busID)
                 : base(id, $"dummy-{type}-{id}", true, DeviceGroupType.NONE,
-                    true, type, $"GPU{++count}", 1)
+                    type, $"GPU{++count}", 1)
             {
                 IDByBus = busID;
                 Uuid = "fake";

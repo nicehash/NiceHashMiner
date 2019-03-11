@@ -35,7 +35,6 @@ namespace NiceHashMinerLegacy.Tests.Devices.Querying.Nvidia
             {
                 Assert.AreEqual("EVGA GeForce GTX 1080 Ti", dev.Name);
                 Assert.AreEqual(DeviceGroupType.NVIDIA_6_x, dev.DeviceGroupType);
-                Assert.IsTrue(dev.IsEtherumCapale);
                 Assert.AreEqual(DeviceType.NVIDIA, dev.DeviceType);
                 Assert.AreEqual(11811160064ul, dev.GpuRam);
                 Assert.IsTrue(dev.ShouldRunEthlargement);
