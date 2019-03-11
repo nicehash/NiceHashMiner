@@ -122,7 +122,7 @@ namespace NiceHashMiner.Devices
             SMMajor = cudaDevice.SM_major;
             SMMinor = cudaDevice.SM_minor;
             Uuid = cudaDevice.UUID;
-            AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
+            AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
             Index = ID + AvailableDevices.AvailCpus; // increment by CPU count
 
             _nvHandle = nvHandle;

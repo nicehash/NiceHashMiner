@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Miners
 {
@@ -17,6 +18,7 @@ namespace NiceHashMiner.Miners
 
         // cryptonight benchmark exception
         private int _cryptonightTotalCount = 0;
+        private int _cryptonightTotalCounted = 0;
 
         private double _cryptonightTotal = 0;
         private const int CryptonightTotalDelim = 2;
@@ -89,40 +91,19 @@ namespace NiceHashMiner.Miners
 
         protected override bool BenchmarkParseLine(string outdata)
         {
-            // cryptonight exception
-            if (_benchmarkException)
+            if (_benchmarkException && outdata.Contains("Total:"))
             {
-                var speedLength = (BenchmarkAlgorithm.NiceHashID == AlgorithmType.CryptoNight_UNUSED) ? 6 : 8;
-                if (outdata.Contains("Total: "))
+                outdata.TryGetHashrateAfter("Total:", out var tmp);
+                _cryptonightTotal += tmp;
+                _cryptonightTotalCounted++;
+                var spd = _cryptonightTotal / _cryptonightTotalCounted;
+                BenchmarkAlgorithm.AvaragedSpeed = spd; // if we don't get the desired speed fallback to this one
+                if (_cryptonightTotalCounted >= _cryptonightTotalCount)
                 {
-                    var st = outdata.IndexOf("Total:") + 7;
-                    var len = outdata.Length - speedLength - st;
-
-                    var parse = outdata.Substring(st, len).Trim();
-                    double.TryParse(parse, NumberStyles.Any, CultureInfo.InvariantCulture, out var tmp);
-
-                    // save speed
-                    var i = outdata.IndexOf("Benchmark:");
-                    var k = outdata.IndexOf("/s");
-                    var hashspeed = outdata.Substring(i + 11, k - i - 9);
-                    var b = hashspeed.IndexOf(" ");
-                    if (hashspeed.Contains("kH/s"))
-                        tmp *= 1000;
-                    else if (hashspeed.Contains("MH/s"))
-                        tmp *= 1000000;
-                    else if (hashspeed.Contains("GH/s"))
-                        tmp *= 1000000000;
-
-                    _cryptonightTotal += tmp;
-                    _cryptonightTotalCount--;
-                }
-                if (_cryptonightTotalCount <= 0)
-                {
-                    var spd = _cryptonightTotal / ((double) BenchmarkTimeInSeconds / CryptonightTotalDelim);
                     BenchmarkAlgorithm.BenchmarkSpeed = spd;
                     BenchmarkSignalFinnished = true;
+                    return true;
                 }
-
                 return false;
             }
 
@@ -177,9 +158,9 @@ namespace NiceHashMiner.Miners
             }
 
             var totalSpeed = MiningSetup.MiningPairs
-                .Select(miningPair =>
-                    miningPair.Device.GetAlgorithm(MinerBaseType.ccminer, AlgorithmType.CryptoNight_UNUSED, AlgorithmType.NONE))
-                .Where(algo => algo != null).Sum(algo => algo.BenchmarkSpeed);
+                .Select(miningPair => miningPair.Algorithm)
+                .Where(algo => algo != null)
+                .Sum(algo => algo.BenchmarkSpeed);
 
             var cryptoNightData = new ApiData(MiningSetup.CurrentAlgorithmType)
             {

@@ -22,6 +22,7 @@ namespace NiceHashMiner.Miners
         private double _benchHashes;
         private int _targetBenchIters;
 
+#pragma warning disable 0649
         private class JsonModel : IApiResult
         {
             public class DeviceEntry
@@ -34,6 +35,7 @@ namespace NiceHashMiner.Miners
 
             public double? TotalHashrate => devices?.Sum(d => d.speed);
         }
+#pragma warning restore 0649
 
         private string AlgoName
         {

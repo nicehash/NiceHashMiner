@@ -31,14 +31,14 @@ namespace NiceHashMinerLegacy.Tests.Devices.Algorithms
             var xrmStakAlgos = algos[MinerBaseType.XmrStak];
             Assert.AreEqual(3, xrmStakAlgos.Count);
 
-            AssertAlgorithmsEqual(xrmStakAlgos[0], MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7_UNUSED);
+            AssertAlgorithmsEqual(xrmStakAlgos[0], MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7);
         }
 
         private static void AssertContainsGpu(IReadOnlyDictionary<MinerBaseType, List<Algorithm>> algos)
         {
             Assert.IsTrue(algos.ContainsKey(MinerBaseType.Claymore));
             var claymoreAlgos = algos[MinerBaseType.Claymore]
-                .Where(a => a.NiceHashID != AlgorithmType.CryptoNightV7_UNUSED && a.NiceHashID != AlgorithmType.Equihash_UNUSED)
+                .Where(a => a.NiceHashID != AlgorithmType.CryptoNightV7 && a.NiceHashID != AlgorithmType.Equihash)
                 .ToList();
             Assert.AreEqual(7, claymoreAlgos.Count);
 
@@ -46,9 +46,9 @@ namespace NiceHashMinerLegacy.Tests.Devices.Algorithms
             {
                 AlgorithmType.NONE,
                 AlgorithmType.Decred,
-                AlgorithmType.Lbry_UNUSED,
+                AlgorithmType.Lbry,
                 AlgorithmType.Pascal,
-                AlgorithmType.Sia_UNUSED,
+                AlgorithmType.Sia,
                 AlgorithmType.Blake2s,
                 AlgorithmType.Keccak
             };

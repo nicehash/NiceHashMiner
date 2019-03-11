@@ -177,7 +177,7 @@ namespace NiceHashMiner.Devices
         {
             if (config != null && config.DeviceUUID == Uuid && config.AlgorithmSettings != null)
             {
-                AlgorithmSettings = GroupAlgorithms.CreateForDeviceList(this);
+                AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
                 foreach (var conf in config.AlgorithmSettings)
                 {
                     var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID, conf.SecondaryNiceHashID);
@@ -282,17 +282,6 @@ namespace NiceHashMiner.Devices
             var algos = GetAlgorithmSettingsThirdParty(ConfigManager.GeneralConfig.Use3rdPartyMiners);
 
             var retAlgos = MinerPaths.GetAndInitAlgorithmsMinerPaths(algos, this);
-            ;
-
-            // NVIDIA
-            if (DeviceGroupType == DeviceGroupType.NVIDIA_5_x || DeviceGroupType == DeviceGroupType.NVIDIA_6_x)
-            {
-                retAlgos = retAlgos.FindAll(a => a.MinerBaseType != MinerBaseType.nheqminer);
-            }
-            else if (DeviceType == DeviceType.NVIDIA)
-            {
-                retAlgos = retAlgos.FindAll(a => a.MinerBaseType != MinerBaseType.eqm);
-            }
 
             // sort by algo
             retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0
@@ -338,10 +327,8 @@ namespace NiceHashMiner.Devices
             var thirdPartyMiners = new List<MinerBaseType>
             {
                 MinerBaseType.Claymore,
-                MinerBaseType.OptiminerAMD,
                 MinerBaseType.EWBF,
                 MinerBaseType.Prospector,
-                MinerBaseType.dtsm,
                 MinerBaseType.trex,
                 MinerBaseType.Phoenix,
                 MinerBaseType.GMiner,

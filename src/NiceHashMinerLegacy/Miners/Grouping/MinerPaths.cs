@@ -148,21 +148,22 @@ namespace NiceHashMiner.Miners.Grouping
         public static string GetPathFor(MinerBaseType minerBaseType, AlgorithmType algoType,
             DeviceGroupType devGroupType, bool def = false)
         {
-            if (!def & ConfigurableMiners.Contains(minerBaseType))
-            {
-                // Override with internals
-                var path = MinerPathPackages.Find(p => p.DeviceType == devGroupType)
-                    .MinerTypes.Find(p => p.Type == minerBaseType)
-                    .Algorithms.Find(p => p.Algorithm == algoType);
-                if (path != null)
-                {
-                    if (File.Exists(path.Path))
-                    {
-                        return path.Path;
-                    }
-                    Helpers.ConsolePrint("PATHS", $"Path {path.Path} not found, using defaults");
-                }
-            }
+            // TODO feature obsolete
+            //if (!def & ConfigurableMiners.Contains(minerBaseType))
+            //{
+            //    // Override with internals
+            //    var path = MinerPathPackages.Find(p => p.DeviceType == devGroupType)
+            //        .MinerTypes.Find(p => p.Type == minerBaseType)
+            //        .Algorithms.Find(p => p.Algorithm == algoType);
+            //    if (path != null)
+            //    {
+            //        if (File.Exists(path.Path))
+            //        {
+            //            return path.Path;
+            //        }
+            //        Helpers.ConsolePrint("PATHS", $"Path {path.Path} not found, using defaults");
+            //    }
+            //}
 
             switch (minerBaseType)
             {
@@ -186,8 +187,6 @@ namespace NiceHashMiner.Miners.Grouping
                     return Data.XmrStak;
                 case MinerBaseType.ccminer_alexis:
                     return NvidiaGroups.CcminerUnstablePath(algoType, devGroupType);
-                case MinerBaseType.experimental:
-                    return Experimental.GetPath(algoType, devGroupType);
                 case MinerBaseType.EWBF:
                     if (algoType == AlgorithmType.ZHash)
                     {
@@ -297,9 +296,6 @@ namespace NiceHashMiner.Miners.Grouping
                     //    return CcminerSM21(algorithmType);
                     case DeviceGroupType.NVIDIA_3_x:
                         return CcminerSM3X(algorithmType);
-                    // CN exception
-                    case DeviceGroupType.NVIDIA_6_x when algorithmType == AlgorithmType.CryptoNight_UNUSED:
-                        return Data.CcminerTPruvot;
                     // sm5x and sm6x have same settings otherwise
                     case DeviceGroupType.NVIDIA_5_x:
                     case DeviceGroupType.NVIDIA_6_x:
@@ -312,8 +308,7 @@ namespace NiceHashMiner.Miners.Grouping
             public static string CcminerUnstablePath(AlgorithmType algorithmType, DeviceGroupType nvidiaGroup)
             {
                 // sm5x and sm6x have same settings
-                if ((nvidiaGroup == DeviceGroupType.NVIDIA_5_x || nvidiaGroup == DeviceGroupType.NVIDIA_6_x) &&
-                    (AlgorithmType.X11Gost_UNUSED == algorithmType || AlgorithmType.Nist5_UNUSED == algorithmType || AlgorithmType.Keccak == algorithmType))
+                if ((nvidiaGroup == DeviceGroupType.NVIDIA_5_x || nvidiaGroup == DeviceGroupType.NVIDIA_6_x) && (AlgorithmType.Keccak == algorithmType))
                     return Data.CcminerX11Gost;
                 // TODO wrong case?
                 return Data.None; // should not happen
@@ -352,17 +347,6 @@ namespace NiceHashMiner.Miners.Grouping
             }
         }
 
-        // unstable miners, NVIDIA for now
-        private static class Experimental
-        {
-            public static string GetPath(AlgorithmType algoType, DeviceGroupType devGroupType)
-            {
-                return devGroupType == DeviceGroupType.NVIDIA_6_x
-                    ? NvidiaGroups.Ccminer_path(algoType, devGroupType)
-                    : Data.None;
-            }
-        }
-
         private static readonly List<MinerPathPackage> MinerPathPackages = new List<MinerPathPackage>();
 
         private static readonly List<MinerBaseType> ConfigurableMiners = new List<MinerBaseType>
@@ -377,6 +361,7 @@ namespace NiceHashMiner.Miners.Grouping
             for (var i = DeviceGroupType.NONE + 1; i < DeviceGroupType.LAST; i++)
             {
                 var package = GroupAlgorithms.CreateDefaultsForGroup(i);
+                if (package == null) continue;
                 var minerTypePaths = (from type in ConfigurableMiners
                     where package.ContainsKey(type)
                     let minerPaths = package[type].Select(algo =>
