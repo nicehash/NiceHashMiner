@@ -13,6 +13,7 @@ namespace MinerPlugin.Toolkit
     // TODO there is no watchdog
     public abstract class MinerBase : IMiner
     {
+        private readonly string _uuid;
         protected MiningProcess _miningProcess;
         protected IEnumerable<(BaseDevice device, Algorithm algorithm)> _miningPairs;
         protected string _miningLocation;

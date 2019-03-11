@@ -12,11 +12,15 @@ using static MinerPlugin.Toolkit.MinersApiPortsManager;
 using NiceHashMinerLegacy.Common.Device;
 using System.Collections.Generic;
 using System.Globalization;
+using NiceHashMinerLegacy.Common;
+using System.IO;
 
 namespace CPUMinerBase
 {
     public class CpuMiner : MinerBase, IAfterStartMining
     {
+        private readonly string _uuid;
+
         // cpuminer can mine only one algorithm at a given time
         private AlgorithmType _algorithmType;
 
@@ -26,6 +30,11 @@ namespace CPUMinerBase
         private int _apiPort;
 
         private ApiDataHelper apiReader = new ApiDataHelper(); // consider replacing with HttpClient
+
+        public CpuMiner(string uuid)
+        {
+            _uuid = uuid;
+        }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -112,8 +121,10 @@ namespace CPUMinerBase
 
         protected override (string, string) GetBinAndCwdPaths()
         {
-            var binPath = @"D:\Programming\NiceHashMinerLegacy\Release\bin\cpuminer_opt\cpuminer.exe";
-            var binCwd = @"D:\Programming\NiceHashMinerLegacy\Release\bin\cpuminer_opt\";
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
+            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var binPath = Path.Combine(pluginRootBins, "cpuminer.exe");
+            var binCwd = pluginRootBins;
             return (binPath, binCwd);
         }
 

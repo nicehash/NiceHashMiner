@@ -189,6 +189,10 @@ namespace MinerPlugin.Toolkit
                             return (0, false, "Cancelling per user request.");
                         }
                     }
+                    catch (Exception e)
+                    {
+                        return (0, false, e.Message);
+                    }
 
                 }
 

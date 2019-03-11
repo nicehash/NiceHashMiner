@@ -29,7 +29,7 @@ namespace CPUMinerBase
             return supported;
         }
 
-        public IMiner CreateMiner() => new CpuMiner();
+        public IMiner CreateMiner() => new CpuMiner(PluginUUID);
 
         
         // TODO check get what kind of benchmark it is, local or network

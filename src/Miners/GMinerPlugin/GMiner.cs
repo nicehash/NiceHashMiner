@@ -60,7 +60,7 @@ namespace GMinerPlugin
             var url = split[0];
             var port = split[1];
 
-            var cmd = $"-a {algo} -s {url} -n {port} -u {username} {_devices} --api {_apiPort} {_extraLaunchParameters}";
+            var cmd = $"-a {algo} -s {url} -n {port} -u {username} {_devices} -w 0 --api {_apiPort} {_extraLaunchParameters}";
 
             if (_algorithmType == AlgorithmType.ZHash)
             {
@@ -124,7 +124,7 @@ namespace GMinerPlugin
             }
 
             // use demo user and disable the watchdog
-            var commandLine = CreateCommandLine(MinerToolkit.DemoUser) + " -w 0";
+            var commandLine = CreateCommandLine(MinerToolkit.DemoUser);
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 

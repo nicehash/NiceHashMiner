@@ -43,8 +43,8 @@ namespace NBMiner
 
         private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
         {
-            const ulong minGrin29Mem = 5 << 30;
-            const ulong minGrin31Mem = 8 << 30;
+            const ulong minGrin29Mem = 5UL << 30;
+            const ulong minGrin31Mem = 8UL << 30;
 
             if (dev.GpuRam >= minGrin29Mem)
                 yield return new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29);

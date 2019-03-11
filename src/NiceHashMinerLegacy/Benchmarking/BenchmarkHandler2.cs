@@ -72,6 +72,7 @@ namespace NiceHashMiner.Benchmarking
                 }
 
                 _currentAlgorithm = _benchmarkAlgorithmQueue.Dequeue();
+                _benchmarkForm.AddToStatusCheck(Device, _currentAlgorithm);
                 if (_currentAlgorithm is PluginAlgorithm pAlgo)
                 {
                     await BenchmarkPluginAlgorithm();
@@ -156,13 +157,22 @@ namespace NiceHashMiner.Benchmarking
             var miner = plugin.CreateMiner();
             miner.InitMiningPairs(new List<(BaseDevice, CommonAlgorithm.Algorithm)>{ (Device.PluginDevice, algo.BaseAlgo) });
             miner.InitMiningLocationAndUsername(Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], Globals.DemoUser); // maybe it will be online
+            _powerHelper.Start();
             var result = await miner.StartBenchmark(_stopBenchmark.Token, _performanceType);
+            var power = _powerHelper.Stop();
             if (result.ok)
             {
+                algo.PowerUsage = power;
                 algo.BenchmarkSpeed = result.speed;
                 // set status to empty string it will return speed
                 _currentAlgorithm.ClearBenchmarkPending();
                 _benchmarkForm.SetCurrentStatus(Device, _currentAlgorithm, "");
+            }
+            else
+            {
+                // add new failed list
+                _benchmarkFailedAlgo.Add(_currentAlgorithm.AlgorithmName);
+                _benchmarkForm.SetCurrentStatus(Device, _currentAlgorithm, result.msg);
             }
         }
 
