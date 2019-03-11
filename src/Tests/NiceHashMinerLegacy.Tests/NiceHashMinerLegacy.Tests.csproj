@@ -68,6 +68,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\3rdparty\managedCuda\Nvml\Nvml.csproj">
+      <Project>{92D51A33-7BF0-47FD-9ECE-D758FFE1691D}</Project>
+      <Name>Nvml</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NiceHashMinerLegacy.Common</Name>
