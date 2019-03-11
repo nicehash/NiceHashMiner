@@ -49,7 +49,7 @@ namespace NiceHashMiner.Plugin
 
         public static bool GetOnlineMinerPlugins()
         {
-            const string pluginsJsonApiUrl = "https://miner-plugins.nicehash.com/plugins.json";
+            const string pluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
             try
             {
                 using (var client = new WebClient())

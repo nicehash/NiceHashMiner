@@ -39,12 +39,6 @@ namespace NiceHashMiner.Benchmarking
         // plugin stuff
         private IMiner _minerFromPlugin;
 
-        // CPU sweet spots
-        private readonly List<AlgorithmType> _cpuAlgos = new List<AlgorithmType>
-        {
-            AlgorithmType.CryptoNight
-        };
-
         public BenchmarkHandler2(ComputeDevice device, Queue<Algorithm> algorithms, IBenchmarkForm form,
             BenchmarkPerformanceType performance)
         {
@@ -67,104 +61,6 @@ namespace NiceHashMiner.Benchmarking
                 thread.Name = $"dev_{Device.DeviceType}-{Device.ID}_benchmark";
             thread.Start();
         }
-
-        //public void OnBenchmarkComplete(bool success, string status)
-        //{
-        //    if (!_benchmarkForm.InBenchmark) return;
-
-        //    var rebenchSame = false;
-        //    if (success && _cpuBenchmarkStatus != null && _cpuAlgos.Contains(_currentAlgorithm.NiceHashID) &&
-        //        _currentAlgorithm.MinerBaseType == MinerBaseType.XmrStak)
-        //    {
-        //        _cpuBenchmarkStatus.SetNextSpeed(_currentAlgorithm.BenchmarkSpeed);
-        //        rebenchSame = _cpuBenchmarkStatus.HasTest();
-        //        _currentAlgorithm.LessThreads = _cpuBenchmarkStatus.LessTreads;
-        //        if (rebenchSame == false)
-        //        {
-        //            _cpuBenchmarkStatus.FindFastest();
-        //            _currentAlgorithm.BenchmarkSpeed = _cpuBenchmarkStatus.GetBestSpeed();
-        //            _currentAlgorithm.LessThreads = _cpuBenchmarkStatus.GetLessThreads();
-        //        }
-        //    }
-
-        //    if (_claymoreZcashStatus != null && _currentAlgorithm.MinerBaseType == MinerBaseType.Claymore &&
-        //        _currentAlgorithm.NiceHashID == AlgorithmType.Equihash)
-        //    {
-        //        if (_claymoreZcashStatus.HasTest())
-        //        {
-        //            _currentMiner = MinerFactory.CreateMiner(Device, _currentAlgorithm);
-        //            rebenchSame = true;
-        //            //System.Threading.Thread.Sleep(1000*60*5);
-        //            _claymoreZcashStatus.SetSpeed(_currentAlgorithm.BenchmarkSpeed);
-        //            _claymoreZcashStatus.SetNext();
-        //            _currentAlgorithm.ExtraLaunchParameters = _claymoreZcashStatus.GetTestExtraParams();
-        //            Helpers.ConsolePrint("ClaymoreAMD_Equihash", _currentAlgorithm.ExtraLaunchParameters);
-        //            _currentMiner.InitBenchmarkSetup(new MiningPair(Device, _currentAlgorithm));
-        //        }
-
-        //        if (_claymoreZcashStatus.HasTest() == false)
-        //        {
-        //            rebenchSame = false;
-        //            // set fastest mode
-        //            _currentAlgorithm.BenchmarkSpeed = _claymoreZcashStatus.GetFastestTime();
-        //            _currentAlgorithm.ExtraLaunchParameters = _claymoreZcashStatus.GetFastestExtraParams();
-        //        }
-        //    }
-
-        //var power = _powerHelper.Stop();
-
-        //var dualAlgo = _currentAlgorithm as DualAlgorithm;
-        //    if (dualAlgo != null && dualAlgo.TuningEnabled)
-        //    {
-        //        dualAlgo.SetPowerForCurrent(power);
-
-        //        if (dualAlgo.IncrementToNextEmptyIntensity())
-        //            rebenchSame = true;
-        //    }
-        //    else
-        //    {
-        //        _currentAlgorithm.PowerUsage = power;
-        //    }
-
-        //    if (!rebenchSame) _benchmarkForm.RemoveFromStatusCheck(Device, _currentAlgorithm);
-
-        //    if (!success && !rebenchSame)
-        //    {
-        //        // add new failed list
-        //        _benchmarkFailedAlgo.Add(_currentAlgorithm.AlgorithmName);
-        //        _benchmarkForm.SetCurrentStatus(Device, _currentAlgorithm, status);
-        //    }
-        //    else if (!rebenchSame)
-        //    {
-        //        // set status to empty string it will return speed
-        //        _currentAlgorithm.ClearBenchmarkPending();
-        //        _benchmarkForm.SetCurrentStatus(Device, _currentAlgorithm, "");
-        //    }
-
-        //    if (rebenchSame)
-        //    {
-        //        _powerHelper.Start();
-
-        //        if (_cpuBenchmarkStatus != null)
-        //        {
-        //            _currentMiner.BenchmarkStart(_cpuBenchmarkStatus.Time, null);
-        //        }
-        //        else if (_claymoreZcashStatus != null)
-        //        {
-        //            _currentMiner.BenchmarkStart(_claymoreZcashStatus.Time, null);
-        //        }
-        //        else if (dualAlgo != null && dualAlgo.TuningEnabled)
-        //        {
-        //            var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
-        //                .GetBenchamrktime(_performanceType, Device.DeviceGroupType);
-        //            _currentMiner.BenchmarkStart(time, null);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        NextBenchmark();
-        //    }
-        //}
 
         private async void Benchmark()
         {
@@ -199,36 +95,6 @@ namespace NiceHashMiner.Benchmarking
                 return;
             }
             // well lets just assume it is not null
-            // TODO preparation check for mutliple benchmarks on the same algorithm
-            {
-
-                /*
-                if (_currentAlgorithm.MinerBaseType == MinerBaseType.XmrStak && _currentAlgorithm.NiceHashID == AlgorithmType.CryptoNight 
-                    && string.IsNullOrEmpty(_currentAlgorithm.ExtraLaunchParameters) 
-                    && _currentAlgorithm.ExtraLaunchParameters.Contains("enable_ht=true") == false) {
-                    _cpuBenchmarkStatus = new CPUBenchmarkStatus(Globals.ThreadsPerCPU);
-                    _currentAlgorithm.LessThreads = _cpuBenchmarkStatus.LessTreads;
-                } else {
-                    _cpuBenchmarkStatus = null;
-                }
-                */
-                //_cpuBenchmarkStatus = null;
-
-                //if (_currentAlgorithm.MinerBaseType == MinerBaseType.Claymore &&
-                //    _currentAlgorithm.NiceHashID == AlgorithmType.Equihash &&
-                //    _currentAlgorithm.ExtraLaunchParameters != null &&
-                //    !_currentAlgorithm.ExtraLaunchParameters.Contains("-asm"))
-                //{
-                //    _claymoreZcashStatus = new ClaymoreZcashBenchHelper(_currentAlgorithm.ExtraLaunchParameters);
-                //    _currentAlgorithm.ExtraLaunchParameters = _claymoreZcashStatus.GetTestExtraParams();
-                //}
-                //else
-                //{
-                //    _claymoreZcashStatus = null;
-                //}
-
-                //if (_currentAlgorithm is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled) dualAlgo.StartTuning();
-            }
             // actual benchmarking scope?
             {
                 _benchmarkForm.AddToStatusCheck(Device, _currentAlgorithm);
@@ -251,7 +117,7 @@ namespace NiceHashMiner.Benchmarking
                 _powerHelper.Start();
                 var result = await benchTaskResult;
                 var power = _powerHelper.Stop();
-                var rebenchSame = false; // TODO get rid of this
+                var rebenchSame = false; // TODO get rid of this, but keep for DualAlgorithm's for now
 
                 var dualAlgo = _currentAlgorithm as DualAlgorithm;
                 if (dualAlgo != null && dualAlgo.TuningEnabled)

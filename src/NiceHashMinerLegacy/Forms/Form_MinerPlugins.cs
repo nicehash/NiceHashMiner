@@ -26,7 +26,7 @@ namespace NiceHashMiner.Forms
 
         private void FormShown(object sender, EventArgs e)
         {
-            foreach (var plugin in MinerPluginsManager.OnlinePlugins)
+            foreach (var plugin in MinerPluginsManager.OnlinePlugins ?? Enumerable.Empty<PluginPackageInfo>())
             {
                 dataGridView1.Rows.Add(GetPluginRowData(plugin));
 
