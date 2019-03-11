@@ -18,7 +18,7 @@ namespace NiceHashMiner.Miners.Grouping
 
             var canGroup = IsGroupableMinerBaseType(a) && IsGroupableMinerBaseType(b);
             // group if same bin path and same algo type
-            if (canGroup && IsSameBinPath(a, b) && IsSameAlgorithmType(a, b) &&
+            if (IsSameBinPath(a, b) && IsSameAlgorithmType(a, b) &&
                 ((IsNotCpuGroups(a, b) && IsSameDeviceType(a, b)) ||
                  (a.Algorithm.MinerBaseType == MinerBaseType.Prospector &&
                  b.Algorithm.MinerBaseType == MinerBaseType.Prospector) ||

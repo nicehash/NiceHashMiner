@@ -25,15 +25,6 @@ namespace NiceHashMiner.Miners.Parsing
                 }
             ),
             new MinerOptionPackage(
-                MinerType.ccminer_CryptoNight,
-                new List<MinerOption>
-                {
-                    new MinerOption("Launch", "-l", "--launch=", "8x20", MinerOptionFlagType.MultiParam, ","), // default is 8x20
-                    new MinerOption("Bfactor", "", "--bfactor=", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("Bsleep", "", "--bsleep=", "0", MinerOptionFlagType.MultiParam, ",") // TODO check default
-                }
-            ),
-            new MinerOptionPackage(
                 MinerType.ethminer_OCL,
                 new List<MinerOption>
                 {
@@ -80,121 +71,6 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("TempTarget", "", "--temp-target", "75", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("AutoFan", "", "--auto-fan", null, MinerOptionFlagType.Uni),
                     new MinerOption("AutoGpu", "", "--auto-gpu", null, MinerOptionFlagType.Uni)
-                }
-            ),
-            new MinerOptionPackage(
-                MinerType.cpuminer_opt,
-                new List<MinerOption>
-                {
-                    new MinerOption("Threads", "-t", "--threads=", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-                    new MinerOption("CpuAffinity", "", "--cpu-affinity", "-1", MinerOptionFlagType.MultiParam, ","), // default none
-                    new MinerOption("CpuPriority", "", "--cpu-priority", "-1", MinerOptionFlagType.MultiParam, ",") // default 
-                }
-            ),
-            new MinerOptionPackage(
-                MinerType.nheqminer_CPU,
-                new List<MinerOption>
-                {
-                    new MinerOption("Threads", "-t", "-t", "-1", MinerOptionFlagType.SingleParam, " "), // default none
-                }
-            ),
-            new MinerOptionPackage(
-                MinerType.nheqminer_CUDA,
-                new List<MinerOption>
-                {
-                    new MinerOption("Solver_Version", "-cv", "-cv", "0", MinerOptionFlagType.SingleParam, " "), // default 0
-                    new MinerOption("Solver_Block", "-cb", "-cb", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-                    new MinerOption("Solver_Thread", "-ct", "-ct", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-                }
-            ),
-            new MinerOptionPackage(
-                MinerType.eqm_CUDA,
-                new List<MinerOption>
-                {
-                    new MinerOption("Solver_Mode", "-cm", "-cm", "0", MinerOptionFlagType.MultiParam, " "), // default 0
-                }
-            ),
-            new MinerOptionPackage(
-                MinerType.ClaymoreZcash,
-                new List<MinerOption>
-                {
-                    new MinerOption("ClaymoreZcash_a", "-a", "-a", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreZcash_asm", "-asm", "-asm", "1", MinerOptionFlagType.MultiParam, ","),
-
-                    new MinerOption("ClaymoreZcash_i", "-i", "-i", "6", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreZcash_wd", "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
-                    //new MinerOption(ClaymoreZcash_r      , , , , MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreZcash_nofee", "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreZcash_li", "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
-
-                    //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
-                    new MinerOption("ClaymoreZcash_cclock", "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreZcash_mclock", "-mclock", "-mclock", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreZcash_powlim", "-powlim", "-powlim", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreZcash_cvddc", "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreZcash_mvddc", "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
-                },
-                new List<MinerOption>
-                {
-                    // temperature stuff
-                    //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
-                    new MinerOption("ClaymoreZcash_tt", "-tt", "-tt", "1", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreZcash_ttli", "-ttli", "-ttli", "70", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreZcash_tstop", "-tstop", "-tstop", "0", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreZcash_fanmax", "-fanmax", "-fanmax", "100", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreZcash_fanmin", "-fanmin", "-fanmin", "0", MinerOptionFlagType.MultiParam, ","),
-                }
-            ),
-            new MinerOptionPackage(
-                MinerType.ClaymoreCryptoNight,
-                new List<MinerOption>
-                {
-                    new MinerOption("ClaymoreCryptoNight_a", "-a", "-a", "0", MinerOptionFlagType.MultiParam),
-                    new MinerOption("ClaymoreCryptoNight_wd", "-wd", "-wd", "1", MinerOptionFlagType.SingleParam, ","),
-                    //new MinerOption(ClaymoreCryptoNight_r      , , , , MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_nofee", "-nofee", "-nofee", "0", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_li", "-li", "-li", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_h", "-h", "-h", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_allpools", "-allpools", "0", MinerOptionFlagType.SingleParam),
-                    new MinerOption("ClaymoreCryptoNight_cclock", "-cclock", "-cclock", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_mclock", "-mclock", "-mclock", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_powlim", "-powlim", "-powlim", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_cvddc", "-cvddc", "-cvddc", "0", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_mvddc", "-mvddc", "-mvddc", "0", MinerOptionFlagType.MultiParam, ","),
-                },
-                new List<MinerOption>
-                {
-                    // temperature stuff
-                    //MinerOptionFlagType.MultiParam might not work corectly due to ADL indexing so use single param to apply to all
-                    new MinerOption("ClaymoreCryptoNight_tt", "-tt", "-tt", "1", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_tstop", "-tstop", "-tstop", "0", MinerOptionFlagType.SingleParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_fanmax", "-fanmax", "-fanmax", "100", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ClaymoreCryptoNight_fanmin", "-fanmin", "-fanmin", "0", MinerOptionFlagType.MultiParam, ","),
-                }
-            ),
-            new MinerOptionPackage(
-                MinerType.OptiminerZcash,
-                new List<MinerOption>
-                {
-                    new MinerOption("ForceGenericKernel", "--force-generic-kernel", "--force-generic-kernel", null,
-                        MinerOptionFlagType.Uni),
-                    new MinerOption("ExperimentalKernel", "--experimental-kernel", "--experimental-kernel", null, MinerOptionFlagType.Uni),
-                    new MinerOption("nodevfee", "--nodevfee", "--nodevfee", null, MinerOptionFlagType.Uni),
-                    new MinerOption("Intensity", "-i", "--intensity", "0", MinerOptionFlagType.DuplicateMultiParam),
-                    new MinerOption("PciMode", "--pci-mode", "--pci-mode", "", MinerOptionFlagType.SingleParam),
-                }
-            ),
-            new MinerOptionPackage(
-                MinerType.excavator,
-                new List<MinerOption>
-                {
-                    // parameters differ according to algorithm
-                    new MinerOption("parameter1", "-c1", "-c1", "0", MinerOptionFlagType.MultiParam, " "),
-                    new MinerOption("parameter2", "-c2", "-c2", "0", MinerOptionFlagType.MultiParam, " "),
-                    new MinerOption("debug_param", "-f", "-f", "", MinerOptionFlagType.SingleParam, " "),
-                    // Overclocking not supported from NHM
-                    //new MinerOption("Overclocking_os", "-os", "-os", "", MinerOptionFlagType.MultiParam, " "),
-                    //new MinerOption("Overclocking_od", "-od", "-od", "2", MinerOptionFlagType.MultiParam, " "),
                 }
             ),
             new MinerOptionPackage(
@@ -267,30 +143,6 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("EWBF_powercalc", "--pec", "--pec", null, MinerOptionFlagType.Uni, " "),
                 }
             ),
-            new MinerOptionPackage(
-                MinerType.Xmrig,
-                new List<MinerOption>
-                {
-                    new MinerOption("Xmrig_fee", "--donate-level=", "0", MinerOptionFlagType.SingleParam),
-                    new MinerOption("Xmrig_threads", "-t", "--threads=", null, MinerOptionFlagType.SingleParam),
-                    new MinerOption("Xmrig_av", "-v", "--av=", "0", MinerOptionFlagType.SingleParam),
-                    new MinerOption("Xmrig_affinity", "--cpu-affinity", null, MinerOptionFlagType.SingleParam),
-                    new MinerOption("Xmrig_priority", "--cpu-priority", null, MinerOptionFlagType.SingleParam),
-                    new MinerOption("Xmrig_nohugepages", "--no-huge-pages", null, MinerOptionFlagType.Uni),
-                    new MinerOption("Xmrig_nocolor", "--no-color", null, MinerOptionFlagType.Uni),
-                    new MinerOption("Xmrig_maxusage", "--max-cpu-usage=", "75", MinerOptionFlagType.SingleParam),
-                    new MinerOption("Xmrig_safe", "--safe", null, MinerOptionFlagType.Uni)
-                }
-            ),
-            //new MinerOptionPackage(
-            //    MinerType.dtsm,
-            //    new List<MinerOption>
-            //    {
-            //        new MinerOption("dtsm_time", "--time", null, MinerOptionFlagType.Uni),
-            //        new MinerOption("dtsm_noreconnect", "--noreconnect", null, MinerOptionFlagType.Uni),
-            //        new MinerOption("dtsm_temp-target", "--temp-target", null, MinerOptionFlagType.SingleParam)
-            //    }
-            //),
             new MinerOptionPackage(
                 MinerType.Phoenix,
                 new List<MinerOption>

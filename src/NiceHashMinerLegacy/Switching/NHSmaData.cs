@@ -26,14 +26,14 @@ namespace NiceHashMiner.Switching
         // private static Dictionary<AlgorithmType, List<double>> _recentPaying;
 
         // Global list of SMA data, should be accessed with a lock since callbacks/timers update it
-        private static Dictionary<AlgorithmType, NiceHashSma> _currentSma;
+        private static Dictionary<AlgorithmType, double> _currentSma;
         // Global list of stable algorithms, should be accessed with a lock
         private static HashSet<AlgorithmType> _stableAlgorithms;
 
         // Public for tests only
         public static void Initialize()
         {
-            _currentSma = new Dictionary<AlgorithmType, NiceHashSma>();
+            _currentSma = new Dictionary<AlgorithmType, double>();
             _stableAlgorithms = new HashSet<AlgorithmType>();
 
             Dictionary<AlgorithmType, double> cacheDict = null;
@@ -64,13 +64,7 @@ namespace NiceHashMiner.Switching
                     paying = 1;
 #endif
 
-                    _currentSma[algo] = new NiceHashSma
-                    {
-                        Port = (int) algo + 3333,
-                        Name = algo.ToString().ToLower(),
-                        Algo = (int) algo,
-                        Paying = paying
-                    };
+                    _currentSma[algo] = paying;
                     //_recentPaying[algo] = new List<double>
                     //{
                     //    0
@@ -101,7 +95,7 @@ namespace NiceHashMiner.Switching
                 {
                     if (_currentSma.ContainsKey(algo))
                     {
-                        _currentSma[algo].Paying = newSma[algo];
+                        _currentSma[algo] = newSma[algo];
                     }
                 }
 
@@ -133,7 +127,7 @@ namespace NiceHashMiner.Switching
             {
                 if (!_currentSma.ContainsKey(algo))
                     throw new ArgumentException("Algo not setup in SMA");
-                _currentSma[algo].Paying = paying;
+                _currentSma[algo] = paying;
             }
 
             HasData = true;
@@ -181,28 +175,6 @@ namespace NiceHashMiner.Switching
         #endregion
 
         # region Get Methods
-
-        /// <summary>
-        /// Attempt to get SMA for an algorithm
-        /// </summary>
-        /// <param name="algo">Algorithm</param>
-        /// <param name="sma">Variable to place SMA in</param>
-        /// <returns>True iff we know about this algo</returns>
-        public static bool TryGetSma(AlgorithmType algo, out NiceHashSma sma)
-        {
-            CheckInit();
-            lock (_currentSma)
-            {
-                if (_currentSma.ContainsKey(algo))
-                {
-                    sma = _currentSma[algo];
-                    return true;
-                }
-            }
-
-            sma = null;
-            return false;
-        }
         
         /// <summary>
         /// Attempt to get paying rate for an algorithm
@@ -213,10 +185,13 @@ namespace NiceHashMiner.Switching
         public static bool TryGetPaying(AlgorithmType algo, out double paying)
         {
             CheckInit();
-            if (TryGetSma(algo, out var sma))
+            lock (_currentSma)
             {
-                paying = sma.Paying;
-                return true;
+                if (_currentSma.ContainsKey(algo))
+                {
+                    paying = _currentSma[algo];
+                    return true;
+                }
             }
 
             paying = default(double);
@@ -252,7 +227,7 @@ namespace NiceHashMiner.Switching
                 {
                     if (_stableAlgorithms.Contains(kvp.Key) == stable)
                     {
-                        dict[kvp.Key] = kvp.Value.Paying;
+                        dict[kvp.Key] = kvp.Value;
                     }
                 }
             }
@@ -270,68 +245,5 @@ namespace NiceHashMiner.Switching
             if (!Initialized)
                 throw new InvalidOperationException("NHSmaData cannot be used before initialization");
         }
-
-        #region Obsolete
-
-        //[Obsolete]
-        //public void AppendPayingForAlgo(AlgorithmType algo, double paying)
-        //{
-        //    if (algo >= 0 && _recentPaying.ContainsKey(algo))
-        //    {
-        //        if (_recentPaying[algo].Count >= ConfigManager.GeneralConfig.NormalizedProfitHistory || CurrentPayingForAlgo(algo) == 0)
-        //        {
-        //            _recentPaying[algo].RemoveAt(0);
-        //        }
-        //        _recentPaying[algo].Add(paying);
-        //    }
-        //}
-
-        //[Obsolete]
-        //public Dictionary<AlgorithmType, NiceHashSma> NormalizedSma()
-        //{
-        //    foreach (var algo in _recentPaying.Keys)
-        //    {
-        //        if (_currentSma.ContainsKey(algo))
-        //        {
-        //            var current = CurrentPayingForAlgo(algo);
-
-        //            if (ConfigManager.GeneralConfig.NormalizedProfitHistory > 0
-        //                && _recentPaying[algo].Count >= ConfigManager.GeneralConfig.NormalizedProfitHistory)
-        //            {
-        //                // Find IQR
-        //                var quartiles = _recentPaying[algo].Quartiles();
-        //                var IQR = quartiles.Item3 - quartiles.Item1;
-        //                var TQ = quartiles.Item3;
-
-        //                if (current > (IQR * ConfigManager.GeneralConfig.IQROverFactor) + TQ)
-        //                {
-        //                    // result is deviant over
-        //                    var norm = (IQR * ConfigManager.GeneralConfig.IQRNormalizeFactor) + TQ;
-        //                    Helpers.ConsolePrint("PROFITNORM",
-        //                        $"Algorithm {_currentSma[algo].name} profit deviant, {(current - TQ) / IQR} IQRs over ({current} actual, {TQ} 3Q). Normalizing to {norm}");
-        //                    _currentSma[algo].paying = norm;
-        //                }
-        //                else
-        //                {
-        //                    _currentSma[algo].paying = current;
-        //                }
-        //            }
-        //            else
-        //            {
-        //                _currentSma[algo].paying = current;
-        //            }
-        //        }
-        //    }
-
-        //    return _currentSma;
-        //}
-
-        //[Obsolete]
-        //private double CurrentPayingForAlgo(AlgorithmType algo)
-        //{
-        //    return _recentPaying.ContainsKey(algo) ? _recentPaying[algo].LastOrDefault() : 0;
-        //}
-
-        #endregion
     }
 }

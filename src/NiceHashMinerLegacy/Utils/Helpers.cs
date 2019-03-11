@@ -393,6 +393,7 @@ namespace NiceHashMiner
             }
         }
 
+#pragma warning disable 0618
         public static AlgorithmType DualAlgoFromAlgos(AlgorithmType primary, AlgorithmType secondary)
         {
             if (primary == AlgorithmType.DaggerHashimoto)
@@ -401,12 +402,12 @@ namespace NiceHashMiner
                 {
                     case AlgorithmType.Decred:
                        return AlgorithmType.DaggerDecred;
-                    //case AlgorithmType.Lbry:
-                    //    return AlgorithmType.DaggerLbry;
-                    //case AlgorithmType.Pascal:
-                    //    return AlgorithmType.DaggerPascal;
-                    //case AlgorithmType.Sia:
-                    //    return AlgorithmType.DaggerSia;
+                    case AlgorithmType.Lbry:
+                        return AlgorithmType.DaggerLbry;
+                    case AlgorithmType.Pascal:
+                        return AlgorithmType.DaggerPascal;
+                    case AlgorithmType.Sia:
+                        return AlgorithmType.DaggerSia;
                     case AlgorithmType.Blake2s:
                         return AlgorithmType.DaggerBlake2s;
                     case AlgorithmType.Keccak:
@@ -416,5 +417,7 @@ namespace NiceHashMiner
 
             return primary;
         }
+#pragma warning restore 0618
+
     }
 }

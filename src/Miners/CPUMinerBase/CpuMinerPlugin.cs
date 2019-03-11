@@ -48,7 +48,7 @@ namespace CPUMinerBase
         IReadOnlyList<Algorithm> GetSupportedAlgorithms()
         {
             return new List<Algorithm>{
-                new Algorithm(PluginUUID, AlgorithmType.Lyra2z_UNUSED)
+                new Algorithm(PluginUUID, AlgorithmType.Lyra2Z)
             };
         }
     }

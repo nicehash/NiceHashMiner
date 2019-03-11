@@ -657,7 +657,7 @@ namespace NiceHashMiner.Forms
                 foreach (var cDev in AvailableDevices.Devices)
                 {
                     if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
-                    var deviceDefaultsAlgoSettings = GroupAlgorithms.CreateForDeviceList(cDev);
+                    var deviceDefaultsAlgoSettings = DefaultAlgorithms.GetAlgorithmsForDevice(cDev);
                     foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings)
                     {
                         var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings);

@@ -2,286 +2,384 @@
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace NiceHashMiner.Devices.Algorithms
 {
+    // TODO add checks for minimum drivers versions
     public static class DefaultAlgorithms
     {
-        #region All
+        #region Limitations and filters
+        const ulong MinDaggerHashimotoMemory = 3UL << 30; // 3GB
+        const ulong MinZHashMemory = 1879047230; // 1.75GB
+        const ulong MinBeamMemory = 3113849695; // 2.9GB
+        const ulong MinGrinCuckaroo29Memory = 6012951136; // 5.6GB
+        const ulong MinGrin31Mem = 8UL << 30; // 8GB
 
-        private static Dictionary<MinerBaseType, List<Algorithm>> All => new Dictionary<MinerBaseType, List<Algorithm>>
+        private static readonly Dictionary<AlgorithmType, ulong> minMemoryPerAlgo = new Dictionary<AlgorithmType, ulong>
         {
-            {
-                MinerBaseType.XmrStak,
-                new List<Algorithm>
-                {
-                    //new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV7, "cryptonight_v7"),
-                    new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightHeavy, "cryptonight_heavy"),
-                    new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV8, "cryptonight_v8"),
-                    new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightR, "cryptonight_r"),
-                }
-            }
+            { AlgorithmType.DaggerHashimoto, MinDaggerHashimotoMemory },
+            { AlgorithmType.ZHash, MinZHashMemory},
+            { AlgorithmType.Beam, MinBeamMemory },
+            { AlgorithmType.GrinCuckaroo29, MinGrinCuckaroo29Memory },
+            { AlgorithmType.GrinCuckatoo31, MinGrin31Mem },
         };
 
-        #endregion
-
-        #region GPU
-
-        private static Dictionary<MinerBaseType, List<Algorithm>> Gpu => new Dictionary<MinerBaseType, List<Algorithm>>
+        private static List<AlgorithmType> InsufficientDeviceMemoryAlgorithnms(ulong Ram, IEnumerable<AlgorithmType> algos)
         {
+            var filterAlgorithms = new List<AlgorithmType>();
+            foreach (var algo in algos)
             {
-                MinerBaseType.Claymore,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto),
-                    new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred),
-                    //new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Lbry),
-                    //new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Pascal),
-                    //new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Sia),
-                    new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s),
-                    new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak)
-                }
-            },
-            {
-                MinerBaseType.Phoenix,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto)
-                }
-            },
-            {
-                MinerBaseType.GMiner,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam), // BEAM added for NVIDIA and AMD check GPU section
-                    //new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash),
-                    //new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckaroo29)
-                }
-            },
-        };
-
-        #endregion
-
-        #region CPU
-
-        public static Dictionary<MinerBaseType, List<Algorithm>> Cpu => new Dictionary<MinerBaseType, List<Algorithm>>
-        {
-            // {
-            //     MinerBaseType.Xmrig,
-            //     new List<Algorithm>
-            //     {
-            //         //new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNight, ""),
-            //         //new Algorithm(MinerBaseType.Xmrig, AlgorithmType.CryptoNightV7)
-            //     }
-            // },
-            // {
-            //     MinerBaseType.cpuminer,
-            //     new List<Algorithm>
-            //     {
-            //         //new Algorithm(MinerBaseType.cpuminer, AlgorithmType.Lyra2z, "lyra2z"),
-            //         //new Algorithm(MinerBaseType.cpuminer, AlgorithmType.MTP, "mtp")
-            //     }
-            // }
-        }.ConcatDict(All);
-
-        #endregion
-
-        #region AMD
-
-        private const string RemDis = " --remove-disabled";
-        private const string DefaultParam = RemDis + AmdGpuDevice.DefaultParam;
-
-        public static Dictionary<MinerBaseType, List<Algorithm>> Amd => new Dictionary<MinerBaseType, List<Algorithm>>
-        {
-            {
-                MinerBaseType.sgminer,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.NeoScrypt, "neoscrypt", false)
-                    {
-                        ExtraLaunchParameters =
-                            DefaultParam +
-                            "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4"
-                    },
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.DaggerHashimoto, "ethash")
-                    {
-                        ExtraLaunchParameters = RemDis + "--xintensity 512 -w 192 -g 1"
-                    },
-                    //new Algorithm(MinerBaseType.sgminer, AlgorithmType.Decred, "decred", false)
-                    //{
-                    //    ExtraLaunchParameters = RemDis + "--gpu-threads 1 --xintensity 256 --lookup-gap 2 --worksize 64"
-                    //},
-                    //new Algorithm(MinerBaseType.sgminer, AlgorithmType.Lbry, "lbry", false)
-                    //{
-                    //    ExtraLaunchParameters = DefaultParam + "--xintensity 512 --worksize 128 --gpu-threads 2"
-                    //},
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal", false)
-                    {
-                        ExtraLaunchParameters = DefaultParam + "--intensity 21 -w 64 -g 2"
-                    },
-                    //new Algorithm(MinerBaseType.sgminer, AlgorithmType.X11Gost, "sibcoin-mod", false)
-                    //{
-                    //    ExtraLaunchParameters = DefaultParam + "--intensity 16 -w 64 -g 2"
-                    //},
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.Keccak, "keccak")
-                    {
-                        ExtraLaunchParameters = DefaultParam + "--intensity 15"
-                    },
-                    new Algorithm(MinerBaseType.sgminer, AlgorithmType.X16R, "x16r")
-                    {
-                        ExtraLaunchParameters = "-X 256"
-                    },
-                    //new Algorithm(MinerBaseType.sgminer, AlgorithmType.MTP, "mtp")
-                    //{
-                    //    ExtraLaunchParameters = "--worksize 256 --intensity 18"
-                    //}
-                }
-            },
-            {
-                MinerBaseType.Claymore,
-                new List<Algorithm>
-                {
-                    //new Algorithm(MinerBaseType.Claymore, AlgorithmType.CryptoNightV7),
-                    //new Algorithm(MinerBaseType.Claymore, AlgorithmType.Equihash, "equihash")
-                }
-            },
-            //{
-            //    MinerBaseType.OptiminerAMD,
-            //    new List<Algorithm>
-            //    {
-            //        new Algorithm(MinerBaseType.OptiminerAMD, AlgorithmType.Equihash, "equihash")
-            //    }
-            //},
-            {
-                MinerBaseType.Prospector,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt", false),
-                    //new Algorithm(MinerBaseType.Prospector, AlgorithmType.Sia, "sia", false)
-                }
-            },
-            {
-                MinerBaseType.BMiner,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.Beam)
-                }
+                if (minMemoryPerAlgo.ContainsKey(algo) == false) continue;
+                var minRam = minMemoryPerAlgo[algo];
+                if (Ram < minRam) filterAlgorithms.Add(algo);
             }
-        }.ConcatDictList(All, Gpu);
+            return filterAlgorithms;
+        }
 
-        #endregion
-
-        #region NVIDIA
-
-        public static Dictionary<MinerBaseType, List<Algorithm>> Nvidia => new Dictionary<MinerBaseType, List<Algorithm>>
+        private static List<Algorithm> FilterAlgorithmsList(List<Algorithm> algos, IEnumerable<AlgorithmType> filterAlgos)
         {
+            return algos.Where(a => filterAlgos.Contains(a.NiceHashID) == false).ToList();
+        }
+
+        private static List<Algorithm> FilterInsufficientRamAlgorithmsList(ulong Ram, List<Algorithm> algos)
+        {
+            var filterAlgos = InsufficientDeviceMemoryAlgorithnms(Ram, algos.Select(a => a.NiceHashID));
+            return FilterAlgorithmsList(algos, filterAlgos);
+        }
+
+        #endregion Limitations and filters
+
+        // ALL CPU, NVIDIA and AMD
+        private static List<Algorithm> XmrStakAlgorithmsForDevice(ComputeDevice dev)
+        {
+            // multiple OpenCL GPUs seem to freeze the whole system
+            var CryptoNightR_Enabled = dev.DeviceType != DeviceType.AMD;
+            var algos = new List<Algorithm>
             {
-                MinerBaseType.ccminer,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.NeoScrypt, "neoscrypt"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv2, "lyra2v2"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Decred, "decred", false),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lbry, "lbry", false),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.X11Gost, "sib", false),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Sia, "sia", false),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk"),
-                    //new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2z, "lyra2z"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.X16R, "x16r"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv3, "lyra2v3"),
-                    new Algorithm(MinerBaseType.ccminer, AlgorithmType.MTP, "mtp"),
-                }
-            },
+                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightHeavy, "cryptonight_heavy"),
+                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV8, "cryptonight_v8"),
+                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightR, "cryptonight_r") { Enabled = CryptoNightR_Enabled },
+            };
+            return algos;
+        }
+
+        // NVIDIA and AMD
+        private static List<Algorithm> ClaymoreDualAlgorithmsForDevice(ComputeDevice dev)
+        {
+            if (dev.IsEtherumCapale == false) return null;
+            if (dev.DeviceType == DeviceType.CPU) return null;
+            if (dev is CudaComputeDevice cudaDev && cudaDev.SMMajor < 5) return null;
+
+            var algos = new List<Algorithm>
             {
-                MinerBaseType.ccminer_alexis,
-                new List<Algorithm>
-                {
-                    //new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.X11Gost, "sib", false),
-                    new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.Keccak, "keccak")
-                }
-            },
+                new Algorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto),
+                // duals disabled by default
+                #pragma warning disable 0618
+                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred) { Enabled = false },
+                #pragma warning restore 0618
+                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s) { Enabled = false },
+                new DualAlgorithm(MinerBaseType.Claymore, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak) { Enabled = false }
+            };
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
+        // NVIDIA and AMD
+        private static List<Algorithm> PhoenixAlgorithmsForDevice(ComputeDevice dev)
+        {
+            if (dev.IsEtherumCapale == false) return null;
+            if (dev.DeviceType == DeviceType.CPU) return null;
+            if (dev is CudaComputeDevice cudaDev && cudaDev.SMMajor < 5) return null;
+
+            var algos = new List<Algorithm> {
+                new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto)
+            };
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
+        // NVIDIA and AMD
+        private static List<Algorithm> GMinerAlgorithmsForDevice(ComputeDevice dev)
+        {
+            if (dev.DeviceType == DeviceType.CPU) return null;
+
+            var algos = new List<Algorithm>();
+            // CUDA 5.0+
+            if (dev is CudaComputeDevice cudaDev && cudaDev.SMMajor >= 5)
             {
-                MinerBaseType.ethminer,
-                new List<Algorithm>
+                algos = new List<Algorithm>
                 {
-                    new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto")
-                }
-            },
-            //{
-            //    MinerBaseType.nheqminer,
-            //    new List<Algorithm>
-            //    {
-            //        new Algorithm(MinerBaseType.nheqminer, AlgorithmType.Equihash, "equihash")
-            //    }
-            //},
-            {
-                MinerBaseType.EWBF,
-                new List<Algorithm>
-                {
-                    //new Algorithm(MinerBaseType.EWBF, AlgorithmType.Equihash),
-                    new Algorithm(MinerBaseType.EWBF, AlgorithmType.ZHash)
-                }
-            },
-            //{
-            //    MinerBaseType.dtsm,
-            //    new List<Algorithm>
-            //    {
-            //        new Algorithm(MinerBaseType.dtsm, AlgorithmType.Equihash)
-            //    }
-            //},
-            {
-                MinerBaseType.trex,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.trex, AlgorithmType.Skunk, "skunk"),
-                    //new Algorithm(MinerBaseType.trex, AlgorithmType.Lyra2z, "lyra2z"),
-                    new Algorithm(MinerBaseType.trex, AlgorithmType.X16R, "x16r")
-                }
-            },
-            {
-                MinerBaseType.GMiner,
-                new List<Algorithm>
-                {
-                    //new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam), // BEAM added for NVIDIA and AMD check GPU section
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash),
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam),
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckaroo29),
-                    //new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckatoo31)
-                }
-            },
-            {
-                MinerBaseType.BMiner,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.ZHash),
-                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto),
-                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.Beam),
-                    //new Algorithm(MinerBaseType.BMiner, AlgorithmType.Equihash),
-                    // TODO Only getting CUDA errors when dual mining
-                    //new DualAlgorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s)
-                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.GrinCuckaroo29)
-                }
-            },
-            {
-                MinerBaseType.TTMiner,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.TTMiner, AlgorithmType.MTP),
-                    new Algorithm(MinerBaseType.TTMiner, AlgorithmType.Lyra2REv3),
-                }
-            },
-            {
-                MinerBaseType.NBMiner,
-                new List<Algorithm>
-                {
-                    new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckaroo29),
-                    new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31)
-                }
+                };
             }
-            
-        }.ConcatDictList(All, Gpu);
+            // AMD only allow Gcn4+
+            if (dev is AmdComputeDevice amdDev && amdDev.IsGcn4 && dev.GpuRam >= MinBeamMemory)
+            {
+                algos = new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam),
+                };
+            }
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
 
-        #endregion
+        // AMD
+        private static List<Algorithm> sgminerAlgorithmsForDevice(ComputeDevice dev)
+        {
+            if (dev.DeviceType != DeviceType.AMD) return null;
+
+            const string RemDis = " --remove-disabled";
+            const string DefaultParam = RemDis + AmdGpuDevice.DefaultParam;
+
+            var NeoScryptExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4";
+            if (!dev.Codename.Contains("Tahiti"))
+            {
+                NeoScryptExtraLaunchParameters =
+                    AmdGpuDevice.DefaultParam +
+                    "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
+                Helpers.ConsolePrint("ComputeDevice", $"The GPU detected ({dev.Codename}) is not Tahiti. Changing default gpu-threads to 2.");
+            }
+
+            var algos = new List<Algorithm>
+            {
+                new Algorithm(MinerBaseType.sgminer, AlgorithmType.NeoScrypt, "neoscrypt", false)
+                {
+                    ExtraLaunchParameters = NeoScryptExtraLaunchParameters
+                },
+                new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal", false)
+                {
+                    ExtraLaunchParameters = DefaultParam + "--intensity 21 -w 64 -g 2"
+                },
+                new Algorithm(MinerBaseType.sgminer, AlgorithmType.Keccak, "keccak")
+                {
+                    ExtraLaunchParameters = DefaultParam + "--intensity 15"
+                },
+                new Algorithm(MinerBaseType.sgminer, AlgorithmType.DaggerHashimoto, "ethash", false)
+                {
+                    ExtraLaunchParameters = RemDis + "--xintensity 512 -w 192 -g 1"
+                },
+                new Algorithm(MinerBaseType.sgminer, AlgorithmType.X16R, "x16r")
+                {
+                    ExtraLaunchParameters = "-X 256"
+                },
+            };
+
+            // filter drivers algos issue
+            if (dev.DriverDisableAlgos)
+            {
+                algos = FilterAlgorithmsList(algos, new List<AlgorithmType>{ AlgorithmType.NeoScrypt });
+            }
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+
+            return algos;
+        }
+
+        // AMD
+        private static List<Algorithm> ProspectorAlgorithmsForDevice(ComputeDevice dev)
+        {
+            if (dev.DeviceType != DeviceType.AMD) return null;
+
+            var algos = new List<Algorithm>
+            {
+                new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt", false),
+            };
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
+        // NVIDIA
+        private static List<Algorithm> ccminerAlgorithmsForDevice(ComputeDevice dev)
+        {
+            var cudaDev = dev as CudaComputeDevice;
+            // CUDA SM3.0+
+            if (cudaDev == null || cudaDev.SMMajor < 3) return null;
+
+            var algos = new List<Algorithm>
+            {
+                new Algorithm(MinerBaseType.ccminer, AlgorithmType.NeoScrypt, "neoscrypt"),
+                new Algorithm(MinerBaseType.ccminer, AlgorithmType.Blake2s, "blake2s"),
+                new Algorithm(MinerBaseType.ccminer, AlgorithmType.Keccak, "keccak"),
+                new Algorithm(MinerBaseType.ccminer, AlgorithmType.Skunk, "skunk"),
+                new Algorithm(MinerBaseType.ccminer, AlgorithmType.X16R, "x16r"),
+                new Algorithm(MinerBaseType.ccminer, AlgorithmType.Lyra2REv3, "lyra2v3"),
+                new Algorithm(MinerBaseType.ccminer, AlgorithmType.MTP, "mtp") { Enabled = false },
+                // ccminer_alexis unstable disable it by default
+                new Algorithm(MinerBaseType.ccminer_alexis, AlgorithmType.Keccak, "keccak") { Enabled = false }
+            };
+            if (cudaDev.SMMajor == 3)
+            {
+                // filter NeoScrypt and Lyra2REv3
+                algos = FilterAlgorithmsList(algos, new List<AlgorithmType> { AlgorithmType.NeoScrypt, AlgorithmType.Lyra2REv3 });
+            }
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
+        // NVIDIA - TODO can also support AMD
+        private static List<Algorithm> ethminerAlgorithmsForDevice(ComputeDevice dev)
+        {
+            var cudaDev = dev as CudaComputeDevice;
+            // CUDA SM3.0+
+            if (cudaDev == null || cudaDev.SMMajor < 3 ) return null;
+            if (dev.IsEtherumCapale == false) return null;
+            if (dev.Name.Contains("750") && dev.Name.Contains("Ti")) return null;
+
+            const bool enabledByDefault = false;
+            var algos = new List<Algorithm>
+            {
+                new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto") {Enabled = enabledByDefault }
+            };
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
+        // NVIDIA
+        private static List<Algorithm> EWBFAlgorithmsForDevice(ComputeDevice dev)
+        {
+            var cudaDev = dev as CudaComputeDevice;
+            // CUDA SM5.0+
+            if (cudaDev == null || cudaDev.SMMajor < 5) return null;
+
+            var algos = new List<Algorithm>
+            {
+                new Algorithm(MinerBaseType.EWBF, AlgorithmType.ZHash)
+            };
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
+        // NVIDIA
+        private static List<Algorithm> trexAlgorithmsForDevice(ComputeDevice dev)
+        {
+            // TODO check if SM3.0 is compatible
+            // CUDA SM3.0+
+            var cudaDev = dev as CudaComputeDevice;
+            if (cudaDev == null || cudaDev.SMMajor < 3) return null;
+
+            var algos = new List<Algorithm>
+            {
+                new Algorithm(MinerBaseType.trex, AlgorithmType.Skunk, "skunk"),
+                new Algorithm(MinerBaseType.trex, AlgorithmType.X16R, "x16r")
+            };
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
+        // NVIDIA AMD
+        private static List<Algorithm> BMinerAlgorithmsForDevice(ComputeDevice dev)
+        {
+            const bool enabledByDefault = false;
+            var algos = new List<Algorithm>();
+            // CUDA SM5.0+
+            if (dev is CudaComputeDevice cudaDev && cudaDev.SMMajor >= 5)
+            {
+                algos = new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.ZHash) {Enabled = enabledByDefault },
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.DaggerHashimoto) {Enabled = enabledByDefault },
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.Beam) {Enabled = enabledByDefault },
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.GrinCuckaroo29) {Enabled = enabledByDefault }
+                };
+            }
+            // only allow Gcn4+
+            if (dev is AmdComputeDevice amdDev && amdDev.IsGcn4)
+            {
+                algos = new List<Algorithm>
+                {
+                    new Algorithm(MinerBaseType.BMiner, AlgorithmType.Beam) {Enabled = enabledByDefault }
+                };
+            }
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
+        // NVIDIA
+        private static List<Algorithm> TTMinerAlgorithmsForDevice(ComputeDevice dev)
+        {
+            // TODO check min version
+            // CUDA SM5.0+
+            var cudaDev = dev as CudaComputeDevice;
+            if (cudaDev == null || cudaDev.SMMajor < 5) return null;
+
+            const bool enabledByDefault = false;
+            var algos = new List<Algorithm>
+            {
+                new Algorithm(MinerBaseType.TTMiner, AlgorithmType.MTP) {Enabled = enabledByDefault },
+                new Algorithm(MinerBaseType.TTMiner, AlgorithmType.Lyra2REv3) {Enabled = enabledByDefault },
+            };
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
+        // NVIDIA
+        private static List<Algorithm> NBMinerAlgorithmsForDevice(ComputeDevice dev)
+        {
+            // CUDA SM6.1 ONLY
+            var cudaDev = dev as CudaComputeDevice;
+            if (cudaDev == null || !(cudaDev.SMMajor == 6 && cudaDev.SMMinor == 1)) return null;
+            
+            var algos = new List<Algorithm>
+            {
+                new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckaroo29),
+                new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31),
+            };
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
+
+        private delegate List<Algorithm> AlgorithmsForDevice(ComputeDevice dev);
+        private static IReadOnlyList<AlgorithmsForDevice> algorithmsDelegates = new List<AlgorithmsForDevice>
+        {
+            XmrStakAlgorithmsForDevice,
+            sgminerAlgorithmsForDevice,
+            ccminerAlgorithmsForDevice,
+            ethminerAlgorithmsForDevice,
+        };
+
+        private static IReadOnlyList<AlgorithmsForDevice> algorithmsDelegates3rdParty = new List<AlgorithmsForDevice>
+        {
+            ClaymoreDualAlgorithmsForDevice,
+            PhoenixAlgorithmsForDevice,
+            GMinerAlgorithmsForDevice,
+            ProspectorAlgorithmsForDevice,
+            EWBFAlgorithmsForDevice,
+            trexAlgorithmsForDevice,
+            BMinerAlgorithmsForDevice,
+            TTMinerAlgorithmsForDevice,
+            NBMinerAlgorithmsForDevice,
+        };
+
+        public static List<Algorithm> GetAlgorithmsForDevice(ComputeDevice dev)
+        {
+            var ret = new List<Algorithm>();
+            var delegates = new List<AlgorithmsForDevice>();
+            delegates.AddRange(algorithmsDelegates);
+            // TODO add 3rdparty checking
+            delegates.AddRange(algorithmsDelegates3rdParty);
+
+            foreach (var algorithmsFor in delegates)
+            {
+                var algorithms = algorithmsFor(dev);
+                if (algorithms != null) ret.AddRange(algorithms);
+            }
+            return ret;
+        }
     }
 }

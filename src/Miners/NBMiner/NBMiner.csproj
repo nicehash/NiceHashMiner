@@ -9,8 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Miners\MinerPlugin\MinerPlugin.csproj" />
-    <ProjectReference Include="..\src\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj" />
+    <ProjectReference Include="..\MinerPlugin\MinerPlugin.csproj" />
   </ItemGroup>
 
 </Project>
