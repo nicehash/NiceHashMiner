@@ -26,7 +26,6 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
                 var skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
                 var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
-                var etherumCapableStr = gpu.IsEtherumCapable ? "YES" : "NO";
 
                 stringBuilder.AppendLine($"\t{skipOrAdd} device{isDisabledGroupStr}:");
                 stringBuilder.AppendLine($"\t\tID: {gpu.DeviceID}");
@@ -34,7 +33,6 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 stringBuilder.AppendLine($"\t\tCODE_NAME: {gpu.Codename}");
                 stringBuilder.AppendLine($"\t\tUUID: {gpu.Uuid}");
                 stringBuilder.AppendLine($"\t\tMEMORY: {gpu.DeviceGlobalMemory}");
-                stringBuilder.AppendLine($"\t\tETHEREUM: {etherumCapableStr}");
 
                 computeDevs.Add(new AmdComputeDevice(gpu, ++numDevs, IsFallback, gpu.Adl2Index));
             }

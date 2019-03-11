@@ -480,9 +480,6 @@ namespace NiceHashMiner.Forms
 
                     // get unbenchmarked from criteria and disable
                     CalcBenchmarkDevicesAlgorithmQueue();
-                    foreach (var deviceAlgoQueue in _benchmarkDevicesAlgorithmQueue)
-                    foreach (var algorithm in deviceAlgoQueue.Item2)
-                        algorithm.Enabled = false;
                 }
 
                 if (ExitWhenFinished || StartMining) Close();
@@ -511,13 +508,6 @@ namespace NiceHashMiner.Forms
 
             // save already benchmarked algorithms
             ConfigManager.CommitBenchmarks();
-            // check devices without benchmarks
-            foreach (var cdev in AvailableDevices.Devices)
-                if (cdev.Enabled)
-                {
-                    var enabled = cdev.GetAlgorithmSettings().Any(algo => algo.BenchmarkSpeed > 0);
-                    cdev.Enabled = enabled;
-                }
         }
 
         private void DevicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)

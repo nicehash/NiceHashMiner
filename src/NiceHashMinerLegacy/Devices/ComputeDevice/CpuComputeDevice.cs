@@ -28,7 +28,6 @@ namespace NiceHashMiner.Devices
                 name,
                 true,
                 DeviceGroupType.CPU,
-                false,
                 DeviceType.CPU,
                 string.Format(Translations.Tr("CPU#{0}"), cpuCount),
                 0)

@@ -9,54 +9,54 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.Grouping
 {
-    public class MinerPathPackageFile : ConfigFile<MinerPathPackage>
-    {
-        public MinerPathPackageFile(string name)
-            : base(Folders.Internals, $"{name}.json", $"{name}_old.json")
-        { }
-    }
+    //public class MinerPathPackageFile : ConfigFile<MinerPathPackage>
+    //{
+    //    public MinerPathPackageFile(string name)
+    //        : base(Folders.Internals, $"{name}.json", $"{name}_old.json")
+    //    { }
+    //}
 
-    public class MinerPathPackage
-    {
-        public string Name;
-        public DeviceGroupType DeviceType;
-        public List<MinerTypePath> MinerTypes;
+    //public class MinerPathPackage
+    //{
+    //    public string Name;
+    //    public DeviceGroupType DeviceType;
+    //    public List<MinerTypePath> MinerTypes;
 
-        public MinerPathPackage(DeviceGroupType type, List<MinerTypePath> paths)
-        {
-            DeviceType = type;
-            MinerTypes = paths;
-            Name = DeviceType.ToString();
-        }
-    }
+    //    public MinerPathPackage(DeviceGroupType type, List<MinerTypePath> paths)
+    //    {
+    //        DeviceType = type;
+    //        MinerTypes = paths;
+    //        Name = DeviceType.ToString();
+    //    }
+    //}
 
-    public class MinerTypePath
-    {
-        public string Name;
-        public MinerBaseType Type;
-        public List<MinerPath> Algorithms;
+    //public class MinerTypePath
+    //{
+    //    public string Name;
+    //    public MinerBaseType Type;
+    //    public List<MinerPath> Algorithms;
 
-        public MinerTypePath(MinerBaseType type, List<MinerPath> paths)
-        {
-            Type = type;
-            Algorithms = paths;
-            Name = type.ToString();
-        }
-    }
+    //    public MinerTypePath(MinerBaseType type, List<MinerPath> paths)
+    //    {
+    //        Type = type;
+    //        Algorithms = paths;
+    //        Name = type.ToString();
+    //    }
+    //}
 
-    public class MinerPath
-    {
-        public string Name;
-        public AlgorithmType Algorithm;
-        public string Path;
+    //public class MinerPath
+    //{
+    //    public string Name;
+    //    public AlgorithmType Algorithm;
+    //    public string Path;
 
-        public MinerPath(AlgorithmType algo, string path)
-        {
-            Algorithm = algo;
-            Path = path;
-            Name = Algorithm.ToString();
-        }
-    }
+    //    public MinerPath(AlgorithmType algo, string path)
+    //    {
+    //        Algorithm = algo;
+    //        Path = path;
+    //        Name = Algorithm.ToString();
+    //    }
+    //}
 
     /// <summary>
     /// MinerPaths, used just to store miners paths strings. Only one instance needed
@@ -347,78 +347,78 @@ namespace NiceHashMiner.Miners.Grouping
             }
         }
 
-        private static readonly List<MinerPathPackage> MinerPathPackages = new List<MinerPathPackage>();
+        //private static readonly List<MinerPathPackage> MinerPathPackages = new List<MinerPathPackage>();
 
-        private static readonly List<MinerBaseType> ConfigurableMiners = new List<MinerBaseType>
-        {
-            MinerBaseType.ccminer,
-            MinerBaseType.sgminer
-        };
+        //private static readonly List<MinerBaseType> ConfigurableMiners = new List<MinerBaseType>
+        //{
+        //    MinerBaseType.ccminer,
+        //    MinerBaseType.sgminer
+        //};
 
-        public static void InitializePackages()
-        {
-            var defaults = new List<MinerPathPackage>();
-            for (var i = DeviceGroupType.NONE + 1; i < DeviceGroupType.LAST; i++)
-            {
-                var package = GroupAlgorithms.CreateDefaultsForGroup(i);
-                if (package == null) continue;
-                var minerTypePaths = (from type in ConfigurableMiners
-                    where package.ContainsKey(type)
-                    let minerPaths = package[type].Select(algo =>
-                        new MinerPath(algo.NiceHashID, GetPathFor(type, algo.NiceHashID, i, true))).ToList()
-                    select new MinerTypePath(type, minerPaths)).ToList();
-                if (minerTypePaths.Count > 0)
-                {
-                    defaults.Add(new MinerPathPackage(i, minerTypePaths));
-                }
-            }
+        //public static void InitializePackages()
+        //{
+        //    var defaults = new List<MinerPathPackage>();
+        //    for (var i = DeviceGroupType.NONE + 1; i < DeviceGroupType.LAST; i++)
+        //    {
+        //        var package = GroupAlgorithms.CreateDefaultsForGroup(i);
+        //        if (package == null) continue;
+        //        var minerTypePaths = (from type in ConfigurableMiners
+        //            where package.ContainsKey(type)
+        //            let minerPaths = package[type].Select(algo =>
+        //                new MinerPath(algo.NiceHashID, GetPathFor(type, algo.NiceHashID, i, true))).ToList()
+        //            select new MinerTypePath(type, minerPaths)).ToList();
+        //        if (minerTypePaths.Count > 0)
+        //        {
+        //            defaults.Add(new MinerPathPackage(i, minerTypePaths));
+        //        }
+        //    }
 
-            foreach (var pack in defaults)
-            {
-                var packageName = $"MinerPathPackage_{pack.Name}";
-                var packageFile = new MinerPathPackageFile(packageName);
-                var readPack = packageFile.ReadFile();
-                if (readPack == null)
-                {
-                    // read has failed
-                    Helpers.ConsolePrint("MinerPaths", "Creating internal paths config " + packageName);
-                    MinerPathPackages.Add(pack);
-                    packageFile.Commit(pack);
-                }
-                else
-                {
-                    Helpers.ConsolePrint("MinerPaths", "Loading internal paths config " + packageName);
-                    var isChange = false;
-                    foreach (var miner in pack.MinerTypes)
-                    {
-                        var readMiner = readPack.MinerTypes.Find(x => x.Type == miner.Type);
-                        if (readMiner != null)
-                        {
-                            // file contains miner type
-                            foreach (var algo in miner.Algorithms)
-                            {
-                                if (!readMiner.Algorithms.Exists(x => x.Algorithm == algo.Algorithm))
-                                {
-                                    // file does not contain algo on this miner
-                                    Helpers.ConsolePrint("PATHS",
-                                        $"Algorithm {algo.Name} not found in miner {miner.Name} on device {pack.Name}. Adding default");
-                                    readMiner.Algorithms.Add(algo);
-                                    isChange = true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // file does not contain miner type
-                            Helpers.ConsolePrint("PATHS", $"Miner {miner.Name} not found on device {pack.Name}");
-                            readPack.MinerTypes.Add(miner);
-                            isChange = true;
-                        }
-                    }
-                    MinerPathPackages.Add(readPack);
-                    if (isChange) packageFile.Commit(readPack);
-                }
-            }
-        }
+        //    foreach (var pack in defaults)
+        //    {
+        //        var packageName = $"MinerPathPackage_{pack.Name}";
+        //        var packageFile = new MinerPathPackageFile(packageName);
+        //        var readPack = packageFile.ReadFile();
+        //        if (readPack == null)
+        //        {
+        //            // read has failed
+        //            Helpers.ConsolePrint("MinerPaths", "Creating internal paths config " + packageName);
+        //            MinerPathPackages.Add(pack);
+        //            packageFile.Commit(pack);
+        //        }
+        //        else
+        //        {
+        //            Helpers.ConsolePrint("MinerPaths", "Loading internal paths config " + packageName);
+        //            var isChange = false;
+        //            foreach (var miner in pack.MinerTypes)
+        //            {
+        //                var readMiner = readPack.MinerTypes.Find(x => x.Type == miner.Type);
+        //                if (readMiner != null)
+        //                {
+        //                    // file contains miner type
+        //                    foreach (var algo in miner.Algorithms)
+        //                    {
+        //                        if (!readMiner.Algorithms.Exists(x => x.Algorithm == algo.Algorithm))
+        //                        {
+        //                            // file does not contain algo on this miner
+        //                            Helpers.ConsolePrint("PATHS",
+        //                                $"Algorithm {algo.Name} not found in miner {miner.Name} on device {pack.Name}. Adding default");
+        //                            readMiner.Algorithms.Add(algo);
+        //                            isChange = true;
+        //                        }
+        //                    }
+        //                }
+        //                else
+        //                {
+        //                    // file does not contain miner type
+        //                    Helpers.ConsolePrint("PATHS", $"Miner {miner.Name} not found on device {pack.Name}");
+        //                    readPack.MinerTypes.Add(miner);
+        //                    isChange = true;
+        //                }
+        //            }
+        //            MinerPathPackages.Add(readPack);
+        //            if (isChange) packageFile.Commit(readPack);
+        //        }
+        //    }
+        //}
     }
 }

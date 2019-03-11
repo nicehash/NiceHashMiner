@@ -28,17 +28,5 @@ namespace NiceHashMiner.Devices
             }
             return $"{VendorName} {DeviceName}";
         }
-
-        public bool IsEtherumCapable()
-        {
-            // exception devices
-            if (DeviceName.Contains("750") && DeviceName.Contains("Ti"))
-            {
-                Helpers.ConsolePrint("CudaDevice",
-                    "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
-                return false;
-            }
-            return DeviceGlobalMemory >= ComputeDevice.Memory3Gb && SM_major >= 3;
-        }
     }
 }

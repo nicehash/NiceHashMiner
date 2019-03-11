@@ -47,8 +47,6 @@ namespace NiceHashMiner.Devices
 
         // GPU extras
         public readonly ulong GpuRam;
-        public readonly bool IsEtherumCapale;
-        public static readonly ulong Memory3Gb = 3221225472;
 
         // sgminer extra quickfix
         //public readonly bool IsOptimizedVersion;
@@ -70,14 +68,13 @@ namespace NiceHashMiner.Devices
         public virtual double PowerUsage => -1;
 
         // Ambiguous constructor
-        protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group, bool ethereumCapable,
+        protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group,
             DeviceType type, string nameCount, ulong gpuRam)
         {
             ID = id;
             Name = name;
             Enabled = enabled;
             DeviceGroupType = group;
-            IsEtherumCapale = ethereumCapable;
             DeviceType = type;
             NameCount = nameCount;
             GpuRam = gpuRam;
@@ -92,7 +89,6 @@ namespace NiceHashMiner.Devices
             Enabled = true;
             DeviceType = DeviceType.CPU;
             DeviceGroupType = DeviceGroupType.NONE;
-            IsEtherumCapale = false;
             //IsOptimizedVersion = false;
             Codename = "fake";
             Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);

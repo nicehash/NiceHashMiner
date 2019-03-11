@@ -25,7 +25,6 @@ namespace NiceHashMiner.Devices
         public int Adl2Index { get; }
 
         public ulong DeviceGlobalMemory => _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE;
-        public bool IsEtherumCapable => DeviceGlobalMemory >= ComputeDevice.Memory3Gb;
 
         public int DeviceID => (int) _openClSubset.DeviceID;
         public int BusID => _openClSubset.AMD_BUS_ID;
