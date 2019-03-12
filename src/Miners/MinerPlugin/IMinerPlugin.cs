@@ -23,7 +23,12 @@ namespace MinerPlugin
         /// </summary>
         string Name { get; }
 
-        
+        /// <summary>
+        /// Specifies the plugin author.
+        /// </summary>
+        string Author { get; }
+
+
         /// <summary>
         /// Checks supported devices for the plugin and returns devices and algorithms that can be mined with the plugin.
         /// </summary>

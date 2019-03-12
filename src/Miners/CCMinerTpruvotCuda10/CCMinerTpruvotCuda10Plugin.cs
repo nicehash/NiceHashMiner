@@ -14,6 +14,8 @@ namespace CCMinerTpruvotCuda10
 
         public string Name => "CCMinerTpruvotCuda10";
 
+        public string Author => "stanko@nicehash.com";
+
         public string PluginUUID => Shared.UUID;
 
         public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)

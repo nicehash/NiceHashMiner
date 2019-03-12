@@ -20,6 +20,8 @@ namespace GMinerPlugin
 
         public string Name => "GMinerCuda9.0+";
 
+        public string Author => "stanko@nicehash.com";
+
         public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)
         {
             return a.algorithm.FirstAlgorithmType == b.algorithm.FirstAlgorithmType;

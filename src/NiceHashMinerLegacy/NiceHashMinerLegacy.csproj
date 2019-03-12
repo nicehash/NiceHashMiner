@@ -138,6 +138,12 @@
     <Compile Include="Devices\Querying\QueryResult.cs" />
     <Compile Include="Devices\Querying\SystemSpecs.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
+    <Compile Include="Forms\Components\PluginInfoItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoItem.Designer.cs">
+      <DependentUpon>PluginInfoItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DownloadFormTest.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -386,6 +392,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\PluginInfoItem.resx">
+      <DependentUpon>PluginInfoItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EnterBTCDialogSwitch.resx">
       <DependentUpon>EnterBTCDialogSwitch.cs</DependentUpon>

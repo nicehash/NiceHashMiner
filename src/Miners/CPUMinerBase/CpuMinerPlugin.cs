@@ -16,6 +16,8 @@ namespace CPUMinerBase
 
         public string Name => "cpuminer";
 
+        public string Author => "stanko@nicehash.com";
+
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var cpus = devices.Where(dev => dev is CPUDevice).Select(dev => (CPUDevice)dev);

@@ -1044,9 +1044,12 @@ namespace NiceHashMiner
         private void ButtonHelp_Click(object sender, EventArgs e)
         {
             //Process.Start(Links.NhmHelp);
-            var pluginsForm = new Form_MinerPlugins();
-            SetChildFormCenter(pluginsForm);
-            pluginsForm.ShowDialog();
+            // TODO temporary fix this later
+            using (var pluginsForm = new Form_MinerPlugins())
+            {
+                SetChildFormCenter(pluginsForm);
+                pluginsForm.ShowDialog();
+            }
         }
 
         private void ToolStripStatusLabel10_Click(object sender, EventArgs e)

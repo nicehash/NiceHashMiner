@@ -12,6 +12,7 @@ namespace TTMiner
     {
         public Version Version => new Version(1, 0);
         public string Name => "TTMiner";
+        public string Author => "stanko@nicehash.com";
 
         public string PluginUUID => "a61acd93-2dfd-4604-a0d2-15547640a64e";
 

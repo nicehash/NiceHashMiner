@@ -25,13 +25,22 @@ namespace MinerPluginLoader
                     try {
                         return Assembly.LoadFrom(dllFile);
                     } catch (Exception e) {
+                        // TODO logging
                         return null;
                     }
                 })
                 .Where(assembly => assembly != null)
                 .SelectMany(assembly => {
-                    var concreteTypes = assembly.GetTypes().Where(type => !type.IsInterface && !type.IsAbstract);
-                    return concreteTypes.Where(type => type.GetInterface(pluginType.FullName) != null);
+                    try
+                    {
+                        var concreteTypes = assembly.GetTypes().Where(type => !type.IsInterface && !type.IsAbstract);
+                        return concreteTypes.Where(type => type.GetInterface(pluginType.FullName) != null);
+                    }
+                    catch (Exception e)
+                    {
+                        // TODO logging
+                        return Enumerable.Empty<Type>();
+                    }
                 });
 
             foreach (var pluginType in pluginTypes)
