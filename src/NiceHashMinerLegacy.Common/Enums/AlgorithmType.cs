@@ -73,7 +73,7 @@ namespace NiceHashMinerLegacy.Common.Enums
         Lbry = 23,
         [Obsolete("UNUSED Algorithm")]
         Equihash = 24,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         Pascal = 25,
         [Obsolete("UNUSED Algorithm")]
         X11Gost = 26,

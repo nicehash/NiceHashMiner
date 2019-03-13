@@ -16,7 +16,7 @@ namespace NiceHashMiner.Forms
             {
                 c.Text = Translations.Tr(c.Text);
             }
-            catch(Exception e)
+            catch(Exception)
             {
             }
             
