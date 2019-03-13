@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static NiceHashMiner.Translations;
 
 namespace NiceHashMiner.Forms
 {
@@ -19,6 +20,7 @@ namespace NiceHashMiner.Forms
         public Form_MinerPlugins()
         {
             InitializeComponent();
+            flowLayoutPanelPluginsLV.Controls.Clear();
             CenterToScreen();
             Icon = Properties.Resources.logo;
             FormHelpers.TranslateFormControls(this);
@@ -31,32 +33,28 @@ namespace NiceHashMiner.Forms
             this.Shown += new EventHandler(this.FormShown);
         }
 
-        ~Form_MinerPlugins()
-        {
-            int byebye5 = 5;
-        }
-
         private void FormShown(object sender, EventArgs e)
         {
-
-
-
-            //foreach (var plugin in MinerPluginsManager.OnlinePlugins ?? Enumerable.Empty<PluginPackageInfo>())
-            //{
-            //    dataGridView1.Rows.Add(GetPluginRowData(plugin));
-
-            //    var newRow = dataGridView1.Rows[dataGridView1.Rows.Count - 1];
-            //    newRow.Tag = plugin;
-            //}
-
-            foreach (var kvp in MinerPluginsManager.MinerPlugin)
+            foreach (var kvp in MinerPluginsManager.Plugins)
             {
                 var plugin = kvp.Value;
+                var buttonText = Tr("Install Plugin");
+                if (plugin.Installed)
+                {
+                    // Well you can have a plugin that can be updated and removed so add another button
+                    buttonText = Tr("Remove Plugin");
+                }
+                else if (plugin.Installed && plugin.LatestVersion)
+                {
+                    buttonText = Tr("Update Plugin");
+                }
                 var pluginInfoItem = new PluginInfoItem()
                 {
-                    PluginName = plugin.Name,
-                    PluginVersion = $"{plugin.Version.Major}.{plugin.Version.Minor}",
-                    PluginAuthor = "Plugin Author build",//plugin.
+                    PluginUUID = plugin.PluginUUID,
+                    PluginName = plugin.PluginName,
+                    PluginVersion = Tr("Version: {0}", $"{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}"),
+                    PluginAuthor = Tr("Author: {0}", plugin.PluginAuthor),
+                    ButtonText = buttonText,
                     OnPluginInfoItemMouseClick = OnPluginInfoItemMouseClick,
                     OnPluginInfoItemButtonClick = OnPluginInfoItemButtonClick,
                 };
@@ -65,28 +63,48 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        public static object[] GetPluginRowData(PluginPackageInfo p)
+        private void OnPluginInfoItemMouseClick(object sender, string pluginUUID)
         {
-            object[] rowData = { p.PluginUUID, p.PluginAuthor, $"{p.PluginVersion.Major}.{p.PluginVersion.Minor}", "N/A" };
-            return rowData;
+            var plugin = MinerPluginsManager.Plugins[pluginUUID];
+            groupBox2.Text = plugin.PluginName;
+            richTextBox1.Text = $"";
+            richTextBox1.Text += $"PluginName: {plugin.PluginName}" + Environment.NewLine;
+            richTextBox1.Text += $"PluginVersion: {plugin.PluginVersion}" + Environment.NewLine;
+            richTextBox1.Text += $"PluginAuthor: {plugin.PluginAuthor}" + Environment.NewLine;
+            richTextBox1.Text += $"PluginDescription: {plugin.PluginDescription}" + Environment.NewLine;
+            richTextBox1.Text += $"Installed: {plugin.Installed}" + Environment.NewLine;
+            richTextBox1.Text += $"LatestVersion: {plugin.LatestVersion}" + Environment.NewLine;
+            richTextBox1.Text += $"OnlineVersion: {plugin.OnlineVersion}" + Environment.NewLine;
+            richTextBox1.Text += $"PluginUUID: {plugin.PluginUUID}" + Environment.NewLine;
+            richTextBox1.Text += $"PluginPackageURL: {plugin.PluginPackageURL}" + Environment.NewLine;
+            richTextBox1.Text += $"MinerPackageURL: {plugin.MinerPackageURL}" + Environment.NewLine;
+            richTextBox1.Text += $"SupportedDevicesAlgorithms: {plugin.SupportedDevicesAlgorithms}" + Environment.NewLine;
         }
 
-        public static object[] GetPluginRowData(IMinerPlugin p)
+        private void OnPluginInfoItemButtonClick(object sender, string pluginUUID)
         {
-            object[] rowData = { p.PluginUUID, p.Name, "N/A", $"{p.Version.Major}.{p.Version.Minor}" };
-            return rowData;
-        }
-
-        private void OnPluginInfoItemMouseClick(object sender, string value)
-        {
-            groupBox2.Text = value;
-            richTextBox1.Text = $"OnPluginInfoItemMouseClick {value}";
-        }
-
-        private void OnPluginInfoItemButtonClick(object sender, string value)
-        {
-            groupBox2.Text = value;
-            richTextBox1.Text = $"OnPluginInfoItemButtonClick {value}";
+            var plugin = MinerPluginsManager.Plugins[pluginUUID];
+            var actionText = plugin.Installed ? "Upgrade" : "Install";
+            groupBox2.Text = plugin.PluginName;
+            richTextBox1.Text = $"OnPluginInfoItemButtonClick {actionText}";
+            // remove if installed
+            if (plugin.Installed)
+            {
+                MinerPluginsManager.Remove(pluginUUID);
+                // find and remove
+                var removeAtIndex = -1;
+                for (int i = 0; i < flowLayoutPanelPluginsLV.Controls.Count; ++i)
+                {
+                    var c = flowLayoutPanelPluginsLV.Controls[i] as PluginInfoItem;
+                    if (c != null && c.PluginUUID == pluginUUID)
+                    {
+                        removeAtIndex = i;
+                        // TODO this might fail because we are inside a for?
+                        flowLayoutPanelPluginsLV.Controls.RemoveAt(removeAtIndex);
+                        break;
+                    }
+                }
+            }
         }
     }
 }

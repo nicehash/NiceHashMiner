@@ -52,18 +52,32 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
+        public string ButtonText
+        {
+            get
+            {
+                return buttonInstallRemove.Text;
+            }
+            set
+            {
+                buttonInstallRemove.Text = value;
+            }
+        }
+
+        public string PluginUUID { get; set; }
+
         public EventHandler<string> OnPluginInfoItemMouseClick;
 
         private void PluginInfoItem_MouseClick(object sender, MouseEventArgs e)
         {
-            OnPluginInfoItemMouseClick?.Invoke(sender, PluginName);
+            OnPluginInfoItemMouseClick?.Invoke(sender, PluginUUID);
         }
 
         public EventHandler<string> OnPluginInfoItemButtonClick;
 
         private void button1_Click(object sender, EventArgs e)
         {
-            OnPluginInfoItemButtonClick?.Invoke(sender, PluginName);
+            OnPluginInfoItemButtonClick?.Invoke(sender, PluginUUID);
         }
     }
 }

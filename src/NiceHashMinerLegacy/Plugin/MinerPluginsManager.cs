@@ -19,13 +19,21 @@ namespace NiceHashMiner.Plugin
     {
         const string PluginsPath = "miner_plugins";
 
-        public static List<PluginPackageInfo> OnlinePlugins { get; private set; }
-        public static Dictionary<string, IMinerPlugin> MinerPlugin { get => MinerPluginHost.MinerPlugin; }
+        private static List<PluginPackageInfo> OnlinePlugins { get; set; }
+        private static Dictionary<string, IMinerPlugin> MinerPlugins { get => MinerPluginHost.MinerPlugin; }
+
+        public static Dictionary<string, PluginPackageInfoCR> Plugins { get; set; } = new Dictionary<string, PluginPackageInfoCR>();
 
         public static void LoadMinerPlugins()
         {
-            GetOnlineMinerPlugins();
             MinerPluginHost.LoadPlugins(PluginsPath, SearchOption.AllDirectories);
+            UpdatePluginAlgorithms();
+            // cross reference local and online list
+            CrossReferenceInstalledWithOnline();
+        }
+
+        private static void UpdatePluginAlgorithms()
+        {
             // get devices
             var allDevs = AvailableDevices.Devices;
             var baseDevices = allDevs.Select(dev => dev.PluginDevice);
@@ -43,6 +51,110 @@ namespace NiceHashMiner.Plugin
                     var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
                     var pluginAlgos = algos.Select(a => new PluginAlgorithm(a)).ToList();
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
+                }
+            }
+        }
+
+        private static void RemovePluginAlgorithms(string pluginUUID)
+        {
+            foreach (var dev in AvailableDevices.Devices)
+            {
+                dev.RemovePluginAlgorithms(pluginUUID);
+            }
+        }
+
+        public static void Remove(string pluginUUID)
+        {
+            try
+            {
+                var deletePath = Path.Combine(PluginsPath, pluginUUID);
+                MinerPluginHost.MinerPlugin.Remove(pluginUUID);
+                RemovePluginAlgorithms(pluginUUID);
+                CrossReferenceInstalledWithOnline();
+                //// TODO before deleting you will need to unload the dll
+                //if (Directory.Exists(deletePath))
+                //{
+                //    Directory.Delete(deletePath, true);
+                //    //LoadMinerPlugins();
+                //}
+            } catch(Exception e)
+            {
+
+            }
+        }
+
+        public static void CrossReferenceInstalledWithOnline()
+        {
+            // first go over the installed plugins
+            foreach (var installedPluginKvp in MinerPlugins)
+            {
+                var uuid = installedPluginKvp.Key;
+                var installed = installedPluginKvp.Value;
+
+                if (Plugins.ContainsKey(uuid) == false)
+                {
+                    Plugins[uuid] = new PluginPackageInfoCR
+                    {
+                        Installed = true,
+                        PluginAuthor = installed.Author,
+                        PluginName = installed.Name,
+                        PluginUUID = uuid,
+                        PluginVersion = installed.Version,
+                        // other stuff is not inside the plugin
+                    };
+                }
+                else
+                {
+                    var plugin = Plugins[uuid];
+                    // update stuff that might change, after update, take care of uninstall case
+                    plugin.Installed = true;
+                    plugin.PluginAuthor = installed.Author;
+                    plugin.PluginName = installed.Name;
+                    plugin.PluginUUID = uuid;
+                    plugin.PluginVersion = installed.Version;
+                }
+            }
+
+            // get online list and check what we have and what is online
+            if (GetOnlineMinerPlugins() == false || OnlinePlugins == null) return;
+
+            foreach (var online in OnlinePlugins)
+            {
+                var uuid = online.PluginUUID;
+                if (Plugins.ContainsKey(uuid) == false)
+                {
+                    Plugins[uuid] = new PluginPackageInfoCR
+                    {
+                        Installed = false,
+                        OnlineVersion = online,
+                        PluginUUID = online.PluginUUID,
+                        PluginName = online.PluginName,
+                        PluginVersion = online.PluginVersion,
+                        PluginPackageURL = online.PluginPackageURL,
+                        MinerPackageURL = online.MinerPackageURL,
+                        SupportedDevicesAlgorithms = online.SupportedDevicesAlgorithms,
+                        PluginAuthor = online.PluginAuthor,
+                        PluginDescription = online.PluginDescription,
+                    };
+                }
+                else
+                {
+                    Plugins[uuid].OnlineVersion = online;
+                }
+            }
+            // finally check uninstalled version
+            var installedPlugins = Plugins.Where(p => p.Value.Installed);
+            foreach (var pluginInfo in installedPlugins)
+            {
+                if(MinerPlugins.ContainsKey(pluginInfo.Key) == false)
+                {
+                    // not installed anymore
+                    pluginInfo.Value.Installed = false;
+                    // TODO we might not have any online reference so remove it in this case
+                    if (pluginInfo.Value.OnlineVersion == null)
+                    {
+                        Plugins.Remove(pluginInfo.Key);
+                    }
                 }
             }
         }
