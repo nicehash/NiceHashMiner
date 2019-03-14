@@ -50,6 +50,19 @@ namespace MinerPlugin.Toolkit
             return s.Substring(index + after.Length);
         }
 
+        private static int pow10(int power) => (int)Math.Pow(10, power);
+        private static readonly Dictionary<char, int> _postfixes = new Dictionary<char, int>
+        {
+            {'k', pow10(3)},
+            {'M', pow10(6)},
+            {'G', pow10(9)},
+            {'T', pow10(12)},
+            {'P', pow10(15)},
+            {'E', pow10(15)},
+            {'Z', pow10(21)},
+            {'Y', pow10(24)},
+        };
+
         public static (double, bool) TryGetHashrateAfter(this string s, string after)
         {
             var ret = (hashrate: default(double), found: false);
@@ -71,14 +84,25 @@ namespace MinerPlugin.Toolkit
             }
 
             ret.found = true;
-            if (afterString.Contains("kh"))
-                ret.hashrate = hash * 1000;
-            else if (afterString.Contains("mh"))
-                ret.hashrate = hash * 1000000;
-            else if (afterString.Contains("gh"))
-                ret.hashrate = hash * 1000000000;
-            else
-                ret.hashrate = hash;
+            var i = afterString.IndexOf('.');
+            for (; i < afterString.Length - 1; ++i)
+            {
+                var c = afterString[i];
+                if (!Char.IsLetter(c)) continue;
+                var c2 = afterString[i + 1];
+
+                foreach (var kvp in _postfixes)
+                {
+                    var postfix = Char.ToLower(kvp.Key);
+                    var mult = kvp.Value;
+                    if (postfix == c && 'h' == c2)
+                    {
+                        ret.hashrate = hash * mult;
+                        return ret;
+                    }
+                }
+            }
+            ret.hashrate = hash;
 
             return ret;
         }
