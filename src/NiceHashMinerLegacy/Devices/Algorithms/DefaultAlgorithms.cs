@@ -315,7 +315,7 @@ namespace NiceHashMiner.Devices.Algorithms
             var cudaDev = dev as CudaComputeDevice;
             if (cudaDev == null || cudaDev.SMMajor < 5) return null;
 
-            const bool enabledByDefault = false;
+            const bool enabledByDefault = true;
             var algos = new List<Algorithm>
             {
                 new Algorithm(MinerBaseType.TTMiner, AlgorithmType.MTP) {Enabled = enabledByDefault },
