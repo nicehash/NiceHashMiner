@@ -200,6 +200,7 @@
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
     <Compile Include="Plugin\PluginPackageInfo.cs" />
+    <Compile Include="Plugin\PluginPackageInfoCR.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Miners\Equihash\Ewbf.cs" />

@@ -31,7 +31,8 @@
             this.labelName = new System.Windows.Forms.Label();
             this.labelVersion = new System.Windows.Forms.Label();
             this.labelAuthor = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonInstallRemove = new System.Windows.Forms.Button();
+            this.buttonUpdate = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // labelName
@@ -62,22 +63,32 @@
             this.labelAuthor.TabIndex = 2;
             this.labelAuthor.Text = "labelAuthor";
             // 
-            // button1
+            // buttonInstallRemove
             // 
-            this.button1.Location = new System.Drawing.Point(18, 90);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(144, 23);
-            this.button1.TabIndex = 3;
-            this.button1.Text = "Install/Update/Remove";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonInstallRemove.Location = new System.Drawing.Point(18, 90);
+            this.buttonInstallRemove.Name = "buttonInstallRemove";
+            this.buttonInstallRemove.Size = new System.Drawing.Size(144, 23);
+            this.buttonInstallRemove.TabIndex = 3;
+            this.buttonInstallRemove.Text = "Install/Remove";
+            this.buttonInstallRemove.UseVisualStyleBackColor = true;
+            this.buttonInstallRemove.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // buttonUpdate
+            // 
+            this.buttonUpdate.Location = new System.Drawing.Point(211, 90);
+            this.buttonUpdate.Name = "buttonUpdate";
+            this.buttonUpdate.Size = new System.Drawing.Size(134, 23);
+            this.buttonUpdate.TabIndex = 4;
+            this.buttonUpdate.Text = "Update";
+            this.buttonUpdate.UseVisualStyleBackColor = true;
             // 
             // PluginInfoItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonUpdate);
+            this.Controls.Add(this.buttonInstallRemove);
             this.Controls.Add(this.labelAuthor);
             this.Controls.Add(this.labelVersion);
             this.Controls.Add(this.labelName);
@@ -94,6 +105,7 @@
         private System.Windows.Forms.Label labelName;
         private System.Windows.Forms.Label labelVersion;
         private System.Windows.Forms.Label labelAuthor;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonInstallRemove;
+        private System.Windows.Forms.Button buttonUpdate;
     }
 }

@@ -153,10 +153,6 @@ namespace NiceHashMiner.Devices.Algorithms
                 {
                     ExtraLaunchParameters = NeoScryptExtraLaunchParameters
                 },
-                new Algorithm(MinerBaseType.sgminer, AlgorithmType.Pascal, "pascal", false)
-                {
-                    ExtraLaunchParameters = DefaultParam + "--intensity 21 -w 64 -g 2"
-                },
                 new Algorithm(MinerBaseType.sgminer, AlgorithmType.Keccak, "keccak")
                 {
                     ExtraLaunchParameters = DefaultParam + "--intensity 15"

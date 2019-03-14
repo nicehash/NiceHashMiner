@@ -7,6 +7,7 @@ using System.Reflection;
 
 namespace MinerPluginLoader
 {
+    // TODO implement unloadable plugins
     public static class MinerPluginHost
     {
         public static Dictionary<string, IMinerPlugin> MinerPlugin { get; } = new Dictionary<string, IMinerPlugin>();
@@ -19,17 +20,23 @@ namespace MinerPluginLoader
                 return;
             }
 
+            // get all managed plugin dll's 
             var dllFiles = Directory.GetFiles(dirPath, "*.dll", searchOption);
-            var pluginTypes = dllFiles
-                .Select(dllFile => {
-                    try {
+            var pluginDllFiles = dllFiles
+                .Select(dllFile =>
+                {
+                    try
+                    {
                         return Assembly.LoadFrom(dllFile);
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e)
+                    {
                         // TODO logging
                         return null;
                     }
                 })
-                .Where(assembly => assembly != null)
+                .Where(assembly => assembly != null);
+            var pluginTypes = pluginDllFiles
                 .SelectMany(assembly => {
                     try
                     {
@@ -47,7 +54,7 @@ namespace MinerPluginLoader
             {
                 try
                 {
-                    var plugin = (IMinerPlugin)Activator.CreateInstance(pluginType);
+                    var plugin = Activator.CreateInstance(pluginType) as IMinerPlugin;
                     if (MinerPlugin.ContainsKey(plugin.PluginUUID))
                     {
                         var existingPlugin = MinerPlugin[plugin.PluginUUID];

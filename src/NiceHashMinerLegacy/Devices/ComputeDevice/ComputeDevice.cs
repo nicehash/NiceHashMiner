@@ -130,6 +130,14 @@ namespace NiceHashMiner.Devices
             this.AlgorithmSettings.AddRange(pluginAlgos);
         }
 
+        public void RemovePluginAlgorithms(string pluginUUID)
+        {
+            var toRemove = AlgorithmSettings.Where(algo => algo is PluginAlgorithm pAlgo && pAlgo.BaseAlgo.MinerID == pluginUUID);
+            if (toRemove.Count() == 0) return;
+            var newList = AlgorithmSettings.Where(algo => toRemove.Contains(algo) == false).ToList();
+            AlgorithmSettings = newList;
+        }
+
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)
         {
             foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings)

@@ -36,8 +36,8 @@ namespace NiceHashMiner.Miners
                 //    return "dcr";
                 //case AlgorithmType.Lbry:
                 //    return "lbc";
-                case AlgorithmType.Pascal:
-                    return "pasc";
+                //case AlgorithmType.Pascal:
+                //    return "pasc";
                 //case AlgorithmType.Sia:
                 //    return "sc";
                 case AlgorithmType.Blake2s:
