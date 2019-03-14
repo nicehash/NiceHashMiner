@@ -276,6 +276,26 @@
     "PluginAuthor": "luc1an24",
     "PluginDescription": "[API not working] CryptoDredge miner",
     "PluginName": "CryptoDredge"
+  },
+  {
+    "PluginUUID": "a6c96e17-6fa7-418f-b75e-6631b3a5241e",
+    "PluginVersion": {
+      "major": "1",
+      "minor": "0"
+    },
+    "PluginPackageURL": "",
+    "MinerPackageURL": "https://gitlab.com/Lolliedieb/lolminer-releases",
+    "SupportedDevicesAlgorithms": {
+      "NVIDIA": [
+        "Beam"
+      ],
+      "AMD": [
+        "Beam"
+      ]
+    },
+    "PluginAuthor": "Domen Kirn Krefl",
+    "PluginDescription": "LolMiner for Beam(Equihash 150/5) algorithm",
+    "PluginName": "LolMinerBeam"
   }
 ]</value>
   </data>
