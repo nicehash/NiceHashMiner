@@ -1,6 +1,7 @@
 ﻿using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -327,12 +328,30 @@ namespace NiceHashMiner.Devices.Algorithms
         }
 
         // NVIDIA
+        private static List<Version> nbMinerSMSupportedVersions = new List<Version>
+        {
+            new Version(6,0),
+            new Version(6,1),
+            new Version(7,0),
+            new Version(7,5),
+        };
+        // NVIDIA
         private static List<Algorithm> NBMinerAlgorithmsForDevice(ComputeDevice dev)
         {
-            // CUDA SM6.1 ONLY
             var cudaDev = dev as CudaComputeDevice;
-            if (cudaDev == null || !(cudaDev.SMMajor == 6 && cudaDev.SMMinor == 1)) return null;
-            
+            if (cudaDev == null) return null;
+            var cudaDevSMver = new Version(cudaDev.SMMajor, cudaDev.SMMinor);
+            var supportedVersion = false;
+            foreach (var supportedVer in nbMinerSMSupportedVersions)
+            {
+                if (supportedVer == cudaDevSMver)
+                {
+                    supportedVersion = true;
+                    break;
+                }
+            }
+            if (supportedVersion == false) return null;
+
             var algos = new List<Algorithm>
             {
                 new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckaroo29),
