@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPlugin.Toolkit;
 using Newtonsoft.Json;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using static MinerPlugin.Toolkit.MinersApiPortsManager;
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
@@ -64,7 +66,6 @@ namespace LolMinerBeam
 
                 var gpuDevices = _miningPairs.Select(pair => pair.device);
                 var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-                var perDevicePowerInfo = new List<(string, int)>();
                 var totalSpeed = summary.Session.Performance_Summary;
 
                 foreach (var gpuDevice in gpuDevices)
@@ -90,8 +91,6 @@ namespace LolMinerBeam
 
         public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            // determine benchmark time 
-            // settup times
             var benchmarkTime = 20; // in seconds
             switch (benchmarkType)
             {
@@ -106,18 +105,16 @@ namespace LolMinerBeam
                     break;
             }
 
-            var commandLine = $"--coin BEAM --pool beam.eu.nicehash.com --port 3370 --user 38QriJ13vEBWUPhJrEKKZwKdVftV9dtW25.lolMiner --tls 0 --apiport {_apiPort} {_extraLaunchParameters}";
+            var commandLine = $"--benchmark {AlgorithmName(_algorithmType)} --longstats {benchmarkTime} --logs 1";
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
-            //todo have to implement with benchmark flag when update of lolMiner will arrive (currently benchmarking is not possible)
-            //var commandLine = $"--benchmark {algo} --longstats {benchmarkTime}";
             bp.CheckData = (string data) =>
             {
                 return MinerToolkit.TryGetHashrateAfter(data, "Total:");
             };
 
-            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
+            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
@@ -125,8 +122,10 @@ namespace LolMinerBeam
 
         protected override (string binPath, string binCwd) GetBinAndCwdPaths()
         {
-            var binPath = @"C:\legacyBins\lolMinerBeam\lolMiner.exe";
-            var binCwd = @"C:\legacyBins\lolMinerBeam";
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
+            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var binPath = Path.Combine(pluginRootBins, "lolMiner.exe");
+            var binCwd = pluginRootBins;
             return (binPath, binCwd);
         }
 
@@ -138,8 +137,8 @@ namespace LolMinerBeam
             // all good continue on
 
             // init command line params parts
-            var deviceIds = MinerToolkit.GetDevicesIDsInOrder(_miningPairs);
-            _devices = $"--devices {string.Join(",", deviceIds)}";
+            var deviceIDs = _miningPairs.Select(p =>{return p.device.ID;}).OrderBy(id => id);
+            _devices = $"--devices {string.Join(",", deviceIDs)}";
             // TODO implement this later
             //_extraLaunchParameters;
         }
@@ -156,7 +155,7 @@ namespace LolMinerBeam
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--coin {algo} --pool {url} --port {port} --user {_username} --tls 0 --apiport {_apiPort} {_extraLaunchParameters}";
+            var commandLine = $"--coin {algo} --pool {url} --port {port} --user {_username} --tls 0 --apiport {_apiPort} {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }
