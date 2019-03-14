@@ -27,7 +27,12 @@ namespace MinerPluginLoader
                 {
                     try
                     {
-                        return Assembly.LoadFrom(dllFile);
+                        // read raw assembly and load that
+                        byte[] dllBytes = File.ReadAllBytes(dllFile);
+                        return Assembly.Load(dllBytes);
+
+                        // lock the file 
+                        //return Assembly.LoadFrom(dllFile);
                     }
                     catch (Exception e)
                     {
@@ -36,6 +41,7 @@ namespace MinerPluginLoader
                     }
                 })
                 .Where(assembly => assembly != null);
+
             var pluginTypes = pluginDllFiles
                 .SelectMany(assembly => {
                     try
