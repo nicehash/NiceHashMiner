@@ -30,9 +30,9 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanelPluginsLV = new System.Windows.Forms.FlowLayoutPanel();
+            this.pluginInfoItem1 = new NiceHashMiner.Forms.Components.PluginInfoItem();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.pluginInfoItem1 = new NiceHashMiner.Forms.Components.PluginInfoItem();
             this.groupBox1.SuspendLayout();
             this.flowLayoutPanelPluginsLV.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -40,6 +40,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox1.Controls.Add(this.flowLayoutPanelPluginsLV);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
@@ -60,8 +62,23 @@
             this.flowLayoutPanelPluginsLV.TabIndex = 0;
             this.flowLayoutPanelPluginsLV.WrapContents = false;
             // 
+            // pluginInfoItem1
+            // 
+            this.pluginInfoItem1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pluginInfoItem1.ButtonText = "Install/Remove";
+            this.pluginInfoItem1.Location = new System.Drawing.Point(3, 3);
+            this.pluginInfoItem1.Name = "pluginInfoItem1";
+            this.pluginInfoItem1.PluginAuthor = "labelAuthor";
+            this.pluginInfoItem1.PluginName = "Name";
+            this.pluginInfoItem1.PluginUUID = null;
+            this.pluginInfoItem1.PluginVersion = "version";
+            this.pluginInfoItem1.Size = new System.Drawing.Size(382, 128);
+            this.pluginInfoItem1.TabIndex = 0;
+            // 
             // groupBox2
             // 
+            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.groupBox2.Controls.Add(this.richTextBox1);
             this.groupBox2.Location = new System.Drawing.Point(436, 25);
             this.groupBox2.Name = "groupBox2";
@@ -78,17 +95,6 @@
             this.richTextBox1.Size = new System.Drawing.Size(382, 262);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
-            // 
-            // pluginInfoItem1
-            // 
-            this.pluginInfoItem1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pluginInfoItem1.Location = new System.Drawing.Point(3, 3);
-            this.pluginInfoItem1.Name = "pluginInfoItem1";
-            this.pluginInfoItem1.PluginAuthor = "labelAuthor";
-            this.pluginInfoItem1.PluginName = "Name";
-            this.pluginInfoItem1.PluginVersion = "version";
-            this.pluginInfoItem1.Size = new System.Drawing.Size(382, 128);
-            this.pluginInfoItem1.TabIndex = 0;
             // 
             // Form_MinerPlugins
             // 

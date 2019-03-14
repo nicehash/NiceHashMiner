@@ -166,7 +166,9 @@ namespace NiceHashMiner.Plugin
             {
                 using (var client = new WebClient())
                 {
-                    string s = client.DownloadString(pluginsJsonApiUrl);
+                    //string s = client.DownloadString(pluginsJsonApiUrl);
+                    // local fake string
+                    string s = Properties.Resources.pluginJSON;
                     var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, Globals.JsonSettings);
                     OnlinePlugins = onlinePlugins;
                 }
