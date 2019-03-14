@@ -343,6 +343,25 @@ namespace NiceHashMiner.Devices.Algorithms
             return algos;
         }
 
+        // AMD
+        private static List<Algorithm> TeamRedMinerAlgorithmsForDevice(ComputeDevice dev)
+        {
+            // CUDA SM6.1 ONLY
+            var amdDev = dev as AmdComputeDevice;
+            if (amdDev == null || amdDev.IsGcn4 == false) return null;
+
+            var algos = new List<Algorithm>
+            {
+                new Algorithm(MinerBaseType.TeamRedMiner, AlgorithmType.CryptoNightV8),
+                new Algorithm(MinerBaseType.TeamRedMiner, AlgorithmType.CryptoNightR),
+                new Algorithm(MinerBaseType.TeamRedMiner, AlgorithmType.Lyra2REv3),
+                //new Algorithm(MinerBaseType.TeamRedMiner, AlgorithmType.Lyra2Z),
+            };
+            // filter RAM requirements
+            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+            return algos;
+        }
+
 
         private delegate List<Algorithm> AlgorithmsForDevice(ComputeDevice dev);
         private static IReadOnlyList<AlgorithmsForDevice> algorithmsDelegates = new List<AlgorithmsForDevice>
@@ -364,6 +383,7 @@ namespace NiceHashMiner.Devices.Algorithms
             BMinerAlgorithmsForDevice,
             TTMinerAlgorithmsForDevice,
             NBMinerAlgorithmsForDevice,
+            TeamRedMinerAlgorithmsForDevice,
         };
 
         public static List<Algorithm> GetAlgorithmsForDevice(ComputeDevice dev)
