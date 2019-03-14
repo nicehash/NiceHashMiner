@@ -131,7 +131,7 @@ namespace NiceHashMiner.Miners
             {
                 ++_benchCount;
                 if (_benchCount == 2) {
-                    BenchmarkAlgorithm.BenchmarkSpeed = hashrate;
+                    BenchmarkAlgorithm.BenchmarkSpeed = hashrate * (1.0d - DevFee) ;
                     return true;
                 }
             }
@@ -166,7 +166,15 @@ namespace NiceHashMiner.Miners
             }
         }
 
-        private string CreateCommandLine(string url, string btcAddress, string worker)
+        private double DevFee
+        {
+            get
+            {
+                return 0.01d; // 1% for all
+            }
+        }
+
+                private string CreateCommandLine(string url, string btcAddress, string worker)
         {
             var devs = string.Join(" ", MiningSetup.MiningPairs.Select(pair => pair.Device.ID.ToString()));
             var cmd = $"-a {AlgoName} -url {url} " +
