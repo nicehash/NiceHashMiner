@@ -127,10 +127,10 @@ namespace NiceHashMiner.Miners
         protected override bool BenchmarkParseLine(string outdata)
         {
 
-            if (outdata.Contains("GPU[") && outdata.ToLower().TryGetHashrateAfter("]:", out var hashrate) && hashrate > 0)
+            if (outdata.Contains("LastShare") && outdata.Contains("GPU[") && outdata.ToLower().TryGetHashrateAfter("]:", out var hashrate) && hashrate > 0)
             {
                 ++_benchCount;
-                if (_benchCount > 2) {
+                if (_benchCount == 2) {
                     BenchmarkAlgorithm.BenchmarkSpeed = hashrate;
                     return true;
                 }
