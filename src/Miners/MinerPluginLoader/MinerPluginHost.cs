@@ -13,11 +13,11 @@ namespace MinerPluginLoader
         public static Dictionary<string, IMinerPlugin> MinerPlugin { get; } = new Dictionary<string, IMinerPlugin>();
         private static Type pluginType = typeof(IMinerPlugin);
 
-        public static void LoadPlugins(string dirPath, SearchOption searchOption)
+        public static int LoadPlugins(string dirPath, SearchOption searchOption)
         {
             if (!Directory.Exists(dirPath)) {
                 // TODO directory doesn't exist
-                return;
+                return 0;
             }
 
             // get all managed plugin dll's 
@@ -56,6 +56,7 @@ namespace MinerPluginLoader
                     }
                 });
 
+            var loadedPlugins = 0;
             foreach (var pluginType in pluginTypes)
             {
                 try
@@ -69,12 +70,14 @@ namespace MinerPluginLoader
                         Console.WriteLine($"new {plugin.Name} v{plugin.Version}");
                     }
                     MinerPlugin[plugin.PluginUUID] = plugin;
+                    loadedPlugins++;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine($"Exception while loading plugin {e}");
                 }
             }
+            return loadedPlugins;
         }
     }
 }

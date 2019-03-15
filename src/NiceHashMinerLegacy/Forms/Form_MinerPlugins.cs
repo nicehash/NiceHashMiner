@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static NiceHashMiner.Translations;
+using NiceHashMiner.Forms;
+using System.Net;
+using System.Threading;
 
 namespace NiceHashMiner.Forms
 {
@@ -93,7 +96,7 @@ namespace NiceHashMiner.Forms
             richTextBox1.Text += $"SupportedDevicesAlgorithms: {supportedDevsAlgos}" + Environment.NewLine;
         }
 
-        private void OnPluginInfoItemButtonClick(object sender, string pluginUUID)
+        private async void OnPluginInfoItemButtonClick(object sender, string pluginUUID)
         {
             var plugin = MinerPluginsManager.Plugins[pluginUUID];
             var actionText = plugin.Installed ? "Upgrade" : "Install";
@@ -117,6 +120,26 @@ namespace NiceHashMiner.Forms
                     }
                 }
             }
+            else if (plugin.Installed == false && sender is PluginInfoItem pit)
+            {
+                var cancelInstall = new CancellationTokenSource();
+                MinerPluginsManager.DownloadAndInstallUpdate downloadAndInstallUpdate = (string infoStr) => {
+                    FormHelpers.SafeInvoke(pit, () => { pit.StatusText = infoStr; });
+                };
+                //var onDownloadProgresChanged = new DownloadProgressChangedEventHandler((s, e1) => {
+                //    FormHelpers.SafeInvoke(pit, () => { pit.StatusText = $"Downloading: {e1.ProgressPercentage} %"; });
+                //});
+                //MinerPluginsManager.OnZipProgres onUnzipChanged = (int progress) => {
+                //    FormHelpers.SafeInvoke(pit, () => { pit.StatusText = $"Unzipping {progress.ToString("F2")} %"; });
+                //};
+                await MinerPluginsManager.DownloadAndInstall(
+                    plugin,
+                    downloadAndInstallUpdate,
+                    cancelInstall.Token);
+            }
+
+            
+
         }
     }
 }

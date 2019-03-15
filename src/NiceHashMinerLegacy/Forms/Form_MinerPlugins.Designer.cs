@@ -30,11 +30,9 @@
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.flowLayoutPanelPluginsLV = new System.Windows.Forms.FlowLayoutPanel();
-            this.pluginInfoItem1 = new NiceHashMiner.Forms.Components.PluginInfoItem();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.groupBox1.SuspendLayout();
-            this.flowLayoutPanelPluginsLV.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +51,6 @@
             // flowLayoutPanelPluginsLV
             // 
             this.flowLayoutPanelPluginsLV.AutoScroll = true;
-            this.flowLayoutPanelPluginsLV.Controls.Add(this.pluginInfoItem1);
             this.flowLayoutPanelPluginsLV.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanelPluginsLV.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanelPluginsLV.Location = new System.Drawing.Point(3, 16);
@@ -61,19 +58,6 @@
             this.flowLayoutPanelPluginsLV.Size = new System.Drawing.Size(412, 282);
             this.flowLayoutPanelPluginsLV.TabIndex = 0;
             this.flowLayoutPanelPluginsLV.WrapContents = false;
-            // 
-            // pluginInfoItem1
-            // 
-            this.pluginInfoItem1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pluginInfoItem1.ButtonText = "Install/Remove";
-            this.pluginInfoItem1.Location = new System.Drawing.Point(3, 3);
-            this.pluginInfoItem1.Name = "pluginInfoItem1";
-            this.pluginInfoItem1.PluginAuthor = "labelAuthor";
-            this.pluginInfoItem1.PluginName = "Name";
-            this.pluginInfoItem1.PluginUUID = null;
-            this.pluginInfoItem1.PluginVersion = "version";
-            this.pluginInfoItem1.Size = new System.Drawing.Size(382, 128);
-            this.pluginInfoItem1.TabIndex = 0;
             // 
             // groupBox2
             // 
@@ -106,7 +90,6 @@
             this.Name = "Form_MinerPlugins";
             this.Text = "Form_MinerPlugins";
             this.groupBox1.ResumeLayout(false);
-            this.flowLayoutPanelPluginsLV.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 

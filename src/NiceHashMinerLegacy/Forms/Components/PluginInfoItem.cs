@@ -64,20 +64,34 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
+        #region DEBUGGING
+        public string StatusText
+        {
+            get
+            {
+                return labelStatus.Text;
+            }
+            set
+            {
+                labelStatus.Text = value;
+            }
+        }
+        #endregion DEBUGGING
+
         public string PluginUUID { get; set; }
 
         public EventHandler<string> OnPluginInfoItemMouseClick;
 
         private void PluginInfoItem_MouseClick(object sender, MouseEventArgs e)
         {
-            OnPluginInfoItemMouseClick?.Invoke(sender, PluginUUID);
+            OnPluginInfoItemMouseClick?.Invoke(this, PluginUUID);
         }
 
         public EventHandler<string> OnPluginInfoItemButtonClick;
 
         private void button1_Click(object sender, EventArgs e)
         {
-            OnPluginInfoItemButtonClick?.Invoke(sender, PluginUUID);
+            OnPluginInfoItemButtonClick?.Invoke(this, PluginUUID);
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPlugin.Toolkit;
@@ -185,5 +187,164 @@ namespace NiceHashMiner.Plugin
             if (!MinerPluginHost.MinerPlugin.ContainsKey(pluginUuid)) return null;
             return MinerPluginHost.MinerPlugin[pluginUuid];
         }
+
+        #region Downloading
+
+        public delegate void DownloadAndInstallUpdate(string statusInfo);
+
+        public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, DownloadAndInstallUpdate downloadAndInstallUpdate, CancellationToken stop)
+        {
+            //MinerPluginsManager.Remove(pluginUUID);
+            var downloadProgressChangedEventHandler = new DownloadProgressChangedEventHandler((s, e1) => {
+                downloadAndInstallUpdate($"Downloading: {e1.ProgressPercentage} %");
+            });
+            OnZipProgres zipProgressChangedEventHandler = (int progress) => {
+                downloadAndInstallUpdate($"Unzipping {progress.ToString("F2")} %");
+            };
+            try
+            {
+                downloadAndInstallUpdate("Starting");
+                var tmpPath = Path.Combine(Paths.MinerPluginsPath(), $"tmp_{plugin.PluginUUID}");
+                Directory.CreateDirectory(tmpPath);
+
+                // download plugin dll
+                var pluginPackageDownloaded = Path.Combine(tmpPath, "plugin.zip");
+                var downloadOK = await DownloadFile(plugin.PluginPackageURL, pluginPackageDownloaded, downloadProgressChangedEventHandler, stop);
+                // unzip 
+                var unzipOK = await UnzipFile(pluginPackageDownloaded, tmpPath, zipProgressChangedEventHandler, stop);
+
+                // download plugin dll
+                var binsPackageDownloaded = Path.Combine(tmpPath, "bins.zip");
+                downloadOK = await DownloadFile(plugin.MinerPackageURL, binsPackageDownloaded, downloadProgressChangedEventHandler, stop);
+                // unzip 
+                var binsUnzipPath = Path.Combine(tmpPath, plugin.PluginUUID, "bins");
+                unzipOK = await UnzipFile(binsPackageDownloaded, binsUnzipPath, zipProgressChangedEventHandler, stop);
+
+                downloadAndInstallUpdate("Checking old plugin");
+                var pluginPath = Path.Combine(Paths.MinerPluginsPath(), plugin.PluginUUID);
+                if (Directory.Exists(pluginPath))
+                {
+                    //Directory.Move(pluginPath, $"backup_{pluginPath}");
+                    var newPluginPath = Path.Combine(tmpPath, plugin.PluginUUID);
+
+                    var loadedPlugins = MinerPluginHost.LoadPlugins(newPluginPath, SearchOption.TopDirectoryOnly);
+                    if (loadedPlugins > 0)
+                    {
+                        Directory.Delete(pluginPath);
+                        Directory.Move(newPluginPath, pluginPath);
+                        downloadAndInstallUpdate($"Loaded {loadedPlugins} PLUGIN");
+                        UpdatePluginAlgorithms();
+                        // cross reference local and online list
+                        CrossReferenceInstalledWithOnline();
+                    }
+                    else
+                    {
+                        downloadAndInstallUpdate($"Loaded ZERO PLUGIN");
+                    }
+                }
+                else
+                {
+                    var newPluginPath = Path.Combine(tmpPath, plugin.PluginUUID);
+                    var loadedPlugins = MinerPluginHost.LoadPlugins(newPluginPath, SearchOption.TopDirectoryOnly);
+                    if (loadedPlugins > 0)
+                    {
+                        Directory.Move(newPluginPath, pluginPath);
+                        downloadAndInstallUpdate($"Loaded {loadedPlugins} PLUGIN");
+                        UpdatePluginAlgorithms();
+                        // cross reference local and online list
+                        CrossReferenceInstalledWithOnline();
+                    }
+                    else
+                    {
+                        downloadAndInstallUpdate($"Loaded ZERO PLUGIN");
+                    }
+                }
+
+                Directory.Delete(tmpPath, true);
+            }
+            catch (Exception e)
+            {
+                downloadAndInstallUpdate($"Installation failed: ${e}");
+            }
+        }
+
+        //public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, DownloadProgressChangedEventHandler downloadProgressChangedEventHandler, OnZipProgres zipProgressChangedEventHandler, CancellationToken stop)
+        //{
+        //    //MinerPluginsManager.Remove(pluginUUID);
+        //    try
+        //    {
+        //        var tmpPath = Path.Combine(Paths.MinerPluginsPath(), $"tmp_{plugin.PluginUUID}");
+        //        Directory.CreateDirectory(tmpPath);
+
+        //        // download plugin dll
+        //        var pluginPackageDownloaded = Path.Combine(tmpPath, "plugin.zip");
+        //        var downloadOK = await DownloadFile(plugin.PluginPackageURL, pluginPackageDownloaded, downloadProgressChangedEventHandler, stop);
+        //        // unzip 
+        //        var unzipOK = await UnzipFile(pluginPackageDownloaded, tmpPath, zipProgressChangedEventHandler, stop);
+
+        //        // download plugin dll
+        //        var binsPackageDownloaded = Path.Combine(tmpPath, "bins.zip");
+        //        downloadOK = await DownloadFile(plugin.MinerPackageURL, binsPackageDownloaded, downloadProgressChangedEventHandler, stop);
+        //        // unzip 
+        //        var binsUnzipPath = Path.Combine(tmpPath, plugin.PluginUUID, "bins");
+        //        unzipOK = await UnzipFile(binsPackageDownloaded, binsUnzipPath, zipProgressChangedEventHandler, stop);
+
+        //        Directory.Delete(tmpPath, true);
+        //    } catch(Exception e)
+        //    {
+
+        //    }
+        //}
+
+        public static async Task<bool> DownloadFile(string url, string downloadFileLocation, DownloadProgressChangedEventHandler downloadProgressChangedEventHandler, CancellationToken stop)
+        {
+            var downloadStatus = false;
+            using (var client = new WebClient())
+            {
+                client.DownloadProgressChanged += downloadProgressChangedEventHandler;
+                client.DownloadFileCompleted += (s, e) =>
+                {
+                    downloadStatus = !e.Cancelled && e.Error == null;
+                };
+                stop.Register(client.CancelAsync);
+                // Starts the download
+                await client.DownloadFileTaskAsync(new Uri(url), downloadFileLocation);
+            }
+            return downloadStatus;
+        }
+
+        public delegate void OnZipProgres(int prog);
+
+        public static async Task<bool> UnzipFile(string zipLocation, string unzipLocation, OnZipProgres zipProgressChangedEventHandler, CancellationToken stop)
+        {
+            return await Task.Run(() => {
+                using (var archive = ZipFile.OpenRead(zipLocation))
+                {
+                    float entriesCount = archive.Entries.Count;
+                    float extractedEntries = 0;
+                    foreach (var entry in archive.Entries)
+                    {
+                        if (stop.IsCancellationRequested) break;
+
+                        extractedEntries += 1;
+                        var isDirectory = entry.Name == "";
+                        if (isDirectory) continue;
+
+                        var prog = ((extractedEntries / entriesCount) * 100.0f);
+                        zipProgressChangedEventHandler((int)prog);
+
+                        var extractPath = Path.Combine(unzipLocation, entry.FullName);
+                        var dirPath = Path.GetDirectoryName(extractPath);
+                        if (!Directory.Exists(dirPath))
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
+                        }
+                        entry.ExtractToFile(extractPath, true);
+                    }
+                }
+                return true;
+            }, stop);
+        }
+        #endregion Downloading
     }
 }
