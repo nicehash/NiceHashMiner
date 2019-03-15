@@ -77,6 +77,8 @@ namespace NiceHashMiner.Miners
                     return new BMiner(algorithm.NiceHashID);
                 case MinerBaseType.NBMiner:
                     return new NBMiner();
+                case MinerBaseType.TeamRedMiner:
+                    return new TeamRedMiner();
             }
 
             return null;
