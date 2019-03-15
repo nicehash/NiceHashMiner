@@ -408,6 +408,7 @@ namespace NiceHashMiner.Devices.Algorithms
         public static List<Algorithm> GetAlgorithmsForDevice(ComputeDevice dev)
         {
             var ret = new List<Algorithm>();
+            return ret; //TODO DON'T COMMIT THIS!!!!!!!!!!!!!!!!
             var delegates = new List<AlgorithmsForDevice>();
             delegates.AddRange(algorithmsDelegates);
             // TODO add 3rdparty checking
