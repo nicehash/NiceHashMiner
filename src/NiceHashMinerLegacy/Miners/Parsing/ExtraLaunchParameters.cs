@@ -175,12 +175,22 @@ namespace NiceHashMiner.Miners.Parsing
                 }
             ),
             new MinerOptionPackage(
-                MinerType.BMiner,
-                new List<MinerOption>
+            MinerType.BMiner,
+            new List<MinerOption>
                 {
                     new MinerOption("bminer_max_temp", "-max-temperature", "85", MinerOptionFlagType.MultiParam),
                     new MinerOption("bminer_nofee", "-nofee", null, MinerOptionFlagType.Uni)
-                })
+                }
+            ),
+            new MinerOptionPackage(
+            MinerType.TTMiner,
+            new List<MinerOption>
+                {
+                    new MinerOption("ttminer_intensity", "-i", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ttminer_intensity_grid", "-ig", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ttminer_grid_size", "-gs", "-1", MinerOptionFlagType.MultiParam, ","),
+                }
+            ),
         };
 
         private static readonly List<MinerOptionPackage> MinerOptionPackages = new List<MinerOptionPackage>();

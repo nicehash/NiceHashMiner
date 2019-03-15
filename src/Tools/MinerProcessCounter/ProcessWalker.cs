@@ -58,7 +58,8 @@ namespace MinerProcessCounter
             "prospector",
             "t-rex",
             "TT-Miner",
-            "nbminer"
+            "nbminer",
+            "teamredminer"
         };
 
         private static bool isFilterIncluded(string psName) {

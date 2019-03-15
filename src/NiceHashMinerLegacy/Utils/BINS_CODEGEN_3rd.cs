@@ -57,7 +57,7 @@ namespace NiceHashMiner.Utils
             @"\nbminer\nbminer.exe",
             @"\nbminer\OhGodAnETHlargementPill-r2.exe",
             @"\phoenix\PhoenixMiner.exe",
-            @"\prospector\prospector.exe",
+            @"\teamredminer\teamredminer.exe",
             @"\trex\msvcr71.dll",
             @"\trex\t-rex.exe",
             @"\ttminer\nvml.dll",
@@ -87,7 +87,6 @@ namespace NiceHashMiner.Utils
             @"\ttminer\Algos\AlgoUbqhash-C100.dll",
             @"\ttminer\Algos\AlgoUbqhash-C92.dll",
             @"\ttminer\Algos\AlgoUbqhash.dll",
-
         };
 
         #endregion //CODE_GEN STUFF // listFiles.py

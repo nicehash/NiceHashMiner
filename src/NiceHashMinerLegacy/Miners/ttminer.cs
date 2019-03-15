@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
 
@@ -174,14 +175,13 @@ namespace NiceHashMiner.Miners
             }
         }
 
-                private string CreateCommandLine(string url, string btcAddress, string worker)
+        private string CreateCommandLine(string url, string btcAddress, string worker)
         {
             var devs = string.Join(" ", MiningSetup.MiningPairs.Select(pair => pair.Device.ID.ToString()));
             var cmd = $"-a {AlgoName} -url {url} " +
                               $"-u {btcAddress}.{worker} -d {devs} --api-bind 127.0.0.1:{ApiPort} ";
-
-            // TODO
-            //cmd += ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.AMD);
+            
+           cmd += ExtraLaunchParametersParser.ParseForMiningSetup(MiningSetup, DeviceType.NVIDIA);
 
             return cmd;
         }
