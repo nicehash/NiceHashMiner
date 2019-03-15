@@ -33,6 +33,7 @@
             this.labelAuthor = new System.Windows.Forms.Label();
             this.buttonInstallRemove = new System.Windows.Forms.Button();
             this.buttonUpdate = new System.Windows.Forms.Button();
+            this.labelStatus = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // labelName
@@ -82,11 +83,21 @@
             this.buttonUpdate.Text = "Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
             // 
+            // labelStatus
+            // 
+            this.labelStatus.AutoSize = true;
+            this.labelStatus.Location = new System.Drawing.Point(274, 17);
+            this.labelStatus.Name = "labelStatus";
+            this.labelStatus.Size = new System.Drawing.Size(37, 13);
+            this.labelStatus.TabIndex = 5;
+            this.labelStatus.Text = "Status";
+            // 
             // PluginInfoItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonUpdate);
             this.Controls.Add(this.buttonInstallRemove);
             this.Controls.Add(this.labelAuthor);
@@ -107,5 +118,6 @@
         private System.Windows.Forms.Label labelAuthor;
         private System.Windows.Forms.Button buttonInstallRemove;
         private System.Windows.Forms.Button buttonUpdate;
+        private System.Windows.Forms.Label labelStatus;
     }
 }

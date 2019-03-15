@@ -78,7 +78,19 @@ namespace NiceHashMiner.Forms
             richTextBox1.Text += $"PluginUUID: {plugin.PluginUUID}" + Environment.NewLine;
             richTextBox1.Text += $"PluginPackageURL: {plugin.PluginPackageURL}" + Environment.NewLine;
             richTextBox1.Text += $"MinerPackageURL: {plugin.MinerPackageURL}" + Environment.NewLine;
-            richTextBox1.Text += $"SupportedDevicesAlgorithms: {plugin.SupportedDevicesAlgorithms}" + Environment.NewLine;
+            var supportedDevsAlgos = "";
+            if (plugin.SupportedDevicesAlgorithms != null)
+            {
+                foreach (var devAlgos in plugin.SupportedDevicesAlgorithms)
+                {
+                    supportedDevsAlgos += $"{devAlgos.Key}:" + Environment.NewLine;
+                    foreach (var algo in devAlgos.Value)
+                    {
+                        supportedDevsAlgos += $"\t - {algo}," + Environment.NewLine;
+                    }
+                }
+            }
+            richTextBox1.Text += $"SupportedDevicesAlgorithms: {supportedDevsAlgos}" + Environment.NewLine;
         }
 
         private void OnPluginInfoItemButtonClick(object sender, string pluginUUID)
