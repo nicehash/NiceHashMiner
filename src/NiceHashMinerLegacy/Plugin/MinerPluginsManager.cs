@@ -11,14 +11,13 @@ using MinerPluginLoader;
 using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
+using NiceHashMinerLegacy.Common;
 
 // TODO fix up the namespace
 namespace NiceHashMiner.Plugin
 {
     public static class MinerPluginsManager
     {
-        const string PluginsPath = "miner_plugins";
-
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }
         private static Dictionary<string, IMinerPlugin> MinerPlugins { get => MinerPluginHost.MinerPlugin; }
 
@@ -26,7 +25,7 @@ namespace NiceHashMiner.Plugin
 
         public static void LoadMinerPlugins()
         {
-            MinerPluginHost.LoadPlugins(PluginsPath, SearchOption.AllDirectories);
+            MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath(), SearchOption.AllDirectories);
             UpdatePluginAlgorithms();
             // cross reference local and online list
             CrossReferenceInstalledWithOnline();
@@ -67,7 +66,7 @@ namespace NiceHashMiner.Plugin
         {
             try
             {
-                var deletePath = Path.Combine(PluginsPath, pluginUUID);
+                var deletePath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID);
                 MinerPluginHost.MinerPlugin.Remove(pluginUUID);
                 RemovePluginAlgorithms(pluginUUID);
                 CrossReferenceInstalledWithOnline();
