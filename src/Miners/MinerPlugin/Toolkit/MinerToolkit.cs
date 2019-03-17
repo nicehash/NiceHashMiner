@@ -63,6 +63,7 @@ namespace MinerPlugin.Toolkit
             {'Y', pow10(24)},
         };
 
+        // TODO this will work on Sol-rates and G-rates but will skip prefixes
         public static (double, bool) TryGetHashrateAfter(this string s, string after)
         {
             var ret = (hashrate: default(double), found: false);
@@ -84,12 +85,12 @@ namespace MinerPlugin.Toolkit
             }
 
             ret.found = true;
-            var i = afterString.IndexOf('.');
-            for (; i < afterString.Length - 1; ++i)
+            var afterNumString = afterString.GetStringAfter(numString);
+            for (var i = 0; i < afterNumString.Length - 1; ++i)
             {
-                var c = afterString[i];
+                var c = afterNumString[i];
                 if (!Char.IsLetter(c)) continue;
-                var c2 = afterString[i + 1];
+                var c2 = afterNumString[i + 1];
 
                 foreach (var kvp in _postfixes)
                 {

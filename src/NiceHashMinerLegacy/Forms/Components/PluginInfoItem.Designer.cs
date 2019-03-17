@@ -72,7 +72,6 @@
             this.buttonInstallRemove.TabIndex = 3;
             this.buttonInstallRemove.Text = "Install/Remove";
             this.buttonInstallRemove.UseVisualStyleBackColor = true;
-            this.buttonInstallRemove.Click += new System.EventHandler(this.button1_Click);
             // 
             // buttonUpdate
             // 

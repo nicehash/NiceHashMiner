@@ -15,6 +15,9 @@ namespace NiceHashMiner.Forms.Components
         public PluginInfoItem()
         {
             InitializeComponent();
+
+            buttonInstallRemove.Click += new EventHandler(ButtonInstallRemove_Click);
+            buttonUpdate.Click += new EventHandler(ButtonUpdate_Click);
         }
 
         public string PluginName {
@@ -52,7 +55,7 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        public string ButtonText
+        public string ButtonInstallRemoveText
         {
             get
             {
@@ -61,6 +64,42 @@ namespace NiceHashMiner.Forms.Components
             set
             {
                 buttonInstallRemove.Text = value;
+            }
+        }
+
+        public bool ButtonInstallRemoveEnabled
+        {
+            get
+            {
+                return buttonInstallRemove.Enabled;
+            }
+            set
+            {
+                buttonInstallRemove.Enabled = value;
+            }
+        }
+
+        public string ButtonUpdateText
+        {
+            get
+            {
+                return buttonUpdate.Text;
+            }
+            set
+            {
+                buttonUpdate.Text = value;
+            }
+        }
+
+        public bool ButtonUpdateEnabled
+        {
+            get
+            {
+                return buttonUpdate.Enabled;
+            }
+            set
+            {
+                buttonUpdate.Enabled = value;
             }
         }
 
@@ -87,11 +126,20 @@ namespace NiceHashMiner.Forms.Components
             OnPluginInfoItemMouseClick?.Invoke(this, PluginUUID);
         }
 
-        public EventHandler<string> OnPluginInfoItemButtonClick;
+        
 
-        private void button1_Click(object sender, EventArgs e)
+        public EventHandler<string> OnButtonInstallRemoveClick;
+
+        private void ButtonInstallRemove_Click(object sender, EventArgs e)
         {
-            OnPluginInfoItemButtonClick?.Invoke(this, PluginUUID);
+            OnButtonInstallRemoveClick?.Invoke(this, PluginUUID);
+        }
+
+        public EventHandler<string> OnButtonUpdateClick;
+
+        private void ButtonUpdate_Click(object sender, EventArgs e)
+        {
+            OnButtonUpdateClick?.Invoke(this, PluginUUID);
         }
     }
 }

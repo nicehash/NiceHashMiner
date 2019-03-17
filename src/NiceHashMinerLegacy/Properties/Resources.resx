@@ -283,8 +283,8 @@
       "major": "1",
       "minor": "0"
     },
-    "PluginPackageURL": "",
-    "MinerPackageURL": "https://gitlab.com/Lolliedieb/lolminer-releases",
+    "PluginPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/LolMinerBeam_v1.0-a6c96e17-6fa7-418f-b75e-6631b3a5241e.zip",
+    "MinerPackageURL": "https://gitlab.com/Lolliedieb/lolminer-releases/uploads/aef4b16b6168db8bc6437744796acd0c/lolMiner_v07_Win64.zip",
     "SupportedDevicesAlgorithms": {
       "NVIDIA": [
         "Beam"

@@ -127,21 +127,26 @@ namespace NiceHashMiner.Devices
         // TODO this thing doesn't support dual algorithms
         public void UpdatePluginAlgorithms(string pluginUuid, IList<PluginAlgorithm> pluginAlgos)
         {
-            var newAlgorithms = pluginAlgos.Select(algo => algo.NiceHashID);
-            // get plugin algos for plguin UUID and filter only those that are inside the new list
-            // make sure to filter old algorithms that are not inside the new list
-            var oldPluginAlgos = AlgorithmSettings
+            var pluginUuidAlgos = AlgorithmSettings
                 .Where(algo => algo is PluginAlgorithm pAlgo && pAlgo.BaseAlgo.MinerID == pluginUuid)
-                .Cast<PluginAlgorithm>()
-                .Where(algo => newAlgorithms.Contains(algo.NiceHashID));
+                .Cast<PluginAlgorithm>();
 
-            var oldAlgorithmsIds = oldPluginAlgos.Select(algo => algo.NiceHashID);
-            var newPluginAlgos = pluginAlgos.Where(algo => oldAlgorithmsIds.Contains(algo.NiceHashID) == false);
-            // filter all plugin algorithms we might be removing support for some
-            AlgorithmSettings = AlgorithmSettings.Where(algo => algo is PluginAlgorithm pAlgo && pAlgo.BaseAlgo.MinerID != pluginUuid).ToList();
+            // filter out old plugin algorithms if any
+            if (pluginUuidAlgos.Count() > 0)
+            {
+                AlgorithmSettings = AlgorithmSettings.Where(algo => pluginUuidAlgos.Contains(algo) == false).ToList();
+            }
 
+            // keep old algorithms with settings and filter out obsolete ones
+            var newAlgorithmIDs = pluginAlgos.Select(algo => algo.NiceHashID);
+            var oldAlgosWithSettings = pluginUuidAlgos.Where(algo => newAlgorithmIDs.Contains(algo.NiceHashID));
+
+            // filter out old algorithms with settings and keep only brand new ones
+            var oldAlgosWithSettingsIDs = oldAlgosWithSettings.Select(algo => algo.NiceHashID);
+            var newPluginAlgos = pluginAlgos.Where(algo => oldAlgosWithSettingsIDs.Contains(algo.NiceHashID) == false);
+            
             // add back old ones that are in the new module
-            if (oldPluginAlgos.Count() > 0) AlgorithmSettings.AddRange(oldPluginAlgos);
+            if (oldAlgosWithSettings.Count() > 0) AlgorithmSettings.AddRange(oldAlgosWithSettings);
             // add new ones 
             if (newPluginAlgos.Count() > 0) AlgorithmSettings.AddRange(newPluginAlgos);
         }
