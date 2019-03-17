@@ -18,7 +18,8 @@ namespace NiceHashMiner.Plugin
             {
                 // maybe there is no online version
                 if (OnlineVersion == null || LocalVersion == null) return false;
-                return OnlineVersion.PluginVersion > LocalVersion.PluginVersion; ;
+                if (OnlineVersion.PluginVersion.Major > LocalVersion.PluginVersion.Major) return true;
+                return OnlineVersion.PluginVersion.Minor > LocalVersion.PluginVersion.Minor;
             }
         }
 

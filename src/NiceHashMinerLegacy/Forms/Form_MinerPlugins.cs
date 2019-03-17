@@ -125,12 +125,20 @@ namespace NiceHashMiner.Forms
                 else if (pluginPackageInfo.Installed == false)
                 {
                     var cancelInstall = new CancellationTokenSource();
-                    MinerPluginsManager.DownloadAndInstallUpdate downloadAndInstallUpdate = (string infoStr) => {
-                        FormHelpers.SafeInvoke(pluginInfoItem, () => { pluginInfoItem.StatusText = infoStr; });
+                    MinerPluginsManager.DownloadAndInstallUpdate downloadAndInstallUpdate = (string infoStr) =>
+                    {
+                        var strNum = infoStr.Replace("Downloading:", "").Replace("Unzipping:", "").Replace("%", "").Trim();
+                        int progress = 0;
+                        int.TryParse(strNum, out progress);
+                        FormHelpers.SafeInvoke(pluginInfoItem, () => {
+                            pluginInfoItem.StatusText = infoStr;
+                            pluginInfoItem.ProgressBarValue = progress;
+                        });
                     };
+                    pluginInfoItem.ProgressBarVisible = true;
                     await MinerPluginsManager.DownloadAndInstall(pluginPackageInfo, downloadAndInstallUpdate, cancelInstall.Token);
+                    pluginInfoItem.ProgressBarVisible = false;
                 }
-
             }
             catch (Exception e)
             {
@@ -162,9 +170,17 @@ namespace NiceHashMiner.Forms
                 var cancelInstall = new CancellationTokenSource();
                 MinerPluginsManager.DownloadAndInstallUpdate downloadAndInstallUpdate = (string infoStr) =>
                 {
-                    FormHelpers.SafeInvoke(pluginInfoItem, () => { pluginInfoItem.StatusText = infoStr; });
+                    var strNum = infoStr.Replace("Downloading:", "").Replace("Unzipping:", "").Replace("%:", "").Trim();
+                    int progress = 0;
+                    int.TryParse(strNum, out progress);
+                    FormHelpers.SafeInvoke(pluginInfoItem, () => {
+                        pluginInfoItem.StatusText = infoStr;
+                        pluginInfoItem.ProgressBarValue = progress;
+                    });
                 };
+                pluginInfoItem.ProgressBarVisible = true;
                 await MinerPluginsManager.DownloadAndInstall(pluginPackageInfo, downloadAndInstallUpdate, cancelInstall.Token);
+                pluginInfoItem.ProgressBarVisible = false;
                 var ver = pluginPackageInfo.PluginVersion;
                 pluginInfoItem.PluginVersion = Tr("Version: {0}", $"{ver.Major}.{ver.Minor}");
             }

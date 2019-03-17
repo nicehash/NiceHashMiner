@@ -18,6 +18,8 @@ namespace NiceHashMiner.Forms.Components
 
             buttonInstallRemove.Click += new EventHandler(ButtonInstallRemove_Click);
             buttonUpdate.Click += new EventHandler(ButtonUpdate_Click);
+
+            ProgressBarVisible = false;
         }
 
         public string PluginName {
@@ -100,6 +102,31 @@ namespace NiceHashMiner.Forms.Components
             set
             {
                 buttonUpdate.Enabled = value;
+            }
+        }
+
+        public bool ProgressBarVisible
+        {
+            get
+            {
+                return progressBar1.Visible;
+            }
+            set
+            {
+                progressBar1.Visible = value;
+            }
+        }
+
+        public int ProgressBarValue
+        {
+            get
+            {
+                return progressBar1.Value;
+            }
+            set
+            {
+                progressBar1.Value = value;
+                progressBar1.Invalidate();
             }
         }
 

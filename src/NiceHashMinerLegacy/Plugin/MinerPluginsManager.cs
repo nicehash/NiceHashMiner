@@ -165,7 +165,7 @@ namespace NiceHashMiner.Plugin
                 downloadAndInstallUpdate($"Downloading: {e1.ProgressPercentage} %");
             });
             OnZipProgres zipProgressChangedEventHandler = (int progress) => {
-                downloadAndInstallUpdate($"Unzipping {progress.ToString("F2")} %");
+                downloadAndInstallUpdate($"Unzipping: {progress} %");
             };
             const string installingPrefix = "installing_";
             var installingPluginPath = Path.Combine(Paths.MinerPluginsPath(), $"{installingPrefix}{plugin.PluginUUID}");
