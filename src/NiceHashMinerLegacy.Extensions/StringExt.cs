@@ -41,12 +41,12 @@ namespace NiceHashMinerLegacy.Extensions
                 return false;
             }
 
-            var i = afterString.IndexOf('.');
-            for (; i < afterString.Length - 1; ++i)
+            var afterNumString = afterString.GetStringAfter(numString);
+            for (var i = 0; i < afterNumString.Length - 1; ++i)
             {
-                var c = afterString[i];
+                var c = afterNumString[i];
                 if (!Char.IsLetter(c)) continue;
-                var c2 = afterString[i + 1];
+                var c2 = afterNumString[i + 1];
 
                 foreach (var kvp in _postfixes)
                 {
