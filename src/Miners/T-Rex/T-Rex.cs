@@ -29,7 +29,7 @@ namespace T_Rex
 
         private AlgorithmType _algorithmType;
 
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient = new HttpClient();
 
         public T_Rex(string uuid)
         {
@@ -57,7 +57,6 @@ namespace T_Rex
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            if (_httpClient == null) _httpClient = new HttpClient();
             var ad = new ApiData();
             try
             {
@@ -96,10 +95,6 @@ namespace T_Rex
 
         public override async Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-
-
-            // determine benchmark time 
-            // settup times
             var benchmarkTime = 20; // in seconds
             switch (benchmarkType)
             {
@@ -126,7 +121,6 @@ namespace T_Rex
 
             bp.CheckData = (string data) =>
             {
-                Console.WriteLine(data);
                 var (hashrate, found) = data.TryGetHashrateAfter("Total");
 
                 if (data.Contains("Time limit is reached."))
