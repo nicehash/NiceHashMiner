@@ -25,6 +25,13 @@ namespace CCMinerTpruvotCuda10
         // lazy init
         //private HttpClient _httpClient = null; // throws exceptions
         private ApiDataHelper apiReader = new ApiDataHelper(); // consider replacing with HttpClient
+        private readonly string _uuid;
+
+        public CCMinerTpruvotCuda10Miner(string uuid)
+        {
+            _uuid = uuid;
+        }
+
 
         string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -32,10 +39,10 @@ namespace CCMinerTpruvotCuda10
             {
                 case AlgorithmType.NeoScrypt: return "neoscrypt";
                 //case AlgorithmType.Lyra2REv2_UNUSED: return "lyra2v2";
-                case AlgorithmType.Decred: return "decred";
+                //case AlgorithmType.Decred: return "decred";
                 //case AlgorithmType.Lbry_UNUSED: return "lbry";
                 //case AlgorithmType.X11Gost_UNUSED: return "sib";
-                case AlgorithmType.Blake2s: return "blake2s";
+                //case AlgorithmType.Blake2s: return "blake2s";
                 //case AlgorithmType.Sia_UNUSED: return "sia";
                 case AlgorithmType.Keccak: return "keccak";
                 case AlgorithmType.Skunk: return "skunk";
@@ -187,7 +194,7 @@ namespace CCMinerTpruvotCuda10
 
         protected override (string, string) GetBinAndCwdPaths()
         {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), Shared.UUID);
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
             var binPath = Path.Combine(pluginRootBins, "ccminer.exe");
             var binCwd = pluginRootBins;

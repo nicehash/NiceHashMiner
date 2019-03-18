@@ -16,7 +16,7 @@ namespace CCMinerTpruvotCuda10
 
         public string Author => "stanko@nicehash.com";
 
-        public string PluginUUID => Shared.UUID;
+        public string PluginUUID => "563960f0-4990-11e9-87d3-6b57d758e2c6 ";
 
         public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)
         {
@@ -25,7 +25,7 @@ namespace CCMinerTpruvotCuda10
 
         public IMiner CreateMiner()
         {
-            return new CCMinerTpruvotCuda10Miner();
+            return new CCMinerTpruvotCuda10Miner(PluginUUID);
         }
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
@@ -54,10 +54,10 @@ namespace CCMinerTpruvotCuda10
             return new List<Algorithm>{
                 new Algorithm(PluginUUID, AlgorithmType.NeoScrypt),
                 //new Algorithm(PluginUUID, AlgorithmType.Lyra2REv2_UNUSED),
-                new Algorithm(PluginUUID, AlgorithmType.Decred),
+                //new Algorithm(PluginUUID, AlgorithmType.Decred),
                 //new Algorithm(PluginUUID, AlgorithmType.Lbry_UNUSED),
                 //new Algorithm(PluginUUID, AlgorithmType.X11Gost_UNUSED),
-                new Algorithm(PluginUUID, AlgorithmType.Blake2s),
+                //new Algorithm(PluginUUID, AlgorithmType.Blake2s),
                 //new Algorithm(PluginUUID, AlgorithmType.Sia_UNUSED),
                 new Algorithm(PluginUUID, AlgorithmType.Keccak),
                 new Algorithm(PluginUUID, AlgorithmType.Skunk),
