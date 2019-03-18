@@ -12,20 +12,29 @@ using System.Globalization;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http;
+using System.IO;
+using NiceHashMinerLegacy.Common;
 
-namespace T_RexBase
+namespace T_Rex
 {
-    public class T_RexBase : MinerBase
+    public class T_Rex : MinerBase
     {
+        private string _devices;
+
+        private string _extraLaunchParameters = "";
+
+        private int _apiPort;
+
+        private readonly string _uuid;
+
         private AlgorithmType _algorithmType;
 
-        private string _devices;
-        private string _extraLaunchParameters = "";
-        private int _apiPort;
-        private HttpClient _httpClient;
+        private readonly HttpClient _httpClient = new HttpClient();
 
-
-        private ApiDataHelper apiReader = new ApiDataHelper();
+        public T_Rex(string uuid)
+        {
+            _uuid = uuid;
+        }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -34,13 +43,20 @@ namespace T_RexBase
                 case AlgorithmType.Lyra2Z: return "lyra2z";
                 case AlgorithmType.Skunk: return "skunk";
                 case AlgorithmType.X16R: return "x16r";
+                default: return "";
             }
-            return "";
+        }
+
+        private double DevFee
+        {
+            get
+            {
+                return 1.0;
+            }
         }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            if (_httpClient == null) _httpClient = new HttpClient();
             var ad = new ApiData();
             try
             {
@@ -79,12 +95,6 @@ namespace T_RexBase
 
         public override async Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            var avgRet = 0.0;
-            var counter = 0;
-            var after = "Total:";
-
-            // determine benchmark time 
-            // settup times
             var benchmarkTime = 20; // in seconds
             switch (benchmarkType)
             {
@@ -101,50 +111,29 @@ namespace T_RexBase
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --benchmark --time-limit {benchmarkTime}";
+            var commandLine = $"--algo {algo} {_devices} --benchmark --time-limit {benchmarkTime}";
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
+            var benchHashes = 0d;
+            var counter = 0;
+            var benchHashResult = 0d;
+
             bp.CheckData = (string data) =>
             {
-                var s = data;
-                Console.WriteLine(s);
-                var ret = (hashrate: default(double), found: false);
-                if (s.Contains("WARN: Time limit is reached"))
-                {
-                    ret.hashrate = avgRet / counter;
-                    ret.found = true;
-                }
-                else
-                {
-                    if (!s.Contains(after))
-                    {
-                        return ret;
-                    }
-                    var afterString = s.GetStringAfter(after).ToLower();
-                    var numString = new string(afterString
-                        .ToCharArray()
-                        .SkipWhile(c => !char.IsDigit(c))
-                        .TakeWhile(c => char.IsDigit(c) || c == '.')
-                        .ToArray());
+                var (hashrate, found) = data.TryGetHashrateAfter("Total");
 
-                    if (!double.TryParse(numString, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
-                    {
-                        return ret;
-                    }
+                if (data.Contains("Time limit is reached."))
+                    return (benchHashResult, true);
 
-                    counter++;
-                    if (afterString.Contains("kh"))
-                        avgRet += hash * 1000;
-                    else if (afterString.Contains("mh"))
-                        avgRet += hash * 1000000;
-                    else if (afterString.Contains("gh"))
-                        avgRet += hash * 1000000000;
-                    else
-                        avgRet += hash;
+                if (!found) return (benchHashResult, false);
 
-                }
-                return ret;
+                benchHashes += hashrate;
+                counter++;
+
+                benchHashResult = (benchHashes / counter) * (1 - DevFee * 0.01);
+                
+                return (benchHashResult, false);
             };
             
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
@@ -156,8 +145,10 @@ namespace T_RexBase
 
         protected override (string, string) GetBinAndCwdPaths()
         {
-            var binPath = @"C:\Users\Domen\Desktop\nhml\bin_3rdparty\trex\t-rex.exe";
-            var binCwd = @"C:\Users\Domen\Desktop\nhml\bin_3rdparty\trex";
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
+            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var binPath = Path.Combine(pluginRootBins, "t-rex.exe");
+            var binCwd = pluginRootBins;
             return (binPath, binCwd);
         }
 
@@ -169,8 +160,8 @@ namespace T_RexBase
             // all good continue on
 
             // init command line params parts
-            var deviceIds = MinerToolkit.GetDevicesIDsInOrder(_miningPairs);
-            _devices = $"--devices {string.Join(",", deviceIds)}";
+            var deviceIDs = _miningPairs.Select(p =>{return p.device.ID;}).OrderBy(id => id);
+            _devices = $"--devices {string.Join(",", deviceIDs)}";
             // TODO implement this later
             //_extraLaunchParameters;
         }
@@ -183,7 +174,7 @@ namespace T_RexBase
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind-http 127.0.0.1:{_apiPort} {_extraLaunchParameters}";
+            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind-http 127.0.0.1:{_apiPort} {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }

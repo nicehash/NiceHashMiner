@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace T_RexBase
+namespace T_Rex
 {
         [Serializable]
     internal class Gpu

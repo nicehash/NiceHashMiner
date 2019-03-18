@@ -51,8 +51,8 @@ namespace BMiner
                     case AlgorithmType.ZHash:
                     case AlgorithmType.Beam:
                     case AlgorithmType.GrinCuckaroo29:
-                    case AlgorithmType.GrinCuckatoo31: return 2.0;
-                    default: return 0;
+                    case AlgorithmType.GrinCuckatoo31:
+                    default: return 2.0;
                 }
             }
         }

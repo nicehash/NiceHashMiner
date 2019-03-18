@@ -9,17 +9,30 @@ using MinerPlugin.Toolkit;
 using NiceHashMinerLegacy.Common.Enums;
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
 using static MinerPlugin.Toolkit.MinersApiPortsManager;
+using System.Net.Http;
+using System.IO;
+using NiceHashMinerLegacy.Common;
 
 namespace ZEnemy
 {
-    public class ZEnemyBase : MinerBase
+    public class ZEnemy : MinerBase
     {
+        private string _devices;
+
+        private string _extraLaunchParameters = "";
+
+        private int _apiPort;
+
+        private readonly string _uuid;
+
         private AlgorithmType _algorithmType;
 
-        private string _devices;
-        private string _extraLaunchParameters = "";
-        private int _apiPort;
         private ApiDataHelper apiReader = new ApiDataHelper(); // consider replacing with HttpClient
+
+        public ZEnemy(string uuid)
+        {
+            _uuid = uuid;
+        }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -31,15 +44,25 @@ namespace ZEnemy
             return "";
         }
 
+        private double DevFee
+        {
+            get
+            {
+                return 1.0;
+            }
+        }
+
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var summaryApiResult = await apiReader.GetApiDataAsync(_apiPort, ApiDataHelper.GetHttpRequestNhmAgentStrin("summary"));
-            double totalSpeed = 0;
-            int totalPower = 0;
-            if (!string.IsNullOrEmpty(summaryApiResult))
+            var api = new ApiData();
+            try
             {
-                try
+                var summaryApiResult = await apiReader.GetApiDataAsync(_apiPort, ApiDataHelper.GetHttpRequestNhmAgentStrin("summary"));
+                double totalSpeed = 0;
+                int totalPower = 0;
+                if (!string.IsNullOrEmpty(summaryApiResult))
                 {
+
                     var summaryOptvals = summaryApiResult.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var optvalPairs in summaryOptvals)
                     {
@@ -51,19 +74,13 @@ namespace ZEnemy
                         }
                     }
                 }
-                catch
-                { }
-            }
-            // TODO if have multiple GPUs call the threads as well, but maybe not as often since it might crash the miner
-            //var threadsApiResult = await _httpClient.GetStringAsync($"{localhost}/threads");
-            var threadsApiResult = await apiReader.GetApiDataAsync(_apiPort, ApiDataHelper.GetHttpRequestNhmAgentStrin("threads"));
-            var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-            var perDevicePowerInfo = new List<(string, int)>();
-            if (!string.IsNullOrEmpty(threadsApiResult))
-            {
-                // TODO return empty
-                try
+
+                var threadsApiResult = await apiReader.GetApiDataAsync(_apiPort, ApiDataHelper.GetHttpRequestNhmAgentStrin("threads"));
+                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
+                var perDevicePowerInfo = new List<(string, int)>();
+                if (!string.IsNullOrEmpty(threadsApiResult))
                 {
+
                     var gpus = threadsApiResult.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var gpu in gpus)
                     {
@@ -86,7 +103,7 @@ namespace ZEnemy
                                 gpuData.speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
                             }
                         }
-                        // TODO do stuff with it gpuData
+
                         var device = _miningPairs.Where(kvp => kvp.device.ID == gpuData.id).Select(kvp => kvp.device).FirstOrDefault();
                         if (device != null)
                         {
@@ -96,44 +113,37 @@ namespace ZEnemy
                         }
 
                     }
-                }
-                catch
-                { }
-            }
-            var ad = new ApiData();
-            var total = new List<(AlgorithmType, double)>();
-            total.Add((_algorithmType, totalSpeed));
-            ad.AlgorithmSpeedsTotal = total;
-            ad.PowerUsageTotal = totalPower;
-            ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-            ad.PowerUsagePerDevice = perDevicePowerInfo;
 
-            return ad;
+                }
+                var total = new List<(AlgorithmType, double)>();
+                total.Add((_algorithmType, totalSpeed));
+                api.AlgorithmSpeedsTotal = total;
+                api.PowerUsageTotal = totalPower;
+                api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                api.PowerUsagePerDevice = perDevicePowerInfo;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"exception: {e}");
+            }
+            return api;
         }
 
         public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            var avgRet = 0.0;
-            var counter = 0;
-            var maxCheck = 0;
-            var after = "Diff:";
-
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 20; // in seconds
+            var benchmarkTime = 60;
             switch (benchmarkType)
             {
                 case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 20;
-                    maxCheck = 1;
+                    benchmarkTime = 40;
                     break;
                 case BenchmarkPerformanceType.Standard:
                     benchmarkTime = 60;
-                    maxCheck = 2;
                     break;
                 case BenchmarkPerformanceType.Precise:
                     benchmarkTime = 120;
-                    maxCheck = 3;
                     break;
             }
 
@@ -143,60 +153,33 @@ namespace ZEnemy
             var port = split[2];
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url={url}:{port} --user 38QriJ13vEBWUPhJrEKKZwKdVftV9dtW25";
+            var commandLine = $"--algo {algo} --url={url}:{port} --user {MinerToolkit.DemoUser} {_devices}";
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
+            var benchHashes = 0d;
+            var benchIters = 0;
+            var benchHashResult = 0d;  // Not too sure what this is..
+            var after = $"GPU#"; //if multiple benchmark add gpu cuda id
+            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
+
             bp.CheckData = (string data) =>
             {
-                var s = data;
-                Console.WriteLine(s);
-                var ret = (hashrate: default(double), found: false);
+                var hasHashRate = data.Contains(after) && data.Contains("-");
 
-                if (s.Contains("Uptime:"))
-                {
-                    maxCheck--;
-                    if(maxCheck == 0)
-                    {
-                        ret.hashrate = avgRet / counter;
-                        ret.found = true;
-                    }
-                } else
-                {
-                    if (!s.Contains(after))
-                    {
-                        return ret;
-                    }
-                    var afterString = s.GetStringAfter(after).ToLower();
-                    var afterStringArray = afterString.Split(',');
-                    var hashRate = afterStringArray[1];
-                    var numString = new string(hashRate
-                        .ToCharArray()
-                        .SkipWhile(c => !char.IsDigit(c))
-                        .TakeWhile(c => char.IsDigit(c) || c == '.')
-                        .ToArray());
+                if (!hasHashRate) return (benchHashResult, false);
 
-                    if (!double.TryParse(numString, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
-                    {
-                        return ret;
-                    }
+                var (hashrate, found) = data.TryGetHashrateAfter("-");
 
-                    counter++;
-                    if (hashRate.Contains("kh"))
-                        avgRet += hash * 1000;
-                    else if (hashRate.Contains("mh"))
-                        avgRet += hash * 1000000;
-                    else if (hashRate.Contains("gh"))
-                        avgRet += hash * 1000000000;
-                    else
-                        avgRet += hash;
+                benchHashes += hashrate;
+                benchIters++;
 
-                }
+                benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
 
-                return ret;
+                return (benchHashResult, benchIters >= targetBenchIters);
             };
 
-            var benchmarkTimeout = TimeSpan.FromSeconds(300);
+            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
@@ -204,8 +187,10 @@ namespace ZEnemy
 
         protected override (string binPath, string binCwd) GetBinAndCwdPaths()
         {
-            var binPath = @"C:\Users\Domen\Desktop\nhml\bin_3rdparty\Z-ENEMY\z-enemy.exe";
-            var binCwd = @"C:\Users\Domen\Desktop\nhml\bin_3rdparty\Z-ENEMY";
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
+            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var binPath = Path.Combine(pluginRootBins, "z-enemy.exe");
+            var binCwd = pluginRootBins;
             return (binPath, binCwd);
         }
 
@@ -217,8 +202,12 @@ namespace ZEnemy
             // all good continue on
 
             // init command line params parts
-            var deviceIds = MinerToolkit.GetDevicesIDsInOrder(_miningPairs);
-            _devices = $"--devices {string.Join(",", deviceIds)}";
+            var deviceIDs = _miningPairs.Select(p =>
+            {
+                var device = p.device;
+                return device.ID;
+            }).OrderBy(id => id);
+            _devices = $"--devices {string.Join(",", deviceIDs)}";
             // TODO implement this later
             //_extraLaunchParameters;
         }
@@ -235,7 +224,7 @@ namespace ZEnemy
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url={url}:{port} --user {_username} --api-bind={_apiPort} {_extraLaunchParameters}";
+            var commandLine = $"--algo {algo} --url={url}:{port} --user {_username} --api-bind={_apiPort} {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }
