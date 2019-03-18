@@ -4,7 +4,6 @@ using System.Text;
 
 namespace BMiner
 {
-
     [Serializable]
     public class Solver
     {

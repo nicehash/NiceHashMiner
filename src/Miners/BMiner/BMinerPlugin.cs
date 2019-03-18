@@ -16,14 +16,18 @@ namespace BMiner
 
         public string Author => "Domen Kirn Krefl";
 
-        public string PluginUUID => "c7e2060d-aebf-44bb-a7e5-dcec5de8243b";
+        public string PluginUUID => "92a7fd10-498d-11e9-87d3-6b57d758e2c6";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 5).Cast<CUDADevice>();
-            //todo check driver version
+            
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+            // CUDA 9.2+ driver 397.44
+            var mininumRequiredDriver = new Version(397, 44);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS >= mininumRequiredDriver) return supported;
 
+
+            var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 5).Cast<CUDADevice>();
             foreach (var gpu in cudaGpus)
             {
                 var algos = GetSupportedAlgorithms(gpu).ToList();
