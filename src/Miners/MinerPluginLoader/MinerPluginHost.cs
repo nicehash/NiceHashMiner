@@ -11,17 +11,45 @@ namespace MinerPluginLoader
     public static class MinerPluginHost
     {
         public static Dictionary<string, IMinerPlugin> MinerPlugin { get; } = new Dictionary<string, IMinerPlugin>();
-        private static Type pluginType = typeof(IMinerPlugin);
+        private static Type _pluginType = typeof(IMinerPlugin);
 
-        public static void LoadPlugins(string dirPath, SearchOption searchOption)
+        private static HashSet<string> _tempDirPrefixes = new HashSet<string> { "installing", "backup", "temp" };
+
+        private static bool HasTempPrefix(string dirPath)
         {
-            if (!Directory.Exists(dirPath)) {
+            return _tempDirPrefixes.Where(prefix => dirPath.Contains(prefix)).Count() > 0;
+        }
+
+        public static int LoadPlugins(string pluginsRootDirPath)
+        {
+            if (!Directory.Exists(pluginsRootDirPath))
+            {
                 // TODO directory doesn't exist
-                return;
+                return 0;
+            }
+
+            // this can throw
+            var pluginDirectories = Directory.GetDirectories(pluginsRootDirPath)
+                .Where(dir => HasTempPrefix(dir) == false);
+
+            var loadedPlugins = 0;
+            foreach (var pluginDirectory in pluginDirectories)
+            {
+                loadedPlugins += LoadPlugin(pluginDirectory);
+            }
+
+            return loadedPlugins;
+        }
+
+        public static int LoadPlugin(string pluginDirPath)
+        {
+            if (!Directory.Exists(pluginDirPath)) {
+                // TODO directory doesn't exist
+                return 0;
             }
 
             // get all managed plugin dll's 
-            var dllFiles = Directory.GetFiles(dirPath, "*.dll", searchOption);
+            var dllFiles = Directory.GetFiles(pluginDirPath, "*.dll");
             var pluginDllFiles = dllFiles
                 .Select(dllFile =>
                 {
@@ -47,7 +75,7 @@ namespace MinerPluginLoader
                     try
                     {
                         var concreteTypes = assembly.GetTypes().Where(type => !type.IsInterface && !type.IsAbstract);
-                        return concreteTypes.Where(type => type.GetInterface(pluginType.FullName) != null);
+                        return concreteTypes.Where(type => type.GetInterface(_pluginType.FullName) != null);
                     }
                     catch (Exception e)
                     {
@@ -56,6 +84,7 @@ namespace MinerPluginLoader
                     }
                 });
 
+            var loadedPlugins = 0;
             foreach (var pluginType in pluginTypes)
             {
                 try
@@ -69,12 +98,14 @@ namespace MinerPluginLoader
                         Console.WriteLine($"new {plugin.Name} v{plugin.Version}");
                     }
                     MinerPlugin[plugin.PluginUUID] = plugin;
+                    loadedPlugins++;
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine($"Exception while loading plugin {e}");
                 }
             }
+            return loadedPlugins;
         }
     }
 }

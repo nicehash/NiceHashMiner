@@ -39,6 +39,11 @@ namespace NiceHashMinerLegacy.Extensions.Tests
             // NBMiner
             "[13:11:57] INFO - cuckatoo - 1: 1.47 g/s".TryGetHashrateAfter(" - 1: ", out hash);
             Assert.AreEqual(1.47, hash);
+
+            // integer
+            "after: 77 "
+                .TryGetHashrateAfter("after:", out hash);
+            Assert.AreEqual(77, hash);
         }
 
         [TestMethod]

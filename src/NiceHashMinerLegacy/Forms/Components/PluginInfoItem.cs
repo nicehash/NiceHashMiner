@@ -15,6 +15,11 @@ namespace NiceHashMiner.Forms.Components
         public PluginInfoItem()
         {
             InitializeComponent();
+
+            buttonInstallRemove.Click += new EventHandler(ButtonInstallRemove_Click);
+            buttonUpdate.Click += new EventHandler(ButtonUpdate_Click);
+
+            ProgressBarVisible = false;
         }
 
         public string PluginName {
@@ -52,7 +57,7 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        public string ButtonText
+        public string ButtonInstallRemoveText
         {
             get
             {
@@ -64,20 +69,104 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
+        public bool ButtonInstallRemoveEnabled
+        {
+            get
+            {
+                return buttonInstallRemove.Enabled;
+            }
+            set
+            {
+                buttonInstallRemove.Enabled = value;
+            }
+        }
+
+        public string ButtonUpdateText
+        {
+            get
+            {
+                return buttonUpdate.Text;
+            }
+            set
+            {
+                buttonUpdate.Text = value;
+            }
+        }
+
+        public bool ButtonUpdateEnabled
+        {
+            get
+            {
+                return buttonUpdate.Enabled;
+            }
+            set
+            {
+                buttonUpdate.Enabled = value;
+            }
+        }
+
+        public bool ProgressBarVisible
+        {
+            get
+            {
+                return progressBar1.Visible;
+            }
+            set
+            {
+                progressBar1.Visible = value;
+            }
+        }
+
+        public int ProgressBarValue
+        {
+            get
+            {
+                return progressBar1.Value;
+            }
+            set
+            {
+                progressBar1.Value = value;
+                progressBar1.Invalidate();
+            }
+        }
+
+        #region DEBUGGING
+        public string StatusText
+        {
+            get
+            {
+                return labelStatus.Text;
+            }
+            set
+            {
+                labelStatus.Text = value;
+            }
+        }
+        #endregion DEBUGGING
+
         public string PluginUUID { get; set; }
 
         public EventHandler<string> OnPluginInfoItemMouseClick;
 
         private void PluginInfoItem_MouseClick(object sender, MouseEventArgs e)
         {
-            OnPluginInfoItemMouseClick?.Invoke(sender, PluginUUID);
+            OnPluginInfoItemMouseClick?.Invoke(this, PluginUUID);
         }
 
-        public EventHandler<string> OnPluginInfoItemButtonClick;
+        
 
-        private void button1_Click(object sender, EventArgs e)
+        public EventHandler<string> OnButtonInstallRemoveClick;
+
+        private void ButtonInstallRemove_Click(object sender, EventArgs e)
         {
-            OnPluginInfoItemButtonClick?.Invoke(sender, PluginUUID);
+            OnButtonInstallRemoveClick?.Invoke(this, PluginUUID);
+        }
+
+        public EventHandler<string> OnButtonUpdateClick;
+
+        private void ButtonUpdate_Click(object sender, EventArgs e)
+        {
+            OnButtonUpdateClick?.Invoke(this, PluginUUID);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -8,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
+using MinerPlugin.Interfaces;
 using MinerPlugin.Toolkit;
 using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common;
@@ -15,13 +17,16 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace TTMiner
 {
-    public class TTMiner : MinerBase, IDisposable
+    public class TTMiner : MinerBase, IDisposable, IAfterStartMining
     {
         private int _apiPort;
         private readonly string _uuid;
         private AlgorithmType _algorithmType;
         //private readonly Dictionary<int, int> _cudaIDMap;
         //private readonly HttpClient _http = new HttpClient();
+
+        // TODO figure out how to fix API workaround without this started time
+        private DateTime _started;
 
         private class JsonApiResponse
         {
@@ -52,7 +57,7 @@ namespace TTMiner
         {
             get
             {
-                return 1.0;
+                return 0.01d; // 1% for all
             }
         }
 
@@ -89,11 +94,11 @@ namespace TTMiner
             bp.CheckData = (data) =>
             {
                 var (hashrate, found) = data.ToLower().TryGetHashrateAfter("]:");
-                if (data.Contains("GPU[") && found && hashrate > 0)
+                if (data.Contains("LastShare") && data.Contains("GPU[") && found && hashrate > 0)
                 {
                     benchHashes += hashrate;
                     benchIters++;
-                    benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+                    benchHashResult = (benchHashes / benchIters) * (1.0d - DevFee);
                 }
                 return (benchHashResult, benchIters >= targetBenchIters);
             };
@@ -136,6 +141,11 @@ namespace TTMiner
         public override async Task<ApiData> GetMinerStatsDataAsync()
         {
             var api = new ApiData();
+            var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
+            if (elapsedSeconds < 15)
+            {
+                return api;
+            }
             JsonApiResponse resp = null;
             try
             {
@@ -151,6 +161,45 @@ namespace TTMiner
                     resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr);
                     // TODO
                     //api.AlgorithmSpeedsTotal = new[] { (_algorithmType, resp.TotalHashrate ?? 0) };
+                    if (resp != null && resp.error == null)
+                    {
+                        //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp != null && resp.error == null");
+                        if (resp.result != null && resp.result.Count > 4)
+                        {
+                            var speeds = resp.result[3].Split(';');
+                            var totalSpeed = 0d;
+                            foreach (var speed in speeds)
+                            {
+                                //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "foreach (var speed in speeds) {");
+                                double tmpSpeed;
+                                try
+                                {
+                                    tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
+                                }
+                                catch
+                                {
+                                    tmpSpeed = 0;
+                                }
+
+                                totalSpeed += tmpSpeed;
+                            }
+                            var total = new List<(AlgorithmType, double)>();
+                            total.Add((_algorithmType, totalSpeed));
+                            api.AlgorithmSpeedsTotal = total; //new List<(AlgorithmType, double)>((_algorithmType, totalSpeed));
+                        }
+
+                        //if (ad.Speed == 0)
+                        //{
+                        //    CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
+                        //}
+
+                        ////// some clayomre miners have this issue reporting negative speeds in that case restart miner
+                        ////if (ad.Speed < 0)
+                        ////{
+                        ////    Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
+                        ////    Restart();
+                        ////}
+                    }
                 }
             }
             catch (Exception ex)
@@ -166,6 +215,11 @@ namespace TTMiner
             bool ok;
             (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+        }
+
+        public void AfterStartMining()
+        {
+            _started = DateTime.Now;
         }
 
         public void Dispose()

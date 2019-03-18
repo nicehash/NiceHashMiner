@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPlugin.Toolkit;
@@ -25,7 +27,7 @@ namespace NiceHashMiner.Plugin
 
         public static void LoadMinerPlugins()
         {
-            MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath(), SearchOption.AllDirectories);
+            MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath());
             UpdatePluginAlgorithms();
             // cross reference local and online list
             CrossReferenceInstalledWithOnline();
@@ -69,13 +71,20 @@ namespace NiceHashMiner.Plugin
                 var deletePath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID);
                 MinerPluginHost.MinerPlugin.Remove(pluginUUID);
                 RemovePluginAlgorithms(pluginUUID);
+
+                Plugins[pluginUUID].LocalVersion = null;
+                // TODO we might not have any online reference so remove it in this case
+                if (Plugins[pluginUUID].OnlineVersion == null)
+                {
+                    Plugins.Remove(pluginUUID);
+                }
+
                 CrossReferenceInstalledWithOnline();
-                //// TODO before deleting you will need to unload the dll
-                //if (Directory.Exists(deletePath))
-                //{
-                //    Directory.Delete(deletePath, true);
-                //    //LoadMinerPlugins();
-                //}
+                // TODO before deleting you will need to unload the dll
+                if (Directory.Exists(deletePath))
+                {
+                    Directory.Delete(deletePath, true);
+                }
             } catch(Exception e)
             {
 
@@ -89,29 +98,19 @@ namespace NiceHashMiner.Plugin
             {
                 var uuid = installedPluginKvp.Key;
                 var installed = installedPluginKvp.Value;
-
+                var localPluginInfo = new PluginPackageInfo
+                {
+                    PluginAuthor = installed.Author,
+                    PluginName = installed.Name,
+                    PluginUUID = uuid,
+                    PluginVersion = installed.Version,
+                    // other stuff is not inside the plugin
+                };
                 if (Plugins.ContainsKey(uuid) == false)
                 {
-                    Plugins[uuid] = new PluginPackageInfoCR
-                    {
-                        Installed = true,
-                        PluginAuthor = installed.Author,
-                        PluginName = installed.Name,
-                        PluginUUID = uuid,
-                        PluginVersion = installed.Version,
-                        // other stuff is not inside the plugin
-                    };
+                    Plugins[uuid] = new PluginPackageInfoCR{};
                 }
-                else
-                {
-                    var plugin = Plugins[uuid];
-                    // update stuff that might change, after update, take care of uninstall case
-                    plugin.Installed = true;
-                    plugin.PluginAuthor = installed.Author;
-                    plugin.PluginName = installed.Name;
-                    plugin.PluginUUID = uuid;
-                    plugin.PluginVersion = installed.Version;
-                }
+                Plugins[uuid].LocalVersion = localPluginInfo;
             }
 
             // get online list and check what we have and what is online
@@ -122,39 +121,9 @@ namespace NiceHashMiner.Plugin
                 var uuid = online.PluginUUID;
                 if (Plugins.ContainsKey(uuid) == false)
                 {
-                    Plugins[uuid] = new PluginPackageInfoCR
-                    {
-                        Installed = false,
-                        OnlineVersion = online,
-                        PluginUUID = online.PluginUUID,
-                        PluginName = online.PluginName,
-                        PluginVersion = online.PluginVersion,
-                        PluginPackageURL = online.PluginPackageURL,
-                        MinerPackageURL = online.MinerPackageURL,
-                        SupportedDevicesAlgorithms = online.SupportedDevicesAlgorithms,
-                        PluginAuthor = online.PluginAuthor,
-                        PluginDescription = online.PluginDescription,
-                    };
+                    Plugins[uuid] = new PluginPackageInfoCR{};
                 }
-                else
-                {
-                    Plugins[uuid].OnlineVersion = online;
-                }
-            }
-            // finally check uninstalled version
-            var installedPlugins = Plugins.Where(p => p.Value.Installed);
-            foreach (var pluginInfo in installedPlugins)
-            {
-                if(MinerPlugins.ContainsKey(pluginInfo.Key) == false)
-                {
-                    // not installed anymore
-                    pluginInfo.Value.Installed = false;
-                    // TODO we might not have any online reference so remove it in this case
-                    if (pluginInfo.Value.OnlineVersion == null)
-                    {
-                        Plugins.Remove(pluginInfo.Key);
-                    }
-                }
+                Plugins[uuid].OnlineVersion = online;
             }
         }
 
@@ -185,5 +154,118 @@ namespace NiceHashMiner.Plugin
             if (!MinerPluginHost.MinerPlugin.ContainsKey(pluginUuid)) return null;
             return MinerPluginHost.MinerPlugin[pluginUuid];
         }
+
+        #region Downloading
+
+        public delegate void DownloadAndInstallUpdate(string statusInfo);
+
+        public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, DownloadAndInstallUpdate downloadAndInstallUpdate, CancellationToken stop)
+        {
+            var downloadProgressChangedEventHandler = new DownloadProgressChangedEventHandler((s, e1) => {
+                downloadAndInstallUpdate($"Downloading: {e1.ProgressPercentage} %");
+            });
+            OnZipProgres zipProgressChangedEventHandler = (int progress) => {
+                downloadAndInstallUpdate($"Unzipping: {progress} %");
+            };
+            const string installingPrefix = "installing_";
+            var installingPluginPath = Path.Combine(Paths.MinerPluginsPath(), $"{installingPrefix}{plugin.PluginUUID}");
+            try
+            {
+                downloadAndInstallUpdate("Starting");
+                Directory.CreateDirectory(installingPluginPath);
+
+                // download plugin dll
+                var pluginPackageDownloaded = Path.Combine(installingPluginPath, "plugin.zip");
+                var downloadPluginOK = await DownloadFile(plugin.PluginPackageURL, pluginPackageDownloaded, downloadProgressChangedEventHandler, stop);
+                // unzip 
+                var unzipPluginOK = await UnzipFile(pluginPackageDownloaded, installingPluginPath, zipProgressChangedEventHandler, stop);
+                File.Delete(pluginPackageDownloaded);
+
+                // download plugin dll
+                var binsPackageDownloaded = Path.Combine(installingPluginPath, "miner_bins.zip");
+                var downloadMinerBinsOK = await DownloadFile(plugin.MinerPackageURL, binsPackageDownloaded, downloadProgressChangedEventHandler, stop);
+                // unzip 
+                var binsUnzipPath = Path.Combine(installingPluginPath, "bins");
+                var unzipMinerBinsOK = await UnzipFile(binsPackageDownloaded, binsUnzipPath, zipProgressChangedEventHandler, stop);
+                File.Delete(binsPackageDownloaded);
+
+
+                var loadedPlugins = MinerPluginHost.LoadPlugin(installingPluginPath);
+                if (loadedPlugins == 0)
+                {
+                    downloadAndInstallUpdate($"Loaded ZERO PLUGINS");
+                    Directory.Delete(installingPluginPath, true);
+                    return;
+                }
+
+                downloadAndInstallUpdate("Checking old plugin");
+                var pluginPath = Path.Combine(Paths.MinerPluginsPath(), plugin.PluginUUID);
+                // if there is an old plugin installed remove it
+                if (Directory.Exists(pluginPath))
+                {
+                    Directory.Delete(pluginPath, true);
+                }
+                downloadAndInstallUpdate($"Loaded {loadedPlugins} PLUGIN");
+                Directory.Move(installingPluginPath, pluginPath);
+                UpdatePluginAlgorithms();
+                // cross reference local and online list
+                CrossReferenceInstalledWithOnline();
+            }
+            catch (Exception e)
+            {
+                downloadAndInstallUpdate($"Installation failed: ${e}");
+            }
+        }
+
+        public static async Task<bool> DownloadFile(string url, string downloadFileLocation, DownloadProgressChangedEventHandler downloadProgressChangedEventHandler, CancellationToken stop)
+        {
+            var downloadStatus = false;
+            using (var client = new WebClient())
+            {
+                client.DownloadProgressChanged += downloadProgressChangedEventHandler;
+                client.DownloadFileCompleted += (s, e) =>
+                {
+                    downloadStatus = !e.Cancelled && e.Error == null;
+                };
+                stop.Register(client.CancelAsync);
+                // Starts the download
+                await client.DownloadFileTaskAsync(new Uri(url), downloadFileLocation);
+            }
+            return downloadStatus;
+        }
+
+        public delegate void OnZipProgres(int prog);
+
+        public static async Task<bool> UnzipFile(string zipLocation, string unzipLocation, OnZipProgres zipProgressChangedEventHandler, CancellationToken stop)
+        {
+            return await Task.Run(() => {
+                using (var archive = ZipFile.OpenRead(zipLocation))
+                {
+                    float entriesCount = archive.Entries.Count;
+                    float extractedEntries = 0;
+                    foreach (var entry in archive.Entries)
+                    {
+                        if (stop.IsCancellationRequested) break;
+
+                        extractedEntries += 1;
+                        var isDirectory = entry.Name == "";
+                        if (isDirectory) continue;
+
+                        var prog = ((extractedEntries / entriesCount) * 100.0f);
+                        zipProgressChangedEventHandler((int)prog);
+
+                        var extractPath = Path.Combine(unzipLocation, entry.FullName);
+                        var dirPath = Path.GetDirectoryName(extractPath);
+                        if (!Directory.Exists(dirPath))
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
+                        }
+                        entry.ExtractToFile(extractPath, true);
+                    }
+                }
+                return true;
+            }, stop);
+        }
+        #endregion Downloading
     }
 }
