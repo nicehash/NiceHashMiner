@@ -41,6 +41,7 @@ namespace NiceHashMinerLegacy.Common.Enums
         Phoenix,
         GMiner,
         BMiner,
+        TTMiner,
         END
     }
 }

@@ -169,6 +169,7 @@
     <Compile Include="Miners\GMiner.cs" />
     <Compile Include="Miners\NBMiner.cs" />
     <Compile Include="Miners\Phoenix.cs" />
+    <Compile Include="Miners\TeamRedMiner.cs" />
     <Compile Include="Miners\Trex.cs" />
     <Compile Include="Miners\Ttminer.cs" />
     <Compile Include="Miners\VanillaProcessMiner.cs" />

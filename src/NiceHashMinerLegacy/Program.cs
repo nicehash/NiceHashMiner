@@ -93,7 +93,7 @@ namespace NiceHashMiner
             // check TOS
             if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer)
             {
-                Helpers.ConsolePrint("NICEHASH", $"TOS differs! agreed: ${ConfigManager.GeneralConfig.agreedWithTOS} != Current ${Globals.CurrentTosVer}. Showing TOS Form.");
+                Helpers.ConsolePrint("NICEHASH", $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {Globals.CurrentTosVer}. Showing TOS Form.");
                 Application.Run(new FormEula()); 
                 // check TOS after 
                 if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer) {
