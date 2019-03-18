@@ -10,11 +10,11 @@ namespace CPUMinerBase
 {
     public class CPUMinerPlugin : IMinerPlugin
     {
-        public string PluginUUID => "0d4422e2-342b-4daa-9cca-8ceb96ce4279";
+        public string PluginUUID => "1cdf69c0-4991-11e9-87d3-6b57d758e2c6";
 
         public Version Version => new Version(1,0);
 
-        public string Name => "cpuminer";
+        public string Name => "cpuminer-opt";
 
         public string Author => "stanko@nicehash.com";
 

@@ -9,6 +9,7 @@ using System.Text;
 
 namespace CryptoDredge
 {
+    // TODO don't use this plugin as it doesn't have GetMinerStatsDataAsync() method miner doesn't support it.
     class CryptoDredgePlugin : IMinerPlugin
     {
         public Version Version => new Version(1, 0);
