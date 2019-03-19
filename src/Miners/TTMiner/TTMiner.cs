@@ -9,10 +9,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
-using MinerPlugin.Interfaces;
-using MinerPlugin.Toolkit;
+using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Interfaces;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common;
+using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace TTMiner
@@ -24,6 +26,9 @@ namespace TTMiner
         private AlgorithmType _algorithmType;
         //private readonly Dictionary<int, int> _cudaIDMap;
         //private readonly HttpClient _http = new HttpClient();
+
+        private string _devices;
+        private string _extraLaunchParameters;
 
         // TODO figure out how to fix API workaround without this started time
         private DateTime _started;
@@ -82,9 +87,9 @@ namespace TTMiner
                     break;
             }
 
-            var cl = CreateCommandLine(MinerToolkit.DemoUser);
+            var commandLine = CreateCommandLine(MinerToolkit.DemoUser);
             var (binPath, binCwd) = GetBinAndCwdPaths();
-            var bp = new BenchmarkProcess(binPath, binCwd, cl);
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
             var benchHashes = 0d;
             var benchIters = 0;
@@ -127,14 +132,7 @@ namespace TTMiner
         {
             _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-
-            var devs = string.Join(" ", _miningPairs.Select(p => p.device.ID).OrderBy(id => id));
-            var cmd = $"-a {AlgoName} -url {url} " +
-                              $"-u {username} -d {devs} --api-bind 127.0.0.1:{_apiPort} ";
-
-            // TODO
-            //cmd += ExtraLaunchParameters
-
+            var cmd = $"-a {AlgoName} -url {url} -u {username} -d {_devices} --api-bind 127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
 
@@ -215,6 +213,18 @@ namespace TTMiner
             bool ok;
             (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+
+            // Order pairs and parse ELP
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            _devices = string.Join(" ", orderedMiningPairs.Select(p => p.device.ID));
+            if (MinerOptionsPackage != null)
+            {
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         public void AfterStartMining()

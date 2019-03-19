@@ -8,8 +8,4 @@
     <ProjectReference Include="..\..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Toolkit\ExtraLaunchParameters\" />
-  </ItemGroup>
-
 </Project>

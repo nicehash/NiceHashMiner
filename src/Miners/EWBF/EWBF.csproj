@@ -1,11 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\MinerPlugin\MinerPlugin.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <ProjectReference Include="..\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

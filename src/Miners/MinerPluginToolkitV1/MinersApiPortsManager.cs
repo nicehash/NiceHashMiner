@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Net.NetworkInformation;
 
-namespace MinerPlugin.Toolkit
+namespace MinerPluginToolkitV1
 {
     // RENAME MinersApiPortsManager to FreePortsCheckerManager
     public static class MinersApiPortsManager

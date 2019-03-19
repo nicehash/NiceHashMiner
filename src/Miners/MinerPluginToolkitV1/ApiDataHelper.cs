@@ -4,7 +4,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace MinerPlugin.Toolkit
+namespace MinerPluginToolkitV1
 {
     // this is temporary since we know it alredy works, try not to use it or replace it later
     public class ApiDataHelper
@@ -20,13 +20,15 @@ namespace MinerPlugin.Toolkit
         public delegate bool IsApiEofFun(byte third, byte second, byte last);
         private IsApiEofFun _isApiEof;
 
-        public ApiDataHelper(IsApiEofFun isApiEof = null) {
-            _isApiEof = isApiEof; 
+        public ApiDataHelper(IsApiEofFun isApiEof = null)
+        {
+            _isApiEof = isApiEof;
         }
 
         protected virtual bool IsApiEof(byte third, byte second, byte last)
         {
-            if (_isApiEof != null) {
+            if (_isApiEof != null)
+            {
                 return _isApiEof(third, second, last);
             }
             return false;

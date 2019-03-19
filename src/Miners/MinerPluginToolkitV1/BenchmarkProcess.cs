@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MinerPlugin.Toolkit
+namespace MinerPluginToolkitV1
 {
     // This one just reads from std out and err
     public class BenchmarkProcess

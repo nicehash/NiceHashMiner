@@ -1,11 +1,12 @@
 ﻿using MinerPlugin;
-using MinerPlugin.Toolkit;
+using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Interfaces;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
-using static MinerPlugin.Toolkit.MinersApiPortsManager;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
@@ -175,7 +176,7 @@ namespace CryptoDredge
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
-            _apiPort = GetAvaliablePortInRange(); // use the default range
+            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
             // instant non blocking
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);

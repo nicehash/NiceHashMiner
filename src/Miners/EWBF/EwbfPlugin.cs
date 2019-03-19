@@ -5,7 +5,6 @@ using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using MinerPlugin.Interfaces;
 using System.Threading.Tasks;
 using NiceHashMinerLegacy.Common;
 using System.IO;

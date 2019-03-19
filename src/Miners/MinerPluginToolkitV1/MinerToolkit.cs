@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 // alias
 using TimersTimer = System.Timers.Timer;
 
-namespace MinerPlugin.Toolkit
+namespace MinerPluginToolkitV1
 {
     public static class MinerToolkit
     {
@@ -184,7 +184,7 @@ namespace MinerPlugin.Toolkit
 
         public static async Task<(double, bool, string)> WaitBenchmarkResult(BenchmarkProcess benchmarkProcess, TimeSpan timeoutTime, TimeSpan delayTime, CancellationToken stop)
         {
-            var retTuple = (speed: 0.0, success: false, msg: ""); 
+            var retTuple = (speed: 0.0, success: false, msg: "");
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var timeoutTimerTime = timeoutTime + delayTime;
 

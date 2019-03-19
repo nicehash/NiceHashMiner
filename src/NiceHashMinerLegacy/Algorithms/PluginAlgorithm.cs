@@ -18,5 +18,17 @@ namespace NiceHashMiner.Algorithms
             BaseAlgo = algorithm;
         }
 
+
+        public override string ExtraLaunchParameters {
+            get
+            {
+                if (BaseAlgo == null) return ""; 
+                return BaseAlgo.ExtraLaunchParameters;
+            }
+            set
+            {
+                if (BaseAlgo != null) BaseAlgo.ExtraLaunchParameters = value;
+            }
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using MinerPlugin;
-using MinerPlugin.Toolkit;
+using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Interfaces;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
@@ -10,7 +12,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using NiceHashMinerLegacy.Common.Device;
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
-using static MinerPlugin.Toolkit.MinersApiPortsManager;
 using System.IO;
 using NiceHashMinerLegacy.Common;
 
@@ -51,7 +52,7 @@ namespace GMinerPlugin
         private string CreateCommandLine(string username)
         {
             // API port function might be blocking
-            _apiPort = GetAvaliablePortInRange(); // use the default range
+            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
 
             var algo = AlgorithmName(_algorithmType);
 

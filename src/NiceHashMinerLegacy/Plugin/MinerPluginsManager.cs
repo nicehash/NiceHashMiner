@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
-using MinerPlugin.Toolkit;
+using MinerPluginToolkitV1.Interfaces;
 using MinerPluginLoader;
 using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
@@ -25,9 +25,20 @@ namespace NiceHashMiner.Plugin
 
         public static Dictionary<string, PluginPackageInfoCR> Plugins { get; set; } = new Dictionary<string, PluginPackageInfoCR>();
 
+        private static void InitPluginInternals()
+        {
+            foreach (var kvp in MinerPlugins)
+            {
+                var plugin = kvp.Value;
+                if (plugin is IInitInternals pluginWithInternals) pluginWithInternals.InitInternals();
+            }
+        }
+
         public static void LoadMinerPlugins()
         {
             MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath());
+            // init internals
+            InitPluginInternals();
             UpdatePluginAlgorithms();
             // cross reference local and online list
             CrossReferenceInstalledWithOnline();

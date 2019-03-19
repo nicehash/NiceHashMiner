@@ -1,4 +1,4 @@
-﻿using MinerPlugin.Interfaces;
+﻿using MinerPlugin;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Algorithm;
@@ -7,8 +7,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Interfaces;
 
-namespace MinerPlugin.Toolkit
+namespace MinerPluginToolkitV1
 {
     // TODO there is no watchdog
     public abstract class MinerBase : IMiner
@@ -23,7 +25,9 @@ namespace MinerPlugin.Toolkit
         // if stop is called then consider this miner obsolete
         protected object _lock = new object();
         protected bool _stopCalled = false;
-        
+
+        public MinerOptionsPackage MinerOptionsPackage { get; set; }
+
         abstract public Task<ApiData> GetMinerStatsDataAsync();
 
         abstract protected void Init();
@@ -68,7 +72,7 @@ namespace MinerPlugin.Toolkit
             {
                 throw new InvalidOperationException("Could not start process: " + p);
             }
-            
+
             if (this is IAfterStartMining asm)
             {
                 asm.AfterStartMining();

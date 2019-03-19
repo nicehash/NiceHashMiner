@@ -57,7 +57,7 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// String containing raw extralaunchparams entered by user
         /// </summary>
-        public string ExtraLaunchParameters { get; set; }
+        public virtual string ExtraLaunchParameters { get; set; }
 
         /// <summary>
         /// Get or set whether this algorithm is enabled for mining

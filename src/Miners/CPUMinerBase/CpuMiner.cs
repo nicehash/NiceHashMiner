@@ -1,6 +1,7 @@
 ﻿using MinerPlugin;
-using MinerPlugin.Toolkit;
-using MinerPlugin.Interfaces;
+using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Interfaces;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Linq;
@@ -8,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
-using static MinerPlugin.Toolkit.MinersApiPortsManager;
 using NiceHashMinerLegacy.Common.Device;
 using System.Collections.Generic;
 using System.Globalization;
@@ -147,7 +147,7 @@ namespace CPUMinerBase
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
-            _apiPort = GetAvaliablePortInRange(); // use the default range
+            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
             // instant non blocking
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);

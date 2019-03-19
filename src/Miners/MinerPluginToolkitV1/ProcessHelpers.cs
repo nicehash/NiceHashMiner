@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
-namespace MinerPlugin.Toolkit
+namespace MinerPluginToolkitV1
 {
-    public static class ProcessHelpers {
+    public static class ProcessHelpers
+    {
 
         // TODO make sure to separate platform specific code
         // #if Windows
@@ -23,7 +24,7 @@ namespace MinerPlugin.Toolkit
 
         public static (bool ok, string msg) AdjustAffinity(int pid, ulong mask)
         {
-            
+
             // DWORD pid;
             // DWORD_PTR mask;
             // HANDLE hProc;

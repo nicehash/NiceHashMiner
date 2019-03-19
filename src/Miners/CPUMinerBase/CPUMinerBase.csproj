@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\MinerPlugin\MinerPlugin.csproj" />
+    <ProjectReference Include="..\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -509,6 +509,10 @@
       <Project>{2c35f83c-aa75-49c0-98e8-082e329b6491}</Project>
       <Name>MinerPluginLoader</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">
+      <Project>{847398e0-2e35-4a85-8c70-0b40aa172aba}</Project>
+      <Name>MinerPluginToolkitV1</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\MinerPlugin\MinerPlugin.csproj">
       <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
       <Name>MinerPlugin</Name>

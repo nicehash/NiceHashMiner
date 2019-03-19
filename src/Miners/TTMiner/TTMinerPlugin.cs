@@ -5,12 +5,14 @@ using MinerPlugin;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Interfaces;
 
 namespace TTMiner
 {
-    public class TTMinerPlugin : IMinerPlugin
+    public class TTMinerPlugin : IMinerPlugin, IInitInternals
     {
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
         public string Name => "TTMiner";
         public string Author => "stanko@nicehash.com";
 
@@ -47,12 +49,52 @@ namespace TTMiner
 
         public IMiner CreateMiner()
         {
-            return new TTMiner(PluginUUID);
+            return new TTMiner(PluginUUID)
+            {
+                MinerOptionsPackage = _minerOptionsPackage
+            };
         }
 
         public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)
         {
             return a.algorithm.FirstAlgorithmType == b.algorithm.FirstAlgorithmType;
         }
+
+        public void InitInternals()
+        {
+            // TODO implement internals MinerOptionSettings
+        }
+
+        // 
+        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
+        {
+            GeneralOptions = new List<MinerOption>
+            {
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParamters,
+                    ID = "ttminer_intensity",
+                    ShortName = "-i",
+                    DefaultValue = "-1",
+                    Delimiter = ","
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParamters,
+                    ID = "ttminer_intensity_grid",
+                    ShortName = "-ig",
+                    DefaultValue = "-1",
+                    Delimiter = ","
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParamters,
+                    ID = "ttminer_grid_size",
+                    ShortName = "-gs",
+                    DefaultValue = "-1",
+                    Delimiter = ","
+                },
+            }
+        };
     }
 }
