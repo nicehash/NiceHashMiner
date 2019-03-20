@@ -7,6 +7,9 @@ using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
+using MinerPluginToolkitV1.Configs;
+using System.IO;
+using NiceHashMinerLegacy.Common;
 
 namespace TTMiner
 {
@@ -60,9 +63,23 @@ namespace TTMiner
             return a.algorithm.FirstAlgorithmType == b.algorithm.FirstAlgorithmType;
         }
 
+
+        #region Internal Settings
         public void InitInternals()
         {
             // TODO implement internals MinerOptionSettings
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
+            var minerOptionsPackagePath = Path.Combine(pluginRootIntenrals, "MinerOptionsPackage.json");
+            var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
+            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
+            {
+                _minerOptionsPackage = fileMinerOptionsPackage;
+            }
+            else
+            {
+                InternalConfigs.WriteFileSettings(minerOptionsPackagePath, _minerOptionsPackage);
+            }
         }
 
         // 
@@ -96,5 +113,6 @@ namespace TTMiner
                 },
             }
         };
+        #endregion Internal Settings
     }
 }
