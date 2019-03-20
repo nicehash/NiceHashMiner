@@ -18,8 +18,8 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
 
         /// <summary>
         /// OptionWithSingleParameter indicates that option takes only 1 parameter.
-        /// If multiple devices use the same parameter it will use only the first one encountered.
         /// </summary>
+        /// <remarks>If multiple devices use the same parameter it will use only the first one encountered.</remarks>
         /// <example>--algo ALGORITHM</example>
         OptionWithSingleParameter,
 

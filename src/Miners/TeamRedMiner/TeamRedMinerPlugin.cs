@@ -10,9 +10,9 @@ namespace TeamRedMiner
 {
     public class TeamRedMinerPlugin : IMinerPlugin
     {
-        public string PluginUUID => "c9b45549-2392-449a-bad5-f90f7df16e96";
+        public string PluginUUID => "189aaf80-4b23-11e9-a481-e144ccd86993";
 
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
 
         public string Name => "TeamRedMiner";
 

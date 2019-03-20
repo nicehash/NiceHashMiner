@@ -107,17 +107,17 @@ namespace MinerPluginToolkitV1.SgminerCommon
         public string Status { get; set; }
         public double Temperature { get; set; }
 
-        [JsonProperty("Fan Speed")]
-        public int Fan_Speed { get; set; }
+        //[JsonProperty("Fan Speed")]
+        //public int Fan_Speed { get; set; }
 
-        [JsonProperty("Fan Percent")]
-        public int Fan_Percent { get; set; }
+        //[JsonProperty("Fan Percent")]
+        //public int Fan_Percent { get; set; }
 
-        [JsonProperty("GPU Clock")]
-        public int GPU_Clock { get; set; }
+        //[JsonProperty("GPU Clock")]
+        //public int GPU_Clock { get; set; }
 
-        [JsonProperty("Memory Clock")]
-        public int Memory_Clock { get; set; }
+        //[JsonProperty("Memory Clock")]
+        //public int Memory_Clock { get; set; }
 
         [JsonProperty("GPU Voltage")]
         public double GPU_Voltage { get; set; }
@@ -127,17 +127,17 @@ namespace MinerPluginToolkitV1.SgminerCommon
 
         public int Powertune { get; set; }
 
-        [JsonProperty("MHS av")]
-        public double MHS_av { get; set; }
+        //[JsonProperty("MHS av")]
+        //public double MHS_av { get; set; }
 
-        [JsonProperty("MHS 5s")]
-        public double MHS_5s { get; set; }
+        //[JsonProperty("MHS 5s")]
+        //public double MHS_5s { get; set; }
 
         [JsonProperty("KHS av")]
-        public int KHS_av { get; set; }
+        public double KHS_av { get; set; }
 
         [JsonProperty("KHS 5s")]
-        public int KHS_5s { get; set; }
+        public double KHS_5s { get; set; }
 
         public int Accepted { get; set; }
         public int Rejected { get; set; }
@@ -145,19 +145,19 @@ namespace MinerPluginToolkitV1.SgminerCommon
         [JsonProperty("Hardware_Errors")]
         public int Hardware_Errors { get; set; }
 
-        public double Utility { get; set; }
-        public string Intensity { get; set; }
-        public int XIntensity { get; set; }
-        public int RawIntensity { get; set; }
+        //public double Utility { get; set; }
+        //public string Intensity { get; set; }
+        //public int XIntensity { get; set; }
+        //public int RawIntensity { get; set; }
 
-        [JsonProperty("Last Share Pool")]
-        public int Last_Share_Pool { get; set; }
+        //[JsonProperty("Last Share Pool")]
+        //public int Last_Share_Pool { get; set; }
 
-        [JsonProperty("Last Share Time")]
-        public int Last_Share_Time { get; set; }
+        //[JsonProperty("Last Share Time")]
+        //public int Last_Share_Time { get; set; }
 
-        [JsonProperty("Total MH")]
-        public double Total_MH { get; set; }
+        //[JsonProperty("Total MH")]
+        //public double Total_MH { get; set; }
 
         [JsonProperty("Diff1 Work")]
         public double Diff1_Work { get; set; }
@@ -193,7 +193,5 @@ namespace MinerPluginToolkitV1.SgminerCommon
     }
 #pragma warning restore IDE1006 // Naming Styles
     #endregion JSON Generated code
-
-
 
 }

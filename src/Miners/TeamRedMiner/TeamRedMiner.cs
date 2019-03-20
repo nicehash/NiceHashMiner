@@ -14,6 +14,7 @@ using System.IO;
 using NiceHashMinerLegacy.Common;
 using System.Net.Sockets;
 using System.Text;
+using MinerPluginToolkitV1.SgminerCommon;
 
 namespace TeamRedMiner
 {
@@ -25,6 +26,9 @@ namespace TeamRedMiner
 
         // can mine only one algorithm at a given time
         private AlgorithmType _algorithmType;
+
+        // the order of intializing devices is the order how the API responds
+        private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
 
         // command line parts
         private string _devicesOnPlatform;
@@ -74,15 +78,50 @@ namespace TeamRedMiner
         {
             // API port function might be blocking
             _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
-            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
-            var cmd = $"-a {AlgoName} -o {url} -u {username} {_devicesOnPlatform}  --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
+            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var cmd = $"-a {AlgoName} -o {url} -u {username} {_devicesOnPlatform} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
 
-        // TODO implement this with JSON API
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
+            var apiDevsResult = await SgminerAPIHelpers.GetApiDevsRootAsync(_apiPort);
             var ad = new ApiData();
+            if (apiDevsResult == null) return ad;
+
+            try
+            {
+                var deviveStats = apiDevsResult.DEVS;
+                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
+                var perDevicePowerInfo = new List<(string, int)>();
+                var totalSpeed = 0d;
+                var totalPowerUsage = 0;
+
+                // the devices have ordered ids by -d parameter, so -d 4,2 => 4=0;2=1
+                foreach (var kvp in _initOrderMirrorApiOrderUUIDs)
+                {
+                    var gpuID = kvp.Key;
+                    var gpuUUID = kvp.Value;
+                    
+                    var deviceStats = deviveStats
+                        .Where(devStat => gpuID == devStat.GPU)
+                        .FirstOrDefault();
+                    if (deviceStats == null) continue;
+
+                    var speedHS = deviceStats.KHS_av * 1000;
+                    totalSpeed += speedHS;
+                    perDeviceSpeedInfo.Add((gpuUUID, new List<(AlgorithmType, double)>() { (_algorithmType, speedHS) }));
+                    // TODO check PowerUsage API
+                }
+                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType, double)> { (_algorithmType, totalSpeed) };
+                ad.PowerUsageTotal = totalPowerUsage;
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine($"TeamRedMiner.GetMinerStatsDataAsync exception: {ex.Message}");
+                //return null;
+            }
+
             return ad;
         }
 
@@ -155,15 +194,24 @@ namespace TeamRedMiner
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
-            // init command line params parts
-            var deviceIds = _miningPairs
-                .Select(pair => pair.device.ID)
-                .OrderBy(id => id)
-                .Select(id => id.ToString());
+            // Order pairs and parse ELP
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            var deviceIds = orderedMiningPairs.Select(pair => pair.device.ID);
             _devicesOnPlatform = $"--platform={_openClAmdPlatformNum} -d {string.Join(",", deviceIds)}";
 
-            // TODO implement this later
-            //_extraLaunchParameters;
+            for(int i = 0; i < orderedMiningPairs.Count; i++)
+            {
+                _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].device.UUID;
+            }
+
+            if (MinerOptionsPackage != null)
+            {
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         protected override string MiningCreateCommandLine()
