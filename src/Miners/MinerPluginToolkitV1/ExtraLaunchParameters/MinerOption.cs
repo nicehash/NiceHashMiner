@@ -10,7 +10,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
     public class MinerOption
     {
         /// <summary>
-        /// Type represents which MinerOptionType is being used for parameter.
+        /// Type member indicates how to parse following values. User should not change definition!
         /// </summary>
         /// <example>MinerOptionType.OptionWithMultiParameters</example>
         [JsonConverter(typeof(StringEnumConverter))]
@@ -18,7 +18,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
         public MinerOptionType Type { get; set; }
 
         /// <summary>
-        /// ID represents internal id for parameter.
+        /// User should not change!
         /// </summary>
         /// <example>"ttminer_intensity"</example>
         [JsonProperty("id")]
