@@ -29,13 +29,13 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
         /// </summary>
         /// comma separated intensity values
         /// <example>--intensity 20,-1,21</example>
-        OptionWithMultipleParamters,
+        OptionWithMultipleParameters,
 
         /// <summary>
         /// OptionWithDuplicateMultipleParamters indicates that option takes one or more parameters but with repeated flag.
         /// </summary>
         /// Intensity 
         /// <example>--intensity 20 --intensity -1 --intensity 21</example>
-        OptionWithDuplicateMultipleParamters
+        OptionWithDuplicateMultipleParameters
     }
 }

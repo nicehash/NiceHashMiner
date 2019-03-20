@@ -85,8 +85,8 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                     switch (deviceParsedOption.Option.Type)
                     {
                         case MinerOptionType.OptionWithSingleParameter:
-                        case MinerOptionType.OptionWithMultipleParamters:
-                        case MinerOptionType.OptionWithDuplicateMultipleParamters:
+                        case MinerOptionType.OptionWithMultipleParameters:
+                        case MinerOptionType.OptionWithDuplicateMultipleParameters:
                             deviceParsedOption.Value = value;
                             break;
 
@@ -163,7 +163,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                             retVal += string.Format(mask, option.ShortName, setValue);
                             break;
                         }
-                    case MinerOptionType.OptionWithMultipleParamters:
+                    case MinerOptionType.OptionWithMultipleParameters:
                         {
                             var setValues = values
                                 .Select(value => value != null ? value : option.DefaultValue);
@@ -175,7 +175,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                             retVal += string.Format(mask, option.ShortName, string.Join(option.Delimiter, setValues));
                             break;
                         }
-                    case MinerOptionType.OptionWithDuplicateMultipleParamters:
+                    case MinerOptionType.OptionWithDuplicateMultipleParameters:
                         {
                             var mask = "{0} {1}";
                             if (option.ShortName.Contains("="))

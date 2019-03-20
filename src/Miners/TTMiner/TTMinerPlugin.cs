@@ -72,7 +72,7 @@ namespace TTMiner
             {
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithMultipleParamters,
+                    Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "ttminer_intensity",
                     ShortName = "-i",
                     DefaultValue = "-1",
@@ -80,7 +80,7 @@ namespace TTMiner
                 },
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithMultipleParamters,
+                    Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "ttminer_intensity_grid",
                     ShortName = "-ig",
                     DefaultValue = "-1",
@@ -88,7 +88,7 @@ namespace TTMiner
                 },
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithMultipleParamters,
+                    Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "ttminer_grid_size",
                     ShortName = "-gs",
                     DefaultValue = "-1",
