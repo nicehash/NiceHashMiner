@@ -154,7 +154,7 @@ namespace ZEnemy
             var port = split[2];
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url={url}:{port} --user {MinerToolkit.DemoUser} {_devices}";
+            var commandLine = $"--algo {algo} --url={url}:{port} --user {MinerToolkit.DemoUser} --devices {_devices} {_extraLaunchParameters}";
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 

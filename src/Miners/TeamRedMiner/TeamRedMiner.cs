@@ -21,6 +21,7 @@ namespace TeamRedMiner
     {
         private int _apiPort;
         private readonly string _uuid;
+        private string _extraLaunchParameters = "";
         private readonly int _openClAmdPlatformNum;
 
         // can mine only one algorithm at a given time
@@ -74,7 +75,7 @@ namespace TeamRedMiner
             // API port function might be blocking
             _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
-            var cmd = $"-a {AlgoName} -o {url} -u {username} --platform={_openClAmdPlatformNum} -d {_devices} --api_listen=127.0.0.1:{_apiPort} ";
+            var cmd = $"-a {AlgoName} -o {url} -u {username} --platform={_openClAmdPlatformNum} -d {_devices} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
 
@@ -158,6 +159,13 @@ namespace TeamRedMiner
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
             _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            if (MinerOptionsPackage != null)
+            {
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         protected override string MiningCreateCommandLine()

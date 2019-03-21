@@ -96,7 +96,7 @@ namespace CryptoDredge
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind 127.0.0.1:{_apiPort} --no-watchdog --device {_devices}";
+            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind 127.0.0.1:{_apiPort} --no-watchdog --device {_devices} {_extraLaunchParameters}";
 
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);

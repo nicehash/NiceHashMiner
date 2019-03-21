@@ -117,7 +117,7 @@ namespace BMiner
             var port = split[2];
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"-uri {algo}://{_username}@{url}:{port} {_devices} -watchdog=false";
+            var commandLine = $"-uri {algo}://{_username}@{url}:{port} {_devices} -watchdog=false {_extraLaunchParameters}";
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 

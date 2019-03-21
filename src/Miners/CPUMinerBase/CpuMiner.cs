@@ -100,7 +100,7 @@ namespace CPUMinerBase
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime}";
+            var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";
 
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);

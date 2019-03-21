@@ -112,7 +112,7 @@ namespace T_Rex
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} {_devices} --benchmark --time-limit {benchmarkTime}";
+            var commandLine = $"--algo {algo} --devices {_devices} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 

@@ -156,7 +156,7 @@ namespace CCMinerTpruvotCuda10
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime} {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime} --devices {_devices} {_extraLaunchParameters}";
 
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
