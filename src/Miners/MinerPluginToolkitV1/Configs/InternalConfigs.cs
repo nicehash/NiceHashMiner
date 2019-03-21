@@ -65,5 +65,25 @@ namespace MinerPluginToolkitV1.Configs
             }
             return false;
         }
+
+        // this checks if there are user settings and returns that if not then it saves the given defaultSettings to a file
+        public static MinerSystemEnvironmentVariables InitMinerSystemEnvironmentVariablesSettings(string pluginRoot, MinerSystemEnvironmentVariables defaultSettings)
+        {
+            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
+            var settingsPath = Path.Combine(pluginRootIntenrals, "MinerSystemEnvironmentVariables.json");
+            if (File.Exists(settingsPath))
+            {
+                var fileSettings = ReadFileSettings<MinerSystemEnvironmentVariables>(settingsPath);
+                if (fileSettings != null && fileSettings.UseUserSettings)
+                {
+                    // use file settings
+                    return fileSettings;
+                }
+            }
+
+            // if we get here then create/override the settings file
+            WriteFileSettings(settingsPath, defaultSettings);
+            return null;
+        }
     }
 }

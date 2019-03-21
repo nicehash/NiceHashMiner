@@ -14,7 +14,7 @@ namespace MinerPluginToolkitV1.Configs
         [JsonProperty("default_system_environment_variables")]
         public Dictionary<string, string> DefaultSystemEnvironmentVariables { get; set; } = null;
         
-        [JsonProperty("algorithm_system_environment_variables")]
-        public Dictionary<string, Dictionary<string, string>> AlgorithmSystemEnvironmentVariables { get; set; } = null;
+        [JsonProperty("custom_system_environment_variables")]
+        public Dictionary<string, Dictionary<string, string>> CustomSystemEnvironmentVariables { get; set; } = null;
     }
 }

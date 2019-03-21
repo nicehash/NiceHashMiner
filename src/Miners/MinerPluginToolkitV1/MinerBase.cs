@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
 
@@ -27,6 +28,7 @@ namespace MinerPluginToolkitV1
         protected bool _stopCalled = false;
 
         public MinerOptionsPackage MinerOptionsPackage { get; set; }
+        public MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; }
 
         abstract public Task<ApiData> GetMinerStatsDataAsync();
 
