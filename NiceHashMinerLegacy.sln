@@ -67,7 +67,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CryptoDredge", "src\Miners\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LolMinerBeam", "src\Miners\LolMinerBeam\LolMinerBeam.csproj", "{DB7AC204-7B8C-4FA4-8D8C-DC133E534D8A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "T-Rex", "src\Miners\T-Rex\T-Rex.csproj", "{B26475D0-9F90-4679-8AB5-AB33DCB34C05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TRex", "src\Miners\T-Rex\TRex.csproj", "{B26475D0-9F90-4679-8AB5-AB33DCB34C05}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZEnemy", "src\Miners\ZEnemy\ZEnemy.csproj", "{059E2CA2-85C5-453E-A48C-ADA45A3C5879}"
 EndProject

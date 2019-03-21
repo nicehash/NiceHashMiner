@@ -16,9 +16,9 @@ using System.Net.Http;
 using System.IO;
 using NiceHashMinerLegacy.Common;
 
-namespace T_Rex
+namespace TRex
 {
-    public class T_Rex : MinerBase
+    public class TRex : MinerBase
     {
         private string _devices;
 
@@ -32,7 +32,7 @@ namespace T_Rex
 
         private readonly HttpClient _httpClient = new HttpClient();
 
-        public T_Rex(string uuid)
+        public TRex(string uuid)
         {
             _uuid = uuid;
         }

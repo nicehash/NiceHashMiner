@@ -1,5 +1,6 @@
 ﻿using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
+using NiceHashMinerLegacy.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -84,6 +85,22 @@ namespace MinerPluginToolkitV1.Configs
             // if we get here then create/override the settings file
             WriteFileSettings(settingsPath, defaultSettings);
             return null;
+        }
+
+        public static MinerOptionsPackage InitInternalsHelper(string pluginUUID, MinerOptionsPackage minerOptionsPackage)
+        {
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), pluginUUID);
+            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
+            var minerOptionsPackagePath = Path.Combine(pluginRootIntenrals, "MinerOptionsPackage.json");
+            var fileMinerOptionsPackage = ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
+            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings) {
+                return fileMinerOptionsPackage;
+            }
+            else
+            { 
+                 WriteFileSettings(minerOptionsPackagePath, minerOptionsPackage);
+                 return null;
+            }
         }
     }
 }

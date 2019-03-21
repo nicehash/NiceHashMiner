@@ -12,13 +12,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace T_Rex
+namespace TRex
 {
-    public class T_RexPlugin : IMinerPlugin, IInitInternals
+    public class TRexPlugin : IMinerPlugin, IInitInternals
     {
         public Version Version => new Version(1, 1);
 
-        public string Name => "T-Rex";
+        public string Name => "TRex";
 
         public string Author => "Domen Kirn Krefl";
 
@@ -47,7 +47,7 @@ namespace T_Rex
 
         public IMiner CreateMiner()
         {
-            return new T_Rex(PluginUUID)
+            return new TRex(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage
             };
