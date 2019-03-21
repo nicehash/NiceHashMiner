@@ -168,5 +168,12 @@ namespace NiceHashMiner.Forms.Components
         {
             OnButtonUpdateClick?.Invoke(this, PluginUUID);
         }
+
+        public EventHandler<string> OnDetailsClick;
+
+        private void linkLabelDetails_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            OnDetailsClick?.Invoke(this, PluginUUID);
+        }
     }
 }

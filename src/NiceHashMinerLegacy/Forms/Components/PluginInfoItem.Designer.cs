@@ -35,55 +35,57 @@
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.labelStatus = new System.Windows.Forms.Label();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.labelShortendDescription = new System.Windows.Forms.Label();
+            this.linkLabelDetails = new System.Windows.Forms.LinkLabel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelName
             // 
             this.labelName.AutoSize = true;
-            this.labelName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.labelName.Location = new System.Drawing.Point(19, 12);
-            this.labelName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.labelName.Location = new System.Drawing.Point(3, 3);
+            this.labelName.Margin = new System.Windows.Forms.Padding(3);
             this.labelName.Name = "labelName";
-            this.labelName.Size = new System.Drawing.Size(64, 25);
+            this.labelName.Size = new System.Drawing.Size(55, 20);
             this.labelName.TabIndex = 0;
             this.labelName.Text = "Name";
             // 
             // labelVersion
             // 
             this.labelVersion.AutoSize = true;
-            this.labelVersion.Location = new System.Drawing.Point(20, 48);
-            this.labelVersion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelVersion.Location = new System.Drawing.Point(3, 74);
+            this.labelVersion.Margin = new System.Windows.Forms.Padding(3);
             this.labelVersion.Name = "labelVersion";
-            this.labelVersion.Size = new System.Drawing.Size(54, 17);
+            this.labelVersion.Size = new System.Drawing.Size(41, 13);
             this.labelVersion.TabIndex = 1;
             this.labelVersion.Text = "version";
             // 
             // labelAuthor
             // 
             this.labelAuthor.AutoSize = true;
-            this.labelAuthor.Location = new System.Drawing.Point(20, 75);
-            this.labelAuthor.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelAuthor.Location = new System.Drawing.Point(3, 93);
+            this.labelAuthor.Margin = new System.Windows.Forms.Padding(3);
             this.labelAuthor.Name = "labelAuthor";
-            this.labelAuthor.Size = new System.Drawing.Size(80, 17);
+            this.labelAuthor.Size = new System.Drawing.Size(60, 13);
             this.labelAuthor.TabIndex = 2;
             this.labelAuthor.Text = "labelAuthor";
             // 
             // buttonInstallRemove
             // 
-            this.buttonInstallRemove.Location = new System.Drawing.Point(24, 111);
-            this.buttonInstallRemove.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonInstallRemove.Location = new System.Drawing.Point(3, 144);
             this.buttonInstallRemove.Name = "buttonInstallRemove";
-            this.buttonInstallRemove.Size = new System.Drawing.Size(192, 28);
+            this.buttonInstallRemove.Size = new System.Drawing.Size(122, 23);
             this.buttonInstallRemove.TabIndex = 3;
             this.buttonInstallRemove.Text = "Install/Remove";
             this.buttonInstallRemove.UseVisualStyleBackColor = true;
             // 
             // buttonUpdate
             // 
-            this.buttonUpdate.Location = new System.Drawing.Point(281, 111);
-            this.buttonUpdate.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.buttonUpdate.Location = new System.Drawing.Point(138, 144);
             this.buttonUpdate.Name = "buttonUpdate";
-            this.buttonUpdate.Size = new System.Drawing.Size(179, 28);
+            this.buttonUpdate.Size = new System.Drawing.Size(134, 23);
             this.buttonUpdate.TabIndex = 4;
             this.buttonUpdate.Text = "Update";
             this.buttonUpdate.UseVisualStyleBackColor = true;
@@ -91,8 +93,8 @@
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Location = new System.Drawing.Point(365, 21);
-            this.labelStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.labelStatus.Location = new System.Drawing.Point(131, 144);
             this.labelStatus.Name = "labelStatus";
             this.labelStatus.Size = new System.Drawing.Size(48, 17);
             this.labelStatus.TabIndex = 5;
@@ -101,27 +103,64 @@
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(0, 149);
+            this.progressBar1.Location = new System.Drawing.Point(0, 168);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(509, 10);
+            this.progressBar1.Size = new System.Drawing.Size(274, 8);
             this.progressBar1.TabIndex = 6;
+            // 
+            // labelShortendDescription
+            // 
+            this.labelShortendDescription.AutoSize = true;
+            this.labelShortendDescription.Location = new System.Drawing.Point(3, 29);
+            this.labelShortendDescription.Margin = new System.Windows.Forms.Padding(3);
+            this.labelShortendDescription.Name = "labelShortendDescription";
+            this.labelShortendDescription.Size = new System.Drawing.Size(253, 39);
+            this.labelShortendDescription.TabIndex = 7;
+            this.labelShortendDescription.Text = "Description of the miner... Description of the miner... Description of the miner." +
+    "..Description of the miner... Description of the miner... Description of the min" +
+    "er...";
+            // 
+            // linkLabelDetails
+            // 
+            this.linkLabelDetails.AutoSize = true;
+            this.linkLabelDetails.Location = new System.Drawing.Point(3, 112);
+            this.linkLabelDetails.Margin = new System.Windows.Forms.Padding(3);
+            this.linkLabelDetails.Name = "linkLabelDetails";
+            this.linkLabelDetails.Size = new System.Drawing.Size(48, 13);
+            this.linkLabelDetails.TabIndex = 8;
+            this.linkLabelDetails.TabStop = true;
+            this.linkLabelDetails.Text = "Details >";
+            this.linkLabelDetails.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelDetails_LinkClicked);
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.labelName);
+            this.flowLayoutPanel1.Controls.Add(this.labelShortendDescription);
+            this.flowLayoutPanel1.Controls.Add(this.labelVersion);
+            this.flowLayoutPanel1.Controls.Add(this.labelAuthor);
+            this.flowLayoutPanel1.Controls.Add(this.linkLabelDetails);
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(3, 3);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(269, 135);
+            this.flowLayoutPanel1.TabIndex = 9;
             // 
             // PluginInfoItem
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.labelStatus);
             this.Controls.Add(this.buttonUpdate);
             this.Controls.Add(this.buttonInstallRemove);
-            this.Controls.Add(this.labelAuthor);
-            this.Controls.Add(this.labelVersion);
-            this.Controls.Add(this.labelName);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "PluginInfoItem";
-            this.Size = new System.Drawing.Size(509, 158);
+            this.Size = new System.Drawing.Size(274, 176);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PluginInfoItem_MouseClick);
+            this.flowLayoutPanel1.ResumeLayout(false);
+            this.flowLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -136,5 +175,8 @@
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.Label labelStatus;
         private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label labelShortendDescription;
+        private System.Windows.Forms.LinkLabel linkLabelDetails;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
     }
 }

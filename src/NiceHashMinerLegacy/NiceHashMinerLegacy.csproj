@@ -144,6 +144,12 @@
     <Compile Include="Forms\Components\PluginInfoItem.Designer.cs">
       <DependentUpon>PluginInfoItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Components\PluginInfoItemRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoItemRow.Designer.cs">
+      <DependentUpon>PluginInfoItemRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\EnterBTCDialogSwitch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -391,6 +397,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\PluginInfoItem.resx">
       <DependentUpon>PluginInfoItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\PluginInfoItemRow.resx">
+      <DependentUpon>PluginInfoItemRow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EnterBTCDialogSwitch.resx">
       <DependentUpon>EnterBTCDialogSwitch.cs</DependentUpon>

@@ -41,26 +41,62 @@ namespace NiceHashMiner.Forms
             return installed ? Tr("Remove Plugin") : Tr("Install Plugin");
         }
 
+        private void setPluginInfoItem(PluginInfoItem pluginInfoItem, PluginPackageInfoCR plugin)
+        {
+            pluginInfoItem.PluginUUID = plugin.PluginUUID;
+            pluginInfoItem.PluginName = plugin.PluginName;
+            pluginInfoItem.PluginVersion = Tr("Version: {0}", $"{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}");
+            pluginInfoItem.PluginAuthor = Tr("Author: {0}", plugin.PluginAuthor);
+            pluginInfoItem.ButtonInstallRemoveText = PluginInstallRemoveText(plugin.Installed);
+            pluginInfoItem.ButtonUpdateEnabled = plugin.HasNewerVersion;
+            pluginInfoItem.OnPluginInfoItemMouseClick = OnPluginInfoItemMouseClick;
+            pluginInfoItem.OnButtonInstallRemoveClick = OnButtonInstallRemoveClick;
+            pluginInfoItem.OnButtonUpdateClick = OnButtonUpdateClick;
+        }
+
+
         private void FormShown(object sender, EventArgs e)
         {
-            foreach (var kvp in MinerPluginsManager.Plugins)
+            var plugins = MinerPluginsManager.Plugins.Select(kvp => kvp.Value).ToList();
+            var evenCount = plugins.Count - plugins.Count % 2;
+            var lastSingleItemRow = plugins.Count % 2 == 1;
+
+            for (int row = 0; row < evenCount; row += 2)
             {
-                var plugin = kvp.Value;
-                var pluginInfoItem = new PluginInfoItem()
-                {
-                    PluginUUID = plugin.PluginUUID,
-                    PluginName = plugin.PluginName,
-                    PluginVersion = Tr("Version: {0}", $"{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}"),
-                    PluginAuthor = Tr("Author: {0}", plugin.PluginAuthor),
-                    ButtonInstallRemoveText = PluginInstallRemoveText(plugin.Installed),
-                    ButtonUpdateEnabled = plugin.HasNewerVersion,
-                    OnPluginInfoItemMouseClick = OnPluginInfoItemMouseClick,
-                    OnButtonInstallRemoveClick = OnButtonInstallRemoveClick,
-                    OnButtonUpdateClick = OnButtonUpdateClick,
-                };
-                pluginInfoItem.Tag = plugin;
-                flowLayoutPanelPluginsLV.Controls.Add(pluginInfoItem);
+                var plugin1 = plugins[row];
+                var plugin2 = plugins[row + 1];
+                var pluginRowItem = new PluginInfoItemRow();
+                setPluginInfoItem(pluginRowItem.PluginInfoItem1, plugin1);
+                setPluginInfoItem(pluginRowItem.PluginInfoItem2, plugin2);
+                flowLayoutPanelPluginsLV.Controls.Add(pluginRowItem);
             }
+            if (lastSingleItemRow)
+            {
+                var plugin1 = plugins.Last();
+                var pluginRowItem = new PluginInfoItemRow();
+                setPluginInfoItem(pluginRowItem.PluginInfoItem1, plugin1);
+                pluginRowItem.PluginInfoItem2.Visible = false;
+                flowLayoutPanelPluginsLV.Controls.Add(pluginRowItem);
+            }
+
+            //foreach (var kvp in MinerPluginsManager.Plugins)
+            //{
+            //    var plugin = kvp.Value;
+            //    var pluginInfoItem = new PluginInfoItem()
+            //    {
+            //        PluginUUID = plugin.PluginUUID,
+            //        PluginName = plugin.PluginName,
+            //        PluginVersion = Tr("Version: {0}", $"{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}"),
+            //        PluginAuthor = Tr("Author: {0}", plugin.PluginAuthor),
+            //        ButtonInstallRemoveText = PluginInstallRemoveText(plugin.Installed),
+            //        ButtonUpdateEnabled = plugin.HasNewerVersion,
+            //        OnPluginInfoItemMouseClick = OnPluginInfoItemMouseClick,
+            //        OnButtonInstallRemoveClick = OnButtonInstallRemoveClick,
+            //        OnButtonUpdateClick = OnButtonUpdateClick,
+            //    };
+            //    pluginInfoItem.Tag = plugin;
+            //    flowLayoutPanelPluginsLV.Controls.Add(pluginInfoItem);
+            //}
         }
 
         private void OnPluginInfoItemMouseClick(object sender, string pluginUUID)
