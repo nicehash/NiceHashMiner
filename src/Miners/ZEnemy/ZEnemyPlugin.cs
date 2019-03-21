@@ -62,7 +62,8 @@ namespace ZEnemy
         #region Internal Settings
         public void InitInternals()
         {
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(PluginUUID, _minerOptionsPackage);
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null)
                 _minerOptionsPackage = fileMinerOptionsPackage;
         }
