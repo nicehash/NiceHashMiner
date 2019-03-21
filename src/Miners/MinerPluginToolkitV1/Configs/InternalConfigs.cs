@@ -85,5 +85,20 @@ namespace MinerPluginToolkitV1.Configs
             WriteFileSettings(settingsPath, defaultSettings);
             return null;
         }
+
+        public static MinerOptionsPackage InitInternalsHelper(string pluginRoot, MinerOptionsPackage minerOptionsPackage)
+        {
+            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
+            var minerOptionsPackagePath = Path.Combine(pluginRootIntenrals, "MinerOptionsPackage.json");
+            var fileMinerOptionsPackage = ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
+            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings) {
+                return fileMinerOptionsPackage;
+            }
+            else
+            { 
+                 WriteFileSettings(minerOptionsPackagePath, minerOptionsPackage);
+                 return null;
+            }
+        }
     }
 }

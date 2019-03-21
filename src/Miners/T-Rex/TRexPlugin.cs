@@ -12,13 +12,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace T_Rex
+namespace TRex
 {
-    public class T_RexPlugin : IMinerPlugin, IInitInternals
+    public class TRexPlugin : IMinerPlugin, IInitInternals
     {
         public Version Version => new Version(1, 1);
 
-        public string Name => "T-Rex";
+        public string Name => "TRex";
 
         public string Author => "Domen Kirn Krefl";
 
@@ -47,7 +47,7 @@ namespace T_Rex
 
         public IMiner CreateMiner()
         {
-            return new T_Rex(PluginUUID)
+            return new TRex(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage
             };
@@ -62,17 +62,8 @@ namespace T_Rex
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
-            var minerOptionsPackagePath = Path.Combine(pluginRootIntenrals, "MinerOptionsPackage.json");
-            var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
-            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
-            {
-                _minerOptionsPackage = fileMinerOptionsPackage;
-            }
-            else
-            {
-                InternalConfigs.WriteFileSettings(minerOptionsPackagePath, _minerOptionsPackage);
-            }
+            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
+            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
         private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage{
