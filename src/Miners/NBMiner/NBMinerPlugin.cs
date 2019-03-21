@@ -77,17 +77,8 @@ namespace NBMiner
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-            var pluginRootInternals = Path.Combine(pluginRoot, "internals");
-            var minerOptionsPackagePath = Path.Combine(pluginRootInternals, "MinerOptionsPackage.json");
-            var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
-            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
-            {
-                _minerOptionsPackage = fileMinerOptionsPackage;
-            }
-            else
-            {
-                InternalConfigs.WriteFileSettings(minerOptionsPackagePath, _minerOptionsPackage);
-            }
+            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
+            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
         private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage {};

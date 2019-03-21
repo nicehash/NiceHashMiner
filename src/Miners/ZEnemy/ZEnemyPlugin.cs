@@ -64,8 +64,7 @@ namespace ZEnemy
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
-            if (fileMinerOptionsPackage != null)
-                _minerOptionsPackage = fileMinerOptionsPackage;
+            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
         private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
