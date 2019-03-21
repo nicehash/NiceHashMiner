@@ -19,7 +19,7 @@ namespace TTMiner
         public string Name => "TTMiner";
         public string Author => "stanko@nicehash.com";
 
-        public string PluginUUID => "a61acd93-2dfd-4604-a0d2-15547640a64e";
+        public string PluginUUID => "5ee2e280-4bfc-11e9-a481-e144ccd86993";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

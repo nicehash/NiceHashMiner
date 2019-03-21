@@ -22,7 +22,7 @@ namespace TRex
 
         public string Author => "Domen Kirn Krefl";
 
-        public string PluginUUID => "078bf411-9231-4ff1-8d73-7e65e2c1f67a";
+        public string PluginUUID => "0cd49150-4bfc-11e9-a481-e144ccd86993";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

@@ -16,7 +16,7 @@ namespace EWBF
 {
     public class EwbfPlugin : IMinerPlugin, IInitInternals
     {
-        public string PluginUUID => "d836f10f-9f33-400a-8aee-5927144e75d5";
+        public string PluginUUID => "3e627d60-4bfa-11e9-a481-e144ccd86993";
 
         public Version Version => new Version(1, 1);
 

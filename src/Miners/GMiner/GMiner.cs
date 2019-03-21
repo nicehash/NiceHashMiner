@@ -23,6 +23,8 @@ namespace GMinerPlugin
     // benchmark is 
     public class GMiner : MinerBase
     {
+        private readonly string _uuid;
+
         private const double DevFee = 2.0;
         private HttpClient _httpClient;
         private int _apiPort;
@@ -33,6 +35,11 @@ namespace GMinerPlugin
         // command line parts
         private string _extraLaunchParameters = "";
         private string _devices;
+
+        public GMiner(string uuid)
+        {
+            _uuid = uuid;
+        }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -156,7 +163,7 @@ namespace GMinerPlugin
 
         protected override (string, string) GetBinAndCwdPaths()
         {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), Shared.UUID);
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
             var binPath = Path.Combine(pluginRootBins, "miner.exe");
             var binCwd = pluginRootBins;

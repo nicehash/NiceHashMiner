@@ -16,7 +16,7 @@ namespace GMinerPlugin
 {
     public class GMinerPlugin : IMinerPlugin, IInitInternals
     {
-        public string PluginUUID => Shared.UUID;
+        public string PluginUUID => "5def7740-4bfb-11e9-a481-e144ccd86993";
 
         public Version Version => new Version(1, 1);
 
@@ -31,7 +31,7 @@ namespace GMinerPlugin
 
         public IMiner CreateMiner()
         {
-            return new GMiner()
+            return new GMiner(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage
             };

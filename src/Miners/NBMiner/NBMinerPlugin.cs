@@ -20,7 +20,7 @@ namespace NBMiner
 
         public string Author => "Dillon Newell";
 
-        public string PluginUUID => "139935b0-7b7e-4016-855a-272ace00ce8a";
+        public string PluginUUID => "d9e7ea80-4bfb-11e9-a481-e144ccd86993";
 
         private readonly Dictionary<int, int> _mappedCudaIDs = new Dictionary<int, int>();
 
