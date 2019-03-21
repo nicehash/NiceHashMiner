@@ -21,8 +21,6 @@ namespace LolMinerBeam
     {
         private string _devices;
 
-        private string _extraLaunchParameters;
-
         private int _apiPort;
 
         private readonly string _uuid;
@@ -141,13 +139,6 @@ namespace LolMinerBeam
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
             _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
-            if (MinerOptionsPackage != null)
-            {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
         }
 
         protected override string MiningCreateCommandLine()
@@ -162,7 +153,7 @@ namespace LolMinerBeam
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--coin {algo} --pool {url} --port {port} --user {_username} --tls 0 --apiport {_apiPort} --devices {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--coin {algo} --pool {url} --port {port} --user {_username} --tls 0 --apiport {_apiPort} --devices {_devices}";
             return commandLine;
         }
     }

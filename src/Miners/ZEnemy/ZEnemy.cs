@@ -20,7 +20,7 @@ namespace ZEnemy
     {
         private string _devices;
 
-        private string _extraLaunchParameters;
+        private string _extraLaunchParameters = "";
 
         private int _apiPort;
 

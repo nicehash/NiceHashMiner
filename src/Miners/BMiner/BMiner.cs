@@ -20,7 +20,7 @@ namespace BMiner
     public class BMiner : MinerBase
     {
         private string _devices;
-        private string _extraLaunchParameters;
+        private string _extraLaunchParameters = "";
         private int _apiPort;
         private readonly string _uuid;
         private AlgorithmType _algorithmType;

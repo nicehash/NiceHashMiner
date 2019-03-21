@@ -21,7 +21,7 @@ namespace CCMinerTpruvotCuda10
         private AlgorithmType _algorithmType;
         // command line parts
         private string _devices;
-        private string _extraLaunchParameters;
+        private string _extraLaunchParameters = "";
         private int _apiPort;
         // lazy init
         //private HttpClient _httpClient = null; // throws exceptions

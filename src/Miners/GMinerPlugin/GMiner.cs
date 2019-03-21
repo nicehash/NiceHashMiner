@@ -32,7 +32,6 @@ namespace GMinerPlugin
         
         // command line parts
         private string _devices;
-        private string _extraLaunchParameters;
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -61,7 +60,7 @@ namespace GMinerPlugin
             var url = split[0];
             var port = split[1];
 
-            var cmd = $"-a {algo} -s {url} -n {port} -u {username} -d {_devices} -w 0 --api {_apiPort} {_extraLaunchParameters}";
+            var cmd = $"-a {algo} -s {url} -n {port} -u {username} -d {_devices} -w 0 --api {_apiPort}";
 
             if (_algorithmType == AlgorithmType.ZHash)
             {
@@ -174,13 +173,6 @@ namespace GMinerPlugin
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
             _devices = string.Join(" ", orderedMiningPairs.Select(p => p.device.ID));
-            if (MinerOptionsPackage != null)
-            {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
         }
 
         protected override string MiningCreateCommandLine()

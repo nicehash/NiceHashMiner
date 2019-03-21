@@ -91,7 +91,7 @@ namespace LolMinerBeam
             }
         }
 
-        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage { GeneralOptions = new List<MinerOption> { } };
+        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage { };
         #endregion Internal Settings
     }
 }

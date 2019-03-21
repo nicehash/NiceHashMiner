@@ -18,7 +18,7 @@ namespace CryptoDredge
     public class CryptoDredge : MinerBase
     {
         private string _devices;
-        private string _extraLaunchParameters;
+        private string _extraLaunchParameters = "";
         private int _apiPort;
         private readonly string _uuid;
 

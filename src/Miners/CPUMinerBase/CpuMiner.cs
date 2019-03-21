@@ -26,7 +26,7 @@ namespace CPUMinerBase
 
         // command line parts
         private ulong _affinityMask = 0;
-        private string _extraLaunchParameters;
+        private string _extraLaunchParameters = "";
         private int _apiPort;
 
         private ApiDataHelper apiReader = new ApiDataHelper(); // consider replacing with HttpClient

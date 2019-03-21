@@ -29,7 +29,7 @@ namespace EWBF
 
         // command line parts
         private string _devices;
-        private string _extraLaunchParameters;
+        private string _extraLaunchParameters = "";
 
         public EwbfMiner(string uuid)
         {
