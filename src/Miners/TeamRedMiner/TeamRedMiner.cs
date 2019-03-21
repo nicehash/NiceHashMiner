@@ -22,6 +22,7 @@ namespace TeamRedMiner
     {
         private int _apiPort;
         private readonly string _uuid;
+        private string _extraLaunchParameters = "";
         private readonly int _openClAmdPlatformNum;
 
         // can mine only one algorithm at a given time
@@ -31,8 +32,7 @@ namespace TeamRedMiner
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
 
         // command line parts
-        private string _devicesOnPlatform;
-        private string _extraLaunchParameters;
+        private string _devices;
 
         public TeamRedMiner(string uuid, int openClAmdPlatformNum)
         {
@@ -78,8 +78,8 @@ namespace TeamRedMiner
         {
             // API port function might be blocking
             _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
-            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var cmd = $"-a {AlgoName} -o {url} -u {username} {_devicesOnPlatform} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
+            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
+            var cmd = $"-a {AlgoName} -o {url} -u {username} --platform={_openClAmdPlatformNum} -d {_devices} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
 
@@ -197,9 +197,8 @@ namespace TeamRedMiner
             // Order pairs and parse ELP
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
-            var deviceIds = orderedMiningPairs.Select(pair => pair.device.ID);
-            _devicesOnPlatform = $"--platform={_openClAmdPlatformNum} -d {string.Join(",", deviceIds)}";
-
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            
             for(int i = 0; i < orderedMiningPairs.Count; i++)
             {
                 _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].device.UUID;

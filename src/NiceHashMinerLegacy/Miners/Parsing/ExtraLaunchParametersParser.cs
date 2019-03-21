@@ -196,6 +196,12 @@ namespace NiceHashMiner.Miners.Parsing
             {
                 foreach (var option in options)
                 {
+                    string optionName = "";
+                    if (option.ShortName != null)
+                        optionName = option.ShortName;
+                    else
+                        optionName = option.LongName;
+
                     if (isOptionDefaults[option.Type] && !isOptionExist[option.Type] && !useIfDefaults) continue;
                     // if options all default ignore
                     switch (option.FlagType)
@@ -205,18 +211,18 @@ namespace NiceHashMiner.Miners.Parsing
                             var isOptionInUse = miningPairs.Any(pair => cdevOptions[pair.Device.Uuid][option.Type] != null);
                             if (isOptionInUse)
                             {
-                                retVal += $" {option.LongName}";
+                                retVal += $" {optionName}";
                             }
                             break;
                         case MinerOptionFlagType.MultiParam:
                         {
                             var values = miningPairs.Select(pair => cdevOptions[pair.Device.Uuid][option.Type]).ToList();
                             var mask = " {0} {1}";
-                            if (option.LongName.Contains("="))
+                            if (optionName.Contains("="))
                             {
                                 mask = " {0}{1}";
                             }
-                            retVal += string.Format(mask, option.LongName, string.Join(option.Separator, values));
+                            retVal += string.Format(mask, optionName, string.Join(option.Separator, values));
                             break;
                         }
                         case MinerOptionFlagType.SingleParam:
@@ -233,18 +239,18 @@ namespace NiceHashMiner.Miners.Parsing
                                 setValue = values.First();
                             }
                             var mask = " {0} {1}";
-                            if (option.LongName.Contains("="))
+                            if (optionName.Contains("="))
                             {
                                 mask = " {0}{1}";
                             }
-                            retVal += string.Format(mask, option.LongName, setValue);
+                            retVal += string.Format(mask, optionName, setValue);
                             break;
                         }
                         case MinerOptionFlagType.DuplicateMultiParam:
                         {
                             const string mask = " {0} {1}";
                             var values = miningPairs.Select(pair =>
-                                string.Format(mask, option.LongName, cdevOptions[pair.Device.Uuid][option.Type])).ToList();
+                                string.Format(mask, optionName, cdevOptions[pair.Device.Uuid][option.Type])).ToList();
                             retVal += " " + string.Join(" ", values);
                             break;
                         }

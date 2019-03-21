@@ -5,14 +5,19 @@ using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using MinerPluginToolkitV1.Interfaces;
+using System.IO;
+using NiceHashMinerLegacy.Common;
+using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
 
 namespace CPUMinerBase
 {
-    public class CPUMinerPlugin : IMinerPlugin
+    public class CPUMinerPlugin : IMinerPlugin, IInitInternals 
     {
         public string PluginUUID => "1cdf69c0-4991-11e9-87d3-6b57d758e2c6";
 
-        public Version Version => new Version(1,0);
+        public Version Version => new Version(1,1);
 
         public string Name => "cpuminer-opt";
 
@@ -31,7 +36,10 @@ namespace CPUMinerBase
             return supported;
         }
 
-        public IMiner CreateMiner() => new CpuMiner(PluginUUID);
+        public IMiner CreateMiner() => new CpuMiner(PluginUUID)
+        {
+            MinerOptionsPackage = _minerOptionsPackage
+        };
 
         
         // TODO check get what kind of benchmark it is, local or network
@@ -53,5 +61,60 @@ namespace CPUMinerBase
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2Z)
             };
         }
+
+        #region Internal Settings
+            public void InitInternals()
+                    {
+                var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+                var pluginRootInternals = Path.Combine(pluginRoot, "internals");
+                var minerOptionsPackagePath = Path.Combine(pluginRootInternals, "MinerOptionsPackage.json");
+                var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
+                if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
+                {
+                    _minerOptionsPackage = fileMinerOptionsPackage;
+                }
+                else
+                {
+                    InternalConfigs.WriteFileSettings(minerOptionsPackagePath, _minerOptionsPackage);
+                }
+            }
+
+        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
+        {
+            GeneralOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// number of miner threads (default: number of processors)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "cpuminer_threads",
+                    ShortName = "-t",
+                    LongName = "--threads=",
+                },
+                /// <summary>
+                /// set process priority (default: 0 idle, 2 normal to 5 highest)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "cpuminer_priority",
+                    ShortName = "--cpu-priority",
+                    DefaultValue = "0"
+                },
+                //TODO WARNING this functionality can overlap with already implemented one!!!
+                /// <summary>
+                /// set process affinity to cpu core(s), mask 0x3 for cores 0 and 1
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "cpuminer_affinity",
+                    ShortName = "--cpu-affinity",
+                }
+            }
+        };
+        #endregion Internal Settings
     }
 }

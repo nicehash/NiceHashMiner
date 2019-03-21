@@ -20,6 +20,7 @@ namespace NBMiner
     {
         private int _apiPort;
         private readonly string _uuid;
+        private string _extraLaunchParameters = "";
         private AlgorithmType _algorithmType;
         private readonly Dictionary<int, int> _cudaIDMap;
         private readonly HttpClient _http = new HttpClient();
@@ -131,7 +132,7 @@ namespace NBMiner
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             
             var devs = string.Join(",", _miningPairs.Select(p => _cudaIDMap[p.device.ID]));
-            return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} -d {devs} -RUN ";
+            return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} -d {devs} -RUN {_extraLaunchParameters}";
         }
         
         public override async Task<ApiData> GetMinerStatsDataAsync()
@@ -155,6 +156,16 @@ namespace NBMiner
             bool ok;
             (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            if (MinerOptionsPackage != null)
+            {
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         public void Dispose()

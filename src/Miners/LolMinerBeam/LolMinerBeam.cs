@@ -20,9 +20,7 @@ namespace LolMinerBeam
     public class LolMinerBeam : MinerBase
     {
         private string _devices;
-
         private string _extraLaunchParameters = "";
-
         private int _apiPort;
 
         private readonly string _uuid;
@@ -106,7 +104,7 @@ namespace LolMinerBeam
                     break;
             }
 
-            var commandLine = $"--benchmark {AlgorithmName(_algorithmType)} --longstats {benchmarkTime} --logs 1";
+            var commandLine = $"--benchmark {AlgorithmName(_algorithmType)} --longstats {benchmarkTime} --devices {_devices} {_extraLaunchParameters}";
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
@@ -138,10 +136,16 @@ namespace LolMinerBeam
             // all good continue on
 
             // init command line params parts
-            var deviceIDs = _miningPairs.Select(p =>{return p.device.ID;}).OrderBy(id => id);
-            _devices = $"--devices {string.Join(",", deviceIDs)}";
-            // TODO implement this later
-            //_extraLaunchParameters;
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            if (MinerOptionsPackage != null)
+            {
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         protected override string MiningCreateCommandLine()
@@ -156,7 +160,7 @@ namespace LolMinerBeam
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--coin {algo} --pool {url} --port {port} --user {_username} --tls 0 --apiport {_apiPort} {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--coin {algo} --pool {url} --port {port} --user {_username} --tls 0 --apiport {_apiPort} --devices {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }

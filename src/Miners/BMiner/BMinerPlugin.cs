@@ -1,17 +1,22 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Interfaces;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace BMiner
 {
-    class BMinerPlugin : IMinerPlugin
+    class BMinerPlugin : IMinerPlugin, IInitInternals
     {
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
         public string Name => "BMiner";
 
         public string Author => "Domen Kirn Krefl";
@@ -59,12 +64,59 @@ namespace BMiner
 
         public IMiner CreateMiner()
         {
-            return new BMiner(PluginUUID);
+            return new BMiner(PluginUUID)
+            {
+                MinerOptionsPackage = _minerOptionsPackage
+            };
         }
 
         public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)
         {
             return a.algorithm.FirstAlgorithmType == b.algorithm.FirstAlgorithmType;
         }
+
+        #region Internal settings
+        public void InitInternals()
+        {
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRootInternals = Path.Combine(pluginRoot, "internals");
+            var minerOptionsPackagePath = Path.Combine(pluginRootInternals, "MinerOptionsPackage.json");
+            var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
+            if(fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
+            {
+                _minerOptionsPackage = fileMinerOptionsPackage;
+            }
+            else
+            {
+                InternalConfigs.WriteFileSettings(minerOptionsPackagePath, _minerOptionsPackage);
+            }
+        }
+
+        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
+        {
+            GeneralOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// The intensity of the CPU for grin/AE mining. Valid values are 0 to 12. Higher intensity may give better performance but more CPU usage. (default 6)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "bminer_cpu_intensity",
+                    ShortName = "-intensity",
+                    DefaultValue = "6",
+                },
+                /// <summary>
+                /// Disable the devfee but it also disables some optimizations.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "bminer_nofee",
+                    ShortName = "-nofee",
+                }
+            }
+        };
+        #endregion Internal settings
     }
 }

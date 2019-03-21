@@ -154,7 +154,7 @@ namespace ZEnemy
             var port = split[2];
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url={url}:{port} --user {MinerToolkit.DemoUser} {_devices}";
+            var commandLine = $"--algo {algo} --url={url}:{port} --user {MinerToolkit.DemoUser} --devices {_devices} {_extraLaunchParameters}";
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
@@ -203,14 +203,16 @@ namespace ZEnemy
             // all good continue on
 
             // init command line params parts
-            var deviceIDs = _miningPairs.Select(p =>
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            if (MinerOptionsPackage != null)
             {
-                var device = p.device;
-                return device.ID;
-            }).OrderBy(id => id);
-            _devices = $"--devices {string.Join(",", deviceIDs)}";
-            // TODO implement this later
-            //_extraLaunchParameters;
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         protected override string MiningCreateCommandLine()
@@ -225,7 +227,7 @@ namespace ZEnemy
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url={url}:{port} --user {_username} --api-bind={_apiPort} {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--algo {algo} --url={url}:{port} --user {_username} --api-bind={_apiPort} --devices {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }

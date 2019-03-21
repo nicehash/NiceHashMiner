@@ -128,22 +128,6 @@ namespace CPUMinerBase
             return (binPath, binCwd);
         }
 
-        protected override void Init()
-        {
-            bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
-
-            var cpuDevice = _miningPairs.Select(kvp => kvp.device).FirstOrDefault();
-            if (cpuDevice is CPUDevice cpu) {
-                // TODO affinity mask stuff
-                //_affinityMask
-            }
-
-            // TODO implement this later
-            //_extraLaunchParameters;
-        }
-
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
@@ -154,6 +138,27 @@ namespace CPUMinerBase
 
             var commandLine = $"--algo={algo} --url={url} --user={_username} --api-bind={_apiPort} {_extraLaunchParameters}";
             return commandLine;
+        }
+
+        protected override void Init()
+        {
+            bool ok;
+            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+
+            var cpuDevice = _miningPairs.Select(kvp => kvp.device).FirstOrDefault();
+            if (cpuDevice is CPUDevice cpu)
+            {
+                // TODO affinity mask stuff
+                //_affinityMask
+            }
+            var miningPairsList = _miningPairs.ToList();
+            if (MinerOptionsPackage != null)
+            {
+                var generalParams = Parser.Parse(miningPairsList, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         public void AfterStartMining()

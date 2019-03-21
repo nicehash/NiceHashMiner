@@ -5,10 +5,15 @@ using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using MinerPluginToolkitV1.Interfaces;
+using System.IO;
+using NiceHashMinerLegacy.Common;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Configs;
 
 namespace TeamRedMiner
 {
-    public class TeamRedMinerPlugin : IMinerPlugin
+    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals
     {
         public string PluginUUID => "189aaf80-4b23-11e9-a481-e144ccd86993";
 
@@ -25,7 +30,10 @@ namespace TeamRedMiner
 
         public IMiner CreateMiner()
         {
-            return new TeamRedMiner(PluginUUID, AMDDevice.OpenCLPlatformID);
+            return new TeamRedMiner(PluginUUID, AMDDevice.OpenCLPlatformID)
+            {
+                MinerOptionsPackage = _minerOptionsPackage
+            };
         }
 
         /// <summary>
@@ -68,5 +76,26 @@ namespace TeamRedMiner
             };
             return algorithms;
         }
+
+        #region Internal Settings
+        public void InitInternals()
+        {
+            // TODO implement internals MinerOptionSettings
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
+            var minerOptionsPackagePath = Path.Combine(pluginRootIntenrals, "MinerOptionsPackage.json");
+            var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
+            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
+            {
+                _minerOptionsPackage = fileMinerOptionsPackage;
+            }
+            else
+            {
+                InternalConfigs.WriteFileSettings(minerOptionsPackagePath, _minerOptionsPackage);
+            }
+        }
+
+        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage{};
+        #endregion Internal Settings
     }
 }
