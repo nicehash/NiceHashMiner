@@ -1,17 +1,22 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Interfaces;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace T_Rex
 {
-    public class T_RexPlugin : IMinerPlugin
+    public class T_RexPlugin : IMinerPlugin, IInitInternals
     {
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
 
         public string Name => "T-Rex";
 
@@ -42,12 +47,62 @@ namespace T_Rex
 
         public IMiner CreateMiner()
         {
-            return new T_Rex(PluginUUID);
+            return new T_Rex(PluginUUID)
+            {
+                MinerOptionsPackage = _minerOptionsPackage
+            };
         }
 
         public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)
         {
             return a.algorithm.FirstAlgorithmType == b.algorithm.FirstAlgorithmType;
         }
+
+        #region Internal Settings
+        public void InitInternals()
+        {
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
+            var minerOptionsPackagePath = Path.Combine(pluginRootIntenrals, "MinerOptionsPackage.json");
+            var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
+            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
+            {
+                _minerOptionsPackage = fileMinerOptionsPackage;
+            }
+            else
+            {
+                InternalConfigs.WriteFileSettings(minerOptionsPackagePath, _minerOptionsPackage);
+            }
+        }
+
+        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage{
+            GeneralOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// GPU intensity 8-25 (default: auto).
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_intensity",
+                    ShortName = "-i",
+                    LongName = "--intensity",
+                    DefaultValue = "auto"
+                },
+
+                /// <summary>
+                /// Set process priority (default: 2) 0 idle, 2 normal to 5 highest.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_priority",
+                    ShortName = "--cpu-priority",
+                    DefaultValue = "2"
+                },
+                
+            }
+        };
+        #endregion Internal Settings
     }
 }

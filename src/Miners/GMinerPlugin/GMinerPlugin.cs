@@ -8,14 +8,17 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using NiceHashMinerLegacy.Common;
 using System.IO;
+using MinerPluginToolkitV1.Interfaces;
+using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
 
 namespace GMinerPlugin
 {
-    public class GMinerPlugin : IMinerPlugin
+    public class GMinerPlugin : IMinerPlugin, IInitInternals
     {
         public string PluginUUID => Shared.UUID;
 
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
 
         public string Name => "GMinerCuda9.0+";
 
@@ -28,7 +31,10 @@ namespace GMinerPlugin
 
         public IMiner CreateMiner()
         {
-            return new GMiner();
+            return new GMiner()
+            {
+                MinerOptionsPackage = _minerOptionsPackage
+            };
         }
 
 
@@ -94,5 +100,25 @@ namespace GMinerPlugin
 
             return algorithms;
         }
+
+        #region Internal Settings
+        public void InitInternals()
+        {
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRootInternals = Path.Combine(pluginRoot, "internals");
+            var minerOptionsPackagePath = Path.Combine(pluginRootInternals, "MinerOptionsPackage.json");
+            var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
+            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
+            {
+                _minerOptionsPackage = fileMinerOptionsPackage;
+            }
+            else
+            {
+                InternalConfigs.WriteFileSettings(minerOptionsPackagePath, _minerOptionsPackage);
+            }
+        }
+
+        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage { };
+        #endregion Internal Settings
     }
 }

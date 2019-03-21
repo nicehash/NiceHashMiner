@@ -8,14 +8,17 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using NiceHashMinerLegacy.Common;
 using System.IO;
+using MinerPluginToolkitV1.Interfaces;
+using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
 
 namespace EWBF
 {
-    public class EwbfPlugin : IMinerPlugin
+    public class EwbfPlugin : IMinerPlugin, IInitInternals
     {
         public string PluginUUID => "d836f10f-9f33-400a-8aee-5927144e75d5";
 
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
 
         public string Name => "Ewbf";
 
@@ -28,7 +31,10 @@ namespace EWBF
 
         public IMiner CreateMiner()
         {
-            return new EwbfMiner(PluginUUID);
+            return new EwbfMiner(PluginUUID)
+            {
+                MinerOptionsPackage = _minerOptionsPackage
+            };
         }
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
@@ -64,5 +70,48 @@ namespace EWBF
 
             return algorithms;
         }
+
+        #region Internal Settings
+        public void InitInternals()
+        {
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRootInternals = Path.Combine(pluginRoot, "internals");
+            var minerOptionsPackagePath = Path.Combine(pluginRootInternals, "MinerOptionsPackage.json");
+            var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
+            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
+            {
+                _minerOptionsPackage = fileMinerOptionsPackage;
+            }
+            else
+            {
+                InternalConfigs.WriteFileSettings(minerOptionsPackagePath, _minerOptionsPackage);
+            }
+        }
+
+        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
+        {
+            GeneralOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// Personalization for equihash, string 8 characters
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ewbf_personalization_equihash",
+                    ShortName = "--pers"
+                },
+                /// <summary>
+                /// The developer fee in percent allowed decimals for example 0, 1, 2.5, 1.5 etc.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ewbf_developer_fee",
+                    ShortName = "--fee",
+                }
+            }
+        };
+        #endregion Internal Settings
     }
 }

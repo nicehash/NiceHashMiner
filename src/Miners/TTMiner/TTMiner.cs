@@ -28,7 +28,7 @@ namespace TTMiner
         //private readonly HttpClient _http = new HttpClient();
 
         private string _devices;
-        private string _extraLaunchParameters;
+        private string _extraLaunchParameters = "";
 
         // TODO figure out how to fix API workaround without this started time
         private DateTime _started;

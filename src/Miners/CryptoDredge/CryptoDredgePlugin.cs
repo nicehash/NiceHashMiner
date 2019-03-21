@@ -1,25 +1,28 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Interfaces;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace CryptoDredge
 {
     // TODO don't use this plugin as it doesn't have GetMinerStatsDataAsync() method miner doesn't support it.
-    class CryptoDredgePlugin : IMinerPlugin
+    class CryptoDredgePlugin : IMinerPlugin, IInitInternals
     {
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
         public string Name => "CryptoDredge";
 
         public string Author => "Domen Kirn Krefl";
 
         public string PluginUUID => "c5bea9fd-5660-4ccb-9f0e-a3f500d228c8";
-
-
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -60,12 +63,62 @@ namespace CryptoDredge
 
         public IMiner CreateMiner()
         {
-            return new CryptoDredge(PluginUUID);
+            return new CryptoDredge(PluginUUID)
+            {
+                MinerOptionsPackage = _minerOptionsPackage
+            };
         }
 
         public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)
         {
             return a.algorithm.FirstAlgorithmType == b.algorithm.FirstAlgorithmType;
         }
+
+        #region Internal Settings
+        public void InitInternals()
+        {
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRootInternals = Path.Combine(pluginRoot, "internals");
+            var minerOptionsPackagePath = Path.Combine(pluginRootInternals, "MinerOptionsPackage.json");
+            var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
+            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
+            {
+                _minerOptionsPackage = fileMinerOptionsPackage;
+            }
+            else
+            {
+                InternalConfigs.WriteFileSettings(minerOptionsPackagePath, _minerOptionsPackage);
+            }
+        }
+
+        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
+        {
+            GeneralOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// Mining intensity (0 - 6). (default: 6)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "cryptodredge_intensity",
+                    ShortName = "-i",
+                    LongName = "--intensity",
+                    DefaultValue = "6",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Set process priority in the range 0 (low) to 5 (high). (default: 3)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID  = "cryptodredge_cpu_priority",
+                    ShortName = "--cpu-priority",
+                    DefaultValue = "3"
+                }
+            }
+        };
+        #endregion Internal Settings
     }
 }

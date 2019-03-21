@@ -112,7 +112,7 @@ namespace T_Rex
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} {_devices} --benchmark --time-limit {benchmarkTime}";
+            var commandLine = $"--algo {algo} --devices {_devices} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
@@ -161,10 +161,16 @@ namespace T_Rex
             // all good continue on
 
             // init command line params parts
-            var deviceIDs = _miningPairs.Select(p =>{return p.device.ID;}).OrderBy(id => id);
-            _devices = $"--devices {string.Join(",", deviceIDs)}";
-            // TODO implement this later
-            //_extraLaunchParameters;
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            if (MinerOptionsPackage != null)
+            {
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         protected override string MiningCreateCommandLine()
@@ -175,7 +181,7 @@ namespace T_Rex
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind-http 127.0.0.1:{_apiPort} {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind-http 127.0.0.1:{_apiPort} --devices {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }

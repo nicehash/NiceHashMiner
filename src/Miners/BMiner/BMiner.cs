@@ -117,7 +117,7 @@ namespace BMiner
             var port = split[2];
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"-uri {algo}://{_username}@{url}:{port} {_devices} -watchdog=false";
+            var commandLine = $"-uri {algo}://{_username}@{url}:{port} {_devices} -watchdog=false {_extraLaunchParameters}";
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
@@ -163,6 +163,8 @@ namespace BMiner
             // all good continue on
 
             // init command line params parts
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
             var deviceIDs = _miningPairs.Select(p =>
             {
                 var device = p.device;
@@ -170,8 +172,13 @@ namespace BMiner
                 return prefix + device.ID;
             }).OrderBy(id => id);
             _devices = $"-devices {string.Join(",", deviceIDs)}";
-            // TODO implement this later
-            //_extraLaunchParameters;
+
+            if(MinerOptionsPackage != null)
+            {
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         protected override string MiningCreateCommandLine()
@@ -185,10 +192,8 @@ namespace BMiner
             var port = split[2];
 
             var algo = AlgorithmName(_algorithmType);
-            var commandLine = $"-uri {algo}://{_username}@{url}:{port} -api 127.0.0.1:{_apiPort} {_devices} -watchdog=false";
+            var commandLine = $"-uri {algo}://{_username}@{url}:{port} -api 127.0.0.1:{_apiPort} {_devices} -watchdog=false {_extraLaunchParameters}";
             return commandLine;
         }
-
-
     }
 }

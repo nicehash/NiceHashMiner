@@ -21,14 +21,14 @@ namespace TeamRedMiner
     {
         private int _apiPort;
         private readonly string _uuid;
+        private string _extraLaunchParameters = "";
         private readonly int _openClAmdPlatformNum;
 
         // can mine only one algorithm at a given time
         private AlgorithmType _algorithmType;
 
         // command line parts
-        private string _devicesOnPlatform;
-        private string _extraLaunchParameters;
+        private string _devices;
 
         public TeamRedMiner(string uuid, int openClAmdPlatformNum)
         {
@@ -75,7 +75,7 @@ namespace TeamRedMiner
             // API port function might be blocking
             _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
-            var cmd = $"-a {AlgoName} -o {url} -u {username} {_devicesOnPlatform}  --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
+            var cmd = $"-a {AlgoName} -o {url} -u {username} --platform={_openClAmdPlatformNum} -d {_devices} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
 
@@ -155,15 +155,17 @@ namespace TeamRedMiner
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
-            // init command line params parts
-            var deviceIds = _miningPairs
-                .Select(pair => pair.device.ID)
-                .OrderBy(id => id)
-                .Select(id => id.ToString());
-            _devicesOnPlatform = $"--platform={_openClAmdPlatformNum} -d {string.Join(",", deviceIds)}";
-
-            // TODO implement this later
-            //_extraLaunchParameters;
+            // Order pairs and parse ELP
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            if (MinerOptionsPackage != null)
+            {
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         protected override string MiningCreateCommandLine()
