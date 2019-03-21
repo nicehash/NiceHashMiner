@@ -87,6 +87,10 @@ namespace TTMiner
         {
             GeneralOptions = new List<MinerOption>
             {
+                /// <summary>
+                /// Comma or space separated list of intensities that should be used mining.
+			    /// First value for first GPU and so on. A single value sets the same intensity to all GPUs. A value of -1 uses the default intensity of the miner.
+                /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
@@ -95,6 +99,9 @@ namespace TTMiner
                     DefaultValue = "-1",
                     Delimiter = ","
                 },
+                /// <summary>
+                /// intensity grid. Same as intensity (-i) just defines the size for the grid directly.
+                /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
@@ -103,6 +110,9 @@ namespace TTMiner
                     DefaultValue = "-1",
                     Delimiter = ","
                 },
+                /// <summary>
+                /// intensity grid-size. This will give you more and finer control about the gridsize.
+                /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,

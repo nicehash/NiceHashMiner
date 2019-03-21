@@ -62,7 +62,7 @@ namespace EWBF
             var algorithmParam = $"--algo {algo}";
             if (_algorithmType == AlgorithmType.ZHash) algorithmParam += " --pers auto";
 
-            var ret = $"{algorithmParam} {_devices} --user {username} --server {url} --port {port} --pass x --api 127.0.0.1:{_apiPort} {_extraLaunchParameters}";
+            var ret = $"{algorithmParam} --cuda_devices {_devices} --user {username} --server {url} --port {port} --pass x --api 127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             if (!ret.Contains("--fee"))
             {
                 ret += " --fee 0";
@@ -191,14 +191,16 @@ namespace EWBF
             // all good continue on
 
             // init command line params parts
-            var deviceIds = _miningPairs
-                .Select(pair => pair.device.ID)
-                .OrderBy(id => id)
-                .Select(id => id.ToString());
-            _devices = $"--cuda_devices {string.Join(" ", deviceIds)}";
-            
-            // TODO implement this later
-            //_extraLaunchParameters;
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            _devices = string.Join(" ", orderedMiningPairs.Select(p => p.device.ID));
+            if (MinerOptionsPackage != null)
+            {
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         protected override string MiningCreateCommandLine()

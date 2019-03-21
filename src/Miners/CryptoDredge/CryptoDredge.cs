@@ -18,7 +18,7 @@ namespace CryptoDredge
     public class CryptoDredge : MinerBase
     {
         private string _devices;
-        private string _extraLaunchParameters = "";
+        private string _extraLaunchParameters;
         private int _apiPort;
         private readonly string _uuid;
 
@@ -96,7 +96,7 @@ namespace CryptoDredge
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind 127.0.0.1:{_apiPort} --no-watchdog";
+            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind 127.0.0.1:{_apiPort} --no-watchdog --device {_devices}";
 
             var (binPath, binCwd) = GetBinAndCwdPaths();
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
@@ -167,10 +167,16 @@ namespace CryptoDredge
             // all good continue on
 
             // init command line params parts
-            var deviceIDs = _miningPairs.Select(p => { return p.device.ID; }).OrderBy(id => id);
-            _devices = $"--device {string.Join(",", deviceIDs)}";
-            // TODO implement this later
-            //_extraLaunchParameters; 
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            if (MinerOptionsPackage != null)
+            {
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         protected override string MiningCreateCommandLine()
@@ -181,7 +187,7 @@ namespace CryptoDredge
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind 127.0.0.1:{_apiPort} {_devices} --no-watchdog";
+            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind 127.0.0.1:{_apiPort} --device {_devices} --no-watchdog {_extraLaunchParameters}";
             return commandLine;
         }
     }

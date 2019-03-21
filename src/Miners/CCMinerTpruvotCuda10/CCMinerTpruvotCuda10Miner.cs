@@ -21,7 +21,7 @@ namespace CCMinerTpruvotCuda10
         private AlgorithmType _algorithmType;
         // command line parts
         private string _devices;
-        private string _extraLaunchParameters = "";
+        private string _extraLaunchParameters;
         private int _apiPort;
         // lazy init
         //private HttpClient _httpClient = null; // throws exceptions
@@ -209,11 +209,16 @@ namespace CCMinerTpruvotCuda10
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
-            // init command line params parts
-            var deviceIds = MinerToolkit.GetDevicesIDsInOrder(_miningPairs);
-            _devices = $"--devices {string.Join(",", deviceIds)}";
-            // TODO implement this later
-            //_extraLaunchParameters;
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            if (MinerOptionsPackage != null)
+            {
+                // TODO add ignore temperature checks
+                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
         }
 
         protected override string MiningCreateCommandLine()
@@ -228,7 +233,7 @@ namespace CCMinerTpruvotCuda10
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo={algo} --url={url} --user={_username} --api-bind={_apiPort} {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--algo={algo} --url={url} --user={_username} --api-bind={_apiPort} --devices {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }
