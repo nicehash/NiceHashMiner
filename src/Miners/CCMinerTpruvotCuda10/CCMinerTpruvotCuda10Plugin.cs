@@ -21,7 +21,7 @@ namespace CCMinerTpruvotCuda10
 
         public string Author => "stanko@nicehash.com";
 
-        public string PluginUUID => "563960f0-4990-11e9-87d3-6b57d758e2c6 ";
+        public string PluginUUID => "563960f0-4990-11e9-87d3-6b57d758e2c6";
 
         public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)
         {
