@@ -53,9 +53,7 @@ namespace TeamRedMiner
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             // Get AMD GCN4+
-            var amdGpus = devices
-                .Where(dev => dev is AMDDevice gpu && IsGcn4(gpu))
-                .Cast<AMDDevice>();
+            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && IsGcn4(gpu)).Cast<AMDDevice>();
 
             foreach (var gpu in amdGpus)
             {
@@ -72,7 +70,6 @@ namespace TeamRedMiner
                 new Algorithm(PluginUUID, AlgorithmType.CryptoNightV8),
                 new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
-                //new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
             };
             return algorithms;
         }
