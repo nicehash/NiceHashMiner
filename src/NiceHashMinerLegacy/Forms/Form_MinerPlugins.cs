@@ -131,11 +131,11 @@ namespace NiceHashMiner.Forms
             if (pluginInfoItem == null) return;
 
             var pluginPackageInfo = MinerPluginsManager.Plugins[pluginUUID];
-            var oldUpdateButtonEnabledValue = pluginInfoItem.ButtonUpdateEnabled;
+            //var oldUpdateButtonEnabledValue = pluginInfoItem.ButtonUpdateEnabled;
             try
             {
                 pluginInfoItem.ButtonInstallRemoveEnabled = false;
-                pluginInfoItem.ButtonUpdateEnabled = false;
+                //pluginInfoItem.ButtonUpdateEnabled = false;
 
                 var actionText = pluginPackageInfo.Installed ? "Upgrade" : "Install";
                 groupBox2.Text = pluginPackageInfo.PluginName;
@@ -173,7 +173,7 @@ namespace NiceHashMiner.Forms
             {
                 pluginInfoItem.ButtonInstallRemoveText = PluginInstallRemoveText(pluginPackageInfo);
                 pluginInfoItem.ButtonInstallRemoveEnabled = true;
-                pluginInfoItem.ButtonUpdateEnabled = oldUpdateButtonEnabledValue;
+                //pluginInfoItem.ButtonUpdateEnabled = oldUpdateButtonEnabledValue;
             }
         }
 
@@ -183,11 +183,11 @@ namespace NiceHashMiner.Forms
             if (pluginInfoItem == null) return;
 
             var pluginPackageInfo = MinerPluginsManager.Plugins[pluginUUID];
-            var oldUpdateButtonEnabledValue = pluginInfoItem.ButtonUpdateEnabled;
+            //var oldUpdateButtonEnabledValue = pluginInfoItem.ButtonUpdateEnabled;
             try
             {
                 pluginInfoItem.ButtonInstallRemoveEnabled = false;
-                pluginInfoItem.ButtonUpdateEnabled = false;
+                //pluginInfoItem.ButtonUpdateEnabled = false;
 
                 groupBox2.Text = pluginPackageInfo.PluginName;
                 richTextBox1.Text = $"OnButtonUpdateClick";

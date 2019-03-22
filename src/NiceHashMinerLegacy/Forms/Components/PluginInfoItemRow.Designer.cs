@@ -37,7 +37,6 @@
             this.pluginInfoItem1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pluginInfoItem1.ButtonInstallRemoveEnabled = true;
             this.pluginInfoItem1.ButtonInstallRemoveText = "Install/Remove";
-            this.pluginInfoItem1.ButtonUpdateEnabled = true;
             this.pluginInfoItem1.ButtonUpdateText = "Update";
             this.pluginInfoItem1.Location = new System.Drawing.Point(3, 3);
             this.pluginInfoItem1.Name = "pluginInfoItem1";
@@ -56,7 +55,6 @@
             this.pluginInfoItem2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pluginInfoItem2.ButtonInstallRemoveEnabled = true;
             this.pluginInfoItem2.ButtonInstallRemoveText = "Install/Remove";
-            this.pluginInfoItem2.ButtonUpdateEnabled = true;
             this.pluginInfoItem2.ButtonUpdateText = "Update";
             this.pluginInfoItem2.Location = new System.Drawing.Point(283, 3);
             this.pluginInfoItem2.Name = "pluginInfoItem2";

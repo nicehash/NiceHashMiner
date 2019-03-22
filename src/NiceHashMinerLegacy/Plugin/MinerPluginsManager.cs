@@ -202,7 +202,8 @@ namespace NiceHashMiner.Plugin
             // TODO loading 
         }
 
-        public delegate void DownloadAndInstallUpdate(ProgressState satte, int progress);
+        //public delegate void DownloadAndInstallUpdate(ProgressState state, int progress);
+        public delegate void DownloadAndInstallUpdate(string infoStr);
 
         public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, DownloadAndInstallUpdate downloadAndInstallUpdate, CancellationToken stop)
         {
