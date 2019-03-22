@@ -9,35 +9,37 @@ namespace NiceHashMiner.Plugin
     // cross referenced local and online
     public class PluginPackageInfoCR
     {
-        public PluginPackageInfo OnlineVersion { get; set; }
-        public PluginPackageInfo LocalVersion { get; set; }
+        public PluginPackageInfo OnlineInfo { get; set; }
+        public PluginPackageInfo LocalInfo { get; set; }
 
         public bool HasNewerVersion
         {
             get
             {
-                // maybe there is no online version
-                if (OnlineVersion == null || LocalVersion == null) return false;
-                if (OnlineVersion.PluginVersion.Major > LocalVersion.PluginVersion.Major) return true;
-                return OnlineVersion.PluginVersion.Minor > LocalVersion.PluginVersion.Minor;
+                var localVer = LocalInfo?.PluginVersion;
+                var onlineVer = OnlineInfo?.PluginVersion;
+                if (localVer == null || onlineVer == null) return false;
+                if (onlineVer.Major > localVer.Major) return true;
+                return onlineVer.Minor > localVer.Minor;
             }
         }
 
         public bool Installed {
             get
             {
-                return LocalVersion != null;
+                return LocalInfo != null;
             }
         }
+
+        public int OnlineSupportedDeviceCount { get; set; } = 0;
 
         // PluginPackageInfo region
         public string PluginUUID
         {
             get
             {
-                if (LocalVersion != null) return LocalVersion.PluginUUID;
-                if (OnlineVersion != null) return OnlineVersion.PluginUUID;
-                return "N/A";
+                var uuid = LocalInfo?.PluginUUID ?? OnlineInfo?.PluginUUID ?? "N/A";
+                return uuid;
             }
         }
 
@@ -45,9 +47,8 @@ namespace NiceHashMiner.Plugin
         {
             get
             {
-                if (LocalVersion != null) return LocalVersion.PluginName;
-                if (OnlineVersion != null) return OnlineVersion.PluginName;
-                return "N/A";
+                var name = LocalInfo?.PluginName ?? OnlineInfo?.PluginName ?? "N/A";
+                return name;
             }
         }
 
@@ -56,9 +57,8 @@ namespace NiceHashMiner.Plugin
         {
             get
             {
-                if (LocalVersion != null) return LocalVersion.PluginVersion;
-                if (OnlineVersion != null) return OnlineVersion.PluginVersion;
-                return null;
+                var ver = LocalInfo?.PluginVersion ?? OnlineInfo?.PluginVersion;
+                return ver;
             }
         }
 
@@ -66,9 +66,9 @@ namespace NiceHashMiner.Plugin
         {
             get
             {
-                //if (LocalVersion != null) return LocalVersion.PluginPackageURL;
-                if (OnlineVersion != null) return OnlineVersion.PluginPackageURL;
-                return "N/A";
+                //var pluginURL = LocalInfo?.PluginPackageURL ?? OnlineInfo?.PluginPackageURL ?? "N/A";
+                var pluginURL = OnlineInfo?.PluginPackageURL ?? "N/A";
+                return pluginURL;
             }
         }
 
@@ -76,9 +76,9 @@ namespace NiceHashMiner.Plugin
         {
             get
             {
-                //if (LocalVersion != null) return LocalVersion.MinerPackageURL;
-                if (OnlineVersion != null) return OnlineVersion.MinerPackageURL;
-                return "N/A";
+                //var minerURL = LocalInfo?.MinerPackageURL ?? OnlineInfo?.MinerPackageURL ?? "N/A";
+                var minerURL = OnlineInfo?.MinerPackageURL ?? "N/A";
+                return minerURL;
             }
         }
         
@@ -86,9 +86,8 @@ namespace NiceHashMiner.Plugin
         {
             get
             {
-                if (LocalVersion != null) return LocalVersion.SupportedDevicesAlgorithms;
-                if (OnlineVersion != null) return OnlineVersion.SupportedDevicesAlgorithms;
-                return null;
+                var supportedDevicesAlgorithms = LocalInfo?.SupportedDevicesAlgorithms ?? OnlineInfo?.SupportedDevicesAlgorithms;
+                return supportedDevicesAlgorithms;
             }
         }
         
@@ -96,9 +95,8 @@ namespace NiceHashMiner.Plugin
         {
             get
             {
-                if (LocalVersion != null) return LocalVersion.PluginName;
-                if (OnlineVersion != null) return OnlineVersion.PluginName;
-                return "N/A";
+                var author = LocalInfo?.PluginAuthor ?? OnlineInfo?.PluginAuthor ?? "N/A";
+                return author;
             }
         }
 
@@ -107,9 +105,9 @@ namespace NiceHashMiner.Plugin
         {
             get
             {
-                if (LocalVersion != null) return LocalVersion.PluginDescription;
-                if (OnlineVersion != null) return OnlineVersion.PluginDescription;
-                return "N/A";
+                // prefer local over online
+                var desc = LocalInfo?.PluginDescription ?? OnlineInfo?.PluginDescription ?? "N/A";
+                return desc;
             }
         }
     }

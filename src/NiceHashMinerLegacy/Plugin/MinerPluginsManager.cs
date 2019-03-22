@@ -25,6 +25,19 @@ namespace NiceHashMiner.Plugin
 
         public static Dictionary<string, PluginPackageInfoCR> Plugins { get; set; } = new Dictionary<string, PluginPackageInfoCR>();
 
+        public static List<PluginPackageInfoCR> RankedPlugins
+        {
+            get
+            {
+                var orderedByDeviceSupportCountAndName = Plugins
+                    .Select(kvp => kvp.Value)
+                    .OrderByDescending(info => info.HasNewerVersion)
+                    .OrderByDescending(info => info.OnlineSupportedDeviceCount)
+                    .ThenBy(info => info.PluginName);
+                return orderedByDeviceSupportCountAndName.ToList();
+            }
+        }
+
         private static void InitPluginInternals()
         {
             foreach (var kvp in MinerPlugins)
@@ -83,9 +96,9 @@ namespace NiceHashMiner.Plugin
                 MinerPluginHost.MinerPlugin.Remove(pluginUUID);
                 RemovePluginAlgorithms(pluginUUID);
 
-                Plugins[pluginUUID].LocalVersion = null;
+                Plugins[pluginUUID].LocalInfo = null;
                 // TODO we might not have any online reference so remove it in this case
-                if (Plugins[pluginUUID].OnlineVersion == null)
+                if (Plugins[pluginUUID].OnlineInfo == null)
                 {
                     Plugins.Remove(pluginUUID);
                 }
@@ -121,7 +134,7 @@ namespace NiceHashMiner.Plugin
                 {
                     Plugins[uuid] = new PluginPackageInfoCR{};
                 }
-                Plugins[uuid].LocalVersion = localPluginInfo;
+                Plugins[uuid].LocalInfo = localPluginInfo;
             }
 
             // get online list and check what we have and what is online
@@ -134,7 +147,18 @@ namespace NiceHashMiner.Plugin
                 {
                     Plugins[uuid] = new PluginPackageInfoCR{};
                 }
-                Plugins[uuid].OnlineVersion = online;
+                Plugins[uuid].OnlineInfo = online;
+                if (online.SupportedDevicesAlgorithms != null)
+                {
+                    var supportedDevices = online.SupportedDevicesAlgorithms
+                        .Where(kvp => kvp.Value.Count > 0)
+                        .Select(kvp => kvp.Key);
+                    var devRank = AvailableDevices.Devices
+                        .Where(d => supportedDevices.Contains(d.DeviceType.ToString()))
+                        .Count();
+                    Plugins[uuid].OnlineSupportedDeviceCount = devRank;
+                }
+                
             }
         }
 
@@ -168,7 +192,17 @@ namespace NiceHashMiner.Plugin
 
         #region Downloading
 
-        public delegate void DownloadAndInstallUpdate(string statusInfo);
+        // TODO refactor ProgressState this tells us in what kind of a state the installation is
+        public enum ProgressState
+        {
+            DownloadingPlugin,
+            ExtractingPlugin,
+            DownloadingMiner,
+            ExtractingMiner,
+            // TODO loading 
+        }
+
+        public delegate void DownloadAndInstallUpdate(ProgressState satte, int progress);
 
         public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, DownloadAndInstallUpdate downloadAndInstallUpdate, CancellationToken stop)
         {

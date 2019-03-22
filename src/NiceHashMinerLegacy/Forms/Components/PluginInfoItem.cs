@@ -22,6 +22,21 @@ namespace NiceHashMiner.Forms.Components
             ProgressBarVisible = false;
         }
 
+        public string Description
+        {
+            get
+            {
+                return labelShortendDescription.Text;
+            }
+            set
+            {
+                if (value == null) return;
+                var setValue = value;
+                if (setValue.Length > 150) setValue = setValue.Substring(0, 15) + "...";
+                labelShortendDescription.Text = setValue;
+            }
+        }
+
         public string PluginName {
             get
             {
@@ -93,15 +108,15 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        public bool ButtonUpdateEnabled
+        public bool ButtonUpdateVisible
         {
             get
             {
-                return buttonUpdate.Enabled;
+                return buttonUpdate.Visible;
             }
             set
             {
-                buttonUpdate.Enabled = value;
+                buttonUpdate.Visible = value;
             }
         }
 
@@ -130,7 +145,6 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        #region DEBUGGING
         public string StatusText
         {
             get
@@ -142,6 +156,21 @@ namespace NiceHashMiner.Forms.Components
                 labelStatus.Text = value;
             }
         }
+
+        public bool StatusVisible
+        {
+            get
+            {
+                return labelStatus.Visible;
+            }
+            set
+            {
+                labelStatus.Visible = value;
+            }
+        }
+
+        #region DEBUGGING
+
         #endregion DEBUGGING
 
         public string PluginUUID { get; set; }

@@ -36,19 +36,28 @@ namespace NiceHashMiner.Forms
             this.Shown += new EventHandler(this.FormShown);
         }
 
-        private static string PluginInstallRemoveText(bool installed)
+        private static string PluginInstallRemoveText(PluginPackageInfoCR plugin)
         {
-            return installed ? Tr("Remove Plugin") : Tr("Install Plugin");
+            if (plugin.Installed) return Tr("Remove");
+            if (plugin.OnlineSupportedDeviceCount > 0) return Tr("Install");
+            return Tr("Not Supported");
+        }
+
+        private static bool PluginInstallRemoveEnabled(PluginPackageInfoCR plugin)
+        {
+            return plugin.Installed || plugin.OnlineSupportedDeviceCount > 0;
         }
 
         private void setPluginInfoItem(PluginInfoItem pluginInfoItem, PluginPackageInfoCR plugin)
         {
             pluginInfoItem.PluginUUID = plugin.PluginUUID;
+            pluginInfoItem.Description = plugin.PluginDescription;
             pluginInfoItem.PluginName = plugin.PluginName;
             pluginInfoItem.PluginVersion = Tr("Version: {0}", $"{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}");
             pluginInfoItem.PluginAuthor = Tr("Author: {0}", plugin.PluginAuthor);
-            pluginInfoItem.ButtonInstallRemoveText = PluginInstallRemoveText(plugin.Installed);
-            pluginInfoItem.ButtonUpdateEnabled = plugin.HasNewerVersion;
+            pluginInfoItem.ButtonInstallRemoveText = PluginInstallRemoveText(plugin);
+            pluginInfoItem.ButtonInstallRemoveEnabled = PluginInstallRemoveEnabled(plugin);
+            pluginInfoItem.ButtonUpdateVisible = plugin.HasNewerVersion;
             pluginInfoItem.OnPluginInfoItemMouseClick = OnPluginInfoItemMouseClick;
             pluginInfoItem.OnButtonInstallRemoveClick = OnButtonInstallRemoveClick;
             pluginInfoItem.OnButtonUpdateClick = OnButtonUpdateClick;
@@ -57,7 +66,7 @@ namespace NiceHashMiner.Forms
 
         private void FormShown(object sender, EventArgs e)
         {
-            var plugins = MinerPluginsManager.Plugins.Select(kvp => kvp.Value).ToList();
+            var plugins = MinerPluginsManager.RankedPlugins;
             var evenCount = plugins.Count - plugins.Count % 2;
             var lastSingleItemRow = plugins.Count % 2 == 1;
 
@@ -78,25 +87,6 @@ namespace NiceHashMiner.Forms
                 pluginRowItem.PluginInfoItem2.Visible = false;
                 flowLayoutPanelPluginsLV.Controls.Add(pluginRowItem);
             }
-
-            //foreach (var kvp in MinerPluginsManager.Plugins)
-            //{
-            //    var plugin = kvp.Value;
-            //    var pluginInfoItem = new PluginInfoItem()
-            //    {
-            //        PluginUUID = plugin.PluginUUID,
-            //        PluginName = plugin.PluginName,
-            //        PluginVersion = Tr("Version: {0}", $"{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}"),
-            //        PluginAuthor = Tr("Author: {0}", plugin.PluginAuthor),
-            //        ButtonInstallRemoveText = PluginInstallRemoveText(plugin.Installed),
-            //        ButtonUpdateEnabled = plugin.HasNewerVersion,
-            //        OnPluginInfoItemMouseClick = OnPluginInfoItemMouseClick,
-            //        OnButtonInstallRemoveClick = OnButtonInstallRemoveClick,
-            //        OnButtonUpdateClick = OnButtonUpdateClick,
-            //    };
-            //    pluginInfoItem.Tag = plugin;
-            //    flowLayoutPanelPluginsLV.Controls.Add(pluginInfoItem);
-            //}
         }
 
         private void OnPluginInfoItemMouseClick(object sender, string pluginUUID)
@@ -116,7 +106,7 @@ namespace NiceHashMiner.Forms
             richTextBox1.Text += $"PluginDescription: {plugin.PluginDescription}" + Environment.NewLine;
             richTextBox1.Text += $"Installed: {plugin.Installed}" + Environment.NewLine;
             richTextBox1.Text += $"HasNewerVersion: {plugin.HasNewerVersion}" + Environment.NewLine;
-            richTextBox1.Text += $"OnlineVersion: {plugin.OnlineVersion}" + Environment.NewLine;
+            richTextBox1.Text += $"OnlineVersion: {plugin.OnlineInfo}" + Environment.NewLine;
             richTextBox1.Text += $"PluginUUID: {plugin.PluginUUID}" + Environment.NewLine;
             richTextBox1.Text += $"PluginPackageURL: {plugin.PluginPackageURL}" + Environment.NewLine;
             richTextBox1.Text += $"MinerPackageURL: {plugin.MinerPackageURL}" + Environment.NewLine;
@@ -181,7 +171,7 @@ namespace NiceHashMiner.Forms
             }
             finally
             {
-                pluginInfoItem.ButtonInstallRemoveText = PluginInstallRemoveText(pluginPackageInfo.Installed);
+                pluginInfoItem.ButtonInstallRemoveText = PluginInstallRemoveText(pluginPackageInfo);
                 pluginInfoItem.ButtonInstallRemoveEnabled = true;
                 pluginInfoItem.ButtonUpdateEnabled = oldUpdateButtonEnabledValue;
             }
@@ -225,9 +215,16 @@ namespace NiceHashMiner.Forms
             }
             finally
             {
-                pluginInfoItem.ButtonInstallRemoveText = PluginInstallRemoveText(pluginPackageInfo.Installed);
+                pluginInfoItem.ButtonInstallRemoveText = PluginInstallRemoveText(pluginPackageInfo);
                 pluginInfoItem.ButtonInstallRemoveEnabled = true;
             }
+        }
+
+        private async Task InstallOrUpdate(PluginInfoItem pluginInfoItem, string pluginUUID)
+        {
+            // update
+            var cancelInstall = new CancellationTokenSource();
+
         }
     }
 }
