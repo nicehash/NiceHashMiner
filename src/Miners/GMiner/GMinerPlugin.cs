@@ -58,10 +58,27 @@ namespace GMinerPlugin
         //   - Equihash 192,7 ~2.75GB VRAM
         //   - Equihash 210,9 ~1GB VRAM
         //   - CUDA 9.0+ 
+        internal static bool IsGcn4(AMDDevice dev)
+        {
+            if (dev.Name.Contains("Vega"))
+                return true;
+            if (dev.InfSection.ToLower().Contains("polaris"))
+                return true;
+
+            return false;
+        }
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+
+            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && IsGcn4(gpu)).Cast<AMDDevice>();
+            foreach (var gpu in amdGpus)
+            {
+                var algorithms = GetAMDSupportedAlgorithms(gpu).ToList();
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
+            }
+
             //CUDA 9.0+: minimum drivers 384.xx
             var minDrivers = new Version(384, 0);
             if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
@@ -76,14 +93,14 @@ namespace GMinerPlugin
             {
                 Shared.MappedCudaIds[gpu.ID] = pcieId;
                 ++pcieId;
-                var algorithms = GetSupportedAlgorithms(gpu);
-                if (algorithms.Count > 0) supported.Add(gpu, GetSupportedAlgorithms(gpu));
+                var algorithms = GetCUDASupportedAlgorithms(gpu);
+                if (algorithms.Count > 0) supported.Add(gpu, GetCUDASupportedAlgorithms(gpu));
             }
 
             return supported;
         }
 
-        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu) {
+        IReadOnlyList<Algorithm> GetCUDASupportedAlgorithms(CUDADevice gpu) {
             var algorithms = new List<Algorithm>{};
             const ulong MinZHashMemory = 1879047230; // 1.75GB
             if (gpu.GpuRam > MinZHashMemory) {
@@ -98,6 +115,17 @@ namespace GMinerPlugin
                 algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29));
             }
 
+            return algorithms;
+        }
+
+        IReadOnlyList<Algorithm> GetAMDSupportedAlgorithms(AMDDevice gpu)
+        {
+            var algorithms = new List<Algorithm> { };
+            const ulong MinBeamMemory = 3113849695; // 2.9GB
+            if (gpu.GpuRam > MinBeamMemory)
+            {
+                algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.Beam));
+            }
             return algorithms;
         }
 

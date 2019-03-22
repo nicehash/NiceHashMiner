@@ -24,6 +24,24 @@ namespace NBMiner
 
         private readonly Dictionary<int, int> _mappedCudaIDs = new Dictionary<int, int>();
 
+        private bool isSupportedVersion(int major, int minor)
+        {
+            Dictionary<int, int> supportedVersions = new Dictionary<int, int>();
+            supportedVersions.Add(6, 0);
+            supportedVersions.Add(6, 1);
+            supportedVersions.Add(7, 0);
+            supportedVersions.Add(7, 5);
+
+            if (!supportedVersions.ContainsKey(major)) return false;
+            if (!supportedVersions.ContainsValue(minor)) return false;
+
+            foreach(var kvp in supportedVersions)
+            {
+                if (kvp.Key == major && kvp.Value == minor) return true;
+            }
+            return false;
+        }
+
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
@@ -33,7 +51,7 @@ namespace NBMiner
             if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major == 6 && gpu.SM_minor == 1)
+                .Where(dev => dev is CUDADevice gpu && isSupportedVersion(gpu.SM_major, gpu.SM_minor))
                 .Cast<CUDADevice>()
                 .OrderBy(dev => dev.PCIeBusID);
 
