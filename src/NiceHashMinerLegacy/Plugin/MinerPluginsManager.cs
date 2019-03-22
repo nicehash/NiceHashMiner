@@ -195,63 +195,73 @@ namespace NiceHashMiner.Plugin
         // TODO refactor ProgressState this tells us in what kind of a state the installation is
         public enum ProgressState
         {
+            Started,
             DownloadingPlugin,
             ExtractingPlugin,
             DownloadingMiner,
             ExtractingMiner,
-            // TODO loading 
+            // TODO loading
         }
 
-        //public delegate void DownloadAndInstallUpdate(ProgressState state, int progress);
-        public delegate void DownloadAndInstallUpdate(string infoStr);
+        public delegate void DownloadAndInstallUpdate(ProgressState state, int progress);
+        //public delegate void DownloadAndInstallUpdate(string infoStr);
 
         public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, DownloadAndInstallUpdate downloadAndInstallUpdate, CancellationToken stop)
         {
-            var downloadProgressChangedEventHandler = new DownloadProgressChangedEventHandler((s, e1) => {
-                downloadAndInstallUpdate($"Downloading: {e1.ProgressPercentage} %");
+            var downloadPluginProgressChangedEventHandler = new DownloadProgressChangedEventHandler((s, e1) => {
+                downloadAndInstallUpdate?.Invoke(ProgressState.DownloadingPlugin, e1.ProgressPercentage);
             });
-            OnZipProgres zipProgressChangedEventHandler = (int progress) => {
-                downloadAndInstallUpdate($"Unzipping: {progress} %");
+            OnZipProgres zipProgressPluginChangedEventHandler = (int progress) => {
+                downloadAndInstallUpdate?.Invoke(ProgressState.ExtractingPlugin, progress);
             };
+            var downloadMinerProgressChangedEventHandler = new DownloadProgressChangedEventHandler((s, e1) => {
+                downloadAndInstallUpdate?.Invoke(ProgressState.DownloadingMiner, e1.ProgressPercentage);
+            });
+            OnZipProgres zipProgressMinerChangedEventHandler = (int progress) => {
+                downloadAndInstallUpdate?.Invoke(ProgressState.ExtractingMiner, progress);
+            };
+
+
+
             const string installingPrefix = "installing_";
             var installingPluginPath = Path.Combine(Paths.MinerPluginsPath(), $"{installingPrefix}{plugin.PluginUUID}");
             try
             {
-                downloadAndInstallUpdate("Starting");
+                //downloadAndInstallUpdate("Starting");
                 Directory.CreateDirectory(installingPluginPath);
 
                 // download plugin dll
                 var pluginPackageDownloaded = Path.Combine(installingPluginPath, "plugin.zip");
-                var downloadPluginOK = await DownloadFile(plugin.PluginPackageURL, pluginPackageDownloaded, downloadProgressChangedEventHandler, stop);
+                var downloadPluginOK = await DownloadFile(plugin.PluginPackageURL, pluginPackageDownloaded, downloadPluginProgressChangedEventHandler, stop);
                 // unzip 
-                var unzipPluginOK = await UnzipFile(pluginPackageDownloaded, installingPluginPath, zipProgressChangedEventHandler, stop);
+                var unzipPluginOK = await UnzipFile(pluginPackageDownloaded, installingPluginPath, zipProgressPluginChangedEventHandler, stop);
                 File.Delete(pluginPackageDownloaded);
 
                 // download plugin dll
                 var binsPackageDownloaded = Path.Combine(installingPluginPath, "miner_bins.zip");
-                var downloadMinerBinsOK = await DownloadFile(plugin.MinerPackageURL, binsPackageDownloaded, downloadProgressChangedEventHandler, stop);
+                var downloadMinerBinsOK = await DownloadFile(plugin.MinerPackageURL, binsPackageDownloaded, downloadMinerProgressChangedEventHandler, stop);
                 // unzip 
                 var binsUnzipPath = Path.Combine(installingPluginPath, "bins");
-                var unzipMinerBinsOK = await UnzipFile(binsPackageDownloaded, binsUnzipPath, zipProgressChangedEventHandler, stop);
+                var unzipMinerBinsOK = await UnzipFile(binsPackageDownloaded, binsUnzipPath, zipProgressMinerChangedEventHandler, stop);
                 File.Delete(binsPackageDownloaded);
 
 
                 var loadedPlugins = MinerPluginHost.LoadPlugin(installingPluginPath);
                 if (loadedPlugins == 0)
                 {
-                    downloadAndInstallUpdate($"Loaded ZERO PLUGINS");
+                    //downloadAndInstallUpdate($"Loaded ZERO PLUGINS");
                     Directory.Delete(installingPluginPath, true);
                     return;
                 }
 
-                downloadAndInstallUpdate("Checking old plugin");
+                //downloadAndInstallUpdate("Checking old plugin");
                 var pluginPath = Path.Combine(Paths.MinerPluginsPath(), plugin.PluginUUID);
                 // if there is an old plugin installed remove it
                 if (Directory.Exists(pluginPath))
                 {
                     Directory.Delete(pluginPath, true);
                 }
-                downloadAndInstallUpdate($"Loaded {loadedPlugins} PLUGIN");
+                //downloadAndInstallUpdate($"Loaded {loadedPlugins} PLUGIN");
                 Directory.Move(installingPluginPath, pluginPath);
                 UpdatePluginAlgorithms();
                 // cross reference local and online list
@@ -259,7 +269,8 @@ namespace NiceHashMiner.Plugin
             }
             catch (Exception e)
             {
-                downloadAndInstallUpdate($"Installation failed: ${e}");
+                Helpers.ConsolePrint("MinerPluginsManager", $"Installation of {plugin.PluginName}_{plugin.PluginVersion}_{plugin.PluginUUID} failed: ${e}");
+                //downloadAndInstallUpdate();
             }
         }
 
