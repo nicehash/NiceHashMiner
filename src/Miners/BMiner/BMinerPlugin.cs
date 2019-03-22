@@ -23,26 +23,40 @@ namespace BMiner
 
         public string PluginUUID => "92a7fd10-498d-11e9-87d3-6b57d758e2c6";
 
+        internal static bool IsGcn4(AMDDevice dev)
+        {
+            if (dev.Name.Contains("Vega"))
+                return true;
+            if (dev.InfSection.ToLower().Contains("polaris"))
+                return true;
+
+            return false;
+        }
+
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+
+            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && IsGcn4(gpu)).Cast<AMDDevice>();
+            foreach (var gpu in amdGpus)
+            {
+                var algorithms = GetAMDSupportedAlgorithms(gpu).ToList();
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
+            }
             // CUDA 9.2+ driver 397.44
             var mininumRequiredDriver = new Version(397, 44);
             if (CUDADevice.INSTALLED_NVIDIA_DRIVERS >= mininumRequiredDriver) return supported;
-
-
             var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 5).Cast<CUDADevice>();
             foreach (var gpu in cudaGpus)
             {
-                var algos = GetSupportedAlgorithms(gpu).ToList();
+                var algos = GetCUDASupportedAlgorithms(gpu).ToList();
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
 
             return supported;
         }
 
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
+        private IEnumerable<Algorithm> GetCUDASupportedAlgorithms(CUDADevice dev)
         {
             const ulong minZhashMem = 1879047230;
             const ulong minBeamMem = 3113849695;
@@ -60,6 +74,13 @@ namespace BMiner
 
             if (dev.GpuRam >= minGrin31Mem)
                 yield return new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31);
+        }
+
+        private IEnumerable<Algorithm> GetAMDSupportedAlgorithms(AMDDevice dev)
+        {
+            const ulong minBeamMem = 3113849695;
+            if (dev.GpuRam >= minBeamMem)
+                yield return new Algorithm(PluginUUID, AlgorithmType.Beam);
         }
 
         public IMiner CreateMiner()

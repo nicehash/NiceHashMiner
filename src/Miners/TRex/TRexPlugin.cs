@@ -26,7 +26,7 @@ namespace TRex
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 5).Cast<CUDADevice>();
+            var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 3).Cast<CUDADevice>();
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
             foreach (var gpu in cudaGpus)
@@ -40,7 +40,6 @@ namespace TRex
 
         private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
         {
-            yield return new Algorithm(PluginUUID, AlgorithmType.Lyra2Z);
             yield return new Algorithm(PluginUUID, AlgorithmType.Skunk);
             yield return new Algorithm(PluginUUID, AlgorithmType.X16R);
         }
