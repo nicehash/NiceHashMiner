@@ -29,14 +29,30 @@ namespace NiceHashMiner.Forms
             Icon = Properties.Resources.logo;
             FormHelpers.TranslateFormControls(this);
 
-            richTextBox1.ReadOnly = true;
-            richTextBox1.DetectUrls = true;
-            richTextBox1.HideSelection = true;
-            richTextBox1.LinkClicked += (s, e) => Process.Start(e.LinkText);
+            Shown += new EventHandler(FormShown);
+            FormClosing += new FormClosingEventHandler(Form_MinerPlugins_FormClosing);
+        }        
 
-            this.Shown += new EventHandler(this.FormShown);
+        private void Form_MinerPlugins_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var details = _pluginInfoDetails.Values.Select(pair => pair.Details).Where(detail => detail != null);
+            foreach (var pluginInfoDetails in details)
+            {
+                pluginInfoDetails.Visible = false;
+            }
         }
 
+        //private PluginInfoDetails pluginInfoDetails1;
+        // save references to details panels
+
+        private class PluginControlPair
+        {
+            public PluginInfoItem Item;
+            public PluginInfoDetails Details;
+        }
+
+        private Dictionary<string, PluginControlPair> _pluginInfoDetails = new Dictionary<string, PluginControlPair>();
+        
         private static string PluginInstallRemoveText(PluginPackageInfoCR plugin)
         {
             if (plugin.Installed) return Tr("Remove");
@@ -56,82 +72,170 @@ namespace NiceHashMiner.Forms
             pluginInfoItem.PluginName = plugin.PluginName;
             pluginInfoItem.PluginVersion = Tr("Version: {0}", $"{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}");
             pluginInfoItem.PluginAuthor = Tr("Author: {0}", plugin.PluginAuthor);
+
+            //pluginInfoItem.OnPluginInfoItemMouseClick = OnPluginInfoItemMouseClick;
+            pluginInfoItem.OnDetailsClick = (s, e) => {
+                if (!_pluginInfoDetails.ContainsKey(plugin.PluginUUID)) return;
+                var detailsPanel = _pluginInfoDetails[plugin.PluginUUID].Details;
+                if (detailsPanel == null) return;
+                detailsPanel.BringToFront();
+                detailsPanel.Visible = true;
+            };
             pluginInfoItem.ButtonInstallRemoveText = PluginInstallRemoveText(plugin);
             pluginInfoItem.ButtonInstallRemoveEnabled = PluginInstallRemoveEnabled(plugin);
             pluginInfoItem.ButtonUpdateVisible = plugin.HasNewerVersion;
-            pluginInfoItem.OnPluginInfoItemMouseClick = OnPluginInfoItemMouseClick;
             pluginInfoItem.OnButtonInstallRemoveClick = OnButtonInstallRemoveClick;
             pluginInfoItem.OnButtonUpdateClick = OnButtonUpdateClick;
             // TODO maybe we would want a visible status
             pluginInfoItem.StatusVisible = false;
+            FormHelpers.TranslateFormControls(pluginInfoItem);
         }
 
+        private void setPluginInfoDetails(PluginInfoDetails pluginInfoDetails, PluginPackageInfoCR plugin)
+        {
+            pluginInfoDetails.PluginUUID = plugin.PluginUUID;
+            pluginInfoDetails.PluginName = plugin.PluginName;
+            pluginInfoDetails.PluginVersion = $"Plugin Version: {plugin.PluginVersion}";
+            pluginInfoDetails.PluginAuthor = $"Plugin Author: {plugin.PluginAuthor}";
+            pluginInfoDetails.Description = $"Plugin Description: {plugin.PluginDescription}";
+            var supportedDevs = plugin.SupportedDevicesAlgorithms
+                .Where(kvp => kvp.Value.Count > 0)
+                .OrderBy(kvp => kvp.Key);
+
+            var supportedDevices = $"Supported Devices: {string.Join(",", supportedDevs.Select(kvp => kvp.Key))}";
+            pluginInfoDetails.SupportedDevices = supportedDevices;
+
+            var supportedDevicesAlgos = supportedDevs.Select(kvp => {
+                var deviceType = $"\t{kvp.Key}:";
+                var algorithms = kvp.Value.Select(algo => $"\t\t- {algo}");
+
+                var ret = deviceType + Environment.NewLine + string.Join(Environment.NewLine, algorithms);
+                return ret;
+            });
+            var supportedDevicesAlgorithms = string.Join(Environment.NewLine, supportedDevicesAlgos).Replace("\t", "    ");
+
+            pluginInfoDetails.SupportedDevicesAlgorithms = $"Supported Devices Algorithms:{Environment.NewLine}{supportedDevicesAlgorithms}";
+
+            pluginInfoDetails.StatusText = "";
+
+            pluginInfoDetails.ButtonInstallRemoveText = PluginInstallRemoveText(plugin);
+            pluginInfoDetails.ButtonInstallRemoveEnabled = PluginInstallRemoveEnabled(plugin);
+            pluginInfoDetails.ButtonUpdateVisible = plugin.HasNewerVersion;
+            pluginInfoDetails.OnButtonInstallRemoveClick = OnButtonInstallRemoveClick;
+            pluginInfoDetails.OnButtonUpdateClick = OnButtonUpdateClick;
+            FormHelpers.TranslateFormControls(pluginInfoDetails);
+        }
+
+        private static PluginInfoDetails CreatePluginInfoDetails()
+        {
+            var pluginInfoDetails1 = new PluginInfoDetails()
+            {
+                Visible = false,
+                Dock = DockStyle.Fill
+            };
+            pluginInfoDetails1.OnBackClick = (s, e) => pluginInfoDetails1.Visible = false;
+            return pluginInfoDetails1;
+        }
 
         private void FormShown(object sender, EventArgs e)
         {
-            var plugins = MinerPluginsManager.RankedPlugins;
-            var evenCount = plugins.Count - plugins.Count % 2;
-            var lastSingleItemRow = plugins.Count % 2 == 1;
+            // TODO blocking make it async
+            MinerPluginsManager.GetOnlineMinerPlugins();
 
-            for (int row = 0; row < evenCount; row += 2)
+
+            var rankedUUIDs = MinerPluginsManager.RankedPlugins.Select(plugin => plugin.PluginUUID).ToList();
+
+            // update existing
+            foreach (var controlsPair in _pluginInfoDetails.Values)
             {
-                var plugin1 = plugins[row];
-                var plugin2 = plugins[row + 1];
-                var pluginRowItem = new PluginInfoItemRow();
-                setPluginInfoItem(pluginRowItem.PluginInfoItem1, plugin1);
-                setPluginInfoItem(pluginRowItem.PluginInfoItem2, plugin2);
-                flowLayoutPanelPluginsLV.Controls.Add(pluginRowItem);
+                var plugin = MinerPluginsManager.Plugins[controlsPair.Item.PluginUUID];
+                setPluginInfoItem(controlsPair.Item, plugin);
+                setPluginInfoDetails(controlsPair.Details, plugin);
+            }
+
+            var newPlugins = MinerPluginsManager.RankedPlugins.Where(plugin => _pluginInfoDetails.ContainsKey(plugin.PluginUUID) == false).ToList();
+            var lastSingleItemRow = rankedUUIDs.Count % 2 == 1;
+
+            // create and add new plugins
+            foreach (var plugin in newPlugins)
+            {
+                var controlsPair = new PluginControlPair
+                {
+                    Item = new PluginInfoItem(),
+                    Details = CreatePluginInfoDetails()
+                };
+                // add control pairs
+                _pluginInfoDetails.Add(plugin.PluginUUID, controlsPair);
+                Controls.Add(controlsPair.Details);
+                
+                setPluginInfoItem(controlsPair.Item, plugin);
+                setPluginInfoDetails(controlsPair.Details, plugin);
+            }
+
+            // get row count
+            var rowsNeeded = rankedUUIDs.Count / 2 + rankedUUIDs.Count % 2;
+            var rowsAdded = flowLayoutPanelPluginsLV.Controls.Count;
+
+            // we have new rows
+            if (rowsAdded < rowsNeeded)
+            {
+                for (int add = 0; add < rowsNeeded - rowsAdded; add++)
+                {
+                    var pluginRowItem = new PluginInfoItemRow();
+                    flowLayoutPanelPluginsLV.Controls.Add(pluginRowItem);
+                }
+            }
+            // we have too many
+            else if(rowsAdded > rowsNeeded)
+            {
+                var toRemoveCount = rowsAdded - rowsNeeded;
+                for (int remove = 0; remove < toRemoveCount; remove++)
+                {
+                    var lastIndex = flowLayoutPanelPluginsLV.Controls.Count - 1;
+                    var lastRow = flowLayoutPanelPluginsLV.Controls[lastIndex] as PluginInfoItemRow;
+                    if (lastRow != null)
+                    {
+                        lastRow.RemovePluginInfoItem1();
+                        lastRow.RemovePluginInfoItem2();
+                    }
+                    flowLayoutPanelPluginsLV.Controls.RemoveAt(lastIndex);
+                }
+            }
+
+            for (int item = 0; item < rankedUUIDs.Count; item++)
+            {
+                var uuid = rankedUUIDs[item];
+                var rowIndex = (item / 2);
+                var isFirst = (item % 2) == 0;
+
+                var controlsPair = _pluginInfoDetails[uuid];
+
+                var row = flowLayoutPanelPluginsLV.Controls[rowIndex] as PluginInfoItemRow;
+                if (row == null) continue; 
+                if (isFirst)
+                {
+                    row.SetPluginInfoItem1(controlsPair.Item);
+                }
+                else
+                {
+                    row.SetPluginInfoItem2(controlsPair.Item);
+                }
             }
             if (lastSingleItemRow)
             {
-                var plugin1 = plugins.Last();
-                var pluginRowItem = new PluginInfoItemRow();
-                setPluginInfoItem(pluginRowItem.PluginInfoItem1, plugin1);
-                pluginRowItem.PluginInfoItem2.Visible = false;
-                flowLayoutPanelPluginsLV.Controls.Add(pluginRowItem);
-            }
-        }
-
-        private void OnPluginInfoItemMouseClick(object sender, string pluginUUID)
-        {
-            //var pluginInfoItem = sender as PluginInfoItem;
-            //if (pluginInfoItem != null)
-            //{
-            //    pluginInfoItem.BackColor = Color.LightGray;
-            //}
-
-            var plugin = MinerPluginsManager.Plugins[pluginUUID];
-            groupBox2.Text = plugin.PluginName;
-            richTextBox1.Text = $"";
-            richTextBox1.Text += $"PluginName: {plugin.PluginName}" + Environment.NewLine;
-            richTextBox1.Text += $"PluginVersion: {plugin.PluginVersion}" + Environment.NewLine;
-            richTextBox1.Text += $"PluginAuthor: {plugin.PluginAuthor}" + Environment.NewLine;
-            richTextBox1.Text += $"PluginDescription: {plugin.PluginDescription}" + Environment.NewLine;
-            richTextBox1.Text += $"Installed: {plugin.Installed}" + Environment.NewLine;
-            richTextBox1.Text += $"HasNewerVersion: {plugin.HasNewerVersion}" + Environment.NewLine;
-            richTextBox1.Text += $"OnlineVersion: {plugin.OnlineInfo}" + Environment.NewLine;
-            richTextBox1.Text += $"PluginUUID: {plugin.PluginUUID}" + Environment.NewLine;
-            richTextBox1.Text += $"PluginPackageURL: {plugin.PluginPackageURL}" + Environment.NewLine;
-            richTextBox1.Text += $"MinerPackageURL: {plugin.MinerPackageURL}" + Environment.NewLine;
-            var supportedDevsAlgos = "";
-            if (plugin.SupportedDevicesAlgorithms != null)
-            {
-                foreach (var devAlgos in plugin.SupportedDevicesAlgorithms)
+                var lastIndex = flowLayoutPanelPluginsLV.Controls.Count - 1;
+                var lastRow = flowLayoutPanelPluginsLV.Controls[lastIndex] as PluginInfoItemRow;
+                if (lastRow != null)
                 {
-                    supportedDevsAlgos += $"{devAlgos.Key}:" + Environment.NewLine;
-                    foreach (var algo in devAlgos.Value)
-                    {
-                        supportedDevsAlgos += $"\t - {algo}," + Environment.NewLine;
-                    }
+                    lastRow.RemovePluginInfoItem2();
                 }
             }
-            richTextBox1.Text += $"SupportedDevicesAlgorithms: {supportedDevsAlgos}" + Environment.NewLine;
         }
 
         private async void OnButtonInstallRemoveClick(object sender, string pluginUUID)
         {
-            var pluginInfoItem = sender as PluginInfoItem;
-            if (pluginInfoItem == null) return;
+            if (_pluginInfoDetails.ContainsKey(pluginUUID) == false) return;
+            var pluginInfoControlsPair =  _pluginInfoDetails[pluginUUID];
 
             var pluginPackageInfo = MinerPluginsManager.Plugins[pluginUUID];
             try
@@ -141,11 +245,14 @@ namespace NiceHashMiner.Forms
                 {
                     MinerPluginsManager.Remove(pluginUUID);
                     //flowLayoutPanelPluginsLV.Controls.Remove(pluginInfoItem);
+                    var pluginInfoItem = pluginInfoControlsPair.Item;
                     pluginInfoItem.StatusText = "Removed";
+                    var pluginInfoDetails = pluginInfoControlsPair.Details;
+                    pluginInfoDetails.StatusText = "";
                 }
                 else if (pluginPackageInfo.Installed == false)
                 {
-                    await InstallOrUpdateAsync(pluginInfoItem, pluginUUID);
+                    await InstallOrUpdateAsync(pluginInfoControlsPair, pluginUUID);
                 }
             }
             catch (Exception e)
@@ -153,19 +260,23 @@ namespace NiceHashMiner.Forms
             }
             finally
             {
-                setPluginInfoItem(pluginInfoItem, pluginPackageInfo);
+                setPluginInfoItem(pluginInfoControlsPair.Item, pluginPackageInfo);
+                setPluginInfoDetails(pluginInfoControlsPair.Details, pluginPackageInfo);
             }
         }
 
         private async void OnButtonUpdateClick(object sender, string pluginUUID)
         {
-            var pluginInfoItem = sender as PluginInfoItem;
-            if (pluginInfoItem == null) return;
-            await InstallOrUpdateAsync(pluginInfoItem, pluginUUID);
+            if (_pluginInfoDetails.ContainsKey(pluginUUID) == false) return;
+            var pluginInfoControlsPair = _pluginInfoDetails[pluginUUID];
+            
+            await InstallOrUpdateAsync(pluginInfoControlsPair, pluginUUID);
         }
 
-        private async Task InstallOrUpdateAsync(PluginInfoItem pluginInfoItem, string pluginUUID)
+        private async Task InstallOrUpdateAsync(PluginControlPair pluginInfoControlsPair, string pluginUUID)
         {
+            var pluginInfoItem = pluginInfoControlsPair.Item;
+            var pluginInfoDetails = pluginInfoControlsPair.Details;
             // update
             var cancelInstall = new CancellationTokenSource();
             var pluginPackageInfo = MinerPluginsManager.Plugins[pluginUUID];
@@ -176,9 +287,12 @@ namespace NiceHashMiner.Forms
                 pluginInfoItem.StatusVisible = true;
                 //pluginInfoItem.ButtonUpdateEnabled = false;
 
-                //var actionText = pluginPackageInfo.Installed ? "Upgrade" : "Install";
-                //groupBox2.Text = pluginPackageInfo.PluginName;
-                //richTextBox1.Text = $"OnPluginInfoItemButtonClick {actionText}";
+                pluginInfoDetails.ButtonInstallRemoveEnabled = false;
+                pluginInfoDetails.ProgressBarVisible = true;
+                pluginInfoDetails.StatusVisible = true;
+
+                pluginInfoItem.StatusText = "Pending Install";
+                pluginInfoDetails.StatusText = "Pending Install";
 
 
                 MinerPluginsManager.DownloadAndInstallUpdate downloadAndInstallUpdate = (ProgressState state, int progress) =>
@@ -207,9 +321,14 @@ namespace NiceHashMiner.Forms
                         pluginInfoItem.StatusText = statusText;
                         pluginInfoItem.ProgressBarValue = progress;
                     });
+                    FormHelpers.SafeInvoke(pluginInfoDetails, () => {
+                        pluginInfoDetails.StatusText = statusText;
+                        pluginInfoDetails.ProgressBarValue = progress;
+                    });
                 };
                 await MinerPluginsManager.DownloadAndInstall(pluginPackageInfo, downloadAndInstallUpdate, cancelInstall.Token);
                 pluginInfoItem.ProgressBarVisible = false;
+                pluginInfoDetails.ProgressBarVisible = false;
             }
             catch (Exception e)
             {
@@ -217,6 +336,7 @@ namespace NiceHashMiner.Forms
             finally
             {
                 setPluginInfoItem(pluginInfoItem, pluginPackageInfo);
+                setPluginInfoDetails(pluginInfoDetails, pluginPackageInfo);
             }
         }
     }

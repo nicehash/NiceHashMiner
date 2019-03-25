@@ -40,6 +40,7 @@ namespace NiceHashMiner
 
         private Form_Loading _loadingScreen;
         private Form_Benchmark _benchmarkForm;
+        private Form_MinerPlugins _minerPluginsForm;
 
         private int _flowLayoutPanelVisibleCount = 0;
         private int _flowLayoutPanelRatesIndex = 0;
@@ -1043,13 +1044,7 @@ namespace NiceHashMiner
 
         private void ButtonHelp_Click(object sender, EventArgs e)
         {
-            //Process.Start(Links.NhmHelp);
-            // TODO temporary fix this later
-            using (var pluginsForm = new Form_MinerPlugins())
-            {
-                SetChildFormCenter(pluginsForm);
-                pluginsForm.ShowDialog();
-            }
+            Process.Start(Links.NhmHelp);
         }
 
         private void ToolStripStatusLabel10_Click(object sender, EventArgs e)
@@ -1303,6 +1298,13 @@ namespace NiceHashMiner
             //        this.textBoxBTCAddress.Text = loginForm.Btc;
             //    }
             //}
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (_minerPluginsForm == null) _minerPluginsForm = new Form_MinerPlugins();
+            SetChildFormCenter(_minerPluginsForm);
+            _minerPluginsForm.ShowDialog();
         }
     }
 }

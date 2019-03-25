@@ -15,21 +15,38 @@ namespace NiceHashMiner.Forms.Components
         public PluginInfoItemRow()
         {
             InitializeComponent();
+
         }
 
-        public PluginInfoItem PluginInfoItem1
+        public void SetPluginInfoItem1(PluginInfoItem pluginInfoItem)
         {
-            get
+            RemovePluginInfoItem1();
+            pluginInfoItem.Location = new Point(3, 3);
+            Controls.Add(pluginInfoItem);
+            pluginInfoItem1 = pluginInfoItem;
+        }
+
+        public void SetPluginInfoItem2(PluginInfoItem pluginInfoItem)
+        {
+            RemovePluginInfoItem2();
+            pluginInfoItem.Location = new Point(283, 3);
+            Controls.Add(pluginInfoItem);
+            pluginInfoItem2 = pluginInfoItem;
+        }
+
+        public void RemovePluginInfoItem1()
+        {
+            if (pluginInfoItem1 != null)
             {
-                return pluginInfoItem1;
+                Controls.Remove(pluginInfoItem1);
             }
         }
 
-        public PluginInfoItem PluginInfoItem2
+        public void RemovePluginInfoItem2()
         {
-            get
+            if (pluginInfoItem2 != null)
             {
-                return pluginInfoItem2;
+                Controls.Remove(pluginInfoItem2);
             }
         }
     }

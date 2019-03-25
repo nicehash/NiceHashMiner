@@ -93,10 +93,10 @@
             // labelStatus
             // 
             this.labelStatus.AutoSize = true;
-            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.labelStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.labelStatus.Location = new System.Drawing.Point(131, 144);
             this.labelStatus.Name = "labelStatus";
-            this.labelStatus.Size = new System.Drawing.Size(48, 17);
+            this.labelStatus.Size = new System.Drawing.Size(37, 13);
             this.labelStatus.TabIndex = 5;
             this.labelStatus.Text = "Status";
             // 

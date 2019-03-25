@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
 {
-    public partial class PluginInfoItem : UserControl
+    public partial class PluginInfoDetails : UserControl
     {
-        public PluginInfoItem()
+        public PluginInfoDetails()
         {
             InitializeComponent();
 
@@ -22,22 +22,8 @@ namespace NiceHashMiner.Forms.Components
             ProgressBarVisible = false;
         }
 
-        public string Description
+        public string PluginName
         {
-            get
-            {
-                return labelShortendDescription.Text;
-            }
-            set
-            {
-                if (value == null) return;
-                var setValue = value;
-                if (setValue.Length > 150) setValue = setValue.Substring(0, 15) + "...";
-                labelShortendDescription.Text = setValue;
-            }
-        }
-
-        public string PluginName {
             get
             {
                 return labelName.Text;
@@ -69,6 +55,42 @@ namespace NiceHashMiner.Forms.Components
             set
             {
                 labelAuthor.Text = value;
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return labelDescription.Text;
+            }
+            set
+            {
+                labelDescription.Text = value;
+            }
+        }
+
+        public string SupportedDevices
+        {
+            get
+            {
+                return labelSupportedDevices.Text;
+            }
+            set
+            {
+                labelSupportedDevices.Text = value;
+            }
+        }
+
+        public string SupportedDevicesAlgorithms
+        {
+            get
+            {
+                return labelSupportedDevicesAndAlgorithms.Text;
+            }
+            set
+            {
+                labelSupportedDevicesAndAlgorithms.Text = value;
             }
         }
 
@@ -118,6 +140,13 @@ namespace NiceHashMiner.Forms.Components
             {
                 buttonUpdate.Visible = value;
             }
+        }
+
+        public EventHandler OnBackClick;
+
+        private void buttonBack_Click(object sender, EventArgs e)
+        {
+            OnBackClick?.Invoke(this, e);
         }
 
         public bool ProgressBarVisible
@@ -173,13 +202,7 @@ namespace NiceHashMiner.Forms.Components
 
 
         // Events TODO 
-        public EventHandler<string> OnPluginInfoItemMouseClick;
 
-        private void PluginInfoItem_MouseClick(object sender, MouseEventArgs e)
-        {
-            OnPluginInfoItemMouseClick?.Invoke(this, PluginUUID);
-        }
-        
         public EventHandler<string> OnButtonInstallRemoveClick;
 
         private void ButtonInstallRemove_Click(object sender, EventArgs e)
@@ -192,13 +215,6 @@ namespace NiceHashMiner.Forms.Components
         private void ButtonUpdate_Click(object sender, EventArgs e)
         {
             OnButtonUpdateClick?.Invoke(this, PluginUUID);
-        }
-
-        public EventHandler<string> OnDetailsClick;
-
-        private void linkLabelDetails_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            OnDetailsClick?.Invoke(this, PluginUUID);
         }
     }
 }

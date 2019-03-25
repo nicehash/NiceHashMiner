@@ -62,6 +62,7 @@
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.button1 = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -135,7 +136,7 @@
             this.toolStripStatusLabelBalanceDollarText,
             this.toolStripStatusLabelBalanceDollarValue,
             this.toolStripStatusLabel10});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 306);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 341);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(565, 25);
             this.statusStrip1.TabIndex = 8;
@@ -329,7 +330,7 @@
             // 
             this.groupBox1.Controls.Add(this.label_NotProfitable);
             this.groupBox1.Controls.Add(this.flowLayoutPanelRates);
-            this.groupBox1.Location = new System.Drawing.Point(9, 246);
+            this.groupBox1.Location = new System.Drawing.Point(9, 276);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(551, 59);
             this.groupBox1.TabIndex = 108;
@@ -349,7 +350,7 @@
             // 
             // buttonHelp
             // 
-            this.buttonHelp.Location = new System.Drawing.Point(452, 215);
+            this.buttonHelp.Location = new System.Drawing.Point(453, 244);
             this.buttonHelp.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(89, 23);
@@ -377,14 +378,25 @@
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
             this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(435, 129);
+            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(435, 158);
             this.devicesListViewEnableControl1.TabIndex = 109;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(453, 216);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(89, 23);
+            this.button1.TabIndex = 111;
+            this.button1.Text = "Plugins";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 331);
+            this.ClientSize = new System.Drawing.Size(565, 366);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.linkLabelNewVersion);
             this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.devicesListViewEnableControl1);
@@ -458,6 +470,7 @@
         private System.Windows.Forms.Button buttonHelp;
         private System.Windows.Forms.LinkLabel linkLabelNewVersion;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button button1;
     }
 }
 
