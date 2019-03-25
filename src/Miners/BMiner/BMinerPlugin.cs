@@ -16,7 +16,7 @@ namespace BMiner
 {
     class BMinerPlugin : IMinerPlugin, IInitInternals
     {
-        public Version Version => new Version(1, 1);
+        public Version Version => new Version(1, 2);
         public string Name => "BMiner";
 
         public string Author => "Domen Kirn Krefl";
@@ -45,12 +45,14 @@ namespace BMiner
             }
             // CUDA 9.2+ driver 397.44
             var mininumRequiredDriver = new Version(397, 44);
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS >= mininumRequiredDriver) return supported;
-            var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 5).Cast<CUDADevice>();
-            foreach (var gpu in cudaGpus)
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS >= mininumRequiredDriver)
             {
-                var algos = GetCUDASupportedAlgorithms(gpu).ToList();
-                if (algos.Count > 0) supported.Add(gpu, algos);
+                var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 5).Cast<CUDADevice>();
+                foreach (var gpu in cudaGpus)
+                {
+                    var algos = GetCUDASupportedAlgorithms(gpu).ToList();
+                    if (algos.Count > 0) supported.Add(gpu, algos);
+                }
             }
 
             return supported;
