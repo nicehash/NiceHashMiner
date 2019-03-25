@@ -62,7 +62,7 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// Get or set whether this algorithm is enabled for mining
         /// </summary>
-        public bool Enabled { get; set; }
+        public virtual bool Enabled { get; set; }
 
         // TODO not needed with new xmr-stak?
         public int LessThreads { get; set; }

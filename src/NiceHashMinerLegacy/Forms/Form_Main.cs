@@ -276,13 +276,13 @@ namespace NiceHashMiner
 
             _isDeviceDetectionInitialized = true;
 
+            // Plugin Loading
+            MinerPluginsManager.LoadMinerPlugins();
+
             /////////////////////////////////////////////
             /////// from here on we have our devices and Miners initialized
             ConfigManager.AfterDeviceQueryInitialization();
             _loadingScreen.IncreaseLoadCounterAndMessage(Tr("Saving config..."));
-
-            // Plugin Loading
-            MinerPluginsManager.LoadMinerPlugins();
 
             // All devices settup should be initialized in AllDevices
             devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices);

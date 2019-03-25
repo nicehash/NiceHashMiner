@@ -114,6 +114,7 @@
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler2.cs" />
+    <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />

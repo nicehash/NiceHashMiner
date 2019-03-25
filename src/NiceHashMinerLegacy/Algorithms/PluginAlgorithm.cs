@@ -13,11 +13,13 @@ namespace NiceHashMiner.Algorithms
     {
         public AlgorithmCommon.Algorithm BaseAlgo;
 
-        public PluginAlgorithm(AlgorithmCommon.Algorithm algorithm) : base(MinerBaseType.PLUGIN, algorithm.FirstAlgorithmType, "", algorithm.Enabled)
+        public readonly string PluginName;
+
+        public PluginAlgorithm(string pluginName, AlgorithmCommon.Algorithm algorithm) : base(MinerBaseType.PLUGIN, algorithm.FirstAlgorithmType, "", algorithm.Enabled)
         {
+            PluginName = pluginName;
             BaseAlgo = algorithm;
         }
-
 
         public override string ExtraLaunchParameters {
             get
@@ -28,6 +30,19 @@ namespace NiceHashMiner.Algorithms
             set
             {
                 if (BaseAlgo != null) BaseAlgo.ExtraLaunchParameters = value;
+            }
+        }
+
+        public override bool Enabled
+        {
+            get
+            {
+                if (BaseAlgo == null) return false;
+                return BaseAlgo.Enabled;
+            }
+            set
+            {
+                if (BaseAlgo != null) BaseAlgo.Enabled = value;
             }
         }
     }

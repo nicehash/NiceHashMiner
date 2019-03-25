@@ -213,7 +213,8 @@ namespace NiceHashMiner.Devices
         {
             if (config != null && config.DeviceUUID == Uuid && config.AlgorithmSettings != null)
             {
-                AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
+                // TODO why replace AlgorithmSettings?
+                //AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
                 foreach (var conf in config.AlgorithmSettings)
                 {
                     var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID, conf.SecondaryNiceHashID);
@@ -244,6 +245,21 @@ namespace NiceHashMiner.Devices
                         }
                     }
                 }
+                if (config == null || config.DeviceUUID != Uuid || config.PluginAlgorithmSettings == null) return;
+                // plugin algorithms
+                var pluginAlgos = AlgorithmSettings.Where(algo => algo is PluginAlgorithm).Cast<PluginAlgorithm>();
+                foreach (var pluginConf in config.PluginAlgorithmSettings)
+                {
+                    var pluginAlgo = pluginAlgos
+                        .Where(pAlgo => pluginConf.PluginUUID == pAlgo.BaseAlgo.MinerID && pluginConf.AlgorithmIDs.Except(pAlgo.BaseAlgo.IDs).Count() == 0)
+                        .FirstOrDefault();
+                    if (pluginAlgo == null) continue;
+                    // set plugin algo
+                    pluginAlgo.BenchmarkSpeed = pluginConf.Speeds.FirstOrDefault();
+                    pluginAlgo.Enabled = pluginConf.Enabled;
+                    pluginAlgo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
+                    pluginAlgo.PowerUsage = pluginConf.PowerUsage;
+                }
             }
         }
 
@@ -269,6 +285,23 @@ namespace NiceHashMiner.Devices
             // init algo settings
             foreach (var algo in AlgorithmSettings)
             {
+                if (algo is PluginAlgorithm pluginAlgo)
+                {
+                    var pluginConf = new PluginAlgorithmConfig
+                    {
+                        Name = pluginAlgo.PluginName,
+                        PluginUUID = pluginAlgo.BaseAlgo.MinerID,
+                        AlgorithmIDs = pluginAlgo.BaseAlgo.IDs.ToList(),
+                        Enabled = pluginAlgo.Enabled,
+                        ExtraLaunchParameters = pluginAlgo.ExtraLaunchParameters,
+                        PluginVersion = "N/A",
+                        PowerUsage = pluginAlgo.PowerUsage,
+                        // TODO dual not supported ATM
+                        Speeds = new List<double> { pluginAlgo.BenchmarkSpeed }
+                    };
+                    ret.PluginAlgorithmSettings.Add(pluginConf);
+                    continue;
+                }
                 // create/setup
                 var conf = new AlgorithmConfig
                 {

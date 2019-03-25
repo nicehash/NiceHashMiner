@@ -67,6 +67,7 @@ namespace NiceHashMiner.Plugin
             {
                 var pluginUuid = kvp.Key;
                 var plugin = kvp.Value;
+                var pluginName = plugin.Name;
                 var supported = plugin.GetSupportedAlgorithms(baseDevices);
                 // check out the supported algorithms
                 foreach (var pair in supported)
@@ -74,7 +75,7 @@ namespace NiceHashMiner.Plugin
                     var bd = pair.Key;
                     var algos = pair.Value;
                     var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
-                    var pluginAlgos = algos.Select(a => new PluginAlgorithm(a)).ToList();
+                    var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a)).ToList();
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                 }
             }

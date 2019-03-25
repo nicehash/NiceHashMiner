@@ -11,5 +11,6 @@ namespace NiceHashMiner.Configs.Data
         //public int TimeLimit { get; set; }
         public List<AlgorithmConfig> AlgorithmSettings = new List<AlgorithmConfig>();
         public List<DualAlgorithmConfig> DualAlgorithmSettings = new List<DualAlgorithmConfig>();
+        public List<PluginAlgorithmConfig> PluginAlgorithmSettings = new List<PluginAlgorithmConfig>();
     }
 }
