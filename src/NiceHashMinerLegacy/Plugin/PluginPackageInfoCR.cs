@@ -20,7 +20,7 @@ namespace NiceHashMiner.Plugin
                 var onlineVer = OnlineInfo?.PluginVersion;
                 if (localVer == null || onlineVer == null) return false;
                 if (onlineVer.Major > localVer.Major) return true;
-                return onlineVer.Minor > localVer.Minor;
+                return onlineVer.Major == localVer.Major && onlineVer.Minor > localVer.Minor;
             }
         }
 

@@ -170,7 +170,7 @@ namespace NiceHashMiner.Forms
         private void FormShown(object sender, EventArgs e)
         {
             // TODO blocking make it async
-            MinerPluginsManager.GetOnlineMinerPlugins();
+            MinerPluginsManager.CrossReferenceInstalledWithOnline();
 
             var rankedUUIDs = MinerPluginsManager.RankedPlugins.Select(plugin => plugin.PluginUUID).ToList();
 
