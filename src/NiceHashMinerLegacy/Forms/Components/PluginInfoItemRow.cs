@@ -15,7 +15,6 @@ namespace NiceHashMiner.Forms.Components
         public PluginInfoItemRow()
         {
             InitializeComponent();
-
         }
 
         public void SetPluginInfoItem1(PluginInfoItem pluginInfoItem)

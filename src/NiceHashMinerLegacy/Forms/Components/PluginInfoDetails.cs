@@ -18,7 +18,10 @@ namespace NiceHashMiner.Forms.Components
 
             buttonInstallRemove.Click += new EventHandler(ButtonInstallRemove_Click);
             buttonUpdate.Click += new EventHandler(ButtonUpdate_Click);
+            buttonCancel.Click += new EventHandler(ButtonCancel_Click);
 
+            labelStatus.Text = "";
+            buttonCancel.Visible = false;
             ProgressBarVisible = false;
         }
 
@@ -142,11 +145,20 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
-        public EventHandler OnBackClick;
-
-        private void buttonBack_Click(object sender, EventArgs e)
+        public void SwapInstallRemoveButtonWithCancelButton(bool isCancel)
         {
-            OnBackClick?.Invoke(this, e);
+            if (isCancel)
+            {
+                buttonCancel.Visible = true;
+                buttonInstallRemove.Enabled = false;
+                buttonInstallRemove.Visible = false;
+            }
+            else
+            {
+                buttonCancel.Visible = false;
+                buttonInstallRemove.Enabled = true;
+                buttonInstallRemove.Visible = true;
+            }
         }
 
         public bool ProgressBarVisible
@@ -203,6 +215,13 @@ namespace NiceHashMiner.Forms.Components
 
         // Events TODO 
 
+        public EventHandler OnBackClick;
+
+        private void buttonBack_Click(object sender, EventArgs e)
+        {
+            OnBackClick?.Invoke(this, e);
+        }
+
         public EventHandler<string> OnButtonInstallRemoveClick;
 
         private void ButtonInstallRemove_Click(object sender, EventArgs e)
@@ -215,6 +234,13 @@ namespace NiceHashMiner.Forms.Components
         private void ButtonUpdate_Click(object sender, EventArgs e)
         {
             OnButtonUpdateClick?.Invoke(this, PluginUUID);
+        }
+
+        public EventHandler<string> OnButtonCancel;
+
+        private void ButtonCancel_Click(object sender, EventArgs e)
+        {
+            OnButtonCancel?.Invoke(this, PluginUUID);
         }
     }
 }

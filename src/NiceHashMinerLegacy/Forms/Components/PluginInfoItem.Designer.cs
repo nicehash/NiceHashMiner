@@ -38,6 +38,7 @@
             this.labelShortendDescription = new System.Windows.Forms.Label();
             this.linkLabelDetails = new System.Windows.Forms.LinkLabel();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonCancel = new System.Windows.Forms.Button();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -146,11 +147,21 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(269, 135);
             this.flowLayoutPanel1.TabIndex = 9;
             // 
+            // buttonCancel
+            // 
+            this.buttonCancel.Location = new System.Drawing.Point(3, 144);
+            this.buttonCancel.Name = "buttonCancel";
+            this.buttonCancel.Size = new System.Drawing.Size(122, 23);
+            this.buttonCancel.TabIndex = 10;
+            this.buttonCancel.Text = "Cancel";
+            this.buttonCancel.UseVisualStyleBackColor = true;
+            // 
             // PluginInfoItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.labelStatus);
@@ -178,5 +189,6 @@
         private System.Windows.Forms.Label labelShortendDescription;
         private System.Windows.Forms.LinkLabel linkLabelDetails;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.Button buttonCancel;
     }
 }

@@ -52,7 +52,37 @@ namespace NiceHashMiner.Forms
         }
 
         private Dictionary<string, PluginControlPair> _pluginInfoDetails = new Dictionary<string, PluginControlPair>();
+
+        private object _lock = new object();
+        private HashSet<string> _activeTasks = new HashSet<string>();
         
+        private void AddActiveTask(string uuid)
+        {
+            lock(_lock)
+            {
+                _activeTasks.Add(uuid);
+            }
+        }
+
+        private void RemoveActiveTask(string uuid)
+        {
+            lock (_lock)
+            {
+                _activeTasks.Remove(uuid);
+            }
+        }
+
+        private List<string> GetActiveTasks()
+        {
+            var ret = new List<string>();
+            lock (_lock)
+            {
+                foreach (var uuid in _activeTasks) ret.Add(uuid);
+            }
+            return ret;
+        }
+
+
         private static string PluginInstallRemoveText(PluginPackageInfoCR plugin)
         {
             if (plugin.Installed) return Tr("Remove");
@@ -142,13 +172,15 @@ namespace NiceHashMiner.Forms
             // TODO blocking make it async
             MinerPluginsManager.GetOnlineMinerPlugins();
 
-
             var rankedUUIDs = MinerPluginsManager.RankedPlugins.Select(plugin => plugin.PluginUUID).ToList();
 
-            // update existing
+            // update existing that are not in a task
+            var ignoreActive = GetActiveTasks();
             foreach (var controlsPair in _pluginInfoDetails.Values)
             {
-                var plugin = MinerPluginsManager.Plugins[controlsPair.Item.PluginUUID];
+                var uuid = controlsPair.Item.PluginUUID;
+                if (ignoreActive.Contains(uuid)) continue;
+                var plugin = MinerPluginsManager.Plugins[uuid];
                 setPluginInfoItem(controlsPair.Item, plugin);
                 setPluginInfoDetails(controlsPair.Details, plugin);
             }
@@ -282,12 +314,15 @@ namespace NiceHashMiner.Forms
             var pluginPackageInfo = MinerPluginsManager.Plugins[pluginUUID];
             try
             {
-                pluginInfoItem.ButtonInstallRemoveEnabled = false;
+                AddActiveTask(pluginUUID);
+                pluginInfoItem.OnButtonCancel = (s, e) => cancelInstall.Cancel();
+                pluginInfoItem.SwapInstallRemoveButtonWithCancelButton(true);
                 pluginInfoItem.ProgressBarVisible = true;
                 pluginInfoItem.StatusVisible = true;
                 //pluginInfoItem.ButtonUpdateEnabled = false;
 
-                pluginInfoDetails.ButtonInstallRemoveEnabled = false;
+                pluginInfoDetails.OnButtonCancel = (s, e) => cancelInstall.Cancel();
+                pluginInfoDetails.SwapInstallRemoveButtonWithCancelButton(true);
                 pluginInfoDetails.ProgressBarVisible = true;
                 pluginInfoDetails.StatusVisible = true;
 
@@ -327,16 +362,20 @@ namespace NiceHashMiner.Forms
                     });
                 };
                 await MinerPluginsManager.DownloadAndInstall(pluginPackageInfo, downloadAndInstallUpdate, cancelInstall.Token);
-                pluginInfoItem.ProgressBarVisible = false;
-                pluginInfoDetails.ProgressBarVisible = false;
+                
             }
             catch (Exception e)
             {
             }
             finally
             {
+                pluginInfoItem.ProgressBarVisible = false;
+                pluginInfoDetails.ProgressBarVisible = false;
+                pluginInfoItem.SwapInstallRemoveButtonWithCancelButton(false);
+                pluginInfoDetails.SwapInstallRemoveButtonWithCancelButton(false);
                 setPluginInfoItem(pluginInfoItem, pluginPackageInfo);
                 setPluginInfoDetails(pluginInfoDetails, pluginPackageInfo);
+                RemoveActiveTask(pluginUUID);
             }
         }
     }

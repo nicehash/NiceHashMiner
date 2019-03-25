@@ -18,7 +18,11 @@ namespace NiceHashMiner.Forms.Components
 
             buttonInstallRemove.Click += new EventHandler(ButtonInstallRemove_Click);
             buttonUpdate.Click += new EventHandler(ButtonUpdate_Click);
+            buttonCancel.Click += new EventHandler(ButtonCancel_Click);
 
+
+            labelStatus.Text = "";
+            buttonCancel.Visible = false;
             ProgressBarVisible = false;
         }
 
@@ -169,6 +173,22 @@ namespace NiceHashMiner.Forms.Components
             }
         }
 
+        public void SwapInstallRemoveButtonWithCancelButton(bool isCancel)
+        {
+            if (isCancel)
+            {
+                buttonCancel.Visible = true;
+                buttonInstallRemove.Enabled = false;
+                buttonInstallRemove.Visible = false;
+            }
+            else
+            {
+                buttonCancel.Visible = false;
+                buttonInstallRemove.Enabled = true;
+                buttonInstallRemove.Visible = true;
+            }
+        }
+
         public string PluginUUID { get; set; }
 
 
@@ -185,6 +205,13 @@ namespace NiceHashMiner.Forms.Components
         private void ButtonInstallRemove_Click(object sender, EventArgs e)
         {
             OnButtonInstallRemoveClick?.Invoke(this, PluginUUID);
+        }
+
+        public EventHandler<string> OnButtonCancel;
+
+        private void ButtonCancel_Click(object sender, EventArgs e)
+        {
+            OnButtonCancel?.Invoke(this, PluginUUID);
         }
 
         public EventHandler<string> OnButtonUpdateClick;
