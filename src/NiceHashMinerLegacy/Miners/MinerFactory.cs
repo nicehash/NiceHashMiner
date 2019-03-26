@@ -65,8 +65,6 @@ namespace NiceHashMiner.Miners
                     return new XmrStak.XmrStak();
                 case MinerBaseType.EWBF:
                     return CreateEwbf(algorithm.NiceHashID);
-                case MinerBaseType.Prospector:
-                    return new Prospector();
                 case MinerBaseType.trex:
                     return new Trex();
                 case MinerBaseType.Phoenix:

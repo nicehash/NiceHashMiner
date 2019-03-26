@@ -27,6 +27,7 @@ namespace NiceHashMinerLegacy.Common.Enums
         [Obsolete("Miner is obsolete")]
         experimental,
         EWBF,
+        [Obsolete("Miner is obsolete")]
         Prospector,
         [Obsolete("Miner is obsolete")]
         Xmrig,
