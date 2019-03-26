@@ -3,12 +3,18 @@ using MyDownloader.Core.Extensions;
 using MyDownloader.Core.UI;
 using MyDownloader.Extension.Protocols;
 using NiceHashMiner.Interfaces;
-using SharpCompress.Archive;
-using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+
+// for now keep both, but replace with USE_DOT_NET_IO_Compression
+#if USE_DOT_NET_IO_Compression
+using System.IO.Compression;
+#else
+using SharpCompress.Archive;
+using SharpCompress.Common;
+#endif
 
 namespace NiceHashMiner.Utils
 {
@@ -88,7 +94,7 @@ namespace NiceHashMiner.Utils
             _timer.Change(0, 500);
         }
 
-        #region Download delegates
+#region Download delegates
 
         private void TmrRefresh_Tick(object stateInfo)
         {
@@ -152,7 +158,7 @@ namespace NiceHashMiner.Utils
             }
         }
 
-        #endregion Download delegates
+#endregion Download delegates
 
 
         private void UnzipStart()
@@ -166,6 +172,66 @@ namespace NiceHashMiner.Utils
             _unzipThread.Start();
         }
 
+#if USE_DOT_NET_IO_Compression
+        private void UnzipThreadRoutine()
+        {
+            try
+            {
+                if (File.Exists(_downloadSetup.BinsZipLocation))
+                {
+                    Helpers.ConsolePrint(Tag, _downloadSetup.BinsZipLocation + " already downloaded");
+                    Helpers.ConsolePrint(Tag, "unzipping");
+
+                    _minerUpdateIndicator.SetMaxProgressValue(100);
+                    using (var archive = ZipFile.OpenRead(_downloadSetup.BinsZipLocation))
+                    {
+                        float entriesCount = archive.Entries.Count;
+                        float extractedEntries = 0;
+                        foreach (var entry in archive.Entries)
+                        {
+                            extractedEntries += 1;
+                            var isDirectory = entry.Name == "";
+                            if (isDirectory) continue;
+
+                            Helpers.ConsolePrint(Tag, entry.FullName);
+                            var prog = ((extractedEntries / entriesCount) * 100.0f);
+                            var unzipStr = string.Format(Translations.Tr("Unzipping {0} %"), prog.ToString("F2"));
+                            _minerUpdateIndicator.SetProgressValueAndMsg((int)prog, unzipStr);
+
+                            var extractPath = Path.Combine(Environment.CurrentDirectory, entry.FullName);
+                            var dirPath = Path.GetDirectoryName(extractPath);
+                            if (!Directory.Exists(dirPath)) {
+                                Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
+                            }
+                            entry.ExtractToFile(extractPath, true);
+                        }
+                    }
+                    // after unzip stuff
+                    _minerUpdateIndicator.FinishMsg(true);
+                    // remove bins zip
+                    try
+                    {
+                        if (File.Exists(_downloadSetup.BinsZipLocation))
+                        {
+                            File.Delete(_downloadSetup.BinsZipLocation);
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Helpers.ConsolePrint("MinersDownloader.UnzipThreadRoutine", "Cannot delete exception: " + e.Message);
+                    }
+                }
+                else
+                {
+                    Helpers.ConsolePrint(Tag, $"UnzipThreadRoutine {_downloadSetup.BinsZipLocation} file not found");
+                }
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint(Tag, "UnzipThreadRoutine has encountered an error: " + e.Message);
+            }
+        }
+#else
         private void UnzipThreadRoutine()
         {
             try
@@ -188,8 +254,8 @@ namespace NiceHashMiner.Utils
                             Helpers.ConsolePrint(Tag, entry.Key);
                             entry.WriteToDirectory("", ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
 
-                            var prog = sizeCount / (double) fileArchive.Length * 100;
-                            _minerUpdateIndicator.SetProgressValueAndMsg((int) prog,
+                            var prog = sizeCount / (double)fileArchive.Length * 100;
+                            _minerUpdateIndicator.SetProgressValueAndMsg((int)prog,
                                 string.Format(Translations.Tr("Unzipping {0} %"), prog.ToString("F2")));
                         }
                     }
@@ -219,5 +285,6 @@ namespace NiceHashMiner.Utils
                 Helpers.ConsolePrint(Tag, "UnzipThreadRoutine has encountered an error: " + e.Message);
             }
         }
+#endif
     }
 }
