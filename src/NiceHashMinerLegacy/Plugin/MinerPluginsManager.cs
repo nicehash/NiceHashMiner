@@ -228,6 +228,7 @@ namespace NiceHashMiner.Plugin
             var installingPluginPath = Path.Combine(Paths.MinerPluginsPath(), $"{installingPrefix}{plugin.PluginUUID}");
             try
             {
+                if (Directory.Exists(installingPluginPath)) Directory.Delete(installingPluginPath, true);
                 //downloadAndInstallUpdate("Starting");
                 Directory.CreateDirectory(installingPluginPath);
 
@@ -298,9 +299,11 @@ namespace NiceHashMiner.Plugin
 
         public delegate void OnZipProgres(int prog);
 
+        
         public static async Task<bool> UnzipFile(string zipLocation, string unzipLocation, OnZipProgres zipProgressChangedEventHandler, CancellationToken stop)
         {
-            return await Task.Run(() => {
+            try
+            {
                 using (var archive = ZipFile.OpenRead(zipLocation))
                 {
                     float entriesCount = archive.Entries.Count;
@@ -322,11 +325,22 @@ namespace NiceHashMiner.Plugin
                         {
                             Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
                         }
-                        entry.ExtractToFile(extractPath, true);
+                        //entry.ExtractToFile(extractPath, true);
+
+                        using (var zipStream = entry.Open())
+                        using (var fileStream = new FileStream(extractPath, FileMode.CreateNew))
+                        {
+                            await zipStream.CopyToAsync(fileStream);
+                        }
                     }
                 }
                 return true;
-            }, stop);
+            }
+            catch(Exception e)
+            {
+                // TODO log
+                return false;
+            }
         }
         #endregion Downloading
     }
