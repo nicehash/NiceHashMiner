@@ -70,6 +70,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\..\packages\BouncyCastle.1.8.5\lib\BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
     <Reference Include="log4net">
       <HintPath>..\3rdparty\log4net\log4net.dll</HintPath>
     </Reference>
@@ -282,6 +285,10 @@
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
     <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
+    <Compile Include="Utils\Guid\Constants.cs" />
+    <Compile Include="Utils\Guid\Providers\HashProvider.cs" />
+    <Compile Include="Utils\Guid\Providers\RandomNumberProvider.cs" />
+    <Compile Include="Utils\Guid\UUID.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />
