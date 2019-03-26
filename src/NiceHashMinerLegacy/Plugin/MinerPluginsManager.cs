@@ -204,25 +204,12 @@ namespace NiceHashMiner.Plugin
             // TODO loading
         }
 
-        public delegate void DownloadAndInstallUpdate(ProgressState state, int progress);
-        //public delegate void DownloadAndInstallUpdate(string infoStr);
-
-        public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, DownloadAndInstallUpdate downloadAndInstallUpdate, CancellationToken stop)
+        public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, IProgress<(ProgressState state, int progress)> progress, CancellationToken stop)
         {
-            var downloadPluginProgressChangedEventHandler = new DownloadProgressChangedEventHandler((s, e1) => {
-                downloadAndInstallUpdate?.Invoke(ProgressState.DownloadingPlugin, e1.ProgressPercentage);
-            });
-            OnZipProgres zipProgressPluginChangedEventHandler = (int progress) => {
-                downloadAndInstallUpdate?.Invoke(ProgressState.ExtractingPlugin, progress);
-            };
-            var downloadMinerProgressChangedEventHandler = new DownloadProgressChangedEventHandler((s, e1) => {
-                downloadAndInstallUpdate?.Invoke(ProgressState.DownloadingMiner, e1.ProgressPercentage);
-            });
-            OnZipProgres zipProgressMinerChangedEventHandler = (int progress) => {
-                downloadAndInstallUpdate?.Invoke(ProgressState.ExtractingMiner, progress);
-            };
-
-
+            var downloadPluginProgressChangedEventHandler = new Progress<int>(perc => progress?.Report((ProgressState.DownloadingPlugin, perc)));
+            var zipProgressPluginChangedEventHandler = new Progress<int>(perc => progress?.Report((ProgressState.ExtractingPlugin, perc)));
+            var downloadMinerProgressChangedEventHandler = new Progress<int>(perc => progress?.Report((ProgressState.DownloadingMiner, perc)));
+            var zipProgressMinerChangedEventHandler = new Progress<int>(perc => progress?.Report((ProgressState.ExtractingMiner, perc)));
 
             const string installingPrefix = "installing_";
             var installingPluginPath = Path.Combine(Paths.MinerPluginsPath(), $"{installingPrefix}{plugin.PluginUUID}");
@@ -280,12 +267,14 @@ namespace NiceHashMiner.Plugin
             }
         }
 
-        public static async Task<bool> DownloadFile(string url, string downloadFileLocation, DownloadProgressChangedEventHandler downloadProgressChangedEventHandler, CancellationToken stop)
+        public static async Task<bool> DownloadFile(string url, string downloadFileLocation, IProgress<int> progress, CancellationToken stop)
         {
             var downloadStatus = false;
             using (var client = new WebClient())
             {
-                client.DownloadProgressChanged += downloadProgressChangedEventHandler;
+                client.DownloadProgressChanged += (s, e1) => {
+                    progress?.Report(e1.ProgressPercentage);
+                };
                 client.DownloadFileCompleted += (s, e) =>
                 {
                     downloadStatus = !e.Cancelled && e.Error == null;
@@ -296,11 +285,8 @@ namespace NiceHashMiner.Plugin
             }
             return downloadStatus;
         }
-
-        public delegate void OnZipProgres(int prog);
-
         
-        public static async Task<bool> UnzipFile(string zipLocation, string unzipLocation, OnZipProgres zipProgressChangedEventHandler, CancellationToken stop)
+        public static async Task<bool> UnzipFile(string zipLocation, string unzipLocation, IProgress<int> progress, CancellationToken stop)
         {
             try
             {
@@ -317,7 +303,7 @@ namespace NiceHashMiner.Plugin
                         if (isDirectory) continue;
 
                         var prog = ((extractedEntries / entriesCount) * 100.0f);
-                        zipProgressChangedEventHandler((int)prog);
+                        progress?.Report((int)prog);
 
                         var extractPath = Path.Combine(unzipLocation, entry.FullName);
                         var dirPath = Path.GetDirectoryName(extractPath);
@@ -336,7 +322,7 @@ namespace NiceHashMiner.Plugin
                 }
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 // TODO log
                 return false;
