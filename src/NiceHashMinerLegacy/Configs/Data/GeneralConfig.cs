@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -40,9 +41,11 @@ namespace NiceHashMiner.Configs.Data
         public bool DisableDefaultOptimizations = false;
 
         public bool AutoScaleBTCValues = true;
-        public bool StartMiningWhenIdle = false;
 
+        public bool StartMiningWhenIdle = false;
+        public IdleCheckType IdleCheckType = IdleCheckType.SessionLock;
         public int MinIdleSeconds = 60;
+
         public bool LogToFile = true;
 
         // in bytes
@@ -100,7 +103,14 @@ namespace NiceHashMiner.Configs.Data
         /// </summary>
         public bool UseSmaCache = true;
 
+        public bool ShowPowerColumns = false;
+        public bool ShowDiagColumns = true;
+
+        public Point MainFormSize = new Point(1000, 400);
+
         public bool UseEthlargement = false;
+
+        public string RigGroup = "";
 
         // methods
         public void SetDefaults()
@@ -140,6 +150,7 @@ namespace NiceHashMiner.Configs.Data
             DownloadInit = false;
             //ContinueMiningIfNoInternetAccess = false;
             IdleWhenNoInternetAccess = true;
+            IdleCheckType = IdleCheckType.SessionLock;
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
             DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
@@ -152,7 +163,10 @@ namespace NiceHashMiner.Configs.Data
             SwitchSmaTicksStable = new Interval(2, 3);
             SwitchSmaTicksUnstable = new Interval(5, 13);
             UseSmaCache = true;
+            ShowPowerColumns = false;
+            ShowDiagColumns = true;
             UseEthlargement = false;
+            RigGroup = "";
         }
 
         public void FixSettingBounds()
@@ -224,6 +238,18 @@ namespace NiceHashMiner.Configs.Data
             SwitchSmaTimeChangeSeconds.FixRange();
             SwitchSmaTicksStable.FixRange();
             SwitchSmaTicksUnstable.FixRange();
+        }
+
+        public bool HasValidUserWorker()
+        {
+            return NiceHashMiner.BitcoinAddress.ValidateBitcoinAddress(BitcoinAddress) &&
+                   NiceHashMiner.BitcoinAddress.ValidateWorkerName(WorkerName);
+        }
+
+        //C#7
+        public (string btc, string worker, string group) GetCredentials()
+        {
+            return (BitcoinAddress.Trim(), WorkerName.Trim(), RigGroup.Trim());
         }
     }
 }

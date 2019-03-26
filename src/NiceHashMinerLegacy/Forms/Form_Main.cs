@@ -24,7 +24,7 @@ namespace NiceHashMiner
 {
     public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IMainFormRatesComunication
     {
-        private string _visitUrlNew = Links.VisitUrlNew;
+        private string _visitUrlNew = Links.VisitNewVersionReleaseUrl;
 
         private Timer _minerStatsCheck;
         //private Timer _smaMinerCheck;
@@ -878,7 +878,7 @@ namespace NiceHashMiner
             if (ret < 0 || (ret == 0 && BetaAlphaPostfixString != ""))
             {
                 SetVersionLabel(string.Format(Tr("IMPORTANT! New version v{0} has\r\nbeen released. Click here to download it."), ver));
-                _visitUrlNew = Links.VisitUrlNew + ver;
+                _visitUrlNew = Links.VisitNewVersionReleaseUrl + ver;
             }
         }
 

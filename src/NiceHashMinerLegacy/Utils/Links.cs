@@ -5,7 +5,8 @@
         public const string VisitUrl = "https://www.nicehash.com";
 
         // add version
-        public const string VisitUrlNew = "https://github.com/NiceHash/NiceHashMinerLegacy/releases/tag/";
+        public const string VisitReleasesUrl = "https://github.com/NiceHash/NiceHashMinerLegacy/releases/";
+        public const string VisitNewVersionReleaseUrl = "https://github.com/NiceHash/NiceHashMinerLegacy/releases/tag/";
 
         // add btc adress as parameter
         public const string CheckStats = "https://www.nicehash.com/index.jsp?p=miners&addr=";
@@ -29,6 +30,12 @@
         public const string NhmProfitCheck = "https://api.nicehash.com/p=calc&name=";
 
         // SMA Socket
+#if TESTNET
+        public const string NhmSocketAddress = "https://nhmws-test.nicehash.com/v3/nhml"; // new endpoint with balances and exchanges
+#elif TESTNETDEV
+        public const string NhmSocketAddress = "https://nhmws-test-dev.nicehash.com/v3/nhml"; // new endpoint with balances and exchanges
+#else
         public const string NhmSocketAddress = "https://nhmws.nicehash.com/v2/nhm";
+#endif
     }
 }

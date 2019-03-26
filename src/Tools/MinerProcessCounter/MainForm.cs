@@ -26,7 +26,7 @@ namespace MinerProcessCounter
             psSnapshotIntervalTimer.Start();
         }
 
-        private async void StartupTimer_Tick(object sender, EventArgs e)
+        private void StartupTimer_Tick(object sender, EventArgs e)
         {
             var running = ProcessWalker.ListRunning();
             dataGridView1.Rows.Clear();
