@@ -500,16 +500,17 @@
   <PropertyGroup>
     <PostBuildEvent>REM copy translations. Always copy and replace file
 copy /Y "$(ProjectDir)\translations.json" "$(SolutionDir)$(Configuration)\translations.json"
-
-
+REM device detection test script
+copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_test.bat" "$(SolutionDir)$(Configuration)\device_detection_test.bat"
 
 REM copy device detection dll's. Copy only if files don't exist
 If NOT exist "$(SolutionDir)$(Configuration)\cpuid.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cpuid.dll" "$(SolutionDir)$(Configuration)\cpuid.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\cuda_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cuda_device_detection.dll" "$(SolutionDir)$(Configuration)\cuda_device_detection.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcp120.dll" "$(SolutionDir)$(Configuration)\msvcp120.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcr120.dll" "$(SolutionDir)$(Configuration)\msvcr120.dll"
-REM OpenCL.dll can cause problems don't copy it over
-REM If NOT exist "$(SolutionDir)$(Configuration)\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL.dll"
+REM OpenCL.dll inside a separate folder
+If NOT exist "$(SolutionDir)$(Configuration)\OpenCL\" mkdir "$(SolutionDir)$(Configuration)\OpenCL\"
+if NOT exist "$(SolutionDir)$(Configuration)\OpenCL\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL\OpenCL.dll"
 If NOT exist "$(SolutionDir)$(Configuration)\opencl_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\opencl_device_detection.dll" "$(SolutionDir)$(Configuration)\opencl_device_detection.dll"
 
 
