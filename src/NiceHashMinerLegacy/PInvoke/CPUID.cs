@@ -76,19 +76,19 @@ namespace NiceHashMiner
             return mask;
         }
 
-        public static void AdjustAffinity(int pid, ulong mask)
-        {
-            var processHandle = new Process
-            {
-                StartInfo =
-                {
-                    FileName = "setcpuaff.exe",
-                    Arguments = pid + " " + mask,
-                    CreateNoWindow = true,
-                    UseShellExecute = false
-                }
-            };
-            processHandle.Start();
-        }
+        //public static void AdjustAffinity(int pid, ulong mask)
+        //{
+        //    var processHandle = new Process
+        //    {
+        //        StartInfo =
+        //        {
+        //            FileName = "setcpuaff.exe",
+        //            Arguments = pid + " " + mask,
+        //            CreateNoWindow = true,
+        //            UseShellExecute = false
+        //        }
+        //    };
+        //    processHandle.Start();
+        //}
     }
 }
