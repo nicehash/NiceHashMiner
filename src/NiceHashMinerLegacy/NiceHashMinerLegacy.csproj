@@ -471,13 +471,13 @@
       <Project>{92d51a33-7bf0-47fd-9ece-d758ffe1691d}</Project>
       <Name>Nvml</Name>
     </ProjectReference>
+    <ProjectReference Include="..\3rdparty\MessageBoxManager\MessageBoxManager.csproj">
+      <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
+      <Name>MessageBoxManager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\3rdparty\websocket-sharp\websocket-sharp.csproj">
       <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
       <Name>websocket-sharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Helpers\MessageBoxManager\MessageBoxManager.csproj">
-      <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
-      <Name>MessageBoxManager</Name>
     </ProjectReference>
     <ProjectReference Include="..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
