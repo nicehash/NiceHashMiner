@@ -12,5 +12,6 @@ namespace NiceHashMiner.Devices
         public List<CudaDevice> CudaDevices;
         public string DriverVersion;
         public string ErrorString;
+        public bool NvmlLoaded;
     }
 }
