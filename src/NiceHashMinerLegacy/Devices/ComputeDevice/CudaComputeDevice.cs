@@ -121,7 +121,15 @@ namespace NiceHashMiner.Devices
             BusID = cudaDevice.pciBusID;
             SMMajor = cudaDevice.SM_major;
             SMMinor = cudaDevice.SM_minor;
-            Uuid = cudaDevice.UUID;
+            // if no nvml loaded fallback ID
+            if (string.IsNullOrEmpty(cudaDevice.UUID))
+            {
+                Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+            }
+            else
+            {
+                Uuid = cudaDevice.UUID;
+            }
             AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
             Index = ID + AvailableDevices.AvailCpus; // increment by CPU count
 
