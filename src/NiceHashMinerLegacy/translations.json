@@ -16,7 +16,6 @@
       "es": " (actual {0})",
       "it": " (attuale {0})",
       "pl": " (obecny {0})",
-      "pt": " (current {0})",
       "ro": " (curent {0})",
       "ru": " (текущий {0})",
       "zh_cn": "(当前 {0})"
@@ -29,20 +28,13 @@
     },
     "&Benchmark": {
       "bg": "&Тест скорост",
-      "es": "&Benchmark",
-      "it": "&Benchmark",
-      "pl": "&Benchmark",
-      "pt": "&Benchmark",
-      "ro": "&Benchmark",
       "ru": "&Бенчмарк",
       "zh_cn": "基准测试 (&B)"
     },
     "&Cancel": {
       "bg": "Отка&з",
-      "es": "&Cancel",
       "it": "&Annulla",
       "pl": "&Anuluj",
-      "pt": "&Cancel",
       "ro": "&Anulare",
       "ru": "О&тмена",
       "zh_cn": "取消 (&C)"
@@ -131,13 +123,6 @@
       "zh_cn": "否 (&N)"
     },
     "&OK": {
-      "bg": "&ОК",
-      "es": "&OK",
-      "it": "&OK",
-      "pl": "&OK",
-      "pt": "&OK",
-      "ro": "&OK",
-      "ru": "&OK",
       "zh_cn": "确认 (&O)"
     },
     "&Precise (will take longer)": {
@@ -163,8 +148,6 @@
     "&Reset": {
       "bg": "&Ресет",
       "es": "&Resetear",
-      "it": "&Reset",
-      "pl": "&Reset",
       "pt": "&Resetar",
       "ro": "&Resetează",
       "ru": "Сбр&осить",
@@ -172,10 +155,8 @@
     },
     "&Retry": {
       "bg": "&Опитай отново",
-      "es": "&Retry",
       "it": "&Riprova",
       "pl": "&Ponów",
-      "pt": "&Retry",
       "ro": "&Reîncearcă",
       "ru": "&Повторить",
       "zh_cn": "重试 (&R)"
@@ -193,30 +174,22 @@
     "&Standard": {
       "bg": "&Стандартен",
       "es": "Es&tandar",
-      "it": "&Standard",
       "pl": "&Zwykły",
       "pt": "&Normal",
-      "ro": "&Standard",
       "ru": "Ст&андартный",
       "zh_cn": "普通 (&S)"
     },
     "&Start": {
       "bg": "&Тест",
       "es": "&Empezar",
-      "it": "&Start",
-      "pl": "&Start",
       "pt": "&Iniciar",
-      "ro": "&Start",
       "ru": "&Старт",
       "zh_cn": "开始 (&S)"
     },
     "&Stop": {
       "bg": "Сто&п",
       "es": "&Detener",
-      "it": "&Stop",
-      "pl": "&Stop",
       "pt": "&Parar",
-      "ro": "&Stop",
       "ru": "С&топ",
       "zh_cn": "停止 (&S)"
     },
@@ -231,41 +204,25 @@
       "zh_cn": "是 (&Y)"
     },
     "(AMD) [s]:": {
-      "bg": "AMD [s]:",
-      "es": "(AMD) [s]:",
-      "it": "(AMD) [s]:",
-      "pl": "(AMD) [s]:",
-      "pt": "(AMD) [s]:",
       "ro": "(AMD) [uri]:",
       "ru": "(AMD) [с]:",
       "zh_cn": "(AMD) [秒]:"
     },
     "(CPU) [s]:": {
-      "bg": "Процесор [s]:",
-      "es": "(CPU) [s]:",
-      "it": "(CPU) [s]:",
-      "pl": "(CPU) [s]:",
-      "pt": "(CPU) [s]:",
+      "bg": "(Процесор) [s]:",
       "ro": "(CPU) [uri]:",
       "ru": "(CPU) [с]:",
       "zh_cn": "(CPU) [秒]:"
     },
     "(NVIDIA) [s]:": {
-      "bg": "NVIDIA [s]:",
-      "es": "(NVIDIA) [s]:",
-      "it": "(NVIDIA) [s]:",
-      "pl": "(NVIDIA) [s]:",
-      "pt": "(NVIDIA) [s]:",
       "ro": "(NVIDIA) [uri]:",
       "ru": "(NVIDIA) [с]:",
       "zh_cn": "(NVIDIA) [秒]:"
     },
     "AMD Miner API Grace [s]": {
-      "bg": "AMD Miner API Grace [s]",
       "es": "Periodo de gracia de la API del minero(AMD)[s]",
       "it": "Abbuono API Miner AMD [s]",
       "pl": "Opóźnienie API górnika AMD [s]",
-      "pt": "AMD Miner API Grace [s]",
       "ro": "Grație AMD Miner API [s]",
       "ru": "AMD ожидание API [с]",
       "zh_cn": "AMD矿工API宽限 [秒]"
@@ -274,9 +231,6 @@
       "bg": "Порт за връзка с API",
       "es": "Puerto de API",
       "it": "Porta Bind API",
-      "pl": "API Bind Port",
-      "pt": "API Bind Port",
-      "ro": "Port API Bind",
       "ru": "Порт связи API",
       "zh_cn": "API绑定端口"
     },
@@ -285,7 +239,6 @@
       "es": "Puertos disponibles para la API:",
       "it": "Numero porta bind API per pool:",
       "pl": "Numer portu API:",
-      "pt": "API Bind port pool start:",
       "ro": "Poer API Bind start pool:",
       "ru": "Начальный порт связи API:",
       "zh_cn": "API绑定端口池下限:"
@@ -295,7 +248,6 @@
       "es": "Puerto de la API que será usado por ethminer para {0} GPUs.",
       "it": "La porta API che verrà usata da ethminer per le GPU {0}.",
       "pl": "Port API górnika ethminer dla kart {0}.",
-      "pt": "API port that will be used by ethminer for {0} GPUs.",
       "ro": "Port API care va fi utilizat de ethminer pentru GPUuri {0}.",
       "ru": "Порт API, который будет использоваться ethminer для {0} GPU.",
       "zh_cn": "ethminer在{0} GPU上运行时使用的API端口。"
@@ -305,7 +257,6 @@
       "es": "Puerto de la API que será usado por este grupo.",
       "it": "La porta API che verrà usata da questo gruppo.",
       "pl": "Port API używany przez tę grupę.",
-      "pt": "API port that will be used by this group.",
       "ro": "Port API care va fi folosit de acest grup.",
       "ru": "Порт API, который будет использоваться этой группой.",
       "zh_cn": "此组用户使用的API端口。"
@@ -335,7 +286,6 @@
       "es": "Parámetros de inicio adicionales.",
       "it": "Parametri di lancio aggiuntivi quando si avvia un miner.",
       "pl": "Dodatkowe parametry startowe do uruchomienia górnika.",
-      "pt": "Additional launch parameters when launching miner.",
       "ro": "Parametrii adiționali de lansare a minerului.",
       "ru": "Дополнительные параметры при запуске майнера.",
       "zh_cn": "挖矿程序的额外启动参数。"
@@ -370,6 +320,7 @@
       "ru": "Настройки алгоритма для {0}:",
       "zh_cn": "用于 {0} 的算法配置:"
     },
+  "Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?": {},
     "All benchmarks have been successful": {
       "bg": "Всички тестове за скорост приключиха успешно.",
       "es": "Todos los benchmark se han realizado correctamente",
@@ -425,7 +376,6 @@
       "es": "NiceHash Miner Legacy ignorará los dispositivos marcados.",
       "it": "Tutti i dispositivi selezionati saranno saltati da NiceHash Miner Legacy.",
       "pl": "Wszystkie zaznaczone tu urządzenia będą pomijane przez NiceHash Miner Legacy.",
-      "pt": "Any devices that are checked will be skipped by NiceHash Miner Legacy.",
       "ro": "Orice dispozitive bifate vor fi ignorate de NiceHash Miner Legacy.",
       "ru": "Отмеченные устройства будут пропущены в NiceHash Miner Legacy.",
       "zh_cn": "所有被选中的设备将会被NiceHash Miner Legacy忽略。"
@@ -502,11 +452,6 @@
     },
     "Benchmark": {
       "bg": "Тестове за скорост",
-      "es": "Benchmark",
-      "it": "Benchmark",
-      "pl": "Benchmark",
-      "pt": "Benchmark",
-      "ro": "Benchmark",
       "ru": "Бенчмарк",
       "zh_cn": "基准测试"
     },
@@ -540,6 +485,16 @@
       "ru": "Скорость бенчмарка (H/s):",
       "zh_cn": "测得速率 (H/s):"
     },
+  "Benchmark Time Limits": {
+    "bg": "Лимити на времената за тестване",
+    "es": "Límites de tiempo de benchmark",
+    "it": "Limite di tempo dei benchmark",
+    "pl": "Limity czasów benchmarków",
+    "pt": "Tempo limite para Benchmark",
+    "ro": "Limite Timp Benchmark",
+    "ru": "Лимит времени бенчмарка",
+    "zh_cn": "基准测试时限"
+  },
     "Benchmark Time Limits:": {
       "bg": "Лимити на време за тестовете:",
       "es": "Límites de tiempo de los benchamark:",
@@ -611,35 +566,11 @@
       "zh_cn": "比特币提现地址:"
     },
     "Brazil - Sao Paulo": {
-      "bg": "Brazil - Sao Paulo",
-      "es": "Brazil - Sao Paulo",
-      "it": "Brazil - Sao Paulo",
-      "pl": "Brazil - Sao Paulo",
-      "pt": "Brazil - Sao Paulo",
-      "ro": "Brazil - Sao Paulo",
       "ru": "Бразилия - Сан-Паулу",
       "zh_cn": "巴西 - 圣保罗"
     },
-    "CDev#{0}": {
-      "bg": "CDev#{0}",
-      "es": "CDev#{0}",
-      "it": "CDev#{0}",
-      "pl": "CDev#{0}",
-      "pt": "CDev#{0}",
-      "ro": "CDev#{0}",
-      "ru": "CDev#{0}",
-      "zh_cn": "CDev#{0}"
-    },
-    "CPU#{0}": {
-      "bg": "CPU#{0}",
-      "es": "CPU#{0}",
-      "it": "CPU#{0}",
-      "pl": "CPU#{0}",
-      "pt": "CPU#{0}",
-      "ro": "CPU#{0}",
-      "ru": "CPU#{0}",
-      "zh_cn": "CPU#{0}"
-    },
+    "CDev#{0}": {},
+    "CPU#{0}": {},
     "CURRENTLY MINING NOT PROFITABLE.": {
       "bg": "В МОМЕНТА РАБОТАТА НЕ НОСИ ВЪЗВРЪЩАЕМОСТ.",
       "es": "EL MINADO NO ES RENTABLE ACTUALMENTE.",
@@ -725,7 +656,6 @@
       "es": "Márcalo si quieres saltar y desactivar un algoritmo en particular.\nEl minado y el benchmark serán desactivados para este algoritmo en particular.\nEl cambio automático de algoritmo también ignorará este algoritmo.",
       "it": "Spuntalo se vuoi saltare e disattivare un particolare algoritmo.\nIl benchmarking così come il mining verrà disabilitato per questo particolare algoritmo.\nDetto questo, durante il mining l'algoritmo verrà saltato in automatico.",
       "pl": "Zaznacz jeśli chcesz pominąć i wyłączyć określony algorytm.\nWyłączy równiez bechmarki dla tych algorytmów.\nSkutkiem tego automatyczne przełączanie pominie te algorytmy.",
-      "pt": "Check it if you would like to skip & disable a particular algorithm.\nBenchmarking as well as actual mining will be disabled for this particular algorithm.\nThat said, auto-switching will skip this algorithm when mining will be running.",
       "ro": "Bifați dacă doriți să săriți și să dezactivați un anume algoritm.\nBenchmark și minarea vor fi dezactivate pentru acest algoritm.\nAstfel, auto-comutarea o să sară peste acest algoritm când rulează minarea.",
       "ru": "Отметьте, если вы хотели бы пропустить/отключить определённый алгоритм. \nБенчмарк, а также фактический майнинг будут отключены для этого конкретного алгоритма. \nЭто означает, что автоматическое переключение будет пропускать этот алгоритм во время майнинга.",
       "zh_cn": "禁用被选中的算法。\n被禁用的算法在基准测试和实际挖矿中都将不可用。\n挖矿过程中切换算法时，这些算法也会被忽略。"
@@ -735,7 +665,6 @@
       "es": "Márcalo si quieres desactivar el control de temperatura predeterminado\npara las GPUs de AMD (excepto para el algoritmo daggerhashimoto).",
       "it": "Spuntalo, se vuoi disattivare il controllo della temperatura integrato\nper le GPU AMD (tranne che per l'algoritmo daggerhashimoto).",
       "pl": "Zaznacz, jeśli chcesz wyłączyć kontrolę temperatury \ndla kart AMD (nie działa dla daggerhashimoto).",
-      "pt": "Check it, if you would like to disable the built-in temperature control\nfor AMD GPUs (except daggerhashimoto algorithm).",
       "ro": "Bifați dacă doriți să dezactivați controlul intern al temperaturii\npentru GPUuri AMD (în afară de algoritmul daggerhashimoto).",
       "ru": "Отметьте, если вы хотите отключить встроенный контроль температуры\nдля AMD GPU (за исключением алгоритма daggerhashimoto).",
       "zh_cn": "选择此处禁用AMD图形处理器内置的温控\n机制（Dagger Hashimoto算法除外）。"
@@ -801,15 +730,10 @@
       "zh_cn": "正在检查更新..."
     },
     "China - Hong Kong": {
-      "bg": "China - Hong Kong",
-      "es": "China - Hong Kong",
-      "it": "China - Hong Kong",
-      "pl": "China - Hong Kong",
-      "pt": "China - Hong Kong",
-      "ro": "China - Hong Kong",
       "ru": "Китай - Гонконг",
       "zh_cn": "中国 - 香港"
     },
+  "Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds.": {},
     "Choose what Currency to Display mining profit.": {
       "bg": "Посочете валутата, в която да се показват доходите от изчисления.",
       "es": "Elija qué divisa mostrar",
@@ -825,20 +749,12 @@
       "es": "Elige que GPU creará el archivo DAG.\nElije la GPU más rápida posible.",
       "it": "Scegli quale GPU creerà un file DAG.\nCome regola, scegli la GPU più veloce disponibile.",
       "pl": "Wybierz na którym GPU będzie utworzony plik DAG.\nNajlepiej wybrać najszybszą.",
-      "pt": "Choose which GPU will create the on GPU DAG file.\nAs a rule of thumb, choose the fastest GPU that is available.",
       "ro": "Alegeți care GPU o să creeze fișierul DAG.\nCa regulă, alegeți cel mai rapid GPU care este disponibil.",
       "ru": "Выберите какая GPU будет создавать DAG-файл.\nСоветуем выбрать самую быструю из доступных.",
       "zh_cn": "选择负责生成DAG文件的图形处理器。\n一般情况下应选择最快的图形处理器承担此任务。"
     },
     "ClaymoreDual Tuning": {
-      "bg": "ClaymoreDual Tuning",
-      "es": "ClaymoreDual Tuning",
-      "it": "ClaymoreDual Tuning",
-      "pl": "ClaymoreDual Tuning",
-      "pt": "ClaymoreDual Tuning",
-      "ro": "ClaymoreDual Tuning",
-      "ru": "Тюнинг ClaymoreDual",
-      "zh_cn": "ClaymoreDual Tuning"
+      "ru": "Тюнинг ClaymoreDual"
     },
     "Clear Algorithm Speed": {
       "bg": "Изчистване на измерената скорост",
@@ -881,14 +797,7 @@
       "zh_cn": "从（基准测试，算法参数）复制配置"
     },
     "Copy tuning settings only": {
-      "bg": "Copy tuning settings only",
-      "es": "Copy tuning settings only",
-      "it": "Copy tuning settings only",
-      "pl": "Copy tuning settings only",
-      "pt": "Copy tuning settings only",
-      "ro": "Copy tuning settings only",
-      "ru": "Скопировать только настройки тюнинга",
-      "zh_cn": "Copy tuning settings only"
+      "ru": "Скопировать только настройки тюнинга"
     },
     "Current benchmark settings are already executed. There is nothing to do.": {
       "bg": "Настоящите настройки за тестване вече са изпълнени. Няма нищо друго за правене.",
@@ -905,18 +814,14 @@
       "es": "Modo de carga del DAG:",
       "it": "Modalità Caricamento DAG:",
       "pl": "Tryb ładowania DAG:",
-      "pt": "Dag Load Mode:",
       "ro": "Mod Încărcare Dag:",
       "ru": "Режим загрузки Dag:",
       "zh_cn": "DAG加载模式:"
     },
     "Dagger Hashimoto Generate Device": {
-      "bg": "Dagger Hashimoto Generate Device",
       "es": "Dispositivo que generará el DAG",
       "it": "Genera dispositivo Dagger Hashimoto",
       "pl": "Urządzenie dla Dagger Hashimoto",
-      "pt": "Dagger Hashimoto Generate Device",
-      "ro": "Dagger Hashimoto Generate Device",
       "ru": "Устройство генерации DaggerHashimoto",
       "zh_cn": "Dagger Hashimoto生成设备"
     },
@@ -940,6 +845,7 @@
       "ru": "Окно отладки",
       "zh_cn": "调试控制台"
     },
+  "Deviant Algorithm": {},
     "Device": {
       "bg": "Устройство",
       "es": "Dispositivo",
@@ -1020,6 +926,7 @@
       "ru": "Отключить ошибки",
       "zh_cn": "禁用Windows错误报告"
     },
+    "Disabled": {},
     "Disabled Devices": {
       "bg": "Деактивирани устройства",
       "es": "Dispositivos sin usar",
@@ -1194,21 +1101,17 @@
       "zh_cn": "错误！请为LessThreads输入有效的数值。"
     },
     "Ethminer API Port AMD": {
-      "bg": "Ethminer API Port AMD",
       "es": "Puerto API de ethminer AMD",
       "it": "Porta API Ethminer AMD",
       "pl": "Ethminer - Port API AMD",
-      "pt": "Ethminer API Port AMD",
       "ro": "Port Ethminer API AMD",
       "ru": "Ethminer API порт AMD",
       "zh_cn": "Ethminer API端口 (AMD)"
     },
     "Ethminer API Port NVIDIA": {
-      "bg": "Ethminer API Port NVIDIA",
       "es": "Puerto API de ethminer NVIDIA",
       "it": "Porta API Ethminer NVIDIA",
       "pl": "Ethminer - Port API NVIDIA",
-      "pt": "Ethminer API Port NVIDIA",
       "ro": "Port Ethminer API NVIDIA",
       "ru": "Ethminer API порт NVIDIA",
       "zh_cn": "Ethminer API端口 (NVIDIA)"
@@ -1224,12 +1127,6 @@
       "zh_cn": "Ethminer默认区块高度:"
     },
     "Europe - Amsterdam": {
-      "bg": "Europe - Amsterdam",
-      "es": "Europe - Amsterdam",
-      "it": "Europe - Amsterdam",
-      "pl": "Europe - Amsterdam",
-      "pt": "Europe - Amsterdam",
-      "ro": "Europe - Amsterdam",
       "ru": "Европа - Амстердам",
       "zh_cn": "欧洲 - 阿姆斯特丹"
     },
@@ -1277,7 +1174,6 @@
       "es": "Personalización de los ratios de los algoritmos al cambiar manualmente las velocidades de los benchmark.",
       "it": "Regola il rapporto dell'algoritmo settando manualmente le velocità di benchmark per ogni algoritmo.",
       "pl": "Udoskonala wydajność dobierając manualnie predkości benchmarków dla każdego algorytmu.",
-      "pt": "Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm.",
       "ro": "Ajustați precis rațiile algoritmului prin setarea manuală a vitezei benchmark pentru fiecare algoritm.",
       "ru": "Ручная настройка скорости бенчмарка для каждого алгоритма.",
       "zh_cn": "手动调整每一算法的基准测试测得速率。"
@@ -1322,23 +1218,12 @@
       "ru": "Использовать определённую технологию для CPU.",
       "zh_cn": "强制启用某些CPU指令集扩展。"
     },
-    "GPU#{0}": {
-      "bg": "GPU#{0}",
-      "es": "GPU#{0}",
-      "it": "GPU#{0}",
-      "pl": "GPU#{0}",
-      "pt": "GPU#{0}",
-      "ro": "GPU#{0}",
-      "ru": "GPU#{0}",
-      "zh_cn": "GPU#{0}"
-    },
+    "GPU#{0}": {},
     "General": {
       "bg": "Общи",
-      "es": "General",
       "it": "Generali",
       "pl": "Ogólne",
       "pt": "Geral",
-      "ro": "General",
       "ru": "Общие",
       "zh_cn": "通用"
     },
@@ -1402,6 +1287,8 @@
       "ru": "Ставки Группы/Устройства:",
       "zh_cn": "组/设备收益:"
     },
+    "H/s": {},
+    "H/s (Secondary)": {},
     "Help me choose my Bitcoin wallet": {
       "bg": "Как да избера Bitcoin портфейл",
       "es": "&Ayúdame a escojer una cartera Bitcoin",
@@ -1424,10 +1311,7 @@
     },
     "Hour": {
       "bg": "час",
-      "es": "Hour",
       "it": "Ora",
-      "pl": "Hour",
-      "pt": "Hour",
       "ro": "Oră",
       "ru": "час",
       "zh_cn": "小时"
@@ -1472,6 +1356,7 @@
       "ru": "ВАЖНО! Выпущена новая версия v{0}.\r\nКликните здесь, чтобы скачать.",
       "zh_cn": "重要！ 新版本 v{0} 已发布。\r\n点击此处下载。"
     },
+    "Idle Check Method": {},
     "Idle When No Internet Access": {
       "bg": "Спиране на работа при липса на интернет достъп",
       "it": "Idle in assenza di Internet",
@@ -1491,14 +1376,7 @@
       "zh_cn": "开启此选项后NiceHash Miner Legacy将在失去互联网连接时停止挖矿。"
     },
     "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.": {
-      "bg": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
-      "es": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
-      "it": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
-      "pl": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
-      "pt": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
-      "ro": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.",
-      "ru": "Если включено, NHML произведёт бенчмарк для всех указанных значений dcri и запишет их скорость.\nNHML будет использовать для майнинга наиболее прибыльные комбинации скоростей.\nЭтот режим игнорирует дополнительный параметр -dcri, если тот указан.",
-      "zh_cn": "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater."
+      "ru": "Если включено, NHML произведёт бенчмарк для всех указанных значений dcri и запишет их скорость.\nNHML будет использовать для майнинга наиболее прибыльные комбинации скоростей.\nЭтот режим игнорирует дополнительный параметр -dcri, если тот указан."
     },
     "If enabled, NiceHash Miner Legacy will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.": {
       "bg": "Ако тази опция е активирана, NiceHash Miner Legacy ще използва въведения API ключ за If This Then That (IFTTT) да ви уведоми, когато рентабилността е по-ниска от зададената от вас. \nВижте инструкциите за употреба, за да научите как да конфигурирате тази функционалност.",
@@ -1521,12 +1399,6 @@
       "zh_cn": "如设置成大于0 (USD)的任意值，NiceHash Miner Legacy将会在\n预估每日收益跌至此金额以下时停止挖矿。"
     },
     "India - Chennai": {
-      "bg": "India - Chennai",
-      "es": "India - Chennai",
-      "it": "India - Chennai",
-      "pl": "India - Chennai",
-      "pt": "India - Chennai",
-      "ro": "India - Chennai",
       "ru": "Индия - Ченнаи",
       "zh_cn": "印度 - 金奈"
     },
@@ -1540,15 +1412,14 @@
       "ru": "Ошибка ввода",
       "zh_cn": "输入错误"
     },
+    "InputTimeout": {
+      "en": "Input Timeout"
+    },
     "Intensity": {
-      "bg": "Intensity",
-      "es": "Intensity",
       "it": "Intensità",
       "pl": "Intensywność",
-      "pt": "Intensity",
-      "ro": "Intensity",
       "ru": "Интенсивность",
-      "zh_cn": "Intensity"
+      "zh_cn": "烈度"
     },
     "Intensity values for selected algorithm must be in range from {0} to {1}": {
       "bg": "Стойностите за интензивност за избрания алгоритъм трябва да са в интервала от {0} до {1}",
@@ -1631,12 +1502,6 @@
       "zh_cn": "矿工名无效！\n\n请输入有效的矿工名（仅限大小写英文字母与数字，最多7个字符长度）。"
     },
     "Japan - Tokyo": {
-      "bg": "Japan - Tokyo",
-      "es": "Japan - Tokyo",
-      "it": "Japan - Tokyo",
-      "pl": "Japan - Tokyo",
-      "pt": "Japan - Tokyo",
-      "ro": "Japan - Tokyo",
       "ru": "Япония - Токио",
       "zh_cn": "日本 - 东京"
     },
@@ -1653,9 +1518,6 @@
     "Less Threads": {
       "bg": "Свободни нишки",
       "es": "Núcleos",
-      "it": "LessThreads",
-      "pl": "LessThreads",
-      "pt": "LessThreads",
       "ro": "Mai puține Threaduri",
       "ru": "Уменьшитель кол-ва потоков",
       "zh_cn": "Less Threads"
@@ -1673,13 +1535,10 @@
     "Link": {
       "bg": "Връзка",
       "es": "Enlace",
-      "it": "Link",
-      "pl": "Link",
-      "pt": "Link",
-      "ro": "Link",
       "ru": "Ссылка",
       "zh_cn": "链接"
     },
+    "Load (%)": {},
     "Loading, please wait...": {
       "bg": "Настройките се зареждат, моля изчакайте...",
       "es": "Cargando, espere por favor...",
@@ -1723,7 +1582,6 @@
     "Logging:": {
       "bg": "Журнал:",
       "es": "Registro:",
-      "it": "Logging:",
       "pl": "Logi:",
       "pt": "Configurações de Log:",
       "ro": "Înregistrare:",
@@ -1744,27 +1602,22 @@
       "zh_cn": "主要:"
     },
     "Miner API Grace [s]": {
-      "bg": "Miner API Grace [s]",
       "es": "Periodo de gracia de la API del minero[s]",
       "it": "Abbuono API Miner [s]",
       "pl": "Opóźnienie API górnika [s]",
-      "pt": "Miner API Grace [s]",
       "ro": "Grație Miner API [s]",
       "ru": "Ожидание API [с]",
       "zh_cn": "矿工API宽限 [秒]"
     },
     "Miner API Query Interval [s]:": {
-      "bg": "Miner API Query Interval [s]:",
       "es": "Intervalo API del minero [s]:",
       "it": "Intervallo richiesta API Miner [s]:",
       "pl": "Interwał API górnika [s]:",
-      "pt": "Miner API Query Interval [s]:",
       "ro": "Interval Interogare API Miner [s]:",
       "ru": "Интервал запросов API [с]:",
       "zh_cn": "矿工API请求间隔 [秒]:"
     },
     "Miner Restart Delay [ms]:": {
-      "bg": "Miner Restart Delay [ms]:",
       "es": "Retraso reinicio de minero[ms]:",
       "it": "Ritardo riavvio del miner [ms]:",
       "pl": "Opóźnienie startu kopania [ms]:",
@@ -1778,7 +1631,6 @@
       "es": "El minero no se cambiará si la rentabilidad es menor a el umbral de rentabilidad establecido. El valor es un porcentaje [0 - 1]",
       "it": "Il miner non verrà cambiato se al redditività è sotto la soglia di profitto. Il valore è espresso in percentuale [0 - 1]",
       "pl": "górnik nie zostanie zmieniony dopóki zyskowność innego nie przekroczy podanej wartości SwitchProfitabilityThreshold. Wartość w procentach [0 - 1]",
-      "pt": "Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]",
       "ro": "Minerul nu va fi schimbat dacă profitabilitatea este sub SwitchProfitabilityThreshold. Valoarea este procent [0 - 1]",
       "ru": "Майнер не будет переключаться, если разница между прибыльностью алгоритмов\nниже Порога переключения прибыльности. Значение в процентах [0 — 1]",
       "zh_cn": "该程序在新得挖矿收益低于切换收益阈值的情况下将不会切换算法。此值为百分比，范围为 [0 - 1]"
@@ -1786,7 +1638,6 @@
     "Miners:": {
       "bg": "Изчисл. програми:",
       "es": "Mineros:",
-      "it": "Miners:",
       "pl": "Ustawienia kopania:",
       "pt": "Mineradores:",
       "ro": "Mineri:",
@@ -1814,7 +1665,6 @@
       "zh_cn": "最小化至托盘"
     },
     "Minimum Idle [s]:": {
-      "bg": "Minimum Idle [s]:",
       "es": "Tiempo mínimo detenido [s]:",
       "it": "Tempo minimo di Idle [s]:",
       "pl": "Min. czas bezczynności [s]:",
@@ -1855,21 +1705,13 @@
     },
     "Month": {
       "bg": "месец",
-      "es": "Month",
       "it": "Mese",
-      "pl": "Month",
-      "pt": "Month",
       "ro": "Lună",
       "ru": "мес",
       "zh_cn": "月"
     },
     "N/A": {
-      "bg": "N/A",
-      "es": "N/A",
       "it": "N/D",
-      "pl": "N/A",
-      "pt": "N/A",
-      "ro": "N/A",
       "ru": "Н/Д",
       "zh_cn": "不可用 (N/A)"
     },
@@ -1878,16 +1720,12 @@
       "es": "NADA",
       "it": "VUOTO",
       "pl": "NIC",
-      "pt": "NONE",
-      "ro": "NONE",
-      "ru": "НЕТ",
-      "zh_cn": "NONE"
+      "ro": "NICIUNUL",
+      "ru": "НЕТ"
     },
     "NVIDIA P0 State": {
       "bg": "NVIDIA P0 режим",
       "es": "Estado NVIDIA P0",
-      "it": "NVIDIA P0 State",
-      "pl": "NVIDIA P0 State",
       "pt": "Modo P0 NVIDIA",
       "ro": "Stare P0 NVIDIA",
       "ru": "NVIDIA статус P0",
@@ -1967,7 +1805,6 @@
       "es": "NiceHash Miner Legacy requiere .NET Framework 4.5 o mayor para funcionar correctamente. Por favor reinstala Microsoft .NET Framework 4.5",
       "it": "NiceHash Miner Legacy richiede .NET Framework 4.5 o superiori per lavorare correttamente. Per favore, installa Microsoft .NET Framework 4.5",
       "pl": "NiceHash Miner Legacy wymaga pakietu .NET Framework 4.5 lub wyższego do pracy. Zainstaluj najpierw Microsoft .NET Framework 4.5",
-      "pt": "NiceHash Miner Legacy requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5",
       "ro": "NiceHash Miner Legacy necesită .NET Framework 4.5 sau mai nou pentru a funcționa corect. Vă rugăm instalați Microsoft .NET Framework 4.5",
       "ru": "Для корректной работы NiceHash Miner Legacy требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
       "zh_cn": "NiceHash Miner Legacy 依赖 .NET Framework 4.5或更高版本。请安装Microsoft .NET Framework 4.5"
@@ -2151,8 +1988,8 @@
       "ru": "Подождите, пожалуйста, около {0} секунд…",
       "zh_cn": "请等待约{0}秒..."
     },
-    "Power": {
-    },
+    "Power": {},
+    "Power Cost ({0})": {},
     "Power Usage (W):": {
       "ru": "Потребление мощности (Вт):"
     },
@@ -2166,6 +2003,7 @@
       "ru": "Точного:",
       "zh_cn": "精确:"
     },
+    "Profit ({0})": {},
     "Querying AMD OpenCL devices...": {
       "bg": "Проверка на AMD OpenCL устройства...",
       "es": "Buscando dispositivos AMD OpenCL...",
@@ -2246,6 +2084,7 @@
       "ru": "Быстрого:",
       "zh_cn": "快速:"
     },
+    "RPM": {},
     "Random part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nRandom part is used to prevent all world-wide NiceHash Miner Legacy users to have the exact same switching pattern.": {
       "bg": "Случайна компонента на минималния интервал време в секунди) преди програмата да превключи изчислителния алгоритъм.\nОбщият интервал е SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nСлучайната компонента е необходима, за да се избегне възможността всички потребители на NiceHash Miner Legacy в целия свят да имат еднакъв ритъм на превключване на алгоритмите.",
       "es": "Parte aleatoria del tiempo mínimo (en segundos) antes de que el minero cambie de algoritmo.\nEl tiempo total es SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nEsta parte aleatoria es usada para que no todos los usuarios de NiceHash Miner Legacy tengan los mismos patrones de cambio de algoritmo.",
@@ -2324,10 +2163,8 @@
     },
     "Run script when CUDA GPU is lost": {
       "bg": "Изпълняване на скрипт при отпадане на CUDA GPU",
-      "es": "Run script when CUDA GPU is lost",
       "it": "Esegui script se persa una GPU CUDA",
       "pl": "Uruchom skrypt po utracie GPU CUDA",
-      "pt": "Run script when CUDA GPU is lost",
       "ro": "Rulează un script când se pierde un GOU",
       "ru": "Запуск скрипта при потере CUDA GPU",
       "zh_cn": "CUDA GPU停止响应后执行脚本"
@@ -2363,15 +2200,9 @@
       "zh_cn": "第二测得速率 (H/s):"
     },
     "Secondary Speed": {
-      "bg": "Secondary Speed",
-      "es": "Secondary Speed",
-      "it": "Secondary Speed",
-      "pl": "Secondary Speed",
-      "pt": "Secondary Speed",
-      "ro": "Secondary Speed",
-      "ru": "Вторичная скорость",
-      "zh_cn": "Secondary Speed"
+      "ru": "Вторичная скорость:"
     },
+    "Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?": {},
     "Select device first": {
       "bg": "Първо изберете устройство",
       "es": "Selecciona un dispositivo primero",
@@ -2402,6 +2233,9 @@
       "ru": "Локация:",
       "zh_cn": "服务器地址:"
     },
+    "SessionLock": {
+      "en": "Session Lock"
+    },
     "Set default settings?": {
       "bg": "Установяване на стойности по подразбиране?",
       "es": "¿Poner configuración predeterminada?",
@@ -2417,7 +2251,6 @@
       "es": "Seleccione el puerto mínimo por el cual la API del minero utilizará para la comunicación",
       "it": "Imposta il numero della porta dalla quale il miner imposterà la comunicazione.",
       "pl": "Ustawia numer portu API, na którym nastąpi komunikacja z górnikiem.",
-      "pt": "Set starting port number from which miner API Bind ports will be set for comunication.",
       "ro": "Setați numărul portului de start de la care porturile API Bind ale minerului vor fi setate pentru comunicare.",
       "ru": "Начальный номер порта, с которого порты связи API будут установлены для коммуникации.",
       "zh_cn": "矿机API将绑定不低于此端口号的端口来侦听通讯。"
@@ -2477,10 +2310,7 @@
     },
     "Sets the time unit to report BTC rates.": {
       "bg": "Избира периода от време за показване на дохода в BTC.",
-      "es": "Sets the time unit to report BTC rates.",
       "it": "Imposta l'unità di tempo con cui riportare il rateo dei BTC.",
-      "pl": "Sets the time unit to report BTC rates.",
-      "pt": "Sets the time unit to report BTC rates.",
       "ro": "Setați unitatea de timp pentru raportarea ratei BTC.",
       "ru": "Указывает единицу времени для ставки BTC.",
       "zh_cn": "设置显示收益的时间单位。"
@@ -2557,10 +2387,8 @@
     },
     "Show Internet Connection Warning": {
       "bg": "Проверка за липсваща интернет връзка",
-      "es": "Show Internet Connection Warning",
       "it": "Mostra l'avviso di connessione a Internet",
       "pl": "Ostrzegaj o połączeniu internetowym",
-      "pt": "Show Internet Connection Warning",
       "ro": "Afișează Avertizare Conexiune Internet",
       "ru": "Уведомлять об интернет-соединении",
       "zh_cn": "显示互联网连接警告"
@@ -2606,7 +2434,6 @@
       "zh_cn": "速率:"
     },
     "Speed for the secondary algorithm when using dual algo mining.": {
-      "bg": "Speed for the secondary algorithm when using dual algo mining.",
       "es": "Velocidad para el algoritmo secundario cuando se utiliza minería de algo dual.",
       "it": "La velocità per l'algoritmo secondario quando viene usato il dual algo mining.",
       "pl": "Tempo dla dodatkowego algorytmu w trybie  dual mining.",
@@ -2618,30 +2445,23 @@
     "St&op": {
       "bg": "Сто&п",
       "es": "&Parar",
-      "it": "St&op",
-      "pl": "St&op",
       "pt": "Pa&rar",
-      "ro": "St&op",
       "ru": "Ст&оп",
       "zh_cn": "停止 (&o)"
     },
     "St&op benchmark": {
       "bg": "&Стоп",
       "es": "&Detener benchmark",
-      "it": "St&op benchmark",
       "pl": "Zat&rzymaj benchmark",
       "pt": "Pa&rar benchmark",
-      "ro": "St&op benchmark",
       "ru": "Ст&оп",
       "zh_cn": "停止测试 (&o)"
     },
     "Standard:": {
       "bg": "нормален:",
       "es": "Normal:",
-      "it": "Standard:",
       "pl": "Zwykły:",
       "pt": "Normal:",
-      "ro": "Standard:",
       "ru": "Стандарт:",
       "zh_cn": "普通:"
     },
@@ -2651,7 +2471,6 @@
       "it": "Inizia &benchmark",
       "pl": "Uruchom &benchmark",
       "pt": "Iniciar &benchmark",
-      "ro": "Start &benchmark",
       "ru": "&Старт бенчмарка",
       "zh_cn": "开始测试 (&b)"
     },
@@ -2701,7 +2520,6 @@
       "it": "Invia &hardware",
       "pl": "Zgłoś swój &sprzęt",
       "pt": "Enviar &hardware",
-      "ro": "Submit &hardware",
       "ru": "Отп&равить оборудование",
       "zh_cn": "提交硬件信息 (&h)"
     },
@@ -2716,7 +2534,6 @@
       "zh_cn": "提交基准测试结果"
     },
     "Switch Maximum [s]:": {
-      "bg": "Switch Maximum [s]:",
       "es": "Cambiar máximo [s]:",
       "it": "Passaggio massimo [s]:",
       "pl": "Czas maksymalny [s]:",
@@ -2726,7 +2543,6 @@
       "zh_cn": "切换最大值 [s]:"
     },
     "Switch Minimum AMD [s]": {
-      "bg": "Switch Minimum AMD [s]",
       "es": "Cambiar mínimo AMD [s]",
       "it": "Passaggio minimo AMD [s]",
       "pl": "Czas przełączania AMD [s]",
@@ -2736,7 +2552,6 @@
       "zh_cn": "AMD附加静态切换间隔 [秒]"
     },
     "Switch Minimum Dynamic [s]": {
-      "bg": "Switch Minimum Dynamic [s]",
       "es": "Cambiar mínimo variable [s]",
       "it": "Passaggio minimo dinamico [s]",
       "pl": "Min. odstęp dynamiczny [s]",
@@ -2746,7 +2561,6 @@
       "zh_cn": "最小动态切换间隔 [秒]"
     },
     "Switch Minimum Fixed [s]": {
-      "bg": "Switch Minimum Fixed [s]",
       "es": "Cambiar mínimo fijo [s]",
       "it": "Passaggio minimo fisso [s]",
       "pl": "Min. odstęp stały [s]",
@@ -2756,7 +2570,6 @@
       "zh_cn": "最小静态切换间隔 [秒]"
     },
     "Switch Minimum [s]:": {
-      "bg": "Switch Minimum [s]:",
       "es": "Cambiar mínimo [s]:",
       "it": "Passaggio minimo [s]:",
       "pl": "Czas przełączania [s]:",
@@ -2775,6 +2588,7 @@
       "ru": "Порог переключ. прибыльн.:",
       "zh_cn": "切换收益阈值:"
     },
+    "Temp (C)": {},
     "Terminated": {
       "bg": "Прекратен",
       "es": "Finalizado",
@@ -2786,37 +2600,15 @@
       "zh_cn": "意外中止"
     },
     "The first dcri value to use for tuning": {
-      "bg": "The first dcri value to use for tuning",
-      "es": "The first dcri value to use for tuning",
-      "it": "The first dcri value to use for tuning",
-      "pl": "The first dcri value to use for tuning",
-      "pt": "The first dcri value to use for tuning",
-      "ro": "The first dcri value to use for tuning",
-      "ru": "Начальное значение dcri для тюнинга",
-      "zh_cn": "The first dcri value to use for tuning"
+      "ru": "Начальное значение dcri для тюнинга"
     },
     "The interval for dcri values to use for tuning": {
-      "bg": "The interval for dcri values to use for tuning",
-      "es": "The interval for dcri values to use for tuning",
-      "it": "The interval for dcri values to use for tuning",
-      "pl": "The interval for dcri values to use for tuning",
-      "pt": "The interval for dcri values to use for tuning",
-      "ro": "The interval for dcri values to use for tuning",
-      "ru": "Интервал значений dcri для тюнинга",
-      "zh_cn": "The interval for dcri values to use for tuning"
+      "ru": "Интервал значений dcri для тюнинга"
     },
     "The last dcri value to use for tuning": {
-      "bg": "The last dcri value to use for tuning",
-      "es": "The last dcri value to use for tuning",
-      "it": "The last dcri value to use for tuning",
-      "pl": "The last dcri value to use for tuning",
-      "pt": "The last dcri value to use for tuning",
-      "ro": "The last dcri value to use for tuning",
-      "ru": "Конечное значение dcri для тюнинга",
-      "zh_cn": "The last dcri value to use for tuning"
+      "ru": "Конечное значение dcri для тюнинга"
     },
-    "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
-    },
+    "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {},
     "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue.": {
       "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. NiceHash Miner Legacy няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно NiceHash Miner Legacy и да опитате да поправите този проблем.",
       "es": "Faltan algunos archivos desde el último inicio. Asegúrese de que su antivirus no bloquea la aplicación. NiceHash Miner Legacy podría no funcionar correctamente al faltar algunos archivos. Elige Sí para reinicializar NiceHash Miner Legacy e intentar repararlo.",
@@ -2859,10 +2651,7 @@
     },
     "Time Unit": {
       "bg": "Единица време",
-      "es": "Time Unit",
       "it": "Unità di tempo",
-      "pl": "Time Unit",
-      "pt": "Time Unit",
       "ro": "Unitate timp",
       "ru": "Единица времени",
       "zh_cn": "时间单位"
@@ -2887,63 +2676,23 @@
       "ru": "Для идентификации компьютера пользователя.",
       "zh_cn": "用于识别该计算机。"
     },
+    "Total": {},
     "Tuning Enabled": {
-      "bg": "Tuning Enabled",
-      "es": "Tuning Enabled",
-      "it": "Tuning Enabled",
-      "pl": "Tuning Enabled",
-      "pt": "Tuning Enabled",
-      "ro": "Tuning Enabled",
-      "ru": "Тюнинг включён",
-      "zh_cn": "Tuning Enabled"
+      "ru": "Тюнинг включён"
     },
     "Tuning End": {
-      "bg": "Tuning End",
-      "es": "Tuning End",
-      "it": "Tuning End",
-      "pl": "Tuning End",
-      "pt": "Tuning End",
-      "ro": "Tuning End",
-      "ru": "Конец тюнинга",
-      "zh_cn": "Tuning End"
+      "ru": "Конец тюнинга"
     },
     "Tuning Interval": {
-      "bg": "Tuning Interval",
-      "es": "Tuning Interval",
-      "it": "Tuning Interval",
-      "pl": "Tuning Interval",
-      "pt": "Tuning Interval",
-      "ro": "Tuning Interval",
-      "ru": "Интервал тюнинга",
-      "zh_cn": "Tuning Interval"
+      "ru": "Интервал тюнинга"
     },
     "Tuning Settings": {
-      "bg": "Tuning Settings",
-      "es": "Tuning Settings",
-      "it": "Tuning Settings",
-      "pl": "Tuning Settings",
-      "pt": "Tuning Settings",
-      "ro": "Tuning Settings",
-      "ru": "Настройки тюнинга",
-      "zh_cn": "Tuning Settings"
+      "ru": "Настройки тюнинга"
     },
     "Tuning Start": {
-      "bg": "Tuning Start",
-      "es": "Tuning Start",
-      "it": "Tuning Start",
-      "pl": "Tuning Start",
-      "pt": "Tuning Start",
-      "ro": "Tuning Start",
-      "ru": "Начало тюнинга",
-      "zh_cn": "Tuning Start"
+      "ru": "Начало тюнинга"
     },
     "USA - San Jose": {
-      "bg": "USA - San Jose",
-      "es": "USA - San Jose",
-      "it": "USA - San Jose",
-      "pl": "USA - San Jose",
-      "pt": "USA - San Jose",
-      "ro": "USA - San Jose",
       "ru": "США - Сан-Хосе",
       "zh_cn": "美国 - 圣何塞"
     },
@@ -2960,7 +2709,6 @@
     "Unzipping {0} %": {
       "bg": "Разархивиране на {0} %",
       "es": "Descomprimiendo {0} %",
-      "it": "Unzipping {0} %",
       "pl": "Wypakowywanie {0} %",
       "pt": "Descompactando {0} %",
       "ro": "Dezarhivare {0} %",
@@ -2995,7 +2743,6 @@
       "es": "Utilice IFTTT",
       "it": "Usa IFTTT",
       "pl": "użyj IFTTT",
-      "pt": "Use IFTTT",
       "ro": "Folosește IFTTT",
       "ru": "Исп. IFTTT",
       "zh_cn": "开启IFTTT"
@@ -3021,12 +2768,10 @@
       "zh_cn": "矿工密码"
     },
     "Use Skip for CPUs..": {
-      "bg": "Use Skip for CPUs..",
       "es": "Usar Saltar para CPUs...",
       "it": "Usa Salta per le CPU..",
       "pl": "Użyj pominięć dla CPU..",
       "pt": "Use Pular para CPUs..",
-      "ro": "Use Skip for CPUs..",
       "ru": "Пропустить для CPU.",
       "zh_cn": "跳过CPU设备.."
     },
@@ -3045,7 +2790,6 @@
       "es": "Usa esta contraseña al iniciar este minero y este algoritmo. Si no se establece, UsePassword del grupo se usará.",
       "it": "Usa questa password quando viene lanciato il miner con questo algoritmo. Se non impostata, verrà usata la password del gruppo.",
       "pl": "Uzyj tego hasła do uruchomienia górników dla tego algorytmu. Jeśli puste, użyjemy hasła grupy.",
-      "pt": "Use this password when launching miner and this algorithm. If not set, Groups's UsePassword is used.",
       "ro": "Folosiți această parolă când lansați minerul și acest algoritm. Dacă nu este setată, va fi folosită parola Grupului.",
       "ru": "Использовать этот пароль при запуске майнера и этого алгоритма. Если не указано, будет использоваться пароль группы.",
       "zh_cn": "针对此挖矿程序及此算法使用的矿工密码。如果未设置，系统将使用此组的“矿工密码”。"
@@ -3055,7 +2799,6 @@
       "es": "Usa esta contraseña al iniciar el minero (el usuario es tu dirección Bitcoin y la contraseña es la que pongas aquí). Si está vacío, la contraseña 'x' será usada. ",
       "it": "Usa questa password quando viene lanciato il miner. Se vuota, verrà usata la password di default 'x'.",
       "pl": "Używaj tego hasła uruchamiając kopanie. Jeśli puste, używa domyślnego hasła x.",
-      "pt": "Use this password when launching miner. If null, default password 'x' is used.",
       "ro": "Folosește această parolă la lansarea minerului. Dacă nu, va fi folosită parola implicită 'x'.",
       "ru": "Использовать этот пароль при запуске майнера. Если не указан, используется пароль по умолчанию 'x'.",
       "zh_cn": "传递给挖矿程序的挖工密码。如留空白，将使用默认密码“x”。"
@@ -3070,16 +2813,7 @@
       "ru": "Биткоин-адрес пользователя для майнинга.",
       "zh_cn": "比特币提现地址。用于分发挖矿所得。"
     },
-    "V_ID_{0}": {
-      "bg": "V_ID_{0}",
-      "es": "V_ID_{0}",
-      "it": "V_ID_{0}",
-      "pl": "V_ID_{0}",
-      "pt": "V_ID_{0}",
-      "ro": "V_ID_{0}",
-      "ru": "V_ID_{0}",
-      "zh_cn": "V_ID_{0}"
-    },
+    "V_ID_{0}": {},
     "Visit us @ www.nicehash.com": {
       "bg": "Посетете ни на www.nicehash.com",
       "es": "Visítanos @ www.nicehash.com",
@@ -3125,7 +2859,6 @@
       "es": "¡Advertencia! El algoritmo {0} indica 0 acciones aceptadas. Deshabilite este algoritmo en Benchmark / Configuración e informe este problema a support@nicehash.com.",
       "it": "Attenzione! L'algoritmo {0} sta riportando 0 parti accettate. Disabilita questo algoritmo in Impostazioni/Benchmark e segnala questo problema a https://github.com/nicehash/NiceHashMinerLegacy/issues!",
       "pl": "Uwaga! Algorytm {0} raportuje 0 shares accepted. Wyłącz ten algorytm w ustawieniach lub benchmarkach i napisz raport na https://github.com/nicehash/NiceHashMinerLegacy/issues (prosimy)",
-      "pt": "Warning! Algorithm {0} is reporting 0 shares accepted. Please disable this algorithm in Benchmark/Settings and report this issue to support@nicehash.com!",
       "ro": "Avertizare! Algoritmul {0} raportează 0 share acceptate. Vă rugăm să dezactivați acest algoritm în Benchmark/Setări și să raportați această problemă la https://github.com/nicehash/NiceHashMinerLegacy/issues!",
       "ru": "Предупреждение! Алгоритм {0} сообщает 0 принятых шар. Отключите, пожалуйста, этот алгоритм в Бенчмарке/Настройках и сообщите о данной проблеме на support-ru@nicehash.com!",
       "zh_cn": "警告！算法{0}报告其计算所得并没有被矿池服务器接受。请在基准测试/设置中禁用此算法并前往问题反馈页面汇报此问题 https://github.com/nicehash/NiceHashMinerLegacy/issues！"
@@ -3165,7 +2898,6 @@
       "es": "Hemos detectado que tu driver es más antiguo que {0}{1}. Le recomendamos actualizar a la versión {2} o mayor.",
       "it": "Abbiamo rilevato che i tuoi driver NVIDIA sono più vecchi di {0}{1}. Ti consigliamo di aggiornarli alla {2} o superiore.",
       "pl": "Wykryliśmy, sterownik Nvidia jest starszy niż {0}{1}. Zalecamy aktualizację do  {2} lub nowszego.",
-      "pt": "We have detected that your Nvidia Driver is older than {0}{1}. We recommend you to update to {2} or newer.",
       "ro": "Am detectat că driverul Nvidia este mai vechi de {0}{1}. Vă recomandăm să-l actualizați la {2} sau mai nou.",
       "ru": "Мы обнаружили, что ваш драйвер старее {0}{1}. Мы рекомендуем вам обновиться до {2} или новее.",
       "zh_cn": "我们检测到您的Nvidia驱动旧于{0}{1}。我们建议您升级至{2}或更高版本。"
@@ -3175,7 +2907,6 @@
       "es": "Hemos detectado que el sistema tiene GPUs de NVIDIA, pero tu driver es más antiguo que {0}. Para que NiceHash Miner Legacy funcione correctamente debería actualizar su driver a la versión recomendada {1} o mayor.",
       "it": "Abbiamo rilevato che il tuo sistema ha GPU NVIDIA, ma i tuoi driver sono più vecchi di {0}. Per fare in modo che NiceHash Miner Legacy funzioni correttamente dovresti aggiornare i driver alla versione {1} o superiori. Se vedi ancora questo avviso dopo aver aggiornato i driver disinstalla tutti i tuoi driver NVIDIA ed esegui una installazione pulita dei driver ufficiali più recenti da http://www.nvidia.com.",
       "pl": "Wykryto, ze masz karty Nvidia, ale sterownik jest starszy niż {0}. Aby NiceHash Miner Legacy pracował poprawnie należy zaktualizować sterownik do {1} lub nowszego. Jeśli nadal będziesz po tym widzieć ten komunikat, odinstaluj wszystkie sterowniki Nvidia i wykonaj czystą instalację (taki ptaszek w instalatorze Nvidia). Pobierz sterowniki z http://www.nvidia.com.",
-      "pt": "We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner Legacy to work correctly you should upgrade your drivers to recomended {1} or newer. If you still see this warning after updating the driver please uninstall all your Nvidia drivers and make a clean install of latest official driver from http://www.nvidia.com.",
       "ro": "Am detectat că sistemul dumneavoastră are GPUuri Nvidia, dar driverul este mai vechi de {0}. Pentru ca NiceHash Miner Legacy să funcționeze corect trebuie să upgradați driverele la versiunea recomandată {1} sau mai nouă. Dacaă vedeți această avertizare și după actualizarea driverului vă rugăm să dezinstalați toate driverele Nvidia și să instalați pe curat cel mai nou driver oficial de la http://www.nvidia.com.",
       "ru": "Мы обнаружили, что в вашей системе есть устройства Nvidia GPU, но ваш драйвер старее, чем {0}. Для правильной работы NiceHash Miner Legacy вам следует обновить ваши драйверы до рекомендуемых {1} или новее. Если вы все ещё видите это предупреждение после обновления драйверов, удалите, пожалуйста, все ваши драйверы для Nvidia и выполните чистую установку последних официальных драйверов с http://www.nvidia.com.",
       "zh_cn": "我们检测到您的系统装有Nvidia图形处理器，但是您的驱动版本旧于{0}。为确保NiceHash Miner Legacy的正常运作，您应该将驱动升级至推荐版本 {1} 或更高。若您在升级驱动后仍遇此警告，请删除现有驱动并从官网 http://www.nvidia.com 下载并重新安装最新版本。"
@@ -3192,10 +2923,7 @@
     },
     "Week": {
       "bg": "седмица",
-      "es": "Week",
       "it": "Settimana",
-      "pl": "Week",
-      "pt": "Week",
       "ro": "Săptămână",
       "ru": "нед",
       "zh_cn": "周"
@@ -3235,7 +2963,6 @@
       "es": "Si está marcado, NiceHash Miner Legacy pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
       "it": "Quando spuntato, NiceHash Miner Legacy cambierà lo stato di tutte le GPU NVIDIA allo stato P0.\nQuesto migliorerà le prestazioni con certi algoritmi.\nQuesta funzione richiede privilegi di amministratore per essere eseguita.",
       "pl": "Kiedy zaznaczone, NiceHash Miner Legacy ustawi kartom NVIDIA GPUs tzw. P0 state.\nMoże to znacznie zwiększyć wydajność dla niektórych algorytmów.\nWymaga uprawnień administratora Windows.",
-      "pt": "When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.",
       "ro": "Când bifați, NiceHash Miner Legacy o să treacă toate GPUurile NVIDIA suportate îm starea P0.\nAcest lucru o să îmbunătățească ușor performanța anumitor algoritmi.\nAceastă funcționalitate necesită ca drepturile administrative să fie activate.",
       "ru": "Если отмечено, NiceHash Miner Legacy изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора.",
       "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会把所有受支持的NVIDIA图形处理器调整到P0状态。\n这将略微增强部分算法的执行速率。\n开启此功能需要管理员权限。"
@@ -3252,10 +2979,8 @@
     },
     "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
       "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
-      "es": "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.",
       "it": "Quando spuntato, NiceHash Miner Legacy eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
       "pl": "Kiedy zaznaczone, NiceHash Miner Legacy uruchomi skrypt OnGPUsLost.bat w wypadku gdy\nwykryje utratę co najmniej jednego GPU CUDA, domyślnie skrypt zrestartuje całą maszynę.",
-      "pt": "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.",
       "ro": "Când bifați, NiceHash Miner Legacy o să ruleze OnGPUsLost.bat atunci când cel puțin un GPU CUDA este pierdut,\nimplicit scriptul o să restarteze întregul sistem.",
       "ru": "Если отмечено, NiceHash Miner Legacy запустит OnGPUsLost.bat \nпри потере хотя бы одного устройства CUDA GPU,\nпо умолчанию скрипт должен перезапускать всю систему.",
       "zh_cn": "若选择此复选框，NiceHash Miner Legacy将在探测到有CUDA GPU停止响应后执行OnGPUsLost.bat脚本。默认脚本会重新启动计算机。"
@@ -3275,17 +3000,14 @@
       "es": "Si está marcado, NiceHash Miner Legacy dará un aviso si\nla versión óptima del driver está instalada.",
       "it": "Quando spuntato, NiceHash Miner Legacy mostrerà un avviso se\nun driver non ottimale è installato.",
       "pl": "Po zaznaczeniu NiceHash Miner Legacy pokaże ostrzeżenie\njeśli wykryje nieoptymalny sterownik.",
-      "pt": "When checked, NiceHash Miner Legacy would give warning if\nless optimal version of a driver is installed.",
       "ro": "Când bifați, NiceHash Miner Legacy o sa genereze o avertizare dacă\no versiune mai puțin optimă de driver este instalată.",
       "ru": "Если отмечено, NiceHash Miner Legacy будет показывать предупреждение,\nесли установлена не самая оптимальная версия драйвера.",
       "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会在\n检测到非最优驱动版本时显示警告。"
     },
     "When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available.": {
       "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще покаже предупреждение,\nако няма работеща връзка към интернет.",
-      "es": "When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available.",
       "it": "Quando spuntato, NiceHash Miner Legacy mostrerà un avviso se\nla connessione a Internet non è disponibile.",
       "pl": "Kiedy zaznaczone, NiceHash Miner Legacy pokaże ostrzeżenie, \njeśli straci połączenie internetowe.",
-      "pt": "When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available.",
       "ro": "Când bifați, NiceHash Miner Legacy o să vă avertizeze dacă\nnu este disponibilă conexiunea la internet.",
       "ru": "Если отмечено, NiceHash Miner Legacy будет показывать предупреждение,\nкогда соединение с интернетом недоступно.",
       "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会在\n互联网连接不可用时显示警告。"
@@ -3295,7 +3017,6 @@
       "es": "Si está marcado, NiceHash Miner Legacy usará la nueva página de configuración.",
       "it": "Quando spuntato, NiceHash Miner Legacy userà la nuova pagina delle impostazioni.",
       "pl": "Kiedy zaznaczone, NiceHash Miner Legacy będzie używać nowej strony ustawień.",
-      "pt": "When checked, NiceHash Miner Legacy would use the new settings page.",
       "ro": "Cînd bifați, NiceHash Miner Legacy o să folosească noua pagină de setări.",
       "ru": "Если отмечено, NiceHash Miner Legacy будет использовать новую страницу настроек.",
       "zh_cn": "若选择此复选框，NiceHash Miner Legacy将启用新版的设置页面。"
@@ -3305,7 +3026,6 @@
       "es": "Si está marcado, si un minero crasheara,NiceHash Miner Legacy sería capaz de reabrirlo si no está bloqueado por algún mensaje de error de Windows.\nEs recomendable dejarlo activado para que se pueda minar ininterrunpidamente con unos mineros que no sean completamente estables.",
       "it": "Quando spuntato, nel caso di un crash del miner,\nNiceHash Miner Legacy sarà ancora in grado di riavviare ancora il miner se non è bloccato da un messaggio di errore di Windows.\nÈ consigliabile spuntare questa opzione per minare ininterrottamente in quanto i programmi di mining non sono stabili al 100%.",
       "pl": "Kiedy zaznaczone, w przypadku wykrzaczenia się górnika,\nNiceHash Miner Legacy będzie próbować uruchomić go ponownie i nie będzie to blokowane przez raportowanie błędów Windows.\nZalecane kiedy program kopiący nie jest całkowicie stabilny, co się niestety zdarza.",
-      "pt": "When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.",
       "ro": "Când bifați, în caz că minerul se blochează,\nNiceHash Miner Legacy o să poată sa-l repornească nefiind blocat de mesaj de eroare Windows.\nEste recomandat ca această setare să fie bifată pentru minare neîntreruptă din cauză ca programele miner nu sunt 100% stabile.",
       "ru": "Если отмечено, в случае аварийного завершения работы майнера NiceHash Miner Legacy \nперезапустит майнер без блокирования сообщением об ошибке Windows. \nРекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны.",
       "zh_cn": "若选择此复选框，NiceHash Miner Legacy将可以\n自动重启奔溃的挖矿程序。Windows错误报告会阻止NiceHash Miner Legacy执行这一重启。\n由于挖矿程序不尽完善，我们推荐开启此选项。"
@@ -3355,7 +3075,6 @@
       "es": "Error de Administración de Instrumentos de Windows",
       "it": "Errore di Windows Management Instrumentation",
       "pl": "Błąd Instrumentacji zarzadzania Windows",
-      "pt": "Windows Management Instrumentation Error",
       "ro": "Eroare Windows Management Instrumentation",
       "ru": "Ошибка Инструментария управления Windows",
       "zh_cn": "Windows Management Instrumentation错误"
@@ -3372,10 +3091,7 @@
     },
     "Year": {
       "bg": "година",
-      "es": "Year",
       "it": "Anno",
-      "pl": "Year",
-      "pt": "Year",
       "ro": "An",
       "ru": "год",
       "zh_cn": "年"
@@ -3426,7 +3142,6 @@
       "it": "nessuna",
       "pl": "brak",
       "pt": "nenhum",
-      "ro": "none",
       "ru": "нет",
       "zh_cn": "未测试"
     },
@@ -3440,16 +3155,7 @@
       "ru": "Работа {0} завершится. Этот новое диалоговое окно ещё тестируется и {0} нужен перезапуск для результата.",
       "zh_cn": "{0} 现在将退出。此新版设置对话还处于测试阶段，{0} 需重启方可生效。"
     },
-    "{0} {1}": {
-      "bg": "{0} {1}",
-      "es": "{0} {1}",
-      "it": "{0} {1}",
-      "pl": "{0} {1}",
-      "pt": "{0} {1}",
-      "ro": "{0} {1}",
-      "ru": "{0} {1}",
-      "zh_cn": "{0} {1}"
-    },
+    "{0} {1}": {},
     "{0}% : Benchmarking {1}.. Please wait..": {
       "bg": "{0}% : Тестване на {1}.. Моля изчакайте..",
       "es": "{0}% : Corriendo benchmark {1}.. Espera, por favor..",
