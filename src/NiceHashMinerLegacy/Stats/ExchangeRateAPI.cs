@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
@@ -9,8 +10,6 @@ namespace NiceHashMiner.Stats
 {
     internal static class ExchangeRateApi
     {
-        private const string ApiUrl = "https://api.nicehash.com/api?method=nicehash.service.info";
-
         private static readonly ConcurrentDictionary<string, double> ExchangesFiat = new ConcurrentDictionary<string, double>();
         private static double _usdBtcRate = -1;
 
@@ -62,6 +61,19 @@ namespace NiceHashMiner.Stats
             return amount;
         }
 
+        public static double ConvertFromBtc(double amount)
+        {
+            return ConvertToActiveCurrency(amount * GetUsdExchangeRate());
+        }
+
+        public static string GetCurrencyString(double amount)
+        {
+            return ConvertToActiveCurrency(amount * GetUsdExchangeRate())
+                       .ToString("F2", CultureInfo.InvariantCulture)
+                   + $" {ActiveDisplayCurrency}/"
+                   + Translations.Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+        }
+
         public static double GetUsdExchangeRate()
         {
             return UsdBtcRate > 0 ? UsdBtcRate : 0.0;
@@ -95,50 +107,10 @@ namespace NiceHashMiner.Stats
             return price / UsdBtcRate;
         }
 
-        //[Obsolete("UpdateApi is deprecated, use websocket method")]
-        //public static void UpdateApi(string worker)
-        //{
-        //    var resp = NiceHashStats.GetNiceHashApiData(ApiUrl, worker);
-        //    if (resp != null)
-        //    {
-        //        try
-        //        {
-        //            var lastResponse = JsonConvert.DeserializeObject<ExchangeRateJson>(resp, Globals.JsonSettings);
-        //            // set that we have a response
-        //            if (lastResponse != null)
-        //            {
-        //                var lastResult = lastResponse.result;
-        //                ExchangesFiat = lastResult.exchanges_fiat;
-        //                if (ExchangesFiat == null)
-        //                {
-        //                    Helpers.ConsolePrint("CurrencyConverter", "Unable to retrieve update, Falling back to USD");
-        //                    ActiveDisplayCurrency = "USD";
-        //                }
-        //                else
-        //                {
-        //                    ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
-        //                }
-        //                // ActiveDisplayCurrency = "USD";
-        //                // check if currency avaliable and fill currency list
-        //                foreach (var pair in lastResult.exchanges)
-        //                {
-        //                    if (pair.ContainsKey("USD") && pair.ContainsKey("coin") && pair["coin"] == "BTC" && pair["USD"] != null)
-        //                    {
-        //                        UsdBtcRate = Helpers.ParseDouble(pair["USD"]);
-        //                        break;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Helpers.ConsolePrint("ExchangeRateAPI", "UpdateAPI got Exception: " + e.Message);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        Helpers.ConsolePrint("ExchangeRateAPI", "UpdateAPI got NULL");
-        //    }
-        //}
+        public static double GetKwhPriceInFiat()
+        {
+            var price = ConfigManager.GeneralConfig.KwhPrice;
+            return price > 0 ? price : 0;
+        }
     }
 }
