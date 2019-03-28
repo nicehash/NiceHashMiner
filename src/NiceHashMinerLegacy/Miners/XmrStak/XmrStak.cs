@@ -240,7 +240,14 @@ namespace NiceHashMiner.Miners.XmrStak
                 Helpers.ConsolePrint(MinerTag(), "Launching xmr-stak to generate configs, this can take up to 30s");
 
                 // Try running xmr-stak to create default configs
-                var handle = BenchmarkStartProcess(GetBenchmarkCommandLine(MiningSetup.CurrentAlgorithmType, 10, null));
+                var commandLine = GetBenchmarkCommandLine(MiningSetup.CurrentAlgorithmType, 10, null);
+                var supportedTypes = new HashSet<DeviceType> { DeviceType.AMD, DeviceType.CPU, DeviceType.NVIDIA };
+                supportedTypes.Remove(type);
+                foreach (var disableDeviceType in supportedTypes)
+                {
+                    commandLine += $" --no{disableDeviceType.ToString()}";
+                }
+                var handle = BenchmarkStartProcess(commandLine);
 
                 timer.Start();
                 try
