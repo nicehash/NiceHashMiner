@@ -179,20 +179,6 @@ namespace NiceHashMiner.Devices.Algorithms
             return algos;
         }
 
-        //// AMD disable this
-        //private static List<Algorithm> ProspectorAlgorithmsForDevice(ComputeDevice dev)
-        //{
-        //    if (dev.DeviceType != DeviceType.AMD) return null;
-
-        //    var algos = new List<Algorithm>
-        //    {
-        //        new Algorithm(MinerBaseType.Prospector, AlgorithmType.Skunk, "sigt", false),
-        //    };
-        //    // filter RAM requirements
-        //    algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
-        //    return algos;
-        //}
-
         // NVIDIA
         private static List<Algorithm> ccminerAlgorithmsForDevice(ComputeDevice dev)
         {
@@ -396,7 +382,6 @@ namespace NiceHashMiner.Devices.Algorithms
             ClaymoreDualAlgorithmsForDevice,
             PhoenixAlgorithmsForDevice,
             GMinerAlgorithmsForDevice,
-            //ProspectorAlgorithmsForDevice,
             EWBFAlgorithmsForDevice,
             trexAlgorithmsForDevice,
             BMinerAlgorithmsForDevice,
