@@ -184,47 +184,45 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
 
         #endregion
 
-        public static async Task<NvidiaSmiDriver> GetNvSmiDriverAsync()
-        {
-            WqlObjectQuery query = new WqlObjectQuery("SELECT DriverVersion FROM Win32_VideoController");
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+        public static NvidiaSmiDriver GetNvSmiDriver()
+        {            
             List<NvidiaSmiDriver> drivers = new List<NvidiaSmiDriver>();
-
-            try
-            {
-                foreach (ManagementObject devicesInfo in searcher.Get())
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(new WqlObjectQuery("SELECT DriverVersion FROM Win32_VideoController"))) {
+                try
                 {
-                    var winVerArray = devicesInfo.GetPropertyValue("DriverVersion").ToString().Split('.');
-                    //we must parse windows driver format (ie. 25.21.14.1634) into nvidia driver format (ie. 416.34)
-                    //nvidia format driver is inside last two elements of splited windows driver string (ie. 14 + 1634)
-                    if (winVerArray.Length >= 2)
+                    foreach (ManagementObject devicesInfo in searcher.Get())
                     {
-                        var firstPartOfVersion = winVerArray[winVerArray.Length - 2];
-                        var secondPartOfVersion = winVerArray[winVerArray.Length - 1];
-                        var shortVerArray = firstPartOfVersion + secondPartOfVersion;
-                        var driverFull = shortVerArray.Remove(0, 1).Insert(3, ".").Split('.'); // we transform that string into "nvidia" version (ie. 416.83)
-                        NvidiaSmiDriver driver = new NvidiaSmiDriver(Convert.ToInt32(driverFull[0]), Convert.ToInt32(driverFull[1])); //we create driver object from string version
-
-                        if (drivers.Count == 0)
-                            drivers.Add(driver);
-                        else
+                        var winVerArray = devicesInfo.GetPropertyValue("DriverVersion").ToString().Split('.');
+                        //we must parse windows driver format (ie. 25.21.14.1634) into nvidia driver format (ie. 416.34)
+                        //nvidia format driver is inside last two elements of splited windows driver string (ie. 14 + 1634)
+                        if (winVerArray.Length >= 2)
                         {
-                            foreach (var ver in drivers) //we are checking if there is other driver version on system
+                            var firstPartOfVersion = winVerArray[winVerArray.Length - 2];
+                            var secondPartOfVersion = winVerArray[winVerArray.Length - 1];
+                            var shortVerArray = firstPartOfVersion + secondPartOfVersion;
+                            var driverFull = shortVerArray.Remove(0, 1).Insert(3, ".").Split('.'); // we transform that string into "nvidia" version (ie. 416.83)
+                            NvidiaSmiDriver driver = new NvidiaSmiDriver(Convert.ToInt32(driverFull[0]), Convert.ToInt32(driverFull[1])); //we create driver object from string version
+
+                            if (drivers.Count == 0)
+                                drivers.Add(driver);
+                            else
                             {
-                                if (ver.LeftPart != driver.LeftPart || ver.RightPart != driver.RightPart)
-                                    drivers.Add(driver);
+                                foreach (var ver in drivers) //we are checking if there is other driver version on system
+                                {
+                                    if (ver.LeftPart != driver.LeftPart || ver.RightPart != driver.RightPart)
+                                        drivers.Add(driver);
+                                }
+                            }
+                            if (drivers.Count != 1)
+                            {
+                                //TODO what happens if there are more driver versions??!!
                             }
                         }
-                        if (drivers.Count != 1)
-                        {
-                            //TODO what happens if there are more driver versions??!!
-                        }
                     }
+                    return drivers[0]; // TODO if we will support multiple drivers this must be changed
                 }
-                return drivers[0]; // TODO if we will support multiple drivers this must be changed
+                catch (Exception e) { }
             }
-            catch (Exception e) { }
-
             return new NvidiaSmiDriver(-1, -1);
         }
     }
