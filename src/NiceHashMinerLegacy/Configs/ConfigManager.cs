@@ -127,16 +127,23 @@ namespace NiceHashMiner.Configs
         {
             foreach (var cDev in AvailableDevices.Devices)
             {
-                var devUuid = cDev.Uuid;
-                if (BenchmarkConfigFiles.ContainsKey(devUuid))
-                {
-                    BenchmarkConfigFiles[devUuid].Commit(cDev.GetAlgorithmDeviceConfig());
-                }
-                else
+                CommitBenchmarksForDevice(cDev);
+            }
+        }
+
+        public static void CommitBenchmarksForDevice(ComputeDevice device)
+        {
+            // since we have multitrheaded benchmarks
+            lock (BenchmarkConfigFiles)
+            lock (device)
+            {
+                var devUuid = device.Uuid;
+                if (!BenchmarkConfigFiles.ContainsKey(devUuid))
                 {
                     BenchmarkConfigFiles[devUuid] = new DeviceBenchmarkConfigFile(devUuid);
-                    BenchmarkConfigFiles[devUuid].Commit(cDev.GetAlgorithmDeviceConfig());
                 }
+                var configs = device.GetAlgorithmDeviceConfig();
+                BenchmarkConfigFiles[devUuid].Commit(configs);
             }
         }
 
