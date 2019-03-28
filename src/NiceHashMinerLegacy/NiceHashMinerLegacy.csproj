@@ -182,7 +182,7 @@
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="Miners\BMiner.cs" />
-    <Compile Include="Miners\Equihash\Ewbf144.cs" />
+    <Compile Include="Miners\Ewbf144.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\GMiner.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
@@ -199,7 +199,6 @@
     <Compile Include="Plugin\PluginPackageInfoCR.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
-    <Compile Include="Miners\Equihash\Ewbf.cs" />
     <Compile Include="Miners\XmrStak\XmrStak.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
@@ -302,7 +301,6 @@
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />
-    <Compile Include="Miners\Equihash\ClaymoreZcashMiner.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
