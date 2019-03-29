@@ -176,6 +176,11 @@
     <Compile Include="Miners\BMiner.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\GMiner.cs" />
+    <Compile Include="Miners\IdleChecking\IdleChangedEventArgs.cs" />
+    <Compile Include="Miners\IdleChecking\IdleChecker.cs" />
+    <Compile Include="Miners\IdleChecking\IdleCheckManager.cs" />
+    <Compile Include="Miners\IdleChecking\InputTimeoutChecker.cs" />
+    <Compile Include="Miners\IdleChecking\SessionLockChecker.cs" />
     <Compile Include="Miners\NBMiner.cs" />
     <Compile Include="Miners\Phoenix.cs" />
     <Compile Include="Miners\TeamRedMiner.cs" />
