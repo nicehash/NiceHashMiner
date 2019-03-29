@@ -66,8 +66,6 @@ namespace NiceHashMiner.Forms
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
             devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices);
 
-            InitLocale();
-
             _benchmarkingTimer = new Timer();
             _benchmarkingTimer.Tick += BenchmarkingTimer_Tick;
             _benchmarkingTimer.Interval = 1000; // 1s
@@ -286,13 +284,6 @@ namespace NiceHashMiner.Forms
             ++_dotCount;
             if (_dotCount > 3) _dotCount = 1;
             return new string('.', _dotCount);
-        }
-
-        private void InitLocale()
-        {
-            // TODO fix locale for benchmark enabled label
-            devicesListViewEnableControl1.InitLocale();
-            algorithmsListView1.InitLocale();
         }
 
         #region Start/Stop methods

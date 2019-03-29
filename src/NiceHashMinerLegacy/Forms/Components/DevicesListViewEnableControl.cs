@@ -151,13 +151,6 @@ namespace NiceHashMiner.Forms.Components
             SetComputeDevices(computeDevices);
         }
 
-        public void InitLocale()
-        {
-            listViewDevices.Columns[ENABLED].Text =
-                Translations.Tr("Device"); //International.GetText("ListView_Enabled");
-            //listViewDevices.Columns[DEVICE].Text = International.GetText("ListView_Device");
-        }
-
         private void ListViewDevicesItemChecked(object sender, ItemCheckedEventArgs e)
         {
             if (e.Item.Tag is ComputeDevice cDevice)

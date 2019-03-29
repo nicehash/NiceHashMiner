@@ -45,29 +45,23 @@ namespace NiceHashMiner.Forms
 
         private void InitLocale()
         {
-            listView_Intensities.Columns[Intensity].Text = Tr("Intensity");
-            listView_Intensities.Columns[Speed].Text = Tr("Speed");
-            listView_Intensities.Columns[Secondaryspeed].Text = Tr("Secondary Speed");
-            listView_Intensities.Columns[Profit].Text = Tr("BTC/Day");
-            listView_Intensities.Columns[Power].Text = Tr("Power");
-
             field_Speed.InitLocale(toolTip1,
-                Tr("Benchmark Speed (H/s)") + ":",
+                Tr("Benchmark Speed (H/s):"),
                 Tr("Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm."));
             field_SecondarySpeed.InitLocale(toolTip1,
-                Tr("Secondary Benchmark Speed (H/s)") + ":",
+                Tr("Secondary Benchmark Speed (H/s):"),
                 Tr("Speed for the secondary algorithm when using dual algo mining."));
             field_TuningStart.InitLocale(toolTip1,
-                Tr("Tuning Start") + ":",
+                Tr("Tuning Start:"),
                 Tr("The first dcri value to use for tuning"));
             field_TuningEnd.InitLocale(toolTip1,
-                Tr("Tuning End") + ":",
+                Tr("Tuning End:"),
                 Tr("The last dcri value to use for tuning"));
             field_TuningInterval.InitLocale(toolTip1,
-                Tr("Tuning Interval") + ":",
+                Tr("Tuning Interval:"),
                 Tr("The interval for dcri values to use for tuning"));
             field_Power.InitLocale(toolTip1,
-                Tr("Power Usage (W)") + ":",
+                Tr("Power Usage (W):"),
                 Tr("The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0."));
 
             toolTip1.SetToolTip(checkBox_TuningEnabled, Tr("If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater."));

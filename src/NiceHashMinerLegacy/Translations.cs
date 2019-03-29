@@ -53,6 +53,9 @@ namespace NiceHashMiner
 
         private static string _selectedLanguage = "en";
         private static Dictionary<string, Dictionary<string, string>> _entries = new Dictionary<string, Dictionary<string, string>>();
+        
+        // transform so it is possible to switch from any language
+        private static Dictionary<string, Dictionary<string, string>> _transformedEntries = new Dictionary<string, Dictionary<string, string>>();
         public static List<Language> _availableLanguages = new List<Language>();
 
         private static void TryInitTranslations()
@@ -61,7 +64,7 @@ namespace NiceHashMiner
             var transFilePath = "translations.json";
             try
             {
-                TranslationFile translations = JsonConvert.DeserializeObject<TranslationFile>(File.ReadAllText(transFilePath, Encoding.UTF8));
+                var translations = JsonConvert.DeserializeObject<TranslationFile>(File.ReadAllText(transFilePath, Encoding.UTF8));
                 if (translations == null) return;
 
                 if (translations.Languages != null)
@@ -75,6 +78,29 @@ namespace NiceHashMiner
                 if (translations.Translations != null)
                 {
                     _entries = translations.Translations;
+                    // init transformed entries so we can switch back and forth
+                    foreach (var lang in _availableLanguages)
+                    {
+                        if (lang.Code == "en") continue;
+                        foreach (var enTrans in _entries)
+                        {
+                            var enKey = enTrans.Key;
+                            var enToOther = enTrans.Value;
+                            if (enToOther.ContainsKey(lang.Code) == false) continue; 
+                            var trKey = enToOther[lang.Code];                            
+                            var trToOther = new Dictionary<string, string>();
+                            trToOther["en"] = enKey;
+                            foreach (var kvp in enToOther)
+                            {
+                                var langCode = kvp.Key;
+                                if (lang.Code == langCode) continue;
+
+                                var translatedText = kvp.Value;
+                                trToOther[langCode] = translatedText;
+                            }
+                            _transformedEntries[trKey] = trToOther;
+                        }
+                    }
                 }
             }
             catch (Exception e)
@@ -136,10 +162,17 @@ namespace NiceHashMiner
         // Tr Short for translate
         public static string Tr(string text)
         {
+            if (string.IsNullOrEmpty(_selectedLanguage)) return text;
+
             // if other language search for it
-            if (!string.IsNullOrEmpty(_selectedLanguage) && _entries.ContainsKey(text) && _entries[text].ContainsKey(_selectedLanguage))
+            if (_entries.ContainsKey(text) && _entries[text].ContainsKey(_selectedLanguage))
             {
                 return _entries[text][_selectedLanguage];
+            }
+            // check transformed entry
+            if (_transformedEntries.ContainsKey(text) && _transformedEntries[text].ContainsKey(_selectedLanguage))
+            {
+                return _transformedEntries[text][_selectedLanguage];
             }
             // didn't find text with language key so just return the text 
             return text;
