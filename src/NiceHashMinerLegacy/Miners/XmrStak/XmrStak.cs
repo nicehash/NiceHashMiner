@@ -77,7 +77,7 @@ namespace NiceHashMiner.Miners.XmrStak
             }
 
             return $"-o {url} -u {user} --currency {MiningSetup.MinerName} -i {ApiPort} " +
-                   $"--use-nicehash -p x -r x {devs} --noAMDCache";
+                   $"--use-nicehash -p x -r x {devs}";
         }
 
         private Dictionary<DeviceType, string> PrepareConfigFiles()

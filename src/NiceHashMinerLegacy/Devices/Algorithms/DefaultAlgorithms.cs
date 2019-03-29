@@ -55,12 +55,12 @@ namespace NiceHashMiner.Devices.Algorithms
         private static List<Algorithm> XmrStakAlgorithmsForDevice(ComputeDevice dev)
         {
             // multiple OpenCL GPUs seem to freeze the whole system
-            var CryptoNightR_Enabled = dev.DeviceType != DeviceType.AMD;
+            var AMD_DisabledByDefault = dev.DeviceType != DeviceType.AMD;
             var algos = new List<Algorithm>
             {
-                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightHeavy, "cryptonight_heavy"),
-                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV8, "cryptonight_v8"),
-                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightR, "cryptonight_r") { Enabled = CryptoNightR_Enabled },
+                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightHeavy, "cryptonight_heavy") { Enabled = AMD_DisabledByDefault },
+                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV8, "cryptonight_v8") { Enabled = AMD_DisabledByDefault },
+                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightR, "cryptonight_r") { Enabled = AMD_DisabledByDefault },
             };
             return algos;
         }
