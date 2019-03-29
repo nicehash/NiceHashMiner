@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner.Utils.Guid;
 
 namespace NiceHashMiner.Devices
 {
@@ -109,9 +110,15 @@ namespace NiceHashMiner.Devices
                 string.Format(Translations.Tr("GPU#{0}"), gpuCount),
                 amdDevice.DeviceGlobalMemory)
         {
-            Uuid = isDetectionFallback
-                ? GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType)
-                : amdDevice.Uuid;
+            var infoToHashed = amdDevice.Uuid;
+            if (isDetectionFallback)
+            {
+                // some static data
+                infoToHashed = $"{ID}--{DeviceType.AMD}--{amdDevice.DeviceGlobalMemory}--{amdDevice.Codename}--{Name}";
+            }
+            var uuidHEX = UUID.V5(UUID.Nil().AsGuid(), infoToHashed).AsGuid().ToString();
+            Uuid = $"AMD-{uuidHEX}";
+
             BusID = amdDevice.BusID;
             Codename = amdDevice.Codename;
             InfSection = amdDevice.InfSection;

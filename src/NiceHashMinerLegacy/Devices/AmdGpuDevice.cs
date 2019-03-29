@@ -10,11 +10,14 @@ namespace NiceHashMiner.Devices
         public const string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 --remove-disabled  ";
         public const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90 " + " --temp-target 75 --auto-fan --auto-gpu ";
 
-        public string DeviceName { get; } // init this with the ADL
-        public string Uuid { get; } // init this with the ADL, use PCI_VEN & DEV IDs
+        public int DeviceID => (int) _openClSubset.DeviceID;
+        public int BusID => (int) _openClSubset.AMD_BUS_ID;
+        public string DeviceName; // init this with the ADL
+        public string Uuid; // init this with the ADL, use PCI_VEN & DEV IDs
+        public ulong DeviceGlobalMemory => _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE;
 
         //public bool UseOptimizedVersion { get; private set; }
-        private readonly OpenCLDevice _openClSubset;
+        private readonly OpenCLDevice _openClSubset = new OpenCLDevice();
 
         public string InfSection { get; } // has arhitecture string
 
@@ -23,11 +26,6 @@ namespace NiceHashMiner.Devices
 
         public int Adl1Index { get; } // init this with the ADL
         public int Adl2Index { get; }
-
-        public ulong DeviceGlobalMemory => _openClSubset._CL_DEVICE_GLOBAL_MEM_SIZE;
-
-        public int DeviceID => (int) _openClSubset.DeviceID;
-        public int BusID => _openClSubset.AMD_BUS_ID;
 
         public string Codename => _openClSubset._CL_DEVICE_NAME;
 

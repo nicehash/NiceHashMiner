@@ -66,7 +66,7 @@ namespace NiceHashMiner.Devices
 
             foreach (var dev in Devices.Where(d => d.DeviceType == DeviceType.CPU))
             {
-                dev.Enabled = false;
+                dev.SetEnabled(false);
             }
         }
 

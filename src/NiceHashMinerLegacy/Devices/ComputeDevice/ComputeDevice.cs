@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Configs;
+﻿using System;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Miners.Grouping;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices.Algorithms;
+using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Devices
@@ -22,7 +24,12 @@ namespace NiceHashMiner.Devices
 
         // name count is the short name for displaying in moning groups
         public readonly string NameCount;
-        public bool Enabled;
+        public bool Enabled { get; protected set; }
+
+        // disabled state check
+        public bool IsDisabled => (!Enabled || State == DeviceState.Disabled);
+
+        public DeviceState State { get; set; } = DeviceState.Stopped;
 
         public readonly DeviceGroupType DeviceGroupType;
 
@@ -31,6 +38,17 @@ namespace NiceHashMiner.Devices
 
         // UUID now used for saving
         public string Uuid { get; protected set; }
+
+        public string B64Uuid
+        {
+            get
+            {
+                var type = DeviceType == DeviceType.CPU ? 1 : 2;
+                var uuid = UUID.V5(UUID.Nil().AsGuid(), Uuid);
+                var b64 = Convert.ToBase64String(uuid.AsGuid().ToByteArray());
+                return $"{type}-{b64.Trim('=').Replace('/', '-')}";
+            }
+        }
 
         // used for Claymore indexing
         public int BusID { get; protected set; } = -1;
@@ -55,6 +73,8 @@ namespace NiceHashMiner.Devices
 
         protected List<Algorithm> AlgorithmSettings;
 
+        public double MinimumProfit { get; set; }
+
         public string BenchmarkCopyUuid { get; set; }
         public string TuningCopyUuid { get; set; }
 
@@ -69,11 +89,17 @@ namespace NiceHashMiner.Devices
         {
             ID = id;
             Name = name;
-            Enabled = enabled;
+            SetEnabled(enabled);
             DeviceGroupType = group;
             DeviceType = type;
             NameCount = nameCount;
             GpuRam = gpuRam;
+        }
+
+        public void SetEnabled(bool isEnabled)
+        {
+            Enabled = isEnabled;
+            State = isEnabled ? DeviceState.Stopped : DeviceState.Disabled;
         }
 
         // Fake dev
@@ -161,11 +187,12 @@ namespace NiceHashMiner.Devices
 
         // settings
         // setters
-        public void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
+        public virtual void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
         {
             if (config != null && config.UUID == Uuid)
             {
-                Enabled = config.Enabled;
+                SetEnabled(config.Enabled);
+                MinimumProfit = config.MinimumProfit;
             }
         }
 
@@ -208,13 +235,14 @@ namespace NiceHashMiner.Devices
         }
 
         // getters
-        public ComputeDeviceConfig GetComputeDeviceConfig()
+        public virtual ComputeDeviceConfig GetComputeDeviceConfig()
         {
             var ret = new ComputeDeviceConfig
             {
                 Enabled = Enabled,
                 Name = Name,
-                UUID = Uuid
+                UUID = Uuid,
+                MinimumProfit = MinimumProfit
             };
             return ret;
         }

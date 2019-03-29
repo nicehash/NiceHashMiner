@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using NiceHashMiner.Devices.Algorithms;
+using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Devices
@@ -33,9 +34,13 @@ namespace NiceHashMiner.Devices
         {
             Threads = threads;
             AffinityMask = affinityMask;
-            Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+            //Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
             AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
             Index = ID; // Don't increment for CPU
+
+            var hashedInfo = $"{id}--{name}--{threads}";
+            var uuidHEX = UUID.V5(UUID.Nil().AsGuid(), hashedInfo).AsGuid().ToString();
+            Uuid = $"CPU-{uuidHEX}";
 
             _cpuCounter = new PerformanceCounter
             {

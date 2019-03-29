@@ -1,8 +1,11 @@
 ﻿using ManagedCuda.Nvml;
 using NVIDIA.NVAPI;
 using System;
+using System.Diagnostics;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner.Configs.Data;
+using NiceHashMiner.Utils.Guid;
 
 namespace NiceHashMiner.Devices
 {
@@ -16,6 +19,15 @@ namespace NiceHashMiner.Devices
         public int SMMinor { get; protected set; }
 
         public readonly bool ShouldRunEthlargement;
+
+        private readonly uint _minPowerLimit;
+        private readonly uint _defaultPowerLimit;
+        private readonly uint _maxPowerLimit;
+
+        public uint PowerTarget { get; private set; }
+        public PowerLevel PowerLevel { get; private set; }
+
+        public bool PowerLimitsEnabled { get; private set; }
 
         public override float Load
         {
@@ -124,7 +136,9 @@ namespace NiceHashMiner.Devices
             // if no nvml loaded fallback ID
             if (string.IsNullOrEmpty(cudaDevice.UUID))
             {
-                Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
+                var infoToHashed = $"{ID}--{DeviceType.NVIDIA}--{cudaDevice.DeviceGlobalMemory}--{SMMajor}--{SMMinor}--{Name}";
+                var uuidHEX = UUID.V5(UUID.Nil().AsGuid(), infoToHashed).AsGuid().ToString();
+                Uuid = $"GPU-{uuidHEX}";
             }
             else
             {
@@ -137,6 +151,135 @@ namespace NiceHashMiner.Devices
             _nvmlDevice = nvmlHandle;
 
             ShouldRunEthlargement = cudaDevice.DeviceName.Contains("1080") || cudaDevice.DeviceName.Contains("Titan Xp");
+
+            try
+            {
+                var powerInfo = new NvGPUPowerInfo
+                {
+                    Version = NVAPI.GPU_POWER_INFO_VER,
+                    Entries = new NvGPUPowerInfoEntry[4]
+                };
+
+                var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesGetInfo(nvHandle, ref powerInfo);
+                if (ret != NvStatus.OK)
+                    throw new Exception(ret.ToString());
+
+                Debug.Assert(powerInfo.Entries.Length == 4);
+
+                if (powerInfo.Entries[0].MinPower == 0 || powerInfo.Entries[0].MaxPower == 0)
+                {
+                    throw new Exception("Power control not available!");
+                }
+
+                _minPowerLimit = powerInfo.Entries[0].MinPower;
+                _maxPowerLimit = powerInfo.Entries[0].MaxPower;
+                _defaultPowerLimit = powerInfo.Entries[0].DefPower;
+
+                PowerLimitsEnabled = true;
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("NVML", $"Getting power info failed with message \"{e.Message}\", disabling power setting");
+                PowerLimitsEnabled = false;
+            }
+        }
+
+        // Will probably move this power stuff to its own class when refactoring NV into a diff project
+
+        // nvPercent in thousands of percent, e.g. 100000 for 100%
+        private bool SetPowerTarget(uint nvPercent)
+        {
+            if (!PowerLimitsEnabled) return false;
+            if (NVAPI.NvAPI_DLL_ClientPowerPoliciesSetStatus == null)
+            {
+                Helpers.ConsolePrint("NVAPI", "Missing power set delegate, disabling power");
+                PowerLimitsEnabled = false;
+                return false;
+            }
+
+            // Value of 0 corresponds to not touching anything
+            if (nvPercent == uint.MinValue)
+            {
+                PowerTarget = nvPercent;
+                return true;
+            }
+
+            // Check if given value is within bounds
+            if (nvPercent < _minPowerLimit)
+                throw new PowerOutOfRangeException(_minPowerLimit);
+            if (nvPercent > _maxPowerLimit)
+                throw new PowerOutOfRangeException(_maxPowerLimit);
+
+            var status = new NvGPUPowerStatus
+            {
+                Flags = 1,
+                Entries = new NvGPUPowerStatusEntry[4]
+            };
+            status.Entries[0].Power = nvPercent;  // percent * 1000
+            status.Version = NVAPI.GPU_POWER_STATUS_VER;
+
+            try
+            {
+                var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesSetStatus(_nvHandle, ref status);
+                if (ret != NvStatus.OK)
+                    throw new Exception($"NVAPI failed with return {ret}");
+            }
+            catch (Exception e)
+            {
+                Helpers.ConsolePrint("NVAPI", e.ToString());
+                return false;
+            }
+
+            PowerTarget = nvPercent;
+
+            return true;
+        }
+
+        public bool SetPowerTarget(PowerLevel level)
+        {
+            switch (level)
+            {
+                case PowerLevel.Low:
+                    PowerLevel = level;
+                    return SetPowerTarget(_minPowerLimit);
+                case PowerLevel.Medium:
+                    PowerLevel = level;
+                    return SetPowerTarget((uint)Math.Round((_minPowerLimit + _defaultPowerLimit) / 2d));
+                case PowerLevel.High:
+                    PowerLevel = level;
+                    return SetPowerTarget(_defaultPowerLimit);
+            }
+
+            return false;
+        }
+
+        // percent is in hundreds, e.g. 100%
+        public bool SetPowerTarget(double percent)
+        {
+            return SetPowerTarget((uint)Math.Round(percent * 1000));
+        }
+
+        public override void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
+        {
+            base.SetFromComputeDeviceConfig(config);
+
+            if (config.PowerLevel != PowerLevel.Custom)  // Placeholder
+            {
+                SetPowerTarget(config.PowerLevel);
+            }
+            else
+            {
+                SetPowerTarget(config.PowerTarget);
+            }
+        }
+
+        public override ComputeDeviceConfig GetComputeDeviceConfig()
+        {
+            var config = base.GetComputeDeviceConfig();
+            config.PowerTarget = PowerTarget;
+            config.PowerLevel = PowerLevel;
+
+            return config;
         }
     }
 }

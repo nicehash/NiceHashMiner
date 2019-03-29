@@ -1199,7 +1199,7 @@ namespace NiceHashMiner
                         if (cdev.Enabled)
                         {
                             var enabled = cdev.GetAlgorithmSettings().Any(algo => algo.BenchmarkSpeed > 0);
-                            cdev.Enabled = enabled;
+                            cdev.SetEnabled(enabled);
                         }
                     }
                 }

@@ -84,7 +84,7 @@ namespace MinerSmokeTest
             {
                 var deviceEnabled = checkbox.Value != null && (bool)checkbox.Value;
                 checkbox.Value = !deviceEnabled;
-                device.Enabled = !deviceEnabled;
+                device.SetEnabled(!deviceEnabled);
             }
             var algorithms = device.GetAlgorithmSettings();
             foreach (var algo in algorithms)

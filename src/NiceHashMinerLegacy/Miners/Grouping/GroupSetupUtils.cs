@@ -25,7 +25,7 @@ namespace NiceHashMiner.Miners.Grouping
                 // C# is null happy
                 status = DeviceMiningStatus.DeviceNull;
             }
-            else if (device.Enabled == false)
+            else if (device.IsDisabled)
             {
                 status = DeviceMiningStatus.Disabled;
             }
