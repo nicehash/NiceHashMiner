@@ -16,7 +16,8 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.Equihash
 {
-    public class Ewbf : Miner
+    // old ewbf renamed updated GetStartCommand
+    public class Ewbf144 : Miner
     {
 #pragma warning disable IDE1006
         private class Result
@@ -49,7 +50,7 @@ namespace NiceHashMiner.Miners.Equihash
         private const string LookForEnd = "sol/s";
         private const double DevFee = 2.0;
 
-        public Ewbf(string name = "ewbf") : base(name)
+        public Ewbf144(string name = "ewbf144") : base(name)
         {
             ConectionType = NhmConectionType.NONE;
             IsNeverHideMiningWindow = true;
@@ -86,6 +87,9 @@ namespace NiceHashMiner.Miners.Equihash
             {
                 ret += " --fee 0";
             }
+
+            // old Ewbf is removed and we have only one algo
+            ret += " --algo 144_5 --pers auto";
 
             return ret;
         }
@@ -129,14 +133,14 @@ namespace NiceHashMiner.Miners.Equihash
             BenchmarkSignalHanged = false;
             BenchmarkSignalFinnished = false;
             BenchmarkException = null;
-            
+
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
 
             try
             {
                 Helpers.ConsolePrint("BENCHMARK", "Benchmark starts");
                 Helpers.ConsolePrint(MinerTag(), "Benchmark should end in : " + _benchmarkTimeWait + " seconds");
-                BenchmarkHandle = BenchmarkStartProcess((string) commandLine);
+                BenchmarkHandle = BenchmarkStartProcess((string)commandLine);
                 BenchmarkHandle.WaitForExit(_benchmarkTimeWait + 2);
                 var benchmarkTimer = new Stopwatch();
                 benchmarkTimer.Reset();
