@@ -1,15 +1,26 @@
+using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Switching;
+using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner
 {
-    public class Globals
+    public static class Globals
     {
-        // Constants
-        public static string[] MiningLocation = {"eu", "usa", "hk", "jp", "in", "br"};
-
+#if TESTNET
+        public static readonly string DemoUser = "2N6ibfrTwUSSvzAz1esPe1gYULG82asTHiS";
+#elif TESTNETDEV
+        public static readonly string DemoUser = "2N2e2ET1jMY9r5is9KaTKnU3bkCFaYHEEEx"; // TODO
+#else
         public static readonly string DemoUser = "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
+#endif
+
+        // Constants
+        public static string[] MiningLocation = { "eu", "usa", "hk", "jp", "in", "br" };
 
         // change this if TOS changes
         public const int CurrentTosVer = 4;
@@ -25,6 +36,7 @@ namespace NiceHashMiner
         public static int FirstNetworkCheckTimeoutTimeMs = 500;
         public static int FirstNetworkCheckTimeoutTries = 10;
 
+        public static readonly string RigID;
 
         private static string GetAlgorithmUrlName(AlgorithmType algorithmType)
         {
