@@ -187,10 +187,10 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
         public static NvidiaSmiDriver GetNvSmiDriver()
         {            
             List<NvidiaSmiDriver> drivers = new List<NvidiaSmiDriver>();
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(new WqlObjectQuery("SELECT DriverVersion FROM Win32_VideoController"))) {
+            using (var searcher = new ManagementObjectSearcher(new WqlObjectQuery("SELECT DriverVersion FROM Win32_VideoController")).Get()) {
                 try
                 {
-                    foreach (ManagementObject devicesInfo in searcher.Get())
+                    foreach (ManagementObject devicesInfo in searcher)
                     {
                         var winVerArray = devicesInfo.GetPropertyValue("DriverVersion").ToString().Split('.');
                         //we must parse windows driver format (ie. 25.21.14.1634) into nvidia driver format (ie. 416.34)
