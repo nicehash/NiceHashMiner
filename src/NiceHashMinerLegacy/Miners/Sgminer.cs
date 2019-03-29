@@ -218,6 +218,8 @@ namespace NiceHashMiner.Miners
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
+            if (string.IsNullOrEmpty(outdata) || string.IsNullOrWhiteSpace(outdata)) return;
+
             if (_benchmarkTimer.Elapsed.TotalSeconds >= BenchmarkTimeInSeconds)
             {
                 var resp = GetApiDataAsync(ApiPort, "quit").Result.TrimEnd((char) 0);
