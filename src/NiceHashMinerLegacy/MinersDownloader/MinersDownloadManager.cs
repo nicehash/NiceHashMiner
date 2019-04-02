@@ -211,7 +211,7 @@ namespace NiceHashMiner.MinersDownloader
         private delegate void OnDownloadEnded(object sender, DownloaderEventArgs e);
 
         // #2 download the file
-        private static Task<bool> DownlaodAsync(string url, string downloadLocation, IProgress<Tuple<string, int>> progress, CancellationToken stop)
+        private static async Task<bool> DownlaodAsync(string url, string downloadLocation, IProgress<Tuple<string, int>> progress, CancellationToken stop)
         {
             long lastProgress = 0;
             var ticksSinceUpdate = 0;
@@ -265,13 +265,8 @@ namespace NiceHashMiner.MinersDownloader
             });
 
             var tcs = new TaskCompletionSource<bool>();
-
-            // TODO unregister 
-            var downloadedCalled = false;
-            DownloadManager.Instance.DownloadEnded += (object sender, DownloaderEventArgs e) =>
+            var onDownloadEnded = new EventHandler<DownloaderEventArgs>((object sender, DownloaderEventArgs e) =>
             {
-                if (downloadedCalled) return;
-                downloadedCalled = true;
                 timer.Dispose();
                 if (downloader != null)
                 {
@@ -286,9 +281,12 @@ namespace NiceHashMiner.MinersDownloader
                         tcs.SetResult(true);
                     }
                 }
-            };
+            });
+            DownloadManager.Instance.DownloadEnded += onDownloadEnded;
+            var result = await tcs.Task;
+            DownloadManager.Instance.DownloadEnded -= onDownloadEnded;
 
-            return tcs.Task;
+            return result;
         }
 
 
