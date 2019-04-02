@@ -44,10 +44,12 @@ namespace NiceHashMiner
         public static int GetVirtualCoresCount()
         {
             var coreCount = 0;
-
-            foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_ComputerSystem").Get())
+            using (var query = new System.Management.ManagementObjectSearcher("Select * from Win32_ComputerSystem").Get())
             {
-                coreCount += int.Parse(item["NumberOfLogicalProcessors"].ToString());
+                foreach (var item in query)
+                {
+                    coreCount += int.Parse(item["NumberOfLogicalProcessors"].ToString());
+                }
             }
 
             return coreCount;
@@ -55,9 +57,12 @@ namespace NiceHashMiner
 
         public static int GetNumberOfCores() {
             var coreCount = 0;
-
-            foreach (var item in new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get()) {
-                coreCount += int.Parse(item["NumberOfCores"].ToString());
+            using(var query = new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get())
+            {
+                foreach (var item in query)
+                {
+                    coreCount += int.Parse(item["NumberOfCores"].ToString());
+                }
             }
 
             return coreCount;
