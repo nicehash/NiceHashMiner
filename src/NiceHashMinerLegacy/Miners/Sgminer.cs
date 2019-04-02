@@ -218,6 +218,7 @@ namespace NiceHashMiner.Miners
 
         protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
         {
+            if (BenchmarkSignalFinnished || BenchmarkSignalHanged) return;
             if (_benchmarkTimer.Elapsed.TotalSeconds >= BenchmarkTimeInSeconds)
             {
                 var resp = GetApiDataAsync(ApiPort, "quit").Result.TrimEnd((char) 0);
@@ -230,7 +231,8 @@ namespace NiceHashMiner.Miners
                 KillSgminer();
                 BenchmarkSignalHanged = true;
             }
-            if (!BenchmarkSignalFinnished && outdata != null)
+            if (string.IsNullOrEmpty(outdata) || string.IsNullOrWhiteSpace(outdata)) return;
+            if (!BenchmarkSignalFinnished)
             {
                 CheckOutdata(outdata);
             }

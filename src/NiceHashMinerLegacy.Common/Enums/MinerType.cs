@@ -42,6 +42,7 @@ namespace NiceHashMinerLegacy.Common.Enums
         GMiner,
         BMiner,
         TTMiner,
+        NBMiner,
         END
     }
 }

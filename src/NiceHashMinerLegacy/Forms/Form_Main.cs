@@ -115,18 +115,9 @@ namespace NiceHashMiner
             MessageBoxManager.Retry = Tr("&Retry");
             MessageBoxManager.Register();
 
-            //todo make this dinamically
-            {
-                comboBoxLocation.Items[0] = Tr("Europe - Amsterdam");
-                comboBoxLocation.Items[1] = Tr("USA - San Jose");
-                comboBoxLocation.Items[2] = Tr("China - Hong Kong");
-                comboBoxLocation.Items[3] = Tr("Japan - Tokyo");
-                comboBoxLocation.Items[4] = Tr("India - Chennai");
-                comboBoxLocation.Items[5] = Tr("Brazil - Sao Paulo");
-            }
-
             //??? doesn't get translated if we don't translate it directly????
             toolStripStatusLabelGlobalRateText.Text = Tr("Global rate:");
+
 
             toolStripStatusLabelBTCDayText.Text =
                 "BTC/" + Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
@@ -134,8 +125,6 @@ namespace NiceHashMiner
                                                    Tr(
                                                        ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
                                                    Tr("Balance") + ":";
-
-            devicesListViewEnableControl1.InitLocale();
         }
 
         private void InitMainConfigGuiData()
@@ -995,6 +984,7 @@ namespace NiceHashMiner
             else if (settings.IsChange && settings.IsChangeSaved)
             {
                 InitLocalization();
+                FormHelpers.TranslateFormControls(this);
                 InitMainConfigGuiData();
             }
         }

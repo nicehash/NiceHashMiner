@@ -89,16 +89,6 @@ namespace NiceHashMiner.Forms.Components
             IsInBenchmark = false;
         }
 
-        public void InitLocale()
-        {
-            listViewAlgorithms.Columns[ENABLED].Text = Translations.Tr("Enabled");
-            listViewAlgorithms.Columns[ALGORITHM].Text = Translations.Tr("Algorithm");
-            listViewAlgorithms.Columns[SPEED].Text = Translations.Tr("Speed");
-            listViewAlgorithms.Columns[SECSPEED].Text = Translations.Tr("Secondary Speed");
-            listViewAlgorithms.Columns[RATIO].Text = Translations.Tr("Ratio BTC/GH/Day");
-            listViewAlgorithms.Columns[RATE].Text = Translations.Tr("BTC/Day");
-        }
-
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled)
         {
             _computeDevice = computeDevice;
