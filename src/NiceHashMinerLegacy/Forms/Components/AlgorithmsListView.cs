@@ -362,8 +362,10 @@ namespace NiceHashMiner.Forms.Components
                         lvi.Checked = lvi.Selected;
                         if (lvi.Selected && algorithm.BenchmarkSpeed <= 0)
                         {
-                            // If it has zero speed, set to 1 so it can be tested
+                            // If it has zero speed, set to 1 so it can be tested, must be available only in DEBUG mode!!
+                            #if DEBUG
                             algorithm.BenchmarkSpeed = 1;
+                            #endif
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                             ComunicationInterface?.ChangeSpeed(lvi);
                         }

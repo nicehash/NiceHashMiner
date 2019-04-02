@@ -72,13 +72,15 @@ namespace NiceHashMiner
             InitLocalization();
 
             // Log the computer's amount of Total RAM and Page File Size
-            var moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
-            foreach (ManagementObject mo in moc)
+            using (var moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get())
             {
-                var totalRam = long.Parse(mo["TotalVisibleMemorySize"].ToString()) / 1024;
-                var pageFileSize = (long.Parse(mo["TotalVirtualMemorySize"].ToString()) / 1024) - totalRam;
-                Helpers.ConsolePrint("NICEHASH", "Total RAM: " + totalRam + "MB");
-                Helpers.ConsolePrint("NICEHASH", "Page File Size: " + pageFileSize + "MB");
+                foreach (ManagementObject mo in moc)
+                {
+                    var totalRam = long.Parse(mo["TotalVisibleMemorySize"].ToString()) / 1024;
+                    var pageFileSize = (long.Parse(mo["TotalVirtualMemorySize"].ToString()) / 1024) - totalRam;
+                    Helpers.ConsolePrint("NICEHASH", "Total RAM: " + totalRam + "MB");
+                    Helpers.ConsolePrint("NICEHASH", "Page File Size: " + pageFileSize + "MB");
+                }
             }
 
             Text += " v" + Application.ProductVersion + BetaAlphaPostfixString;
