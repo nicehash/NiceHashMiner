@@ -178,14 +178,14 @@ namespace NiceHashMiner
 
         public static string GetMotherboardID()
         {
-            var mos = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard");
-            var moc = mos.Get();
             var serial = "";
-            foreach (ManagementObject mo in moc)
+            using (var moc = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard").Get())
             {
-                serial = (string) mo["SerialNumber"];
+                foreach (ManagementObject mo in moc)
+                {
+                    serial = (string) mo["SerialNumber"];
+                }
             }
-
             return serial;
         }
 
@@ -195,11 +195,12 @@ namespace NiceHashMiner
             var id = "N/A";
             try
             {
-                var mbs = new ManagementObjectSearcher("Select * From Win32_processor");
-                var mbsList = mbs.Get();
-                foreach (ManagementObject mo in mbsList)
+                using(var mbsList = new ManagementObjectSearcher("Select * From Win32_processor").Get())
                 {
-                    id = mo["ProcessorID"].ToString();
+                    foreach (ManagementObject mo in mbsList)
+                    {
+                        id = mo["ProcessorID"].ToString();
+                    }
                 }
             }
             catch { }
@@ -305,9 +306,11 @@ namespace NiceHashMiner
         {
             try
             {
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
-                ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
-                return true;
+                using (new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get())
+                {
+                    ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
+                    return true;
+                }
             }
             catch
             {

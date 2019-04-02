@@ -21,9 +21,9 @@ namespace NiceHashMiner.Devices.Querying
         {
             var winQuery = new ObjectQuery("SELECT * FROM Win32_OperatingSystem");
 
-            using (var searcher = new ManagementObjectSearcher(winQuery))
+            using (var searcher = new ManagementObjectSearcher(winQuery).Get())
             {
-                foreach (var obj in searcher.Get())
+                foreach (var obj in searcher)
                 {
                     if (!(obj is ManagementObject item)) continue;
 

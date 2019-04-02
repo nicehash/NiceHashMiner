@@ -123,7 +123,7 @@ namespace NiceHashMiner.Devices
 
             if (SystemSpecs.HasNvidiaVideoController)
             {
-                var currentDriver = await NvidiaQuery.GetNvSmiDriverAsync();
+                var currentDriver = NvidiaQuery.GetNvSmiDriver();
 
                 result.CurrentDriverString = currentDriver.ToString();
                 result.FailedMinNVDriver = !nvCountMatched && currentDriver < NvidiaMinDetectionDriver;
