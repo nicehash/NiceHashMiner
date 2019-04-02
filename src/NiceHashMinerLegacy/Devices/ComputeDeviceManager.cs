@@ -20,21 +20,19 @@ namespace NiceHashMiner.Devices
 
         private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(372, 54); // 372.54;
         private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
-
-        public static event EventHandler<string> OnProgressUpdate;
         
-        public static async Task<QueryResult> QueryDevicesAsync()
+        public static async Task<QueryResult> QueryDevicesAsync(IProgress<string> progress)
         {
             // #0 get video controllers, used for cross checking
             var badVidCtrls = SystemSpecs.QueryVideoControllers();
+            //progress?.Report(TODO no CPU checking???);
             // Order important CPU Query must be first
             // #1 CPU
             var cpuDevs = CpuQuery.QueryCpus(out var failed64Bit, out var failedCpuCount);
             AvailableDevices.AddDevices(cpuDevs);
 
             // #2 CUDA
-            
-            OnProgressUpdate?.Invoke(null, Tr("Querying CUDA devices"));
+            progress?.Report(Tr("Querying CUDA devices"));
             var nv = new NvidiaQuery();
             var nvDevs = nv.QueryCudaDevices();
 
@@ -56,10 +54,10 @@ namespace NiceHashMiner.Devices
 
             var amd = new AmdQuery(AvailableDevices.NumDetectedNvDevs);
             // #3 OpenCL
-            OnProgressUpdate?.Invoke(null, Tr("Querying OpenCL devices"));
+            progress?.Report(Tr("Querying OpenCL devices"));
             amd.QueryOpenCLDevices();
             // #4 AMD query AMD from OpenCL devices, get serial and add devices
-            OnProgressUpdate?.Invoke(null, Tr("Checking AMD OpenCL GPUs"));
+            progress?.Report(Tr("Checking AMD OpenCL GPUs"));
             var amdDevs = amd.QueryAmd(out var failedAmdDriverCheck);
 
             if (amdDevs != null)

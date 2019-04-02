@@ -404,7 +404,6 @@
             this.Controls.Add(this.labelServiceLocation);
             this.Controls.Add(this.textBoxBTCAddress);
             this.Controls.Add(this.buttonStartMining);
-            this.Enabled = false;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(576, 316);

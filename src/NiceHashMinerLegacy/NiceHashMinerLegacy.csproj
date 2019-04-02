@@ -85,6 +85,8 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
@@ -122,6 +124,12 @@
     <Compile Include="Devices\Querying\QueryResult.cs" />
     <Compile Include="Devices\Querying\SystemSpecs.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
+    <Compile Include="Forms\Components\StartupLoadingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\StartupLoadingControl.Designer.cs">
+      <DependentUpon>StartupLoadingControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\EnterBTCDialogSwitch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -151,6 +159,9 @@
     </Compile>
     <Compile Include="Interfaces\IApiResult.cs" />
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="MinersDownloader\DownloadSetup.cs" />
+    <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
+    <Compile Include="MinersDownloader\ProgressState.cs" />
     <Compile Include="Miners\BMiner.cs" />
     <Compile Include="Miners\Ewbf144.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
@@ -264,7 +275,6 @@
     <Compile Include="Interfaces\IBenchmarkComunicator.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
-    <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\ClaymoreBaseMiner.cs" />
@@ -305,12 +315,6 @@
     <Compile Include="Forms\Form_Main.Designer.cs">
       <DependentUpon>Form_Main.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Loading.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_Loading.Designer.cs">
-      <DependentUpon>Form_Loading.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Miners\Miner.cs" />
     <Compile Include="Forms\MinerFileNotFoundDialog.cs">
@@ -327,9 +331,6 @@
     <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
     <Compile Include="Utils\BINS_CODEGEN_3rd.cs" />
-    <Compile Include="Utils\DownloadSetup.cs" />
-    <Compile Include="Utils\MinersDownloader.cs" />
-    <Compile Include="Utils\MinersDownloadManager.cs" />
     <Compile Include="Utils\MinersExistanceChecker.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
@@ -353,6 +354,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\StartupLoadingControl.resx">
+      <DependentUpon>StartupLoadingControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EnterBTCDialogSwitch.resx">
       <DependentUpon>EnterBTCDialogSwitch.cs</DependentUpon>
@@ -380,9 +384,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Main.resx">
       <DependentUpon>Form_Main.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Loading.resx">
-      <DependentUpon>Form_Loading.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MinerFileNotFoundDialog.resx">
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>

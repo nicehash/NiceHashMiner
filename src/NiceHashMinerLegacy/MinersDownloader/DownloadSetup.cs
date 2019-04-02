@@ -1,6 +1,12 @@
-﻿namespace NiceHashMiner.Utils
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace NiceHashMiner.MinersDownloader
 {
-    public class DownloadSetup
+    internal class DownloadSetup
     {
         public DownloadSetup(string url, string dlName, string inFolderName)
         {
