@@ -169,6 +169,7 @@
     <Compile Include="Miners\XmrStak\XmrStak.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
+    <Compile Include="Stats\WindowsManagementObjectSearcher.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
     <Compile Include="Switching\Interval.cs" />

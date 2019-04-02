@@ -2,6 +2,7 @@
 using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Devices.Querying.Amd;
 using NiceHashMiner.Devices.Querying.Nvidia;
+using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace NiceHashMiner.Devices
 
             if (SystemSpecs.HasNvidiaVideoController)
             {
-                var currentDriver = NvidiaQuery.GetNvSmiDriver();
+                var currentDriver = WindowsManagementObjectSearcher.GetNvSmiDriver();
 
                 result.CurrentDriverString = currentDriver.ToString();
                 result.FailedMinNVDriver = !nvCountMatched && currentDriver < NvidiaMinDetectionDriver;

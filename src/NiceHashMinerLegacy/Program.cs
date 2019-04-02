@@ -118,7 +118,7 @@ namespace NiceHashMiner
             Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
             
             // check WMI
-            if (Helpers.IsWmiEnabled())
+            if (WindowsManagementObjectSearcher.IsWmiEnabled())
             {
                 // if no BTC address show login/register form
                 if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "") Application.Run(new EnterBTCDialogSwitch());

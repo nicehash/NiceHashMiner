@@ -184,6 +184,7 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
 
         #endregion
 
+        [Obsolete("Use WindowsManagementObjectSearcher.GetNvSmiDriver instead")]
         public static NvidiaSmiDriver GetNvSmiDriver()
         {            
             List<NvidiaSmiDriver> drivers = new List<NvidiaSmiDriver>();
