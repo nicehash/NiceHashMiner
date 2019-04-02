@@ -12,21 +12,26 @@ namespace DeviceDetectionPrinter
         {
             if (args.Count() < 1)
             {
+                Console.WriteLine("Error usage [ocl|cuda] [-|p]");
+                return;
+            }
+            var isPretty = args.Count() >= 2 && args[1] != "-";
+            var isNoNewline = args.Count() >= 2 && args[1] == "-";
+            string printString = null;
+            if (args[0].ToLower() == "ocl")
+            {
+                printString = DeviceDetection.GetOpenCLDevices(isPretty);
+            } else if(args[0].ToLower() == "cuda")
+            {
+                printString = DeviceDetection.GetCUDADevices(isPretty);
+            } else
+            {
                 Console.WriteLine("Error usage [ocl|cuda] [|p]");
                 return;
             }
 
-            var isPretty = args.Count() >= 2;
-            if (args[0].ToLower() == "ocl")
-            {
-                Console.WriteLine(DeviceDetection.GetOpenCLDevices(isPretty));
-            } else if(args[0].ToLower() == "cuda")
-            {
-                Console.WriteLine(DeviceDetection.GetCUDADevices(isPretty));
-            } else
-            {
-                Console.WriteLine("Error usage [ocl|cuda] [|p]");
-            }
+            Console.Write(printString);
+            if (!isNoNewline) Console.WriteLine();
         }
     }
 }
