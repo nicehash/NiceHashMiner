@@ -136,43 +136,21 @@ namespace NiceHashMiner.Devices.Algorithms
         {
             if (dev.DeviceType != DeviceType.AMD) return null;
 
-            const string RemDis = " --remove-disabled";
-            const string DefaultParam = RemDis + AmdGpuDevice.DefaultParam;
-
-            var NeoScryptExtraLaunchParameters = DefaultParam + "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 4";
-            if (!dev.Codename.Contains("Tahiti"))
-            {
-                NeoScryptExtraLaunchParameters =
-                    AmdGpuDevice.DefaultParam +
-                    "--nfactor 10 --xintensity    2 --thread-concurrency 8192 --worksize  64 --gpu-threads 2";
-                Helpers.ConsolePrint("ComputeDevice", $"The GPU detected ({dev.Codename}) is not Tahiti. Changing default gpu-threads to 2.");
-            }
-
             var algos = new List<Algorithm>
             {
-                new Algorithm(MinerBaseType.sgminer, AlgorithmType.NeoScrypt, "neoscrypt", false)
-                {
-                    ExtraLaunchParameters = NeoScryptExtraLaunchParameters
-                },
                 new Algorithm(MinerBaseType.sgminer, AlgorithmType.Keccak, "keccak")
                 {
-                    ExtraLaunchParameters = DefaultParam + "--intensity 15"
+                    ExtraLaunchParameters = " --remove-disabled --keccak-unroll 0 --hamsi-expand-big 4 --remove-disabled --intensity 15"
                 },
                 new Algorithm(MinerBaseType.sgminer, AlgorithmType.DaggerHashimoto, "ethash", false)
                 {
-                    ExtraLaunchParameters = RemDis + "--xintensity 512 -w 192 -g 1"
+                    ExtraLaunchParameters = " --remove-disabled --xintensity 512 -w 192 -g 1"
                 },
                 new Algorithm(MinerBaseType.sgminer, AlgorithmType.X16R, "x16r")
                 {
-                    ExtraLaunchParameters = "-X 256"
+                    ExtraLaunchParameters = " -X 256"
                 },
             };
-
-            // filter drivers algos issue
-            if (dev.DriverDisableAlgos)
-            {
-                algos = FilterAlgorithmsList(algos, new List<AlgorithmType>{ AlgorithmType.NeoScrypt });
-            }
             // filter RAM requirements
             algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
 

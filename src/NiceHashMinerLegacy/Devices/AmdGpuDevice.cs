@@ -7,7 +7,6 @@ namespace NiceHashMiner.Devices
     [Serializable]
     public class AmdGpuDevice
     {
-        public const string DefaultParam = "--keccak-unroll 0 --hamsi-expand-big 4 --remove-disabled  ";
         public const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90 " + " --temp-target 75 --auto-fan --auto-gpu ";
 
         public string DeviceName { get; } // init this with the ADL
@@ -17,9 +16,6 @@ namespace NiceHashMiner.Devices
         private readonly OpenCLDevice _openClSubset;
 
         public string InfSection { get; } // has arhitecture string
-
-        // new drivers make some algorithms unusable 21.19.164.1 => driver not working with NeoScrypt and 
-        public bool DriverDisableAlgos { get; }
 
         public int Adl1Index { get; } // init this with the ADL
         public int Adl2Index { get; }
@@ -33,7 +29,6 @@ namespace NiceHashMiner.Devices
 
         internal AmdGpuDevice(OpenCLDevice openClSubset, string infSection, bool driverDisableAlgo, string name, string uuid)
         {
-            DriverDisableAlgos = driverDisableAlgo;
             InfSection = infSection;
 
             _openClSubset = openClSubset ?? new OpenCLDevice();

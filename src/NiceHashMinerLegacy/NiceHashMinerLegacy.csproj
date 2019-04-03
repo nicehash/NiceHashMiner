@@ -120,7 +120,6 @@
     <Compile Include="Devices\Querying\Amd\OpenCL\QueryOpenCL.cs" />
     <Compile Include="Devices\Querying\QueryGpu.cs" />
     <Compile Include="Devices\Querying\QueryResult.cs" />
-    <Compile Include="Devices\Querying\SystemSpecs.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
     <Compile Include="Forms\Components\StartupLoadingControl.cs">
       <SubType>UserControl</SubType>
@@ -299,12 +298,6 @@
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="Miners\Ccminer.cs" />
-    <Compile Include="Forms\DriverVersionConfirmationDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DriverVersionConfirmationDialog.Designer.cs">
-      <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Miners\ethminer\Ethereum.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
@@ -377,9 +370,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DriverVersionConfirmationDialog.resx">
-      <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Main.resx">
       <DependentUpon>Form_Main.cs</DependentUpon>

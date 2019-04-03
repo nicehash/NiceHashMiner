@@ -9,77 +9,134 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Stats
 {
-    class WindowsManagementObjectSearcher
+    static class WindowsManagementObjectSearcher
     {
+        #region System Memory
+        public static ulong TotalVisibleMemorySize { get; private set; }
+        public static ulong TotalVirtualMemorySize { get; private set; }
+        // PageFileSize might be redundant
+        public static ulong PageFileSize => TotalVirtualMemorySize - TotalVisibleMemorySize;
+        public static ulong FreePhysicalMemory { get; private set; }
+        public static ulong FreeVirtualMemory { get; private set; }
 
-        public static void GetRamAndPageFileSize()
+        public static void QueryWin32_OperatingSystemData()
         {
-            using (var query = new ManagementObjectSearcher("root\\CIMV2", "SELECT TotalVisibleMemorySize,TotalVirtualMemorySize FROM Win32_OperatingSystem").Get())
+            var attributes = new List<string> { "FreePhysicalMemory", "FreeVirtualMemory", "TotalVisibleMemorySize", "TotalVirtualMemorySize" };
+            var attributesParams = string.Join(",", attributes);
+            using (var searcher = new ManagementObjectSearcher("root\\CIMV2", $"SELECT {attributesParams} FROM Win32_OperatingSystem"))
+            using (var query = searcher.Get())
             {
                 foreach (var item in query)
                 {
-                    var totalRam = long.Parse(item.GetPropertyValue("TotalVisibleMemorySize").ToString()) / 1024;
-                    var pageFileSize = (long.Parse(item.GetPropertyValue("TotalVirtualMemorySize").ToString()) / 1024) - totalRam;
-                    Helpers.ConsolePrint("NICEHASH", "Total RAM: " + totalRam + "MB");
-                    Helpers.ConsolePrint("NICEHASH", "Page File Size: " + pageFileSize + "MB");
+                    if (!(item is ManagementObject mo)) continue;
+                    TotalVisibleMemorySize = Convert.ToUInt64(mo.GetPropertyValue("TotalVisibleMemorySize"));
+                    TotalVirtualMemorySize = Convert.ToUInt64(mo.GetPropertyValue("TotalVirtualMemorySize"));
+                    FreePhysicalMemory = Convert.ToUInt64(mo.GetPropertyValue("FreePhysicalMemory"));
+                    FreeVirtualMemory = Convert.ToUInt64(mo.GetPropertyValue("FreeVirtualMemory"));
                 }
             }
         }
+        #endregion System Memory
 
-        public static Tuple<ulong, ulong> GetSystemSpecs()
-        {
-            var winQuery = new ObjectQuery("SELECT FreePhysicalMemory,FreeVirtualMemory FROM Win32_OperatingSystem");
-            ulong FreePhysicalMemory = 0;
-            ulong FreeVirtualMemory = 0;
-            using (var searcher = new ManagementObjectSearcher(winQuery).Get())
+
+        #region Video Controllers and Drivers
+        public static NvidiaSmiDriver NvidiaDriver { get; private set; } = new NvidiaSmiDriver(-1, -1);
+        //public static NvidiaSmiDriver NvidiaDriver { get; private set; } = new NvidiaSmiDriver(-1, -1);
+        public static IReadOnlyList<VideoControllerData> AvailableVideoControllers { get; private set; }
+        public static IEnumerable<VideoControllerData> BadVideoControllers {
+            get
             {
-                foreach (var obj in searcher)
-                {
-                    if (!(obj is ManagementObject item)) continue;
-
-                    FreePhysicalMemory = Convert.ToUInt64(item.GetPropertyValue("FreePhysicalMemory"));
-                    FreeVirtualMemory = Convert.ToUInt64(item.GetPropertyValue("FreeVirtualMemory"));
-                }
+                return AvailableVideoControllers?.Where(vc => vc.Status.ToLower() != "ok") ?? Enumerable.Empty<VideoControllerData>();  
             }
-            return Tuple.Create(FreePhysicalMemory, FreeVirtualMemory);
         }
+        public static bool HasNvidiaVideoController => AvailableVideoControllers?.Any(vctrl => vctrl.IsNvidia) ?? false;
 
-        public static List<VideoControllerData> GetVideoControllersData()
+        public static void QueryWin32_VideoController()
         {
+
+            var attributes = new List<string> { "AdapterRAM", "Name", "Description", "PNPDeviceID", "DriverVersion", "Status", "InfSection" };
+            var attributesParams = string.Join(",", attributes);
+
             var vidControllers = new List<VideoControllerData>();
-            var stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine("");
-            stringBuilder.AppendLine("QueryVideoControllers: ");
-
-            using (var query = new ManagementObjectSearcher("root\\CIMV2",
-                "SELECT AdapterRAM,Name,Description,PNPDeviceID,DriverVersion,Status,InfSection FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get())
+            using (var searcher = new ManagementObjectSearcher("root\\CIMV2", $"SELECT {attributesParams} FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'"))
+            using (var query = searcher.Get())
             {
-                foreach (var manObj in query)
+                foreach (var item in query)
                 {
-                    ulong.TryParse(manObj.GetPropertyValue("AdapterRAM").ToString() ?? "key is null", out var memTmp);
+                    if (!(item is ManagementObject mo)) continue;
+
+                    var memTmp = Convert.ToUInt64(mo.GetPropertyValue("AdapterRAM"));
                     var vidController = new VideoControllerData
                     (
-                        manObj.GetPropertyValue("Name")?.ToString() ?? "key is null",
-                        manObj.GetPropertyValue("Description")?.ToString() ?? "key is null",
-                        manObj.GetPropertyValue("PNPDeviceID")?.ToString() ?? "key is null",
-                        manObj.GetPropertyValue("DriverVersion")?.ToString() ?? "key is null",
-                        manObj.GetPropertyValue("Status")?.ToString() ?? "key is null",
-                        manObj.GetPropertyValue("InfSection")?.ToString() ?? "key is null",
+                        mo.GetPropertyValue("Name")?.ToString() ?? "key is null",
+                        mo.GetPropertyValue("Description")?.ToString() ?? "key is null",
+                        mo.GetPropertyValue("PNPDeviceID")?.ToString() ?? "key is null",
+                        mo.GetPropertyValue("DriverVersion")?.ToString() ?? "key is null",
+                        mo.GetPropertyValue("Status")?.ToString() ?? "key is null",
+                        mo.GetPropertyValue("InfSection")?.ToString() ?? "key is null",
                         memTmp
                     );
-
-                    stringBuilder.AppendLine("\tWin32_VideoController detected:");
-                    stringBuilder.AppendLine($"{vidController.GetFormattedString()}");
-
                     vidControllers.Add(vidController);
                 }
             }
-            Helpers.ConsolePrint("SystemSpecs", stringBuilder.ToString());
 
-            return vidControllers;
+            AvailableVideoControllers = vidControllers;
+
+            var nvidiaDriverVersion = "NO NVIDIA DEVICES";
+            // check NVIDIA drivers, we assume all NVIDIA devices are using the same driver version
+            var nvidiaVideoControllerData = vidControllers.Where(vidC => vidC.IsNvidia).FirstOrDefault();
+            if (nvidiaVideoControllerData != null)
+            {
+                NvidiaDriver = ParseNvSmiDriver(nvidiaVideoControllerData.DriverVersion);
+                nvidiaDriverVersion = NvidiaDriver.ToString();
+            }
+
+            ////////////////////////////////////////////////////
+            // TODO move logging outside
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"NVIDIA driver version: {nvidiaDriverVersion}");
+            stringBuilder.AppendLine("QueryVideoControllers: ");
+            foreach (var vidController in vidControllers)
+            {
+                stringBuilder.AppendLine("\tWin32_VideoController detected:");
+                stringBuilder.AppendLine($"{vidController.GetFormattedString()}");
+            }
+            Helpers.ConsolePrint("SystemSpecs", stringBuilder.ToString());
         }
 
-        public static int GetVirtualCoresCount()
+        private static NvidiaSmiDriver ParseNvSmiDriver(string windowsDriverVersion)
+        {
+            var winVerArray = windowsDriverVersion.Split('.');
+            //we must parse windows driver format (ie. 25.21.14.1634) into nvidia driver format (ie. 416.34)
+            //nvidia format driver is inside last two elements of splited windows driver string (ie. 14 + 1634)
+            if (winVerArray.Length >= 2)
+            {
+                var firstPartOfVersion = winVerArray[winVerArray.Length - 2];
+                var secondPartOfVersion = winVerArray[winVerArray.Length - 1];
+                var shortVerArray = firstPartOfVersion + secondPartOfVersion;
+                var driverFull = shortVerArray.Remove(0, 1).Insert(3, ".").Split('.'); // we transform that string into "nvidia" version (ie. 416.83)
+                var driver = new NvidiaSmiDriver(Convert.ToInt32(driverFull[0]), Convert.ToInt32(driverFull[1])); //we create driver object from string version
+
+                return driver;
+            }
+            return new NvidiaSmiDriver(-1, -1);
+        }
+
+        #endregion Video Controllers and Drivers
+
+        #region CPU Info
+
+        public static int NumberOfCPUCores { get; private set; }
+        public static int VirtualCoresCount { get; private set; }
+        public static bool IsHypeThreadingEnabled => VirtualCoresCount > NumberOfCPUCores;
+
+        public static void QueryCPU_Info()
+        {
+            VirtualCoresCount = GetVirtualCoresCount();
+            NumberOfCPUCores = GetNumberOfCores();
+        }
+
+        private static int GetVirtualCoresCount()
         {
             var coreCount = 0;
             using (var query = new ManagementObjectSearcher("Select NumberOfLogicalProcessors from Win32_ComputerSystem").Get())
@@ -92,10 +149,11 @@ namespace NiceHashMiner.Stats
             return coreCount;
         }
 
-        public static int GetNumberOfCores()
+        private static int GetNumberOfCores()
         {
             var coreCount = 0;
-            using (var query = new ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
+            using (var searcher = new ManagementObjectSearcher("Select NumberOfCores from Win32_Processor"))
+            using (var query = searcher.Get())
             {
                 foreach (var item in query)
                 {
@@ -104,13 +162,15 @@ namespace NiceHashMiner.Stats
             }
             return coreCount;
         }
+        #endregion CPU Info
 
         public static string GetCpuID()
         {
             var serial = "N/A";
             try
             {
-                using (var query = new ManagementObjectSearcher("Select ProcessorID from Win32_processor").Get())
+                using (var searcher = new ManagementObjectSearcher("Select ProcessorID from Win32_processor"))
+                using (var query = searcher.Get())
                 {
                     foreach (var item in query)
                     {
@@ -122,24 +182,25 @@ namespace NiceHashMiner.Stats
             return serial;
         }
 
-        public static string GetMotherboardID()
-        {
-            var serial = "";
-            using (var query = new ManagementObjectSearcher("Select SerialNumber from Win32_BaseBoard").Get())
-            {
-                foreach (var item in query)
-                {
-                    serial = item.GetPropertyValue("SerialNumber").ToString();
-                }
-            }
-            return serial;
-        }
+        //public static string GetMotherboardID()
+        //{
+        //    var serial = "";
+        //    using (var query = new ManagementObjectSearcher("Select SerialNumber from Win32_BaseBoard").Get())
+        //    {
+        //        foreach (var item in query)
+        //        {
+        //            serial = item.GetPropertyValue("SerialNumber").ToString();
+        //        }
+        //    }
+        //    return serial;
+        //}
 
         public static bool IsWmiEnabled()
         {
             try
             {
-                using (new ManagementObjectSearcher("root\\CIMV2", "SELECT FreePhysicalMemory FROM Win32_OperatingSystem").Get())
+                using (var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT FreePhysicalMemory FROM Win32_OperatingSystem"))
+                using (var query = searcher.Get())
                 {
                     Helpers.ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
                     return true;
@@ -150,49 +211,6 @@ namespace NiceHashMiner.Stats
                 Helpers.ConsolePrint("NICEHASH", "ManagementObjectSearcher not working need WMI service to be running");
             }
             return false;
-        }
-
-        public static NvidiaSmiDriver GetNvSmiDriver()
-        {
-            List<NvidiaSmiDriver> drivers = new List<NvidiaSmiDriver>();
-            using (var searcher = new ManagementObjectSearcher(new WqlObjectQuery("SELECT DriverVersion FROM Win32_VideoController")).Get())
-            {
-                try
-                {
-                    foreach (ManagementObject devicesInfo in searcher)
-                    {
-                        var winVerArray = devicesInfo.GetPropertyValue("DriverVersion").ToString().Split('.');
-                        //we must parse windows driver format (ie. 25.21.14.1634) into nvidia driver format (ie. 416.34)
-                        //nvidia format driver is inside last two elements of splited windows driver string (ie. 14 + 1634)
-                        if (winVerArray.Length >= 2)
-                        {
-                            var firstPartOfVersion = winVerArray[winVerArray.Length - 2];
-                            var secondPartOfVersion = winVerArray[winVerArray.Length - 1];
-                            var shortVerArray = firstPartOfVersion + secondPartOfVersion;
-                            var driverFull = shortVerArray.Remove(0, 1).Insert(3, ".").Split('.'); // we transform that string into "nvidia" version (ie. 416.83)
-                            NvidiaSmiDriver driver = new NvidiaSmiDriver(Convert.ToInt32(driverFull[0]), Convert.ToInt32(driverFull[1])); //we create driver object from string version
-
-                            if (drivers.Count == 0)
-                                drivers.Add(driver);
-                            else
-                            {
-                                foreach (var ver in drivers) //we are checking if there is other driver version on system
-                                {
-                                    if (ver.LeftPart != driver.LeftPart || ver.RightPart != driver.RightPart)
-                                        drivers.Add(driver);
-                                }
-                            }
-                            if (drivers.Count != 1)
-                            {
-                                //TODO what happens if there are more driver versions??!!
-                            }
-                        }
-                    }
-                    return drivers[0]; // TODO if we will support multiple drivers this must be changed
-                }
-                catch (Exception e) { }
-            }
-            return new NvidiaSmiDriver(-1, -1);
         }
     }
 }

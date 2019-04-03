@@ -71,9 +71,6 @@ namespace NiceHashMiner
 
             InitLocalization();
 
-            // Log the computer's amount of Total RAM and Page File Size
-            WindowsManagementObjectSearcher.GetRamAndPageFileSize();
-
             Text += " v" + Application.ProductVersion + BetaAlphaPostfixString;
 
             label_NotProfitable.Visible = false;
@@ -273,7 +270,25 @@ namespace NiceHashMiner
                     return perc;
                 });
 
-                var detectionProgress = new Progress<string>(info => progress?.Report(new Tuple<string, int>(info, nextProgPerc())));
+                progress?.Report(Tuple.Create(Tr("Checking System Memory"), nextProgPerc()));
+                await Task.Run(() => WindowsManagementObjectSearcher.QueryWin32_OperatingSystemData());
+                var TotalVisibleMemorySize = WindowsManagementObjectSearcher.TotalVisibleMemorySize;
+                var TotalVirtualMemorySize = WindowsManagementObjectSearcher.TotalVirtualMemorySize;
+                var PageFileSize = WindowsManagementObjectSearcher.PageFileSize;
+                var FreePhysicalMemory = WindowsManagementObjectSearcher.FreePhysicalMemory;
+                var FreeVirtualMemory = WindowsManagementObjectSearcher.FreeVirtualMemory;
+                Helpers.ConsolePrint("NICEHASH", $"TotalVisibleMemorySize: {TotalVisibleMemorySize}, {TotalVisibleMemorySize / 1024} MB");
+                Helpers.ConsolePrint("NICEHASH", $"TotalVirtualMemorySize: {TotalVirtualMemorySize}, {TotalVirtualMemorySize / 1024} MB");
+                Helpers.ConsolePrint("NICEHASH", $"PageFileSize = {PageFileSize}, {PageFileSize / 1024} MB");
+                Helpers.ConsolePrint("NICEHASH", $"FreePhysicalMemory = {FreePhysicalMemory}, {FreePhysicalMemory / 1024} MB");
+                Helpers.ConsolePrint("NICEHASH", $"FreeVirtualMemory = {FreeVirtualMemory}, {FreeVirtualMemory / 1024} MB");
+
+                progress?.Report(Tuple.Create(Tr("Checking Windows Video Controllers"), nextProgPerc()));
+                await Task.Run(() => WindowsManagementObjectSearcher.QueryWin32_VideoController());
+
+                
+
+                var detectionProgress = new Progress<string>(info => progress?.Report(Tuple.Create(info, nextProgPerc())));
                 // Query Available ComputeDevices
                 var query = await ComputeDeviceManager.QueryDevicesAsync(detectionProgress);
                 ShowQueryWarnings(query);
@@ -284,7 +299,7 @@ namespace NiceHashMiner
                 /////// from here on we have our devices and Miners initialized
                 ConfigManager.AfterDeviceQueryInitialization();
                 //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Saving config..."));
-                progress?.Report(new Tuple<string, int>(Tr("Saving config..."), nextProgPerc()));
+                progress?.Report(Tuple.Create(Tr("Saving config..."), nextProgPerc()));
 
                 // All devices settup should be initialized in AllDevices
                 devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices);
@@ -292,7 +307,7 @@ namespace NiceHashMiner
                 devicesListViewEnableControl1.SaveToGeneralConfig = true;
 
                 //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Checking for latest version..."));
-                progress?.Report(new Tuple<string, int>(Tr("Checking for latest version..."), nextProgPerc()));
+                progress?.Report(Tuple.Create(Tr("Checking for latest version..."), nextProgPerc()));
 
                 _minerStatsCheck = new Timer();
                 _minerStatsCheck.Tick += MinerStatsCheck_Tick;
@@ -311,7 +326,7 @@ namespace NiceHashMiner
                 //}
 
                 //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Getting NiceHash SMA information..."));
-                progress?.Report(new Tuple<string, int>(Tr("Getting NiceHash SMA information..."), nextProgPerc()));
+                progress?.Report(Tuple.Create(Tr("Getting NiceHash SMA information..."), nextProgPerc()));
                 // Init ws connection
                 NiceHashStats.OnBalanceUpdate += BalanceCallback;
                 NiceHashStats.OnSmaUpdate += SmaCallback;
@@ -332,30 +347,11 @@ namespace NiceHashMiner
                 }
 
                 //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Getting Bitcoin exchange rate..."));
-                progress?.Report(new Tuple<string, int>(Tr("Getting Bitcoin exchange rate..."), nextProgPerc()));
+                progress?.Report(Tuple.Create(Tr("Getting Bitcoin exchange rate..."), nextProgPerc()));
 
-                //// Don't start timer if socket is giving data
-                //if (ExchangeRateApi.ExchangesFiat == null)
-                //{
-                //    // Wait a bit and check again
-                //    Thread.Sleep(1000);
-                //    if (ExchangeRateApi.ExchangesFiat == null)
-                //    {
-                //        Helpers.ConsolePrint("NICEHASH", "No exchange from socket yet, getting manually");
-                //        _bitcoinExchangeCheck = new Timer();
-                //        _bitcoinExchangeCheck.Tick += BitcoinExchangeCheck_Tick;
-                //        _bitcoinExchangeCheck.Interval = 1000 * 3601; // every 1 hour and 1 second
-                //        _bitcoinExchangeCheck.Start();
-                //        BitcoinExchangeCheck_Tick(null, null);
-                //    }
-                //}
-
-                //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Setting environment variables..."));
-                progress?.Report(new Tuple<string, int>(Tr("Setting environment variables..."), nextProgPerc()));
-                Helpers.SetDefaultEnvironmentVariables();
 
                 //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Setting Windows error reporting..."));
-                progress?.Report(new Tuple<string, int>(Tr("Setting Windows error reporting..."), nextProgPerc()));
+                progress?.Report(Tuple.Create(Tr("Setting Windows error reporting..."), nextProgPerc()));
                 Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
 
                 // TODO put this at start mining?
@@ -386,7 +382,7 @@ namespace NiceHashMiner
                         loadingControl.LoadTitleTextSecond = Tr("Downloading Open Source Miners");
                         loadingControl.ShowSecondProgressBar = true;
                         
-                        progress?.Report(new Tuple<string, int>(Tr("Downloading Open Source Miners..."), nextProgPerc()));
+                        progress?.Report(Tuple.Create(Tr("Downloading Open Source Miners..."), nextProgPerc()));
                         await MinersDownloader.MinersDownloadManager.DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(downloadAndInstallUpdate, exitApplication.Token);
                         loadingControl.ShowSecondProgressBar = false;
                         if (exitApplication.IsCancellationRequested) return;
@@ -431,7 +427,7 @@ namespace NiceHashMiner
                             loadingControl.LoadTitleTextSecond = Tr("Downloading 3rd party Miners");
                             loadingControl.ShowSecondProgressBar = true;
 
-                            progress?.Report(new Tuple<string, int>(Tr("Downloading 3rd party Miners..."), nextProgPerc()));
+                            progress?.Report(Tuple.Create(Tr("Downloading 3rd party Miners..."), nextProgPerc()));
                             await MinersDownloader.MinersDownloadManager.DownloadAndExtractThirdPartyMinersWithMyDownloaderAsync(downloadAndInstallUpdate, exitApplication.Token);
                             loadingControl.ShowSecondProgressBar = false;
                             if (exitApplication.IsCancellationRequested) return;
@@ -539,25 +535,25 @@ namespace NiceHashMiner
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-            if (query.FailedAmdDriverCheck)
-            {
-                var warningDialog = new DriverVersionConfirmationDialog();
-                warningDialog.ShowDialog();
-            }
+            //if (query.FailedAmdDriverCheck)
+            //{
+            //    var warningDialog = new DriverVersionConfirmationDialog();
+            //    warningDialog.ShowDialog();
+            //}
 
-            if (query.FailedCpu64Bit)
-            {
-                MessageBox.Show(Tr("NiceHash Miner Legacy works only on 64-bit version of OS for CPU mining. CPU mining will be disabled."),
-                    Tr("Warning!"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            //if (query.FailedCpu64Bit)
+            //{
+            //    MessageBox.Show(Tr("NiceHash Miner Legacy works only on 64-bit version of OS for CPU mining. CPU mining will be disabled."),
+            //        Tr("Warning!"),
+            //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //}
 
-            if (query.FailedCpuCount)
-            {
-                MessageBox.Show(Tr("NiceHash Miner Legacy does not support more than 64 virtual cores. CPU mining will be disabled."),
-                    Tr("Warning!"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            //if (query.FailedCpuCount)
+            //{
+            //    MessageBox.Show(Tr("NiceHash Miner Legacy does not support more than 64 virtual cores. CPU mining will be disabled."),
+            //        Tr("Warning!"),
+            //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //}
         }
 
         private void SetChildFormCenter(Form form)

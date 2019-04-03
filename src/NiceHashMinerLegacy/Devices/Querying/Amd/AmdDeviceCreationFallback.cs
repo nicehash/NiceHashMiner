@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NiceHashMiner.Devices.Querying.Amd.OpenCL;
+using NiceHashMiner.Stats;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
@@ -15,7 +16,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
 
             // get video AMD controllers and sort them by RAM
             // (find a way to get PCI BUS Numbers from PNPDeviceID)
-            var amdVideoControllers = SystemSpecs.AvailableVideoControllers.Where(vcd => vcd.IsAmd).ToList();
+            var amdVideoControllers = WindowsManagementObjectSearcher.AvailableVideoControllers.Where(vcd => vcd.IsAmd).ToList();
             // sort by ram not ideal 
             amdVideoControllers.Sort((a, b) => (int)(a.AdapterRam - b.AdapterRam));
             amdDevices.Sort((a, b) =>

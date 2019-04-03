@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using ATI.ADL;
+using NiceHashMiner.Stats;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
@@ -72,7 +73,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
 
                     var pnpStr = adapter.PNPString;
                     // find vi controller pnp
-                    var infSection = SystemSpecs.AvailableVideoControllers
+                    var infSection = WindowsManagementObjectSearcher.AvailableVideoControllers
                         .FirstOrDefault(vc => vc.PnpDeviceID == pnpStr)?
                         .InfSection ?? "";
 
