@@ -158,7 +158,9 @@ namespace CCMinerTpruvotCuda10
 
             var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime} --devices {_devices} {_extraLaunchParameters}";
 
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
 
@@ -193,25 +195,26 @@ namespace CCMinerTpruvotCuda10
             return (speed, ok, msg);
         }
 
-        protected override (string, string) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
             var binPath = Path.Combine(pluginRootBins, "ccminer.exe");
             var binCwd = pluginRootBins;
-            return (binPath, binCwd);
+            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()
         {
-            bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks

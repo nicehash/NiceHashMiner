@@ -83,7 +83,9 @@ namespace NBMiner
             }
 
             var cl = CreateCommandLine(MinerToolkit.DemoUser);
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, cl);
 
             var benchHashes = 0d;
@@ -118,7 +120,7 @@ namespace NBMiner
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
             var binPath = Path.Combine(pluginRootBins, "nbminer.exe");
             var binCwd = pluginRootBins;
-            return (binPath, binCwd);
+            return Tuple.Create(binPath, binCwd);
         }
 
         protected override string MiningCreateCommandLine()

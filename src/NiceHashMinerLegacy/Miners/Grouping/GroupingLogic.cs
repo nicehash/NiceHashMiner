@@ -58,12 +58,20 @@ namespace NiceHashMiner.Miners.Grouping
         }
         private static bool CheckPluginCanGroup(MiningPair a, MiningPair b)
         {
-            var pluginA = (device: a.Device.PluginDevice, algorithm: ((PluginAlgorithm)a.Algorithm).BaseAlgo);
-            var pluginB = (device: b.Device.PluginDevice, algorithm: ((PluginAlgorithm)b.Algorithm).BaseAlgo);
+            var pluginA = new MinerPlugin.MiningPair
+            {
+                Device = a.Device.PluginDevice,
+                Algorithm = ((PluginAlgorithm) a.Algorithm).BaseAlgo
+            };
+            var pluginB = new MinerPlugin.MiningPair
+            {
+                Device = b.Device.PluginDevice,
+                Algorithm = ((PluginAlgorithm) b.Algorithm).BaseAlgo
+            };
 
-            if (pluginA.algorithm.MinerID != pluginB.algorithm.MinerID) return false;
+            if (pluginA.Algorithm.MinerID != pluginB.Algorithm.MinerID) return false;
 
-            var plugin = MinerPluginsManager.GetPluginWithUuid(pluginA.algorithm.MinerID);
+            var plugin = MinerPluginsManager.GetPluginWithUuid(pluginA.Algorithm.MinerID);
             // TODO can plugin be null?
             var canGroup = plugin.CanGroup(pluginA, pluginB);
             return canGroup;

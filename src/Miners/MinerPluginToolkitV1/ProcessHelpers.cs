@@ -22,7 +22,7 @@ namespace MinerPluginToolkitV1
         [DllImport("kernel32.dll")]
         private static extern uint GetLastError();
 
-        public static (bool ok, string msg) AdjustAffinity(int pid, ulong mask)
+        public static Tuple<bool, string> AdjustAffinity(int pid, ulong mask)
         {
 
             // DWORD pid;
@@ -45,16 +45,16 @@ namespace MinerPluginToolkitV1
             var hProc = OpenProcess(PROCESS_SET_INFORMATION, FALSE, pid);
             if (hProc == IntPtr.Zero)
             {
-                return (false, $"Error opening process, code={GetLastError()}");
+                return Tuple.Create(false, $"Error opening process, code={GetLastError()}");
             }
 
             if (!SetProcessAffinityMask(hProc, new UIntPtr(mask)))
             {
-                return (false, $"Error setting affinity, code={GetLastError()}");
+                return Tuple.Create(false, $"Error setting affinity, code={GetLastError()}");
             }
             CloseHandle(hProc);
 
-            return (true, "Affinity adjusted");
+            return Tuple.Create(true, "Affinity adjusted");
         }
         // #else
 

@@ -52,9 +52,9 @@ namespace TRex
             };
         }
 
-        public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b)
+        public bool CanGroup(MiningPair a, MiningPair b)
         {
-            return a.algorithm.FirstAlgorithmType == b.algorithm.FirstAlgorithmType;
+            return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
         }
 
         #region Internal Settings

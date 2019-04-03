@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MinerPlugin;
 
 // alias
 using TimersTimer = System.Timers.Timer;
@@ -20,26 +21,24 @@ namespace MinerPluginToolkitV1
         /// <summary>
         /// Use DemoUser if the miner requires a network benchmark the plugin will blacklist users
         /// </summary>
-        public static string DemoUser { get { return "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW"; } }
+        public static string DemoUser => "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
+        
 
-        public static (AlgorithmType algorithmType, bool hasOnlyOneAlgorithmType) GetAlgorithmSingleType(this IEnumerable<(BaseDevice device, Algorithm algorithm)> mps)
+        public static Tuple<AlgorithmType, bool> GetAlgorithmSingleType(this IEnumerable<MiningPair> mps)
         {
-            var algorithmTypes = mps.Select(pair => {
-                var (_, algo) = pair;
-                return algo.IDs.First();
-            });
+            var algorithmTypes = mps.Select(pair => pair.Algorithm.IDs.First());
             var mustIncludeSingle = new HashSet<AlgorithmType>(algorithmTypes);
             if (mustIncludeSingle.Count == 1)
             {
-                return (mustIncludeSingle.First(), true);
+                return Tuple.Create(mustIncludeSingle.First(), true);
             }
-            return (AlgorithmType.NONE, false);
+            return Tuple.Create(AlgorithmType.NONE, false);
         }
 
 
-        public static IEnumerable<string> GetDevicesIDsInOrder(this IEnumerable<(BaseDevice device, Algorithm algorithm)> mps)
+        public static IEnumerable<string> GetDevicesIDsInOrder(this IEnumerable<MiningPair> mps)
         {
-            var deviceIds = mps.Select(pair => pair.device.ID).OrderBy(id => id).Select(id => id.ToString());
+            var deviceIds = mps.Select(pair => pair.Device.ID).OrderBy(id => id).Select(id => id.ToString());
             return deviceIds;
         }
 
@@ -64,12 +63,12 @@ namespace MinerPluginToolkitV1
         };
 
         // TODO this will work on Sol-rates and G-rates but will skip prefixes
-        public static (double, bool) TryGetHashrateAfter(this string s, string after)
+        // Hashrate and found pair
+        public static Tuple<double, bool> TryGetHashrateAfter(this string s, string after)
         {
-            var ret = (hashrate: default(double), found: false);
             if (!s.Contains(after))
             {
-                return ret;
+                return Tuple.Create(0d, false);;
             }
 
             var afterString = s.GetStringAfter(after).ToLower();
@@ -81,10 +80,9 @@ namespace MinerPluginToolkitV1
 
             if (!double.TryParse(numString, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
             {
-                return ret;
+                return Tuple.Create(0d, false);
             }
 
-            ret.found = true;
             var afterNumString = afterString.GetStringAfter(numString);
             for (var i = 0; i < afterNumString.Length - 1; ++i)
             {
@@ -98,14 +96,12 @@ namespace MinerPluginToolkitV1
                     var mult = kvp.Value;
                     if (postfix == c && 'h' == c2)
                     {
-                        ret.hashrate = hash * mult;
-                        return ret;
+                        var hashrate = hash * mult;
+                        return Tuple.Create(hashrate, true);
                     }
                 }
             }
-            ret.hashrate = hash;
-
-            return ret;
+            return Tuple.Create(hash, true);
         }
 
         // TODO make one with Start NiceHashProcess
@@ -182,9 +178,9 @@ namespace MinerPluginToolkitV1
             return benchmarkHandle;
         }
 
-        public static async Task<(double, bool, string)> WaitBenchmarkResult(BenchmarkProcess benchmarkProcess, TimeSpan timeoutTime, TimeSpan delayTime, CancellationToken stop)
+        public static async Task<BenchmarkResult> WaitBenchmarkResult(BenchmarkProcess benchmarkProcess, TimeSpan timeoutTime, TimeSpan delayTime, CancellationToken stop)
         {
-            var retTuple = (speed: 0.0, success: false, msg: "");
+            var ret = new BenchmarkResult();
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var timeoutTimerTime = timeoutTime + delayTime;
 
@@ -196,7 +192,7 @@ namespace MinerPluginToolkitV1
                     try
                     {
                         await Task.Delay(delayTime, linkedCts.Token);
-                        (retTuple.speed, retTuple.success) = await benchmarkProcess.Execute(linkedCts.Token);
+                        ret = await benchmarkProcess.Execute(linkedCts.Token);
                     }
                     catch (OperationCanceledException)
                     {
@@ -205,18 +201,18 @@ namespace MinerPluginToolkitV1
                         if (timeout.IsCancellationRequested)
                         {
                             Console.WriteLine("Operation timed out.");
-                            return (0, false, "Operation timed out.");
+                            return new BenchmarkResult{ ErrorMessage = "Operation timed out."};
                         }
                         else if (stop.IsCancellationRequested)
                         {
                             Console.WriteLine("Cancelling per user request.");
                             stop.ThrowIfCancellationRequested();
-                            return (0, false, "Cancelling per user request.");
+                            return new BenchmarkResult{ ErrorMessage = "Cancelling per user request."};
                         }
                     }
                     catch (Exception e)
                     {
-                        return (0, false, e.Message);
+                        return new BenchmarkResult{ ErrorMessage = e.Message };
                     }
 
                 }
@@ -224,16 +220,16 @@ namespace MinerPluginToolkitV1
                 if (timeout.IsCancellationRequested)
                 {
                     Console.WriteLine("Operation timed out.");
-                    return (0, false, "Operation timed out.");
+                    return new BenchmarkResult{ ErrorMessage = "Operation timed out." };
                 }
                 else if (stop.IsCancellationRequested)
                 {
                     Console.WriteLine("Cancelling per user request.");
-                    return (0, false, "Cancelling per user request.");
+                    return new BenchmarkResult{ ErrorMessage = "Cancelling per user request." };
                 }
             }
 
-            return retTuple;
+            return ret;
         }
     }
 }

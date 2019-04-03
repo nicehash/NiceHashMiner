@@ -66,9 +66,9 @@ namespace BMiner
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/api/status");
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
-                var gpus = _miningPairs.Select(pair => pair.device);
-                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-                var perDevicePowerInfo = new List<(string, int)>();
+                var gpus = _miningPairs.Select(pair => pair.Device);
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
 
@@ -76,13 +76,15 @@ namespace BMiner
                 {
                     if (summary.miners == null) continue;
 
-                    totalSpeed += summary.miners[$"{gpu.ID}"].solver.solution_rate;
-                    perDeviceSpeedInfo.Add((gpu.UUID, new List<(AlgorithmType, double)>() { (_algorithmType, summary.miners[$"{gpu.ID}"].solver.solution_rate) }));
-                    totalPowerUsage += summary.miners[$"{gpu.ID}"].device.power;
-                    perDevicePowerInfo.Add((gpu.UUID, summary.miners[$"{gpu.ID}"].device.power));
+                    var currentSpeed = summary.miners[$"{gpu.ID}"].solver.solution_rate;
+                    totalSpeed += currentSpeed;
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed) });
+                    var currentPower = summary.miners[$"{gpu.ID}"].device.power;
+                    totalPowerUsage += currentPower;
+                    perDevicePowerInfo.Add(gpu.UUID, currentPower);
                 }
 
-                api.AlgorithmSpeedsTotal = new List<(AlgorithmType, double)> { (_algorithmType, totalSpeed) };
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 api.PowerUsageTotal = totalPowerUsage;
             }
             catch (Exception e)
@@ -93,7 +95,7 @@ namespace BMiner
             return api;
         }
 
-        public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // determine benchmark time 
             // settup times
@@ -118,7 +120,9 @@ namespace BMiner
             var algo = AlgorithmName(_algorithmType);
 
             var commandLine = $"-uri {algo}://{_username}@{url}:{port} {_devices} -watchdog=false {_extraLaunchParameters}";
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
             var benchHashes = 0d;
@@ -128,16 +132,22 @@ namespace BMiner
 
             bp.CheckData = (string data) =>
             {
-                var (hashrate, found) = data.TryGetHashrateAfter("Total");
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
 
-                if (!found) return (benchHashResult, false);
+                if (!found) return new BenchmarkResult{Success = false};
 
                 benchHashes += hashrate;
                 benchIters++;
 
                 benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
-
-                return (benchHashResult, benchIters >= targetBenchIters);
+                
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair>{ new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult)},
+                    Success = benchIters >= targetBenchIters
+                };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
@@ -146,28 +156,29 @@ namespace BMiner
             return await t;
         }
 
-        protected override (string binPath, string binCwd) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
             var binPath = Path.Combine(pluginRootBins, "bminer.exe");
             var binCwd = pluginRootBins;
-            return (binPath, binCwd);
+            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()
         {
-            bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
             // init command line params parts
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             var deviceIDs = _miningPairs.Select(p =>
             {
-                var device = p.device;
+                var device = p.Device;
                 var prefix = device.DeviceType == DeviceType.AMD ? "amd:" : "";
                 return prefix + device.ID;
             }).OrderBy(id => id);

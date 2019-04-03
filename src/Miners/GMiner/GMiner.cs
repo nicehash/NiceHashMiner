@@ -133,7 +133,9 @@ namespace GMinerPlugin
 
             // use demo user and disable the watchdog
             var commandLine = CreateCommandLine(MinerToolkit.DemoUser);
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
             double benchHashesSum = 0;
@@ -161,19 +163,21 @@ namespace GMinerPlugin
             return await t;
         }
 
-        protected override (string, string) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
             var binPath = Path.Combine(pluginRootBins, "miner.exe");
             var binCwd = pluginRootBins;
-            return (binPath, binCwd);
+            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()
         {
             bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 

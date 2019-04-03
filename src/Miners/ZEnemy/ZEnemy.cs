@@ -105,7 +105,7 @@ namespace ZEnemy
                             }
                         }
 
-                        var device = _miningPairs.Where(kvp => kvp.device.ID == gpuData.id).Select(kvp => kvp.device).FirstOrDefault();
+                        var device = _miningPairs.Where(kvp => kvp.Device.ID == gpuData.id).Select(kvp => kvp.Device).FirstOrDefault();
                         if (device != null)
                         {
                             perDeviceSpeedInfo.Add((device.UUID, new List<(AlgorithmType, double)>() { (_algorithmType, gpuData.speed) }));
@@ -155,7 +155,9 @@ namespace ZEnemy
             var algo = AlgorithmName(_algorithmType);
 
             var commandLine = $"--algo {algo} --url={url}:{port} --user {MinerToolkit.DemoUser} --devices {_devices} {_extraLaunchParameters}";
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
             var benchHashes = 0d;
@@ -192,13 +194,14 @@ namespace ZEnemy
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
             var binPath = Path.Combine(pluginRootBins, "z-enemy.exe");
             var binCwd = pluginRootBins;
-            return (binPath, binCwd);
+            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()
         {
-            bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 

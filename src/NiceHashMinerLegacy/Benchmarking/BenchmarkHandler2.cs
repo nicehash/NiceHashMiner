@@ -16,6 +16,7 @@ using NiceHashMinerLegacy.Common.Device;
 using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
 using MinerPlugin;
 using NiceHashMiner.Plugin;
+using MiningPair = NiceHashMiner.Miners.Grouping.MiningPair;
 
 namespace NiceHashMiner.Benchmarking
 {
@@ -155,15 +156,20 @@ namespace NiceHashMiner.Benchmarking
             var algo = (PluginAlgorithm)_currentAlgorithm;
             var plugin = MinerPluginsManager.GetPluginWithUuid(algo.BaseAlgo.MinerID);
             var miner = plugin.CreateMiner();
-            miner.InitMiningPairs(new List<(BaseDevice, CommonAlgorithm.Algorithm)>{ (Device.PluginDevice, algo.BaseAlgo) });
+            var miningPair = new MinerPlugin.MiningPair
+            {
+                Device = Device.PluginDevice,
+                Algorithm = algo.BaseAlgo
+            };
+            miner.InitMiningPairs(new List<MinerPlugin.MiningPair>{ miningPair });
             miner.InitMiningLocationAndUsername(Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], Globals.DemoUser); // maybe it will be online
             _powerHelper.Start();
             var result = await miner.StartBenchmark(_stopBenchmark.Token, _performanceType);
             var power = _powerHelper.Stop();
-            if (result.ok)
+            if (result.Success || result.AlgorithmTypeSpeeds?.Count > 0)
             {
+                algo.BenchmarkSpeed = result.AlgorithmTypeSpeeds.First().Speed;
                 algo.PowerUsage = power;
-                algo.BenchmarkSpeed = result.speed;
                 // set status to empty string it will return speed
                 _currentAlgorithm.ClearBenchmarkPending();
                 _benchmarkForm.SetCurrentStatus(Device, _currentAlgorithm, "");
@@ -172,7 +178,7 @@ namespace NiceHashMiner.Benchmarking
             {
                 // add new failed list
                 _benchmarkFailedAlgo.Add(_currentAlgorithm.AlgorithmName);
-                _benchmarkForm.SetCurrentStatus(Device, _currentAlgorithm, result.msg);
+                _benchmarkForm.SetCurrentStatus(Device, _currentAlgorithm, result.ErrorMessage);
             }
         }
 
