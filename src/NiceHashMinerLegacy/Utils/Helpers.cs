@@ -143,7 +143,7 @@ namespace NiceHashMiner
             return ret;
         }
 
-        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0, AlgorithmType algo = AlgorithmType.NONE) 
+        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0, AlgorithmType algo = AlgorithmType.NONE)
         {
             string ret;
             if (secondarySpeed > 0)
@@ -176,30 +176,33 @@ namespace NiceHashMiner
             return ret + unit;
         }
 
+        [Obsolete("Use WindowsManagementObjectSearcher.GetMotherboardID() instead")]
         public static string GetMotherboardID()
         {
-            var mos = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard");
-            var moc = mos.Get();
             var serial = "";
-            foreach (ManagementObject mo in moc)
+            using (var moc = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard").Get())
             {
-                serial = (string) mo["SerialNumber"];
+                foreach (ManagementObject mo in moc)
+                {
+                    serial = (string) mo["SerialNumber"];
+                }
             }
-
             return serial;
         }
 
         // TODO could have multiple cpus
+        [Obsolete("Use WindowsManagementObjectSearcher.GetCpuID() instead")]
         public static string GetCpuID()
         {
             var id = "N/A";
             try
             {
-                var mbs = new ManagementObjectSearcher("Select * From Win32_processor");
-                var mbsList = mbs.Get();
-                foreach (ManagementObject mo in mbsList)
+                using(var mbsList = new ManagementObjectSearcher("Select * From Win32_processor").Get())
                 {
-                    id = mo["ProcessorID"].ToString();
+                    foreach (ManagementObject mo in mbsList)
+                    {
+                        id = mo["ProcessorID"].ToString();
+                    }
                 }
             }
             catch { }
@@ -301,13 +304,16 @@ namespace NiceHashMiner
         }
 
         // IsWMI enabled
+        [Obsolete("Use WindowsManagementObjectSearcher.IsWmiEnabled() instead")]
         public static bool IsWmiEnabled()
         {
             try
             {
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
-                ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
-                return true;
+                using (new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get())
+                {
+                    ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
+                    return true;
+                }
             }
             catch
             {

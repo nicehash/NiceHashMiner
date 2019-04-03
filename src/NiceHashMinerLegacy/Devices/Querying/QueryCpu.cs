@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using NiceHashMiner.Stats;
+using System.Collections.Generic;
 
 namespace NiceHashMiner.Devices.Querying
 {
@@ -18,7 +19,7 @@ namespace NiceHashMiner.Devices.Querying
                     : "HyperThreadingEnabled = FALSE");
 
             // get all cores (including virtual - HT can benefit mining)
-            var threadsPerCpu = CpuID.GetVirtualCoresCount() / cpuCount;
+            var threadsPerCpu = WindowsManagementObjectSearcher.GetVirtualCoresCount() / cpuCount;
 
             failed64Bit = !Helpers.Is64BitOperatingSystem;
             failedCpuCount = threadsPerCpu * cpuCount > 64;

@@ -343,15 +343,6 @@ namespace NiceHashMiner.Forms
             checkBox_DisableDetectionAMD.Text =
                 string.Format(Tr("Disable Detection of {0}"), "AMD");
 
-            {
-                comboBox_ServiceLocation.Items[0] = Tr("Europe - Amsterdam");
-                comboBox_ServiceLocation.Items[1] = Tr("USA - San Jose");
-                comboBox_ServiceLocation.Items[2] = Tr("China - Hong Kong");
-                comboBox_ServiceLocation.Items[3] = Tr("Japan - Tokyo");
-                comboBox_ServiceLocation.Items[4] = Tr("India - Chennai");
-                comboBox_ServiceLocation.Items[5] = Tr("Brazil - Sao Paulo");
-            }
-
             // Benchmark time limits
             // internationalization change
             benchmarkLimitControlCPU.GroupName =
@@ -360,15 +351,6 @@ namespace NiceHashMiner.Forms
                 Tr("(NVIDIA) [s]:");
             benchmarkLimitControlAMD.GroupName =
                 Tr("(AMD) [s]:");
-
-            // device enabled listview translation
-            devicesListViewEnableControl1.InitLocale();
-            algorithmsListView1.InitLocale();
-
-            // new translations
-            tabControlGeneral.TabPages[0].Text = Tr("General");
-            tabControlGeneral.TabPages[1].Text = Tr("Advanced");
-            tabControlGeneral.TabPages[2].Text = Tr("Devices/Algorithms");
 
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
         }

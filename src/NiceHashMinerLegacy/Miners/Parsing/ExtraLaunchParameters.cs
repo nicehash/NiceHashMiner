@@ -154,6 +154,7 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("phoenix_clgreen", "-clgreen", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("phoenix_clNew", "-clNew", "1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("phoenix_clf", "-clf", "1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("phoenix_nvKernel", "-nvKernel", "0", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("phoenix_nvNew", "-nvNew", "1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("phoenix_nvf", "-nvf", "1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("phoenix_eres", "-eres", "2", MinerOptionFlagType.MultiParam, ","),
@@ -162,7 +163,6 @@ namespace NiceHashMiner.Miners.Parsing
                     new MinerOption("phoenix_altinit", "-altinit", null, MinerOptionFlagType.Uni),
                     new MinerOption("phoenix_gpow", "-gpow", "100", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("phoenix_li", "-li", "0", MinerOptionFlagType.MultiParam, ",")
-
                 }
             ),
             new MinerOptionPackage(
@@ -188,7 +188,14 @@ namespace NiceHashMiner.Miners.Parsing
                 {
                     new MinerOption("ttminer_intensity", "-i", "-1", MinerOptionFlagType.MultiParam, ","),
                     new MinerOption("ttminer_intensity_grid", "-ig", "-1", MinerOptionFlagType.MultiParam, ","),
-                    new MinerOption("ttminer_grid_size", "-gs", "-1", MinerOptionFlagType.MultiParam, ","),
+                    new MinerOption("ttminer_grid_size", "-gs", "-1", MinerOptionFlagType.MultiParam, ",")
+                }
+            ),
+            new MinerOptionPackage(
+            MinerType.NBMiner,
+            new List<MinerOption>
+                {
+                    new MinerOption("nbminer_intensity", "--cuckoo-intensity", "0", MinerOptionFlagType.SingleParam)
                 }
             ),
         };

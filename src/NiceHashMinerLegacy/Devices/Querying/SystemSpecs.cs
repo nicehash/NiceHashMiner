@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using NiceHashMiner.Stats;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using System.Text;
@@ -19,21 +21,9 @@ namespace NiceHashMiner.Devices.Querying
 
         static SystemSpecs()
         {
-            var winQuery = new ObjectQuery("SELECT * FROM Win32_OperatingSystem");
-
-            using (var searcher = new ManagementObjectSearcher(winQuery))
-            {
-                foreach (var obj in searcher.Get())
-                {
-                    if (!(obj is ManagementObject item)) continue;
-
-                    // We only ever use these two values, so others are deleted for cleanup
-                    // If we need them later we can revert this commit
-                    FreePhysicalMemory = item["FreePhysicalMemory"] as ulong? ?? FreePhysicalMemory;
-                    FreeVirtualMemory = item["FreeVirtualMemory"] as ulong? ?? FreeVirtualMemory;
-                }
-            }
-
+            var query = WindowsManagementObjectSearcher.GetSystemSpecs();
+            FreePhysicalMemory = query.Item1 as ulong? ?? FreePhysicalMemory;
+            FreeVirtualMemory = query.Item2 as ulong? ?? FreeVirtualMemory;
             // log
             Helpers.ConsolePrint("SystemSpecs", $"FreePhysicalMemory = {FreePhysicalMemory}");
             Helpers.ConsolePrint("SystemSpecs", $"FreeVirtualMemory = {FreeVirtualMemory}");
@@ -54,6 +44,7 @@ namespace NiceHashMiner.Devices.Querying
             return "key is null";
         }
 
+        /*
         internal static IEnumerable<VideoControllerData> QueryVideoControllers()
         {
             var vidControllers = new List<VideoControllerData>();
@@ -99,6 +90,29 @@ namespace NiceHashMiner.Devices.Querying
 
             if (allVideoContollersOK) return Enumerable.Empty<VideoControllerData>();
 
+            return vidControllers.Where(vc => vc.Status.ToLower() != "ok");
+        }
+        */
+        
+
+        internal static IEnumerable<VideoControllerData> QueryVideoControllers()
+        {
+            var allVideoContollersOK = true;
+
+            var vidControllers = WindowsManagementObjectSearcher.GetVideoControllersData();
+
+            AvailableVideoControllers = vidControllers;
+
+            foreach(var controller in vidControllers)
+            {
+                if (allVideoContollersOK && !controller.Status.ToLower().Equals("ok"))
+                {
+                    allVideoContollersOK = false;
+                }
+            }
+
+            if (allVideoContollersOK) return Enumerable.Empty<VideoControllerData>();
+        
             return vidControllers.Where(vc => vc.Status.ToLower() != "ok");
         }
     }

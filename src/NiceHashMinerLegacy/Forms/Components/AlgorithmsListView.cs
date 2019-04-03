@@ -90,16 +90,6 @@ namespace NiceHashMiner.Forms.Components
             IsInBenchmark = false;
         }
 
-        public void InitLocale()
-        {
-            listViewAlgorithms.Columns[ENABLED].Text = Translations.Tr("Enabled");
-            listViewAlgorithms.Columns[ALGORITHM].Text = Translations.Tr("Algorithm");
-            listViewAlgorithms.Columns[SPEED].Text = Translations.Tr("Speed");
-            listViewAlgorithms.Columns[SECSPEED].Text = Translations.Tr("Secondary Speed");
-            listViewAlgorithms.Columns[RATIO].Text = Translations.Tr("Ratio BTC/GH/Day");
-            listViewAlgorithms.Columns[RATE].Text = Translations.Tr("BTC/Day");
-        }
-
         public void SetAlgorithms(ComputeDevice computeDevice, bool isEnabled)
         {
             _computeDevice = computeDevice;
@@ -379,8 +369,10 @@ namespace NiceHashMiner.Forms.Components
                         lvi.Checked = lvi.Selected;
                         if (lvi.Selected && algorithm.BenchmarkSpeed <= 0)
                         {
-                            // If it has zero speed, set to 1 so it can be tested
+                            // If it has zero speed, set to 1 so it can be tested, must be available only in DEBUG mode!!
+                            #if DEBUG
                             algorithm.BenchmarkSpeed = 1;
+                            #endif
                             RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                             ComunicationInterface?.ChangeSpeed(lvi);
                         }
