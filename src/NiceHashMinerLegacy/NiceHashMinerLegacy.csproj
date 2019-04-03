@@ -102,8 +102,9 @@
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
-    <Compile Include="Devices\CudaDeviceChecker.cs" />
-    <Compile Include="Devices\CudaDeviceDetectionResult.cs" />
+    <Compile Include="Devices\Querying\DeviceDetectionPrinter.cs" />
+    <Compile Include="Devices\Querying\Nvidia\CudaDeviceChecker.cs" />
+    <Compile Include="Devices\Querying\Nvidia\CudaDeviceDetectionResult.cs" />
     <Compile Include="Devices\Querying\Amd\AmdQuery.cs" />
     <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLDeviceDetectionResult.cs" />
     <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLPlatform.cs" />
@@ -197,7 +198,7 @@
     <Compile Include="Devices\ComputeDevice\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceManager.cs" />
     <Compile Include="Devices\CPUUtils.cs" />
-    <Compile Include="Devices\CudaDevice.cs" />
+    <Compile Include="Devices\Querying\Nvidia\CudaDevice.cs" />
     <Compile Include="Devices\CUDA_Unsupported.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLDevice.cs" />

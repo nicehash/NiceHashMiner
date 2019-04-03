@@ -15,8 +15,8 @@ namespace NiceHashMiner.MinersDownloader
             ZipedFolderName = inFolderName;
         }
 
-        public readonly string BinsDownloadUrl;
-        public readonly string BinsZipLocation;
-        public readonly string ZipedFolderName;
+        public string BinsDownloadUrl { get; set; }
+        public string BinsZipLocation { get; set; }
+        public string ZipedFolderName { get; set; }
     }
 }

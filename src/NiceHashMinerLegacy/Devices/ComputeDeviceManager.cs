@@ -55,7 +55,7 @@ namespace NiceHashMiner.Devices
             var amd = new AmdQuery(AvailableDevices.NumDetectedNvDevs);
             // #3 OpenCL
             progress?.Report(Tr("Querying OpenCL devices"));
-            amd.QueryOpenCLDevices();
+            await amd.QueryOpenCLDevicesAsync();
             // #4 AMD query AMD from OpenCL devices, get serial and add devices
             progress?.Report(Tr("Checking AMD OpenCL GPUs"));
             var amdDevs = amd.QueryAmd(out var failedAmdDriverCheck);

@@ -2,6 +2,7 @@
 using MyDownloader.Core.Extensions;
 using MyDownloader.Core.UI;
 using MyDownloader.Extension.Protocols;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,8 +12,6 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-
 
 namespace NiceHashMiner.MinersDownloader
 {
@@ -35,6 +34,23 @@ namespace NiceHashMiner.MinersDownloader
                    | SecurityProtocolType.Tls11
                    | SecurityProtocolType.Tls12
                    | SecurityProtocolType.Ssl3;
+
+            const string binsUrlSettings = "bins_urls.json";
+            if (File.Exists(binsUrlSettings))
+            {
+                var downloadSettings = JsonConvert.DeserializeObject<List<DownloadSetup>>(File.ReadAllText(binsUrlSettings), Globals.JsonSettings);
+                if (downloadSettings != null)
+                {
+                    if (downloadSettings.Count >= 1)
+                    {
+                        StandardDlSetup = downloadSettings[0];
+                    }
+                    if (downloadSettings.Count >= 2)
+                    {
+                        ThirdPartyDlSetup = downloadSettings[1];
+                    }
+                }
+            }
         }
 
         public static Task DownloadAndExtractOpenSourceMinersAsync(IProgress<Tuple<ProgressState, int>> progress, CancellationToken stop)
@@ -64,7 +80,6 @@ namespace NiceHashMiner.MinersDownloader
             catch (Exception e)
             {
                 Helpers.ConsolePrint("MinersDownloadManager", $"DownloadAndExtract failed: {e}");
-                //downloadAndInstallUpdate();
             }
         }
 
@@ -169,15 +184,36 @@ namespace NiceHashMiner.MinersDownloader
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("MinersDownloader2", e.Message);
+                Helpers.ConsolePrint("MinersDownloadManager", e.Message);
             }
 
             try
             {
                 var downloadedSuccess = await DownlaodAsync(downloadSetup.BinsDownloadUrl, downloadSetup.BinsZipLocation, progress, stop);
-                if (!downloadedSuccess || stop.IsCancellationRequested) return;
+                if (!downloadedSuccess || stop.IsCancellationRequested) {
+                    Helpers.ConsolePrint("MinersDownloadManager", $"Download success={downloadedSuccess} || cancel={stop.IsCancellationRequested}");
+                    return;
+                }
 
-                await Task.Delay(1000);
+                var zipFileExists = false;
+                const int maxWait = 3000;
+                const int stepWait = 300;
+                int waitLeft = maxWait;
+                while (waitLeft > 0)
+                {
+                    waitLeft -= stepWait;
+                    if (File.Exists(downloadSetup.BinsZipLocation))
+                    {
+                        zipFileExists = true;
+                        break;
+                    }
+                    await Task.Delay(stepWait);
+                }
+                if (!zipFileExists)
+                {
+                    Helpers.ConsolePrint("MinersDownloadManager", $"Downloaded file {downloadSetup.BinsZipLocation} doesn't exist exiting");
+                    return;
+                }
 
                 var unzipProgress = new Progress<int>(perc => progress?.Report(new Tuple<string, int>(Translations.Tr("Unzipping {0} %", perc), perc)));
                 await UnzipFileAsync(downloadSetup.BinsZipLocation, "", unzipProgress, stop);
@@ -188,9 +224,9 @@ namespace NiceHashMiner.MinersDownloader
                     File.Delete(downloadSetup.BinsZipLocation);
                 }
             }
-            catch
+            catch (Exception e)
             {
-                // TODO
+                Helpers.ConsolePrint("MinersDownloadManager", $"Exception while downloading and extracting {e}");
             }
         }
 
@@ -228,7 +264,7 @@ namespace NiceHashMiner.MinersDownloader
 
                 if (downloader.LastError != null)
                 {
-                    Helpers.ConsolePrint("MinersDownloader2", downloader.LastError.Message);
+                    Helpers.ConsolePrint("MinersDownloadManager", downloader.LastError.Message);
                 }
 
                 var speedString = $"{downloader.Rate / 1024d:0.00} kb/s";
@@ -248,12 +284,12 @@ namespace NiceHashMiner.MinersDownloader
                 }
                 else if (ticksSinceUpdate > 20)
                 {
-                    Helpers.ConsolePrint("MinersDownloader2", "Maximum ticks reached, retrying");
+                    Helpers.ConsolePrint("MinersDownloadManager", "Maximum ticks reached, retrying");
                     ticksSinceUpdate = 0;
                 }
                 else
                 {
-                    Helpers.ConsolePrint("MinersDownloader2", "No progress in ticks " + ticksSinceUpdate);
+                    Helpers.ConsolePrint("MinersDownloadManager", "No progress in ticks " + ticksSinceUpdate);
                     ticksSinceUpdate++;
                 }
             });
@@ -288,8 +324,6 @@ namespace NiceHashMiner.MinersDownloader
 
             return result;
         }
-
-
         #endregion MyDownloader
     }
 }

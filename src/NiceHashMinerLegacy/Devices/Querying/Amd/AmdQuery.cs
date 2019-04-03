@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.Querying.Amd.OpenCL;
 
@@ -30,6 +31,12 @@ namespace NiceHashMiner.Devices.Querying.Amd
         public void QueryOpenCLDevices()
         {
             _openCLSuccess = OclQuery.TryQueryOpenCLDevices(out _openCLResult);
+        }
+
+        public async Task QueryOpenCLDevicesAsync()
+        {
+            _openCLResult = await OclQuery.TryQueryOpenCLDevicesAsync();
+            _openCLSuccess = _openCLResult != null;
         }
 
         public List<AmdComputeDevice> QueryAmd(out bool failedDriverCheck)

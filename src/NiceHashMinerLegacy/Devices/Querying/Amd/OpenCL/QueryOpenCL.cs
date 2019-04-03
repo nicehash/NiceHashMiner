@@ -2,6 +2,8 @@
 using System.Text;
 using Newtonsoft.Json;
 using NiceHashMiner.PInvoke;
+using NiceHashMiner.Devices.Querying;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
 {
@@ -61,6 +63,34 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
             Helpers.ConsolePrint(Tag, "QueryOpenCLDevices END");
 
             return success;
+        }
+
+        public async Task<OpenCLDeviceDetectionResult> TryQueryOpenCLDevicesAsync()
+        {
+            Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
+
+            var result = await DeviceDetectionPrinter.GetDeviceDetectionResultAsync<OpenCLDeviceDetectionResult>("ocl -", 60 * 1000);
+            if (result == null) return null;
+
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("");
+            stringBuilder.AppendLine("AMDOpenCLDeviceDetection found devices success:");
+            foreach (var oclElem in result.Platforms)
+            {
+                stringBuilder.AppendLine($"\tFound devices for platform: {oclElem.PlatformName}");
+                foreach (var oclDev in oclElem.Devices)
+                {
+                    stringBuilder.AppendLine("\t\tDevice:");
+                    stringBuilder.AppendLine($"\t\t\tDevice ID {oclDev.DeviceID}");
+                    stringBuilder.AppendLine($"\t\t\tDevice NAME {oclDev._CL_DEVICE_NAME}");
+                    stringBuilder.AppendLine($"\t\t\tDevice TYPE {oclDev._CL_DEVICE_TYPE}");
+                }
+            }
+            Helpers.ConsolePrint(Tag, stringBuilder.ToString());
+            
+            Helpers.ConsolePrint(Tag, "QueryOpenCLDevices END");
+
+            return result;
         }
     }
 }
