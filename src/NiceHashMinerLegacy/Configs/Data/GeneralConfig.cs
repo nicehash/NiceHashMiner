@@ -83,9 +83,6 @@ namespace NiceHashMiner.Configs.Data
 
         public bool CoolDownCheckEnabled = true;
 
-        // Set to skip driver checks to enable Neoscrypt/Lyra2RE on AMD
-        public bool ForceSkipAMDNeoscryptLyraCheck = false;
-
         // Overriding AMDOpenCLDeviceDetection returned Bus IDs (in case of driver error, e.g. 17.12.1)
         public string OverrideAMDBusIds = "";
 
@@ -157,7 +154,6 @@ namespace NiceHashMiner.Configs.Data
             UseIFTTT = false;
             CoolDownCheckEnabled = true;
             RunScriptOnCUDA_GPU_Lost = false;
-            ForceSkipAMDNeoscryptLyraCheck = false;
             OverrideAMDBusIds = "";
             SwitchSmaTimeChangeSeconds = new Interval(34, 55);
             SwitchSmaTicksStable = new Interval(2, 3);

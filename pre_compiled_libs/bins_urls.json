@@ -1,0 +1,12 @@
+[
+  {
+    "BinsDownloadUrl": "https://github.com/nicehash/NiceHashMinerLegacy/releases/download/1.9.0.19/bin_1_9_0_20.zip",
+    "BinsZipLocation": "bins.zip",
+    "ZipedFolderName": "bin"
+  },
+  {
+    "BinsDownloadUrl": "https://github.com/nicehash/NiceHashMinerLegacy/releases/download/1.9.0.19/bin_3rdparty_1_9_0_20.zip",
+    "BinsZipLocation": "bins_3rdparty.zip",
+    "ZipedFolderName": "bin_3rdparty"
+  }
+]

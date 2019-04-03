@@ -68,9 +68,6 @@ namespace NiceHashMiner.Devices
 
         public string InfSection { get; protected set; }
 
-        // amd has some algos not working with new drivers
-        public bool DriverDisableAlgos { get; protected set; }
-
         protected List<Algorithm> AlgorithmSettings;
 
         public double MinimumProfit { get; set; }

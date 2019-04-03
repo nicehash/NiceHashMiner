@@ -2,6 +2,7 @@
 using NiceHashMiner.PInvoke;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices.Querying.Nvidia
 {
@@ -34,6 +35,35 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 return false;
             }
         }
+
+        //public async Task<CudaDeviceDetectionResult> TryQueryCudaDevicesAsync()
+        //{
+        //    var result = await DeviceDetectionPrinter.GetDeviceDetectionResultAsync<CudaDeviceDetectionResult>("cuda -", 30 * 1000);
+        //    if (result == null) return null;
+
+        //    try
+        //    {
+        //        var queryCudaDevicesString = GetCudaQueryString();
+        //        var cudaQueryResult = JsonConvert.DeserializeObject<CudaDeviceDetectionResult>(queryCudaDevicesString,
+        //            Globals.JsonSettings);
+        //        cudaDevices = cudaQueryResult.CudaDevices;
+
+        //        if (cudaDevices != null && cudaDevices.Count != 0) return true;
+
+        //        Helpers.ConsolePrint(Tag,
+        //            "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +
+        //            queryCudaDevicesString);
+
+        //        return false;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // TODO
+        //        Helpers.ConsolePrint(Tag, "CudaDevicesDetection threw Exception: " + ex.Message);
+        //        cudaDevices = null;
+        //        return false;
+        //    }
+        //}
 
         protected virtual string GetCudaQueryString()
         {

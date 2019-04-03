@@ -80,14 +80,13 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SharpCompress">
-      <HintPath>..\3rdparty\sharpcompress-0.11\SharpCompress.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
@@ -107,9 +106,10 @@
     <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
     <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
     <Compile Include="Devices\CpuInfo.cs" />
-    <Compile Include="Devices\CudaDeviceChecker.cs" />
-    <Compile Include="Devices\CudaDeviceDetectionResult.cs" />
     <Compile Include="Devices\PowerOutOfRangeException.cs" />
+    <Compile Include="Devices\Querying\DeviceDetectionPrinter.cs" />
+    <Compile Include="Devices\Querying\Nvidia\CudaDeviceChecker.cs" />
+    <Compile Include="Devices\Querying\Nvidia\CudaDeviceDetectionResult.cs" />
     <Compile Include="Devices\Querying\Amd\AmdQuery.cs" />
     <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLDeviceDetectionResult.cs" />
     <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLPlatform.cs" />
@@ -125,8 +125,13 @@
     <Compile Include="Devices\Querying\Amd\OpenCL\QueryOpenCL.cs" />
     <Compile Include="Devices\Querying\QueryGpu.cs" />
     <Compile Include="Devices\Querying\QueryResult.cs" />
-    <Compile Include="Devices\Querying\SystemSpecs.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
+    <Compile Include="Forms\Components\StartupLoadingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\StartupLoadingControl.Designer.cs">
+      <DependentUpon>StartupLoadingControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\EnterBTCDialogSwitch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -173,6 +178,9 @@
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
     <Compile Include="Interfaces\StateSetters\IStateSetter.cs" />
+    <Compile Include="MinersDownloader\DownloadSetup.cs" />
+    <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
+    <Compile Include="MinersDownloader\ProgressState.cs" />
     <Compile Include="Miners\BMiner.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\GMiner.cs" />
@@ -205,6 +213,7 @@
     <Compile Include="Stats\StatusCodes.cs" />
     <Compile Include="Stats\TimeFactor.cs" />
     <Compile Include="StratumService.cs" />
+    <Compile Include="Stats\WindowsManagementObjectSearcher.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
     <Compile Include="Switching\Interval.cs" />
@@ -225,7 +234,7 @@
     <Compile Include="Devices\ComputeDevice\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceManager.cs" />
     <Compile Include="Devices\CPUUtils.cs" />
-    <Compile Include="Devices\CudaDevice.cs" />
+    <Compile Include="Devices\Querying\Nvidia\CudaDevice.cs" />
     <Compile Include="Devices\CUDA_Unsupported.cs" />
     <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLDevice.cs" />
@@ -300,7 +309,6 @@
     <Compile Include="Interfaces\IBenchmarkComunicator.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
-    <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
     <Compile Include="Utils\Guid\Constants.cs" />
     <Compile Include="Utils\Guid\Providers\HashProvider.cs" />
     <Compile Include="Utils\Guid\Providers\RandomNumberProvider.cs" />
@@ -330,12 +338,6 @@
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="Miners\Ccminer.cs" />
-    <Compile Include="Forms\DriverVersionConfirmationDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DriverVersionConfirmationDialog.Designer.cs">
-      <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Miners\ethminer\Ethereum.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
@@ -344,12 +346,6 @@
     </Compile>
     <Compile Include="Forms\Form_Main.Designer.cs">
       <DependentUpon>Form_Main.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Form_Loading.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_Loading.Designer.cs">
-      <DependentUpon>Form_Loading.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Miners\Miner.cs" />
@@ -367,9 +363,6 @@
     <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
     <Compile Include="Utils\BINS_CODEGEN_3rd.cs" />
-    <Compile Include="Utils\DownloadSetup.cs" />
-    <Compile Include="Utils\MinersDownloader.cs" />
-    <Compile Include="Utils\MinersDownloadManager.cs" />
     <Compile Include="Utils\MinersExistanceChecker.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
@@ -394,6 +387,9 @@
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\StartupLoadingControl.resx">
+      <DependentUpon>StartupLoadingControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\EnterBTCDialogSwitch.resx">
       <DependentUpon>EnterBTCDialogSwitch.cs</DependentUpon>
     </EmbeddedResource>
@@ -415,14 +411,8 @@
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DriverVersionConfirmationDialog.resx">
-      <DependentUpon>DriverVersionConfirmationDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Main.resx">
       <DependentUpon>Form_Main.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Loading.resx">
-      <DependentUpon>Form_Loading.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MinerFileNotFoundDialog.resx">
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>

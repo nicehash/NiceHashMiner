@@ -1,6 +1,7 @@
 ﻿using NiceHashMiner.Configs.ConfigJsonFile;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Stats;
 using System.Collections.Generic;
 
 namespace NiceHashMiner.Configs
@@ -31,7 +32,7 @@ namespace NiceHashMiner.Configs
         {
             // init defaults
             GeneralConfig.SetDefaults();
-            GeneralConfig.hwid = Helpers.GetCpuID();
+            GeneralConfig.hwid = WindowsManagementObjectSearcher.GetCpuID();
             // if exists load file
             GeneralConfig fromFile = null;
             if (GeneralConfigFile.IsFileExists())

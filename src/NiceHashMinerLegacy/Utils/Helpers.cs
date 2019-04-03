@@ -143,7 +143,7 @@ namespace NiceHashMiner
             return ret;
         }
 
-        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0, AlgorithmType algo = AlgorithmType.NONE) 
+        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0, AlgorithmType algo = AlgorithmType.NONE)
         {
             string ret;
             if (secondarySpeed > 0)
@@ -174,36 +174,6 @@ namespace NiceHashMiner
             }
 
             return ret + unit;
-        }
-
-        public static string GetMotherboardID()
-        {
-            var mos = new ManagementObjectSearcher("SELECT * FROM Win32_BaseBoard");
-            var moc = mos.Get();
-            var serial = "";
-            foreach (ManagementObject mo in moc)
-            {
-                serial = (string) mo["SerialNumber"];
-            }
-
-            return serial;
-        }
-
-        // TODO could have multiple cpus
-        public static string GetCpuID()
-        {
-            var id = "N/A";
-            try
-            {
-                var mbs = new ManagementObjectSearcher("Select * From Win32_processor");
-                var mbsList = mbs.Get();
-                foreach (ManagementObject mo in mbsList)
-                {
-                    id = mo["ProcessorID"].ToString();
-                }
-            }
-            catch { }
-            return id;
         }
 
         public static bool WebRequestTestGoogle()
@@ -300,22 +270,6 @@ namespace NiceHashMiner
             }
         }
 
-        // IsWMI enabled
-        public static bool IsWmiEnabled()
-        {
-            try
-            {
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
-                ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
-                return true;
-            }
-            catch
-            {
-                ConsolePrint("NICEHASH", "ManagementObjectSearcher not working need WMI service to be running");
-            }
-            return false;
-        }
-
         public static void InstallVcRedist()
         {
             var cudaDevicesDetection = new Process
@@ -334,39 +288,6 @@ namespace NiceHashMiner
             //const int waitTime = 45 * 1000; // 45seconds
             //CudaDevicesDetection.WaitForExit(waitTime);
             cudaDevicesDetection.Start();
-        }
-
-        public static void SetDefaultEnvironmentVariables()
-        {
-            ConsolePrint("NICEHASH", "Setting environment variables");
-
-            var envNameValues = new Dictionary<string, string>()
-            {
-                {"GPU_MAX_ALLOC_PERCENT", "100"},
-                {"GPU_USE_SYNC_OBJECTS", "1"},
-                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
-                {"GPU_MAX_HEAP_SIZE", "100"},
-                //{"GPU_FORCE_64BIT_PTR", "1"}  causes problems with lots of miners
-            };
-
-            foreach (var kvp in envNameValues)
-            {
-                var envName = kvp.Key;
-                var envValue = kvp.Value;
-                // Check if all the variables is set
-                if (Environment.GetEnvironmentVariable(envName) == null)
-                {
-                    try { Environment.SetEnvironmentVariable(envName, envValue); }
-                    catch (Exception e) { ConsolePrint("NICEHASH", e.ToString()); }
-                }
-
-                // Check to make sure all the values are set correctly
-                if (!Environment.GetEnvironmentVariable(envName)?.Equals(envValue) ?? false)
-                {
-                    try { Environment.SetEnvironmentVariable(envName, envValue); }
-                    catch (Exception e) { ConsolePrint("NICEHASH", e.ToString()); }
-                }
-            }
         }
 
         public static void SetNvidiaP0State()

@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using NiceHashMiner.Stats;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Devices.Querying
 {
@@ -6,50 +9,58 @@ namespace NiceHashMiner.Devices.Querying
     {
         private const string Tag = "QueryCPU";
 
-        public static List<CpuComputeDevice> QueryCpus(out bool failed64Bit, out bool failedCpuCount)
+        public static IEnumerable<CpuComputeDevice> QueryCpus()
         {
             Helpers.ConsolePrint(Tag, "QueryCpus START");
             // get all CPUs
             var cpuCount = CpuID.GetPhysicalProcessorCount();
+            var cpuName = CpuID.GetCpuName().Trim();
+
+            if (!CpuUtils.IsCpuMiningCapable())
+            {
+                // TODO LOG
+                return Enumerable.Empty<CpuComputeDevice>();
+            }
 
             Helpers.ConsolePrint(Tag,
-                CpuID.IsHypeThreadingEnabled()
+                WindowsManagementObjectSearcher.IsHypeThreadingEnabled
                     ? "HyperThreadingEnabled = TRUE"
                     : "HyperThreadingEnabled = FALSE");
 
             // get all cores (including virtual - HT can benefit mining)
-            var threadsPerCpu = CpuID.GetVirtualCoresCount() / cpuCount;
-
-            failed64Bit = !Helpers.Is64BitOperatingSystem;
-            failedCpuCount = threadsPerCpu * cpuCount > 64;
-
+            var threadsPerCpu = WindowsManagementObjectSearcher.VirtualCoresCount / cpuCount;
             // TODO important move this to settings
             var threadsPerCpuMask = threadsPerCpu;
-            Globals.ThreadsPerCpu = threadsPerCpu;
+            //if (threadsPerCpu * cpuCount > 64)
+            //{
+            //    // set lower 
+            //    threadsPerCpuMask = 64;
+            //}
 
             var cpus = new List<CpuComputeDevice>();
 
-            if (CpuUtils.IsCpuMiningCapable() && !failed64Bit && !failedCpuCount)
+            if (cpuCount == 1)
             {
-                if (cpuCount == 1)
+                cpus.Add(new CpuComputeDevice(0, "CPU0", cpuName, threadsPerCpu, 0, 1));
+            }
+            else if (cpuCount > 1)
+            {
+                for (var i = 0; i < cpuCount; i++)
                 {
-                    cpus.Add(new CpuComputeDevice(0, "CPU0", CpuID.GetCpuName().Trim(), threadsPerCpu, 0, 1));
-                }
-                else if (cpuCount > 1)
-                {
-                    for (var i = 0; i < cpuCount; i++)
-                    {
-                        cpus.Add(
-                            new CpuComputeDevice(i, "CPU" + i, CpuID.GetCpuName().Trim(), threadsPerCpu,
-                                CpuID.CreateAffinityMask(i, threadsPerCpuMask), i + 1)
-                        );
-                    }
+                    var affinityMask = CpuUtils.CreateAffinityMask(i, threadsPerCpuMask);
+                    cpus.Add(new CpuComputeDevice(i, "CPU" + i, cpuName, threadsPerCpu, affinityMask, i + 1)
+                    );
                 }
             }
 
             Helpers.ConsolePrint(Tag, "QueryCpus END");
 
             return cpus;
+        }
+
+        public static Task<IEnumerable<CpuComputeDevice>> QueryCpusAsync()
+        {
+            return Task.Run(() => QueryCpus());
         }
     }
 }

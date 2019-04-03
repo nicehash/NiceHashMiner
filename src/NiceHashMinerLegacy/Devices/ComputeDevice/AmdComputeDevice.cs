@@ -123,7 +123,6 @@ namespace NiceHashMiner.Devices
             Codename = amdDevice.Codename;
             InfSection = amdDevice.InfSection;
             AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
-            DriverDisableAlgos = amdDevice.DriverDisableAlgos;
             Index = ID + AvailableDevices.AvailCpus + AvailableDevices.AvailNVGpus;
             _adapterIndex = amdDevice.Adl1Index;
 
