@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using NiceHashMiner.Stats;
 
 namespace NiceHashMiner
 {
@@ -41,6 +42,7 @@ namespace NiceHashMiner
             return Marshal.PtrToStringAnsi(a);
         }
 
+        [Obsolete("Use WindowsManagementObjectSearcher.GetVirtualCoresCount() instead")]
         public static int GetVirtualCoresCount()
         {
             var coreCount = 0;
@@ -55,6 +57,7 @@ namespace NiceHashMiner
             return coreCount;
         }
 
+        [Obsolete("Use WindowsManagementObjectSearcher.GetNumberOfCores() instead")]
         public static int GetNumberOfCores() {
             var coreCount = 0;
             using(var query = new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get())
@@ -69,7 +72,7 @@ namespace NiceHashMiner
         }
 
         public static bool IsHypeThreadingEnabled() {
-            return GetVirtualCoresCount() > GetNumberOfCores();
+            return WindowsManagementObjectSearcher.GetVirtualCoresCount() > WindowsManagementObjectSearcher.GetNumberOfCores();
         }
 
         public static ulong CreateAffinityMask(int index, int percpu)

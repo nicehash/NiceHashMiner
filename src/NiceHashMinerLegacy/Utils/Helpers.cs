@@ -143,7 +143,7 @@ namespace NiceHashMiner
             return ret;
         }
 
-        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0, AlgorithmType algo = AlgorithmType.NONE) 
+        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0, AlgorithmType algo = AlgorithmType.NONE)
         {
             string ret;
             if (secondarySpeed > 0)
@@ -176,6 +176,7 @@ namespace NiceHashMiner
             return ret + unit;
         }
 
+        [Obsolete("Use WindowsManagementObjectSearcher.GetMotherboardID() instead")]
         public static string GetMotherboardID()
         {
             var serial = "";
@@ -190,6 +191,7 @@ namespace NiceHashMiner
         }
 
         // TODO could have multiple cpus
+        [Obsolete("Use WindowsManagementObjectSearcher.GetCpuID() instead")]
         public static string GetCpuID()
         {
             var id = "N/A";
@@ -302,6 +304,7 @@ namespace NiceHashMiner
         }
 
         // IsWMI enabled
+        [Obsolete("Use WindowsManagementObjectSearcher.IsWmiEnabled() instead")]
         public static bool IsWmiEnabled()
         {
             try
