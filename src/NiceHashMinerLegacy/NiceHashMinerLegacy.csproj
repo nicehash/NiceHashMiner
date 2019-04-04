@@ -182,6 +182,13 @@
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerKlausTIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTPruvotIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX11GostIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX16RIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedMiner.cs" />
