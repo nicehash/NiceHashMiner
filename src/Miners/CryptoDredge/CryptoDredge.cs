@@ -67,6 +67,12 @@ namespace CryptoDredge
             throw new NotImplementedException();
         }
 
+        private struct HashFound
+        {
+            public double hashrate;
+            public bool found;
+        }
+
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             var numOfGpus = 2; //MUST BE SET CORRECTLY OTHERWISE BENCHMARKING WON't WORK (all cards are combined currently)
@@ -108,7 +114,9 @@ namespace CryptoDredge
             {
                 var s = data;
                 Console.WriteLine(s);
-                var ret = (hashrate: default(double), found: false);
+                var ret = new HashFound();
+                ret.hashrate = default(double);
+                ret.found = false;
 
                 if (s.Contains(after))
                 {

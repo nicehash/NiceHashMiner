@@ -172,7 +172,7 @@ namespace CPUMinerBase
             // TODO C# can have this shorter
             if (_affinityMask != 0 && pid != -1)
             {
-                var (ok, msg) = ProcessHelpers.AdjustAffinity(pid, _affinityMask);
+                var okMsg = ProcessHelpers.AdjustAffinity(pid, _affinityMask);
                 // TODO log what is going on is it ok or not 
             }
         }

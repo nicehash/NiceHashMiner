@@ -100,7 +100,10 @@ namespace TTMiner
 
             bp.CheckData = (data) =>
             {
-                var (hashrate, found) = data.ToLower().TryGetHashrateAfter("]:");
+                var hashrateFoundPair = data.ToLower().TryGetHashrateAfter("]:");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
+
                 if (data.Contains("LastShare") && data.Contains("GPU[") && found && hashrate > 0)
                 {
                     benchHashes += hashrate;
@@ -215,8 +218,9 @@ namespace TTMiner
 
         protected override void Init()
         {
-            bool ok;
-            (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
 
             // Order pairs and parse ELP

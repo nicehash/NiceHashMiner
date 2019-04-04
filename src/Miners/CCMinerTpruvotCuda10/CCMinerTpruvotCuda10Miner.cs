@@ -109,7 +109,6 @@ namespace CCMinerTpruvotCuda10
                     {
                         var gpuOptvalPairs = gpu.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         var gpuData = new IdPowerHash();
-                        //var gpuData = (id: -1, power: -1, speed: -1d);
                         foreach (var optvalPairs in gpuOptvalPairs)
                         {
                             var optval = optvalPairs.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);

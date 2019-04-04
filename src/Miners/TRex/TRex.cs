@@ -123,7 +123,9 @@ namespace TRex
 
             bp.CheckData = (string data) =>
             {
-                var (hashrate, found) = data.TryGetHashrateAfter("Total");
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
 
                 if (data.Contains("Time limit is reached."))
                     return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = true };

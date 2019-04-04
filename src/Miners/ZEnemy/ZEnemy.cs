@@ -53,6 +53,12 @@ namespace ZEnemy
             }
         }
 
+        private struct IdPowerHash
+        {
+            public int id;
+            public int power;
+            public double speed;
+        }
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var api = new ApiData();
@@ -86,7 +92,7 @@ namespace ZEnemy
                     foreach (var gpu in gpus)
                     {
                         var gpuOptvalPairs = gpu.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        var gpuData = (id: -1, power: -1, speed: -1d);
+                        var gpuData = new IdPowerHash();
                         foreach (var optvalPairs in gpuOptvalPairs)
                         {
                             var optval = optvalPairs.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
@@ -171,7 +177,9 @@ namespace ZEnemy
 
                 if (!hasHashRate) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
-                var (hashrate, found) = data.TryGetHashrateAfter("-");
+                var hashrateFoundPair = data.TryGetHashrateAfter("-");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
 
                 benchHashes += hashrate;
                 benchIters++;

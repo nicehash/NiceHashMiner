@@ -96,7 +96,9 @@ namespace NBMiner
             bp.CheckData = (data) =>
             {
                 var id = _cudaIDMap.Values.First();
-                var (hashrate, found) = data.TryGetHashrateAfter($" - {id}: ");
+                var hashrateFoundPair = data.TryGetHashrateAfter($" - {id}: ");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
 
                 if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
@@ -159,8 +161,9 @@ namespace NBMiner
 
         protected override void Init()
         {
-            bool ok;
-            (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
 
             var orderedMiningPairs = _miningPairs.ToList();

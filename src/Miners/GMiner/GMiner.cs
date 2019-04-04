@@ -89,8 +89,8 @@ namespace GMinerPlugin
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);                
 
                 var gpus = _miningPairs.Select(pair => pair.Device);
-                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-                var perDevicePowerInfo = new List<(string, int)>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
                 foreach (var gpu in gpus)
@@ -98,9 +98,9 @@ namespace GMinerPlugin
                     var currentDevStats = summary.devices.Where(devStats => devStats.gpu_id == gpu.ID).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed;
-                    perDeviceSpeedInfo.Add((gpu.UUID, new List<(AlgorithmType, double)>() { (_algorithmType, currentDevStats.speed) }));
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed) });
                     totalPowerUsage += currentDevStats.power_usage;
-                    perDevicePowerInfo.Add((gpu.UUID, currentDevStats.power_usage));
+                    perDevicePowerInfo.Add(gpu.UUID, currentDevStats.power_usage);
                 }
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
 
@@ -145,7 +145,9 @@ namespace GMinerPlugin
             int targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 30d));
             // TODO implement fallback average, final benchmark 
             bp.CheckData = (string data) => {
-                var (hashrate, found) = MinerToolkit.TryGetHashrateAfter(data, "Total Speed:");
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total Speed:");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
                 if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
                 // sum and return

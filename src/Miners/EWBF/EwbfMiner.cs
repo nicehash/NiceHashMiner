@@ -97,8 +97,8 @@ namespace EWBF
                 var results = resp.result;
 
                 var gpus = _miningPairs.Select(pair => pair.Device);
-                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-                var perDevicePowerInfo = new List<(string, int)>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
                 foreach (var gpu in gpus)
@@ -106,9 +106,10 @@ namespace EWBF
                     var currentDevStats = results.Where(r => r.cudaid == gpu.ID).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed_sps;
-                    perDeviceSpeedInfo.Add((gpu.UUID, new List<(AlgorithmType, double)>() { (_algorithmType, currentDevStats.speed_sps) }));
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed_sps) });
                     totalPowerUsage += (int)currentDevStats.gpu_power_usage;
-                    perDevicePowerInfo.Add((gpu.UUID, (int)currentDevStats.gpu_power_usage));
+                    perDevicePowerInfo.Add(gpu.UUID, (int)currentDevStats.gpu_power_usage);
+
                 }
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 ad.PowerUsageTotal = totalPowerUsage;
@@ -157,7 +158,9 @@ namespace EWBF
             bp.CheckData = (string data) => {
                 var containsSolRate = data.Contains(totalSpeed) && data.Contains("Sol");
                 if (containsSolRate == false) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
-                var (hashrate, found) = MinerToolkit.TryGetHashrateAfter(data, totalSpeed);
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, totalSpeed);
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
                 if (!found) return new BenchmarkResult {AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
                 // sum and return
