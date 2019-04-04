@@ -13,6 +13,8 @@ using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common;
+using NiceHashMiner.Miners.IntegratedPlugins;
+
 
 // TODO fix up the namespace
 namespace NiceHashMiner.Plugin
@@ -20,10 +22,14 @@ namespace NiceHashMiner.Plugin
     public static class MinerPluginsManager
     {
         public static bool IntegratedPluginsOnly => true;
-        public static new List<IMinerPlugin> IntegratedPlugins = new List<IMinerPlugin>
+        public static new List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
         {
-            new TTMiner.TTMinerPlugin(),
-            new TRex.TRexPlugin()
+            // open source
+
+
+            // 3rd party
+            new TTMinerIntegratedPlugin(),
+            new TRexIntegratedPlugin(),
         };
 
         public static void InitIntegratedPlugins()
@@ -47,7 +53,10 @@ namespace NiceHashMiner.Plugin
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                 }
             }
-            InitPluginInternals();
+            foreach (var plugin in IntegratedPlugins)
+            {
+                if (plugin is IInitInternals pluginWithInternals) pluginWithInternals.InitInternals();
+            }
         }
 
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }

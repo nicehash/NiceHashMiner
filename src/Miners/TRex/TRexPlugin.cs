@@ -16,13 +16,18 @@ namespace TRex
 {
     public class TRexPlugin : IMinerPlugin, IInitInternals
     {
+        public TRexPlugin(string pluginUUID = "0cd49150-4bfc-11e9-a481-e144ccd86993")
+        {
+            _pluginUUID = pluginUUID;
+        }
+        private readonly string _pluginUUID;
+        public string PluginUUID => _pluginUUID;
+
         public Version Version => new Version(1, 1);
 
         public string Name => "TRex";
 
         public string Author => "Domen Kirn Krefl";
-
-        public string PluginUUID => "0cd49150-4bfc-11e9-a481-e144ccd86993";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -65,7 +70,7 @@ namespace TRex
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage{
+        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage{
             GeneralOptions = new List<MinerOption>
             {
                 /// <summary>

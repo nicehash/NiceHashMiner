@@ -16,7 +16,12 @@ namespace EWBF
 {
     public class EwbfPlugin : IMinerPlugin, IInitInternals
     {
-        public string PluginUUID => "3e627d60-4bfa-11e9-a481-e144ccd86993";
+        public EwbfPlugin(string pluginUUID = "3e627d60-4bfa-11e9-a481-e144ccd86993")
+        {
+            _pluginUUID = pluginUUID;
+        }
+        private readonly string _pluginUUID;
+        public string PluginUUID => _pluginUUID;
 
         public Version Version => new Version(1, 1);
 
@@ -79,7 +84,7 @@ namespace EWBF
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
+        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
         {
             GeneralOptions = new List<MinerOption>
             {

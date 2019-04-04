@@ -180,6 +180,15 @@
     </Compile>
     <Compile Include="Interfaces\IApiResult.cs" />
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="Miners\BMiner.cs" />
     <Compile Include="Miners\Ewbf144.cs" />
@@ -509,6 +518,14 @@
     <ProjectReference Include="..\3rdparty\websocket-sharp\websocket-sharp.csproj">
       <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
       <Name>websocket-sharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\EWBF\EWBF.csproj">
+      <Project>{8b382c65-fc83-43bd-ae16-f06c26a24786}</Project>
+      <Name>EWBF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\GMiner\GMiner.csproj">
+      <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
+      <Name>GMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\MinerPluginLoader\MinerPluginLoader.csproj">
       <Project>{2c35f83c-aa75-49c0-98e8-082e329b6491}</Project>
