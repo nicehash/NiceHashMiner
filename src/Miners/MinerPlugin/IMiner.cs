@@ -22,7 +22,7 @@ namespace MinerPlugin
         //// enumerable must be read only 
         //IEnumerable<AlgorithmType> CurrentAlgorithms { get; }
 
-        void InitMiningPairs(IEnumerable<(BaseDevice device, Algorithm algorithm)> miningPairs);
+        void InitMiningPairs(IEnumerable<MiningPair> miningPairs);
 
 
         // change miningLocation with URL, optional password
@@ -37,7 +37,7 @@ namespace MinerPlugin
         // TODO no dual algorithm support
         // TODO start benchmark
         // TODO when we update to C#7 use tuple values
-        Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard); // IBenchmarker
+        Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard); // IBenchmarker
         // TODO add interface for parallel benchmarking
         //Task StopBenchmark();
 

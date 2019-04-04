@@ -64,9 +64,9 @@ namespace TRex
                 var summaryApiResult = await _httpClient.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(summaryApiResult);
             
-                var gpuDevices = _miningPairs.Select(pair => pair.device);
-                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-                var perDevicePowerInfo = new List<(string, int)>();
+                var gpuDevices = _miningPairs.Select(pair => pair.Device);
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = summary.hashrate;
                 var totalPowerUsage = 0.0;
 
@@ -74,14 +74,13 @@ namespace TRex
                 {
                     var currentStats = summary.gpus.Where(devStats => devStats.gpu_id == gpuDevice.ID).FirstOrDefault();
                     if (currentStats == null) continue;
-                    perDeviceSpeedInfo.Add((gpuDevice.UUID, new List<(AlgorithmType, double)>() { (_algorithmType, currentStats.hashrate) }));
+                    perDeviceSpeedInfo.Add(gpuDevice.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentStats.hashrate) });
                     totalPowerUsage += currentStats.power;
-                    perDevicePowerInfo.Add((gpuDevice.UUID, currentStats.hashrate));
+                    perDevicePowerInfo.Add(gpuDevice.UUID, currentStats.hashrate);
                 }
 
-                var total = new List<(AlgorithmType, double)>();
-                total.Add((_algorithmType, totalSpeed));
-                ad.AlgorithmSpeedsTotal = total;
+
+                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 ad.PowerUsageTotal = Convert.ToInt32(totalPowerUsage);
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;
@@ -94,7 +93,7 @@ namespace TRex
             return ad;
         }
 
-        public override async Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             var benchmarkTime = 20; // in seconds
             switch (benchmarkType)
@@ -113,7 +112,9 @@ namespace TRex
             var algo = AlgorithmName(_algorithmType);
 
             var commandLine = $"--algo {algo} --devices {_devices} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
             var benchHashes = 0d;
@@ -122,19 +123,22 @@ namespace TRex
 
             bp.CheckData = (string data) =>
             {
-                var (hashrate, found) = data.TryGetHashrateAfter("Total");
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
 
                 if (data.Contains("Time limit is reached."))
-                    return (benchHashResult, true);
+                    return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = true };
 
-                if (!found) return (benchHashResult, false);
+                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+
 
                 benchHashes += hashrate;
                 counter++;
 
                 benchHashResult = (benchHashes / counter) * (1 - DevFee * 0.01);
-                
-                return (benchHashResult, false);
+
+                return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
             };
             
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
@@ -144,26 +148,27 @@ namespace TRex
         }
 
 
-        protected override (string, string) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
             var binPath = Path.Combine(pluginRootBins, "t-rex.exe");
             var binCwd = pluginRootBins;
-            return (binPath, binCwd);
+            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()
         {
-            bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
             // init command line params parts
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks

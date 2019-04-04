@@ -50,7 +50,7 @@ namespace CPUMinerBase
         // TODO DevFee does it have one what kind of a fee is there, does it differ from algo or ssl enabled
         // extra launch parameters thingy should be taken care of per miner
 
-        public bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b) 
+        public bool CanGroup(MiningPair a, MiningPair b) 
         {
             return false;
         }

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MinerPlugin;
 
 namespace MinerPluginToolkitV1
 {
@@ -20,11 +21,11 @@ namespace MinerPluginToolkitV1
             Handle = MinerToolkit.CreateBenchmarkProcess(binPath, workingDir, commandLine, environmentVariables);
         }
 
-        public delegate (double, bool) CheckDataFun(string data);
+        public delegate BenchmarkResult CheckDataFun(string data);
         public CheckDataFun CheckData { get; set; }
 
         public Process Handle { get; }
-        public double Speed { get; private set; } = default(double);
+        public BenchmarkResult Result { get; private set; } = default(BenchmarkResult);
         public bool Success { get; private set; } = default(bool);
 
         private bool exitCalled = false;
@@ -35,9 +36,9 @@ namespace MinerPluginToolkitV1
             {
                 return;
             }
-
-            (Speed, Success) = CheckData(e.Data);
-            if (Success)
+            
+            Result  = CheckData(e.Data);
+            if (Result.Success)
             {
                 TryExit();
             }
@@ -63,9 +64,9 @@ namespace MinerPluginToolkitV1
             catch { }
         }
 
-        public Task<(double, bool)> Execute(CancellationToken stop)
+        public Task<BenchmarkResult> Execute(CancellationToken stop)
         {
-            var tcs = new TaskCompletionSource<(double, bool)>();
+            var tcs = new TaskCompletionSource<BenchmarkResult>();
             // TODO throw if handle is not initialized
             //if (Handle == null)
             //{
@@ -76,7 +77,7 @@ namespace MinerPluginToolkitV1
 
             Handle.Exited += (s, ea) => {
                 exitCalled = true;
-                tcs.SetResult((Speed, Success));
+                tcs.SetResult(Result);
             };
             Handle.OutputDataReceived += BenchmarkOutputErrorDataReceived;
             Handle.ErrorDataReceived += BenchmarkOutputErrorDataReceived;

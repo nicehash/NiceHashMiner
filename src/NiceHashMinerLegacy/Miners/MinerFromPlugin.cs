@@ -32,8 +32,8 @@ namespace NiceHashMiner.Miners
             if (apiData.AlgorithmSpeedsTotal.Count == 1)
             {
                 var algoSpeed = apiData.AlgorithmSpeedsTotal.First();
-                var ret = new ApiData(algoSpeed.type);
-                ret.Speed = algoSpeed.speed;
+                var ret = new ApiData(algoSpeed.AlgorithmType);
+                ret.Speed = algoSpeed.Speed;
                 ret.PowerUsage = apiData.PowerUsageTotal;
                 return ret;
             } 
@@ -48,7 +48,13 @@ namespace NiceHashMiner.Miners
             var username = $"{btcAdress}.{worker}";
             _miner.InitMiningLocationAndUsername(location, username);
 
-            var pluginPairs = this.MiningSetup.MiningPairs.Where(pair => pair.Algorithm is PluginAlgorithm).Select(pair => (pair.Device.PluginDevice, ((PluginAlgorithm)pair.Algorithm).BaseAlgo));
+            var pluginPairs = this.MiningSetup.MiningPairs
+                .Where(pair => pair.Algorithm is PluginAlgorithm)
+                .Select(pair => new MinerPlugin.MiningPair
+                {
+                    Device = pair.Device.PluginDevice,
+                    Algorithm = ((PluginAlgorithm) pair.Algorithm).BaseAlgo
+                });
             _miner.InitMiningPairs(pluginPairs);
 
             _miner.StartMining();

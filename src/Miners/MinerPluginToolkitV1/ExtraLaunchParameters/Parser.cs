@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using MinerPlugin;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Algorithm;
 
@@ -37,7 +38,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             return false;
         }
 
-        public static string Parse(List<(BaseDevice device, Algorithm algorithm)> miningPairs, List<MinerOption> options, bool useIfDefaults = false)
+        public static string Parse(List<MiningPair> miningPairs, List<MinerOption> options, bool useIfDefaults = false)
         {
             if (options == null || options.Count == 0) return "";
             
@@ -45,8 +46,10 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             // order of devices matters!
             // order of parameters may matter
             var devicesOptions = new List<ParsedDeviceMinerOptions>();
-            foreach (var (device, algorithm) in miningPairs)
+            foreach (var miningPair in miningPairs)
             {
+                var device = miningPair.Device;
+                var algorithm  = miningPair.Algorithm;
                 var parameters = algorithm.ExtraLaunchParameters
                     .Replace("=", "= ")
                     .Split(' ')

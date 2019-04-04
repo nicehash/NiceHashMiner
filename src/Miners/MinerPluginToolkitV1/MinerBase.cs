@@ -18,7 +18,7 @@ namespace MinerPluginToolkitV1
     {
         private readonly string _uuid;
         protected MiningProcess _miningProcess;
-        protected IEnumerable<(BaseDevice device, Algorithm algorithm)> _miningPairs;
+        protected IEnumerable<MiningPair> _miningPairs;
         protected string _miningLocation;
         protected string _username;
         protected string _password;
@@ -34,7 +34,7 @@ namespace MinerPluginToolkitV1
 
         abstract protected void Init();
 
-        public void InitMiningPairs(IEnumerable<(BaseDevice, Algorithm)> miningPairs)
+        public void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
         {
             _miningPairs = miningPairs;
             Init();
@@ -46,9 +46,9 @@ namespace MinerPluginToolkitV1
             _username = username;
         }
 
-        abstract public Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
+        abstract public Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
 
-        abstract protected (string binPath, string binCwd) GetBinAndCwdPaths();
+        abstract protected Tuple<string, string> GetBinAndCwdPaths();
         abstract protected string MiningCreateCommandLine();
 
         // most don't require extra enviorment vars
@@ -63,8 +63,9 @@ namespace MinerPluginToolkitV1
             {
                 bsm.BeforeStartMining();
             }
-
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var commandLine = MiningCreateCommandLine();
             var environmentVariables = GetEnvironmentVariables();
             var p = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables);

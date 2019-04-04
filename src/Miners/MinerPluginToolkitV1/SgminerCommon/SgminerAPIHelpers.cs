@@ -65,8 +65,8 @@ namespace MinerPluginToolkitV1.SgminerCommon
             try
             {
                 var deviveStats = apiDevsResult.DEVS;
-                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-                var perDevicePowerInfo = new List<(string, int)>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
 
@@ -85,10 +85,12 @@ namespace MinerPluginToolkitV1.SgminerCommon
 
                     var speedHS = deviceStats.KHS_5s * 1000;
                     totalSpeed += speedHS;
-                    perDeviceSpeedInfo.Add((gpu.UUID, new List<(AlgorithmType, double)>() { (algorithmType, speedHS) }));
+                    var algoSpeedPair = new AlgorithmTypeSpeedPair(algorithmType, speedHS);
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { algoSpeedPair });
                     // TODO check PowerUsage API
                 }
-                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType, double)> { (algorithmType, totalSpeed) };
+                var totalAlgoSpeedPair = new AlgorithmTypeSpeedPair(algorithmType, totalSpeed);
+                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair>() { totalAlgoSpeedPair };
                 ad.PowerUsageTotal = totalPowerUsage;
             }
             catch (Exception ex)

@@ -71,7 +71,7 @@ namespace TTMiner
             _uuid = uuid;
         }
 
-        public override async Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             int benchTime;
             switch (benchmarkType)
@@ -88,7 +88,9 @@ namespace TTMiner
             }
 
             var commandLine = CreateCommandLine(MinerToolkit.DemoUser);
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
             var benchHashes = 0d;
@@ -98,14 +100,21 @@ namespace TTMiner
 
             bp.CheckData = (data) =>
             {
-                var (hashrate, found) = data.ToLower().TryGetHashrateAfter("]:");
+                var hashrateFoundPair = data.ToLower().TryGetHashrateAfter("]:");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
+
                 if (data.Contains("LastShare") && data.Contains("GPU[") && found && hashrate > 0)
                 {
                     benchHashes += hashrate;
                     benchIters++;
                     benchHashResult = (benchHashes / benchIters) * (1.0d - DevFee);
                 }
-                return (benchHashResult, benchIters >= targetBenchIters);
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = benchIters >= targetBenchIters
+                };
             };
 
             var timeout = TimeSpan.FromSeconds(benchTime + 5);
@@ -114,13 +123,13 @@ namespace TTMiner
             return await t;
         }
 
-        protected override (string binPath, string binCwd) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
             var binPath = Path.Combine(pluginRootBins, "TT-Miner.exe");
             var binCwd = pluginRootBins;
-            return (binPath, binCwd);
+            return Tuple.Create(binPath, binCwd);
         }
 
         protected override string MiningCreateCommandLine()
@@ -181,9 +190,8 @@ namespace TTMiner
 
                                 totalSpeed += tmpSpeed;
                             }
-                            var total = new List<(AlgorithmType, double)>();
-                            total.Add((_algorithmType, totalSpeed));
-                            api.AlgorithmSpeedsTotal = total; //new List<(AlgorithmType, double)>((_algorithmType, totalSpeed));
+                            api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+
                         }
 
                         //if (ad.Speed == 0)
@@ -210,14 +218,15 @@ namespace TTMiner
 
         protected override void Init()
         {
-            bool ok;
-            (_algorithmType, ok) = _miningPairs.GetAlgorithmSingleType();
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
 
             // Order pairs and parse ELP
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
-            _devices = string.Join(" ", orderedMiningPairs.Select(p => p.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            _devices = string.Join(" ", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks

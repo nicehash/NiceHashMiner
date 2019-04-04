@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net.Http;
 using System.IO;
 using NiceHashMinerLegacy.Common;
+using System.Collections.Generic;
 
 namespace CryptoDredge
 {
@@ -66,7 +67,13 @@ namespace CryptoDredge
             throw new NotImplementedException();
         }
 
-        public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        private struct HashFound
+        {
+            public double hashrate;
+            public bool found;
+        }
+
+        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             var numOfGpus = 2; //MUST BE SET CORRECTLY OTHERWISE BENCHMARKING WON't WORK (all cards are combined currently)
             var avgRet = 0.0;
@@ -98,14 +105,18 @@ namespace CryptoDredge
 
             var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind 127.0.0.1:{_apiPort} --no-watchdog --device {_devices} {_extraLaunchParameters}";
 
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
             bp.CheckData = (string data) =>
             {
                 var s = data;
                 Console.WriteLine(s);
-                var ret = (hashrate: default(double), found: false);
+                var ret = new HashFound();
+                ret.hashrate = default(double);
+                ret.found = false;
 
                 if (s.Contains(after))
                 {
@@ -121,7 +132,7 @@ namespace CryptoDredge
                     numString.Replace(',', '.');
                     if (!double.TryParse(numString, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
                     {
-                        return ret;
+                        return new BenchmarkResult {AlgorithmTypeSpeeds= new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, ret.hashrate) }, Success = ret.found};
                     }
 
                     counter++;
@@ -141,7 +152,7 @@ namespace CryptoDredge
                         ret.found = true;
                     }
                 }
-                return ret;
+                return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, ret.hashrate) }, Success = ret.found };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(300);
@@ -150,26 +161,27 @@ namespace CryptoDredge
             return await t;
         }
 
-        protected override (string binPath, string binCwd) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
             var binPath = Path.Combine(pluginRootBins, "CryptoDredge.exe");
             var binCwd = pluginRootBins;
-            return (binPath, binCwd);
+            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()
         {
-            bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
             // init command line params parts
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks

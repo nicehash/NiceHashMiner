@@ -330,10 +330,10 @@ namespace NiceHashMiner.Forms
                 pluginInfoDetails.StatusText = "Pending Install";
 
 
-                var downloadAndInstallUpdate = new Progress<(ProgressState state, int progress)>(statePerc  =>
+                var downloadAndInstallUpdate = new Progress<Tuple<ProgressState, int>>(statePerc  =>
                 {
-                    var state = statePerc.state;
-                    var progress = statePerc.progress;
+                    var state = statePerc.Item1;
+                    var progress = statePerc.Item2;
                     var statusText = "";
                     switch (state)
                     {

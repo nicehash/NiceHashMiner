@@ -57,6 +57,6 @@ namespace MinerPlugin
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        bool CanGroup((BaseDevice device, Algorithm algorithm) a, (BaseDevice device, Algorithm algorithm) b);
+        bool CanGroup(MiningPair a, MiningPair b);
     }
 }

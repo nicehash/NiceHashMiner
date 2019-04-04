@@ -11,6 +11,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using MinerPlugin;
 using System.Threading.Tasks;
 using System;
+using MiningPair = NiceHashMiner.Miners.Grouping.MiningPair;
 
 namespace NiceHashMiner.Benchmarking
 {

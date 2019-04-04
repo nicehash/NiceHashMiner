@@ -64,13 +64,13 @@ namespace SGMinerHub
             }
         }
 
-        protected override (string, string) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins", SGMinerName);
             var binPath = Path.Combine(pluginRootBins, "sgminer.exe");
             var binCwd = pluginRootBins;
-            return (binPath, binCwd);
+            return Tuple.Create(binPath, binCwd);
         }
     }
 }

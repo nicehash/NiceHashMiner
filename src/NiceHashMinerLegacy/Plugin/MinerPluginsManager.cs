@@ -204,12 +204,12 @@ namespace NiceHashMiner.Plugin
             // TODO loading
         }
 
-        public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, IProgress<(ProgressState state, int progress)> progress, CancellationToken stop)
+        public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, IProgress<Tuple<ProgressState, int>> progress, CancellationToken stop)
         {
-            var downloadPluginProgressChangedEventHandler = new Progress<int>(perc => progress?.Report((ProgressState.DownloadingPlugin, perc)));
-            var zipProgressPluginChangedEventHandler = new Progress<int>(perc => progress?.Report((ProgressState.ExtractingPlugin, perc)));
-            var downloadMinerProgressChangedEventHandler = new Progress<int>(perc => progress?.Report((ProgressState.DownloadingMiner, perc)));
-            var zipProgressMinerChangedEventHandler = new Progress<int>(perc => progress?.Report((ProgressState.ExtractingMiner, perc)));
+            var downloadPluginProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.DownloadingPlugin, perc)));
+            var zipProgressPluginChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.ExtractingPlugin, perc)));
+            var downloadMinerProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.DownloadingMiner, perc)));
+            var zipProgressMinerChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.ExtractingMiner, perc)));
 
             const string installingPrefix = "installing_";
             var installingPluginPath = Path.Combine(Paths.MinerPluginsPath(), $"{installingPrefix}{plugin.PluginUUID}");

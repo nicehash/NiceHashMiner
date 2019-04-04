@@ -63,7 +63,6 @@ namespace MinerPluginToolkitV1.Configs
                 //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {ex}");
                 return false;
             }
-            return false;
         }
 
         // this checks if there are user settings and returns that if not then it saves the given defaultSettings to a file

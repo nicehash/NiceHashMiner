@@ -92,8 +92,8 @@ namespace TeamRedMiner
             try
             {
                 var deviveStats = apiDevsResult.DEVS;
-                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-                var perDevicePowerInfo = new List<(string, int)>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
 
@@ -110,10 +110,10 @@ namespace TeamRedMiner
 
                     var speedHS = deviceStats.KHS_av * 1000;
                     totalSpeed += speedHS;
-                    perDeviceSpeedInfo.Add((gpuUUID, new List<(AlgorithmType, double)>() { (_algorithmType, speedHS) }));
+                    perDeviceSpeedInfo.Add(gpuUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, speedHS) });
                     // TODO check PowerUsage API
                 }
-                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType, double)> { (_algorithmType, totalSpeed) };
+                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 ad.PowerUsageTotal = totalPowerUsage;
             }
             catch (Exception ex)
@@ -125,7 +125,7 @@ namespace TeamRedMiner
             return ad;
         }
 
-        public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // determine benchmark time 
             // settup times
@@ -145,7 +145,9 @@ namespace TeamRedMiner
 
             // use demo user and disable colorts so we can read from stdout
             var commandLine = CreateCommandLine(MinerToolkit.DemoUser) + " --disable_colors";
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
             double benchHashesSum = 0;
@@ -158,9 +160,12 @@ namespace TeamRedMiner
             bp.CheckData = (string data) =>
             {
                 var containsHashRate = data.Contains(afterAlgoSpeed) && data.Contains("GPU");
-                if (containsHashRate == false) return (benchHashResult, false);
-                var (hashrate, found) = MinerToolkit.TryGetHashrateAfter(data, afterAlgoSpeed);
-                if (!found) return (benchHashResult, false);
+                if (containsHashRate == false) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, afterAlgoSpeed);
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
+
+                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
                 // sum and return
                 benchHashesSum += hashrate;
@@ -168,8 +173,11 @@ namespace TeamRedMiner
 
                 benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee);
 
-                var isFinished = benchIters >= targetBenchIters;
-                return (benchHashResult, isFinished);
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = benchIters >= targetBenchIters
+                };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
@@ -178,30 +186,31 @@ namespace TeamRedMiner
             return await t;
         }
 
-        protected override (string, string) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins", "teamredminer-v0.4.2-win");
             var binPath = Path.Combine(pluginRootBins, "teamredminer.exe");
             var binCwd = pluginRootBins;
-            return (binPath, binCwd);
+            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()
         {
-            bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
             // Order pairs and parse ELP
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             
             for(int i = 0; i < orderedMiningPairs.Count; i++)
             {
-                _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].device.UUID;
+                _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].Device.UUID;
             }
 
             if (MinerOptionsPackage != null)

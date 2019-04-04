@@ -10,10 +10,11 @@ namespace MinerPlugin
     public class ApiData
     {
         // total
-        public IReadOnlyList<(AlgorithmType type, double speed)> AlgorithmSpeedsTotal;
+        public IReadOnlyList<AlgorithmTypeSpeedPair> AlgorithmSpeedsTotal;
         public int PowerUsageTotal;
         // per device
-        public IReadOnlyList<(string UUID, IReadOnlyList<(AlgorithmType type, double speed)>)> AlgorithmSpeedsPerDevice;
-        public IReadOnlyList<(string UUID, int power)> PowerUsagePerDevice;
+        // key is device UUID
+        public IReadOnlyDictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>> AlgorithmSpeedsPerDevice;
+        public IReadOnlyDictionary<string, int> PowerUsagePerDevice;
     }
 }

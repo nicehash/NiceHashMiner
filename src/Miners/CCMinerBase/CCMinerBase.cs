@@ -147,7 +147,9 @@ namespace CCMinerBase
             
             var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime} {_devices} {_extraLaunchParameters}";
 
-            var (binPath, binCwd) = GetBinAndCwdPaths();
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
             // TODO implement fallback average, final benchmark 
@@ -162,17 +164,18 @@ namespace CCMinerBase
         }
 
         //// TODO this PATH IS temporary FIXED
-        //protected override (string, string) GetBinAndCwdPaths()
+        //protected override Tuple<string, string> GetBinAndCwdPaths()
         //{
         //    var binPath = @"D:\Programming\NiceHashMinerLegacy\Release\bin\ccminer_tpruvot\ccminer.exe";
         //    var binCwd = @"D:\Programming\NiceHashMinerLegacy\Release\bin\ccminer_tpruvot\";
-        //    return (binPath, binCwd);
+        //    return Tuple.Create(binPath, binCwd);
         //}
 
         protected override void Init()
         {
-            bool ok;
-            (_algorithmType, ok) = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
