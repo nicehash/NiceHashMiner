@@ -259,20 +259,8 @@ namespace NiceHashMiner.Miners.Grouping
         ////// private stuff from here on
         private static class NvidiaGroups
         {
-            //private static string CcminerSM21(AlgorithmType algorithmType)
-            //{
-            //    return Data.CcminerDecred;
-            //}
             private static string CcminerSM3X(AlgorithmType algorithmType)
             {
-                //if (AlgorithmType.Decred == algorithmType)
-                //{
-                //    return Data.CcminerDecred;
-                //}
-                //if (AlgorithmType.CryptoNight == algorithmType)
-                //{
-                //    return Data.CcminerCryptonight;
-                //}
                 return Data.CcminerTPruvot;
             }
 
@@ -295,9 +283,6 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 switch (nvidiaGroup)
                 {
-                    // sm21 and sm3x no longer have same settings since tpruvot dropped 21 support
-                    //case DeviceGroupType.NVIDIA_2_1:
-                    //    return CcminerSM21(algorithmType);
                     case DeviceGroupType.NVIDIA_3_x:
                         return CcminerSM3X(algorithmType);
                     // sm5x and sm6x have same settings otherwise

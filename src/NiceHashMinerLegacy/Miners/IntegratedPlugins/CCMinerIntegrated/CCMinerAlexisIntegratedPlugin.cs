@@ -10,20 +10,21 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class CCMinerX16RIntegratedPlugin : CCMinersPluginBase
+    class CCMinerAlexisIntegratedPlugin : CCMinersPluginBase
     {
-        public override string PluginUUID => "CCMinerX16R";
+        public override string PluginUUID => "CCMinerAlexis";
 
         public override Version Version => new Version(1,0);
 
-        public override string Name => "CCMinerX16R";
+        public override string Name => "CCMinerAlexis";
 
-        protected override string DirPath => "ccminer_x16r";
+        // TODO rename to alexis
+        protected override string DirPath => "ccminer_x11gost";
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var reqCudaVer = Checkers.CudaVersion.CUDA_9_0_76;
+            var reqCudaVer = Checkers.CudaVersion.CUDA_8_0_61;
             var isCompatible = Checkers.IsCudaCompatibleDriver(reqCudaVer, CUDADevice.INSTALLED_NVIDIA_DRIVERS);
             if (!isCompatible) return supported; // return emtpy
 
@@ -34,7 +35,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             foreach (var gpu in cudaGpus)
             {
                 var algorithms = new List<Algorithm> {
-                    new Algorithm(PluginUUID, AlgorithmType.X16R),
+                    new Algorithm(PluginUUID, AlgorithmType.Keccak) { Enabled = false }
                 };
                 supported.Add(gpu, algorithms);
             }

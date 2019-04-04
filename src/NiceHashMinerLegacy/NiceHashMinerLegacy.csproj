@@ -186,8 +186,8 @@
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerKlausTIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTPruvotIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX11GostIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerAlexisIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX16RIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />

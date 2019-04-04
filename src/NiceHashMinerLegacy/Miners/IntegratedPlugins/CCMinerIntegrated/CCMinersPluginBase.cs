@@ -40,55 +40,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         }
 
         public abstract Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices);
-        //public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
-        //{
-        //    var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-        //    // 410.48
-        //    var minimumNVIDIADriver = new Version(410, 48);
-        //    if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minimumNVIDIADriver) return supported; // return emtpy
-
-        //    // SM3.+ and CUDA 10 drivers
-        //    var cudaGpus = devices.Where(dev => dev is CUDADevice cudaDev && cudaDev.SM_major > 3).Select(dev => (CUDADevice)dev);
-
-        //    foreach (var gpu in cudaGpus)
-        //    {
-        //        supported.Add(gpu, GetSupportedAlgorithms());
-        //    }
-
-        //    cudaGpus = devices.Where(dev => dev is CUDADevice cudaDev && cudaDev.SM_major == 3).Select(dev => (CUDADevice)dev);
-        //    foreach (var gpu in cudaGpus)
-        //    {
-        //        supported.Add(gpu, GetFilteredSupportedAlgorithms());
-        //    }
-        //    return supported;
-        //}
-
-        //IReadOnlyList<Algorithm> GetSupportedAlgorithms()
-        //{
-        //    return new List<Algorithm>{
-        //        new Algorithm(PluginUUID, AlgorithmType.NeoScrypt),
-        //        //new Algorithm(PluginUUID, AlgorithmType.Lyra2REv2_UNUSED),
-        //        //new Algorithm(PluginUUID, AlgorithmType.Decred),
-        //        //new Algorithm(PluginUUID, AlgorithmType.Lbry_UNUSED),
-        //        //new Algorithm(PluginUUID, AlgorithmType.X11Gost_UNUSED),
-        //        //new Algorithm(PluginUUID, AlgorithmType.Blake2s),
-        //        //new Algorithm(PluginUUID, AlgorithmType.Sia_UNUSED),
-        //        new Algorithm(PluginUUID, AlgorithmType.Keccak),
-        //        new Algorithm(PluginUUID, AlgorithmType.Skunk),
-        //        //new Algorithm(PluginUUID, AlgorithmType.Lyra2z_UNUSED),
-        //        new Algorithm(PluginUUID, AlgorithmType.X16R),
-        //        new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
-        //    };
-        //}
-
-        //IReadOnlyList<Algorithm> GetFilteredSupportedAlgorithms()
-        //{
-        //    return new List<Algorithm>{
-        //        new Algorithm(PluginUUID, AlgorithmType.Keccak),
-        //        new Algorithm(PluginUUID, AlgorithmType.Skunk),
-        //        new Algorithm(PluginUUID, AlgorithmType.X16R),
-        //    };
-        //}
 
         #region Internal Settings
         public void InitInternals()

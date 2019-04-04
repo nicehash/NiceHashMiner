@@ -25,6 +25,11 @@ namespace NiceHashMiner.Plugin
         public static new List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
         {
             // open source
+            new CCMinerAlexisIntegratedPlugin(),
+            new CCMinerKlausTIntegratedPlugin(),
+            new CCMinerMTPIntegratedPlugin(),
+            new CCMinerTpruvotIntegratedPlugin(),
+            new CCMinerX16RIntegratedPlugin(),
             new SGminerAvemoreIntegratedPlugin(),
             new SGminerGMIntegratedPlugin(),
             new SGminerNHGeneralIntegratedPlugin(),
