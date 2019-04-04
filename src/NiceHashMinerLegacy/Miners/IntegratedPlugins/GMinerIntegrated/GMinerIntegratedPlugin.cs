@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NiceHashMiner.Miners.IntegratedPlugins.GMinerIntegrated
+namespace NiceHashMiner.Miners.IntegratedPlugins
 {
     class GMinerIntegratedPlugin : GMinerPlugin.GMinerPlugin, IntegratedPlugin
     {

@@ -70,13 +70,13 @@ namespace NiceHashMiner.Miners
                 case MinerBaseType.Phoenix:
                     return new Phoenix();
                 case MinerBaseType.GMiner:
-                    return new GMiner();
+                    return new GMinerOld();
                 case MinerBaseType.BMiner:
-                    return new BMiner(algorithm.NiceHashID);
+                    return new BMinerOld(algorithm.NiceHashID);
                 case MinerBaseType.NBMiner:
-                    return new NBMiner();
+                    return new NBMinerOld();
                 case MinerBaseType.TeamRedMiner:
-                    return new TeamRedMiner();
+                    return new TeamRedMinerOld();
                 case MinerBaseType.PLUGIN:
                     return CreateMinerFromPlugin(algorithm);
             }

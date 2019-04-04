@@ -14,14 +14,19 @@ using System.Text;
 
 namespace BMiner
 {
-    class BMinerPlugin : IMinerPlugin, IInitInternals
+    public class BMinerPlugin : IMinerPlugin, IInitInternals
     {
+        public BMinerPlugin(string pluginUUID = "92a7fd10-498d-11e9-87d3-6b57d758e2c6")
+        {
+            _pluginUUID = pluginUUID;
+        }
+        private readonly string _pluginUUID;
+        public string PluginUUID => _pluginUUID;
+
         public Version Version => new Version(1, 2);
         public string Name => "BMiner";
 
         public string Author => "Domen Kirn Krefl";
-
-        public string PluginUUID => "92a7fd10-498d-11e9-87d3-6b57d758e2c6";
 
         internal static bool IsGcn4(AMDDevice dev)
         {
@@ -106,7 +111,7 @@ namespace BMiner
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
+        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
         {
             GeneralOptions = new List<MinerOption>
             {

@@ -180,11 +180,15 @@
     </Compile>
     <Compile Include="Interfaces\IApiResult.cs" />
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerGMIntegratedMiner.cs" />
@@ -192,19 +196,21 @@
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerNHGeneralIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerNHGeneralIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGMinerPluginBase.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TeamRedMinerIntegrated\TeamRedMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TeamRedMinerIntegrated\TeamRedMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
-    <Compile Include="Miners\BMiner.cs" />
+    <Compile Include="Miners\BMinerOld.cs" />
     <Compile Include="Miners\Ewbf144.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
-    <Compile Include="Miners\GMiner.cs" />
+    <Compile Include="Miners\GMinerOld.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
-    <Compile Include="Miners\NBMiner.cs" />
+    <Compile Include="Miners\NBMinerOld.cs" />
     <Compile Include="Miners\Phoenix.cs" />
-    <Compile Include="Miners\TeamRedMiner.cs" />
+    <Compile Include="Miners\TeamRedMinerOld.cs" />
     <Compile Include="Miners\Trex.cs" />
     <Compile Include="Miners\Ttminer.cs" />
     <Compile Include="Miners\VanillaProcessMiner.cs" />
@@ -526,6 +532,10 @@
       <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
       <Name>websocket-sharp</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\BMiner\BMiner.csproj">
+      <Project>{da54e8c4-73d8-4f1a-be84-0d548b77a2c0}</Project>
+      <Name>BMiner</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\EWBF\EWBF.csproj">
       <Project>{8b382c65-fc83-43bd-ae16-f06c26a24786}</Project>
       <Name>EWBF</Name>
@@ -545,6 +555,14 @@
     <ProjectReference Include="..\Miners\MinerPlugin\MinerPlugin.csproj">
       <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
       <Name>MinerPlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\NBMiner\NBMiner.csproj">
+      <Project>{a4b0cdcb-d1d7-4563-9888-d58e0b36d0f8}</Project>
+      <Name>NBMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj">
+      <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>
+      <Name>TeamRedMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\TRex\TRex.csproj">
       <Project>{1b00711a-2ca2-49c0-a9fd-8bf9e478e3b0}</Project>

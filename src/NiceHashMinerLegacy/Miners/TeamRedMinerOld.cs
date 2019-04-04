@@ -12,10 +12,10 @@ using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Miners
 {
-    public class TeamRedMiner : Miner
+    public class TeamRedMinerOld : Miner
     {
 
-        public TeamRedMiner() : base("TeamRedMiner")
+        public TeamRedMinerOld() : base("TeamRedMiner")
         { }
 
         private string AlgoName

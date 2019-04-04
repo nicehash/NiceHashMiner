@@ -2,9 +2,9 @@
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class EWBFIntegratedPlugin : EWBF.EwbfPlugin, IntegratedPlugin
+    class TeamRedMinerIntegratedPlugin : TeamRedMiner.TeamRedMinerPlugin, IntegratedPlugin
     {
-        public EWBFIntegratedPlugin() : base("Ewbf")
+        public TeamRedMinerIntegratedPlugin() : base("TeamRedMiner")
         { }
 
         public bool Is3rdParty => true;

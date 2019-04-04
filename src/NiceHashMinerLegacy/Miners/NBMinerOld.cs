@@ -11,7 +11,7 @@ using NiceHashMinerLegacy.Extensions;
 
 namespace NiceHashMiner.Miners
 {
-    public class NBMiner : VanillaProcessMiner
+    public class NBMinerOld : VanillaProcessMiner
     {
         private class JsonModel : IApiResult
         {
@@ -71,7 +71,7 @@ namespace NiceHashMiner.Miners
             }
         }
 
-        public NBMiner() : base("nbminer")
+        public NBMinerOld() : base("nbminer")
         { }
 
         protected override int GetMaxCooldownTimeInMilliseconds()

@@ -15,29 +15,33 @@ namespace NBMiner
 {
     public class NBMinerPlugin : IMinerPlugin, IInitInternals
     {
+        public NBMinerPlugin(string pluginUUID = "d9e7ea80-4bfb-11e9-a481-e144ccd86993")
+        {
+            _pluginUUID = pluginUUID;
+        }
+        private readonly string _pluginUUID;
+        public string PluginUUID => _pluginUUID;
+
         public Version Version => new Version(1, 1);
         public string Name => "NBMiner";
 
         public string Author => "Dillon Newell";
-
-        public string PluginUUID => "d9e7ea80-4bfb-11e9-a481-e144ccd86993";
-
-        private readonly Dictionary<int, int> _mappedCudaIDs = new Dictionary<int, int>();
+        
+        protected readonly Dictionary<int, int> _mappedCudaIDs = new Dictionary<int, int>();
 
         private bool isSupportedVersion(int major, int minor)
         {
-            Dictionary<int, int> supportedVersions = new Dictionary<int, int>();
-            supportedVersions.Add(6, 0);
-            supportedVersions.Add(6, 1);
-            supportedVersions.Add(7, 0);
-            supportedVersions.Add(7, 5);
-
-            if (!supportedVersions.ContainsKey(major)) return false;
-            if (!supportedVersions.ContainsValue(minor)) return false;
-
-            foreach(var kvp in supportedVersions)
+            var nbMinerSMSupportedVersions = new List<Version>
             {
-                if (kvp.Key == major && kvp.Value == minor) return true;
+                new Version(6,0),
+                new Version(6,1),
+                new Version(7,0),
+                new Version(7,5),
+            };
+            var cudaDevSMver = new Version(major, minor);
+            foreach (var supportedVer in nbMinerSMSupportedVersions)
+            {
+                if (supportedVer == cudaDevSMver) return true;
             }
             return false;
         }
@@ -53,7 +57,8 @@ namespace NBMiner
             var cudaGpus = devices
                 .Where(dev => dev is CUDADevice gpu && isSupportedVersion(gpu.SM_major, gpu.SM_minor))
                 .Cast<CUDADevice>()
-                .OrderBy(dev => dev.PCIeBusID);
+                .OrderBy(dev => dev.PCIeBusID)
+                .ToList();
 
             var pcieID = 0;
             foreach (var gpu in cudaGpus)
@@ -99,7 +104,7 @@ namespace NBMiner
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage {};
+        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage {};
         #endregion Internal Settings
     }
 }

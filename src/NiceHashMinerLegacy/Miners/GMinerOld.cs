@@ -14,7 +14,7 @@ namespace NiceHashMiner.Miners
 {
     // NOTE: GMiner will NOT run if the VS debugger is attached to NHML. 
     // Detach the debugger to use GMiner.
-    public class GMiner : Miner
+    public class GMinerOld : Miner
     {
         private const double DevFee = 2.0;
 
@@ -57,7 +57,7 @@ namespace NiceHashMiner.Miners
             }
         }
 
-        public GMiner() : base("gminer")
+        public GMinerOld() : base("gminer")
         {
             ConectionType = NhmConectionType.NONE;
         }

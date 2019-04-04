@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners
 {
-    public class BMiner : VanillaProcessMiner
+    public class BMinerOld : VanillaProcessMiner
     {
         #region JSON Models
 
@@ -93,7 +93,7 @@ namespace NiceHashMiner.Miners
 
         private bool IsDual => MiningSetup.CurrentSecondaryAlgorithmType != AlgorithmType.NONE;
 
-        public BMiner(AlgorithmType algo) : base("bminer")
+        public BMinerOld(AlgorithmType algo) : base("bminer")
         {
             ConectionType = algo == AlgorithmType.Beam ?
                 NhmConectionType.SSL : NhmConectionType.NONE;

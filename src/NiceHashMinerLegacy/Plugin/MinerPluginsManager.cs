@@ -30,8 +30,13 @@ namespace NiceHashMiner.Plugin
             new SGminerNHGeneralIntegratedPlugin(),
 
             // 3rd party
-            new TTMinerIntegratedPlugin(),
+            new BMinerIntegratedPlugin(),
+            new EWBFIntegratedPlugin(),
+            new GMinerIntegratedPlugin(),
+            new NBMinerIntegratedPlugin(),
+            new TeamRedMinerIntegratedPlugin(),
             new TRexIntegratedPlugin(),
+            new TTMinerIntegratedPlugin(),
         };
 
         // TODO add use3rdParty flag

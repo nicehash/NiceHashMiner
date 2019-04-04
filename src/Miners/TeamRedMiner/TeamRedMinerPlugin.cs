@@ -15,7 +15,12 @@ namespace TeamRedMiner
 {
     public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals
     {
-        public string PluginUUID => "189aaf80-4b23-11e9-a481-e144ccd86993";
+        public TeamRedMinerPlugin(string pluginUUID = "189aaf80-4b23-11e9-a481-e144ccd86993")
+        {
+            _pluginUUID = pluginUUID;
+        }
+        private readonly string _pluginUUID;
+        public string PluginUUID => _pluginUUID;
 
         public Version Version => new Version(1, 1);
 
@@ -82,7 +87,7 @@ namespace TeamRedMiner
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage{};
+        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage{};
         #endregion Internal Settings
     }
 }

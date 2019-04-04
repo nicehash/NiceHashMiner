@@ -2,16 +2,16 @@
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class EWBFIntegratedPlugin : EWBF.EwbfPlugin, IntegratedPlugin
+    class NBMinerIntegratedPlugin : NBMiner.NBMinerPlugin, IntegratedPlugin
     {
-        public EWBFIntegratedPlugin() : base("Ewbf")
+        public NBMinerIntegratedPlugin() : base("NBMiner")
         { }
 
         public bool Is3rdParty => true;
 
         public new IMiner CreateMiner()
         {
-            return new EWBFIntegratedMiner(PluginUUID)
+            return new NBMinerIntegratedMiner(PluginUUID, _mappedCudaIDs)
             {
                 MinerOptionsPackage = _minerOptionsPackage
             };
