@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net.Http;
 using System.IO;
 using NiceHashMinerLegacy.Common;
+using System.Collections.Generic;
 
 namespace CryptoDredge
 {
@@ -66,7 +67,7 @@ namespace CryptoDredge
             throw new NotImplementedException();
         }
 
-        public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             var numOfGpus = 2; //MUST BE SET CORRECTLY OTHERWISE BENCHMARKING WON't WORK (all cards are combined currently)
             var avgRet = 0.0;
@@ -123,7 +124,7 @@ namespace CryptoDredge
                     numString.Replace(',', '.');
                     if (!double.TryParse(numString, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
                     {
-                        return ret;
+                        return new BenchmarkResult {AlgorithmTypeSpeeds= new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, ret.hashrate) }, Success = ret.found};
                     }
 
                     counter++;
@@ -143,7 +144,7 @@ namespace CryptoDredge
                         ret.found = true;
                     }
                 }
-                return ret;
+                return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, ret.hashrate) }, Success = ret.found };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(300);

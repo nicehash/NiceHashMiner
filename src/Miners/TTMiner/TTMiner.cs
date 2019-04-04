@@ -71,7 +71,7 @@ namespace TTMiner
             _uuid = uuid;
         }
 
-        public override async Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             int benchTime;
             switch (benchmarkType)
@@ -107,7 +107,11 @@ namespace TTMiner
                     benchIters++;
                     benchHashResult = (benchHashes / benchIters) * (1.0d - DevFee);
                 }
-                return (benchHashResult, benchIters >= targetBenchIters);
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = benchIters >= targetBenchIters
+                };
             };
 
             var timeout = TimeSpan.FromSeconds(benchTime + 5);
@@ -116,7 +120,7 @@ namespace TTMiner
             return await t;
         }
 
-        protected override (string binPath, string binCwd) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
@@ -183,9 +187,8 @@ namespace TTMiner
 
                                 totalSpeed += tmpSpeed;
                             }
-                            var total = new List<(AlgorithmType, double)>();
-                            total.Add((_algorithmType, totalSpeed));
-                            api.AlgorithmSpeedsTotal = total; //new List<(AlgorithmType, double)>((_algorithmType, totalSpeed));
+                            api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+
                         }
 
                         //if (ad.Speed == 0)
@@ -218,8 +221,8 @@ namespace TTMiner
 
             // Order pairs and parse ELP
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
-            _devices = string.Join(" ", orderedMiningPairs.Select(p => p.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            _devices = string.Join(" ", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks

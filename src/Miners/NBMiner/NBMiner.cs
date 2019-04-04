@@ -66,7 +66,7 @@ namespace NBMiner
             _cudaIDMap = cudaIDMap;
         }
 
-        public override async Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             int benchTime;
             switch (benchmarkType)
@@ -98,14 +98,18 @@ namespace NBMiner
                 var id = _cudaIDMap.Values.First();
                 var (hashrate, found) = data.TryGetHashrateAfter($" - {id}: ");
 
-                if (!found) return (benchHashResult, false);
+                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
                 benchHashes += hashrate;
                 benchIters++;
 
                 benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
 
-                return (benchHashResult, benchIters >= targetBenchIters);
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = benchIters >= targetBenchIters
+                };
             };
 
             var timeout = TimeSpan.FromSeconds(benchTime + 5);
@@ -114,7 +118,7 @@ namespace NBMiner
             return await t;
         }
 
-        protected override (string binPath, string binCwd) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
@@ -133,7 +137,7 @@ namespace NBMiner
             _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             
-            var devs = string.Join(",", _miningPairs.Select(p => _cudaIDMap[p.device.ID]));
+            var devs = string.Join(",", _miningPairs.Select(p => _cudaIDMap[p.Device.ID]));
             return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} -d {devs} -RUN {_extraLaunchParameters}";
         }
         
@@ -144,7 +148,7 @@ namespace NBMiner
             {
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/api/v1/status");
                 var summary = JsonConvert.DeserializeObject<NBMinerJsonResponse>(result);
-                api.AlgorithmSpeedsTotal = new[] { (_algorithmType, summary.TotalHashrate ?? 0) };
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, summary.TotalHashrate ?? 0) };
             }
             catch (Exception e)
             {
@@ -160,7 +164,7 @@ namespace NBMiner
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
 
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks

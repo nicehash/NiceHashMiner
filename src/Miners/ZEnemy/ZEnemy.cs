@@ -77,8 +77,8 @@ namespace ZEnemy
                 }
 
                 var threadsApiResult = await apiReader.GetApiDataAsync(_apiPort, ApiDataHelper.GetHttpRequestNhmAgentStrin("threads"));
-                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-                var perDevicePowerInfo = new List<(string, int)>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
                 if (!string.IsNullOrEmpty(threadsApiResult))
                 {
 
@@ -108,17 +108,16 @@ namespace ZEnemy
                         var device = _miningPairs.Where(kvp => kvp.Device.ID == gpuData.id).Select(kvp => kvp.Device).FirstOrDefault();
                         if (device != null)
                         {
-                            perDeviceSpeedInfo.Add((device.UUID, new List<(AlgorithmType, double)>() { (_algorithmType, gpuData.speed) }));
-                            perDevicePowerInfo.Add((device.UUID, gpuData.power));
+                            perDeviceSpeedInfo.Add(device.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, gpuData.speed) });
+                            perDevicePowerInfo.Add(device.UUID, gpuData.power);
                             totalPower += gpuData.power;
                         }
 
                     }
 
                 }
-                var total = new List<(AlgorithmType, double)>();
-                total.Add((_algorithmType, totalSpeed));
-                api.AlgorithmSpeedsTotal = total;
+
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 api.PowerUsageTotal = totalPower;
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;
@@ -130,7 +129,7 @@ namespace ZEnemy
             return api;
         }
 
-        public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // determine benchmark time 
             // settup times
@@ -170,7 +169,7 @@ namespace ZEnemy
             {
                 var hasHashRate = data.Contains(after) && data.Contains("-");
 
-                if (!hasHashRate) return (benchHashResult, false);
+                if (!hasHashRate) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
                 var (hashrate, found) = data.TryGetHashrateAfter("-");
 
@@ -179,7 +178,11 @@ namespace ZEnemy
 
                 benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
 
-                return (benchHashResult, benchIters >= targetBenchIters);
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = benchIters >= targetBenchIters
+                };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
@@ -188,7 +191,7 @@ namespace ZEnemy
             return await t;
         }
 
-        protected override (string binPath, string binCwd) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
@@ -207,8 +210,8 @@ namespace ZEnemy
 
             // init command line params parts
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks
