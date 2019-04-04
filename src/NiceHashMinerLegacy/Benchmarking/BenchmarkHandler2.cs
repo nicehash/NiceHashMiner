@@ -170,6 +170,11 @@ namespace NiceHashMiner.Benchmarking
             {
                 algo.BenchmarkSpeed = result.AlgorithmTypeSpeeds.First().Speed;
                 algo.PowerUsage = power;
+                if(result.AlgorithmTypeSpeeds.Count > 1)
+                {
+                    Helpers.ConsolePrint("BenchmarkHandler2", $"Has Second speed {result.AlgorithmTypeSpeeds[1].Speed}");
+
+                }
                 // set status to empty string it will return speed
                 _currentAlgorithm.ClearBenchmarkPending();
                 _benchmarkForm.SetCurrentStatus(Device, _currentAlgorithm, "");

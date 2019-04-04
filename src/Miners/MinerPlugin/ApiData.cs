@@ -11,6 +11,7 @@ namespace MinerPlugin
     {
         // total
         public IReadOnlyList<AlgorithmTypeSpeedPair> AlgorithmSpeedsTotal;
+        public IReadOnlyList<AlgorithmTypeSpeedPair> AlgorithmSecondarySpeedsTotal;
         public int PowerUsageTotal;
         // per device
         // key is device UUID
