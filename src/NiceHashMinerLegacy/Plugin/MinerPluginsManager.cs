@@ -25,13 +25,16 @@ namespace NiceHashMiner.Plugin
         public static new List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
         {
             // open source
-
+            new SGminerAvemoreIntegratedPlugin(),
+            new SGminerGMIntegratedPlugin(),
+            new SGminerNHGeneralIntegratedPlugin(),
 
             // 3rd party
             new TTMinerIntegratedPlugin(),
             new TRexIntegratedPlugin(),
         };
 
+        // TODO add use3rdParty flag
         public static void InitIntegratedPlugins()
         {
             // get devices

@@ -57,7 +57,7 @@ namespace EWBF
             foreach (var gpu in cudaGpus)
             {
                 var algorithms = GetSupportedAlgorithms(gpu);
-                if (algorithms.Count > 0) supported.Add(gpu, GetSupportedAlgorithms(gpu));
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;

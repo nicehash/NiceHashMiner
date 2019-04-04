@@ -99,7 +99,7 @@ namespace GMinerPlugin
                 Shared.MappedCudaIds[gpu.ID] = pcieId;
                 ++pcieId;
                 var algorithms = GetCUDASupportedAlgorithms(gpu);
-                if (algorithms.Count > 0) supported.Add(gpu, GetCUDASupportedAlgorithms(gpu));
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;

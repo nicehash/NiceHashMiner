@@ -49,7 +49,7 @@ namespace SGMinerHub
             foreach (var gpu in amdGpus)
             {
                 var algorithms = GetSupportedAlgorithms(gpu);
-                if (algorithms.Count > 0) supported.Add(gpu, GetSupportedAlgorithms(gpu));
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
@@ -91,7 +91,7 @@ namespace SGMinerHub
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        private static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
         {
             // we have same env vars for all miners now, check avemore env vars if they differ and use custom env vars instead of defaults
             DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
@@ -104,6 +104,6 @@ namespace SGMinerHub
             },
         };
 
-        private static MinerOptionsPackage _minerOptionsPackage = SGMinerBase.DefaultMinerOptionsPackage;
+        protected static MinerOptionsPackage _minerOptionsPackage = SGMinerBase.DefaultMinerOptionsPackage;
     }
 }

@@ -58,7 +58,7 @@ namespace TeamRedMiner
             foreach (var gpu in amdGpus)
             {
                 var algorithms = GetSupportedAlgorithms(gpu);
-                if (algorithms.Count > 0) supported.Add(gpu, GetSupportedAlgorithms(gpu));
+                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
             return supported;
