@@ -53,11 +53,5 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\NiceHashMinerLegacy\NiceHashMinerLegacy.csproj">
-      <Project>{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}</Project>
-      <Name>NiceHashMinerLegacy</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
