@@ -33,6 +33,13 @@ namespace CCMinerTpruvotCuda10
             _uuid = uuid;
         }
 
+        private double DevFee
+        {
+            get
+            {
+                return 0.0;
+            }
+        }
 
         string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -53,6 +60,13 @@ namespace CCMinerTpruvotCuda10
             }
             // TODO throw exception
             return "";
+        }
+
+        private struct IdPowerHash
+        {
+            public int id;
+            public int power;
+            public double speed;
         }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
@@ -82,8 +96,9 @@ namespace CCMinerTpruvotCuda10
             // TODO if have multiple GPUs call the threads as well, but maybe not as often since it might crash the miner
             //var threadsApiResult = await _httpClient.GetStringAsync($"{localhost}/threads");
             var threadsApiResult = await apiReader.GetApiDataAsync(_apiPort, ApiDataHelper.GetHttpRequestNhmAgentStrin("threads"));
-            var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-            var perDevicePowerInfo = new List<(string, int)>();
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var perDevicePowerInfo = new Dictionary<string, int>();
+
             if (!string.IsNullOrEmpty(threadsApiResult))
             {
                 // TODO return empty
@@ -93,7 +108,7 @@ namespace CCMinerTpruvotCuda10
                     foreach (var gpu in gpus)
                     {
                         var gpuOptvalPairs = gpu.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        var gpuData = (id: -1, power: -1, speed: -1d);
+                        var gpuData = new IdPowerHash();
                         foreach (var optvalPairs in gpuOptvalPairs)
                         {
                             var optval = optvalPairs.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
@@ -112,11 +127,11 @@ namespace CCMinerTpruvotCuda10
                             }
                         }
                         // TODO do stuff with it gpuData
-                        var device = _miningPairs.Where(kvp => kvp.device.ID == gpuData.id).Select(kvp => kvp.device).FirstOrDefault();
+                        var device = _miningPairs.Where(kvp => kvp.Device.ID == gpuData.id).Select(kvp => kvp.Device).FirstOrDefault();
                         if (device != null)
                         {
-                            perDeviceSpeedInfo.Add((device.UUID, new List<(AlgorithmType, double)>() { (_algorithmType, gpuData.speed) }));
-                            perDevicePowerInfo.Add((device.UUID, gpuData.power));
+                            perDeviceSpeedInfo.Add(device.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, gpuData.speed) });
+                            perDevicePowerInfo.Add(device.UUID, gpuData.power);
                             totalPower += gpuData.power;
                         }
 
@@ -126,9 +141,7 @@ namespace CCMinerTpruvotCuda10
                 { }
             }
             var ad = new ApiData();
-            var total = new List<(AlgorithmType, double)>();
-            total.Add((_algorithmType, totalSpeed));
-            ad.AlgorithmSpeedsTotal = total;
+            ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
             ad.PowerUsageTotal = totalPower;
             ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             ad.PowerUsagePerDevice = perDevicePowerInfo;
@@ -136,7 +149,7 @@ namespace CCMinerTpruvotCuda10
             return ad;
         }
 
-        public override async Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // determine benchmark time 
             // settup times
@@ -167,6 +180,11 @@ namespace CCMinerTpruvotCuda10
             var errorList = new List<string> { "Unknown algo parameter", "Cuda error", "Non-existant CUDA device" };
             var errorFound = false;
             var errorMsg = "";
+
+            var benchHashes = 0d;
+            var benchIters = 0;
+            var benchHashResult = 0d;  // Not too sure what this is..
+            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
             // TODO implement fallback average, final benchmark 
             bp.CheckData = (string data) => {
                 // check if error
@@ -177,22 +195,33 @@ namespace CCMinerTpruvotCuda10
                         bp.TryExit();
                         errorFound = true;
                         errorMsg = data;
-                        return (0, false);
+                        return new BenchmarkResult { Success = false , ErrorMessage = errorMsg};
                     }
                 }
 
-                return MinerToolkit.TryGetHashrateAfter(data, "Benchmark:"); // TODO add option to read totals
+                //return MinerToolkit.TryGetHashrateAfter(data, "Benchmark:"); // TODO add option to read totals
+                var hashrateFoundPair =  MinerToolkit.TryGetHashrateAfter(data, "Benchmark:"); // TODO add option to read totals
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
+
+                if (!found) return new BenchmarkResult { Success = false };
+
+                benchHashes += hashrate;
+                benchIters++;
+
+                benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = benchIters >= targetBenchIters
+                };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            var (speed, ok, msg) = await t;
-            if (errorFound)
-            {
-                return (0, false, errorMsg);
-            }
-            return (speed, ok, msg);
+            return await t;
         }
 
         protected override Tuple<string, string> GetBinAndCwdPaths()

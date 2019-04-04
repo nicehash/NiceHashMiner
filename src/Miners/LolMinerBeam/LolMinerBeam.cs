@@ -63,20 +63,18 @@ namespace LolMinerBeam
                 var summaryApiResult = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
 
-                var gpuDevices = _miningPairs.Select(pair => pair.device);
-                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
+                var gpuDevices = _miningPairs.Select(pair => pair.Device);
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
                 var totalSpeed = summary.Session.Performance_Summary;
 
                 foreach (var gpuDevice in gpuDevices)
                 {
                     var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuDevice.ID).FirstOrDefault(); //todo index == ID ????
                     if (currentStats == null) continue;
-                    perDeviceSpeedInfo.Add((gpuDevice.UUID, new List<(AlgorithmType, double)>() { (_algorithmType, currentStats.Performance) }));
+                    perDeviceSpeedInfo.Add(gpuDevice.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair (_algorithmType, currentStats.Performance) });
                 }
 
-                var total = new List<(AlgorithmType, double)>();
-                total.Add((_algorithmType, totalSpeed));
-                ad.AlgorithmSpeedsTotal = total;
+                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
 
             }
@@ -88,7 +86,7 @@ namespace LolMinerBeam
             return ad;
         }
 
-        public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             var benchmarkTime = 20; // in seconds
             switch (benchmarkType)
@@ -110,9 +108,29 @@ namespace LolMinerBeam
             var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
+            var benchHashes = 0d;
+            var benchIters = 0;
+            var benchHashResult = 0d;  // Not too sure what this is..
+            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
+
             bp.CheckData = (string data) =>
             {
-                return MinerToolkit.TryGetHashrateAfter(data, "Total:");
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
+
+                if (!found) return new BenchmarkResult { Success = false };
+
+                benchHashes += hashrate;
+                benchIters++;
+
+                benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = benchIters >= targetBenchIters
+                };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
@@ -121,7 +139,7 @@ namespace LolMinerBeam
             return await t;
         }
 
-        protected override (string binPath, string binCwd) GetBinAndCwdPaths()
+        protected override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
@@ -140,8 +158,8 @@ namespace LolMinerBeam
 
             // init command line params parts
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks

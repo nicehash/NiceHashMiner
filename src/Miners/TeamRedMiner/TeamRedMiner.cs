@@ -92,8 +92,8 @@ namespace TeamRedMiner
             try
             {
                 var deviveStats = apiDevsResult.DEVS;
-                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-                var perDevicePowerInfo = new List<(string, int)>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
 
@@ -110,10 +110,10 @@ namespace TeamRedMiner
 
                     var speedHS = deviceStats.KHS_av * 1000;
                     totalSpeed += speedHS;
-                    perDeviceSpeedInfo.Add((gpuUUID, new List<(AlgorithmType, double)>() { (_algorithmType, speedHS) }));
+                    perDeviceSpeedInfo.Add(gpuUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, speedHS) });
                     // TODO check PowerUsage API
                 }
-                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType, double)> { (_algorithmType, totalSpeed) };
+                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 ad.PowerUsageTotal = totalPowerUsage;
             }
             catch (Exception ex)
@@ -125,7 +125,7 @@ namespace TeamRedMiner
             return ad;
         }
 
-        public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // determine benchmark time 
             // settup times
@@ -160,9 +160,12 @@ namespace TeamRedMiner
             bp.CheckData = (string data) =>
             {
                 var containsHashRate = data.Contains(afterAlgoSpeed) && data.Contains("GPU");
-                if (containsHashRate == false) return (benchHashResult, false);
-                var (hashrate, found) = MinerToolkit.TryGetHashrateAfter(data, afterAlgoSpeed);
-                if (!found) return (benchHashResult, false);
+                if (containsHashRate == false) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, afterAlgoSpeed);
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
+
+                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
                 // sum and return
                 benchHashesSum += hashrate;
@@ -170,8 +173,11 @@ namespace TeamRedMiner
 
                 benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee);
 
-                var isFinished = benchIters >= targetBenchIters;
-                return (benchHashResult, isFinished);
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = benchIters >= targetBenchIters
+                };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
@@ -199,12 +205,12 @@ namespace TeamRedMiner
 
             // Order pairs and parse ELP
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.device.ID.CompareTo(b.device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.device.ID));
+            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             
             for(int i = 0; i < orderedMiningPairs.Count; i++)
             {
-                _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].device.UUID;
+                _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].Device.UUID;
             }
 
             if (MinerOptionsPackage != null)

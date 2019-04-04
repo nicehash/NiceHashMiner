@@ -71,16 +71,14 @@ namespace CPUMinerBase
                 { }
             }
             var ad = new ApiData();
-            var total = new List<(AlgorithmType, double)>();
-            total.Add((_algorithmType, totalSpeed));
-            ad.AlgorithmSpeedsTotal = total;
+            ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
             ad.PowerUsageTotal = totalPower;
             // cpuMiner is single device so no need for API
 
             return ad;
         }
 
-        public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // determine benchmark time 
             // settup times
@@ -111,8 +109,9 @@ namespace CPUMinerBase
             // make sure this is culture invariant
             // TODO implement fallback average, final benchmark 
             bp.CheckData = (string data) => {
-                if (double.TryParse(data, out var parsedSpeed)) return (parsedSpeed, true);
-                return (0d, false);
+                if (double.TryParse(data, out var parsedSpeed))
+                    return new BenchmarkResult {AlgorithmTypeSpeeds= new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, parsedSpeed) } ,Success = true };
+                return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, 0d) }, Success = false };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
@@ -149,7 +148,7 @@ namespace CPUMinerBase
             bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
 
-            var cpuDevice = _miningPairs.Select(kvp => kvp.device).FirstOrDefault();
+            var cpuDevice = _miningPairs.Select(kvp => kvp.Device).FirstOrDefault();
             if (cpuDevice is CPUDevice cpu)
             {
                 // TODO affinity mask stuff
@@ -173,7 +172,7 @@ namespace CPUMinerBase
             // TODO C# can have this shorter
             if (_affinityMask != 0 && pid != -1)
             {
-                var (ok, msg) = ProcessHelpers.AdjustAffinity(pid, _affinityMask);
+                var okMsg = ProcessHelpers.AdjustAffinity(pid, _affinityMask);
                 // TODO log what is going on is it ok or not 
             }
         }

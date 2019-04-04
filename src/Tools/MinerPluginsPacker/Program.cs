@@ -43,7 +43,7 @@ namespace MinerPluginsPacker
 
             // get all managed plugin dll's 
             var dllFiles = Directory.GetFiles(pluginsSearchRoot, "*.dll", SearchOption.AllDirectories)
-                .Where(filePath => !filePath.Contains("MinerPlugin") && filePath.Contains("Release") && !filePath.Contains("bin")).ToList();
+                .Where(filePath => !filePath.Contains("MinerPlugin") && filePath.Contains("net45") && filePath.Contains("Release") && !filePath.Contains("bin")).ToList();
 
             var packedPlugins = new HashSet<string>();
 

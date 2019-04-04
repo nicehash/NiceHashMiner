@@ -97,8 +97,8 @@ namespace EWBF
                 var results = resp.result;
 
                 var gpus = _miningPairs.Select(pair => pair.Device);
-                var perDeviceSpeedInfo = new List<(string uuid, IReadOnlyList<(AlgorithmType, double)>)>();
-                var perDevicePowerInfo = new List<(string, int)>();
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
                 foreach (var gpu in gpus)
@@ -106,11 +106,12 @@ namespace EWBF
                     var currentDevStats = results.Where(r => r.cudaid == gpu.ID).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed_sps;
-                    perDeviceSpeedInfo.Add((gpu.UUID, new List<(AlgorithmType, double)>() { (_algorithmType, currentDevStats.speed_sps) }));
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed_sps) });
                     totalPowerUsage += (int)currentDevStats.gpu_power_usage;
-                    perDevicePowerInfo.Add((gpu.UUID, (int)currentDevStats.gpu_power_usage));
+                    perDevicePowerInfo.Add(gpu.UUID, (int)currentDevStats.gpu_power_usage);
+
                 }
-                ad.AlgorithmSpeedsTotal = new List<(AlgorithmType, double)> { (_algorithmType, totalSpeed) };
+                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 ad.PowerUsageTotal = totalPowerUsage;
             }
             catch (Exception ex)
@@ -121,7 +122,7 @@ namespace EWBF
             return ad;
         }
 
-        public async override Task<(double speed, bool ok, string msg)> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // determine benchmark time 
             // settup times
@@ -156,9 +157,11 @@ namespace EWBF
 
             bp.CheckData = (string data) => {
                 var containsSolRate = data.Contains(totalSpeed) && data.Contains("Sol");
-                if (containsSolRate == false) return (benchHashResult, false);
-                var (hashrate, found) = MinerToolkit.TryGetHashrateAfter(data, totalSpeed);
-                if (!found) return (benchHashResult, false);
+                if (containsSolRate == false) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, totalSpeed);
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
+                if (!found) return new BenchmarkResult {AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
                 // sum and return
                 benchHashesSum += hashrate;
@@ -166,8 +169,11 @@ namespace EWBF
 
                 benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee);
 
-                var isFinished = benchIters >= targetBenchIters;
-                return (benchHashResult, isFinished);
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = benchIters >= targetBenchIters
+                };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
