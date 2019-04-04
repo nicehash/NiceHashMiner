@@ -176,22 +176,6 @@ namespace NiceHashMiner
             return ret + unit;
         }
 
-        public static bool WebRequestTestGoogle()
-        {
-            const string url = "http://www.google.com";
-            try
-            {
-                var myRequest = System.Net.WebRequest.Create(url);
-                myRequest.Timeout = Globals.FirstNetworkCheckTimeoutTimeMs;
-                myRequest.GetResponse();
-            }
-            catch (System.Net.WebException)
-            {
-                return false;
-            }
-            return true;
-        }
-
         // Checking the version using >= will enable forward compatibility, 
         // however you should always compile your code on newer versions of
         // the framework to ensure your app works the same.

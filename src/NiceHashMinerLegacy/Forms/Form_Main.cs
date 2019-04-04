@@ -29,17 +29,11 @@ namespace NiceHashMiner
         private string _visitUrlNew = Links.VisitUrlNew;
 
         private Timer _minerStatsCheck;
-        //private Timer _smaMinerCheck;
-        //private Timer _bitcoinExchangeCheck;
-        //private Timer _startupTimer;
         private Timer _idleCheck;
 
         private bool _showWarningNiceHashData;
         private bool _demoMode;
 
-        //private readonly Random R;
-
-        //private Form_Loading _loadingScreen;
         private Form_Benchmark _benchmarkForm;
 
         private int _flowLayoutPanelVisibleCount = 0;
@@ -51,8 +45,6 @@ namespace NiceHashMiner
 
         private bool _isManuallyStarted = false;
         private bool _isNotProfitable = false;
-
-        //private bool _isSmaUpdated = false;
 
         private double _factorTimeUnit = 1.0;
 
@@ -205,7 +197,7 @@ namespace NiceHashMiner
             }
         }
 
-        // This is a single shot _benchmarkTimer
+
         private async Task StartupTimer_Tick()
         {
             //var loadingControl = new StartupLoadingControl();
@@ -337,33 +329,16 @@ namespace NiceHashMiner
                 NiceHashStats.OnExchangeUpdate += ExchangeCallback;
                 NiceHashStats.StartConnection(Links.NhmSocketAddress);
 
-                // increase timeout
-                if (Globals.IsFirstNetworkCheckTimeout)
-                {
-                    while (!Helpers.WebRequestTestGoogle() && Globals.FirstNetworkCheckTimeoutTries > 0)
-                    {
-                        --Globals.FirstNetworkCheckTimeoutTries;
-                    }
-                }
-
-                //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Getting Bitcoin exchange rate..."));
                 progress?.Report(Tuple.Create(Tr("Getting Bitcoin exchange rate..."), nextProgPerc()));
 
-
-                //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Setting Windows error reporting..."));
                 progress?.Report(Tuple.Create(Tr("Setting Windows error reporting..."), nextProgPerc()));
                 Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
 
-                // TODO put this at start mining?
-                //_loadingScreen.IncreaseLoadCounter();
-                //if (ConfigManager.GeneralConfig.NVIDIAP0State)
-                //{
-                //    _loadingScreen.SetInfoMsg(Tr("Changing all supported NVIDIA GPUs to P0 state..."));
-                //    Helpers.SetNvidiaP0State();
-                //}
-
-                //_loadingScreen.FinishLoad();
-                // TODO 
+                if (ConfigManager.GeneralConfig.NVIDIAP0State)
+                {
+                    progress?.Report(Tuple.Create(Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
+                    Helpers.SetNvidiaP0State();
+                }
 
                 var downloadAndInstallUpdate = new Progress<Tuple<string, int>>(statePerc => 
                 {
