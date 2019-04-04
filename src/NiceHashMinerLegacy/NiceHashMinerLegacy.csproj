@@ -522,6 +522,14 @@
       <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
       <Name>MinerPlugin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\TRex\TRex.csproj">
+      <Project>{1b00711a-2ca2-49c0-a9fd-8bf9e478e3b0}</Project>
+      <Name>TRex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\TTMiner\TTMiner.csproj">
+      <Project>{06e84bad-4317-41e0-ad59-31e70db4c12c}</Project>
+      <Name>TTMiner</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NiceHashMinerLegacy.Common</Name>

@@ -4,7 +4,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
@@ -20,6 +19,37 @@ namespace NiceHashMiner.Plugin
 {
     public static class MinerPluginsManager
     {
+        public static bool IntegratedPluginsOnly => true;
+        public static new List<IMinerPlugin> IntegratedPlugins = new List<IMinerPlugin>
+        {
+            new TTMiner.TTMinerPlugin(),
+            new TRex.TRexPlugin()
+        };
+
+        public static void InitIntegratedPlugins()
+        {
+            // get devices
+            var allDevs = AvailableDevices.Devices;
+            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            // examine all plugins and what to use
+            foreach (var plugin in IntegratedPlugins)
+            {
+                var pluginUuid = plugin.PluginUUID;
+                var pluginName = plugin.Name;
+                var supported = plugin.GetSupportedAlgorithms(baseDevices);
+                // check out the supported algorithms
+                foreach (var pair in supported)
+                {
+                    var bd = pair.Key;
+                    var algos = pair.Value;
+                    var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
+                    var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a)).ToList();
+                    dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
+                }
+            }
+            InitPluginInternals();
+        }
+
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }
         private static Dictionary<string, IMinerPlugin> MinerPlugins { get => MinerPluginHost.MinerPlugin; }
 
@@ -49,6 +79,10 @@ namespace NiceHashMiner.Plugin
 
         public static void LoadMinerPlugins()
         {
+            // TODO only integrated
+            InitIntegratedPlugins();
+            if (IntegratedPluginsOnly) return;
+
             MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath());
             // init internals
             InitPluginInternals();
@@ -187,6 +221,9 @@ namespace NiceHashMiner.Plugin
 
         public static IMinerPlugin GetPluginWithUuid(string pluginUuid)
         {
+            // search for integrated
+            var integratedPlugin = IntegratedPlugins.Find(p => p.PluginUUID == pluginUuid);
+            if (integratedPlugin != null) return integratedPlugin;
             if (!MinerPluginHost.MinerPlugin.ContainsKey(pluginUuid)) return null;
             return MinerPluginHost.MinerPlugin[pluginUuid];
         }
