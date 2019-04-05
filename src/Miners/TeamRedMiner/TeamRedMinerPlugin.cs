@@ -10,6 +10,7 @@ using System.IO;
 using NiceHashMinerLegacy.Common;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1;
 
 namespace TeamRedMiner
 {
@@ -41,24 +42,11 @@ namespace TeamRedMiner
             };
         }
 
-        /// <summary>
-        /// Get whether AMD device is GCN 4th gen or higher (400/500/Vega)
-        /// </summary>
-        internal static bool IsGcn4(AMDDevice dev)
-        {
-            if (dev.Name.Contains("Vega"))
-                return true;
-            if (dev.InfSection.ToLower().Contains("polaris"))
-                return true;
-
-            return false;
-        }
-
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             // Get AMD GCN4+
-            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && IsGcn4(gpu)).Cast<AMDDevice>();
+            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu)).Cast<AMDDevice>();
 
             foreach (var gpu in amdGpus)
             {
@@ -75,6 +63,7 @@ namespace TeamRedMiner
                 new Algorithm(PluginUUID, AlgorithmType.CryptoNightV8),
                 new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
+                //new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
             };
             return algorithms;
         }

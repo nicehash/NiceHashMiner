@@ -1,4 +1,5 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
@@ -28,21 +29,11 @@ namespace BMiner
 
         public string Author => "Domen Kirn Krefl";
 
-        internal static bool IsGcn4(AMDDevice dev)
-        {
-            if (dev.Name.Contains("Vega"))
-                return true;
-            if (dev.InfSection.ToLower().Contains("polaris"))
-                return true;
-
-            return false;
-        }
-
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && IsGcn4(gpu)).Cast<AMDDevice>();
+            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu)).Cast<AMDDevice>();
             foreach (var gpu in amdGpus)
             {
                 var algorithms = GetAMDSupportedAlgorithms(gpu).ToList();
@@ -63,31 +54,28 @@ namespace BMiner
             return supported;
         }
 
-        private IEnumerable<Algorithm> GetCUDASupportedAlgorithms(CUDADevice dev)
+        private IEnumerable<Algorithm> GetCUDASupportedAlgorithms(CUDADevice gpu)
         {
-            const ulong minZhashMem = 1879047230;
-            const ulong minBeamMem = 3113849695;
-            const ulong minGrin29Mem = 6012951136;
-            const ulong minGrin31Mem = 9UL << 30;
-
-            if (dev.GpuRam >= minZhashMem)
-                yield return new Algorithm(PluginUUID, AlgorithmType.ZHash);
-
-            if (dev.GpuRam >= minBeamMem)
-                yield return new Algorithm(PluginUUID, AlgorithmType.Beam);
-
-            if (dev.GpuRam >= minGrin29Mem)
-                yield return new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29);
-
-            if (dev.GpuRam >= minGrin31Mem)
-                yield return new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31);
+            var algorithms = new List<Algorithm>
+            {
+                new Algorithm(PluginUUID, AlgorithmType.ZHash) {Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto) {Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.Beam) {Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
+            };
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
-        private IEnumerable<Algorithm> GetAMDSupportedAlgorithms(AMDDevice dev)
+        private IEnumerable<Algorithm> GetAMDSupportedAlgorithms(AMDDevice gpu)
         {
-            const ulong minBeamMem = 3113849695;
-            if (dev.GpuRam >= minBeamMem)
-                yield return new Algorithm(PluginUUID, AlgorithmType.Beam);
+            var algorithms = new List<Algorithm>
+            {
+                new Algorithm(PluginUUID, AlgorithmType.Beam) {Enabled = false },
+            };
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         public IMiner CreateMiner()
