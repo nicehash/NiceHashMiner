@@ -5,6 +5,7 @@ using NiceHashMiner.Devices.Querying.Nvidia;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static NiceHashMiner.Translations;
@@ -21,21 +22,20 @@ namespace NiceHashMiner.Devices
 
         private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(372, 54); // 372.54;
         private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
-
-        public static event EventHandler<string> OnProgressUpdate;
         
-        public static async Task<QueryResult> QueryDevicesAsync()
+        public static async Task<QueryResult> QueryDevicesAsync(IProgress<string> progress)
         {
             // #0 get video controllers, used for cross checking
-            var badVidCtrls = SystemSpecs.QueryVideoControllers();
+            //progress?.Report(TODO no CPU checking???);
             // Order important CPU Query must be first
             // #1 CPU
-            var cpuDevs = CpuQuery.QueryCpus(out var failed64Bit, out var failedCpuCount);
+            progress?.Report(Tr("Checking CPU Info"));
+            await Task.Run(() => WindowsManagementObjectSearcher.QueryCPU_Info());
+            var cpuDevs = await CpuQuery.QueryCpusAsync();
             AvailableDevices.AddDevices(cpuDevs);
 
             // #2 CUDA
-            
-            OnProgressUpdate?.Invoke(null, Tr("Querying CUDA devices"));
+            progress?.Report(Tr("Querying CUDA devices"));
             var nv = new NvidiaQuery();
             var nvDevs = nv.QueryCudaDevices();
 
@@ -57,11 +57,11 @@ namespace NiceHashMiner.Devices
 
             var amd = new AmdQuery(AvailableDevices.NumDetectedNvDevs);
             // #3 OpenCL
-            OnProgressUpdate?.Invoke(null, Tr("Querying OpenCL devices"));
-            amd.QueryOpenCLDevices();
+            progress?.Report(Tr("Querying OpenCL devices"));
+            await amd.QueryOpenCLDevicesAsync();
             // #4 AMD query AMD from OpenCL devices, get serial and add devices
-            OnProgressUpdate?.Invoke(null, Tr("Checking AMD OpenCL GPUs"));
-            var amdDevs = amd.QueryAmd(out var failedAmdDriverCheck);
+            progress?.Report(Tr("Checking AMD OpenCL GPUs"));
+            var amdDevs = await Task.Run(() => amd.QueryAmd());
 
             if (amdDevs != null)
             {
@@ -86,7 +86,7 @@ namespace NiceHashMiner.Devices
             {
                 var amdCount = 0;
                 var nvidiaCount = 0;
-                foreach (var vidCtrl in SystemSpecs.AvailableVideoControllers)
+                foreach (var vidCtrl in WindowsManagementObjectSearcher.AvailableVideoControllers)
                 {
                     if (vidCtrl.IsNvidia)
                     {
@@ -122,9 +122,9 @@ namespace NiceHashMiner.Devices
 
             if (!ConfigManager.GeneralConfig.ShowDriverVersionWarning) return result;
 
-            if (SystemSpecs.HasNvidiaVideoController)
+            if (WindowsManagementObjectSearcher.HasNvidiaVideoController)
             {
-                var currentDriver = WindowsManagementObjectSearcher.GetNvSmiDriver();
+                var currentDriver = WindowsManagementObjectSearcher.NvidiaDriver;
 
                 result.CurrentDriverString = currentDriver.ToString();
                 result.FailedMinNVDriver = !nvCountMatched && currentDriver < NvidiaMinDetectionDriver;
@@ -136,6 +136,7 @@ namespace NiceHashMiner.Devices
 
             result.FailedRamCheck = !ramOK;
 
+            var badVidCtrls = WindowsManagementObjectSearcher.BadVideoControllers;
             foreach (var failedVc in badVidCtrls)
             {
                 result.FailedVidControllerStatus = true;
@@ -143,10 +144,9 @@ namespace NiceHashMiner.Devices
                     $"{Tr("Name: {0}, Status {1}, PNPDeviceID {2}", failedVc.Name, failedVc.Status, failedVc.PnpDeviceID)}\n";
             }
 
-            result.FailedAmdDriverCheck = failedAmdDriverCheck;
-
-            result.FailedCpu64Bit = failed64Bit;
-            result.FailedCpuCount = failedCpuCount;
+            //result.FailedAmdDriverCheck = failedAmdDriverCheck;
+            //result.FailedCpu64Bit = failed64Bit;
+            //result.FailedCpuCount = failedCpuCount;
 
             return result;
         }
@@ -172,7 +172,7 @@ namespace NiceHashMiner.Devices
             // Make gpu ram needed not larger than 4GB per GPU
             var totalGpuRam = Math.Min((ulong) ((nvRamSum + amdRamSum) * 0.6 / 1024),
                 (ulong) AvailableDevices.AvailGpUs * 4 * 1024 * 1024);
-            var totalSysRam = SystemSpecs.FreePhysicalMemory + SystemSpecs.FreeVirtualMemory;
+            var totalSysRam = WindowsManagementObjectSearcher.FreePhysicalMemory + WindowsManagementObjectSearcher.FreeVirtualMemory;
             
 
             if (totalSysRam < totalGpuRam)

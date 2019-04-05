@@ -36,67 +36,10 @@ namespace NiceHashMiner
             return Marshal.PtrToStringAnsi(a);
         }
 
-        public static string GetCpuVendor()
-        {
-            var a = _GetCPUVendor();
-            return Marshal.PtrToStringAnsi(a);
-        }
-
-        [Obsolete("Use WindowsManagementObjectSearcher.GetVirtualCoresCount() instead")]
-        public static int GetVirtualCoresCount()
-        {
-            var coreCount = 0;
-            using (var query = new System.Management.ManagementObjectSearcher("Select * from Win32_ComputerSystem").Get())
-            {
-                foreach (var item in query)
-                {
-                    coreCount += int.Parse(item["NumberOfLogicalProcessors"].ToString());
-                }
-            }
-
-            return coreCount;
-        }
-
-        [Obsolete("Use WindowsManagementObjectSearcher.GetNumberOfCores() instead")]
-        public static int GetNumberOfCores() {
-            var coreCount = 0;
-            using(var query = new System.Management.ManagementObjectSearcher("Select * from Win32_Processor").Get())
-            {
-                foreach (var item in query)
-                {
-                    coreCount += int.Parse(item["NumberOfCores"].ToString());
-                }
-            }
-
-            return coreCount;
-        }
-
-        public static bool IsHypeThreadingEnabled() {
-            return WindowsManagementObjectSearcher.GetVirtualCoresCount() > WindowsManagementObjectSearcher.GetNumberOfCores();
-        }
-
-        public static ulong CreateAffinityMask(int index, int percpu)
-        {
-            ulong mask = 0;
-            const ulong one = 0x0000000000000001;
-            for (var i = index * percpu; i < (index + 1) * percpu; i++)
-                mask = mask | (one << i);
-            return mask;
-        }
-
-        //public static void AdjustAffinity(int pid, ulong mask)
+        //public static string GetCpuVendor()
         //{
-        //    var processHandle = new Process
-        //    {
-        //        StartInfo =
-        //        {
-        //            FileName = "setcpuaff.exe",
-        //            Arguments = pid + " " + mask,
-        //            CreateNoWindow = true,
-        //            UseShellExecute = false
-        //        }
-        //    };
-        //    processHandle.Start();
+        //    var a = _GetCPUVendor();
+        //    return Marshal.PtrToStringAnsi(a);
         //}
     }
 }
