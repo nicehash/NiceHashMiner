@@ -250,8 +250,9 @@ namespace NiceHashMiner.Devices
                 var pluginAlgos = AlgorithmSettings.Where(algo => algo is PluginAlgorithm).Cast<PluginAlgorithm>();
                 foreach (var pluginConf in config.PluginAlgorithmSettings)
                 {
+                    var pluginConfAlgorithmIDs = pluginConf.GetAlgorithmIDs();
                     var pluginAlgo = pluginAlgos
-                        .Where(pAlgo => pluginConf.PluginUUID == pAlgo.BaseAlgo.MinerID && pluginConf.AlgorithmIDs.Except(pAlgo.BaseAlgo.IDs).Count() == 0)
+                        .Where(pAlgo => pluginConf.PluginUUID == pAlgo.BaseAlgo.MinerID && pluginConfAlgorithmIDs.Except(pAlgo.BaseAlgo.IDs).Count() == 0)
                         .FirstOrDefault();
                     if (pluginAlgo == null) continue;
                     // set plugin algo
@@ -259,9 +260,12 @@ namespace NiceHashMiner.Devices
                     pluginAlgo.Enabled = pluginConf.Enabled;
                     pluginAlgo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
                     pluginAlgo.PowerUsage = pluginConf.PowerUsage;
+                    // TODO loaded version
                 }
             }
         }
+
+
 
         // getters
         public ComputeDeviceConfig GetComputeDeviceConfig()
@@ -291,10 +295,11 @@ namespace NiceHashMiner.Devices
                     {
                         Name = pluginAlgo.PluginName,
                         PluginUUID = pluginAlgo.BaseAlgo.MinerID,
-                        AlgorithmIDs = pluginAlgo.BaseAlgo.IDs.ToList(),
+                        AlgorithmIDs = string.Join("-", pluginAlgo.BaseAlgo.IDs.Select(id => id.ToString())),
                         Enabled = pluginAlgo.Enabled,
                         ExtraLaunchParameters = pluginAlgo.ExtraLaunchParameters,
-                        PluginVersion = "N/A",
+                        // TODO
+                        PluginVersion = "N/A", // $"{1}.{0}",
                         PowerUsage = pluginAlgo.PowerUsage,
                         // TODO dual not supported ATM
                         Speeds = new List<double> { pluginAlgo.BenchmarkSpeed }
