@@ -191,12 +191,12 @@ namespace MinerPluginToolkitV1
 
         public static async Task<BenchmarkResult> WaitBenchmarkResult(BenchmarkProcess benchmarkProcess, TimeSpan timeoutTime, TimeSpan delayTime, CancellationToken stop)
         {
-            var ret = new BenchmarkResult();
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             var timeoutTimerTime = timeoutTime + delayTime;
 
             using (var timeoutSource = new CancellationTokenSource(timeoutTimerTime))
             {
+                BenchmarkResult ret = null;
                 var timeout = timeoutSource.Token;
                 using (var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(timeout, stop))
                 {
@@ -207,40 +207,27 @@ namespace MinerPluginToolkitV1
                     }
                     catch (OperationCanceledException)
                     {
-                        // TODO this block is redundant
-                        //add finally ??
-                        if (timeout.IsCancellationRequested)
-                        {
-                            Console.WriteLine("Operation timed out.");
-                            return new BenchmarkResult{ ErrorMessage = "Operation timed out."};
-                        }
-                        else if (stop.IsCancellationRequested)
-                        {
-                            Console.WriteLine("Cancelling per user request.");
-                            stop.ThrowIfCancellationRequested();
-                            return new BenchmarkResult{ ErrorMessage = "Cancelling per user request."};
-                        }
                     }
                     catch (Exception e)
                     {
                         return new BenchmarkResult{ ErrorMessage = e.Message };
                     }
-
+                }
+                // #1 if canceled return canceled
+                if (stop.IsCancellationRequested)
+                {
+                    Console.WriteLine("Cancelling per user request.");
+                    return new BenchmarkResult { ErrorMessage = "Cancelling per user request." };
                 }
 
+                if (ret != null && ret.HasNonZeroSpeeds()) return ret;
                 if (timeout.IsCancellationRequested)
                 {
                     Console.WriteLine("Operation timed out.");
                     return new BenchmarkResult{ ErrorMessage = "Operation timed out." };
                 }
-                else if (stop.IsCancellationRequested)
-                {
-                    Console.WriteLine("Cancelling per user request.");
-                    return new BenchmarkResult{ ErrorMessage = "Cancelling per user request." };
-                }
             }
-
-            return ret;
+            return new BenchmarkResult();
         }
     }
 }
