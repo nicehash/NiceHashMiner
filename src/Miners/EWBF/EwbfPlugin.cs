@@ -104,7 +104,50 @@ namespace EWBF
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "ewbf_developer_fee",
-                    ShortName = "--fee",
+                    ShortName = "--fee"
+                },
+
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ewbf_templimit",
+                    ShortName = "--templimit",
+                    DefaultValue = "90"
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ewbf_tempunits",
+                    ShortName = "--tempunits",
+                    DefaultValue = "C"
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ewbf_eexit",
+                    ShortName = "--eexit"
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "ewbf_solver",
+                    ShortName = "--solver",
+                    DefaultValue = "0",
+                    Delimiter = " "
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "ewbf_intensity",
+                    ShortName = "--intensity",
+                    DefaultValue = "64",
+                    Delimiter = " "
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "ewbf_powercalc",
+                    ShortName = "--pec"
                 }
             }
         };

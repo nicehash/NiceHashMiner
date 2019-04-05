@@ -104,7 +104,18 @@ namespace NBMiner
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage {};
+        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
+        {
+            GeneralOptions = new List<MinerOption> { 
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "nbminer_intensity",
+                    LongName = "--cuckoo-intensity",
+                    DefaultValue = "0"
+                }
+            }
+        };
         #endregion Internal Settings
     }
 }
