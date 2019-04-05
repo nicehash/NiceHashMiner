@@ -16,12 +16,14 @@ namespace MinerPluginToolkitV1.CCMinerCommon
     public abstract class CCMinerBase : MinerBase
     {
         // ccminer can mine only one algorithm at a given time
-        private AlgorithmType _algorithmType;
+        protected AlgorithmType _algorithmType;
         // command line parts
-        private string _devices;
-        private string _extraLaunchParameters = "";
-        private int _apiPort;
-        private readonly string _uuid;
+        protected string _devices;
+        protected string _extraLaunchParameters = "";
+        protected int _apiPort;
+        protected readonly string _uuid;
+
+        protected bool _noTimeLimitOption = false;
 
         public CCMinerBase(string uuid)
         {
@@ -38,17 +40,16 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 
         protected abstract string AlgorithmName(AlgorithmType algorithmType);
 
-        private struct IdPowerHash
-        {
-            public int id;
-            public int power;
-            public double speed;
-        }
-
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs);
             return ret;
+        }
+
+        protected virtual string CreateBenchmarkCommandLine(int benchmarkTime)
+        {
+            var algo = AlgorithmName(_algorithmType);
+            return $"--algo={algo} --benchmark --time-limit {benchmarkTime} --devices {_devices} {_extraLaunchParameters}";
         }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
@@ -70,8 +71,8 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             }
 
             var algo = AlgorithmName(_algorithmType);
-
-            var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime} --devices {_devices} {_extraLaunchParameters}";
+            var timeLimit = _noTimeLimitOption ? "" : $"--time-limit {benchmarkTime}";
+            var commandLine = $"--algo={algo} --benchmark {timeLimit} --devices {_devices} {_extraLaunchParameters}";
 
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
@@ -86,6 +87,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             var benchHashes = 0d;
             var benchIters = 0;
             var benchHashResult = 0d;  // Not too sure what this is..
+            // TODO fix this tick based system
             var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
             // TODO implement fallback average, final benchmark 
             bp.CheckData = (string data) => {
@@ -102,16 +104,27 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                 }
 
                 //return MinerToolkit.TryGetHashrateAfter(data, "Benchmark:"); // TODO add option to read totals
-                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Benchmark:"); // TODO add option to read totals
-                var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
+                var hashrateFinalFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Benchmark:"); // TODO add option to read totals
+                var hashrateFinal = hashrateFinalFoundPair.Item1;
+                var finalFound = hashrateFinalFoundPair.Item2;
 
-                if (!found) return new BenchmarkResult { Success = false };
-
-                benchHashes += hashrate;
-                benchIters++;
-
-                benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+                if (finalFound) {
+                    return new BenchmarkResult
+                    {
+                        AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                        Success = true
+                    };
+                }
+                // no final calculate avg speed
+                var hashrateTotalFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total:"); // TODO add option to read totals
+                var hashrateTotal = hashrateTotalFoundPair.Item1;
+                var totalFound = hashrateTotalFoundPair.Item2;
+                if (totalFound)
+                {
+                    benchHashes += hashrateTotal;
+                    benchIters++;
+                    benchHashResult = (benchHashes / benchIters); // * (1 - DevFee * 0.01);
+                }
 
                 return new BenchmarkResult
                 {

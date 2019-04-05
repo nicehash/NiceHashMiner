@@ -14,6 +14,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         public CCMinerIntegratedMiner(string uuid, string dirPath) : base(uuid)
         {
             _dirPath = dirPath;
+            _noTimeLimitOption = "ccminer_klaust" == dirPath;
         }
         protected readonly string _dirPath;
 
