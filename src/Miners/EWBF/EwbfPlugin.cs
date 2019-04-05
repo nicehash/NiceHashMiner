@@ -11,6 +11,7 @@ using System.IO;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1;
 
 namespace EWBF
 {
@@ -65,15 +66,21 @@ namespace EWBF
 
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            var algorithms = new List<Algorithm> { };
-            // on btctalk ~1.63GB vram
-            const ulong MinZHashMemory = 1879047230; // 1.75GB
-            if (gpu.GpuRam > MinZHashMemory)
-            {
-                algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.ZHash));
-            }
+            //var algorithms = new List<Algorithm> { };
+            //// on btctalk ~1.63GB vram
+            //const ulong MinZHashMemory = 1879047230; // 1.75GB
+            //if (gpu.GpuRam > MinZHashMemory)
+            //{
+            //    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.ZHash));
+            //}
 
-            return algorithms;
+            //return algorithms;
+            var algorithms = new List<Algorithm>
+            {
+                new Algorithm(PluginUUID, AlgorithmType.ZHash),
+            };
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         #region Internal Settings

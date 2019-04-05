@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using MinerPlugin;
+using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
@@ -22,7 +23,7 @@ namespace NBMiner
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 1);
+        public Version Version => new Version(1, 2);
         public string Name => "NBMiner";
 
         public string Author => "Dillon Newell";
@@ -71,16 +72,15 @@ namespace NBMiner
             return supported;
         }
 
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
+        private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            const ulong minGrin29Mem = 5UL << 30;
-            const ulong minGrin31Mem = 8UL << 30;
-
-            if (dev.GpuRam >= minGrin29Mem)
-                yield return new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29);
-
-            if (dev.GpuRam >= minGrin31Mem)
-                yield return new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31);
+            var algorithms = new List<Algorithm>
+            {
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
+            };
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         public IMiner CreateMiner()

@@ -35,6 +35,7 @@ namespace BMiner
         {
             switch (algorithmType)
             {
+                case AlgorithmType.DaggerHashimoto: return "ethstratum";
                 case AlgorithmType.ZHash: return "zhash";
                 case AlgorithmType.Beam: return "beam";
                 case AlgorithmType.GrinCuckaroo29: return "cuckaroo29";
@@ -136,12 +137,13 @@ namespace BMiner
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
-                if (!found) return new BenchmarkResult{Success = false};
+                if (found)
+                {
+                    benchHashes += hashrate;
+                    benchIters++;
 
-                benchHashes += hashrate;
-                benchIters++;
-
-                benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+                    benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+                }
                 
                 return new BenchmarkResult
                 {

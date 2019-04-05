@@ -9,6 +9,9 @@ namespace MinerPluginToolkitV1
 {
     public static class Checkers
     {
+        /// <summary>
+        /// Get whether AMD device is GCN 4th gen or higher (400/500/Vega)
+        /// </summary>
         public static bool IsGcn4(AMDDevice dev)
         {
             if (dev.Name.Contains("Vega"))
