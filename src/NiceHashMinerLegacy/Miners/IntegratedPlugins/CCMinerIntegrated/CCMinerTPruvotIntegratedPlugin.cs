@@ -35,6 +35,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {
                 var algorithms = new List<Algorithm> {
                     new Algorithm(PluginUUID, AlgorithmType.NeoScrypt),
+                    new Algorithm(PluginUUID, AlgorithmType.Blake2s),
                     new Algorithm(PluginUUID, AlgorithmType.Keccak),
                     new Algorithm(PluginUUID, AlgorithmType.Skunk),
                     new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
