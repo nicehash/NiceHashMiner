@@ -152,15 +152,6 @@ namespace GMinerPlugin
             {
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "gminer_templimit",
-                    ShortName = "-t",
-                    LongName = "--templimit",
-                    DefaultValue = "90",
-                    Delimiter = " "
-                },
-                new MinerOption
-                {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "gminer_pec",
                     LongName = "--pec",
@@ -171,6 +162,17 @@ namespace GMinerPlugin
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "gminer_electricity",
                     LongName = "--electricity_cost"
+                }
+            },
+            TemperatureOptions = new List<MinerOption>{
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_templimit",
+                    ShortName = "-t",
+                    LongName = "--templimit",
+                    DefaultValue = "90",
+                    Delimiter = " "
                 }
             }
         };
