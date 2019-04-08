@@ -116,6 +116,7 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.ZHash),
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;

@@ -213,13 +213,10 @@
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
-    <Compile Include="Miners\BMinerOld.cs" />
     <Compile Include="MinersDownloader\DownloadSetup.cs" />
     <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
     <Compile Include="MinersDownloader\ProgressState.cs" />
-    <Compile Include="Miners\Ewbf144.cs" />
     <Compile Include="Miners\Ethlargement.cs" />
-    <Compile Include="Miners\GMinerOld.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="Miners\Phoenix.cs" />
     <Compile Include="Miners\TeamRedMinerOld.cs" />

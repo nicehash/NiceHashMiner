@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using NiceHashMinerLegacy.Common.Device;
 using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMiner.Plugin;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Miners
 {
@@ -44,7 +45,8 @@ namespace NiceHashMiner.Miners
         // TODO this thing 
         public override void Start(string url, string btcAdress, string worker)
         {
-            var location = "eu"; // TODO hardcoded
+            // TODO global state right here
+            var location = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
             var username = $"{btcAdress}.{worker}";
             _miner.InitMiningLocationAndUsername(location, username);
 

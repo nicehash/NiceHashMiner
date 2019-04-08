@@ -1,6 +1,5 @@
 ﻿using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Miners.Equihash;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners
@@ -32,20 +31,6 @@ namespace NiceHashMiner.Miners
             return null;
         }
 
-        private static Miner CreateEwbf(AlgorithmType type)
-        {
-            //if (type == AlgorithmType.Equihash)
-            //{
-            //    return new Ewbf();
-            //}
-            if (type == AlgorithmType.ZHash)
-            {
-                return new Ewbf144();
-            }
-
-            return null;
-        }
-
         public static Miner CreateMiner(DeviceType deviceType, Algorithm algorithm)
         {
             switch (algorithm.MinerBaseType)
@@ -58,14 +43,8 @@ namespace NiceHashMiner.Miners
                     return CreateClaymore(algorithm);
                 case MinerBaseType.XmrStak:
                     return new XmrStak.XmrStak();
-                case MinerBaseType.EWBF:
-                    return CreateEwbf(algorithm.NiceHashID);
                 case MinerBaseType.Phoenix:
                     return new Phoenix();
-                case MinerBaseType.GMiner:
-                    return new GMinerOld();
-                case MinerBaseType.BMiner:
-                    return new BMinerOld(algorithm.NiceHashID);
                 case MinerBaseType.TeamRedMiner:
                     return new TeamRedMinerOld();
                 case MinerBaseType.PLUGIN:

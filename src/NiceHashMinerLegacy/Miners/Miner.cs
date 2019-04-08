@@ -1286,50 +1286,6 @@ namespace NiceHashMiner
                    "\r\n";
         }
 
-        protected async Task<ApiData> GetSummaryCpuCcminerAsync()
-        {
-            // TODO aname
-            string aname = null;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType);
-
-            var dataToSend = GetHttpRequestNhmAgentStrin("summary");
-
-            var resp = await GetApiDataAsync(ApiPort, dataToSend);
-            if (resp == null)
-            {
-                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " summary is null");
-                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-                return null;
-            }
-
-            try
-            {
-                var resps = resp.Split(new char[] {';'}, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var res in resps)
-                {
-                    var optval = res.Split(new char[] {'='}, StringSplitOptions.RemoveEmptyEntries);
-                    if (optval.Length != 2) continue;
-                    if (optval[0] == "ALGO")
-                        aname = optval[1];
-                    else if (optval[0] == "KHS")
-                        ad.Speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
-                }
-            }
-            catch
-            {
-                Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Could not read data from API bind port");
-                CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-                return null;
-            }
-
-            CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
-            // check if speed zero
-            if (ad.Speed == 0) CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-
-            return ad;
-        }
-
-
         #region Cooldown/retry logic
 
         /// <summary>
