@@ -218,9 +218,9 @@ namespace NiceHashMiner
                     loadingControl.LoadMessageText = msg;
                 });
 
-                // Internals Init
-                // TODO add loading step
-                MinersSettingsManager.Init();
+                //// Internals Init
+                //// TODO add loading step
+                //MinersSettingsManager.Init();
 
                 if (!Helpers.Is45NetOrHigher())
                 {

@@ -196,21 +196,9 @@ namespace NiceHashMiner
                 var minerBase = MiningSetup.MiningPairs[0].Algorithm.MinerBaseType;
                 var algoType = MiningSetup.MiningPairs[0].Algorithm.NiceHashID;
                 var path = MiningSetup.MinerPath;
-                var reservedPorts = MinersSettingsManager.GetPortsListFor(minerBase, path, algoType);
-                ApiPort = -1; // not set
-                foreach (var reservedPort in reservedPorts)
-                {
-                    if (MinersApiPortsManager.IsPortAvaliable(reservedPort))
-                    {
-                        ApiPort = reservedPort;
-                        break;
-                    }
-                }
 
-                if (ApiPort == -1)
-                {
-                    ApiPort = MinersApiPortsManager.GetAvaliablePort();
-                }
+                ApiPort = -1; // not set
+                ApiPort = MinersApiPortsManager.GetAvaliablePort();
             }
         }
 
@@ -483,17 +471,6 @@ namespace NiceHashMiner
                 BenchmarkProcessPath = benchmarkHandle.StartInfo.FileName;
                 Helpers.ConsolePrint(MinerTag(), "Using miner: " + benchmarkHandle.StartInfo.FileName);
                 benchmarkHandle.StartInfo.WorkingDirectory = WorkingDirectory;
-            }
-
-            // set sys variables
-            if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path))
-            {
-                foreach (var kvp in MinersSettingsManager.MinerSystemVariables[Path])
-                {
-                    var envName = kvp.Key;
-                    var envValue = kvp.Value;
-                    benchmarkHandle.StartInfo.EnvironmentVariables[envName] = envValue;
-                }
             }
 
             benchmarkHandle.StartInfo.Arguments = commandLine;
@@ -996,16 +973,6 @@ namespace NiceHashMiner
             if (WorkingDirectory.Length > 1)
             {
                 P.StartInfo.WorkingDirectory = WorkingDirectory;
-            }
-
-            if (MinersSettingsManager.MinerSystemVariables.ContainsKey(Path))
-            {
-                foreach (var kvp in MinersSettingsManager.MinerSystemVariables[Path])
-                {
-                    var envName = kvp.Key;
-                    var envValue = kvp.Value;
-                    P.StartInfo.EnvironmentVariables[envName] = envValue;
-                }
             }
 
             if (envVariables != null)

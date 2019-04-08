@@ -219,7 +219,6 @@
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="Miners\Phoenix.cs" />
-    <Compile Include="Miners\TeamRedMinerOld.cs" />
     <Compile Include="Miners\VanillaProcessMiner.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
@@ -333,7 +332,6 @@
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
-    <Compile Include="Miners\MinersSettingsManager.cs" />
     <Compile Include="Miners\Parsing\ExtraLaunchParameters.cs" />
     <Compile Include="Miners\Parsing\ExtraLaunchParametersParser.cs" />
     <Compile Include="Miners\Grouping\GroupingLogic.cs" />
