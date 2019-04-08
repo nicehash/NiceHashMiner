@@ -50,11 +50,6 @@ namespace NiceHashMiner.Miners
         {
             switch (algorithm.MinerBaseType)
             {
-                case MinerBaseType.TTMiner:
-                    return new Ttminer();
-                case MinerBaseType.ccminer:
-                case MinerBaseType.ccminer_alexis:
-                    return new Ccminer();
                 case MinerBaseType.sgminer:
                     return new Sgminer();
                 case MinerBaseType.ethminer:
@@ -65,16 +60,12 @@ namespace NiceHashMiner.Miners
                     return new XmrStak.XmrStak();
                 case MinerBaseType.EWBF:
                     return CreateEwbf(algorithm.NiceHashID);
-                case MinerBaseType.trex:
-                    return new Trex();
                 case MinerBaseType.Phoenix:
                     return new Phoenix();
                 case MinerBaseType.GMiner:
                     return new GMinerOld();
                 case MinerBaseType.BMiner:
                     return new BMinerOld(algorithm.NiceHashID);
-                case MinerBaseType.NBMiner:
-                    return new NBMinerOld();
                 case MinerBaseType.TeamRedMiner:
                     return new TeamRedMinerOld();
                 case MinerBaseType.PLUGIN:

@@ -19,6 +19,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace TTMiner
 {
+    // TODO get ordered API data
     public class TTMiner : MinerBase, IDisposable, IAfterStartMining
     {
         private int _apiPort;

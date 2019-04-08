@@ -221,11 +221,8 @@
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\GMinerOld.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
-    <Compile Include="Miners\NBMinerOld.cs" />
     <Compile Include="Miners\Phoenix.cs" />
     <Compile Include="Miners\TeamRedMinerOld.cs" />
-    <Compile Include="Miners\Trex.cs" />
-    <Compile Include="Miners\Ttminer.cs" />
     <Compile Include="Miners\VanillaProcessMiner.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
     <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
@@ -357,7 +354,6 @@
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
-    <Compile Include="Miners\Ccminer.cs" />
     <Compile Include="Miners\ethminer\Ethereum.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
