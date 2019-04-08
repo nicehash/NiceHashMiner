@@ -45,8 +45,6 @@ namespace NiceHashMiner.Miners
                     return new XmrStak.XmrStak();
                 case MinerBaseType.Phoenix:
                     return new Phoenix();
-                case MinerBaseType.TeamRedMiner:
-                    return new TeamRedMinerOld();
                 case MinerBaseType.PLUGIN:
                     return CreateMinerFromPlugin(algorithm);
             }
