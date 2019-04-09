@@ -212,6 +212,8 @@
     <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="MinersDownloader\DownloadSetup.cs" />
     <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
@@ -220,14 +222,14 @@
     <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="Miners\Phoenix.cs" />
     <Compile Include="Miners\VanillaProcessMiner.cs" />
-    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
-    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
+    <Compile Include="Miners\XmrStakOld\Configs\XmrStakConfigCpu.cs" />
+    <Compile Include="Miners\XmrStakOld\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
     <Compile Include="Plugin\PluginPackageInfo.cs" />
     <Compile Include="Plugin\PluginPackageInfoCR.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
-    <Compile Include="Miners\XmrStak\XmrStak.cs" />
+    <Compile Include="Miners\XmrStakOld\XmrStak.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
     <Compile Include="Stats\WindowsManagementObjectSearcher.cs" />
@@ -556,6 +558,10 @@
     <ProjectReference Include="..\Miners\TTMiner\TTMiner.csproj">
       <Project>{06e84bad-4317-41e0-ad59-31e70db4c12c}</Project>
       <Name>TTMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj">
+      <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
+      <Name>XmrStak</Name>
     </ProjectReference>
     <ProjectReference Include="..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>

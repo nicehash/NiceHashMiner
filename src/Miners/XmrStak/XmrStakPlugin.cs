@@ -12,10 +12,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using XmrStak.Configs;
 
 namespace XmrStak
 {
-    public class XmrStakPlugin : IMinerPlugin, IInitInternals
+    public class XmrStakPlugin : IMinerPlugin, IInitInternals, IXmrStakConfigHandler
     {
         public XmrStakPlugin(string pluginUUID = "b4cf2181-ca66-4d9c-83ba-cd5a7c6a7499")
         {
@@ -74,7 +75,7 @@ namespace XmrStak
 
         public IMiner CreateMiner()
         {
-            return new XmrStak(PluginUUID);
+            return new XmrStak(PluginUUID, this);
         }
 
         public bool CanGroup(MiningPair a, MiningPair b)
@@ -95,16 +96,76 @@ namespace XmrStak
         }
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
-        {
-            // we have same env vars for all miners now, check avemore env vars if they differ and use custom env vars instead of defaults
-            DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
-            {
-                { "XMRSTAK_NOWAIT", "1" }
-            },
-        };
+        {};
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
-        { };
+        {};
         #endregion Internal settings
+
+
+
+        #region Cached configs
+        protected Dictionary<AlgorithmType, CpuConfig> _cpuConfigs = new Dictionary<AlgorithmType, CpuConfig>();
+        protected Dictionary<AlgorithmType, AmdConfig> _amdConfigs = new Dictionary<AlgorithmType, AmdConfig>();
+        protected Dictionary<AlgorithmType, NvidiaConfig> _nvidiaConfigs = new Dictionary<AlgorithmType, NvidiaConfig>();
+
+
+        public bool HasConfig(DeviceType deviceType, AlgorithmType algorithmType)
+        {
+            switch (deviceType)
+            {
+                case DeviceType.CPU:
+                    return _cpuConfigs.ContainsKey(algorithmType);
+                case DeviceType.AMD:
+                    return _amdConfigs.ContainsKey(algorithmType);
+                case DeviceType.NVIDIA:
+                    return _nvidiaConfigs.ContainsKey(algorithmType);
+            }
+            return false;
+        }
+
+        public void SaveMoveConfig(DeviceType deviceType, AlgorithmType algorithmType, string sourcePath, string destinationPath)
+        {
+            try
+            {
+                var readConfigContent = File.ReadAllText(sourcePath);
+                // make it JSON 
+                readConfigContent = "{" + readConfigContent + "}";
+                // remove old if any
+                if (File.Exists(destinationPath)) File.Delete(destinationPath);
+                // move to path
+                File.Move(sourcePath, destinationPath);
+
+                //TODO load and save 
+                switch(deviceType)
+                {
+                    case DeviceType.CPU:
+                        break;
+                    case DeviceType.AMD:
+                        break;
+                    case DeviceType.NVIDIA:
+                        break;
+                }
+            }
+            catch (Exception)
+            { }
+        }
+
+        public CpuConfig GetCpuConfig(AlgorithmType algorithmType)
+        {
+            return _cpuConfigs[algorithmType];
+        }
+
+        public AmdConfig GetAmdConfig(AlgorithmType algorithmType)
+        {
+            return _amdConfigs[algorithmType];
+        }
+
+        public NvidiaConfig GetNvidiaConfig(AlgorithmType algorithmType)
+        {
+            return _nvidiaConfigs[algorithmType];
+        }
+
+        #endregion Cached configs
     }
 }

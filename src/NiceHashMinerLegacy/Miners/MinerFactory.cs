@@ -16,33 +16,18 @@ namespace NiceHashMiner.Miners
             return DeviceType.NVIDIA == deviceType ? new MinerEtherumCUDA() : null;
         }
 
-        private static Miner CreateClaymore(Algorithm algorithm)
-        {
-            switch (algorithm.NiceHashID)
-            {
-                //case AlgorithmType.Equihash:
-                //    return new ClaymoreZcashMiner();
-                //case AlgorithmType.CryptoNightV7:
-                //    return new ClaymoreCryptoNightMiner();
-                case AlgorithmType.DaggerHashimoto:
-                    return new ClaymoreDual(algorithm.SecondaryNiceHashID);
-            }
-
-            return null;
-        }
-
         public static Miner CreateMiner(DeviceType deviceType, Algorithm algorithm)
         {
             switch (algorithm.MinerBaseType)
             {
-                case MinerBaseType.sgminer:
-                    return new Sgminer();
+                //case MinerBaseType.sgminer:
+                //    return new Sgminer();
                 case MinerBaseType.ethminer:
                     return CreateEthminer(deviceType);
                 case MinerBaseType.Claymore:
-                    return CreateClaymore(algorithm);
+                    return new ClaymoreDual(algorithm.SecondaryNiceHashID);
                 case MinerBaseType.XmrStak:
-                    return new XmrStak.XmrStak();
+                    return new XmrStakOld.XmrStak();
                 case MinerBaseType.Phoenix:
                     return new Phoenix();
                 case MinerBaseType.PLUGIN:

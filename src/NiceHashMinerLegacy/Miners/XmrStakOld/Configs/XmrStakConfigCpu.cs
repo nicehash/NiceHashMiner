@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 
-namespace NiceHashMiner.Miners.XmrStak.Configs
+namespace NiceHashMiner.Miners.XmrStakOld.Configs
 {
     public class XmrStakConfigCpu
     {

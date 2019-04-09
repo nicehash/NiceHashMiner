@@ -33,6 +33,7 @@ namespace NiceHashMiner.Plugin
             new SGminerAvemoreIntegratedPlugin(),
             new SGminerGMIntegratedPlugin(),
             new SGminerNHGeneralIntegratedPlugin(),
+            new XmrStakIntegratedPlugin(),
 
             // 3rd party
             new BMinerIntegratedPlugin(),

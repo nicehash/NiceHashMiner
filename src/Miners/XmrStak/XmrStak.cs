@@ -29,10 +29,12 @@ namespace XmrStak
         protected readonly string _uuid;
         protected AlgorithmType _algorithmType;
         protected readonly HttpClient _http = new HttpClient();
+        protected IXmrStakConfigHandler _configHandler;
 
-        public XmrStak(string uuid)
+        public XmrStak(string uuid, IXmrStakConfigHandler configHandler)
         {
             _uuid = uuid;
+            _configHandler = configHandler;
         }
 
         protected override Dictionary<string, string> GetEnvironmentVariables()
@@ -68,18 +70,18 @@ namespace XmrStak
                 foreach (var thread in threadsHashrate)
                 {
                     var deviceType = TableParser.GetDeviceTypeFromInfo(thread);
-                    var deviceId = TableParser.GetDeviceIDFromInfo(thread);
+                    var deviceConfigId = TableParser.GetDeviceConfigIdFromInfo(thread);
                     var threadId = TableParser.GetThreadIdFromInfo(thread);
-                    var device = _miningPairs
-                        .Where(d => d.Device.DeviceType == deviceType && d.Device.ID == deviceId)
-                        .Select(d => d.Device)
-                        .FirstOrDefault();
-                    if (device == null)
-                    {
-                        // LOG ERROR
-                        continue;
-                    }
-                    _threadsForDeviceUUIDs[threadId] = device.UUID;
+                    //var device = _miningPairs
+                    //    .Where(d => d.Device.DeviceType == deviceType && d.Device.ID == deviceId)
+                    //    .Select(d => d.Device)
+                    //    .FirstOrDefault();
+                    //if (device == null)
+                    //{
+                    //    // LOG ERROR
+                    //    continue;
+                    //}
+                    //_threadsForDeviceUUIDs[threadId] = device.UUID;
                 }
             }
             catch (Exception e)
@@ -192,14 +194,16 @@ namespace XmrStak
 
             var algo = AlgorithmName(_algorithmType);
             // prepare configs
-
-
-            var deviceConfigParams = "";
             var folder = _algorithmType.ToString().ToLower();
+
+            var deviceConfigParams = $@"--cpu {folder}\cpu.txt";
             // TODO prepare config files
             //if (_miningDeviceTypes.Contains(DeviceType.))
             //{
             //}
+            CreateConfigFile(DeviceType.CPU).Wait();
+            CreateConfigFile(DeviceType.NVIDIA).Wait();
+
             var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(_miningDeviceTypes);
             var commandLine = $@"--config {folder}\config.txt --poolconf {folder}\pools.txt {deviceConfigParams} {disableDeviceTypes}";
             return commandLine;

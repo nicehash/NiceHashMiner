@@ -8,7 +8,7 @@ namespace XmrStak.Configs
 {
 #pragma warning disable IDE1006 // Naming Styles
 
-    class AmdThreadsConfItem
+    public class AmdThreadsConfItem
     {
         public int index = 0;
         public int intensity = 0;
@@ -22,7 +22,7 @@ namespace XmrStak.Configs
     }
 
     [Serializable]
-    class AmdConfig
+    public class AmdConfig
     {
         public List<AmdThreadsConfItem> gpu_threads_conf;
     }

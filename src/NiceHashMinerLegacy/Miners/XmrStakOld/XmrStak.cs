@@ -3,7 +3,7 @@ using Newtonsoft.Json.Linq;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.Parsing;
-using NiceHashMiner.Miners.XmrStak.Configs;
+using NiceHashMiner.Miners.XmrStakOld.Configs;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
 using System;
@@ -14,7 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NiceHashMiner.Miners.XmrStak
+namespace NiceHashMiner.Miners.XmrStakOld
 {
     public class XmrStak : Miner
     {

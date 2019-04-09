@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NiceHashMiner.Miners.XmrStak.Configs
+namespace NiceHashMiner.Miners.XmrStakOld.Configs
 {
     public abstract class XmrStakGpuItem
     {

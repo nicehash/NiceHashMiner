@@ -32,7 +32,7 @@ namespace MinerPluginToolkitV1
 
         private void BenchmarkOutputErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (Success || string.IsNullOrEmpty(e.Data) || exitCalled)
+            if (Success || CheckData == null || string.IsNullOrEmpty(e.Data) || exitCalled)
             {
                 return;
             }

@@ -8,7 +8,7 @@ namespace XmrStak.Configs
 {
 #pragma warning disable IDE1006 // Naming Styles
 
-    class NvidiaThreadsConfItem
+    public class NvidiaThreadsConfItem
     {
         public int index = 0;
         public int threads = 0;
@@ -21,7 +21,7 @@ namespace XmrStak.Configs
     }
 
     [Serializable]
-    class NvidiaConfig
+    public class NvidiaConfig
     {
         public List<NvidiaThreadsConfItem> gpu_threads_conf;
     }

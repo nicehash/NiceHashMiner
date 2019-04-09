@@ -23,7 +23,7 @@ namespace XmrStak
             return ERROR_UNKNOWN;
         }
 
-        public static int GetDeviceIDFromInfo(string deviceTypeIdAndThreadId)
+        public static int GetDeviceConfigIdFromInfo(string deviceTypeIdAndThreadId)
         {
             var splitted = deviceTypeIdAndThreadId.Split('.').ToArray();
             if (splitted.Count() < 2) return -1;

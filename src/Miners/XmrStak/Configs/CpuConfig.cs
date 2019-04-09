@@ -56,7 +56,7 @@ namespace XmrStak.Configs
 
 #pragma warning disable IDE1006 // Naming Styles
 
-    class CpuThreadsConfItem
+    public class CpuThreadsConfItem
     {
         public object low_power_mode = false;
         public bool no_prefetch = false;
@@ -66,7 +66,7 @@ namespace XmrStak.Configs
     }
 
     [Serializable]
-    class CpuConfig
+    public class CpuConfig
     {
         public List<CpuThreadsConfItem> cpu_threads_conf;
     }

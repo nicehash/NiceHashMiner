@@ -12,12 +12,12 @@ namespace XmrStak.Configs
     static class ConfigHelpers
     {
 
-        public static void PrepareConfigFiles(string path, )
-        {
+        //public static void PrepareConfigFiles(string path, )
+        //{
 
-        }
+        //}
 
-        public static 
+        //public static 
 
         private static Task CreateConfigFileTask(string binPath, string cwdPath, string commandLine, Dictionary<string, string> environmentVariables, CancellationToken stop)
         {
@@ -49,6 +49,7 @@ namespace XmrStak.Configs
                 }
             } catch(Exception e)
             {
+                Console.WriteLine($"CreateConfigFile {e.Message}");
             }
             return File.Exists(configFilePath);
         }
