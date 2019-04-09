@@ -85,7 +85,7 @@ namespace XmrStak.Configs
     [Serializable]
     public class PoolsConfig
     {
-        PoolsConfig(string url, string username, string currency)
+        public PoolsConfig(string url, string username, string currency)
         {
             this.pool_list = new List<PoolItem>{ new PoolItem { pool_address = url, wallet_address = username } };
             this.currency = currency;

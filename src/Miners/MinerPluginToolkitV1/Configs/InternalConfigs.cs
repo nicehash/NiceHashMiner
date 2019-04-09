@@ -65,6 +65,27 @@ namespace MinerPluginToolkitV1.Configs
             }
         }
 
+        public static bool WriteFileSettings(string filePath, string settingsText)
+        {
+            if (settingsText == null) return false;
+
+            try
+            {
+                var dirPath = Path.GetDirectoryName(filePath);
+                if (Directory.Exists(dirPath) == false)
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+                File.WriteAllText(filePath, settingsText);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {ex}");
+                return false;
+            }
+        }
+
         // this checks if there are user settings and returns that if not then it saves the given defaultSettings to a file
         public static MinerSystemEnvironmentVariables InitMinerSystemEnvironmentVariablesSettings(string pluginRoot, MinerSystemEnvironmentVariables defaultSettings)
         {

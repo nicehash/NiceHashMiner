@@ -31,6 +31,11 @@ namespace XmrStak
         protected readonly HttpClient _http = new HttpClient();
         protected IXmrStakConfigHandler _configHandler;
 
+        // running configs
+        protected CpuConfig _cpuConfig;
+        protected AmdConfig _amdConfig;
+        protected NvidiaConfig _nvidiaConfig;
+
         public XmrStak(string uuid, IXmrStakConfigHandler configHandler)
         {
             _uuid = uuid;
@@ -72,16 +77,49 @@ namespace XmrStak
                     var deviceType = TableParser.GetDeviceTypeFromInfo(thread);
                     var deviceConfigId = TableParser.GetDeviceConfigIdFromInfo(thread);
                     var threadId = TableParser.GetThreadIdFromInfo(thread);
-                    //var device = _miningPairs
-                    //    .Where(d => d.Device.DeviceType == deviceType && d.Device.ID == deviceId)
-                    //    .Select(d => d.Device)
-                    //    .FirstOrDefault();
-                    //if (device == null)
-                    //{
-                    //    // LOG ERROR
-                    //    continue;
-                    //}
-                    //_threadsForDeviceUUIDs[threadId] = device.UUID;
+
+                    var deviceUUID = "";
+                    if (deviceType == DeviceType.CPU)
+                    {
+                        var cpu = _miningPairs
+                            .Where(d => d.Device.DeviceType == deviceType)
+                            .Select(d => d.Device)
+                            .FirstOrDefault();
+                        if (cpu != null)
+                        {
+                            deviceUUID = cpu.UUID;
+                        }
+                    }
+                    if (deviceType == DeviceType.AMD)
+                    {
+                        var openCL_ID = _amdConfig.gpu_threads_conf[deviceConfigId].index;
+                        var amd = _miningPairs
+                            .Where(d => d.Device.DeviceType == deviceType && openCL_ID == d.Device.ID)
+                            .Select(d => d.Device)
+                            .FirstOrDefault();
+                        if (amd != null)
+                        {
+                            deviceUUID = amd.UUID;
+                        }
+                    }
+                    if (deviceType == DeviceType.NVIDIA)
+                    {
+                        var cudaID = _nvidiaConfig.gpu_threads_conf[deviceConfigId].index;
+                        var nvidia = _miningPairs
+                            .Where(d => d.Device.DeviceType == deviceType && cudaID == d.Device.ID)
+                            .Select(d => d.Device)
+                            .FirstOrDefault();
+                        if (nvidia != null)
+                        {
+                            deviceUUID = nvidia.UUID;
+                        }
+                    }
+                    if (string.IsNullOrEmpty(deviceUUID))
+                    {
+                        // TODO log
+                        continue;
+                    }
+                    _threadsForDeviceUUIDs[threadId] = deviceUUID;
                 }
             }
             catch (Exception e)
@@ -91,7 +129,6 @@ namespace XmrStak
         }
 
         // XmrStak doesn't report power usage
-        // TODO map threads
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             if (_threadsForDeviceUUIDs == null)
@@ -136,8 +173,10 @@ namespace XmrStak
                     perDevicePowerInfo.Add(UUID, -1);
                 }
 
+                api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                api.PowerUsagePerDevice = perDevicePowerInfo;
                 api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
-                api.PowerUsageTotal = 0;
+                api.PowerUsageTotal = -1;
             }
             catch (Exception e)
             {
@@ -147,10 +186,74 @@ namespace XmrStak
             return api;
         }
 
-        // TODO broken
+        // TODO account AMD kernel building
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            return new BenchmarkResult();
+            // END prepare config block
+
+            // determine benchmark time 
+            // settup times
+            var openCLCodeGenerationWait = 0;
+            var benchWait = 5;
+            var benchmarkTime = 30; // in seconds
+            switch (benchmarkType)
+            {
+                case BenchmarkPerformanceType.Quick:
+                    benchmarkTime = 30;
+                    break;
+                case BenchmarkPerformanceType.Standard:
+                    benchmarkTime = 60;
+                    break;
+                case BenchmarkPerformanceType.Precise:
+                    benchmarkTime = 120;
+                    break;
+            }
+
+            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var algo = AlgorithmName(_algorithmType);
+
+            // this one here might block
+            var deviceConfigParams = await PrepareDeviceConfigs();
+            var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(_miningDeviceTypes);
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binPath = binPathBinCwdPair.Item1;
+            var binCwd = binPathBinCwdPair.Item2;
+            // API port function might be blocking
+            var apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
+            var commandLine = $"-o {url} -u {MinerToolkit.DemoUser} --currency {algo} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork {benchmarkTime} --benchwait {benchWait} {deviceConfigParams} {disableDeviceTypes}";
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
+
+            var benchHashes = 0d;
+            var benchIters = 0;
+            var benchHashResult = 0d;  // Not too sure what this is..
+            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
+
+            bp.CheckData = (string data) =>
+            {
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Benchmark Total:");
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
+
+                if (found)
+                {
+                    benchHashes += hashrate;
+                    benchIters++;
+
+                    benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+                }
+
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = found
+                };
+            };
+
+            // always add 10second extra
+            var benchmarkTimeout = TimeSpan.FromSeconds(10 + benchmarkTime + benchWait + openCLCodeGenerationWait);
+            var benchmarkWait = TimeSpan.FromMilliseconds(500);
+            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
+            return await t;
         }
 
         protected override Tuple<string, string> GetBinAndCwdPaths()
@@ -197,19 +300,43 @@ namespace XmrStak
             var algo = AlgorithmName(_algorithmType);
             // prepare configs
             var folder = _algorithmType.ToString().ToLower();
-            var deviceConfigParams = "";
+
+            var blockingTask = PrepareDeviceConfigs();
+            blockingTask.Wait();
+            var deviceConfigParams = blockingTask.Result;
+            // prepare pools and config
+            var generalConfigFilePath = Path.Combine(binCwd, folder, "config.txt");
+            var generalConfig = new MainConfig{ httpd_port = _apiPort };
+            ConfigHelpers.WriteConfigFile(generalConfigFilePath, generalConfig);
+            var poolsConfigFilePath = Path.Combine(binCwd, folder, "pools.txt");
+            var poolsConfig = new PoolsConfig(urlWithPort, _username, algo);
+            ConfigHelpers.WriteConfigFile(poolsConfigFilePath, poolsConfig);
+
+            var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(_miningDeviceTypes);
+            var commandLine = $@"--config {folder}\config.txt --poolconf {folder}\pools.txt {deviceConfigParams} {disableDeviceTypes}";
+            return commandLine;
+        }
+
+        protected async Task<string> PrepareDeviceConfigs()
+        {
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binCwd = binPathBinCwdPair.Item2;
+            var algo = AlgorithmName(_algorithmType);
+            // prepare configs
+            var folder = _algorithmType.ToString().ToLower();
             // check if we have configs
             foreach (var deviceType in _miningDeviceTypes)
             {
-                var config = $"{deviceType.ToString()}.txt".ToLower();
+                var flag = deviceType.ToString().ToLower();
+                var config = $"{flag}.txt";
                 var configFilePath = Path.Combine(binCwd, config);
                 if (!_configHandler.HasConfig(deviceType, _algorithmType))
                 {
                     try
                     {
                         var t = CreateConfigFile(deviceType);
-                        t.Wait(); // block
-                        if (t.Result)
+                        var result = await t; 
+                        if (result)
                         {
                             _configHandler.SaveMoveConfig(deviceType, _algorithmType, configFilePath);
                         }
@@ -219,12 +346,44 @@ namespace XmrStak
                         // TODO log
                     }
                 }
-                deviceConfigParams += $@" --{config} {folder}\{config}.txt";
             }
 
-            var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(_miningDeviceTypes);
-            var commandLine = $@"--config {folder}\config.txt --poolconf {folder}\pools.txt {deviceConfigParams} {disableDeviceTypes}";
-            return commandLine;
+
+            var deviceConfigParams = "";
+            // prepare
+            foreach (var deviceType in _miningDeviceTypes)
+            {
+                var flag = deviceType.ToString().ToLower();
+                // for filtering devices by CUDA and OpenCL indexes
+                var deviceIDs = _miningPairs.Where(pair => pair.Device.DeviceType == deviceType).Select(pair => pair.Device.ID);
+                var config = $"{flag}_{string.Join(",", deviceIDs)}.txt".ToLower();
+                
+                deviceConfigParams += $@" --{flag} {folder}\{config}";
+                var deviceConfigFilePath = Path.Combine(binCwd, folder, config);
+
+                
+                if (_cpuConfig == null && DeviceType.CPU == deviceType)
+                {
+                    // we just use the template
+                    _cpuConfig = _configHandler.GetCpuConfig(_algorithmType);
+                    ConfigHelpers.WriteConfigFile(deviceConfigFilePath, _cpuConfig);
+                }
+                if (_nvidiaConfig == null && DeviceType.NVIDIA == deviceType)
+                {
+                    var nvidiaTemplate = _configHandler.GetNvidiaConfig(_algorithmType);
+                    _nvidiaConfig = new NvidiaConfig();
+                    _nvidiaConfig.gpu_threads_conf = nvidiaTemplate.gpu_threads_conf.Where(t => deviceIDs.Contains(t.index)).ToList();
+                    ConfigHelpers.WriteConfigFile(deviceConfigFilePath, _nvidiaConfig);
+                }
+                if (_amdConfig == null && DeviceType.AMD == deviceType)
+                {
+                    var amdTemplate = _configHandler.GetAmdConfig(_algorithmType);
+                    _amdConfig = new AmdConfig();
+                    _amdConfig.gpu_threads_conf = amdTemplate.gpu_threads_conf.Where(t => deviceIDs.Contains(t.index)).ToList();
+                    ConfigHelpers.WriteConfigFile(deviceConfigFilePath, _amdConfig);
+                }
+            }
+            return deviceConfigParams;
         }
 
         protected Task<bool> CreateConfigFile(DeviceType deviceType)

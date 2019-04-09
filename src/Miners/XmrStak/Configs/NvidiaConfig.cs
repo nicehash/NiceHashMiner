@@ -8,6 +8,7 @@ namespace XmrStak.Configs
 {
 #pragma warning disable IDE1006 // Naming Styles
 
+    [Serializable]
     public class NvidiaThreadsConfItem
     {
         public int index = 0;

@@ -31,9 +31,8 @@ namespace XmrStak
 
         public string Author => "stanko@nicehash.com";
 
-        protected Dictionary<string, DeviceType> _registeredDeviceUUIDTypes;
-        protected HashSet<AlgorithmType> _registeredAlgorithmTypes;
-        protected Dictionary<bool, Dictionary<string, AlgorithmType>> _configExists;
+        protected Dictionary<string, DeviceType> _registeredDeviceUUIDTypes = new Dictionary<string, DeviceType>();
+        protected HashSet<AlgorithmType> _registeredAlgorithmTypes = new HashSet<AlgorithmType>();
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -96,6 +95,11 @@ namespace XmrStak
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
         }
 
+        private string GetMinerConfigsRoot()
+        {
+            return Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "configs");
+        }
+
         // these here are slightly different
         #region Internal settings
         public void InitInternals()
@@ -107,17 +111,49 @@ namespace XmrStak
             var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
             if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
 
-            var configsRoot = Path.Combine(pluginRoot, "configsOrWhatever");
-            foreach (string file in Directory.GetFiles(configsRoot, "*.json"))
-            {
-                foreach(var device in _registeredDeviceUUIDTypes)
-                {
-                    foreach(var algorithm in _registeredAlgorithmTypes)
-                    {
 
+            var minerConfigPath = GetMinerConfigsRoot();
+            if (!Directory.Exists(minerConfigPath)) return; // no settings
+
+            var configFiles = Directory.GetFiles(minerConfigPath, "cached_*.json");
+            var registeredDeviceTypes = _registeredDeviceUUIDTypes.Select(kvp => kvp.Value).Distinct();
+
+            foreach (var deviceType in registeredDeviceTypes)
+            {
+                var uuids = _registeredDeviceUUIDTypes.Where(kvp => kvp.Value == deviceType).Select(kvp => kvp.Key);
+                foreach (var algorithm in _registeredAlgorithmTypes)
+                {
+                    var cachedConfig = $"{algorithm.ToString()}_{deviceType.ToString()}";
+                    var cachedConfigPath = configFiles.Where(path => path.Contains(cachedConfig)).FirstOrDefault();
+                    if (string.IsNullOrEmpty(cachedConfigPath)) continue;
+
+                    var cachedConfigContent = File.ReadAllText(cachedConfigPath);
+                    try
+                    {
+                        switch (deviceType)
+                        {
+                            case DeviceType.CPU:
+                                var cpuConfig = JsonConvert.DeserializeObject<CachedCpuSettings>(cachedConfigContent);
+                                var isCpuSame = uuids.Except(cpuConfig.DeviceUUIDs).Count() == 0;
+                                if (isCpuSame) _cpuConfigs[algorithm] = cpuConfig.CachedConfig;
+                                break;
+                            case DeviceType.AMD:
+                                var amdConfig = JsonConvert.DeserializeObject<CachedAmdSettings>(cachedConfigContent);
+                                var isAmdSame = uuids.Except(amdConfig.DeviceUUIDs).Count() == 0;
+                                if (isAmdSame) _amdConfigs[algorithm] = amdConfig.CachedConfig;
+                                break;
+                            case DeviceType.NVIDIA:
+                                var nvidiaConfig = JsonConvert.DeserializeObject<CachedNvidiaSettings>(cachedConfigContent);
+                                var isNvidiaSame = uuids.Except(nvidiaConfig.DeviceUUIDs).Count() == 0;
+                                if (isNvidiaSame) _nvidiaConfigs[algorithm] = nvidiaConfig.CachedConfig;
+                                break;
+                        }
                     }
+                    catch (Exception)
+                    { }
                 }
             }
+
         }
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
@@ -151,9 +187,9 @@ namespace XmrStak
 
         public void SaveMoveConfig(DeviceType deviceType, AlgorithmType algorithmType, string sourcePath)
         {
-            string destinationPath = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "configs", $"{algorithmType.ToString()}_{deviceType.ToString()}.txt");
             try
             {
+                string destinationPath = Path.Combine(GetMinerConfigsRoot(), $"{algorithmType.ToString()}_{deviceType.ToString()}.txt");
                 var dirPath = Path.GetDirectoryName(destinationPath);
                 if (Directory.Exists(dirPath) == false)
                 {
@@ -168,30 +204,50 @@ namespace XmrStak
                 // move to path
                 File.Move(sourcePath, destinationPath);
 
+                var cachedFileSettings = $"cached_{algorithmType.ToString()}_{deviceType.ToString()}.json";
+                var cachedFileSettingsPath = Path.Combine(GetMinerConfigsRoot(), cachedFileSettings);
+                var uuids = _registeredDeviceUUIDTypes.Where(kvp => kvp.Value == deviceType).Select(kvp => kvp.Key).ToList();
+                object cachedSettings = null;
                 //TODO load and save 
-                switch(deviceType)
+                switch (deviceType)
                 {
                     case DeviceType.CPU:
-                        if (GetCpuConfig(algorithmType) == null) {
-                            CpuConfig cpuConfig = JsonConvert.DeserializeObject<CpuConfig>(readConfigContent);
-                            _cpuConfigs[algorithmType] = cpuConfig;
-                        }
-
+                        var cpuConfig = JsonConvert.DeserializeObject<CpuConfig>(readConfigContent);
+                        _cpuConfigs[algorithmType] = cpuConfig;
+                        cachedSettings = new CachedCpuSettings {
+                            CachedConfig = cpuConfig,
+                            DeviceUUIDs = uuids
+                        };
                         break;
                     case DeviceType.AMD:
-                        if (GetAmdConfig(algorithmType) == null)
+                        var amdConfig = JsonConvert.DeserializeObject<AmdConfig>(readConfigContent);
+                        _amdConfigs[algorithmType] = amdConfig;
+                        cachedSettings = new CachedAmdSettings
                         {
-                            AmdConfig amdConfig = JsonConvert.DeserializeObject<AmdConfig>(readConfigContent);
-                            _amdConfigs[algorithmType] = amdConfig;
-                        }
+                            CachedConfig = amdConfig,
+                            DeviceUUIDs = uuids
+                        };
                         break;
                     case DeviceType.NVIDIA:
-                        if (GetNvidiaConfig(algorithmType) == null)
+                        var nvidiaConfig = JsonConvert.DeserializeObject<NvidiaConfig>(readConfigContent);
+                        _nvidiaConfigs[algorithmType] = nvidiaConfig;
+                        cachedSettings = new CachedNvidiaSettings
                         {
-                            NvidiaConfig nvidiaConfig = JsonConvert.DeserializeObject<NvidiaConfig>(readConfigContent);
-                            _nvidiaConfigs[algorithmType] = nvidiaConfig;
-                        }
+                            CachedConfig = nvidiaConfig,
+                            DeviceUUIDs = uuids
+                        };
                         break;
+                }
+                if (cachedSettings != null)
+                {
+                    var header = "// This config file was autogenerated by NHML.";
+                    header += "\n// \"DeviceUUIDs\" is used to check if we have same devices and should not be edited.";
+                    header += "\n// \"CachedConfig\" can be edited as it is used as config template (edit this only if you know what you are doing)";
+                    header += "\n// If \"DeviceUUIDs\" is different (new devices added or old ones removed) this file will be overwritten and \"CachedConfig\" will be set to defaults.";
+                    header += "\n\n";
+                    var jsonText = JsonConvert.SerializeObject(cachedSettings, Formatting.Indented);
+                    var headerWithConfigs = header + jsonText;
+                    InternalConfigs.WriteFileSettings(cachedFileSettingsPath, headerWithConfigs);
                 }
             }
             catch (Exception)
