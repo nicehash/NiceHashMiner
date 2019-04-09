@@ -122,6 +122,18 @@ namespace BMiner
                     ID = "bminer_nofee",
                     ShortName = "-nofee",
                 }
+            },
+            TemperatureOptions = new List<MinerOption>{
+                /// <summary>
+                /// Hard limits of the temperature of the GPUs. Bminer slows down itself when the temperautres of the devices exceed the limit. (default 85)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "bminer_max_temp",
+                    ShortName = "-max-temperature",
+                    DefaultValue = "85",
+                }
             }
         };
         #endregion Internal settings

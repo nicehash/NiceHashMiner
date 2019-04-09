@@ -147,7 +147,36 @@ namespace GMinerPlugin
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage { };
+        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
+        {
+            GeneralOptions = new List<MinerOption>
+            {
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_pec",
+                    LongName = "--pec",
+                    DefaultValue = "1"
+                },
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_electricity",
+                    LongName = "--electricity_cost"
+                }
+            },
+            TemperatureOptions = new List<MinerOption>{
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_templimit",
+                    ShortName = "-t",
+                    LongName = "--templimit",
+                    DefaultValue = "90",
+                    Delimiter = " "
+                }
+            }
+        };
         #endregion Internal Settings
     }
 }
