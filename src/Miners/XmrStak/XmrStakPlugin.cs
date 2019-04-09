@@ -3,6 +3,7 @@ using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
+using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
@@ -30,6 +31,10 @@ namespace XmrStak
 
         public string Author => "stanko@nicehash.com";
 
+        protected Dictionary<string, DeviceType> _registeredDeviceUUIDTypes;
+        protected HashSet<AlgorithmType> _registeredAlgorithmTypes;
+        protected Dictionary<bool, Dictionary<string, AlgorithmType>> _configExists;
+
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
@@ -53,7 +58,15 @@ namespace XmrStak
             foreach (var dev in devicesToAdd)
             {
                 var algorithms = GetSupportedAlgorithms(dev);
-                if (algorithms.Count > 0) supported.Add(dev, algorithms);
+                if (algorithms.Count > 0)
+                {
+                    supported.Add(dev, algorithms);
+                    _registeredDeviceUUIDTypes.Add(dev.UUID, dev.DeviceType);
+                    foreach (var algorithm in algorithms)
+                    {
+                        _registeredAlgorithmTypes.Add(algorithm.FirstAlgorithmType);
+                    }
+                }
             }
 
 
@@ -93,6 +106,18 @@ namespace XmrStak
 
             var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
             if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
+
+            var configsRoot = Path.Combine(pluginRoot, "configsOrWhatever");
+            foreach (string file in Directory.GetFiles(configsRoot, "*.json"))
+            {
+                foreach(var device in _registeredDeviceUUIDTypes)
+                {
+                    foreach(var algorithm in _registeredAlgorithmTypes)
+                    {
+
+                    }
+                }
+            }
         }
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
@@ -147,10 +172,25 @@ namespace XmrStak
                 switch(deviceType)
                 {
                     case DeviceType.CPU:
+                        if (GetCpuConfig(algorithmType) == null) {
+                            CpuConfig cpuConfig = JsonConvert.DeserializeObject<CpuConfig>(readConfigContent);
+                            _cpuConfigs[algorithmType] = cpuConfig;
+                        }
+
                         break;
                     case DeviceType.AMD:
+                        if (GetAmdConfig(algorithmType) == null)
+                        {
+                            AmdConfig amdConfig = JsonConvert.DeserializeObject<AmdConfig>(readConfigContent);
+                            _amdConfigs[algorithmType] = amdConfig;
+                        }
                         break;
                     case DeviceType.NVIDIA:
+                        if (GetNvidiaConfig(algorithmType) == null)
+                        {
+                            NvidiaConfig nvidiaConfig = JsonConvert.DeserializeObject<NvidiaConfig>(readConfigContent);
+                            _nvidiaConfigs[algorithmType] = nvidiaConfig;
+                        }
                         break;
                 }
             }
