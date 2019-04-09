@@ -196,10 +196,10 @@ namespace XmrStak
 
             var deviceConfigParams = "";
             var folder = _algorithmType.ToString().ToLower();
-
-            if (_miningDeviceTypes.Contains(DeviceType.))
-            {
-            }
+            // TODO prepare config files
+            //if (_miningDeviceTypes.Contains(DeviceType.))
+            //{
+            //}
             var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(_miningDeviceTypes);
             var commandLine = $@"--config {folder}\config.txt --poolconf {folder}\pools.txt {deviceConfigParams} {disableDeviceTypes}";
             return commandLine;

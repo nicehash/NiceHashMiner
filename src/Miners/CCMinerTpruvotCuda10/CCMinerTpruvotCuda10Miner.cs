@@ -174,7 +174,7 @@ namespace CCMinerTpruvotCuda10
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
 
             var errorList = new List<string> { "Unknown algo parameter", "Cuda error", "Non-existant CUDA device" };
