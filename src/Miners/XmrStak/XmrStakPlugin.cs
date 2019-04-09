@@ -124,10 +124,17 @@ namespace XmrStak
             return false;
         }
 
-        public void SaveMoveConfig(DeviceType deviceType, AlgorithmType algorithmType, string sourcePath, string destinationPath)
+        public void SaveMoveConfig(DeviceType deviceType, AlgorithmType algorithmType, string sourcePath)
         {
+            string destinationPath = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "configs", $"{algorithmType.ToString()}_{deviceType.ToString()}.txt");
             try
             {
+                var dirPath = Path.GetDirectoryName(destinationPath);
+                if (Directory.Exists(dirPath) == false)
+                {
+                    Directory.CreateDirectory(dirPath);
+                }
+
                 var readConfigContent = File.ReadAllText(sourcePath);
                 // make it JSON 
                 readConfigContent = "{" + readConfigContent + "}";

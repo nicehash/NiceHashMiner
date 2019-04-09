@@ -192,17 +192,35 @@ namespace XmrStak
             // instant non blocking
             var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
 
+            var binPathBinCwdPair = GetBinAndCwdPaths();
+            var binCwd = binPathBinCwdPair.Item2;
             var algo = AlgorithmName(_algorithmType);
             // prepare configs
             var folder = _algorithmType.ToString().ToLower();
-
-            var deviceConfigParams = $@"--cpu {folder}\cpu.txt";
-            // TODO prepare config files
-            //if (_miningDeviceTypes.Contains(DeviceType.))
-            //{
-            //}
-            CreateConfigFile(DeviceType.CPU).Wait();
-            CreateConfigFile(DeviceType.NVIDIA).Wait();
+            var deviceConfigParams = "";
+            // check if we have configs
+            foreach (var deviceType in _miningDeviceTypes)
+            {
+                var config = $"{deviceType.ToString()}.txt".ToLower();
+                var configFilePath = Path.Combine(binCwd, config);
+                if (!_configHandler.HasConfig(deviceType, _algorithmType))
+                {
+                    try
+                    {
+                        var t = CreateConfigFile(deviceType);
+                        t.Wait(); // block
+                        if (t.Result)
+                        {
+                            _configHandler.SaveMoveConfig(deviceType, _algorithmType, configFilePath);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // TODO log
+                    }
+                }
+                deviceConfigParams += $@" --{config} {folder}\{config}.txt";
+            }
 
             var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(_miningDeviceTypes);
             var commandLine = $@"--config {folder}\config.txt --poolconf {folder}\pools.txt {deviceConfigParams} {disableDeviceTypes}";

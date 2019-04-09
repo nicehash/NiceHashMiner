@@ -11,7 +11,7 @@ namespace XmrStak.Configs
     {
         bool HasConfig(DeviceType deviceType, AlgorithmType algorithmType);
 
-        void SaveMoveConfig(DeviceType deviceType, AlgorithmType algorithmType, string sourcePath, string destinationPath);
+        void SaveMoveConfig(DeviceType deviceType, AlgorithmType algorithmType, string sourcePath);
 
         CpuConfig GetCpuConfig(AlgorithmType algorithmType);
         AmdConfig GetAmdConfig(AlgorithmType algorithmType);
