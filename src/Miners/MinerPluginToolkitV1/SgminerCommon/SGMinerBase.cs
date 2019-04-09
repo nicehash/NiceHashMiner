@@ -123,7 +123,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             var device = _miningPairs.Select(kvp => kvp.Device).FirstOrDefault();
             string currentGPU = $"GPU{device.ID}";

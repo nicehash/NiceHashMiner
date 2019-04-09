@@ -148,7 +148,7 @@ namespace TeamRedMiner
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             double benchHashesSum = 0;
             double benchHashResult = 0;

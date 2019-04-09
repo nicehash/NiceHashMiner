@@ -86,7 +86,7 @@ namespace NBMiner
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
-            var bp = new BenchmarkProcess(binPath, binCwd, cl);
+            var bp = new BenchmarkProcess(binPath, binCwd, cl, GetEnvironmentVariables());
 
             var benchHashes = 0d;
             var benchIters = 0;
