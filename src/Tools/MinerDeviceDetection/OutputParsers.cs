@@ -142,5 +142,37 @@ namespace MinerDeviceDetection
             }
             return mappedDevices;
         }
+
+        public static Dictionary<string, int> ParseNBMinerOutput(string output, List<BaseDevice> baseDevices)
+        {
+            var cudaGpus = baseDevices.Where(dev => dev is CUDADevice).Cast<CUDADevice>();
+
+            Dictionary<string, int> mappedDevices = new Dictionary<string, int>();
+            if (cudaGpus.Count() == 0)
+            {
+                return mappedDevices;
+            }
+            var lines = output.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Count() != 0)
+            {
+                foreach (var line in lines)
+                {
+                    if (line.Substring(0, 4).Any(c => char.IsDigit(c))) //if the ID is digit then we know there is gpu data in that line
+                    {
+                        var gpuName = line.Substring(line.LastIndexOf('|')).Remove(0, 2);
+                        var index = line.Substring(0,4).Replace("|", "");
+                        foreach (var gpu in cudaGpus)
+                        {
+                            if (gpu.Name == gpuName)
+                            {
+                                mappedDevices.Add(gpu.UUID, Convert.ToInt32(index));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return mappedDevices;
+        }
     }
 }

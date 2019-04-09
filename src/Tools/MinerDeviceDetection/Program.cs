@@ -56,6 +56,31 @@ namespace MinerDeviceDetection
             return output;
         }
 
+        static string MinerErrorOutput(string path, string arguments)
+        {
+            string output = "";
+            try
+            {
+                Process getDevices = new Process
+                {
+                    StartInfo ={
+                                FileName = path,
+                                Arguments = arguments,
+                                UseShellExecute = false,
+                                RedirectStandardError = true
+                }
+                };
+                getDevices.Start();
+                output = getDevices.StandardError.ReadToEnd();
+                getDevices.WaitForExit();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e);
+            }
+            return output;
+        }
+
         static void Main(string[] args)
         {
             var root = Directory.GetCurrentDirectory();
@@ -71,68 +96,97 @@ namespace MinerDeviceDetection
             }
             Dictionary<string, string> minerDeviceDetection = new Dictionary<string, string>();
             Dictionary<string, string> goodMiners = new Dictionary<string, string>() { {"avemore"/*sgminer*/, "--ndevs" }, {"sgminer-gm", "--ndevs" },{"sgminer-5-6-0-general", "--ndevs" },{ "gminer", "--list_devices" }, {"nbminer", "--device-info" }, {"phoenix", "-list" }, { "teamredminer", "--list_devices"}, { "ttminer", "-list"} };
-            foreach (var miner in goodMiners)
+            if (File.Exists("outTest.txt"))
             {
-                foreach(var bin in binData)
+                File.Delete("outTest.txt");
+            }
+            if (File.Exists("mappedGpus.txt"))
+            {
+                File.Delete("mappedGpus.txt");
+            }
+            using (StreamWriter mappedMinersFile = new StreamWriter("mappedGpus.txt", true))
+            {
+
+                foreach (var miner in goodMiners)
                 {
-                    if (bin.Key == miner.Key)
+                    foreach (var bin in binData)
                     {
-                        var output = MinerOutput(bin.Value, miner.Value);
-                        List<BaseDevice> tmpDeleteDevices = new List<BaseDevice>();
-                        var dev = new CUDADevice(new BaseDevice(DeviceType.NVIDIA, "uuid1", "name02", 1), 2, 200, 6, 1);
-                        tmpDeleteDevices.Add(dev);
-                        dev = new CUDADevice(new BaseDevice(DeviceType.NVIDIA, "uuid0", "name01", 0), 1, 200, 6, 1);
-                        tmpDeleteDevices.Add(dev);
-                        var mappedDevices = new Dictionary<string, int>();
-                        switch (bin.Key)
+                        if (bin.Key == miner.Key)
                         {
-                            case "nbminer":
-                                break;
-                            case "gminer":
-                                mappedDevices = OutputParsers.ParseGMinerOutput(output, tmpDeleteDevices);
-                                foreach (var device in tmpDeleteDevices)
-                                {
-                                    foreach (var tmpDev in mappedDevices)
+                            var output = MinerOutput(bin.Value, miner.Value);
+                            List<BaseDevice> tmpDeleteDevices = new List<BaseDevice>();
+                            var dev = new CUDADevice(new BaseDevice(DeviceType.NVIDIA, "uuid1", "GeForce GTX 1060 6GB", 1), 2, 200, 6, 1);
+                            tmpDeleteDevices.Add(dev);
+                            dev = new CUDADevice(new BaseDevice(DeviceType.NVIDIA, "uuid0", "GeForce GTX 1070 Ti", 0), 1, 200, 6, 1);
+                            tmpDeleteDevices.Add(dev);
+                            var mappedDevices = new Dictionary<string, int>();
+
+                            switch (bin.Key)
+                            {
+                                case "gminer":
+                                    mappedMinersFile.WriteLine("GMiner");
+                                    mappedDevices = OutputParsers.ParseGMinerOutput(output, tmpDeleteDevices);
+                                    foreach (var device in tmpDeleteDevices)
                                     {
-                                        if (device.UUID == tmpDev.Key)
+                                        foreach (var tmpDev in mappedDevices)
                                         {
-                                            using (StreamWriter file = new StreamWriter("outMapGminer.txt", true)) { file.WriteLine(device.Name + "   " + tmpDev.Value); }
+                                            if (device.UUID == tmpDev.Key)
+                                            {
+                                                mappedMinersFile.WriteLine($"{tmpDev.Value}     {device.Name}");
+                                            }
                                         }
                                     }
-                                }
-                                break;
-                            case "phoenix":
-                                mappedDevices = OutputParsers.ParsePhoenixOutput(output, tmpDeleteDevices);
-                                foreach (var device in tmpDeleteDevices)
-                                {
-                                    foreach (var tmpDev in mappedDevices)
+                                    break;
+                                case "nbminer":
+                                    mappedMinersFile.WriteLine("NBMiner");
+                                    var errOutput = MinerErrorOutput(bin.Value, miner.Value);
+                                    mappedDevices = OutputParsers.ParseNBMinerOutput(errOutput, tmpDeleteDevices);
+                                    foreach (var device in tmpDeleteDevices)
                                     {
-                                        if (device.UUID == tmpDev.Key)
+                                        foreach (var tmpDev in mappedDevices)
                                         {
-                                            using (StreamWriter file = new StreamWriter("outMapPhoenix.txt", true)) { file.WriteLine(device.Name + "   " + tmpDev.Value); }
+                                            if (device.UUID == tmpDev.Key)
+                                            {
+                                                mappedMinersFile.WriteLine($"{tmpDev.Value}     {device.Name}");
+                                            }
                                         }
                                     }
-                                }
-                                break;
-                            case "ttminer":
-                                mappedDevices = OutputParsers.ParseTTMinerOutput(output, tmpDeleteDevices);
-                                foreach (var device in tmpDeleteDevices)
-                                {
-                                    foreach (var tmpDev in mappedDevices)
+                                    break;
+                                case "phoenix":
+                                    mappedMinersFile.WriteLine("Phoenix");
+                                    mappedDevices = OutputParsers.ParsePhoenixOutput(output, tmpDeleteDevices);
+                                    foreach (var device in tmpDeleteDevices)
                                     {
-                                        if (device.UUID == tmpDev.Key)
+                                        foreach (var tmpDev in mappedDevices)
                                         {
-                                            using (StreamWriter file = new StreamWriter("outMapTTMiner.txt", true)) { file.WriteLine(device.Name + "   " + tmpDev.Value); }
+                                            if (device.UUID == tmpDev.Key)
+                                            {
+                                                mappedMinersFile.WriteLine($"{tmpDev.Value}     {device.Name}");
+                                            }
                                         }
                                     }
-                                }
-                                break;
-                            default:
-                                break;
+                                    break;
+                                case "ttminer":
+                                    mappedMinersFile.WriteLine("TTMiner");
+                                    mappedDevices = OutputParsers.ParseTTMinerOutput(output, tmpDeleteDevices);
+                                    foreach (var device in tmpDeleteDevices)
+                                    {
+                                        foreach (var tmpDev in mappedDevices)
+                                        {
+                                            if (device.UUID == tmpDev.Key)
+                                            {
+                                                mappedMinersFile.WriteLine($"{tmpDev.Value}     {device.Name}");
+                                            }
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            minerDeviceDetection.Add(miner.Key, output);
+                            using (StreamWriter file = new StreamWriter("outTest.txt", true)) { file.WriteLine(miner.Key); file.WriteLine(output); }
                         }
- 
-                        minerDeviceDetection.Add(miner.Key, output);
-                        using (StreamWriter file = new StreamWriter("outTest.txt", true)) {file.WriteLine(miner.Key); file.WriteLine(output); }
                     }
                 }
             }
