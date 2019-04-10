@@ -96,11 +96,11 @@ namespace MinerPluginToolkitV1
                 {
                     _stopCalled = true;
                 }
-                _miningProcess?.Handle?.Close();
+                _miningProcess?.Handle?.CloseMainWindow();
                 // 5 seconds wait for shutdown
                 if (!_miningProcess?.Handle?.WaitForExit(5 * 1000) ?? false)
                 {
-                    //_miningProcess?.Handle?.Kill(); // TODO look for another gracefull shutdown
+                    _miningProcess?.Handle?.Kill(); // TODO look for another gracefull shutdown
                 }
             }
             catch (Exception e)
