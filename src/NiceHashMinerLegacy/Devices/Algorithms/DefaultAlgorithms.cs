@@ -208,28 +208,28 @@ namespace NiceHashMiner.Devices.Algorithms
         //    return algos;
         //}
 
-        // NVIDIA - TODO can also support AMD
-        private static List<Algorithm> ethminerAlgorithmsForDevice(ComputeDevice dev)
-        {
-            var cudaDev = dev as CudaComputeDevice;
-            // CUDA SM3.0+
-            if (cudaDev == null || cudaDev.SMMajor < 3 ) return null;
-            if (dev.Name.Contains("750") && dev.Name.Contains("Ti")) {
-                Helpers.ConsolePrint("DefaultAlgorithms-ethminer",
-                        "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
-                return null;
-            }
+        //// NVIDIA - TODO can also support AMD
+        //private static List<Algorithm> ethminerAlgorithmsForDevice(ComputeDevice dev)
+        //{
+        //    var cudaDev = dev as CudaComputeDevice;
+        //    // CUDA SM3.0+
+        //    if (cudaDev == null || cudaDev.SMMajor < 3 ) return null;
+        //    if (dev.Name.Contains("750") && dev.Name.Contains("Ti")) {
+        //        Helpers.ConsolePrint("DefaultAlgorithms-ethminer",
+        //                "GTX 750Ti found! By default this device will be disabled for ethereum as it is generally too slow to mine on it.");
+        //        return null;
+        //    }
             
 
-            const bool enabledByDefault = false;
-            var algos = new List<Algorithm>
-            {
-                new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto") {Enabled = enabledByDefault }
-            };
-            // filter RAM requirements
-            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
-            return algos;
-        }
+        //    const bool enabledByDefault = false;
+        //    var algos = new List<Algorithm>
+        //    {
+        //        new Algorithm(MinerBaseType.ethminer, AlgorithmType.DaggerHashimoto, "daggerhashimoto") {Enabled = enabledByDefault }
+        //    };
+        //    // filter RAM requirements
+        //    algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+        //    return algos;
+        //}
 
         //// NVIDIA
         //private static List<Algorithm> EWBFAlgorithmsForDevice(ComputeDevice dev)
@@ -374,7 +374,7 @@ namespace NiceHashMiner.Devices.Algorithms
             //XmrStakAlgorithmsForDevice,
             //sgminerAlgorithmsForDevice,
             //ccminerAlgorithmsForDevice,
-            ethminerAlgorithmsForDevice,
+            //ethminerAlgorithmsForDevice,
         };
 
         private static IReadOnlyList<AlgorithmsForDevice> algorithmsDelegates3rdParty = new List<AlgorithmsForDevice>

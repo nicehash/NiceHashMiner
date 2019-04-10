@@ -6,24 +6,10 @@ namespace NiceHashMiner.Miners
 {
     public static class MinerFactory
     {
-        private static Miner CreateEthminer(DeviceType deviceType)
-        {
-            if (DeviceType.AMD == deviceType)
-            {
-                return new MinerEtherumOCL();
-            }
-
-            return DeviceType.NVIDIA == deviceType ? new MinerEtherumCUDA() : null;
-        }
-
         public static Miner CreateMiner(DeviceType deviceType, Algorithm algorithm)
         {
             switch (algorithm.MinerBaseType)
             {
-                //case MinerBaseType.sgminer:
-                //    return new Sgminer();
-                case MinerBaseType.ethminer:
-                    return CreateEthminer(deviceType);
                 case MinerBaseType.Claymore:
                     return new ClaymoreDual(algorithm.SecondaryNiceHashID);
                 case MinerBaseType.Phoenix:
