@@ -99,6 +99,7 @@
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler2.cs" />
+    <Compile Include="Benchmarking\BenchmarkTimes.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
@@ -242,7 +243,6 @@
     <Compile Include="Configs\ConfigJsonFile\ConfigFile.cs" />
     <Compile Include="Configs\Data\ComputeDeviceConfig.cs" />
     <Compile Include="Configs\Data\GeneralConfig.cs" />
-    <Compile Include="Configs\Data\BenchmarkTimeLimitsConfig.cs" />
     <Compile Include="Configs\Data\DeviceDetectionConfig.cs" />
     <Compile Include="Configs\ConfigJsonFile\DeviceBenchmarkConfigFile.cs" />
     <Compile Include="Configs\ConfigJsonFile\GeneralConfigFile.cs" />
@@ -265,12 +265,6 @@
     </Compile>
     <Compile Include="Forms\Components\AlgorithmSettingsControl.Designer.cs">
       <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Components\BenchmarkLimitControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\BenchmarkLimitControl.Designer.cs">
-      <DependentUpon>BenchmarkLimitControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Components\BenchmarkOptions.cs">
       <SubType>UserControl</SubType>
@@ -376,9 +370,6 @@
     <EmbeddedResource Include="Forms\Components\AlgorithmSettingsControl.resx">
       <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\BenchmarkLimitControl.resx">
-      <DependentUpon>BenchmarkLimitControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>

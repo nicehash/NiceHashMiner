@@ -104,8 +104,7 @@ namespace NiceHashMiner.Benchmarking
 
 
                 _currentMiner.InitBenchmarkSetup(new MiningPair(Device, _currentAlgorithm));
-                var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
-                    .GetBenchamrktime(_performanceType, Device.DeviceGroupType);
+                var time = BenchmarkTimes.GetTime(_performanceType, Device.DeviceType);
                 ////currentConfig.TimeLimit = time;
                 //if (_cpuBenchmarkStatus != null) _cpuBenchmarkStatus.Time = time;
                 //if (_claymoreZcashStatus != null) _claymoreZcashStatus.Time = time;

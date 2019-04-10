@@ -24,14 +24,9 @@ namespace NiceHashMiner.Configs.Data
 
         public bool MinimizeMiningWindows = false;
 
-        //public int LessThreads;
-        public CpuExtensionType ForceCPUExtension = CpuExtensionType.Automatic;
-
         public double SwitchProfitabilityThreshold = 0.05; // percent
         public int MinerAPIQueryInterval = 5;
         public int MinerRestartDelayMS = 500;
-
-        public BenchmarkTimeLimitsConfig BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
 
         // TODO deprecate this
         public DeviceDetectionConfig DeviceDetection = new DeviceDetectionConfig();
@@ -52,9 +47,7 @@ namespace NiceHashMiner.Configs.Data
         public bool DisableWindowsErrorReporting = true;
         public bool ShowInternetConnectionWarning = true;
         public bool NVIDIAP0State = false;
-
-        public int ethminerDefaultBlockHeight = 2000000;
-        public DagGenerationType EthminerDagGenerationType = DagGenerationType.SingleKeep;
+        
         public int ApiBindPortPoolStart = 5100;
         public double MinimumProfit = 0;
         public bool IdleWhenNoInternetAccess = true;
@@ -104,7 +97,6 @@ namespace NiceHashMiner.Configs.Data
         {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             //Language = "en";
-            ForceCPUExtension = CpuExtensionType.Automatic;
             BitcoinAddress = "";
             WorkerName = "worker1";
             TimeUnit = TimeUnitType.Day;
@@ -114,7 +106,6 @@ namespace NiceHashMiner.Configs.Data
             DebugConsole = false;
             HideMiningWindows = false;
             MinimizeToTray = false;
-            BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
             DeviceDetection = new DeviceDetectionConfig();
             DisableAMDTempControl = true;
             DisableDefaultOptimizations = false;
@@ -127,13 +118,11 @@ namespace NiceHashMiner.Configs.Data
             ShowInternetConnectionWarning = true;
             NVIDIAP0State = false;
             MinerRestartDelayMS = 500;
-            ethminerDefaultBlockHeight = 2000000;
             SwitchProfitabilityThreshold = 0.05; // percent
             MinIdleSeconds = 60;
             DisplayCurrency = "USD";
             ApiBindPortPoolStart = 4000;
             MinimumProfit = 0;
-            EthminerDagGenerationType = DagGenerationType.SingleKeep;
             DownloadInit = false;
             //ContinueMiningIfNoInternetAccess = false;
             IdleWhenNoInternetAccess = true;
@@ -179,10 +168,6 @@ namespace NiceHashMiner.Configs.Data
             if (ApiBindPortPoolStart > (65535 - 2000))
             {
                 ApiBindPortPoolStart = 5100;
-            }
-            if (BenchmarkTimeLimits == null)
-            {
-                BenchmarkTimeLimits = new BenchmarkTimeLimitsConfig();
             }
             if (DeviceDetection == null)
             {

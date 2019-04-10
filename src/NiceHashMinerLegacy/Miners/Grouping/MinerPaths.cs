@@ -16,17 +16,11 @@ namespace NiceHashMiner.Miners.Grouping
     {
         public static class Data
         {
-            // root binary folder
-            private const string Bin = @"bin";
-            public const string Ethminer = Bin + @"\ethminer\ethminer.exe";
-            public const string XmrStak = Bin + @"\xmr-stak\xmr-stak.exe";
-
             public const string None = "";
 
             // root binary folder
             private const string Bin3rdParty = @"bin_3rdparty";
             public const string ClaymoreDual = Bin3rdParty + @"\claymore_dual\EthDcrMiner64.exe";
-            public const string EthLargement = Bin3rdParty + @"\ethlargement\OhGodAnETHlargementPill-r2.exe";
             public const string Phoenix = Bin3rdParty + @"\phoenix\PhoenixMiner.exe";
         }
 
@@ -42,12 +36,8 @@ namespace NiceHashMiner.Miners.Grouping
         {
             switch (minerBaseType)
             {
-                case MinerBaseType.ethminer:
-                    return Data.Ethminer;
                 case MinerBaseType.Claymore:
                     return Data.ClaymoreDual;
-                case MinerBaseType.XmrStak:
-                    return Data.XmrStak;
                 case MinerBaseType.Phoenix:
                     return Data.Phoenix;
             }
