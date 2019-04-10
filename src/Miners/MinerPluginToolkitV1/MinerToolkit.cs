@@ -141,7 +141,7 @@ namespace MinerPluginToolkitV1
                     WorkingDirectory = workingDir,
                     Arguments = commandLine,
                     // common settings
-                    UseShellExecute = true,
+                    UseShellExecute = environmentVariables == null,
                 },
                 EnableRaisingEvents = true, // TODO check out this one
             };
