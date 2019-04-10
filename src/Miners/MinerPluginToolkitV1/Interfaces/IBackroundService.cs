@@ -11,6 +11,6 @@ namespace MinerPluginToolkitV1.Interfaces
     {
         bool ServiceEnabled { get; set; }
         void Start(IEnumerable<MiningPair> miningPairs);
-        void Stop();
+        void Stop(IEnumerable<MiningPair> miningPairs = null);
     }
 }

@@ -413,6 +413,7 @@ namespace XmrStak
             return deviceConfigParams;
         }
 
+        // TODO add cancel token
         protected async Task<Tuple<bool, string>> CreateConfigFile(DeviceType deviceType)
         {
             // API port function might be blocking
