@@ -41,7 +41,7 @@ namespace XmrStak
             var devicesToAdd = new List<BaseDevice>();
             // AMD case check if we should check Gcn4
             var amdGpus = devices.Where(dev => dev is AMDDevice /* amd && Checkers.IsGcn4(amd)*/).Cast<AMDDevice>(); 
-            var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 5).Cast<CUDADevice>();
+            var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 3).Cast<CUDADevice>();
             var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();
 
             // CUDA 9.2+ driver 397.44
@@ -157,7 +157,17 @@ namespace XmrStak
         }
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
-        {};
+        {
+            DefaultSystemEnvironmentVariables = new Dictionary<string, string>
+            {
+                // https://github.com/fireice-uk/xmr-stak/blob/master/doc/tuning.md#increase-memory-pool
+                // for AMD backend
+                {"GPU_MAX_ALLOC_PERCENT", "100"},
+                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+                {"GPU_MAX_HEAP_SIZE", "100"},
+                {"GPU_FORCE_64BIT_PTR", "1"}
+            }
+        };
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
         {};
