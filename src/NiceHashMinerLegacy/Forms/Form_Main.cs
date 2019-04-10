@@ -284,7 +284,7 @@ namespace NiceHashMiner
 
                 var detectionProgress = new Progress<string>(info => progress?.Report(Tuple.Create(info, nextProgPerc())));
                 // Query Available ComputeDevices
-                var query = await ComputeDeviceManager.QueryDevicesAsync(detectionProgress);
+                var query = await ComputeDeviceManager.QueryDevicesAsync(detectionProgress, false);
                 ShowQueryWarnings(query);
 
                 _isDeviceDetectionInitialized = true;
