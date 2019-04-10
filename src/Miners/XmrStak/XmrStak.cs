@@ -193,7 +193,7 @@ namespace XmrStak
 
             // determine benchmark time 
             // settup times
-            var openCLCodeGenerationWait = 0;
+            var openCLCodeGenerationWait = _miningDeviceTypes.Contains(DeviceType.AMD) ? 20 : 0;
             var benchWait = 5;
             var benchmarkTime = 30; // in seconds
             switch (benchmarkType)
