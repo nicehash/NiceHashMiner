@@ -136,17 +136,17 @@ namespace XmrStak
                             case DeviceType.CPU:
                                 var cpuConfig = JsonConvert.DeserializeObject<CachedCpuSettings>(cachedConfigContent);
                                 var isCpuSame = uuids.Except(cpuConfig.DeviceUUIDs).Count() == 0;
-                                if (isCpuSame) _cpuConfigs[algorithm] = cpuConfig.CachedConfig;
+                                if (isCpuSame) SetCpuConfig(algorithm, cpuConfig.CachedConfig);
                                 break;
                             case DeviceType.AMD:
                                 var amdConfig = JsonConvert.DeserializeObject<CachedAmdSettings>(cachedConfigContent);
                                 var isAmdSame = uuids.Except(amdConfig.DeviceUUIDs).Count() == 0;
-                                if (isAmdSame) _amdConfigs[algorithm] = amdConfig.CachedConfig;
+                                if (isAmdSame) SetAmdConfig(algorithm, amdConfig.CachedConfig);
                                 break;
                             case DeviceType.NVIDIA:
                                 var nvidiaConfig = JsonConvert.DeserializeObject<CachedNvidiaSettings>(cachedConfigContent);
                                 var isNvidiaSame = uuids.Except(nvidiaConfig.DeviceUUIDs).Count() == 0;
-                                if (isNvidiaSame) _nvidiaConfigs[algorithm] = nvidiaConfig.CachedConfig;
+                                if (isNvidiaSame) SetNvidiaConfig(algorithm, nvidiaConfig.CachedConfig);
                                 break;
                         }
                     }
@@ -224,7 +224,7 @@ namespace XmrStak
                 {
                     case DeviceType.CPU:
                         var cpuConfig = JsonConvert.DeserializeObject<CpuConfig>(readConfigContent);
-                        _cpuConfigs[algorithmType] = cpuConfig;
+                        SetCpuConfig(algorithmType, cpuConfig);
                         cachedSettings = new CachedCpuSettings {
                             CachedConfig = cpuConfig,
                             DeviceUUIDs = uuids
@@ -232,7 +232,7 @@ namespace XmrStak
                         break;
                     case DeviceType.AMD:
                         var amdConfig = JsonConvert.DeserializeObject<AmdConfig>(readConfigContent);
-                        _amdConfigs[algorithmType] = amdConfig;
+                        SetAmdConfig(algorithmType, amdConfig);
                         cachedSettings = new CachedAmdSettings
                         {
                             CachedConfig = amdConfig,
@@ -241,7 +241,7 @@ namespace XmrStak
                         break;
                     case DeviceType.NVIDIA:
                         var nvidiaConfig = JsonConvert.DeserializeObject<NvidiaConfig>(readConfigContent);
-                        _nvidiaConfigs[algorithmType] = nvidiaConfig;
+                        SetNvidiaConfig(algorithmType, nvidiaConfig);
                         cachedSettings = new CachedNvidiaSettings
                         {
                             CachedConfig = nvidiaConfig,
