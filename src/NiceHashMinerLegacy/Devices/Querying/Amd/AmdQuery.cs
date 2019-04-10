@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.Querying.Amd.OpenCL;
+using NiceHashMinerLegacy.Common.Device;
 using NiceHashMiner.Stats;
 
 namespace NiceHashMiner.Devices.Querying.Amd
@@ -65,6 +66,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 amdPlatformNumFound = true;
                 var amdOpenCLPlatformStringKey = oclEl.PlatformName;
                 AvailableDevices.AmdOpenCLPlatformNum = oclEl.PlatformNum;
+                AMDDevice.OpenCLPlatformID = oclEl.PlatformNum;
                 amdOclDevices = oclEl.Devices;
                 Helpers.ConsolePrint(Tag,
                     $"AMD platform found: Key: {amdOpenCLPlatformStringKey}, Num: {AvailableDevices.AmdOpenCLPlatformNum}");

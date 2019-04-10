@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using NiceHashMiner.PInvoke;
+using NiceHashMinerLegacy.Common.Device;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -19,7 +21,12 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                     Globals.JsonSettings);
                 cudaDevices = cudaQueryResult.CudaDevices;
 
-                if (cudaDevices != null && cudaDevices.Count != 0) return true;
+                if (cudaDevices != null && cudaDevices.Count != 0) {
+                    var driverVer = cudaQueryResult.DriverVersion.Split('.').Select(s => int.Parse(s)).ToArray();
+                    CUDADevice.INSTALLED_NVIDIA_DRIVERS = new Version(driverVer[0], driverVer[1]);
+                    return true;
+                }
+                
 
                 Helpers.ConsolePrint(Tag,
                     "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +

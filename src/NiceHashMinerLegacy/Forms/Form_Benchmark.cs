@@ -38,7 +38,7 @@ namespace NiceHashMiner.Forms
         private int _dotCount;
 
         private bool _hasFailedAlgorithms;
-        private List<BenchmarkHandler> _runningBenchmarkThreads = new List<BenchmarkHandler>();
+        private List<BenchmarkHandler2> _runningBenchmarkThreads = new List<BenchmarkHandler2>();
         private Dictionary<ComputeDevice, Algorithm> _statusCheckAlgos;
 
         private readonly bool ExitWhenFinished;
@@ -376,7 +376,7 @@ namespace NiceHashMiner.Forms
             _statusCheckAlgos = new Dictionary<ComputeDevice, Algorithm>();
             lock (_runningBenchmarkThreads)
             {
-                _runningBenchmarkThreads = new List<BenchmarkHandler>();
+                _runningBenchmarkThreads = new List<BenchmarkHandler2>();
             }
 
             // disable gui controls
@@ -423,7 +423,7 @@ namespace NiceHashMiner.Forms
             {
                 foreach (var pair in _benchmarkDevicesAlgorithmQueue)
                 {
-                    var handler = new BenchmarkHandler(pair.Item1, pair.Item2, this, benchmarkOptions1.PerformanceType);
+                    var handler = new BenchmarkHandler2(pair.Item1, pair.Item2, this, benchmarkOptions1.PerformanceType);
                     _runningBenchmarkThreads.Add(handler);
                 }
                 // Don't start until list is populated

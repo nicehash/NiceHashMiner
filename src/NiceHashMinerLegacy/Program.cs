@@ -10,6 +10,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner
 {
@@ -26,6 +27,7 @@ namespace NiceHashMiner
             var path = Path.GetDirectoryName(Application.ExecutablePath);
             if (path != null)
             {
+                Paths.Root = path;
                 Environment.CurrentDirectory = path;
                 pathSet = true;
             }

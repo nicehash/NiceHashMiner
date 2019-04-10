@@ -28,14 +28,6 @@ namespace NiceHashMiner
         // Variables
         public static JsonSerializerSettings JsonSettings = null;
 
-        public static int ThreadsPerCpu;
-
-        // quickfix guard for checking internet conection
-        public static bool IsFirstNetworkCheckTimeout = true;
-
-        public static int FirstNetworkCheckTimeoutTimeMs = 500;
-        public static int FirstNetworkCheckTimeoutTries = 10;
-
         public static readonly string RigID;
 
         private static string GetAlgorithmUrlName(AlgorithmType algorithmType)

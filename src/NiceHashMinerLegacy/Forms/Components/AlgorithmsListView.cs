@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
+using NiceHashMiner.Plugin;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -106,6 +107,12 @@ namespace NiceHashMiner.Forms.Components
                     name = "  + " + dualAlg.SecondaryAlgorithmName;
                     secondarySpeed = dualAlg.SecondaryBenchmarkSpeedString();
                     payingRatio = dualAlg.SecondaryCurPayingRatio;
+                }
+                else if (alg is PluginAlgorithm plugAlg)
+                {
+                    var plugin = MinerPluginsManager.GetPluginWithUuid(plugAlg.BaseAlgo.MinerID);
+                    name = $"{alg.AlgorithmName} ({plugin.Name} (PLUGIN))";
+                    payingRatio = alg.CurPayingRatio;
                 }
                 else
                 {

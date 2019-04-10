@@ -36,7 +36,7 @@ namespace NiceHashMiner.Miners
             var newPortEnd = port + 3000;
             for (; port < newPortEnd; ++port)
             {
-                if (MinersSettingsManager.AllReservedPorts.Contains(port) == false && IsPortAvaliable(port) && UsedPorts.Add(port))
+                if (/*MinersSettingsManager.AllReservedPorts.Contains(port) == false && */IsPortAvaliable(port) && UsedPorts.Add(port))
                 {
                     break;
                 }

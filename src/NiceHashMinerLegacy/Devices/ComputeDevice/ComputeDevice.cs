@@ -10,11 +10,15 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Common.Device;
 
 namespace NiceHashMiner.Devices
 {
     public class ComputeDevice
     {
+        // migrate ComputeDevice to BaseDevice
+        public BaseDevice PluginDevice { get; protected set; }
+
         public readonly int ID;
 
         public int Index { get; protected set; } // For socket control, unique
@@ -142,6 +146,42 @@ namespace NiceHashMiner.Devices
         //    return null;
         //}
 
+         
+        // TODO this thing doesn't support dual algorithms
+        public void UpdatePluginAlgorithms(string pluginUuid, IList<PluginAlgorithm> pluginAlgos)
+        {
+            var pluginUuidAlgos = AlgorithmSettings
+                .Where(algo => algo is PluginAlgorithm pAlgo && pAlgo.BaseAlgo.MinerID == pluginUuid)
+                .Cast<PluginAlgorithm>();
+
+            // filter out old plugin algorithms if any
+            if (pluginUuidAlgos.Count() > 0)
+            {
+                AlgorithmSettings = AlgorithmSettings.Where(algo => pluginUuidAlgos.Contains(algo) == false).ToList();
+            }
+
+            // keep old algorithms with settings and filter out obsolete ones
+            var newAlgorithmIDs = pluginAlgos.Select(algo => algo.NiceHashID);
+            var oldAlgosWithSettings = pluginUuidAlgos.Where(algo => newAlgorithmIDs.Contains(algo.NiceHashID));
+
+            // filter out old algorithms with settings and keep only brand new ones
+            var oldAlgosWithSettingsIDs = oldAlgosWithSettings.Select(algo => algo.NiceHashID);
+            var newPluginAlgos = pluginAlgos.Where(algo => oldAlgosWithSettingsIDs.Contains(algo.NiceHashID) == false);
+            
+            // add back old ones that are in the new module
+            if (oldAlgosWithSettings.Count() > 0) AlgorithmSettings.AddRange(oldAlgosWithSettings);
+            // add new ones 
+            if (newPluginAlgos.Count() > 0) AlgorithmSettings.AddRange(newPluginAlgos);
+        }
+
+        public void RemovePluginAlgorithms(string pluginUUID)
+        {
+            var toRemove = AlgorithmSettings.Where(algo => algo is PluginAlgorithm pAlgo && pAlgo.BaseAlgo.MinerID == pluginUUID);
+            if (toRemove.Count() == 0) return;
+            var newList = AlgorithmSettings.Where(algo => toRemove.Contains(algo) == false).ToList();
+            AlgorithmSettings = newList;
+        }
+
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)
         {
             foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings)
@@ -197,7 +237,8 @@ namespace NiceHashMiner.Devices
         {
             if (config != null && config.DeviceUUID == Uuid && config.AlgorithmSettings != null)
             {
-                AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
+                // TODO why replace AlgorithmSettings?
+                //AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
                 foreach (var conf in config.AlgorithmSettings)
                 {
                     var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID, conf.SecondaryNiceHashID);
@@ -228,8 +269,27 @@ namespace NiceHashMiner.Devices
                         }
                     }
                 }
+                if (config == null || config.DeviceUUID != Uuid || config.PluginAlgorithmSettings == null) return;
+                // plugin algorithms
+                var pluginAlgos = AlgorithmSettings.Where(algo => algo is PluginAlgorithm).Cast<PluginAlgorithm>();
+                foreach (var pluginConf in config.PluginAlgorithmSettings)
+                {
+                    var pluginConfAlgorithmIDs = pluginConf.GetAlgorithmIDs();
+                    var pluginAlgo = pluginAlgos
+                        .Where(pAlgo => pluginConf.PluginUUID == pAlgo.BaseAlgo.MinerID && pluginConfAlgorithmIDs.Except(pAlgo.BaseAlgo.IDs).Count() == 0)
+                        .FirstOrDefault();
+                    if (pluginAlgo == null) continue;
+                    // set plugin algo
+                    pluginAlgo.BenchmarkSpeed = pluginConf.Speeds.FirstOrDefault();
+                    pluginAlgo.Enabled = pluginConf.Enabled;
+                    pluginAlgo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
+                    pluginAlgo.PowerUsage = pluginConf.PowerUsage;
+                    // TODO loaded version
+                }
             }
         }
+
+
 
         // getters
         public virtual ComputeDeviceConfig GetComputeDeviceConfig()
@@ -254,6 +314,24 @@ namespace NiceHashMiner.Devices
             // init algo settings
             foreach (var algo in AlgorithmSettings)
             {
+                if (algo is PluginAlgorithm pluginAlgo)
+                {
+                    var pluginConf = new PluginAlgorithmConfig
+                    {
+                        Name = pluginAlgo.PluginName,
+                        PluginUUID = pluginAlgo.BaseAlgo.MinerID,
+                        AlgorithmIDs = string.Join("-", pluginAlgo.BaseAlgo.IDs.Select(id => id.ToString())),
+                        Enabled = pluginAlgo.Enabled,
+                        ExtraLaunchParameters = pluginAlgo.ExtraLaunchParameters,
+                        // TODO
+                        PluginVersion = "N/A", // $"{1}.{0}",
+                        PowerUsage = pluginAlgo.PowerUsage,
+                        // TODO dual not supported ATM
+                        Speeds = new List<double> { pluginAlgo.BenchmarkSpeed }
+                    };
+                    ret.PluginAlgorithmSettings.Add(pluginConf);
+                    continue;
+                }
                 // create/setup
                 var conf = new AlgorithmConfig
                 {

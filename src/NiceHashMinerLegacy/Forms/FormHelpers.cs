@@ -62,5 +62,23 @@ namespace NiceHashMiner.Forms
             }
         }
 
+        static public void SafeInvoke(this Control c, Action f, bool beginInvoke = false)
+        {
+            if (c.InvokeRequired)
+            {
+                if (beginInvoke)
+                {
+                    c.BeginInvoke(f);
+                }
+                else
+                {
+                    c.Invoke(f);
+                }
+            }
+            else
+            {
+                f();
+            }
+        }
     }
 }

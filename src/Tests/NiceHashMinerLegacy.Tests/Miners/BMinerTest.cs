@@ -16,7 +16,7 @@ namespace NiceHashMinerLegacy.Tests.Miners
     [TestClass]
     public class BMinerTest
     {
-        private class TestBMiner : BMiner
+        private class TestBMiner : BMinerOld
         {
             public TestBMiner(AlgorithmType algo)
                 : base(algo)

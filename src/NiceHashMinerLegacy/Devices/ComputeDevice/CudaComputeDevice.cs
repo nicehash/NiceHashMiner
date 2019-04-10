@@ -6,6 +6,7 @@ using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Utils.Guid;
+using NiceHashMinerLegacy.Common.Device;
 
 namespace NiceHashMiner.Devices
 {
@@ -151,6 +152,9 @@ namespace NiceHashMiner.Devices
             _nvmlDevice = nvmlHandle;
 
             ShouldRunEthlargement = cudaDevice.DeviceName.Contains("1080") || cudaDevice.DeviceName.Contains("Titan Xp");
+            // plugin device
+            var bd = new BaseDevice(DeviceType.NVIDIA, cudaDevice.UUID, cudaDevice.GetName(), (int)cudaDevice.DeviceID);
+            PluginDevice = new CUDADevice(bd, cudaDevice.pciBusID, cudaDevice.DeviceGlobalMemory, cudaDevice.SM_major, cudaDevice.SM_minor);
 
             try
             {

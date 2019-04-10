@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Utils.Guid;
+using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Devices
@@ -48,6 +49,10 @@ namespace NiceHashMiner.Devices
                 CounterName = "% Processor Time",
                 InstanceName = "_Total"
             };
+
+            // plugin device
+            var bd = new BaseDevice(DeviceType.CPU, Uuid, name, ID); // TODO UUID
+            PluginDevice = new CPUDevice(bd, threads, true, affinityMask); // TODO hyperthreading 
         }
     }
 }

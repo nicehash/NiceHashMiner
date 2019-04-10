@@ -57,12 +57,12 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// String containing raw extralaunchparams entered by user
         /// </summary>
-        public string ExtraLaunchParameters { get; set; }
+        public virtual string ExtraLaunchParameters { get; set; }
 
         /// <summary>
         /// Get or set whether this algorithm is enabled for mining
         /// </summary>
-        public bool Enabled { get; set; }
+        public virtual bool Enabled { get; set; }
 
         // TODO not needed with new xmr-stak?
         public int LessThreads { get; set; }

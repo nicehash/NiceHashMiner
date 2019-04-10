@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Utils.Guid;
+using NiceHashMinerLegacy.Common.Device;
 
 namespace NiceHashMiner.Devices
 {
@@ -128,6 +129,10 @@ namespace NiceHashMiner.Devices
 
             ADL.ADL2_Main_Control_Create?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);
             _adapterIndex2 = adl2Index;
+
+            // plugin device
+            var bd = new BaseDevice(DeviceType.AMD, Uuid, Name, ID);
+            PluginDevice = new AMDDevice(bd, amdDevice.BusID, amdDevice.DeviceGlobalMemory, Codename, InfSection);
         }
     }
 }

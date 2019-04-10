@@ -139,4 +139,164 @@
   <data name="Eula" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Eula.rtf;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="pluginJSON" xml:space="preserve">
+    <value>[
+  {
+    "PluginUUID": "330238cd-e9d7-424b-94bf-0a0fa8682a8a",
+    "PluginVersion": {
+      "major": "1",
+      "minor": "0"
+    },
+    "PluginPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/CCMinerTpruvotCuda10_v1.0-330238cd-e9d7-424b-94bf-0a0fa8682a8a.zip",
+    "MinerPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/ccminer_tpruvot.zip",
+    "SupportedDevicesAlgorithms": {
+      "NVIDIA": [
+        "NeoScrypt",
+        "Decred",
+        "Blake2s",
+        "Keccak",
+        "Skunk",
+        "X16R",
+        "Lyra2REv3"
+      ]
+    },
+    "PluginAuthor": "stanko@nicehash.com",
+    "PluginDescription": "Plugin for https://github.com/tpruvot/ccminer. Requires CUDA10 minimum supported drivers 410.48 and newer and supports SM 3.0+ NVIDIA GPUs. Blablalbalalbalala",
+    "PluginName": "CCMinerTpruvotCuda10"
+  },
+  {
+    "PluginUUID": "a61acd93-2dfd-4604-a0d2-15547640a64e",
+    "PluginVersion": {
+      "major": "1",
+      "minor": "0"
+    },
+    "PluginPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/TTMiner_v1.0_broken-a61acd93-2dfd-4604-a0d2-15547640a64e.zip",
+    "MinerPackageURL": "https://tradeproject.de/download/Miner/TT-Miner-2.1.15.zip",
+    "SupportedDevicesAlgorithms": {
+      "NVIDIA": [
+        "MTP",
+        "Lyra2REv3"
+      ]
+    },
+    "PluginAuthor": "stanko@nicehash.com",
+    "PluginDescription": "[BROKEN PLUGIN]. TTMiner NVIDIA miner. DevFee 1% for all algorithms",
+    "PluginName": "TTMiner"
+  },
+  {
+    "PluginUUID": "139935b0-7b7e-4016-855a-272ace00ce8a",
+    "PluginVersion": {
+      "major": "1",
+      "minor": "0"
+    },
+    "PluginPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/NBMiner_v1.0-139935b0-7b7e-4016-855a-272ace00ce8a.zip",
+    "MinerPackageURL": "https://github.com/NebuTech/NBMiner/releases/download/v21.0/NBMiner_21.0_Win.zip",
+    "SupportedDevicesAlgorithms": {
+      "NVIDIA": [
+        "GrinCuckaroo29",
+        "GrinCuckatoo31"
+      ]
+    },
+    "PluginAuthor": "Dillon Newell",
+    "PluginDescription": "NBMiner Require 377.xx drivers and supports SM 6.1 GPUs only",
+    "PluginName": "NBMiner"
+  },
+  {
+    "PluginUUID": "0d4422e2-342b-4daa-9cca-8ceb96ce4279",
+    "PluginVersion": {
+      "major": "1",
+      "minor": "0"
+    },
+    "PluginPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/CPUMinerBase_v1.0-0d4422e2-342b-4daa-9cca-8ceb96ce4279.zip",
+    "MinerPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/cpuminer_opt.zip",
+    "SupportedDevicesAlgorithms": {
+      "CPU": [
+        "Lyra2Z"
+      ]
+    },
+    "PluginAuthor": "stanko@nicehash.com",
+    "PluginDescription": "AES-NI CPU Miner",
+    "PluginName": "cpuminer"
+  },
+  {
+    "PluginUUID": "066745f3-6738-4b65-adbb-0d1e153ed873",
+    "PluginVersion": {
+      "major": "1",
+      "minor": "0"
+    },
+    "PluginPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/GMinerPlugin_v1.0-066745f3-6738-4b65-adbb-0d1e153ed873.zip",
+    "MinerPackageURL": "https://github.com/develsoftware/GMinerRelease/releases/download/1.33/gminer_1_33_minimal_windows64.zip",
+    "SupportedDevicesAlgorithms": {
+      "NVIDIA": [
+        "ZHash",
+        "Beam",
+        "GrinCuckaroo29"
+      ]
+    },
+    "PluginAuthor": "stanko@nicehash.com",
+    "PluginDescription": "GMiner Plugin NVIDIA support only. Blabla bla write what version it uses",
+    "PluginName": "GMinerCuda9.0+"
+  },
+  {
+    "PluginUUID": "c7e2060d-aebf-44bb-a7e5-dcec5de8243b",
+    "PluginVersion": {
+      "major": "1",
+      "minor": "1"
+    },
+    "PluginPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/BMiner_v1.1-c7e2060d-aebf-44bb-a7e5-dcec5de8243b.zip",
+    "MinerPackageURL": "https://www.bminercontent.com/releases/bminer-lite-v15.3.0-7fa379d-amd64.zip",
+    "SupportedDevicesAlgorithms": {
+      "NVIDIA": [
+        "zhash",
+        "beam",
+        "grin29",
+        "grin31"
+      ]
+    },
+    "PluginAuthor": "luc1an24",
+    "PluginDescription": "BMiner plugin miner NVIDIA support only",
+    "PluginName": "BMiner"
+  },
+  {
+    "PluginUUID": "c5bea9fd-5660-4ccb-9f0e-a3f500d228c8",
+    "PluginVersion": {
+      "major": "1",
+      "minor": "0"
+    },
+    "PluginPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/CryptoDredge_v1.0-c5bea9fd-5660-4ccb-9f0e-a3f500d228c8.zip",
+    "MinerPackageURL": "https://github.com/technobyl/CryptoDredge/releases/download/v0.17.0/CryptoDredge_0.17.0_cuda_10.0_windows.zip",
+    "SupportedDevicesAlgorithms": {
+      "NVIDIA": [
+        "cnheavy",
+        "cnv8",
+        "lyra2v3",
+        "neoscrypt",
+        "mtp"
+      ]
+    },
+    "PluginAuthor": "luc1an24",
+    "PluginDescription": "[API not working] CryptoDredge miner",
+    "PluginName": "CryptoDredge"
+  },
+  {
+    "PluginUUID": "a6c96e17-6fa7-418f-b75e-6631b3a5241e",
+    "PluginVersion": {
+      "major": "1",
+      "minor": "0"
+    },
+    "PluginPackageURL": "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/LolMinerBeam_v1.0-a6c96e17-6fa7-418f-b75e-6631b3a5241e.zip",
+    "MinerPackageURL": "https://gitlab.com/Lolliedieb/lolminer-releases/uploads/aef4b16b6168db8bc6437744796acd0c/lolMiner_v07_Win64.zip",
+    "SupportedDevicesAlgorithms": {
+      "NVIDIA": [
+        "Beam"
+      ],
+      "AMD": [
+        "Beam"
+      ]
+    },
+    "PluginAuthor": "Domen Kirn Krefl",
+    "PluginDescription": "LolMiner for Beam(Equihash 150/5) algorithm",
+    "PluginName": "LolMinerBeam"
+  }
+]</value>
+  </data>
 </root>

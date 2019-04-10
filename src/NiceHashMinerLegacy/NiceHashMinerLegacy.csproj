@@ -98,8 +98,11 @@
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithms\Algorithm.cs" />
     <Compile Include="Algorithms\DualAlgorithm.cs" />
+    <Compile Include="Algorithms\PluginAlgorithm.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
+    <Compile Include="Benchmarking\BenchmarkHandler2.cs" />
+    <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
     <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
@@ -126,6 +129,24 @@
     <Compile Include="Devices\Querying\QueryGpu.cs" />
     <Compile Include="Devices\Querying\QueryResult.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
+    <Compile Include="Forms\Components\PluginInfoDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoDetails.Designer.cs">
+      <DependentUpon>PluginInfoDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoItem.Designer.cs">
+      <DependentUpon>PluginInfoItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoItemRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoItemRow.Designer.cs">
+      <DependentUpon>PluginInfoItemRow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Components\StartupLoadingControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -145,6 +166,12 @@
       <DependentUpon>FormEula.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\FormHelpers.cs" />
+    <Compile Include="Forms\Form_MinerPlugins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_MinerPlugins.Designer.cs">
+      <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -178,36 +205,60 @@
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
     <Compile Include="Interfaces\StateSetters\IStateSetter.cs" />
-    <Compile Include="MinersDownloader\DownloadSetup.cs" />
-    <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
-    <Compile Include="MinersDownloader\ProgressState.cs" />
-    <Compile Include="Miners\BMiner.cs" />
-    <Compile Include="Miners\Ethlargement.cs" />
-    <Compile Include="Miners\GMiner.cs" />
     <Compile Include="Miners\IdleChecking\IdleChangedEventArgs.cs" />
     <Compile Include="Miners\IdleChecking\IdleChecker.cs" />
     <Compile Include="Miners\IdleChecking\IdleCheckManager.cs" />
     <Compile Include="Miners\IdleChecking\InputTimeoutChecker.cs" />
     <Compile Include="Miners\IdleChecking\SessionLockChecker.cs" />
-    <Compile Include="Miners\NBMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerKlausTIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerAlexisIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX16RIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerGMIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerGMIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerNHGeneralIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerNHGeneralIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGMinerPluginBase.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TeamRedMinerIntegrated\TeamRedMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TeamRedMinerIntegrated\TeamRedMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
+    <Compile Include="Plugin\MinerPluginsManager.cs" />
+    <Compile Include="MinersDownloader\DownloadSetup.cs" />
+    <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
+    <Compile Include="MinersDownloader\ProgressState.cs" />
+    <Compile Include="Miners\Ethlargement.cs" />
+    <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="Miners\Phoenix.cs" />
-    <Compile Include="Miners\TeamRedMiner.cs" />
-    <Compile Include="Miners\Trex.cs" />
-    <Compile Include="Miners\Ttminer.cs" />
-    <Compile Include="Miners\VanillaProcessMiner.cs" />
-    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigCpu.cs" />
-    <Compile Include="Miners\XmrStak\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
     <Compile Include="Stats\ErrorCode.cs" />
-    <Compile Include="Stats\ExchangeRateAPI.cs" />
-    <Compile Include="Miners\ClaymoreDual.cs" />
-    <Compile Include="Miners\Ewbf144.cs" />
-    <Compile Include="Miners\XmrStak\XmrStak.cs" />
     <Compile Include="Stats\Models\DeviceUpdateEventArgs.cs" />
     <Compile Include="Stats\Models\EssentialsCall.cs" />
     <Compile Include="Stats\Models\ExecutedCall.cs" />
     <Compile Include="Stats\Models\ExecutedInfo.cs" />
     <Compile Include="Stats\Models\RpcException.cs" />
+    <Compile Include="Plugin\PluginPackageInfo.cs" />
+    <Compile Include="Plugin\PluginPackageInfoCR.cs" />
+    <Compile Include="Stats\ExchangeRateAPI.cs" />
+    <Compile Include="Miners\ClaymoreDual.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
     <Compile Include="Stats\StatusCodes.cs" />
@@ -319,7 +370,6 @@
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
-    <Compile Include="Miners\MinersSettingsManager.cs" />
     <Compile Include="Miners\Parsing\ExtraLaunchParameters.cs" />
     <Compile Include="Miners\Parsing\ExtraLaunchParametersParser.cs" />
     <Compile Include="Miners\Grouping\GroupingLogic.cs" />
@@ -337,7 +387,6 @@
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
-    <Compile Include="Miners\Ccminer.cs" />
     <Compile Include="Miners\ethminer\Ethereum.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
@@ -359,7 +408,6 @@
     <Compile Include="Switching\NHSmaData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Miners\Sgminer.cs" />
     <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
     <Compile Include="Utils\BINS_CODEGEN_3rd.cs" />
@@ -387,6 +435,15 @@
     <EmbeddedResource Include="Forms\Components\GroupProfitControl.resx">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\PluginInfoDetails.resx">
+      <DependentUpon>PluginInfoDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\PluginInfoItem.resx">
+      <DependentUpon>PluginInfoItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\PluginInfoItemRow.resx">
+      <DependentUpon>PluginInfoItemRow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\StartupLoadingControl.resx">
       <DependentUpon>StartupLoadingControl.cs</DependentUpon>
     </EmbeddedResource>
@@ -407,6 +464,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_DcriValues.resx">
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_MinerPlugins.resx">
+      <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
@@ -493,6 +553,50 @@
     <ProjectReference Include="..\3rdparty\websocket-sharp\websocket-sharp.csproj">
       <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
       <Name>websocket-sharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\BMiner\BMiner.csproj">
+      <Project>{da54e8c4-73d8-4f1a-be84-0d548b77a2c0}</Project>
+      <Name>BMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\EWBF\EWBF.csproj">
+      <Project>{8b382c65-fc83-43bd-ae16-f06c26a24786}</Project>
+      <Name>EWBF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\GMiner\GMiner.csproj">
+      <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
+      <Name>GMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\MinerPluginLoader\MinerPluginLoader.csproj">
+      <Project>{2c35f83c-aa75-49c0-98e8-082e329b6491}</Project>
+      <Name>MinerPluginLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">
+      <Project>{847398e0-2e35-4a85-8c70-0b40aa172aba}</Project>
+      <Name>MinerPluginToolkitV1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\MinerPlugin\MinerPlugin.csproj">
+      <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
+      <Name>MinerPlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\NBMiner\NBMiner.csproj">
+      <Project>{a4b0cdcb-d1d7-4563-9888-d58e0b36d0f8}</Project>
+      <Name>NBMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj">
+      <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>
+      <Name>TeamRedMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\TRex\TRex.csproj">
+      <Project>{1b00711a-2ca2-49c0-a9fd-8bf9e478e3b0}</Project>
+      <Name>TRex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\TTMiner\TTMiner.csproj">
+      <Project>{06e84bad-4317-41e0-ad59-31e70db4c12c}</Project>
+      <Name>TTMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj">
+      <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
+      <Name>XmrStak</Name>
     </ProjectReference>
     <ProjectReference Include="..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>

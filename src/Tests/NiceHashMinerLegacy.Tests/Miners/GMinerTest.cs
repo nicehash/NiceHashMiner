@@ -11,7 +11,7 @@ namespace NiceHashMinerLegacy.Tests.Miners
     [TestClass]
     public class GMinerTest
     {
-        private class TestGMiner : GMiner
+        private class TestGMiner : GMinerOld
         {
             public bool ParseBenchLine(string line)
             {

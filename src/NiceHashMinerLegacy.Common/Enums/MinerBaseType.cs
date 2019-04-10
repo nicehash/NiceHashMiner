@@ -44,6 +44,7 @@ namespace NiceHashMinerLegacy.Common.Enums
         TTMiner,
         NBMiner,
         TeamRedMiner,
-        END
+        END,
+        PLUGIN // make PLUGIN outside of end
     }
 }
