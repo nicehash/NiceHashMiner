@@ -339,18 +339,20 @@ namespace XmrStak
             // check if we have configs
             foreach (var deviceType in _miningDeviceTypes)
             {
-                var flag = deviceType.ToString().ToLower();
-                var config = $"{flag}.txt";
-                var configFilePath = Path.Combine(binCwd, config);
                 if (!_configHandler.HasConfig(deviceType, _algorithmType))
                 {
                     try
                     {
                         var t = CreateConfigFile(deviceType);
-                        var result = await t; 
+                        var tupleResult = await t;
+                        var result = tupleResult.Item1;
+                        var configFilePath = tupleResult.Item2;
                         if (result)
                         {
                             _configHandler.SaveMoveConfig(deviceType, _algorithmType, configFilePath);
+                            // cleanup after
+                            var cleanupDir = Path.GetDirectoryName(configFilePath);
+                            if (!Directory.Exists(cleanupDir)) Directory.Delete(cleanupDir, true);
                         }
                     }
                     catch (Exception)
@@ -411,7 +413,7 @@ namespace XmrStak
             return deviceConfigParams;
         }
 
-        protected Task<bool> CreateConfigFile(DeviceType deviceType)
+        protected async Task<Tuple<bool, string>> CreateConfigFile(DeviceType deviceType)
         {
             // API port function might be blocking
             var apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
@@ -426,8 +428,22 @@ namespace XmrStak
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
 
+            var pathVar = Environment.GetEnvironmentVariable("PATH");
+            pathVar = pathVar + ";" + binCwd;
+            var genSettingsEnvVars = new Dictionary<string, string> { { "PATH", pathVar } };
+            var envVars = GetEnvironmentVariables();
+            if (envVars != null)
+            {
+                foreach (var kvp in envVars) genSettingsEnvVars[kvp.Key] = kvp.Value;
+            }
+
+            var tag = string.Join("_", _miningPairs.Select(pair => $"{pair.Device.DeviceType.ToString()}_{pair.Device.ID}"));
+            var genCwdPath = Path.Combine(binCwd, $"gen_{_algorithmType.ToString()}_{tag}");
+            if (!Directory.Exists(genCwdPath)) Directory.CreateDirectory(genCwdPath);
             var config = $"{deviceType.ToString()}.txt".ToLower();
-            return ConfigHelpers.CreateConfigFile(config, binPath, binCwd, commandLine, GetEnvironmentVariables());
+            var configFilePath = Path.Combine(genCwdPath, config);
+            var success = await ConfigHelpers.CreateConfigFile(config, binPath, genCwdPath, commandLine, genSettingsEnvVars);
+            return Tuple.Create(success, configFilePath);
         }
     }
 }
