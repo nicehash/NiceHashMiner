@@ -426,7 +426,7 @@ namespace XmrStak
 
             var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(new List<DeviceType> { deviceType });
             var currency = AlgorithmName(_algorithmType);
-            var commandLine = $"-o {url} -u {MinerToolkit.DemoUser} --currency {currency} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork 25 --benchwait 5 {disableDeviceTypes}";
+            var commandLine = $"-o {url} -u {MinerToolkit.DemoUser} --currency {currency} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork 60 --benchwait 5 {disableDeviceTypes}";
 
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
