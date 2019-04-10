@@ -23,16 +23,16 @@ namespace NiceHashMiner.Devices
         private static readonly NvidiaSmiDriver NvidiaRecomendedDriver = new NvidiaSmiDriver(372, 54); // 372.54;
         private static readonly NvidiaSmiDriver NvidiaMinDetectionDriver = new NvidiaSmiDriver(362, 61); // 362.61;
         
-        public static async Task<QueryResult> QueryDevicesAsync(IProgress<string> progress)
+        public static async Task<QueryResult> QueryDevicesAsync(IProgress<string> progress, bool skipVideoControllerCheck)
         {
             // #0 get video controllers, used for cross checking
             //progress?.Report(TODO no CPU checking???);
             // Order important CPU Query must be first
-            // #1 CPU
+            // #1 CPU         
             progress?.Report(Tr("Checking CPU Info"));
             await Task.Run(() => WindowsManagementObjectSearcher.QueryCPU_Info());
             var cpuDevs = await CpuQuery.QueryCpusAsync();
-            AvailableDevices.AddDevices(cpuDevs);
+            AvailableDevices.AddDevices(cpuDevs);         
 
             // #2 CUDA
             progress?.Report(Tr("Querying CUDA devices"));
@@ -79,7 +79,7 @@ namespace NiceHashMiner.Devices
 
             // #5 uncheck CPU if GPUs present, call it after we Query all devices
             AvailableDevices.UncheckCpuIfGpu();
-
+            if (skipVideoControllerCheck) return null;
             // TODO update this to report undetected hardware
             // #6 check NVIDIA, AMD devices count
             bool nvCountMatched;

@@ -1,4 +1,6 @@
-﻿using NiceHashMinerLegacy.Common.Device;
+﻿using NiceHashMiner.Devices;
+using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -81,9 +83,30 @@ namespace MinerDeviceDetection
             return output;
         }
 
+        private static async Task QueryDevices()
+        {
+            await ComputeDeviceManager.QueryDevicesAsync(null, true);
+        }
+
         static void Main(string[] args)
         {
             var root = Directory.GetCurrentDirectory();
+            try
+            {
+                QueryDevices().GetAwaiter().GetResult();
+            }
+            catch(Exception e)
+            {
+            }
+            var devices = AvailableDevices.Devices;
+
+            List<BaseDevice> baseDevices = new List<BaseDevice>();
+
+            foreach (var dev in devices)
+            {
+                baseDevices.Add(dev.PluginDevice);
+            }
+
             List<string> binPaths = new List<string>() { "bin", "bin_3rdparty" };
             var binData = new Dictionary<string, string>();
             foreach (var path in binPaths)
@@ -114,19 +137,14 @@ namespace MinerDeviceDetection
                         if (bin.Key == miner.Key)
                         {
                             var output = MinerOutput(bin.Value, miner.Value);
-                            List<BaseDevice> tmpDeleteDevices = new List<BaseDevice>();
-                            var dev = new CUDADevice(new BaseDevice(DeviceType.NVIDIA, "uuid1", "GeForce GTX 1060 6GB", 1), 2, 200, 6, 1);
-                            tmpDeleteDevices.Add(dev);
-                            dev = new CUDADevice(new BaseDevice(DeviceType.NVIDIA, "uuid0", "GeForce GTX 1070 Ti", 0), 1, 200, 6, 1);
-                            tmpDeleteDevices.Add(dev);
                             var mappedDevices = new Dictionary<string, int>();
 
                             switch (bin.Key)
                             {
                                 case "gminer":
                                     mappedMinersFile.WriteLine("GMiner");
-                                    mappedDevices = OutputParsers.ParseGMinerOutput(output, tmpDeleteDevices);
-                                    foreach (var device in tmpDeleteDevices)
+                                    mappedDevices = OutputParsers.ParseGMinerOutput(output, baseDevices);
+                                    foreach (var device in baseDevices)
                                     {
                                         foreach (var tmpDev in mappedDevices)
                                         {
@@ -140,8 +158,8 @@ namespace MinerDeviceDetection
                                 case "nbminer":
                                     mappedMinersFile.WriteLine("NBMiner");
                                     var errOutput = MinerErrorOutput(bin.Value, miner.Value);
-                                    mappedDevices = OutputParsers.ParseNBMinerOutput(errOutput, tmpDeleteDevices);
-                                    foreach (var device in tmpDeleteDevices)
+                                    mappedDevices = OutputParsers.ParseNBMinerOutput(errOutput, baseDevices);
+                                    foreach (var device in baseDevices)
                                     {
                                         foreach (var tmpDev in mappedDevices)
                                         {
@@ -154,8 +172,8 @@ namespace MinerDeviceDetection
                                     break;
                                 case "phoenix":
                                     mappedMinersFile.WriteLine("Phoenix");
-                                    mappedDevices = OutputParsers.ParsePhoenixOutput(output, tmpDeleteDevices);
-                                    foreach (var device in tmpDeleteDevices)
+                                    mappedDevices = OutputParsers.ParsePhoenixOutput(output, baseDevices);
+                                    foreach (var device in baseDevices)
                                     {
                                         foreach (var tmpDev in mappedDevices)
                                         {
@@ -168,8 +186,8 @@ namespace MinerDeviceDetection
                                     break;
                                 case "ttminer":
                                     mappedMinersFile.WriteLine("TTMiner");
-                                    mappedDevices = OutputParsers.ParseTTMinerOutput(output, tmpDeleteDevices);
-                                    foreach (var device in tmpDeleteDevices)
+                                    mappedDevices = OutputParsers.ParseTTMinerOutput(output, baseDevices);
+                                    foreach (var device in baseDevices)
                                     {
                                         foreach (var tmpDev in mappedDevices)
                                         {
