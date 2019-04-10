@@ -492,7 +492,7 @@ namespace NiceHashMiner
                 }
             }
 
-            Ethlargement.CheckAndStart(MiningSetup);
+            EthlargementOld.CheckAndStart(MiningSetup);
 
             if (!benchmarkHandle.Start()) return null;
 
@@ -936,7 +936,7 @@ namespace NiceHashMiner
             PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
 
-            Ethlargement.CheckAndStart(MiningSetup);
+            EthlargementOld.CheckAndStart(MiningSetup);
 
             var P = new NiceHashProcess();
 

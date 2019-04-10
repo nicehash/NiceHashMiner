@@ -192,6 +192,7 @@
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerAlexisIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX16RIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedMiner.cs" />
@@ -218,7 +219,7 @@
     <Compile Include="MinersDownloader\DownloadSetup.cs" />
     <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
     <Compile Include="MinersDownloader\ProgressState.cs" />
-    <Compile Include="Miners\Ethlargement.cs" />
+    <Compile Include="Miners\EthlargementOld.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="Miners\Phoenix.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
@@ -517,6 +518,10 @@
     <ProjectReference Include="..\Miners\BMiner\BMiner.csproj">
       <Project>{da54e8c4-73d8-4f1a-be84-0d548b77a2c0}</Project>
       <Name>BMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\Ethlargement\Ethlargement.csproj">
+      <Project>{5f994ad1-02a2-4a00-90ca-5cd5943fd24a}</Project>
+      <Name>Ethlargement</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\EWBF\EWBF.csproj">
       <Project>{8b382c65-fc83-43bd-ae16-f06c26a24786}</Project>

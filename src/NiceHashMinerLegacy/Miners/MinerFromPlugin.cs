@@ -11,13 +11,16 @@ using NiceHashMinerLegacy.Common.Device;
 using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMiner.Plugin;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Miners.IntegratedPlugins;
 
 namespace NiceHashMiner.Miners
 {
     // pretty much just implement what we need and ignore everything else
     public class MinerFromPlugin : Miner
-    {
+    { 
         private readonly IMiner _miner;
+        List<MiningPair> _miningPairs;
+
         public MinerFromPlugin(string pluginUUID) : base(pluginUUID)
         {
             var plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
@@ -50,15 +53,16 @@ namespace NiceHashMiner.Miners
             var username = $"{btcAdress}.{worker}";
             _miner.InitMiningLocationAndUsername(location, username);
 
-            var pluginPairs = this.MiningSetup.MiningPairs
+            _miningPairs = this.MiningSetup.MiningPairs
                 .Where(pair => pair.Algorithm is PluginAlgorithm)
                 .Select(pair => new MinerPlugin.MiningPair
                 {
                     Device = pair.Device.PluginDevice,
                     Algorithm = ((PluginAlgorithm) pair.Algorithm).BaseAlgo
-                });
-            _miner.InitMiningPairs(pluginPairs);
+                }).ToList();
+            _miner.InitMiningPairs(_miningPairs);
 
+            EthlargementIntegratedPlugin.Instance.Start(_miningPairs);
             _miner.StartMining();
             IsRunning = true;
         }
@@ -71,6 +75,8 @@ namespace NiceHashMiner.Miners
 
         protected override void _Stop(MinerStopType willswitch)
         {
+            // TODO thing about this case, closing opening on switching
+            // EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
             IsRunning = false;
             _miner.StopMining();
         }
