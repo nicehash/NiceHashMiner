@@ -350,9 +350,6 @@ namespace XmrStak
                         if (result)
                         {
                             _configHandler.SaveMoveConfig(deviceType, _algorithmType, configFilePath);
-                            // cleanup after
-                            var cleanupDir = Path.GetDirectoryName(configFilePath);
-                            if (!Directory.Exists(cleanupDir)) Directory.Delete(cleanupDir, true);
                         }
                     }
                     catch (Exception)
@@ -372,7 +369,10 @@ namespace XmrStak
                     hasConfig = _configHandler.HasConfig(deviceType, _algorithmType);
                     if (hasConfig) break;
                 }
-                if (!hasConfig) throw new Exception($"Cannot start device type {deviceType.ToString()} for algorithm {_algorithmType.ToString()} there is no config");
+                if (!hasConfig)
+                {
+                    throw new Exception($"Cannot start device type {deviceType.ToString()} for algorithm {_algorithmType.ToString()} there is no config");
+                } 
             }
 
 
@@ -439,6 +439,7 @@ namespace XmrStak
 
             var tag = string.Join("_", _miningPairs.Select(pair => $"{pair.Device.DeviceType.ToString()}_{pair.Device.ID}"));
             var genCwdPath = Path.Combine(binCwd, $"gen_{_algorithmType.ToString()}_{tag}");
+            if (Directory.Exists(genCwdPath)) Directory.Delete(genCwdPath);
             if (!Directory.Exists(genCwdPath)) Directory.CreateDirectory(genCwdPath);
             var config = $"{deviceType.ToString()}.txt".ToLower();
             var configFilePath = Path.Combine(genCwdPath, config);
