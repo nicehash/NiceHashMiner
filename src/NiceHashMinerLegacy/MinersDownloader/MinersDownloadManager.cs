@@ -3,6 +3,7 @@ using MyDownloader.Core.Extensions;
 using MyDownloader.Core.UI;
 using MyDownloader.Extension.Protocols;
 using Newtonsoft.Json;
+using SharpCompress.Archives.SevenZip;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -135,6 +136,46 @@ namespace NiceHashMiner.MinersDownloader
                         {
                             await zipStream.CopyToAsync(fileStream);
                         }
+                    }
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                // TODO log
+                return false;
+            }
+        }
+
+        public static async Task<bool> Un7zipFileAsync(string fileLocation, string extractLocation, IProgress<int> progress, CancellationToken stop)
+        {
+            try
+            {
+                using (Stream stream = File.OpenRead(fileLocation))
+                using (var archive = SevenZipArchive.Open(stream))
+                using (var reader = archive.ExtractAllEntries())
+                {
+                    float extractedEntries = 0;  
+                    float entriesCount = archive.Entries.Count;
+                    while (reader.MoveToNextEntry())
+                    {
+                        extractedEntries += 1;
+                        if (!reader.Entry.IsDirectory)
+                        {
+                            var extractPath = Path.Combine(extractLocation, reader.Entry.Key);
+                            var dirPath = Path.GetDirectoryName(extractPath);
+                            if (!Directory.Exists(dirPath))
+                            {
+                                Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
+                            }
+                            using (var entryStream = reader.OpenEntryStream())
+                            using (var fileStream = new FileStream(extractPath, FileMode.CreateNew))
+                            {
+                                await entryStream.CopyToAsync(fileStream);
+                            }
+                        }
+                        var prog = ((extractedEntries / entriesCount) * 100.0f);
+                        progress?.Report((int)prog);
                     }
                 }
                 return true;
