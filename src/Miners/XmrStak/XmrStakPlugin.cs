@@ -187,11 +187,11 @@ namespace XmrStak
             switch (deviceType)
             {
                 case DeviceType.CPU:
-                    return _cpuConfigs.ContainsKey(algorithmType);
+                    return GetCpuConfig(algorithmType) != null;
                 case DeviceType.AMD:
-                    return _amdConfigs.ContainsKey(algorithmType);
+                    return GetAmdConfig(algorithmType) != null;
                 case DeviceType.NVIDIA:
-                    return _nvidiaConfigs.ContainsKey(algorithmType);
+                    return GetNvidiaConfig(algorithmType) != null;
             }
             return false;
         }
@@ -267,17 +267,41 @@ namespace XmrStak
 
         public CpuConfig GetCpuConfig(AlgorithmType algorithmType)
         {
-            return _cpuConfigs[algorithmType];
+            CpuConfig config = null;
+            _cpuConfigs.TryGetValue(algorithmType, out config);
+            return config;
         }
 
         public AmdConfig GetAmdConfig(AlgorithmType algorithmType)
         {
-            return _amdConfigs[algorithmType];
+            AmdConfig config = null;
+            _amdConfigs.TryGetValue(algorithmType, out config);
+            return config;
         }
 
         public NvidiaConfig GetNvidiaConfig(AlgorithmType algorithmType)
         {
-            return _nvidiaConfigs[algorithmType];
+            NvidiaConfig config = null;
+            _nvidiaConfigs.TryGetValue(algorithmType, out config);
+            return config;
+        }
+
+        public void SetCpuConfig(AlgorithmType algorithmType, CpuConfig conf)
+        {
+            if (HasConfig(DeviceType.CPU, algorithmType)) return;
+            _cpuConfigs.TryAdd(algorithmType, conf);
+        }
+
+        public void SetAmdConfig(AlgorithmType algorithmType, AmdConfig conf)
+        {
+            if (HasConfig(DeviceType.AMD, algorithmType)) return;
+            _amdConfigs.TryAdd(algorithmType, conf);
+        }
+
+        public void SetNvidiaConfig(AlgorithmType algorithmType, NvidiaConfig conf)
+        {
+            if (HasConfig(DeviceType.NVIDIA, algorithmType)) return;
+            _nvidiaConfigs.TryAdd(algorithmType, conf);
         }
 
         #endregion Cached configs
