@@ -213,7 +213,19 @@ namespace XmrStak
             var algo = AlgorithmName(_algorithmType);
 
             // this one here might block
-            var deviceConfigParams = await PrepareDeviceConfigs();
+            string deviceConfigParams = "";
+            try
+            {
+                deviceConfigParams = await PrepareDeviceConfigs();
+            }
+            catch (Exception e)
+            {
+                return new BenchmarkResult
+                {
+                    ErrorMessage = e.Message
+                };
+            }
+            
             var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(_miningDeviceTypes);
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
@@ -346,6 +358,19 @@ namespace XmrStak
                         // TODO log
                     }
                 }
+            }
+            // wait until we have the algorithms ready, 5 seconds should be enough
+            foreach (var deviceType in _miningDeviceTypes)
+            {
+                var hasConfig = false;
+                var start = DateTime.Now;
+                while (DateTime.Now.Subtract(start).Seconds < 5)
+                {
+                    await Task.Delay(100);
+                    hasConfig = _configHandler.HasConfig(deviceType, _algorithmType);
+                    if (hasConfig) break;
+                }
+                if (!hasConfig) throw new Exception($"Cannot start device type {deviceType.ToString()} for algorithm {_algorithmType.ToString()} there is no config");
             }
 
 

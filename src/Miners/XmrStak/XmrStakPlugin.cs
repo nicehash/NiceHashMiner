@@ -9,6 +9,7 @@ using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -176,9 +177,9 @@ namespace XmrStak
 
 
         #region Cached configs
-        protected Dictionary<AlgorithmType, CpuConfig> _cpuConfigs = new Dictionary<AlgorithmType, CpuConfig>();
-        protected Dictionary<AlgorithmType, AmdConfig> _amdConfigs = new Dictionary<AlgorithmType, AmdConfig>();
-        protected Dictionary<AlgorithmType, NvidiaConfig> _nvidiaConfigs = new Dictionary<AlgorithmType, NvidiaConfig>();
+        protected ConcurrentDictionary<AlgorithmType, CpuConfig> _cpuConfigs = new ConcurrentDictionary<AlgorithmType, CpuConfig>();
+        protected ConcurrentDictionary<AlgorithmType, AmdConfig> _amdConfigs = new ConcurrentDictionary<AlgorithmType, AmdConfig>();
+        protected ConcurrentDictionary<AlgorithmType, NvidiaConfig> _nvidiaConfigs = new ConcurrentDictionary<AlgorithmType, NvidiaConfig>();
 
 
         public bool HasConfig(DeviceType deviceType, AlgorithmType algorithmType)
