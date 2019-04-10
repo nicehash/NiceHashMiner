@@ -88,7 +88,7 @@ namespace XmrStak
 
         public IMiner CreateMiner()
         {
-            return new XmrStak(PluginUUID, this);
+            return new XmrStak(PluginUUID, AMDDevice.OpenCLPlatformID, this);
         }
 
         public bool CanGroup(MiningPair a, MiningPair b)
@@ -161,6 +161,7 @@ namespace XmrStak
         {
             DefaultSystemEnvironmentVariables = new Dictionary<string, string>
             {
+                { "XMRSTAK_NOWAIT", "1" },
                 // https://github.com/fireice-uk/xmr-stak/blob/master/doc/tuning.md#increase-memory-pool
                 // for AMD backend
                 {"GPU_MAX_ALLOC_PERCENT", "100"},

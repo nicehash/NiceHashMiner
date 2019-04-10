@@ -31,14 +31,17 @@ namespace XmrStak
         protected readonly HttpClient _http = new HttpClient();
         protected IXmrStakConfigHandler _configHandler;
 
+        private readonly int _openClAmdPlatformNum;
+
         // running configs
         protected CpuConfig _cpuConfig;
         protected AmdConfig _amdConfig;
         protected NvidiaConfig _nvidiaConfig;
 
-        public XmrStak(string uuid, IXmrStakConfigHandler configHandler)
+        public XmrStak(string uuid, int openClAmdPlatformNum, IXmrStakConfigHandler configHandler)
         {
             _uuid = uuid;
+            _openClAmdPlatformNum = openClAmdPlatformNum;
             _configHandler = configHandler;
         }
 
@@ -405,7 +408,7 @@ namespace XmrStak
                 if (_amdConfig == null && DeviceType.AMD == deviceType)
                 {
                     var amdTemplate = _configHandler.GetAmdConfig(_algorithmType);
-                    _amdConfig = new AmdConfig();
+                    _amdConfig = new AmdConfig() { platform_index = _openClAmdPlatformNum };
                     _amdConfig.gpu_threads_conf = amdTemplate.gpu_threads_conf.Where(t => deviceIDs.Contains(t.index)).ToList();
                     ConfigHelpers.WriteConfigFile(deviceConfigFilePath, _amdConfig);
                 }

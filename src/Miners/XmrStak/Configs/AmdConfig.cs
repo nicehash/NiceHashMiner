@@ -26,6 +26,8 @@ namespace XmrStak.Configs
     public class AmdConfig
     {
         public List<AmdThreadsConfItem> gpu_threads_conf;
+        public int auto_tune = 0;
+        public int platform_index;
     }
 #pragma warning restore IDE1006 // Naming Styles
 

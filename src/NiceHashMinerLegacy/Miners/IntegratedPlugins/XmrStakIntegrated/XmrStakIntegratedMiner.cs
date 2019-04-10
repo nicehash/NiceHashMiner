@@ -7,7 +7,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 {
     class XmrStakIntegratedMiner : XmrStak.XmrStak
     {
-        public XmrStakIntegratedMiner(string uuid, IXmrStakConfigHandler configHandler) : base(uuid, configHandler)
+        public XmrStakIntegratedMiner(string uuid, int openClAmdPlatformNum, IXmrStakConfigHandler configHandler) : base(uuid, openClAmdPlatformNum, configHandler)
         { }
 
         protected override Tuple<string, string> GetBinAndCwdPaths()
