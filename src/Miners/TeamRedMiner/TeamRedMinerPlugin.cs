@@ -74,7 +74,21 @@ namespace TeamRedMiner
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
+
+            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
+            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
         }
+
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
+        {
+            DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
+            {
+                {"GPU_MAX_ALLOC_PERCENT", "100"},
+                {"GPU_USE_SYNC_OBJECTS", "1"},
+                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+                {"GPU_MAX_HEAP_SIZE", "100"},
+            },
+        };
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage{};
         #endregion Internal Settings
