@@ -1,4 +1,5 @@
 ﻿using MinerPlugin;
+using NiceHashMinerLegacy.Common.Device;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
@@ -11,7 +12,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public new IMiner CreateMiner()
         {
-            return new XmrStakIntegratedMiner(PluginUUID, this)
+            return new XmrStakIntegratedMiner(PluginUUID, AMDDevice.OpenCLPlatformID, this)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
