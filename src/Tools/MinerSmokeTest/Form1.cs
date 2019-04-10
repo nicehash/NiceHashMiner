@@ -42,7 +42,7 @@ namespace MinerSmokeTest
         private async void FormShown(object sender, EventArgs e)
         {
             ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
-            await ComputeDeviceManager.QueryDevicesAsync(null);
+            await ComputeDeviceManager.QueryDevicesAsync(null, false);
             var devices = AvailableDevices.Devices;
 
             foreach(var device in devices)

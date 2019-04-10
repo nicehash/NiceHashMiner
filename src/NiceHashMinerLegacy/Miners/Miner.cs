@@ -142,6 +142,8 @@ namespace NiceHashMiner
 
         protected bool IsMultiType;
 
+        protected Dictionary<string, string> _enviormentVariables = null;
+
         private readonly Lazy<HttpClient> _httpClient = new Lazy<HttpClient>();
 
         protected Miner(string minerDeviceName)
@@ -481,6 +483,14 @@ namespace NiceHashMiner
             benchmarkHandle.OutputDataReceived += BenchmarkOutputErrorDataReceived;
             benchmarkHandle.ErrorDataReceived += BenchmarkOutputErrorDataReceived;
             benchmarkHandle.Exited += BenchmarkHandle_Exited;
+
+            if (_enviormentVariables != null)
+            {
+                foreach (var kvp in _enviormentVariables)
+                {
+                    benchmarkHandle.StartInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
+                }
+            }
 
             Ethlargement.CheckAndStart(MiningSetup);
 
@@ -915,7 +925,7 @@ namespace NiceHashMiner
         #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
         
 
-        protected virtual NiceHashProcess _Start(IReadOnlyDictionary<string, string> envVariables = null)
+        protected virtual NiceHashProcess _Start()
         {
             // never start when ended
             if (_isEnded)
@@ -935,9 +945,9 @@ namespace NiceHashMiner
                 P.StartInfo.WorkingDirectory = WorkingDirectory;
             }
 
-            if (envVariables != null)
+            if (_enviormentVariables != null)
             {
-                foreach (var kvp in envVariables)
+                foreach (var kvp in _enviormentVariables)
                 {
                     P.StartInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
                 }
