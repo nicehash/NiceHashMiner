@@ -84,13 +84,28 @@ namespace MinerPluginToolkitV1
 
         public virtual void StopMining()
         {
-            // remove on exited
-            _miningProcess.Handle.Exited -= MinerProcess_Exited;
             lock (_lock)
             {
-                _stopCalled = true;
+                if (_stopCalled) return;
             }
-            _miningProcess?.Handle?.Kill(); // TODO look for another gracefull shutdown
+            try
+            {
+                // remove on exited
+                _miningProcess.Handle.Exited -= MinerProcess_Exited;
+                lock (_lock)
+                {
+                    _stopCalled = true;
+                }
+                _miningProcess?.Handle?.Close();
+                // 5 seconds wait for shutdown
+                if (!_miningProcess?.Handle?.WaitForExit(5 * 1000) ?? false)
+                {
+                    //_miningProcess?.Handle?.Kill(); // TODO look for another gracefull shutdown
+                }
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         private async void MinerProcess_Exited(object sender, EventArgs e)

@@ -51,19 +51,19 @@ namespace NiceHashMiner.Devices.Algorithms
 
         #endregion Limitations and filters
 
-        // ALL CPU, NVIDIA and AMD
-        private static List<Algorithm> XmrStakAlgorithmsForDevice(ComputeDevice dev)
-        {
-            // multiple OpenCL GPUs seem to freeze the whole system
-            var AMD_DisabledByDefault = dev.DeviceType != DeviceType.AMD;
-            var algos = new List<Algorithm>
-            {
-                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightHeavy, "cryptonight_heavy") { Enabled = AMD_DisabledByDefault },
-                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV8, "cryptonight_v8") { Enabled = AMD_DisabledByDefault },
-                new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightR, "cryptonight_r") { Enabled = AMD_DisabledByDefault },
-            };
-            return algos;
-        }
+        //// ALL CPU, NVIDIA and AMD
+        //private static List<Algorithm> XmrStakAlgorithmsForDevice(ComputeDevice dev)
+        //{
+        //    // multiple OpenCL GPUs seem to freeze the whole system
+        //    var AMD_DisabledByDefault = dev.DeviceType != DeviceType.AMD;
+        //    var algos = new List<Algorithm>
+        //    {
+        //        new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightHeavy, "cryptonight_heavy") { Enabled = AMD_DisabledByDefault },
+        //        new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightV8, "cryptonight_v8") { Enabled = AMD_DisabledByDefault },
+        //        new Algorithm(MinerBaseType.XmrStak, AlgorithmType.CryptoNightR, "cryptonight_r") { Enabled = AMD_DisabledByDefault },
+        //    };
+        //    return algos;
+        //}
 
         // NVIDIA and AMD
         private static List<Algorithm> ClaymoreDualAlgorithmsForDevice(ComputeDevice dev)
@@ -371,7 +371,7 @@ namespace NiceHashMiner.Devices.Algorithms
         private delegate List<Algorithm> AlgorithmsForDevice(ComputeDevice dev);
         private static IReadOnlyList<AlgorithmsForDevice> algorithmsDelegates = new List<AlgorithmsForDevice>
         {
-            XmrStakAlgorithmsForDevice,
+            //XmrStakAlgorithmsForDevice,
             //sgminerAlgorithmsForDevice,
             //ccminerAlgorithmsForDevice,
             ethminerAlgorithmsForDevice,

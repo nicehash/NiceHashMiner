@@ -26,8 +26,6 @@ namespace NiceHashMiner.Miners
                     return CreateEthminer(deviceType);
                 case MinerBaseType.Claymore:
                     return new ClaymoreDual(algorithm.SecondaryNiceHashID);
-                case MinerBaseType.XmrStak:
-                    return new XmrStakOld.XmrStak();
                 case MinerBaseType.Phoenix:
                     return new Phoenix();
                 case MinerBaseType.PLUGIN:
