@@ -221,15 +221,11 @@
     <Compile Include="Miners\Ethlargement.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="Miners\Phoenix.cs" />
-    <Compile Include="Miners\VanillaProcessMiner.cs" />
-    <Compile Include="Miners\XmrStakOld\Configs\XmrStakConfigCpu.cs" />
-    <Compile Include="Miners\XmrStakOld\Configs\XmrStakConfigGpu.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
     <Compile Include="Plugin\PluginPackageInfo.cs" />
     <Compile Include="Plugin\PluginPackageInfoCR.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Miners\ClaymoreDual.cs" />
-    <Compile Include="Miners\XmrStakOld\XmrStak.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
     <Compile Include="Stats\WindowsManagementObjectSearcher.cs" />
@@ -372,7 +368,6 @@
     <Compile Include="Switching\NHSmaData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Miners\Sgminer.cs" />
     <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
     <Compile Include="Utils\BINS_CODEGEN.cs" />
     <Compile Include="Utils\BINS_CODEGEN_3rd.cs" />
