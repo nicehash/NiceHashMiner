@@ -16,6 +16,11 @@ using NiceHashMinerLegacy.Common;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Common.Device;
+
+
+// alias
+using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
 
 
 // TODO fix up the namespace
@@ -50,20 +55,43 @@ namespace NiceHashMiner.Plugin
             EthlargementIntegratedPlugin.Instance
         };
 
+
+        private static Dictionary<string, bool> _integratedPluginsInitialized = new Dictionary<string, bool>();
+        private static Dictionary<string, Dictionary<BaseDevice, IReadOnlyList<CommonAlgorithm.Algorithm>>> _integratedPluginsCachedAlgorithms = new Dictionary<string, Dictionary<BaseDevice, IReadOnlyList<CommonAlgorithm.Algorithm>>>();
+
         // TODO add use3rdParty flag
         public static void InitIntegratedPlugins()
         {
+            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             // get devices
             var allDevs = AvailableDevices.Devices;
             var baseDevices = allDevs.Select(dev => dev.PluginDevice);
             // examine all plugins and what to use
             foreach (var plugin in IntegratedPlugins)
             {
-                if (plugin.Is3rdParty && ConfigManager.GeneralConfig.Use3rdPartyMiners != Use3rdPartyMiners.YES) continue;
-
                 var pluginUuid = plugin.PluginUUID;
                 var pluginName = plugin.Name;
+
+
+                if (plugin.Is3rdParty && !is3rdPartyEnabled) continue;
+                if (_integratedPluginsInitialized.ContainsKey(pluginUuid) && _integratedPluginsInitialized[pluginUuid])
+                {
+                    // add from cache
+                    var supportedCached = _integratedPluginsCachedAlgorithms[pluginUuid];
+                    foreach (var pair in supportedCached)
+                    {
+                        var bd = pair.Key;
+                        var algos = pair.Value;
+                        var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
+                        var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a)).ToList();
+                        dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
+                    }
+                    continue;
+                }
+                    
+                // register and add 
                 var supported = plugin.GetSupportedAlgorithms(baseDevices);
+                _integratedPluginsCachedAlgorithms[pluginUuid] = supported;
                 // check out the supported algorithms
                 foreach (var pair in supported)
                 {
@@ -73,14 +101,28 @@ namespace NiceHashMiner.Plugin
                     var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a)).ToList();
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                 }
+
+                _integratedPluginsInitialized[pluginUuid] = true;
             }
             foreach (var plugin in IntegratedPlugins)
             {
+                var pluginUuid = plugin.PluginUUID;
+                if (plugin.Is3rdParty && !is3rdPartyEnabled) continue;
+                if (_integratedPluginsInitialized.ContainsKey(pluginUuid) && _integratedPluginsInitialized[pluginUuid]) continue;
                 if (plugin is IInitInternals pluginWithInternals) pluginWithInternals.InitInternals();
             }
 
-            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
+
+            if (is3rdPartyEnabled) return;
+            // filter out 3rdParty
+            var thirdPartyPluginUUIDs = IntegratedPlugins
+                .Where(plugin => plugin.Is3rdParty)
+                .Select(plugin => plugin.PluginUUID);
+            foreach (var uuid in thirdPartyPluginUUIDs)
+            {
+                RemovePluginAlgorithms(uuid);
+            }
         }
 
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }

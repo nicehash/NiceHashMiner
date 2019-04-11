@@ -14,6 +14,7 @@ using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
 using static NiceHashMiner.Translations;
 using NiceHashMiner.Miners.IntegratedPlugins;
+using NiceHashMiner.Plugin;
 
 namespace NiceHashMiner.Forms
 {
@@ -895,6 +896,8 @@ namespace NiceHashMiner.Forms
             var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated && is3rdPartyEnabled;
             EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
+            // re-init update plugins
+            MinerPluginsManager.InitIntegratedPlugins();
         }
 
         private void CheckBox_HideMiningWindows_CheckChanged(object sender, EventArgs e)
