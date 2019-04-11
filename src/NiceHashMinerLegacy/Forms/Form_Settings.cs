@@ -13,6 +13,7 @@ using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
 using static NiceHashMiner.Translations;
+using NiceHashMiner.Miners.IntegratedPlugins;
 
 namespace NiceHashMiner.Forms
 {
@@ -376,7 +377,6 @@ namespace NiceHashMiner.Forms
                 checkBox_MinimizeMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_UseIFTTT.CheckedChanged += CheckBox_UseIFTTT_CheckChanged;
                 checkBox_RunScriptOnCUDA_GPU_Lost.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_RunEthlargement.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -584,7 +584,6 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
             ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
-            ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
         }
 
         private void CheckBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e)
@@ -891,6 +890,11 @@ namespace NiceHashMiner.Forms
             {
                 ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
             }
+
+            // update logic
+            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+            checkBox_RunEthlargement.Enabled = Helpers.IsElevated && is3rdPartyEnabled;
+            EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
         }
 
         private void CheckBox_HideMiningWindows_CheckChanged(object sender, EventArgs e)
@@ -909,6 +913,14 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
 
             textBox_IFTTTKey.Enabled = checkBox_UseIFTTT.Checked;
+        }
+
+        private void checkBox_RunEthlargement_CheckedChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
+            // update logic
+            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+            EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
         }
     }
 }
