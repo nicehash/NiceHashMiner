@@ -555,6 +555,7 @@ namespace NiceHashMiner
             {
                 c.Enabled = true;
             }
+            buttonStopMining.Enabled = false;
         }
 
 //        [Obsolete("Deprecated in favour of AlgorithmSwitchingManager timer")]
