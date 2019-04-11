@@ -442,7 +442,7 @@ namespace NiceHashMiner.Forms
             {
                 _benchmarkingTimer.Stop();
                 InBenchmark = false;
-                Ethlargement.Stop();
+                EthlargementOld.Stop();
                 Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
 
                 //CopyBenchmarks();

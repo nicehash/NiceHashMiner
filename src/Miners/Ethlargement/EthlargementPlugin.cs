@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Ethlargement
 {
@@ -72,7 +73,7 @@ namespace Ethlargement
                 var shouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => kvp.Value == AlgorithmType.DaggerHashimoto);
                 if (shouldRun)
                 {
-                    StartEthlargementProcess(EthlargementBinPath());
+                    StartEthlargementProcess();
                 }
                 else
                 {
@@ -92,7 +93,8 @@ namespace Ethlargement
                 if (stopAll)
                 {
                     // TODO STOP Ethlargement
-                    foreach (var key in _devicesUUIDActiveAlgorithm.Keys) _devicesUUIDActiveAlgorithm[key] = AlgorithmType.NONE;
+                    var keys = _devicesUUIDActiveAlgorithm.Keys.ToArray();
+                    foreach (var key in keys) _devicesUUIDActiveAlgorithm[key] = AlgorithmType.NONE;
                     StopEthlargementProcess();
                 }
                 else
@@ -101,7 +103,7 @@ namespace Ethlargement
                     var supportedUUIDs = _registeredSupportedDevices.Select(kvp => kvp.Key);
                     var supportedPairs = miningPairs
                         .Where(pair => supportedUUIDs.Contains(pair.Device.UUID))
-                        .Select(pair => pair.Device.UUID);
+                        .Select(pair => pair.Device.UUID).ToArray();
                     if (supportedPairs.Count() == 0) return;
 
                     foreach (var uuid in supportedPairs)
@@ -127,6 +129,9 @@ namespace Ethlargement
 
 
         #region Ethlargement Process
+
+        private static string _ethlargementBinPath = "";
+
         private static Process _ethlargementProcess = null;
 
         private static bool IsEthlargementProcessRunning()
@@ -141,34 +146,33 @@ namespace Ethlargement
             }
         }
 
-        private static void ExitEvent(object sender, EventArgs e)
+        private async static void ExitEvent(object sender, EventArgs e)
         {
+            _ethlargementProcess = null;
+            await Task.Delay(1000);
+            // TODO add delay and check if it is running
+            // lock and check
+            var shouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => kvp.Value == AlgorithmType.DaggerHashimoto);
+            if (shouldRun)
+            {
+                StartEthlargementProcess();
+            }
         }
 
-        private static void StartEthlargementProcess(string binPath)
+        private static void StartEthlargementProcess()
         {
-            if (IsEthlargementProcessRunning() == false) return;
+            if (IsEthlargementProcessRunning() == true) return;
 
             _ethlargementProcess = new Process
             {
                 StartInfo =
                 {
-                    FileName = binPath,
+                    FileName = _ethlargementBinPath,
                     //CreateNoWindow = false
                 },
                 EnableRaisingEvents = true
             };
-            _ethlargementProcess.Exited += (s, e) =>
-            {
-                _ethlargementProcess = null;
-                // TODO add delay and check if it is running
-                // lock and check
-                var shouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => kvp.Value == AlgorithmType.DaggerHashimoto);
-                if (!shouldRun)
-                {
-                    StartEthlargementProcess(binPath);
-                }
-            };
+            _ethlargementProcess.Exited += ExitEvent;
 
             try
             {
@@ -189,9 +193,10 @@ namespace Ethlargement
 
         private static void StopEthlargementProcess()
         {
-            if (IsEthlargementProcessRunning()) return;
+            if (IsEthlargementProcessRunning() == false) return;
             try
             {
+                _ethlargementProcess.Exited -= ExitEvent;
                 _ethlargementProcess.CloseMainWindow();
                 if (!_ethlargementProcess.WaitForExit(10 * 1000))
                 {
@@ -199,11 +204,11 @@ namespace Ethlargement
                 }
 
                 _ethlargementProcess.Close();
+                _ethlargementProcess = null;
             }
-            catch
+            catch (Exception ex)
             {
             }
-            
         }
 
         #endregion Ethlargement Process
@@ -224,6 +229,9 @@ namespace Ethlargement
 
         public void InitInternals()
         {
+            // set ethlargement path
+            _ethlargementBinPath = EthlargementBinPath();
+
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
             var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
             var supportedDevicesSettingsPath = Path.Combine(pluginRootIntenrals, "SupportedDevicesSettings.json");
@@ -242,7 +250,7 @@ namespace Ethlargement
             if (supportedDevicesNames == null) return;
             Func<string, bool> isSupportedName = (string name) => supportedDevicesNames.Any(supportedPart => name.Contains(supportedPart));
 
-            var unsupportedDevicesUUIDs = _registeredSupportedDevices.Where(kvp => !isSupportedName(kvp.Value)).Select(kvp => kvp.Key);
+            var unsupportedDevicesUUIDs = _registeredSupportedDevices.Where(kvp => !isSupportedName(kvp.Value)).Select(kvp => kvp.Key).ToArray();
             foreach (var removeKey in unsupportedDevicesUUIDs)
             {
                 _registeredSupportedDevices.Remove(removeKey);

@@ -14,6 +14,8 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common;
 using NiceHashMiner.Miners.IntegratedPlugins;
+using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common.Enums;
 
 
 // TODO fix up the namespace
@@ -43,6 +45,9 @@ namespace NiceHashMiner.Plugin
             new TeamRedMinerIntegratedPlugin(),
             new TRexIntegratedPlugin(),
             new TTMinerIntegratedPlugin(),
+
+            // service plugin
+            EthlargementIntegratedPlugin.Instance
         };
 
         // TODO add use3rdParty flag
@@ -54,6 +59,8 @@ namespace NiceHashMiner.Plugin
             // examine all plugins and what to use
             foreach (var plugin in IntegratedPlugins)
             {
+                if (plugin.Is3rdParty && ConfigManager.GeneralConfig.Use3rdPartyMiners != Use3rdPartyMiners.YES) continue;
+
                 var pluginUuid = plugin.PluginUUID;
                 var pluginName = plugin.Name;
                 var supported = plugin.GetSupportedAlgorithms(baseDevices);
@@ -71,6 +78,9 @@ namespace NiceHashMiner.Plugin
             {
                 if (plugin is IInitInternals pluginWithInternals) pluginWithInternals.InitInternals();
             }
+
+            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+            EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
         }
 
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }

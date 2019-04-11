@@ -36,19 +36,20 @@ namespace NiceHashMiner.Miners
             IsMultiType = true;
         }
 
+#pragma warning disable 0618
         // the short form the miner uses for secondary algo in cmd line and log
         public string SecondaryShortName()
         {
             switch (SecondaryAlgorithmType)
             {
-                //case AlgorithmType.Decred:
-                //    return "dcr";
-                //case AlgorithmType.Lbry:
-                //    return "lbc";
-                //case AlgorithmType.Pascal:
-                //    return "pasc";
-                //case AlgorithmType.Sia:
-                //    return "sc";
+                case AlgorithmType.Decred:
+                    return "dcr";
+                case AlgorithmType.Lbry:
+                    return "lbc";
+                case AlgorithmType.Pascal:
+                    return "pasc";
+                case AlgorithmType.Sia:
+                    return "sc";
                 case AlgorithmType.Blake2s:
                     return "b2s";
                 case AlgorithmType.Keccak:
@@ -57,12 +58,14 @@ namespace NiceHashMiner.Miners
 
             return "";
         }
+#pragma warning restore 0618
 
         protected override int GetMaxCooldownTimeInMilliseconds()
         {
             return 90 * 1000; // 1.5 minute max, whole waiting time 75seconds
         }
 
+#pragma warning disable 0618
         private string GetStartCommand(string url, string btcAdress, string worker)
         {
             var username = GetUsername(btcAdress, worker);
@@ -76,23 +79,23 @@ namespace NiceHashMiner.Miners
                     if (!pair.CurrentExtraLaunchParameters.Contains("-dual=")) continue;
                     var dual = AlgorithmType.NONE;
                     var coinP = "";
-                    //if (pair.CurrentExtraLaunchParameters.Contains("Decred"))
-                    //{
-                    //    dual = AlgorithmType.Decred;
-                    //    coinP = " -dcoin dcr ";
-                    //}
+                    if (pair.CurrentExtraLaunchParameters.Contains("Decred"))
+                    {
+                        dual = AlgorithmType.Decred;
+                        coinP = " -dcoin dcr ";
+                    }
 
-                    //if (pair.CurrentExtraLaunchParameters.Contains("Siacoin"))
-                    //{
-                    //    dual = AlgorithmType.Sia;
-                    //    coinP = " -dcoin sc";
-                    //}
+                    if (pair.CurrentExtraLaunchParameters.Contains("Siacoin"))
+                    {
+                        dual = AlgorithmType.Sia;
+                        coinP = " -dcoin sc";
+                    }
 
-                    //if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))
-                    //{
-                    //    dual = AlgorithmType.Lbry;
-                    //    coinP = " -dcoin lbc ";
-                    //}
+                    if (pair.CurrentExtraLaunchParameters.Contains("Lbry"))
+                    {
+                        dual = AlgorithmType.Lbry;
+                        coinP = " -dcoin lbc ";
+                    }
 
                     if (pair.CurrentExtraLaunchParameters.Contains("Pascal"))
                     {
@@ -122,6 +125,7 @@ namespace NiceHashMiner.Miners
                    + $"  -epool {url} -ewal {username} -mport 127.0.0.1:-{ApiPort} -esm 3 -epsw x -allpools 1"
                    + dualModeParams;
         }
+#pragma warning restore 0618
 
         protected virtual IEnumerable<MiningPair> SortDeviceList(IEnumerable<MiningPair> startingList)
         {

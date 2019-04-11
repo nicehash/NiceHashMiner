@@ -100,8 +100,7 @@ namespace NiceHashMiner.Benchmarking
         private async Task BenchmarkAlgorithmOnce(Miner currentMiner, Algorithm algo)
         {
             currentMiner.InitBenchmarkSetup(new MiningPair(Device, algo));
-            var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
-                .GetBenchamrktime(_performanceType, Device.DeviceGroupType);
+            var time = BenchmarkTimes.GetTime(_performanceType, Device.DeviceType);
 
             var benchTaskResult = currentMiner.BenchmarkStartAsync(time, _stopBenchmark.Token);
             _powerHelper.Start();
@@ -132,8 +131,7 @@ namespace NiceHashMiner.Benchmarking
                 if (_stopBenchmark.IsCancellationRequested) break;
 
                 currentMiner.InitBenchmarkSetup(new MiningPair(Device, dualAlgo));
-                var time = ConfigManager.GeneralConfig.BenchmarkTimeLimits
-                    .GetBenchamrktime(_performanceType, Device.DeviceGroupType);
+                var time = BenchmarkTimes.GetTime(_performanceType, Device.DeviceType);
 
                 var benchTaskResult = currentMiner.BenchmarkStartAsync(time, _stopBenchmark.Token);
                 _powerHelper.Start();
