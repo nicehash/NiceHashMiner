@@ -50,7 +50,7 @@ namespace NiceHashMiner.Miners
         {
             // TODO global state right here
             var location = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
-            var username = $"{btcAdress}.{worker}";
+            var username = GetUsername(btcAdress, worker);
             _miner.InitMiningLocationAndUsername(location, username);
 
             _miningPairs = this.MiningSetup.MiningPairs
