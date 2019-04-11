@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+// TESTNET
+#if TESTNET || TESTNETDEV
+using Newtonsoft.Json;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
@@ -36,9 +38,14 @@ namespace NiceHashMiner.Miners
         // CD intensity tuning
         protected const int defaultIntensity = 30;
 
+        private IEnumerable<MiningPair> SortedMiningPairs => MiningSetup.MiningPairs
+            .OrderByDescending(pair => pair.Device.DeviceType)
+            .ThenBy(pair => pair.Device.IDByBus);
+
         protected ClaymoreBaseMiner(string minerDeviceName)
             : base(minerDeviceName)
         {
+            TimeoutStandard = true;
             ConectionType = NhmConectionType.STRATUM_SSL;
             IsKillAllUsedMinerProcs = true;
         }
@@ -66,7 +73,7 @@ namespace NiceHashMiner.Miners
         public override async Task<ApiData> GetSummaryAsync()
         {
             CurrentMinerReadStatus = MinerApiReadStatus.NONE;
-            var ad = new ApiData(MiningSetup.CurrentAlgorithmType, MiningSetup.CurrentSecondaryAlgorithmType);
+            var ad = new SplitApiData(MiningSetup);
 
             JsonApiResponse resp = null;
             try
@@ -95,42 +102,36 @@ namespace NiceHashMiner.Miners
                 {
                     //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp.result != null && resp.result.Count > 4");
                     var speeds = resp.result[3].Split(';');
-                    var secondarySpeeds = (IsDual()) ? resp.result[5].Split(';') : new string[0];
-                    ad.Speed = 0;
-                    ad.SecondarySpeed = 0;
-                    foreach (var speed in speeds)
+                    var secondarySpeeds = resp.result[5].Split(';');
+
+                    var sortedDevs = SortedMiningPairs.Select(p => p.Device.Index).ToList();
+
+                    for (var i = 0; i < speeds.Length; i++)
                     {
                         //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "foreach (var speed in speeds) {");
-                        double tmpSpeed;
+                        var tmpSpeed = 0d;
+                        var tmpSecSpeed = 0d;
                         try
                         {
-                            tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
+                            tmpSpeed = double.Parse(speeds[i], CultureInfo.InvariantCulture);
+                            if (IsDual()) 
+                            {
+                                tmpSecSpeed = double.Parse(secondarySpeeds[i], CultureInfo.InvariantCulture);
+                            }
                         }
                         catch
-                        {
-                            tmpSpeed = 0;
-                        }
+                        { }
 
-                        ad.Speed += tmpSpeed;
+                        if (sortedDevs.Count > i)
+                        {
+                            ad.Speeds[sortedDevs[i]] = tmpSpeed * ApiReadMult;
+                            if (IsDual())
+                            {
+                                ad.SecondarySpeeds[sortedDevs[i]] = tmpSecSpeed * ApiReadMult;
+                            }
+                        } 
                     }
 
-                    foreach (var speed in secondarySpeeds)
-                    {
-                        double tmpSpeed;
-                        try
-                        {
-                            tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
-                        }
-                        catch
-                        {
-                            tmpSpeed = 0;
-                        }
-
-                        ad.SecondarySpeed += tmpSpeed;
-                    }
-
-                    ad.Speed *= ApiReadMult;
-                    ad.SecondarySpeed *= ApiReadMult;
                     CurrentMinerReadStatus = MinerApiReadStatus.GOT_READ;
                 }
 
@@ -155,43 +156,74 @@ namespace NiceHashMiner.Miners
             ShutdownMiner();
         }
 
-        protected static string GetAlphanumericID(int id)
+        protected virtual string DeviceCommand(int amdCount = 1)
         {
-            if (id > 9)
+            return " -di ";
+        }
+
+        // This method now overridden in ClaymoreCryptoNightMiner 
+        // Following logic for ClaymoreDual and ClaymoreZcash
+        protected override string GetDevicesCommandString()
+        {
+            // First by device type (AMD then NV), then by bus ID index
+            var sortedMinerPairs = SortedMiningPairs.ToList();
+            var extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
+
+            var ids = new List<string>();
+            var intensities = new List<string>();
+
+            var amdDeviceCount = ComputeDeviceManager.Query.AmdDevices.Count;
+            Helpers.ConsolePrint("ClaymoreIndexing", $"Found {amdDeviceCount} AMD devices");
+
+            foreach (var mPair in sortedMinerPairs)
             {
-                // New >10 GPU support in CD9.8
-                if (id < 36)
+                var id = mPair.Device.IDByBus;
+                if (id < 0)
                 {
-                    // CD supports 0-9 and a-z indexes, so 36 GPUs
-                    var idchar = (char) (id + 87); // 10 = 97(a), 11 - 98(b), etc
-                    return idchar.ToString();
+                    // should never happen
+                    Helpers.ConsolePrint("ClaymoreIndexing", "ID by Bus too low: " + id + " skipping device");
+                    continue;
+                }
+
+                if (mPair.Device.DeviceType == DeviceType.NVIDIA)
+                {
+                    Helpers.ConsolePrint("ClaymoreIndexing", "NVIDIA device increasing index by " + amdDeviceCount);
+                    id += amdDeviceCount;
+                }
+
+                if (id > 9)
+                {
+                    // New >10 GPU support in CD9.8
+                    if (id < 36)
+                    {
+                        // CD supports 0-9 and a-z indexes, so 36 GPUs
+                        var idchar = (char) (id + 87); // 10 = 97(a), 11 - 98(b), etc
+                        ids.Add(idchar.ToString());
+                    }
+                    else
+                    {
+                        Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
+                    }
                 }
                 else
                 {
-                    Helpers.ConsolePrint("ClaymoreIndexing", "ID " + id + " too high, ignoring");
+                    ids.Add(id.ToString());
+                }
+
+                if (mPair.Algorithm is DualAlgorithm algo && algo.TuningEnabled)
+                {
+                    intensities.Add(algo.CurrentIntensity.ToString());
                 }
             }
 
-            return id.ToString();
-        }
+            var deviceStringCommand = DeviceCommand(amdDeviceCount) + string.Join("", ids);
+            var intensityStringCommand = "";
+            if (intensities.Count > 0)
+            {
+                intensityStringCommand = " -dcri " + string.Join(",", intensities);
+            }
 
-        // This method now overridden in ClaymoreDual
-        // Following logic for ClaymoreCryptoNightMiner and ClaymoreZcash
-        protected override string GetDevicesCommandString()
-        {
-            // Order by bus ID index
-            var sortedMinerPairs = MiningSetup.MiningPairs
-                .OrderBy(pair => pair.Device.IDByBus)
-                .ToList();
-            var extraParams = ExtraLaunchParametersParser.ParseForMiningPairs(sortedMinerPairs, DeviceType.AMD);
-
-            var ids = sortedMinerPairs
-                .Select(p => p.Device.IDByBus)
-                .Select(GetAlphanumericID);
-
-            var deviceStringCommand = "-di " + string.Join("", ids);
-
-            return deviceStringCommand + extraParams;
+            return deviceStringCommand + intensityStringCommand + extraParams;
         }
 
         // benchmark stuff
@@ -317,3 +349,5 @@ namespace NiceHashMiner.Miners
         }
     }
 }
+#endif
+﻿

@@ -10,7 +10,6 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -21,29 +20,10 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
+using System.ComponentModel;
 
 namespace NiceHashMiner
 {
-    public class ApiData
-    {
-        public AlgorithmType AlgorithmID;
-        public AlgorithmType SecondaryAlgorithmID;
-        public string AlgorithmName;
-        public double Speed;
-        public double SecondarySpeed;
-        public double PowerUsage;
-
-        public ApiData(AlgorithmType algorithmID, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)
-        {
-            AlgorithmID = algorithmID;
-            SecondaryAlgorithmID = secondaryAlgorithmID;
-            AlgorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmID, secondaryAlgorithmID));
-            Speed = 0.0;
-            SecondarySpeed = 0.0;
-            PowerUsage = 0.0;
-        }
-    }
-
     // 
     public class MinerPidData
     {
@@ -139,9 +119,15 @@ namespace NiceHashMiner
 
         protected bool IsMultiType;
 
+// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
         protected Dictionary<string, string> _enviormentVariables = null;
+#endif
+// TESTNET
+#if TESTNET || TESTNETDEV
+        protected IEnumerable<ComputeDevice> Devices => MiningSetup.MiningPairs.Select(p => p.Device);
+#endif
 
-        private readonly Lazy<HttpClient> _httpClient = new Lazy<HttpClient>();
 
         protected Miner(string minerDeviceName)
         {
@@ -283,6 +269,8 @@ namespace NiceHashMiner
             _allPidData.RemoveAll(x => toRemovePidData.Contains(x));
         }
 
+// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
         public abstract void Start(string url, string btcAdress, string worker);
 
         protected string GetUsername(string btcAdress, string worker)
@@ -294,6 +282,12 @@ namespace NiceHashMiner
 
             return btcAdress;
         }
+#endif
+// TESTNET
+#if TESTNET || TESTNETDEV
+        public abstract void Start(string url, string username);
+#endif
+
 
         protected abstract void _Stop(MinerStopType willswitch);
 
@@ -344,8 +338,21 @@ namespace NiceHashMiner
         {
             foreach (var process in Process.GetProcessesByName(exeName))
             {
-                try { process.Kill(); }
-                catch (Exception e) { Helpers.ConsolePrint(MinerDeviceName, e.ToString()); }
+                try
+                {
+                    process.Kill();
+                }
+                catch (Exception e)
+                {
+                    unchecked
+                    {
+                        // Suppress reporting of Access Denied error
+                        if (!(e is Win32Exception w && w.HResult != (int) 0x80004005))
+                        {
+                            Helpers.ConsolePrint(MinerDeviceName, e.ToString());
+                        }
+                    }
+                }
             }
         }
 
@@ -901,8 +908,15 @@ namespace NiceHashMiner
 
         protected string GetServiceUrl(AlgorithmType algo)
         {
+// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
             return Globals.GetLocationUrl(algo, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
                 ConectionType);
+#endif
+// TESTNET
+#if TESTNET || TESTNETDEV
+            return ApplicationStateManager.GetSelectedServiceLocationLocationUrl(algo, ConectionType);
+#endif
         }
 
         protected bool IsActiveProcess(int pid)

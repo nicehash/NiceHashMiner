@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
@@ -283,36 +285,6 @@ namespace NiceHashMiner.Stats
 
         #endregion
 
-        public static string GetNiceHashApiData(string url, string worker)
-        {
-            var responseFromServer = "";
-            try
-            {
-                var wr = (HttpWebRequest) WebRequest.Create(url);
-                wr.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
-                if (worker.Length > 64) worker = worker.Substring(0, 64);
-                wr.Headers.Add("NiceHash-Worker-ID", worker);
-                wr.Timeout = 30 * 1000;
-                var response = wr.GetResponse();
-                var ss = response.GetResponseStream();
-                if (ss != null)
-                {
-                    ss.ReadTimeout = 20 * 1000;
-                    var reader = new StreamReader(ss);
-                    responseFromServer = reader.ReadToEnd();
-                    if (responseFromServer.Length == 0 || responseFromServer[0] != '{')
-                        throw new Exception("Not JSON!");
-                    reader.Close();
-                }
-                response.Close();
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("NICEHASH", ex.Message);
-                return null;
-            }
-
-            return responseFromServer;
-        }
     }
 }
+#endif

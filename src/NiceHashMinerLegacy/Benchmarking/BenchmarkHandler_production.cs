@@ -1,4 +1,6 @@
-﻿using NiceHashMiner.Algorithms;
+﻿// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Benchmarking.BenchHelpers;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
@@ -163,3 +165,4 @@ namespace NiceHashMiner.Benchmarking
         }
     }
 }
+#endif

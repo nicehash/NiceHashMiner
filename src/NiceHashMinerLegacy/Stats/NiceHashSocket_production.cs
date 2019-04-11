@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+using Newtonsoft.Json;
 using NiceHashMiner.Switching;
 using System;
 using System.Threading;
@@ -207,3 +209,4 @@ namespace NiceHashMiner.Stats
         }
     }
 }
+#endif

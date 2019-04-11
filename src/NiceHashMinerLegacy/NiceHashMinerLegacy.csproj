@@ -102,9 +102,22 @@
     <Compile Include="Algorithms\Algorithm.cs" />
     <Compile Include="Algorithms\DualAlgorithm.cs" />
     <Compile Include="Algorithms\PluginAlgorithm.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.DataVizualizers.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Devices.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Init.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Mining.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Program.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Refactoring.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Timers.cs" />
+    <Compile Include="Benchmarking\BenchChecker.cs" />
+    <Compile Include="Benchmarking\BenchDeviationInfo.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
-    <Compile Include="Benchmarking\BenchmarkHandler.cs" />
+    <Compile Include="Benchmarking\BenchmarkChecker.cs" />
+    <Compile Include="Benchmarking\BenchmarkHandler_testnet.cs" />
+    <Compile Include="Benchmarking\BenchmarkHandler_production.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler2.cs" />
+    <Compile Include="Benchmarking\BenchmarkManager.cs" />
     <Compile Include="Benchmarking\BenchmarkTimes.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
     <Compile Include="Devices\Algorithms\DefaultAlgorithms.cs" />
@@ -169,7 +182,8 @@
     <Compile Include="Forms\FormEula.Designer.cs">
       <DependentUpon>FormEula.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormHelpers.cs" />
+    <Compile Include="Forms\FormHelpers_production.cs" />
+    <Compile Include="Forms\FormHelpers_testnet.cs" />
     <Compile Include="Forms\Form_MinerPlugins.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,6 +196,8 @@
     <Compile Include="Forms\LoginForm.Designer.cs">
       <DependentUpon>LoginForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Globals_production.cs" />
+    <Compile Include="Globals_testnet.cs" />
     <Compile Include="IFTTT.cs" />
     <Compile Include="Configs\Data\DualAlgorithmConfig.cs" />
     <Compile Include="Forms\Form_DcriValues.cs">
@@ -205,10 +221,16 @@
     <Compile Include="Interfaces\DataVisualizer\IStopMiningDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IVersionDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IWorkerNameDisplayer.cs" />
-    <Compile Include="Interfaces\IApiResult.cs" />
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="Interfaces\IMessageNotifier.cs" />
+    <Compile Include="Interfaces\IMinerUpdateIndicator.cs" />
+    <Compile Include="Interfaces\IRatesComunication.cs" />
     <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
     <Compile Include="Interfaces\StateSetters\IStateSetter.cs" />
+    <Compile Include="Miners\ApiData_production.cs" />
+    <Compile Include="Miners\ApiData_testnet.cs" />
+    <Compile Include="Miners\ClaymoreBaseMiner_testnet.cs" />
+    <Compile Include="Miners\ClaymoreDual_testnet.cs" />
     <Compile Include="Miners\IdleChecking\IdleChangedEventArgs.cs" />
     <Compile Include="Miners\IdleChecking\IdleChecker.cs" />
     <Compile Include="Miners\IdleChecking\IdleCheckManager.cs" />
@@ -246,6 +268,8 @@
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
+    <Compile Include="Miners\MinersManager_testnet.cs" />
+    <Compile Include="Miners\MiningSession_testnet.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="MinersDownloader\DownloadSetup.cs" />
     <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
@@ -263,9 +287,11 @@
     <Compile Include="Plugin\PluginPackageInfo.cs" />
     <Compile Include="Plugin\PluginPackageInfoCR.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
-    <Compile Include="Miners\ClaymoreDual.cs" />
-    <Compile Include="Stats\NiceHashSocket.cs" />
-    <Compile Include="Stats\NiceHashStats.cs" />
+    <Compile Include="Miners\ClaymoreDual_production.cs" />
+    <Compile Include="Stats\NiceHashSocket_testnet.cs" />
+    <Compile Include="Stats\NiceHashSocket_production.cs" />
+    <Compile Include="Stats\NiceHashStats_testnet.cs" />
+    <Compile Include="Stats\NiceHashStats_production.cs" />
     <Compile Include="Stats\StatusCodes.cs" />
     <Compile Include="Stats\TimeFactor.cs" />
     <Compile Include="StratumService.cs" />
@@ -353,7 +379,7 @@
     <Compile Include="Forms\Form_Settings.Designer.cs">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Globals.cs" />
+    <Compile Include="Globals_shared.cs" />
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
     <Compile Include="Interfaces\IBenchmarkComunicator.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
@@ -364,7 +390,7 @@
     <Compile Include="Utils\Guid\UUID.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
-    <Compile Include="Miners\ClaymoreBaseMiner.cs" />
+    <Compile Include="Miners\ClaymoreBaseMiner_production.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
@@ -377,8 +403,8 @@
     <Compile Include="Miners\Parsing\MinerOption.cs" />
     <Compile Include="Miners\Grouping\MinerPaths.cs" />
     <Compile Include="Miners\MinersApiPortsManager.cs" />
-    <Compile Include="Miners\MinersManager.cs" />
-    <Compile Include="Miners\MiningSession.cs" />
+    <Compile Include="Miners\MinersManager_production.cs" />
+    <Compile Include="Miners\MiningSession_production.cs" />
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />

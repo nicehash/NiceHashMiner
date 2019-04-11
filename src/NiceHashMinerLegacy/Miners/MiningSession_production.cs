@@ -1,4 +1,6 @@
-﻿using NiceHashMiner.Configs;
+﻿// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners.Grouping;
@@ -607,3 +609,4 @@ namespace NiceHashMiner.Miners
         }
     }
 }
+#endif

@@ -77,7 +77,11 @@ namespace NiceHashMiner.Miners.Grouping
             CurrentRate = 0;
         }
 
+
+// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
         public void Start(string miningLocation, string btcAdress, string worker)
+
         {
             if (Miner.IsRunning)
             {
@@ -86,7 +90,25 @@ namespace NiceHashMiner.Miners.Grouping
             // Wait before new start
             System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
             var locationUrl = Globals.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
+
             Miner.Start(locationUrl, btcAdress, worker);
+
         }
+#endif
+// TESTNET
+#if TESTNET || TESTNETDEV
+public void Start(string miningLocation, string username)
+        {
+            if (Miner.IsRunning)
+            {
+                return;
+            }
+            // Wait before new start
+            System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            var locationUrl = StratumService.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
+            Miner.Start(locationUrl, username);
+        }
+#endif
+
     }
 }

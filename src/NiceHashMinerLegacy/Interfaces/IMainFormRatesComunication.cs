@@ -1,4 +1,8 @@
-﻿namespace NiceHashMiner.Interfaces
+// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+using NiceHashMiner.Miners;
+
+namespace NiceHashMiner.Interfaces
 {
     public interface IMainFormRatesComunication
     {
@@ -19,3 +23,4 @@
         void ClearRates(int groupCount);
     }
 }
+#endif

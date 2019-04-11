@@ -1,4 +1,7 @@
-﻿using System;
+﻿// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -82,3 +85,4 @@ namespace NiceHashMiner.Forms
         }
     }
 }
+#endif
