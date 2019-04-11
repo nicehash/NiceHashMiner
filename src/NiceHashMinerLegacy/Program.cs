@@ -147,7 +147,7 @@ namespace NiceHashMiner
                 // if no BTC address show login/register form
                 if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "") Application.Run(new EnterBTCDialogSwitch());
                 // finally run
-                Application.Run(new Form_Main());
+                Application.Run(new Form_Main_Production());
             }
             else
             {

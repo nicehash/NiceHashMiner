@@ -337,11 +337,11 @@
     <Compile Include="Forms\Components\BenchmarkOptions.Designer.cs">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl.cs">
+    <Compile Include="Forms\Components\DevicesListViewEnableControl_Production.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl.Designer.cs">
-      <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
+    <Compile Include="Forms\Components\DevicesListViewEnableControl_Production.Designer.cs">
+      <DependentUpon>DevicesListViewEnableControl_Production.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Components\Field.cs">
       <SubType>UserControl</SubType>
@@ -355,11 +355,11 @@
     <Compile Include="Forms\Components\GroupProfitControl.Designer.cs">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Benchmark.cs">
+    <Compile Include="Forms\Form_Benchmark_Production.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form_Benchmark.Designer.cs">
-      <DependentUpon>Form_Benchmark.cs</DependentUpon>
+    <Compile Include="Forms\Form_Benchmark_Production.Designer.cs">
+      <DependentUpon>Form_Benchmark_Production.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Form_ChooseLanguage.cs">
       <SubType>Form</SubType>
@@ -373,11 +373,11 @@
     <Compile Include="Forms\Form_3rdParty_TOS.Designer.cs">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Settings.cs">
+    <Compile Include="Forms\Form_Settings_Production.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form_Settings.Designer.cs">
-      <DependentUpon>Form_Settings.cs</DependentUpon>
+    <Compile Include="Forms\Form_Settings_Production.Designer.cs">
+      <DependentUpon>Form_Settings_Production.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals_shared.cs" />
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
@@ -410,11 +410,11 @@
     <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
-    <Compile Include="Forms\Form_Main.cs">
+    <Compile Include="Forms\Form_Main_Production.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form_Main.Designer.cs">
-      <DependentUpon>Form_Main.cs</DependentUpon>
+    <Compile Include="Forms\Form_Main_Production.Designer.cs">
+      <DependentUpon>Form_Main_Production.cs</DependentUpon>
     </Compile>
     <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Miners\Miner.cs" />
@@ -443,8 +443,8 @@
     <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\DevicesListViewEnableControl.resx">
-      <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Components\DevicesListViewEnableControl_Production.resx">
+      <DependentUpon>DevicesListViewEnableControl_Production.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>
@@ -470,8 +470,8 @@
     <EmbeddedResource Include="Forms\FormEula.resx">
       <DependentUpon>FormEula.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Benchmark.resx">
-      <DependentUpon>Form_Benchmark.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Form_Benchmark_Production.resx">
+      <DependentUpon>Form_Benchmark_Production.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
@@ -485,11 +485,11 @@
     <EmbeddedResource Include="Forms\Form_MinerPlugins.resx">
       <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Settings.resx">
-      <DependentUpon>Form_Settings.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Form_Settings_Production.resx">
+      <DependentUpon>Form_Settings_Production.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Main.resx">
-      <DependentUpon>Form_Main.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\Form_Main_Production.resx">
+      <DependentUpon>Form_Main_Production.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MinerFileNotFoundDialog.resx">
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>

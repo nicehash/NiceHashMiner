@@ -1,6 +1,6 @@
 ﻿namespace NiceHashMiner.Forms
 {
-    partial class Form_Settings
+    partial class Form_Settings_Production
     {
         /// <summary>
         /// Required designer variable.
@@ -133,7 +133,7 @@
             this.textBox_MinerRestartDelayMS = new System.Windows.Forms.TextBox();
             this.textBox_MinerAPIQueryInterval = new System.Windows.Forms.TextBox();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl_Production();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
@@ -1673,7 +1673,7 @@
         private System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.PictureBox pictureBox_displayCurrency;
         private System.Windows.Forms.PictureBox pictureBox_Language;
-        private Components.DevicesListViewEnableControl devicesListViewEnableControl1;
+        private Components.DevicesListViewEnableControl_Production devicesListViewEnableControl1;
         private System.Windows.Forms.PictureBox pictureBox_MinIdleSeconds;
         private System.Windows.Forms.PictureBox pictureBox_SwitchMinSeconds;
         private System.Windows.Forms.PictureBox pictureBox_MinerAPIQueryInterval;

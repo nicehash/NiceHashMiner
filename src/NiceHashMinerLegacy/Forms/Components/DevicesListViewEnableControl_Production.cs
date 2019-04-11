@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
 {
-    public partial class DevicesListViewEnableControl : UserControl
+    public partial class DevicesListViewEnableControl_Production : UserControl
     {
         private const int ENABLED = 0;
         private const int DEVICE = 1;
@@ -90,7 +90,7 @@ namespace NiceHashMiner.Forms.Components
 
         public bool SaveToGeneralConfig { get; set; }
 
-        public DevicesListViewEnableControl()
+        public DevicesListViewEnableControl_Production()
         {
             InitializeComponent();
 

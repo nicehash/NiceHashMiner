@@ -25,7 +25,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner
 {
-    public partial class Form_Main : Form, IMainFormRatesComunication
+    public partial class Form_Main_Production : Form, IMainFormRatesComunication
     {
         private string _visitUrlNew = Links.VisitNewVersionReleaseUrl;
 
@@ -35,7 +35,7 @@ namespace NiceHashMiner
         private bool _showWarningNiceHashData;
         private bool _demoMode;
 
-        private Form_Benchmark _benchmarkForm;
+        private Form_Benchmark_Production _benchmarkForm;
         private Form_MinerPlugins _minerPluginsForm;
 
         private int _flowLayoutPanelVisibleCount = 0;
@@ -57,7 +57,7 @@ namespace NiceHashMiner
 
         private CudaDeviceChecker _cudaChecker;
 
-        public Form_Main()
+        public Form_Main_Production()
         {
             InitializeComponent();
             CenterToScreen();
@@ -962,7 +962,7 @@ namespace NiceHashMiner
         {
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
-            _benchmarkForm = new Form_Benchmark();
+            _benchmarkForm = new Form_Benchmark_Production();
             SetChildFormCenter(_benchmarkForm);
             _benchmarkForm.ShowDialog();
             var startMining = _benchmarkForm.StartMining;
@@ -978,7 +978,7 @@ namespace NiceHashMiner
 
         private void ButtonSettings_Click(object sender, EventArgs e)
         {
-            var settings = new Form_Settings();
+            var settings = new Form_Settings_Production();
             SetChildFormCenter(settings);
             settings.ShowDialog();
 
@@ -1192,7 +1192,7 @@ namespace NiceHashMiner
                 }
                 if (result == DialogResult.Yes)
                 {
-                    _benchmarkForm = new Form_Benchmark(
+                    _benchmarkForm = new Form_Benchmark_Production(
                         BenchmarkPerformanceType.Standard,
                         true);
                     SetChildFormCenter(_benchmarkForm);

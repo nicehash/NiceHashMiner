@@ -18,7 +18,7 @@ using NiceHashMiner.Plugin;
 
 namespace NiceHashMiner.Forms
 {
-    public partial class Form_Settings : Form
+    public partial class Form_Settings_Production : Form
     {
         private readonly bool _isInitFinished = false;
         private bool _isChange = false;
@@ -42,7 +42,7 @@ namespace NiceHashMiner.Forms
 
         private bool _isStartupChanged = false;
 
-        public Form_Settings()
+        public Form_Settings_Production()
         {
             InitializeComponent();
             Icon = Properties.Resources.logo;

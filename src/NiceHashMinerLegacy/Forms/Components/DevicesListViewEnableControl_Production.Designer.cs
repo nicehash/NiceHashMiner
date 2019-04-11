@@ -1,5 +1,5 @@
 ﻿namespace NiceHashMiner.Forms.Components {
-    partial class DevicesListViewEnableControl {
+    partial class DevicesListViewEnableControl_Production {
         /// <summary> 
         /// Required designer variable.
         /// </summary>

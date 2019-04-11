@@ -17,7 +17,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace NiceHashMiner.Forms
 {
-    public partial class Form_Benchmark : Form, IListItemCheckColorSetter, IBenchmarkForm, IBenchmarkCalculation
+    public partial class Form_Benchmark_Production : Form, IListItemCheckColorSetter, IBenchmarkForm, IBenchmarkCalculation
     {
         private static readonly Color DisabledColor = Color.DarkGray;
         private static readonly Color BenchmarkedColor = Color.LightGreen;
@@ -47,7 +47,7 @@ namespace NiceHashMiner.Forms
 
         public bool InBenchmark { get; private set; }
 
-        public Form_Benchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+        public Form_Benchmark_Production(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false)
         {
             InitializeComponent();
