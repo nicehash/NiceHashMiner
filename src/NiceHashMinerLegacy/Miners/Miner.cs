@@ -85,9 +85,6 @@ namespace NiceHashMiner
 
         protected string LastCommandLine { get; set; }
 
-        // TODO check this 
-        protected double PreviousTotalMH;
-
         // the defaults will be 
         protected string WorkingDirectory { get; private set; }
 
@@ -158,7 +155,6 @@ namespace NiceHashMiner
             WorkingDirectory = "";
 
             IsRunning = false;
-            PreviousTotalMH = 0.0;
 
             LastCommandLine = "";
 
@@ -305,7 +301,6 @@ namespace NiceHashMiner
         {
             _cooldownCheckTimer?.Stop();
             _Stop(willswitch);
-            PreviousTotalMH = 0.0;
             IsRunning = false;
         }
 
@@ -933,7 +928,6 @@ namespace NiceHashMiner
                 return null;
             }
 
-            PreviousTotalMH = 0.0;
             if (LastCommandLine.Length == 0) return null;
 
             EthlargementOld.CheckAndStart(MiningSetup);
