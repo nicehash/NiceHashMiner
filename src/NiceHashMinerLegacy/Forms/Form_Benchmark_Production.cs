@@ -1,4 +1,6 @@
-﻿using System;
+﻿// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -117,7 +119,7 @@ namespace NiceHashMiner.Forms
             FormHelpers.TranslateFormControls(this);
         }
 
-        #region IBenchmarkCalculation methods
+#region IBenchmarkCalculation methods
 
         public void CalcBenchmarkDevicesAlgorithmQueue()
         {
@@ -165,9 +167,9 @@ namespace NiceHashMiner.Forms
             _bechmarkCurrentIndex = 0;
         }
 
-        #endregion
+#endregion
 
-        #region IBenchmarkForm methods
+#region IBenchmarkForm methods
 
         public void AddToStatusCheck(ComputeDevice device, Algorithm algorithm)
         {
@@ -222,9 +224,9 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        #endregion
+#endregion
 
-        #region IListItemCheckColorSetter methods
+#region IListItemCheckColorSetter methods
 
         public void LviSetColor(ListViewItem lvi)
         {
@@ -254,7 +256,7 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        #endregion
+#endregion
 
         private void CopyBenchmarks()
         {
@@ -286,7 +288,7 @@ namespace NiceHashMiner.Forms
             return new string('.', _dotCount);
         }
 
-        #region Start/Stop methods
+#region Start/Stop methods
 
         private void StartStopBtn_Click(object sender, EventArgs e)
         {
@@ -477,7 +479,7 @@ namespace NiceHashMiner.Forms
             });
         }
 
-        #endregion
+#endregion
 
         private void CloseBtn_Click(object sender, EventArgs e)
         {
@@ -540,7 +542,7 @@ namespace NiceHashMiner.Forms
         }
 
 
-        #region Benchmark progress GUI stuff
+#region Benchmark progress GUI stuff
 
         private void SetLabelBenchmarkSteps(int current, int max)
         {
@@ -553,6 +555,7 @@ namespace NiceHashMiner.Forms
             progressBarBenchmarkSteps.Value = 0;
         }
 
-        #endregion // Benchmark progress GUI stuff
+#endregion // Benchmark progress GUI stuff
     }
 }
+#endif

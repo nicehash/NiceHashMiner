@@ -1,8 +1,8 @@
-﻿// PRODUCTION
-#if !(TESTNET || TESTNETDEV)
+﻿// TESTNET
+#if TESTNET || TESTNETDEV
 namespace NiceHashMiner
 {
-    partial class Form_Main_Production
+    partial class Form_Main
     {
         /// <summary>
         /// Required designer variable.
@@ -57,26 +57,22 @@ namespace NiceHashMiner
             this.linkLabelChooseBTCWallet = new System.Windows.Forms.LinkLabel();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.labelDemoMode = new System.Windows.Forms.Label();
-            this.flowLayoutPanelRates = new System.Windows.Forms.FlowLayoutPanel();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label_NotProfitable = new System.Windows.Forms.Label();
             this.buttonHelp = new System.Windows.Forms.Button();
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl_Production();
-            this.button1 = new System.Windows.Forms.Button();
+            this.devicesMainBoard1 = new NiceHashMiner.Forms.Components.DevicesMainBoardDevicesListViewSpeedControl();
             this.statusStrip1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonStartMining
             // 
-            this.buttonStartMining.Location = new System.Drawing.Point(452, 162);
+            this.buttonStartMining.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonStartMining.Location = new System.Drawing.Point(680, 162);
             this.buttonStartMining.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonStartMining.Name = "buttonStartMining";
             this.buttonStartMining.Size = new System.Drawing.Size(89, 23);
             this.buttonStartMining.TabIndex = 6;
-            this.buttonStartMining.Text = "&Start";
+            this.buttonStartMining.Text = "&Start All";
             this.buttonStartMining.UseVisualStyleBackColor = true;
             this.buttonStartMining.Click += new System.EventHandler(this.ButtonStartMining_Click);
             // 
@@ -86,8 +82,7 @@ namespace NiceHashMiner
             this.textBoxBTCAddress.Name = "textBoxBTCAddress";
             this.textBoxBTCAddress.Size = new System.Drawing.Size(237, 20);
             this.textBoxBTCAddress.TabIndex = 1;
-            this.textBoxBTCAddress.Enter += new System.EventHandler(this.TextBoxBTCAddress_Enter);
-            this.textBoxBTCAddress.Leave += new System.EventHandler(this.TextBoxCheckBoxMain_Leave);
+            this.textBoxBTCAddress.Leave += new System.EventHandler(this.textBoxBTCAddress_Leave);
             // 
             // labelServiceLocation
             // 
@@ -113,16 +108,16 @@ namespace NiceHashMiner
             this.comboBoxLocation.Name = "comboBoxLocation";
             this.comboBoxLocation.Size = new System.Drawing.Size(121, 21);
             this.comboBoxLocation.TabIndex = 0;
-            this.comboBoxLocation.Leave += new System.EventHandler(this.TextBoxCheckBoxMain_Leave);
+            this.comboBoxLocation.SelectedIndexChanged += new System.EventHandler(this.comboBoxLocation_SelectedIndexChanged);
             // 
             // labelBitcoinAddress
             // 
             this.labelBitcoinAddress.AutoSize = true;
             this.labelBitcoinAddress.Location = new System.Drawing.Point(8, 42);
             this.labelBitcoinAddress.Name = "labelBitcoinAddress";
-            this.labelBitcoinAddress.Size = new System.Drawing.Size(83, 13);
+            this.labelBitcoinAddress.Size = new System.Drawing.Size(82, 13);
             this.labelBitcoinAddress.TabIndex = 99;
-            this.labelBitcoinAddress.Text = "Bitcoin Address:";
+            this.labelBitcoinAddress.Text = "Bitcoin address:";
             // 
             // statusStrip1
             // 
@@ -138,9 +133,9 @@ namespace NiceHashMiner
             this.toolStripStatusLabelBalanceDollarText,
             this.toolStripStatusLabelBalanceDollarValue,
             this.toolStripStatusLabel10});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 341);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 241);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(565, 25);
+            this.statusStrip1.Size = new System.Drawing.Size(776, 25);
             this.statusStrip1.TabIndex = 8;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -228,9 +223,9 @@ namespace NiceHashMiner
             this.labelWorkerName.AutoSize = true;
             this.labelWorkerName.Location = new System.Drawing.Point(8, 68);
             this.labelWorkerName.Name = "labelWorkerName";
-            this.labelWorkerName.Size = new System.Drawing.Size(76, 13);
+            this.labelWorkerName.Size = new System.Drawing.Size(74, 13);
             this.labelWorkerName.TabIndex = 99;
-            this.labelWorkerName.Text = "Worker Name:";
+            this.labelWorkerName.Text = "Worker name:";
             // 
             // textBoxWorkerName
             // 
@@ -238,23 +233,25 @@ namespace NiceHashMiner
             this.textBoxWorkerName.Name = "textBoxWorkerName";
             this.textBoxWorkerName.Size = new System.Drawing.Size(120, 20);
             this.textBoxWorkerName.TabIndex = 2;
-            this.textBoxWorkerName.Leave += new System.EventHandler(this.TextBoxCheckBoxMain_Leave);
+            this.textBoxWorkerName.Leave += new System.EventHandler(this.textBoxWorkerName_Leave);
             // 
             // buttonStopMining
             // 
+            this.buttonStopMining.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonStopMining.Enabled = false;
-            this.buttonStopMining.Location = new System.Drawing.Point(452, 188);
+            this.buttonStopMining.Location = new System.Drawing.Point(680, 188);
             this.buttonStopMining.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonStopMining.Name = "buttonStopMining";
             this.buttonStopMining.Size = new System.Drawing.Size(89, 23);
             this.buttonStopMining.TabIndex = 7;
-            this.buttonStopMining.Text = "St&op";
+            this.buttonStopMining.Text = "&Stop All";
             this.buttonStopMining.UseVisualStyleBackColor = true;
             this.buttonStopMining.Click += new System.EventHandler(this.ButtonStopMining_Click);
             // 
             // buttonBenchmark
             // 
-            this.buttonBenchmark.Location = new System.Drawing.Point(452, 109);
+            this.buttonBenchmark.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonBenchmark.Location = new System.Drawing.Point(680, 109);
             this.buttonBenchmark.Margin = new System.Windows.Forms.Padding(3, 3, 3, 2);
             this.buttonBenchmark.Name = "buttonBenchmark";
             this.buttonBenchmark.Size = new System.Drawing.Size(89, 23);
@@ -265,7 +262,8 @@ namespace NiceHashMiner
             // 
             // buttonSettings
             // 
-            this.buttonSettings.Location = new System.Drawing.Point(452, 135);
+            this.buttonSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSettings.Location = new System.Drawing.Point(680, 135);
             this.buttonSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonSettings.Name = "buttonSettings";
             this.buttonSettings.Size = new System.Drawing.Size(89, 23);
@@ -276,11 +274,12 @@ namespace NiceHashMiner
             // 
             // buttonLogo
             // 
+            this.buttonLogo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonLogo.Cursor = System.Windows.Forms.Cursors.Hand;
             this.buttonLogo.FlatAppearance.BorderSize = 0;
             this.buttonLogo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonLogo.Image = global::NiceHashMiner.Properties.Resources.NHM_logo_xsmall_light;
-            this.buttonLogo.Location = new System.Drawing.Point(355, 9);
+            this.buttonLogo.Location = new System.Drawing.Point(564, 8);
             this.buttonLogo.Name = "buttonLogo";
             this.buttonLogo.Size = new System.Drawing.Size(205, 52);
             this.buttonLogo.TabIndex = 11;
@@ -317,42 +316,10 @@ namespace NiceHashMiner
             this.labelDemoMode.Text = "NiceHash Miner Legacy is running in DEMO mode!";
             this.labelDemoMode.Visible = false;
             // 
-            // flowLayoutPanelRates
-            // 
-            this.flowLayoutPanelRates.AutoScroll = true;
-            this.flowLayoutPanelRates.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanelRates.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanelRates.Location = new System.Drawing.Point(3, 16);
-            this.flowLayoutPanelRates.Name = "flowLayoutPanelRates";
-            this.flowLayoutPanelRates.Size = new System.Drawing.Size(545, 40);
-            this.flowLayoutPanelRates.TabIndex = 107;
-            this.flowLayoutPanelRates.WrapContents = false;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label_NotProfitable);
-            this.groupBox1.Controls.Add(this.flowLayoutPanelRates);
-            this.groupBox1.Location = new System.Drawing.Point(9, 276);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(551, 59);
-            this.groupBox1.TabIndex = 108;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Group/Device Rates:";
-            // 
-            // label_NotProfitable
-            // 
-            this.label_NotProfitable.AutoSize = true;
-            this.label_NotProfitable.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.label_NotProfitable.ForeColor = System.Drawing.Color.Red;
-            this.label_NotProfitable.Location = new System.Drawing.Point(6, 0);
-            this.label_NotProfitable.Name = "label_NotProfitable";
-            this.label_NotProfitable.Size = new System.Drawing.Size(366, 24);
-            this.label_NotProfitable.TabIndex = 110;
-            this.label_NotProfitable.Text = "CURRENTLY MINING NOT PROFITABLE.";
-            // 
             // buttonHelp
             // 
-            this.buttonHelp.Location = new System.Drawing.Point(453, 244);
+            this.buttonHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonHelp.Location = new System.Drawing.Point(680, 214);
             this.buttonHelp.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(89, 23);
@@ -370,39 +337,24 @@ namespace NiceHashMiner
             this.linkLabelNewVersion.TabIndex = 110;
             this.linkLabelNewVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelNewVersion_LinkClicked);
             // 
-            // devicesListViewEnableControl1
+            // devicesMainBoard1
             // 
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
-            this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
-            this.devicesListViewEnableControl1.Location = new System.Drawing.Point(11, 109);
-            this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
-            this.devicesListViewEnableControl1.SaveToGeneralConfig = false;
-            this.devicesListViewEnableControl1.Size = new System.Drawing.Size(435, 158);
-            this.devicesListViewEnableControl1.TabIndex = 109;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(453, 216);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(89, 23);
-            this.button1.TabIndex = 111;
-            this.button1.Text = "Plugins";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.devicesMainBoard1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.devicesMainBoard1.Location = new System.Drawing.Point(10, 109);
+            this.devicesMainBoard1.Name = "devicesMainBoard1";
+            this.devicesMainBoard1.Size = new System.Drawing.Size(664, 127);
+            this.devicesMainBoard1.TabIndex = 111;
             // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(565, 366);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(776, 266);
+            this.Controls.Add(this.devicesMainBoard1);
             this.Controls.Add(this.linkLabelNewVersion);
             this.Controls.Add(this.buttonHelp);
-            this.Controls.Add(this.devicesListViewEnableControl1);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.labelDemoMode);
             this.Controls.Add(this.linkLabelChooseBTCWallet);
             this.Controls.Add(this.buttonLogo);
@@ -418,19 +370,17 @@ namespace NiceHashMiner
             this.Controls.Add(this.labelServiceLocation);
             this.Controls.Add(this.textBoxBTCAddress);
             this.Controls.Add(this.buttonStartMining);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(576, 316);
+            this.Enabled = false;
+            this.MinimumSize = new System.Drawing.Size(572, 303);
             this.Name = "Form_Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NiceHash Miner Legacy";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Shown += new System.EventHandler(this.Form_Main_Shown);
+            this.ResizeEnd += new System.EventHandler(this.Form_Main_ResizeEnd);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -464,14 +414,10 @@ namespace NiceHashMiner
         private System.Windows.Forms.TextBox textBoxWorkerName;
         private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
         private System.Windows.Forms.Label labelDemoMode;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label_NotProfitable;
-        private Forms.Components.DevicesListViewEnableControl_Production devicesListViewEnableControl1;
         private System.Windows.Forms.Button buttonHelp;
         private System.Windows.Forms.LinkLabel linkLabelNewVersion;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button button1;
+        private Forms.Components.DevicesMainBoardDevicesListViewSpeedControl devicesMainBoard1;
     }
 }
 

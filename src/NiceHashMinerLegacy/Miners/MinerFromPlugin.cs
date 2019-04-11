@@ -46,11 +46,17 @@ namespace NiceHashMiner.Miners
         }
 
         // TODO this thing 
+        // PRODUCTION
+#if !(TESTNET || TESTNETDEV)
         public override void Start(string url, string btcAdress, string worker)
         {
+            var username = GetUsername(btcAdress, worker);
+#elif TESTNET || TESTNETDEV
+        public override void Start(string url, string username)
+        {
+#endif
             // TODO global state right here
             var location = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
-            var username = GetUsername(btcAdress, worker);
             _miner.InitMiningLocationAndUsername(location, username);
 
             _miningPairs = this.MiningSetup.MiningPairs

@@ -1,4 +1,6 @@
-﻿using NiceHashMiner.Configs;
+﻿// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Forms;
@@ -1312,3 +1314,4 @@ namespace NiceHashMiner
         }
     }
 }
+#endif

@@ -1,7 +1,7 @@
-﻿// PRODUCTION
-#if !(TESTNET || TESTNETDEV)
+﻿// TESTNET
+#if TESTNET || TESTNETDEV
 namespace NiceHashMiner.Forms {
-    partial class Form_Benchmark_Production {
+    partial class Form_Benchmark {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -35,7 +35,7 @@ namespace NiceHashMiner.Forms {
             this.checkBox_StartMiningAfterBenchmark = new System.Windows.Forms.CheckBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl_Production();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewBenchmarkControl();
             this.groupBoxBenchmarkProgress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -99,7 +99,7 @@ namespace NiceHashMiner.Forms {
             this.radioButton_SelectedUnbenchmarked.Size = new System.Drawing.Size(260, 17);
             this.radioButton_SelectedUnbenchmarked.TabIndex = 110;
             this.radioButton_SelectedUnbenchmarked.TabStop = true;
-            this.radioButton_SelectedUnbenchmarked.Text = "Benchmark Selected Unbenchmarked Algorithms";
+            this.radioButton_SelectedUnbenchmarked.Text = "Benchmark Selected Unbenchmarked Algorithms ";
             this.radioButton_SelectedUnbenchmarked.UseVisualStyleBackColor = true;
             this.radioButton_SelectedUnbenchmarked.CheckedChanged += new System.EventHandler(this.RadioButton_SelectedUnbenchmarked_CheckedChanged_1);
             // 
@@ -111,7 +111,7 @@ namespace NiceHashMiner.Forms {
             this.radioButton_RE_SelectedUnbenchmarked.Name = "radioButton_RE_SelectedUnbenchmarked";
             this.radioButton_RE_SelectedUnbenchmarked.Size = new System.Drawing.Size(192, 17);
             this.radioButton_RE_SelectedUnbenchmarked.TabIndex = 110;
-            this.radioButton_RE_SelectedUnbenchmarked.Text = "Benchmark All Selected Algorithms";
+            this.radioButton_RE_SelectedUnbenchmarked.Text = "Benchmark All Selected Algorithms ";
             this.radioButton_RE_SelectedUnbenchmarked.UseVisualStyleBackColor = true;
             this.radioButton_RE_SelectedUnbenchmarked.CheckedChanged += new System.EventHandler(this.RadioButton_RE_SelectedUnbenchmarked_CheckedChanged);
             // 
@@ -132,6 +132,7 @@ namespace NiceHashMiner.Forms {
             this.algorithmsListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.algorithmsListView1.BackColor = System.Drawing.SystemColors.Control;
             this.algorithmsListView1.BenchmarkCalculation = null;
             this.algorithmsListView1.ComunicationInterface = null;
             this.algorithmsListView1.IsInBenchmark = false;
@@ -193,7 +194,7 @@ namespace NiceHashMiner.Forms {
 
 #endregion
 
-        private Components.DevicesListViewEnableControl_Production devicesListViewEnableControl1;
+        private Components.DevicesListViewBenchmarkControl devicesListViewEnableControl1;
         private System.Windows.Forms.Button StartStopBtn;
         private System.Windows.Forms.Button CloseBtn;
         private Components.BenchmarkOptions benchmarkOptions1;

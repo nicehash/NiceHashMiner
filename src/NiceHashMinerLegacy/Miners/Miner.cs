@@ -119,14 +119,14 @@ namespace NiceHashMiner
 
         protected bool IsMultiType;
 
-// PRODUCTION
-#if !(TESTNET || TESTNETDEV)
+//// PRODUCTION
+//#if !(TESTNET || TESTNETDEV)
         protected Dictionary<string, string> _enviormentVariables = null;
-#endif
-// TESTNET
-#if TESTNET || TESTNETDEV
+//#endif
+//// TESTNET
+//#if TESTNET || TESTNETDEV
         protected IEnumerable<ComputeDevice> Devices => MiningSetup.MiningPairs.Select(p => p.Device);
-#endif
+//#endif
 
 
         protected Miner(string minerDeviceName)
