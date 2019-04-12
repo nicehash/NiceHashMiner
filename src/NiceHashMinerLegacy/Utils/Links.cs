@@ -2,13 +2,17 @@
 {
     public static class Links
     {
+        #if DEBUG
+        public const string VisitUrl = "https://test.nicehash.com";
+        public const string CheckStats = "https://test.nicehash.com/mining/stats";
+        #else
         public const string VisitUrl = "https://www.nicehash.com";
-
+        public const string CheckStats = "https://www.nicehash.com/index.jsp?p=miners&addr=";
+        #endif
         // add version
         public const string VisitUrlNew = "https://github.com/NiceHash/NiceHashMinerLegacy/releases/tag/";
 
         // add btc adress as parameter
-        public const string CheckStats = "https://www.nicehash.com/index.jsp?p=miners&addr=";
 
         // help and faq
         public const string NhmHelp = "https://github.com/nicehash/NiceHashMinerLegacy/";
