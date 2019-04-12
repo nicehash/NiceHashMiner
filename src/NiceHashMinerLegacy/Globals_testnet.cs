@@ -11,15 +11,6 @@ namespace NiceHashMiner
 {
     public static partial class Globals
     {
-        public static int ThreadsPerCpu;
-
-        // quickfix guard for checking internet conection
-        public static bool IsFirstNetworkCheckTimeout = true;
-
-        public static int FirstNetworkCheckTimeoutTimeMs = 500;
-        public static int FirstNetworkCheckTimeoutTries = 10;
-
-
         static Globals()
         {
             var guid = Helpers.GetMachineGuid();

@@ -370,7 +370,6 @@ namespace NiceHashMiner
             this.Controls.Add(this.labelServiceLocation);
             this.Controls.Add(this.textBoxBTCAddress);
             this.Controls.Add(this.buttonStartMining);
-            this.Enabled = false;
             this.MinimumSize = new System.Drawing.Size(572, 303);
             this.Name = "Form_Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

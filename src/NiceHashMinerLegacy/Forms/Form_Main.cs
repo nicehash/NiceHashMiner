@@ -25,16 +25,15 @@ using static NiceHashMiner.Translations; // consider using static
 namespace NiceHashMiner
 {
     using NiceHashMiner.Forms.Components;
+    using NiceHashMiner.Plugin;
     using System.IO;
+    using System.Threading.Tasks;
 
-    public partial class Form_Main : Form, Form_Loading.IAfterInitializationCaller, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IStartMiningDisplayer, IStopMiningDisplayer
+    public partial class Form_Main : Form, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IStartMiningDisplayer, IStopMiningDisplayer
     {
-        private Timer _startupTimer;
-
         private bool _showWarningNiceHashData;
         private bool _demoMode;
-
-        private Form_Loading _loadingScreen;
+        
         private Form_Benchmark _benchmarkForm;
 
         //private bool _isDeviceDetectionInitialized = false;
@@ -56,19 +55,6 @@ namespace NiceHashMiner
             Icon = Properties.Resources.logo;
 
             InitLocalization();
-
-            ComputeDeviceManager.SystemSpecs.QueryAndLog();
-
-            // Log the computer's amount of Total RAM and Page File Size
-            var moc = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem").Get();
-            foreach (ManagementObject mo in moc)
-            {
-                var totalRam = long.Parse(mo["TotalVisibleMemorySize"].ToString()) / 1024;
-                var pageFileSize = (long.Parse(mo["TotalVirtualMemorySize"].ToString()) / 1024) - totalRam;
-                Helpers.ConsolePrint("NICEHASH", "Total RAM: " + totalRam + "MB");
-                Helpers.ConsolePrint("NICEHASH", "Page File Size: " + pageFileSize + "MB");
-            }
-
             Text += ApplicationStateManager.Title;
 
             InitMainConfigGuiData();
@@ -136,7 +122,7 @@ namespace NiceHashMiner
 
             //if (_isDeviceDetectionInitialized)
             //{
-            //    devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
+            //    devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices);
             //}
 
             devicesListViewEnableControl1.SetPayingColumns();
@@ -144,7 +130,7 @@ namespace NiceHashMiner
 
         public void AfterLoadComplete()
         {
-            _loadingScreen = null;
+            //_loadingScreen = null;
             Enabled = true;
 
             IdleCheckManager.StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
@@ -173,149 +159,210 @@ namespace NiceHashMiner
             }
         }
 
-        // This is a single shot _benchmarkTimer
-        private void StartupTimer_Tick(object sender, EventArgs e)
+        private async Task StartupTimer_Tick()
         {
-            _startupTimer.Stop();
-            _startupTimer = null;
-
             //// TODO temporary hooks
             ApplicationStateManager._ratesComunication = devicesListViewEnableControl1;
-
-            // Internals Init
-            // TODO add loading step
-            MinersSettingsManager.Init();
-
-            // Query Available ComputeDevices
-            ComputeDeviceManager.Query.QueryDevices(_loadingScreen);
-            //_isDeviceDetectionInitialized = true;
-
-            /////////////////////////////////////////////
-            /////// from here on we have our devices and Miners initialized
-            ApplicationStateManager.AfterDeviceQueryInitialization();
-            _loadingScreen.IncreaseLoadCounterAndMessage(Tr("Saving config..."));
-
-            // All devices settup should be initialized in AllDevices
-            devicesListViewEnableControl1.ResetComputeDevices(ComputeDeviceManager.Available.Devices);
-            //// set properties after
-            //devicesListViewEnableControl1.SaveToGeneralConfig = true;
-
-            _loadingScreen.IncreaseLoadCounterAndMessage(
-                Tr("Checking for latest version..."));
-
-            _loadingScreen.IncreaseLoadCounterAndMessage(Tr("Getting NiceHash SMA information..."));
-            // Init ws connection
-            NiceHashStats.OnConnectionLost += ConnectionLostCallback;
-            NiceHashStats.OnExchangeUpdate += UpdateExchange;
-            NiceHashStats.StartConnection(Links.NhmSocketAddress);
-
-            // increase timeout
-            if (Globals.IsFirstNetworkCheckTimeout)
+            //var loadingControl = new StartupLoadingControl();
+            using (var loadingControl = new StartupLoadingControl(Tr("Loading, please wait...")))
             {
-                while (!Helpers.WebRequestTestGoogle() && Globals.FirstNetworkCheckTimeoutTries > 0)
+                loadingControl.LoadMessageText = Tr("Querying CPU devices...");
+                this.Controls.Add(loadingControl);
+                var location = new Point((Width - loadingControl.Width) / 2, (int)((Height - loadingControl.Height) * 0.3));
+                loadingControl.Location = location;
+                loadingControl.BringToFront();
+
+                IProgress<Tuple<string, int>> progress = new Progress<Tuple<string, int>>(pair =>
                 {
-                    --Globals.FirstNetworkCheckTimeoutTries;
+                    var msg = pair.Item1;
+                    var prog = pair.Item2;
+                    loadingControl.Progress = prog;
+                    loadingControl.LoadMessageText = msg;
+                });
+
+                // make a progress 'functor'
+                var maxSteps = 3 + 9;
+                var currentStep = 0;
+                var nextProgPerc = new Func<int>(() =>
+                {
+                    ++currentStep;
+                    var perc = (int)(((double)currentStep / maxSteps) * 100);
+                    if (perc > 100) return 100;
+                    return perc;
+                });
+
+                progress?.Report(Tuple.Create(Tr("Checking System Memory"), nextProgPerc()));
+                await Task.Run(() => WindowsManagementObjectSearcher.QueryWin32_OperatingSystemData());
+                var TotalVisibleMemorySize = WindowsManagementObjectSearcher.TotalVisibleMemorySize;
+                var TotalVirtualMemorySize = WindowsManagementObjectSearcher.TotalVirtualMemorySize;
+                var PageFileSize = WindowsManagementObjectSearcher.PageFileSize;
+                var FreePhysicalMemory = WindowsManagementObjectSearcher.FreePhysicalMemory;
+                var FreeVirtualMemory = WindowsManagementObjectSearcher.FreeVirtualMemory;
+                Helpers.ConsolePrint("NICEHASH", $"TotalVisibleMemorySize: {TotalVisibleMemorySize}, {TotalVisibleMemorySize / 1024} MB");
+                Helpers.ConsolePrint("NICEHASH", $"TotalVirtualMemorySize: {TotalVirtualMemorySize}, {TotalVirtualMemorySize / 1024} MB");
+                Helpers.ConsolePrint("NICEHASH", $"PageFileSize = {PageFileSize}, {PageFileSize / 1024} MB");
+                Helpers.ConsolePrint("NICEHASH", $"FreePhysicalMemory = {FreePhysicalMemory}, {FreePhysicalMemory / 1024} MB");
+                Helpers.ConsolePrint("NICEHASH", $"FreeVirtualMemory = {FreeVirtualMemory}, {FreeVirtualMemory / 1024} MB");
+
+                progress?.Report(Tuple.Create(Tr("Checking Windows Video Controllers"), nextProgPerc()));
+                await Task.Run(() => WindowsManagementObjectSearcher.QueryWin32_VideoController());
+
+
+
+                var detectionProgress = new Progress<string>(info => progress?.Report(Tuple.Create(info, nextProgPerc())));
+                // Query Available ComputeDevices
+                var query = await ComputeDeviceManager.QueryDevicesAsync(detectionProgress, false);
+                ApplicationStateManager.ShowQueryWarnings(query);
+
+                // Plugin Loading
+                MinerPluginsManager.LoadMinerPlugins();
+
+                /////////////////////////////////////////////
+                /////// from here on we have our devices and Miners initialized
+                ApplicationStateManager.AfterDeviceQueryInitialization();
+                //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Saving config..."));
+                progress?.Report(Tuple.Create(Tr("Saving config..."), nextProgPerc()));
+
+                // All devices settup should be initialized in AllDevices
+                devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices.ToList());
+                // set properties after
+                //devicesListViewEnableControl1.SaveToGeneralConfig = true;
+
+                //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Checking for latest version..."));
+                progress?.Report(Tuple.Create(Tr("Checking for latest version..."), nextProgPerc()));
+
+                //_minerStatsCheck = new Timer();
+                //_minerStatsCheck.Tick += MinerStatsCheck_Tick;
+                //_minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
+
+                //_smaMinerCheck = new Timer();
+                //_smaMinerCheck.Tick += SMAMinerCheck_Tick;
+                //_smaMinerCheck.Interval = ConfigManager.GeneralConfig.SwitchMinSecondsFixed * 1000 +
+                //                          R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+                //if (ComputeDeviceManager.Group.ContainsAmdGpus)
+                //{
+                //    _smaMinerCheck.Interval =
+                //        (ConfigManager.GeneralConfig.SwitchMinSecondsAMD +
+                //         ConfigManager.GeneralConfig.SwitchMinSecondsFixed) * 1000 +
+                //        R.Next(ConfigManager.GeneralConfig.SwitchMinSecondsDynamic * 1000);
+                //}
+
+                //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Getting NiceHash SMA information..."));
+                progress?.Report(Tuple.Create(Tr("Getting NiceHash SMA information..."), nextProgPerc()));
+                // Init ws connection
+                NiceHashStats.OnConnectionLost += ConnectionLostCallback;
+                NiceHashStats.OnExchangeUpdate += UpdateExchange;
+                NiceHashStats.StartConnection(Links.NhmSocketAddress);
+
+                progress?.Report(Tuple.Create(Tr("Getting Bitcoin exchange rate..."), nextProgPerc()));
+
+                progress?.Report(Tuple.Create(Tr("Setting Windows error reporting..."), nextProgPerc()));
+                Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
+
+                if (ConfigManager.GeneralConfig.NVIDIAP0State)
+                {
+                    progress?.Report(Tuple.Create(Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
+                    Helpers.SetNvidiaP0State();
                 }
-            }
 
-            _loadingScreen.IncreaseLoadCounterAndMessage(Tr("Getting Bitcoin exchange rate..."));
-            _loadingScreen.IncreaseLoadCounterAndMessage(Tr("Setting environment variables..."));
-            Helpers.SetDefaultEnvironmentVariables();
-            _loadingScreen.IncreaseLoadCounterAndMessage(Tr("Setting Windows error reporting..."));
-
-            Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
-
-            _loadingScreen.IncreaseLoadCounter();
-            if (ConfigManager.GeneralConfig.NVIDIAP0State)
-            {
-                _loadingScreen.SetInfoMsg(Tr("Changing all supported NVIDIA GPUs to P0 state..."));
-                Helpers.SetNvidiaP0State();
-            }
-
-            _loadingScreen.FinishLoad();
-
-            var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
-            // standard miners check scope
-            {
-                // check if download needed
-                if (!MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit)
+                var downloadAndInstallUpdate = new Progress<Tuple<string, int>>(statePerc =>
                 {
-                    var downloadUnzipForm =
-                        new Form_Loading(new MinersDownloader(MinersDownloadManager.StandardDlSetup));
-                    SetChildFormCenter(downloadUnzipForm);
-                    downloadUnzipForm.ShowDialog();
-                }
-                // check if files are mising
-                if (!MinersExistanceChecker.IsMinersBinsInit())
+                    var statusText = statePerc.Item1;
+                    var perc = statePerc.Item2;
+                    loadingControl.ProgressSecond = perc;
+                    loadingControl.LoadMessageTextSecond = statusText;
+                });
+
+                var exitApplication = ApplicationStateManager.ExitApplication;
+
+                var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
+                // standard miners check scope
                 {
-                    var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue."),
-                        Tr("Warning!"),
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (result == DialogResult.Yes)
+                    // check if download needed
+                    if (!MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit)
                     {
-                        ConfigManager.GeneralConfig.DownloadInit = false;
-                        ConfigManager.GeneralConfigFileCommit();
-                        ApplicationStateManager.RestartProgram();
-                        return;
-                    }
-                }
-                else if (!ConfigManager.GeneralConfig.DownloadInit)
-                {
-                    // all good
-                    ConfigManager.GeneralConfig.DownloadInit = true;
-                    ConfigManager.GeneralConfigFileCommit();
-                }
-            }
-            // 3rdparty miners check scope #2
-            {
-                // check if download needed
-                if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES)
-                {
-                    if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit() &&
-                        !ConfigManager.GeneralConfig.DownloadInit3rdParty)
-                    {
-                        var download3rdPartyUnzipForm =
-                            new Form_Loading(new MinersDownloader(MinersDownloadManager.ThirdPartyDlSetup));
-                        SetChildFormCenter(download3rdPartyUnzipForm);
-                        download3rdPartyUnzipForm.ShowDialog();
+                        loadingControl.LoadTitleTextSecond = Tr("Downloading Open Source Miners");
+                        loadingControl.ShowSecondProgressBar = true;
+
+                        progress?.Report(Tuple.Create(Tr("Downloading Open Source Miners..."), nextProgPerc()));
+                        await MinersDownloader.MinersDownloadManager.DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(downloadAndInstallUpdate, exitApplication.Token);
+                        loadingControl.ShowSecondProgressBar = false;
+                        if (exitApplication.IsCancellationRequested) return;
                     }
                     // check if files are mising
-                    if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit())
+                    if (!MinersExistanceChecker.IsMinersBinsInit())
                     {
                         var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue."),
                             Tr("Warning!"),
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                         if (result == DialogResult.Yes)
                         {
-                            ConfigManager.GeneralConfig.DownloadInit3rdParty = false;
+                            ConfigManager.GeneralConfig.DownloadInit = false;
                             ConfigManager.GeneralConfigFileCommit();
                             ApplicationStateManager.RestartProgram();
                             return;
                         }
                     }
-                    else if (!ConfigManager.GeneralConfig.DownloadInit3rdParty)
+                    else if (!ConfigManager.GeneralConfig.DownloadInit)
                     {
                         // all good
-                        ConfigManager.GeneralConfig.DownloadInit3rdParty = true;
+                        ConfigManager.GeneralConfig.DownloadInit = true;
                         ConfigManager.GeneralConfigFileCommit();
                     }
                 }
-            }
-
-            if (runVCRed)
-            {
-                Helpers.InstallVcRedist();
-            }
-
-            ApplicationStateManager.InitFinished();
-            if (ConfigManager.GeneralConfig.AutoStartMining)
-            {
-                // well this is started manually as we want it to start at runtime
-                _isManuallyStarted = true;
-                if (StartMining(false) != StartMiningReturnType.StartMining)
+                // 3rdparty miners check scope #2
                 {
-                    _isManuallyStarted = false;
-                    ApplicationStateManager.StopAllDevice();
+                    // check if download needed
+                    if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES)
+                    {
+                        if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit() && !ConfigManager.GeneralConfig.DownloadInit3rdParty)
+                        {
+                            loadingControl.LoadTitleTextSecond = Tr("Downloading 3rd party Miners");
+                            loadingControl.ShowSecondProgressBar = true;
+
+                            progress?.Report(Tuple.Create(Tr("Downloading 3rd party Miners..."), nextProgPerc()));
+                            await MinersDownloader.MinersDownloadManager.DownloadAndExtractThirdPartyMinersWithMyDownloaderAsync(downloadAndInstallUpdate, exitApplication.Token);
+                            loadingControl.ShowSecondProgressBar = false;
+                            if (exitApplication.IsCancellationRequested) return;
+                        }
+                        // check if files are mising
+                        if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit())
+                        {
+                            var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue."),
+                                Tr("Warning!"),
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                            if (result == DialogResult.Yes)
+                            {
+                                ConfigManager.GeneralConfig.DownloadInit3rdParty = false;
+                                ConfigManager.GeneralConfigFileCommit();
+                                ApplicationStateManager.RestartProgram();
+                                return;
+                            }
+                        }
+                        else if (!ConfigManager.GeneralConfig.DownloadInit3rdParty)
+                        {
+                            // all good
+                            ConfigManager.GeneralConfig.DownloadInit3rdParty = true;
+                            ConfigManager.GeneralConfigFileCommit();
+                        }
+                    }
+                }
+
+                if (runVCRed)
+                {
+                    Helpers.InstallVcRedist();
+                }
+
+                ApplicationStateManager.InitFinished();
+                if (ConfigManager.GeneralConfig.AutoStartMining)
+                {
+                    // well this is started manually as we want it to start at runtime
+                    _isManuallyStarted = true;
+                    if (StartMining(false) != StartMiningReturnType.StartMining)
+                    {
+                        _isManuallyStarted = false;
+                        ApplicationStateManager.StopAllDevice();
+                    }
                 }
             }
         }
@@ -326,21 +373,19 @@ namespace NiceHashMiner
             form.Location = new Point(Location.X + (Width - form.Width) / 2, Location.Y + (Height - form.Height) / 2);
         }
 
-        private void Form_Main_Shown(object sender, EventArgs e)
+        private async void Form_Main_Shown(object sender, EventArgs e)
         {
-            //new StateDumpForm().Show();
-            // general loading indicator
-            const int totalLoadSteps = 11;
-            _loadingScreen = new Form_Loading(this,
-                Tr("Loading, please wait..."),
-                Tr("Querying CPU devices..."), totalLoadSteps);
-            SetChildFormCenter(_loadingScreen);
-            _loadingScreen.Show();
+            foreach (Control c in Controls)
+            {
+                c.Enabled = false;
+            }
+            await StartupTimer_Tick();
 
-            _startupTimer = new Timer();
-            _startupTimer.Tick += StartupTimer_Tick;
-            _startupTimer.Interval = 200;
-            _startupTimer.Start();
+            foreach (Control c in Controls)
+            {
+                c.Enabled = true;
+            }
+            buttonStopMining.Enabled = false;
         }
 
         //public void ShowNotProfitable(string msg)
