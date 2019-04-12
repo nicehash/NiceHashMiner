@@ -55,7 +55,7 @@ namespace NiceHashMiner
         private readonly int _mainFormHeight = 0;
         private readonly int _emtpyGroupPanelHeight = 0;
 
-        CancellationTokenSource exitApplication = new CancellationTokenSource();
+        
 
         private CudaDeviceChecker _cudaChecker;
 
@@ -67,7 +67,7 @@ namespace NiceHashMiner
 
             InitLocalization();
 
-            Text += " v" + Application.ProductVersion + BetaAlphaPostfixString;
+            Text += ApplicationStateManager.Title;
 
             label_NotProfitable.Visible = false;
 
@@ -220,41 +220,6 @@ namespace NiceHashMiner
                     loadingControl.LoadMessageText = msg;
                 });
 
-                //// Internals Init
-                //// TODO add loading step
-                //MinersSettingsManager.Init();
-
-                if (!Helpers.Is45NetOrHigher())
-                {
-                    MessageBox.Show(Tr("NiceHash Miner Legacy requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5"),
-                        Tr("Warning!"),
-                        MessageBoxButtons.OK);
-
-                    Close();
-                    return;
-                }
-
-                if (!Helpers.Is64BitOperatingSystem)
-                {
-                    MessageBox.Show(Tr("NiceHash Miner Legacy supports only x64 platforms. You will not be able to use NiceHash Miner Legacy with x86"),
-                        Tr("Warning!"),
-                        MessageBoxButtons.OK);
-
-                    Close();
-                    return;
-                }
-
-                // 3rdparty miners check scope #1
-                {
-                    // check if setting set
-                    if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET)
-                    {
-                        // Show TOS
-                        Form tos = new Form_3rdParty_TOS();
-                        tos.ShowDialog(this);
-                    }
-                }
-
                 // make a progress 'functor'
                 var maxSteps = 3 + 9;
                 var currentStep = 0;
@@ -355,6 +320,8 @@ namespace NiceHashMiner
                     loadingControl.LoadMessageTextSecond = statusText;
                 });
 
+                var exitApplication = ApplicationStateManager.ExitApplication;
+
                 var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
                 // standard miners check scope
                 {
@@ -379,15 +346,7 @@ namespace NiceHashMiner
                         {
                             ConfigManager.GeneralConfig.DownloadInit = false;
                             ConfigManager.GeneralConfigFileCommit();
-                            var pHandle = new Process
-                            {
-                                StartInfo =
-                            {
-                                FileName = Application.ExecutablePath
-                            }
-                            };
-                            pHandle.Start();
-                            Close();
+                            ApplicationStateManager.RestartProgram();
                             return;
                         }
                     }
@@ -424,15 +383,7 @@ namespace NiceHashMiner
                             {
                                 ConfigManager.GeneralConfig.DownloadInit3rdParty = false;
                                 ConfigManager.GeneralConfigFileCommit();
-                                var pHandle = new Process
-                                {
-                                    StartInfo =
-                                {
-                                    FileName = Application.ExecutablePath
-                                }
-                                };
-                                pHandle.Start();
-                                Close();
+                                ApplicationStateManager.RestartProgram();
                                 return;
                             }
                         }
@@ -516,19 +467,6 @@ namespace NiceHashMiner
                     Tr("Warning! Video Controller not operating correctly"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-            //if (query.FailedAmdDriverCheck)
-            //{
-            //    var warningDialog = new DriverVersionConfirmationDialog();
-            //    warningDialog.ShowDialog();
-            //}
-
-            //if (query.FailedCpu64Bit)
-            //{
-            //    MessageBox.Show(Tr("NiceHash Miner Legacy works only on 64-bit version of OS for CPU mining. CPU mining will be disabled."),
-            //        Tr("Warning!"),
-            //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            //}
 
             //if (query.FailedCpuCount)
             //{
@@ -950,14 +888,7 @@ namespace NiceHashMiner
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            try {
-                exitApplication.Cancel();
-            }
-            catch { }
-            
-            MinersManager.StopAllMiners();
-
-            MessageBoxManager.Unregister();
+            ApplicationStateManager.BeforeExit();
         }
 
         private void ButtonBenchmark_Click(object sender, EventArgs e)

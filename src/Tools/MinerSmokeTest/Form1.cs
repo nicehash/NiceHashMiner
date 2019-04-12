@@ -167,7 +167,7 @@ namespace MinerSmokeTest
                         label1.Text = $"{step} / {testSteps}";
 
                         tbx_info.Text += $"Starting miner running for {miningTime.ToString()}" + Environment.NewLine;
-                        miner.Start(url, Globals.DemoUser, "test");
+                        miner.Start(url, Globals.DemoUser);
 
                         await Task.Delay(miningTime);
                         tbx_info.Text += $"Stopping" + Environment.NewLine;

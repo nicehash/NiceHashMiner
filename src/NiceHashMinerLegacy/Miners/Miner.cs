@@ -269,24 +269,7 @@ namespace NiceHashMiner
             _allPidData.RemoveAll(x => toRemovePidData.Contains(x));
         }
 
-// PRODUCTION
-#if !(TESTNET || TESTNETDEV)
-        public abstract void Start(string url, string btcAdress, string worker);
-
-        protected string GetUsername(string btcAdress, string worker)
-        {
-            if (worker.Length > 0)
-            {
-                return btcAdress + "." + worker;
-            }
-
-            return btcAdress;
-        }
-#endif
-// TESTNET
-#if TESTNET || TESTNETDEV
         public abstract void Start(string url, string username);
-#endif
 
 
         protected abstract void _Stop(MinerStopType willswitch);

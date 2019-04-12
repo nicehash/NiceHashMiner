@@ -1,6 +1,5 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
-﻿using NiceHashMiner.Benchmarking;
+// SHARED
+using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Stats;
 using System;
 using System.Collections.Generic;
@@ -17,13 +16,46 @@ namespace NiceHashMiner
 {
     static partial class ApplicationStateManager
     {
+        #region BuildTag
+        private const string BetaAlphaPostfixString = " - Alpha";
+#if TESTNET
+        private static readonly string BuildTag = " (TESTNET)";
+#elif TESTNETDEV
+        private static readonly string BuildTag = " (TESTNETDEV)";
+#else
+        private static readonly string BuildTag = "";
+#endif
+        public static string Title
+        {
+            get
+            {
+                return " v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTag;
+            }
+        }
+        #endregion BuildTag
+
+        public static CancellationTokenSource ExitApplication { get; } = new CancellationTokenSource();
+
         public static void BeforeExit()
         {
+            // TESTNET
+#if TESTNET || TESTNETDEV
             StopRefreshDeviceListViewTimer();
             // close websocket
             NiceHashStats.EndConnection();
             // stop all mining and benchmarking devices
             StopAllDevice();
+#endif
+            // PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+            try
+            {
+                ExitApplication.Cancel();
+            }
+            catch { }
+            NiceHashMiner.Miners.MinersManager.StopAllMiners();
+            MessageBoxManager.Unregister();
+#endif
         }
 
         public static void RestartProgram()
@@ -85,4 +117,3 @@ namespace NiceHashMiner
         }
     }
 }
-#endif

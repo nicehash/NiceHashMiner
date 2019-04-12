@@ -520,7 +520,14 @@ namespace NiceHashMiner.Miners
                     {
                         stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmType}, ");
 
-                        toStart.Start(_miningLocation, _btcAdress, _worker);
+                        // TODO this differs in format PRODUCTION vs. TESTNET
+                        var username = _btcAdress;
+                        if (!string.IsNullOrEmpty(_worker))
+                        {
+                            username = $"{_btcAdress}.{_worker}";
+                        }
+
+                        toStart.Start(_miningLocation, username);
                         _runningGroupMiners[toStart.Key] = toStart;
                     }
 

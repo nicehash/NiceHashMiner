@@ -38,6 +38,9 @@ namespace NiceHashMiner.Miners
             return cl;
         }
 
+
+        // PRODUCTION
+#if !(TESTNET || TESTNETDEV)
         protected override IEnumerable<MiningPair> SortDeviceList(IEnumerable<MiningPair> startingList)
         {
             // first by dev type (NV first), then by bus ID
@@ -56,5 +59,6 @@ namespace NiceHashMiner.Miners
             // Phoenix sets a bad DAG epoch when -benchmark switch is used
             return "";
         }
+#endif
     }
 }

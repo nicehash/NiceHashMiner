@@ -68,10 +68,8 @@ namespace NiceHashMiner.Miners
         }
 
 #pragma warning disable 0618
-        private string GetStartCommand(string url, string btcAdress, string worker)
+        private string GetStartCommand(string url, string username)
         {
-            var username = GetUsername(btcAdress, worker);
-
             var dualModeParams = "";
             if (!IsDual())
             {
@@ -210,7 +208,7 @@ namespace NiceHashMiner.Miners
             return deviceStringCommand + intensityStringCommand + extraParams;
         }
 
-        public override void Start(string url, string btcAdress, string worker)
+        public override void Start(string url, string username)
         {
             // Update to most profitable intensity
             foreach (var mPair in MiningSetup.MiningPairs)
@@ -223,7 +221,7 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            LastCommandLine = GetStartCommand(url, btcAdress, worker) + " -dbg -1";
+            LastCommandLine = GetStartCommand(url, username) + " -dbg -1";
             ProcessHandle = _Start();
         }
 
@@ -234,7 +232,7 @@ namespace NiceHashMiner.Miners
             // network stub
             var url = GetServiceUrl(algorithm.NiceHashID);
             // demo for benchmark
-            var ret = GetStartCommand(url, Globals.GetBitcoinUser(), ConfigManager.GeneralConfig.WorkerName.Trim())
+            var ret = GetStartCommand(url, Globals.DemoUser)
                          + " -logfile " + GetLogFileName();
             // local benhcmark
             if (!IsDual())

@@ -2,12 +2,13 @@
 #if TESTNET || TESTNETDEV
 using NiceHashMiner.Configs;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
-using System.Collections.Generic;
 
 namespace NiceHashMiner.Miners
 {

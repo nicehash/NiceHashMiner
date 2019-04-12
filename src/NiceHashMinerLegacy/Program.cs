@@ -11,10 +11,7 @@ using System.Threading;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common;
-// TESTNET
-#if TESTNET || TESTNETDEV
 using NiceHashMinerLegacy.Common.Enums;
-#endif
 
 namespace NiceHashMiner
 {
@@ -97,27 +94,23 @@ namespace NiceHashMiner
                 Helpers.ConsolePrint("NICEHASH", "Path not set to executable");
             }
 
-// PRODUCTION
-#if !(TESTNET || TESTNETDEV)
             // check TOS
             if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer)
-
             {
                 Helpers.ConsolePrint("NICEHASH", $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {Globals.CurrentTosVer}. Showing TOS Form.");
 
-                Application.Run(new FormEula()); 
+                Application.Run(new FormEula());
                 // check TOS after 
-                if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer) {
+                if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer)
+                {
                     Helpers.ConsolePrint("NICEHASH", $"TOS differs AFTER TOS confirmation FORM");
                     // TOS not confirmed return from Main
                     return;
                 }
-
             }
+
             // if config created show language select
-
             if (string.IsNullOrEmpty(ConfigManager.GeneralConfig.Language))
-
             {
                 if (Translations.GetAvailableLanguagesNames().Count > 1)
                 {
@@ -132,49 +125,26 @@ namespace NiceHashMiner
             }
             Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
 
-            
+            // if system requirements are not ensured it will fail the program
+            var canRun = ApplicationStateManager.SystemRequirementsEnsured();
+            if (!canRun) return;
 
-            // check WMI
-
-            if (WindowsManagementObjectSearcher.IsWmiEnabled())
-
-            {
-                // if no BTC address show login/register form
-                if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "") Application.Run(new EnterBTCDialogSwitch());
-                // finally run
-                Application.Run(new Form_Main_Production());
-            }
-            else
-            {
-                MessageBox.Show(Translations.Tr("NiceHash Miner Legacy cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner Legacy to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner Legacy."),
-                    Translations.Tr("Windows Management Instrumentation Error"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-#endif
-// TESTNET
-#if TESTNET || TESTNETDEV
-            var tosChecked = ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer;
-            if (!tosChecked)
-            {
-                Helpers.ConsolePrint("NICEHASH",
-                    "No config file found. Running NiceHash Miner Legacy for the first time. Choosing a default language.");
-                Application.Run(new Form_ChooseLanguage());
-            }
-            // Init languages
-            Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
             // 3rdparty miners TOS check if setting set
             if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET)
             {
                 Application.Run(new Form_3rdParty_TOS());
             }
 
-            // if system requirements are not ensured it will fail the program
-            var canRun = ApplicationStateManager.SystemRequirementsEnsured();
-            // make an ensure TOS
-            if (canRun && ConfigManager.GeneralConfig.agreedWithTOS == Globals.CurrentTosVer)
-            {
-                Application.Run(new Form_Main());
-            }
+            // PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+            // if no BTC address show login/register form
+            if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "") Application.Run(new EnterBTCDialogSwitch());
+            // finally run
+            Application.Run(new Form_Main_Production());
+#endif
+            // TESTNET
+#if TESTNET || TESTNETDEV
+            Application.Run(new Form_Main());
 #endif
 
         }

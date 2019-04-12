@@ -18,23 +18,7 @@ namespace NiceHashMiner
 {
     static partial class ApplicationStateManager
     {
-#if TESTNET
-        private static readonly string BuildTag = " (TESTNET)";
-#elif TESTNETDEV
-        private static readonly string BuildTag = " (TESTNETDEV)";
-#else
-        private static readonly string BuildTag = "";
-#endif
-        public static string Title
-        {
-            get
-            {
-                return " v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTag;
-            }
-        }
-
         #region Version
-        private const string BetaAlphaPostfixString = " - Alpha";
         public static string LocalVersion { get; private set; }
         public static string OnlineVersion { get; private set; }
 
