@@ -115,7 +115,7 @@ namespace NiceHashMiner.Forms.Components
             switch (cellItem)
             {
                 case DataGridViewButtonCell button:
-                    var dev = ComputeDeviceManager.Available.GetDeviceWithUuidOrB64Uuid(deviceUUID);
+                    var dev = AvailableDevices.GetDeviceWithUuidOrB64Uuid(deviceUUID);
                     if (dev == null) return;
                     if (dev.State == DeviceState.Stopped) {
                         button.Value = Tr("Starting");
@@ -146,7 +146,7 @@ namespace NiceHashMiner.Forms.Components
                 // see what devices to 
                 // iterate each row
                 var devicesToAddUuids = new List<string>();
-                var allDevs = ComputeDeviceManager.Available.Devices;
+                var allDevs = AvailableDevices.Devices;
                 foreach (var dev in allDevs)
                 {
                     bool found = false;
@@ -164,7 +164,7 @@ namespace NiceHashMiner.Forms.Components
                 }
 
                 // filter what to add if any
-                var devsToAdd = ComputeDeviceManager.Available.Devices.Where(dev => devicesToAddUuids.Contains(dev.Uuid));
+                var devsToAdd = AvailableDevices.Devices.Where(dev => devicesToAddUuids.Contains(dev.Uuid));
                 foreach (var dev in devsToAdd)
                 {
                     // add dummy data
@@ -177,7 +177,7 @@ namespace NiceHashMiner.Forms.Components
                 foreach (DataGridViewRow row in devicesDataGridView.Rows)
                 {
                     var tagUUID = (string)row.Tag;
-                    var dev = ComputeDeviceManager.Available.Devices.FirstOrDefault(d => d.Uuid == tagUUID);
+                    var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == tagUUID);
                     SetRowColumnItemValue(row, Column.Enabled, dev.Enabled);
                     SetRowColumnItemValue(row, Column.Name, dev.GetFullName());
                     SetRowColumnItemValue(row, Column.Status, stateStr(dev.State));

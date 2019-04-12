@@ -7,6 +7,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
+using System.Collections.Generic;
 
 namespace NiceHashMiner.Miners
 {

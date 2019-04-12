@@ -11,28 +11,9 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms
 {
-    static class FormHelpers
+    public static partial class FormHelpers
     {
-        // TODO maybe not the best name
-        static public void SafeInvoke(Control c, Action f, bool beginInvoke = false)
-        {
-            if (c.InvokeRequired)
-            {
-                if (beginInvoke)
-                {
-                    c.BeginInvoke(f);
-                }
-                else
-                {
-                    c.Invoke(f);
-                }
-            }
-            else
-            {
-                f();
-            }
-        }
-
+        
         static public void SubscribeAllControls(Control c)
         {
             // data display

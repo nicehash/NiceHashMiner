@@ -17,6 +17,8 @@ using NiceHashMiner.Properties;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Windows.Forms.Timer;
 
+using BenchmarkSelection = NiceHashMinerLegacy.Common.Enums.AlgorithmBenchmarkSettingsType;
+
 namespace NiceHashMiner.Forms
 {
     public partial class Form_Benchmark : Form, IListItemCheckColorSetter, IBenchmarkForm, IBenchmarkCalculation
@@ -41,7 +43,7 @@ namespace NiceHashMiner.Forms
             StartMiningOnFinish = false;
 
             // clear prev pending statuses
-            foreach (var dev in ComputeDeviceManager.Available.Devices)
+            foreach (var dev in AvailableDevices.Devices)
             foreach (var algo in dev.GetAlgorithmSettings())
                 algo.ClearBenchmarkPendingFirst();
 
@@ -49,7 +51,7 @@ namespace NiceHashMiner.Forms
 
             // benchmark only unique devices
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
-            devicesListViewEnableControl1.SetComputeDevices(ComputeDeviceManager.Available.Devices);
+            devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
 
             InitLocale();
 
@@ -75,9 +77,9 @@ namespace NiceHashMiner.Forms
             algorithmsListView1.BenchmarkCalculation = this;
 
             // set first device selected {
-            if (ComputeDeviceManager.Available.Devices.Count > 0)
+            if (AvailableDevices.Devices.Count > 0)
             {
-                var firstComputedevice = ComputeDeviceManager.Available.Devices[0];
+                var firstComputedevice = AvailableDevices.Devices[0];
                 algorithmsListView1.SetAlgorithms(firstComputedevice, firstComputedevice.Enabled);
             }
 
@@ -140,11 +142,11 @@ namespace NiceHashMiner.Forms
         private void CopyBenchmarks()
         {
             Helpers.ConsolePrint("CopyBenchmarks", "Checking for benchmarks to copy");
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
                 // check if copy
                 if (!cDev.Enabled && cDev.BenchmarkCopyUuid != null)
                 {
-                    var copyCdevSettings = ComputeDeviceManager.Available.GetDeviceWithUuid(cDev.BenchmarkCopyUuid);
+                    var copyCdevSettings = AvailableDevices.GetDeviceWithUuid(cDev.BenchmarkCopyUuid);
                     if (copyCdevSettings != null)
                     {
                         Helpers.ConsolePrint("CopyBenchmarks", $"Copy from {cDev.Uuid} to {cDev.BenchmarkCopyUuid}");
@@ -177,8 +179,8 @@ namespace NiceHashMiner.Forms
 
             // TODO fix locale for benchmark enabled label
             devicesListViewEnableControl1.InitLocale();
-            benchmarkOptions1.InitLocale();
-            algorithmsListView1.InitLocale();
+            //benchmarkOptions1.InitLocale();
+            //algorithmsListView1.InitLocale();
             groupBoxBenchmarkProgress.Text = Translations.Tr("Benchmark progress status:");
             radioButton_SelectedUnbenchmarked.Text =
                 Translations.Tr("Benchmark Selected Unbenchmarked Algorithms");
@@ -249,7 +251,7 @@ namespace NiceHashMiner.Forms
             CalcBenchmarkDevicesAlgorithmQueue();
             // device selection check scope
             {
-                var noneSelected = ComputeDeviceManager.Available.Devices.All(cDev => !cDev.Enabled);
+                var noneSelected = AvailableDevices.Devices.All(cDev => !cDev.Enabled);
                 if (noneSelected)
                 {
                     MessageBox.Show(Translations.Tr("No device has been selected there is nothing to benchmark"),
@@ -349,7 +351,7 @@ namespace NiceHashMiner.Forms
             }
 
             // disable all pending benchmark
-            foreach (var cDev in ComputeDeviceManager.Available.Devices)
+            foreach (var cDev in AvailableDevices.Devices)
             {
                 foreach (var algorithm in cDev.GetAlgorithmSettings())
                 {
@@ -368,7 +370,7 @@ namespace NiceHashMiner.Forms
             //algorithmSettingsControl1.Deselect();
             // show algorithms
             var selectedComputeDevice =
-                ComputeDeviceManager.Available.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
+                AvailableDevices.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
             algorithmsListView1.SetAlgorithms(selectedComputeDevice, selectedComputeDevice.Enabled);
         }
 

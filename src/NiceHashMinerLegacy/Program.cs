@@ -10,12 +10,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
-
-
-// PRODUCTION
-#if !(TESTNET || TESTNETDEV)
-    using NiceHashMinerLegacy.Common;
-#endif
+using NiceHashMinerLegacy.Common;
 // TESTNET
 #if TESTNET || TESTNETDEV
 using NiceHashMinerLegacy.Common.Enums;

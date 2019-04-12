@@ -276,7 +276,7 @@ namespace NiceHashMiner.Stats
             //        var name = m.Last().Value<string>();
             //        var i = m.First().Value<int>();
 
-            //        foreach (var dev in ComputeDeviceManager.Available.Devices)
+            //        foreach (var dev in AvailableDevices.Devices)
             //        {
             //            if (dev.Name.Contains(name))
             //                dev.TypeID = i;
@@ -419,7 +419,7 @@ namespace NiceHashMiner.Stats
         {
             bool allDevices = devs == "*";
             // get device with uuid if it exists, devs can be single device uuid
-            var deviceWithUUID = ComputeDeviceManager.Available.GetDeviceWithUuidOrB64Uuid(devs);
+            var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(devs);
 
             // Check if RPC should execute
             // check if redundant rpc
@@ -443,15 +443,15 @@ namespace NiceHashMiner.Stats
             // if got here than we can execute the call
             ApplicationStateManager.SetDeviceEnabledState(null, (devs, enabled));
             // TODO invoke the event for controls that use it
-            OnDeviceUpdate?.Invoke(null, new DeviceUpdateEventArgs(ComputeDeviceManager.Available.Devices));
+            OnDeviceUpdate?.Invoke(null, new DeviceUpdateEventArgs(AvailableDevices.Devices.ToList()));
             // TODO this used to return 'anyStillRunning' but we are actually checking if there are any still enabled left
-            var anyStillEnabled = ComputeDeviceManager.Available.Devices.Any();
+            var anyStillEnabled = AvailableDevices.Devices.Any();
             return anyStillEnabled;
         }
 
 #region Start
         private static void startMiningAllDevices() {
-            var allDisabled = ComputeDeviceManager.Available.Devices.All(dev => dev.IsDisabled);
+            var allDisabled = AvailableDevices.Devices.All(dev => dev.IsDisabled);
             if (allDisabled) {
                 throw new RpcException("All devices are disabled cannot start", ErrorCode.DisabledDevice);
             }
@@ -464,7 +464,7 @@ namespace NiceHashMiner.Stats
         private static void startMiningOnDeviceWithUuid(string uuid) {
             string errMsgForUuid = $"Cannot start device with uuid {uuid}";
             // get device with uuid if it exists, devs can be single device uuid
-            var deviceWithUUID = ComputeDeviceManager.Available.GetDeviceWithUuidOrB64Uuid(uuid);
+            var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
             if (deviceWithUUID == null) {
                 throw new RpcException($"{errMsgForUuid}. Device not found.", ErrorCode.NonExistentDevice);
             }
@@ -492,7 +492,7 @@ namespace NiceHashMiner.Stats
 #region Stop
         private static void stopMiningAllDevices()
         {
-            var allDisabled = ComputeDeviceManager.Available.Devices.All(dev => dev.IsDisabled);
+            var allDisabled = AvailableDevices.Devices.All(dev => dev.IsDisabled);
             if (allDisabled) {
                 throw new RpcException("All devices are disabled cannot stop", ErrorCode.DisabledDevice);
             }
@@ -506,7 +506,7 @@ namespace NiceHashMiner.Stats
         {
             string errMsgForUuid = $"Cannot stop device with uuid {uuid}";
             // get device with uuid if it exists, devs can be single device uuid
-            var deviceWithUUID = ComputeDeviceManager.Available.GetDeviceWithUuidOrB64Uuid(uuid);
+            var deviceWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
             if (deviceWithUUID == null) {
                 throw new RpcException($"{errMsgForUuid}. Device not found.", ErrorCode.NonExistentDevice);
             }
@@ -534,8 +534,8 @@ namespace NiceHashMiner.Stats
         private static void SetPowerMode(string device, PowerLevel level)
         {
             var devs = device == "*" ? 
-                ComputeDeviceManager.Available.Devices : 
-                ComputeDeviceManager.Available.Devices.Where(d => d.B64Uuid == device);
+                AvailableDevices.Devices : 
+                AvailableDevices.Devices.Where(d => d.B64Uuid == device);
 
             var found = false;
 
@@ -571,7 +571,7 @@ namespace NiceHashMiner.Stats
 
         private static void SendMinerStatus(bool sendDeviceNames)
         {
-            var devices = ComputeDeviceManager.Available.Devices;
+            var devices = AvailableDevices.Devices;
             var rigStatus = ApplicationStateManager.CalcRigStatusString();
             var paramList = new List<JToken>
             {
@@ -657,38 +657,6 @@ namespace NiceHashMiner.Stats
         public static void StateChanged()
         {
             SendMinerStatus(false);
-        }
-
-        public static string GetNiceHashApiData(string url, string worker)
-        {
-            var responseFromServer = "";
-            try
-            {
-                var wr = (HttpWebRequest) WebRequest.Create(url);
-                wr.UserAgent = "NiceHashMiner/" + Application.ProductVersion;
-                if (worker.Length > 64) worker = worker.Substring(0, 64);
-                wr.Headers.Add("NiceHash-Worker-ID", worker);
-                wr.Timeout = 30 * 1000;
-                var response = wr.GetResponse();
-                var ss = response.GetResponseStream();
-                if (ss != null)
-                {
-                    ss.ReadTimeout = 20 * 1000;
-                    var reader = new StreamReader(ss);
-                    responseFromServer = reader.ReadToEnd();
-                    if (responseFromServer.Length == 0 || responseFromServer[0] != '{')
-                        throw new Exception("Not JSON!");
-                    reader.Close();
-                }
-                response.Close();
-            }
-            catch (Exception ex)
-            {
-                Helpers.ConsolePrint("NICEHASH", ex.Message);
-                return null;
-            }
-
-            return responseFromServer;
         }
     }
 }

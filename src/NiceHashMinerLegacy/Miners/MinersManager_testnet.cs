@@ -16,7 +16,7 @@ namespace NiceHashMiner.Miners
         public static void StopAllMiners(bool headless)
         {
             _curMiningSession?.StopAllMiners(headless);
-            Ethlargement.Stop();
+            EthlargementOld.Stop();
             _curMiningSession = null; // TODO consider not nulling a mining session
         }
 

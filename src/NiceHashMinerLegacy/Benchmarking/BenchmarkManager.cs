@@ -256,7 +256,7 @@ namespace NiceHashMiner.Benchmarking
         private static void End()
         {
             InBenchmark = false;
-            Ethlargement.Stop();
+            EthlargementOld.Stop();
             _benchForm?.EndBenchmark(_hasFailedAlgorithms);
         }
 

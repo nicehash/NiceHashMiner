@@ -28,7 +28,7 @@ namespace NiceHashMiner
 
         private static void UpdateDevicesToMine()
         {
-            var allDevs = ComputeDeviceManager.Available.Devices;
+            var allDevs = AvailableDevices.Devices;
             var devicesToMine = allDevs.Where(dev => dev.State == DeviceState.Mining).ToList();
             if (devicesToMine.Count > 0) {
                 StartMining();
@@ -43,7 +43,7 @@ namespace NiceHashMiner
         // TODO add check for any enabled algorithms
         public static (bool started, string failReason) StartAllAvailableDevices(bool isRpcCall = false)
         {
-            var allDevs = ComputeDeviceManager.Available.Devices;
+            var allDevs = AvailableDevices.Devices;
             var devicesToStart = allDevs.Where(dev => dev.State == DeviceState.Stopped);
             if (devicesToStart.Count() == 0) {
                 return (false, "there are no new devices to start");
@@ -102,7 +102,7 @@ namespace NiceHashMiner
         }
 
         public static (bool stopped, string failReason) StopAllDevice() {
-            var allDevs = ComputeDeviceManager.Available.Devices;
+            var allDevs = AvailableDevices.Devices;
             // TODO when starting and stopping we are not taking Pending and Error states into account
             var devicesToStop = allDevs.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
             if (devicesToStop.Count() == 0) {

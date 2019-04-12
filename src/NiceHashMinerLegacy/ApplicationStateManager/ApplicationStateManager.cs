@@ -296,7 +296,7 @@ namespace NiceHashMiner
 
         public static void ToggleActiveInactiveDisplay()
         {
-            var allDevs = ComputeDeviceManager.Available.Devices;
+            var allDevs = AvailableDevices.Devices;
             var devicesNotActive = allDevs.All(dev => dev.State != DeviceState.Mining && dev.State != DeviceState.Benchmarking);
             if (devicesNotActive)
             {
@@ -310,7 +310,7 @@ namespace NiceHashMiner
 
         public static bool AnyInMiningState()
         {
-            var allDevs = ComputeDeviceManager.Available.Devices;
+            var allDevs = AvailableDevices.Devices;
             return allDevs.Any(dev => dev.State == DeviceState.Mining);
         } 
 
@@ -375,7 +375,7 @@ namespace NiceHashMiner
             // TODO check if we are connected to ws if not retrun offline state
 
             // check devices
-            var allDevs = ComputeDeviceManager.Available.Devices;
+            var allDevs = AvailableDevices.Devices;
             // now assume we have all disabled
             var rigState = RigStatus.Disabled;
             // order matters, we are excluding pending state

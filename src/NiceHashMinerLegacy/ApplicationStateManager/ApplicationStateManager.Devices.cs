@@ -16,7 +16,7 @@ namespace NiceHashMiner
         #region device state checkers
         public static bool IsEnableAllDevicesRedundantOperation()
         {
-            var allEnabled = ComputeDeviceManager.Available.Devices.All(dev => !dev.IsDisabled);
+            var allEnabled = AvailableDevices.Devices.All(dev => !dev.IsDisabled);
             return allEnabled;
         }
 
@@ -35,11 +35,11 @@ namespace NiceHashMiner
             var isDisableAllDevices = "*" == uuid;
             if (isDisableAllDevices)
             {
-                devicesToDisable.AddRange(ComputeDeviceManager.Available.Devices.Where(dev => !dev.IsDisabled));
+                devicesToDisable.AddRange(AvailableDevices.Devices.Where(dev => !dev.IsDisabled));
             }
             else
             {
-                var devWithUUID = ComputeDeviceManager.Available.GetDeviceWithUuidOrB64Uuid(uuid);
+                var devWithUUID = AvailableDevices.GetDeviceWithUuidOrB64Uuid(uuid);
                 if (devWithUUID != null)
                 {
                     devicesToDisable.Add(devWithUUID);

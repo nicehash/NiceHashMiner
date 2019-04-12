@@ -1,5 +1,4 @@
-﻿// PRODUCTION
-#if !(TESTNET || TESTNETDEV)
+﻿// SHARED - PRODUCTION + TESTNET / TESTNETDEV
 
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,7 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms
 {
-    public static class FormHelpers
+    public static partial class FormHelpers
     {
 
         public static void TranslateFormControls(Control c)
@@ -85,4 +84,3 @@ namespace NiceHashMiner.Forms
         }
     }
 }
-#endif
