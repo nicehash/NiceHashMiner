@@ -87,6 +87,7 @@ namespace NBMiner
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, cl, GetEnvironmentVariables());
+            var id = _cudaIDMap[_miningPairs.First().Device.ID];
 
             var benchHashes = 0d;
             var benchIters = 0;
@@ -95,7 +96,6 @@ namespace NBMiner
 
             bp.CheckData = (data) =>
             {
-                var id = _cudaIDMap.Values.First();
                 var hashrateFoundPair = data.TryGetHashrateAfter($" - {id}: ");
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
