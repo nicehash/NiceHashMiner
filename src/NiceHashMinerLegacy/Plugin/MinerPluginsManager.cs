@@ -101,8 +101,6 @@ namespace NiceHashMiner.Plugin
                     var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a)).ToList();
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                 }
-
-                _integratedPluginsInitialized[pluginUuid] = true;
             }
             foreach (var plugin in IntegratedPlugins)
             {
@@ -110,6 +108,7 @@ namespace NiceHashMiner.Plugin
                 if (plugin.Is3rdParty && !is3rdPartyEnabled) continue;
                 if (_integratedPluginsInitialized.ContainsKey(pluginUuid) && _integratedPluginsInitialized[pluginUuid]) continue;
                 if (plugin is IInitInternals pluginWithInternals) pluginWithInternals.InitInternals();
+                _integratedPluginsInitialized[pluginUuid] = true;
             }
 
             EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
