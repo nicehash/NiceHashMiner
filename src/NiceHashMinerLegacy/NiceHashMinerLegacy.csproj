@@ -208,7 +208,7 @@
     <Compile Include="Forms\FormEula.Designer.cs">
       <DependentUpon>FormEula.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\FormHelpers_production.cs" />
+    <Compile Include="Forms\FormHelpers_shared.cs" />
     <Compile Include="Forms\FormHelpers_testnet.cs" />
     <Compile Include="Forms\Form_Benchmark.cs" />
     <Compile Include="Forms\Form_Benchmark.Designer.cs">
@@ -440,7 +440,6 @@
     <Compile Include="Miners\Grouping\MiningSetup.cs" />
     <Compile Include="Miners\Parsing\MinerOption.cs" />
     <Compile Include="Miners\Grouping\MinerPaths.cs" />
-    <Compile Include="Miners\MinersApiPortsManager.cs" />
     <Compile Include="Miners\MinersManager_production.cs" />
     <Compile Include="Miners\MiningSession_production.cs" />
     <Compile Include="Miners\Parsing\MinerOptionPackage.cs" />
@@ -520,8 +519,14 @@
     <EmbeddedResource Include="Forms\Form_DcriValues.resx">
       <DependentUpon>Form_DcriValues.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_Main.resx">
+      <DependentUpon>Form_Main.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_MinerPlugins.resx">
       <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_Settings.resx">
+      <DependentUpon>Form_Settings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings_Production.resx">
       <DependentUpon>Form_Settings_Production.cs</DependentUpon>

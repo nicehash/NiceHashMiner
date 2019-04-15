@@ -7,6 +7,7 @@ using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Security;
@@ -108,7 +109,7 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(checkBox_DebugConsole,
                 Tr("When checked, it displays debug console."));
             toolTip1.SetToolTip(pictureBox_DebugConsole,
-               Tr("When checked, it displays debug console."));
+                Tr("When checked, it displays debug console."));
 
             toolTip1.SetToolTip(textBox_BitcoinAddress, Tr("User's bitcoin address for mining."));
             toolTip1.SetToolTip(label_BitcoinAddress, Tr("User's bitcoin address for mining."));
@@ -339,7 +340,7 @@ namespace NiceHashMiner.Forms
         }
 
 #region Tab General
-
+// TODO THIS IS LOGIC INSIDE CONTENT
         private void InitializeGeneralTabTranslations()
         {
             checkBox_DisableDetectionNVIDIA.Text =
@@ -393,7 +394,6 @@ namespace NiceHashMiner.Forms
                 textBox_MinerRestartDelayMS.Leave += GeneralTextBoxes_Leave;
                 textBox_MinIdleSeconds.Leave += GeneralTextBoxes_Leave;
                 textBox_LogMaxFileSize.Leave += GeneralTextBoxes_Leave;
-                //textBox_ethminerDefaultBlockHeight.Leave += GeneralTextBoxes_Leave;
                 textBox_APIBindPortStart.Leave += GeneralTextBoxes_Leave;
                 textBox_MinProfit.Leave += GeneralTextBoxes_Leave;
                 textBox_ElectricityCost.Leave += GeneralTextBoxes_Leave;
@@ -613,6 +613,7 @@ namespace NiceHashMiner.Forms
             }
         }
 
+        // TODO broken feature no miner has default optimizations anymore (only sgminer plugin and this is not compatible)
         private void CheckBox_DisableDefaultOptimizations_CheckedChanged(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;

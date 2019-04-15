@@ -1,6 +1,4 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
-﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
 using System;
@@ -38,42 +36,22 @@ namespace NiceHashMiner
         }
         #endregion
 
+        // TODO This is duplicated with CudaDeviceChecker
         #region ComputeDevicesCheck Lost GPU check
-        private static SystemTimer _computeDevicesCheckTimer;
+        private static CudaDeviceChecker _cudaDeviceChecker;
 
         private static void StartComputeDevicesCheckTimer()
         {
-            // return if we don't want to check devices
-            if (!ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost) return;
-
-            _computeDevicesCheckTimer = new SystemTimer();
-            _computeDevicesCheckTimer.Elapsed += (object sender, ElapsedEventArgs e) =>
+            if (_cudaDeviceChecker == null)
             {
-                if (ComputeDeviceManager.Query.CheckVideoControllersCountMismath())
-                {
-                    // less GPUs than before, ACT!
-                    try
-                    {
-                        var onGpusLost = new ProcessStartInfo(Directory.GetCurrentDirectory() + "\\OnGPUsLost.bat")
-                        {
-                            WindowStyle = ProcessWindowStyle.Minimized
-                        };
-                        Process.Start(onGpusLost);
-                    }
-                    catch (Exception ex)
-                    {
-                        Helpers.ConsolePrint("NICEHASH", "OnGPUsMismatch.bat error: " + ex.Message);
-                    }
-                }
-            };
-            _computeDevicesCheckTimer.Interval = 60000;
-            _computeDevicesCheckTimer.Start();
+                _cudaDeviceChecker = new CudaDeviceChecker();
+            }
+            _cudaDeviceChecker.Start();
         }
 
         private static void StopComputeDevicesCheckTimer()
         {
-            _computeDevicesCheckTimer?.Stop();
-            _computeDevicesCheckTimer = null;
+            _cudaDeviceChecker?.Stop();
         }
         #endregion
 
@@ -106,7 +84,10 @@ namespace NiceHashMiner
         {
             _refreshDeviceListViewTimer = new SystemTimer();
             _refreshDeviceListViewTimer.Elapsed += (object sender, ElapsedEventArgs e) => {
+                // TESTNET
+#if TESTNET || TESTNETDEV
                 RefreshDeviceListView?.Invoke(sender, EventArgs.Empty);
+#endif
             };
             _refreshDeviceListViewTimer.Interval = 2000;
             _refreshDeviceListViewTimer.Start();
@@ -117,7 +98,6 @@ namespace NiceHashMiner
             _refreshDeviceListViewTimer?.Stop();
             _refreshDeviceListViewTimer = null;
         }
-        #endregion
+#endregion
     }
 }
-#endif
