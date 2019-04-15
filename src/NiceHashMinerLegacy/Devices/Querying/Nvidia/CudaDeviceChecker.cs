@@ -38,7 +38,7 @@ namespace NiceHashMiner.Devices
 
         public void Stop()
         {
-            _cudaCheckTimer.Stop();
+            _cudaCheckTimer?.Stop();
         }
 
         private bool CheckDevicesMistmatch()
