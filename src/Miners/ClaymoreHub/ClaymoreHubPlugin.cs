@@ -54,20 +54,19 @@ namespace ClaymoreHub
             return supported;
         }
 
-        //TODO how to set dual algorithms?? like this?
         private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
             yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerDecred);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerBlake2s);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerKeccak);
+            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred);
+            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s);
+            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak);
         }
         private IEnumerable<Algorithm> GetSupportedAlgorithms(AMDDevice gpu)
         {
             yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerDecred);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerBlake2s);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerKeccak);
+            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred);
+            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s);
+            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak);
         }
 
         public IMiner CreateMiner()
@@ -91,62 +90,8 @@ namespace ClaymoreHub
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
-        {
-            GeneralOptions = new List<MinerOption>
-            {
-                /// <summary>
-                /// Ethereum intensity. Default value is 8, you can decrease this value if you don't want Windows to freeze or if you have problems with stability. The most low GPU load is "-ethi 0".
-	            ///Also "-ethi" can set intensity for every card individually, for example "-ethi 1,8,6".
-                ///You can also specify negative values, for example, "-ethi -8192", it exactly means "global work size" parameter which is used in official miner.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "claymoreDual_intensity_primary",
-                    ShortName = "-ethi",
-                    DefaultValue = "8",
-                    Delimiter = ","
-                },
-                /// <summary>
-                /// Decred/Siacoin/Lbry/Pascal intensity, or Ethereum fine-tuning value in ETH-only ASM mode. Default value is 30, you can adjust this value to get the best Decred/Siacoin/Lbry mining speed without reducing Ethereum mining speed. 
-	            ///You can also specify values for every card, for example "-dcri 30,100,50".
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "claymoreDual_intensity_secondary",
-                    ShortName = "-dcri",
-                    DefaultValue = "30",
-                    Delimiter = ","
-                },
-                /// <summary>
-                /// low intensity mode. Reduces mining intensity, useful if your cards are overheated. Note that mining speed is reduced too. 
-	            /// More value means less heat and mining speed, for example, "-li 10" is less heat and mining speed than "-li 1". You can also specify values for every card, for example "-li 3,10,50".
-                /// Default value is "0" - no low intensity mode.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "claymoreDual_lowIntensity",
-                    ShortName = "-li",
-                    DefaultValue = "0",
-                    Delimiter = ","
-                },
-                /// <summary>
-                /// set "1" to cancel my developer fee at all. In this mode some optimizations are disabled so mining speed will be slower by about 3%. 
-	            /// By enabling this mode, I will lose 100% of my earnings, you will lose only about 2% of your earnings.
-                /// So you have a choice: "fastest miner" or "completely free miner but a bit slower".
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "claymoreDual_noFee",
-                    ShortName = "-nofee",
-                    DefaultValue = "0",
-                },
-            }
-        };
+        protected static MinerOptionsPackage _minerOptionsPackage = Claymore.DefaultMinerOptionsPackage;
+
         #endregion Internal Settings
     }
 

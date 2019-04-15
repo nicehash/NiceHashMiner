@@ -15,7 +15,7 @@ namespace NiceHashMinerLegacy.Tests.Miners
     {
         private static int count;
 
-        private class ClaymoreDualDummy : ClaymoreDual
+        private class ClaymoreDualDummy : ClaymoreDualOld
         {
             public ClaymoreDualDummy(AlgorithmType secondaryAlgorithmType = AlgorithmType.NONE) 
                 : base(secondaryAlgorithmType)
