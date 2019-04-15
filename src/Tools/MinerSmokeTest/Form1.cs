@@ -39,13 +39,25 @@ namespace MinerSmokeTest
             return rowData;
         }
 
+        private static async Task QueryDevices()
+        {
+            await ComputeDeviceManager.QueryDevicesAsync(null, true);
+        }
+
         private async void FormShown(object sender, EventArgs e)
         {
             ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
-            await ComputeDeviceManager.QueryDevicesAsync(null, false);
+            try
+            {
+                await ComputeDeviceManager.QueryDevicesAsync(null, false);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
             var devices = AvailableDevices.Devices;
 
-            foreach(var device in devices)
+            foreach (var device in devices)
             {
                 dgv_devices.Rows.Add(GetDeviceRowData(device));
 

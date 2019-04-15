@@ -47,6 +47,7 @@ namespace NiceHashMiner.Plugin
             new EWBFIntegratedPlugin(),
             new GMinerIntegratedPlugin(),
             new NBMinerIntegratedPlugin(),
+            new PhoenixIntegratedPlugin(),
             new TeamRedMinerIntegratedPlugin(),
             new TRexIntegratedPlugin(),
             new TTMinerIntegratedPlugin(),
