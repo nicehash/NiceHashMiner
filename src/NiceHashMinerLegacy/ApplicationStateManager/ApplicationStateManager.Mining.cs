@@ -1,6 +1,6 @@
 // TESTNET
 #if TESTNET || TESTNETDEV
-﻿using NiceHashMiner.Devices;
+using NiceHashMiner.Devices;
 using System;
 using System.Collections.Generic;
 using System.Linq;

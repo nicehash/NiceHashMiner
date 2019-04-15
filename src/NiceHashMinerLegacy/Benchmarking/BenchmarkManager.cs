@@ -13,7 +13,7 @@ using NiceHashMiner.Stats;
 
 namespace NiceHashMiner.Benchmarking
 {
-
+    // alias enum
     using BenchmarkSelection = AlgorithmBenchmarkSettingsType;
     public static class BenchmarkManager
     {
@@ -84,7 +84,7 @@ namespace NiceHashMiner.Benchmarking
             _runningBenchmarkThreads = new List<BenchmarkHandler>();
         }
 
-        #region Public get helpers
+#region Public get helpers
 
         public static IEnumerable<Tuple<ComputeDevice, Algorithm>> GetStatusCheckAlgos()
         {
@@ -104,9 +104,9 @@ namespace NiceHashMiner.Benchmarking
             return BenchDevAlgoQueue.Select(t => t.Item1).Select(d => d.Index);
         }
 
-        #endregion
+#endregion
 
-        #region Calculation methods
+#region Calculation methods
 
         public static int CalcBenchDevAlgoQueue()
         {
@@ -179,9 +179,9 @@ namespace NiceHashMiner.Benchmarking
             return false;
         }
 
-        #endregion 
+#endregion
 
-        #region Start/Stop methods
+#region Start/Stop methods
 
         public static void Start(BenchmarkPerformanceType perfType, IBenchmarkForm form)
         {
@@ -280,9 +280,9 @@ namespace NiceHashMiner.Benchmarking
             }
         }
 
-        #endregion
+#endregion
 
-        #region In-bench status updates
+#region In-bench status updates
 
         public static bool IsDevBenchmarked(string uuid)
         {
@@ -336,7 +336,7 @@ namespace NiceHashMiner.Benchmarking
             OnStepUp?.Invoke(null, args);
         }
 
-        #endregion
+#endregion
         
         private enum BenchmarkSettingsStatus
         {

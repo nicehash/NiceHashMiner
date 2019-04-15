@@ -1,6 +1,6 @@
-// TESTNET
+//TESTNET
 #if TESTNET || TESTNETDEV
-﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces.DataVisualizer;
 using NiceHashMiner.Stats;
 using System;
@@ -17,7 +17,7 @@ namespace NiceHashMiner
         // lock for adding and removing IDataVisualizers
         static object objectLock = new object();
 
-        #region IBalanceBTCDisplayer DisplayBTCBalance double
+#region IBalanceBTCDisplayer DisplayBTCBalance double
         static event EventHandler<double> DisplayBTCBalance;
         private static void subscribeIBalanceBTCDisplayer(IDataVisualizer s)
         {
@@ -32,9 +32,9 @@ namespace NiceHashMiner
         {
             if (s is IBalanceBTCDisplayer sIBalanceBTCDisplayer) DisplayBTCBalance -= sIBalanceBTCDisplayer.DisplayBTCBalance;
         }
-        #endregion IBalanceBTCDisplayer DisplayBTCBalance double
+#endregion IBalanceBTCDisplayer DisplayBTCBalance double
 
-        #region IBalanceFiatDisplayer DisplayFiatBalance (double fiatBalance, string fiatCurrencySymbol)
+#region IBalanceFiatDisplayer DisplayFiatBalance (double fiatBalance, string fiatCurrencySymbol)
         static event EventHandler<(double fiatBalance, string fiatCurrencySymbol)> DisplayFiatBalance;
         private static void subscribeIBalanceFiatDisplayer(IDataVisualizer s)
         {
@@ -49,9 +49,9 @@ namespace NiceHashMiner
         {
             if (s is IBalanceFiatDisplayer sIBalanceFiatDisplayer) DisplayFiatBalance -= sIBalanceFiatDisplayer.DisplayFiatBalance;
         }
-        #endregion IBalanceFiatDisplayer DisplayFiatBalance (double fiatBalance, string fiatCurrencySymbol)
+#endregion IBalanceFiatDisplayer DisplayFiatBalance (double fiatBalance, string fiatCurrencySymbol)
 
-        #region IBTCDisplayer DisplayBTC string
+#region IBTCDisplayer DisplayBTC string
         static event EventHandler<string> DisplayBTC;
         private static void subscribeIBTCDisplayer(IDataVisualizer s)
         {
@@ -66,9 +66,9 @@ namespace NiceHashMiner
         {
             if (s is IBTCDisplayer sIBTCDisplayer) DisplayBTC -= sIBTCDisplayer.DisplayBTC;
         }
-        #endregion IBTCDisplayer DisplayBTC string
+#endregion IBTCDisplayer DisplayBTC string
 
-        #region IGlobalMiningRateDisplayer DisplayGlobalMiningRate double
+#region IGlobalMiningRateDisplayer DisplayGlobalMiningRate double
         static event EventHandler<double> DisplayGlobalMiningRate;
         private static void subscribeIGlobalMiningRateDisplayer(IDataVisualizer s)
         {
@@ -80,9 +80,9 @@ namespace NiceHashMiner
         {
             if (s is IGlobalMiningRateDisplayer sIGlobalMiningRateDisplayer) DisplayGlobalMiningRate -= sIGlobalMiningRateDisplayer.DisplayGlobalMiningRate;
         }
-        #endregion IGlobalMiningRateDisplayer DisplayGlobalMiningRate double
+#endregion IGlobalMiningRateDisplayer DisplayGlobalMiningRate double
 
-        #region IGroupDisplayer DisplayGroup string
+#region IGroupDisplayer DisplayGroup string
         static event EventHandler<string> DisplayGroup;
         private static void subscribeIGroupDisplayer(IDataVisualizer s)
         {
@@ -94,9 +94,9 @@ namespace NiceHashMiner
         {
             if (s is IGroupDisplayer sIGroupDisplayer) DisplayGroup -= sIGroupDisplayer.DisplayGroup;
         }
-        #endregion IGroupDisplayer DisplayGroup string
+#endregion IGroupDisplayer DisplayGroup string
 
-        #region IMiningNotProfitableDisplayer DisplayMiningNotProfitable EventArgs
+#region IMiningNotProfitableDisplayer DisplayMiningNotProfitable EventArgs
         static event EventHandler<EventArgs> _DisplayMiningNotProfitable;
         private static void subscribeIMiningNotProfitableDisplayer(IDataVisualizer s)
         {
@@ -108,9 +108,9 @@ namespace NiceHashMiner
         {
             if (s is IMiningNotProfitableDisplayer sIMiningNotProfitableDisplayer) _DisplayMiningNotProfitable -= sIMiningNotProfitableDisplayer.DisplayMiningNotProfitable;
         }
-        #endregion IMiningNotProfitableDisplayer DisplayMiningNotProfitable EventArgs
+#endregion IMiningNotProfitableDisplayer DisplayMiningNotProfitable EventArgs
 
-        #region IMiningProfitableDisplayer DisplayMiningProfitable EventArgs
+#region IMiningProfitableDisplayer DisplayMiningProfitable EventArgs
         static event EventHandler<EventArgs> _DisplayMiningProfitable;
         private static void subscribeIMiningProfitableDisplayer(IDataVisualizer s)
         {
@@ -122,9 +122,9 @@ namespace NiceHashMiner
         {
             if (s is IMiningProfitableDisplayer sIMiningProfitableDisplayer) _DisplayMiningProfitable -= sIMiningProfitableDisplayer.DisplayMiningProfitable;
         }
-        #endregion IMiningProfitableDisplayer DisplayMiningProfitable EventArgs
+#endregion IMiningProfitableDisplayer DisplayMiningProfitable EventArgs
 
-        #region INoInternetConnectionDisplayer DisplayNoInternetConnection EventArgs
+#region INoInternetConnectionDisplayer DisplayNoInternetConnection EventArgs
         static event EventHandler<EventArgs> _DisplayNoInternetConnection;
         private static void subscribeINoInternetConnectionDisplayer(IDataVisualizer s)
         {
@@ -136,9 +136,9 @@ namespace NiceHashMiner
         {
             if (s is INoInternetConnectionDisplayer sINoInternetConnectionDisplayer) _DisplayNoInternetConnection -= sINoInternetConnectionDisplayer.DisplayNoInternetConnection;
         }
-        #endregion INoInternetConnectionDisplayer DisplayNoInternetConnection EventArgs
+#endregion INoInternetConnectionDisplayer DisplayNoInternetConnection EventArgs
 
-        #region IServiceLocationDisplayer DisplayServiceLocation int
+#region IServiceLocationDisplayer DisplayServiceLocation int
         static event EventHandler<int> DisplayServiceLocation;
         private static void subscribeIServiceLocationDisplayer(IDataVisualizer s)
         {
@@ -153,9 +153,9 @@ namespace NiceHashMiner
         {
             if (s is IServiceLocationDisplayer sIServiceLocationDisplayer) DisplayServiceLocation -= sIServiceLocationDisplayer.DisplayServiceLocation;
         }
-        #endregion IServiceLocationDisplayer DisplayServiceLocation int
+#endregion IServiceLocationDisplayer DisplayServiceLocation int
 
-        #region IStartMiningDisplayer DisplayMiningStarted EventArgs
+#region IStartMiningDisplayer DisplayMiningStarted EventArgs
         static event EventHandler<EventArgs> DisplayMiningStarted;
         private static void subscribeIStartMiningDisplayer(IDataVisualizer s)
         {
@@ -167,9 +167,9 @@ namespace NiceHashMiner
         {
             if (s is IStartMiningDisplayer sIStartMiningDisplayer) DisplayMiningStarted -= sIStartMiningDisplayer.DisplayMiningStarted;
         }
-        #endregion IStartMiningDisplayer DisplayMiningStarted EventArgs
+#endregion IStartMiningDisplayer DisplayMiningStarted EventArgs
 
-        #region IStopMiningDisplayer DisplayMiningStopped EventArgs
+#region IStopMiningDisplayer DisplayMiningStopped EventArgs
         static event EventHandler<EventArgs> DisplayMiningStopped;
         private static void subscribeIStopMiningDisplayer(IDataVisualizer s)
         {
@@ -181,9 +181,9 @@ namespace NiceHashMiner
         {
             if (s is IStopMiningDisplayer sIStopMiningDisplayer) DisplayMiningStopped -= sIStopMiningDisplayer.DisplayMiningStopped;
         }
-        #endregion IStopMiningDisplayer DisplayMiningStopped EventArgs
+#endregion IStopMiningDisplayer DisplayMiningStopped EventArgs
 
-        #region IVersionDisplayer DisplayVersion string
+#region IVersionDisplayer DisplayVersion string
         static event EventHandler<string> DisplayVersion;
         private static void subscribeIVersionDisplayer(IDataVisualizer s)
         {
@@ -195,9 +195,9 @@ namespace NiceHashMiner
         {
             if (s is IVersionDisplayer sIVersionDisplayer) DisplayVersion -= sIVersionDisplayer.DisplayVersion;
         }
-        #endregion IVersionDisplayer DisplayVersion string
+#endregion IVersionDisplayer DisplayVersion string
 
-        #region IWorkerNameDisplayer DisplayWorkerName string
+#region IWorkerNameDisplayer DisplayWorkerName string
         static event EventHandler<string> DisplayWorkerName;
         private static void subscribeIWorkerNameDisplayer(IDataVisualizer s)
         {
@@ -212,9 +212,9 @@ namespace NiceHashMiner
         {
             if (s is IWorkerNameDisplayer sIWorkerNameDisplayer) DisplayWorkerName -= sIWorkerNameDisplayer.DisplayWorkerName;
         }
-        #endregion IWorkerNameDisplayer DisplayWorkerName string
+#endregion IWorkerNameDisplayer DisplayWorkerName string
 
-        #region IDevicesStateDisplayer RefreshDeviceListView EventArgs
+#region IDevicesStateDisplayer RefreshDeviceListView EventArgs
         static event EventHandler<EventArgs> RefreshDeviceListView;
         private static void subscribeIDevicesStateDisplayer(IDataVisualizer s)
         {
@@ -226,9 +226,9 @@ namespace NiceHashMiner
         {
             if (s is IDevicesStateDisplayer sIDevicesStateDisplayer) RefreshDeviceListView -= sIDevicesStateDisplayer.RefreshDeviceListView;
         }
-        #endregion IDevicesStateDisplayer RefreshDeviceListView EventArgs
+#endregion IDevicesStateDisplayer RefreshDeviceListView EventArgs
 
-        #region Subscribe/Unsubscribe 
+#region Subscribe/Unsubscribe 
         public static void SubscribeStateDisplayer(IDataVisualizer s)
         {
             lock (objectLock)
@@ -300,7 +300,7 @@ namespace NiceHashMiner
 
             }
         }
-        #endregion Subscribe/Unsubscribe 
+#endregion Subscribe/Unsubscribe 
         // GENERATED CODE by nhmlCodeGen tool END
     }
 }

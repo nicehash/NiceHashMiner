@@ -156,8 +156,6 @@ namespace NiceHashMiner
 
         ~Miner()
         {
-            // free the port
-            MinersApiPortsManager.RemovePort(ApiPort);
             Helpers.ConsolePrint(MinerTag(), "MINER DESTROYED");
         }
 
@@ -182,7 +180,7 @@ namespace NiceHashMiner
                 var path = MiningSetup.MinerPath;
 
                 ApiPort = -1; // not set
-                ApiPort = MinersApiPortsManager.GetAvaliablePort();
+                ApiPort = MinerPluginToolkitV1.MinersApiPortsManager.GetAvaliablePortInRange(ConfigManager.GeneralConfig.ApiBindPortPoolStart);
             }
         }
 

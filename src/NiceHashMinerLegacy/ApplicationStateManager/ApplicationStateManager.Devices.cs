@@ -1,6 +1,6 @@
 // TESTNET
 #if TESTNET || TESTNETDEV
-﻿using NiceHashMiner.Devices;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
@@ -13,7 +13,7 @@ namespace NiceHashMiner
 {
     static partial class ApplicationStateManager
     {
-        #region device state checkers
+#region device state checkers
         public static bool IsEnableAllDevicesRedundantOperation()
         {
             var allEnabled = AvailableDevices.Devices.All(dev => !dev.IsDisabled);
@@ -25,7 +25,7 @@ namespace NiceHashMiner
             return !IsEnableAllDevicesRedundantOperation();
         }
 
-        #endregion device state checkers
+#endregion device state checkers
 
         public static void SetDeviceEnabledState(object sender, (string uuid, bool enabled) args)
         {

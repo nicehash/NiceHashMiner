@@ -1,6 +1,6 @@
 // TESTNET
 #if TESTNET || TESTNETDEV
-﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces.DataVisualizer;
 using NiceHashMiner.Miners;
@@ -18,7 +18,7 @@ namespace NiceHashMiner
 {
     static partial class ApplicationStateManager
     {
-        #region Version
+#region Version
         public static string LocalVersion { get; private set; }
         public static string OnlineVersion { get; private set; }
 
@@ -59,9 +59,9 @@ namespace NiceHashMiner
             }
             Process.Start(url);
         }
-        #endregion
+#endregion
 
-        #region BtcBalance and fiat balance
+#region BtcBalance and fiat balance
 
         public static double BtcBalance { get; private set; }
 
@@ -81,7 +81,7 @@ namespace NiceHashMiner
             // fiat
             DisplayFiatBalance?.Invoke(null, getFiatFromBtcBalance(btcBalance));
         }
-        #endregion
+#endregion
 
         [Flags]
         public enum CredentialsValidState : uint
@@ -134,7 +134,7 @@ namespace NiceHashMiner
             CHANGED
         }
 
-        #region ServiceLocation
+#region ServiceLocation
 
         public static string GetSelectedServiceLocationLocationUrl(AlgorithmType algorithmType, NhmConectionType conectionType)
         {
@@ -167,9 +167,9 @@ namespace NiceHashMiner
             // notify all components
             DisplayServiceLocation?.Invoke(null, serviceLocation);
         }
-        #endregion
+#endregion
 
-        #region BTC setter
+#region BTC setter
 
         // make sure to pass in trimmedBtc
         public static SetResult SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
@@ -203,9 +203,9 @@ namespace NiceHashMiner
             // notify all components
             DisplayBTC?.Invoke(null, btc);
         }
-        #endregion
+#endregion
 
-        #region Worker setter
+#region Worker setter
 
         // make sure to pass in trimmed workerName
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
@@ -241,9 +241,9 @@ namespace NiceHashMiner
             // notify all components
             DisplayWorkerName?.Invoke(null, workerName);
         }
-        #endregion
+#endregion
 
-        #region Group setter
+#region Group setter
 
         // make sure to pass in trimmed GroupName
         // skipCredentialsSet when calling from RPC, workaround so RPC will work
@@ -276,7 +276,7 @@ namespace NiceHashMiner
             // notify all components
             DisplayGroup?.Invoke(null, groupName);
         }
-        #endregion
+#endregion
 
         public static void ToggleActiveInactiveDisplay()
         {

@@ -315,7 +315,7 @@ namespace XmrStak
             var algo = AlgorithmName(_algorithmType);
             // prepare configs
             var folder = _algorithmType.ToString().ToLower();
-            
+            // run in new task so we don't deadlock main thread
             var deviceConfigParams = Task.Run(PrepareDeviceConfigs).Result;
             var generalConfigFilePath = Path.Combine(binCwd, folder, "config.txt");
             var generalConfig = new MainConfig{ httpd_port = _apiPort };
