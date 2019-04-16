@@ -172,7 +172,7 @@ namespace NiceHashMiner.Benchmarking
             };
             miner.InitMiningPairs(new List<MinerPlugin.MiningPair> { miningPair });
             // fill service since the benchmark might be online. DemoUser.BTC must be used
-            miner.InitMiningLocationAndUsername(Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], DemoUser.BTC);
+            miner.InitMiningLocationAndUsername(StratumService.SelectedServiceLocation, DemoUser.BTC);
             _powerHelper.Start();
             var result = await miner.StartBenchmark(_stopBenchmark.Token, _performanceType);
             var power = _powerHelper.Stop();

@@ -169,7 +169,7 @@ namespace MinerSmokeTest
                         var miningSetup = new MiningSetup(pair);
 
                         miner.InitMiningSetup(miningSetup);
-                        var url = StratumHelpers.GetLocationUrl(algorithm.NiceHashID, "eu", miner.ConectionType);
+                        var url = StratumServiceHelpers.GetLocationUrl(algorithm.NiceHashID, "eu", miner.ConectionType);
 
                         tbx_info.Text += $"TESTING: {Environment.NewLine}";
                         tbx_info.Text += $"Device: {device.GetFullName()} {Environment.NewLine}";

@@ -5,6 +5,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces.DataVisualizer;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -139,8 +140,8 @@ namespace NiceHashMiner
         public static string GetSelectedServiceLocationLocationUrl(AlgorithmType algorithmType, NhmConectionType conectionType)
         {
             // TODO make sure the ServiceLocation index is always valid
-            var location = StratumService.MiningLocations[ConfigManager.GeneralConfig.ServiceLocation];
-            return StratumService.GetLocationUrl(algorithmType, location, conectionType);
+            var location = StratumService.SelectedServiceLocation;
+            return StratumServiceHelpers.GetLocationUrl(algorithmType, location, conectionType);
         }
 
         public static SetResult SetServiceLocationIfValidOrDifferent(int serviceLocation)

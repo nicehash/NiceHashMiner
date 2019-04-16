@@ -88,7 +88,7 @@ namespace NiceHashMiner.Miners
         public override void Start(string url, string username)
         {
             // TODO global state right here
-            var location = Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation];
+            var location = StratumService.SelectedServiceLocation;
             _miner.InitMiningLocationAndUsername(location, username);
 
             _miningPairs = this.MiningSetup.MiningPairs

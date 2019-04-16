@@ -1,6 +1,7 @@
 ﻿using NiceHashMiner.Configs;
 using System.Collections.Generic;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -86,7 +87,7 @@ namespace NiceHashMiner.Miners.Grouping
             }
             // Wait before new start
             System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-            var locationUrl = StratumService.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
+            var locationUrl = StratumServiceHelpers.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
             Miner.Start(locationUrl, username);
         }
     }

@@ -21,6 +21,7 @@ using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
 using System.ComponentModel;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner
 {
@@ -891,7 +892,7 @@ namespace NiceHashMiner
         {
 // PRODUCTION
 #if !(TESTNET || TESTNETDEV)
-            return Globals.GetLocationUrl(algo, Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
+            return StratumServiceHelpers.GetLocationUrl(algo, StratumService.SelectedServiceLocation,
                 ConectionType);
 #endif
 // TESTNET

@@ -10,7 +10,7 @@ namespace NiceHashMinerLegacy.Common
 {
     public static class StratumServiceHelpers
     {
-
+        #region CUSTOM_ENDPOINTS
 #if CUSTOM_ENDPOINTS
         class ServiceCustomSettings
         {
@@ -70,6 +70,7 @@ namespace NiceHashMinerLegacy.Common
             }
         }
 #endif
+        #endregion CUSTOM_ENDPOINTS
 
         private static string GetAlgorithmUrlName(AlgorithmType algorithmType)
         {

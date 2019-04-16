@@ -117,7 +117,7 @@ namespace NiceHashMiner
         private void InitMainConfigGuiData()
         {
             if (ConfigManager.GeneralConfig.ServiceLocation >= 0 &&
-                ConfigManager.GeneralConfig.ServiceLocation < Globals.MiningLocation.Length)
+                ConfigManager.GeneralConfig.ServiceLocation < StratumService.MiningLocations.Count)
                 comboBoxLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
             else
                 comboBoxLocation.SelectedIndex = 0;
@@ -1113,7 +1113,7 @@ namespace NiceHashMiner
             ClearRatesAll();
 
             var btcAdress = _demoMode ? DemoUser.BTC : textBoxBTCAddress.Text.Trim();
-            var isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
+            var isMining = MinersManager.StartInitialize(this, StratumService.SelectedServiceLocation,
                 textBoxWorkerName.Text.Trim(), btcAdress);
 
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();

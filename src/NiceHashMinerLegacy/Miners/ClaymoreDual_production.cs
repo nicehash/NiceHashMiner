@@ -106,8 +106,8 @@ namespace NiceHashMiner.Miners
 
                     if (dual != AlgorithmType.NONE)
                     {
-                        var urlSecond = Globals.GetLocationUrl(dual,
-                            Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation],
+                        var urlSecond = StratumServiceHelpers.GetLocationUrl(dual,
+                            StratumService.SelectedServiceLocation,
                             ConectionType);
                         dualModeParams = $" {coinP} -dpool {urlSecond} -dwal {username}";
                         break;
@@ -116,8 +116,8 @@ namespace NiceHashMiner.Miners
             }
             else
             {
-                var urlSecond = Globals.GetLocationUrl(SecondaryAlgorithmType,
-                    Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], ConectionType);
+                var urlSecond = StratumServiceHelpers.GetLocationUrl(SecondaryAlgorithmType,
+                    StratumService.SelectedServiceLocation, ConectionType);
                 dualModeParams = $" -dcoin {SecondaryShortName()} -dpool {urlSecond} -dwal {username} -dpsw x";
             }
 

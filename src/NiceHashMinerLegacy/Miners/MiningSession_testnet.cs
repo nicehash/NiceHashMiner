@@ -231,7 +231,7 @@ namespace NiceHashMiner.Miners
             foreach (var key in _runningGroupMiners.Keys)
             {
                 _runningGroupMiners[key].Stop();
-                var miningLocation = StratumService.SelectedService;
+                var miningLocation = StratumService.SelectedServiceLocation;
                 _runningGroupMiners[key].Start(miningLocation, _username);
             }
         }
@@ -563,7 +563,7 @@ namespace NiceHashMiner.Miners
                     }
 
                     // start new miners
-                    var miningLocation = StratumService.SelectedService;
+                    var miningLocation = StratumService.SelectedServiceLocation;
                     foreach (var toStart in toRunNewGroupMiners.Values)
                     {
                         stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmType}, ");
