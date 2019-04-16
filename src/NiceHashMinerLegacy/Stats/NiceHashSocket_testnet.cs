@@ -87,7 +87,7 @@ namespace NiceHashMiner.Stats
             _endConnection = true;
             // TODO client away
             //CloseStatusCode.Away
-            _webSocket.Close(CloseStatusCode.Normal, "Exiting NiceHashMiner Legacy");
+            _webSocket?.Close(CloseStatusCode.Normal, "Exiting NiceHashMiner Legacy");
         }
 
         private void ReceiveCallback(object sender, MessageEventArgs e)

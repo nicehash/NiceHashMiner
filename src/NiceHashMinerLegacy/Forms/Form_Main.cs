@@ -253,7 +253,7 @@ namespace NiceHashMiner
                 // Init ws connection
                 NiceHashStats.OnConnectionLost += ConnectionLostCallback;
                 NiceHashStats.OnExchangeUpdate += UpdateExchange;
-                NiceHashStats.StartConnection(Links.NhmSocketAddress);
+                NiceHashStats.StartConnection(Nhmws.NhmSocketAddress);
 
                 progress?.Report(Tuple.Create(Tr("Getting Bitcoin exchange rate..."), nextProgPerc()));
 

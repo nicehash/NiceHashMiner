@@ -154,23 +154,33 @@
     <Compile Include="Forms\Components\AlgorithmsDataGridView.Designer.cs">
       <DependentUpon>AlgorithmsDataGridView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs" />
+    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.Designer.cs">
       <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl.cs" />
+    <Compile Include="Forms\Components\DevicesListViewEnableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Components\DevicesListViewEnableControl.Designer.cs">
       <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewSpeedControl.cs" />
+    <Compile Include="Forms\Components\DevicesListViewSpeedControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Components\DevicesListViewSpeedControl.Designer.cs">
       <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesMainBoard.cs" />
+    <Compile Include="Forms\Components\DevicesMainBoard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Components\DevicesMainBoard.Designer.cs">
       <DependentUpon>DevicesMainBoard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesMainBoardDevicesListViewSpeedControl.cs" />
+    <Compile Include="Forms\Components\DevicesMainBoardDevicesListViewSpeedControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Components\DevicesMainBoardDevicesListViewSpeedControl.Designer.cs">
       <DependentUpon>DevicesMainBoardDevicesListViewSpeedControl.cs</DependentUpon>
     </Compile>
@@ -212,11 +222,15 @@
     </Compile>
     <Compile Include="Forms\FormHelpers_shared.cs" />
     <Compile Include="Forms\FormHelpers_testnet.cs" />
-    <Compile Include="Forms\Form_Benchmark.cs" />
+    <Compile Include="Forms\Form_Benchmark.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Form_Benchmark.Designer.cs">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Main.cs" />
+    <Compile Include="Forms\Form_Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Form_Main.Designer.cs">
       <DependentUpon>Form_Main.cs</DependentUpon>
     </Compile>
@@ -226,7 +240,9 @@
     <Compile Include="Forms\Form_MinerPlugins.Designer.cs">
       <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Settings.cs" />
+    <Compile Include="Forms\Form_Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Form_Settings.Designer.cs">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
@@ -396,9 +412,7 @@
     <Compile Include="Forms\Components\GroupProfitControl.Designer.cs">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Benchmark_Production.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\Form_Benchmark_Production.cs" />
     <Compile Include="Forms\Form_Benchmark_Production.Designer.cs">
       <DependentUpon>Form_Benchmark_Production.cs</DependentUpon>
     </Compile>
@@ -414,9 +428,7 @@
     <Compile Include="Forms\Form_3rdParty_TOS.Designer.cs">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Settings_Production.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\Form_Settings_Production.cs" />
     <Compile Include="Forms\Form_Settings_Production.Designer.cs">
       <DependentUpon>Form_Settings_Production.cs</DependentUpon>
     </Compile>
@@ -450,9 +462,7 @@
     <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
-    <Compile Include="Forms\Form_Main_Production.cs">
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="Forms\Form_Main_Production.cs" />
     <Compile Include="Forms\Form_Main_Production.Designer.cs">
       <DependentUpon>Form_Main_Production.cs</DependentUpon>
     </Compile>
