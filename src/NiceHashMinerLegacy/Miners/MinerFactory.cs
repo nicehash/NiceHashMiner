@@ -11,9 +11,7 @@ namespace NiceHashMiner.Miners
             switch (algorithm.MinerBaseType)
             {
                 case MinerBaseType.Claymore:
-                    return new ClaymoreDual(algorithm.SecondaryNiceHashID);
-                case MinerBaseType.Phoenix:
-                    return new Phoenix();
+                    return new ClaymoreDualOld(algorithm.SecondaryNiceHashID);
                 case MinerBaseType.PLUGIN:
                     return CreateMinerFromPlugin(algorithm);
             }

@@ -16,20 +16,24 @@ using System.Threading.Tasks;
 namespace MinerPluginToolkitV1.ClaymoreCommon
 {
 
-    public class ClaymoreBase : MinerBase
+    public abstract class ClaymoreBase : MinerBase
     {
-        private int _apiPort;
+        protected abstract override Tuple<string, string> GetBinAndCwdPaths();
+        public abstract override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
+
+        protected int _apiPort;
         protected readonly string _uuid;
 
+        // TODO rename first and second
         // this is second algorithm - if this is null only dagger is being mined
-        private AlgorithmType _algorithmSingleType;
-        private AlgorithmType _algorithmDualType;
+        public AlgorithmType _algorithmSingleType;
+        public AlgorithmType _algorithmDualType;
 
-        private string _devices;
-        private string _extraLaunchParameters = "";
+        public string _devices;
+        public string _extraLaunchParameters = "";
 
         // command line parts
-        private string _platform;
+        public string _platform;
 
         public ClaymoreBase(string uuid)
         {
@@ -69,11 +73,11 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             {
                 switch (_algorithmDualType)
                 {
-                    case AlgorithmType.DaggerDecred:
+                    case AlgorithmType.Decred:
                         return "dcr";
-                    case AlgorithmType.DaggerBlake2s:
+                    case AlgorithmType.Blake2s:
                         return "b2s";
-                    case AlgorithmType.DaggerKeccak:
+                    case AlgorithmType.Keccak:
                         return "kc";
                     default:
                         return "";
@@ -81,7 +85,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             }
         }
 
-        private double DevFee
+        public double DevFee
         {
             get
             {
@@ -89,7 +93,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             }
         }
 
-        private double DualDevFee
+        public double DualDevFee
         {
             get
             {
@@ -102,92 +106,6 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             return (_algorithmDualType != AlgorithmType.NONE);
         }
 
-        private class JsonApiResponse
-        {
-#pragma warning disable IDE1006 // Naming Styles
-            public List<string> result { get; set; }
-            public int id { get; set; }
-            public object error { get; set; }
-#pragma warning restore IDE1006 // Naming Styles
-        }
-
-        public async override Task<ApiData> GetMinerStatsDataAsync()
-        {
-            var ad = new ApiData();
-
-            JsonApiResponse resp = null;
-            try
-            {
-                var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"miner_getstat1\"}\n");
-                using (var client = new TcpClient("127.0.0.1", _apiPort))
-                using (var nwStream = client.GetStream())
-                {
-                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                    var bytesToRead = new byte[client.ReceiveBufferSize];
-                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                    resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr);
-                }
-                //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", respStr);
-                if (resp != null && resp.error == null)
-                {
-                    //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp != null && resp.error == null");
-                    if (resp.result != null && resp.result.Count > 4)
-                    {
-                        //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp.result != null && resp.result.Count > 4");
-                        var speeds = resp.result[3].Split(';');
-                        var secondarySpeeds = (IsDual()) ? resp.result[5].Split(';') : new string[0];
-                        var primarySpeed = 0d;
-                        var secondarySpeed = 0d;
-                        foreach (var speed in speeds)
-                        {
-                            //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "foreach (var speed in speeds) {");
-                            double tmpSpeed;
-                            try
-                            {
-                                tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
-                            }
-                            catch
-                            {
-                                tmpSpeed = 0;
-                            }
-
-                            primarySpeed += tmpSpeed;
-                        }
-
-                        foreach (var speed in secondarySpeeds)
-                        {
-                            double tmpSpeed;
-                            try
-                            {
-                                tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
-                            }
-                            catch
-                            {
-                                tmpSpeed = 0;
-                            }
-
-                            secondarySpeed += tmpSpeed;
-                        }
-                        var totalPrimary = new List<AlgorithmTypeSpeedPair>();
-                        var totalSecondary = new List<AlgorithmTypeSpeedPair>();
-                        totalPrimary.Add(new AlgorithmTypeSpeedPair(AlgorithmType.DaggerHashimoto, primarySpeed));
-                        totalSecondary.Add(new AlgorithmTypeSpeedPair(_algorithmDualType, secondarySpeed));
-
-                        ad.AlgorithmSpeedsTotal = totalPrimary;
-                        ad.AlgorithmSecondarySpeedsTotal = totalSecondary;
-                        //ad.Speed *= ApiReadMult;
-                        //ad.SecondarySpeed *= ApiReadMult;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //Helpers.ConsolePrint(MinerTag(), "GetSummary exception: " + ex.Message);
-            }
-            return ad;
-        }
-
         protected override void Init()
         {
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
@@ -195,7 +113,6 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
 
-            //doesn't work - will always return NONE
             var dualType = MinerToolkit.GetAlgorithmDualType(_miningPairs);
             _algorithmDualType = dualType.Item1;
             ok = dualType.Item2;
@@ -217,111 +134,19 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             }
         }
 
-        public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        {
-            var benchmarkTime = 90; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 90;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 180;
-                    break;
-            }
-
-            var commandLine = CreateCommandLine(MinerToolkit.DemoUser);
-            var binPathBinCwdPair = GetBinAndCwdPaths();
-            var binPath = binPathBinCwdPair.Item1;
-            var binCwd = binPathBinCwdPair.Item2;
-            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
-
-            var benchHashesFirst = 0d;
-            var benchIters = 0;
-            var benchHashResultFirst = 0d;
-            var benchHashesSecond = 0d;
-            var benchHashResultSecond = 0d;
-            //var afterSingle = $"{SingleAlgoName.ToUpper()} - Total Speed:";
-            var afterSingle = $"GPU{_devices}";
-            var afterDual = $"{DualAlgoName.ToUpper()} - Total Speed:";
-            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
-
-            bp.CheckData = (string data) =>
-            {
-                // if (_algorithmDualType == AlgorithmType.NONE)
-                // {
-                Console.WriteLine("Data za benchmark: ", data);
-                    var hashrateFoundPairFirst = data.TryGetHashrateAfter(afterSingle);
-                    var hashrateFirst = hashrateFoundPairFirst.Item1;
-                    var foundFirst = hashrateFoundPairFirst.Item2;
-                    benchHashesFirst += hashrateFirst;
-                    benchIters++;
-
-                    benchHashResultFirst = (benchHashesFirst / benchIters) * (1 - DevFee * 0.01);
-                    return new BenchmarkResult
-                    {
-                        AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmSingleType, benchHashResultFirst) },
-                        Success = benchIters >= targetBenchIters
-                    };
-                /*} else
-                {
-                    var hashrateFoundPairFirst = data.TryGetHashrateAfter(afterSingle);
-                    var hashrateFirst = hashrateFoundPairFirst.Item1;
-                    var foundFirst = hashrateFoundPairFirst.Item2;
-                    benchHashesFirst += hashrateFirst;
-                    benchIters++;
-
-                    benchHashResultFirst = (benchHashesFirst / benchIters) * (1 - DevFee * 0.01);
-
-                    var hashrateFoundPairSecond = data.TryGetHashrateAfter(afterDual);
-                    var hashrateSecond = hashrateFoundPairSecond.Item1;
-                    var foundSecond = hashrateFoundPairSecond.Item2;
-                    benchHashesSecond += hashrateSecond;
-                    benchIters++;
-
-                    benchHashResultSecond = (benchHashesSecond / benchIters) * (1 - DevFee * 0.01);
-                    return new BenchmarkResult
-                    {
-                        AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmSingleType, benchHashResultFirst), new AlgorithmTypeSpeedPair(_algorithmDualType, benchHashResultSecond) },
-                        Success = benchIters >= targetBenchIters
-                    };
-                }*/
-            };
-
-            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
-            var benchmarkWait = TimeSpan.FromMilliseconds(500);
-            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            return await t;
-        }
-
-        protected override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
-            var binPath = Path.Combine(pluginRootBins, "EthDcrMiner64.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
-        }
-
-        private string CreateCommandLine(string username)
+        public string CreateCommandLine(string username)
         {
             var urlFirst = StratumServiceHelpers.GetLocationUrl(_algorithmSingleType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var cmd = "";
             if (_algorithmDualType == AlgorithmType.NONE) //noDual
             {
-                //cmd = $"-di {_devices} -platform {_platform} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dbg -1 {_extraLaunchParameters} -wd 0";
                 cmd = $"-di {_devices} -platform {_platform} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dbg 1 {_extraLaunchParameters} -wd 0";
             }
             else
             {
                 var urlSecond = StratumServiceHelpers.GetLocationUrl(_algorithmDualType, _miningLocation, NhmConectionType.STRATUM_TCP);
                 cmd = $"-di {_devices} -platform {_platform} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dcoin {DualAlgoName} -dpool {urlSecond} -dwal {username} -dpsw x -dbg 1 {_extraLaunchParameters} -wd 0";
-                //cmd = $"-di {_devices} -platform {_platform} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dcoin {DualAlgoName} -dpool {urlSecond} -dwal {username} -dpsw x -dbg -1 {_extraLaunchParameters} -wd 0";
             }
-
             return cmd;
         }
 
@@ -330,5 +155,62 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
             return CreateCommandLine(_username) + $" -mport 127.0.0.1:-{_apiPort}";
         }
-    }
+
+        public static readonly MinerOptionsPackage DefaultMinerOptionsPackage = new MinerOptionsPackage
+        {
+            GeneralOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// Ethereum intensity. Default value is 8, you can decrease this value if you don't want Windows to freeze or if you have problems with stability. The most low GPU load is "-ethi 0".
+	            ///Also "-ethi" can set intensity for every card individually, for example "-ethi 1,8,6".
+                ///You can also specify negative values, for example, "-ethi -8192", it exactly means "global work size" parameter which is used in official miner.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_intensity_primary",
+                    ShortName = "-ethi",
+                    DefaultValue = "8",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// Decred/Siacoin/Lbry/Pascal intensity, or Ethereum fine-tuning value in ETH-only ASM mode. Default value is 30, you can adjust this value to get the best Decred/Siacoin/Lbry mining speed without reducing Ethereum mining speed. 
+	            ///You can also specify values for every card, for example "-dcri 30,100,50".
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_intensity_secondary",
+                    ShortName = "-dcri",
+                    DefaultValue = "30",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// low intensity mode. Reduces mining intensity, useful if your cards are overheated. Note that mining speed is reduced too. 
+	            /// More value means less heat and mining speed, for example, "-li 10" is less heat and mining speed than "-li 1". You can also specify values for every card, for example "-li 3,10,50".
+                /// Default value is "0" - no low intensity mode.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_lowIntensity",
+                    ShortName = "-li",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// set "1" to cancel my developer fee at all. In this mode some optimizations are disabled so mining speed will be slower by about 3%. 
+	            /// By enabling this mode, I will lose 100% of my earnings, you will lose only about 2% of your earnings.
+                /// So you have a choice: "fastest miner" or "completely free miner but a bit slower".
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_noFee",
+                    ShortName = "-nofee",
+                    DefaultValue = "0",
+                },
+            }
+        };
+     }
 }

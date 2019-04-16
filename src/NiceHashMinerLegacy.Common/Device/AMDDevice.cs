@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NiceHashMinerLegacy.Common.Device
 {
-    public class AMDDevice : BaseDevice
+    public class AMDDevice : BaseDevice, IGpuDevice
     {
         public AMDDevice(BaseDevice bd, int iPCIeBusID, ulong gpuRam, string codename, string infSection) : base(bd)
         {

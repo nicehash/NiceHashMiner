@@ -12,7 +12,7 @@ namespace NiceHashMinerLegacy.Tests.Miners
     [TestClass]
     public class PhoenixTest
     {
-        private class PhoenixDummy : Phoenix
+        private class PhoenixDummy : PhoenixOld
         {
             public string GetDevCmd() => GetDevicesCommandString();
         }

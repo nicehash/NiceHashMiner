@@ -12,9 +12,9 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners
 {
-    public class ClaymoreDual : ClaymoreBaseMiner
+    public class ClaymoreDualOld : ClaymoreBaseMiner
     {
-        public ClaymoreDual(AlgorithmType secondaryAlgorithmType)
+        public ClaymoreDualOld(AlgorithmType secondaryAlgorithmType)
             : base("ClaymoreDual")
         {
             IgnoreZero = true;
@@ -170,4 +170,4 @@ namespace NiceHashMiner.Miners
     }
 }
 #endif
-﻿
+

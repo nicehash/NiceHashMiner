@@ -16,6 +16,7 @@ using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
+using MinerPluginToolkitV1.ClaymoreCommon;
 
 namespace TTMiner
 {
@@ -25,8 +26,7 @@ namespace TTMiner
         private int _apiPort;
         private readonly string _uuid;
         private AlgorithmType _algorithmType;
-        //private readonly Dictionary<int, int> _cudaIDMap;
-        //private readonly HttpClient _http = new HttpClient();
+        protected List<MiningPair> _orderedMiningPairs = new List<MiningPair>();
 
         private string _devices;
         private string _extraLaunchParameters = "";
@@ -146,7 +146,7 @@ namespace TTMiner
             return cmd;
         }
 
-        public override async Task<ApiData> GetMinerStatsDataAsync()
+        public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var api = new ApiData();
             var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
@@ -154,67 +154,10 @@ namespace TTMiner
             {
                 return api;
             }
-            JsonApiResponse resp = null;
-            try
-            {
-                var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"miner_getstat1\"}\n");
-                using (var client = new TcpClient("127.0.0.1", _apiPort))
-                using (var nwStream = client.GetStream())
-                {
-                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                    var bytesToRead = new byte[client.ReceiveBufferSize];
-                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                    //Helpers.ConsolePrint(MinerTag(), "respStr: " + respStr);
-                    resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr);
-                    // TODO
-                    //api.AlgorithmSpeedsTotal = new[] { (_algorithmType, resp.TotalHashrate ?? 0) };
-                    if (resp != null && resp.error == null)
-                    {
-                        //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp != null && resp.error == null");
-                        if (resp.result != null && resp.result.Count > 4)
-                        {
-                            var speeds = resp.result[3].Split(';');
-                            var totalSpeed = 0d;
-                            foreach (var speed in speeds)
-                            {
-                                //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "foreach (var speed in speeds) {");
-                                double tmpSpeed;
-                                try
-                                {
-                                    tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
-                                }
-                                catch
-                                {
-                                    tmpSpeed = 0;
-                                }
 
-                                totalSpeed += tmpSpeed;
-                            }
-                            api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
-
-                        }
-
-                        //if (ad.Speed == 0)
-                        //{
-                        //    CurrentMinerReadStatus = MinerApiReadStatus.READ_SPEED_ZERO;
-                        //}
-
-                        ////// some clayomre miners have this issue reporting negative speeds in that case restart miner
-                        ////if (ad.Speed < 0)
-                        ////{
-                        ////    Helpers.ConsolePrint(MinerTag(), "Reporting negative speeds will restart...");
-                        ////    Restart();
-                        ////}
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //Helpers.ConsolePrint(MinerTag(), "GetSummary exception: " + ex.Message);
-            }
-
-            return api;
+            var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
+            var algorithmTypes = new AlgorithmType[] { _algorithmType };
+            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, algorithmTypes);
         }
 
         protected override void Init()
@@ -225,14 +168,14 @@ namespace TTMiner
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
 
             // Order pairs and parse ELP
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(" ", orderedMiningPairs.Select(p => p.Device.ID));
+            _orderedMiningPairs = _miningPairs.ToList();
+            _orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            _devices = string.Join(" ", _orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var generalParams = Parser.Parse(_orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(_orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }
