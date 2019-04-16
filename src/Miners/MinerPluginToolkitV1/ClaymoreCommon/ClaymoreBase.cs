@@ -21,9 +21,10 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
         protected abstract override Tuple<string, string> GetBinAndCwdPaths();
         public abstract override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
 
-        private int _apiPort;
+        protected int _apiPort;
         protected readonly string _uuid;
 
+        // TODO rename first and second
         // this is second algorithm - if this is null only dagger is being mined
         public AlgorithmType _algorithmSingleType;
         public AlgorithmType _algorithmDualType;
@@ -103,92 +104,6 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
         public bool IsDual()
         {
             return (_algorithmDualType != AlgorithmType.NONE);
-        }
-
-        private class JsonApiResponse
-        {
-#pragma warning disable IDE1006 // Naming Styles
-            public List<string> result { get; set; }
-            public int id { get; set; }
-            public object error { get; set; }
-#pragma warning restore IDE1006 // Naming Styles
-        }
-
-        public async override Task<ApiData> GetMinerStatsDataAsync()
-        {
-            var ad = new ApiData();
-
-            JsonApiResponse resp = null;
-            try
-            {
-                var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":0,\"jsonrpc\":\"2.0\",\"method\":\"miner_getstat1\"}\n");
-                using (var client = new TcpClient("127.0.0.1", _apiPort))
-                using (var nwStream = client.GetStream())
-                {
-                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                    var bytesToRead = new byte[client.ReceiveBufferSize];
-                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                    resp = JsonConvert.DeserializeObject<JsonApiResponse>(respStr);
-                }
-                //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", respStr);
-                if (resp != null && resp.error == null)
-                {
-                    //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp != null && resp.error == null");
-                    if (resp.result != null && resp.result.Count > 4)
-                    {
-                        //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "resp.result != null && resp.result.Count > 4");
-                        var speeds = resp.result[3].Split(';');
-                        var secondarySpeeds = (IsDual()) ? resp.result[5].Split(';') : new string[0];
-                        var primarySpeed = 0d;
-                        var secondarySpeed = 0d;
-                        foreach (var speed in speeds)
-                        {
-                            //Helpers.ConsolePrint("ClaymoreZcashMiner API back:", "foreach (var speed in speeds) {");
-                            double tmpSpeed;
-                            try
-                            {
-                                tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
-                            }
-                            catch
-                            {
-                                tmpSpeed = 0;
-                            }
-
-                            primarySpeed += tmpSpeed;
-                        }
-
-                        foreach (var speed in secondarySpeeds)
-                        {
-                            double tmpSpeed;
-                            try
-                            {
-                                tmpSpeed = double.Parse(speed, CultureInfo.InvariantCulture);
-                            }
-                            catch
-                            {
-                                tmpSpeed = 0;
-                            }
-
-                            secondarySpeed += tmpSpeed;
-                        }
-                        var totalPrimary = new List<AlgorithmTypeSpeedPair>();
-                        var totalSecondary = new List<AlgorithmTypeSpeedPair>();
-                        totalPrimary.Add(new AlgorithmTypeSpeedPair(AlgorithmType.DaggerHashimoto, primarySpeed));
-                        totalSecondary.Add(new AlgorithmTypeSpeedPair(_algorithmDualType, secondarySpeed));
-
-                        ad.AlgorithmSpeedsTotal = totalPrimary;
-                        //ad.AlgorithmSecondarySpeedsTotal = totalSecondary;
-                        //ad.Speed *= ApiReadMult;
-                        //ad.SecondarySpeed *= ApiReadMult;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                //Helpers.ConsolePrint(MinerTag(), "GetSummary exception: " + ex.Message);
-            }
-            return ad;
         }
 
         protected override void Init()

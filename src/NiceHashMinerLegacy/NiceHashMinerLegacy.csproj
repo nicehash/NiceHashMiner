@@ -196,9 +196,6 @@
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerAlexisIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX16RIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\ClaymoreIntegrated\ClaymoreIntegratedMiner.cs" />
-    <Compile Include="Miners\IntegratedPlugins\ClaymoreIntegrated\ClaymoreIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\ClaymoreIntegrated\ClaymorePluginBase.cs" />
     <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />

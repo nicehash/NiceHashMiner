@@ -18,7 +18,8 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         {
             return new PhoenixIntegratedMiner(PluginUUID, _mappedIDs)
             {
-                MinerOptionsPackage = _minerOptionsPackage
+                MinerOptionsPackage = _minerOptionsPackage,
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
             };
         }
     }

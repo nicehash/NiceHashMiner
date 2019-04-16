@@ -87,20 +87,20 @@ namespace NiceHashMiner.Devices.Algorithms
             return algos;
         }
 
-        // NVIDIA and AMD
-        private static List<Algorithm> PhoenixAlgorithmsForDevice(ComputeDevice dev)
-        {
-            if (dev.DeviceType == DeviceType.CPU) return null;
-            // SM5.0+
-            if (dev is CudaComputeDevice cudaDev && cudaDev.SMMajor < 5) return null;
+        //// NVIDIA and AMD
+        //private static List<Algorithm> PhoenixAlgorithmsForDevice(ComputeDevice dev)
+        //{
+        //    if (dev.DeviceType == DeviceType.CPU) return null;
+        //    // SM5.0+
+        //    if (dev is CudaComputeDevice cudaDev && cudaDev.SMMajor < 5) return null;
 
-            var algos = new List<Algorithm> {
-                new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto)
-            };
-            // filter RAM requirements
-            algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
-            return algos;
-        }
+        //    var algos = new List<Algorithm> {
+        //        new Algorithm(MinerBaseType.Phoenix, AlgorithmType.DaggerHashimoto)
+        //    };
+        //    // filter RAM requirements
+        //    algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
+        //    return algos;
+        //}
 
         //// NVIDIA and AMD
         //private static List<Algorithm> GMinerAlgorithmsForDevice(ComputeDevice dev)
@@ -380,7 +380,7 @@ namespace NiceHashMiner.Devices.Algorithms
         private static IReadOnlyList<AlgorithmsForDevice> algorithmsDelegates3rdParty = new List<AlgorithmsForDevice>
         {
             ClaymoreDualAlgorithmsForDevice,
-            PhoenixAlgorithmsForDevice,
+            //PhoenixAlgorithmsForDevice,
             //GMinerAlgorithmsForDevice,
             //EWBFAlgorithmsForDevice,
             //trexAlgorithmsForDevice,
