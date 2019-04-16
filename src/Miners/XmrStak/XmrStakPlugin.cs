@@ -172,7 +172,20 @@ namespace XmrStak
         };
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
-        {};
+        {
+            GeneralOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// Directory to store AMD binary files
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "xmrstak_amdCacheDir",
+                    ShortName = "--amdCacheDir",
+                },
+            }
+        };
         #endregion Internal settings
 
 

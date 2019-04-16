@@ -59,7 +59,8 @@ namespace TTMiner
         {
             return new TTMiner(PluginUUID)
             {
-                MinerOptionsPackage = _minerOptionsPackage
+                MinerOptionsPackage = _minerOptionsPackage,
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
             };
         }
 
@@ -73,11 +74,14 @@ namespace TTMiner
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+
+            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
+            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
+
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        // 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
         {
             GeneralOptions = new List<MinerOption>
@@ -116,8 +120,35 @@ namespace TTMiner
                     DefaultValue = "-1",
                     Delimiter = ","
                 },
+                /// <summary>
+                /// Enable logging of screen output and additional information, the file is created in the folder 'Logs'.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "ttminer_log",
+                    ShortName = "-log",
+                },
+                /// <summary>
+                /// This option set the process priority for TT-Miner to a different level:
+                /// 1 low
+                /// 2 below normal
+                /// 3 normal
+                /// 4 above normal
+                /// 5 high
+                /// Default: -PP 3
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ttminer_processPriority",
+                    ShortName = "-PP",
+                    DefaultValue = "3"
+                }
             }
         };
+
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
     }
 }

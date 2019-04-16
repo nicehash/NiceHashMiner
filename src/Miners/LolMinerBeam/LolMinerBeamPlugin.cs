@@ -65,7 +65,8 @@ namespace LolMinerBeam
         {
             return new LolMinerBeam(PluginUUID)
             {
-                MinerOptionsPackage = _minerOptionsPackage
+                MinerOptionsPackage = _minerOptionsPackage,
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
             };
         }
 
@@ -78,11 +79,52 @@ namespace LolMinerBeam
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+
+            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
+            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
+
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
 
-        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage { };
+        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage {
+            GeneralOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// When setting this parameter to 1, lolMiner will replace the “submitting share / share accepted” message pair by * symbols at the short statistics interval output.
+                /// Every star stands for an accepted share.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_compactNotification",
+                    ShortName = "--shortaccept",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// This parameter can be used to fix the sol/s output of a GPU to a fixed number of digits after the decimal delimiter.
+                /// For example “DIGITS” : 0 will chop of all digits after the decimal delimiter. 
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_decimalDigits",
+                    ShortName = "--digits",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// This parameter can be used to set a new location for the kernel directory. Absolute path are allowed, so you can freely place it when needed.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "lolMiner_kernelsLocation",
+                    ShortName = "--kernelsdir",
+                    DefaultValue = "./kernels"
+                }
+            }
+        };
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
     }
 }

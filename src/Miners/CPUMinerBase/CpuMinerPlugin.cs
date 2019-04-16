@@ -38,7 +38,8 @@ namespace CPUMinerBase
 
         public IMiner CreateMiner() => new CpuMiner(PluginUUID)
         {
-            MinerOptionsPackage = _minerOptionsPackage
+            MinerOptionsPackage = _minerOptionsPackage,
+            MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
         };
 
         
@@ -66,6 +67,10 @@ namespace CPUMinerBase
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+
+            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
+            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
+
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
@@ -106,6 +111,8 @@ namespace CPUMinerBase
                 }
             }
         };
+
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
     }
 }

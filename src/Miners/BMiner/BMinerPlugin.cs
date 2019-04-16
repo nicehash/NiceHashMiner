@@ -82,7 +82,8 @@ namespace BMiner
         {
             return new BMiner(PluginUUID)
             {
-                MinerOptionsPackage = _minerOptionsPackage
+                MinerOptionsPackage = _minerOptionsPackage,
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
             };
         }
 
@@ -95,6 +96,10 @@ namespace BMiner
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+
+            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
+            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
+
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
@@ -104,6 +109,16 @@ namespace BMiner
             GeneralOptions = new List<MinerOption>
             {
                 /// <summary>
+                /// The sub-solver for dual mining. Valid values are 0, 1, 2, 3. Default is -1, which is to tune automatically. (default -1)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "bminer_dual_subsolver",
+                    ShortName = "-dual-subsolver",
+                    DefaultValue = "-1"
+                },
+                /// <summary>
                 /// The intensity of the CPU for grin/AE mining. Valid values are 0 to 12. Higher intensity may give better performance but more CPU usage. (default 6)
                 /// </summary>
                 new MinerOption
@@ -111,7 +126,16 @@ namespace BMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "bminer_cpu_intensity",
                     ShortName = "-intensity",
-                    DefaultValue = "6",
+                    DefaultValue = "6"
+                },
+                /// <summary>
+                /// Append the logs to the file <path>.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "bminer_logfile",
+                    ShortName = "-logfile"
                 },
                 /// <summary>
                 /// Disable the devfee but it also disables some optimizations.
@@ -120,7 +144,17 @@ namespace BMiner
                 {
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "bminer_nofee",
-                    ShortName = "-nofee",
+                    ShortName = "-nofee"
+                },
+                /// <summary>
+                /// Personalization string for equihash 144,5 based coins. Default: BgoldPoW. Valid values include BitcoinZ, Safecoin, ZelProof, etc. (default "BgoldPoW")
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "bminer_pers",
+                    ShortName = "-pers",
+                    DefaultValue = "BgoldPoW"
                 }
             },
             TemperatureOptions = new List<MinerOption>{
@@ -132,10 +166,12 @@ namespace BMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "bminer_max_temp",
                     ShortName = "-max-temperature",
-                    DefaultValue = "85",
+                    DefaultValue = "85"
                 }
             }
         };
+
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables{};
         #endregion Internal settings
     }
 }
