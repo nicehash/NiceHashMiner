@@ -35,16 +35,13 @@ namespace MinerPluginToolkitV1
             return Tuple.Create(AlgorithmType.NONE, false);
         }
 
-        //TODO doesn't work - will always return NONE since mps only returns 1 algorithm - this has to be fixed in Plugin (GetSupportedAlgorithms)??
         public static Tuple<AlgorithmType, bool> GetAlgorithmDualType(this IEnumerable<MiningPair> mps)
         {
+            if (mps.Select(pair => pair.Algorithm.IDs.Count).ToList()[0] == 1) return Tuple.Create(AlgorithmType.NONE, false);
+
             var algorithmTypes = mps.Select(pair => pair.Algorithm.IDs.Last());
             var mustIncludeDual = new HashSet<AlgorithmType>(algorithmTypes);
-            if (mustIncludeDual.Count == 1)
-            {
-                return Tuple.Create(mustIncludeDual.First(), true);
-            }
-            return Tuple.Create(AlgorithmType.NONE, false);
+            return Tuple.Create(mustIncludeDual.First(), true);
         }
 
         public static IEnumerable<string> GetDevicesIDsInOrder(this IEnumerable<MiningPair> mps)

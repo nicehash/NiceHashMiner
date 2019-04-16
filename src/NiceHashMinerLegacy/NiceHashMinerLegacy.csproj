@@ -77,6 +77,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="SharpCompress, Version=0.23.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpCompress.0.23.0\lib\net45\SharpCompress.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -193,6 +196,9 @@
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerAlexisIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX16RIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\ClaymoreIntegrated\ClaymoreIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\ClaymoreIntegrated\ClaymoreIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\ClaymoreIntegrated\ClaymorePluginBase.cs" />
     <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
@@ -201,6 +207,8 @@
     <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\PhoenixIntegrated\PhoenixIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\PhoenixIntegrated\PhoenixIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerGMIntegratedMiner.cs" />
@@ -222,12 +230,12 @@
     <Compile Include="MinersDownloader\ProgressState.cs" />
     <Compile Include="Miners\EthlargementOld.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
-    <Compile Include="Miners\Phoenix.cs" />
+    <Compile Include="Miners\PhoenixOld.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
     <Compile Include="Plugin\PluginPackageInfo.cs" />
     <Compile Include="Plugin\PluginPackageInfoCR.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
-    <Compile Include="Miners\ClaymoreDual.cs" />
+    <Compile Include="Miners\ClaymoreDualOld.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats.cs" />
     <Compile Include="Stats\WindowsManagementObjectSearcher.cs" />
@@ -533,6 +541,10 @@
     <ProjectReference Include="..\Miners\NBMiner\NBMiner.csproj">
       <Project>{a4b0cdcb-d1d7-4563-9888-d58e0b36d0f8}</Project>
       <Name>NBMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\Phoenix\Phoenix.csproj">
+      <Project>{f0f31c63-c7ef-4945-aefd-62c69f430e48}</Project>
+      <Name>Phoenix</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj">
       <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>
