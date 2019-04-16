@@ -1,13 +1,9 @@
 ﻿using NiceHashMiner.Devices;
-using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace MinerDeviceDetection
@@ -58,31 +54,6 @@ namespace MinerDeviceDetection
             return output;
         }
 
-        static string MinerErrorOutput(string path, string arguments)
-        {
-            string output = "";
-            try
-            {
-                Process getDevices = new Process
-                {
-                    StartInfo ={
-                                FileName = path,
-                                Arguments = arguments,
-                                UseShellExecute = false,
-                                RedirectStandardError = true
-                }
-                };
-                getDevices.Start();
-                output = getDevices.StandardError.ReadToEnd();
-                getDevices.WaitForExit();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception: " + e);
-            }
-            return output;
-        }
-
         private static async Task QueryDevices()
         {
             await ComputeDeviceManager.QueryDevicesAsync(null, true);
@@ -100,14 +71,14 @@ namespace MinerDeviceDetection
             }
             var devices = AvailableDevices.Devices;
 
-            List<BaseDevice> baseDevices = new List<BaseDevice>();
+            var baseDevices = new List<BaseDevice>();
 
             foreach (var dev in devices)
             {
                 baseDevices.Add(dev.PluginDevice);
             }
 
-            List<string> binPaths = new List<string>() { "bin", "bin_3rdparty" };
+            var binPaths = new List<string>() { "bin", "bin_3rdparty" };
             var binData = new Dictionary<string, string>();
             foreach (var path in binPaths)
             {
@@ -117,8 +88,8 @@ namespace MinerDeviceDetection
                     binData.Add(minerData.Key, minerData.Value);
                 }
             }
-            Dictionary<string, string> minerDeviceDetection = new Dictionary<string, string>();
-            Dictionary<string, string> goodMiners = new Dictionary<string, string>() { {"avemore"/*sgminer*/, "--ndevs" }, {"sgminer-gm", "--ndevs" },{"sgminer-5-6-0-general", "--ndevs" },{ "gminer", "--list_devices" }, {"nbminer", "--device-info" }, {"phoenix", "-list" }, { "teamredminer", "--list_devices"}, { "ttminer", "-list"} };
+            var minerDeviceDetection = new Dictionary<string, string>();
+            var goodMiners = new Dictionary<string, string>() { {"avemore"/*sgminer*/, "--ndevs" }, {"sgminer-gm", "--ndevs" },{"sgminer-5-6-0-general", "--ndevs" },{ "gminer", "--list_devices" }, {"nbminer", "--device-info-json" }, {"phoenix", "-list" }, { "teamredminer", "--list_devices"}, { "ttminer", "-list"} };
             if (File.Exists("outTest.txt"))
             {
                 File.Delete("outTest.txt");
@@ -157,8 +128,7 @@ namespace MinerDeviceDetection
                                     break;
                                 case "nbminer":
                                     mappedMinersFile.WriteLine("NBMiner");
-                                    var errOutput = MinerErrorOutput(bin.Value, miner.Value);
-                                    mappedDevices = OutputParsers.ParseNBMinerOutput(errOutput, baseDevices);
+                                    mappedDevices = OutputParsers.ParseNBMinerOutput(output, baseDevices);
                                     foreach (var device in baseDevices)
                                     {
                                         foreach (var tmpDev in mappedDevices)
