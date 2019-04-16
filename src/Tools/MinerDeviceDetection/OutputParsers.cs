@@ -1,4 +1,5 @@
-﻿using NiceHashMinerLegacy.Common.Device;
+﻿using Newtonsoft.Json;
+using NiceHashMinerLegacy.Common.Device;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -143,6 +144,21 @@ namespace MinerDeviceDetection
             return mappedDevices;
         }
 
+        public class Device
+        {
+            public int cc_major { get; set; }
+            public int cc_minor { get; set; }
+            public int cuda_id { get; set; }
+            public object memory { get; set; }
+            public string name { get; set; }
+            public int pci_bus_id { get; set; }
+        }
+
+        public class NbMinerDevices
+        {
+            public List<Device> devices { get; set; }
+        }
+
         public static Dictionary<string, int> ParseNBMinerOutput(string output, List<BaseDevice> baseDevices)
         {
             var cudaGpus = baseDevices.Where(dev => dev is CUDADevice).Cast<CUDADevice>();
@@ -152,23 +168,16 @@ namespace MinerDeviceDetection
             {
                 return mappedDevices;
             }
-            var lines = output.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            if (lines.Count() != 0)
+
+            var parsedOutput = JsonConvert.DeserializeObject<NbMinerDevices>(output);
+            foreach(var device in parsedOutput.devices)
             {
-                foreach (var line in lines)
+                foreach(var gpu in cudaGpus)
                 {
-                    if (line.Substring(0, 4).Any(c => char.IsDigit(c))) //if the ID is digit then we know there is gpu data in that line
+                    if(gpu.PCIeBusID == device.pci_bus_id)
                     {
-                        var gpuName = line.Substring(line.LastIndexOf('|')).Remove(0, 2);
-                        var index = line.Substring(0,4).Replace("|", "");
-                        foreach (var gpu in cudaGpus)
-                        {
-                            if (gpu.Name == gpuName)
-                            {
-                                mappedDevices.Add(gpu.UUID, Convert.ToInt32(index));
-                                break;
-                            }
-                        }
+                        mappedDevices.Add(gpu.UUID, device.cuda_id);
+                        break;
                     }
                 }
             }
