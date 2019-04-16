@@ -1,19 +1,20 @@
 ﻿// PRODUCTION
 #if !(TESTNET || TESTNETDEV)
+using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Benchmarking.BenchHelpers;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
-using System.Collections.Generic;
-using System.Threading;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
-using MinerPlugin;
-using System.Threading.Tasks;
-using System;
-using MiningPair = NiceHashMiner.Miners.Grouping.MiningPair;
+using NiceHashMiner.Plugin;
+using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Benchmarking
 {
@@ -28,9 +29,6 @@ namespace NiceHashMiner.Benchmarking
         private readonly IBenchmarkForm _benchmarkForm;
         private readonly BenchmarkPerformanceType _performanceType;
 
-
-        //private ClaymoreZcashBenchHelper _claymoreZcashStatus;
-        //private CpuBenchHelper _cpuBenchmarkStatus;
         private PowerHelper _powerHelper;
 
         public BenchmarkHandler(ComputeDevice device, Queue<Algorithm> algorithms, IBenchmarkForm form,
@@ -92,6 +90,10 @@ namespace NiceHashMiner.Benchmarking
             if (algo is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled && dualAlgo.StartTuning())
             {
                 await BenchmarkAlgorithmDual(currentMiner, dualAlgo);
+            }
+            else if (algo is PluginAlgorithm pAlgo)
+            {
+                await BenchmarkPluginAlgorithm(pAlgo);
             }
             else
             {
@@ -156,6 +158,42 @@ namespace NiceHashMiner.Benchmarking
             {
                 dualAlgo.ClearBenchmarkPending();
                 _benchmarkForm.SetCurrentStatus(Device, dualAlgo, "");
+            }
+        }
+
+        private async Task BenchmarkPluginAlgorithm(PluginAlgorithm algo)
+        {
+            var plugin = MinerPluginsManager.GetPluginWithUuid(algo.BaseAlgo.MinerID);
+            var miner = plugin.CreateMiner();
+            var miningPair = new MinerPlugin.MiningPair
+            {
+                Device = Device.PluginDevice,
+                Algorithm = algo.BaseAlgo
+            };
+            miner.InitMiningPairs(new List<MinerPlugin.MiningPair> { miningPair });
+            // fill service since the benchmark might be online. DemoUser.BTC must be used
+            miner.InitMiningLocationAndUsername(Globals.MiningLocation[ConfigManager.GeneralConfig.ServiceLocation], DemoUser.BTC);
+            _powerHelper.Start();
+            var result = await miner.StartBenchmark(_stopBenchmark.Token, _performanceType);
+            var power = _powerHelper.Stop();
+            if (result.Success || result.AlgorithmTypeSpeeds?.Count > 0)
+            {
+                algo.BenchmarkSpeed = result.AlgorithmTypeSpeeds.First().Speed;
+                algo.PowerUsage = power;
+                if (result.AlgorithmTypeSpeeds.Count > 1)
+                {
+                    Helpers.ConsolePrint("BenchmarkHandler2", $"Has Second speed {result.AlgorithmTypeSpeeds[1].Speed}");
+
+                }
+                // set status to empty string it will return speed
+                algo.ClearBenchmarkPending();
+                _benchmarkForm.SetCurrentStatus(Device, algo, "");
+            }
+            else
+            {
+                // add new failed list
+                _benchmarkFailedAlgo.Add(algo.AlgorithmName);
+                _benchmarkForm.SetCurrentStatus(Device, algo, result.ErrorMessage);
             }
         }
 

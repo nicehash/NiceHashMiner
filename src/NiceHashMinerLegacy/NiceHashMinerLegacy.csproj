@@ -119,7 +119,6 @@
     <Compile Include="Benchmarking\BenchmarkChecker.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler_testnet.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler_production.cs" />
-    <Compile Include="Benchmarking\BenchmarkHandler2.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
     <Compile Include="Benchmarking\BenchmarkTimes.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
