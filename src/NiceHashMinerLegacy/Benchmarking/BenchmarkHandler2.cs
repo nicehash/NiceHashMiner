@@ -65,7 +65,7 @@ namespace NiceHashMiner.Benchmarking
             thread.Start();
         }
 
-        private async void Benchmark()
+        private async Task Benchmark()
         {
             while (_benchmarkAlgorithmQueue.Count > 0)
             {

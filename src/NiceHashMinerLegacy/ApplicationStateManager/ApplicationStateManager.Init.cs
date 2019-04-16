@@ -24,7 +24,7 @@ namespace NiceHashMiner
         }
 
         // TODO add init stuff here
-        public static async void InitializeManagersAndMiners()
+        public static async Task InitializeManagersAndMiners()
         {
             var initSteps = new List<ActionWithMessage>();
         }
