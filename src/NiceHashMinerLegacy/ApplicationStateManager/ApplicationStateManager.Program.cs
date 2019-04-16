@@ -1,6 +1,7 @@
 // SHARED
 using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Utils;
+using NiceHashMiner.Stats;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
