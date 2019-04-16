@@ -39,7 +39,8 @@ namespace GMinerPlugin
         {
             return new GMiner(PluginUUID)
             {
-                MinerOptionsPackage = _minerOptionsPackage
+                MinerOptionsPackage = _minerOptionsPackage,
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
             };
         }
 
@@ -143,6 +144,10 @@ namespace GMinerPlugin
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+
+            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
+            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
+
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
@@ -151,6 +156,18 @@ namespace GMinerPlugin
         {
             GeneralOptions = new List<MinerOption>
             {
+                /// <summary>
+                /// personalization string for equihash algorithm (for example: 'BgoldPoW', 'BitcoinZ', 'Safecoin')
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_pers",
+                    LongName = "--pers",
+                },
+                /// <summary>
+                /// enable/disable power efficiency calculator. Power efficiency calculator display of energy efficiency statistics of GPU in S/w, higher CPU load. Default value is '1' ('0' - off or '1' - on)
+                /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
@@ -158,6 +175,9 @@ namespace GMinerPlugin
                     LongName = "--pec",
                     DefaultValue = "1"
                 },
+                /// <summary>
+                /// pass cost of electricity in USD per kWh, miner will report $ spent to mining
+                /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
@@ -166,6 +186,9 @@ namespace GMinerPlugin
                 }
             },
             TemperatureOptions = new List<MinerOption>{
+                /// <summary>
+                /// space-separated list of temperature limits, upon reaching the limit, the GPU stops mining until it cools down, can be empty (for example: '85 80 75')
+                /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithMultipleParameters,
@@ -177,6 +200,8 @@ namespace GMinerPlugin
                 }
             }
         };
+
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
     }
 }

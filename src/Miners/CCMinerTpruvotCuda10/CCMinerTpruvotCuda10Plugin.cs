@@ -32,7 +32,8 @@ namespace CCMinerTpruvotCuda10
         {
             return new CCMinerTpruvotCuda10Miner(PluginUUID)
             {
-                MinerOptionsPackage = _minerOptionsPackage
+                MinerOptionsPackage = _minerOptionsPackage,
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
             };
         }
 
@@ -63,15 +64,8 @@ namespace CCMinerTpruvotCuda10
         {
             return new List<Algorithm>{
                 new Algorithm(PluginUUID, AlgorithmType.NeoScrypt),
-                //new Algorithm(PluginUUID, AlgorithmType.Lyra2REv2_UNUSED),
-                //new Algorithm(PluginUUID, AlgorithmType.Decred),
-                //new Algorithm(PluginUUID, AlgorithmType.Lbry_UNUSED),
-                //new Algorithm(PluginUUID, AlgorithmType.X11Gost_UNUSED),
-                //new Algorithm(PluginUUID, AlgorithmType.Blake2s),
-                //new Algorithm(PluginUUID, AlgorithmType.Sia_UNUSED),
                 new Algorithm(PluginUUID, AlgorithmType.Keccak),
                 new Algorithm(PluginUUID, AlgorithmType.Skunk),
-                //new Algorithm(PluginUUID, AlgorithmType.Lyra2z_UNUSED),
                 new Algorithm(PluginUUID, AlgorithmType.X16R),
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
             };
@@ -90,6 +84,10 @@ namespace CCMinerTpruvotCuda10
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+
+            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
+            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
+
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
@@ -147,9 +145,52 @@ namespace CCMinerTpruvotCuda10
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "ccminertpruvot_affinity",
                     ShortName = "--cpu-affinity",
+                },
+                /// <summary>
+                /// will force the Geforce 9xx to run in P0 P-State
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ccminertpruvot_pstate",
+                    ShortName = "--pstate=",
+                    DefaultValue = "0",
+                },
+                /// <summary>
+                /// set the gpu power limit, allow multiple values for N cards. On windows this parameter use percentages (like OC tools)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ccminertpruvot_plimit",
+                    ShortName = "--plimit=",
+                }
+            },
+            TemperatureOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// Only mine if gpu temp is less than specified value
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ccminertpruvot_max_temp",
+                    ShortName = "--max-temp=",
+                },
+                /// <summary>
+                /// Set the gpu thermal limit (windows only)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ccminertpruvot_tlimit",
+                    ShortName = "--tlimit=",
+                    DefaultValue = "85"
                 }
             }
         };
+
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
     }
 }

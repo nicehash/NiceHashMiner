@@ -87,7 +87,8 @@ namespace NBMiner
         {
             return new NBMiner(PluginUUID, _mappedCudaIDs)
             {
-                MinerOptionsPackage = _minerOptionsPackage
+                MinerOptionsPackage = _minerOptionsPackage,
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
             };
         }
 
@@ -100,6 +101,10 @@ namespace NBMiner
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+
+            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
+            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
+
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
@@ -107,15 +112,50 @@ namespace NBMiner
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
         {
             GeneralOptions = new List<MinerOption> { 
+                /// <summary>
+                /// Set intensity of cuckoo, cuckaroo, cuckatoo, [1, 12]. Smaller value means higher CPU usage to gain more hashrate. Set to 0 means autumatically adapt. Default: 0.
+                /// </summary>
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "nbminer_intensity",
                     LongName = "--cuckoo-intensity",
                     DefaultValue = "0"
+                },
+                /// <summary>
+                /// Set this option to reduce the range of power consumed by rig when minining with algo cuckatoo.
+                /// This feature can reduce the chance of power supply shutdown caused by overpowered.
+                /// Warning: Setting this option may cause drop on minining performance.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "nbminer_powerOptimize",
+                    LongName = "--cuckatoo-power-optimize",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// Generate log file named `log_<timestamp>.txt`.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "nbminer_log",
+                    LongName = "--log"
+                },
+                /// <summary>
+                /// Use 'yyyy-MM-dd HH:mm:ss,zzz' for log time format.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "nbminer_longTimeFormat",
+                    LongName = "--long-format"
                 }
             }
         };
+
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
     }
 }
