@@ -7,7 +7,7 @@ using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NiceHashMiner.Stats
+namespace NiceHashMiner.Utils
 {
     static class WindowsManagementObjectSearcher
     {

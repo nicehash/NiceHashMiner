@@ -2,7 +2,7 @@
 using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Devices.Querying.Amd;
 using NiceHashMiner.Devices.Querying.Nvidia;
-using NiceHashMiner.Stats;
+using NiceHashMiner.Utils;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Linq;

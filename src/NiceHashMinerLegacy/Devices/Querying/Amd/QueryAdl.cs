@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using ATI.ADL;
-using NiceHashMiner.Stats;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {

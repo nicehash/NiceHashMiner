@@ -337,7 +337,7 @@
     <Compile Include="Stats\StatusCodes.cs" />
     <Compile Include="Stats\TimeFactor.cs" />
     <Compile Include="StratumService.cs" />
-    <Compile Include="Stats\WindowsManagementObjectSearcher.cs" />
+    <Compile Include="Utils\WindowsManagementObjectSearcher.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
     <Compile Include="Switching\Interval.cs" />

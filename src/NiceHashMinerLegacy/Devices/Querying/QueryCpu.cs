@@ -1,4 +1,4 @@
-﻿using NiceHashMiner.Stats;
+﻿using NiceHashMiner.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
