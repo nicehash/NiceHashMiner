@@ -932,7 +932,7 @@ namespace NiceHashMiner
             if (!VerifyMiningAddress(true)) return;
 
             //in testnet there is no option to see stats without logging in
-            #if DEBUG
+            #if TESTNET || TESTNETDEV
             Process.Start(Links.CheckStats);
             #else
             Process.Start(Links.CheckStats + textBoxBTCAddress.Text.Trim());
