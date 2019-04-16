@@ -50,7 +50,8 @@ namespace ZEnemy
         {
             return new ZEnemy(PluginUUID)
             {
-                MinerOptionsPackage = _minerOptionsPackage
+                MinerOptionsPackage = _minerOptionsPackage,
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
             };
         }
 
@@ -63,6 +64,10 @@ namespace ZEnemy
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+
+            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
+            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
+
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
@@ -84,6 +89,19 @@ namespace ZEnemy
                     Delimiter = ","
                 },
                 /// <summary>
+                /// set CUDA scheduling option:
+                /// 0: BlockingSync (default)
+                /// 1: Spin
+                /// 2: Yield
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "zenemy_cudaSchedula",
+                    LongName = "--cuda-schedule",
+                    DefaultValue = "0",
+                },
+                /// <summary>
                 /// set process priority (default: 3) 0 idle, 2 normal to 5 highest
                 /// </summary>
                 new MinerOption
@@ -103,8 +121,32 @@ namespace ZEnemy
                     ID = "zenemy_affinity",
                     ShortName = "--cpu-affinity",
                 }
+            },
+            TemperatureOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// Only mine if gpu temperature is less than specified value
+                /// Can be tuned with --resume-temp=N to set a resume value
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "zenemy_maxTemperature",
+                    ShortName = "--max-temp=",
+                },
+                /// <summary>
+                /// resume value for miners to start again after shutdown
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "zenemy_resumeTemperature",
+                    ShortName = "--resume-temp=",
+                }
             }
         };
+
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
     }
 }

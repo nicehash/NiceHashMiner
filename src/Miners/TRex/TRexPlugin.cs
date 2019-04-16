@@ -53,7 +53,8 @@ namespace TRex
         {
             return new TRex(PluginUUID)
             {
-                MinerOptionsPackage = _minerOptionsPackage
+                MinerOptionsPackage = _minerOptionsPackage,
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
             };
         }
 
@@ -66,6 +67,10 @@ namespace TRex
         public void InitInternals()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+
+            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
+            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
+
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
         }
@@ -84,7 +89,6 @@ namespace TRex
                     LongName = "--intensity",
                     DefaultValue = "auto"
                 },
-
                 /// <summary>
                 /// Set process priority (default: 2) 0 idle, 2 normal to 5 highest.
                 /// </summary>
@@ -95,9 +99,43 @@ namespace TRex
                     ShortName = "--cpu-priority",
                     DefaultValue = "2"
                 },
-                
+                /// <summary>
+                /// Forces miner to immediately reconnect to pool on N successively failed shares (default: 10).
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_reconectFailed",
+                    ShortName = "--reconnect-on-fail-shares",
+                    DefaultValue = "10"
+                }
+            },
+            TemperatureOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// GPU shutdown temperature. (default: 0 - disabled)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_tempLimit",
+                    LongName = "--temperature-limit",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// GPU temperature to enable card after disable. (default: 0 - disabled)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "trex_tempStart",
+                    LongName = "--temperature-start",
+                    DefaultValue = "0"
+                }
             }
         };
+
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
     }
 }
