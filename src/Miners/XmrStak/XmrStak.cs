@@ -235,7 +235,7 @@ namespace XmrStak
             var binCwd = binPathBinCwdPair.Item2;
             // API port function might be blocking
             var apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
-            var commandLine = $"-o {url} -u {MinerToolkit.DemoUser} --currency {algo} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork {benchmarkTime} --benchwait {benchWait} {deviceConfigParams} {disableDeviceTypes}";
+            var commandLine = $"-o {url} -u {MinerToolkit.DemoUserBTC} --currency {algo} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork {benchmarkTime} --benchwait {benchWait} {deviceConfigParams} {disableDeviceTypes}";
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             var benchHashes = 0d;
@@ -423,7 +423,7 @@ namespace XmrStak
 
             var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(new List<DeviceType> { deviceType });
             var currency = AlgorithmName(_algorithmType);
-            var commandLine = $"-o {url} -u {MinerToolkit.DemoUser} --currency {currency} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork 60 --benchwait 5 {disableDeviceTypes}";
+            var commandLine = $"-o {url} -u {MinerToolkit.DemoUserBTC} --currency {currency} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork 60 --benchwait 5 {disableDeviceTypes}";
 
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;

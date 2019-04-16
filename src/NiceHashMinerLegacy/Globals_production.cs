@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Switching;
 using NiceHashMiner.Utils.Guid;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
 
@@ -79,7 +80,7 @@ namespace NiceHashMiner
         {
             return BitcoinAddress.ValidateBitcoinAddress(Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim())
                 ? Configs.ConfigManager.GeneralConfig.BitcoinAddress.Trim()
-                : DemoUser;
+                : DemoUser.BTC;
         }
     }
 }

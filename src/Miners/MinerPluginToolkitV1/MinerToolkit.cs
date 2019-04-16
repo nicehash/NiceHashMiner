@@ -1,6 +1,7 @@
 ﻿using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +22,7 @@ namespace MinerPluginToolkitV1
         /// <summary>
         /// Use DemoUser if the miner requires a network benchmark the plugin will blacklist users
         /// </summary>
-        public static string DemoUser => "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
+        public static string DemoUserBTC => DemoUser.BTC;
         
 
         public static Tuple<AlgorithmType, bool> GetAlgorithmSingleType(this IEnumerable<MiningPair> mps)

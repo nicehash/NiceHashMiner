@@ -159,7 +159,7 @@ namespace ZEnemy
             var port = split[2];
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url={url}:{port} --user {MinerToolkit.DemoUser} --devices {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--algo {algo} --url={url}:{port} --user {MinerToolkit.DemoUserBTC} --devices {_devices} {_extraLaunchParameters}";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;

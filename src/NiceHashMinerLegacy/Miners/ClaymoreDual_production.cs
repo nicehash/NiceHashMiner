@@ -9,6 +9,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Miners.Parsing;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Miners
 {
@@ -232,7 +233,7 @@ namespace NiceHashMiner.Miners
             // network stub
             var url = GetServiceUrl(algorithm.NiceHashID);
             // demo for benchmark
-            var ret = GetStartCommand(url, Globals.DemoUser)
+            var ret = GetStartCommand(url, DemoUser.BTC)
                          + " -logfile " + GetLogFileName();
             // local benhcmark
             if (!IsDual())

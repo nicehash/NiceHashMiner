@@ -24,6 +24,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using static NiceHashMiner.Translations;
 using Timer = System.Windows.Forms.Timer;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner
 {
@@ -1111,7 +1112,7 @@ namespace NiceHashMiner
             InitFlowPanelStart();
             ClearRatesAll();
 
-            var btcAdress = _demoMode ? Globals.DemoUser : textBoxBTCAddress.Text.Trim();
+            var btcAdress = _demoMode ? DemoUser.BTC : textBoxBTCAddress.Text.Trim();
             var isMining = MinersManager.StartInitialize(this, Globals.MiningLocation[comboBoxLocation.SelectedIndex],
                 textBoxWorkerName.Text.Trim(), btcAdress);
 

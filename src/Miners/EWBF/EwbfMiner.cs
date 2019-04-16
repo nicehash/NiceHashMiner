@@ -141,7 +141,7 @@ namespace EWBF
             }
 
             // use demo user and disable the watchdog
-            var commandLine = CreateCommandLine(MinerToolkit.DemoUser) + " --color 0 --boff";
+            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC) + " --color 0 --boff";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;

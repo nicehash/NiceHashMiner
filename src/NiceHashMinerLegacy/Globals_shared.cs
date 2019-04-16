@@ -11,14 +11,6 @@ namespace NiceHashMiner
 {
     public static partial class Globals
     {
-#if TESTNET
-        public static readonly string DemoUser = "2N6ibfrTwUSSvzAz1esPe1gYULG82asTHiS";
-#elif TESTNETDEV
-        public static readonly string DemoUser = "2N2e2ET1jMY9r5is9KaTKnU3bkCFaYHEEEx"; // TODO
-#else
-        public static readonly string DemoUser = "33hGFJZQAfbdzyHGqhJPvZwncDjUBdZqjW";
-#endif
-
         // change this if TOS changes
         public const int CurrentTosVer = 4;
 

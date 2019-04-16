@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NiceHashMinerLegacy.Common;
 
 namespace MinerSmokeTest
 {
@@ -179,7 +180,7 @@ namespace MinerSmokeTest
                         label1.Text = $"{step} / {testSteps}";
 
                         tbx_info.Text += $"Starting miner running for {miningTime.ToString()}" + Environment.NewLine;
-                        miner.Start(url, Globals.DemoUser);
+                        miner.Start(url, DemoUser.BTC);
 
                         await Task.Delay(miningTime);
                         tbx_info.Text += $"Stopping" + Environment.NewLine;

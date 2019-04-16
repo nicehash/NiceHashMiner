@@ -144,7 +144,7 @@ namespace TeamRedMiner
             }
 
             // use demo user and disable colorts so we can read from stdout
-            var commandLine = CreateCommandLine(MinerToolkit.DemoUser) + " --disable_colors";
+            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC) + " --disable_colors";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;

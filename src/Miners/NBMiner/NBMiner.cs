@@ -82,7 +82,7 @@ namespace NBMiner
                     break;
             }
 
-            var cl = CreateCommandLine(MinerToolkit.DemoUser);
+            var cl = CreateCommandLine(MinerToolkit.DemoUserBTC);
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;

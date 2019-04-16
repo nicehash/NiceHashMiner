@@ -44,7 +44,7 @@ namespace ClaymoreHub
                     break;
             }
 
-            var commandLine = CreateCommandLine(MinerToolkit.DemoUser);
+            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC);
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
@@ -106,6 +106,11 @@ namespace ClaymoreHub
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
+        }
+
+        public override Task<ApiData> GetMinerStatsDataAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -10,6 +10,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner
 {
@@ -20,7 +21,7 @@ namespace NiceHashMiner
         public static string GetUsername()
         {
             if (IsDemoMining) {
-                return Globals.DemoUser;
+                return DemoUser.BTC;
             }
 
             return Globals.GetUsername();

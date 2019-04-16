@@ -119,7 +119,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
 
             // use demo user and disable colorts so we can read from stdout
             var stopAt = DateTime.Now.AddSeconds(benchmarkTime).ToString("HH:mm");
-            var commandLine = $"--sched-stop {stopAt} -T " + CreateCommandLine(MinerToolkit.DemoUser);
+            var commandLine = $"--sched-stop {stopAt} -T " + CreateCommandLine(MinerToolkit.DemoUserBTC);
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;

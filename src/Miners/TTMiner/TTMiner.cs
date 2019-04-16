@@ -88,7 +88,7 @@ namespace TTMiner
                     break;
             }
 
-            var commandLine = CreateCommandLine(MinerToolkit.DemoUser);
+            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC);
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
