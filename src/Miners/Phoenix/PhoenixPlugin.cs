@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Phoenix
 {
-    public class PhoenixPlugin : IMinerPlugin, IInitInternals
+    public class PhoenixPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker
     {
         public PhoenixPlugin(string pluginUUID = "ac9c763f-c901-41ef-9df1-c80099c9f942")
         {
@@ -30,7 +30,7 @@ namespace Phoenix
 
         public string Author => "Domen Kirn Krefl";
 
-        protected readonly Dictionary<int, int> _mappedIDs = new Dictionary<int, int>();
+        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -49,7 +49,8 @@ namespace Phoenix
             var pcieID = 0;
             foreach (var gpu in supportedGpus)
             {
-                _mappedIDs[gpu.PCIeBusID] = pcieID++;
+                Shared.MappedCudaIds[gpu.UUID] = pcieID;
+                ++pcieID;
                 var algos = GetSupportedAlgorithms(gpu).ToList();
                 if (algos.Count > 0 && gpu is CUDADevice cuda) supported.Add(cuda, algos);
                 if (algos.Count > 0 && gpu is AMDDevice amd) supported.Add(amd, algos);
@@ -70,7 +71,7 @@ namespace Phoenix
 
         public IMiner CreateMiner()
         {
-            return new Phoenix(PluginUUID, _mappedIDs)
+            return new Phoenix(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
@@ -495,7 +496,31 @@ namespace Phoenix
                 {"GPU_FORCE_64BIT_PTR", "0"}
             },
         };
-
         #endregion Internal Settings
+        
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        {
+            // TODO will break
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-list");
+            var mappedDevs = DevicesListParser.ParsePhoenixOutput(output, devices.ToList());
+
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                Shared.MappedCudaIds[uuid] = indexID;
+            }
+        }
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "PhoenixMiner.exe" });
+        }
     }
 }

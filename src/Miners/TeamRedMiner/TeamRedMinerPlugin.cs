@@ -14,7 +14,7 @@ using MinerPluginToolkitV1;
 
 namespace TeamRedMiner
 {
-    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals
+    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
         public TeamRedMinerPlugin(string pluginUUID = "189aaf80-4b23-11e9-a481-e144ccd86993")
         {
@@ -136,5 +136,13 @@ namespace TeamRedMiner
             }
         };
         #endregion Internal Settings
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "teamredminer.exe" });
+        }
     }
 }

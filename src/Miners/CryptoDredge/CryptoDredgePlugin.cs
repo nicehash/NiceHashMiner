@@ -1,4 +1,5 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
@@ -15,7 +16,7 @@ using System.Text;
 namespace CryptoDredge
 {
     // TODO don't use this plugin as it doesn't have GetMinerStatsDataAsync() method miner doesn't support it.
-    class CryptoDredgePlugin : IMinerPlugin, IInitInternals
+    class CryptoDredgePlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
         public Version Version => new Version(1, 1);
         public string Name => "CryptoDredge";
@@ -118,5 +119,13 @@ namespace CryptoDredge
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "CryptoDredge.exe" });
+        }
     }
 }

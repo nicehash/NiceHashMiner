@@ -17,7 +17,7 @@ using XmrStak.Configs;
 
 namespace XmrStak
 {
-    public class XmrStakPlugin : IMinerPlugin, IInitInternals, IXmrStakConfigHandler
+    public class XmrStakPlugin : IMinerPlugin, IInitInternals, IXmrStakConfigHandler, IBinaryPackageMissingFilesChecker
     {
         public XmrStakPlugin(string pluginUUID = "b4cf2181-ca66-4d9c-83ba-cd5a7c6a7499")
         {
@@ -318,5 +318,16 @@ namespace XmrStak
         }
 
         #endregion Cached configs
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "concrt140.dll", "libeay32.dll", "msvcp140.dll", "msvcp140_1.dll",
+                "msvcp140_2.dll", "nvrtc-builtins64_100.dll", "nvrtc-builtins64_90.dll", "nvrtc64_100_0.dll", "nvrtc64_90.dll", "ssleay32.dll", "vccorlib140.dll", "vcruntime140.dll",
+                "xmr-stak.exe", "xmrstak_cuda_backend.dll", "xmrstak_cuda_backend_cuda10_0.dll", "xmrstak_opencl_backend.dll"
+            });
+        }
     }
 }

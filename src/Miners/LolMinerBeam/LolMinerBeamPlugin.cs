@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using MinerPlugin;
+using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
@@ -14,7 +15,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace LolMinerBeam
 {
-    class LolMinerBeamPlugin : IMinerPlugin, IInitInternals
+    class LolMinerBeamPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
         public Version Version => new Version(1, 1);
 
@@ -126,5 +127,13 @@ namespace LolMinerBeam
         };
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "lolMiner.exe" });
+        }
     }
 }

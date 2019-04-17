@@ -40,9 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DevicesListParser.cs" />
     <Compile Include="Phoenix.cs" />
     <Compile Include="PhoenixPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">

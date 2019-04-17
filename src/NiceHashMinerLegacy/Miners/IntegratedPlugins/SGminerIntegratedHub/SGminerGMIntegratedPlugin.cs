@@ -1,4 +1,6 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Interfaces;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
@@ -48,6 +50,14 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             }
 
             return supported;
+        }
+
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "sgminer.exe" });
         }
     }
 }

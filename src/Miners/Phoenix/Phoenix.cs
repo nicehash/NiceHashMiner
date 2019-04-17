@@ -18,11 +18,9 @@ namespace Phoenix
     public class Phoenix : ClaymoreBase
     {
         protected List<MiningPair> _orderedMiningPairs = new List<MiningPair>();
-        protected readonly Dictionary<int, int> _mappedIDs = new Dictionary<int, int>();
 
-        public Phoenix(string uuid, Dictionary<int, int> mappedIDs) : base(uuid)
+        public Phoenix(string uuid) : base(uuid)
         {
-            _mappedIDs = mappedIDs;
         }
 
         public new double DevFee
@@ -56,7 +54,7 @@ namespace Phoenix
             //_devices = string.Join("", _orderedMiningPairs.Select(p => _mappedIDs[p.Device.]));
             _devices = string.Join("", _orderedMiningPairs.Select(p => {
                 var pGpu = p.Device as IGpuDevice;
-                return _mappedIDs[pGpu.PCIeBusID];
+                return Shared.MappedCudaIds[pGpu.UUID];
             }));
             var deviceTypes = _orderedMiningPairs.Select(pair => pair.Device.DeviceType);
             _platform = $"{ClaymoreHelpers.GetPlatformIDForType(deviceTypes)}";
