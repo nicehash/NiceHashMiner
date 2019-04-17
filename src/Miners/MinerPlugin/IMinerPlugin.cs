@@ -1,9 +1,7 @@
 ﻿using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MinerPlugin
 {

@@ -6,11 +6,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NiceHashMinerLegacy.Common.Enums;
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
-using System.Net.Http;
 using System.IO;
 using NiceHashMinerLegacy.Common;
 

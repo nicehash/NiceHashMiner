@@ -1,6 +1,5 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
@@ -10,7 +9,6 @@ using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Linq;
-using System.Globalization;
 using System.IO;
 using NiceHashMinerLegacy.Common;
 using System.Collections.Generic;
