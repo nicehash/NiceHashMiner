@@ -468,7 +468,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
-    <Compile Include="Utils\BINS_CODEGEN.cs" />
     <Compile Include="Utils\BINS_CODEGEN_3rd.cs" />
     <Compile Include="Utils\MinersExistanceChecker.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">

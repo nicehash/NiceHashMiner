@@ -260,7 +260,7 @@ namespace NiceHashMiner
             {
                 StartInfo =
                 {
-                    FileName = @"bin\vc_redist.x64.exe",
+                    FileName = @"miner_plugins\vc_redist.x64.exe",
                     Arguments = "/q /norestart",
                     UseShellExecute = false,
                     RedirectStandardError = false,

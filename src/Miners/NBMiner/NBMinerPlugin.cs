@@ -164,7 +164,7 @@ namespace NBMiner
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json");
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json -RUN");
             var mappedDevs = DevicesListParser.ParseNBMinerOutput(output, devices.ToList());
 
             foreach (var kvp in mappedDevs)

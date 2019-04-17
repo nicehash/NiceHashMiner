@@ -138,7 +138,7 @@ namespace NiceHashMiner.MinersDownloader
                         //entry.ExtractToFile(extractPath, true);
 
                         using (var zipStream = entry.Open())
-                        using (var fileStream = new FileStream(extractPath, FileMode.CreateNew))
+                        using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write))
                         {
                             await zipStream.CopyToAsync(fileStream);
                         }
@@ -175,7 +175,7 @@ namespace NiceHashMiner.MinersDownloader
                                 Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
                             }
                             using (var entryStream = reader.OpenEntryStream())
-                            using (var fileStream = new FileStream(extractPath, FileMode.CreateNew))
+                            using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write))
                             {
                                 await entryStream.CopyToAsync(fileStream);
                             }
