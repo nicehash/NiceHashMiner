@@ -13,14 +13,5 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         { }
 
         public bool Is3rdParty => true;
-
-        public new IMiner CreateMiner()
-        {
-            return new PhoenixIntegratedMiner(PluginUUID, _mappedIDs)
-            {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
-            };
-        }
     }
 }

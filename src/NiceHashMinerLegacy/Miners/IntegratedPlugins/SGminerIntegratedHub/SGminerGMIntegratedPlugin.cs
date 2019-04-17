@@ -18,16 +18,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public override string Name => _pluginUUIDName;
 
-
-        public override IMiner CreateMiner()
-        {
-            return new SGminerGMIntegratedMiner(PluginUUID, AMDDevice.OpenCLPlatformID)
-            {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
-            };
-        }
-
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             const ulong MinDaggerHashimotoMemory = 3UL << 30; // 3GB

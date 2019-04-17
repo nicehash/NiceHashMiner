@@ -14,13 +14,5 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         { }
 
         public bool Is3rdParty => true;
-
-        public new IMiner CreateMiner()
-        {
-            return new TRexIntegratedMiner(PluginUUID)
-            {
-                MinerOptionsPackage = _minerOptionsPackage
-            };
-        }
     }
 }

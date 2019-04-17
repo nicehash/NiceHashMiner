@@ -35,7 +35,9 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         {
             return new CCMinerIntegratedMiner(PluginUUID, DirPath)
             {
-                MinerOptionsPackage = _minerOptionsPackage
+                MinerOptionsPackage = _minerOptionsPackage,
+                // TODO
+                //MinerSystemEnvironmentVariables
             };
         }
 

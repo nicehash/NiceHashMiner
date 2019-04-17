@@ -20,16 +20,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public override string Name => _pluginUUIDName;
 
-
-        public override IMiner CreateMiner()
-        {
-            return new SGminerAvemoreIntegratedMiner(PluginUUID, AMDDevice.OpenCLPlatformID)
-            {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
-            };
-        }
-
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();

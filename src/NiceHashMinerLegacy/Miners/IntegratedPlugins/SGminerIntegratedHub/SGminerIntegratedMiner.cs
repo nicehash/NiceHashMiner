@@ -3,13 +3,12 @@ using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class SGminerNHGeneralIntegratedMiner : SGMinerBase
+    class SGminerIntegratedMiner : SGMinerBase
     {
-        public SGminerNHGeneralIntegratedMiner(string uuid, int openClAmdPlatformNum) : base(uuid, openClAmdPlatformNum)
+        public SGminerIntegratedMiner(string uuid, int openClAmdPlatformNum) : base(uuid, openClAmdPlatformNum)
         {
         }
 
@@ -28,6 +27,13 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {
                 switch (_algorithmType)
                 {
+                    // avemore
+                    case AlgorithmType.X16R:
+                        return "x16r";
+                    // gm 
+                    case AlgorithmType.DaggerHashimoto:
+                        return "ethash";
+                    // nh general
                     case AlgorithmType.NeoScrypt:
                         return "neoscrypt";
                     case AlgorithmType.Keccak:
@@ -36,13 +42,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
                         return "";
                 }
             }
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var binCwd = Path.Combine(Paths.Root, "bin", "sgminer-5-6-0-general");
-            var binPath = Path.Combine(binCwd, "sgminer.exe");
-            return Tuple.Create(binPath, binCwd);
         }
     }
 }

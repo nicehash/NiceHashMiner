@@ -13,12 +13,9 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
     {
         public CCMinerIntegratedMiner(string uuid, string dirPath) : base(uuid)
         {
-            _dirPath = dirPath;
             _noTimeLimitOption = "ccminer_klaust" == dirPath;
         }
-        protected readonly string _dirPath;
-
-
+        
         protected override string AlgorithmName(AlgorithmType algorithmType)
         {
             switch (algorithmType)
@@ -33,13 +30,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             }
             // TODO throw exception
             return "";
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var binCwd = Path.Combine(Paths.Root, "bin", _dirPath);
-            var binPath = Path.Combine(binCwd, "ccminer.exe");
-            return Tuple.Create(binPath, binCwd);
         }
     }
 }

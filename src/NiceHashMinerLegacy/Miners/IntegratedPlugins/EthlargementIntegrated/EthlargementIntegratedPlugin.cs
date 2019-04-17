@@ -15,11 +15,5 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         { }
 
         public bool Is3rdParty => true;
-
-        public override string EthlargementBinPath()
-        {
-            var binCwd = Path.Combine(Paths.Root, "bin_3rdparty", "ethlargement", "OhGodAnETHlargementPill-r2.exe");
-            return binCwd;
-        }
     }
 }
