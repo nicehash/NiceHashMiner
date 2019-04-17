@@ -13,7 +13,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         public TRexIntegratedMiner(string uuid) : base(uuid)
         { }
 
-        protected override Tuple<string, string> GetBinAndCwdPaths()
+        public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var binCwd = Path.Combine(Paths.Root, "bin_3rdparty", "trex");
             var binPath = Path.Combine(binCwd, "t-rex.exe");

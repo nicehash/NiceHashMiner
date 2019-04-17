@@ -35,7 +35,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             return "";
         }
 
-        protected override Tuple<string, string> GetBinAndCwdPaths()
+        public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var binCwd = Path.Combine(Paths.Root, "bin", _dirPath);
             var binPath = Path.Combine(binCwd, "ccminer.exe");

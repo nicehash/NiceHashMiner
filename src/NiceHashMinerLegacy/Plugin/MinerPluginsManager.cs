@@ -166,6 +166,29 @@ namespace NiceHashMiner.Plugin
             CrossReferenceInstalledWithOnline();
         }
 
+        // for now integrated only, it should be safe to call this multiple times 
+        public static async Task DevicesCrossReferenceIDsWithMinerIndexes()
+        {
+            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+            // get devices
+            var allDevs = AvailableDevices.Devices;
+            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            foreach (var plugin in IntegratedPlugins)
+            {
+                var pluginUuid = plugin.PluginUUID;
+                if (plugin.Is3rdParty && !is3rdPartyEnabled) continue;
+                if (plugin is IDevicesCrossReference pluginWithDCR)
+                {
+                    try
+                    {
+                        await pluginWithDCR.DevicesCrossReference(baseDevices);
+                    }
+                    catch
+                    {}
+                }
+            }
+        }
+
         private static void UpdatePluginAlgorithms()
         {
             // get devices

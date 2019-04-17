@@ -171,7 +171,7 @@ namespace GMinerPlugin
             return await t;
         }
 
-        protected override Tuple<string, string> GetBinAndCwdPaths()
+        public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
@@ -188,10 +188,11 @@ namespace GMinerPlugin
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
             // all good continue on
 
+            // TODO sort by GMiner indexes
             // init command line params parts
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(" ", orderedMiningPairs.Select(p => p.Device.ID));
+            _devices = string.Join(" ", orderedMiningPairs.Select(p => Shared.MappedCudaIds[p.Device.UUID]));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks

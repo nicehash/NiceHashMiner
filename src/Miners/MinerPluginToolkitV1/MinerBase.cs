@@ -14,7 +14,7 @@ using MinerPluginToolkitV1.Interfaces;
 namespace MinerPluginToolkitV1
 {
     // TODO there is no watchdog
-    public abstract class MinerBase : IMiner
+    public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
     {
         private readonly string _uuid;
         protected MiningProcess _miningProcess;
@@ -48,7 +48,7 @@ namespace MinerPluginToolkitV1
 
         abstract public Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
 
-        abstract protected Tuple<string, string> GetBinAndCwdPaths();
+        abstract public Tuple<string, string> GetBinAndCwdPaths();
         abstract protected string MiningCreateCommandLine();
 
         // most don't require extra enviorment vars

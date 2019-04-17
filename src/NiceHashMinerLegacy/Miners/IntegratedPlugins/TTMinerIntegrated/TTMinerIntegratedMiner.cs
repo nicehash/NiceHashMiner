@@ -9,7 +9,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         public TTMinerIntegratedMiner(string uuid) : base(uuid)
         { }
 
-        protected override Tuple<string, string> GetBinAndCwdPaths()
+        public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var binCwd = Path.Combine(Paths.Root, "bin_3rdparty", "ttminer");
             var binPath = Path.Combine(binCwd, "TT-Miner.exe");

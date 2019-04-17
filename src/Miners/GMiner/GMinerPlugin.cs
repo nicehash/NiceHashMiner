@@ -15,7 +15,7 @@ using MinerPluginToolkitV1;
 
 namespace GMinerPlugin
 {
-    public class GMinerPlugin : IMinerPlugin, IInitInternals
+    public class GMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker
     {
         public GMinerPlugin(string pluginUUID = "5def7740-4bfb-11e9-a481-e144ccd86993")
         {
@@ -89,7 +89,8 @@ namespace GMinerPlugin
             var pcieId = 0; // GMiner takes CUDA devices by 
             foreach (var gpu in cudaGpus)
             {
-                Shared.MappedCudaIds[gpu.ID] = pcieId;
+                // naive method
+                Shared.MappedCudaIds[gpu.UUID] = pcieId;
                 ++pcieId;
                 var algorithms = GetCUDASupportedAlgorithms(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
@@ -203,5 +204,30 @@ namespace GMinerPlugin
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
+
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        {
+            // TODO will break
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices");
+            var mappedDevs = DevicesListParser.ParseGMinerOutput(output, devices.ToList());
+
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                Shared.MappedCudaIds[uuid] = indexID;
+            }
+        }
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe" });
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         public PhoenixIntegratedMiner(string uuid, Dictionary<int, int> mappedIDs) : base(uuid, mappedIDs)
         { }
 
-        protected override Tuple<string, string> GetBinAndCwdPaths()
+        public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var binCwd = Path.Combine(Paths.Root, "bin_3rdparty", "phoenix");
             var binPath = Path.Combine(binCwd, "PhoenixMiner.exe");

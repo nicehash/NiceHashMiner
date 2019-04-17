@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace MinerPluginToolkitV1.Interfaces
 {
-    public interface IBinaryPackageMissingFilesChecker
+    public interface IBinAndCwdPathsGettter
     {
-        IEnumerable<string> CheckBinaryPackageMissingFiles();
+        Tuple<string, string> GetBinAndCwdPaths();
     }
 }

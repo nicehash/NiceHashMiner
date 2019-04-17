@@ -6,6 +6,7 @@ namespace NiceHashMinerLegacy.Common.Device
 {
     public interface IGpuDevice
     {
+        string UUID { get; }
         int PCIeBusID { get; }
         ulong GpuRam { get; }
     }

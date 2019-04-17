@@ -10,7 +10,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         public XmrStakIntegratedMiner(string uuid, int openClAmdPlatformNum, IXmrStakConfigHandler configHandler) : base(uuid, openClAmdPlatformNum, configHandler)
         { }
 
-        protected override Tuple<string, string> GetBinAndCwdPaths()
+        public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var binCwd = Path.Combine(Paths.Root, "bin", "xmr-stak");
             var binPath = Path.Combine(binCwd, "xmr-stak.exe");

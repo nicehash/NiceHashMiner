@@ -4,7 +4,7 @@ using NiceHashMinerLegacy.Common.Device;
 
 namespace MinerPluginToolkitV1.Interfaces
 {
-    interface IDevicesCrossReference
+    public interface IDevicesCrossReference
     {
         Task DevicesCrossReference(IEnumerable<BaseDevice> devices);
     }

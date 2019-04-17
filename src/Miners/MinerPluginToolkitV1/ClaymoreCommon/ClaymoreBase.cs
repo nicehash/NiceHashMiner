@@ -18,7 +18,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
     public abstract class ClaymoreBase : MinerBase
     {
-        protected abstract override Tuple<string, string> GetBinAndCwdPaths();
+        public abstract override Tuple<string, string> GetBinAndCwdPaths();
         public abstract override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
 
         protected int _apiPort;

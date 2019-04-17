@@ -6,6 +6,6 @@ namespace GMinerPlugin
 {
     internal static class Shared
     {
-        public static Dictionary<int, int> MappedCudaIds = new Dictionary<int, int>();
+        public static Dictionary<string, int> MappedCudaIds = new Dictionary<string, int>();
     }
 }

@@ -153,7 +153,7 @@ namespace TRex
         }
 
 
-        protected override Tuple<string, string> GetBinAndCwdPaths()
+        public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");

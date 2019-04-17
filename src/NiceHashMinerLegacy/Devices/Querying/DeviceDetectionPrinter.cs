@@ -33,20 +33,22 @@ namespace NiceHashMiner.Devices.Querying
                 {
                     throw new InvalidOperationException("Could not start process: " + run);
                 }
-                var ct = new CancellationTokenSource(milliseconds);
-                ct.Token.Register(() =>
+                using (var ct = new CancellationTokenSource(milliseconds))
                 {
-                    try
+                    ct.Token.Register(() =>
                     {
-                        run.Kill();
+                        try
+                        {
+                            run.Kill();
+                        }
+                        catch { }
+                    });
+                    readData = await run.StandardOutput.ReadToEndAsync();
+                    result = JsonConvert.DeserializeObject<T>(readData, Globals.JsonSettings);
+                    if (result == null && !string.IsNullOrEmpty(readData))
+                    {
+                        Helpers.ConsolePrint("DeviceDetectionPrinter", $"result is NULL readData='{readData}'");
                     }
-                    catch { }
-                });
-                readData = await run.StandardOutput.ReadToEndAsync();
-                result = JsonConvert.DeserializeObject<T>(readData, Globals.JsonSettings);
-                if (result == null && !string.IsNullOrEmpty(readData))
-                {
-                    Helpers.ConsolePrint("DeviceDetectionPrinter", $"result is NULL readData='{readData}'");
                 }
             }
             catch (Exception ex)

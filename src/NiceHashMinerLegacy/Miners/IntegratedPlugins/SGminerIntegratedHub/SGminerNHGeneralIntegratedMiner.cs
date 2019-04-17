@@ -38,7 +38,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             }
         }
 
-        protected override Tuple<string, string> GetBinAndCwdPaths()
+        public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var binCwd = Path.Combine(Paths.Root, "bin", "sgminer-5-6-0-general");
             var binPath = Path.Combine(binCwd, "sgminer.exe");

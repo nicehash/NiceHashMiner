@@ -10,7 +10,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         public NBMinerIntegratedMiner(string uuid, Dictionary<int, int> mappedCudaIDs) : base(uuid, mappedCudaIDs)
         { }
 
-        protected override Tuple<string, string> GetBinAndCwdPaths()
+        public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var binCwd = Path.Combine(Paths.Root, "bin_3rdparty", "nbminer");
             var binPath = Path.Combine(binCwd, "nbminer.exe");

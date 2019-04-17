@@ -397,6 +397,9 @@ namespace NiceHashMiner
                     }
                 }
 
+                // Plugin Loading
+                await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
+
                 if (runVCRed)
                 {
                     Helpers.InstallVcRedist();
