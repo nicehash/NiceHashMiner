@@ -426,14 +426,6 @@ namespace NiceHashMiner.Devices
             var thirdPartyMiners = new List<MinerBaseType>
             {
                 MinerBaseType.Claymore,
-                MinerBaseType.EWBF,
-                MinerBaseType.Prospector,
-                MinerBaseType.trex,
-                MinerBaseType.Phoenix,
-                MinerBaseType.GMiner,
-                MinerBaseType.BMiner,
-                MinerBaseType.TTMiner,
-                MinerBaseType.NBMiner
             };
 
             return AlgorithmSettings.FindAll(a => thirdPartyMiners.IndexOf(a.MinerBaseType) == -1);
