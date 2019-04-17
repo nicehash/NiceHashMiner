@@ -8,15 +8,13 @@ namespace NiceHashMiner.MinersDownloader
 {
     internal class DownloadSetup
     {
-        public DownloadSetup(string url, string dlName, string inFolderName)
+        public DownloadSetup(string url, string dlName)
         {
             BinsDownloadUrl = url;
             BinsZipLocation = dlName;
-            ZipedFolderName = inFolderName;
         }
 
         public string BinsDownloadUrl { get; set; }
         public string BinsZipLocation { get; set; }
-        public string ZipedFolderName { get; set; }
     }
 }
