@@ -365,7 +365,6 @@ namespace NiceHashMiner.Forms
             //    Tr("(AMD) [s]:");
 
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
-            label_IdleType.Text = Tr("Idle Check Method");
             foreach (var type in Enum.GetNames(typeof(IdleCheckType)))
             {
                 // translations will handle enum names
