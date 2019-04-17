@@ -59,6 +59,7 @@ namespace NiceHashMiner
             Text += ApplicationStateManager.Title;
 
             InitMainConfigGuiData();
+            FormHelpers.TranslateFormControls(this);
         }
 
         private void InitLocalization()
@@ -81,13 +82,9 @@ namespace NiceHashMiner
                     i++;
                 }
             }
-            labelBitcoinAddress.Text = Tr("Bitcoin Address") + ":";
-            labelWorkerName.Text = Tr("Worker Name") + ":";
 
-            linkLabelCheckStats.Text = Tr("Check my stats online!");
-            linkLabelChooseBTCWallet.Text = Tr("Help me choose my Bitcoin wallet");
-
-            toolStripStatusLabelGlobalRateText.Text = Tr("Global rate") + ":";
+            //??? doesn't get translated if we don't translate it directly????
+            toolStripStatusLabelGlobalRateText.Text = Tr("Global rate:");
             toolStripStatusLabelBTCDayText.Text =
                 "BTC/" + Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
             toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
@@ -95,12 +92,6 @@ namespace NiceHashMiner
                                                    Tr("Balance") + ":";
 
             devicesListViewEnableControl1.InitLocale();
-
-            buttonBenchmark.Text = Tr("&Benchmark");
-            buttonSettings.Text = Tr("S&ettings");
-            buttonStartMining.Text = Tr("&Start All");
-            buttonStopMining.Text = Tr("&Stop All");
-            buttonHelp.Text = Tr("&Help");
         }
 
         // InitMainConfigGuiData gets called after settings are changed and whatnot but this is a crude and tightly coupled way of doing things
