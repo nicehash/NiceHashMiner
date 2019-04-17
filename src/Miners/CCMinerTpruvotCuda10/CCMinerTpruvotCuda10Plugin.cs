@@ -10,10 +10,11 @@ using MinerPluginToolkitV1.ExtraLaunchParameters;
 using System.IO;
 using MinerPluginToolkitV1.Configs;
 using NiceHashMinerLegacy.Common;
+using MinerPluginToolkitV1;
 
 namespace CCMinerTpruvotCuda10
 {
-    public class CCMinerTpruvotCuda10Plugin : IMinerPlugin, IInitInternals
+    public class CCMinerTpruvotCuda10Plugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
         public Version Version => new Version(1, 1);
 
@@ -192,5 +193,13 @@ namespace CCMinerTpruvotCuda10
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "ccminer.exe", "msvcr120.dll" });
+        }
     }
 }

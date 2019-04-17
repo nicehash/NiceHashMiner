@@ -15,7 +15,7 @@ using System.Text;
 
 namespace BMiner
 {
-    public class BMinerPlugin : IMinerPlugin, IInitInternals
+    public class BMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
         public BMinerPlugin(string pluginUUID = "92a7fd10-498d-11e9-87d3-6b57d758e2c6")
         {
@@ -173,5 +173,14 @@ namespace BMiner
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables{};
         #endregion Internal settings
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "bminer.exe" });
+        }
+
     }
 }

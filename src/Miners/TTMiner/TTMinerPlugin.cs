@@ -10,10 +10,11 @@ using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.Configs;
 using System.IO;
 using NiceHashMinerLegacy.Common;
+using MinerPluginToolkitV1;
 
 namespace TTMiner
 {
-    public class TTMinerPlugin : IMinerPlugin, IInitInternals
+    public class TTMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
         public TTMinerPlugin(string pluginUUID = "5ee2e280-4bfc-11e9-a481-e144ccd86993")
         {
@@ -150,5 +151,18 @@ namespace TTMiner
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nvml.dll", "nvrtc-builtins64_100.dll", "nvrtc-builtins64_101.dll",
+                "nvrtc-builtins64_92.dll", "nvrtc64_100_0.dll", "nvrtc64_101_0.dll", "nvrtc64_92.dll", "SubSystemDll.dll", "TT-Miner.exe", @"Algos\AlgoEthash-C100.dll",
+                @"Algos\AlgoEthash-C92.dll", @"Algos\AlgoEthash.dll", @"Algos\AlgoLyra2Rev3-C100.dll", @"Algos\AlgoLyra2Rev3-C92.dll", @"Algos\AlgoLyra2Rev3.dll", @"Algos\AlgoMTP-C100.dll",
+                @"Algos\AlgoMTP-C92.dll", @"Algos\AlgoMTP.dll", @"Algos\AlgoMyrGr-C100.dll", @"Algos\AlgoMyrGr-C92.dll", @"Algos\AlgoMyrGr.dll", @"Algos\AlgoProgPoW-C100.dll",
+                @"Algos\AlgoProgPoW-C92.dll", @"Algos\AlgoProgPoW.dll", @"Algos\AlgoUbqhash-C100.dll", @"Algos\AlgoUbqhash-C92.dll", @"Algos\AlgoUbqhash.dll"
+            });
+        }
     }
 }

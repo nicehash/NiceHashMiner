@@ -1,4 +1,6 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Interfaces;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
@@ -39,6 +41,16 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             }
 
             return supported;
+        }
+
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "libcurl.dll", "libeay32.dll", "libidn-11.dll", "librtmp.dll",
+                "libssh2.dll", "pdcurses.dll", "pthreadGC2.dll", "ssleay32.dll", "zlib1.dll", "sgminer.exe"
+            });
         }
     }
 }

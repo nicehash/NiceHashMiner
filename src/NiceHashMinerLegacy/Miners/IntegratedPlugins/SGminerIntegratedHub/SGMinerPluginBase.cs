@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin
+    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker
     {
         public bool Is3rdParty => false;
 
@@ -70,5 +70,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         };
 
         protected static MinerOptionsPackage _minerOptionsPackage = SGMinerBase.DefaultMinerOptionsPackage;
+
+        public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
     }
 }
