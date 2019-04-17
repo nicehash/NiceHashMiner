@@ -20,10 +20,10 @@
       "ru": " (текущий {0})",
       "zh_cn": "(当前 {0})"
     },
-    "&(Don't have an account? Register here)":{
+    "&(Don't have an account? Register here)": {
       "ru": "&(Нет аккаунта? Зарегистрируйтесь здесь)"
     },
-    "&(or enter Bitcoin address manually)":{
+    "&(or enter Bitcoin address manually)": {
       "ru": "&(или введите Биткоин-адрес вручную)"
     },
     "&Benchmark": {
@@ -109,7 +109,7 @@
       "ru": "&Ссылка на страницу загрузки драйвера",
       "zh_cn": "驱动下载页面链接 (&L)"
     },
-    "&Login with NiceHash":{
+    "&Login with NiceHash": {
       "ru": "&Войти с помощью NiceHash"
     },
     "&No": {
@@ -179,6 +179,20 @@
       "ru": "Ст&андартный",
       "zh_cn": "普通 (&S)"
     },
+    "Start": {
+      "bg": "Тест",
+      "es": "Empezar",
+      "pt": "Iniciar",
+      "ru": "Старт",
+      "zh_cn": "开始"
+    },
+    "Stop": {
+      "bg": "Стоп",
+      "es": "Detener",
+      "pt": "Parar",
+      "ru": "Стоп",
+      "zh_cn": "停止"
+    },
     "&Start": {
       "bg": "&Тест",
       "es": "&Empezar",
@@ -192,6 +206,24 @@
       "pt": "&Parar",
       "ru": "С&топ",
       "zh_cn": "停止 (&S)"
+    },
+    "&Start All": {
+      "ru": "&Запустить все"
+    },
+    "&Stop All": {
+      "ru": "&Остановить все"
+    },
+    "Stopped": {
+      "ru": "Остановлено"
+    },
+    "Mining": {
+      "ru": "Майнинг"
+    },
+    "Starting": {
+      "ru": "Запуск"
+    },
+    "Stopping": {
+      "ru": "Остановка"
     },
     "&Yes": {
       "bg": "&Да",
@@ -320,7 +352,9 @@
       "ru": "Настройки алгоритма для {0}:",
       "zh_cn": "用于 {0} 的算法配置:"
     },
-  "Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?": {},
+    "Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?": {
+      "ru": "Алгоритм {0} работал с хэшрейтом {1}, но результат бенчмарка был {2}. Хотите принять новое значение?"
+    },
     "All benchmarks have been successful": {
       "bg": "Всички тестове за скорост приключиха успешно.",
       "es": "Todos los benchmark se han realizado correctamente",
@@ -485,16 +519,16 @@
       "ru": "Скорость бенчмарка (H/s):",
       "zh_cn": "测得速率 (H/s):"
     },
-  "Benchmark Time Limits": {
-    "bg": "Лимити на времената за тестване",
-    "es": "Límites de tiempo de benchmark",
-    "it": "Limite di tempo dei benchmark",
-    "pl": "Limity czasów benchmarków",
-    "pt": "Tempo limite para Benchmark",
-    "ro": "Limite Timp Benchmark",
-    "ru": "Лимит времени бенчмарка",
-    "zh_cn": "基准测试时限"
-  },
+    "Benchmark Time Limits": {
+      "bg": "Лимити на времената за тестване",
+      "es": "Límites de tiempo de benchmark",
+      "it": "Limite di tempo dei benchmark",
+      "pl": "Limity czasów benchmarków",
+      "pt": "Tempo limite para Benchmark",
+      "ro": "Limite Timp Benchmark",
+      "ru": "Лимит времени бенчмарка",
+      "zh_cn": "基准测试时限"
+    },
     "Benchmark Time Limits:": {
       "bg": "Лимити на време за тестовете:",
       "es": "Límites de tiempo de los benchamark:",
@@ -541,7 +575,7 @@
       "it": "Stato benchmark ( {0} / {1} )",
       "pl": "Benchmark nr {0} z {1}",
       "pt": "Etapa do Benchmark ( {0} / {1} )",
-      "ro": "Pas Benchmark ( {0} / {1} )",  
+      "ro": "Pas Benchmark ( {0} / {1} )",
       "ru": "Шаг бенчмарка ( {0} / {1} )",
       "zh_cn": "测试进度 ( {0} / {1} )"
     },
@@ -733,7 +767,9 @@
       "ru": "Китай - Гонконг",
       "zh_cn": "中国 - 香港"
     },
-  "Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds.": {},
+    "Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds.": {
+      "ru": "Выберите как проверять простаивает ли компьютер, когда включен запуск майнинга при простое.\nБлокирование сессии начнется, когда компьютер заблокирован (как правило, когда отключается экран).\nТайм-аут ввода начнется, когда системный ввод отсутствовал в течение секунд простоя."
+    },
     "Choose what Currency to Display mining profit.": {
       "bg": "Посочете валутата, в която да се показват доходите от изчисления.",
       "es": "Elija qué divisa mostrar",
@@ -845,7 +881,9 @@
       "ru": "Окно отладки",
       "zh_cn": "调试控制台"
     },
-  "Deviant Algorithm": {},
+    "Deviant Algorithm": {
+      "ru": "Девиантный алгоритм"
+    },
     "Device": {
       "bg": "Устройство",
       "es": "Dispositivo",
@@ -926,7 +964,9 @@
       "ru": "Отключить ошибки",
       "zh_cn": "禁用Windows错误报告"
     },
-    "Disabled": {},
+    "Disabled": {
+      "ru": "Отключен"
+    },
     "Disabled Devices": {
       "bg": "Деактивирани устройства",
       "es": "Dispositivos sin usar",
@@ -1287,8 +1327,12 @@
       "ru": "Ставки Группы/Устройства:",
       "zh_cn": "组/设备收益:"
     },
-    "H/s": {},
-    "H/s (Secondary)": {},
+    "H/s": {
+      "ru": "H/s"
+    },
+    "H/s (Secondary)": {
+      "ru": "H/s (контрольная)"
+    },
     "Help me choose my Bitcoin wallet": {
       "bg": "Как да избера Bitcoin портфейл",
       "es": "&Ayúdame a escojer una cartera Bitcoin",
@@ -1356,7 +1400,9 @@
       "ru": "ВАЖНО! Выпущена новая версия v{0}.\r\nКликните здесь, чтобы скачать.",
       "zh_cn": "重要！ 新版本 v{0} 已发布。\r\n点击此处下载。"
     },
-    "Idle Check Method": {},
+    "Idle Check Method:": {
+      "ru": "Метод проверки простоя"
+    },
     "Idle When No Internet Access": {
       "bg": "Спиране на работа при липса на интернет достъп",
       "it": "Idle in assenza di Internet",
@@ -1413,7 +1459,8 @@
       "zh_cn": "输入错误"
     },
     "InputTimeout": {
-      "en": "Input Timeout"
+      "en": "Input Timeout",
+      "ru": "Тайм-аут ввода"
     },
     "Intensity": {
       "it": "Intensità",
@@ -1538,7 +1585,9 @@
       "ru": "Ссылка",
       "zh_cn": "链接"
     },
-    "Load (%)": {},
+    "Load (%)": {
+      "ru": "Нагрузка (%)"
+    },
     "Loading, please wait...": {
       "bg": "Настройките се зареждат, моля изчакайте...",
       "es": "Cargando, espere por favor...",
@@ -1988,8 +2037,12 @@
       "ru": "Подождите, пожалуйста, около {0} секунд…",
       "zh_cn": "请等待约{0}秒..."
     },
-    "Power": {},
-    "Power Cost ({0})": {},
+    "Power": {
+      "ru": "Мощность"
+    },
+    "Power Cost ({0})": {
+      "ru": "Расход на электроэнергию ({0})"
+    },
     "Power Usage (W):": {
       "ru": "Потребление мощности (Вт):"
     },
@@ -2003,7 +2056,9 @@
       "ru": "Точного:",
       "zh_cn": "精确:"
     },
-    "Profit ({0})": {},
+    "Profit ({0})": {
+      "ru": "Прибыль ({0})"
+    },
     "Querying AMD OpenCL devices...": {
       "bg": "Проверка на AMD OpenCL устройства...",
       "es": "Buscando dispositivos AMD OpenCL...",
@@ -2084,7 +2139,9 @@
       "ru": "Быстрого:",
       "zh_cn": "快速:"
     },
-    "RPM": {},
+    "RPM": {
+      "ru": "об/мин"
+    },
     "Random part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nRandom part is used to prevent all world-wide NiceHash Miner Legacy users to have the exact same switching pattern.": {
       "bg": "Случайна компонента на минималния интервал време в секунди) преди програмата да превключи изчислителния алгоритъм.\nОбщият интервал е SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nСлучайната компонента е необходима, за да се избегне възможността всички потребители на NiceHash Miner Legacy в целия свят да имат еднакъв ритъм на превключване на алгоритмите.",
       "es": "Parte aleatoria del tiempo mínimo (en segundos) antes de que el minero cambie de algoritmo.\nEl tiempo total es SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nEsta parte aleatoria es usada para que no todos los usuarios de NiceHash Miner Legacy tengan los mismos patrones de cambio de algoritmo.",
@@ -2202,7 +2259,9 @@
     "Secondary Speed": {
       "ru": "Вторичная скорость:"
     },
-    "Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?": {},
+    "Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?": {
+      "ru": "Контрольная скорость работы для {0} — {1}, но результат бенчмарка был {2}. Хотите принять новое значение?"
+    },
     "Select device first": {
       "bg": "Първо изберете устройство",
       "es": "Selecciona un dispositivo primero",
@@ -2212,6 +2271,9 @@
       "ro": "Selectați mai întâi dispozitivul",
       "ru": "Сперва выберите устройство",
       "zh_cn": "请先选择设备"
+    },
+    "Selected Device Settings": {
+      "ru": "Выбранные настройки устройства"
     },
     "Selected Algorithm: {0}": {
       "bg": "Алгоритъм: {0}",
@@ -2588,7 +2650,9 @@
       "ru": "Порог переключ. прибыльн.:",
       "zh_cn": "切换收益阈值:"
     },
-    "Temp (C)": {},
+    "Temp (C)": {
+      "ru": "Температура (C)"
+    },
     "Terminated": {
       "bg": "Прекратен",
       "es": "Finalizado",
@@ -2608,7 +2672,9 @@
     "The last dcri value to use for tuning": {
       "ru": "Конечное значение dcri для тюнинга"
     },
-    "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {},
+    "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
+      "ru": "Мощность, используемая этим алгоритмом в ваттах.\n Прибыль алгоритма вычтет расходы на электроэнергию, когда данное значение и расход на электроэнергию выше 0."
+    },
     "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue.": {
       "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. NiceHash Miner Legacy няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно NiceHash Miner Legacy и да опитате да поправите този проблем.",
       "es": "Faltan algunos archivos desde el último inicio. Asegúrese de que su antivirus no bloquea la aplicación. NiceHash Miner Legacy podría no funcionar correctamente al faltar algunos archivos. Elige Sí para reinicializar NiceHash Miner Legacy e intentar repararlo.",
@@ -2649,12 +2715,12 @@
       "ru": "Это поле ввода принимает только цифры (0-9).",
       "zh_cn": "此处只可输入数字(0-9)。"
     },
-    "Time Unit": {
-      "bg": "Единица време",
-      "it": "Unità di tempo",
-      "ro": "Unitate timp",
-      "ru": "Единица времени",
-      "zh_cn": "时间单位"
+    "Time Unit:": {
+      "bg": "Единица време:",
+      "it": "Unità di tempo:",
+      "ro": "Unitate timp:",
+      "ru": "Единица времени:",
+      "zh_cn": "时间单位:"
     },
     "Timed out": {
       "bg": "Timedout",
@@ -2676,7 +2742,9 @@
       "ru": "Для идентификации компьютера пользователя.",
       "zh_cn": "用于识别该计算机。"
     },
-    "Total": {},
+    "Total": {
+      "ru": "Итого"
+    },
     "Tuning Enabled": {
       "ru": "Тюнинг включён"
     },

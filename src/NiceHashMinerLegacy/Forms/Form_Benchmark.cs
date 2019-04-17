@@ -88,9 +88,11 @@ namespace NiceHashMiner.Forms
                 _exitWhenFinished = true;
                 StartStopBtn_Click(null, null);
             }
+
+            FormHelpers.TranslateFormControls(this);
         }
 
-#region IBenchmarkCalculation methods
+        #region IBenchmarkCalculation methods
 
         public void CalcBenchmarkDevicesAlgorithmQueue()
         {
@@ -172,22 +174,10 @@ namespace NiceHashMiner.Forms
 
         private void InitLocale()
         {
-            Text = Translations.Tr("Benchmark"); //Translations.Tr("Submit Benchmark Result");
-            //labelInstruction.Text = Translations.Tr("Please select a device to be benchmarked and once it is done, it will automatially open a \r\nnew web page to display the profitability calculator on NiceHash's website.");
-            StartStopBtn.Text = Translations.Tr("&Start");
-            CloseBtn.Text = Translations.Tr("&Close");
-
             // TODO fix locale for benchmark enabled label
             devicesListViewEnableControl1.InitLocale();
             //benchmarkOptions1.InitLocale();
             //algorithmsListView1.InitLocale();
-            groupBoxBenchmarkProgress.Text = Translations.Tr("Benchmark progress status:");
-            radioButton_SelectedUnbenchmarked.Text =
-                Translations.Tr("Benchmark Selected Unbenchmarked Algorithms");
-            radioButton_RE_SelectedUnbenchmarked.Text =
-                Translations.Tr("Benchmark All Selected Algorithms");
-            checkBox_StartMiningAfterBenchmark.Text =
-                Translations.Tr("Start mining after benchmark");
         }
 
 #region Start/Stop methods
