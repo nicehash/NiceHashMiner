@@ -19,14 +19,12 @@ namespace NiceHashMiner.MinersDownloader
     public static class MinersDownloadManager
     {
         private static readonly DownloadSetup StandardDlSetup = new DownloadSetup(
-            "https://github.com/nicehash/NiceHashMinerLegacy/releases/download/1.9.0.19/bin_1_9_0_20.zip",
-            "bins.zip",
-            "bin");
+            "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/bin.7z",
+            "bins.7z");
 
         private static readonly DownloadSetup ThirdPartyDlSetup = new DownloadSetup(
-            "https://github.com/nicehash/NiceHashMinerLegacy/releases/download/1.9.0.19/bin_3rdparty_1_9_0_20.zip",
-            "bins_3rdparty.zip",
-            "bin_3rdparty");
+            "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/bin_3rdparty.7z",
+            "bins_3rdparty.7z");
 
         static MinersDownloadManager()
         {
@@ -74,7 +72,15 @@ namespace NiceHashMiner.MinersDownloader
                 var downloadPluginOK = await DownloadFileAsync(downloadSetup.BinsDownloadUrl, downloadSetup.BinsZipLocation, downloadMinersProgressChangedEventHandler, stop);
                 if (!downloadPluginOK || stop.IsCancellationRequested) return;
                 // unzip 
-                var unzipPluginOK = await UnzipFileAsync(downloadSetup.BinsZipLocation, "", zipProgressMinersChangedEventHandler, stop);
+                var unzipPluginOK = false;
+                if (downloadSetup.BinsZipLocation.EndsWith(".7z"))
+                {
+                    unzipPluginOK = await Un7zipFileAsync(downloadSetup.BinsZipLocation, "miner_plugins", zipProgressMinersChangedEventHandler, stop);
+                }
+                else
+                {
+                    unzipPluginOK = await UnzipFileAsync(downloadSetup.BinsZipLocation, "miner_plugins", zipProgressMinersChangedEventHandler, stop);
+                }
                 if (!unzipPluginOK || stop.IsCancellationRequested) return;
                 File.Delete(downloadSetup.BinsZipLocation);
             }
@@ -132,7 +138,7 @@ namespace NiceHashMiner.MinersDownloader
                         //entry.ExtractToFile(extractPath, true);
 
                         using (var zipStream = entry.Open())
-                        using (var fileStream = new FileStream(extractPath, FileMode.CreateNew))
+                        using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write))
                         {
                             await zipStream.CopyToAsync(fileStream);
                         }
@@ -169,7 +175,7 @@ namespace NiceHashMiner.MinersDownloader
                                 Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
                             }
                             using (var entryStream = reader.OpenEntryStream())
-                            using (var fileStream = new FileStream(extractPath, FileMode.CreateNew))
+                            using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write))
                             {
                                 await entryStream.CopyToAsync(fileStream);
                             }
@@ -218,10 +224,11 @@ namespace NiceHashMiner.MinersDownloader
                 {
                     File.Delete(downloadSetup.BinsZipLocation);
                 }
-                if (Directory.Exists(downloadSetup.ZipedFolderName))
-                {
-                    Directory.Delete(downloadSetup.ZipedFolderName, true);
-                }
+                // TODO don't delete 'miner_plugins' folder
+                //if (Directory.Exists(downloadSetup.ZipedFolderName))
+                //{
+                //    Directory.Delete(downloadSetup.ZipedFolderName, true);
+                //}
             }
             catch (Exception e)
             {
@@ -257,7 +264,14 @@ namespace NiceHashMiner.MinersDownloader
                 }
 
                 var unzipProgress = new Progress<int>(perc => progress?.Report(new Tuple<string, int>(Translations.Tr("Unzipping {0} %", perc), perc)));
-                await UnzipFileAsync(downloadSetup.BinsZipLocation, "", unzipProgress, stop);
+                if (downloadSetup.BinsZipLocation.EndsWith(".7z"))
+                {
+                    await Un7zipFileAsync(downloadSetup.BinsZipLocation, "miner_plugins", unzipProgress, stop);
+                }
+                else
+                {
+                    await UnzipFileAsync(downloadSetup.BinsZipLocation, "miner_plugins", unzipProgress, stop);
+                }
                 
                 await Task.Delay(300);
                 if (File.Exists(downloadSetup.BinsZipLocation))

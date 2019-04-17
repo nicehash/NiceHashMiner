@@ -15,7 +15,7 @@ using System.Linq;
 namespace ClaymoreHub
 {
 
-    public class ClaymoreHubPlugin : IMinerPlugin, IInitInternals
+    public class ClaymoreHubPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
         public string PluginUUID => "5e3b699e-2755-499c-bf4e-20d4aaef73df";
 
@@ -346,8 +346,17 @@ namespace ClaymoreHub
             }
         };
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
-
         #endregion Internal Settings
-    }
 
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "cudart64_91.dll", "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
+                @"cuda10.0\cudart64_100.dll", @"cuda10.0\EthDcrMiner64.exe", @"cuda6.5\cudart64_65.dll", @"cuda6.5\EthDcrMiner64.exe", @"cuda7.5\cudart64_75.dll", @"cuda7.5\EthDcrMiner64.exe",
+                @"cuda8.0\cudart64_80.dll", @"cuda8.0\EthDcrMiner64.exe", @"Remote manager\EthMan.exe", @"Remote manager\libeay32.dll", @"Remote manager\ssleay32.dll"
+            });
+        }
+    }
 }

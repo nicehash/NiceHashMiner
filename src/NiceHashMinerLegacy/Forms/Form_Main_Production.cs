@@ -397,7 +397,7 @@ namespace NiceHashMiner
                     }
                 }
 
-                // Plugin Loading
+                // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
 
                 if (runVCRed)

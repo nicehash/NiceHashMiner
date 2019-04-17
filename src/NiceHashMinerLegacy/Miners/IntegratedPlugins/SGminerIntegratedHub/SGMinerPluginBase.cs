@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin
+    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker
     {
         public bool Is3rdParty => false;
 
@@ -27,12 +27,19 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public string Author => "stanko@nicehash.com";
 
+        public IMiner CreateMiner()
+        {
+            return new SGminerIntegratedMiner(PluginUUID, AMDDevice.OpenCLPlatformID)
+            {
+                MinerOptionsPackage = _minerOptionsPackage,
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
+            };
+        }
+
         public bool CanGroup(MiningPair a, MiningPair b)
         {
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
         }
-
-        public abstract IMiner CreateMiner();
 
         public abstract Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices);
 
@@ -63,5 +70,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         };
 
         protected static MinerOptionsPackage _minerOptionsPackage = SGMinerBase.DefaultMinerOptionsPackage;
+
+        public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
     }
 }

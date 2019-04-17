@@ -13,13 +13,5 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         { }
 
         public bool Is3rdParty => true;
-
-        public new IMiner CreateMiner()
-        {
-            return new GMinerIntegratedMiner(PluginUUID)
-            {
-                MinerOptionsPackage = _minerOptionsPackage
-            };
-        }
     }
 }

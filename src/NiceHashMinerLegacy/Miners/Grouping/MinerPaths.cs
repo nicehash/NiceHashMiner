@@ -19,9 +19,7 @@ namespace NiceHashMiner.Miners.Grouping
             public const string None = "";
 
             // root binary folder
-            private const string Bin3rdParty = @"bin_3rdparty";
-            public const string ClaymoreDual = Bin3rdParty + @"\claymore_dual\EthDcrMiner64.exe";
-            public const string Phoenix = Bin3rdParty + @"\phoenix\PhoenixMiner.exe";
+            public const string ClaymoreDual = @"miner_plugins\ClaymoreDual\bins\EthDcrMiner64.exe";
         }
 
         // NEW START
@@ -38,8 +36,6 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 case MinerBaseType.Claymore:
                     return Data.ClaymoreDual;
-                case MinerBaseType.Phoenix:
-                    return Data.Phoenix;
             }
             return Data.None;
         }

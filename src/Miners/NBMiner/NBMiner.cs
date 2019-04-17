@@ -22,7 +22,6 @@ namespace NBMiner
         private readonly string _uuid;
         private string _extraLaunchParameters = "";
         private AlgorithmType _algorithmType;
-        private readonly Dictionary<int, int> _cudaIDMap;
         private readonly HttpClient _http = new HttpClient();
 
         private string AlgoName
@@ -60,10 +59,9 @@ namespace NBMiner
             }
         }
 
-        public NBMiner(string uuid, Dictionary<int, int> cudaIDMap)
+        public NBMiner(string uuid)
         {
             _uuid = uuid;
-            _cudaIDMap = cudaIDMap;
         }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
@@ -87,7 +85,7 @@ namespace NBMiner
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, cl, GetEnvironmentVariables());
-            var id = _cudaIDMap[_miningPairs.First().Device.ID];
+            var id = Shared.MappedCudaIds[_miningPairs.First().Device.UUID];
 
             var benchHashes = 0d;
             var benchIters = 0;
@@ -139,7 +137,7 @@ namespace NBMiner
             _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             
-            var devs = string.Join(",", _miningPairs.Select(p => _cudaIDMap[p.Device.ID]));
+            var devs = string.Join(",", _miningPairs.Select(p => Shared.MappedCudaIds[p.Device.UUID]));
             return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} -d {devs} -RUN {_extraLaunchParameters}";
         }
         

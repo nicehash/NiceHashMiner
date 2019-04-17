@@ -189,6 +189,25 @@ namespace NiceHashMiner.Plugin
             }
         }
 
+        // for now integrated only
+        public static List<string> GetMissingMiners(bool is3rdParty)
+        {
+            var ret = new List<string>();
+            foreach (var plugin in IntegratedPlugins)
+            {
+                if (plugin.Is3rdParty == is3rdParty && plugin is IBinaryPackageMissingFilesChecker pluginCheckBins)
+                {
+                    try
+                    {
+                        ret.AddRange(pluginCheckBins.CheckBinaryPackageMissingFiles());
+                    }
+                    catch
+                    { }
+                }
+            }
+            return ret;
+        }
+
         private static void UpdatePluginAlgorithms()
         {
             // get devices

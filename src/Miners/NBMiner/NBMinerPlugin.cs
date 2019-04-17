@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
@@ -14,7 +15,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NBMiner
 {
-    public class NBMinerPlugin : IMinerPlugin, IInitInternals
+    public class NBMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker
     {
         public NBMinerPlugin(string pluginUUID = "d9e7ea80-4bfb-11e9-a481-e144ccd86993")
         {
@@ -28,8 +29,6 @@ namespace NBMiner
 
         public string Author => "Dillon Newell";
         
-        protected readonly Dictionary<int, int> _mappedCudaIDs = new Dictionary<int, int>();
-
         private bool isSupportedVersion(int major, int minor)
         {
             var nbMinerSMSupportedVersions = new List<Version>
@@ -64,7 +63,8 @@ namespace NBMiner
             var pcieID = 0;
             foreach (var gpu in cudaGpus)
             {
-                _mappedCudaIDs[gpu.ID] = pcieID++;
+                Shared.MappedCudaIds[gpu.UUID] = pcieID;
+                ++pcieID;
                 var algos = GetSupportedAlgorithms(gpu).ToList();
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
@@ -85,7 +85,7 @@ namespace NBMiner
 
         public IMiner CreateMiner()
         {
-            return new NBMiner(PluginUUID, _mappedCudaIDs)
+            return new NBMiner(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
@@ -157,5 +157,30 @@ namespace NBMiner
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
+
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        {
+            // TODO will break
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json -RUN");
+            var mappedDevs = DevicesListParser.ParseNBMinerOutput(output, devices.ToList());
+
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                Shared.MappedCudaIds[uuid] = indexID;
+            }
+        }
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nbminer.exe", "OhGodAnETHlargementPill-r2.exe" });
+        }
     }
 }
