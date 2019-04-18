@@ -8,6 +8,8 @@ using System.Globalization;
 using System.Management;
 using System.Security.Principal;
 using NiceHashMinerLegacy.Common.Enums;
+using System.IO;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner
 {
@@ -341,6 +343,25 @@ namespace NiceHashMiner
             }
 
             return guid;
+        }
+
+        public static void SetFirewallRules(string operation)
+        {
+            try
+            {
+                var setFirewallRulesProcess = new Process
+                {
+                    StartInfo =
+                {
+                    FileName = @"FirewallRules.exe",
+                    Arguments = $"{Directory.GetCurrentDirectory()} {operation} miner_plugins",
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+                };
+                setFirewallRulesProcess.Start();
+            }
+            catch { }
         }
     }
 }
