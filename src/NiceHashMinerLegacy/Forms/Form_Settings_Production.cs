@@ -5,14 +5,12 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
-using NiceHashMiner.Miners.Parsing;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Security;
 using System.Windows.Forms;
-using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
 using static NiceHashMiner.Translations;
@@ -589,28 +587,30 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
         }
 
+        // TODO obsolete feature broken
         private void CheckBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
 
-            // indicate there has been a change
-            IsChange = true;
-            ConfigManager.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
-            foreach (var cDev in AvailableDevices.Devices)
-            {
-                if (cDev.DeviceType == DeviceType.AMD)
-                {
-                    foreach (var algorithm in cDev.GetAlgorithmSettings())
-                    {
-                        if (algorithm.NiceHashID != AlgorithmType.DaggerHashimoto)
-                        {
-                            algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
-                            algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-                                new MiningPair(cDev, algorithm), algorithm.NiceHashID, DeviceType.AMD, false);
-                        }
-                    }
-                }
-            }
+            //// indicate there has been a change
+            //IsChange = true;
+            //ConfigManager.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
+            //foreach (var cDev in AvailableDevices.Devices)
+            //{
+            //    if (cDev.DeviceType == DeviceType.AMD)
+            //    {
+            //        foreach (var algorithm in cDev.AlgorithmSettings)
+            //        {
+            //            if (algorithm.NiceHashID != AlgorithmType.DaggerHashimoto)
+            //            {
+            //                // BROKEN
+            //                //algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
+            //                //algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
+            //                //    new MiningPair(cDev, algorithm), algorithm.NiceHashID, DeviceType.AMD, false);
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         // TODO broken feature no miner has default optimizations anymore (only sgminer plugin and this is not compatible)
@@ -618,43 +618,43 @@ namespace NiceHashMiner.Forms
         {
             if (!_isInitFinished) return;
 
-            // indicate there has been a change
-            IsChange = true;
-            ConfigManager.GeneralConfig.DisableDefaultOptimizations = checkBox_DisableDefaultOptimizations.Checked;
-            if (ConfigManager.GeneralConfig.DisableDefaultOptimizations)
-            {
-                foreach (var cDev in AvailableDevices.Devices)
-                {
-                    foreach (var algorithm in cDev.GetAlgorithmSettings())
-                    {
-                        algorithm.ExtraLaunchParameters = "";
-                        if (cDev.DeviceType == DeviceType.AMD && algorithm.NiceHashID != AlgorithmType.DaggerHashimoto)
-                        {
-                            algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
-                            algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-                                new MiningPair(cDev, algorithm), algorithm.NiceHashID, cDev.DeviceType, false);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                foreach (var cDev in AvailableDevices.Devices)
-                {
-                    if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
-                    var deviceDefaultsAlgoSettings = DefaultAlgorithms.GetAlgorithmsForDevice(cDev);
-                    foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings)
-                    {
-                        var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings);
-                        if (toSetAlgo != null)
-                        {
-                            toSetAlgo.ExtraLaunchParameters = defaultAlgoSettings.ExtraLaunchParameters;
-                            toSetAlgo.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-                                new MiningPair(cDev, toSetAlgo), toSetAlgo.NiceHashID, cDev.DeviceType, false);
-                        }
-                    }
-                }
-            }
+            //// indicate there has been a change
+            //IsChange = true;
+            //ConfigManager.GeneralConfig.DisableDefaultOptimizations = checkBox_DisableDefaultOptimizations.Checked;
+            //if (ConfigManager.GeneralConfig.DisableDefaultOptimizations)
+            //{
+            //    foreach (var cDev in AvailableDevices.Devices)
+            //    {
+            //        foreach (var algorithm in cDev.GetAlgorithmSettings())
+            //        {
+            //            algorithm.ExtraLaunchParameters = "";
+            //            if (cDev.DeviceType == DeviceType.AMD && algorithm.NiceHashID != AlgorithmType.DaggerHashimoto)
+            //            {
+            //                algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
+            //                algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
+            //                    new MiningPair(cDev, algorithm), algorithm.NiceHashID, cDev.DeviceType, false);
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    foreach (var cDev in AvailableDevices.Devices)
+            //    {
+            //        if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
+            //        var deviceDefaultsAlgoSettings = DefaultAlgorithms.GetAlgorithmsForDevice(cDev);
+            //        foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings)
+            //        {
+            //            var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings);
+            //            if (toSetAlgo != null)
+            //            {
+            //                toSetAlgo.ExtraLaunchParameters = defaultAlgoSettings.ExtraLaunchParameters;
+            //                toSetAlgo.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
+            //                    new MiningPair(cDev, toSetAlgo), toSetAlgo.NiceHashID, cDev.DeviceType, false);
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         private void CheckBox_RunAtStartup_CheckedChanged(object sender, EventArgs e)

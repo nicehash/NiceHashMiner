@@ -239,16 +239,8 @@ namespace NiceHashMiner.Forms.Components
                     MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes) 
                 {
-                    if (justTuning) 
-                    {
-                        CDevice.TuningCopyUuid = uuid;
-                        CDevice.CopyTuningSettingsFrom(copyBenchCDev);
-                    } 
-                    else 
-                    {
-                        CDevice.BenchmarkCopyUuid = uuid;
-                        CDevice.CopyBenchmarkSettingsFrom(copyBenchCDev);
-                    }
+                    CDevice.BenchmarkCopyUuid = uuid;
+                    CDevice.CopyBenchmarkSettingsFrom(copyBenchCDev);
                     _algorithmsListView?.RepaintStatus(CDevice.Enabled, CDevice.Uuid);
                 }
             }

@@ -59,7 +59,7 @@ namespace NiceHashMiner.Forms
 
             // clear prev pending statuses
             foreach (var dev in AvailableDevices.Devices)
-            foreach (var algo in dev.GetAlgorithmSettings())
+            foreach (var algo in dev.AlgorithmSettings)
                 algo.ClearBenchmarkPendingFirst();
 
             benchmarkOptions1.SetPerformanceType(benchmarkPerformanceType);
@@ -129,7 +129,7 @@ namespace NiceHashMiner.Forms
             foreach (var cDev in AvailableDevices.Devices)
             {
                 var algorithmQueue = new Queue<Algorithm>();
-                foreach (var algo in cDev.GetAlgorithmSettings())
+                foreach (var algo in cDev.AlgorithmSettings)
                     if (ShoulBenchmark(algo))
                     {
                         algorithmQueue.Enqueue(algo);
@@ -496,7 +496,7 @@ namespace NiceHashMiner.Forms
 
             // disable all pending benchmark
             foreach (var cDev in AvailableDevices.Devices)
-            foreach (var algorithm in cDev.GetAlgorithmSettings())
+            foreach (var algorithm in cDev.AlgorithmSettings)
                 algorithm.ClearBenchmarkPending();
 
             // save already benchmarked algorithms

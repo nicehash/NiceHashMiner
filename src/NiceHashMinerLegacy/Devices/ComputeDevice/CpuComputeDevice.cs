@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
@@ -36,7 +35,6 @@ namespace NiceHashMiner.Devices
             Threads = threads;
             AffinityMask = affinityMask;
             //Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
-            AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
             Index = ID; // Don't increment for CPU
 
             var hashedInfo = $"{id}--{name}--{threads}";

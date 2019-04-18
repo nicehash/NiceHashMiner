@@ -119,7 +119,7 @@ namespace NiceHashMiner.Benchmarking
                 foreach (var cDev in AvailableDevices.Devices)
                 {
                     var algorithmQueue = new Queue<Algorithm>();
-                    foreach (var algo in cDev.GetAlgorithmSettings())
+                    foreach (var algo in cDev.AlgorithmSettings)
                     {
                         if (ShouldBenchmark(algo))
                         {
@@ -212,7 +212,7 @@ namespace NiceHashMiner.Benchmarking
         // assume device is enabled and it exists
         public static void StartBenchmarForDevice(ComputeDevice device, bool startMiningAfterBenchmark = false, BenchmarkPerformanceType perfType = BenchmarkPerformanceType.Standard)
         {
-            var unbenchmarkedAlgorithms = device.GetAlgorithmSettings().Where(algo => algo.Enabled && algo.BenchmarkNeeded).ToQueue();
+            var unbenchmarkedAlgorithms = device.AlgorithmSettings.Where(algo => algo.Enabled && algo.BenchmarkNeeded).ToQueue();
             lock (_runningBenchmarkThreads)
             lock (_statusCheckAlgos)
             {

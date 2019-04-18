@@ -50,10 +50,10 @@ namespace NiceHashMiner.Miners.Grouping
         public MiningDevice(ComputeDevice device)
         {
             Device = device;
-            foreach (var algo in Device.GetAlgorithmSettings())
+            foreach (var algo in Device.AlgorithmSettings)
             {
                 var isAlgoMiningCapable = GroupSetupUtils.IsAlgoMiningCapable(algo);
-                var isValidMinerPath = MinerPaths.IsValidMinerPath(algo.MinerBinaryPath);
+                var isValidMinerPath = true; // old crap remove
                 if (isAlgoMiningCapable && isValidMinerPath)
                 {
                     Algorithms.Add(algo);
@@ -65,7 +65,7 @@ namespace NiceHashMiner.Miners.Grouping
             }
 
             MostProfitableAlgorithmType = AlgorithmType.NONE;
-            MostProfitableMinerBaseType = MinerBaseType.NONE;
+            MostProfitableMinerUUID = "NONE";
         }
 
         public ComputeDevice Device { get; }
@@ -74,30 +74,30 @@ namespace NiceHashMiner.Miners.Grouping
         public string GetMostProfitableString()
         {
             return
-                Enum.GetName(typeof(MinerBaseType), MostProfitableMinerBaseType)
+                MostProfitableMinerUUID
                 + "_"
                 + Enum.GetName(typeof(AlgorithmType), MostProfitableAlgorithmType);
         }
 
         public AlgorithmType MostProfitableAlgorithmType { get; private set; }
 
-        public MinerBaseType MostProfitableMinerBaseType { get; private set; }
+        public string MostProfitableMinerUUID { get; private set; }
 
         // prev state
         public AlgorithmType PrevProfitableAlgorithmType { get; private set; }
 
-        public MinerBaseType PrevProfitableMinerBaseType { get; private set; }
+        public string PrevProfitableMinerBaseType { get; private set; }
 
         private int GetMostProfitableIndex()
         {
             return Algorithms.FindIndex((a) =>
-                a.DualNiceHashID == MostProfitableAlgorithmType && a.MinerBaseType == MostProfitableMinerBaseType);
+                a.AlgorithmUUID == MostProfitableAlgorithmType && a.MinerUUID == MostProfitableMinerUUID);
         }
 
         private int GetPrevProfitableIndex()
         {
             return Algorithms.FindIndex((a) =>
-                a.DualNiceHashID == PrevProfitableAlgorithmType && a.MinerBaseType == PrevProfitableMinerBaseType);
+                a.AlgorithmUUID == PrevProfitableAlgorithmType && a.MinerUUID == PrevProfitableMinerBaseType);
         }
 
         public double GetCurrentMostProfitValue
@@ -142,26 +142,26 @@ namespace NiceHashMiner.Miners.Grouping
         {
             // restore last state
             MostProfitableAlgorithmType = PrevProfitableAlgorithmType;
-            MostProfitableMinerBaseType = PrevProfitableMinerBaseType;
+            MostProfitableMinerUUID = PrevProfitableMinerBaseType;
         }
 
         public void SetNotMining()
         {
             // device isn't mining (e.g. below profit threshold) so set state to none
             PrevProfitableAlgorithmType = AlgorithmType.NONE;
-            PrevProfitableMinerBaseType = MinerBaseType.NONE;
+            PrevProfitableMinerBaseType = "NONE";
             MostProfitableAlgorithmType = AlgorithmType.NONE;
-            MostProfitableMinerBaseType = MinerBaseType.NONE;
+            MostProfitableMinerUUID = "NONE";
         }
 
         public void CalculateProfits(Dictionary<AlgorithmType, double> profits)
         {
             // save last state
             PrevProfitableAlgorithmType = MostProfitableAlgorithmType;
-            PrevProfitableMinerBaseType = MostProfitableMinerBaseType;
+            PrevProfitableMinerBaseType = MostProfitableMinerUUID;
             // assume none is profitable
             MostProfitableAlgorithmType = AlgorithmType.NONE;
-            MostProfitableMinerBaseType = MinerBaseType.NONE;
+            MostProfitableMinerUUID = "NONE";
             // calculate new profits
             foreach (var algo in Algorithms)
             {
@@ -175,8 +175,8 @@ namespace NiceHashMiner.Miners.Grouping
                 if (maxProfit < algo.CurrentProfit)
                 {
                     maxProfit = algo.CurrentProfit;
-                    MostProfitableAlgorithmType = algo.DualNiceHashID;
-                    MostProfitableMinerBaseType = algo.MinerBaseType;
+                    MostProfitableAlgorithmType = algo.AlgorithmUUID;
+                    MostProfitableMinerUUID = algo.MinerUUID;
                 }
             }
 #if (SWITCH_TESTING)

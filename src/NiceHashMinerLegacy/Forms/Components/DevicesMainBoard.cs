@@ -61,7 +61,7 @@ namespace NiceHashMiner.Forms.Components
         }
 
         private static string getAlgosStats(ComputeDevice d) {
-            var allAlgos = d.GetAlgorithmSettings();
+            var allAlgos = d.AlgorithmSettings;
             var enabledAlgos = allAlgos.Count(a => a.Enabled);
             var benchmarkedAlgos = allAlgos.Count(a => !a.BenchmarkNeeded);
             return $"{allAlgos.Count} / {enabledAlgos} / {benchmarkedAlgos}";

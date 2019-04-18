@@ -1,7 +1,7 @@
 ﻿using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace NiceHashMinerLegacy.Common.Algorithm
 {
@@ -11,6 +11,7 @@ namespace NiceHashMinerLegacy.Common.Algorithm
         {
             MinerID = minerID;
             IDs = ids;
+            Speeds = ids.Select(id => 0d).ToList();
         }
         // Identity
         public IReadOnlyList<AlgorithmType> IDs { get; }
@@ -23,8 +24,17 @@ namespace NiceHashMinerLegacy.Common.Algorithm
             }
         }
 
+        public AlgorithmType SecondAlgorithmType
+        {
+            get
+            {
+                if (IDs.Count > 1) return IDs[1];
+                return AlgorithmType.NONE;
+            }
+        }
+
         // variable settings
-        public IList<double> Speeds { get; set; } // Make setter private???
+        public IList<double> Speeds { get; private set; }
         public bool Enabled { get; set; } = true;
         public string ExtraLaunchParameters { get; set; } = "";
         // TODO power usage???

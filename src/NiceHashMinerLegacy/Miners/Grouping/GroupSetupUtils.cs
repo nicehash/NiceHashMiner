@@ -31,9 +31,9 @@ namespace NiceHashMiner.Miners.Grouping
             }
             else
             {
-                var hasEnabledAlgo = device.GetAlgorithmSettings().Aggregate(false,
+                var hasEnabledAlgo = device.AlgorithmSettings.Aggregate(false,
                     (current, algo) =>
-                        current | (IsAlgoMiningCapable(algo) && MinerPaths.IsValidMinerPath(algo.MinerBinaryPath) || algo is PluginAlgorithm));
+                        current | (IsAlgoMiningCapable(algo) || algo is PluginAlgorithm));
                 if (hasEnabledAlgo == false)
                 {
                     status = DeviceMiningStatus.NoEnabledAlgorithms;
@@ -109,9 +109,9 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     var device = miningDevice.Device;
                     stringBuilder.AppendLine($"\tENABLED ({device.GetFullName()})");
-                    foreach (var algo in device.GetAlgorithmSettings())
+                    foreach (var algo in device.AlgorithmSettings)
                     {
-                        var isEnabled = IsAlgoMiningCapable(algo) && MinerPaths.IsValidMinerPath(algo.MinerBinaryPath);
+                        var isEnabled = IsAlgoMiningCapable(algo);
                         stringBuilder.AppendLine(
                             $"\t\tALGORITHM {(isEnabled ? "ENABLED " : "DISABLED")} ({algo.AlgorithmStringID})");
                     }
@@ -175,9 +175,9 @@ namespace NiceHashMiner.Miners.Grouping
                             if (index > -1)
                             {
                                 miningDevs[minerDevIndex].Algorithms[index].AvaragedSpeed = avaragedSpeed;
-                                if (miningDevs[minerDevIndex].Algorithms[index] is DualAlgorithm dualAlgo)
+                                if (miningDevs[minerDevIndex].Algorithms[index].IsDual)
                                 {
-                                    dualAlgo.SecondaryAveragedSpeed = secondaryAveragedSpeed;
+                                    miningDevs[minerDevIndex].Algorithms[index].SecondaryAveragedSpeed = secondaryAveragedSpeed;
                                 }
                             }
                         }
@@ -243,9 +243,9 @@ namespace NiceHashMiner.Miners.Grouping
             {
                 var algoID = algo.AlgorithmStringID;
                 double secondarySpeed = 0;
-                if (algo is DualAlgorithm dualAlgo)
+                if (algo.IsDual)
                 {
-                    secondarySpeed = dualAlgo.SecondaryBenchmarkSpeed;
+                    secondarySpeed = algo.SecondaryBenchmarkSpeed;
                 }
                 if (BenchmarkSums.ContainsKey(algoID) == false)
                 {

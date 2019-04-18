@@ -2,7 +2,6 @@
 using NVIDIA.NVAPI;
 using System;
 using System.Diagnostics;
-using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Utils.Guid;
@@ -145,7 +144,6 @@ namespace NiceHashMiner.Devices
             {
                 Uuid = cudaDevice.UUID;
             }
-            AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
             Index = ID + AvailableDevices.AvailCpus; // increment by CPU count
 
             _nvHandle = nvHandle;

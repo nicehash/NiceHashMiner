@@ -29,7 +29,7 @@ namespace NiceHashMiner.Plugin
     public static class MinerPluginsManager
     {
         public static bool IntegratedPluginsOnly => true;
-        public static new List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
+        public static List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
         {
             // open source
             new CCMinerAlexisIntegratedPlugin(),

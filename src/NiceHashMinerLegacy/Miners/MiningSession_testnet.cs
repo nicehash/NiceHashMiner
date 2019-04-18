@@ -40,10 +40,6 @@ namespace NiceHashMiner.Miners
         //Dictionary<GroupedDevices, GroupMiners> _groupedDevicesMiners;
         private Dictionary<string, GroupMiner> _runningGroupMiners = new Dictionary<string, GroupMiner>();
 
-        private GroupMiner _ethminerNvidiaPaused;
-        private GroupMiner _ethminerAmdPaused;
-
-
         private bool _isProfitable;
 
         private bool _isConnectedToInternet;
@@ -59,7 +55,7 @@ namespace NiceHashMiner.Miners
         private bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
 
         private readonly Dictionary<Algorithm, BenchChecker> _benchCheckers = new Dictionary<Algorithm, BenchChecker>();
-        private readonly Dictionary<DualAlgorithm, BenchChecker> _dualBenchCheckers = new Dictionary<DualAlgorithm, BenchChecker>();
+        //private readonly Dictionary<DualAlgorithm, BenchChecker> _dualBenchCheckers = new Dictionary<DualAlgorithm, BenchChecker>();
 
         public List<int> ActiveDeviceIndexes
         {
@@ -134,18 +130,6 @@ namespace NiceHashMiner.Miners
                 _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
 
-            if (_ethminerNvidiaPaused != null)
-            {
-                _ethminerNvidiaPaused.End();
-                _ethminerNvidiaPaused = null;
-            }
-
-            if (_ethminerAmdPaused != null)
-            {
-                _ethminerAmdPaused.End();
-                _ethminerAmdPaused = null;
-            }
-
             _switchingManager.Stop();
 
             ApplicationStateManager.ClearRatesAll();
@@ -169,19 +153,19 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            foreach (var algo in _dualBenchCheckers.Keys)
-            {
-                var info = _dualBenchCheckers[algo].FinalizeIsDeviant(algo.SecondaryBenchmarkSpeed, 0);
-                if (!info.IsDeviant) continue;
-                var result = MessageBox.Show(
-                    Translations.Tr("Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?", algo.DualNiceHashID, info.Deviation, algo.SecondaryBenchmarkSpeed), 
-                    Translations.Tr("Deviant Algorithm"),
-                    MessageBoxButtons.YesNo);
-                if (result == DialogResult.Yes)
-                {
-                    algo.SecondaryBenchmarkSpeed = info.Deviation;
-                }
-            }
+            //foreach (var algo in _dualBenchCheckers.Keys)
+            //{
+            //    var info = _dualBenchCheckers[algo].FinalizeIsDeviant(algo.SecondaryBenchmarkSpeed, 0);
+            //    if (!info.IsDeviant) continue;
+            //    var result = MessageBox.Show(
+            //        Translations.Tr("Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?", algo.DualNiceHashID, info.Deviation, algo.SecondaryBenchmarkSpeed), 
+            //        Translations.Tr("Deviant Algorithm"),
+            //        MessageBoxButtons.YesNo);
+            //    if (result == DialogResult.Yes)
+            //    {
+            //        algo.SecondaryBenchmarkSpeed = info.Deviation;
+            //    }
+            //}
         }
 
         public void StopAllMinersNonProfitable()
@@ -194,18 +178,6 @@ namespace NiceHashMiner.Miners
                 }
 
                 _runningGroupMiners = new Dictionary<string, GroupMiner>();
-            }
-
-            if (_ethminerNvidiaPaused != null)
-            {
-                _ethminerNvidiaPaused.End();
-                _ethminerNvidiaPaused = null;
-            }
-
-            if (_ethminerAmdPaused != null)
-            {
-                _ethminerAmdPaused.End();
-                _ethminerAmdPaused = null;
             }
 
             //_ratesComunication?.ClearRates(-1);
@@ -356,13 +328,13 @@ namespace NiceHashMiner.Miners
                         $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
                         $"\t[{algo.AlgorithmStringID}]"
                     );
-                    if (algo is DualAlgorithm dualAlg)
-                    {
-                        stringBuilderDevice.AppendLine(
-                            $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
-                            $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
-                        );
-                    }
+                    //if (algo is DualAlgorithm dualAlg)
+                    //{
+                    //    stringBuilderDevice.AppendLine(
+                    //        $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
+                    //        $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
+                    //    );
+                    //}
                 }
                 // most profitable
                 stringBuilderDevice.AppendLine(
@@ -467,45 +439,12 @@ namespace NiceHashMiner.Miners
                         var newAlgoType = GetMinerPairAlgorithmType(miningPairs);
                         if (newAlgoType != AlgorithmType.NONE && newAlgoType != AlgorithmType.INVALID)
                         {
-                            // Check if dcri optimal value has changed
-                            var dcriChanged = false;
-                            foreach (var mPair in _runningGroupMiners[runningGroupKey].Miner.MiningSetup.MiningPairs)
-                            {
-                                if (mPair.Algorithm is DualAlgorithm algo
-                                    && algo.TuningEnabled
-                                    && algo.MostProfitableIntensity != algo.CurrentIntensity)
-                                {
-                                    dcriChanged = true;
-                                    break;
-                                }
-                            }
-
                             // if algoType valid and different from currently running update
-                            if (newAlgoType != _runningGroupMiners[runningGroupKey].DualAlgorithmType || dcriChanged)
+                            if (newAlgoType != _runningGroupMiners[runningGroupKey].AlgorithmUUID)
                             {
                                 // remove current one and schedule to stop mining
                                 toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
-                                // create new one TODO check if DaggerHashimoto
-                                GroupMiner newGroupMiner = null;
-                                if (newAlgoType == AlgorithmType.DaggerHashimoto)
-                                {
-                                    if (_ethminerNvidiaPaused != null && _ethminerNvidiaPaused.Key == runningGroupKey)
-                                    {
-                                        newGroupMiner = _ethminerNvidiaPaused;
-                                    }
-
-                                    if (_ethminerAmdPaused != null && _ethminerAmdPaused.Key == runningGroupKey)
-                                    {
-                                        newGroupMiner = _ethminerAmdPaused;
-                                    }
-                                }
-
-                                if (newGroupMiner == null)
-                                {
-                                    newGroupMiner = new GroupMiner(miningPairs, runningGroupKey);
-                                }
-
-                                toRunNewGroupMiners[runningGroupKey] = newGroupMiner;
+                                toRunNewGroupMiners[runningGroupKey] = new GroupMiner(miningPairs, runningGroupKey);
                             }
                             else
                                 noChangeGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
@@ -537,43 +476,30 @@ namespace NiceHashMiner.Miners
                     // stop old miners                   
                     foreach (var toStop in toStopGroupMiners.Values)
                     {
-                        stringBuilderPreviousAlgo.Append($"{toStop.DevicesInfoString}: {toStop.AlgorithmType}, ");
+                        stringBuilderPreviousAlgo.Append($"{toStop.DevicesInfoString}: {toStop.AlgorithmUUID}, ");
 
                         toStop.Stop();
                         _runningGroupMiners.Remove(toStop.Key);
-                        // TODO check if daggerHashimoto and save
-                        if (toStop.AlgorithmType == AlgorithmType.DaggerHashimoto)
-                        {
-                            if (toStop.DeviceType == DeviceType.NVIDIA)
-                            {
-                                _ethminerNvidiaPaused = toStop;
-                            }
-                            else if (toStop.DeviceType == DeviceType.AMD)
-                            {
-                                _ethminerAmdPaused = toStop;
-                            }
-                        }
-
                         if (toStop.Miner.MiningSetup.MiningPairs.Count != 1) continue;
                         var algo = toStop.Miner.MiningSetup.MiningPairs.First().Algorithm;
                         if (_benchCheckers.TryGetValue(algo, out var checker))
                             checker.Stop();
-                        if (algo is DualAlgorithm dual && _dualBenchCheckers.TryGetValue(dual, out var sChecker))
-                            sChecker.Stop();
+                        //if (algo is DualAlgorithm dual && _dualBenchCheckers.TryGetValue(dual, out var sChecker))
+                        //    sChecker.Stop();
                     }
 
                     // start new miners
                     var miningLocation = StratumService.SelectedServiceLocation;
                     foreach (var toStart in toRunNewGroupMiners.Values)
                     {
-                        stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmType}, ");
+                        stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmUUID}, ");
                         toStart.Start(miningLocation, _username);
                         _runningGroupMiners[toStart.Key] = toStart;
                     }
 
                     // which miners dosen't change
                     foreach (var noChange in noChangeGroupMiners.Values)
-                        stringBuilderNoChangeAlgo.Append($"{noChange.DevicesInfoString}: {noChange.AlgorithmType}, ");
+                        stringBuilderNoChangeAlgo.Append($"{noChange.DevicesInfoString}: {noChange.AlgorithmUUID}, ");
 
                     if (stringBuilderPreviousAlgo.Length > 0)
                         Helpers.ConsolePrint(Tag, $"Stop Mining: {stringBuilderPreviousAlgo}");
@@ -598,7 +524,7 @@ namespace NiceHashMiner.Miners
 
         private static AlgorithmType GetMinerPairAlgorithmType(IEnumerable<MiningPair> miningPairs)
         {
-            return miningPairs.FirstOrDefault()?.Algorithm?.DualNiceHashID ?? AlgorithmType.NONE;
+            return miningPairs.FirstOrDefault()?.Algorithm?.AlgorithmUUID ?? AlgorithmType.NONE;
         }
 
         public async Task MinerStatsCheck()
@@ -636,7 +562,7 @@ namespace NiceHashMiner.Miners
                     {
                         groupMiners.CurrentRate = 0;
                         // set empty
-                        ad = new ApiData(groupMiners.AlgorithmType, groupMiners.DevIndexes);
+                        ad = new ApiData(groupMiners.AlgorithmUUID, groupMiners.DevIndexes);
                     }
 
                     // Don't attempt unless card is mining alone
@@ -650,14 +576,14 @@ namespace NiceHashMiner.Miners
                         }
                         checker.AppendSpeed(ad.Speed);
 
-                        if (algo is DualAlgorithm dual)
-                        {
-                            if (!_dualBenchCheckers.TryGetValue(dual, out var sChecker)) {
-                                sChecker = new BenchChecker();
-                                _dualBenchCheckers[dual] = sChecker;
-                            }
-                            sChecker.AppendSpeed(ad.SecondarySpeed);
-                        }
+                        //if (algo is DualAlgorithm dual)
+                        //{
+                        //    if (!_dualBenchCheckers.TryGetValue(dual, out var sChecker)) {
+                        //        sChecker = new BenchChecker();
+                        //        _dualBenchCheckers[dual] = sChecker;
+                        //    }
+                        //    sChecker.AppendSpeed(ad.SecondarySpeed);
+                        //}
                     }
 
                     // Update GUI

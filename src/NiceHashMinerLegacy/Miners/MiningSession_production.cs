@@ -40,10 +40,6 @@ namespace NiceHashMiner.Miners
         //Dictionary<GroupedDevices, GroupMiners> _groupedDevicesMiners;
         private Dictionary<string, GroupMiner> _runningGroupMiners = new Dictionary<string, GroupMiner>();
 
-        private GroupMiner _ethminerNvidiaPaused;
-        private GroupMiner _ethminerAmdPaused;
-
-
         private bool _isProfitable;
 
         private bool _isConnectedToInternet;
@@ -157,18 +153,6 @@ namespace NiceHashMiner.Miners
                 _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
 
-            if (_ethminerNvidiaPaused != null)
-            {
-                _ethminerNvidiaPaused.End();
-                _ethminerNvidiaPaused = null;
-            }
-
-            if (_ethminerAmdPaused != null)
-            {
-                _ethminerAmdPaused.End();
-                _ethminerAmdPaused = null;
-            }
-
             _switchingManager.Stop();
 
             _mainFormRatesComunication?.ClearRatesAll();
@@ -189,18 +173,6 @@ namespace NiceHashMiner.Miners
                 }
 
                 _runningGroupMiners = new Dictionary<string, GroupMiner>();
-            }
-
-            if (_ethminerNvidiaPaused != null)
-            {
-                _ethminerNvidiaPaused.End();
-                _ethminerNvidiaPaused = null;
-            }
-
-            if (_ethminerAmdPaused != null)
-            {
-                _ethminerAmdPaused.End();
-                _ethminerAmdPaused = null;
             }
 
             _mainFormRatesComunication?.ClearRates(-1);
@@ -319,13 +291,14 @@ namespace NiceHashMiner.Miners
                         $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
                         $"\t[{algo.AlgorithmStringID}]"
                     );
-                    if (algo is DualAlgorithm dualAlg)
-                    {
-                        stringBuilderDevice.AppendLine(
-                            $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
-                            $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
-                        );
-                    }
+                    // TODO second paying ratio logging
+                    //if (algo is PluginAlgorithm dualAlg && dualAlg.IsDual)
+                    //{
+                    //    stringBuilderDevice.AppendLine(
+                    //        $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
+                    //        $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
+                    //    );
+                    //}
                 }
                 // most profitable
                 stringBuilderDevice.AppendLine(
@@ -430,45 +403,12 @@ namespace NiceHashMiner.Miners
                         var newAlgoType = GetMinerPairAlgorithmType(miningPairs);
                         if (newAlgoType != AlgorithmType.NONE && newAlgoType != AlgorithmType.INVALID)
                         {
-                            // Check if dcri optimal value has changed
-                            var dcriChanged = false;
-                            foreach (var mPair in _runningGroupMiners[runningGroupKey].Miner.MiningSetup.MiningPairs)
-                            {
-                                if (mPair.Algorithm is DualAlgorithm algo
-                                    && algo.TuningEnabled
-                                    && algo.MostProfitableIntensity != algo.CurrentIntensity)
-                                {
-                                    dcriChanged = true;
-                                    break;
-                                }
-                            }
-
                             // if algoType valid and different from currently running update
-                            if (newAlgoType != _runningGroupMiners[runningGroupKey].DualAlgorithmType || dcriChanged)
+                            if (newAlgoType != _runningGroupMiners[runningGroupKey].AlgorithmUUID)
                             {
                                 // remove current one and schedule to stop mining
                                 toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
-                                // create new one TODO check if DaggerHashimoto
-                                GroupMiner newGroupMiner = null;
-                                if (newAlgoType == AlgorithmType.DaggerHashimoto)
-                                {
-                                    if (_ethminerNvidiaPaused != null && _ethminerNvidiaPaused.Key == runningGroupKey)
-                                    {
-                                        newGroupMiner = _ethminerNvidiaPaused;
-                                    }
-
-                                    if (_ethminerAmdPaused != null && _ethminerAmdPaused.Key == runningGroupKey)
-                                    {
-                                        newGroupMiner = _ethminerAmdPaused;
-                                    }
-                                }
-
-                                if (newGroupMiner == null)
-                                {
-                                    newGroupMiner = new GroupMiner(miningPairs, runningGroupKey);
-                                }
-
-                                toRunNewGroupMiners[runningGroupKey] = newGroupMiner;
+                                toRunNewGroupMiners[runningGroupKey] = new GroupMiner(miningPairs, runningGroupKey);
                             }
                             else
                                 noChangeGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
@@ -497,28 +437,16 @@ namespace NiceHashMiner.Miners
                     // stop old miners                   
                     foreach (var toStop in toStopGroupMiners.Values)
                     {
-                        stringBuilderPreviousAlgo.Append($"{toStop.DevicesInfoString}: {toStop.AlgorithmType}, ");
+                        stringBuilderPreviousAlgo.Append($"{toStop.DevicesInfoString}: {toStop.AlgorithmUUID}, ");
 
                         toStop.Stop();
                         _runningGroupMiners.Remove(toStop.Key);
-                        // TODO check if daggerHashimoto and save
-                        if (toStop.AlgorithmType == AlgorithmType.DaggerHashimoto)
-                        {
-                            if (toStop.DeviceType == DeviceType.NVIDIA)
-                            {
-                                _ethminerNvidiaPaused = toStop;
-                            }
-                            else if (toStop.DeviceType == DeviceType.AMD)
-                            {
-                                _ethminerAmdPaused = toStop;
-                            }
-                        }
                     }
 
                     // start new miners
                     foreach (var toStart in toRunNewGroupMiners.Values)
                     {
-                        stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmType}, ");
+                        stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmUUID}, ");
 
                         // TODO this differs in format PRODUCTION vs. TESTNET
                         var username = _btcAdress;
@@ -533,7 +461,7 @@ namespace NiceHashMiner.Miners
 
                     // which miners dosen't change
                     foreach (var noChange in noChangeGroupMiners.Values)
-                        stringBuilderNoChangeAlgo.Append($"{noChange.DevicesInfoString}: {noChange.AlgorithmType}, ");
+                        stringBuilderNoChangeAlgo.Append($"{noChange.DevicesInfoString}: {noChange.AlgorithmUUID}, ");
 
                     if (stringBuilderPreviousAlgo.Length > 0)
                         Helpers.ConsolePrint(Tag, $"Stop Mining: {stringBuilderPreviousAlgo}");
@@ -558,7 +486,7 @@ namespace NiceHashMiner.Miners
         {
             if (miningPairs.Count > 0)
             {
-                return miningPairs[0].Algorithm.DualNiceHashID;
+                return miningPairs[0].Algorithm.AlgorithmUUID;
             }
 
             return AlgorithmType.NONE;
@@ -602,7 +530,7 @@ namespace NiceHashMiner.Miners
                     {
                         groupMiners.CurrentRate = 0;
                         // set empty
-                        ad = new ApiData(groupMiners.AlgorithmType);
+                        ad = new ApiData(groupMiners.AlgorithmUUID);
                     }
 
                     currentProfit += groupMiners.CurrentRate;

@@ -82,21 +82,13 @@ namespace NiceHashMiner.Benchmarking
 
         private async Task BenchmarkAlgorithm(Algorithm algo)
         {
-            var currentMiner = MinerFactory.CreateMiner(Device, algo);
+            var currentMiner = MinerFactory.CreateMiner(algo);
             if (currentMiner == null) return;
 
             BenchmarkManager.AddToStatusCheck(Device, algo);
-            if (algo is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled && dualAlgo.StartTuning())
-            {
-                await BenchmarkAlgorithmDual(currentMiner, dualAlgo);
-            }
-            else if (algo is PluginAlgorithm pAlgo)
+            if (algo is PluginAlgorithm pAlgo)
             {
                 await BenchmarkPluginAlgorithm(pAlgo);
-            }
-            else
-            {
-                await BenchmarkAlgorithmOnce(currentMiner, algo);
             }
         }
 
@@ -122,41 +114,6 @@ namespace NiceHashMiner.Benchmarking
             {
                 algo.ClearBenchmarkPending();
                 BenchmarkManager.SetCurrentStatus(Device, algo, "");
-            }
-        }
-
-        private async Task BenchmarkAlgorithmDual(Miner currentMiner, DualAlgorithm dualAlgo)
-        {
-            var anyResultSuccess = false;
-            var lastStatus = "";
-            do
-            {
-                if (_stopBenchmark.IsCancellationRequested) break;
-
-                currentMiner.InitBenchmarkSetup(new MiningPair(Device, dualAlgo));
-                var time = BenchmarkTimes.GetTime(_performanceType, Device.DeviceType);
-
-                var benchTaskResult = currentMiner.BenchmarkStartAsync(time, _stopBenchmark.Token);
-                _powerHelper.Start();
-                var result = await benchTaskResult;
-                var power = _powerHelper.Stop();
-                dualAlgo.SetPowerForCurrent(power);
-                anyResultSuccess |= result.Success;
-                lastStatus = result.Status;
-            }
-            while (dualAlgo.IncrementToNextEmptyIntensity());
-
-            BenchmarkManager.RemoveFromStatusCheck(Device/*, dualAlgo*/);
-            if (!anyResultSuccess)
-            {
-                // add new failed list
-                _benchmarkFailedAlgo.Add(dualAlgo.AlgorithmName);
-                BenchmarkManager.SetCurrentStatus(Device, dualAlgo, lastStatus);
-            }
-            else
-            {
-                dualAlgo.ClearBenchmarkPending();
-                BenchmarkManager.SetCurrentStatus(Device, dualAlgo, "");
             }
         }
 

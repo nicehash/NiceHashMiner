@@ -68,7 +68,7 @@ namespace MinerSmokeTest
             // disable/enable all by default 
             foreach (var device in devices)
             {
-                foreach (var algo in device.GetAlgorithmSettings()) {
+                foreach (var algo in device.AlgorithmSettings) {
                     algo.Enabled = true;
                 }
             }
@@ -99,7 +99,7 @@ namespace MinerSmokeTest
                 checkbox.Value = !deviceEnabled;
                 device.SetEnabled(!deviceEnabled);
             }
-            var algorithms = device.GetAlgorithmSettings();
+            var algorithms = device.AlgorithmSettings;
             foreach (var algo in algorithms)
             {
                 dgv_algo.Rows.Add(GetAlgorithmRowData(algo));
@@ -154,33 +154,31 @@ namespace MinerSmokeTest
             var stopDelayTime = TimeSpan.FromMilliseconds(delayTime); //TimeSpan.FromSeconds(1);
             var enabledDevs = AvailableDevices.Devices.Where(dev => dev.Enabled);
 
-            var testSteps = enabledDevs.Select(dev => dev.GetAlgorithmSettings().Where(algo => algo.Enabled).Count()).Sum();
+            var testSteps = enabledDevs.Select(dev => dev.AlgorithmSettings.Where(algo => algo.Enabled).Count()).Sum();
             var step = 0;
             foreach (var device in enabledDevs)
             {
-                var enabledAlgorithms = device.GetAlgorithmSettings().Where(algo => algo.Enabled);
+                var enabledAlgorithms = device.AlgorithmSettings.Where(algo => algo.Enabled);
                 foreach (var algorithm in enabledAlgorithms)
                 {
                     step++;
                     try {
-                        var miner = NiceHashMiner.Miners.MinerFactory.CreateMiner(device.DeviceType, algorithm);
+                        var miner = NiceHashMiner.Miners.MinerFactory.CreateMiner(algorithm);
 
                         var pair = new List<MiningPair> { new MiningPair(device, algorithm) };
                         var miningSetup = new MiningSetup(pair);
 
                         miner.InitMiningSetup(miningSetup);
-                        var url = StratumServiceHelpers.GetLocationUrl(algorithm.NiceHashID, "eu", miner.ConectionType);
 
                         tbx_info.Text += $"TESTING: {Environment.NewLine}";
                         tbx_info.Text += $"Device: {device.GetFullName()} {Environment.NewLine}";
-                        tbx_info.Text += $"Miner path: {algorithm.MinerBinaryPath}" + Environment.NewLine;
                         tbx_info.Text += $"Miner base: {algorithm.MinerBaseTypeName}" + Environment.NewLine;
                         tbx_info.Text += $"Algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
 
                         label1.Text = $"{step} / {testSteps}";
 
                         tbx_info.Text += $"Starting miner running for {miningTime.ToString()}" + Environment.NewLine;
-                        miner.Start(url, DemoUser.BTC);
+                        miner.Start("eu", DemoUser.BTC);
 
                         await Task.Delay(miningTime);
                         tbx_info.Text += $"Stopping" + Environment.NewLine;

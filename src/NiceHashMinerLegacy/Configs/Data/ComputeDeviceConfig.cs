@@ -13,5 +13,6 @@ namespace NiceHashMiner.Configs.Data
 
         public uint PowerTarget = uint.MinValue;
         public PowerLevel PowerLevel = PowerLevel.High;
+        // TODO check last set power mode if it works
     }
 }

@@ -87,9 +87,9 @@ namespace NiceHashMiner.Forms.Components
                 field_PowerUsage.EntryText = ParseDoubleDefault(algorithm.PowerUsage);
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
-                if (algorithm is DualAlgorithm dualAlgo) 
+                if (algorithm.IsDual) 
                 {
-                    secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(dualAlgo.SecondaryBenchmarkSpeed);
+                    secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.SecondaryBenchmarkSpeed);
                     secondaryFieldBoxBenchmarkSpeed.Enabled = true;
                 } 
                 else 
@@ -120,9 +120,9 @@ namespace NiceHashMiner.Forms.Components
                 {
                     fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                     field_PowerUsage.EntryText = ParseDoubleDefault(algorithm.PowerUsage);
-                    if (algorithm is DualAlgorithm dualAlgo) 
+                    if (algorithm.IsDual) 
                     {
-                        secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(dualAlgo.SecondaryBenchmarkSpeed);
+                        secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.SecondaryBenchmarkSpeed);
                     } 
                     else 
                     {
@@ -152,17 +152,16 @@ namespace NiceHashMiner.Forms.Components
         private void SecondaryTextChangedBenchmarkSpeed(object sender, EventArgs e)
         {
             if (double.TryParse(secondaryFieldBoxBenchmarkSpeed.EntryText, out var secondaryValue)
-                && _currentlySelectedAlgorithm is DualAlgorithm dualAlgo)
+                && _currentlySelectedAlgorithm.IsDual)
             {
-                dualAlgo.SecondaryBenchmarkSpeed = secondaryValue;
+                _currentlySelectedAlgorithm.SecondaryBenchmarkSpeed = secondaryValue;
             }
             UpdateSpeedText();
         }
 
         private void UpdateSpeedText()
         {
-            var secondarySpeed = (_currentlySelectedAlgorithm is DualAlgorithm dualAlgo) ? dualAlgo.SecondaryBenchmarkSpeed : 0;
-            var speedString = Helpers.FormatDualSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed, secondarySpeed, _currentlySelectedAlgorithm.NiceHashID);
+            var speedString = _currentlySelectedAlgorithm.BenchmarkSpeedString();
             // update lvi speed
             if (_currentlySelectedLvi != null)
             {

@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using NiceHashMiner.Devices.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Device;
@@ -123,7 +122,6 @@ namespace NiceHashMiner.Devices
             BusID = amdDevice.BusID;
             Codename = amdDevice.Codename;
             InfSection = amdDevice.InfSection;
-            AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
             Index = ID + AvailableDevices.AvailCpus + AvailableDevices.AvailNVGpus;
             _adapterIndex = amdDevice.Adl1Index;
 

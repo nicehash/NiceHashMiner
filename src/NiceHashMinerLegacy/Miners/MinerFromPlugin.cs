@@ -43,7 +43,17 @@ namespace NiceHashMiner.Miners
                 ret.Speed = algoSpeed.Speed;
                 ret.PowerUsage = apiData.PowerUsageTotal;
                 return ret;
-            } 
+            }
+            else if (apiData.AlgorithmSpeedsTotal.Count == 2)
+            {
+                var algoSpeed = apiData.AlgorithmSpeedsTotal.First();
+                var algoSpeedSecond = apiData.AlgorithmSpeedsTotal.Last();
+                var ret = new ApiData(algoSpeed.AlgorithmType, algoSpeedSecond.AlgorithmType);
+                ret.Speed = algoSpeed.Speed;
+                ret.SecondarySpeed = algoSpeedSecond.Speed;
+                ret.PowerUsage = apiData.PowerUsageTotal;
+                return ret;
+            }
 
             return null;
         }
@@ -85,11 +95,9 @@ namespace NiceHashMiner.Miners
 #endif
 
         // TODO this thing 
-        public override void Start(string url, string username)
+        public override void Start(string miningLocation, string username)
         {
-            // TODO global state right here
-            var location = StratumService.SelectedServiceLocation;
-            _miner.InitMiningLocationAndUsername(location, username);
+            _miner.InitMiningLocationAndUsername(miningLocation, username);
 
             _miningPairs = this.MiningSetup.MiningPairs
                 .Where(pair => pair.Algorithm is PluginAlgorithm)

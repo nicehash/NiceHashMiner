@@ -23,13 +23,31 @@ namespace NiceHashMiner.Miners
 
         //public static bool Running => _process != null && !_process.HasExited;
 
+            // get if this is Dagger
+        private static AlgorithmType GetPrimaryAlgorithmFromAlgorithmUUID(AlgorithmType type)
+        {
+            if (type > 0) return type;
+            switch (type)
+            {
+                case AlgorithmType.DaggerKeccak:
+                case AlgorithmType.DaggerBlake2s:
+                case AlgorithmType.DaggerSia:
+                case AlgorithmType.DaggerDecred:
+                case AlgorithmType.DaggerLbry:
+                case AlgorithmType.DaggerPascal:
+                    return AlgorithmType.DaggerHashimoto;
+
+            }
+            return AlgorithmType.NONE;
+        }
+
         public static void CheckAndStart(MiningSetup setup)
         {
             var pluginPairs = setup.MiningPairs
                 .Select(pair => new MinerPlugin.MiningPair
                 {
                     Device = pair.Device.PluginDevice,
-                    Algorithm = new AlgorithmCommon.Algorithm("fake", pair.Algorithm.NiceHashID)
+                    Algorithm = new AlgorithmCommon.Algorithm("fake", GetPrimaryAlgorithmFromAlgorithmUUID(pair.Algorithm.AlgorithmUUID))
                 });
             EthlargementIntegratedPlugin.Instance.Start(pluginPairs);
 

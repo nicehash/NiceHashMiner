@@ -83,83 +83,17 @@ namespace NiceHashMiner.Benchmarking
 
         private async Task BenchmarkAlgorithm(Algorithm algo)
         {
-            var currentMiner = MinerFactory.CreateMiner(Device, algo);
+            var currentMiner = MinerFactory.CreateMiner(algo);
             if (currentMiner == null) return;
 
             _benchmarkForm.AddToStatusCheck(Device, algo);
-            if (algo is DualAlgorithm dualAlgo && dualAlgo.TuningEnabled && dualAlgo.StartTuning())
-            {
-                await BenchmarkAlgorithmDual(currentMiner, dualAlgo);
-            }
-            else if (algo is PluginAlgorithm pAlgo)
+            if (algo is PluginAlgorithm pAlgo)
             {
                 await BenchmarkPluginAlgorithm(pAlgo);
             }
-            else
-            {
-                await BenchmarkAlgorithmOnce(currentMiner, algo);
-            }
         }
 
-        private async Task BenchmarkAlgorithmOnce(Miner currentMiner, Algorithm algo)
-        {
-            currentMiner.InitBenchmarkSetup(new MiningPair(Device, algo));
-            var time = BenchmarkTimes.GetTime(_performanceType, Device.DeviceType);
 
-            var benchTaskResult = currentMiner.BenchmarkStartAsync(time, _stopBenchmark.Token);
-            _powerHelper.Start();
-            var result = await benchTaskResult;
-            var power = _powerHelper.Stop();
-            algo.PowerUsage = power;
-
-            _benchmarkForm.RemoveFromStatusCheck(Device, algo);
-            if (!result.Success)
-            {
-                // add new failed list
-                _benchmarkFailedAlgo.Add(algo.AlgorithmName);
-                _benchmarkForm.SetCurrentStatus(Device, algo, result.Status);
-            }
-            else
-            {
-                algo.ClearBenchmarkPending();
-                _benchmarkForm.SetCurrentStatus(Device, algo, "");
-            }
-        }
-
-        private async Task BenchmarkAlgorithmDual(Miner currentMiner, DualAlgorithm dualAlgo)
-        {
-            var anyResultSuccess = false;
-            var lastStatus = "";
-            do
-            {
-                if (_stopBenchmark.IsCancellationRequested) break;
-
-                currentMiner.InitBenchmarkSetup(new MiningPair(Device, dualAlgo));
-                var time = BenchmarkTimes.GetTime(_performanceType, Device.DeviceType);
-
-                var benchTaskResult = currentMiner.BenchmarkStartAsync(time, _stopBenchmark.Token);
-                _powerHelper.Start();
-                var result = await benchTaskResult;
-                var power = _powerHelper.Stop();
-                dualAlgo.SetPowerForCurrent(power);
-                anyResultSuccess |= result.Success;
-                lastStatus = result.Status;
-            }
-            while (dualAlgo.IncrementToNextEmptyIntensity());
-
-            _benchmarkForm.RemoveFromStatusCheck(Device, dualAlgo);
-            if (!anyResultSuccess)
-            {
-                // add new failed list
-                _benchmarkFailedAlgo.Add(dualAlgo.AlgorithmName);
-                _benchmarkForm.SetCurrentStatus(Device, dualAlgo, lastStatus);
-            }
-            else
-            {
-                dualAlgo.ClearBenchmarkPending();
-                _benchmarkForm.SetCurrentStatus(Device, dualAlgo, "");
-            }
-        }
 
         private async Task BenchmarkPluginAlgorithm(PluginAlgorithm algo)
         {
@@ -178,13 +112,10 @@ namespace NiceHashMiner.Benchmarking
             var power = _powerHelper.Stop();
             if (result.Success || result.AlgorithmTypeSpeeds?.Count > 0)
             {
-                algo.BenchmarkSpeed = result.AlgorithmTypeSpeeds.First().Speed;
+                var ids = result.AlgorithmTypeSpeeds.Select(ats => ats.AlgorithmType).ToList();
+                var speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.Speed).ToList();
+                algo.Speeds = speeds;
                 algo.PowerUsage = power;
-                if (result.AlgorithmTypeSpeeds.Count > 1)
-                {
-                    Helpers.ConsolePrint("BenchmarkHandler2", $"Has Second speed {result.AlgorithmTypeSpeeds[1].Speed}");
-
-                }
                 // set status to empty string it will return speed
                 algo.ClearBenchmarkPending();
                 _benchmarkForm.SetCurrentStatus(Device, algo, "");

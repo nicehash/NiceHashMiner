@@ -1052,7 +1052,7 @@ namespace NiceHashMiner
             {
                 if (cdev.Enabled)
                 {
-                    if (cdev.GetAlgorithmSettings().Where(algo => algo.Enabled).Any(algo => algo.BenchmarkSpeed == 0))
+                    if (cdev.AlgorithmSettings.Where(algo => algo.Enabled).Any(algo => algo.BenchmarkSpeed == 0))
                     {
                         isBenchInit = false;
                     }
@@ -1085,7 +1085,7 @@ namespace NiceHashMiner
                     {
                         if (cdev.Enabled)
                         {
-                            var enabled = cdev.GetAlgorithmSettings().Any(algo => algo.BenchmarkSpeed > 0);
+                            var enabled = cdev.AlgorithmSettings.Any(algo => algo.BenchmarkSpeed > 0);
                             cdev.SetEnabled(enabled);
                         }
                     }

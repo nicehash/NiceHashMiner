@@ -9,9 +9,7 @@ namespace NiceHashMiner.Miners.Grouping
     {
         public Miner Miner { get; protected set; }
         public string DevicesInfoString { get; }
-        public AlgorithmType AlgorithmType { get; }
-
-        public AlgorithmType DualAlgorithmType { get; }
+        public AlgorithmType AlgorithmUUID { get; }
 
         // for now used only for dagger identification AMD or NVIDIA
         public DeviceType DeviceType { get; }
@@ -25,8 +23,7 @@ namespace NiceHashMiner.Miners.Grouping
         // , string miningLocation, string btcAdress, string worker
         public GroupMiner(List<MiningPair> miningPairs, string key)
         {
-            AlgorithmType = AlgorithmType.NONE;
-            DualAlgorithmType = AlgorithmType.NONE;
+            AlgorithmUUID = AlgorithmType.NONE;
             DevicesInfoString = "N/A";
             CurrentRate = 0;
             Key = key;
@@ -50,12 +47,11 @@ namespace NiceHashMiner.Miners.Grouping
                 {
                     var mPair = miningPairs[0];
                     DeviceType = mPair.Device.DeviceType;
-                    Miner = MinerFactory.CreateMiner(mPair.Device, mPair.Algorithm);
+                    Miner = MinerFactory.CreateMiner(mPair.Algorithm);
                     if (Miner != null)
                     {
                         Miner.InitMiningSetup(new MiningSetup(miningPairs));
-                        AlgorithmType = mPair.Algorithm.NiceHashID;
-                        DualAlgorithmType = mPair.Algorithm.DualNiceHashID;
+                        AlgorithmUUID = mPair.Algorithm.AlgorithmUUID;
                     }
                 }
             }
@@ -87,8 +83,7 @@ namespace NiceHashMiner.Miners.Grouping
             }
             // Wait before new start
             System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-            var locationUrl = StratumServiceHelpers.GetLocationUrl(AlgorithmType, miningLocation, Miner.ConectionType);
-            Miner.Start(locationUrl, username);
+            Miner.Start(miningLocation, username);
         }
     }
 }

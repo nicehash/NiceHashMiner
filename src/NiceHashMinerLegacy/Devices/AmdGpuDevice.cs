@@ -7,7 +7,7 @@ namespace NiceHashMiner.Devices
     [Serializable]
     public class AmdGpuDevice
     {
-        public const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90 " + " --temp-target 75 --auto-fan --auto-gpu ";
+        //public const string TemperatureParam = " --gpu-fan 30-95 --temp-cutoff 95 --temp-overheat 90 " + " --temp-target 75 --auto-fan --auto-gpu ";
 
         public int DeviceID => (int) _openClSubset.DeviceID;
         public int BusID => (int) _openClSubset.AMD_BUS_ID;

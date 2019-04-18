@@ -7,7 +7,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using NiceHashMiner.Algorithms;
-using NiceHashMiner.Devices.Algorithms;
 using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Common.Device;
@@ -72,7 +71,7 @@ namespace NiceHashMiner.Devices
 
         public string InfSection { get; protected set; }
 
-        protected List<Algorithm> AlgorithmSettings;
+        public List<Algorithm> AlgorithmSettings { get; protected set; } = new List<Algorithm>();
 
         public double MinimumProfit { get; set; }
 
@@ -103,51 +102,13 @@ namespace NiceHashMiner.Devices
             State = isEnabled ? DeviceState.Stopped : DeviceState.Disabled;
         }
 
-        // Fake dev
-        public ComputeDevice(int id)
-        {
-            ID = id;
-            Name = "fake_" + id;
-            NameCount = Name;
-            Enabled = true;
-            DeviceType = DeviceType.CPU;
-            DeviceGroupType = DeviceGroupType.NONE;
-            //IsOptimizedVersion = false;
-            Codename = "fake";
-            Uuid = GetUuid(ID, GroupNames.GetGroupName(DeviceGroupType, ID), Name, DeviceGroupType);
-            GpuRam = 0;
-        }
-
         // combines long and short name
         public string GetFullName()
         {
             return string.Format(Translations.Tr("{0} {1}"), NameCount, Name);
         }
-
-        public Algorithm GetAlgorithm(Algorithm modelAlgo)
-        {
-            return GetAlgorithm(modelAlgo.MinerBaseType, modelAlgo.NiceHashID, modelAlgo.SecondaryNiceHashID);
-        }
-
-        public Algorithm GetAlgorithm(MinerBaseType minerBaseType, AlgorithmType algorithmType,
-            AlgorithmType secondaryAlgorithmType)
-        {
-            var toSetIndex = AlgorithmSettings.FindIndex(a =>
-                a.NiceHashID == algorithmType && a.MinerBaseType == minerBaseType &&
-                a.SecondaryNiceHashID == secondaryAlgorithmType);
-            return toSetIndex > -1 ? AlgorithmSettings[toSetIndex] : null;
-        }
-
-        //public Algorithm GetAlgorithm(string algoID) {
-        //    int toSetIndex = this.AlgorithmSettings.FindIndex((a) => a.AlgorithmStringID == algoID);
-        //    if (toSetIndex > -1) {
-        //        return this.AlgorithmSettings[toSetIndex];
-        //    }
-        //    return null;
-        //}
-
          
-        // TODO this thing doesn't support dual algorithms
+        // TODO double check adding and removing plugin algos
         public void UpdatePluginAlgorithms(string pluginUuid, IList<PluginAlgorithm> pluginAlgos)
         {
             var pluginUuidAlgos = AlgorithmSettings
@@ -161,17 +122,22 @@ namespace NiceHashMiner.Devices
             }
 
             // keep old algorithms with settings and filter out obsolete ones
-            var newAlgorithmIDs = pluginAlgos.Select(algo => algo.NiceHashID);
-            var oldAlgosWithSettings = pluginUuidAlgos.Where(algo => newAlgorithmIDs.Contains(algo.NiceHashID));
+            var newAlgorithmIDs = pluginAlgos.Select(algo => algo.AlgorithmStringID);
+            var oldAlgosWithSettings = pluginUuidAlgos.Where(algo => newAlgorithmIDs.Contains(algo.AlgorithmStringID));
 
             // filter out old algorithms with settings and keep only brand new ones
-            var oldAlgosWithSettingsIDs = oldAlgosWithSettings.Select(algo => algo.NiceHashID);
-            var newPluginAlgos = pluginAlgos.Where(algo => oldAlgosWithSettingsIDs.Contains(algo.NiceHashID) == false);
+            var oldAlgosWithSettingsIDs = oldAlgosWithSettings.Select(algo => algo.AlgorithmStringID).ToList();
+            var newPluginAlgos = pluginAlgos.Where(algo => oldAlgosWithSettingsIDs.Contains(algo.AlgorithmStringID) == false);
             
             // add back old ones that are in the new module
             if (oldAlgosWithSettings.Count() > 0) AlgorithmSettings.AddRange(oldAlgosWithSettings);
             // add new ones 
-            if (newPluginAlgos.Count() > 0) AlgorithmSettings.AddRange(newPluginAlgos);
+            //if (newPluginAlgos.Count() > 0) AlgorithmSettings.AddRange(newPluginAlgos);
+            var newPluginAlgosList = newPluginAlgos.ToList();
+            foreach (var pluginAlgo in newPluginAlgos)
+            {
+                AlgorithmSettings.Add(pluginAlgo);
+            }
         }
 
         public void RemovePluginAlgorithms(string pluginUUID)
@@ -185,37 +151,13 @@ namespace NiceHashMiner.Devices
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)
         {
             foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings)
-            {
-                var setAlgo = GetAlgorithm(copyFromAlgo);
+            { 
+                var setAlgo = AlgorithmSettings.Where(a => a.MinerUUID == copyFromAlgo.MinerUUID && a.AlgorithmUUID == copyFromAlgo.AlgorithmUUID).FirstOrDefault();
                 if (setAlgo != null)
                 {
                     setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
                     setAlgo.ExtraLaunchParameters = copyFromAlgo.ExtraLaunchParameters;
-                    setAlgo.LessThreads = copyFromAlgo.LessThreads;
                     setAlgo.PowerUsage = copyFromAlgo.PowerUsage;
-                    if (setAlgo is DualAlgorithm dualSA && copyFromAlgo is DualAlgorithm dualCFA)
-                    {
-                        dualSA.SecondaryBenchmarkSpeed = dualCFA.SecondaryBenchmarkSpeed;
-                    }
-                }
-            }
-        }
-
-        public void CopyTuningSettingsFrom(ComputeDevice copyTuningCDev)
-        {
-            foreach (var copyFromAlgo in copyTuningCDev.AlgorithmSettings.OfType<DualAlgorithm>())
-            {
-                if (GetAlgorithm(copyFromAlgo) is DualAlgorithm setAlgo)
-                {
-                    setAlgo.IntensitySpeeds = new Dictionary<int, double>(copyFromAlgo.IntensitySpeeds);
-                    setAlgo.SecondaryIntensitySpeeds = new Dictionary<int, double>(copyFromAlgo.SecondaryIntensitySpeeds);
-                    setAlgo.TuningStart = copyFromAlgo.TuningStart;
-                    setAlgo.TuningEnd = copyFromAlgo.TuningEnd;
-                    setAlgo.TuningInterval = copyFromAlgo.TuningInterval;
-                    setAlgo.TuningEnabled = copyFromAlgo.TuningEnabled;
-                    setAlgo.IntensityPowers = new Dictionary<int, double>(copyFromAlgo.IntensityPowers);
-                    setAlgo.UseIntensityPowers = copyFromAlgo.UseIntensityPowers;
-                    setAlgo.IntensityUpToDate = false;
                 }
             }
         }
@@ -233,59 +175,25 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        // TODO this has to change or is obsolete
         public void SetAlgorithmDeviceConfig(DeviceBenchmarkConfig config)
         {
-            if (config != null && config.DeviceUUID == Uuid && config.AlgorithmSettings != null)
+            if (config == null || config.DeviceUUID != Uuid || config.PluginAlgorithmSettings == null) return;
+            // plugin algorithms
+            var pluginAlgos = AlgorithmSettings.Where(algo => algo is PluginAlgorithm).Cast<PluginAlgorithm>();
+            foreach (var pluginConf in config.PluginAlgorithmSettings)
             {
-                // TODO why replace AlgorithmSettings?
-                //AlgorithmSettings = DefaultAlgorithms.GetAlgorithmsForDevice(this);
-                foreach (var conf in config.AlgorithmSettings)
-                {
-                    var setAlgo = GetAlgorithm(conf.MinerBaseType, conf.NiceHashID, conf.SecondaryNiceHashID);
-                    if (setAlgo != null)
-                    {
-                        setAlgo.BenchmarkSpeed = conf.BenchmarkSpeed;
-                        setAlgo.ExtraLaunchParameters = conf.ExtraLaunchParameters;
-                        setAlgo.Enabled = conf.Enabled;
-                        setAlgo.LessThreads = conf.LessThreads;
-                        setAlgo.PowerUsage = conf.PowerUsage;
-                        if (setAlgo is DualAlgorithm dualSA)
-                        {
-                            dualSA.SecondaryBenchmarkSpeed = conf.SecondaryBenchmarkSpeed;
-                            var dualConf = config.DualAlgorithmSettings?.Find(a =>
-                                a.SecondaryNiceHashID == dualSA.SecondaryNiceHashID);
-                            if (dualConf != null)
-                            {
-                                dualConf.FixSettingsBounds();
-                                dualSA.IntensitySpeeds = dualConf.IntensitySpeeds;
-                                dualSA.SecondaryIntensitySpeeds = dualConf.SecondaryIntensitySpeeds;
-                                dualSA.TuningEnabled = dualConf.TuningEnabled;
-                                dualSA.TuningStart = dualConf.TuningStart;
-                                dualSA.TuningEnd = dualConf.TuningEnd;
-                                dualSA.TuningInterval = dualConf.TuningInterval;
-                                dualSA.IntensityPowers = dualConf.IntensityPowers;
-                                dualSA.UseIntensityPowers = dualConf.UseIntensityPowers;
-                            }
-                        }
-                    }
-                }
-                if (config == null || config.DeviceUUID != Uuid || config.PluginAlgorithmSettings == null) return;
-                // plugin algorithms
-                var pluginAlgos = AlgorithmSettings.Where(algo => algo is PluginAlgorithm).Cast<PluginAlgorithm>();
-                foreach (var pluginConf in config.PluginAlgorithmSettings)
-                {
-                    var pluginConfAlgorithmIDs = pluginConf.GetAlgorithmIDs();
-                    var pluginAlgo = pluginAlgos
-                        .Where(pAlgo => pluginConf.PluginUUID == pAlgo.BaseAlgo.MinerID && pluginConfAlgorithmIDs.Except(pAlgo.BaseAlgo.IDs).Count() == 0)
-                        .FirstOrDefault();
-                    if (pluginAlgo == null) continue;
-                    // set plugin algo
-                    pluginAlgo.BenchmarkSpeed = pluginConf.Speeds.FirstOrDefault();
-                    pluginAlgo.Enabled = pluginConf.Enabled;
-                    pluginAlgo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
-                    pluginAlgo.PowerUsage = pluginConf.PowerUsage;
-                    pluginAlgo.ConfigVersion = pluginConf.GetVersion();
-                }
+                var pluginConfAlgorithmIDs = pluginConf.GetAlgorithmIDs();
+                var pluginAlgo = pluginAlgos
+                    .Where(pAlgo => pluginConf.PluginUUID == pAlgo.BaseAlgo.MinerID && pluginConfAlgorithmIDs.Except(pAlgo.BaseAlgo.IDs).Count() == 0)
+                    .FirstOrDefault();
+                if (pluginAlgo == null) continue;
+                // set plugin algo
+                pluginAlgo.Speeds = pluginConf.Speeds;
+                pluginAlgo.Enabled = pluginConf.Enabled;
+                pluginAlgo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
+                pluginAlgo.PowerUsage = pluginConf.PowerUsage;
+                pluginAlgo.ConfigVersion = pluginConf.GetVersion();
             }
         }
 
@@ -329,43 +237,6 @@ namespace NiceHashMiner.Devices
                         Speeds = new List<double> { pluginAlgo.BenchmarkSpeed }
                     };
                     ret.PluginAlgorithmSettings.Add(pluginConf);
-                    continue;
-                }
-                // create/setup
-                var conf = new AlgorithmConfig
-                {
-                    Name = algo.AlgorithmStringID,
-                    NiceHashID = algo.NiceHashID,
-                    MinerBaseType = algo.MinerBaseType,
-                    MinerName = algo.MinerName,
-                    BenchmarkSpeed = algo.BenchmarkSpeed,
-                    ExtraLaunchParameters = algo.ExtraLaunchParameters,
-                    Enabled = algo.Enabled,
-                    LessThreads = algo.LessThreads,
-                    PowerUsage =  algo.PowerUsage
-                };
-                // insert
-                ret.AlgorithmSettings.Add(conf);
-                if (algo is DualAlgorithm dualAlgo)
-                {
-                    conf.SecondaryNiceHashID = dualAlgo.SecondaryNiceHashID;
-                    conf.SecondaryBenchmarkSpeed = dualAlgo.SecondaryBenchmarkSpeed;
-
-                    DualAlgorithmConfig dualConf = new DualAlgorithmConfig
-                    {
-                        Name = algo.AlgorithmStringID,
-                        SecondaryNiceHashID = dualAlgo.SecondaryNiceHashID,
-                        IntensitySpeeds = dualAlgo.IntensitySpeeds,
-                        SecondaryIntensitySpeeds = dualAlgo.SecondaryIntensitySpeeds,
-                        TuningEnabled = dualAlgo.TuningEnabled,
-                        TuningStart = dualAlgo.TuningStart,
-                        TuningEnd = dualAlgo.TuningEnd,
-                        TuningInterval = dualAlgo.TuningInterval,
-                        IntensityPowers = dualAlgo.IntensityPowers,
-                        UseIntensityPowers = dualAlgo.UseIntensityPowers
-                    };
-
-                    ret.DualAlgorithmSettings.Add(dualConf);
                 }
             }
 
@@ -374,80 +245,7 @@ namespace NiceHashMiner.Devices
 
         #endregion Config Setters/Getters
 
-        public List<Algorithm> GetAlgorithmSettings()
-        {
-            // hello state
-            var algos = GetAlgorithmSettingsThirdParty(ConfigManager.GeneralConfig.Use3rdPartyMiners);
-
-            var retAlgos = MinerPaths.GetAndInitAlgorithmsMinerPaths(algos, this);
-
-            // sort by algo
-            retAlgos.Sort((a_1, a_2) => (a_1.NiceHashID - a_2.NiceHashID) != 0
-                ? (a_1.NiceHashID - a_2.NiceHashID)
-                : ((a_1.MinerBaseType - a_2.MinerBaseType) != 0
-                    ? (a_1.MinerBaseType - a_2.MinerBaseType)
-                    : (a_1.SecondaryNiceHashID - a_2.SecondaryNiceHashID)));
-
-            return retAlgos;
-        }
-
-        public List<Algorithm> GetAlgorithmSettingsFastest()
-        {
-            // hello state
-            var algosTmp = GetAlgorithmSettings();
-            var sortDict = new Dictionary<AlgorithmType, Algorithm>();
-            foreach (var algo in algosTmp)
-            {
-                var algoKey = algo.NiceHashID;
-                if (sortDict.ContainsKey(algoKey))
-                {
-                    if (sortDict[algoKey].BenchmarkSpeed < algo.BenchmarkSpeed)
-                    {
-                        sortDict[algoKey] = algo;
-                    }
-                }
-                else
-                {
-                    sortDict[algoKey] = algo;
-                }
-            }
-
-            return sortDict.Values.ToList();
-        }
-
-        private List<Algorithm> GetAlgorithmSettingsThirdParty(Use3rdPartyMiners use3rdParty)
-        {
-            if (use3rdParty == Use3rdPartyMiners.YES)
-            {
-                return AlgorithmSettings;
-            }
-
-            var thirdPartyMiners = new List<MinerBaseType>
-            {
-                MinerBaseType.Claymore,
-            };
-
-            return AlgorithmSettings.FindAll(a => thirdPartyMiners.IndexOf(a.MinerBaseType) == -1);
-        }
-
         // static methods
-
-        protected static string GetUuid(int id, string group, string name, DeviceGroupType deviceGroupType)
-        {
-            var sha256 = new SHA256Managed();
-            var hash = new StringBuilder();
-            var mixedAttr = id + group + name + (int) deviceGroupType;
-            var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(mixedAttr), 0,
-                Encoding.UTF8.GetByteCount(mixedAttr));
-            foreach (var b in hashedBytes)
-            {
-                hash.Append(b.ToString("x2"));
-            }
-
-            // GEN indicates the UUID has been generated and cannot be presumed to be immutable
-            return "GEN-" + hash;
-        }
-
         internal bool IsAlgorithmSettingsInitialized()
         {
             return AlgorithmSettings != null;

@@ -8,38 +8,10 @@ namespace NiceHashMiner.Miners.Grouping
     {
         public static bool ShouldGroup(MiningPair a, MiningPair b)
         {
-            // plugin case
-            if (IsPluginAlgorithm(a) && IsPluginAlgorithm(b))
-            {
-                return CheckPluginCanGroup(a, b);
-            }
-            // no mixinng of plugin and non plugin algorithms
-            if (IsPluginAlgorithm(a) != IsPluginAlgorithm(b)) return false;
-
-            // ClaymoreDual should be able to mix AMD and NVIDIA
-            var canGroup = IsSameBinPath(a, b) && IsSameAlgorithmType(a, b); //&& IsSameDeviceType(a, b);
-            return canGroup;
+            // now all are plugin cases
+            return CheckPluginCanGroup(a, b);
         }
 
-        private static bool IsSameBinPath(MiningPair a, MiningPair b)
-        {
-            return a.Algorithm.MinerBinaryPath == b.Algorithm.MinerBinaryPath;
-        }
-        private static bool IsSameAlgorithmType(MiningPair a, MiningPair b) 
-        {
-            return a.Algorithm.DualNiceHashID == b.Algorithm.DualNiceHashID;
-        }
-
-        private static bool IsSameDeviceType(MiningPair a, MiningPair b)
-        {
-            return a.Device.DeviceType == b.Device.DeviceType;
-        }
-
-        // PLUGIN stuff 
-        private static bool IsPluginAlgorithm(MiningPair a)
-        {
-            return a.Algorithm.MinerBaseType == MinerBaseType.PLUGIN && a.Algorithm is PluginAlgorithm;
-        }
         private static bool CheckPluginCanGroup(MiningPair a, MiningPair b)
         {
             var pluginA = new MinerPlugin.MiningPair
