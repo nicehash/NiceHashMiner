@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Management;
 using System.Security.Principal;
 using NiceHashMinerLegacy.Common.Enums;
+using System.IO;
 
 namespace NiceHashMiner
 {
@@ -342,5 +343,58 @@ namespace NiceHashMiner
 
             return guid;
         }
+
+        #region firewallRules
+        //Needs administrator privileges
+        private static void SetFirewallRule(string ruleArgument)
+        {
+            Process setRule = new Process();
+            setRule.StartInfo.FileName = "netsh.exe";
+            setRule.StartInfo.Arguments = ruleArgument;
+            setRule.StartInfo.CreateNoWindow = true;
+            setRule.StartInfo.UseShellExecute = false;
+            setRule.Start();
+            setRule.WaitForExit();
+        }
+
+        private static void AllowFirewallRule(string programFullPath, string name)
+        {
+            SetFirewallRule($"advfirewall firewall add rule name={name} program={programFullPath} protocol=tcp dir=in enable=yes action=allow");
+        }
+
+        private static void RemoveFirewallRule(string name)
+        {
+            SetFirewallRule($"advfirewall firewall delete rule name={name}");
+        }
+
+        public static void SetFirewallRules(List<string> paths, string operation)
+        {
+            try
+            {
+                var miners = new Dictionary<string, string>();
+                foreach (var path in paths)
+                {
+                    miners.Add(path, Path.GetFileNameWithoutExtension(path));
+                }
+
+                if (operation == "add")
+                {
+                    foreach (var miner in miners)
+                    {
+                        AllowFirewallRule(miner.Key, miner.Value);
+                    }
+                }
+                if (operation == "rem")
+                {
+                    foreach (var miner in miners)
+                    {
+                        RemoveFirewallRule(miner.Value);
+                    }
+                }
+            }
+            catch { }
+        }
+
+        #endregion firewallRules
     }
 }
