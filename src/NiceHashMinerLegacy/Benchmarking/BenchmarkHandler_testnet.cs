@@ -92,31 +92,6 @@ namespace NiceHashMiner.Benchmarking
             }
         }
 
-        private async Task BenchmarkAlgorithmOnce(Miner currentMiner, Algorithm algo)
-        {
-            currentMiner.InitBenchmarkSetup(new MiningPair(Device, algo));
-            var time = BenchmarkTimes.GetTime(_performanceType, Device.DeviceType);
-
-            var benchTaskResult = currentMiner.BenchmarkStartAsync(time, _stopBenchmark.Token);
-            _powerHelper.Start();
-            var result = await benchTaskResult;
-            var power = _powerHelper.Stop();
-            algo.PowerUsage = power;
-
-            BenchmarkManager.RemoveFromStatusCheck(Device/*, algo*/);
-            if (!result.Success)
-            {
-                // add new failed list
-                _benchmarkFailedAlgo.Add(algo.AlgorithmName);
-                BenchmarkManager.SetCurrentStatus(Device, algo, result.Status);
-            }
-            else
-            {
-                algo.ClearBenchmarkPending();
-                BenchmarkManager.SetCurrentStatus(Device, algo, "");
-            }
-        }
-
         private async Task BenchmarkPluginAlgorithm(PluginAlgorithm algo)
         {
             var plugin = MinerPluginsManager.GetPluginWithUuid(algo.BaseAlgo.MinerID);

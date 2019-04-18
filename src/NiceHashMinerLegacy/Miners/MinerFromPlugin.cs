@@ -30,7 +30,7 @@ namespace NiceHashMiner.Miners
 
         // PRODUCTION
 #if !(TESTNET || TESTNETDEV)
-            public override async Task<ApiData> GetSummaryAsync()
+        public override async Task<ApiData> GetSummaryAsync()
         {
             IsUpdatingApi = true;
             var apiData = await _miner.GetMinerStatsDataAsync();
@@ -126,22 +126,5 @@ namespace NiceHashMiner.Miners
             IsRunning = false;
             _miner.StopMining();
         }
-
-        #region DEAD_CODE_NEVER_CALL_THIS
-        protected override string BenchmarkCreateCommandLine(Algorithm algorithm, int time)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void BenchmarkOutputErrorDataReceivedImpl(string outdata)
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override bool BenchmarkParseLine(string outdata)
-        {
-            throw new NotImplementedException();
-        }
-        #endregion DEAD_CODE_NEVER_CALL_THIS
     }
 }

@@ -144,7 +144,7 @@ namespace NiceHashMiner.Miners
                 var info = _benchCheckers[algo].FinalizeIsDeviant(algo.BenchmarkSpeed, 0);
                 if (!info.IsDeviant) continue;
                 var result = MessageBox.Show(
-                    Translations.Tr("Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?", algo.NiceHashID, info.Deviation, algo.BenchmarkSpeed), 
+                    Translations.Tr("Algorithm {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?", algo.AlgorithmUUID, info.Deviation, algo.BenchmarkSpeed), 
                     Translations.Tr("Deviant Algorithm"),
                     MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
@@ -540,9 +540,7 @@ namespace NiceHashMiner.Miners
                     // skip if not running or if await already in progress
                     if (!m.IsRunning || m.IsUpdatingApi) continue;
 
-                    m.IsUpdatingApi = true;
                     var ad = await m.GetSummaryAsync();
-                    m.IsUpdatingApi = false;
                     if (ad == null)
                     {
                         Helpers.ConsolePrint(m.MinerTag(), "GetSummary returned null..");
@@ -562,7 +560,7 @@ namespace NiceHashMiner.Miners
                     {
                         groupMiners.CurrentRate = 0;
                         // set empty
-                        ad = new ApiData(groupMiners.AlgorithmUUID, groupMiners.DevIndexes);
+                        ad = new ApiData(groupMiners.DevIndexes, groupMiners.AlgorithmUUID);
                     }
 
                     // Don't attempt unless card is mining alone

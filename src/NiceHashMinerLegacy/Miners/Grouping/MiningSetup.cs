@@ -9,7 +9,10 @@ namespace NiceHashMiner.Miners.Grouping
         public List<MiningPair> MiningPairs { get; }
         public bool IsInit { get; }
 
-        public IEnumerable<int> DeviceIDs => MiningPairs.Select(p => p.Device.ID);
+        public AlgorithmType[] AlgorithmIDs()
+        {
+            return MiningPairs[0].Algorithm.IDs;
+        }
 
         public MiningSetup(List<MiningPair> miningPairs)
         {

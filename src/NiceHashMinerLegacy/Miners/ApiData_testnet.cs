@@ -32,16 +32,24 @@ namespace NiceHashMiner.Miners
         public readonly List<int> DeviceIndices;
         public readonly Dictionary<int, double> PowerMap = new Dictionary<int, double>();
 
-        public ApiData(AlgorithmType algorithmID, List<int> indices, AlgorithmType secondaryAlgorithmID = AlgorithmType.NONE)
+        public ApiData(List<int> indices, params AlgorithmType[] algorithmIDs)
         {
-            AlgorithmID = algorithmID;
-            SecondaryAlgorithmID = secondaryAlgorithmID;
-            AlgorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmID, secondaryAlgorithmID));
+            AlgorithmID = AlgorithmType.NONE;
+            SecondaryAlgorithmID = AlgorithmType.NONE;
+            if (algorithmIDs.Count() > 0)
+            {
+                AlgorithmID = algorithmIDs[0];
+            }
+            if (algorithmIDs.Count() > 1)
+            {
+                SecondaryAlgorithmID = algorithmIDs[1];
+            }
+            AlgorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(AlgorithmID, SecondaryAlgorithmID));
             DeviceIndices = indices;
         }
 
         public ApiData(MiningSetup setup)
-            : this(setup.CurrentAlgorithmType, setup.MiningPairs.Select(p => p.Device.Index).ToList(), setup.CurrentSecondaryAlgorithmType)
+            : this(setup.MiningPairs.Select(p => p.Device.Index).ToList(), setup.AlgorithmIDs())
         {
             foreach (var pair in setup.MiningPairs)
             {
