@@ -44,6 +44,7 @@ namespace NiceHashMiner.Plugin
 
             // 3rd party
             new BMinerIntegratedPlugin(),
+            new ClaymoreDualIntegratedPlugin(),
             new EWBFIntegratedPlugin(),
             new GMinerIntegratedPlugin(),
             new NBMinerIntegratedPlugin(),

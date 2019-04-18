@@ -1,6 +1,7 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ClaymoreCommon;
+using MinerPluginToolkitV1.Interfaces;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
@@ -13,11 +14,15 @@ using System.Threading.Tasks;
 
 namespace ClaymoreDual
 {
-    public class ClaymoreDual : ClaymoreBase
+    public class ClaymoreDual : ClaymoreBase, IAfterStartMining
     {
         public ClaymoreDual(string uuid) : base(uuid)
         {
         }
+
+
+        // TODO figure out how to fix API workaround without this started time
+        private DateTime _started;
 
         protected override Dictionary<string, string> GetEnvironmentVariables()
         {
@@ -83,7 +88,7 @@ namespace ClaymoreDual
                 benchHashResultFirst = (benchHashesFirst / benchIters) * (1 - DevFee * 0.01);
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmSingleType, benchHashResultFirst) },
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmFirstType, benchHashResultFirst) },
                     Success = benchIters >= targetBenchIters
                 };
                 /*} else
@@ -116,10 +121,23 @@ namespace ClaymoreDual
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
         }
-
-        public override Task<ApiData> GetMinerStatsDataAsync()
+        public void AfterStartMining()
         {
-            throw new NotImplementedException();
+            _started = DateTime.Now;
+        }
+
+        public async override Task<ApiData> GetMinerStatsDataAsync()
+        {
+            var api = new ApiData();
+            var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
+            if (elapsedSeconds < 15)
+            {
+                return api;
+            }
+
+            var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
+            var algorithmTypes = IsDual() ? new AlgorithmType[] { _algorithmFirstType, _algorithmSecondType } : new AlgorithmType[] { _algorithmFirstType };
+            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, algorithmTypes);
         }
     }
 }

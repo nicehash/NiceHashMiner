@@ -17,8 +17,6 @@ namespace Phoenix
 {
     public class Phoenix : ClaymoreBase
     {
-        protected List<MiningPair> _orderedMiningPairs = new List<MiningPair>();
-
         public Phoenix(string uuid) : base(uuid)
         {
         }
@@ -34,14 +32,14 @@ namespace Phoenix
         protected override void Init()
         {
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmSingleType = singleType.Item1;
+            _algorithmFirstType = singleType.Item1;
             bool ok = singleType.Item2;
             if (!ok) throw new InvalidOperationException("Invalid mining initialization");
 
             var dualType = MinerToolkit.GetAlgorithmDualType(_miningPairs);
-            _algorithmDualType = dualType.Item1;
+            _algorithmSecondType = dualType.Item1;
             ok = dualType.Item2;
-            if (!ok) _algorithmDualType = AlgorithmType.NONE;
+            if (!ok) _algorithmSecondType = AlgorithmType.NONE;
             // all good continue on
 
             // Order pairs and parse ELP
@@ -71,7 +69,7 @@ namespace Phoenix
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
-            var algorithmTypes = new AlgorithmType[] { _algorithmSingleType };
+            var algorithmTypes = new AlgorithmType[] { _algorithmFirstType };
             return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, algorithmTypes);
         }
 
@@ -121,7 +119,7 @@ namespace Phoenix
                 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmSingleType, benchHashResult) }
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmFirstType, benchHashResult) }
                 };
             };
 

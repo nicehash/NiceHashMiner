@@ -16,7 +16,7 @@ namespace MinerPluginToolkitV1
     // TODO there is no watchdog
     public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
     {
-        private readonly string _uuid;
+        //private readonly string _uuid;
         protected MiningProcess _miningProcess;
         protected IEnumerable<MiningPair> _miningPairs;
         protected string _miningLocation;

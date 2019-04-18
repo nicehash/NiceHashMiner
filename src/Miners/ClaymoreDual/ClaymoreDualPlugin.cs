@@ -17,11 +17,16 @@ namespace ClaymoreDual
 {
     public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
-        public string PluginUUID => "5e3b699e-2755-499c-bf4e-20d4aaef73df";
+        public ClaymoreDualPlugin(string pluginUUID = "5e3b699e-2755-499c-bf4e-20d4aaef73df")
+        {
+            _pluginUUID = pluginUUID;
+        }
+        private readonly string _pluginUUID;
+        public string PluginUUID => _pluginUUID;
 
         public Version Version => new Version(1, 0);
 
-        public string Name => "ClaymoreHub";
+        public string Name => "ClaymoreDual";
 
         public string Author => "Domen Kirn Krefl";
 
@@ -30,19 +35,20 @@ namespace ClaymoreDual
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu)).Cast<AMDDevice>();
-
+            // AMD
+            var amdGpus = devices.Where(dev => dev is AMDDevice).Cast<AMDDevice>();
             foreach (var gpu in amdGpus)
             {
                 var algorithms = GetSupportedAlgorithms(gpu).ToList();
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
+            // CUDA
             var minDrivers = new Version(398, 26);
             if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 5)
+                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3)
                 .Cast<CUDADevice>();
 
             foreach (var gpu in cudaGpus)
@@ -54,19 +60,20 @@ namespace ClaymoreDual
             return supported;
         }
 
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
+        private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak);
-        }
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(AMDDevice gpu)
-        {
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s);
-            yield return new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak);
+            var algorithms = new List<Algorithm>
+            {
+                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto),
+            // duals disabled by default
+#pragma warning disable 0618
+                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred) {Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s) {Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak) {Enabled = false },
+#pragma warning restore 0618
+            };
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         public IMiner CreateMiner()
