@@ -11,12 +11,21 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClaymoreHub
+namespace ClaymoreDual
 {
-    public class Claymore : ClaymoreBase
+    public class ClaymoreDual : ClaymoreBase
     {
-        public Claymore(string uuid) : base(uuid)
+        public ClaymoreDual(string uuid) : base(uuid)
         {
+        }
+
+        protected override Dictionary<string, string> GetEnvironmentVariables()
+        {
+            if (MinerSystemEnvironmentVariables != null)
+            {
+                return MinerSystemEnvironmentVariables.DefaultSystemEnvironmentVariables;
+            }
+            return null;
         }
 
         public override Tuple<string, string> GetBinAndCwdPaths()

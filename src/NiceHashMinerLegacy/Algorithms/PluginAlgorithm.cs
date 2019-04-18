@@ -49,5 +49,7 @@ namespace NiceHashMiner.Algorithms
                 if (BaseAlgo != null) BaseAlgo.Enabled = value;
             }
         }
+
+        public bool IsDual => BaseAlgo.IDs.Count > 1; 
     }
 }

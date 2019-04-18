@@ -11,11 +11,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
-namespace ClaymoreHub
+namespace ClaymoreDual
 {
-
-    public class ClaymoreHubPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
+    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
         public string PluginUUID => "5e3b699e-2755-499c-bf4e-20d4aaef73df";
 
@@ -71,7 +71,7 @@ namespace ClaymoreHub
 
         public IMiner CreateMiner()
         {
-            return new Claymore(PluginUUID)
+            return new ClaymoreDual(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
