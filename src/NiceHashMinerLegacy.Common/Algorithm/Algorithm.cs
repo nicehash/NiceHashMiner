@@ -24,7 +24,7 @@ namespace NiceHashMinerLegacy.Common.Algorithm
         }
 
         // variable settings
-        IList<double> Speeds { get; set; } // Make setter private???
+        public IList<double> Speeds { get; set; } // Make setter private???
         public bool Enabled { get; set; } = true;
         public string ExtraLaunchParameters { get; set; } = "";
         // TODO power usage???

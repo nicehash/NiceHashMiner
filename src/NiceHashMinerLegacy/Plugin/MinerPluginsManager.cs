@@ -84,7 +84,7 @@ namespace NiceHashMiner.Plugin
                         var bd = pair.Key;
                         var algos = pair.Value;
                         var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
-                        var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a)).ToList();
+                        var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a, plugin.Version)).ToList();
                         dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                     }
                     continue;
@@ -99,7 +99,7 @@ namespace NiceHashMiner.Plugin
                     var bd = pair.Key;
                     var algos = pair.Value;
                     var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
-                    var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a)).ToList();
+                    var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a, plugin.Version)).ToList();
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                 }
             }
@@ -226,7 +226,7 @@ namespace NiceHashMiner.Plugin
                     var bd = pair.Key;
                     var algos = pair.Value;
                     var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
-                    var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a)).ToList();
+                    var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a, plugin.Version)).ToList();
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                 }
             }

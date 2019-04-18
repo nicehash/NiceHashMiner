@@ -284,7 +284,7 @@ namespace NiceHashMiner.Devices
                     pluginAlgo.Enabled = pluginConf.Enabled;
                     pluginAlgo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
                     pluginAlgo.PowerUsage = pluginConf.PowerUsage;
-                    // TODO loaded version
+                    pluginAlgo.ConfigVersion = pluginConf.GetVersion();
                 }
             }
         }
@@ -323,8 +323,7 @@ namespace NiceHashMiner.Devices
                         AlgorithmIDs = string.Join("-", pluginAlgo.BaseAlgo.IDs.Select(id => id.ToString())),
                         Enabled = pluginAlgo.Enabled,
                         ExtraLaunchParameters = pluginAlgo.ExtraLaunchParameters,
-                        // TODO
-                        PluginVersion = "N/A", // $"{1}.{0}",
+                        PluginVersion = $"{pluginAlgo.PluginVersion.Major}.{pluginAlgo.PluginVersion.Minor}",
                         PowerUsage = pluginAlgo.PowerUsage,
                         // TODO dual not supported ATM
                         Speeds = new List<double> { pluginAlgo.BenchmarkSpeed }

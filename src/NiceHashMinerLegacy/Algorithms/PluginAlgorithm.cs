@@ -15,10 +15,14 @@ namespace NiceHashMiner.Algorithms
 
         public readonly string PluginName;
 
-        public PluginAlgorithm(string pluginName, AlgorithmCommon.Algorithm algorithm) : base(MinerBaseType.PLUGIN, algorithm.FirstAlgorithmType, "", algorithm.Enabled)
+        public Version ConfigVersion = new Version(1, 0);
+        public Version PluginVersion { get; private set; } = new Version(1, 0);
+
+        public PluginAlgorithm(string pluginName, AlgorithmCommon.Algorithm algorithm, Version pluginVersion) : base(MinerBaseType.PLUGIN, algorithm.FirstAlgorithmType, "", algorithm.Enabled)
         {
             PluginName = pluginName;
             BaseAlgo = algorithm;
+            PluginVersion = pluginVersion;
         }
 
         public override string ExtraLaunchParameters {

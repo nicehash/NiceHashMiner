@@ -9,8 +9,8 @@ namespace NiceHashMinerLegacy.Common.Enums
     public enum MinerBaseType
     {
         NONE = 0,
-        Claymore,
-        END,
-        PLUGIN // make PLUGIN outside of end
+        Claymore = 7,
+        END = 8,
+        PLUGIN = 9 // make PLUGIN outside of end
     }
 }

@@ -3,8 +3,7 @@
 namespace NiceHashMinerLegacy.Common.Enums
 {
     /// <summary>
-    /// AlgorithmType enum should/must mirror the values from https://www.nicehash.com/?p=api
-    /// Some algorithms are not used anymore on the client, rename them with _UNUSED postfix so we can catch compile time errors if they are used.
+    /// AlgorithmType enum should/must mirror the values from https://www.nicehash.com/algorithm
     /// </summary>
     public enum AlgorithmType
     {
