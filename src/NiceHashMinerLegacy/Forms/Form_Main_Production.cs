@@ -25,9 +25,6 @@ using System.Windows.Forms;
 using static NiceHashMiner.Translations;
 using Timer = System.Windows.Forms.Timer;
 using NiceHashMinerLegacy.Common;
-using System.Collections.Generic;
-using System.IO;
-using MinerPluginToolkitV1.Interfaces;
 
 namespace NiceHashMiner
 {
