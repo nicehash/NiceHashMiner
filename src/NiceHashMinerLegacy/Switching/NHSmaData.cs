@@ -106,6 +106,11 @@ namespace NiceHashMiner.Switching
                     try
                     {
                         var cache = JsonConvert.SerializeObject(newSma);
+                        var dirPath = Path.GetDirectoryName(CachedFile);
+                        if (Directory.Exists(dirPath) == false)
+                        {
+                            Directory.CreateDirectory(dirPath);
+                        }
                         File.WriteAllText(CachedFile, cache);
                     }
                     catch (Exception e)
