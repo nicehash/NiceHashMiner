@@ -25,6 +25,9 @@ using System.Windows.Forms;
 using static NiceHashMiner.Translations;
 using Timer = System.Windows.Forms.Timer;
 using NiceHashMinerLegacy.Common;
+using System.Collections.Generic;
+using System.IO;
+using MinerPluginToolkitV1.Interfaces;
 
 namespace NiceHashMiner
 {
@@ -404,6 +407,19 @@ namespace NiceHashMiner
                 {
                     Helpers.InstallVcRedist();
                 }
+
+                /*****************************************************************/
+                var pluginPaths = new List<string>();
+                foreach(var pluginMiner in MinerPluginsManager.IntegratedPlugins)
+                {
+                    var miner = pluginMiner.CreateMiner() as IBinAndCwdPathsGettter;
+                    if (miner == null) continue;
+                    var pluginBinsPath = miner.GetBinAndCwdPaths().Item1;
+                    var pluginPath = Path.Combine(Paths.MinerPluginsPath(), pluginMiner.Name, pluginBinsPath); //is this right? should be here pluginMiner.PluginUUID?
+                    pluginPaths.Add(pluginPath);
+                }
+                Helpers.SetFirewallRules(pluginPaths, "add");
+                /*****************************************************************/
 
                 // TODO this thing 
                 AfterLoadComplete();
