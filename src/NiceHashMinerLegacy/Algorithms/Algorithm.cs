@@ -98,6 +98,12 @@ namespace NiceHashMiner.Algorithms
 
         public bool IsBenchmarkPending { get; private set; }
 
+        public void ClearSpeeds()
+        {
+            var allZero = this.Speeds.Select(v => 0d).ToList();
+            this.Speeds = allZero;
+        }
+
         public string CurPayingRatio
         {
             get

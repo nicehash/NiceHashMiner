@@ -14,8 +14,8 @@ namespace NiceHashMiner.Forms.Components
     {
         private const int ENABLED = 0;
         private const int ALGORITHM = 1;
-        private const int SPEED = 2;
-        private const int SECSPEED = 3;
+        private const int MINER = 2;
+        private const int SPEEDS = 3;
         private const int RATIO = 4;
         private const int RATE = 5;
 
@@ -101,13 +101,14 @@ namespace NiceHashMiner.Forms.Components
                 var lvi = new ListViewItem();
 
                 var name = "";
-                var secondarySpeed = "";
+                var minerName = "";
                 var payingRatio = "";
                 if (alg is PluginAlgorithm plugAlg)
                 {
                     var plugin = MinerPluginsManager.GetPluginWithUuid(plugAlg.BaseAlgo.MinerID);
                     var isIntegrated = plugin is IntegratedPlugin;
-                    name = $"{alg.AlgorithmName} ({plugin.Name})" + (isIntegrated ? "" : " (PLUGIN)");
+                    name = $"{alg.AlgorithmName}";
+                    minerName = plugin.Name + (isIntegrated ? "" : "(PLUGIN)");
                     payingRatio = alg.CurPayingRatio;
                 }
                 else
@@ -120,8 +121,8 @@ namespace NiceHashMiner.Forms.Components
                 lvi.SubItems.Add(name);
 
                 //sub.Tag = alg.Value;
+                lvi.SubItems.Add(minerName);
                 lvi.SubItems.Add(alg.BenchmarkSpeedString());
-                lvi.SubItems.Add(secondarySpeed);
                 lvi.SubItems.Add(payingRatio);
                 lvi.SubItems.Add(alg.CurPayingRate);
                 lvi.Tag = alg;
@@ -140,7 +141,7 @@ namespace NiceHashMiner.Forms.Components
                 foreach (ListViewItem lvi in listViewAlgorithms.Items)
                 {
                     var algo = lvi.Tag as Algorithm;
-                    lvi.SubItems[SPEED].Text = algo?.BenchmarkSpeedString();
+                    lvi.SubItems[SPEEDS].Text = algo?.BenchmarkSpeedString();
                     _listItemCheckColorSetter.LviSetColor(lvi);
                 }
 
@@ -199,7 +200,7 @@ namespace NiceHashMiner.Forms.Components
                         if (lvi.Tag is Algorithm algo && algo.AlgorithmStringID == algorithm.AlgorithmStringID)
                         {
                             // TODO handle numbers
-                            lvi.SubItems[SPEED].Text = algorithm.BenchmarkSpeedString();
+                            lvi.SubItems[SPEEDS].Text = algorithm.BenchmarkSpeedString();
                             lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
                             // TODO handle DUAL first + second paying ratio X+Y
                             lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
@@ -291,7 +292,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     if (lvi.Tag is Algorithm algorithm)
                     {
-                        algorithm.BenchmarkSpeed = 0;
+                        algorithm.ClearSpeeds();
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
                         // update benchmark status data
                         BenchmarkCalculation?.CalcBenchmarkDevicesAlgorithmQueue();
