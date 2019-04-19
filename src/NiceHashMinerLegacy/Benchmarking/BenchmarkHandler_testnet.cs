@@ -75,9 +75,11 @@ namespace NiceHashMiner.Benchmarking
                 }
             }
             currentAlgorithm?.ClearBenchmarkPending();
+            var cancel = _stopBenchmark.IsCancellationRequested;
             // don't show unbenchmarked algos if user canceled
-            if (_stopBenchmark.IsCancellationRequested) return;
-            BenchmarkManager.EndBenchmarkForDevice(Device, _benchmarkFailedAlgo.Count > 0);
+            var showFailed = _benchmarkFailedAlgo.Count > 0 && !cancel;
+            var startMining = _startMiningAfterBenchmark && !cancel;
+            BenchmarkManager.EndBenchmarkForDevice(Device, showFailed, startMining);
         }
 
         private async Task BenchmarkAlgorithm(Algorithm algo)
