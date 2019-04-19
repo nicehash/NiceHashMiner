@@ -97,7 +97,7 @@ namespace GMinerPlugin
                 var totalPowerUsage = 0;
                 foreach (var gpu in gpus)
                 {
-                    var currentDevStats = summary.devices.Where(devStats => devStats.gpu_id == gpu.ID).FirstOrDefault();
+                    var currentDevStats = summary.devices.Where(devStats => devStats.gpu_id == Shared.MappedCudaIds[gpu.UUID]).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed;
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed) });
@@ -105,8 +105,9 @@ namespace GMinerPlugin
                     perDevicePowerInfo.Add(gpu.UUID, currentDevStats.power_usage);
                 }
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
-
                 ad.PowerUsageTotal = totalPowerUsage;
+                ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                ad.PowerUsagePerDevice = perDevicePowerInfo;
             }
             catch (Exception e)
             {
@@ -190,14 +191,15 @@ namespace GMinerPlugin
 
             // TODO sort by GMiner indexes
             // init command line params parts
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(" ", orderedMiningPairs.Select(p => Shared.MappedCudaIds[p.Device.UUID]));
+            //var orderedMiningPairs = _miningPairs.ToList();
+            //orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            var minignPairs = _miningPairs.ToList();
+            _devices = string.Join(" ", minignPairs.Select(p => Shared.MappedCudaIds[p.Device.UUID]));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var generalParams = Parser.Parse(minignPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = Parser.Parse(minignPairs, MinerOptionsPackage.TemperatureOptions);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

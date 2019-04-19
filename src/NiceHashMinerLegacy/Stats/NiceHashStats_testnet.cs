@@ -593,8 +593,16 @@ namespace NiceHashMiner.Stats
 
                     array.Add((int)Math.Round(device.Load));
 
-                    // TODO algo speeds
-                    array.Add(new JArray());
+                    var speedsJson = new JArray();
+                    var speeds = MiningStats.GetSpeedForDevice(device.Uuid);
+                    if (speeds != null && device.State == DeviceState.Mining)
+                    {
+                        foreach (var kvp in speeds)
+                        {
+                            speedsJson.Add(new JArray((int)kvp.type, kvp.speed));
+                        }
+                    }
+                    array.Add(speedsJson);
 
                     // Hardware monitoring
                     array.Add((int) Math.Round(device.Temp));
