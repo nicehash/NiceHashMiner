@@ -32,10 +32,14 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
 
         private static bool IsOptionDefaultValue(MinerOption option, string value)
         {
+            // Check if value is null or empty
             if (string.IsNullOrEmpty(value)) return true;
             if (string.IsNullOrWhiteSpace(value)) return true;
-            if (value.Equals(option.DefaultValue)) return true;
-            return false;
+
+            // Value is not null or empty, compare it with default value
+            if (!value.Equals(option.DefaultValue)) return false;
+
+            return true;
         }
 
         public static string Parse(List<MiningPair> miningPairs, List<MinerOption> options, bool useIfDefaults = false)
@@ -152,7 +156,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                         {
                             // get the first non default value
                             var firstNonDefaultValue = values
-                                .Where(value => IsOptionDefaultValue(option, value))
+                                .Where(value => !IsOptionDefaultValue(option, value))
                                 .FirstOrDefault();
 
                             var setValue = option.DefaultValue;
