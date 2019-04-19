@@ -139,12 +139,14 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                 var option = mergedParsedMinerOption.Option;
                 var values = mergedParsedMinerOption.Values;
 
+                var optionName = string.IsNullOrEmpty(option.ShortName) ? option.LongName : option.ShortName;
+
                 if (mergedParsedMinerOption.IsDefaults && !useIfDefaults) continue;
                 // if options all default ignore
                 switch (option.Type)
                 {
                     case MinerOptionType.OptionIsParameter:
-                        retVal += $" {option.ShortName}";
+                        retVal += $" {optionName}";
                         break;
                     case MinerOptionType.OptionWithSingleParameter:
                         {
@@ -159,11 +161,11 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                                 setValue = firstNonDefaultValue;
                             }
                             var mask = " {0} {1}";
-                            if (option.ShortName.Contains("="))
+                            if (optionName.Contains("="))
                             {
                                 mask = " {0}{1}";
                             }
-                            retVal += string.Format(mask, option.ShortName, setValue);
+                            retVal += string.Format(mask, optionName, setValue);
                             break;
                         }
                     case MinerOptionType.OptionWithMultipleParameters:
@@ -171,23 +173,23 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                             var setValues = values
                                 .Select(value => value != null ? value : option.DefaultValue);
                             var mask = " {0} {1}";
-                            if (option.ShortName.Contains("="))
+                            if (optionName.Contains("="))
                             {
                                 mask = " {0}{1}";
                             }
-                            retVal += string.Format(mask, option.ShortName, string.Join(option.Delimiter, setValues));
+                            retVal += string.Format(mask, optionName, string.Join(option.Delimiter, setValues));
                             break;
                         }
                     case MinerOptionType.OptionWithDuplicateMultipleParameters:
                         {
                             var mask = "{0} {1}";
-                            if (option.ShortName.Contains("="))
+                            if (optionName.Contains("="))
                             {
                                 mask = "{0}{1}";
                             }
                             var setValues = values
                                 .Select(value => value != null ? value : option.DefaultValue)
-                                .Select(value => string.Format(mask, option.ShortName, value));
+                                .Select(value => string.Format(mask, optionName, value));
                             retVal += " " + string.Join(" ", setValues);
                             break;
                         }
