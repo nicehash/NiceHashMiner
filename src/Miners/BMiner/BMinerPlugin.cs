@@ -135,7 +135,7 @@ namespace BMiner
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "bminer_logfile",
-                    ShortName = "-logfile"
+                    ShortName = "-logfile="
                 },
                 /// <summary>
                 /// Disable the devfee but it also disables some optimizations.
