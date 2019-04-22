@@ -377,7 +377,7 @@
       "pl": "Wszystkie pomiary zostały wykonane",
       "pt": "Todos os benchmarks foram bem sucedidos",
       "ro": "Toate benchmarkurile au fost cu succes",
-      "ru": "Все тесты были удачными",
+      "ru": "Все тесты прошли успешно",
       "zh_cn": "基准测试完毕。"
     },
     "Allow Multiple Instances": {
@@ -937,7 +937,7 @@
       "pl": "Konsola Debug",
       "pt": "Console para Debug",
       "ro": "Consolă Depanare",
-      "ru": "Окно отладки",
+      "ru": "Консоль отладки",
       "zh_cn": "调试控制台"
     },
     "Device": {
@@ -1017,7 +1017,7 @@
       "pl": "Wyłącz raportowanie błędów Windows",
       "pt": "Desativar Relatórios de Erros do Windows",
       "ro": "Dezactivează Windows Error Reporting",
-      "ru": "Отключить ошибки",
+      "ru": "Откл. отчёты об ошибках Windows",
       "zh_cn": "禁用Windows错误报告"
     },
     "Disabled Devices": {
@@ -1100,7 +1100,7 @@
       "pl": "Włącz tylko test porównawczy",
       "pt": "Ativar apenas o benchmarking",
       "ro": "Activează doar Benchmarked",
-      "ru": "Включить только контрольные показатели",
+      "ru": "Включить прошедшие бенчмарк",
       "zh_cn": "仅启用基准测试"
     },
     "Enable Device": {
@@ -1120,7 +1120,7 @@
       "pl": "Włącz tylko to",
       "pt": "Ativar isso somente",
       "ro": "Activați numai acest lucru",
-      "ru": "Включить это только",
+      "ru": "Включить только этот",
       "zh_cn": "仅启用此功能"
     },
     "Enabled": {
@@ -1707,7 +1707,7 @@
       "pl": "Maks. rozmiar logu [bajty]:",
       "pt": "Tamanho Maximo [bytes]:",
       "ro": "Dimensiune Fișier Log Maximă [bytes]:",
-      "ru": "Размер лог-файла [байт]:",
+      "ru": "Размер лог-файла [байты]:",
       "zh_cn": "最大日志文件大小 [字节]:"
     },
     "Log To File": {
@@ -2068,7 +2068,7 @@
       "pl": "Nie wszystkie pomiary zostały wykonane poprawnie. Ponów aby powtórzyć pomiary, Anuluj aby wyłączyć problematyczne algorytmy i zacząć kopanie.",
       "pt": "Nem todos os benchmarks foram concluídos com sucesso. Tente fazer o benchmark novamente ou Cancele para não tentar novamente.",
       "ro": "Nu toate benchmarkurile au fost cu succes. Reîncercați procesul de benchmark pentru algoritmii fără benchmark sau Anulare pentru a dezactiva algoritmii fără benchmark.",
-      "ru": "Не все тесты прошли удачно. Попробуйте перезапустить бенчмарк для алгоритмов, непрошедших его, либо Отмените для отключения этих алгоритмов.",
+      "ru": "Не все тесты прошли успешно. Попробуйте перезапустить бенчмарк для алгоритмов, непрошедших его, либо выберите «Отмена» для отключения этих алгоритмов.",
       "zh_cn": "有个别基准测试失败。选择“重试”来重新执行失败的测试，或选择“取消”禁用未通过测试的算法。"
     },
     "Nothing to benchmark": {
@@ -2370,7 +2370,7 @@
       "pl": "Secondary Speed",
       "pt": "Secondary Speed",
       "ro": "Secondary Speed",
-      "ru": "Вторичная скорость",
+      "ru": "Доп. скорость",
       "zh_cn": "Secondary Speed"
     },
     "Select device first": {
@@ -2424,7 +2424,7 @@
       "zh_cn": "矿机API将绑定不低于此端口号的端口来侦听通讯。"
     },
     "Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.": {
-      "ru": "Укажите положительное значение для учета затрат на электроэнергию при переключении.\nЭто значение — затраты на кВт⋅ч в выбранной вами валюте отображения.\nУкажите 0 для отключения функции переключения в зависимости от мощности."
+      "ru": "Укажите положительное значение для учёта затрат на электроэнергию при переключении.\nЭто значение — затраты на кВт⋅ч в выбранной вами валюте отображения.\nУкажите 0 для отключения функции переключения в зависимости от мощности."
     },
     "Sets Dag Load Mode for ethminers.": {
       "bg": "Задава начина, по който ethminer зарежда DAG таблицата.",
@@ -2493,7 +2493,7 @@
       "pl": "Ustawianie raportowania błędów Windows...",
       "pt": "Configurando o relatório de erros do Windows...",
       "ro": "Setează Windows error reporting...",
-      "ru": "Установка отчета об ошибках Windows…",
+      "ru": "Установка отчёта об ошибках Windows…",
       "zh_cn": "正在设置Windows错误报告..."
     },
     "Setting environment variables...": {
@@ -2593,7 +2593,7 @@
       "pl": "Tempo",
       "pt": "Velocidade",
       "ro": "Viteză",
-      "ru": "Скор",
+      "ru": "Скорость",
       "zh_cn": "速率"
     },
     "Speed:": {
@@ -2723,7 +2723,7 @@
       "pl": "Czas maksymalny [s]:",
       "pt": "Mudar Máximo [s]:",
       "ro": "Comută Maxim [s]:",
-      "ru": "Мак. переключение [s]:",
+      "ru": "Макс. переключение [s]:",
       "zh_cn": "切换最大值 [s]:"
     },
     "Switch Minimum AMD [s]": {
@@ -2845,7 +2845,7 @@
       "pl": "Pozostały niezmieszone tempa dla niektórych algorytmów. Wybierz Tak aby powtórzyć pomiar i zacząć kopanie, Nie aby pominąć pomiar i zacząć kopanie, Anuluj by stąd wyjść",
       "pt": "Você ainda não fez benchmark em algum(s) dispositivo(s) selecionado(s). Clique em Sim para fazer o benchmark e iniciar mineração, Não para pular o benchmark e continuar minerando",
       "ro": "Există algoritmi fără benchmark pentru dispozitivele active selectate. Apăsați Da pentru benchmark și începere minare, Nu pentru a sări peste benchmark și a continua minarea, Anulare pentru renunțare",
-      "ru": "Для выбранных устройств есть алгоритмы, не прошедшие бенчмарк. Нажмите «Да» для бенчмарка и начала майнинга, «Нет» — для пропуска бенчмарка и продолжения майнинга, «Отмена» — для прерывания",
+      "ru": "Для выбранных устройств есть алгоритмы, непрошедшие бенчмарк. Нажмите «Да» для бенчмарка и начала майнинга, «Нет» — для пропуска бенчмарка и продолжения майнинга, «Отмена» — для прерывания",
       "zh_cn": "已启用的设备上有算法还没有经过基准测试。请点击“是”来进行基准测试并开始挖矿，点击“否”略过基准测试，或点击“取消”中止当前操作。"
     },
     "This input box only accepts numbers (0-9).": {
@@ -2998,7 +2998,7 @@
       "pl": "użyj IFTTT",
       "pt": "Use IFTTT",
       "ro": "Folosește IFTTT",
-      "ru": "Исп. IFTTT",
+      "ru": "Вкл. IFTTT",
       "zh_cn": "开启IFTTT"
     },
     "Use New Settings Page": {
