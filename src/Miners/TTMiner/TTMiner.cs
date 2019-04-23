@@ -156,7 +156,7 @@ namespace TTMiner
 
             var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
             var algorithmTypes = new AlgorithmType[] { _algorithmType };
-            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, algorithmTypes, _logGroup);
+            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, algorithmTypes);
         }
 
         protected override void Init()

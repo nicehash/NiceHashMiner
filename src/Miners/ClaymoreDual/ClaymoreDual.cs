@@ -151,7 +151,7 @@ namespace ClaymoreDual
 
             var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
             var algorithmTypes = IsDual() ? new AlgorithmType[] { _algorithmFirstType, _algorithmSecondType } : new AlgorithmType[] { _algorithmFirstType };
-            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, algorithmTypes, _logGroup);
+            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, algorithmTypes);
         }
     }
 }

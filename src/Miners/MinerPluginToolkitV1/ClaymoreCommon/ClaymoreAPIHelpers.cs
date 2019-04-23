@@ -19,7 +19,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
         private static readonly List<double> _emptySpeeds = new List<double>();
 
-        public static async Task<ApiData> GetMinerStatsDataAsync(int apiPort, IReadOnlyList<BaseDevice> miningDevices, params AlgorithmType[] algorithmTypes, string logGroup)
+        public static async Task<ApiData> GetMinerStatsDataAsync(int apiPort, IReadOnlyList<BaseDevice> miningDevices, string logGroup, params AlgorithmType[] algorithmTypes)
         {
             var ad = new ApiData();
 
