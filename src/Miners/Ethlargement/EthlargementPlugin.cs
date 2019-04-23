@@ -138,6 +138,7 @@ namespace Ethlargement
         {
             try
             {
+                if (_ethlargementProcess == null) return false;
                 return Process.GetProcessById(_ethlargementProcess.Id) != null;
             }
             catch
