@@ -77,14 +77,17 @@ namespace MinerPluginToolkitV1
             var commandLine = MiningCreateCommandLine();
             var environmentVariables = GetEnvironmentVariables();
 
+            Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
             Logger.Debug(_logGroup, $"starting miner commandLine='{commandLine}'");
             // TODO this will not print content
+            Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariables}'");
             Logger.Debug(_logGroup, $"starting miner environmentVariables='{environmentVariables}'");
             var p = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables);
             _miningProcess = new MiningProcess(p);
             p.Exited += MinerProcess_Exited;
             if (!p.Start())
             {
+                Logger.Info(_logGroup, $"Error occured while starting a new process: {p.ToString()}");
                 throw new InvalidOperationException("Could not start process: " + p);
             }
 
@@ -117,6 +120,7 @@ namespace MinerPluginToolkitV1
             }
             catch (Exception e)
             {
+                Logger.Info(_logGroup, $"Error occured while stopping the process: {e.Message}");
             }
         }
 

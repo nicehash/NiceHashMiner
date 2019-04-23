@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using NiceHashMinerLegacy.Common.Enums;
 using System.Text;
+using NiceHashMinerLegacy.Common;
 
 namespace MinerPluginToolkitV1.SgminerCommon
 {
@@ -30,7 +31,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
             return resp;
         }
 
-        public static async Task<ApiDevsRoot> GetApiDevsRootAsync(int port)
+        public static async Task<ApiDevsRoot> GetApiDevsRootAsync(int port, string logGroup)
         {
             try
             {
@@ -48,16 +49,17 @@ namespace MinerPluginToolkitV1.SgminerCommon
                     return resp;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine($"SgminerAPIHelpers.GetApiDevsRootAsync exception: {ex.Message}");
+                Logger.Info(logGroup, $"Error occured while getting API stats: {e.Message}");
+                Console.WriteLine($"SgminerAPIHelpers.GetApiDevsRootAsync exception: {e.Message}");
                 return null;
             }
         }
 
         // TODO implement if all devices alive function check
 
-        public static ApiData ParseApiDataFromApiDevsRoot(ApiDevsRoot apiDevsResult, AlgorithmType algorithmType, IEnumerable<BaseDevice> miningDevices)
+        public static ApiData ParseApiDataFromApiDevsRoot(ApiDevsRoot apiDevsResult, AlgorithmType algorithmType, IEnumerable<BaseDevice> miningDevices, string logGroup)
         {
             var ad = new ApiData();
             if (apiDevsResult == null) return ad;
@@ -78,6 +80,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
                         .FirstOrDefault();
                     if (deviceStats == null)
                     {
+                        Logger.Info(logGroup, $"Device stats from api data are empty. Device: {gpu.UUID}");
                         Console.WriteLine($"SgminerAPIHelpers.ParseApiDataFromApiDevsRoot deviceStats == null");
                         continue;
                     }
@@ -93,9 +96,10 @@ namespace MinerPluginToolkitV1.SgminerCommon
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair>() { totalAlgoSpeedPair };
                 ad.PowerUsageTotal = totalPowerUsage;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine($"SgminerAPIHelpers.ParseApiDataFromApiDevsRoot exception: {ex.Message}");
+                Logger.Info(logGroup, $"Error occured while parsing API stats: {e.Message}");
+                Console.WriteLine($"SgminerAPIHelpers.ParseApiDataFromApiDevsRoot exception: {e.Message}");
                 //return null;
             }
 

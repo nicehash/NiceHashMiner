@@ -178,15 +178,18 @@ namespace Ethlargement
             {
                 if (_ethlargementProcess.Start())
                 {
+                    Logger.Info("ETHLARGEMENT", "Starting ethlargement...");
                     //Helpers.ConsolePrint("ETHLARGEMENT", "Starting ethlargement...");
                 }
                 else
                 {
+                    Logger.Info("ETHLARGEMENT", "Couldn't start ethlargement");
                     //Helpers.ConsolePrint("ETHLARGEMENT", "Couldn't start ethlargement");
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                Logger.Info("ETHLARGEMENT", $"Ethlargement wasn't able to start: {e.Message}");
                 //Helpers.ConsolePrint("ETHLARGEMENT", ex.Message);
             }
         }
@@ -206,8 +209,10 @@ namespace Ethlargement
                 _ethlargementProcess.Close();
                 _ethlargementProcess = null;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                Logger.Info("ETHLARGEMENT", $"Ethlargement wasn't able to stop: {e.Message}");
+
             }
         }
 

@@ -63,8 +63,10 @@ namespace CPUMinerBase
                         }
                     }
                 }
-                catch
-                { }
+                catch (Exception e)
+                {
+                    Logger.Info(_logGroup, $"Error occured while getting API stats: {e.Message}");
+                }
             }
             var ad = new ApiData();
             ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
@@ -99,6 +101,8 @@ namespace CPUMinerBase
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
             // TODO benchmark process add after benchmark
 
@@ -142,7 +146,11 @@ namespace CPUMinerBase
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
 
             var cpuDevice = _miningPairs.Select(kvp => kvp.Device).FirstOrDefault();
             if (cpuDevice is CPUDevice cpu)
@@ -169,7 +177,8 @@ namespace CPUMinerBase
             if (_affinityMask != 0 && pid != -1)
             {
                 var okMsg = ProcessHelpers.AdjustAffinity(pid, _affinityMask);
-                // TODO log what is going on is it ok or not 
+                Logger.Info(_logGroup, $"Adjust Affinity returned: {okMsg.Item2}");
+                Logger.Debug(_logGroup, $"Adjust Affinity returned: {okMsg.Item2}");
             }
         }
     }

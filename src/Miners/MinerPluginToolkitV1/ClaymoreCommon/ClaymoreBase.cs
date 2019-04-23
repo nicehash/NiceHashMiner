@@ -111,7 +111,11 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmFirstType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
 
             var dualType = MinerToolkit.GetAlgorithmDualType(_miningPairs);
             _algorithmSecondType = dualType.Item1;

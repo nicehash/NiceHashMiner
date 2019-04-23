@@ -19,7 +19,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
     {
         private int _apiPort;
         private readonly int _openClAmdPlatformNum;
-
+        
         // can mine only one algorithm at a given time
         protected AlgorithmType _algorithmType;
 
@@ -57,9 +57,9 @@ namespace MinerPluginToolkitV1.SgminerCommon
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var apiDevsResult = await SgminerAPIHelpers.GetApiDevsRootAsync(_apiPort);
+            var apiDevsResult = await SgminerAPIHelpers.GetApiDevsRootAsync(_apiPort, _logGroup);
             var devs = _miningPairs.Select(pair => pair.Device);
-            return SgminerAPIHelpers.ParseApiDataFromApiDevsRoot(apiDevsResult, _algorithmType, devs);
+            return SgminerAPIHelpers.ParseApiDataFromApiDevsRoot(apiDevsResult, _algorithmType, devs, _logGroup);
         }
 
         protected override void Init()
@@ -67,7 +67,11 @@ namespace MinerPluginToolkitV1.SgminerCommon
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
             // all good continue on
 
             // Order pairs and parse ELP
@@ -121,6 +125,8 @@ namespace MinerPluginToolkitV1.SgminerCommon
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             var device = _miningPairs.Select(kvp => kvp.Device).FirstOrDefault();

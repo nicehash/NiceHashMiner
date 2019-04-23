@@ -115,7 +115,7 @@ namespace XmrStak
                     }
                     if (string.IsNullOrEmpty(deviceUUID))
                     {
-                        // TODO log
+                        Logger.Info(_logGroup, $"Device was not found: {deviceType.ToString()}");
                         continue;
                     }
                     _threadsForDeviceUUIDs[threadId] = deviceUUID;
@@ -123,6 +123,7 @@ namespace XmrStak
             }
             catch (Exception e)
             {
+                Logger.Info(_logGroup, $"Error occured while mapping devices: {e.Message}");
                 Console.WriteLine($"MapMinerDevicesStatsDataAsync exception: {e}");
             }
         }
@@ -179,6 +180,7 @@ namespace XmrStak
             }
             catch (Exception e)
             {
+                Logger.Info(_logGroup, $"Error occured while getting API stats: {e.Message}");
                 Console.WriteLine($"exception: {e}");
             }
 
@@ -232,6 +234,8 @@ namespace XmrStak
             // API port function might be blocking
             var apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
             var commandLine = $"-o {url} -u {MinerToolkit.DemoUserBTC} --currency {algo} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork {benchmarkTime} --benchwait {benchWait} {deviceConfigParams} {disableDeviceTypes}";
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             var benchHashes = 0d;
@@ -281,7 +285,11 @@ namespace XmrStak
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
             // all good continue on
 
             _miningDeviceTypes = new HashSet<DeviceType>(_miningPairs.Select(pair => pair.Device.DeviceType));
@@ -348,9 +356,9 @@ namespace XmrStak
                             _configHandler.SaveMoveConfig(deviceType, _algorithmType, configFilePath);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        // TODO log
+                        Logger.Info(_logGroup, $"Failed to create config file: {e.Message}");
                     }
                 }
             }
@@ -367,6 +375,7 @@ namespace XmrStak
                 }
                 if (!hasConfig)
                 {
+                    Logger.Info(_logGroup, $"Config for {deviceType.ToString()}_{_algorithmType.ToString()} not found!");
                     throw new Exception($"Cannot start device type {deviceType.ToString()} for algorithm {_algorithmType.ToString()} there is no config");
                 } 
             }

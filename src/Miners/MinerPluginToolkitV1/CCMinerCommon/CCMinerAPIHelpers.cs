@@ -1,4 +1,5 @@
 ﻿using MinerPlugin;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             public double speed;
         }
 
-        public static async Task<ApiData> GetMinerStatsDataAsync(int port, AlgorithmType algorithmType, IEnumerable<MiningPair> miningPairs)
+        public static async Task<ApiData> GetMinerStatsDataAsync(int port, AlgorithmType algorithmType, IEnumerable<MiningPair> miningPairs, string logGroup)
         {
             var summaryApiResult = await GetApiDataSummary(port);
             double totalSpeed = 0;
@@ -75,8 +76,10 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                         }
                     }
                 }
-                catch
-                { }
+                catch(Exception e)
+                {
+                    Logger.Info(logGroup, $"Error occured while getting total data from API: {e.Message}");
+                }
             }
             // TODO if have multiple GPUs call the threads as well, but maybe not as often since it might crash the miner
             //var threadsApiResult = await _httpClient.GetStringAsync($"{localhost}/threads");
@@ -122,8 +125,10 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 
                     }
                 }
-                catch
-                { }
+                catch(Exception e)
+                {
+                    Logger.Info(logGroup, $"Error occured while getting per device data from API: {e.Message}");
+                }
             }
             var ad = new ApiData();
             ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(algorithmType, totalSpeed) };
