@@ -291,6 +291,7 @@
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
     <Compile Include="Miners\MinersManager_testnet.cs" />
     <Compile Include="Miners\MiningSession_testnet.cs" />
+    <Compile Include="Stats\MiningStats.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="MinersDownloader\DownloadSetup.cs" />
     <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
