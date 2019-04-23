@@ -77,6 +77,22 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             foreach (var deviceOptions in devicesOptions)
             {
                 var parameters = deviceOptions.Parameters;
+
+                //check for option is parameter case
+                if (parameters.Count > 0)
+                {
+                    var param = parameters[0];
+                    var deviceParsedOption = deviceOptions.ParsedMinerOptions
+                        .Where(pOpt => param.Equals(pOpt.Option.ShortName) || param.Equals(pOpt.Option.LongName))
+                        .FirstOrDefault();
+                    if (deviceParsedOption.Option.Type == MinerOptionType.OptionIsParameter)
+                    {
+                        deviceParsedOption.Value = param;
+                        continue;
+                    }
+                }
+
+                //check for single/multi parameter cases
                 for (int paramIndex = 0; paramIndex < parameters.Count - 1; paramIndex++)
                 {
                     var param = parameters[paramIndex];
@@ -95,10 +111,6 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                         case MinerOptionType.OptionWithMultipleParameters:
                         case MinerOptionType.OptionWithDuplicateMultipleParameters:
                             deviceParsedOption.Value = value;
-                            break;
-
-                        case MinerOptionType.OptionIsParameter:
-                            deviceParsedOption.Value = param;
                             break;
                     }
                 }
