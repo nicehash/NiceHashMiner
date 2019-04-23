@@ -2,6 +2,7 @@
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common;
+using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             }
         }
 
+#pragma warning disable 0618
         protected virtual string DualAlgoName
         {
             get
@@ -84,6 +86,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
                 }
             }
         }
+#pragma warning restore 0618
 
         public double DevFee
         {
@@ -121,6 +124,11 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
             // TODO fix sorting and also fix device indexing
             // Order pairs and parse ELP
+            var gpus = _miningPairs
+                .Select(pair => pair.Device)
+                .Cast<IGpuDevice>()
+                .OrderBy(gpu => gpu.PCIeBusID);
+
             _orderedMiningPairs = _miningPairs.ToList();
             _orderedMiningPairs.Sort((a, b) => a.Device.UUID.CompareTo(b.Device.UUID));
             _devices = string.Join("", _orderedMiningPairs.Select(p => p.Device.ID)); // TODO PCIe bus ids
@@ -141,12 +149,12 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             var cmd = "";
             if (_algorithmSecondType == AlgorithmType.NONE) //noDual
             {
-                cmd = $"-di {_devices} -platform {_platform} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dbg 1 {_extraLaunchParameters} -wd 0";
+                cmd = $"-di {_devices} -platform {_platform} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 {_extraLaunchParameters} -wd 0";
             }
             else
             {
                 var urlSecond = StratumServiceHelpers.GetLocationUrl(_algorithmSecondType, _miningLocation, NhmConectionType.STRATUM_TCP);
-                cmd = $"-di {_devices} -platform {_platform} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dcoin {DualAlgoName} -dpool {urlSecond} -dwal {username} -dpsw x -dbg 1 {_extraLaunchParameters} -wd 0";
+                cmd = $"-di {_devices} -platform {_platform} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dcoin {DualAlgoName} -dpool {urlSecond} -dwal {username} -dpsw x {_extraLaunchParameters} -wd 0";
             }
             return cmd;
         }

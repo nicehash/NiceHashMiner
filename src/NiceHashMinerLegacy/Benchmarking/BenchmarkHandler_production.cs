@@ -93,8 +93,6 @@ namespace NiceHashMiner.Benchmarking
             }
         }
 
-
-
         private async Task BenchmarkPluginAlgorithm(PluginAlgorithm algo)
         {
             var plugin = MinerPluginsManager.GetPluginWithUuid(algo.BaseAlgo.MinerID);

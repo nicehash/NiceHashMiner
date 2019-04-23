@@ -13,6 +13,7 @@ using NiceHashMiner.Plugin;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Stats;
 
 namespace NiceHashMiner.Miners
 {
@@ -24,8 +25,17 @@ namespace NiceHashMiner.Miners
 
         public MinerFromPlugin(string pluginUUID) : base(pluginUUID)
         {
+            MinerUUID = pluginUUID;
             var plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
             _miner = plugin.CreateMiner();
+        }
+
+        public override async Task<MinerPlugin.ApiData> GetApiDataAsync()
+        {
+            IsUpdatingApi = true;
+            var apiData = await _miner.GetMinerStatsDataAsync();
+            IsUpdatingApi = false;
+            return apiData;
         }
 
         // PRODUCTION
@@ -64,6 +74,9 @@ namespace NiceHashMiner.Miners
         {
             IsUpdatingApi = true;
             var apiData = await _miner.GetMinerStatsDataAsync();
+
+            // TODO temporary here move it outside later
+            MiningStats.UpdateGroup(apiData, MinerUUID);
             IsUpdatingApi = false;
 
             if (apiData.AlgorithmSpeedsTotal.Count == 1)

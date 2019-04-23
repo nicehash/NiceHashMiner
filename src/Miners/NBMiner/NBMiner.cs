@@ -147,11 +147,31 @@ namespace NBMiner
             try
             {
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/api/v1/status");
-                var summary = JsonConvert.DeserializeObject<NBMinerJsonResponse>(result);
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, summary.TotalHashrate ?? 0) };
+                var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
+
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
+                var totalSpeed = 0d;
+                var totalPowerUsage = 0;
+
+                foreach (var device in summary.miner.devices)
+                {
+                    totalSpeed += device.hashrate_raw;
+                    totalPowerUsage += (int)device.power;
+                    var uuid = Shared.GetUUIDFromMinerID(device.id);
+                    if (uuid == null) continue;
+                    perDeviceSpeedInfo.Add(uuid, new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, device.hashrate_raw) });
+                    perDevicePowerInfo.Add(uuid, (int)device.power);
+                }
+
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                api.PowerUsageTotal = totalPowerUsage;
+                api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                api.PowerUsagePerDevice = perDevicePowerInfo;
             }
             catch (Exception e)
             {
+                Console.WriteLine($"NBMiner {e}");
             }
 
             return api;

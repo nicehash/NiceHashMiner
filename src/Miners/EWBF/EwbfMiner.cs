@@ -74,7 +74,7 @@ namespace EWBF
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var ad = new ApiData();
+            var api = new ApiData();
             try
             {
                 JsonApiResponse resp = null;
@@ -92,7 +92,7 @@ namespace EWBF
 
                 // return if we got nothing
                 var respOK = resp != null && resp.error == null;
-                if (respOK == false) return ad;
+                if (respOK == false) return api;
 
                 var results = resp.result;
 
@@ -111,15 +111,17 @@ namespace EWBF
                     perDevicePowerInfo.Add(gpu.UUID, (int)currentDevStats.gpu_power_usage);
 
                 }
-                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
-                ad.PowerUsageTotal = totalPowerUsage;
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                api.PowerUsageTotal = totalPowerUsage;
+                api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                api.PowerUsagePerDevice = perDevicePowerInfo;
             }
             catch (Exception ex)
             {
                 //Helpers.ConsolePrint(MinerTag(), ex.Message);
             }
 
-            return ad;
+            return api;
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)

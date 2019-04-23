@@ -110,7 +110,8 @@ namespace NiceHashMiner.Configs
             return GeneralConfig.DebugConsole != _generalConfigBackup.DebugConsole
                    || GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
                    || GeneralConfig.LogToFile != _generalConfigBackup.LogToFile
-                   || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting;
+                   || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
+                   || GeneralConfig.Use3rdPartyMiners != _generalConfigBackup.Use3rdPartyMiners;
         }
 
         public static void GeneralConfigFileCommit()

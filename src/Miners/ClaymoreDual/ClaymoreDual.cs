@@ -58,68 +58,77 @@ namespace ClaymoreDual
                     break;
             }
 
-            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC);
+            var deviceIDs = string.Join("", _miningPairs.Select(pair => $"{pair.Device.DeviceType.ToString()}{pair.Device.ID}"));
+            var algoID = IsDual() ? $"{SingleAlgoName}{DualAlgoName}" : SingleAlgoName;
+            var logfileName = $"noappend_{deviceIDs}_{algoID}_bench.txt";
+            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC) + " -dbg 1 -logfile " + logfileName;
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
-
-            var benchHashesFirst = 0d;
-            var benchIters = 0;
-            var benchHashResultFirst = 0d;
-            var benchHashesSecond = 0d;
-            var benchHashResultSecond = 0d;
-            //var afterSingle = $"{SingleAlgoName.ToUpper()} - Total Speed:";
-            var afterSingle = $"GPU{_devices}";
-            var afterDual = $"{DualAlgoName.ToUpper()} - Total Speed:";
-            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
-
             bp.CheckData = (string data) =>
             {
-                // if (_algorithmDualType == AlgorithmType.NONE)
-                // {
-                Console.WriteLine("Data za benchmark: ", data);
-                var hashrateFoundPairFirst = data.TryGetHashrateAfter(afterSingle);
-                var hashrateFirst = hashrateFoundPairFirst.Item1;
-                var foundFirst = hashrateFoundPairFirst.Item2;
-                benchHashesFirst += hashrateFirst;
-                benchIters++;
-
-                benchHashResultFirst = (benchHashesFirst / benchIters) * (1 - DevFee * 0.01);
-                return new BenchmarkResult
-                {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmFirstType, benchHashResultFirst) },
-                    Success = benchIters >= targetBenchIters
-                };
-                /*} else
-                {
-                    var hashrateFoundPairFirst = data.TryGetHashrateAfter(afterSingle);
-                    var hashrateFirst = hashrateFoundPairFirst.Item1;
-                    var foundFirst = hashrateFoundPairFirst.Item2;
-                    benchHashesFirst += hashrateFirst;
-                    benchIters++;
-
-                    benchHashResultFirst = (benchHashesFirst / benchIters) * (1 - DevFee * 0.01);
-
-                    var hashrateFoundPairSecond = data.TryGetHashrateAfter(afterDual);
-                    var hashrateSecond = hashrateFoundPairSecond.Item1;
-                    var foundSecond = hashrateFoundPairSecond.Item2;
-                    benchHashesSecond += hashrateSecond;
-                    benchIters++;
-
-                    benchHashResultSecond = (benchHashesSecond / benchIters) * (1 - DevFee * 0.01);
-                    return new BenchmarkResult
-                    {
-                        AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmSingleType, benchHashResultFirst), new AlgorithmTypeSpeedPair(_algorithmDualType, benchHashResultSecond) },
-                        Success = benchIters >= targetBenchIters
-                    };
-                }*/
+                // we can't read from stdout or stderr, read from logs later
+                return new BenchmarkResult();
             };
+
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 10);
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
-            var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
-            return await t;
+            var t = await MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
+            // look for log file and parse that
+            try
+            {
+                var benchHashesFirstSum = 0d;
+                var benchItersFirst = 0;
+                var benchHashesSecondSum = 0d;
+                var benchItersSecond = 0;
+
+                //var afterSingle = $"{SingleAlgoName.ToUpper()} - Total Speed:";
+                var firstAlgoLineMustContain = SingleAlgoName.ToUpper();
+                var secondAlgoLineMustContain = DualAlgoName.ToUpper();
+                var singleLineMustContain = SingleAlgoName.ToUpper();
+                var gpuAfter = $"GPU0"; // for single device we always have GPU0
+                var afterDual = $"{DualAlgoName.ToUpper()}: {DualAlgoName.ToUpper()} - Total Speed:";
+
+                var logFullPath = Path.Combine(binCwd, logfileName);
+                var lines = File.ReadLines(logFullPath);
+                foreach (var line in lines)
+                {
+                    var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(line, gpuAfter);
+                    var hashrate = hashrateFoundPair.Item1;
+                    var found = hashrateFoundPair.Item2;
+                    if (!found || hashrate == 0) continue;
+
+                    if (line.Contains(firstAlgoLineMustContain))
+                    {
+                        benchHashesFirstSum += hashrate;
+                        benchItersFirst++;
+                    }
+                    else if(line.Contains(secondAlgoLineMustContain))
+                    {
+                        benchHashesSecondSum += hashrate;
+                        benchItersSecond++;
+                    }
+                }
+                var benchHashResultFirst = benchItersFirst == 0 ? 0d : benchHashesFirstSum / benchItersFirst;
+                var benchHashResultSecond = benchItersSecond == 0 ? 0d : benchHashesSecondSum / benchItersSecond;
+                var success = benchHashResultFirst > 0d;
+                var speeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmFirstType, benchHashResultFirst) };
+                if (IsDual())
+                {
+                    speeds.Add(new AlgorithmTypeSpeedPair(_algorithmSecondType, benchHashResultSecond));
+                }
+                // return
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = speeds,
+                    Success = success
+                };
+            }
+            catch
+            { }
+            return t;
         }
         public void AfterStartMining()
         {

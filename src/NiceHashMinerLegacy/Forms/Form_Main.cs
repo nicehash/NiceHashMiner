@@ -340,6 +340,9 @@ namespace NiceHashMiner
                     }
                 }
 
+                // Detected devices cross reference with miner indexes
+                await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
+
                 if (runVCRed)
                 {
                     Helpers.InstallVcRedist();

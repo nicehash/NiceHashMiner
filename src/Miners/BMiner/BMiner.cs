@@ -87,6 +87,8 @@ namespace BMiner
 
                 api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 api.PowerUsageTotal = totalPowerUsage;
+                api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                api.PowerUsagePerDevice = perDevicePowerInfo;
             }
             catch (Exception e)
             {

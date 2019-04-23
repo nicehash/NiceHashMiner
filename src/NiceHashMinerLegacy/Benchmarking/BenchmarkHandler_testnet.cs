@@ -75,9 +75,11 @@ namespace NiceHashMiner.Benchmarking
                 }
             }
             currentAlgorithm?.ClearBenchmarkPending();
+            var cancel = _stopBenchmark.IsCancellationRequested;
             // don't show unbenchmarked algos if user canceled
-            if (_stopBenchmark.IsCancellationRequested) return;
-            BenchmarkManager.EndBenchmarkForDevice(Device, _benchmarkFailedAlgo.Count > 0);
+            var showFailed = _benchmarkFailedAlgo.Count > 0 && !cancel;
+            var startMining = _startMiningAfterBenchmark && !cancel;
+            BenchmarkManager.EndBenchmarkForDevice(Device, showFailed, startMining);
         }
 
         private async Task BenchmarkAlgorithm(Algorithm algo)
@@ -109,13 +111,10 @@ namespace NiceHashMiner.Benchmarking
             var power = _powerHelper.Stop();
             if (result.Success || result.AlgorithmTypeSpeeds?.Count > 0)
             {
-                algo.BenchmarkSpeed = result.AlgorithmTypeSpeeds.First().Speed;
+                var ids = result.AlgorithmTypeSpeeds.Select(ats => ats.AlgorithmType).ToList();
+                var speeds = result.AlgorithmTypeSpeeds.Select(ats => ats.Speed).ToList();
+                algo.Speeds = speeds;
                 algo.PowerUsage = power;
-                if (result.AlgorithmTypeSpeeds.Count > 1)
-                {
-                    Helpers.ConsolePrint("BenchmarkHandler2", $"Has Second speed {result.AlgorithmTypeSpeeds[1].Speed}");
-
-                }
                 // set status to empty string it will return speed
                 algo.ClearBenchmarkPending();
                 BenchmarkManager.SetCurrentStatus(Device, algo, "");

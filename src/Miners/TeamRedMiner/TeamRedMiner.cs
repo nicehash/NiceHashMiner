@@ -115,6 +115,8 @@ namespace TeamRedMiner
                 }
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 ad.PowerUsageTotal = totalPowerUsage;
+                ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                ad.PowerUsagePerDevice = perDevicePowerInfo;
             }
             catch (Exception ex)
             {
