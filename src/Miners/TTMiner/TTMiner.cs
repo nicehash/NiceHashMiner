@@ -24,7 +24,6 @@ namespace TTMiner
     public class TTMiner : MinerBase, IDisposable, IAfterStartMining
     {
         private int _apiPort;
-        private readonly string _uuid;
         private AlgorithmType _algorithmType;
         protected List<MiningPair> _orderedMiningPairs = new List<MiningPair>();
 
@@ -67,10 +66,8 @@ namespace TTMiner
             }
         }
 
-        public TTMiner(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public TTMiner(string uuid) : base(uuid)
+        {}
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {

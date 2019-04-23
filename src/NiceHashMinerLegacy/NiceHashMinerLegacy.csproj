@@ -419,7 +419,6 @@
     <Compile Include="Miners\MiningSession_production.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
-    <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
     <Compile Include="Forms\Form_Main_Production.cs">
       <SubType>Form</SubType>

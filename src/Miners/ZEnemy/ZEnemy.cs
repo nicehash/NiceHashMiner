@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.CCMinerCommon;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NiceHashMinerLegacy.Common.Enums;
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
@@ -22,16 +23,10 @@ namespace ZEnemy
 
         private int _apiPort;
 
-        private readonly string _uuid;
-
         private AlgorithmType _algorithmType;
 
-        private ApiDataHelper apiReader = new ApiDataHelper(); // consider replacing with HttpClient
-
-        public ZEnemy(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public ZEnemy(string uuid) : base(uuid)
+        {}
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -51,86 +46,9 @@ namespace ZEnemy
             }
         }
 
-        private struct IdPowerHash
+        public override Task<ApiData> GetMinerStatsDataAsync()
         {
-            public int id;
-            public int power;
-            public double speed;
-        }
-        public async override Task<ApiData> GetMinerStatsDataAsync()
-        {
-            var api = new ApiData();
-            try
-            {
-                var summaryApiResult = await apiReader.GetApiDataAsync(_apiPort, ApiDataHelper.GetHttpRequestNhmAgentStrin("summary"));
-                double totalSpeed = 0;
-                int totalPower = 0;
-                if (!string.IsNullOrEmpty(summaryApiResult))
-                {
-
-                    var summaryOptvals = summaryApiResult.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var optvalPairs in summaryOptvals)
-                    {
-                        var pair = optvalPairs.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                        if (pair.Length != 2) continue;
-                        if (pair[0] == "KHS")
-                        {
-                            totalSpeed = double.Parse(pair[1], CultureInfo.InvariantCulture) * 1000; // HPS
-                        }
-                    }
-                }
-
-                var threadsApiResult = await apiReader.GetApiDataAsync(_apiPort, ApiDataHelper.GetHttpRequestNhmAgentStrin("threads"));
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
-                var perDevicePowerInfo = new Dictionary<string, int>();
-                if (!string.IsNullOrEmpty(threadsApiResult))
-                {
-
-                    var gpus = threadsApiResult.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var gpu in gpus)
-                    {
-                        var gpuOptvalPairs = gpu.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-                        var gpuData = new IdPowerHash();
-                        foreach (var optvalPairs in gpuOptvalPairs)
-                        {
-                            var optval = optvalPairs.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
-                            if (optval.Length != 2) continue;
-                            if (optval[0] == "GPU")
-                            {
-                                gpuData.id = int.Parse(optval[1], CultureInfo.InvariantCulture);
-                            }
-                            if (optval[0] == "POWER")
-                            {
-                                gpuData.power = int.Parse(optval[1], CultureInfo.InvariantCulture);
-                            }
-                            if (optval[0] == "KHS")
-                            {
-                                gpuData.speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
-                            }
-                        }
-
-                        var device = _miningPairs.Where(kvp => kvp.Device.ID == gpuData.id).Select(kvp => kvp.Device).FirstOrDefault();
-                        if (device != null)
-                        {
-                            perDeviceSpeedInfo.Add(device.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, gpuData.speed) });
-                            perDevicePowerInfo.Add(device.UUID, gpuData.power);
-                            totalPower += gpuData.power;
-                        }
-
-                    }
-
-                }
-
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
-                api.PowerUsageTotal = totalPower;
-                api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-                api.PowerUsagePerDevice = perDevicePowerInfo;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"exception: {e}");
-            }
-            return api;
+            return CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs);
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)

@@ -19,8 +19,6 @@ namespace CPUMinerBase
 {
     public class CpuMiner : MinerBase, IAfterStartMining
     {
-        private readonly string _uuid;
-
         // cpuminer can mine only one algorithm at a given time
         private AlgorithmType _algorithmType;
 
@@ -31,10 +29,8 @@ namespace CPUMinerBase
 
         private ApiDataHelper apiReader = new ApiDataHelper(); // consider replacing with HttpClient
 
-        public CpuMiner(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public CpuMiner(string uuid) : base(uuid)
+        {}
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {

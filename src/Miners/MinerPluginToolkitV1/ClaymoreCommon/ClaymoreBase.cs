@@ -25,8 +25,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
         protected List<MiningPair> _orderedMiningPairs = new List<MiningPair>();
         protected int _apiPort;
-        protected readonly string _uuid;
-
+        
         public AlgorithmType _algorithmFirstType = AlgorithmType.NONE;
         public AlgorithmType _algorithmSecondType = AlgorithmType.NONE;
 
@@ -36,10 +35,8 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
         // command line parts
         public string _platform;
 
-        public ClaymoreBase(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public ClaymoreBase(string uuid) : base(uuid)
+        { }
 
         private static int GetPlatformIDForType(DeviceType type)
         {

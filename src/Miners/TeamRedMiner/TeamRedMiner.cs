@@ -21,7 +21,6 @@ namespace TeamRedMiner
     public class TeamRedMiner : MinerBase
     {
         private int _apiPort;
-        private readonly string _uuid;
         private string _extraLaunchParameters = "";
         private readonly int _openClAmdPlatformNum;
 
@@ -34,9 +33,8 @@ namespace TeamRedMiner
         // command line parts
         private string _devices;
 
-        public TeamRedMiner(string uuid, int openClAmdPlatformNum)
+        public TeamRedMiner(string uuid, int openClAmdPlatformNum) : base(uuid)
         {
-            _uuid = uuid;
             _openClAmdPlatformNum = openClAmdPlatformNum;
         }
 

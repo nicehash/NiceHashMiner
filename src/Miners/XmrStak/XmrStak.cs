@@ -24,7 +24,6 @@ namespace XmrStak
         protected Dictionary<int, string> _threadsForDeviceUUIDs = null;
         protected string _extraLaunchParameters = "";
         protected int _apiPort;
-        protected readonly string _uuid;
         protected AlgorithmType _algorithmType;
         protected readonly HttpClient _http = new HttpClient();
         protected IXmrStakConfigHandler _configHandler;
@@ -36,9 +35,8 @@ namespace XmrStak
         protected AmdConfig _amdConfig;
         protected NvidiaConfig _nvidiaConfig;
 
-        public XmrStak(string uuid, int openClAmdPlatformNum, IXmrStakConfigHandler configHandler)
+        public XmrStak(string uuid, int openClAmdPlatformNum, IXmrStakConfigHandler configHandler) : base(uuid)
         {
-            _uuid = uuid;
             _openClAmdPlatformNum = openClAmdPlatformNum;
             _configHandler = configHandler;
         }

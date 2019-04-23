@@ -10,18 +10,26 @@ using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
+using NiceHashMinerLegacy.Common;
 
 namespace MinerPluginToolkitV1
 {
     // TODO there is no watchdog
     public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
     {
-        //private readonly string _uuid;
+        protected string _logGroup { get; private set; }
+        protected string _uuid { get; private set; }
         protected MiningProcess _miningProcess;
         protected IEnumerable<MiningPair> _miningPairs;
         protected string _miningLocation;
         protected string _username;
         protected string _password;
+
+        public MinerBase(string uuid)
+        {
+            _uuid = uuid;
+            _logGroup = $"Miner-{uuid}";
+        }
 
         // if stop is called then consider this miner obsolete
         protected object _lock = new object();
@@ -68,6 +76,10 @@ namespace MinerPluginToolkitV1
             var binCwd = binPathBinCwdPair.Item2;
             var commandLine = MiningCreateCommandLine();
             var environmentVariables = GetEnvironmentVariables();
+
+            Logger.Debug(_logGroup, $"starting miner commandLine='{commandLine}'");
+            // TODO this will not print content
+            Logger.Debug(_logGroup, $"starting miner environmentVariables='{environmentVariables}'");
             var p = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables);
             _miningProcess = new MiningProcess(p);
             p.Exited += MinerProcess_Exited;

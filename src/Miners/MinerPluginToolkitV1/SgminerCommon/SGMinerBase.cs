@@ -18,7 +18,6 @@ namespace MinerPluginToolkitV1.SgminerCommon
     public class SGMinerBase : MinerBase
     {
         private int _apiPort;
-        protected readonly string _uuid;
         private readonly int _openClAmdPlatformNum;
 
         // can mine only one algorithm at a given time
@@ -28,9 +27,8 @@ namespace MinerPluginToolkitV1.SgminerCommon
         private string _devicesOnPlatform;
         private string _extraLaunchParameters;
 
-        public SGMinerBase(string uuid, int openClAmdPlatformNum)
+        public SGMinerBase(string uuid, int openClAmdPlatformNum) : base(uuid)
         {
-            _uuid = uuid;
             _openClAmdPlatformNum = openClAmdPlatformNum;
         }
 

@@ -26,16 +26,12 @@ namespace TRex
 
         private int _apiPort;
 
-        private readonly string _uuid;
-
         private AlgorithmType _algorithmType;
 
         private readonly HttpClient _httpClient = new HttpClient();
 
-        public TRex(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public TRex(string uuid) : base(uuid)
+        {}
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
