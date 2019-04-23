@@ -34,15 +34,6 @@ namespace NiceHashMiner.Utils
 
         public static bool IsMiners3rdPartyBinsInit()
         {
-            foreach (var filePath in Bins_Data_3rd.ALL_FILES_BINS)
-            {
-                var checkPath = Path.Combine("miner_plugins", filePath);
-                if (!File.Exists(checkPath))
-                {
-                    Helpers.ConsolePrint("MinersExistanceChecker", $"bin_3rdparty {checkPath} doesn't exist! Warning");
-                    return false;
-                }
-            }
             var missingFiles = MinerPluginsManager.GetMissingMiners(true);
             if (missingFiles.Count > 0)
             {
