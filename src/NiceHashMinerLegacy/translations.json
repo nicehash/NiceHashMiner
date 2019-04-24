@@ -1067,7 +1067,7 @@
       "pl": "Zaawansowane ustawienia są dla zaawansowanych ludzi.\r\n\r\nJeśli {0} zawiesza się przez zły konfig możesz to naprawić kasując plik 'config.json'.\r\n\r\nKontynuować edycję ustawień?",
       "pt": "Editar configurações adicionais é para usuários avançados.\r\n\r\nSe {0} crashar devido a uma configuração errada, você pode restaurar a original excluindo o arquivo 'config.json'.\r\n\r\nContinuar editando as configurações?",
       "ro": "Editarea setărilor adiționale este pentru utilizatori avansați.\r\n\r\nDacă {0} se blochează din cauza unei valori eronate de configurare puteți să reveniți prin ștergerea fișierului 'config.json'.\r\n\r\nContinuați cu editarea setărilor?",
-      "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается в связи с плохой конфигурацией, вы можете сбросить ее удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
+      "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается в связи с плохой конфигурацией, вы можете сбросить её удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
       "zh_cn": "编辑进阶设置适用于资深用户。\r\n\r如遇 {0} 因配置不当而奔溃，您可以通过删除“config.json”文件来恢复正确的配置。是否继续编辑进阶设置？"
     },
     "Electricity Cost (/KWh):": {
