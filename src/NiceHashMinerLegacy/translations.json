@@ -2058,7 +2058,7 @@
       "pl": "Brak zgodnych urządzeń. Kliknij OK aby uzyskać pomoc lub Anuluj aby przejść dalej.",
       "pt": "Nenhum dispositivo suportado é encontrado. Selecione o botão OK para obter ajuda ou cancele para continuar.",
       "ro": "Nu am găsit nici un dispozitiv suportat. Selectați butonul OK pentru ajutor sau anulare pentru a continua.",
-      "ru": "Поддерживаемые устройства не найдены. Нажмите кнопку «ОК» для получения справки или отмените для продолжения.",
+      "ru": "Поддерживаемые устройства не найдены. Нажмите кнопку «ОК» для получения справки или «Отмена» для продолжения.",
       "zh_cn": "未找到支持的设备。选择“确认”查看帮助或单击“取消”。"
     },
     "Not all benchmarks finished successfully. Retry to re-run the benchmark process against unbenchmarked algos or Cancel to disable unbenchmarked algorithms.": {
