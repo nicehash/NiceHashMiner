@@ -2817,6 +2817,7 @@
       "zh_cn": "The last dcri value to use for tuning"
     },
     "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
+      "ru": "Мощность в Ваттах, потребляемая этим алгоритмом. Прибыльность алгоритма будет\nуменьшена, если стоимость электроэнергии и потребление мощности больше 0.",
     },
     "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue.": {
       "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. NiceHash Miner Legacy няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно NiceHash Miner Legacy и да опитате да поправите този проблем.",
