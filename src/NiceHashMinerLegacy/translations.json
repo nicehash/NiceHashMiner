@@ -1150,7 +1150,7 @@
       "pl": "Błąd! Upewnij się że Tempo benchmarku to liczba większa lub równa zero.",
       "pt": "Erro! Digite uma velocidade de benchmark válida maior ou igual a 0.",
       "ro": "Eroare! Vă rugăm introduceți o viteză benchmark care este un număr cu valoare mai mare sau egală cu 0.",
-      "ru": "Ошибка! Введите, пожалуйста, скорость бенчмарка больше или равным 0.",
+      "ru": "Ошибка! Введите, пожалуйста, скорость бенчмарка больше или равной 0.",
       "zh_cn": "错误！测的速率必须是非负数值。"
     },
     "Error! Please input a device number that is a number and must be greater than or equal to 0.": {
@@ -1180,7 +1180,7 @@
       "pl": "Błąd! Wprowadź prawidłowy numer portu API.",
       "pt": "Erro! Digite um número de porta API válido.",
       "ro": "Eroare! Vă rugăm introduceți un număr de port API corect.",
-      "ru": "Ошибка! Введите, пожалуйста, корректный номер порта API.",
+      "ru": "Ошибка! Введите, пожалуйста, допустимый номер порта API.",
       "zh_cn": "错误！请输入有效的API端口号！"
     },
     "Error! Please input a valid number for LessThreads.": {
@@ -1190,7 +1190,7 @@
       "pl": "Błąd! Wprowadź prawidłową wartość dla LessThreads.",
       "pt": "Erro! Digite um número válido para LessThreads.",
       "ro": "Eroare! Introduceți un număr valid pentru LessThreads.",
-      "ru": "Ошибка! Введите, пожалуйста, верное значение для уменьшителя кол-ва потоков.",
+      "ru": "Ошибка! Введите, пожалуйста, допустимое значение для уменьшителя количества потоков.",
       "zh_cn": "错误！请为LessThreads输入有效的数值。"
     },
     "Ethminer API Port AMD": {
