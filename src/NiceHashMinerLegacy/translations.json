@@ -362,7 +362,7 @@
       "pl": "Wszystkie pomiary zostały wykonane",
       "pt": "Todos os benchmarks foram bem sucedidos",
       "ro": "Toate benchmarkurile au fost cu succes",
-      "ru": "Все тесты были удачными",
+      "ru": "Все тесты прошли успешно",
       "zh_cn": "基准测试完毕。"
     },
     "Allow Multiple Instances": {
@@ -471,7 +471,7 @@
       "pl": "BTC/Dzień",
       "pt": "BTC/Dia",
       "ro": "BTC/Zi",
-      "ru": "BTC/дн",
+      "ru": "BTC/сут",
       "zh_cn": "BTC/天"
     },
     "Balance": {
@@ -768,7 +768,7 @@
       "zh_cn": "中国 - 香港"
     },
     "Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds.": {
-      "ru": "Выберите как проверять простаивает ли компьютер, когда включен запуск майнинга при простое.\nБлокирование сессии начнется, когда компьютер заблокирован (как правило, когда отключается экран).\nТайм-аут ввода начнется, когда системный ввод отсутствовал в течение секунд простоя."
+      "ru": "Выберите как проверять простаивает ли компьютер, когда включён запуск майнинга при простое.\nБлокирование сессии начнётся, когда компьютер заблокирован (как правило, когда отключается экран).\nТайм-аут ввода начнётся, когда системный ввод отсутствовал в течение секунд простоя."
     },
     "Choose what Currency to Display mining profit.": {
       "bg": "Посочете валутата, в която да се показват доходите от изчисления.",
@@ -878,7 +878,7 @@
       "pl": "Konsola Debug",
       "pt": "Console para Debug",
       "ro": "Consolă Depanare",
-      "ru": "Окно отладки",
+      "ru": "Консоль отладки",
       "zh_cn": "调试控制台"
     },
     "Deviant Algorithm": {
@@ -961,11 +961,11 @@
       "pl": "Wyłącz raportowanie błędów Windows",
       "pt": "Desativar Relatórios de Erros do Windows",
       "ro": "Dezactivează Windows Error Reporting",
-      "ru": "Отключить ошибки",
+      "ru": "Откл. отчёты об ошибках Windows",
       "zh_cn": "禁用Windows错误报告"
     },
     "Disabled": {
-      "ru": "Отключен"
+      "ru": "Отключён"
     },
     "Disabled Devices": {
       "bg": "Деактивирани устройства",
@@ -1014,11 +1014,11 @@
       "pl": "Zaawansowane ustawienia są dla zaawansowanych ludzi.\r\n\r\nJeśli {0} zawiesza się przez zły konfig możesz to naprawić kasując plik 'config.json'.\r\n\r\nKontynuować edycję ustawień?",
       "pt": "Editar configurações adicionais é para usuários avançados.\r\n\r\nSe {0} crashar devido a uma configuração errada, você pode restaurar a original excluindo o arquivo 'config.json'.\r\n\r\nContinuar editando as configurações?",
       "ro": "Editarea setărilor adiționale este pentru utilizatori avansați.\r\n\r\nDacă {0} se blochează din cauza unei valori eronate de configurare puteți să reveniți prin ștergerea fișierului 'config.json'.\r\n\r\nContinuați cu editarea setărilor?",
-      "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается, в связи с плохой конфигурацией, вы можете сбросить ее удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
+      "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается, в связи с плохой конфигурацией, вы можете сбросить её удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
       "zh_cn": "编辑进阶设置适用于资深用户。\r\n\r如遇 {0} 因配置不当而奔溃，您可以通过删除“config.json”文件来恢复正确的配置。是否继续编辑进阶设置？"
     },
     "Electricity Cost (/KWh):": {
-      "ru": "Расходы на электроэнергию (/кВт⋅ч):"
+      "ru": "Стоимость э/э (/кВт⋅ч):"
     },
     "Enable 3rd Party Miners": {
       "bg": "Активиране на софтуер от трети лица",
@@ -1047,7 +1047,7 @@
       "pl": "Włącz tylko test porównawczy",
       "pt": "Ativar apenas o benchmarking",
       "ro": "Activează doar Benchmarked",
-      "ru": "Включить только контрольные показатели",
+      "ru": "Включить прошедшие бенчмарк",
       "zh_cn": "仅启用基准测试"
     },
     "Enable Device": {
@@ -1067,7 +1067,7 @@
       "pl": "Włącz tylko to",
       "pt": "Ativar isso somente",
       "ro": "Activați numai acest lucru",
-      "ru": "Включить это только",
+      "ru": "Включить только этот",
       "zh_cn": "仅启用此功能"
     },
     "Enabled": {
@@ -1097,7 +1097,7 @@
       "pl": "Błąd! Upewnij się że Tempo benchmarku to liczba większa lub równa zero.",
       "pt": "Erro! Digite uma velocidade de benchmark válida maior ou igual a 0.",
       "ro": "Eroare! Vă rugăm introduceți o viteză benchmark care este un număr cu valoare mai mare sau egală cu 0.",
-      "ru": "Ошибка! Введите, пожалуйста, скорость бенчмарка, которая является числом больше/равным 0.",
+      "ru": "Ошибка! Введите, пожалуйста, скорость бенчмарка больше или равной 0",
       "zh_cn": "错误！测的速率必须是非负数值。"
     },
     "Error! Please input a device number that is a number and must be greater than or equal to 0.": {
@@ -1107,7 +1107,7 @@
       "pl": "Błąd! Upewnij się że numer urządzenia to liczba większa lub równa zero.",
       "pt": "Erro! Digite um número de dispositivo válido maior ou igual a 0.",
       "ro": "Eroare! Vă rugăm introduceți un număr de dispozitiv care este număr și mai mare sau egal cu 0.",
-      "ru": "Ошибка! Введите, пожалуйста, номер устройства, который должен быть числом и быть больше/равен 0.",
+      "ru": "Ошибка! Введите, пожалуйста, номер устройства больше или равным 0.",
       "zh_cn": "错误！设备号必须是非负数值。"
     },
     "Error! Please input a minimum profit that is a number and must be greater than or equal to 0.": {
@@ -1117,7 +1117,7 @@
       "pl": "Błąd! Upewnij się że minimalny zysk to liczba większa lub równa zero.",
       "pt": "Erro! Por favor, insira um lucro mínimo válido maior ou igual a 0.",
       "ro": "Eroare! Vă rugăm introduceți un profit minim care este un număr cu valoare mai mare sau egală cu 0.",
-      "ru": "Ошибка! Введите, пожалуйста, минимальный доход, который является числом больше/равным 0.",
+      "ru": "Ошибка! Введите, пожалуйста, минимальный доход больше или равным 0.",
       "zh_cn": "错误！最小收益必须是非负数值。"
     },
     "Error! Please input a valid API port number.": {
@@ -1127,7 +1127,7 @@
       "pl": "Błąd! Wprowadź prawidłowy numer portu API.",
       "pt": "Erro! Digite um número de porta API válido.",
       "ro": "Eroare! Vă rugăm introduceți un număr de port API corect.",
-      "ru": "Ошибка! Введите, пожалуйста, корректный номер порта API.",
+      "ru": "Ошибка! Введите, пожалуйста, допустимый номер порта API.",
       "zh_cn": "错误！请输入有效的API端口号！"
     },
     "Error! Please input a valid number for LessThreads.": {
@@ -1137,7 +1137,7 @@
       "pl": "Błąd! Wprowadź prawidłową wartość dla LessThreads.",
       "pt": "Erro! Digite um número válido para LessThreads.",
       "ro": "Eroare! Introduceți un număr valid pentru LessThreads.",
-      "ru": "Ошибка! Введите, пожалуйста, верное значение для уменьшителя кол-ва потоков.",
+      "ru": "Ошибка! Введите, пожалуйста, допустимое значение для уменьшителя количества потоков.",
       "zh_cn": "错误！请为LessThreads输入有效的数值。"
     },
     "Ethminer API Port AMD": {
@@ -1324,7 +1324,7 @@
       "pl": "Tempa dla grup/urządzeń:",
       "pt": "Taxas de Grupo/Dispositivo:",
       "ro": "Rate Grup/Dispozitiv:",
-      "ru": "Ставки Группы/Устройства:",
+      "ru": "Ставки группы/устройства:",
       "zh_cn": "组/设备收益:"
     },
     "H/s": {
@@ -1350,7 +1350,7 @@
       "pl": "Ukryj konsole górników",
       "pt": "Ocultar Janela de Mineração",
       "ro": "Ascunde Ferestre Mineri",
-      "ru": "Спрятать окна майнинга",
+      "ru": "Скрывать окна майнинга",
       "zh_cn": "隐藏挖矿窗口"
     },
     "Hour": {
@@ -1615,7 +1615,7 @@
       "pl": "Maks. rozmiar logu [bajty]:",
       "pt": "Tamanho Maximo [bytes]:",
       "ro": "Dimensiune Fișier Log Maximă [bytes]:",
-      "ru": "Размер лог-файла [байт]:",
+      "ru": "Размер лог-файла [байты]:",
       "zh_cn": "最大日志文件大小 [字节]:"
     },
     "Log To File": {
@@ -1895,6 +1895,7 @@
       "pl": "Licencja użytkownika NiceHash Miner Legacy: NiceHash pracuje jako serwis dostarczający mocy  obliczeniowej od właścicieli tej mocy do jej kupców. NiceHash nie dostarcza jej bezpośrednio. Będziemy robić co w naszej mocy, aby dostarczać stabilną, bezpieczną, i pełną obsługę serwisu. Nie bierzemy odpowiedzialności za żadne straty mocy obliczeniowej i nie bierzemy za nie odpowiedzialności finansowej, materialnej, prawnej ani żadnych innych odpowiedzialności za jakiekolwiek błędy podczas użytkownaia NiceHash Miner Legacy. Serwis NiceHash oraz jego produkty (NiceHash Miner Legacy, itd.) jest ciągle w opracowaniu, więc błędy i problemy mogą się przydarzyć. Będziemy ciężko pracować, aby naprawić wszelkie stwierdzone problemy i błędy oraz naprawiać je niezwłocznie, a także dodawać nowe funkcje służące do poprawy naszego serwisu. NiceHash zastrzega sobie prawo do odebrania zarobku w przypadku podejrzenia nielegalnej działalności takiej jak botnety, wyłudzanie pieniędzy, próby włamań, itp.\r\n\r\nJako użytkownik NiceHash Miner Legacy, dostarczasz swoją moc obliczeniową (jesteś sprzedawcą) do odbiorców tej mocy poprzez giełdę NiceHash. Zarabiasz bitcoiny ze sprzedaży tej mocy za każdy poprawny udział (share) wygenerowany przez Twojego górnika (miner) zaakceptowany przez serwis Nicehash. W niektórych przypadkach żadne udziały nie są przesyłane albo akceptowane przez serwis NiceHash. Takie przypadki są rzadkie i wynikają z problemów z pracą sprzętu, nieprawidłową pracą oprogramowania, połączenia internetowego i podobnych problemów. W tych przypadkach nie otrzymasz wynagrodzenia od serwisu Nicehash w formie bitcoinów. Wypłaty są zautomatyzowane i płacone w bitcoinach na Twój adres BTC użyty w programie NiceHash Miner Legacy. Harmonogram płatności jest opisany w dziale FAQ na naszej stronie i może podlegać zmianom. Zawsze możesz monitorować swoje statystyki na stronie: https://www.nicehash.com/?p=myminer\r\n\r\nJeśli masz pytania dotyczace liczencji użytkowania, swoich praw i obowiązków wynikających z tej licencji lub użytkowania serwisu NiceHash, lub jakiejkolwiek innej sprawie, skontaktuj się z naszym działem pomocy support@nicehash.com.",
       "pt": "Termos de Uso dos Mineradores NiceHash \r\n\r\nO NiceHash opera como um serviço intermediário, fornecendo o poder de hashing dos proprietários para compradores de poder de hashing. NiceHash não fornece diretamente seu próprio poder de hashing. Faremos o nosso melhor para fornecer serviços estáveis, seguros e funcional. Nós não assumimos a responsabilidade por qualquer tipo de perda de poder de hashing ou perda de fundos e não assumimos qualquer tipo de responsabilidades financeiras, materiais, legais ou outras por quaisquer problemas que surja do uso do NiceHash Miner Legacy. O serviço NiceHash e seus produtos (NiceHash Miner Legacy, etc.) ainda estão em desenvolvimento, portanto, alguns bugs ou outros problemas podem surgir. Vamos trabalhar duro para corrigir quaisquer problemas o mais rápido possível, adicionar novas funcionalidades e melhorar o nosso serviço. NiceHash reserva o direito de apreender quaisquer fundos de actividade ilegal suspeita, como de mineração com botnets, lavagem de dinheiro, tentativas de invasão, etc.\r\n\r\nComo um usuário de NiceHash Miner Legacy, você está fornecendo seu poder de hashing (você é um vendedor) para os compradores de poder de hashing no mercado do NiceHash. Você ganha a Bitcoins vender seu poder de hashing para cada compartilhamento válido que seu mineiro gera e é aceito pelo serviço NiceHash. Em alguns casos, nenhum compartilhamento é enviado ou aceito pelo serviço NiceHash. Estes casos são raros e incluem o uso de erros de hardware, software ou rede mais lentos ou similares. Nesses casos (sem ações geradas e aceitas pelo serviço NiceHash) nenhuma recompensa na forma de Bitcoins pode ser contabilizada para você. Os pagamentos são automáticos e são pagos ao endereço BTC, usado no mineiro NiceHash. O cronograma de pagamento pode ser encontrado em FAQ em nosso site e está sujeito a alterações. Você sempre pode monitorar suas estatísticas neste site:https://www.nicehash.com/?p=myminer\r\n\r\nSe você tiver alguma dúvida relacionada com estes Termos de Uso, seus direitos e obrigações decorrentes destes Termos e / ou o uso do serviço NiceHash, ou qualquer outro assunto, entre em contato conosco (em inglês) em support@nicehash.com.",
       "ro": "Termenii de utilizare NiceHash Miner Legacy NiceHash opereaza ca un serviciu intermediar furnizând putere de hash de la proprietarii de putere de hash către cumpărătorii de putere de hash. NiceHash nu furnizează direct propria putere de hash. Facem tot posibilul pentru a furniza un serviciu stabil, sigur și plin de funcționalități. Nu ne asumăm nici o responsabilitate pentru nici o pierdere de putere de hash sau pierdere de fonduri și nu ne asumăm nici o răspundere financiară, materială, legală sau de orice altă natură pentru nici o problemă care poate apărea din utilizarea NiceHash Miner Legacy. Serviciul NiceHash și produsele sale (NiceHash Miner Legacy, etc.) sunt încă în dezvoltare și deci pot apărea buguri sau alte probleme. Vom lucra din greu pentru remedierea problemelor cât mai repede posibil, să adaugăm noi funcționalități și să îmbunătățim serviciul nostru. NiceHash își rezervă dreptul să rețină orice fonduri rezultate din activități ilegale cum ar fi minarea cu botnet, spălarea de bani, tentative de hack, etc.\r\n\r\nCa utilizator al NiceHash Miner Legacy, vă furnizați puterea de hash (sunteți vânzător) către cumpărătorii de putere de hash prin piața de putere de hash a NiceHash. Câștigați Bitcoini prin vânzarea de putere de hash pentru fiecare share valid pe care minerul dumneavoastră îl generează și este acceptat de serviciul NiceHash. În unele cazuri nici un share nu este trimis către sau acceptat de serviciul NiceHash. Aceste cazuri sunt rare și includ utilizarea de hardware lent, software, erori de rețea sau similar. În aceste cazuri (nici un share generat și acceptat de serviciul NiceHash) nici o răsplată sub forma de Bitcoini nu poate fi contabilizată către dumneavoastră. plățile sunt automare și se fac către adresa BTC folosită în NiceHash Miner Legacy. Programul de plăți poate fi găsit în secțiunea FAQ pe websiteul nostru și poate fi modificată. Puteți să monitorizați oricând statisticile dumneavoastră pe acest site: https://www.nicehash.com/?p=myminer\r\n\r\nDacă aveți orice întrebări legate de acești Termeni de Utilizare, drepturile și obligațiile dumneavoastră care reies din acesti Termeni și/sau utilizarea serviciului NiceHash, sau orice alt subiect, vă rugăm să ne contactați la support@nicehash.com.",
+      "ru": "Общие условия использования NiceHash Miner Legacy\n\rNiceHash работает как посредническая служба, обеспечивающая вычислительную мощность от продавцов к покупателям. NiceHash не предлагает непосредственно собственные вычислительные ресурсы. Мы стараемся обеспечить стабильное, надёжное и богатое функциями обслуживание. Мы не несём ответственности за любые потери вычислительной мощности или денежных средств. Мы не несём ответственности за любые финансовые, материальные, юридические или другие проблемы, которые могут возникнуть в результате использования NiceHash Miner Legacy. Услуги NiceHash и её продукции (NiceHash Legacy и прочее) всё ещё находятся в стадии разработки, поэтому возможно появление ошибок или иных проблем. Мы приложим максимум усилий, чтобы исправить любые проблемы как можно быстрее, а также добавить новые функции и улучшить нашу службу. NiceHash оставляет за собой право блокировать все наличные деньги от подозрительной незаконной деятельности, такой как использование бот-сетей, отмывание денег, попытки несанкционированного доступа и т. д.\r\n\r\Как пользователь NiceHash Legacy, вы предоставляете свою вычислительную мощность (вы являетесь продавцом) покупателю вычислительной мощности через рынок NiceHash. Вы получаете вознаграждение в биткойнах от продажи вашей вычислительной мощности за каждый действительный блок, который генерирует ваш компьютер и принимается службой NiceHash. В некоторых случаях блоки могут не отправляются или приниматься не полностью службой NiceHash. Эти случаи редки и обычно связаны с использованием медленного аппаратного обеспечения, с ошибками программного обеспечения и сети или иными подобными причинами. В таком случае (когда блоки не генерируются или не принимаются службой NiceHash) вознаграждение в биткойнах не может быть предоставлено. Платежи выполняются автоматически и отправляются на адрес BTC, указанный в NiceHash Miner Legacy. График платежей можно найти в разделе FAQ (часто задаваемые вопросы) на нашем веб-сайте, который постоянно обновляется. Вы можете в любое время отслеживать вашу статистику по адресу https://www.nicehash.com/?p=myminer\r\n\r\nЕсли у вас есть вопросы, касающиеся настоящих условий, ваших прав и обязанностей, вытекающих из настоящих условий, использования службы NiceHash, или вопросы иного характера, пожалуйста, свяжитесь с нами через support@nicehash.com.",									  
       "zh_cn": "NiceHash Miner Legacy 使用条款 NiceHash operates as in intermediate service by providing hashing power from hashing power owners to hashing power buyers. NiceHash does not directly provide it's own hashing power. We will do our best to provide stable, secure, and feature full service. We do not take responsibility for any kind of hashing power loss or funds loss and do not take any kind of financial, material, legal, or other responsibilities for any issues that my arise from using NiceHash Miner Legacy. NiceHash service and it's products (NiceHash Miner Legacy, etc.) is still in development, therefore some bugs or other issues may arise. We will work hard to fix any issues as soon as possible, add new features and overall improve our service. NiceHash reserves the rights to seize any funds of suspicious illegal activity such as mining with botnets, money laundering, hacking attempts, etc.\r\n\r\nAs a user of NiceHash Miner Legacy, you are providing your hashing power (your are a seller) to the hashing power buyers though NiceHash's hashing power marketplace. You earn Bitcoins from selling your hashing power for every valid share your miner generates and is accepted by NiceHash service. In some cases no shares are sent to or are accepted by NiceHash service. These cases are rare and includes usage of slower hardware, software, network errors, or simmilar. In these cases (no shares generated and accepted by NiceHash service) no reward in form of Bitcoins can be accounted to you. Payouts are automatic and are paid to BTC address, used in NiceHash Miner Legacy. Payment schedule can be found in FAQ on our website and is subject to change. You can always monitor your statistics on this site: https://www.nicehash.com/?p=myminer\r\n\r\nIf you have any questions relating to these Terms of Use, your rights and obligations arising from these Terms and/or your use of the NiceHash service, or any other matter, please contact us at support@nicehash.com."
     },
     "No Supported Devices": {
@@ -1944,7 +1945,7 @@
       "pl": "Brak zgodnych urządzeń. Kliknij OK aby uzyskać pomoc lub Anuluj aby przejść dalej.",
       "pt": "Nenhum dispositivo suportado é encontrado. Selecione o botão OK para obter ajuda ou cancele para continuar.",
       "ro": "Nu am găsit nici un dispozitiv suportat. Selectați butonul OK pentru ajutor sau anulare pentru a continua.",
-      "ru": "Поддерживаемые устройства не найдены. Нажмите кнопку «ОК» для получения справки или отмените для продолжения.",
+      "ru": "Поддерживаемые устройства не найдены. Нажмите кнопку «ОК» для получения справки или «Отмена» для продолжения.",
       "zh_cn": "未找到支持的设备。选择“确认”查看帮助或单击“取消”。"
     },
     "Not all benchmarks finished successfully. Retry to re-run the benchmark process against unbenchmarked algos or Cancel to disable unbenchmarked algorithms.": {
@@ -1954,7 +1955,7 @@
       "pl": "Nie wszystkie pomiary zostały wykonane poprawnie. Ponów aby powtórzyć pomiary, Anuluj aby wyłączyć problematyczne algorytmy i zacząć kopanie.",
       "pt": "Nem todos os benchmarks foram concluídos com sucesso. Tente fazer o benchmark novamente ou Cancele para não tentar novamente.",
       "ro": "Nu toate benchmarkurile au fost cu succes. Reîncercați procesul de benchmark pentru algoritmii fără benchmark sau Anulare pentru a dezactiva algoritmii fără benchmark.",
-      "ru": "Не все тесты прошли удачно. Попробуйте перезапустить бенчмарк для алгоритмов, непрошедших его, либо Отмените для отключения этих алгоритмов.",
+      "ru": "Не все тесты прошли успешно. Попробуйте перезапустить бенчмарк для алгоритмов, непрошедших его, либо выберите «Отмена» для отключения этих алгоритмов.",
       "zh_cn": "有个别基准测试失败。选择“重试”来重新执行失败的测试，或选择“取消”禁用未通过测试的算法。"
     },
     "Nothing to benchmark": {
@@ -2169,7 +2170,7 @@
       "pl": "Kurs BTC/GH/Dzień",
       "pt": "Taxa BTC/GH/Dia",
       "ro": "Rație BTC/GH/Zi",
-      "ru": "BTC/GH/дн соотношение",
+      "ru": "Отн. BTC/GH/дн",
       "zh_cn": "算力售价 BTC/GH/天"
     },
     "Reduce the number of threads used on each CPU by LessThreads.": {
@@ -2257,7 +2258,7 @@
       "zh_cn": "第二测得速率 (H/s):"
     },
     "Secondary Speed": {
-      "ru": "Вторичная скорость:"
+      "ru": "Доп. скорость:"
     },
     "Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?": {
       "ru": "Контрольная скорость работы для {0} — {1}, но результат бенчмарка был {2}. Хотите принять новое значение?"
@@ -2296,7 +2297,8 @@
       "zh_cn": "服务器地址:"
     },
     "SessionLock": {
-      "en": "Session Lock"
+      "en": "Session Lock",
+      "ru": "Блокировка сессии"
     },
     "Set default settings?": {
       "bg": "Установяване на стойности по подразбиране?",
@@ -2318,7 +2320,7 @@
       "zh_cn": "矿机API将绑定不低于此端口号的端口来侦听通讯。"
     },
     "Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.": {
-      "ru": "Укажите положительное значение для учета затрат на электроэнергию при переключении.\nЭто значение — затраты на кВт⋅ч в выбранной вами валюте отображения.\nУкажите 0 для отключения функции переключения в зависимости от мощности."
+      "ru": "Укажите положительное значение для учёта затрат на электроэнергию при переключении.\nЭто значение — затраты на кВт⋅ч в выбранной вами валюте отображения.\nУкажите 0 для отключения функции переключения в зависимости от мощности."
     },
     "Sets Dag Load Mode for ethminers.": {
       "bg": "Задава начина, по който ethminer зарежда DAG таблицата.",
@@ -2384,7 +2386,7 @@
       "pl": "Ustawianie raportowania błędów Windows...",
       "pt": "Configurando o relatório de erros do Windows...",
       "ro": "Setează Windows error reporting...",
-      "ru": "Установка отчета об ошибках Windows…",
+      "ru": "Установка отчёта об ошибках Windows…",
       "zh_cn": "正在设置Windows错误报告..."
     },
     "Setting environment variables...": {
@@ -2482,7 +2484,7 @@
       "pl": "Tempo",
       "pt": "Velocidade",
       "ro": "Viteză",
-      "ru": "Скор",
+      "ru": "Скорость",
       "zh_cn": "速率"
     },
     "Speed:": {
@@ -2501,7 +2503,7 @@
       "pl": "Tempo dla dodatkowego algorytmu w trybie  dual mining.",
       "pt": "Velocidade para o algoritmo secundário ao usar mineração dois algoritimos.",
       "ro": "Viteza pentru al doilea algoritm când folosiți minarea dual-algoritm.",
-      "ru": "Скорость для вторичного алгоритма при использовании алгоритма двойного алгоритма.",
+      "ru": "Скорость дополнительного алгоритма при использовании двойного майнинга.",
       "zh_cn": "手动调整（双重挖矿时）第二算法的基准测试测得速率。"
     },
     "St&op": {
@@ -2601,7 +2603,7 @@
       "pl": "Czas maksymalny [s]:",
       "pt": "Mudar Máximo [s]:",
       "ro": "Comută Maxim [s]:",
-      "ru": "Мак. переключение [s]:",
+      "ru": "Макс. переключение [s]:",
       "zh_cn": "切换最大值 [s]:"
     },
     "Switch Minimum AMD [s]": {
@@ -2673,7 +2675,7 @@
       "ru": "Конечное значение dcri для тюнинга"
     },
     "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
-      "ru": "Мощность, используемая этим алгоритмом в ваттах.\n Прибыль алгоритма вычтет расходы на электроэнергию, когда данное значение и расход на электроэнергию выше 0."
+      "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину затрат на электроэнергию,\nесли стоимость электроэнергии и потребление мощности больше 0."
     },
     "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue.": {
       "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. NiceHash Miner Legacy няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно NiceHash Miner Legacy и да опитате да поправите този проблем.",
@@ -2702,7 +2704,7 @@
       "pl": "Pozostały niezmieszone tempa dla niektórych algorytmów. Wybierz Tak aby powtórzyć pomiar i zacząć kopanie, Nie aby pominąć pomiar i zacząć kopanie, Anuluj by stąd wyjść",
       "pt": "Você ainda não fez benchmark em algum(s) dispositivo(s) selecionado(s). Clique em Sim para fazer o benchmark e iniciar mineração, Não para pular o benchmark e continuar minerando",
       "ro": "Există algoritmi fără benchmark pentru dispozitivele active selectate. Apăsați Da pentru benchmark și începere minare, Nu pentru a sări peste benchmark și a continua minarea, Anulare pentru renunțare",
-      "ru": "Для выбранных устройств есть алгоритмы, не прошедшие бенчмарк. Нажмите «Да» для бенчмарка и начала майнинга, «Нет» — для пропуска бенчмарка и продолжения майнинга, «Отмена» — для прерывания",
+      "ru": "Для выбранных устройств есть алгоритмы, непрошедшие бенчмарк. Нажмите «Да» для бенчмарка и начала майнинга, «Нет» — для пропуска бенчмарка и продолжения майнинга, «Отмена» — для прерывания",
       "zh_cn": "已启用的设备上有算法还没有经过基准测试。请点击“是”来进行基准测试并开始挖矿，点击“否”略过基准测试，或点击“取消”中止当前操作。"
     },
     "This input box only accepts numbers (0-9).": {
@@ -2812,7 +2814,7 @@
       "it": "Usa IFTTT",
       "pl": "użyj IFTTT",
       "ro": "Folosește IFTTT",
-      "ru": "Исп. IFTTT",
+      "ru": "Вкл. IFTTT",
       "zh_cn": "开启IFTTT"
     },
     "Use New Settings Page": {
