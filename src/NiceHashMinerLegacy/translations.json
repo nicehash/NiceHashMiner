@@ -2613,7 +2613,7 @@
       "pl": "Tempo dla dodatkowego algorytmu w trybie  dual mining.",
       "pt": "Velocidade para o algoritmo secundário ao usar mineração dois algoritimos.",
       "ro": "Viteza pentru al doilea algoritm când folosiți minarea dual-algoritm.",
-      "ru": "Скорость для вторичного алгоритма при использовании алгоритма двойного алгоритма.",
+      "ru": "Скорость дополнительного алгоритма при использовании двойного майнинга.",
       "zh_cn": "手动调整（双重挖矿时）第二算法的基准测试测得速率。"
     },
     "St&op": {
