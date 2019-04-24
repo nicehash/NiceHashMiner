@@ -1067,11 +1067,11 @@
       "pl": "Zaawansowane ustawienia są dla zaawansowanych ludzi.\r\n\r\nJeśli {0} zawiesza się przez zły konfig możesz to naprawić kasując plik 'config.json'.\r\n\r\nKontynuować edycję ustawień?",
       "pt": "Editar configurações adicionais é para usuários avançados.\r\n\r\nSe {0} crashar devido a uma configuração errada, você pode restaurar a original excluindo o arquivo 'config.json'.\r\n\r\nContinuar editando as configurações?",
       "ro": "Editarea setărilor adiționale este pentru utilizatori avansați.\r\n\r\nDacă {0} se blochează din cauza unei valori eronate de configurare puteți să reveniți prin ștergerea fișierului 'config.json'.\r\n\r\nContinuați cu editarea setărilor?",
-      "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается, в связи с плохой конфигурацией, вы можете сбросить ее удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
+      "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается в связи с плохой конфигурацией, вы можете сбросить ее удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
       "zh_cn": "编辑进阶设置适用于资深用户。\r\n\r如遇 {0} 因配置不当而奔溃，您可以通过删除“config.json”文件来恢复正确的配置。是否继续编辑进阶设置？"
     },
     "Electricity Cost (/KWh):": {
-      "ru": "Расходы на электроэнергию (/кВт⋅ч):"
+      "ru": "Стоимость э/э (/кВт⋅ч):"
     },
     "Enable 3rd Party Miners": {
       "bg": "Активиране на софтуер от трети лица",
@@ -1150,7 +1150,7 @@
       "pl": "Błąd! Upewnij się że Tempo benchmarku to liczba większa lub równa zero.",
       "pt": "Erro! Digite uma velocidade de benchmark válida maior ou igual a 0.",
       "ro": "Eroare! Vă rugăm introduceți o viteză benchmark care este un număr cu valoare mai mare sau egală cu 0.",
-      "ru": "Ошибка! Введите, пожалуйста, скорость бенчмарка, которая является числом больше/равным 0.",
+      "ru": "Ошибка! Введите, пожалуйста, скорость бенчмарка больше или равным 0.",
       "zh_cn": "错误！测的速率必须是非负数值。"
     },
     "Error! Please input a device number that is a number and must be greater than or equal to 0.": {
@@ -1160,7 +1160,7 @@
       "pl": "Błąd! Upewnij się że numer urządzenia to liczba większa lub równa zero.",
       "pt": "Erro! Digite um número de dispositivo válido maior ou igual a 0.",
       "ro": "Eroare! Vă rugăm introduceți un număr de dispozitiv care este număr și mai mare sau egal cu 0.",
-      "ru": "Ошибка! Введите, пожалуйста, номер устройства, который должен быть числом и быть больше/равен 0.",
+      "ru": "Ошибка! Введите, пожалуйста, номер устройства больше или равным 0.",
       "zh_cn": "错误！设备号必须是非负数值。"
     },
     "Error! Please input a minimum profit that is a number and must be greater than or equal to 0.": {
@@ -1170,7 +1170,7 @@
       "pl": "Błąd! Upewnij się że minimalny zysk to liczba większa lub równa zero.",
       "pt": "Erro! Por favor, insira um lucro mínimo válido maior ou igual a 0.",
       "ro": "Eroare! Vă rugăm introduceți un profit minim care este un număr cu valoare mai mare sau egală cu 0.",
-      "ru": "Ошибка! Введите, пожалуйста, минимальный доход, который является числом больше/равным 0.",
+      "ru": "Ошибка! Введите, пожалуйста, минимальный доход больше или равным 0.",
       "zh_cn": "错误！最小收益必须是非负数值。"
     },
     "Error! Please input a valid API port number.": {
@@ -1399,7 +1399,7 @@
       "pl": "Tempa dla grup/urządzeń:",
       "pt": "Taxas de Grupo/Dispositivo:",
       "ro": "Rate Grup/Dispozitiv:",
-      "ru": "Ставки Группы/Устройства:",
+      "ru": "Ставки группы/устройства:",
       "zh_cn": "组/设备收益:"
     },
     "Help me choose my Bitcoin wallet": {
