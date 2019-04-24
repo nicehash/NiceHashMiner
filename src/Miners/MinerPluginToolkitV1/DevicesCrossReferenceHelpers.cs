@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMinerLegacy.Common;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -44,6 +45,7 @@ namespace MinerPluginToolkitV1
             }
             catch (Exception e)
             {
+                Logger.Debug("DevicesCrossReferenceHelpers", $"Error occured while getting miner output: {e.Message}");
                 return null;
             }
             return output;

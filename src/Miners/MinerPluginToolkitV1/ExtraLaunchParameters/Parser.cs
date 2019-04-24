@@ -4,6 +4,7 @@ using System.Linq;
 using MinerPlugin;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Algorithm;
+using NiceHashMinerLegacy.Common;
 
 namespace MinerPluginToolkitV1.ExtraLaunchParameters
 {
@@ -199,6 +200,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                         }
                 }
             }
+            Logger.Debug("ELPParser", $"Successfully parsed {retVal} elp");
             return retVal;
         }
     }

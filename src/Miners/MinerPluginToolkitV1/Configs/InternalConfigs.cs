@@ -1,5 +1,6 @@
 ﻿using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
+using NiceHashMinerLegacy.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -35,9 +36,10 @@ namespace MinerPluginToolkitV1.Configs
                     return ret;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {ex}");
+                Logger.Info("InternalConfigs", $"Error occured while reading file settings from {filePath}: {e.Message}");
+                //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {e}");
                 return null;
             }
             return null;
@@ -58,9 +60,10 @@ namespace MinerPluginToolkitV1.Configs
                 File.WriteAllText(filePath, JsonConvert.SerializeObject(settingsValue, Formatting.Indented));
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {ex}");
+                Logger.Info("InternalConfigs", $"Error occured while writing file settings to {filePath}: {e.Message}");
+                //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {e}");
                 return false;
             }
         }
@@ -79,9 +82,10 @@ namespace MinerPluginToolkitV1.Configs
                 File.WriteAllText(filePath, settingsText);
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {ex}");
+                Logger.Info("InternalConfigs", $"Error occured while writing file settings to {filePath}: {e.Message}");
+                //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {e}");
                 return false;
             }
         }
