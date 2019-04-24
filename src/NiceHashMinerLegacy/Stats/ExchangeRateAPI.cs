@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Threading;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Stats
 {
@@ -22,6 +23,7 @@ namespace NiceHashMiner.Stats
                 if (value > 0)
                 {
                     Interlocked.Exchange(ref _usdBtcRate, value);
+                    Logger.Info("ExchangeRateApi", $"USD rate updated: {value} BTC");
                     Helpers.ConsolePrint("NICEHASH", $"USD rate updated: {value} BTC");
                 }
             }
@@ -56,6 +58,7 @@ namespace NiceHashMiner.Stats
             if (ExchangesFiat.TryGetValue(ActiveDisplayCurrency, out var usdExchangeRate))
                 return amount * usdExchangeRate;
 
+            Logger.Info("ExchangeRateApi", $"Unknown Currency Tag: {ActiveDisplayCurrency}, falling back to USD rates");
             Helpers.ConsolePrint("CurrencyConverter", "Unknown Currency Tag: " + ActiveDisplayCurrency + " falling back to USD rates");
             ActiveDisplayCurrency = "USD";
             return amount;

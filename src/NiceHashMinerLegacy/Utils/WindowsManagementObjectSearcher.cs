@@ -1,5 +1,6 @@
 ﻿using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Devices.Querying.Nvidia;
+using NiceHashMinerLegacy.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -202,12 +203,14 @@ namespace NiceHashMiner.Utils
                 using (var searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT FreePhysicalMemory FROM Win32_OperatingSystem"))
                 using (var query = searcher.Get())
                 {
+                    Logger.Info("WindowsManagementObjectSearcher", "WMI service seems to be running, ManagementObjectSearcher returned success.");
                     Helpers.ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
                     return true;
                 }
             }
             catch
             {
+                Logger.Info("WindowsManagementObjectSearcher", "ManagementObjectSearcher not working need WMI service to be running");
                 Helpers.ConsolePrint("NICEHASH", "ManagementObjectSearcher not working need WMI service to be running");
             }
             return false;

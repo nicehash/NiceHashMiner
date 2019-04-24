@@ -1,4 +1,5 @@
 ﻿using NiceHashMiner.Plugin;
+using NiceHashMinerLegacy.Common;
 using System.IO;
 using System.Linq;
 
@@ -18,6 +19,7 @@ namespace NiceHashMiner.Utils
                 var checkPath = Path.Combine("miner_plugins", filePath);
                 if (!File.Exists(checkPath))
                 {
+                    Logger.Info("MinersExistanceChecker", $"Bin '{checkPath}' doesn't exist! Warning");
                     Helpers.ConsolePrint("MinersExistanceChecker", $"Open Source '{checkPath}' doesn't exist! Warning");
                     return false;
                 }
@@ -26,6 +28,7 @@ namespace NiceHashMiner.Utils
             var missingFiles = MinerPluginsManager.GetMissingMiners(false);
             if (missingFiles.Count > 0)
             {
+                Logger.Info("MinersExistanceChecker", $"Open Source Plugin file: '{missingFiles.First()}' doesn't exist! Warning");
                 Helpers.ConsolePrint("MinersExistanceChecker", $"Open Source Plugin file: '{missingFiles.First()}' doesn't exist! Warning");
                 return false;
             }
@@ -37,6 +40,7 @@ namespace NiceHashMiner.Utils
             var missingFiles = MinerPluginsManager.GetMissingMiners(true);
             if (missingFiles.Count > 0)
             {
+                Logger.Info("MinersExistanceChecker", $"3rdparty Plugin file: '{missingFiles.First()}' doesn't exist! Warning");
                 Helpers.ConsolePrint("MinersExistanceChecker", $"3rdparty Plugin file: '{missingFiles.First()}' doesn't exist! Warning");
                 return false;
             }

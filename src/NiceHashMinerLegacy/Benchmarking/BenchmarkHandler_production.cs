@@ -72,6 +72,7 @@ namespace NiceHashMiner.Benchmarking
                 }
                 catch (Exception e)
                 {
+                    Logger.Debug("BenchmarkHandler", $"Error occured while benchmarking {currentAlgorithm.AlgorithmName} on {Device.GetFullName()}: {e.Message}");
                     Helpers.ConsolePrint($"BenchmarkHandler-{Device.GetFullName()}", $"Exception {e}");
                 }
             }
