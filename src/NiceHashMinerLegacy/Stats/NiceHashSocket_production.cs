@@ -65,6 +65,7 @@ namespace NiceHashMiner.Stats
                 _connectionEstablished = true;
             } catch (Exception e)
             {
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.ToString());
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
         }
@@ -85,7 +86,7 @@ namespace NiceHashMiner.Stats
                 OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
             } catch (Exception er)
             {
-                NiceHashMinerLegacy.Common.Logger.Info("NiceHashSocket", $"Error occured while connecting to socker: {er.ToString()}");
+                NiceHashMinerLegacy.Common.Logger.Error("NiceHashSocket", $"Error occured while connecting to socker: {er.ToString()}");
                 Helpers.ConsolePrint("SOCKET", er.ToString());
             }
         }
@@ -147,7 +148,7 @@ namespace NiceHashMiner.Stats
                 }
             } catch (Exception e)
             {
-                NiceHashMinerLegacy.Common.Logger.Info("NiceHashSocket", $"Error occured while sending data: {e.ToString()}");
+                NiceHashMinerLegacy.Common.Logger.Error("NiceHashSocket", $"Error occured while sending data: {e.ToString()}");
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
             return false;
@@ -195,6 +196,7 @@ namespace NiceHashMiner.Stats
                     if (e.Message == "A series of reconnecting has failed.")
                     {
                         // Need to recreate websocket
+                        NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "Recreating socket");
                         Helpers.ConsolePrint("SOCKET", "Recreating socket");
                         _webSocket = null;
                         StartConnection();
@@ -203,7 +205,7 @@ namespace NiceHashMiner.Stats
                 }
                 catch (Exception e)
                 {
-                    NiceHashMinerLegacy.Common.Logger.Info("NiceHashSocket", $"Error while attempting reconnect: {e.ToString()}");
+                    NiceHashMinerLegacy.Common.Logger.Error("NiceHashSocket", $"Error while attempting reconnect: {e.ToString()}");
                     Helpers.ConsolePrint("SOCKET", $"Error while attempting reconnect: {e}");
                 }
                 Thread.Sleep(1000);

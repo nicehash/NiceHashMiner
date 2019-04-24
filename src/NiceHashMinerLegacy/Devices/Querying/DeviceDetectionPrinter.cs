@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NiceHashMinerLegacy.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -53,6 +54,7 @@ namespace NiceHashMiner.Devices.Querying
             }
             catch (Exception ex)
             {
+                Logger.Error("DeviceDetectionPrinter", $"threw Exception: '{ex.Message}'. ReadData '{readData}'");
                 Helpers.ConsolePrint("DeviceDetectionPrinter", $"threw Exception: '{ex.Message}'. ReadData '{readData}'");
             }
             finally

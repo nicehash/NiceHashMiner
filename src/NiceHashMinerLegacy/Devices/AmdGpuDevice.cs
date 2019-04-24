@@ -1,6 +1,7 @@
 ﻿using NiceHashMiner.Devices.Querying.Amd;
 using System;
 using NiceHashMiner.Devices.Querying.Amd.OpenCL;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices
 {
@@ -36,6 +37,7 @@ namespace NiceHashMiner.Devices
 
             // Check for optimized version
             // first if not optimized
+            Logger.Info("AmdGpuDevice", "List: " + _openClSubset._CL_DEVICE_NAME);
             Helpers.ConsolePrint("AmdGpuDevice", "List: " + _openClSubset._CL_DEVICE_NAME);
         }
 

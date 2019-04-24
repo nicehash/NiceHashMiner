@@ -87,7 +87,7 @@ namespace NiceHashMiner.MinersDownloader
             }
             catch (Exception e)
             {
-                Logger.Info("MinersDownloadManager", $"Error occured while downloading and extracting of miners: {e.Message}");
+                Logger.Error("MinersDownloadManager", $"Error occured while downloading and extracting of miners: {e.Message}");
                 Helpers.ConsolePrint("MinersDownloadManager", $"DownloadAndExtract failed: {e}");
             }
         }
@@ -234,7 +234,7 @@ namespace NiceHashMiner.MinersDownloader
             }
             catch (Exception e)
             {
-                Logger.Info("MinersDownloadManager", $"Error occured while downloading files with myDownloader: {e.Message}");
+                Logger.Error("MinersDownloadManager", $"Error occured while downloading files with myDownloader: {e.Message}");
                 Helpers.ConsolePrint("MinersDownloadManager", e.Message);
             }
 
@@ -286,7 +286,7 @@ namespace NiceHashMiner.MinersDownloader
             }
             catch (Exception e)
             {
-                Logger.Info("MinersDownloadManager", $"Error occured while downloading and extracting with myDownloader: {e.Message}");
+                Logger.Error("MinersDownloadManager", $"Error occured while downloading and extracting with myDownloader: {e.Message}");
                 Helpers.ConsolePrint("MinersDownloadManager", $"Exception while downloading and extracting {e}");
             }
         }

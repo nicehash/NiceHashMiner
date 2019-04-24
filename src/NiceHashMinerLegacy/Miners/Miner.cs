@@ -12,6 +12,7 @@ using System.Timers;
 using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner
 {
@@ -180,6 +181,7 @@ namespace NiceHashMiner
                     var process = Process.GetProcessById(pidData.Pid);
                     if (pidData.MinerBinPath.Contains(process.ProcessName))
                     {
+                        Logger.Info(MinerTag(), $"Trying to kill {ProcessTag(pidData)}");
                         Helpers.ConsolePrint(MinerTag(), $"Trying to kill {ProcessTag(pidData)}");
                         try
                         {
@@ -189,6 +191,7 @@ namespace NiceHashMiner
                         }
                         catch (Exception e)
                         {
+                            Logger.Error(MinerTag(), $"Exception killing {ProcessTag(pidData)}, exMsg {e.Message}");
                             Helpers.ConsolePrint(MinerTag(),
                                 $"Exception killing {ProcessTag(pidData)}, exMsg {e.Message}");
                         }
@@ -197,6 +200,7 @@ namespace NiceHashMiner
                 catch (Exception e)
                 {
                     toRemovePidData.Add(pidData);
+                    Logger.Error(MinerTag(), $"Nothing to kill {ProcessTag(pidData)}, exMsg {e.Message}");
                     Helpers.ConsolePrint(MinerTag(), $"Nothing to kill {ProcessTag(pidData)}, exMsg {e.Message}");
                 }
             }
@@ -323,6 +327,7 @@ namespace NiceHashMiner
                     };
                     _allPidData.Add(_currentPidData);
 
+                    Logger.Info(MinerTag(), $"Starting miner {ProcessTag()} {LastCommandLine}");
                     Helpers.ConsolePrint(MinerTag(), "Starting miner " + ProcessTag() + " " + LastCommandLine);
 
                     StartCoolDownTimerChecker();
@@ -330,11 +335,13 @@ namespace NiceHashMiner
                     return P;
                 }
 
+                Logger.Info(MinerTag(), $"NOT STARTED {ProcessTag()} {LastCommandLine}");
                 Helpers.ConsolePrint(MinerTag(), "NOT STARTED " + ProcessTag() + " " + LastCommandLine);
                 return null;
             }
             catch (Exception ex)
             {
+                Logger.Error(MinerTag(), $"{ProcessTag()} _Start: {ex.Message}");
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " _Start: " + ex.Message);
                 return null;
             }
@@ -344,6 +351,7 @@ namespace NiceHashMiner
         {
             if (ConfigManager.GeneralConfig.CoolDownCheckEnabled)
             {
+                Logger.Info(MinerTag(), $"{ProcessTag()} Starting cooldown checker");
                 Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Starting cooldown checker");
                 if (_cooldownCheckTimer != null && _cooldownCheckTimer.Enabled) _cooldownCheckTimer.Stop();
                 // cool down init
@@ -358,6 +366,7 @@ namespace NiceHashMiner
             }
             else
             {
+                Logger.Info(MinerTag(), "Cooldown checker disabled");
                 Helpers.ConsolePrint(MinerTag(), "Cooldown checker disabled");
             }
 
@@ -393,7 +402,8 @@ namespace NiceHashMiner
         protected void Restart()
         {
             if (_isEnded) return;
-            Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Restarting miner..");
+            Logger.Info(MinerTag(), $"{ProcessTag()} Restarting miner...");
+            Helpers.ConsolePrint(MinerTag(), ProcessTag() + " Restarting miner...");
             Stop(MinerStopType.END); // stop miner first
             Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
             ProcessHandle = _Start(); // start with old command line
@@ -458,6 +468,7 @@ namespace NiceHashMiner
                         CoolDown();
                         break;
                     case MinerApiReadStatus.READ_SPEED_ZERO:
+                        Logger.Info(MinerTag(), "{ProcessTag()} READ SPEED ZERO, will cool up");
                         Helpers.ConsolePrint(MinerTag(), ProcessTag() + " READ SPEED ZERO, will cool up");
                         CoolUp();
                         break;

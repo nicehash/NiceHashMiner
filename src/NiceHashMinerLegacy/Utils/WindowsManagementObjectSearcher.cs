@@ -102,6 +102,7 @@ namespace NiceHashMiner.Utils
                 stringBuilder.AppendLine("\tWin32_VideoController detected:");
                 stringBuilder.AppendLine($"{vidController.GetFormattedString()}");
             }
+            Logger.Info("SystemSpecs", stringBuilder.ToString());
             Helpers.ConsolePrint("SystemSpecs", stringBuilder.ToString());
         }
 
@@ -210,7 +211,7 @@ namespace NiceHashMiner.Utils
             }
             catch
             {
-                Logger.Info("WindowsManagementObjectSearcher", "ManagementObjectSearcher not working need WMI service to be running");
+                Logger.Error("WindowsManagementObjectSearcher", "ManagementObjectSearcher not working need WMI service to be running");
                 Helpers.ConsolePrint("NICEHASH", "ManagementObjectSearcher not working need WMI service to be running");
             }
             return false;

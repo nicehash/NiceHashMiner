@@ -475,20 +475,20 @@ namespace NiceHashMiner.Miners
 
                     if (stringBuilderPreviousAlgo.Length > 0)
                     {
-                        Helpers.ConsolePrint(Tag, $"Stop Mining: {stringBuilderPreviousAlgo}");
                         Logger.Info(Tag, $"Stop Mining: {stringBuilderPreviousAlgo}");
+                        Helpers.ConsolePrint(Tag, $"Stop Mining: {stringBuilderPreviousAlgo}");
                     }
 
                     if (stringBuilderCurrentAlgo.Length > 0)
                     {
-                        Helpers.ConsolePrint(Tag, $"Now Mining : {stringBuilderCurrentAlgo}");
                         Logger.Info(Tag, $"Now Mining : {stringBuilderCurrentAlgo}");
+                        Helpers.ConsolePrint(Tag, $"Now Mining : {stringBuilderCurrentAlgo}");
                     }
 
                     if (stringBuilderNoChangeAlgo.Length > 0)
                     {
-                        Helpers.ConsolePrint(Tag, $"No change  : {stringBuilderNoChangeAlgo}");
                         Logger.Info(Tag, $"No change  : {stringBuilderNoChangeAlgo}");
+                        Helpers.ConsolePrint(Tag, $"No change  : {stringBuilderNoChangeAlgo}");
                     }
                 }
             }
@@ -558,7 +558,7 @@ namespace NiceHashMiner.Miners
                 }
             }
             catch (Exception e) {
-                Logger.Info(Tag, $"Error occured while getting mining stats: {e.Message}");
+                Logger.Error(Tag, $"Error occured while getting mining stats: {e.Message}");
                 Helpers.ConsolePrint(Tag, e.Message);
             }
         }

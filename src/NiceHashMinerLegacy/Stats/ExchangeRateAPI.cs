@@ -96,6 +96,7 @@ namespace NiceHashMiner.Stats
             {
                 // Should never happen, indicates error in ExchangesFiat
                 // Fall back with 0
+                Logger.Info("EXCHANGE", "Exchange for currency is 0, power switching disabled.");
                 Helpers.ConsolePrint("EXCHANGE", "Exchange for currency is 0, power switching disabled.");
                 return 0;
             }
@@ -104,6 +105,7 @@ namespace NiceHashMiner.Stats
             // Race condition not a problem since UsdBtcRate will never update to 0
             if (UsdBtcRate <= 0)
             {
+                Logger.Info("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
                 Helpers.ConsolePrint("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
                 return 0;
             }

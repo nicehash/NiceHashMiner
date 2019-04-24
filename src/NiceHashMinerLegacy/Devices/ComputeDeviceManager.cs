@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static NiceHashMiner.Translations;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices
 {
@@ -45,6 +46,7 @@ namespace NiceHashMiner.Devices
 
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
                 {
+                    Logger.Info(Tag, "Skipping NVIDIA device detection, settings are set to disabled");
                     Helpers.ConsolePrint(Tag, "Skipping NVIDIA device detection, settings are set to disabled");
                 }
                 else
@@ -69,6 +71,7 @@ namespace NiceHashMiner.Devices
 
                 if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
                 {
+                    Logger.Info(Tag, "Skipping AMD device detection, settings set to disabled");
                     Helpers.ConsolePrint(Tag, "Skipping AMD device detection, settings set to disabled");
                 }
                 else
@@ -96,6 +99,7 @@ namespace NiceHashMiner.Devices
                         }
                         else
                         {
+                            Logger.Info(Tag, $"Device not supported NVIDIA/CUDA device not supported {vidCtrl.Name}");
                             Helpers.ConsolePrint(Tag,
                                 "Device not supported NVIDIA/CUDA device not supported " + vidCtrl.Name);
                         }
@@ -108,6 +112,8 @@ namespace NiceHashMiner.Devices
 
                 nvCountMatched = nvidiaCount == AvailableDevices.NumDetectedNvDevs;
 
+                Logger.Info(Tag, nvCountMatched ? "Cuda NVIDIA/CUDA device count GOOD" : "Cuda NVIDIA/CUDA device count BAD!!!");
+                Logger.Info(Tag, amdCount == amdDevs?.Count ? "AMD GPU device count GOOD" : "AMD GPU device count BAD!!!");
                 Helpers.ConsolePrint(Tag,
                     nvCountMatched
                         ? "Cuda NVIDIA/CUDA device count GOOD"
@@ -177,11 +183,13 @@ namespace NiceHashMiner.Devices
 
             if (totalSysRam < totalGpuRam)
             {
+                Logger.Info(Tag, "virtual memory size BAD");
                 Helpers.ConsolePrint(Tag, "virtual memory size BAD");
                 return false;
             }
             else
             {
+                Logger.Info(Tag, "virtual memory size GOOD");
                 Helpers.ConsolePrint(Tag, "virtual memory size GOOD");
                 return true;
             }

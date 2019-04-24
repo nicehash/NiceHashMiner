@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using NiceHashMiner.Devices.Querying.Amd.OpenCL;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
@@ -34,6 +35,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 }
                 else
                 {
+                    Logger.Info(Tag, $"\tDevice not added, Bus No. {busID} not found:");
                     Helpers.ConsolePrint(Tag, $"\tDevice not added, Bus No. {busID} not found:");
                 }
             }

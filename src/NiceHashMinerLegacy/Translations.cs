@@ -107,7 +107,7 @@ namespace NiceHashMiner
             }
             catch (Exception e)
             {
-                Logger.Info("NICEHASH", $"Lang error: {e.Message}");
+                Logger.Error("NICEHASH", $"Lang error: {e.Message}");
                 Helpers.ConsolePrint("NICEHASH", "Lang error: " + e.Message);
             }
         }

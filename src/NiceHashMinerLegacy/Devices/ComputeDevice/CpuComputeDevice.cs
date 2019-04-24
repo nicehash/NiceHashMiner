@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using NiceHashMiner.Utils.Guid;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -18,7 +19,10 @@ namespace NiceHashMiner.Devices
                 {
                     if (_cpuCounter != null) return _cpuCounter.NextValue();
                 }
-                catch (Exception e) { Helpers.ConsolePrint("CPUDIAG", e.ToString()); }
+                catch (Exception e) {
+                    Logger.Error("CPUDIAG", e.ToString());
+                    Helpers.ConsolePrint("CPUDIAG", e.ToString());
+                }
                 return -1;
             }
         }

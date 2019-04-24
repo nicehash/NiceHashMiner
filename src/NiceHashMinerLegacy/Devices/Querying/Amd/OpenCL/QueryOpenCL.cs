@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using NiceHashMiner.PInvoke;
 using NiceHashMiner.Devices.Querying;
 using System.Threading.Tasks;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
 {
@@ -18,6 +19,7 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
 
         public bool TryQueryOpenCLDevices(out OpenCLDeviceDetectionResult result)
         {
+            Logger.Info(Tag, "QueryOpenCLDevices START");
             Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
 
             var queryOpenCLDevicesString = "";
@@ -29,6 +31,7 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
             catch (Exception ex)
             {
                 // TODO print AMD detection string
+                Logger.Error(Tag, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
                 Helpers.ConsolePrint(Tag, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
                 result = null;
             }
@@ -58,8 +61,10 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
                         stringBuilder.AppendLine($"\t\t\tDevice TYPE {oclDev._CL_DEVICE_TYPE}");
                     }
                 }
+                Logger.Info(Tag, stringBuilder.ToString());
                 Helpers.ConsolePrint(Tag, stringBuilder.ToString());
             }
+            Logger.Info(Tag, "QueryOpenCLDevices END");
             Helpers.ConsolePrint(Tag, "QueryOpenCLDevices END");
 
             return success;
@@ -67,6 +72,7 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
 
         public async Task<OpenCLDeviceDetectionResult> TryQueryOpenCLDevicesAsync()
         {
+            Logger.Info(Tag, "QueryOpenCLDevices START");
             Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
 
             var result = await DeviceDetectionPrinter.GetDeviceDetectionResultAsync<OpenCLDeviceDetectionResult>("ocl -", 60 * 1000);
@@ -86,9 +92,11 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
                     stringBuilder.AppendLine($"\t\t\tDevice TYPE {oclDev._CL_DEVICE_TYPE}");
                 }
             }
+            Logger.Info(Tag, stringBuilder.ToString());
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
             
             Helpers.ConsolePrint(Tag, "QueryOpenCLDevices END");
+            Logger.Info(Tag, "QueryOpenCLDevices END");
 
             return result;
         }

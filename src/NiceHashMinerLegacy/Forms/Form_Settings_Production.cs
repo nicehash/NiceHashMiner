@@ -16,6 +16,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using static NiceHashMiner.Translations;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Plugin;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Forms
 {
@@ -90,6 +91,7 @@ namespace NiceHashMiner.Forms
             }
             catch (Exception e)
             {
+                Logger.Error("SETTINGS", e.ToString());
                 Helpers.ConsolePrint("SETTINGS", e.ToString());
             }
             FormHelpers.TranslateFormControls(this);
@@ -672,6 +674,7 @@ namespace NiceHashMiner.Forms
             }
             catch (Exception e)
             {
+                Logger.Error("REGISTRY", e.ToString());
                 Helpers.ConsolePrint("REGISTRY", e.ToString());
             }
 
@@ -852,6 +855,7 @@ namespace NiceHashMiner.Forms
                     }
                     catch (Exception er)
                     {
+                        Logger.Error("REGISTRY", er.ToString());
                         Helpers.ConsolePrint("REGISTRY", er.ToString());
                     }
                 }

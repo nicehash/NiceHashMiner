@@ -14,6 +14,7 @@ using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Properties;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Windows.Forms.Timer;
 
@@ -260,6 +261,7 @@ namespace NiceHashMiner.Forms
 
         private void CopyBenchmarks()
         {
+            Logger.Info("CopyBenchmarks", "Checking for benchmarks to copy");
             Helpers.ConsolePrint("CopyBenchmarks", "Checking for benchmarks to copy");
             foreach (var cDev in AvailableDevices.Devices)
                 // check if copy
@@ -268,6 +270,7 @@ namespace NiceHashMiner.Forms
                     var copyCdevSettings = AvailableDevices.GetDeviceWithUuid(cDev.BenchmarkCopyUuid);
                     if (copyCdevSettings != null)
                     {
+                        Logger.Info("CopyBenchmarks", $"Copy from {cDev.Uuid} to {cDev.BenchmarkCopyUuid}");
                         Helpers.ConsolePrint("CopyBenchmarks", $"Copy from {cDev.Uuid} to {cDev.BenchmarkCopyUuid}");
                         cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
                     }
@@ -336,6 +339,7 @@ namespace NiceHashMiner.Forms
         {
             _benchmarkingTimer.Stop();
             InBenchmark = false;
+            Logger.Info("FormBenchmark", "User stopped benchmark routine");
             Helpers.ConsolePrint("FormBenchmark", "StopButonClick() benchmark routine stopped");
             //// copy benchmarked
             //CopyBenchmarks();
@@ -445,6 +449,7 @@ namespace NiceHashMiner.Forms
                 _benchmarkingTimer.Stop();
                 InBenchmark = false;
                 EthlargementOld.Stop();
+                Logger.Info("FormBenchmark", "Benchmark routine finished");
                 Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
 
                 //CopyBenchmarks();

@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices.Querying.Nvidia
 {
@@ -28,6 +29,7 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 }
                 
 
+                Logger.Info(Tag, $"CudaDevicesDetection found no devices. CudaDevicesDetection returned: {queryCudaDevicesString}");
                 Helpers.ConsolePrint(Tag,
                     "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +
                     queryCudaDevicesString);
@@ -37,6 +39,7 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
             catch (Exception ex)
             {
                 // TODO
+                Logger.Error(Tag, $"CudaDevicesDetection threw Exception: {ex.Message}");
                 Helpers.ConsolePrint(Tag, "CudaDevicesDetection threw Exception: " + ex.Message);
                 cudaDevices = null;
                 return false;

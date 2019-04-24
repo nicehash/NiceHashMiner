@@ -337,7 +337,7 @@ namespace NiceHashMiner.Plugin
                 return true;
             } catch(Exception e)
             {
-                Logger.Info("MinerPluginsManager", $"Error occured while getting online miner plugins: {e.Message}");
+                Logger.Error("MinerPluginsManager", $"Error occured while getting online miner plugins: {e.Message}");
                 Helpers.ConsolePrint("MinerPluginsManager", $"GetOnlineMinerPlugins ex: {e}");
             }
             return false;
@@ -423,7 +423,7 @@ namespace NiceHashMiner.Plugin
             }
             catch (Exception e)
             {
-                Logger.Info("MinerPluginsManager", $"Installation of {plugin.PluginName}_{plugin.PluginVersion}_{plugin.PluginUUID} failed: ${e.Message}");
+                Logger.Error("MinerPluginsManager", $"Installation of {plugin.PluginName}_{plugin.PluginVersion}_{plugin.PluginUUID} failed: ${e.Message}");
                 Helpers.ConsolePrint("MinerPluginsManager", $"Installation of {plugin.PluginName}_{plugin.PluginVersion}_{plugin.PluginUUID} failed: ${e}");
                 //downloadAndInstallUpdate();
             }
