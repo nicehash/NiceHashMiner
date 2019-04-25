@@ -78,10 +78,12 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             foreach (var deviceOptions in devicesOptions)
             {
                 var parameters = deviceOptions.Parameters;
-                for (int paramIndex = 0; paramIndex < parameters.Count - 1; paramIndex++)
+
+                //check for single/multi parameter cases
+                for (int paramIndex = 0; paramIndex < parameters.Count; paramIndex++)
                 {
                     var param = parameters[paramIndex];
-                    var value = parameters[paramIndex + 1];
+                    string value = (paramIndex + 1) < parameters.Count ? parameters[paramIndex + 1] : "";
 
                     // find an option with the flag
                     var deviceParsedOption = deviceOptions.ParsedMinerOptions
@@ -92,14 +94,13 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
 
                     switch (deviceParsedOption.Option.Type)
                     {
+                        case MinerOptionType.OptionIsParameter:
+                            deviceParsedOption.Value = param;
+                            break;
                         case MinerOptionType.OptionWithSingleParameter:
                         case MinerOptionType.OptionWithMultipleParameters:
                         case MinerOptionType.OptionWithDuplicateMultipleParameters:
                             deviceParsedOption.Value = value;
-                            break;
-
-                        case MinerOptionType.OptionIsParameter:
-                            deviceParsedOption.Value = param;
                             break;
                     }
                 }
