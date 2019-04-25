@@ -6,6 +6,7 @@ using NiceHashMiner.Switching;
 using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
+using System.Net;
 
 namespace NiceHashMiner
 {
@@ -21,6 +22,12 @@ namespace NiceHashMiner
 
         static Globals()
         {
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                   | SecurityProtocolType.Tls11
+                   | SecurityProtocolType.Tls12
+                   | SecurityProtocolType.Ssl3;
+
             var guid = Helpers.GetMachineGuid();
             if (guid == null)
             {
