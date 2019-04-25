@@ -499,7 +499,8 @@ namespace NiceHashMiner
         public void ClearRatesAll()
         {
             HideNotProfitable();
-            ClearRates(-1);
+            MiningStats.ClearApiDataGroups();
+            RefreshRates();
         }
 
         public void ClearRates(int groupCount)
@@ -537,30 +538,39 @@ namespace NiceHashMiner
             Size = new Size(Size.Width, _mainFormHeight + groupBox1Height);
         }
 
-        public void AddRateInfo(string deviceStringInfo, ApiData iApiData, double paying,
-            bool isApiGetException)
+        public void RefreshRates()
         {
-            var apiGetExceptionString = isApiGetException ? "**" : "";
+            FormHelpers.SafeInvoke(this, () => {
+                var totalRate = 0d;
+                var KwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
+                var minerStats = MiningStats.GetMinersMiningStats();
+                ClearRates(minerStats.Count);
+                foreach (var stat in minerStats)
+                {
+                    var algorithmFirstType = stat.Speeds.Count > 0 ? stat.Speeds[0].type : AlgorithmType.NONE;
+                    var algorithmSecondType = stat.Speeds.Count > 1 ? stat.Speeds[1].type : AlgorithmType.NONE;
+                    var algorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmFirstType, algorithmSecondType));
+                    var firstSpeed = stat.Speeds.Count > 0 ? stat.Speeds[0].speed : 0d;
+                    var secondSpeed = stat.Speeds.Count > 1 ? stat.Speeds[1].speed : 0d;
 
-            var speedString =
-                Helpers.FormatDualSpeedOutput(iApiData.Speed, iApiData.SecondarySpeed, iApiData.AlgorithmID) + " " +
-                iApiData.AlgorithmName + apiGetExceptionString;
-            var rateBtcString = FormatPayingOutput(paying);
-            var rateCurrencyString = ExchangeRateApi
-                                         .ConvertToActiveCurrency(paying * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit)
-                                         .ToString("F2", CultureInfo.InvariantCulture)
-                                     + $" {ExchangeRateApi.ActiveDisplayCurrency}/" +
-                                     Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
-
-            try
-            {
-                // flowLayoutPanelRatesIndex may be OOB, so catch
-                ((GroupProfitControl) flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
-                    .UpdateProfitStats(deviceStringInfo, speedString, rateBtcString, rateCurrencyString);
-            }
-            catch { }
-
-            UpdateGlobalRate();
+                    var speedString = Helpers.FormatDualSpeedOutput(firstSpeed, secondSpeed, algorithmFirstType) + " " + algorithmName;
+                    var paying = stat.TotalPayingRateDeductPowerCost(KwhPriceInBtc);
+                    totalRate += paying;
+                    var rateBtcString = FormatPayingOutput(paying);
+                    var activeCurrencyRateDisplay = ExchangeRateApi.ConvertToActiveCurrency(paying * ExchangeRateApi.GetUsdExchangeRate() * _factorTimeUnit).ToString("F2", CultureInfo.InvariantCulture);
+                    var rateCurrencyString = $"{activeCurrencyRateDisplay} {ExchangeRateApi.ActiveDisplayCurrency}/{Tr(ConfigManager.GeneralConfig.TimeUnit.ToString())}";
+                    var deviceStringInfoNameCount = AvailableDevices.Devices.Where(dev => stat.DeviceUUIDs.Contains(dev.Uuid)).Select(dev => dev.NameCount);
+                    var deviceStringInfo = "{ " + string.Join(", ", deviceStringInfoNameCount) + " }";
+                    try
+                    {
+                        // flowLayoutPanelRatesIndex may be OOB, so catch
+                        ((GroupProfitControl)flowLayoutPanelRates.Controls[_flowLayoutPanelRatesIndex++])
+                            .UpdateProfitStats(deviceStringInfo, speedString, rateBtcString, rateCurrencyString);
+                    }
+                    catch { }
+                }
+                UpdateGlobalRate(totalRate);
+            });
         }
 
         public void ShowNotProfitable(string msg)
@@ -626,24 +636,15 @@ namespace NiceHashMiner
             }
         }
 
-        private void UpdateGlobalRate()
+        private void UpdateGlobalRate(double totalRate)
         {
-            var totalRate = MinersManager.GetTotalRate();
+            var scaleBTC = ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1;
+            var totalDisplayRate = totalRate * _factorTimeUnit * (scaleBTC ? 1000 : 1);
+            var displayTimeUnit = Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
-            if (ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1)
-            {
-                toolStripStatusLabelBTCDayText.Text =
-                    "mBTC/" + Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                toolStripStatusLabelGlobalRateValue.Text =
-                    (totalRate * 1000 * _factorTimeUnit).ToString("F5", CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                toolStripStatusLabelBTCDayText.Text =
-                    "BTC/" + Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                toolStripStatusLabelGlobalRateValue.Text =
-                    (totalRate * _factorTimeUnit).ToString("F6", CultureInfo.InvariantCulture);
-            }
+            toolStripStatusLabelBTCDayText.Text = scaleBTC ? $"mBTC/{displayTimeUnit}" : $"BTC/{displayTimeUnit}";
+            toolStripStatusLabelGlobalRateValue.Text = totalDisplayRate.ToString(scaleBTC ? "F5" : "F6", CultureInfo.InvariantCulture);
+
 
             toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
                 .ConvertToActiveCurrency((totalRate * _factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
@@ -1169,7 +1170,7 @@ namespace NiceHashMiner
                 labelDemoMode.Visible = false;
             }
 
-            UpdateGlobalRate();
+            UpdateGlobalRate(0d);
         }
 
         private void TextBoxBTCAddress_Enter(object sender, EventArgs e)

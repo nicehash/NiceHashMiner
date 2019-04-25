@@ -13,8 +13,6 @@ namespace NiceHashMiner.Miners.Grouping
 
         // for now used only for dagger identification AMD or NVIDIA
         public DeviceType DeviceType { get; }
-
-        public double CurrentRate { get; set; }
         public string Key { get; }
         public List<int> DevIndexes { get; }
 
@@ -25,7 +23,6 @@ namespace NiceHashMiner.Miners.Grouping
         {
             AlgorithmUUID = AlgorithmType.NONE;
             DevicesInfoString = "N/A";
-            CurrentRate = 0;
             Key = key;
             if (miningPairs.Count > 0)
             {
@@ -65,13 +62,11 @@ namespace NiceHashMiner.Miners.Grouping
                 // wait before going on
                 System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
             }
-            CurrentRate = 0;
         }
 
         public void End()
         {
             Miner?.End();
-            CurrentRate = 0;
         }
 
         public void Start(string miningLocation, string username)

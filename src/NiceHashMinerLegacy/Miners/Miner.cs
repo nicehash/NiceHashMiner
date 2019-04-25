@@ -12,6 +12,7 @@ using System.Timers;
 using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
+using MinerPlugin;
 
 namespace NiceHashMiner
 {

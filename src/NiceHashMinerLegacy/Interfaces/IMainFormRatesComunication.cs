@@ -8,19 +8,14 @@ namespace NiceHashMiner.Interfaces
     {
         void ClearRatesAll();
 
-        void AddRateInfo(string deviceStringInfo, ApiData iApiData, double paying,
-            bool isApiGetException);
         //void RaiseAlertSharesNotAccepted(string algoName);
+        void RefreshRates();
 
         // The following four must use an invoker since they may be called from non-UI thread
         
         void ShowNotProfitable(string msg);
 
         void HideNotProfitable();
-
-        void ForceMinerStatsUpdate();
-
-        void ClearRates(int groupCount);
     }
 }
 #endif

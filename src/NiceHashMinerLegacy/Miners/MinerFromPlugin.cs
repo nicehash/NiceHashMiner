@@ -44,30 +44,12 @@ namespace NiceHashMiner.Miners
         {
             IsUpdatingApi = true;
             var apiData = await _miner.GetMinerStatsDataAsync();
+            // TODO if data is null add 0 stubs
             // TODO temporary here move it outside later
             MiningStats.UpdateGroup(apiData, MinerUUID);
             IsUpdatingApi = false;
 
-            if (apiData.AlgorithmSpeedsTotal.Count == 1)
-            {
-                var algoSpeed = apiData.AlgorithmSpeedsTotal.First();
-                var ret = new ApiData(algoSpeed.AlgorithmType);
-                ret.Speed = algoSpeed.Speed;
-                ret.PowerUsage = apiData.PowerUsageTotal;
-                return ret;
-            }
-            else if (apiData.AlgorithmSpeedsTotal.Count == 2)
-            {
-                var algoSpeed = apiData.AlgorithmSpeedsTotal.First();
-                var algoSpeedSecond = apiData.AlgorithmSpeedsTotal.Last();
-                var ret = new ApiData(algoSpeed.AlgorithmType, algoSpeedSecond.AlgorithmType);
-                ret.Speed = algoSpeed.Speed;
-                ret.SecondarySpeed = algoSpeedSecond.Speed;
-                ret.PowerUsage = apiData.PowerUsageTotal;
-                return ret;
-            }
-
-            return null;
+            return apiData;
         }
 #endif
         // TESTNET

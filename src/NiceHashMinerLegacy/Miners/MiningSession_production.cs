@@ -175,7 +175,8 @@ namespace NiceHashMiner.Miners
                 _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
 
-            _mainFormRatesComunication?.ClearRates(-1);
+            MiningStats.ClearApiDataGroups();
+            _mainFormRatesComunication.RefreshRates();
         }
 
         #endregion Start/Stop
@@ -183,18 +184,6 @@ namespace NiceHashMiner.Miners
         private static string CalcGroupedDevicesKey(GroupedDevices group)
         {
             return string.Join(", ", group);
-        }
-
-        public double GetTotalRate()
-        {
-            double totalRate = 0;
-
-            if (_runningGroupMiners != null)
-            {
-                totalRate += _runningGroupMiners.Values.Sum(groupMiner => groupMiner.CurrentRate);
-            }
-
-            return totalRate;
         }
 
         // full of state
@@ -479,7 +468,8 @@ namespace NiceHashMiner.Miners
             //await MinerStatsCheck();
             //}
 
-            _mainFormRatesComunication?.ForceMinerStatsUpdate();
+            // ForceMinerStatsUpdate
+            MinerStatsCheck();
         }
 
         private AlgorithmType GetMinerPairAlgorithmType(List<MiningPair> miningPairs)
@@ -494,8 +484,6 @@ namespace NiceHashMiner.Miners
 
         public async Task MinerStatsCheck()
         {
-            var currentProfit = 0.0d;
-            _mainFormRatesComunication.ClearRates(_runningGroupMiners.Count);
             var checks = new List<GroupMiner>(_runningGroupMiners.Values);
             try
             {
@@ -511,32 +499,9 @@ namespace NiceHashMiner.Miners
                     {
                         Helpers.ConsolePrint(m.MinerTag(), "GetSummary returned null..");
                     }
-
-                    // set rates
-                    if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
-                    {
-                        groupMiners.CurrentRate = paying * ad.Speed * 0.000000001;
-                        if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
-                        {
-                            groupMiners.CurrentRate += secPaying * ad.SecondarySpeed * 0.000000001;
-                        }
-                        // Deduct power costs
-                        var powerUsage = ad.PowerUsage > 0 ? ad.PowerUsage : groupMiners.TotalPower;
-                        groupMiners.CurrentRate -= ExchangeRateApi.GetKwhPriceInBtc() * powerUsage * 24 / 1000;
-                    }
-                    else
-                    {
-                        groupMiners.CurrentRate = 0;
-                        // set empty
-                        ad = new ApiData(groupMiners.AlgorithmUUID);
-                    }
-
-                    currentProfit += groupMiners.CurrentRate;
-                    // Update GUI
-                    _mainFormRatesComunication.AddRateInfo(groupMiners.DevicesInfoString, ad,
-                        groupMiners.CurrentRate,
-                        m.IsApiReadException);
                 }
+                // update GUI
+                _mainFormRatesComunication.RefreshRates();
             }
             catch (Exception e) { Helpers.ConsolePrint(Tag, e.Message); }
         }
