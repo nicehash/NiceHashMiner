@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MinerPlugin;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Switching;
@@ -14,11 +12,10 @@ namespace NiceHashMiner.Stats
     // keep this here for now
     public static class MiningStats
     {
-        // TODO create base class from DeviceMiningStats and MinerMiningStats
-        // We transform ApiData PerDevice info
-        public class DeviceMiningStats
+        public class BaseStats
         {
-            public string DeviceUUID { get; set; } = "";
+            public string GroupKey { get; set; } = "";
+
             public List<(AlgorithmType type, double speed)> Speeds { get; set; } = new List<(AlgorithmType type, double speed)>();
             public List<(AlgorithmType type, double rate)> Rates { get; set; } = new List<(AlgorithmType type, double rate)>();
 
@@ -27,10 +24,18 @@ namespace NiceHashMiner.Stats
             public double PowerUsageDeviceReading { get; set; } = 0d;
             public double PowerUsageAlgorithmSetting { get; set; } = 0d;
 
-            // add methods
+            // add methods or Revenue in ApiData TESTNET
             public double TotalPayingRate()
             {
                 return Rates.Select(rateInfo => rateInfo.rate).Sum();
+            }
+
+            // or Profit in ApiData TESTNET
+            public double TotalPayingRateDeductPowerCost(double kwhPriceInBtc)
+            {
+                var totalRate = TotalPayingRate();
+                var powerCost = PowerCost(kwhPriceInBtc);
+                return totalRate - powerCost;
             }
 
             public double GetPowerUsage()
@@ -48,6 +53,12 @@ namespace NiceHashMiner.Stats
                     return PowerUsageAlgorithmSetting;
                 }
                 return 0d;
+            }
+
+            public double PowerCost(double kwhPriceInBtc)
+            {
+                var powerUsage = GetPowerUsage();
+                return kwhPriceInBtc * powerUsage *24 / 1000;
             }
 
             public void Clear()
@@ -60,74 +71,48 @@ namespace NiceHashMiner.Stats
             }
         }
 
-        // We transform ApiData Total info
-        public class MinerMiningStats
+        // We transform ApiData PerDevice info
+        public class DeviceMiningStats : BaseStats
         {
-            public string GroupKey { get; set; } = "";
+            public string DeviceUUID { get; set; } = "";
 
+            public DeviceMiningStats DeepCopy()
+            {
+                var copy = new DeviceMiningStats
+                {
+                    // BaseStats
+                    GroupKey = this.GroupKey,
+                    Speeds = this.Speeds.ToList(),
+                    Rates = this.Rates.ToList(),
+                    PowerUsageAPI = this.PowerUsageAPI,
+                    PowerUsageDeviceReading = this.PowerUsageDeviceReading,
+                    PowerUsageAlgorithmSetting = this.PowerUsageAlgorithmSetting,
+                    // DeviceMiningStats
+                    DeviceUUID = this.DeviceUUID
+                };
+
+                return copy;
+            }
+        }
+
+        // We transform ApiData Total info
+        public class MinerMiningStats : BaseStats
+        {
             public HashSet<string> DeviceUUIDs = new HashSet<string>();
-
-            public List<(AlgorithmType type, double speed)> Speeds { get; set; } = new List<(AlgorithmType type, double speed)>();
-
-            public List<(AlgorithmType type, double rate)> Rates { get; set; } = new List<(AlgorithmType type, double rate)>();
-
-            // sources for PowerUsages
-            public double PowerUsageAPI { get; set; } = 0d;
-            public double PowerUsageDeviceReading { get; set; } = 0d;
-            public double PowerUsageAlgorithmSetting { get; set; } = 0d;
-
-            public double TotalPayingRate()
-            {
-                return Rates.Select(rateInfo => rateInfo.rate).Sum();
-            }
-
-            public double GetPowerUsage()
-            {
-                if (PowerUsageAPI > 0)
-                {
-                    return PowerUsageAPI;
-                }
-                if (PowerUsageDeviceReading > 0)
-                {
-                    return PowerUsageDeviceReading;
-                }
-                if (PowerUsageAlgorithmSetting > 0)
-                {
-                    return PowerUsageAlgorithmSetting;
-                }
-                return 0d;
-            }
-
-            public double TotalPayingRateDeductPowerCost(double kwhPriceInBtc)
-            {
-                var totalRate = TotalPayingRate();
-                var powerUsage = GetPowerUsage();
-
-                // Deduct power costs
-                totalRate -= kwhPriceInBtc * powerUsage * 24 / 1000;
-
-                return totalRate;
-            }
-
-            public void Clear()
-            {
-                DeviceUUIDs.Clear();
-                Speeds.Clear();
-                Rates.Clear();
-                PowerUsageAPI = 0;
-                //PowerUsageDeviceReading = 0;
-                //PowerUsageAlgorithmSetting = 0;
-            }
 
             public MinerMiningStats DeepCopy()
             {
                 var copy = new MinerMiningStats
                 {
+                    // BaseStats
                     GroupKey = this.GroupKey,
-                    DeviceUUIDs = new HashSet<string>(this.DeviceUUIDs),
                     Speeds = this.Speeds.ToList(),
                     Rates = this.Rates.ToList(),
-                    PowerUsageAPI = this.PowerUsageAPI
+                    PowerUsageAPI = this.PowerUsageAPI,
+                    PowerUsageDeviceReading = this.PowerUsageDeviceReading,
+                    PowerUsageAlgorithmSetting = this.PowerUsageAlgorithmSetting,
+                    // MinerMiningStats
+                    DeviceUUIDs = new HashSet<string>(this.DeviceUUIDs)
                 };
 
                 return copy;
@@ -140,10 +125,10 @@ namespace NiceHashMiner.Stats
         private static Dictionary<string, ApiData> _apiDataGroups = new Dictionary<string, ApiData>();
 
         // key is joined device MinerUUID-UUIDs, sorted uuids
-        private static Dictionary<string, MinerMiningStats> _minerMiningStats = new Dictionary<string, MinerMiningStats>();
+        private static Dictionary<string, MinerMiningStats> _minersMiningStats = new Dictionary<string, MinerMiningStats>();
 
         // key is device UUID 
-        private static Dictionary<string, DeviceMiningStats> _deviceMiningStats = new Dictionary<string, DeviceMiningStats>();
+        private static Dictionary<string, DeviceMiningStats> _devicesMiningStats = new Dictionary<string, DeviceMiningStats>();
 
         public static void UpdateGroup(ApiData apiData, string minerUUID)
         {
@@ -171,7 +156,7 @@ namespace NiceHashMiner.Stats
                 foreach (var removeKey in removeKeys)
                 {
                     _apiDataGroups.Remove(removeKey);
-                    _minerMiningStats.Remove(removeKey);
+                    _minersMiningStats.Remove(removeKey);
                 }
                 // add / update data
                 _apiDataGroups[groupKey] = apiData;
@@ -192,11 +177,11 @@ namespace NiceHashMiner.Stats
         private static void UpdateMinerMiningStats(ApiData apiData, string minerUUID, string groupKey, Dictionary<AlgorithmType, double> payingRates)
         {
             MinerMiningStats stat;
-            if (_minerMiningStats.TryGetValue(groupKey, out stat) == false)
+            if (_minersMiningStats.TryGetValue(groupKey, out stat) == false)
             {
                 // create if it doesn't exist
                 stat = new MinerMiningStats { GroupKey = groupKey };
-                _minerMiningStats[groupKey] = stat;
+                _minersMiningStats[groupKey] = stat;
             }
             var deviceUUIDs = apiData.AlgorithmSpeedsPerDevice.Select(speedInfo => speedInfo.Key).ToArray();
             stat.Clear();
@@ -226,11 +211,11 @@ namespace NiceHashMiner.Stats
         private static void UpdateDeviceMiningStats(ApiData apiData, string minerUUID, string deviceUuid, Dictionary<AlgorithmType, double> payingRates)
         {
             DeviceMiningStats stat;
-            if (_deviceMiningStats.TryGetValue(deviceUuid, out stat) == false)
+            if (_devicesMiningStats.TryGetValue(deviceUuid, out stat) == false)
             {
                 // create if it doesn't exist
                 stat = new DeviceMiningStats { DeviceUUID = deviceUuid };
-                _deviceMiningStats[deviceUuid] = stat;
+                _devicesMiningStats[deviceUuid] = stat;
             }
             stat.Clear();
 
@@ -270,10 +255,13 @@ namespace NiceHashMiner.Stats
 
         public static void ClearApiDataGroups()
         {
-            _apiDataGroups.Clear();
-            _minerMiningStats.Clear();
-            _deviceMiningStats.Clear();
-            // TODO notify change
+            lock (_lock)
+            {
+                _apiDataGroups.Clear();
+                _minersMiningStats.Clear();
+                _devicesMiningStats.Clear();
+                // TODO notify change
+            }
         }
 
         public static List<(AlgorithmType type, double speed)> GetSpeedForDevice(string deviceUuid)
@@ -281,7 +269,7 @@ namespace NiceHashMiner.Stats
             var ret = new List<(AlgorithmType type, double speed)>();
             lock (_lock)
             {
-                if(_deviceMiningStats.TryGetValue(deviceUuid, out var stat))
+                if(_devicesMiningStats.TryGetValue(deviceUuid, out var stat))
                 {
                     foreach (var speedInfo in stat.Speeds)
                     {
@@ -292,95 +280,51 @@ namespace NiceHashMiner.Stats
             return ret;
         }
 
-        //// TODO this should get calculate speeds paying rates and deduct power cost based on measured device usage or on measured algorithm usage
-        //public static double GetTotalRate(Dictionary<AlgorithmType, double> payingRates)
-        //{
-        //    double totalRate = 0;
-        //    var KwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
-        //    lock (_lock)
-        //    {
-        //        foreach (var ad in _apiDataGroups)
-        //        {
-        //            var minerUUID = ad.Key.Split('-')[0];
-        //            var apiData = ad.Value;
-        //            var deviceUUIDs = apiData.AlgorithmSpeedsPerDevice.Keys.ToArray();
-        //            var currentPayingRate = 0d;
-        //            foreach (var algorithmTotal in apiData.AlgorithmSpeedsTotal)
-        //            {
-        //                if (payingRates.TryGetValue(algorithmTotal.AlgorithmType, out var paying) == false) continue;
-        //                currentPayingRate += paying * algorithmTotal.Speed * 0.000000001;
-        //            }
-        //            // power usage first try to get power usage from the api data, then devices and finally from the settings
-        //            double powerUsageFromApiData = apiData.PowerUsageTotal > 0 ? (double)apiData.PowerUsageTotal : 0d;
-        //            var relevantDevices = AvailableDevices.Devices.Where(dev => deviceUUIDs.Contains(dev.Uuid)).ToArray();
-        //            double powerUsageFromDevice = relevantDevices.Select(dev => dev.PowerUsage).Sum();
-        //            double powerUsageFromAlgorithmSettings = relevantDevices
-        //                .Select(dev => dev.GetAlgorithm(minerUUID, apiData.AlgorithmSpeedsPerDevice[dev.Uuid].Select(info => info.AlgorithmType).ToArray()))
-        //                .Select(algo => algo == null ? 0d : algo.PowerUsage)
-        //                .Sum();
+        // GetProfit() deduct power cost
+        public static double GetProfit(double kwhPriceInBtc)
+        {
+            double totalProfit = 0;
+            lock (_lock)
+            {
+                foreach (var minerStatPair in _minersMiningStats)
+                {
+                    var minerStat = minerStatPair.Value;
+                    // add to total
+                    totalProfit += minerStat.TotalPayingRateDeductPowerCost(kwhPriceInBtc);
+                }
+            }
+            return totalProfit;
+        }
 
-        //            var powerUsage = 0d;
-        //            if (powerUsageFromApiData > 0)
-        //            {
-        //                // API data returns W instead of kW
-        //                powerUsage = powerUsageFromApiData / 1000; 
-        //            }
-        //            else if (powerUsageFromDevice > 0)
-        //            {
-        //                powerUsage = powerUsageFromDevice;
-        //            }
-        //            else if (powerUsageFromAlgorithmSettings > 0)
-        //            {
-        //                powerUsage = powerUsageFromAlgorithmSettings;
-        //            }
-
-        //            // Deduct power costs
-        //            currentPayingRate -= KwhPriceInBtc * powerUsage * 24 / 1000;
-        //            // add to total
-        //            totalRate += currentPayingRate;
-        //        }
-        //    }
-
-        //    return totalRate;
-        //}
-
-        //// TODO REMOVE
-        //public static double GetTotalRate()
-        //{
-        //    double totalRate = 0;
-        //    var KwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
-        //    lock (_lock)
-        //    {
-        //        foreach (var deviceStatPair in _deviceMiningStats)
-        //        {
-        //            var key = deviceStatPair.Key;
-        //            var deviceStat = deviceStatPair.Value;
-
-        //            var powerUsage = deviceStat.GetPowerUsage();
-        //            var currentPayingRate = deviceStat.TotalPayingRate();
-        //            // Deduct power costs
-        //            currentPayingRate -= KwhPriceInBtc * powerUsage * 24 / 1000;
-        //            // add to total
-        //            totalRate += currentPayingRate;
-        //        }
-        //    }
-
-        //    return totalRate;
-        //}
-
-        // TODO this one doesn't have deducted
         // For Production
         public static List<MinerMiningStats> GetMinersMiningStats()
         {
             var ret = new List<MinerMiningStats>();
             lock (_lock)
             {
-                foreach (var minerStatPair in _minerMiningStats)
+                foreach (var minerStatPair in _minersMiningStats)
                 {
                     var key = minerStatPair.Key;
                     var minerStat = minerStatPair.Value;
 
                     ret.Add(minerStat.DeepCopy());
+                }
+            }
+            return ret;
+        }
+
+        // For TESTNET
+        public static List<DeviceMiningStats> GetDevicesMiningStats()
+        {
+            var ret = new List<DeviceMiningStats>();
+            lock (_lock)
+            {
+                foreach (var deviceStatPair in _devicesMiningStats)
+                {
+                    var key = deviceStatPair.Key;
+                    var deviceStat = deviceStatPair.Value;
+
+                    ret.Add(deviceStat.DeepCopy());
                 }
             }
             return ret;

@@ -5,6 +5,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Extensions;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace NiceHashMiner.Forms.Components
 
         private List<ComputeDevice> _devices;
 
-        private readonly List<List<int>> _indexTotals = new List<List<int>>();
+        private readonly List<HashSet<string>> _deviceUuidsGroups = new List<HashSet<string>>();
 
         private readonly Timer _diagTimer = new Timer();
 
@@ -118,8 +119,8 @@ namespace NiceHashMiner.Forms.Components
             }
 
             // set devices
-            var allIndices = _indexTotals.SelectMany(i => i).ToList();
-            var inactiveIndices = new List<int>();
+            var allIndices = _deviceUuidsGroups.SelectMany(i => i).ToList();
+            var inactiveIndices = new List<string>();
             foreach (var computeDevice in _devices)
             {
                 var lvi = new ListViewItem
@@ -136,20 +137,19 @@ namespace NiceHashMiner.Forms.Components
                 
                 listViewDevices.Items.Add(lvi);
 
-                if (!allIndices.Contains(computeDevice.Index))
-                    inactiveIndices.Add(computeDevice.Index);
+                if (!allIndices.Contains(computeDevice.Uuid))
+                    inactiveIndices.Add(computeDevice.Uuid);
             }
 
             foreach (var group in listViewDevices.Groups)
             {
                 if (!(group is ListViewGroup g)) continue;
 
-                if (g.Tag is List<int> indices)
+                if (g.Tag is string groupKey)
                 {
                     foreach (var lvi in listViewDevices.Items)
                     {
-                        if (lvi is ListViewItem item && item.Tag is ComputeDevice dev &&
-                            indices.Any(i => dev.Index == i))
+                        if (lvi is ListViewItem item && item.Tag is ComputeDevice dev && groupKey.Contains(dev.Uuid))
                         {
                             g.Items.Add(item);
                         }
@@ -157,7 +157,7 @@ namespace NiceHashMiner.Forms.Components
 
                     if (g.Items.Count <= 0) continue;
 
-                    var t = SetTotalRow(indices, numItems);
+                    var t = SetTotalRow(groupKey, numItems);
                     g.Items.Add(t);
                 }
                 else if (g.Name == DefaultKey)
@@ -165,7 +165,7 @@ namespace NiceHashMiner.Forms.Components
                     foreach (var lvi in listViewDevices.Items)
                     {
                         if (lvi is ListViewItem item && item.Tag is ComputeDevice dev &&
-                            inactiveIndices.Contains(dev.Index))
+                            inactiveIndices.Contains(dev.Uuid))
                         {
                             g.Items.Add(item);
                         }
@@ -179,12 +179,12 @@ namespace NiceHashMiner.Forms.Components
             SaveToGeneralConfig = true;
         }
 
-        private ListViewItem SetTotalRow(List<int> indices, int numSubs)
+        private ListViewItem SetTotalRow(string groupKey, int numSubs)
         {
             var total = new ListViewItem
             {
                 Text = Translations.Tr("Total"),
-                Tag = indices
+                Tag = groupKey
             };
             for (var i = 0; i < numSubs; i++)
             {
@@ -359,13 +359,13 @@ namespace NiceHashMiner.Forms.Components
         {
             FormHelpers.SafeInvoke(this, () =>
             {
-                _indexTotals.Clear();
+                _deviceUuidsGroups.Clear();
                 listViewDevices.Groups.Clear();
                 UpdateListView();
             });
         }
 
-        private void addRateInfoGui(ApiData iApiData, double paying, bool isApiGetException)
+        private void refreshRateInfoGui()
         {
             Enabled = true;
 
@@ -379,69 +379,75 @@ namespace NiceHashMiner.Forms.Components
                 _ignoreChecks = false;
             }
 
-            // ID for algo/miner combo
-            var key = string.Join(",", iApiData.DeviceIndices);
-            // If index is not in any of the groups of indices
-            if (!_indexTotals.Any(l => iApiData.DeviceIndices.All(l.Contains)))
+            var kwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
+            var minersMiningStats = MiningStats.GetMinersMiningStats();
+            var devicesMiningStats = MiningStats.GetDevicesMiningStats();
+            foreach(var minerStats in minersMiningStats)
             {
-                _indexTotals.Add(new List<int>(iApiData.DeviceIndices));
-            }
-            // Make group for this algo/miner combo if not made already
-            if (listViewDevices.Groups[key] == null)
-            {
-                var name = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(iApiData.AlgorithmID, iApiData.SecondaryAlgorithmID));
-                var group = new ListViewGroup(key, name)
+                // get data
+                var algorithmFirstType = minerStats.Speeds.Count > 0 ? minerStats.Speeds[0].type : AlgorithmType.NONE;
+                var algorithmSecondType = minerStats.Speeds.Count > 1 ? minerStats.Speeds[1].type : AlgorithmType.NONE;
+                var algorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmFirstType, algorithmSecondType));
+                var firstSpeed = minerStats.Speeds.Count > 0 ? minerStats.Speeds[0].speed : 0d;
+                var secondSpeed = minerStats.Speeds.Count > 1 ? minerStats.Speeds[1].speed : 0d;
+
+                // ID for algo/miner combo
+                var key = minerStats.GroupKey;
+                // If index is not in any of the groups of indices
+                if (!_deviceUuidsGroups.Any(l => minerStats.DeviceUUIDs.Except(l).Count() == 0))
                 {
-                    Tag = iApiData.DeviceIndices
-                };
-                listViewDevices.Groups.Add(group);
-
-                UpdateListView();
-            }
-
-            foreach (var lvi in listViewDevices.Items)
-            {
-                if (!(lvi is ListViewItem item)) continue;
-
-                if (item.Tag is List<int> indices && indices.Same(iApiData.DeviceIndices))
-                {
-                    // This is a total row
-                    UpdateRowInfo(item, iApiData.Speed, iApiData.SecondarySpeed, iApiData.Revenue, iApiData.Profit, iApiData.PowerCost, iApiData.PowerUsage);
+                    _deviceUuidsGroups.Add(minerStats.DeviceUUIDs);
                 }
-                else if (item.Tag is ComputeDevice dev && iApiData.DeviceIndices.Any(i => i == dev.Index))
+                // Make group for this algo/miner combo if not made already
+                if (listViewDevices.Groups[key] == null)
                 {
-                    // This is a dev row
-                    iApiData.PowerMap.TryGetValue(dev.Index, out var power);
-                    var powerCostBtc = iApiData.PowerCostForIndex(dev.Index);
-
-                    if (iApiData is SplitApiData split)
+                    var name = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmFirstType, algorithmSecondType));
+                    var group = new ListViewGroup(key, name)
                     {
-                        // Here we know per-device profits from API
-                        split.Speeds.TryGetValue(dev.Index, out var speed);
-                        split.SecondarySpeeds.TryGetValue(dev.Index, out var secSpeed);
+                        Tag = minerStats.GroupKey
+                    };
+                    listViewDevices.Groups.Add(group);
 
-                        UpdateRowInfo(item, speed, secSpeed, split.RevenueForIndex(dev.Index), split.ProfitForIndex(dev.Index), powerCostBtc, power);
+                    UpdateListView();
+                }
+
+                foreach (var lvi in listViewDevices.Items)
+                {
+                    if (!(lvi is ListViewItem item)) continue;
+
+                    if (item.Tag is string groupKey && groupKey == minerStats.GroupKey)
+                    {
+                        // This is a total row
+                        var minerRevenue = minerStats.TotalPayingRate();
+                        var minerProfit = minerStats.TotalPayingRateDeductPowerCost(kwhPriceInBtc);
+                        UpdateRowInfo(item, firstSpeed, firstSpeed, minerRevenue, minerProfit, minerStats.PowerCost(kwhPriceInBtc), minerStats.GetPowerUsage());
                     }
-                    else
+                    else if (item.Tag is ComputeDevice dev && minerStats.DeviceUUIDs.Any(uuid => uuid == dev.Uuid))
                     {
-                        // Here we only know total profit from miner
-                        var powerCost = ExchangeRateApi.ConvertFromBtc(powerCostBtc * TimeFactor.TimeUnit);
-
-                        SetPowerText(item, power, powerCost, null);
+                        var deviceStat = devicesMiningStats.Where(stat => stat.DeviceUUID == dev.Uuid).FirstOrDefault();
+                        if (deviceStat == null) continue;
+                        // This is a dev row
+                        var firstDeviceSpeed = deviceStat.Speeds.Count > 0 ? deviceStat.Speeds[0].speed : 0d;
+                        var secondtDeviceSpeed = deviceStat.Speeds.Count > 1 ? deviceStat.Speeds[1].speed : 0d;
+                        var deviceRevenue = deviceStat.TotalPayingRate();
+                        var deviceProfit = deviceStat.TotalPayingRateDeductPowerCost(kwhPriceInBtc);
+                        UpdateRowInfo(item, firstDeviceSpeed, secondtDeviceSpeed, deviceRevenue, deviceProfit, deviceStat.PowerCost(kwhPriceInBtc), deviceStat.GetPowerUsage());
                     }
                 }
             }
         }
-
-        public void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
-        {
-            FormHelpers.SafeInvoke(this, () => { addRateInfoGui(iApiData, paying, isApiGetException); });
-        }
-
-#endregion
-
-#region Helpers
         
+        public void RefreshRates()
+        {
+            FormHelpers.SafeInvoke(this, () => {
+                refreshRateInfoGui();
+            });
+        }
+
+        #endregion
+
+        #region Helpers
+
         private static string CurrencyPerTimeUnit()
         {
             return FormatPerTimeUnit(ExchangeRateApi.ActiveDisplayCurrency);
@@ -480,7 +486,7 @@ namespace NiceHashMiner.Forms.Components
             catch { }
         }
 
-#endregion
+        #endregion
     }
 }
 #endif

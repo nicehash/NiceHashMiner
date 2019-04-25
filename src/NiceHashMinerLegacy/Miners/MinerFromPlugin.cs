@@ -30,16 +30,6 @@ namespace NiceHashMiner.Miners
             _miner = plugin.CreateMiner();
         }
 
-        public override async Task<MinerPlugin.ApiData> GetApiDataAsync()
-        {
-            IsUpdatingApi = true;
-            var apiData = await _miner.GetMinerStatsDataAsync();
-            IsUpdatingApi = false;
-            return apiData;
-        }
-
-        // PRODUCTION
-#if !(TESTNET || TESTNETDEV)
         public override async Task<ApiData> GetSummaryAsync()
         {
             IsUpdatingApi = true;
@@ -51,45 +41,6 @@ namespace NiceHashMiner.Miners
 
             return apiData;
         }
-#endif
-        // TESTNET
-#if TESTNET || TESTNETDEV
-        public override async Task<ApiData> GetSummaryAsync()
-        {
-            IsUpdatingApi = true;
-            var apiData = await _miner.GetMinerStatsDataAsync();
-
-            // TODO temporary here move it outside later
-            MiningStats.UpdateGroup(apiData, MinerUUID);
-            IsUpdatingApi = false;
-
-            if (apiData.AlgorithmSpeedsTotal.Count == 1)
-            {
-                var algoSpeed = apiData.AlgorithmSpeedsTotal.First();
-                var uuids = apiData.AlgorithmSpeedsPerDevice
-                    .Select(pair => pair.Key)
-                    .Distinct();
-                //// GLOBAL SCOPE
-                //var indices = AvailableDevices.Devices
-                //    .Where(dev => uuids.Contains(dev.Uuid))
-                //    .Select(dev => dev.Index)
-                //    .ToList();
-                //var ret = new ApiData(algoSpeed.AlgorithmType, indices);
-                // GLOBAL SCOPE
-                var indices = AvailableDevices.Devices
-                    .Where(dev => uuids.Contains(dev.Uuid))
-                    .Select(dev => dev.Index)
-                    .ToList();
-                var ret = new ApiData(this.MiningSetup); // this will work wirh power usage and all that
-                ret.Speed = algoSpeed.Speed;
-                // TODO use => public ApiData(MiningSetup setup) because this handles power usage
-                //ret.PowerUsage = apiData.PowerUsageTotal;
-                return ret;
-            }
-
-            return null;
-        }
-#endif
 
         // TODO this thing 
         public override void Start(string miningLocation, string username)

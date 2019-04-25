@@ -402,8 +402,7 @@ namespace NiceHashMiner
 
         public abstract Task<ApiData> GetSummaryAsync();
 
-        public abstract Task<MinerPlugin.ApiData> GetApiDataAsync();
-
+        
         #region Cooldown/retry logic
 
         /// <summary>

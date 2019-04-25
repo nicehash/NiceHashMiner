@@ -9,7 +9,8 @@ namespace NiceHashMiner.Interfaces
     {
         void ClearRatesAll();
 
-        void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException);
+        void RefreshRates();
+        //void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException);
     }
 }
 #endif

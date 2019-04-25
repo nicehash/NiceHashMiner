@@ -23,10 +23,15 @@ namespace NiceHashMiner
             _ratesComunication?.ClearRatesAll();
         }
 
-        public static void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
+        public static void RefreshRates()
         {
-            _ratesComunication?.AddRateInfo(iApiData, paying, isApiGetException);
+            _ratesComunication?.RefreshRates();
         }
+
+        //public static void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
+        //{
+        //    _ratesComunication?.AddRateInfo(iApiData, paying, isApiGetException);
+        //}
 
         // The following four must use an invoker since they may be called from non-UI thread
 

@@ -256,7 +256,6 @@
     <Compile Include="Interfaces\IRatesComunication.cs" />
     <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
     <Compile Include="Interfaces\StateSetters\IStateSetter.cs" />
-    <Compile Include="Miners\ApiData_testnet.cs" />
     <Compile Include="Miners\IdleChecking\IdleChangedEventArgs.cs" />
     <Compile Include="Miners\IdleChecking\IdleChecker.cs" />
     <Compile Include="Miners\IdleChecking\IdleCheckManager.cs" />
