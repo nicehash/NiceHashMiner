@@ -233,6 +233,25 @@ namespace NiceHashMiner.Switching
             return dict;
         }
 
+        /// <summary>
+        /// Copy and return SMA profits 
+        /// </summary>
+        public static Dictionary<AlgorithmType, double> CurrentProfitsSnapshot()
+        {
+            CheckInit();
+            var dict = new Dictionary<AlgorithmType, double>();
+
+            lock (_currentPayingRates)
+            {
+                foreach (var kvp in _currentPayingRates)
+                {
+                    dict[kvp.Key] = kvp.Value;
+                }
+            }
+
+            return dict;
+        }
+
         #endregion
 
         /// <summary>

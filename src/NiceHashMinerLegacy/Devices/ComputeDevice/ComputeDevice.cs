@@ -162,6 +162,11 @@ namespace NiceHashMiner.Devices
             }
         }
 
+        public Algorithm GetAlgorithm(string minerUUID, params AlgorithmType[] ids)
+        {
+            return AlgorithmSettings.Where(a => a.MinerUUID == minerUUID && a.IDs.Except(ids).Count() == 0).FirstOrDefault();
+        }
+
         #region Config Setters/Getters
 
         // settings

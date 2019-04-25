@@ -11,7 +11,7 @@ namespace NiceHashMiner.Forms.Components
         }
 
 
-        public void UpdateProfitStats(string groupName, string deviceStringInfo,
+        public void UpdateProfitStats(string deviceStringInfo,
             string speedString, string btcRateString, string currencyRateString)
         {
             groupBoxMinerGroup.Text = string.Format(Translations.Tr("Mining Devices {0}:"), deviceStringInfo);

@@ -8,7 +8,7 @@ namespace NiceHashMiner.Interfaces
     {
         void ClearRatesAll();
 
-        void AddRateInfo(string groupName, string deviceStringInfo, ApiData iApiData, double paying,
+        void AddRateInfo(string deviceStringInfo, ApiData iApiData, double paying,
             bool isApiGetException);
         //void RaiseAlertSharesNotAccepted(string algoName);
 

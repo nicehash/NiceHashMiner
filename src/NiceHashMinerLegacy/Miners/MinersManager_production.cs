@@ -2,6 +2,8 @@
 #if !(TESTNET || TESTNETDEV)
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
+using NiceHashMiner.Stats;
+using NiceHashMiner.Switching;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -30,7 +32,10 @@ namespace NiceHashMiner.Miners
 
         public static double GetTotalRate()
         {
-            return _curMiningSession?.GetTotalRate() ?? 0;
+            var rate01 = _curMiningSession?.GetTotalRate() ?? 0;
+            //var rate02 = MiningStats.GetTotalRate(NHSmaData.CurrentProfitsSnapshot());
+
+            return rate01;
         }
 
         public static bool StartInitialize(IMainFormRatesComunication mainFormRatesComunication,
