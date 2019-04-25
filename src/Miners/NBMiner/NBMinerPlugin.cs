@@ -17,6 +17,10 @@ namespace NBMiner
 {
     public class NBMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker
     {
+        public NBMinerPlugin()
+        {
+            _pluginUUID = "d9e7ea80-4bfb-11e9-a481-e144ccd86993";
+        }
         public NBMinerPlugin(string pluginUUID = "d9e7ea80-4bfb-11e9-a481-e144ccd86993")
         {
             _pluginUUID = pluginUUID;

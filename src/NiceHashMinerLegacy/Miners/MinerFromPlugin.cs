@@ -44,6 +44,8 @@ namespace NiceHashMiner.Miners
         {
             IsUpdatingApi = true;
             var apiData = await _miner.GetMinerStatsDataAsync();
+            // TODO temporary here move it outside later
+            MiningStats.UpdateGroup(apiData, MinerUUID);
             IsUpdatingApi = false;
 
             if (apiData.AlgorithmSpeedsTotal.Count == 1)

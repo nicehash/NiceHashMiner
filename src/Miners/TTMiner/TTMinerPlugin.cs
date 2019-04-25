@@ -16,6 +16,10 @@ namespace TTMiner
 {
     public class TTMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
+        public TTMinerPlugin()
+        {
+            _pluginUUID = "5ee2e280-4bfc-11e9-a481-e144ccd86993";
+        }
         public TTMinerPlugin(string pluginUUID = "5ee2e280-4bfc-11e9-a481-e144ccd86993")
         {
             _pluginUUID = pluginUUID;

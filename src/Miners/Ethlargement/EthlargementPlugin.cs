@@ -20,6 +20,10 @@ namespace Ethlargement
     // TODO replace with integrated
     public class Ethlargement : IMinerPlugin, IInitInternals, IBackroundService
     {
+        public Ethlargement()
+        {
+            _pluginUUID = "efd40691-618c-491a-b328-e7e020bda7a3";
+        }
         public Ethlargement(string pluginUUID = "efd40691-618c-491a-b328-e7e020bda7a3")
         {
             _pluginUUID = pluginUUID;

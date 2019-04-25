@@ -17,6 +17,10 @@ namespace GMinerPlugin
 {
     public class GMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker
     {
+        public GMinerPlugin()
+        {
+            _pluginUUID = "5def7740-4bfb-11e9-a481-e144ccd86993";
+        }
         public GMinerPlugin(string pluginUUID = "5def7740-4bfb-11e9-a481-e144ccd86993")
         {
             _pluginUUID = pluginUUID;

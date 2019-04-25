@@ -19,6 +19,10 @@ namespace XmrStak
 {
     public class XmrStakPlugin : IMinerPlugin, IInitInternals, IXmrStakConfigHandler, IBinaryPackageMissingFilesChecker
     {
+        public XmrStakPlugin()
+        {
+            _pluginUUID = "b4cf2181-ca66-4d9c-83ba-cd5a7c6a7499";
+        }
         public XmrStakPlugin(string pluginUUID = "b4cf2181-ca66-4d9c-83ba-cd5a7c6a7499")
         {
             _pluginUUID = pluginUUID;

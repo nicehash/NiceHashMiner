@@ -17,6 +17,10 @@ namespace ClaymoreDual
 {
     public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
+        public ClaymoreDualPlugin()
+        {
+            _pluginUUID = "5e3b699e-2755-499c-bf4e-20d4aaef73df";
+        }
         public ClaymoreDualPlugin(string pluginUUID = "5e3b699e-2755-499c-bf4e-20d4aaef73df")
         {
             _pluginUUID = pluginUUID;

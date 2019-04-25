@@ -16,6 +16,10 @@ namespace TeamRedMiner
 {
     public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
+        public TeamRedMinerPlugin()
+        {
+            _pluginUUID = "189aaf80-4b23-11e9-a481-e144ccd86993";
+        }
         public TeamRedMinerPlugin(string pluginUUID = "189aaf80-4b23-11e9-a481-e144ccd86993")
         {
             _pluginUUID = pluginUUID;

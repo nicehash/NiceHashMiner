@@ -17,6 +17,10 @@ namespace EWBF
 {
     public class EwbfPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
+        public EwbfPlugin()
+        {
+            _pluginUUID = "3e627d60-4bfa-11e9-a481-e144ccd86993";
+        }
         public EwbfPlugin(string pluginUUID = "3e627d60-4bfa-11e9-a481-e144ccd86993")
         {
             _pluginUUID = pluginUUID;

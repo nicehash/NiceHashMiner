@@ -17,6 +17,11 @@ namespace BMiner
 {
     public class BMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
+        // mandatory constructor
+        public BMinerPlugin()
+        {
+            _pluginUUID = "92a7fd10-498d-11e9-87d3-6b57d758e2c6";
+        }
         public BMinerPlugin(string pluginUUID = "92a7fd10-498d-11e9-87d3-6b57d758e2c6")
         {
             _pluginUUID = pluginUUID;
