@@ -66,6 +66,13 @@ namespace NiceHashMiner
             CenterToScreen();
             Icon = Properties.Resources.logo;
 
+            // Hide plugins button and resize
+#if !ENABLE_EXTERNAL_PLUGINS
+            this.buttonHelp.Location = this.buttonPlugins.Location;
+            this.buttonPlugins.Enabled = false;
+            this.buttonPlugins.Visible = false;
+#endif
+
             InitLocalization();
 
             Text += ApplicationStateManager.Title;
