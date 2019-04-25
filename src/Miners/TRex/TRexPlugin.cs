@@ -17,6 +17,10 @@ namespace TRex
 {
     public class TRexPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
     {
+        public TRexPlugin()
+        {
+            _pluginUUID = "0cd49150-4bfc-11e9-a481-e144ccd86993";
+        }
         public TRexPlugin(string pluginUUID = "0cd49150-4bfc-11e9-a481-e144ccd86993")
         {
             _pluginUUID = pluginUUID;

@@ -18,6 +18,10 @@ namespace Phoenix
 {
     public class PhoenixPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker
     {
+        public PhoenixPlugin()
+        {
+            _pluginUUID = "ac9c763f-c901-41ef-9df1-c80099c9f942";
+        }
         public PhoenixPlugin(string pluginUUID = "ac9c763f-c901-41ef-9df1-c80099c9f942")
         {
             _pluginUUID = pluginUUID;
