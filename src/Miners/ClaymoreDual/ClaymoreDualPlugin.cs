@@ -19,9 +19,9 @@ namespace ClaymoreDual
     {
         public ClaymoreDualPlugin()
         {
-            _pluginUUID = "5e3b699e-2755-499c-bf4e-20d4aaef73df";
+            _pluginUUID = "216ce7e0-672f-11e9-8c45-31fdb2caf300 ";
         }
-        public ClaymoreDualPlugin(string pluginUUID = "5e3b699e-2755-499c-bf4e-20d4aaef73df")
+        public ClaymoreDualPlugin(string pluginUUID = "216ce7e0-672f-11e9-8c45-31fdb2caf300 ")
         {
             _pluginUUID = pluginUUID;
         }
