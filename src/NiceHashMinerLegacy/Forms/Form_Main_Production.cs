@@ -1123,9 +1123,8 @@ namespace NiceHashMiner
             InitFlowPanelStart();
             ClearRatesAll();
 
-            var btcAdress = _demoMode ? DemoUser.BTC : textBoxBTCAddress.Text.Trim();
-            var isMining = MinersManager.StartInitialize(this, StratumService.SelectedServiceLocation,
-                textBoxWorkerName.Text.Trim(), btcAdress);
+            var username = _demoMode ? DemoUser.BTC : Globals.GetUsername();
+            var isMining = MinersManager.StartInitialize(this, StratumService.SelectedServiceLocation, username);
 
             if (!_demoMode) ConfigManager.GeneralConfigFileCommit();
 

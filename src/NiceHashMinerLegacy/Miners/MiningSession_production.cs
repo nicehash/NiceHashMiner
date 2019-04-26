@@ -28,9 +28,9 @@ namespace NiceHashMiner.Miners
         // session varibles fixed
         private readonly string _miningLocation;
 
-        private readonly string _btcAdress;
-        private readonly string _worker;
-        private readonly List<MiningDevice> _miningDevices;
+        string _username;
+
+        private List<MiningDevice> _miningDevices;
         private readonly IMainFormRatesComunication _mainFormRatesComunication;
 
         private readonly AlgorithmSwitchingManager _switchingManager;
@@ -75,7 +75,7 @@ namespace NiceHashMiner.Miners
 
         public MiningSession(IEnumerable<ComputeDevice> devices,
             IMainFormRatesComunication mainFormRatesComunication,
-            string miningLocation, string worker, string btcAdress)
+            string miningLocation, string username)
         {
             // init fixed
             _mainFormRatesComunication = mainFormRatesComunication;
@@ -84,8 +84,7 @@ namespace NiceHashMiner.Miners
             _switchingManager = new AlgorithmSwitchingManager();
             _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
 
-            _btcAdress = btcAdress;
-            _worker = worker;
+            _username = username;
 
             // initial settup
             _miningDevices = GroupSetupUtils.GetMiningDevices(devices, true);
@@ -186,6 +185,39 @@ namespace NiceHashMiner.Miners
             return string.Join(", ", group);
         }
 
+        public void UpdateUsedDevices(IEnumerable<ComputeDevice> devices)
+        {
+            _switchingManager.Stop();
+            SetUsedDevices(devices);
+            _switchingManager.Start();
+        }
+
+        private void RestartRunningGroupMiners()
+        {
+            foreach (var key in _runningGroupMiners.Keys)
+            {
+                _runningGroupMiners[key].Stop();
+                var miningLocation = StratumService.SelectedServiceLocation;
+                _runningGroupMiners[key].Start(miningLocation, _username);
+            }
+        }
+
+        public void RestartMiners()
+        {
+            _switchingManager.Stop();
+            RestartRunningGroupMiners();
+            _switchingManager.Start();
+        }
+
+        private void SetUsedDevices(IEnumerable<ComputeDevice> devices)
+        {
+            _miningDevices = GroupSetupUtils.GetMiningDevices(devices, true);
+            if (_miningDevices.Count > 0)
+            {
+                GroupSetupUtils.AvarageSpeeds(_miningDevices);
+            }
+        }
+
         // full of state
         private bool CheckIfProfitable(double currentProfit, bool log = true)
         {
@@ -265,7 +297,7 @@ namespace NiceHashMiner.Miners
                     currentProfit += device.GetCurrentMostProfitValue;
                     prevStateProfit += device.GetPrevMostProfitValue;
                 }
-            }                                                        
+            }
             var stringBuilderFull = new StringBuilder();
             stringBuilderFull.AppendLine("Current device profits:");
             foreach (var device in _miningDevices)
@@ -436,15 +468,7 @@ namespace NiceHashMiner.Miners
                     foreach (var toStart in toRunNewGroupMiners.Values)
                     {
                         stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmUUID}, ");
-
-                        // TODO this differs in format PRODUCTION vs. TESTNET
-                        var username = _btcAdress;
-                        if (!string.IsNullOrEmpty(_worker))
-                        {
-                            username = $"{_btcAdress}.{_worker}";
-                        }
-
-                        toStart.Start(_miningLocation, username);
+                        toStart.Start(_miningLocation, _username);
                         _runningGroupMiners[toStart.Key] = toStart;
                     }
 
