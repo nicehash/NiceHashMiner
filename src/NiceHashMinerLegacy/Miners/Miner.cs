@@ -12,6 +12,7 @@ using System.Timers;
 using NiceHashMiner.Devices;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
+using MinerPlugin;
 
 namespace NiceHashMiner
 {
@@ -401,8 +402,7 @@ namespace NiceHashMiner
 
         public abstract Task<ApiData> GetSummaryAsync();
 
-        public abstract Task<MinerPlugin.ApiData> GetApiDataAsync();
-
+        
         #region Cooldown/retry logic
 
         /// <summary>

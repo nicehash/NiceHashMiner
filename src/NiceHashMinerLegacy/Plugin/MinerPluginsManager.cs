@@ -28,7 +28,11 @@ namespace NiceHashMiner.Plugin
 {
     public static class MinerPluginsManager
     {
+#if ENABLE_EXTERNAL_PLUGINS
         public static bool IntegratedPluginsOnly => false;
+#else
+        public static bool IntegratedPluginsOnly => true;
+#endif
         public static List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
         {
             // open source
@@ -347,7 +351,7 @@ namespace NiceHashMiner.Plugin
             return MinerPluginHost.MinerPlugin[pluginUuid];
         }
 
-        #region Downloading
+#region Downloading
 
         // TODO refactor ProgressState this tells us in what kind of a state the installation is
         public enum ProgressState
@@ -484,6 +488,6 @@ namespace NiceHashMiner.Plugin
                 return false;
             }
         }
-        #endregion Downloading
+#endregion Downloading
     }
 }

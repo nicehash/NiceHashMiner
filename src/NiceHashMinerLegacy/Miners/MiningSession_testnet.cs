@@ -224,18 +224,6 @@ namespace NiceHashMiner.Miners
             }
         }
 
-        public double GetTotalRate()
-        {
-            double totalRate = 0;
-
-            if (_runningGroupMiners != null)
-            {
-                totalRate += _runningGroupMiners.Values.Sum(groupMiner => groupMiner.CurrentRate);
-            }
-
-            return totalRate;
-        }
-
         // full of state
         private bool CheckIfProfitable(double currentProfit, bool log = true)
         {
@@ -546,49 +534,33 @@ namespace NiceHashMiner.Miners
                         Helpers.ConsolePrint(m.MinerTag(), "GetSummary returned null..");
                     }
 
-                    // set rates
-                    if (ad != null && NHSmaData.TryGetPaying(ad.AlgorithmID, out var paying))
-                    {
-                        ad.SmaVal = paying;
-                        groupMiners.CurrentRate = ad.Profit;
-                        if (NHSmaData.TryGetPaying(ad.SecondaryAlgorithmID, out var secPaying))
-                        {
-                            ad.SecondarySmaVal = secPaying;
-                        }
-                    }
-                    else
-                    {
-                        groupMiners.CurrentRate = 0;
-                        // set empty
-                        ad = new ApiData(groupMiners.DevIndexes, groupMiners.AlgorithmUUID);
-                    }
+                    // BROKEN we have per device speeds in MiningStats we use those to check benchmark and mining speed deviation
+                    //// Don't attempt unless card is mining alone
+                    //if (m.MiningSetup.MiningPairs.Count == 1)
+                    //{
+                    //    var algo = m.MiningSetup.MiningPairs[0].Algorithm;
+                    //    if (!_benchCheckers.TryGetValue(algo, out var checker))
+                    //    {
+                    //        checker = new BenchChecker();
+                    //        _benchCheckers[algo] = checker;
+                    //    }
+                    //    checker.AppendSpeed(ad.Speed);
 
-                    // Don't attempt unless card is mining alone
-                    if (m.MiningSetup.MiningPairs.Count == 1)
-                    {
-                        var algo = m.MiningSetup.MiningPairs[0].Algorithm;
-                        if (!_benchCheckers.TryGetValue(algo, out var checker))
-                        {
-                            checker = new BenchChecker();
-                            _benchCheckers[algo] = checker;
-                        }
-                        checker.AppendSpeed(ad.Speed);
-
-                        //if (algo is DualAlgorithm dual)
-                        //{
-                        //    if (!_dualBenchCheckers.TryGetValue(dual, out var sChecker)) {
-                        //        sChecker = new BenchChecker();
-                        //        _dualBenchCheckers[dual] = sChecker;
-                        //    }
-                        //    sChecker.AppendSpeed(ad.SecondarySpeed);
-                        //}
-                    }
-
-                    // Update GUI
-                    ApplicationStateManager.AddRateInfo(ad, groupMiners.CurrentRate, m.IsApiReadException);
+                    //    //if (algo is DualAlgorithm dual)
+                    //    //{
+                    //    //    if (!_dualBenchCheckers.TryGetValue(dual, out var sChecker)) {
+                    //    //        sChecker = new BenchChecker();
+                    //    //        _dualBenchCheckers[dual] = sChecker;
+                    //    //    }
+                    //    //    sChecker.AppendSpeed(ad.SecondarySpeed);
+                    //    //}
+                    //}
                 }
+                // Update GUI
+                ApplicationStateManager.RefreshRates();
                 // now we shoud have new global/total rate display it
-                ApplicationStateManager.DisplayTotalRate(GetTotalRate());
+                var kwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
+                ApplicationStateManager.DisplayTotalRate(MiningStats.GetProfit(kwhPriceInBtc));
             }
             catch (Exception e) { Helpers.ConsolePrint(Tag, e.Message); }
         }

@@ -64,7 +64,7 @@ namespace NiceHashMiner
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl_Production();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonPlugins = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -383,22 +383,22 @@ namespace NiceHashMiner
             this.devicesListViewEnableControl1.Size = new System.Drawing.Size(435, 158);
             this.devicesListViewEnableControl1.TabIndex = 109;
             // 
-            // button1
+            // buttonPlugins
             // 
-            this.button1.Location = new System.Drawing.Point(453, 216);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(89, 23);
-            this.button1.TabIndex = 111;
-            this.button1.Text = "Plugins";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonPlugins.Location = new System.Drawing.Point(453, 216);
+            this.buttonPlugins.Name = "buttonPlugins";
+            this.buttonPlugins.Size = new System.Drawing.Size(89, 23);
+            this.buttonPlugins.TabIndex = 111;
+            this.buttonPlugins.Text = "Plugins";
+            this.buttonPlugins.UseVisualStyleBackColor = true;
+            this.buttonPlugins.Click += new System.EventHandler(this.button1_Click);
             // 
-            // Form_Main
+            // Form_Main_Production
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(565, 366);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonPlugins);
             this.Controls.Add(this.linkLabelNewVersion);
             this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.devicesListViewEnableControl1);
@@ -421,7 +421,7 @@ namespace NiceHashMiner
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(576, 316);
-            this.Name = "Form_Main";
+            this.Name = "Form_Main_Production";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "NiceHash Miner Legacy";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
@@ -471,7 +471,7 @@ namespace NiceHashMiner
         private System.Windows.Forms.Button buttonHelp;
         private System.Windows.Forms.LinkLabel linkLabelNewVersion;
         private System.Windows.Forms.ToolTip toolTip1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonPlugins;
     }
 }
 

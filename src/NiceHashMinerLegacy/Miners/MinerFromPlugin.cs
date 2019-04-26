@@ -30,84 +30,17 @@ namespace NiceHashMiner.Miners
             _miner = plugin.CreateMiner();
         }
 
-        public override async Task<MinerPlugin.ApiData> GetApiDataAsync()
+        public override async Task<ApiData> GetSummaryAsync()
         {
             IsUpdatingApi = true;
             var apiData = await _miner.GetMinerStatsDataAsync();
+            // TODO if data is null add 0 stubs
+            // TODO temporary here move it outside later
+            MiningStats.UpdateGroup(apiData, MinerUUID);
             IsUpdatingApi = false;
+
             return apiData;
         }
-
-        // PRODUCTION
-#if !(TESTNET || TESTNETDEV)
-        public override async Task<ApiData> GetSummaryAsync()
-        {
-            IsUpdatingApi = true;
-            var apiData = await _miner.GetMinerStatsDataAsync();
-            // TODO temporary here move it outside later
-            MiningStats.UpdateGroup(apiData, MinerUUID);
-            IsUpdatingApi = false;
-
-            if (apiData.AlgorithmSpeedsTotal.Count == 1)
-            {
-                var algoSpeed = apiData.AlgorithmSpeedsTotal.First();
-                var ret = new ApiData(algoSpeed.AlgorithmType);
-                ret.Speed = algoSpeed.Speed;
-                ret.PowerUsage = apiData.PowerUsageTotal;
-                return ret;
-            }
-            else if (apiData.AlgorithmSpeedsTotal.Count == 2)
-            {
-                var algoSpeed = apiData.AlgorithmSpeedsTotal.First();
-                var algoSpeedSecond = apiData.AlgorithmSpeedsTotal.Last();
-                var ret = new ApiData(algoSpeed.AlgorithmType, algoSpeedSecond.AlgorithmType);
-                ret.Speed = algoSpeed.Speed;
-                ret.SecondarySpeed = algoSpeedSecond.Speed;
-                ret.PowerUsage = apiData.PowerUsageTotal;
-                return ret;
-            }
-
-            return null;
-        }
-#endif
-        // TESTNET
-#if TESTNET || TESTNETDEV
-        public override async Task<ApiData> GetSummaryAsync()
-        {
-            IsUpdatingApi = true;
-            var apiData = await _miner.GetMinerStatsDataAsync();
-
-            // TODO temporary here move it outside later
-            MiningStats.UpdateGroup(apiData, MinerUUID);
-            IsUpdatingApi = false;
-
-            if (apiData.AlgorithmSpeedsTotal.Count == 1)
-            {
-                var algoSpeed = apiData.AlgorithmSpeedsTotal.First();
-                var uuids = apiData.AlgorithmSpeedsPerDevice
-                    .Select(pair => pair.Key)
-                    .Distinct();
-                //// GLOBAL SCOPE
-                //var indices = AvailableDevices.Devices
-                //    .Where(dev => uuids.Contains(dev.Uuid))
-                //    .Select(dev => dev.Index)
-                //    .ToList();
-                //var ret = new ApiData(algoSpeed.AlgorithmType, indices);
-                // GLOBAL SCOPE
-                var indices = AvailableDevices.Devices
-                    .Where(dev => uuids.Contains(dev.Uuid))
-                    .Select(dev => dev.Index)
-                    .ToList();
-                var ret = new ApiData(this.MiningSetup); // this will work wirh power usage and all that
-                ret.Speed = algoSpeed.Speed;
-                // TODO use => public ApiData(MiningSetup setup) because this handles power usage
-                //ret.PowerUsage = apiData.PowerUsageTotal;
-                return ret;
-            }
-
-            return null;
-        }
-#endif
 
         // TODO this thing 
         public override void Start(string miningLocation, string username)
