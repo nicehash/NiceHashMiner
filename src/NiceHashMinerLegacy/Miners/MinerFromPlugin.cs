@@ -34,10 +34,33 @@ namespace NiceHashMiner.Miners
         {
             IsUpdatingApi = true;
             var apiData = await _miner.GetMinerStatsDataAsync();
-            // TODO if data is null add 0 stubs
+            IsUpdatingApi = false;
+
+            // TODO workaround plugins should return this info
+            // create empty stub if it is null
+            if (apiData == null)
+            {
+                apiData = new ApiData();
+            }
+            if (apiData.AlgorithmSpeedsPerDevice == null)
+            {
+                apiData = new ApiData();
+                var perDevicePowerDict = new Dictionary<string, int>();
+                var perDeviceSpeedsDict = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDeviceSpeeds = _miningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => new AlgorithmTypeSpeedPair(type, 0d))));
+                foreach (var kvp in perDeviceSpeeds)
+                {
+                    perDeviceSpeedsDict[kvp.UUID] = kvp.Item2.ToList();
+                    perDevicePowerDict[kvp.UUID] = 0;
+                }
+                apiData.AlgorithmSpeedsPerDevice = perDeviceSpeedsDict;
+                apiData.PowerUsagePerDevice = perDevicePowerDict;
+                apiData.PowerUsageTotal = 0;
+                apiData.AlgorithmSpeedsTotal = perDeviceSpeedsDict.First().Value;
+            }
+
             // TODO temporary here move it outside later
             MiningStats.UpdateGroup(apiData, MinerUUID);
-            IsUpdatingApi = false;
 
             return apiData;
         }
