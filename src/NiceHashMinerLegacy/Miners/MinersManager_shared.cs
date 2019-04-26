@@ -1,11 +1,7 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
-using NiceHashMiner.Devices;
+﻿using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Switching;
 
 namespace NiceHashMiner.Miners
 {
@@ -13,13 +9,40 @@ namespace NiceHashMiner.Miners
     {
         private static MiningSession _curMiningSession;
 
-        public static void StopAllMiners(bool headless)
+        // TODO remove deviant checkers Forms code from Mining sessiong and get rid of the headless
+        public static void StopAllMiners(bool headless = true)
         {
+            // PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+            _curMiningSession?.StopAllMiners();
+#endif
+            // TESTNET
+#if TESTNET || TESTNETDEV
             _curMiningSession?.StopAllMiners(headless);
+#endif
             EthlargementOld.Stop();
             _curMiningSession = null; // TODO consider not nulling a mining session
         }
 
+        public static List<int> GetActiveMinersIndexes()
+        {
+            return _curMiningSession != null ? _curMiningSession.ActiveDeviceIndexes : new List<int>();
+        }
+
+        // PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+        public static bool StartInitialize(IMainFormRatesComunication mainFormRatesComunication,
+            string miningLocation, string username)
+        {
+            _curMiningSession = new MiningSession(AvailableDevices.Devices,
+                mainFormRatesComunication, miningLocation, username);
+
+            return _curMiningSession.IsMiningEnabled;
+        }
+#endif
+
+        // TESTNET
+#if TESTNET || TESTNETDEV
         public static void EnsureMiningSession(string username)
         {
             if (_curMiningSession == null)
@@ -27,6 +50,7 @@ namespace NiceHashMiner.Miners
                 _curMiningSession = new MiningSession(new List<ComputeDevice>(), username);
             }
         }
+#endif
 
         public static void UpdateUsedDevices(IEnumerable<ComputeDevice> devices)
         {
@@ -44,4 +68,3 @@ namespace NiceHashMiner.Miners
         }
     }
 }
-#endif
