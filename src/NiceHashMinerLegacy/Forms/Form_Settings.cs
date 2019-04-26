@@ -1,6 +1,4 @@
-﻿// TESTNET
-#if TESTNET || TESTNETDEV
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
@@ -48,7 +46,10 @@ namespace NiceHashMiner.Forms
         public Form_Settings()
         {
             InitializeComponent();
+            // TESTNET
+#if TESTNET || TESTNETDEV
             ApplicationStateManager.SubscribeStateDisplayer(this);
+#endif
             Icon = Properties.Resources.logo;
 
             //ret = 1; // default
@@ -290,18 +291,6 @@ namespace NiceHashMiner.Forms
             //toolTip1.SetToolTip(pictureBox_CPU0_ForceCPUExtension,
             //    Tr("Force certain CPU extension miner."));
 
-            // amd disable temp control
-            toolTip1.SetToolTip(checkBox_AMD_DisableAMDTempControl,
-                Tr("Check it, if you would like to disable the built-in temperature control\nfor AMD GPUs (except daggerhashimoto algorithm)."));
-            toolTip1.SetToolTip(pictureBox_AMD_DisableAMDTempControl,
-                Tr("Check it, if you would like to disable the built-in temperature control\nfor AMD GPUs (except daggerhashimoto algorithm)."));
-
-            // disable default optimizations
-            toolTip1.SetToolTip(checkBox_DisableDefaultOptimizations,
-                Tr("When checked it disables all default optimization settings, making mining potentially more stable but significantly slower (especially for AMD cards)."));
-            toolTip1.SetToolTip(pictureBox_DisableDefaultOptimizations,
-                Tr("When checked it disables all default optimization settings, making mining potentially more stable but significantly slower (especially for AMD cards)."));
-
             // internet connection mining check
             toolTip1.SetToolTip(checkBox_IdleWhenNoInternetAccess,
                 Tr("If enabled NiceHash Miner Legacy will stop mining without internet connectivity"));
@@ -327,9 +316,7 @@ namespace NiceHashMiner.Forms
             toolTip1.SetToolTip(textBox_ElectricityCost, Tr("Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality."));
             toolTip1.SetToolTip(pictureBox_ElectricityCost, Tr("Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality."));
 
-            SetToolTip("Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners.", checkBox_RunEthlargement, pictureBox_RunEthlargement);
-
-            Text = Tr("Settings");
+            SetToolTip(Tr("Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners."), checkBox_RunEthlargement, pictureBox_RunEthlargement);
 
             algorithmSettingsControl1.InitLocale(toolTip1);
 
@@ -392,7 +379,6 @@ namespace NiceHashMiner.Forms
                 checkBox_MinimizeMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_UseIFTTT.CheckedChanged += CheckBox_UseIFTTT_CheckChanged;
                 checkBox_RunScriptOnCUDA_GPU_Lost.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_RunEthlargement.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
             }
             // Add EventHandler for all the general tab's textboxes
             {
@@ -466,8 +452,6 @@ namespace NiceHashMiner.Forms
                     ConfigManager.GeneralConfig.ShowInternetConnectionWarning;
                 checkBox_NVIDIAP0State.Checked = ConfigManager.GeneralConfig.NVIDIAP0State;
                 checkBox_LogToFile.Checked = ConfigManager.GeneralConfig.LogToFile;
-                checkBox_AMD_DisableAMDTempControl.Checked = ConfigManager.GeneralConfig.DisableAMDTempControl;
-                checkBox_DisableDefaultOptimizations.Checked = ConfigManager.GeneralConfig.DisableDefaultOptimizations;
                 checkBox_IdleWhenNoInternetAccess.Checked = ConfigManager.GeneralConfig.IdleWhenNoInternetAccess;
                 checkBox_Use3rdPartyMiners.Checked =
                     ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
@@ -509,8 +493,17 @@ namespace NiceHashMiner.Forms
                 //benchmarkLimitControlAMD.TimeLimits = ConfigManager.GeneralConfig.BenchmarkTimeLimits.AMD;
 
                 // here we want all devices
+                // PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+                devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices);
+                devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
+                devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
+#endif
+                // TESTNET
+#if TESTNET || TESTNETDEV
                 devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
+#endif  
             }
 
             // Add language selections list
@@ -600,77 +593,6 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
             ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
             ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
-            ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
-        }
-
-        // TODO OBSOLETE REMOVE
-        private void CheckBox_AMD_DisableAMDTempControl_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_isInitFinished) return;
-
-            //// indicate there has been a change
-            //IsChange = true;
-            //ConfigManager.GeneralConfig.DisableAMDTempControl = checkBox_AMD_DisableAMDTempControl.Checked;
-            //foreach (var cDev in AvailableDevices.Devices)
-            //{
-            //    if (cDev.DeviceType == DeviceType.AMD)
-            //    {
-            //        foreach (var algorithm in cDev.AlgorithmSettings())
-            //        {
-            //            if (algorithm.NiceHashID != AlgorithmType.DaggerHashimoto)
-            //            {
-            //                algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
-            //                algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-            //                    new MiningPair(cDev, algorithm), algorithm.NiceHashID, DeviceType.AMD, false);
-            //            }
-            //        }
-            //    }
-            //}
-        }
-
-        // TODO OBSOLETE REMOVE
-        // TODO broken feature no miner has default optimizations anymore (only sgminer plugin and this is not compatible)
-        private void CheckBox_DisableDefaultOptimizations_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_isInitFinished) return;
-
-            //// indicate there has been a change
-            //IsChange = true;
-            //ConfigManager.GeneralConfig.DisableDefaultOptimizations = checkBox_DisableDefaultOptimizations.Checked;
-            //if (ConfigManager.GeneralConfig.DisableDefaultOptimizations)
-            //{
-            //    foreach (var cDev in AvailableDevices.Devices)
-            //    {
-            //        foreach (var algorithm in cDev.AlgorithmSettings)
-            //        {
-            //            algorithm.ExtraLaunchParameters = "";
-            //            if (cDev.DeviceType == DeviceType.AMD && algorithm.NiceHashID != AlgorithmType.DaggerHashimoto)
-            //            {
-            //                algorithm.ExtraLaunchParameters += AmdGpuDevice.TemperatureParam;
-            //                algorithm.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-            //                    new MiningPair(cDev, algorithm), algorithm.NiceHashID, cDev.DeviceType, false);
-            //            }
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    foreach (var cDev in AvailableDevices.Devices)
-            //    {
-            //        if (cDev.DeviceType == DeviceType.CPU) continue; // cpu has no defaults
-            //        var deviceDefaultsAlgoSettings = DefaultAlgorithms.GetAlgorithmsForDevice(cDev);
-            //        foreach (var defaultAlgoSettings in deviceDefaultsAlgoSettings)
-            //        {
-            //            var toSetAlgo = cDev.GetAlgorithm(defaultAlgoSettings);
-            //            if (toSetAlgo != null)
-            //            {
-            //                toSetAlgo.ExtraLaunchParameters = defaultAlgoSettings.ExtraLaunchParameters;
-            //                toSetAlgo.ExtraLaunchParameters = ExtraLaunchParametersParser.ParseForMiningPair(
-            //                    new MiningPair(cDev, toSetAlgo), toSetAlgo.NiceHashID, cDev.DeviceType, false);
-            //            }
-            //        }
-            //    }
-            //}
         }
 
         private void CheckBox_RunAtStartup_CheckedChanged(object sender, EventArgs e)
@@ -879,7 +801,16 @@ namespace NiceHashMiner.Forms
 
             if (_isCredChange)
             {
+// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+                NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress.Trim(),
+                    ConfigManager.GeneralConfig.WorkerName.Trim());
+#endif
+// TESTNET
+#if TESTNET || TESTNETDEV
                 ApplicationStateManager.ResetNiceHashStatsCredentials();
+#endif
+
             }
 
             Close();
@@ -1007,7 +938,15 @@ namespace NiceHashMiner.Forms
             textBox_IFTTTKey.Enabled = checkBox_UseIFTTT.Checked;
         }
 
-        private void CheckBox_MineOnIdle_CheckChanged(object sender, EventArgs e)
+        private void checkBox_RunEthlargement_CheckedChanged(object sender, EventArgs e)
+        {
+            ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
+            // update logic
+            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+            EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
+        }
+
+private void CheckBox_MineOnIdle_CheckChanged(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
             IsChange = true;
@@ -1040,4 +979,3 @@ namespace NiceHashMiner.Forms
         }
     }
 }
-#endif

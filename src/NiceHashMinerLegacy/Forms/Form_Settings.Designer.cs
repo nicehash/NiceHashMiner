@@ -1,6 +1,4 @@
-﻿// TESTNET
-#if TESTNET || TESTNETDEV
-namespace NiceHashMiner.Forms
+﻿namespace NiceHashMiner.Forms
 {
     partial class Form_Settings
     {
@@ -41,14 +39,10 @@ namespace NiceHashMiner.Forms
             this.pictureBox_RunAtStartup = new System.Windows.Forms.PictureBox();
             this.checkBox_RunAtStartup = new System.Windows.Forms.CheckBox();
             this.checkBox_AllowMultipleInstances = new System.Windows.Forms.CheckBox();
-            this.checkBox_DisableDefaultOptimizations = new System.Windows.Forms.CheckBox();
-            this.checkBox_AMD_DisableAMDTempControl = new System.Windows.Forms.CheckBox();
             this.checkBox_AutoStartMining = new System.Windows.Forms.CheckBox();
             this.checkBox_HideMiningWindows = new System.Windows.Forms.CheckBox();
             this.pictureBox_AllowMultipleInstances = new System.Windows.Forms.PictureBox();
             this.checkBox_MinimizeToTray = new System.Windows.Forms.CheckBox();
-            this.pictureBox_DisableDefaultOptimizations = new System.Windows.Forms.PictureBox();
-            this.pictureBox_AMD_DisableAMDTempControl = new System.Windows.Forms.PictureBox();
             this.pictureBox_NVIDIAP0State = new System.Windows.Forms.PictureBox();
             this.pictureBox_DisableWindowsErrorReporting = new System.Windows.Forms.PictureBox();
             this.pictureBox_ShowDriverVersionWarning = new System.Windows.Forms.PictureBox();
@@ -140,14 +134,14 @@ namespace NiceHashMiner.Forms
             this.groupBoxBenchmarkTimeLimits = new System.Windows.Forms.GroupBox();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.buttonSaveClose = new System.Windows.Forms.Button();
-            this.buttonDefaults = new System.Windows.Forms.Button();
-            this.buttonCloseNoSave = new System.Windows.Forms.Button();
             this.minDeviceProfitField = new NiceHashMiner.Forms.Components.Field();
+            this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
+            this.buttonSaveClose = new System.Windows.Forms.Button();
+            this.buttonDefaults = new System.Windows.Forms.Button();
+            this.buttonCloseNoSave = new System.Windows.Forms.Button();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -156,8 +150,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDefaultOptimizations)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AMD_DisableAMDTempControl)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_NVIDIAP0State)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableWindowsErrorReporting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowDriverVersionWarning)).BeginInit();
@@ -252,14 +244,10 @@ namespace NiceHashMiner.Forms
             this.groupBox_Misc.Controls.Add(this.pictureBox_RunAtStartup);
             this.groupBox_Misc.Controls.Add(this.checkBox_RunAtStartup);
             this.groupBox_Misc.Controls.Add(this.checkBox_AllowMultipleInstances);
-            this.groupBox_Misc.Controls.Add(this.checkBox_DisableDefaultOptimizations);
-            this.groupBox_Misc.Controls.Add(this.checkBox_AMD_DisableAMDTempControl);
             this.groupBox_Misc.Controls.Add(this.checkBox_AutoStartMining);
             this.groupBox_Misc.Controls.Add(this.checkBox_HideMiningWindows);
             this.groupBox_Misc.Controls.Add(this.pictureBox_AllowMultipleInstances);
             this.groupBox_Misc.Controls.Add(this.checkBox_MinimizeToTray);
-            this.groupBox_Misc.Controls.Add(this.pictureBox_DisableDefaultOptimizations);
-            this.groupBox_Misc.Controls.Add(this.pictureBox_AMD_DisableAMDTempControl);
             this.groupBox_Misc.Controls.Add(this.pictureBox_NVIDIAP0State);
             this.groupBox_Misc.Controls.Add(this.pictureBox_DisableWindowsErrorReporting);
             this.groupBox_Misc.Controls.Add(this.pictureBox_ShowDriverVersionWarning);
@@ -291,7 +279,7 @@ namespace NiceHashMiner.Forms
             // pictureBox_RunScriptOnCUDA_GPU_Lost
             // 
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(222, 383);
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(222, 342);
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Name = "pictureBox_RunScriptOnCUDA_GPU_Lost";
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(18, 18);
@@ -302,7 +290,7 @@ namespace NiceHashMiner.Forms
             // checkBox_RunScriptOnCUDA_GPU_Lost
             // 
             this.checkBox_RunScriptOnCUDA_GPU_Lost.AutoSize = true;
-            this.checkBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(6, 383);
+            this.checkBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(6, 342);
             this.checkBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_RunScriptOnCUDA_GPU_Lost.Name = "checkBox_RunScriptOnCUDA_GPU_Lost";
             this.checkBox_RunScriptOnCUDA_GPU_Lost.Size = new System.Drawing.Size(191, 17);
@@ -313,7 +301,7 @@ namespace NiceHashMiner.Forms
             // pictureBox_ShowInternetConnectionWarning
             // 
             this.pictureBox_ShowInternetConnectionWarning.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ShowInternetConnectionWarning.Location = new System.Drawing.Point(222, 361);
+            this.pictureBox_ShowInternetConnectionWarning.Location = new System.Drawing.Point(222, 320);
             this.pictureBox_ShowInternetConnectionWarning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_ShowInternetConnectionWarning.Name = "pictureBox_ShowInternetConnectionWarning";
             this.pictureBox_ShowInternetConnectionWarning.Size = new System.Drawing.Size(18, 18);
@@ -324,7 +312,7 @@ namespace NiceHashMiner.Forms
             // checkBox_ShowInternetConnectionWarning
             // 
             this.checkBox_ShowInternetConnectionWarning.AutoSize = true;
-            this.checkBox_ShowInternetConnectionWarning.Location = new System.Drawing.Point(6, 361);
+            this.checkBox_ShowInternetConnectionWarning.Location = new System.Drawing.Point(6, 320);
             this.checkBox_ShowInternetConnectionWarning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_ShowInternetConnectionWarning.Name = "checkBox_ShowInternetConnectionWarning";
             this.checkBox_ShowInternetConnectionWarning.Size = new System.Drawing.Size(192, 17);
@@ -357,7 +345,7 @@ namespace NiceHashMiner.Forms
             // pictureBox_RunAtStartup
             // 
             this.pictureBox_RunAtStartup.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_RunAtStartup.Location = new System.Drawing.Point(222, 339);
+            this.pictureBox_RunAtStartup.Location = new System.Drawing.Point(222, 298);
             this.pictureBox_RunAtStartup.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_RunAtStartup.Name = "pictureBox_RunAtStartup";
             this.pictureBox_RunAtStartup.Size = new System.Drawing.Size(18, 18);
@@ -368,7 +356,7 @@ namespace NiceHashMiner.Forms
             // checkBox_RunAtStartup
             // 
             this.checkBox_RunAtStartup.AutoSize = true;
-            this.checkBox_RunAtStartup.Location = new System.Drawing.Point(6, 339);
+            this.checkBox_RunAtStartup.Location = new System.Drawing.Point(6, 298);
             this.checkBox_RunAtStartup.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_RunAtStartup.Name = "checkBox_RunAtStartup";
             this.checkBox_RunAtStartup.Size = new System.Drawing.Size(118, 17);
@@ -380,38 +368,13 @@ namespace NiceHashMiner.Forms
             // checkBox_AllowMultipleInstances
             // 
             this.checkBox_AllowMultipleInstances.AutoSize = true;
-            this.checkBox_AllowMultipleInstances.Location = new System.Drawing.Point(6, 317);
+            this.checkBox_AllowMultipleInstances.Location = new System.Drawing.Point(6, 276);
             this.checkBox_AllowMultipleInstances.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.checkBox_AllowMultipleInstances.Name = "checkBox_AllowMultipleInstances";
             this.checkBox_AllowMultipleInstances.Size = new System.Drawing.Size(139, 17);
             this.checkBox_AllowMultipleInstances.TabIndex = 365;
             this.checkBox_AllowMultipleInstances.Text = "Allow Multiple Instances";
             this.checkBox_AllowMultipleInstances.UseVisualStyleBackColor = true;
-            this.checkBox_AllowMultipleInstances.CheckedChanged += new System.EventHandler(this.CheckBox_DisableDefaultOptimizations_CheckedChanged);
-            // 
-            // checkBox_DisableDefaultOptimizations
-            // 
-            this.checkBox_DisableDefaultOptimizations.AutoSize = true;
-            this.checkBox_DisableDefaultOptimizations.Location = new System.Drawing.Point(6, 296);
-            this.checkBox_DisableDefaultOptimizations.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_DisableDefaultOptimizations.Name = "checkBox_DisableDefaultOptimizations";
-            this.checkBox_DisableDefaultOptimizations.Size = new System.Drawing.Size(163, 17);
-            this.checkBox_DisableDefaultOptimizations.TabIndex = 365;
-            this.checkBox_DisableDefaultOptimizations.Text = "Disable Default Optimizations";
-            this.checkBox_DisableDefaultOptimizations.UseVisualStyleBackColor = true;
-            this.checkBox_DisableDefaultOptimizations.CheckedChanged += new System.EventHandler(this.CheckBox_DisableDefaultOptimizations_CheckedChanged);
-            // 
-            // checkBox_AMD_DisableAMDTempControl
-            // 
-            this.checkBox_AMD_DisableAMDTempControl.AutoSize = true;
-            this.checkBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(6, 275);
-            this.checkBox_AMD_DisableAMDTempControl.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_AMD_DisableAMDTempControl.Name = "checkBox_AMD_DisableAMDTempControl";
-            this.checkBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(187, 17);
-            this.checkBox_AMD_DisableAMDTempControl.TabIndex = 365;
-            this.checkBox_AMD_DisableAMDTempControl.Text = "Disable AMD Temperature Control";
-            this.checkBox_AMD_DisableAMDTempControl.UseVisualStyleBackColor = true;
-            this.checkBox_AMD_DisableAMDTempControl.CheckedChanged += new System.EventHandler(this.CheckBox_AMD_DisableAMDTempControl_CheckedChanged);
             // 
             // checkBox_AutoStartMining
             // 
@@ -438,7 +401,7 @@ namespace NiceHashMiner.Forms
             // pictureBox_AllowMultipleInstances
             // 
             this.pictureBox_AllowMultipleInstances.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_AllowMultipleInstances.Location = new System.Drawing.Point(222, 317);
+            this.pictureBox_AllowMultipleInstances.Location = new System.Drawing.Point(222, 276);
             this.pictureBox_AllowMultipleInstances.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_AllowMultipleInstances.Name = "pictureBox_AllowMultipleInstances";
             this.pictureBox_AllowMultipleInstances.Size = new System.Drawing.Size(18, 18);
@@ -456,28 +419,6 @@ namespace NiceHashMiner.Forms
             this.checkBox_MinimizeToTray.TabIndex = 316;
             this.checkBox_MinimizeToTray.Text = "Minimize To Tray";
             this.checkBox_MinimizeToTray.UseVisualStyleBackColor = true;
-            // 
-            // pictureBox_DisableDefaultOptimizations
-            // 
-            this.pictureBox_DisableDefaultOptimizations.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableDefaultOptimizations.Location = new System.Drawing.Point(222, 296);
-            this.pictureBox_DisableDefaultOptimizations.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_DisableDefaultOptimizations.Name = "pictureBox_DisableDefaultOptimizations";
-            this.pictureBox_DisableDefaultOptimizations.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_DisableDefaultOptimizations.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_DisableDefaultOptimizations.TabIndex = 364;
-            this.pictureBox_DisableDefaultOptimizations.TabStop = false;
-            // 
-            // pictureBox_AMD_DisableAMDTempControl
-            // 
-            this.pictureBox_AMD_DisableAMDTempControl.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_AMD_DisableAMDTempControl.Location = new System.Drawing.Point(222, 275);
-            this.pictureBox_AMD_DisableAMDTempControl.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_AMD_DisableAMDTempControl.Name = "pictureBox_AMD_DisableAMDTempControl";
-            this.pictureBox_AMD_DisableAMDTempControl.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_AMD_DisableAMDTempControl.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_AMD_DisableAMDTempControl.TabIndex = 364;
-            this.pictureBox_AMD_DisableAMDTempControl.TabStop = false;
             // 
             // pictureBox_NVIDIAP0State
             // 
@@ -1535,6 +1476,19 @@ namespace NiceHashMiner.Forms
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Selected Device Settings";
             // 
+            // minDeviceProfitField
+            // 
+            this.minDeviceProfitField.AutoSize = true;
+            this.minDeviceProfitField.BackColor = System.Drawing.Color.Transparent;
+            this.minDeviceProfitField.Enabled = false;
+            this.minDeviceProfitField.EntryText = "";
+            this.minDeviceProfitField.LabelText = "Minimum Profit ($/day):";
+            this.minDeviceProfitField.Location = new System.Drawing.Point(6, 18);
+            this.minDeviceProfitField.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.minDeviceProfitField.Name = "minDeviceProfitField";
+            this.minDeviceProfitField.Size = new System.Drawing.Size(440, 83);
+            this.minDeviceProfitField.TabIndex = 0;
+            // 
             // groupBoxAlgorithmSettings
             // 
             this.groupBoxAlgorithmSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1549,55 +1503,6 @@ namespace NiceHashMiner.Forms
             this.groupBoxAlgorithmSettings.TabIndex = 395;
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
-            // 
-            // buttonSaveClose
-            // 
-            this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(348, 495);
-            this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonSaveClose.Name = "buttonSaveClose";
-            this.buttonSaveClose.Size = new System.Drawing.Size(134, 23);
-            this.buttonSaveClose.TabIndex = 44;
-            this.buttonSaveClose.Text = "&Save and Close";
-            this.buttonSaveClose.UseVisualStyleBackColor = true;
-            this.buttonSaveClose.Click += new System.EventHandler(this.ButtonSaveClose_Click);
-            // 
-            // buttonDefaults
-            // 
-            this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(270, 495);
-            this.buttonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonDefaults.Name = "buttonDefaults";
-            this.buttonDefaults.Size = new System.Drawing.Size(74, 23);
-            this.buttonDefaults.TabIndex = 43;
-            this.buttonDefaults.Text = "&Defaults";
-            this.buttonDefaults.UseVisualStyleBackColor = true;
-            this.buttonDefaults.Click += new System.EventHandler(this.ButtonDefaults_Click);
-            // 
-            // buttonCloseNoSave
-            // 
-            this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(486, 495);
-            this.buttonCloseNoSave.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonCloseNoSave.Name = "buttonCloseNoSave";
-            this.buttonCloseNoSave.Size = new System.Drawing.Size(134, 23);
-            this.buttonCloseNoSave.TabIndex = 45;
-            this.buttonCloseNoSave.Text = "&Close without Saving";
-            this.buttonCloseNoSave.UseVisualStyleBackColor = true;
-            this.buttonCloseNoSave.Click += new System.EventHandler(this.ButtonCloseNoSave_Click);
-            // 
-            // minDeviceProfitField
-            // 
-            this.minDeviceProfitField.AutoSize = true;
-            this.minDeviceProfitField.BackColor = System.Drawing.Color.Transparent;
-            this.minDeviceProfitField.Enabled = false;
-            this.minDeviceProfitField.EntryText = "";
-            this.minDeviceProfitField.LabelText = "Minimum Profit ($/day):";
-            this.minDeviceProfitField.Location = new System.Drawing.Point(6, 18);
-            this.minDeviceProfitField.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.minDeviceProfitField.Name = "minDeviceProfitField";
-            this.minDeviceProfitField.Size = new System.Drawing.Size(440, 83);
-            this.minDeviceProfitField.TabIndex = 0;
             // 
             // algorithmsListView1
             // 
@@ -1636,6 +1541,42 @@ namespace NiceHashMiner.Forms
             this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 304);
             this.algorithmSettingsControl1.TabIndex = 396;
             // 
+            // buttonSaveClose
+            // 
+            this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSaveClose.Location = new System.Drawing.Point(348, 495);
+            this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonSaveClose.Name = "buttonSaveClose";
+            this.buttonSaveClose.Size = new System.Drawing.Size(134, 23);
+            this.buttonSaveClose.TabIndex = 44;
+            this.buttonSaveClose.Text = "&Save and Close";
+            this.buttonSaveClose.UseVisualStyleBackColor = true;
+            this.buttonSaveClose.Click += new System.EventHandler(this.ButtonSaveClose_Click);
+            // 
+            // buttonDefaults
+            // 
+            this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDefaults.Location = new System.Drawing.Point(270, 495);
+            this.buttonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonDefaults.Name = "buttonDefaults";
+            this.buttonDefaults.Size = new System.Drawing.Size(74, 23);
+            this.buttonDefaults.TabIndex = 43;
+            this.buttonDefaults.Text = "&Defaults";
+            this.buttonDefaults.UseVisualStyleBackColor = true;
+            this.buttonDefaults.Click += new System.EventHandler(this.ButtonDefaults_Click);
+            // 
+            // buttonCloseNoSave
+            // 
+            this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonCloseNoSave.Location = new System.Drawing.Point(486, 495);
+            this.buttonCloseNoSave.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonCloseNoSave.Name = "buttonCloseNoSave";
+            this.buttonCloseNoSave.Size = new System.Drawing.Size(134, 23);
+            this.buttonCloseNoSave.TabIndex = 45;
+            this.buttonCloseNoSave.Text = "&Close without Saving";
+            this.buttonCloseNoSave.UseVisualStyleBackColor = true;
+            this.buttonCloseNoSave.Click += new System.EventHandler(this.ButtonCloseNoSave_Click);
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1661,8 +1602,6 @@ namespace NiceHashMiner.Forms
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeMiningWindows)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDefaultOptimizations)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AMD_DisableAMDTempControl)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_NVIDIAP0State)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableWindowsErrorReporting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowDriverVersionWarning)).EndInit();
@@ -1798,10 +1737,6 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.PictureBox pictureBox_SwitchMaxSeconds;
         private System.Windows.Forms.CheckBox checkBox_AutoStartMining;
         private System.Windows.Forms.PictureBox pictureBox_AutoStartMining;
-        private System.Windows.Forms.CheckBox checkBox_AMD_DisableAMDTempControl;
-        private System.Windows.Forms.PictureBox pictureBox_AMD_DisableAMDTempControl;
-        private System.Windows.Forms.CheckBox checkBox_DisableDefaultOptimizations;
-        private System.Windows.Forms.PictureBox pictureBox_DisableDefaultOptimizations;
         private System.Windows.Forms.CheckBox checkBox_IdleWhenNoInternetAccess;
         private System.Windows.Forms.PictureBox pictureBox_IdleWhenNoInternetAccess;
         private System.Windows.Forms.PictureBox pictureBox_Use3rdPartyMiners;
@@ -1838,4 +1773,3 @@ namespace NiceHashMiner.Forms
         private System.Windows.Forms.Label label_IdleType;
     }
 }
-#endif
