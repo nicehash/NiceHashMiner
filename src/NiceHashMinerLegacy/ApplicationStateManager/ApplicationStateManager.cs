@@ -1,5 +1,3 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces.DataVisualizer;
@@ -110,7 +108,16 @@ namespace NiceHashMiner
             return ret;
         }
 
-        // TODO this function is probably not at the right place now
+        // PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+        public static void ResetNiceHashStatsCredentials()
+        {
+            // STUB look down for real thing
+        }
+#endif
+            // TESTNET
+#if TESTNET || TESTNETDEV
+            // TODO this function is probably not at the right place now
         // We call this when we change BTC and Workername and this is most likely wrong
         public static void ResetNiceHashStatsCredentials()
         {
@@ -127,6 +134,7 @@ namespace NiceHashMiner
                 // TODO notify invalid credentials?? send state?
             }
         }
+#endif
 
         public enum SetResult
         {
@@ -409,4 +417,3 @@ namespace NiceHashMiner
         }
     }
 }
-#endif

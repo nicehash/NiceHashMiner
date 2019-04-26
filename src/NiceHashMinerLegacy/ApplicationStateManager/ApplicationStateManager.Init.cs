@@ -24,10 +24,10 @@ namespace NiceHashMiner
         }
 
         // TODO add init stuff here
-        public static async Task InitializeManagersAndMiners()
-        {
-            var initSteps = new List<ActionWithMessage>();
-        }
+        //public static async Task InitializeManagersAndMiners()
+        //{
+        //    var initSteps = new List<ActionWithMessage>();
+        //}
 
         public static void ShowQueryWarnings(QueryResult query)
         {

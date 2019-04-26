@@ -864,7 +864,7 @@ namespace NiceHashMiner
 
         private void ButtonSettings_Click(object sender, EventArgs e)
         {
-            var settings = new Form_Settings_Production();
+            var settings = new Form_Settings();
             SetChildFormCenter(settings);
             settings.ShowDialog();
 

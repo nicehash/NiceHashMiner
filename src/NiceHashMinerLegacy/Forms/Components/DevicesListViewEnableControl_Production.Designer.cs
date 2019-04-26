@@ -1,5 +1,8 @@
-﻿namespace NiceHashMiner.Forms.Components {
-    partial class DevicesListViewEnableControl_Production {
+﻿// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+
+namespace NiceHashMiner.Forms.Components {
+    partial class DevicesListViewEnableControl {
         /// <summary> 
         /// Required designer variable.
         /// </summary>
@@ -16,7 +19,7 @@
             base.Dispose(disposing);
         }
 
-        #region Component Designer generated code
+#region Component Designer generated code
 
         /// <summary> 
         /// Required method for Designer support - do not modify 
@@ -86,7 +89,7 @@
 
         }
 
-        #endregion
+#endregion
 
         private System.Windows.Forms.ListView listViewDevices;
         private System.Windows.Forms.ColumnHeader columnHeader0;
@@ -95,3 +98,4 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
+#endif

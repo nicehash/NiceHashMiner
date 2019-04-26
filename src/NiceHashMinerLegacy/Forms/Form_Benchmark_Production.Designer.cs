@@ -35,7 +35,7 @@ namespace NiceHashMiner.Forms {
             this.checkBox_StartMiningAfterBenchmark = new System.Windows.Forms.CheckBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.benchmarkOptions1 = new NiceHashMiner.Forms.Components.BenchmarkOptions();
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl_Production();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.groupBoxBenchmarkProgress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -193,7 +193,7 @@ namespace NiceHashMiner.Forms {
 
 #endregion
 
-        private Components.DevicesListViewEnableControl_Production devicesListViewEnableControl1;
+        private Components.DevicesListViewEnableControl devicesListViewEnableControl1;
         private System.Windows.Forms.Button StartStopBtn;
         private System.Windows.Forms.Button CloseBtn;
         private Components.BenchmarkOptions benchmarkOptions1;

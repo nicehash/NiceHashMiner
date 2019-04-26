@@ -1,4 +1,6 @@
-﻿using NiceHashMiner.Configs;
+﻿// PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using System;
@@ -8,7 +10,7 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms.Components
 {
-    public partial class DevicesListViewEnableControl_Production : UserControl
+    public partial class DevicesListViewEnableControl : UserControl
     {
         private const int ENABLED = 0;
         private const int DEVICE = 1;
@@ -90,7 +92,7 @@ namespace NiceHashMiner.Forms.Components
 
         public bool SaveToGeneralConfig { get; set; }
 
-        public DevicesListViewEnableControl_Production()
+        public DevicesListViewEnableControl()
         {
             InitializeComponent();
 
@@ -275,3 +277,4 @@ namespace NiceHashMiner.Forms.Components
         }
     }
 }
+#endif
