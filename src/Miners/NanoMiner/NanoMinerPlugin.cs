@@ -20,9 +20,9 @@ namespace NanoMiner
     {
         public NanoMinerPlugin()
         {
-            _pluginUUID = "36f04c55-080d-4bdd-a2cd-de111d15016e";
+            _pluginUUID = "fa2f3530-67ff-11e9-b04e-b5d540d02534";
         }
-        public NanoMinerPlugin(string pluginUUID = "36f04c55-080d-4bdd-a2cd-de111d15016e")
+        public NanoMinerPlugin(string pluginUUID = "fa2f3530-67ff-11e9-b04e-b5d540d02534")
         {
             _pluginUUID = pluginUUID;
         }

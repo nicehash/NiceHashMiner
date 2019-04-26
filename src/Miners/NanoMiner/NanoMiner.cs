@@ -1,6 +1,7 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
+using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
@@ -18,7 +19,7 @@ namespace NanoMiner
     {
         private readonly string _uuid;
 
-        private HttpClient _httpClient;
+        private readonly HttpClient _http = new HttpClient();
         private string _extraLaunchParameters = "";
 
         private int _apiPort;
@@ -88,9 +89,38 @@ namespace NanoMiner
             }
         }
 
-        public override Task<ApiData> GetMinerStatsDataAsync()
+        public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            throw new NotImplementedException();
+            var api = new ApiData();
+            try
+            {
+                var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/stats");
+                var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
+                var gpus = _miningPairs.Select(pair => pair.Device);
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
+                var totalSpeed = 0d;
+                var totalPowerUsage = 0;
+                foreach (var gpu in gpus)
+                {
+                    if (summary.Devices == null) continue;
+                    /*
+                    var currentSpeedString = summary.Algorithms[$"{gpu.ID}"].algoData[$"{AlgorithmName(_algorithmType)}"].Hashrate;
+                    var currentSpeed = Convert.ToDouble(currentSpeedString);
+                    totalSpeed += currentSpeed;
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed) });
+                    var currentPower = summary.miners[$"{gpu.ID}"].device.power;
+                    totalPowerUsage += currentPower;
+                    perDevicePowerInfo.Add(gpu.UUID, currentPower);
+                    */
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"exception: {e}");
+            }
+
+            return api;
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
@@ -171,7 +201,7 @@ namespace NanoMiner
                 }
             }
 
-            configString += $"mport=-{_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\ndevices={_devices}\r\npool1={url}";
+            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\ndevices={_devices}\r\npool1={url}";
             File.WriteAllText(Path.Combine(paths.Item2,$"config_nh_{deviceId}.ini"), configString);
             return $"config_nh_{deviceId}.ini";
         }
