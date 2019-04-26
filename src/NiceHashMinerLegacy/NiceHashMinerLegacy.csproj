@@ -276,6 +276,7 @@
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\NanoMinerIntegrated\NanoMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\PhoenixIntegrated\PhoenixIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedPlugin.cs" />
@@ -612,6 +613,10 @@
     <ProjectReference Include="..\Miners\MinerPlugin\MinerPlugin.csproj">
       <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
       <Name>MinerPlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\NanoMiner\NanoMiner.csproj">
+      <Project>{b16f5e9e-7d4b-482b-908d-b839457fc766}</Project>
+      <Name>NanoMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\NBMiner\NBMiner.csproj">
       <Project>{a4b0cdcb-d1d7-4563-9888-d58e0b36d0f8}</Project>

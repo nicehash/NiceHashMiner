@@ -28,7 +28,7 @@ namespace NiceHashMiner.Plugin
 {
     public static class MinerPluginsManager
     {
-        public static bool IntegratedPluginsOnly => true;
+        public static bool IntegratedPluginsOnly => false;
         public static List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
         {
             // open source
@@ -52,6 +52,7 @@ namespace NiceHashMiner.Plugin
             new TeamRedMinerIntegratedPlugin(),
             new TRexIntegratedPlugin(),
             new TTMinerIntegratedPlugin(),
+            new NanoMinerIntegratedPlugin(),
 
             // service plugin
             EthlargementIntegratedPlugin.Instance
