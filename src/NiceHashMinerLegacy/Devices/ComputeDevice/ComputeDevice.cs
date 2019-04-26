@@ -34,8 +34,6 @@ namespace NiceHashMiner.Devices
 
         public DeviceState State { get; set; } = DeviceState.Stopped;
 
-        public readonly DeviceGroupType DeviceGroupType;
-
         // CPU, NVIDIA, AMD
         public readonly DeviceType DeviceType;
 
@@ -84,13 +82,11 @@ namespace NiceHashMiner.Devices
         public virtual double PowerUsage => -1;
 
         // Ambiguous constructor
-        protected ComputeDevice(int id, string name, bool enabled, DeviceGroupType group,
-            DeviceType type, string nameCount, ulong gpuRam)
+        protected ComputeDevice(int id, string name, bool enabled, DeviceType type, string nameCount, ulong gpuRam)
         {
             ID = id;
             Name = name;
             SetEnabled(enabled);
-            DeviceGroupType = group;
             DeviceType = type;
             NameCount = nameCount;
             GpuRam = gpuRam;
@@ -265,7 +261,7 @@ namespace NiceHashMiner.Devices
 
         protected bool Equals(ComputeDevice other)
         {
-            return ID == other.ID && DeviceGroupType == other.DeviceGroupType && DeviceType == other.DeviceType;
+            return ID == other.ID && DeviceType == other.DeviceType;
         }
 
         public override int GetHashCode()
@@ -273,7 +269,6 @@ namespace NiceHashMiner.Devices
             unchecked
             {
                 var hashCode = ID;
-                hashCode = (hashCode * 397) ^ (int) DeviceGroupType;
                 hashCode = (hashCode * 397) ^ (int) DeviceType;
                 return hashCode;
             }

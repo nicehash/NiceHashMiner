@@ -89,7 +89,6 @@ namespace NiceHashMiner.Devices
             : base(amdDevice.DeviceID,
                 amdDevice.DeviceName,
                 true,
-                DeviceGroupType.AMD_OpenCL,
                 DeviceType.AMD,
                 string.Format(Translations.Tr("GPU#{0}"), gpuCount),
                 amdDevice.DeviceGlobalMemory)

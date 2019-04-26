@@ -66,23 +66,6 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
 
                 if (skip) continue;
 
-                DeviceGroupType group;
-                switch (cudaDev.SM_major)
-                {
-                    case 3:
-                        group = DeviceGroupType.NVIDIA_3_x;
-                        break;
-                    case 5:
-                        group = DeviceGroupType.NVIDIA_5_x;
-                        break;
-                    case 6:
-                        group = DeviceGroupType.NVIDIA_6_x;
-                        break;
-                    default:
-                        group = DeviceGroupType.NVIDIA_6_x;
-                        break;
-                }
-
                 var nvmlHandle = new nvmlDevice();
 
                 if (nvmlInit)
@@ -94,7 +77,7 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 }
 
                 idHandles.TryGetValue(cudaDev.pciBusID, out var handle);
-                compDevs.Add(new CudaComputeDevice(cudaDev, group, ++numDevs, handle, nvmlHandle));
+                compDevs.Add(new CudaComputeDevice(cudaDev, ++numDevs, handle, nvmlHandle));
             }
 
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());

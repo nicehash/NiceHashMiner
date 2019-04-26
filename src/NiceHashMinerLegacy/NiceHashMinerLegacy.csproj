@@ -332,7 +332,6 @@
     <Compile Include="Devices\CPUUtils.cs" />
     <Compile Include="Devices\Querying\Nvidia\CudaDevice.cs" />
     <Compile Include="Devices\CUDA_Unsupported.cs" />
-    <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLDevice.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
