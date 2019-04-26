@@ -15,6 +15,7 @@ using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Plugin;
 using NiceHashMiner.Interfaces;
+using NiceHashMiner.Miners.IntegratedPlugins;
 
 namespace NiceHashMiner.Benchmarking
 {
@@ -102,11 +103,15 @@ namespace NiceHashMiner.Benchmarking
                 Device = Device.PluginDevice,
                 Algorithm = algo.BaseAlgo
             };
-            miner.InitMiningPairs(new List<MinerPlugin.MiningPair> { miningPair });
+            // check ethlargement
+            var miningPairs = new List<MinerPlugin.MiningPair> { miningPair };
+            EthlargementIntegratedPlugin.Instance.Start(miningPairs);
+            miner.InitMiningPairs(miningPairs);
             // fill service since the benchmark might be online. DemoUser.BTC must be used
             miner.InitMiningLocationAndUsername(StratumService.SelectedServiceLocation, DemoUser.BTC);
             _powerHelper.Start();
             var result = await miner.StartBenchmark(_stopBenchmark.Token, _performanceType);
+            //EthlargementIntegratedPlugin.Instance.Stop(miningPairs); // TODO check stopping
             var power = _powerHelper.Stop();
             if (result.Success || result.AlgorithmTypeSpeeds?.Count > 0)
             {

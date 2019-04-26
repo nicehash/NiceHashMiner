@@ -84,13 +84,7 @@ namespace NiceHashMiner.Miners
             IsRunning = true;
         }
 
-        // we are setting 5 minutes on the others so lets keep it this way
-        protected override int GetMaxCooldownTimeInMilliseconds()
-        {
-            return 60 * 1000 * 5; // 5 min
-        }
-
-        protected override void _Stop(MinerStopType willswitch)
+        public override void Stop()
         {
             // TODO thing about this case, closing opening on switching
             // EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
