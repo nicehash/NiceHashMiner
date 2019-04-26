@@ -1,6 +1,4 @@
-﻿// TESTNET
-#if TESTNET || TESTNETDEV
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using System;
@@ -20,6 +18,26 @@ namespace NiceHashMiner.Forms.Components
         private const int ENABLED = 0;
 
         protected AlgorithmsListView _algorithmsListView;
+
+        protected bool _isMining;
+
+        public bool IsMining
+        {
+            get => _isMining;
+            set
+            {
+                if (value)
+                {
+                    _isMining = true;
+                    listViewDevices.CheckBoxes = false;
+                }
+                else
+                {
+                    _isMining = false;
+                    listViewDevices.CheckBoxes = true;
+                }
+            }
+        }
 
         public string FirstColumnText
         {
@@ -41,7 +59,10 @@ namespace NiceHashMiner.Forms.Components
             // intialize ListView callbacks
             listViewDevices.ItemChecked += ListViewDevicesItemChecked;
             //listViewDevices.CheckBoxes = false;
+            // TESTNET
+#if TESTNET || TESTNETDEV
             NiceHashStats.OnDeviceUpdate += UpdateDevices;
+#endif
         }
 
         public void SetAlgorithmsListView(AlgorithmsListView algorithmsListView)
@@ -127,4 +148,3 @@ namespace NiceHashMiner.Forms.Components
         { }
     }
 }
-#endif

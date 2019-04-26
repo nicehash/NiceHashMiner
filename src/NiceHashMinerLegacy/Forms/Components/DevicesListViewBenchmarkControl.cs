@@ -1,6 +1,4 @@
-﻿// TESTNET
-#if TESTNET || TESTNETDEV
-using NiceHashMiner.Devices;
+﻿using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using System;
 using System.Drawing;
@@ -48,26 +46,6 @@ namespace NiceHashMiner.Forms.Components
                 else
                 {
                     _isInBenchmark = false;
-                    listViewDevices.CheckBoxes = true;
-                }
-            }
-        }
-
-        private bool _isMining;
-
-        public bool IsMining
-        {
-            get => _isMining;
-            set
-            {
-                if (value)
-                {
-                    _isMining = true;
-                    listViewDevices.CheckBoxes = false;
-                }
-                else
-                {
-                    _isMining = false;
                     listViewDevices.CheckBoxes = true;
                 }
             }
@@ -195,4 +173,3 @@ namespace NiceHashMiner.Forms.Components
         }
     }
 }
-#endif

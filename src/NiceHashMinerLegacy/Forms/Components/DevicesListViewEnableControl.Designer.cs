@@ -1,6 +1,4 @@
-﻿// TESTNET
-#if TESTNET || TESTNETDEV
-namespace NiceHashMiner.Forms.Components {
+﻿namespace NiceHashMiner.Forms.Components {
     partial class DevicesListViewEnableControl {
         /// <summary> 
         /// Required designer variable.
@@ -99,4 +97,3 @@ namespace NiceHashMiner.Forms.Components {
         protected System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
-#endif

@@ -1,6 +1,4 @@
-﻿// TESTNET
-#if TESTNET || TESTNETDEV
-namespace NiceHashMiner.Forms.Components {
+﻿namespace NiceHashMiner.Forms.Components {
     partial class DevicesListViewBenchmarkControl {
         /// <summary> 
         /// Required designer variable.
@@ -32,4 +30,3 @@ namespace NiceHashMiner.Forms.Components {
 #endregion
     }
 }
-#endif

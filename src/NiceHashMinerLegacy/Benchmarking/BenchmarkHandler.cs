@@ -1,6 +1,4 @@
-﻿// PRODUCTION
-#if !(TESTNET || TESTNETDEV)
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
@@ -23,22 +21,22 @@ namespace NiceHashMiner.Benchmarking
     {
         CancellationTokenSource _stopBenchmark;
 
-        // OLD
+        private bool _startMiningAfterBenchmark;
         private readonly Queue<Algorithm> _benchmarkAlgorithmQueue;
         private readonly int _benchmarkAlgorithmsCount;
         private readonly List<string> _benchmarkFailedAlgo = new List<string>();
-        private readonly IBenchmarkForm _benchmarkForm;
         private readonly BenchmarkPerformanceType _performanceType;
 
-        private PowerHelper _powerHelper;
+        private readonly PowerHelper _powerHelper;
 
-        public BenchmarkHandler(ComputeDevice device, Queue<Algorithm> algorithms, IBenchmarkForm form,
-            BenchmarkPerformanceType performance)
+        public BenchmarkHandler(ComputeDevice device, Queue<Algorithm> algorithms, BenchmarkPerformanceType performance, bool startMiningAfterBenchmark = false)
         {
             _stopBenchmark = new CancellationTokenSource();
+            _startMiningAfterBenchmark = startMiningAfterBenchmark;
             Device = device;
+            // dirty quick fix
+            Device.State = DeviceState.Benchmarking;
             _benchmarkAlgorithmQueue = algorithms;
-            _benchmarkForm = form;
             _performanceType = performance;
 
             _benchmarkAlgorithmsCount = _benchmarkAlgorithmQueue.Count;
@@ -65,10 +63,10 @@ namespace NiceHashMiner.Benchmarking
                 {
                     if (_stopBenchmark.IsCancellationRequested) break;
                     currentAlgorithm = _benchmarkAlgorithmQueue.Dequeue();
-                    _benchmarkForm.AddToStatusCheck(Device, currentAlgorithm);
+                    BenchmarkManager.AddToStatusCheck(Device, currentAlgorithm);
                     await BenchmarkAlgorithm(currentAlgorithm);
                     if (_stopBenchmark.IsCancellationRequested) break;
-                    _benchmarkForm.StepUpBenchmarkStepProgress();
+                    BenchmarkManager.StepUpBenchmarkStepProgress();
                     ConfigManager.CommitBenchmarksForDevice(Device);
                 }
                 catch (Exception e)
@@ -77,9 +75,11 @@ namespace NiceHashMiner.Benchmarking
                 }
             }
             currentAlgorithm?.ClearBenchmarkPending();
+            var cancel = _stopBenchmark.IsCancellationRequested;
             // don't show unbenchmarked algos if user canceled
-            if (_stopBenchmark.IsCancellationRequested) return;
-            _benchmarkForm.EndBenchmarkForDevice(Device, _benchmarkFailedAlgo.Count > 0);
+            var showFailed = _benchmarkFailedAlgo.Count > 0 && !cancel;
+            var startMining = _startMiningAfterBenchmark && !cancel;
+            BenchmarkManager.EndBenchmarkForDevice(Device, showFailed, startMining);
         }
 
         private async Task BenchmarkAlgorithm(Algorithm algo)
@@ -87,7 +87,7 @@ namespace NiceHashMiner.Benchmarking
             var currentMiner = MinerFactory.CreateMiner(algo);
             if (currentMiner == null) return;
 
-            _benchmarkForm.AddToStatusCheck(Device, algo);
+            BenchmarkManager.AddToStatusCheck(Device, algo);
             if (algo is PluginAlgorithm pAlgo)
             {
                 await BenchmarkPluginAlgorithm(pAlgo);
@@ -121,13 +121,13 @@ namespace NiceHashMiner.Benchmarking
                 algo.PowerUsage = power;
                 // set status to empty string it will return speed
                 algo.ClearBenchmarkPending();
-                _benchmarkForm.SetCurrentStatus(Device, algo, "");
+                BenchmarkManager.SetCurrentStatus(Device, algo, "");
             }
             else
             {
                 // add new failed list
                 _benchmarkFailedAlgo.Add(algo.AlgorithmName);
-                _benchmarkForm.SetCurrentStatus(Device, algo, result.ErrorMessage);
+                BenchmarkManager.SetCurrentStatus(Device, algo, result.ErrorMessage);
             }
         }
 
@@ -137,4 +137,3 @@ namespace NiceHashMiner.Benchmarking
         }
     }
 }
-#endif

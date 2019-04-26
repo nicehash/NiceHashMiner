@@ -493,17 +493,14 @@ namespace NiceHashMiner.Forms
                 //benchmarkLimitControlAMD.TimeLimits = ConfigManager.GeneralConfig.BenchmarkTimeLimits.AMD;
 
                 // here we want all devices
-                // PRODUCTION
-#if !(TESTNET || TESTNETDEV)
-                devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices);
-                devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
-                devicesListViewEnableControl1.IsSettingsCopyEnabled = true;
-#endif
-                // TESTNET
-#if TESTNET || TESTNETDEV
+
                 devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
-#endif  
+                // PRODUCTION
+#if !(TESTNET || TESTNETDEV)
+                devicesListViewEnableControl1.SaveToGeneralConfig = true;
+#endif
+
             }
 
             // Add language selections list

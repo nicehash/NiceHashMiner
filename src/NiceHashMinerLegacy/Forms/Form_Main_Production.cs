@@ -38,7 +38,7 @@ namespace NiceHashMiner
         private bool _showWarningNiceHashData;
         private bool _demoMode;
 
-        private Form_Benchmark_Production _benchmarkForm;
+        private Form_Benchmark _benchmarkForm;
         private Form_MinerPlugins _minerPluginsForm;
 
         private int _flowLayoutPanelVisibleCount = 0;
@@ -167,7 +167,7 @@ namespace NiceHashMiner
 
             if (_isDeviceDetectionInitialized)
             {
-                devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices);
+               devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices.ToList());
             }
         }
 
@@ -274,7 +274,7 @@ namespace NiceHashMiner
                 progress?.Report(Tuple.Create(Tr("Saving config..."), nextProgPerc()));
 
                 // All devices settup should be initialized in AllDevices
-                devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices);
+                devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices.ToList());
                 // set properties after
                 devicesListViewEnableControl1.SaveToGeneralConfig = true;
 
@@ -848,10 +848,10 @@ namespace NiceHashMiner
         {
             ConfigManager.GeneralConfig.ServiceLocation = comboBoxLocation.SelectedIndex;
 
-            _benchmarkForm = new Form_Benchmark_Production();
+            _benchmarkForm = new Form_Benchmark();
             SetChildFormCenter(_benchmarkForm);
             _benchmarkForm.ShowDialog();
-            var startMining = _benchmarkForm.StartMining;
+            var startMining = _benchmarkForm.StartMiningOnFinish;
             _benchmarkForm = null;
 
             InitMainConfigGuiData();
@@ -1078,7 +1078,7 @@ namespace NiceHashMiner
                 }
                 if (result == DialogResult.Yes)
                 {
-                    _benchmarkForm = new Form_Benchmark_Production(
+                    _benchmarkForm = new Form_Benchmark(
                         BenchmarkPerformanceType.Standard,
                         true);
                     SetChildFormCenter(_benchmarkForm);

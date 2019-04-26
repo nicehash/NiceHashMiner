@@ -116,8 +116,7 @@
     <Compile Include="Benchmarking\BenchDeviationInfo.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkChecker.cs" />
-    <Compile Include="Benchmarking\BenchmarkHandler_testnet.cs" />
-    <Compile Include="Benchmarking\BenchmarkHandler_production.cs" />
+    <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
     <Compile Include="Benchmarking\BenchmarkTimes.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
@@ -152,11 +151,15 @@
     <Compile Include="Forms\Components\AlgorithmsDataGridView.Designer.cs">
       <DependentUpon>AlgorithmsDataGridView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs" />
+    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.Designer.cs">
       <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl.cs" />
+    <Compile Include="Forms\Components\DevicesListViewEnableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Components\DevicesListViewEnableControl.Designer.cs">
       <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
     </Compile>
@@ -210,7 +213,9 @@
     </Compile>
     <Compile Include="Forms\FormHelpers_shared.cs" />
     <Compile Include="Forms\FormHelpers_testnet.cs" />
-    <Compile Include="Forms\Form_Benchmark.cs" />
+    <Compile Include="Forms\Form_Benchmark.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Form_Benchmark.Designer.cs">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </Compile>
@@ -352,12 +357,6 @@
     <Compile Include="Forms\Components\BenchmarkOptions.Designer.cs">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl_Production.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl_Production.Designer.cs">
-      <DependentUpon>DevicesListViewEnableControl_Production.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Components\Field.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -369,12 +368,6 @@
     </Compile>
     <Compile Include="Forms\Components\GroupProfitControl.Designer.cs">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Form_Benchmark_Production.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_Benchmark_Production.Designer.cs">
-      <DependentUpon>Form_Benchmark_Production.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Form_ChooseLanguage.cs">
       <SubType>Form</SubType>
@@ -442,9 +435,6 @@
     <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\DevicesListViewEnableControl_Production.resx">
-      <DependentUpon>DevicesListViewEnableControl_Production.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>
     </EmbeddedResource>
@@ -468,9 +458,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormEula.resx">
       <DependentUpon>FormEula.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Benchmark_Production.resx">
-      <DependentUpon>Form_Benchmark_Production.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
