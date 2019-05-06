@@ -92,10 +92,7 @@ namespace NiceHashMiner
         public static void InitFinished()
         {
             isInitFinished = true;
-            // TESTNET
-#if TESTNET || TESTNETDEV
             NiceHashStats.StateChanged();
-#endif
         }
     }
 }

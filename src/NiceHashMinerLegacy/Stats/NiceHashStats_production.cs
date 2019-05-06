@@ -15,61 +15,19 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NiceHashMinerLegacy.Common.Enums;
 using WebSocketSharp;
+using NiceHashMiner.Stats.Models;
 
 namespace NiceHashMiner.Stats
 {
-    public class SocketEventArgs : EventArgs
+    internal static partial class NiceHashStats
     {
-        public readonly string Message;
-
-        public SocketEventArgs(string message)
-        {
-            Message = message;
-        }
-    }
-
-    internal static class NiceHashStats
-    {
-        #region JSON Models
-#pragma warning disable 649, IDE1006
-        private class NicehashCredentials
-        {
-            public string method = "credentials.set";
-            public string btc;
-            public string worker;
-        }
-
-        private class NicehashDeviceStatus
-        {
-            public string method = "devices.status";
-            public List<JArray> devices;
-        }
-        public class ExchangeRateJson
-        {
-            public List<Dictionary<string, string>> exchanges { get; set; }
-            public Dictionary<string, double> exchanges_fiat { get; set; }
-        }
-#pragma warning restore 649, IDE1006
-        #endregion
-
-        private const int DeviceUpdateLaunchDelay = 20 * 1000;
         private const int DeviceUpdateInterval = 60 * 1000;
-        
-        public static double Balance { get; private set; }
-        public static string Version { get; private set; }
-        public static bool IsAlive => _socket?.IsAlive ?? false;
 
         // Event handlers for socket
         public static event EventHandler OnBalanceUpdate;
-
-        public static event EventHandler OnSmaUpdate;
         public static event EventHandler OnVersionUpdate;
-        public static event EventHandler OnConnectionLost;
         public static event EventHandler OnConnectionEstablished;
         public static event EventHandler<SocketEventArgs> OnVersionBurn;
-        public static event EventHandler OnExchangeUpdate;
-
-        private static NiceHashSocket _socket;
         
         private static System.Threading.Timer _deviceUpdateTimer;
 
@@ -86,12 +44,7 @@ namespace NiceHashMiner.Stats
             _deviceUpdateTimer = new System.Threading.Timer(DeviceStatus_Tick, null, DeviceUpdateInterval, DeviceUpdateInterval);
         }
 
-        #region Socket Callbacks
-
-        private static void SocketOnOnConnectionLost(object sender, EventArgs eventArgs)
-        {
-            OnConnectionLost?.Invoke(sender, eventArgs);
-        }
+#region Socket Callbacks
 
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
@@ -147,86 +100,10 @@ namespace NiceHashMiner.Stats
 
         #region Incoming socket calls
 
-        private static void SetAlgorithmRates(JArray data)
-        {
-            try
-            {
-                var payingDict = new Dictionary<AlgorithmType, double>();
-                if (data != null)
-                {
-                    foreach (var algo in data)
-                    {
-                        var algoKey = (AlgorithmType) algo[0].Value<int>();
-                        payingDict[algoKey] = algo[1].Value<double>();
-                    }
-                }
-
-                NHSmaData.UpdateSmaPaying(payingDict);
-                
-                OnSmaUpdate?.Invoke(null, EventArgs.Empty);
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
-            }
-        }
-
-        private static void SetStableAlgorithms(JArray stable)
-        {
-            var stables = stable.Select(algo => (AlgorithmType) algo.Value<int>());
-            NHSmaData.UpdateStableAlgorithms(stables);
-        }
-
-        private static void SetBalance(string balance)
-        {
-            try
-            {
-                if (double.TryParse(balance, NumberStyles.Float, CultureInfo.InvariantCulture, out var bal))
-                {
-                    Balance = bal;
-                    OnBalanceUpdate?.Invoke(null, EventArgs.Empty);
-                }
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
-            }
-        }
-
         private static void SetVersion(string version)
         {
             Version = version;
             OnVersionUpdate?.Invoke(null, EventArgs.Empty);
-        }
-
-        private static void SetExchangeRates(string data)
-        {
-            try
-            {
-                var exchange = JsonConvert.DeserializeObject<ExchangeRateJson>(data);
-                if (exchange?.exchanges_fiat != null && exchange.exchanges != null)
-                {
-                    foreach (var exchangePair in exchange.exchanges)
-                    {
-                        if (exchangePair.TryGetValue("coin", out var coin) &&
-                            coin == "BTC" &&
-                            exchangePair.TryGetValue("USD", out var usd) &&
-                            double.TryParse(usd, NumberStyles.Float, CultureInfo.InvariantCulture, out var usdD))
-                        {
-                            ExchangeRateApi.UsdBtcRate = usdD;
-                            break;
-                        }
-                    }
-
-                    ExchangeRateApi.UpdateExchangesFiat(exchange.exchanges_fiat);
-
-                    OnExchangeUpdate?.Invoke(null, EventArgs.Empty);
-                }
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
-            }
         }
 
         #endregion
@@ -273,7 +150,7 @@ namespace NiceHashMiner.Stats
                 }
                 catch (Exception e) { Helpers.ConsolePrint("SOCKET", e.ToString()); }
             }
-            var data = new NicehashDeviceStatus
+            var data = new DeviceStatusMessage
             {
                 devices = deviceList
             };

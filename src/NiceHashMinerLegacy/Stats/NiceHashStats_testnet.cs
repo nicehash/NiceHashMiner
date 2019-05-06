@@ -26,56 +26,14 @@ using static NiceHashMiner.Stats.StatusCodes;
 
 namespace NiceHashMiner.Stats
 {
-    public class SocketEventArgs : EventArgs
+    internal static partial class NiceHashStats
     {
-        public readonly string Message;
-
-        public SocketEventArgs(string message)
-        {
-            Message = message;
-        }
-    }
-
-    public static class NiceHashStats
-    {
-#region JSON Models
-#pragma warning disable 649, IDE1006
-        private class NicehashCredentials
-        {
-            public string method = "credentials.set";
-            public string btc;
-            public string worker;
-        }
-
-        private class NicehashDeviceStatus
-        {
-            public string method = "miner.status";
-            [JsonProperty("params")]
-            public List<JToken> param;
-        }
-        public class ExchangeRateJson
-        {
-            public List<Dictionary<string, string>> exchanges { get; set; }
-            public Dictionary<string, double> exchanges_fiat { get; set; }
-        }
-#pragma warning restore 649, IDE1006
-#endregion
-
-        private const int DeviceUpdateLaunchDelay = 20 * 1000;
         private const int DeviceUpdateInterval = 45 * 1000;
 
-        //public static double Balance { get; private set; }
-        public static string Version { get; private set; }
         public static string VersionLink { get; private set; }
-        public static bool IsAlive => _socket?.IsAlive ?? false;
 
         // Event handlers for socket
-        public static event EventHandler OnSmaUpdate;
-        public static event EventHandler OnConnectionLost;
-        public static event EventHandler OnExchangeUpdate;
         public static event EventHandler<DeviceUpdateEventArgs> OnDeviceUpdate;
-
-        private static NiceHashSocket _socket;
         
         private static System.Threading.Timer _deviceUpdateTimer;
 
@@ -92,17 +50,7 @@ namespace NiceHashMiner.Stats
             _deviceUpdateTimer = new System.Threading.Timer(MinerStatus_Tick, null, DeviceUpdateInterval, DeviceUpdateInterval);
         }
 
-        public static void EndConnection()
-        {
-            _socket?.EndConnection();
-        }
-
 #region Socket Callbacks
-
-        private static void SocketOnOnConnectionLost(object sender, EventArgs eventArgs)
-        {
-            OnConnectionLost?.Invoke(sender, eventArgs);
-        }
 
         private static void SocketOnOnDataReceived(object sender, MessageEventArgs e)
         {
@@ -285,83 +233,11 @@ namespace NiceHashMiner.Stats
             //}
         }
 
-        private static void SetAlgorithmRates(JArray data)
-        {
-            try
-            {
-                var payingDict = new Dictionary<AlgorithmType, double>();
-                if (data != null)
-                {
-                    foreach (var algo in data)
-                    {
-                        var algoKey = (AlgorithmType) algo[0].Value<int>();
-                        payingDict[algoKey] = algo[1].Value<double>();
-                    }
-                }
-
-                NHSmaData.UpdateSmaPaying(payingDict);
-                
-                OnSmaUpdate?.Invoke(null, EventArgs.Empty);
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
-            }
-        }
-
-        private static void SetStableAlgorithms(JArray stable)
-        {
-            var stables = stable.Select(algo => (AlgorithmType) algo.Value<int>());
-            NHSmaData.UpdateStableAlgorithms(stables);
-        }
-
-        private static void SetBalance(string balance)
-        {
-            try
-            {
-                if (double.TryParse(balance, NumberStyles.Float, CultureInfo.InvariantCulture, out var bal))
-                {
-                    ApplicationStateManager.OnBalanceUpdate(bal);
-                }
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
-            }
-        }
-
         private static void SetVersion(string version, string link)
         {
             Version = version;
             VersionLink = link;
             ApplicationStateManager.OnVersionUpdate(version);
-        }
-
-        private static void SetExchangeRates(string data)
-        {
-            try
-            {
-                var exchange = JsonConvert.DeserializeObject<ExchangeRateJson>(data);
-                if (exchange?.exchanges_fiat == null || exchange.exchanges == null) return;
-                foreach (var exchangePair in exchange.exchanges)
-                {
-                    if (!exchangePair.TryGetValue("coin", out var coin) || coin != "BTC" ||
-                        !exchangePair.TryGetValue("USD", out var usd) || 
-                        !double.TryParse(usd, NumberStyles.Float, CultureInfo.InvariantCulture, out var usdD))
-                        continue;
-
-                    ExchangeRateApi.UsdBtcRate = usdD;
-                    break;
-                }
-
-                ExchangeRateApi.UpdateExchangesFiat(exchange.exchanges_fiat);
-
-                OnExchangeUpdate?.Invoke(null, EventArgs.Empty);
-            }
-            catch (Exception e)
-            {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
-            }
         }
 
 #region Credentials setters (btc/username, worker, group)
@@ -629,7 +505,7 @@ namespace NiceHashMiner.Stats
 
             paramList.Add(deviceList);
 
-            var data = new NicehashDeviceStatus
+            var data = new MinerStatusMessage
             {
                 param = paramList
             };

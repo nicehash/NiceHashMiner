@@ -39,24 +39,17 @@ namespace NiceHashMiner
 
         public static void BeforeExit()
         {
-            // TESTNET
-#if TESTNET || TESTNETDEV
-            StopRefreshDeviceListViewTimer();
-            // close websocket
-            NiceHashStats.EndConnection();
-            // stop all mining and benchmarking devices
-            StopAllDevice();
-#endif
-            // PRODUCTION
-#if !(TESTNET || TESTNETDEV)
             try
             {
                 ExitApplication.Cancel();
             }
             catch { }
-            NiceHashMiner.Miners.MinersManager.StopAllMiners();
+            StopRefreshDeviceListViewTimer();
+            // close websocket
+            NiceHashStats.EndConnection();
+            // stop all mining and benchmarking devices
+            StopAllDevice();
             MessageBoxManager.Unregister();
-#endif
         }
 
         public static void RestartProgram()

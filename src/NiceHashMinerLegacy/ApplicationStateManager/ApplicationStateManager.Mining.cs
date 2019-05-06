@@ -26,23 +26,22 @@ namespace NiceHashMiner
             var btc = ConfigManager.GeneralConfig.BitcoinAddress?.Trim();
             var worker = ConfigManager.GeneralConfig.WorkerName?.Trim();
 
+            // TESTNET
+#if TESTNET || TESTNETDEV
+            if (worker.Length > 0 && BitcoinAddress.ValidateWorkerName(worker))
+            {
+                return $"{btc}.{worker}${Globals.RigID}";
+            }
+
+            return $"{btc}${Globals.RigID}";
+#else
             // PRODUCTION
-#if !(TESTNET || TESTNETDEV)
             if (worker.Length > 0 && BitcoinAddress.ValidateWorkerName(worker))
             {
                 return $"{btc}.{worker}";
             }
 
             return $"{btc}";
-#endif
-            // TESTNET
-#if TESTNET || TESTNETDEV
-            if (worker.Length > 0 && BitcoinAddress.ValidateWorkerName(worker))
-            {
-                return $"{btc}.{worker}${RigID}";
-            }
-
-            return $"{btc}${RigID}";
 #endif
         }
 

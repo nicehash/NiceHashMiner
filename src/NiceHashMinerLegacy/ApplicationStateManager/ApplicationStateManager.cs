@@ -108,17 +108,7 @@ namespace NiceHashMiner
             return ret;
         }
 
-        // PRODUCTION
-#if !(TESTNET || TESTNETDEV)
-        public static void ResetNiceHashStatsCredentials()
-        {
-            NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress.Trim(),
-                    ConfigManager.GeneralConfig.WorkerName.Trim());
-        }
-#endif
-            // TESTNET
-#if TESTNET || TESTNETDEV
-            // TODO this function is probably not at the right place now
+        // TODO this function is probably not at the right place now
         // We call this when we change BTC and Workername and this is most likely wrong
         public static void ResetNiceHashStatsCredentials()
         {
@@ -128,14 +118,19 @@ namespace NiceHashMiner
             {
                 // Reset credentials
                 var (btc, worker, group) = ConfigManager.GeneralConfig.GetCredentials();
+                // TESTNET
+#if TESTNET || TESTNETDEV
                 NiceHashStats.SetCredentials(btc, worker, group);
+#else
+                // PRODUCTION
+                NiceHashStats.SetCredentials(btc, worker);
+#endif
             }
             else
             {
                 // TODO notify invalid credentials?? send state?
             }
         }
-#endif
 
         public enum SetResult
         {
