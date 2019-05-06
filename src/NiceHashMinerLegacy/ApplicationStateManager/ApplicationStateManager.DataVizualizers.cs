@@ -1,5 +1,3 @@
-//TESTNET
-#if TESTNET || TESTNETDEV
 using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces.DataVisualizer;
 using NiceHashMiner.Stats;
@@ -304,4 +302,3 @@ namespace NiceHashMiner
         // GENERATED CODE by nhmlCodeGen tool END
     }
 }
-#endif

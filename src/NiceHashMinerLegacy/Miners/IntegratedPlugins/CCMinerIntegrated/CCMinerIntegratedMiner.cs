@@ -15,7 +15,8 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         {
             _noTimeLimitOption = "ccminer_klaust" == dirPath;
         }
-        
+
+#pragma warning disable 0618
         protected override string AlgorithmName(AlgorithmType algorithmType)
         {
             switch (algorithmType)
@@ -31,5 +32,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             // TODO throw exception
             return "";
         }
+#pragma warning restore 0618
     }
 }

@@ -1,6 +1,4 @@
-﻿// TESTNET
-#if TESTNET || TESTNETDEV
-namespace NiceHashMiner.Forms {
+﻿namespace NiceHashMiner.Forms {
     partial class Form_Benchmark {
         /// <summary>
         /// Required designer variable.
@@ -209,4 +207,3 @@ namespace NiceHashMiner.Forms {
 
     }
 }
-#endif

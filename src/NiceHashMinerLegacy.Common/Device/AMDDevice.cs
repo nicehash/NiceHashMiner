@@ -15,6 +15,7 @@ namespace NiceHashMinerLegacy.Common.Device
         }
 
         // TODO does it make sense to set static OpenCLPlatform ID
+        // we can have multiple OpenCL platorm IDs for same device types AMD
         public static int OpenCLPlatformID = -1;
         // and does it make sense to set static AMD driver version
 

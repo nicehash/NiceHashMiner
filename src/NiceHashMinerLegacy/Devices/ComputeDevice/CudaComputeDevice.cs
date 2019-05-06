@@ -120,12 +120,11 @@ namespace NiceHashMiner.Devices
         }
 
         //TODO fix constructor to not include 3rd party handles + refactor inside interface device info (lookup fans speed/temps/...)
-        public CudaComputeDevice(CudaDevice cudaDevice, DeviceGroupType group, int gpuCount,
+        public CudaComputeDevice(CudaDevice cudaDevice, int gpuCount,
             NvPhysicalGpuHandle nvHandle, nvmlDevice nvmlHandle)
             : base((int) cudaDevice.DeviceID,
                 cudaDevice.GetName(),
                 true,
-                group,
                 DeviceType.NVIDIA,
                 string.Format(Translations.Tr("GPU#{0}"), gpuCount),
                 cudaDevice.DeviceGlobalMemory)

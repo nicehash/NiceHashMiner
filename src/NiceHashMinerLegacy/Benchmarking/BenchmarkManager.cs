@@ -1,6 +1,4 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
-﻿using NiceHashMiner.Algorithms;
+using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Extensions;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
@@ -59,7 +57,10 @@ namespace NiceHashMiner.Benchmarking
                 // If starting mining after, don't update for STOPPED status
                 if (value || (!_benchForm?.StartMiningOnFinish ?? true))
                 {
+                    // TESTNET
+#if TESTNET || TESTNETDEV
                     NiceHashStats.StateChanged();
+#endif
                 }
             }
         }
@@ -316,11 +317,14 @@ namespace NiceHashMiner.Benchmarking
                 if (_runningBenchmarkThreads.Count <= 0)
                     End();
 
+                // TESTNET
+#if TESTNET || TESTNETDEV
                 if (startMiningAfterBenchmark) {
                     ApplicationStateManager.StartDevice(device, true);
                 } else {
                     ApplicationStateManager.StopDevice(device);
                 }
+#endif
             }
         }
 
@@ -373,5 +377,3 @@ namespace NiceHashMiner.Benchmarking
         }
     }
 }
-#endif
-

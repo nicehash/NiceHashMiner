@@ -1,6 +1,4 @@
-﻿// TESTNET
-#if TESTNET || TESTNETDEV
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -402,4 +400,3 @@ namespace NiceHashMiner.Forms
 #endregion // Benchmark progress GUI stuff
     }
 }
-#endif

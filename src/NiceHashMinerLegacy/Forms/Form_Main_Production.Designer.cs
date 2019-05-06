@@ -63,7 +63,7 @@ namespace NiceHashMiner
             this.buttonHelp = new System.Windows.Forms.Button();
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl_Production();
+            this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.buttonPlugins = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -372,10 +372,7 @@ namespace NiceHashMiner
             // 
             // devicesListViewEnableControl1
             // 
-            this.devicesListViewEnableControl1.BenchmarkCalculation = null;
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
-            this.devicesListViewEnableControl1.IsInBenchmark = false;
-            this.devicesListViewEnableControl1.IsMining = false;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(11, 109);
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
@@ -467,7 +464,7 @@ namespace NiceHashMiner
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanelRates;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label_NotProfitable;
-        private Forms.Components.DevicesListViewEnableControl_Production devicesListViewEnableControl1;
+        private Forms.Components.DevicesListViewEnableControl devicesListViewEnableControl1;
         private System.Windows.Forms.Button buttonHelp;
         private System.Windows.Forms.LinkLabel linkLabelNewVersion;
         private System.Windows.Forms.ToolTip toolTip1;

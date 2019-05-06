@@ -23,11 +23,10 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public CpuComputeDevice(int id, string group, string name, int threads, ulong affinityMask, int cpuCount)
+        public CpuComputeDevice(int id, string name, int threads, ulong affinityMask, int cpuCount)
             : base(id,
                 name,
                 true,
-                DeviceGroupType.CPU,
                 DeviceType.CPU,
                 string.Format(Translations.Tr("CPU#{0}"), cpuCount),
                 0)

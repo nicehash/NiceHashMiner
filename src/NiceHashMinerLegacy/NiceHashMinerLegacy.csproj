@@ -116,8 +116,7 @@
     <Compile Include="Benchmarking\BenchDeviationInfo.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkChecker.cs" />
-    <Compile Include="Benchmarking\BenchmarkHandler_testnet.cs" />
-    <Compile Include="Benchmarking\BenchmarkHandler_production.cs" />
+    <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
     <Compile Include="Benchmarking\BenchmarkTimes.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
@@ -152,11 +151,15 @@
     <Compile Include="Forms\Components\AlgorithmsDataGridView.Designer.cs">
       <DependentUpon>AlgorithmsDataGridView.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs" />
+    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.Designer.cs">
       <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl.cs" />
+    <Compile Include="Forms\Components\DevicesListViewEnableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Forms\Components\DevicesListViewEnableControl.Designer.cs">
       <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
     </Compile>
@@ -210,7 +213,9 @@
     </Compile>
     <Compile Include="Forms\FormHelpers_shared.cs" />
     <Compile Include="Forms\FormHelpers_testnet.cs" />
-    <Compile Include="Forms\Form_Benchmark.cs" />
+    <Compile Include="Forms\Form_Benchmark.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Form_Benchmark.Designer.cs">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </Compile>
@@ -224,7 +229,9 @@
     <Compile Include="Forms\Form_MinerPlugins.Designer.cs">
       <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Settings.cs" />
+    <Compile Include="Forms\Form_Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\Form_Settings.Designer.cs">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
@@ -286,7 +293,6 @@
     <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
-    <Compile Include="Miners\MinersManager_testnet.cs" />
     <Compile Include="Miners\MiningSession_testnet.cs" />
     <Compile Include="Stats\MiningStats.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
@@ -333,7 +339,6 @@
     <Compile Include="Devices\CPUUtils.cs" />
     <Compile Include="Devices\Querying\Nvidia\CudaDevice.cs" />
     <Compile Include="Devices\CUDA_Unsupported.cs" />
-    <Compile Include="Devices\GroupNames.cs" />
     <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLDevice.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
@@ -353,12 +358,6 @@
     <Compile Include="Forms\Components\BenchmarkOptions.Designer.cs">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl_Production.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\DevicesListViewEnableControl_Production.Designer.cs">
-      <DependentUpon>DevicesListViewEnableControl_Production.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Components\Field.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -371,12 +370,6 @@
     <Compile Include="Forms\Components\GroupProfitControl.Designer.cs">
       <DependentUpon>GroupProfitControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form_Benchmark_Production.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_Benchmark_Production.Designer.cs">
-      <DependentUpon>Form_Benchmark_Production.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Form_ChooseLanguage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -388,12 +381,6 @@
     </Compile>
     <Compile Include="Forms\Form_3rdParty_TOS.Designer.cs">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\Form_Settings_Production.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\Form_Settings_Production.Designer.cs">
-      <DependentUpon>Form_Settings_Production.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals_shared.cs" />
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
@@ -412,7 +399,7 @@
     <Compile Include="Miners\Grouping\GroupMiner.cs" />
     <Compile Include="Miners\Grouping\MiningPair.cs" />
     <Compile Include="Miners\Grouping\MiningSetup.cs" />
-    <Compile Include="Miners\MinersManager_production.cs" />
+    <Compile Include="Miners\MinersManager_shared.cs" />
     <Compile Include="Miners\MiningSession_production.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
@@ -449,9 +436,6 @@
     <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
       <DependentUpon>BenchmarkOptions.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Components\DevicesListViewEnableControl_Production.resx">
-      <DependentUpon>DevicesListViewEnableControl_Production.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Components\Field.resx">
       <DependentUpon>Field.cs</DependentUpon>
     </EmbeddedResource>
@@ -476,9 +460,6 @@
     <EmbeddedResource Include="Forms\FormEula.resx">
       <DependentUpon>FormEula.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Benchmark_Production.resx">
-      <DependentUpon>Form_Benchmark_Production.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </EmbeddedResource>
@@ -493,9 +474,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\Form_Settings_Production.resx">
-      <DependentUpon>Form_Settings_Production.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Main_Production.resx">
       <DependentUpon>Form_Main_Production.cs</DependentUpon>

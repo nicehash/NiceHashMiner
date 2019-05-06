@@ -41,14 +41,14 @@ namespace NiceHashMiner.Devices.Querying
 
             if (cpuCount == 1)
             {
-                cpus.Add(new CpuComputeDevice(0, "CPU0", cpuName, threadsPerCpu, 0, 1));
+                cpus.Add(new CpuComputeDevice(0, cpuName, threadsPerCpu, 0, 1));
             }
             else if (cpuCount > 1)
             {
                 for (var i = 0; i < cpuCount; i++)
                 {
                     var affinityMask = CpuUtils.CreateAffinityMask(i, threadsPerCpuMask);
-                    cpus.Add(new CpuComputeDevice(i, "CPU" + i, cpuName, threadsPerCpu, affinityMask, i + 1)
+                    cpus.Add(new CpuComputeDevice(i, cpuName, threadsPerCpu, affinityMask, i + 1)
                     );
                 }
             }
