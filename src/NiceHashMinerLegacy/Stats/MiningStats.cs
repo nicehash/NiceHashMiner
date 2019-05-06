@@ -8,6 +8,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Stats
 {
+    // TODO this should ba a namespace with separate files
     // MiningStats are the new APIData rates groups...
     // keep this here for now
     public static class MiningStats
