@@ -381,7 +381,6 @@
     <Compile Include="Globals_shared.cs" />
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
-    <Compile Include="Interfaces\IMainFormRatesComunication.cs" />
     <Compile Include="Utils\Guid\Constants.cs" />
     <Compile Include="Utils\Guid\Providers\HashProvider.cs" />
     <Compile Include="Utils\Guid\Providers\RandomNumberProvider.cs" />

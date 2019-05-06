@@ -39,32 +39,5 @@ namespace NiceHashMiner
             var uuid = UUID.V5(UUID.Nil().AsGuid(), $"NHML{guid}");
             RigID = $"{0}-{uuid.AsGuid().ToByteArray().ToBase64String()}";
         }
-
-
-
-        public static string GetUsername()
-        {
-            var btc = ConfigManager.GeneralConfig.BitcoinAddress?.Trim();
-            var worker = ConfigManager.GeneralConfig.WorkerName?.Trim();
-
-            // PRODUCTION
-#if !(TESTNET || TESTNETDEV)
-            if (worker.Length > 0 && BitcoinAddress.ValidateWorkerName(worker))
-            {
-                return $"{btc}.{worker}";
-            }
-
-            return $"{btc}";
-#endif
-            // TESTNET
-#if TESTNET || TESTNETDEV
-            if (worker.Length > 0 && BitcoinAddress.ValidateWorkerName(worker))
-            {
-                return $"{btc}.{worker}${RigID}";
-            }
-
-            return $"{btc}${RigID}";
-#endif
-        }
     }
 }

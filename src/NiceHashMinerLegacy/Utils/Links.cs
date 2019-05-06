@@ -2,6 +2,7 @@
 {
     public static class Links
     {
+        // TODO implement TESTDEV
         #if TESTNET || TESTNETDEV
         public const string VisitUrl = "https://test.nicehash.com";
         public const string CheckStats = "https://test.nicehash.com/mining/stats";
