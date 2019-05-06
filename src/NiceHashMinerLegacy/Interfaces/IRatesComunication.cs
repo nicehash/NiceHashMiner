@@ -1,7 +1,4 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
-
-﻿using NiceHashMiner.Miners;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner.Interfaces
 {
@@ -13,4 +10,3 @@ namespace NiceHashMiner.Interfaces
         //void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException);
     }
 }
-#endif

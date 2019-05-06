@@ -1,5 +1,3 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
@@ -489,4 +487,3 @@ namespace NiceHashMiner.Forms.Components
         #endregion
     }
 }
-#endif

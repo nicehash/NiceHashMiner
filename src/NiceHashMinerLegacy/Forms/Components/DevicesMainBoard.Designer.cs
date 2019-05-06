@@ -1,5 +1,3 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
 namespace NiceHashMiner.Forms.Components
 {
     partial class DevicesMainBoard
@@ -156,4 +154,3 @@ namespace NiceHashMiner.Forms.Components
         private System.Windows.Forms.DataGridViewTextBoxColumn algorithmsEnabled;
     }
 }
-#endif

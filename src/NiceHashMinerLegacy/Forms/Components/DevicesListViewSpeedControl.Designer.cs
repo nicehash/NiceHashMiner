@@ -1,5 +1,3 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
 namespace NiceHashMiner.Forms.Components
 {
     partial class DevicesListViewSpeedControl
@@ -93,4 +91,3 @@ namespace NiceHashMiner.Forms.Components
         private System.Windows.Forms.ColumnHeader fiatHeader;
     }
 }
-#endif

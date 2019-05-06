@@ -84,10 +84,7 @@ namespace NiceHashMiner
         {
             _refreshDeviceListViewTimer = new SystemTimer();
             _refreshDeviceListViewTimer.Elapsed += (object sender, ElapsedEventArgs e) => {
-                // TESTNET
-#if TESTNET || TESTNETDEV
                 RefreshDeviceListView?.Invoke(sender, EventArgs.Empty);
-#endif
             };
             _refreshDeviceListViewTimer.Interval = 2000;
             _refreshDeviceListViewTimer.Start();

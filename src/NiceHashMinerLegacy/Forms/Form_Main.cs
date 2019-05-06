@@ -1,6 +1,4 @@
-﻿// TESTNET
-#if TESTNET || TESTNETDEV
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Interfaces;
@@ -36,6 +34,7 @@ namespace NiceHashMiner
         private bool _demoMode;
         
         private Form_Benchmark _benchmarkForm;
+        private Form_MinerPlugins _minerPluginsForm;
 
         //private bool _isDeviceDetectionInitialized = false;
 
@@ -47,13 +46,22 @@ namespace NiceHashMiner
         public Form_Main()
         {
             InitializeComponent();
+            CenterToScreen();
+            Icon = Properties.Resources.logo;
+
             textBoxBTCAddress.TextChanged += textBoxBTCAddress_TextChanged;
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
             FormHelpers.SubscribeAllControls(this);
 
+            // Hide plugins button and resize
+#if !ENABLE_EXTERNAL_PLUGINS
+            this.buttonHelp.Location = this.buttonPlugins.Location;
+            this.buttonPlugins.Enabled = false;
+            this.buttonPlugins.Visible = false;
+#endif
+
             Width = ConfigManager.GeneralConfig.MainFormSize.X;
             Height = ConfigManager.GeneralConfig.MainFormSize.Y;
-            Icon = Properties.Resources.logo;
 
             InitLocalization();
             Text += ApplicationStateManager.Title;
@@ -71,17 +79,6 @@ namespace NiceHashMiner
             MessageBoxManager.Cancel = Tr("&Cancel");
             MessageBoxManager.Retry = Tr("&Retry");
             MessageBoxManager.Register();
-
-            labelServiceLocation.Text = Tr("Service location") + ":";
-            {
-                // TODO keep in mind the localizations
-                var i = 0;
-                foreach (var loc in StratumService.MiningLocations)
-                {
-                    comboBoxLocation.Items[i] = Tr((string)StratumService.MiningLocationNames[i]);
-                    i++;
-                }
-            }
 
             //??? doesn't get translated if we don't translate it directly????
             toolStripStatusLabelGlobalRateText.Text = Tr("Global rate:");
@@ -110,24 +107,12 @@ namespace NiceHashMiner
             toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
                                                    Tr(ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
                                                    Tr("Balance") + ":";
-            //BalanceCallback(null, null); // update currency changes
 
-            //if (_isDeviceDetectionInitialized)
-            //{
-            //    devicesListViewEnableControl1.ResetComputeDevices(AvailableDevices.Devices);
-            //}
 
             devicesListViewEnableControl1.SetPayingColumns();
         }
-
-        public void AfterLoadComplete()
-        {
-            //_loadingScreen = null;
-            Enabled = true;
-
-            IdleCheckManager.StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
-        }
         
+        // TODO this has nothing to do with Mian_Form
         private void IdleCheck(object sender, IdleChangedEventArgs e)
         {
             if (!ConfigManager.GeneralConfig.StartMiningWhenIdle || _isManuallyStarted) return;
@@ -223,9 +208,6 @@ namespace NiceHashMiner
                 //_loadingScreen.IncreaseLoadCounterAndMessage(Tr("Checking for latest version..."));
                 progress?.Report(Tuple.Create(Tr("Checking for latest version..."), nextProgPerc()));
 
-                //_minerStatsCheck = new Timer();
-                //_minerStatsCheck.Tick += MinerStatsCheck_Tick;
-                //_minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
 
                 //_smaMinerCheck = new Timer();
                 //_smaMinerCheck.Tick += SMAMinerCheck_Tick;
@@ -463,26 +445,21 @@ namespace NiceHashMiner
 
         private void UpdateGlobalRate(double totalRate)
         {
-            if (ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1)
-            {
-                toolStripStatusLabelBTCDayText.Text =
-                    "mBTC/" + Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                toolStripStatusLabelGlobalRateValue.Text =
-                    (totalRate * 1000 * TimeFactor.TimeUnit).ToString("F5", CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                toolStripStatusLabelBTCDayText.Text =
-                    "BTC/" + Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
-                toolStripStatusLabelGlobalRateValue.Text =
-                    (totalRate * TimeFactor.TimeUnit).ToString("F6", CultureInfo.InvariantCulture);
-            }
+            var factorTimeUnit = TimeFactor.TimeUnit;
+            var scaleBTC = ConfigManager.GeneralConfig.AutoScaleBTCValues && totalRate < 0.1;
+            var totalDisplayRate = totalRate * factorTimeUnit * (scaleBTC ? 1000 : 1);
+            var displayTimeUnit = Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+
+            toolStripStatusLabelBTCDayText.Text = scaleBTC ? $"mBTC/{displayTimeUnit}" : $"BTC/{displayTimeUnit}";
+            toolStripStatusLabelGlobalRateValue.Text = totalDisplayRate.ToString(scaleBTC ? "F5" : "F6", CultureInfo.InvariantCulture);
+
 
             toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
-                .ConvertToActiveCurrency((totalRate * TimeFactor.TimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
+                .ConvertToActiveCurrency((totalRate * factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
                 .ToString("F2", CultureInfo.InvariantCulture);
             toolStripStatusLabelBalanceText.Text = (ExchangeRateApi.ActiveDisplayCurrency + "/") +
-                                                   Tr(ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
+                                                   Tr(
+                                                       ConfigManager.GeneralConfig.TimeUnit.ToString()) + "     " +
                                                    Tr("Balance") + ":";
         }
 
@@ -553,11 +530,11 @@ namespace NiceHashMiner
             if (!VerifyMiningAddress(true)) return;
 
             //in testnet there is no option to see stats without logging in
-            #if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV
             Process.Start(Links.CheckStats);
-            #else
+#else
             Process.Start(Links.CheckStats + textBoxBTCAddress.Text.Trim());
-            #endif           
+#endif
         }
 
 
@@ -617,8 +594,10 @@ namespace NiceHashMiner
             else if (settings.IsChange && settings.IsChangeSaved)
             {
                 InitLocalization();
+                FormHelpers.TranslateFormControls(this);
                 InitMainConfigGuiData();
-                AfterLoadComplete();
+                // TODO check this later
+                IdleCheckManager.StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
             }
         }
 
@@ -963,6 +942,12 @@ namespace NiceHashMiner
                     break;
             }
         }
+
+        private void ButtonPlugins_Click(object sender, EventArgs e)
+        {
+            if (_minerPluginsForm == null) _minerPluginsForm = new Form_MinerPlugins();
+            SetChildFormCenter(_minerPluginsForm);
+            _minerPluginsForm.ShowDialog();
+        }
     }
 }
-#endif

@@ -1,5 +1,3 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
 namespace NiceHashMiner.Forms.Components
 {
     partial class DevicesMainBoardDevicesListViewSpeedControl
@@ -98,4 +96,3 @@ namespace NiceHashMiner.Forms.Components
         private DevicesListViewSpeedControl devicesListViewSpeedControl1;
     }
 }
-#endif

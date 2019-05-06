@@ -112,7 +112,8 @@ namespace NiceHashMiner
 #if !(TESTNET || TESTNETDEV)
         public static void ResetNiceHashStatsCredentials()
         {
-            // STUB look down for real thing
+            NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress.Trim(),
+                    ConfigManager.GeneralConfig.WorkerName.Trim());
         }
 #endif
             // TESTNET

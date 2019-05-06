@@ -1,6 +1,4 @@
-﻿// TESTNET
-#if TESTNET || TESTNETDEV
-namespace NiceHashMiner
+﻿namespace NiceHashMiner
 {
     partial class Form_Main
     {
@@ -61,6 +59,7 @@ namespace NiceHashMiner
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.devicesMainBoard1 = new NiceHashMiner.Forms.Components.DevicesMainBoardDevicesListViewSpeedControl();
+            this.buttonPlugins = new System.Windows.Forms.Button();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -133,7 +132,7 @@ namespace NiceHashMiner
             this.toolStripStatusLabelBalanceDollarText,
             this.toolStripStatusLabelBalanceDollarValue,
             this.toolStripStatusLabel10});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 241);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 274);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(776, 25);
             this.statusStrip1.TabIndex = 8;
@@ -319,7 +318,7 @@ namespace NiceHashMiner
             // buttonHelp
             // 
             this.buttonHelp.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonHelp.Location = new System.Drawing.Point(680, 214);
+            this.buttonHelp.Location = new System.Drawing.Point(680, 242);
             this.buttonHelp.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonHelp.Name = "buttonHelp";
             this.buttonHelp.Size = new System.Drawing.Size(89, 23);
@@ -344,14 +343,27 @@ namespace NiceHashMiner
             | System.Windows.Forms.AnchorStyles.Right)));
             this.devicesMainBoard1.Location = new System.Drawing.Point(10, 109);
             this.devicesMainBoard1.Name = "devicesMainBoard1";
-            this.devicesMainBoard1.Size = new System.Drawing.Size(664, 127);
+            this.devicesMainBoard1.Size = new System.Drawing.Size(664, 160);
             this.devicesMainBoard1.TabIndex = 111;
+            // 
+            // buttonPlugins
+            // 
+            this.buttonPlugins.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonPlugins.Location = new System.Drawing.Point(680, 215);
+            this.buttonPlugins.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonPlugins.Name = "buttonPlugins";
+            this.buttonPlugins.Size = new System.Drawing.Size(89, 23);
+            this.buttonPlugins.TabIndex = 112;
+            this.buttonPlugins.Text = "&Plugins";
+            this.buttonPlugins.UseVisualStyleBackColor = true;
+            this.buttonPlugins.Click += new System.EventHandler(this.ButtonPlugins_Click);
             // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(776, 266);
+            this.ClientSize = new System.Drawing.Size(776, 299);
+            this.Controls.Add(this.buttonPlugins);
             this.Controls.Add(this.devicesMainBoard1);
             this.Controls.Add(this.linkLabelNewVersion);
             this.Controls.Add(this.buttonHelp);
@@ -417,9 +429,7 @@ namespace NiceHashMiner
         private System.Windows.Forms.LinkLabel linkLabelNewVersion;
         private System.Windows.Forms.ToolTip toolTip1;
         private Forms.Components.DevicesMainBoardDevicesListViewSpeedControl devicesMainBoard1;
+        private System.Windows.Forms.Button buttonPlugins;
     }
 }
 
-
-
-#endif

@@ -1,5 +1,3 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
 using NiceHashMiner.Devices;
 using System;
 using System.Collections.Generic;
@@ -53,10 +51,11 @@ namespace NiceHashMiner
             var started = true;
             var failReason = "";
 
+            // TODO we have a BUG HERE if device enabled with all disabled algorithms
             var devicesToBenchmark = devicesToStart.Where(dev => BenchmarkChecker.IsDeviceWithAllEnabledAlgorithmsWithoutBenchmarks(dev));
             foreach (var dev in devicesToBenchmark) {
-                dev.State = DeviceState.Benchmarking;
-                BenchmarkManager.StartBenchmarForDevice(dev, true);
+               dev.State = DeviceState.Benchmarking;
+               BenchmarkManager.StartBenchmarForDevice(dev, true);
             }
             
             // TODO check count
@@ -162,4 +161,3 @@ namespace NiceHashMiner
         }
     }
 }
-#endif

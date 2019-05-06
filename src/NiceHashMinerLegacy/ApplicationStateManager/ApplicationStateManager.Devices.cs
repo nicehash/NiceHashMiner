@@ -1,5 +1,3 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
 using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common.Enums;
@@ -62,4 +60,3 @@ namespace NiceHashMiner
         }
     }
 }
-#endif

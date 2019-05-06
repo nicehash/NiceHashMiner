@@ -285,6 +285,11 @@ namespace NiceHashMiner.Stats
 
         #endregion
 
+
+        public static void StateChanged()
+        {
+            // STUB FROM TESTNET
+        }
     }
 }
 #endif

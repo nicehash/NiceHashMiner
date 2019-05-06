@@ -46,10 +46,8 @@ namespace NiceHashMiner.Forms
         public Form_Settings()
         {
             InitializeComponent();
-            // TESTNET
-#if TESTNET || TESTNETDEV
             ApplicationStateManager.SubscribeStateDisplayer(this);
-#endif
+
             Icon = Properties.Resources.logo;
 
             //ret = 1; // default
@@ -496,11 +494,7 @@ namespace NiceHashMiner.Forms
 
                 devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
-                // PRODUCTION
-#if !(TESTNET || TESTNETDEV)
                 devicesListViewEnableControl1.SaveToGeneralConfig = true;
-#endif
-
             }
 
             // Add language selections list
@@ -798,16 +792,7 @@ namespace NiceHashMiner.Forms
 
             if (_isCredChange)
             {
-// PRODUCTION
-#if !(TESTNET || TESTNETDEV)
-                NiceHashStats.SetCredentials(ConfigManager.GeneralConfig.BitcoinAddress.Trim(),
-                    ConfigManager.GeneralConfig.WorkerName.Trim());
-#endif
-// TESTNET
-#if TESTNET || TESTNETDEV
                 ApplicationStateManager.ResetNiceHashStatsCredentials();
-#endif
-
             }
 
             Close();

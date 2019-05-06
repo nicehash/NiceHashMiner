@@ -1,5 +1,3 @@
-// TESTNET
-#if TESTNET || TESTNETDEV
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
@@ -180,7 +178,8 @@ namespace NiceHashMiner.Miners
                 _runningGroupMiners = new Dictionary<string, GroupMiner>();
             }
 
-            //_ratesComunication?.ClearRates(-1);
+            // one of these is redundant
+            // THIS ONE PROBABLY MiningStats.ClearApiDataGroups();
             ApplicationStateManager.ClearRatesAll();
         }
 
@@ -301,7 +300,7 @@ namespace NiceHashMiner.Miners
                     currentProfit += device.GetCurrentMostProfitValue;
                     prevStateProfit += device.GetPrevMostProfitValue;
                 }
-            }                                                        
+            }
             var stringBuilderFull = new StringBuilder();
             stringBuilderFull.AppendLine("Current device profits:");
             foreach (var device in _miningDevices)
@@ -316,7 +315,8 @@ namespace NiceHashMiner.Miners
                         $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
                         $"\t[{algo.AlgorithmStringID}]"
                     );
-                    //if (algo is DualAlgorithm dualAlg)
+                    // TODO second paying ratio logging
+                    //if (algo is PluginAlgorithm dualAlg && dualAlg.IsDual)
                     //{
                     //    stringBuilderDevice.AppendLine(
                     //        $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
@@ -468,6 +468,7 @@ namespace NiceHashMiner.Miners
 
                         toStop.Stop();
                         _runningGroupMiners.Remove(toStop.Key);
+                        // Deviant checker works only for single Device so we skip if there are multiple devices, BUT NOW WE HAVE PER DEVICE SPEEDS AND WE SHOULD MOVE THIS CHECKER OUTSIDE
                         if (toStop.Miner.MiningSetup.MiningPairs.Count != 1) continue;
                         var algo = toStop.Miner.MiningSetup.MiningPairs.First().Algorithm;
                         if (_benchCheckers.TryGetValue(algo, out var checker))
@@ -566,5 +567,3 @@ namespace NiceHashMiner.Miners
         }
     }
 }
-#endif
-﻿
