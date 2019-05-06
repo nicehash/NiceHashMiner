@@ -1,5 +1,6 @@
 ﻿using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
+using NiceHashMiner.Miners.IntegratedPlugins;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -20,7 +21,7 @@ namespace NiceHashMiner.Miners
 #if TESTNET || TESTNETDEV
             _curMiningSession?.StopAllMiners(headless);
 #endif
-            EthlargementOld.Stop();
+            EthlargementIntegratedPlugin.Instance.Stop();
             _curMiningSession = null; // TODO consider not nulling a mining session
         }
 

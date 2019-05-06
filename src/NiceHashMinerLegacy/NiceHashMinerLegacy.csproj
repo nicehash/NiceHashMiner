@@ -295,7 +295,6 @@
     <Compile Include="MinersDownloader\DownloadSetup.cs" />
     <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
     <Compile Include="MinersDownloader\ProgressState.cs" />
-    <Compile Include="Miners\EthlargementOld.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
     <Compile Include="Stats\ErrorCode.cs" />

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NiceHashMiner.Stats;
+using NiceHashMiner.Miners.IntegratedPlugins;
 
 namespace NiceHashMiner.Benchmarking
 {
@@ -257,7 +258,7 @@ namespace NiceHashMiner.Benchmarking
         private static void End()
         {
             InBenchmark = false;
-            EthlargementOld.Stop();
+            EthlargementIntegratedPlugin.Instance.Stop();
             _benchForm?.EndBenchmark(_hasFailedAlgorithms);
         }
 
