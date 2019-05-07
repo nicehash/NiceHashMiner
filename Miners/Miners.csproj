@@ -45,11 +45,16 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.3.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\9.0.1\lib\netstandard1.0\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MinerPluginToolkitV1\ExtraLaunchParameters\ParserTest.cs" />
+    <Compile Include="NanoMiner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +68,10 @@
     <ProjectReference Include="..\src\Miners\MinerPlugin\MinerPlugin.csproj">
       <Project>{AD369259-FE29-4832-BD46-12A6D4B181C5}</Project>
       <Name>MinerPlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\src\Miners\NanoMiner\NanoMiner.csproj">
+      <Project>{B16F5E9E-7D4B-482B-908D-B839457FC766}</Project>
+      <Name>NanoMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\src\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279A5B29-3799-43FA-9734-E462E046BA81}</Project>
