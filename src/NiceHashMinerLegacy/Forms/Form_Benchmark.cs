@@ -30,15 +30,13 @@ namespace NiceHashMiner.Forms
 
         private readonly bool _exitWhenFinished;
 
-        public bool StartMiningOnFinish { get; private set; }
+        public bool StartMiningOnFinish { get; private set; } = false;
 
         public Form_Benchmark(BenchmarkPerformanceType benchmarkPerformanceType = BenchmarkPerformanceType.Standard,
             bool autostart = false)
         {
             InitializeComponent();
             Icon = Resources.logo;
-
-            StartMiningOnFinish = false;
 
             // clear prev pending statuses
             foreach (var dev in AvailableDevices.Devices)
@@ -59,7 +57,8 @@ namespace NiceHashMiner.Forms
 
             BenchmarkManager.OnAlgoStatusUpdate += SetCurrentStatus;
             BenchmarkManager.OnStepUp += StepUpBenchmarkStepProgress;
-            
+            BenchmarkManager.OnBenchmarkEnd += EndBenchmark;
+
             devicesListViewEnableControl1.Enabled = true;
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
 
@@ -278,7 +277,7 @@ namespace NiceHashMiner.Forms
             return true;
         }
 
-        public void EndBenchmark(bool hasFailedAlgos)
+        public void EndBenchmark(object sender, bool hasFailedAlgos)
         {
             if (ApplicationStateManager.BurnCalled) {
                 return;
@@ -329,6 +328,9 @@ namespace NiceHashMiner.Forms
 
         private void FormBenchmark_New_FormClosing(object sender, FormClosingEventArgs e)
         {
+            BenchmarkManager.OnAlgoStatusUpdate -= SetCurrentStatus;
+            BenchmarkManager.OnStepUp -= StepUpBenchmarkStepProgress;
+            BenchmarkManager.OnBenchmarkEnd -= EndBenchmark;
             if (ApplicationStateManager.BurnCalled) {
                 return;
             }
