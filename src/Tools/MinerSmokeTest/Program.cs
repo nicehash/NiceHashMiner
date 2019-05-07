@@ -1,4 +1,6 @@
-﻿using NiceHashMiner;
+﻿using log4net.Core;
+using NiceHashMiner;
+using NiceHashMinerLegacy.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -33,7 +35,7 @@ namespace MinerSmokeTest
             pathVar += ";" + Path.Combine(Environment.CurrentDirectory, "common");
             Environment.SetEnvironmentVariable("PATH", pathVar);
 
-            Logger.ConfigureWithFile();
+            Logger.ConfigureWithFile(true, Level.Info);
             Application.Run(new Form1());
         }
     }

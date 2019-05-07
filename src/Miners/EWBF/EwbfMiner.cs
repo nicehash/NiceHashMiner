@@ -22,7 +22,6 @@ namespace EWBF
         // default is 2% and can be changed with --fee parameter
         private double DevFee = 0.02;
         private int _apiPort;
-        private readonly string _uuid;
 
         // can mine only one algorithm at a given time
         private AlgorithmType _algorithmType;
@@ -31,10 +30,8 @@ namespace EWBF
         private string _devices;
         private string _extraLaunchParameters = "";
 
-        public EwbfMiner(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public EwbfMiner(string uuid) : base(uuid)
+        {}
 
         private string AlgorithmName(AlgorithmType algorithmType)
         {

@@ -402,7 +402,6 @@
     <Compile Include="Miners\MinersManager.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
-    <Compile Include="Utils\Logger.cs" />
     <Compile Include="PInvoke\CPUID.cs" />
     <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Miners\Miner.cs" />

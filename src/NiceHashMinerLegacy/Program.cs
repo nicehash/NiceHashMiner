@@ -10,6 +10,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
+using log4net.Core;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -73,11 +74,9 @@ namespace NiceHashMiner
                 catch { }
             }
 
-            // start program
-            if (ConfigManager.GeneralConfig.LogToFile)
-            {
-                Logger.ConfigureWithFile();
-            }
+
+            // TODO set logging level
+            Logger.ConfigureWithFile(ConfigManager.GeneralConfig.LogToFile, Level.Info, ConfigManager.GeneralConfig.LogMaxFileSize);
 
             if (ConfigManager.GeneralConfig.DebugConsole)
             {

@@ -23,8 +23,6 @@ namespace GMinerPlugin
     // benchmark is 
     public class GMiner : MinerBase
     {
-        private readonly string _uuid;
-
         private const double DevFee = 2.0;
         private HttpClient _httpClient;
         private int _apiPort;
@@ -36,10 +34,8 @@ namespace GMinerPlugin
         private string _extraLaunchParameters = "";
         private string _devices;
 
-        public GMiner(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public GMiner(string uuid) : base(uuid)
+        {}
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {

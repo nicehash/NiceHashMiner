@@ -23,16 +23,12 @@ namespace LolMinerBeam
         private string _extraLaunchParameters = "";
         private int _apiPort;
 
-        private readonly string _uuid;
-
         private AlgorithmType _algorithmType;
 
         private readonly HttpClient _http = new HttpClient();
 
-        public LolMinerBeam (string uuid)
-        {
-            _uuid = uuid;
-        }
+        public LolMinerBeam (string uuid) : base(uuid)
+        {}
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {

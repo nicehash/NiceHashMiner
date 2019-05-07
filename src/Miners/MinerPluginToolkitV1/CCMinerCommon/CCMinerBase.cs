@@ -21,14 +21,11 @@ namespace MinerPluginToolkitV1.CCMinerCommon
         protected string _devices;
         protected string _extraLaunchParameters = "";
         protected int _apiPort;
-        protected readonly string _uuid;
 
         protected bool _noTimeLimitOption = false;
 
-        public CCMinerBase(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public CCMinerBase(string uuid) : base(uuid)
+        {}
 
         private double DevFee
         {

@@ -22,14 +22,11 @@ namespace BMiner
         private string _devices;
         private string _extraLaunchParameters = "";
         private int _apiPort;
-        private readonly string _uuid;
         private AlgorithmType _algorithmType;
         private readonly HttpClient _http = new HttpClient();
 
-        public BMiner(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public BMiner(string uuid) : base(uuid)
+        { }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {

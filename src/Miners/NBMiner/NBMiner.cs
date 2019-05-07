@@ -19,7 +19,6 @@ namespace NBMiner
     public class NBMiner : MinerBase, IDisposable
     {
         private int _apiPort;
-        private readonly string _uuid;
         private string _extraLaunchParameters = "";
         private AlgorithmType _algorithmType;
         private readonly HttpClient _http = new HttpClient();
@@ -59,10 +58,8 @@ namespace NBMiner
             }
         }
 
-        public NBMiner(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public NBMiner(string uuid) : base(uuid)
+        {}
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
