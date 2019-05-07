@@ -46,9 +46,6 @@ namespace NiceHashMiner
 
         public bool IsUpdatingApi { get; protected set; } = false;
 
-        // for ApiData and ID of plugins
-        public string MinerUUID { get; protected set; }
-
         protected Dictionary<string, string> _enviormentVariables = null;
 
 

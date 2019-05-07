@@ -26,7 +26,6 @@ namespace NiceHashMiner.Miners
 
         public MinerFromPlugin(string pluginUUID) : base(pluginUUID)
         {
-            MinerUUID = pluginUUID;
             _plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
             _miner = _plugin.CreateMiner();
         }
@@ -61,7 +60,7 @@ namespace NiceHashMiner.Miners
             }
 
             // TODO temporary here move it outside later
-            MiningStats.UpdateGroup(apiData, MinerUUID, _plugin.Name);
+            MiningStats.UpdateGroup(apiData, _plugin.PluginUUID, _plugin.Name);
 
             return apiData;
         }
@@ -89,7 +88,7 @@ namespace NiceHashMiner.Miners
         {
             // TODO thing about this case, closing opening on switching
             // EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
-            MiningStats.RemoveGroup(_miningPairs.Select(pair => pair.Device.UUID), MinerUUID);
+            MiningStats.RemoveGroup(_miningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             IsRunning = false;
             _miner.StopMining();
         }
