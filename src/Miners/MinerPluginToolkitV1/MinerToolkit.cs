@@ -122,6 +122,11 @@ namespace MinerPluginToolkitV1
             return environmentVariables.ContainsKey("NEVER_HIDE_MINING_WINDOW");
         }
 
+        public static bool IsUseShellExecute(Dictionary<string, string> environmentVariables)
+        {
+            return environmentVariables == null;
+        }
+
         // TODO make one with Start NiceHashProcess
         public static Process CreateMiningProcess(string binPath, string workingDir, string commandLine, Dictionary<string, string> environmentVariables = null)
         {
@@ -134,7 +139,7 @@ namespace MinerPluginToolkitV1
                     WorkingDirectory = workingDir,
                     Arguments = commandLine,
                     // common settings
-                    UseShellExecute = environmentVariables == null,
+                    UseShellExecute = IsUseShellExecute(environmentVariables),
                 },
                 EnableRaisingEvents = true, // TODO check out this one
             };
@@ -157,12 +162,14 @@ namespace MinerPluginToolkitV1
             if (hideMiningWindow)
             {
                 miningHandle.StartInfo.CreateNoWindow = true;
+                miningHandle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                miningHandle.StartInfo.UseShellExecute = false;
             }
             else if(minimizeMiningWindow)
             {
                 miningHandle.StartInfo.CreateNoWindow = false;
                 miningHandle.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-                miningHandle.StartInfo.UseShellExecute = true;
+                miningHandle.StartInfo.UseShellExecute = false;
             }
 
             return miningHandle;
