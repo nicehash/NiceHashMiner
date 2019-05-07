@@ -47,7 +47,7 @@ namespace NiceHashMiner
         protected Miner(string minerDeviceName, List<Miners.Grouping.MiningPair> miningPairs)
         {
             MiningPairs = miningPairs;
-            IsInit = MiningPairs != null || MiningPairs.Count > 0;
+            IsInit = MiningPairs != null && MiningPairs.Count > 0;
 
             MinerDeviceName = minerDeviceName;
 
