@@ -29,6 +29,8 @@ namespace NiceHashMiner.Benchmarking
 
         private readonly PowerHelper _powerHelper;
 
+        public ComputeDevice Device { get; }
+
         public BenchmarkHandler(ComputeDevice device, Queue<Algorithm> algorithms, BenchmarkPerformanceType performance, bool startMiningAfterBenchmark = false)
         {
             _stopBenchmark = new CancellationTokenSource();
@@ -42,8 +44,6 @@ namespace NiceHashMiner.Benchmarking
             _benchmarkAlgorithmsCount = _benchmarkAlgorithmQueue.Count;
             _powerHelper = new PowerHelper(device);
         }
-
-        public ComputeDevice Device { get; }
 
         public void Start()
         {

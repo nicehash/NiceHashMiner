@@ -35,6 +35,7 @@ namespace NiceHashMiner.Benchmarking
 
         public static event EventHandler<StepUpEventArgs> OnStepUp;
         public static event EventHandler<AlgoStatusEventArgs> OnAlgoStatusUpdate;
+        public static event EventHandler<bool> OnBenchmarkEnd;
 
         public static BenchmarkSelection Selection { get; set; }
 
@@ -256,7 +257,7 @@ namespace NiceHashMiner.Benchmarking
         {
             InBenchmark = false;
             EthlargementIntegratedPlugin.Instance.Stop();
-            _benchForm?.EndBenchmark(_hasFailedAlgorithms);
+            OnBenchmarkEnd?.Invoke(null, _hasFailedAlgorithms);
         }
 
         public static void DisableTodoAlgos()
