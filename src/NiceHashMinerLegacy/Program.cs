@@ -87,26 +87,22 @@ namespace NiceHashMiner
             ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
             Logger.Info("NICEHASH", $"Starting up NiceHashMiner v{Application.ProductVersion}");
-            Helpers.ConsolePrint("NICEHASH", "Starting up NiceHashMiner v" + Application.ProductVersion);
 
             if (!pathSet)
             {
                 Logger.Info("NICEHASH", "Path not set to executable");
-                Helpers.ConsolePrint("NICEHASH", "Path not set to executable");
             }
 
             // check TOS
             if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer)
             {
                 Logger.Info("NICEHASH", $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {Globals.CurrentTosVer}. Showing TOS Form.");
-                Helpers.ConsolePrint("NICEHASH", $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {Globals.CurrentTosVer}. Showing TOS Form.");
 
                 Application.Run(new FormEula());
                 // check TOS after 
                 if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer)
                 {
                     Logger.Info("NICEHASH", "TOS differs AFTER TOS confirmation FORM");
-                    Helpers.ConsolePrint("NICEHASH", $"TOS differs AFTER TOS confirmation FORM");
                     // TOS not confirmed return from Main
                     return;
                 }

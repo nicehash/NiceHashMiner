@@ -71,20 +71,20 @@ namespace NiceHashMiner.Stats
             }
             catch (RpcException rEr)
             {
-                Helpers.ConsolePrint("SOCKET", rEr.ToString());
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", rEr.Message);
                 if (!executed) return;
-                Helpers.ConsolePrint("SOCKET", $"Sending executed response with code {rEr.Code}");
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", $"Sending executed response with code {rEr.Code}");
                 SendExecuted(info, id, rEr.Code, rEr.Message);
             }
             catch (Exception er)
             {
-                Helpers.ConsolePrint("SOCKET", er.ToString());
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", er.Message);
             }
         }
 
         internal static ExecutedInfo ProcessData(string data, out bool executed, out int? id)
         {
-            Helpers.ConsolePrint("SOCKET", "Received: " + data);
+            NiceHashMinerLegacy.Common.Logger.Info("SOCKET", $"Received: {data}");
             dynamic message = JsonConvert.DeserializeObject(data);
             executed = false;
 
@@ -500,7 +500,9 @@ namespace NiceHashMiner.Stats
 
                     deviceList.Add(array);
                 }
-                catch (Exception e) { Helpers.ConsolePrint("SOCKET", e.ToString()); }
+                catch (Exception e) {
+                    NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.Message);
+                }
             }
 
             paramList.Add(deviceList);
@@ -518,7 +520,7 @@ namespace NiceHashMiner.Stats
 
         private static void MinerStatus_Tick(object state)
         {
-            Helpers.ConsolePrint("SOCKET", "SendMinerStatus Tick 'miner.status'");
+            NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "SendMinerStatus Tick 'miner.status'");
             SendMinerStatus(false);
         }
 

@@ -65,7 +65,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.Message);
             }
         }
 
@@ -86,7 +86,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.Message);
             }
         }
 
@@ -113,7 +113,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("SOCKET", e.ToString());
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.Message);
             }
         }
 

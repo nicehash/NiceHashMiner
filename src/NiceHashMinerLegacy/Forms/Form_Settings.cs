@@ -16,6 +16,7 @@ using NiceHashMiner.Interfaces.DataVisualizer;
 using static NiceHashMiner.Translations;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Plugin;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Forms
 {
@@ -92,7 +93,7 @@ namespace NiceHashMiner.Forms
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("SETTINGS", e.ToString());
+                Logger.Error("SETTINGS", e.Message);
             }
             FormHelpers.TranslateFormControls(this);
         }
@@ -601,7 +602,7 @@ namespace NiceHashMiner.Forms
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("REGISTRY", e.ToString());
+                Logger.Error("REGISTRY", e.Message);
             }
 
             return startVal == Application.ExecutablePath;
@@ -851,7 +852,7 @@ namespace NiceHashMiner.Forms
                     }
                     catch (Exception er)
                     {
-                        Helpers.ConsolePrint("REGISTRY", er.ToString());
+                        Logger.Error("REGISTRY", er.Message);
                     }
                 }
             }

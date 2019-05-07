@@ -71,7 +71,6 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             catch (Exception ex)
             {
                 Logger.Error(_tag, $"ReadFile {FilePath}: exception {ex}");
-                Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {ex}");
                 file = null;
             }
             return file;
@@ -83,7 +82,6 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             if (file == null)
             {
                 Logger.Info(_tag, $"Commit for FILE {FilePath} IGNORED. Passed null object");
-                Helpers.ConsolePrint(_tag, $"Commit for FILE {FilePath} IGNORED. Passed null object");
                 return;
             }
             try
@@ -93,14 +91,12 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             catch (Exception ex)
             {
                 Logger.Error(_tag, $"Commit {FilePath}: exception {ex}");
-                Helpers.ConsolePrint(_tag, $"Commit {FilePath}: exception {ex}");
             }
         }
 
         public void CreateBackup()
         {
             Logger.Debug(_tag, $"Backing up {FilePath} to {FilePathOld}..");
-            Helpers.ConsolePrint(_tag, $"Backing up {FilePath} to {FilePathOld}..");
             try
             {
                 if (File.Exists(FilePathOld))

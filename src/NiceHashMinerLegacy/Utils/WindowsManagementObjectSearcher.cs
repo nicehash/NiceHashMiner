@@ -103,7 +103,6 @@ namespace NiceHashMiner.Utils
                 stringBuilder.AppendLine($"{vidController.GetFormattedString()}");
             }
             Logger.Info("SystemSpecs", stringBuilder.ToString());
-            Helpers.ConsolePrint("SystemSpecs", stringBuilder.ToString());
         }
 
         private static NvidiaSmiDriver ParseNvSmiDriver(string windowsDriverVersion)
@@ -205,14 +204,12 @@ namespace NiceHashMiner.Utils
                 using (var query = searcher.Get())
                 {
                     Logger.Info("WindowsManagementObjectSearcher", "WMI service seems to be running, ManagementObjectSearcher returned success.");
-                    Helpers.ConsolePrint("NICEHASH", "WMI service seems to be running, ManagementObjectSearcher returned success.");
                     return true;
                 }
             }
             catch
             {
                 Logger.Error("WindowsManagementObjectSearcher", "ManagementObjectSearcher not working need WMI service to be running");
-                Helpers.ConsolePrint("NICEHASH", "ManagementObjectSearcher not working need WMI service to be running");
             }
             return false;
         }

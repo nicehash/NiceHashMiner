@@ -28,7 +28,6 @@ namespace NiceHashMiner.Devices
                 if (result != ADL.ADL_SUCCESS)
                 {
                     Logger.Info("ADL", $"ADL fan getting failed with error code {result}");
-                    Helpers.ConsolePrint("ADL", "ADL fan getting failed with error code " + result);
                     return -1;
                 }
                 return adlf.FanSpeed;
@@ -44,7 +43,6 @@ namespace NiceHashMiner.Devices
                 if (result != ADL.ADL_SUCCESS)
                 {
                     Logger.Info("ADL", $"ADL temp getting failed with error code {result}");
-                    Helpers.ConsolePrint("ADL", "ADL temp getting failed with error code " + result);
                     return -1;
                 }
                 return adlt.Temperature * 0.001f;
@@ -60,7 +58,6 @@ namespace NiceHashMiner.Devices
                 if (result != ADL.ADL_SUCCESS)
                 {
                     Logger.Info("ADL", $"ADL load getting failed with error code {result}");
-                    Helpers.ConsolePrint("ADL", "ADL load getting failed with error code " + result);
                     return -1;
                 }
                 return adlp.ActivityPercent;
@@ -82,7 +79,6 @@ namespace NiceHashMiner.Devices
 
                     // Only alert once
                     Logger.Info("ADL", $"ADL power getting failed with code {result} for GPU {NameCount}. Turning off power for this GPU.");
-                    Helpers.ConsolePrint("ADL", $"ADL power getting failed with code {result} for GPU {NameCount}. Turning off power for this GPU.");
                     _powerHasFailed = true;
                 }
 

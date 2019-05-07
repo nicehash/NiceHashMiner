@@ -24,7 +24,6 @@ namespace NiceHashMiner.Stats
                 {
                     Interlocked.Exchange(ref _usdBtcRate, value);
                     Logger.Info("ExchangeRateApi", $"USD rate updated: {value} BTC");
-                    Helpers.ConsolePrint("NICEHASH", $"USD rate updated: {value} BTC");
                 }
             }
         }
@@ -59,7 +58,6 @@ namespace NiceHashMiner.Stats
                 return amount * usdExchangeRate;
 
             Logger.Info("ExchangeRateApi", $"Unknown Currency Tag: {ActiveDisplayCurrency}, falling back to USD rates");
-            Helpers.ConsolePrint("CurrencyConverter", "Unknown Currency Tag: " + ActiveDisplayCurrency + " falling back to USD rates");
             ActiveDisplayCurrency = "USD";
             return amount;
         }
@@ -97,7 +95,6 @@ namespace NiceHashMiner.Stats
                 // Should never happen, indicates error in ExchangesFiat
                 // Fall back with 0
                 Logger.Info("EXCHANGE", "Exchange for currency is 0, power switching disabled.");
-                Helpers.ConsolePrint("EXCHANGE", "Exchange for currency is 0, power switching disabled.");
                 return 0;
             }
             // Make price in USD
@@ -106,7 +103,6 @@ namespace NiceHashMiner.Stats
             if (UsdBtcRate <= 0)
             {
                 Logger.Info("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
-                Helpers.ConsolePrint("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
                 return 0;
             }
             return price / UsdBtcRate;

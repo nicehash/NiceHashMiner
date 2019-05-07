@@ -38,7 +38,6 @@ namespace NiceHashMiner.Devices
             // Check for optimized version
             // first if not optimized
             Logger.Info("AmdGpuDevice", "List: " + _openClSubset._CL_DEVICE_NAME);
-            Helpers.ConsolePrint("AmdGpuDevice", "List: " + _openClSubset._CL_DEVICE_NAME);
         }
 
         internal AmdGpuDevice(OpenCLDevice openClSubset, bool driverDisableAlgo, string name, AmdBusIDInfo busIdInfo)

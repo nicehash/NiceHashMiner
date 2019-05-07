@@ -20,7 +20,6 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
         public bool TryQueryOpenCLDevices(out OpenCLDeviceDetectionResult result)
         {
             Logger.Info(Tag, "QueryOpenCLDevices START");
-            Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
 
             var queryOpenCLDevicesString = "";
             try
@@ -32,7 +31,6 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
             {
                 // TODO print AMD detection string
                 Logger.Error(Tag, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
-                Helpers.ConsolePrint(Tag, "AMDOpenCLDeviceDetection threw Exception: " + ex.Message);
                 result = null;
             }
 
@@ -40,7 +38,7 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
 
             if (result == null)
             {
-                Helpers.ConsolePrint(Tag,
+                Logger.Info(Tag,
                     "AMDOpenCLDeviceDetection found no devices. AMDOpenCLDeviceDetection returned: " +
                     queryOpenCLDevicesString);
             }
@@ -62,10 +60,8 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
                     }
                 }
                 Logger.Info(Tag, stringBuilder.ToString());
-                Helpers.ConsolePrint(Tag, stringBuilder.ToString());
             }
             Logger.Info(Tag, "QueryOpenCLDevices END");
-            Helpers.ConsolePrint(Tag, "QueryOpenCLDevices END");
 
             return success;
         }
@@ -73,7 +69,6 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
         public async Task<OpenCLDeviceDetectionResult> TryQueryOpenCLDevicesAsync()
         {
             Logger.Info(Tag, "QueryOpenCLDevices START");
-            Helpers.ConsolePrint(Tag, "QueryOpenCLDevices START");
 
             var result = await DeviceDetectionPrinter.GetDeviceDetectionResultAsync<OpenCLDeviceDetectionResult>("ocl -", 60 * 1000);
             if (result == null) return null;
@@ -93,9 +88,7 @@ namespace NiceHashMiner.Devices.Querying.Amd.OpenCL
                 }
             }
             Logger.Info(Tag, stringBuilder.ToString());
-            Helpers.ConsolePrint(Tag, stringBuilder.ToString());
             
-            Helpers.ConsolePrint(Tag, "QueryOpenCLDevices END");
             Logger.Info(Tag, "QueryOpenCLDevices END");
 
             return result;

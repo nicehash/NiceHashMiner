@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using NiceHashMiner;
+using NiceHashMinerLegacy.Common;
 // ReSharper disable All
 #pragma warning disable
 
@@ -260,7 +261,7 @@ namespace NVIDIA.NVAPI
             try {
                 GetDelegate(0x0150E828, out NvAPI_Initialize);
             } catch (Exception e) {
-                Helpers.ConsolePrint("NVAPI", e.ToString());
+                Logger.Info("NVAPI", e.ToString());
                 return;
             }
 

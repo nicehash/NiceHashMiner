@@ -116,7 +116,6 @@ namespace NiceHashMiner.Switching
             if (_hasStarted)
             {
                 Logger.Info(Tag, sb.ToString());
-                Helpers.ConsolePrint(Tag, sb.ToString());
             }
             else
             {

@@ -84,7 +84,6 @@ namespace NiceHashMiner.Devices
                 if (cDev.IsAlgorithmSettingsInitialized()) continue;
 
                 Logger.Info(Tag, "CRITICAL ISSUE!!! Device has AlgorithmSettings == null. Will remove");
-                Helpers.ConsolePrint(Tag, "CRITICAL ISSUE!!! Device has AlgorithmSettings == null. Will remove");
                 invalidDevices.Add(cDev);
             }
             // remove invalids

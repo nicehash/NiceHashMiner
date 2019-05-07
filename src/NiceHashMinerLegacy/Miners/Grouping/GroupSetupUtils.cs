@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -96,7 +97,7 @@ namespace NiceHashMiner.Miners.Grouping
                     stringBuilder.AppendLine("\t" + GetDisabledDeviceStatusString(deviceStatus));
                 }
 
-                Helpers.ConsolePrint(Tag, stringBuilder.ToString());
+                Logger.Info(Tag, stringBuilder.ToString());
             }
 
             if (enabledDevices.Count > 0)
@@ -117,7 +118,7 @@ namespace NiceHashMiner.Miners.Grouping
                     }
                 }
 
-                Helpers.ConsolePrint(Tag, stringBuilder.ToString());
+                Logger.Info(Tag, stringBuilder.ToString());
             }
         }
 

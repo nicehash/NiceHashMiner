@@ -71,7 +71,7 @@ namespace NiceHashMiner.Benchmarking
                 }
                 catch (Exception e)
                 {
-                    Helpers.ConsolePrint($"BenchmarkHandler-{Device.GetFullName()}", $"Exception {e}");
+                    Logger.Error("BenchmarkHandler", $"Exception occurred in benchmark task: {e.Message}");
                 }
             }
             currentAlgorithm?.ClearBenchmarkPending();

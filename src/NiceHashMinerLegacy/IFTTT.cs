@@ -36,7 +36,6 @@ namespace NiceHashMiner
             catch (Exception ex)
             {
                 Logger.Info("Ifttt", $"Error occured: {ex.Message}");
-                Helpers.ConsolePrint("NICEHASH", ex.Message);
             }
         }
     }

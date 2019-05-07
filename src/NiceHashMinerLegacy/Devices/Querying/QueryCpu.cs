@@ -13,7 +13,6 @@ namespace NiceHashMiner.Devices.Querying
         public static IEnumerable<CpuComputeDevice> QueryCpus()
         {
             Logger.Info(Tag, "QueryCpus START");
-            Helpers.ConsolePrint(Tag, "QueryCpus START");
             // get all CPUs
             var cpuCount = CpuID.GetPhysicalProcessorCount();
             var cpuName = CpuID.GetCpuName().Trim();
@@ -25,10 +24,6 @@ namespace NiceHashMiner.Devices.Querying
             }
 
             Logger.Info(Tag, WindowsManagementObjectSearcher.IsHypeThreadingEnabled ? "HyperThreadingEnabled = TRUE" : "HyperThreadingEnabled = FALSE");
-            Helpers.ConsolePrint(Tag,
-                WindowsManagementObjectSearcher.IsHypeThreadingEnabled
-                    ? "HyperThreadingEnabled = TRUE"
-                    : "HyperThreadingEnabled = FALSE");
 
             // get all cores (including virtual - HT can benefit mining)
             var threadsPerCpu = WindowsManagementObjectSearcher.VirtualCoresCount / cpuCount;
@@ -57,7 +52,6 @@ namespace NiceHashMiner.Devices.Querying
             }
 
             Logger.Info(Tag, "QueryCpus END");
-            Helpers.ConsolePrint(Tag, "QueryCpus END");
 
             return cpus;
         }

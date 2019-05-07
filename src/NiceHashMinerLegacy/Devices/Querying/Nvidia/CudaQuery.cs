@@ -30,17 +30,12 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 
 
                 Logger.Info(Tag, $"CudaDevicesDetection found no devices. CudaDevicesDetection returned: {queryCudaDevicesString}");
-                Helpers.ConsolePrint(Tag,
-                    "CudaDevicesDetection found no devices. CudaDevicesDetection returned: " +
-                    queryCudaDevicesString);
-
                 return false;
             }
             catch (Exception ex)
             {
                 // TODO
                 Logger.Error(Tag, $"CudaDevicesDetection threw Exception: {ex.Message}");
-                Helpers.ConsolePrint(Tag, "CudaDevicesDetection threw Exception: " + ex.Message);
                 cudaDevices = null;
                 return false;
             }

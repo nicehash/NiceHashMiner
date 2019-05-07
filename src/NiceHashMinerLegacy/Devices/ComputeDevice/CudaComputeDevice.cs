@@ -48,7 +48,6 @@ namespace NiceHashMiner.Devices
                 catch (Exception e)
                 {
                     Logger.Error("NVML", e.ToString());
-                    Helpers.ConsolePrint("NVML", e.ToString());
                 }
 
                 return load;
@@ -74,7 +73,6 @@ namespace NiceHashMiner.Devices
                 catch (Exception e)
                 {
                     Logger.Error("NVML", e.ToString());
-                    Helpers.ConsolePrint("NVML", e.ToString());
                 }
 
                 return temp;
@@ -92,8 +90,7 @@ namespace NiceHashMiner.Devices
                     if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
                     {
                         // GPUs without fans are not uncommon, so don't treat as error and just return -1
-                        Logger.Info("NVAPI", "Tach get failed with status: {result}");
-                        Helpers.ConsolePrint("NVAPI", "Tach get failed with status: " + result);
+                        Logger.Info("NVAPI", $"Tach get failed with status: {result}");
                         return -1;
                     }
                 }
@@ -117,7 +114,6 @@ namespace NiceHashMiner.Devices
                 catch (Exception e)
                 {
                     Logger.Error("NVML", e.ToString());
-                    Helpers.ConsolePrint("NVML", e.ToString());
                 }
 
                 return -1;
@@ -186,7 +182,6 @@ namespace NiceHashMiner.Devices
             catch (Exception e)
             {
                 Logger.Error("NVML", $"Getting power info failed with message \"{e.Message}\", disabling power setting");
-                Helpers.ConsolePrint("NVML", $"Getting power info failed with message \"{e.Message}\", disabling power setting");
                 PowerLimitsEnabled = false;
             }
         }
@@ -200,7 +195,6 @@ namespace NiceHashMiner.Devices
             if (NVAPI.NvAPI_DLL_ClientPowerPoliciesSetStatus == null)
             {
                 Logger.Info("NVAPI", "Missing power set delegate, disabling power");
-                Helpers.ConsolePrint("NVAPI", "Missing power set delegate, disabling power");
                 PowerLimitsEnabled = false;
                 return false;
             }
@@ -234,8 +228,7 @@ namespace NiceHashMiner.Devices
             }
             catch (Exception e)
             {
-                Logger.Info("NVAPI", e.ToString());
-                Helpers.ConsolePrint("NVAPI", e.ToString());
+                Logger.Info("NVAPI", e.Message);
                 return false;
             }
 

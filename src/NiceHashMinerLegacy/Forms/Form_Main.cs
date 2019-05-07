@@ -123,12 +123,12 @@ namespace NiceHashMiner
                 if (!e.IsIdle)
                 {
                     ApplicationStateManager.StopAllDevice();
-                    Helpers.ConsolePrint("NICEHASH", "Resumed from idling");
+                    Logger.Info("NICEHASH", "Resumed from idling");
                 }
             }
             else if (_benchmarkForm == null && e.IsIdle)
             {
-                Helpers.ConsolePrint("NICEHASH", "Entering idling state");
+                Logger.Info("NICEHASH", "Entering idling state");
                 if (StartMining(false) != StartMiningReturnType.StartMining)
                 {
                     ApplicationStateManager.StopAllDevice();
@@ -175,11 +175,11 @@ namespace NiceHashMiner
                 var PageFileSize = WindowsManagementObjectSearcher.PageFileSize;
                 var FreePhysicalMemory = WindowsManagementObjectSearcher.FreePhysicalMemory;
                 var FreeVirtualMemory = WindowsManagementObjectSearcher.FreeVirtualMemory;
-                Helpers.ConsolePrint("NICEHASH", $"TotalVisibleMemorySize: {TotalVisibleMemorySize}, {TotalVisibleMemorySize / 1024} MB");
-                Helpers.ConsolePrint("NICEHASH", $"TotalVirtualMemorySize: {TotalVirtualMemorySize}, {TotalVirtualMemorySize / 1024} MB");
-                Helpers.ConsolePrint("NICEHASH", $"PageFileSize = {PageFileSize}, {PageFileSize / 1024} MB");
-                Helpers.ConsolePrint("NICEHASH", $"FreePhysicalMemory = {FreePhysicalMemory}, {FreePhysicalMemory / 1024} MB");
-                Helpers.ConsolePrint("NICEHASH", $"FreeVirtualMemory = {FreeVirtualMemory}, {FreeVirtualMemory / 1024} MB");
+                Logger.Info("NICEHASH", $"TotalVisibleMemorySize: {TotalVisibleMemorySize}, {TotalVisibleMemorySize / 1024} MB");
+                Logger.Info("NICEHASH", $"TotalVirtualMemorySize: {TotalVirtualMemorySize}, {TotalVirtualMemorySize / 1024} MB");
+                Logger.Info("NICEHASH", $"PageFileSize = {PageFileSize}, {PageFileSize / 1024} MB");
+                Logger.Info("NICEHASH", $"FreePhysicalMemory = {FreePhysicalMemory}, {FreePhysicalMemory / 1024} MB");
+                Logger.Info("NICEHASH", $"FreeVirtualMemory = {FreeVirtualMemory}, {FreeVirtualMemory / 1024} MB");
 
                 progress?.Report(Tuple.Create(Tr("Checking Windows Video Controllers"), nextProgPerc()));
                 await Task.Run(() => WindowsManagementObjectSearcher.QueryWin32_VideoController());
@@ -439,7 +439,7 @@ namespace NiceHashMiner
             }
             catch (Exception e)
             {
-                Helpers.ConsolePrint("NiceHash", e.ToString());
+                Logger.Error("NiceHash", e.Message);
             }
         }
 
@@ -476,8 +476,7 @@ namespace NiceHashMiner
 
                 toolTip1.SetToolTip(statusStrip1, $"1 BTC = {currencyRate} {ExchangeRateApi.ActiveDisplayCurrency}");
 
-                Helpers.ConsolePrint("NICEHASH",
-                    "Current Bitcoin rate: " + br.ToString("F2", CultureInfo.InvariantCulture));
+                Logger.Info("NICEHASH", $"Current Bitcoin rate: {br.ToString("F2", CultureInfo.InvariantCulture)}");
             });
         }
 
@@ -773,13 +772,13 @@ namespace NiceHashMiner
                     if (hasData) break;
                     Thread.Sleep(1000);
                     hasData = NHSmaData.HasData;
-                    Helpers.ConsolePrint("NICEHASH", $"After {i}s has data: {hasData}");
+                    Logger.Info("NICEHASH", $"After {i}s has data: {hasData}");
                 }
             }
 
             if (!hasData)
             {
-                Helpers.ConsolePrint("NICEHASH", "No data received within timeout");
+                Logger.Debug("NICEHASH", "No data received within timeout");
                 if (showWarnings)
                 {
                     MessageBox.Show(Tr("Unable to get NiceHash profitability data. If you are connected to internet, try again later."),

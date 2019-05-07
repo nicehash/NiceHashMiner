@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MinerPlugin;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner
 {
@@ -54,7 +55,7 @@ namespace NiceHashMiner
             IsRunning = false;
             //_maxCooldownTimeInMilliseconds = GetMaxCooldownTimeInMilliseconds();
             // 
-            Helpers.ConsolePrint(MinerTag(), "NEW MINER CREATED");
+            Logger.Info(MinerTag(), "NEW MINER CREATED");
         }
 
         // TAG for identifying miner

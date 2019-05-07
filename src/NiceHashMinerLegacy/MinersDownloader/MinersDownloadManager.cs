@@ -88,7 +88,6 @@ namespace NiceHashMiner.MinersDownloader
             catch (Exception e)
             {
                 Logger.Error("MinersDownloadManager", $"Error occured while downloading and extracting of miners: {e.Message}");
-                Helpers.ConsolePrint("MinersDownloadManager", $"DownloadAndExtract failed: {e}");
             }
         }
 
@@ -235,7 +234,6 @@ namespace NiceHashMiner.MinersDownloader
             catch (Exception e)
             {
                 Logger.Error("MinersDownloadManager", $"Error occured while downloading files with myDownloader: {e.Message}");
-                Helpers.ConsolePrint("MinersDownloadManager", e.Message);
             }
 
             try
@@ -243,7 +241,6 @@ namespace NiceHashMiner.MinersDownloader
                 var downloadedSuccess = await DownlaodAsync(downloadSetup.BinsDownloadUrl, downloadSetup.BinsZipLocation, progress, stop);
                 if (!downloadedSuccess || stop.IsCancellationRequested) {
                     Logger.Info("MinersDownloadManager", $"Download success={downloadedSuccess} || cancel={stop.IsCancellationRequested}");
-                    Helpers.ConsolePrint("MinersDownloadManager", $"Download success={downloadedSuccess} || cancel={stop.IsCancellationRequested}");
                     return;
                 }
 
@@ -264,7 +261,6 @@ namespace NiceHashMiner.MinersDownloader
                 if (!zipFileExists)
                 {
                     Logger.Info("MinersDownloadManager", $"Downloaded file {downloadSetup.BinsZipLocation} doesn't exist, exiting");
-                    Helpers.ConsolePrint("MinersDownloadManager", $"Downloaded file {downloadSetup.BinsZipLocation} doesn't exist exiting");
                     return;
                 }
 
@@ -287,7 +283,6 @@ namespace NiceHashMiner.MinersDownloader
             catch (Exception e)
             {
                 Logger.Error("MinersDownloadManager", $"Error occured while downloading and extracting with myDownloader: {e.Message}");
-                Helpers.ConsolePrint("MinersDownloadManager", $"Exception while downloading and extracting {e}");
             }
         }
 
@@ -326,7 +321,6 @@ namespace NiceHashMiner.MinersDownloader
                 if (downloader.LastError != null)
                 {
                     Logger.Info("MinersDownloadManager", $"Error occured while downloading: {downloader.LastError.Message}");
-                    Helpers.ConsolePrint("MinersDownloadManager", downloader.LastError.Message);
                 }
 
                 var speedString = $"{downloader.Rate / 1024d:0.00} kb/s";
@@ -347,13 +341,11 @@ namespace NiceHashMiner.MinersDownloader
                 else if (ticksSinceUpdate > 20)
                 {
                     Logger.Debug("MinersDownloadManager", "Maximum ticks reached, retrying");
-                    Helpers.ConsolePrint("MinersDownloadManager", "Maximum ticks reached, retrying");
                     ticksSinceUpdate = 0;
                 }
                 else
                 {
                     Logger.Debug("MinersDownloadManager", $"No progress in ticks {ticksSinceUpdate}");
-                    Helpers.ConsolePrint("MinersDownloadManager", "No progress in ticks " + ticksSinceUpdate);
                     ticksSinceUpdate++;
                 }
             });
@@ -373,13 +365,11 @@ namespace NiceHashMiner.MinersDownloader
                     if (downloader.State == DownloaderState.EndedWithError)
                     {
                         Logger.Info("MinersDownloadManager", $"Download didn't complete successfully: {downloader.LastError.Message}");
-                        Helpers.ConsolePrint("MinersDownloadManager", downloader.LastError.Message);
                         tcs.SetResult(false);
                     }
                     else if (downloader.State == DownloaderState.Ended)
                     {
                         Logger.Info("MinersDownloadManager", "DownloadCompleted Success");
-                        Helpers.ConsolePrint("MinersDownloadManager", "DownloadCompleted Success");
                         tcs.SetResult(true);
                     }
                 }

@@ -51,16 +51,12 @@ namespace NiceHashMiner.Devices
             if (!_cudaQuery.TryQueryCudaDevices(out var currentDevs))
             {
                 Logger.Info(Tag, "Querying CUDA devs failed");
-                Helpers.ConsolePrint(Tag, "Querying CUDA devs failed");
                 return true;
             }
 
             var gpusNew = currentDevs.Count;
 
             Logger.Info(Tag, "CUDA GPUs count: Old: " + _gpuCount + " / New: " + gpusNew);
-            Helpers.ConsolePrint("ComputeDeviceManager.CheckCount",
-                "CUDA GPUs count: Old: " + _gpuCount + " / New: " + gpusNew);
-
             return gpusNew < _gpuCount;
         }
 
@@ -79,7 +75,6 @@ namespace NiceHashMiner.Devices
             catch (Exception ex)
             {
                 Logger.Error(Tag, $"OnGPUsMismatch.bat error: {ex.Message}");
-                Helpers.ConsolePrint("NICEHASH", "OnGPUsMismatch.bat error: " + ex.Message);
             }
         }
     }

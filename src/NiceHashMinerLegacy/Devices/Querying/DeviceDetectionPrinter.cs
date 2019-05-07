@@ -48,14 +48,13 @@ namespace NiceHashMiner.Devices.Querying
                     result = JsonConvert.DeserializeObject<T>(readData, Globals.JsonSettings);
                     if (result == null && !string.IsNullOrEmpty(readData))
                     {
-                        Helpers.ConsolePrint("DeviceDetectionPrinter", $"result is NULL readData='{readData}'");
+                        Logger.Debug("DeviceDetectionPrinter", $"result is NULL readData='{readData}'");
                     }
                 }
             }
             catch (Exception ex)
             {
                 Logger.Error("DeviceDetectionPrinter", $"threw Exception: '{ex.Message}'. ReadData '{readData}'");
-                Helpers.ConsolePrint("DeviceDetectionPrinter", $"threw Exception: '{ex.Message}'. ReadData '{readData}'");
             }
             finally
             {

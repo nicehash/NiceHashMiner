@@ -235,14 +235,9 @@ namespace NiceHashMiner.Miners
             if (log)
             {
                 Logger.Info(Tag, $"Current global profit = {currentProfitUsd.ToString("F8")} USD/Day");
-                Helpers.ConsolePrint(Tag, "Current Global profit: " + currentProfitUsd.ToString("F8") + " USD/Day");
                 if (!_isProfitable)
                 {
                     Logger.Info(Tag, $"Current global profit = NOT PROFITABLE, MinProfit: {ConfigManager.GeneralConfig.MinimumProfit.ToString("F8")} USD/Day");
-                    Helpers.ConsolePrint(Tag,
-                        "Current Global profit: NOT PROFITABLE MinProfit " +
-                        ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") +
-                        " USD/Day");
                 }
                 else
                 {
@@ -250,7 +245,6 @@ namespace NiceHashMiner.Miners
                         ? "mine always regardless of profit"
                         : ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
                     Logger.Info(Tag, $"Current global profit = IS PROFITABLE, MinProfit: {profitabilityInfo}");
-                    Helpers.ConsolePrint(Tag, "Current Global profit: IS PROFITABLE MinProfit " + profitabilityInfo);
                 }
             }
 
@@ -273,7 +267,6 @@ namespace NiceHashMiner.Miners
                     if (log)
                     {
                         Logger.Info(Tag, $"No internet connection! Not able to min.");
-                        Helpers.ConsolePrint(Tag, "NO INTERNET!!! Stopping mining.");
                     }
                     ApplicationStateManager.DisplayNoInternetConnection();
                 }
@@ -337,7 +330,7 @@ namespace NiceHashMiner.Miners
                     $"\t\tMOST PROFITABLE ALGO: {device.GetMostProfitableString()}, PROFIT: {device.GetCurrentMostProfitValue.ToString(DoubleFormat)}");
                 stringBuilderFull.AppendLine(stringBuilderDevice.ToString());
             }
-            Helpers.ConsolePrint(Tag, stringBuilderFull.ToString());
+            Logger.Info(Tag, stringBuilderFull.ToString());
 
             // check if should mine
             // Only check if profitable inside this method when getting SMA data, cheching during mining is not reliable
@@ -353,7 +346,6 @@ namespace NiceHashMiner.Miners
 
             // check profit threshold
             Logger.Info(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
-            Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
             if (prevStateProfit > 0 && currentProfit > 0)
             {
                 var a = Math.Max(prevStateProfit, currentProfit);
@@ -364,8 +356,6 @@ namespace NiceHashMiner.Miners
                 {
                     // don't switch
                     Logger.Info(Tag, $"Will NOT switch profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
-                    Helpers.ConsolePrint(Tag,
-                        $"Will NOT switch profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
                     // RESTORE OLD PROFITS STATE
                     foreach (var device in _miningDevices)
                     {
@@ -375,8 +365,6 @@ namespace NiceHashMiner.Miners
                     return;
                 }
                 Logger.Info(Tag, $"Will SWITCH profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
-                Helpers.ConsolePrint(Tag,
-                    $"Will SWITCH profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
             }
 
             // group new miners 
@@ -502,19 +490,16 @@ namespace NiceHashMiner.Miners
 
                     if (stringBuilderPreviousAlgo.Length > 0)
                     {
-                        Helpers.ConsolePrint(Tag, $"Stop Mining: {stringBuilderPreviousAlgo}");
                         Logger.Info(Tag, $"Stop Mining: {stringBuilderPreviousAlgo}");
                     }
 
                     if (stringBuilderCurrentAlgo.Length > 0)
                     {
-                        Helpers.ConsolePrint(Tag, $"Now Mining : {stringBuilderCurrentAlgo}");
                         Logger.Info(Tag, $"Now Mining : {stringBuilderCurrentAlgo}");
                     }
 
                     if (stringBuilderNoChangeAlgo.Length > 0)
                     {
-                        Helpers.ConsolePrint(Tag, $"No change  : {stringBuilderNoChangeAlgo}");
                         Logger.Info(Tag, $"No change  : {stringBuilderNoChangeAlgo}");
                     }
                 }
@@ -551,7 +536,7 @@ namespace NiceHashMiner.Miners
                     var ad = await m.GetSummaryAsync();
                     if (ad == null)
                     {
-                        Helpers.ConsolePrint(m.MinerTag(), "GetSummary returned null..");
+                        Logger.Debug(m.MinerTag(), "GetSummary returned null..");
                     }
 
                     // BROKEN we have per device speeds in MiningStats we use those to check benchmark and mining speed deviation
@@ -583,8 +568,7 @@ namespace NiceHashMiner.Miners
                 ApplicationStateManager.DisplayTotalRate(MiningStats.GetProfit(kwhPriceInBtc));
             }
             catch (Exception e) {
-                Logger.Info(Tag, $"Error occured while getting mining stats: {e.Message}");
-                Helpers.ConsolePrint(Tag, e.Message);
+                Logger.Error(Tag, $"Error occured while getting mining stats: {e.Message}");
             }        
         }
     }

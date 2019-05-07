@@ -72,7 +72,7 @@ namespace NiceHashMiner
         {
             //bool failed = false;
 
-            ConsolePrint("NICEHASH", "Trying to enable/disable Windows error reporting");
+            Logger.Info("NICEHASH", "Trying to enable/disable Windows error reporting");
 
             // CurrentUser
             try
@@ -85,34 +85,34 @@ namespace NiceHashMiner
                         if (o != null)
                         {
                             var val = (int) o;
-                            ConsolePrint("NICEHASH", "Current DontShowUI value: " + val);
+                            Logger.Info("NICEHASH", $"Current DontShowUI value: {val}");
 
                             if (val == 0 && en)
                             {
-                                ConsolePrint("NICEHASH", "Setting register value to 1.");
+                                Logger.Info("NICEHASH", "Setting register value to 1.");
                                 rk.SetValue("DontShowUI", 1);
                             }
                             else if (val == 1 && !en)
                             {
-                                ConsolePrint("NICEHASH", "Setting register value to 0.");
+                                Logger.Info("NICEHASH", "Setting register value to 0.");
                                 rk.SetValue("DontShowUI", 0);
                             }
                         }
                         else
                         {
-                            ConsolePrint("NICEHASH", "Registry key not found .. creating one..");
+                            Logger.Info("NICEHASH", "Registry key not found .. creating one..");
                             rk.CreateSubKey("DontShowUI", RegistryKeyPermissionCheck.Default);
-                            ConsolePrint("NICEHASH", "Setting register value to 1..");
+                            Logger.Info("NICEHASH", "Setting register value to 1..");
                             rk.SetValue("DontShowUI", en ? 1 : 0);
                         }
                     }
                     else
-                        ConsolePrint("NICEHASH", "Unable to open SubKey.");
+                        Logger.Info("NICEHASH", "Unable to open SubKey.");
                 }
             }
             catch (Exception ex)
             {
-                ConsolePrint("NICEHASH", "Unable to access registry. Error: " + ex.Message);
+                Logger.Error("NICEHASH", $"Unable to access registry. Error: {ex.Message}");
             }
         }
 
@@ -280,12 +280,10 @@ namespace NiceHashMiner
                     Logger.Info("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode);
                 else
                     Logger.Info("NICEHASH", "nvidiasetp0state all OK");
-                    ConsolePrint("NICEHASH", "nvidiasetp0state all OK");
             }
             catch (Exception ex)
             {
                 Logger.Error("NICEHASH", "nvidiasetp0state error: " + ex.Message);
-                ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
             }
         }
 
@@ -329,7 +327,6 @@ namespace NiceHashMiner
             catch (Exception e)
             {
                 Logger.Error("REGISTRY", e.Message);
-                ConsolePrint("REGISTRY", e.Message);
             }
 
             return guid;

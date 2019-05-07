@@ -74,7 +74,6 @@ namespace NiceHashMiner
                     foreach (var kvp in _availableLanguages)
                     {
                         Logger.Info("Translations", $"Found language: code: {kvp.Code}, name: {kvp.Name}");
-                        Helpers.ConsolePrint("NICEHASH", $"Found language: code: {kvp.Code}, name: {kvp.Name}");
                     }
                 } 
                 if (translations.Translations != null)
@@ -108,7 +107,6 @@ namespace NiceHashMiner
             catch (Exception e)
             {
                 Logger.Error("NICEHASH", $"Lang error: {e.Message}");
-                Helpers.ConsolePrint("NICEHASH", "Lang error: " + e.Message);
             }
         }
 

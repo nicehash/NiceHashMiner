@@ -21,7 +21,6 @@ namespace NiceHashMiner.Devices
                 }
                 catch (Exception e) {
                     Logger.Error("CPUDIAG", e.ToString());
-                    Helpers.ConsolePrint("CPUDIAG", e.ToString());
                 }
                 return -1;
             }

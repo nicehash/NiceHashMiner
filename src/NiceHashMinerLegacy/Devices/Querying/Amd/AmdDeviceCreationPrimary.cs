@@ -18,7 +18,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
         protected override IEnumerable<AmdGpuDevice> CreateGpuDevices(List<OpenCLDevice> amdDevices,
             Dictionary<string, bool> disableAlgos)
         {
-            Helpers.ConsolePrint(Tag, "Using AMD device creation DEFAULT Reliable mappings");
+            Logger.Debug(Tag, "Using AMD device creation DEFAULT Reliable mappings");
             foreach (var dev in amdDevices)
             {
                 var busID = dev.AMD_BUS_ID;
@@ -36,7 +36,6 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 else
                 {
                     Logger.Info(Tag, $"\tDevice not added, Bus No. {busID} not found:");
-                    Helpers.ConsolePrint(Tag, $"\tDevice not added, Bus No. {busID} not found:");
                 }
             }
         }

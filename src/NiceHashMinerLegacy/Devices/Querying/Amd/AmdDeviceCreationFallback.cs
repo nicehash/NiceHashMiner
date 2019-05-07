@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NiceHashMiner.Devices.Querying.Amd.OpenCL;
 using NiceHashMiner.Utils;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
@@ -12,7 +13,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
 
         protected override IEnumerable<AmdGpuDevice> CreateGpuDevices(List<OpenCLDevice> amdDevices, Dictionary<string, bool> disableAlgos)
         {
-            Helpers.ConsolePrint(Tag, "Using AMD device creation FALLBACK UnReliable mappings");
+            Logger.Debug(Tag, "Using AMD device creation FALLBACK UnReliable mappings");
 
             // get video AMD controllers and sort them by RAM
             // (find a way to get PCI BUS Numbers from PNPDeviceID)

@@ -16,6 +16,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Windows.Forms.Timer;
 
 using BenchmarkSelection = NiceHashMinerLegacy.Common.Enums.AlgorithmBenchmarkSettingsType;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Forms
 {
@@ -140,7 +141,7 @@ namespace NiceHashMiner.Forms
 
         private void CopyBenchmarks()
         {
-            Helpers.ConsolePrint("CopyBenchmarks", "Checking for benchmarks to copy");
+            Logger.Debug("CopyBenchmarks", "Checking for benchmarks to copy");
             foreach (var cDev in AvailableDevices.Devices)
                 // check if copy
                 if (!cDev.Enabled && cDev.BenchmarkCopyUuid != null)
@@ -148,7 +149,7 @@ namespace NiceHashMiner.Forms
                     var copyCdevSettings = AvailableDevices.GetDeviceWithUuid(cDev.BenchmarkCopyUuid);
                     if (copyCdevSettings != null)
                     {
-                        Helpers.ConsolePrint("CopyBenchmarks", $"Copy from {cDev.Uuid} to {cDev.BenchmarkCopyUuid}");
+                        Logger.Info("CopyBenchmarks", $"Copy from {cDev.Uuid} to {cDev.BenchmarkCopyUuid}");
                         cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
                     }
                 }
@@ -224,7 +225,7 @@ namespace NiceHashMiner.Forms
         private void StopButonClick()
         {
             _benchmarkingTimer.Stop();
-            Helpers.ConsolePrint("FormBenchmark", "StopButonClick() benchmark routine stopped");
+            Logger.Debug("FormBenchmark", "StopButonClick() benchmark routine stopped");
             //// copy benchmarked
             //CopyBenchmarks();
 
@@ -284,7 +285,7 @@ namespace NiceHashMiner.Forms
             }
             FormHelpers.SafeInvoke(this, () => {
                 _benchmarkingTimer.Stop();
-                Helpers.ConsolePrint("FormBenchmark", "EndBenchmark() benchmark routine finished");
+                Logger.Debug("FormBenchmark", "EndBenchmark() benchmark routine finished");
 
                 //CopyBenchmarks();
 

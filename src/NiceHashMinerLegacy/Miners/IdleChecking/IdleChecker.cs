@@ -12,7 +12,6 @@ namespace NiceHashMiner.Miners.IdleChecking
         protected void FireStatusEvent(bool isIdle)
         {
             Logger.Info("IdleChecker", $"Idle status changed to {isIdle}");
-            Helpers.ConsolePrint("IDLE", $"Idle status changed to idling = {isIdle}");
             IdleStatusChanged?.Invoke(null, new IdleChangedEventArgs(isIdle));
         }
 

@@ -45,12 +45,10 @@ namespace NiceHashMiner.Devices.Querying.Amd
         public List<AmdComputeDevice> QueryAmd()
         {
             Logger.Info(Tag, "QueryAMD START");
-            Helpers.ConsolePrint(Tag, "QueryAMD START");
 
             var amdDevices = _openCLSuccess ? ProcessDevices(_openCLResult) : null;
 
             Logger.Info(Tag, "QueryAMD END");
-            Helpers.ConsolePrint(Tag, "QueryAMD END");
 
             if (amdDevices != null) SortBusIDs(amdDevices);
 
@@ -72,8 +70,6 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 AMDDevice.OpenCLPlatformID = oclEl.PlatformNum;
                 amdOclDevices = oclEl.Devices;
                 Logger.Info(Tag, $"AMD platform found: Key: {amdOpenCLPlatformStringKey}, Num: {AvailableDevices.AmdOpenCLPlatformNum}");
-                Helpers.ConsolePrint(Tag,
-                    $"AMD platform found: Key: {amdOpenCLPlatformStringKey}, Num: {AvailableDevices.AmdOpenCLPlatformNum}");
                 break;
             }
 
@@ -93,13 +89,11 @@ namespace NiceHashMiner.Devices.Querying.Amd
             if (amdDevices.Count == 0)
             {
                 Logger.Info(Tag, "AMD GPUs count is 0");
-                Helpers.ConsolePrint(Tag, "AMD GPUs count is 0");
                 return null;
             }
 
             Logger.Info(Tag, $"AMD GPUs count : {amdDevices.Count}");
-            Helpers.ConsolePrint(Tag, "AMD GPUs count : " + amdDevices.Count);
-            Helpers.ConsolePrint(Tag, "AMD Getting device name and serial from ADL");
+            Logger.Debug(Tag, "AMD Getting device name and serial from ADL");
             // ADL
             var isAdlInit = AdlQuery.TryQuery(out var busIdInfos, out var numDevs);
 
@@ -132,10 +126,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 isBusIDOk = isBusIDOk && busIDs.Count == amdDevices.Count;
             }
             // print BUS id status
-            Helpers.ConsolePrint(Tag,
-                isBusIDOk
-                    ? "AMD Bus IDs are unique and valid. OK"
-                    : "AMD Bus IDs IS INVALID. Using fallback AMD detection mode");
+            Logger.Info(Tag, isBusIDOk ? "AMD Bus IDs are unique and valid. OK" : "AMD Bus IDs IS INVALID. Using fallback AMD detection mode");
 
             ///////
             // AMD device creation (in NHM context)
