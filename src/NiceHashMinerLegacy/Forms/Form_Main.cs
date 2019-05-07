@@ -32,7 +32,9 @@ namespace NiceHashMiner
     {
         private bool _showWarningNiceHashData;
         private bool _demoMode;
-        
+
+        private bool _exitCalled = false;
+
         private Form_Benchmark _benchmarkForm;
         private Form_MinerPlugins _minerPluginsForm;
 
@@ -65,6 +67,10 @@ namespace NiceHashMiner
 
             InitLocalization();
             Text += ApplicationStateManager.Title;
+
+            notifyIcon1.Icon = Properties.Resources.logo;
+            notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
+                               "\nDouble-click to restore..";
 
             InitMainConfigGuiData();
             FormHelpers.TranslateFormControls(this);
@@ -547,14 +553,6 @@ namespace NiceHashMiner
             ApplicationStateManager.VisitNewVersionUrl();
         }
 
-
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            FormHelpers.UnsubscribeAllControls(this);
-            ApplicationStateManager.BeforeExit();
-            MessageBoxManager.Unregister();
-        }
-
         private void ButtonBenchmark_Click(object sender, EventArgs e)
         {
             _benchmarkForm = new Form_Benchmark();
@@ -699,30 +697,6 @@ namespace NiceHashMiner
                 case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
                     break;
             }
-        }
-
-        // Minimize to system tray if MinimizeToTray is set to true
-        private void Form1_Resize(object sender, EventArgs e)
-        {
-            notifyIcon1.Icon = Properties.Resources.logo;
-            notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
-                               "\nDouble-click to restore..";
-
-            //devicesMainBoard1.Size = devicesListViewEnableControl1.Size;
-
-            if (ConfigManager.GeneralConfig.MinimizeToTray && FormWindowState.Minimized == WindowState)
-            {
-                notifyIcon1.Visible = true;
-                Hide();
-            }
-        }
-
-        // Restore NiceHashMiner from the system tray
-        private void NotifyIcon1_DoubleClick(object sender, EventArgs e)
-        {
-            Show();
-            WindowState = FormWindowState.Normal;
-            notifyIcon1.Visible = false;
         }
 
         ///////////////////////////////////////
@@ -947,6 +921,60 @@ namespace NiceHashMiner
             if (_minerPluginsForm == null) _minerPluginsForm = new Form_MinerPlugins();
             SetChildFormCenter(_minerPluginsForm);
             _minerPluginsForm.ShowDialog();
+        }
+
+        private void NotifyIcon1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (MouseButtons.Right == e.Button)
+            {
+                contextMenuStrip1.Show();
+            } 
+        }
+
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _exitCalled = true;
+            Application.Exit();
+        }
+
+        private void ToolStripMenuItemShow_Click(object sender, EventArgs e)
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+            notifyIcon1.Visible = false;
+        }
+
+        // Minimize to system tray if MinimizeToTray is set to true
+        private void Form1_Resize(object sender, EventArgs e)
+        {
+            if (ConfigManager.GeneralConfig.MinimizeToTray && FormWindowState.Minimized == WindowState)
+            {
+                notifyIcon1.Visible = true;
+                Hide();
+            }
+        }
+
+        // Restore NiceHashMiner from the system tray
+        private void NotifyIcon1_DoubleClick(object sender, EventArgs e)
+        {
+            Show();
+            WindowState = FormWindowState.Normal;
+            notifyIcon1.Visible = false;
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (ConfigManager.GeneralConfig.MinimizeToTray && !_exitCalled)
+            {
+                notifyIcon1.Visible = true;
+                Hide();
+                e.Cancel = true;
+                return;
+            }
+
+            FormHelpers.UnsubscribeAllControls(this);
+            ApplicationStateManager.BeforeExit();
+            MessageBoxManager.Unregister();
         }
     }
 }
