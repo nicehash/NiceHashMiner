@@ -19,11 +19,32 @@ namespace NiceHashMiner.Configs.Data
         public TimeUnitType TimeUnit = TimeUnitType.Day;
         public string IFTTTKey = "";
         public int ServiceLocation = 0;
-        public bool AutoStartMining = false;
-        public bool HideMiningWindows = false;
-        public bool MinimizeToTray = false;
 
-        public bool MinimizeMiningWindows = false;
+        public bool AutoStartMining = false;
+
+
+        public bool _hideMiningWindows = false;
+        public bool _minimizeMiningWindows = false;
+        public bool HideMiningWindows
+        {
+            get => _hideMiningWindows;
+            set
+            {
+                _hideMiningWindows = value;
+                MinerPluginToolkitV1.MinerToolkit.HideMiningWindows = value;
+            }
+        }
+        public bool MinimizeMiningWindows
+        {
+            get => _minimizeMiningWindows;
+            set
+            {
+                _minimizeMiningWindows = value;
+                MinerPluginToolkitV1.MinerToolkit.MinimizeMiningWindows = value;
+            }
+        }
+
+        public bool MinimizeToTray = false;
 
         public double SwitchProfitabilityThreshold = 0.05; // percent
         public int MinerAPIQueryInterval = 5;

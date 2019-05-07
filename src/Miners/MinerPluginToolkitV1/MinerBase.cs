@@ -4,7 +4,7 @@ using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Algorithm;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
@@ -17,6 +17,7 @@ namespace MinerPluginToolkitV1
     // TODO there is no watchdog
     public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
     {
+        private static long _MINER_COUNT_ID = 0;
         protected string _logGroup { get; private set; }
         protected string _uuid { get; private set; }
         protected MiningProcess _miningProcess;
@@ -27,8 +28,9 @@ namespace MinerPluginToolkitV1
 
         public MinerBase(string uuid)
         {
+            _MINER_COUNT_ID++;
             _uuid = uuid;
-            _logGroup = $"Miner-{uuid}";
+            _logGroup = $"Miner{_MINER_COUNT_ID}-{uuid}";
         }
 
         // if stop is called then consider this miner obsolete
@@ -45,6 +47,8 @@ namespace MinerPluginToolkitV1
         public void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
         {
             _miningPairs = miningPairs;
+            //// update log group
+            //_logGroup += _miningPairs.
             Init();
         }
 
@@ -77,11 +81,12 @@ namespace MinerPluginToolkitV1
             var commandLine = MiningCreateCommandLine();
             var environmentVariables = GetEnvironmentVariables();
 
+            // Logging
             Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
-            Logger.Debug(_logGroup, $"starting miner commandLine='{commandLine}'");
             // TODO this will not print content
-            Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariables}'");
-            Logger.Debug(_logGroup, $"starting miner environmentVariables='{environmentVariables}'");
+            var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));
+            Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'"); // TODO log or debug???
+
             var p = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables);
             _miningProcess = new MiningProcess(p);
             p.Exited += MinerProcess_Exited;

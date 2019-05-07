@@ -23,7 +23,10 @@ namespace MinerPluginToolkitV1
         /// Use DemoUser if the miner requires a network benchmark the plugin will blacklist users
         /// </summary>
         public static string DemoUserBTC => DemoUser.BTC;
-        
+
+        public static bool HideMiningWindows { set; get; }
+        public static bool MinimizeMiningWindows { set; get; }
+
 
         public static Tuple<AlgorithmType, bool> GetAlgorithmSingleType(this IEnumerable<MiningPair> mps)
         {
@@ -113,23 +116,15 @@ namespace MinerPluginToolkitV1
             return Tuple.Create(hash, true);
         }
 
+        public static bool IsNeverHideMiningWindow(Dictionary<string, string> environmentVariables)
+        {
+            if (environmentVariables == null) return false;
+            return environmentVariables.ContainsKey("NEVER_HIDE_MINING_WINDOW");
+        }
+
         // TODO make one with Start NiceHashProcess
         public static Process CreateMiningProcess(string binPath, string workingDir, string commandLine, Dictionary<string, string> environmentVariables = null)
         {
-            // TODO no handling of WINDOW hiding or minimizing
-            //////if (IsNeverHideMiningWindow)
-            //////{
-            //////    P.StartInfo.CreateNoWindow = false;
-            //////    if (ConfigManager.GeneralConfig.HideMiningWindows || ConfigManager.GeneralConfig.MinimizeMiningWindows)
-            //////    {
-            //////        P.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-            //////        P.StartInfo.UseShellExecute = true;
-            //////    }
-            //////}
-            //////else
-            //////{
-            //////    P.StartInfo.CreateNoWindow = ConfigManager.GeneralConfig.HideMiningWindows;
-            //////}
             var miningHandle = new Process
             {
                 StartInfo =
@@ -143,6 +138,7 @@ namespace MinerPluginToolkitV1
                 },
                 EnableRaisingEvents = true, // TODO check out this one
             };
+
             // add environment if any
             if (environmentVariables != null)
             {
@@ -153,6 +149,22 @@ namespace MinerPluginToolkitV1
                     miningHandle.StartInfo.EnvironmentVariables[envName] = envValue;
                 }
             }
+
+            // WINDOW hiding or minimizing
+            var isNeverHideMiningWindow = IsNeverHideMiningWindow(environmentVariables);
+            var hideMiningWindow = HideMiningWindows && !isNeverHideMiningWindow;
+            var minimizeMiningWindow = MinimizeMiningWindows || (HideMiningWindows && isNeverHideMiningWindow);
+            if (hideMiningWindow)
+            {
+                miningHandle.StartInfo.CreateNoWindow = true;
+            }
+            else if(minimizeMiningWindow)
+            {
+                miningHandle.StartInfo.CreateNoWindow = false;
+                miningHandle.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+                miningHandle.StartInfo.UseShellExecute = true;
+            }
+
             return miningHandle;
         }
 
