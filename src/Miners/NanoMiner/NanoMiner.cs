@@ -101,19 +101,48 @@ namespace NanoMiner
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
-                foreach (var gpu in gpus)
+           
+                foreach (var apiDeviceData in summary.Devices)
                 {
-                    if (summary.Devices == null) continue;
-                    /*
-                    var currentSpeedString = summary.Algorithms[$"{gpu.ID}"].algoData[$"{AlgorithmName(_algorithmType)}"].Hashrate;
-                    var currentSpeed = Convert.ToDouble(currentSpeedString);
-                    totalSpeed += currentSpeed;
-                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed) });
-                    var currentPower = summary.miners[$"{gpu.ID}"].device.power;
-                    totalPowerUsage += currentPower;
-                    perDevicePowerInfo.Add(gpu.UUID, currentPower);
-                    */
+                    foreach (var kvp in apiDeviceData)
+                    {
+                        var devId = int.Parse(kvp.Key.Remove(0, 3), System.Globalization.NumberStyles.HexNumber); //remove GPU from GPU XX string to get ID
+                        var gpu = gpus.Where(dev => dev.ID == devId).FirstOrDefault();
+                        var devData = kvp.Value;
+                        var currentPower = Convert.ToInt32(devData.Power);
+                        totalPowerUsage += currentPower;
+                        perDevicePowerInfo.Add(gpu.UUID, currentPower);
+                    }
                 }
+
+                foreach (var apiAlgoData in summary.Algorithms)
+                {
+                    foreach (var kvp in apiAlgoData)
+                    {
+                        var algo = kvp.Key;
+                        var algoData = kvp.Value;
+                        foreach (var data in algoData)
+                        {
+                            if (data.Key.Contains("GPU"))
+                            {
+                                var devId = int.Parse(data.Key.Remove(0, 3), System.Globalization.NumberStyles.HexNumber); //remove GPU from GPU XX string to get ID
+                                var gpu = gpus.Where(dev => dev.ID == devId).FirstOrDefault();
+                                var speed = data.Value.ToString();
+                                perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, JsonApiHelpers.HashrateFromApiData(speed)) });
+                            }
+                            else if (data.Key == "Total")
+                            {
+                                var speed = data.Value.ToString();
+                                totalSpeed = JsonApiHelpers.HashrateFromApiData(speed);
+                            }
+                        }
+                    }
+                }
+
+                api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                api.PowerUsagePerDevice = perDevicePowerInfo;
+                api.PowerUsageTotal = totalPowerUsage;
             }
             catch (Exception e)
             {

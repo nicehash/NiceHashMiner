@@ -22,4 +22,22 @@ namespace NanoMiner
         public int Temperature { get; set; }
         public double Power { get; set; }
     }
+
+    public static class JsonApiHelpers
+    {
+        public static double HashrateFromApiData(string data)
+        {
+            try
+            {
+                var hashSplit = data.Substring(data.IndexOf("Hashrate")).Replace("\"", "").Split(':');
+                var hash = hashSplit[1].Substring(0, hashSplit[1].IndexOf('\r'));
+                return Convert.ToDouble(hash);
+            }
+            catch (Exception e)
+            {
+                //TODO log
+                return 0.0;
+            }
+        }
+    }
 }
