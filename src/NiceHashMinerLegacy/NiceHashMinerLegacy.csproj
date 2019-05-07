@@ -399,7 +399,6 @@
     <Compile Include="Miners\Grouping\GroupingLogic.cs" />
     <Compile Include="Miners\Grouping\GroupMiner.cs" />
     <Compile Include="Miners\Grouping\MiningPair.cs" />
-    <Compile Include="Miners\Grouping\MiningSetup.cs" />
     <Compile Include="Miners\MinersManager.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />

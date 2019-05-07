@@ -84,7 +84,7 @@ namespace NiceHashMiner.Benchmarking
 
         private async Task BenchmarkAlgorithm(Algorithm algo)
         {
-            var currentMiner = MinerFactory.CreateMiner(algo);
+            var currentMiner = MinerFactory.CreateMinerForBenchmark(algo);
             if (currentMiner == null) return;
 
             BenchmarkManager.AddToStatusCheck(Device, algo);

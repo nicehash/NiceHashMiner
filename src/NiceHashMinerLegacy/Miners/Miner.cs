@@ -18,12 +18,9 @@ namespace NiceHashMiner
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
 
-        public MiningSetup MiningSetup { get; protected set; }
+        public List<Miners.Grouping.MiningPair> MiningPairs { get; protected set; }
 
         public bool IsRunning { get; protected set; }
-
-        // Benchmark stuff
-        protected Exception BenchmarkException;
 
 
         //// TODO maybe set for individual miner cooldown/retries logic variables
@@ -46,13 +43,11 @@ namespace NiceHashMiner
 
         public bool IsUpdatingApi { get; protected set; } = false;
 
-        protected Dictionary<string, string> _enviormentVariables = null;
 
-
-        protected Miner(string minerDeviceName)
+        protected Miner(string minerDeviceName, List<Miners.Grouping.MiningPair> miningPairs)
         {
-            MiningSetup = new MiningSetup(null);
-            IsInit = false;
+            MiningPairs = miningPairs;
+            IsInit = MiningPairs != null || MiningPairs.Count > 0;
 
             MinerDeviceName = minerDeviceName;
 
@@ -60,12 +55,6 @@ namespace NiceHashMiner
             //_maxCooldownTimeInMilliseconds = GetMaxCooldownTimeInMilliseconds();
             // 
             Helpers.ConsolePrint(MinerTag(), "NEW MINER CREATED");
-        }
-
-        public virtual void InitMiningSetup(MiningSetup miningSetup)
-        {
-            MiningSetup = miningSetup;
-            IsInit = MiningSetup.IsInit;
         }
 
         // TAG for identifying miner
@@ -81,7 +70,7 @@ namespace NiceHashMiner
                 }
 
                 // contains ids
-                var ids = MiningSetup.MiningPairs.Select(cdevs => cdevs.Device.ID.ToString()).ToList();
+                var ids = MiningPairs.Select(cdevs => cdevs.Device.ID.ToString()).ToList();
                 _minerTag = string.Format(mask, MinerDeviceName, MinerID, string.Join(",", ids));
             }
 
@@ -103,6 +92,8 @@ namespace NiceHashMiner
         // Put this in internals common error lines when benchmarking
         protected void CheckOutdata(string outdata)
         {
+            // Benchmark stuff
+            Exception BenchmarkException;
             //Helpers.ConsolePrint("BENCHMARK" + benchmarkLogPath, outdata);
             // ccminer, cpuminer
             if (outdata.Contains("Cuda error"))

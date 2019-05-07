@@ -24,7 +24,7 @@ namespace NiceHashMiner.Miners
         private readonly IMiner _miner;
         List<MiningPair> _miningPairs;
 
-        public MinerFromPlugin(string pluginUUID) : base(pluginUUID)
+        public MinerFromPlugin(string pluginUUID, List<Miners.Grouping.MiningPair> miningPairs) : base(pluginUUID, miningPairs)
         {
             _plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
             _miner = _plugin.CreateMiner();
@@ -70,7 +70,7 @@ namespace NiceHashMiner.Miners
         {
             _miner.InitMiningLocationAndUsername(miningLocation, username);
 
-            _miningPairs = this.MiningSetup.MiningPairs
+            _miningPairs = this.MiningPairs
                 .Where(pair => pair.Algorithm is PluginAlgorithm)
                 .Select(pair => new MinerPlugin.MiningPair
                 {

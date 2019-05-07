@@ -5,15 +5,13 @@ namespace NiceHashMiner.Miners.Grouping
 {
     public class MiningPair
     {
-        public readonly ComputeDevice Device;
-        public readonly Algorithm Algorithm;
-        public string CurrentExtraLaunchParameters;
+        public ComputeDevice Device { get; private set; }
+        public Algorithm Algorithm { get; private set; }
 
         public MiningPair(ComputeDevice d, Algorithm a)
         {
             Device = d;
             Algorithm = a;
-            CurrentExtraLaunchParameters = Algorithm.ExtraLaunchParameters;
         }
     }
 }

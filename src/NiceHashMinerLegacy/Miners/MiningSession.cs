@@ -469,8 +469,8 @@ namespace NiceHashMiner.Miners
                         toStop.Stop();
                         _runningGroupMiners.Remove(toStop.Key);
                         // Deviant checker works only for single Device so we skip if there are multiple devices, BUT NOW WE HAVE PER DEVICE SPEEDS AND WE SHOULD MOVE THIS CHECKER OUTSIDE
-                        if (toStop.Miner.MiningSetup.MiningPairs.Count != 1) continue;
-                        var algo = toStop.Miner.MiningSetup.MiningPairs.First().Algorithm;
+                        if (toStop.Miner.MiningPairs.Count != 1) continue;
+                        var algo = toStop.Miner.MiningPairs.First().Algorithm;
                         if (_benchCheckers.TryGetValue(algo, out var checker))
                             checker.Stop();
                         //if (algo is DualAlgorithm dual && _dualBenchCheckers.TryGetValue(dual, out var sChecker))

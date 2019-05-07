@@ -10,13 +10,8 @@ namespace NiceHashMiner.Miners.Grouping
         public Miner Miner { get; protected set; }
         public string DevicesInfoString { get; }
         public AlgorithmType AlgorithmUUID { get; }
-
-        // for now used only for dagger identification AMD or NVIDIA
-        public DeviceType DeviceType { get; }
         public string Key { get; }
         public List<int> DevIndexes { get; }
-
-        public double TotalPower { get; }
 
         // , string miningLocation, string btcAdress, string worker
         public GroupMiner(List<MiningPair> miningPairs, string key)
@@ -36,18 +31,15 @@ namespace NiceHashMiner.Miners.Grouping
                     {
                         deviceNames.Add(pair.Device.NameCount);
                         DevIndexes.Add(pair.Device.Index);
-                        TotalPower += pair.Algorithm.PowerUsage;
                     }
                     DevicesInfoString = "{ " + string.Join(", ", deviceNames) + " }";
                 }
                 // init miner
                 {
-                    var mPair = miningPairs[0];
-                    DeviceType = mPair.Device.DeviceType;
-                    Miner = MinerFactory.CreateMiner(mPair.Algorithm);
+                    Miner = MinerFactory.CreateMinerForMining(miningPairs);
                     if (Miner != null)
                     {
-                        Miner.InitMiningSetup(new MiningSetup(miningPairs));
+                        var mPair = miningPairs[0];
                         AlgorithmUUID = mPair.Algorithm.AlgorithmUUID;
                     }
                 }

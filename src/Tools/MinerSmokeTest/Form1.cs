@@ -163,12 +163,10 @@ namespace MinerSmokeTest
                 {
                     step++;
                     try {
-                        var miner = NiceHashMiner.Miners.MinerFactory.CreateMiner(algorithm);
-
                         var pair = new List<MiningPair> { new MiningPair(device, algorithm) };
-                        var miningSetup = new MiningSetup(pair);
-
-                        miner.InitMiningSetup(miningSetup);
+                        var miner = NiceHashMiner.Miners.MinerFactory.CreateMinerForMining(pair);
+                        //var miningSetup = new MiningSetup(pair);
+                        //miner.InitMiningSetup(miningSetup);
 
                         tbx_info.Text += $"TESTING: {Environment.NewLine}";
                         tbx_info.Text += $"Device: {device.GetFullName()} {Environment.NewLine}";
