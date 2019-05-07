@@ -96,6 +96,7 @@ namespace NiceHashMinerLegacy.Common
                 var logFilePath = Path.Combine(_logsRootPath, "log.txt");
 
                 // TODO broken on netstandard
+#if NET45
                 var h = (Hierarchy)LogManager.GetRepository();
                 h.Root.Level = logLevel;
 
@@ -106,6 +107,7 @@ namespace NiceHashMinerLegacy.Common
                 }
 
                 h.Configured = true;
+#endif
 
                 _isInitSucceess = true;
             }

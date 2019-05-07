@@ -56,7 +56,7 @@ namespace NiceHashMiner.Plugin
             new TeamRedMinerIntegratedPlugin(),
             new TRexIntegratedPlugin(),
             new TTMinerIntegratedPlugin(),
-            new NanoMinerIntegratedPlugin(),
+            //new NanoMinerIntegratedPlugin(),
 
             // service plugin
             EthlargementIntegratedPlugin.Instance

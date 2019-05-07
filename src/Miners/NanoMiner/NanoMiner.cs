@@ -17,7 +17,6 @@ namespace NanoMiner
 {
     public class NanoMiner : MinerBase
     {
-        private readonly string _uuid;
 
         private readonly HttpClient _http = new HttpClient();
         private string _extraLaunchParameters = "";
@@ -28,10 +27,8 @@ namespace NanoMiner
 
         private string _devices;
 
-        public NanoMiner(string uuid)
-        {
-            _uuid = uuid;
-        }
+        public NanoMiner(string uuid) : base(uuid)
+        {}
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
