@@ -17,13 +17,16 @@ namespace NiceHashMiner.Forms.Components
     /// </summary>
     public partial class DevicesListViewSpeedControl : DevicesListViewEnableControl, IRatesComunication
     {
-        private const int Speed = 1;
-        private const int SecSpeed = 2;
-        private const int Profit = 3;
-        private const int Fiat = 4;
-        private const int PowerUsage = 5;
-        private const int PowerCost = 6;
-        private const int PowerProfit = 7;
+        private enum Column : int
+        {
+            Name = 0,
+            Speeds,
+            Profit,
+            Fiat,
+            PowerUsage,
+            PowerCost,
+            PowerProfit,
+        }
 
         private const string PowerKey = "power";
         private const string DiagKey = "diag";
@@ -72,8 +75,7 @@ namespace NiceHashMiner.Forms.Components
         {
             base.InitLocale();
 
-            speedHeader.Text = Translations.Tr("H/s");
-            secondarySpeedHeader.Text = Translations.Tr("H/s (Secondary)");
+            speedHeader.Text = Translations.Tr("Speeds");
         }
 
         protected override void ListViewDevicesItemChecked(object sender, ItemCheckedEventArgs e)
@@ -290,9 +292,9 @@ namespace NiceHashMiner.Forms.Components
             if (!ShowPowerCols) return;
             if (lvi.SubItems.Count <= 7) return;
 
-            lvi.SubItems[PowerUsage].Text = powerUsage.ToString("F2");
-            lvi.SubItems[PowerCost].Text = powerCost.ToString("F2");
-            lvi.SubItems[PowerProfit].Text = profit?.ToString("F2") ?? "";
+            lvi.SubItems[(int)Column.PowerUsage].Text = powerUsage.ToString("F2");
+            lvi.SubItems[(int)Column.PowerCost].Text = powerCost.ToString("F2");
+            lvi.SubItems[(int)Column.PowerProfit].Text = profit?.ToString("F2") ?? "";
         }
 
         private void SetOptionalHeaders(string key)
@@ -385,7 +387,8 @@ namespace NiceHashMiner.Forms.Components
                 // get data
                 var algorithmFirstType = minerStats.Speeds.Count > 0 ? minerStats.Speeds[0].type : AlgorithmType.NONE;
                 var algorithmSecondType = minerStats.Speeds.Count > 1 ? minerStats.Speeds[1].type : AlgorithmType.NONE;
-                var algorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmFirstType, algorithmSecondType));
+                var algorithmUUID = Helpers.DualAlgoFromAlgos(algorithmFirstType, algorithmSecondType);
+                var algorithmName = AlgorithmNiceHashNames.GetName(algorithmUUID);
                 var minerName = minerStats.MinerName;
                 var name = minerName != "" ? $"{algorithmName} ({minerName})" : algorithmName;
                 var firstSpeed = minerStats.Speeds.Count > 0 ? minerStats.Speeds[0].speed : 0d;
@@ -419,7 +422,7 @@ namespace NiceHashMiner.Forms.Components
                         // This is a total row
                         var minerRevenue = minerStats.TotalPayingRate();
                         var minerProfit = minerStats.TotalPayingRateDeductPowerCost(kwhPriceInBtc);
-                        UpdateRowInfo(item, firstSpeed, firstSpeed, minerRevenue, minerProfit, minerStats.PowerCost(kwhPriceInBtc), minerStats.GetPowerUsage());
+                        UpdateRowInfo(item, firstSpeed, secondSpeed, algorithmUUID, minerRevenue, minerProfit, minerStats.PowerCost(kwhPriceInBtc), minerStats.GetPowerUsage());
                     }
                     else if (item.Tag is ComputeDevice dev && minerStats.DeviceUUIDs.Any(uuid => uuid == dev.Uuid))
                     {
@@ -430,7 +433,7 @@ namespace NiceHashMiner.Forms.Components
                         var secondtDeviceSpeed = deviceStat.Speeds.Count > 1 ? deviceStat.Speeds[1].speed : 0d;
                         var deviceRevenue = deviceStat.TotalPayingRate();
                         var deviceProfit = deviceStat.TotalPayingRateDeductPowerCost(kwhPriceInBtc);
-                        UpdateRowInfo(item, firstDeviceSpeed, secondtDeviceSpeed, deviceRevenue, deviceProfit, deviceStat.PowerCost(kwhPriceInBtc), deviceStat.GetPowerUsage());
+                        UpdateRowInfo(item, firstDeviceSpeed, secondtDeviceSpeed, algorithmUUID, deviceRevenue, deviceProfit, deviceStat.PowerCost(kwhPriceInBtc), deviceStat.GetPowerUsage());
                     }
                 }
             }
@@ -458,28 +461,28 @@ namespace NiceHashMiner.Forms.Components
             return $"{unit}/{timeUnit}";
         }
         
-        private static void UpdateRowInfo(ListViewItem item, double speed, double secSpeed, double revenue, double profit,
+        private static void UpdateRowInfo(ListViewItem item, double speed, double secSpeed, AlgorithmType algorithmType, double revenue, double profit,
             double power, double powerUsage)
         {
             try
             {
-                item.SubItems[Speed].Text = Helpers.FormatSpeedOutput(speed);
-                item.SubItems[SecSpeed].Text = secSpeed > 0 ? Helpers.FormatSpeedOutput(secSpeed) : "";
+                item.SubItems[(int)Column.Speeds].Text = Helpers.FormatDualSpeedOutput(speed, secSpeed, algorithmType);
+                //item.SubItems[SecSpeed].Text = secSpeed > 0 ? Helpers.FormatSpeedOutput(secSpeed) : "";
 
                 var fiat = ExchangeRateApi.ConvertFromBtc(profit * TimeFactor.TimeUnit);
                 if (ShowPowerCols)
                 {
                     // When showing power cols, the default "profit" header changes to revenue
                     // The power headers then explain cost of power and real profit after subtracting this
-                    item.SubItems[Profit].Text = (revenue * 1000 * TimeFactor.TimeUnit).ToString("F4");
-                    item.SubItems[Fiat].Text = ExchangeRateApi.ConvertFromBtc(revenue * TimeFactor.TimeUnit).ToString("F2");
+                    item.SubItems[(int)Column.Profit].Text = (revenue * 1000 * TimeFactor.TimeUnit).ToString("F4");
+                    item.SubItems[(int)Column.Fiat].Text = ExchangeRateApi.ConvertFromBtc(revenue * TimeFactor.TimeUnit).ToString("F2");
                     var powerCost = ExchangeRateApi.ConvertFromBtc(power * TimeFactor.TimeUnit);
                     SetPowerText(item, powerUsage, powerCost, fiat);
                 }
                 else
                 {
-                    item.SubItems[Profit].Text = (profit * 1000 * TimeFactor.TimeUnit).ToString("F4");
-                    item.SubItems[Fiat].Text = fiat.ToString("F2");
+                    item.SubItems[(int)Column.Profit].Text = (profit * 1000 * TimeFactor.TimeUnit).ToString("F4");
+                    item.SubItems[(int)Column.Fiat].Text = fiat.ToString("F2");
                 }
             }
             catch { }

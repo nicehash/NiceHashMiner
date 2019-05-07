@@ -29,7 +29,6 @@ namespace NiceHashMiner.Forms.Components
         private void InitializeComponent()
         {
             this.speedHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.secondarySpeedHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.profitHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.fiatHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
@@ -38,11 +37,9 @@ namespace NiceHashMiner.Forms.Components
             // 
             this.listViewDevices.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.speedHeader,
-            this.secondarySpeedHeader,
             this.profitHeader,
             this.fiatHeader});
-            this.listViewDevices.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
-            this.listViewDevices.Size = new System.Drawing.Size(647, 303);
+            this.listViewDevices.Margin = new System.Windows.Forms.Padding(2);
             // 
             // devicesHeader
             // 
@@ -50,15 +47,9 @@ namespace NiceHashMiner.Forms.Components
             // 
             // speedHeader
             // 
-            this.speedHeader.Text = "H/s";
+            this.speedHeader.Text = "Speeds";
             this.speedHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.speedHeader.Width = 100;
-            // 
-            // secondarySpeedHeader
-            // 
-            this.secondarySpeedHeader.Text = "H/s (Secondary)";
-            this.secondarySpeedHeader.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.secondarySpeedHeader.Width = 100;
             // 
             // profitHeader
             // 
@@ -86,7 +77,6 @@ namespace NiceHashMiner.Forms.Components
 #endregion
 
         private System.Windows.Forms.ColumnHeader speedHeader;
-        private System.Windows.Forms.ColumnHeader secondarySpeedHeader;
         private System.Windows.Forms.ColumnHeader profitHeader;
         private System.Windows.Forms.ColumnHeader fiatHeader;
     }
