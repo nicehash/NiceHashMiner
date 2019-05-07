@@ -19,15 +19,16 @@ namespace NiceHashMiner.Miners
 {
     // pretty much just implement what we need and ignore everything else
     public class MinerFromPlugin : Miner
-    { 
+    {
+        private readonly IMinerPlugin _plugin;
         private readonly IMiner _miner;
         List<MiningPair> _miningPairs;
 
         public MinerFromPlugin(string pluginUUID) : base(pluginUUID)
         {
             MinerUUID = pluginUUID;
-            var plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
-            _miner = plugin.CreateMiner();
+            _plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
+            _miner = _plugin.CreateMiner();
         }
 
         public override async Task<ApiData> GetSummaryAsync()
@@ -60,7 +61,7 @@ namespace NiceHashMiner.Miners
             }
 
             // TODO temporary here move it outside later
-            MiningStats.UpdateGroup(apiData, MinerUUID);
+            MiningStats.UpdateGroup(apiData, MinerUUID, _plugin.Name);
 
             return apiData;
         }
@@ -88,6 +89,7 @@ namespace NiceHashMiner.Miners
         {
             // TODO thing about this case, closing opening on switching
             // EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
+            MiningStats.RemoveGroup(_miningPairs.Select(pair => pair.Device.UUID), MinerUUID);
             IsRunning = false;
             _miner.StopMining();
         }

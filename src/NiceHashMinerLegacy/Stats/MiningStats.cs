@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MinerPlugin;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Plugin;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -15,6 +16,7 @@ namespace NiceHashMiner.Stats
     {
         public class BaseStats
         {
+            public string MinerName { get; set; } = "";
             public string GroupKey { get; set; } = "";
 
             public List<(AlgorithmType type, double speed)> Speeds { get; set; } = new List<(AlgorithmType type, double speed)>();
@@ -62,6 +64,18 @@ namespace NiceHashMiner.Stats
                 return kwhPriceInBtc * powerUsage *24 / 1000;
             }
 
+            public void CopyFrom(BaseStats setFrom)
+            {
+                // BaseStats
+                MinerName = setFrom.MinerName;
+                GroupKey = setFrom.GroupKey;
+                Speeds = setFrom.Speeds.ToList();
+                Rates = setFrom.Rates.ToList();
+                PowerUsageAPI = setFrom.PowerUsageAPI;
+                PowerUsageDeviceReading = setFrom.PowerUsageDeviceReading;
+                PowerUsageAlgorithmSetting = setFrom.PowerUsageAlgorithmSetting;
+            }
+
             public void Clear()
             {
                 Speeds.Clear();
@@ -82,6 +96,7 @@ namespace NiceHashMiner.Stats
                 var copy = new DeviceMiningStats
                 {
                     // BaseStats
+                    MinerName = this.MinerName,
                     GroupKey = this.GroupKey,
                     Speeds = this.Speeds.ToList(),
                     Rates = this.Rates.ToList(),
@@ -106,6 +121,7 @@ namespace NiceHashMiner.Stats
                 var copy = new MinerMiningStats
                 {
                     // BaseStats
+                    MinerName = this.MinerName,
                     GroupKey = this.GroupKey,
                     Speeds = this.Speeds.ToList(),
                     Rates = this.Rates.ToList(),
@@ -131,7 +147,20 @@ namespace NiceHashMiner.Stats
         // key is device UUID 
         private static Dictionary<string, DeviceMiningStats> _devicesMiningStats = new Dictionary<string, DeviceMiningStats>();
 
-        public static void UpdateGroup(ApiData apiData, string minerUUID)
+        public static void RemoveGroup(IEnumerable<string> deviceUUIDs, string minerUUID)
+        {
+            var sortedDeviceUUIDs = deviceUUIDs.OrderBy(uuid => uuid).ToList();
+            var uuidsKeys = string.Join(",", sortedDeviceUUIDs);
+            var removeKey = $"{minerUUID}-{uuidsKeys}";
+            // remove groups
+            lock (_lock)
+            {
+                _apiDataGroups.Remove(removeKey);
+                _minersMiningStats.Remove(removeKey);
+            }
+        }
+
+        public static void UpdateGroup(ApiData apiData, string minerUUID, string minerName)
         {
 
             if (apiData == null) return;
@@ -164,24 +193,24 @@ namespace NiceHashMiner.Stats
 
                 var payingRates = NHSmaData.CurrentProfitsSnapshot();
                 // update stats
-                UpdateMinerMiningStats(apiData, minerUUID, groupKey, payingRates);
+                UpdateMinerMiningStats(apiData, minerUUID, minerName, groupKey, payingRates);
                 // update device stats
                 foreach (var deviceUuid in sortedDeviceUUIDs)
                 {
-                    UpdateDeviceMiningStats(apiData, minerUUID, deviceUuid, payingRates);
+                    UpdateDeviceMiningStats(apiData, minerUUID, minerName, groupKey, deviceUuid, payingRates);
                 }
 
                 // TODO notify change
             }
         }
 
-        private static void UpdateMinerMiningStats(ApiData apiData, string minerUUID, string groupKey, Dictionary<AlgorithmType, double> payingRates)
+        private static void UpdateMinerMiningStats(ApiData apiData, string minerUUID, string minerName, string groupKey, Dictionary<AlgorithmType, double> payingRates)
         {
             MinerMiningStats stat;
             if (_minersMiningStats.TryGetValue(groupKey, out stat) == false)
             {
                 // create if it doesn't exist
-                stat = new MinerMiningStats { GroupKey = groupKey };
+                stat = new MinerMiningStats { GroupKey = groupKey, MinerName = minerName };
                 _minersMiningStats[groupKey] = stat;
             }
             var deviceUUIDs = apiData.AlgorithmSpeedsPerDevice.Select(speedInfo => speedInfo.Key).ToArray();
@@ -209,16 +238,19 @@ namespace NiceHashMiner.Stats
             stat.PowerUsageAlgorithmSetting = powerUsageFromAlgorithmSettings;
         }
 
-        private static void UpdateDeviceMiningStats(ApiData apiData, string minerUUID, string deviceUuid, Dictionary<AlgorithmType, double> payingRates)
+        private static void UpdateDeviceMiningStats(ApiData apiData, string minerUUID, string minerName, string groupKey, string deviceUuid, Dictionary<AlgorithmType, double> payingRates)
         {
             DeviceMiningStats stat;
             if (_devicesMiningStats.TryGetValue(deviceUuid, out stat) == false)
             {
                 // create if it doesn't exist
-                stat = new DeviceMiningStats { DeviceUUID = deviceUuid };
+                stat = new DeviceMiningStats{ DeviceUUID = deviceUuid };
                 _devicesMiningStats[deviceUuid] = stat;
             }
             stat.Clear();
+            // re-set miner name and group key
+            stat.MinerName = minerName;
+            stat.GroupKey = groupKey;
 
             // update stat
             var deviceSpeedsInfo = apiData.AlgorithmSpeedsPerDevice

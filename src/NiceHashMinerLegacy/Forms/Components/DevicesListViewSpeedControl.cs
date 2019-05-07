@@ -386,6 +386,8 @@ namespace NiceHashMiner.Forms.Components
                 var algorithmFirstType = minerStats.Speeds.Count > 0 ? minerStats.Speeds[0].type : AlgorithmType.NONE;
                 var algorithmSecondType = minerStats.Speeds.Count > 1 ? minerStats.Speeds[1].type : AlgorithmType.NONE;
                 var algorithmName = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmFirstType, algorithmSecondType));
+                var minerName = minerStats.MinerName;
+                var name = minerName != "" ? $"{algorithmName} ({minerName})" : algorithmName;
                 var firstSpeed = minerStats.Speeds.Count > 0 ? minerStats.Speeds[0].speed : 0d;
                 var secondSpeed = minerStats.Speeds.Count > 1 ? minerStats.Speeds[1].speed : 0d;
 
@@ -399,7 +401,6 @@ namespace NiceHashMiner.Forms.Components
                 // Make group for this algo/miner combo if not made already
                 if (listViewDevices.Groups[key] == null)
                 {
-                    var name = AlgorithmNiceHashNames.GetName(Helpers.DualAlgoFromAlgos(algorithmFirstType, algorithmSecondType));
                     var group = new ListViewGroup(key, name)
                     {
                         Tag = minerStats.GroupKey
