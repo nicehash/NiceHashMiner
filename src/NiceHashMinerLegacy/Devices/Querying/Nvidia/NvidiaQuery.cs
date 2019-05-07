@@ -1,4 +1,5 @@
 ﻿using ManagedCuda.Nvml;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using NVIDIA.NVAPI;
 using System;
@@ -28,12 +29,14 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
 
         public List<CudaComputeDevice> QueryCudaDevices()
         {
+            Logger.Info(Tag, "QueryCudaDevices START");
             Helpers.ConsolePrint(Tag, "QueryCudaDevices START");
 
             var compDevs = new List<CudaComputeDevice>();
 
             if (!CudaQuery.TryQueryCudaDevices(out var cudaDevs))
             {
+                Logger.Info(Tag, "QueryCudaDevices END");
                 Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
                 return compDevs;
             }
@@ -80,8 +83,10 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 compDevs.Add(new CudaComputeDevice(cudaDev, ++numDevs, handle, nvmlHandle));
             }
 
+            Logger.Info(Tag, stringBuilder.ToString());
+            Logger.Info(Tag, "QueryCudaDevices END");
+
             Helpers.ConsolePrint(Tag, stringBuilder.ToString());
-            
             Helpers.ConsolePrint(Tag, "QueryCudaDevices END");
 
             SortBusIDs(compDevs);
@@ -100,6 +105,7 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
             var handles = new NvPhysicalGpuHandle[NVAPI.MAX_PHYSICAL_GPUS];
             if (NVAPI.NvAPI_EnumPhysicalGPUs == null)
             {
+                Logger.Debug("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable");
                 Helpers.ConsolePrint("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable");
             }
             else
@@ -107,6 +113,7 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 var status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out _);
                 if (status != NvStatus.OK)
                 {
+                    Logger.Debug("NVAPI", $"Enum physical GPUs failed with status: {status}");
                     Helpers.ConsolePrint("NVAPI", "Enum physical GPUs failed with status: " + status);
                 }
                 else
@@ -119,11 +126,14 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
 
                         if (idStatus != NvStatus.OK)
                         {
+                            Logger.Debug("NVAPI",
+                                "Bus ID get failed with status: " + idStatus);
                             Helpers.ConsolePrint("NVAPI",
                                 "Bus ID get failed with status: " + idStatus);
                         }
                         else
                         {
+                            Logger.Debug("NVAPI", "Found handle for busid " + id);
                             Helpers.ConsolePrint("NVAPI", "Found handle for busid " + id);
                             idHandles[id] = handle;
                         }
@@ -145,6 +155,7 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
             }
             catch (Exception e)
             {
+                Logger.Error("NVML", e.ToString());
                 Helpers.ConsolePrint("NVML", e.ToString());
                 return false;
             }

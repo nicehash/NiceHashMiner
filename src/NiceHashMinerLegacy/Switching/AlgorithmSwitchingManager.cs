@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Timers;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Switching
 {
@@ -114,6 +115,7 @@ namespace NiceHashMiner.Switching
 
             if (_hasStarted)
             {
+                Logger.Info(Tag, sb.ToString());
                 Helpers.ConsolePrint(Tag, sb.ToString());
             }
             else

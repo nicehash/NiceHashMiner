@@ -128,6 +128,7 @@ namespace NiceHashMiner.Plugin
             {
                 RemovePluginAlgorithms(uuid);
             }
+            Logger.Info("MinerPluginsManager", "Finished initialization of miners.");
         }
 
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }
@@ -188,8 +189,10 @@ namespace NiceHashMiner.Plugin
                     {
                         await pluginWithDCR.DevicesCrossReference(baseDevices);
                     }
-                    catch
-                    {}
+                    catch (Exception e)
+                    {
+                        Logger.Debug("MinerPluginsManager", $"Error occured while executing device cross reference in {plugin.Name} plugin: {e.Message}");
+                    }
                 }
             }
         }
@@ -206,8 +209,10 @@ namespace NiceHashMiner.Plugin
                     {
                         ret.AddRange(pluginCheckBins.CheckBinaryPackageMissingFiles());
                     }
-                    catch
-                    { }
+                    catch (Exception e)
+                    {
+                        Logger.Debug("MinerPluginsManager", $"Error occured while checking for missing miners: {e.Message}");
+                    }
                 }
             }
             return ret;
@@ -268,8 +273,8 @@ namespace NiceHashMiner.Plugin
                 }
             } catch(Exception e)
             {
-
-            }
+                Logger.Debug("MinerPluginsManager", $"Error occured while removing {pluginUUID} plugin: {e.Message}");
+            }       
         }
 
         public static void CrossReferenceInstalledWithOnline()
@@ -336,6 +341,7 @@ namespace NiceHashMiner.Plugin
                 return true;
             } catch(Exception e)
             {
+                Logger.Error("MinerPluginsManager", $"Error occured while getting online miner plugins: {e.Message}");
                 Helpers.ConsolePrint("MinerPluginsManager", $"GetOnlineMinerPlugins ex: {e}");
             }
             return false;
@@ -421,6 +427,7 @@ namespace NiceHashMiner.Plugin
             }
             catch (Exception e)
             {
+                Logger.Error("MinerPluginsManager", $"Installation of {plugin.PluginName}_{plugin.PluginVersion}_{plugin.PluginUUID} failed: ${e.Message}");
                 Helpers.ConsolePrint("MinerPluginsManager", $"Installation of {plugin.PluginName}_{plugin.PluginVersion}_{plugin.PluginUUID} failed: ${e}");
                 //downloadAndInstallUpdate();
             }
@@ -483,7 +490,7 @@ namespace NiceHashMiner.Plugin
             }
             catch (Exception e)
             {
-                // TODO log
+                Logger.Info("MinerPluginsManager", $"Error occured while unzipping file: {e.Message}");
                 return false;
             }
         }

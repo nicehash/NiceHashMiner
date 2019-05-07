@@ -48,7 +48,7 @@ namespace ZEnemy
 
         public override Task<ApiData> GetMinerStatsDataAsync()
         {
-            return CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs);
+            return CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup);
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
@@ -79,6 +79,8 @@ namespace ZEnemy
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             var benchHashes = 0d;
@@ -129,7 +131,11 @@ namespace ZEnemy
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
             // all good continue on
 
             // init command line params parts

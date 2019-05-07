@@ -113,9 +113,9 @@ namespace EWBF
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //Helpers.ConsolePrint(MinerTag(), ex.Message);
+                Logger.Info(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
             return api;
@@ -144,6 +144,8 @@ namespace EWBF
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             double benchHashesSum = 0;
@@ -195,7 +197,11 @@ namespace EWBF
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
             // all good continue on
 
             // init command line params parts

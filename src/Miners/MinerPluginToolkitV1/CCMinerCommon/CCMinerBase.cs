@@ -39,11 +39,11 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs);
+            var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup);
             return ret;
         }
 
-        protected virtual string CreateBenchmarkCommandLine(int benchmarkTime)
+        protected virtual string CreateBenchmarkCommandLine(int benchmarkTime) //this is obsolete?
         {
             var algo = AlgorithmName(_algorithmType);
             return $"--algo={algo} --benchmark --time-limit {benchmarkTime} --devices {_devices} {_extraLaunchParameters}";
@@ -74,6 +74,8 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
 
@@ -150,7 +152,11 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }            
             // all good continue on
 
             var orderedMiningPairs = _miningPairs.ToList();

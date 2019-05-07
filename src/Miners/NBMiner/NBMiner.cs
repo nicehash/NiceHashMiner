@@ -77,11 +77,13 @@ namespace NBMiner
                     break;
             }
 
-            var cl = CreateCommandLine(MinerToolkit.DemoUserBTC);
+            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC);
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
-            var bp = new BenchmarkProcess(binPath, binCwd, cl, GetEnvironmentVariables());
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
             var id = Shared.MappedCudaIds[_miningPairs.First().Device.UUID];
 
             var benchHashes = 0d;
@@ -168,6 +170,7 @@ namespace NBMiner
             }
             catch (Exception e)
             {
+                Logger.Info(_logGroup, $"Error occured while getting API stats: {e.Message}");
                 Console.WriteLine($"NBMiner {e}");
             }
 
@@ -179,7 +182,11 @@ namespace NBMiner
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
 
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));

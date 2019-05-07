@@ -58,7 +58,7 @@ namespace CCMinerTpruvotCuda10
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            return await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs);
+            return await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup);
         }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
@@ -86,6 +86,8 @@ namespace CCMinerTpruvotCuda10
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
 
@@ -150,7 +152,11 @@ namespace CCMinerTpruvotCuda10
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
             // all good continue on
 
             var orderedMiningPairs = _miningPairs.ToList();

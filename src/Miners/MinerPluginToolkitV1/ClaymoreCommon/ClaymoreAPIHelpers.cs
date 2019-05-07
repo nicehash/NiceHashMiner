@@ -1,5 +1,6 @@
 ﻿using MinerPlugin;
 using Newtonsoft.Json;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
@@ -18,7 +19,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
         private static readonly List<double> _emptySpeeds = new List<double>();
 
-        public static async Task<ApiData> GetMinerStatsDataAsync(int apiPort, IReadOnlyList<BaseDevice> miningDevices, params AlgorithmType[] algorithmTypes)
+        public static async Task<ApiData> GetMinerStatsDataAsync(int apiPort, IReadOnlyList<BaseDevice> miningDevices, string logGroup, params AlgorithmType[] algorithmTypes)
         {
             var ad = new ApiData();
 
@@ -91,9 +92,9 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                // TODO log
+                Logger.Info(logGroup, $"Error occured while getting API stats: {e.ToString()}");
             }
             return ad;
         }

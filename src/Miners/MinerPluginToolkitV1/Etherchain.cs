@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using NiceHashMinerLegacy.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,8 +32,9 @@ namespace MinerPluginToolkitV1
                     return currentBlockNum;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                Logger.Debug("Etherchain", $"Error occured while getting current block async: {e.Message}");
                 return null;
             }
         }

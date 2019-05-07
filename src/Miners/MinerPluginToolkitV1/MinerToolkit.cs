@@ -208,12 +208,14 @@ namespace MinerPluginToolkitV1
                     }
                     catch (Exception e)
                     {
+                        Logger.Info("MinerToolkit", $"Error occured while waiting for benchmark result: {e.Message}");
                         return new BenchmarkResult{ ErrorMessage = e.Message };
                     }
                 }
                 // #1 if canceled return canceled
                 if (stop.IsCancellationRequested)
                 {
+                    Logger.Info("MinerToolkit", "Benchmark process was canceled by user");
                     Console.WriteLine("Cancelling per user request.");
                     return new BenchmarkResult { ErrorMessage = "Cancelling per user request." };
                 }
@@ -221,6 +223,7 @@ namespace MinerPluginToolkitV1
                 if (ret != null && ret.HasNonZeroSpeeds()) return ret;
                 if (timeout.IsCancellationRequested)
                 {
+                    Logger.Info("MinerToolkit", "Benchmark process timed out");
                     Console.WriteLine("Operation timed out.");
                     return new BenchmarkResult{ ErrorMessage = "Operation timed out." };
                 }

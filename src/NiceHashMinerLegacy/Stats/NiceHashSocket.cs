@@ -92,11 +92,13 @@ namespace NiceHashMiner.Stats
 
         private static void ErrorCallback(object sender, ErrorEventArgs e)
         {
+            NiceHashMinerLegacy.Common.Logger.Info("NiceHashSocket", $"Error occured: {e.ToString()}");
             Helpers.ConsolePrint("SOCKET", e.ToString());
         }
 
         private void CloseCallback(object sender, CloseEventArgs e)
         {
+            NiceHashMinerLegacy.Common.Logger.Info("NiceHashSocket", $"Connection closed code {e.Code}: {e.Reason}");
             Helpers.ConsolePrint("SOCKET", $"Connection closed code {e.Code}: {e.Reason}");
             AttemptReconnect();
         }
@@ -149,6 +151,7 @@ namespace NiceHashMiner.Stats
                 }
             } catch (Exception e)
             {
+                NiceHashMinerLegacy.Common.Logger.Info("NiceHashSocket", $"Error occured while sending data: {e.ToString()}");
                 Helpers.ConsolePrint("SOCKET", e.ToString());
             }
             return false;
@@ -204,6 +207,7 @@ namespace NiceHashMiner.Stats
                 }
                 catch (Exception e)
                 {
+                    NiceHashMinerLegacy.Common.Logger.Info("NiceHashSocket", $"Error while attempting reconnect: {e.ToString()}");
                     Helpers.ConsolePrint("SOCKET", $"Error while attempting reconnect: {e}");
                 }
                 Thread.Sleep(1000);

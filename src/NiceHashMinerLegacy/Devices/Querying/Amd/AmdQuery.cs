@@ -6,6 +6,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.Querying.Amd.OpenCL;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
@@ -43,10 +44,12 @@ namespace NiceHashMiner.Devices.Querying.Amd
 
         public List<AmdComputeDevice> QueryAmd()
         {
+            Logger.Info(Tag, "QueryAMD START");
             Helpers.ConsolePrint(Tag, "QueryAMD START");
 
             var amdDevices = _openCLSuccess ? ProcessDevices(_openCLResult) : null;
 
+            Logger.Info(Tag, "QueryAMD END");
             Helpers.ConsolePrint(Tag, "QueryAMD END");
 
             if (amdDevices != null) SortBusIDs(amdDevices);
@@ -68,6 +71,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 AvailableDevices.AmdOpenCLPlatformNum = oclEl.PlatformNum;
                 AMDDevice.OpenCLPlatformID = oclEl.PlatformNum;
                 amdOclDevices = oclEl.Devices;
+                Logger.Info(Tag, $"AMD platform found: Key: {amdOpenCLPlatformStringKey}, Num: {AvailableDevices.AmdOpenCLPlatformNum}");
                 Helpers.ConsolePrint(Tag,
                     $"AMD platform found: Key: {amdOpenCLPlatformStringKey}, Num: {AvailableDevices.AmdOpenCLPlatformNum}");
                 break;
@@ -88,10 +92,12 @@ namespace NiceHashMiner.Devices.Querying.Amd
 
             if (amdDevices.Count == 0)
             {
+                Logger.Info(Tag, "AMD GPUs count is 0");
                 Helpers.ConsolePrint(Tag, "AMD GPUs count is 0");
                 return null;
             }
 
+            Logger.Info(Tag, $"AMD GPUs count : {amdDevices.Count}");
             Helpers.ConsolePrint(Tag, "AMD GPUs count : " + amdDevices.Count);
             Helpers.ConsolePrint(Tag, "AMD Getting device name and serial from ADL");
             // ADL

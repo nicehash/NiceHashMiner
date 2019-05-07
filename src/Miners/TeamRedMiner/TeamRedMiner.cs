@@ -83,7 +83,7 @@ namespace TeamRedMiner
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var apiDevsResult = await SgminerAPIHelpers.GetApiDevsRootAsync(_apiPort);
+            var apiDevsResult = await SgminerAPIHelpers.GetApiDevsRootAsync(_apiPort, _logGroup);
             var ad = new ApiData();
             if (apiDevsResult == null) return ad;
 
@@ -116,8 +116,10 @@ namespace TeamRedMiner
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                Logger.Info(_logGroup, $"Error occured while parsing API stats: {e.Message}");
+
                 //Console.WriteLine($"TeamRedMiner.GetMinerStatsDataAsync exception: {ex.Message}");
                 //return null;
             }
@@ -148,6 +150,8 @@ namespace TeamRedMiner
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             double benchHashesSum = 0;
@@ -200,7 +204,11 @@ namespace TeamRedMiner
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
             // all good continue on
 
             // Order pairs and parse ELP

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Switching
@@ -47,6 +48,7 @@ namespace NiceHashMiner.Switching
             }
             catch (Exception e)
             {
+                Logger.Error(Tag, e.ToString());
                 Helpers.ConsolePrint(Tag, e.ToString());
             }
 
@@ -115,6 +117,7 @@ namespace NiceHashMiner.Switching
                     }
                     catch (Exception e)
                     {
+                        Logger.Error(Tag, e.ToString());
                         Helpers.ConsolePrint(Tag, e.ToString());
                     }
                 }

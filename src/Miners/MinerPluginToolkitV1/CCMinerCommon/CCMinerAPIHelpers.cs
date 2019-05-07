@@ -1,4 +1,5 @@
 ﻿using MinerPlugin;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 {
     public static class CCMinerAPIHelpers
     {
-        public static async Task<string> GetApiDataBase(int port, string dataToSend)
+        public static async Task<string> GetApiDataBase(int port, string dataToSend, string logGroup)
         {
             try
             {
@@ -28,23 +29,24 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                     return respStr;
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine($"CCMinerAPIHelpers.GetApiDataBase exception: {ex.Message}");
+                Logger.Info(logGroup, $"Error occured while getting api data base: {e.Message}");
+                Console.WriteLine($"CCMinerAPIHelpers.GetApiDataBase exception: {e.Message}");
                 return null;
             }
         }
 
-        public static Task<string> GetApiDataSummary(int port)
+        public static Task<string> GetApiDataSummary(int port, string logGroup)
         {
             var dataToSend = ApiDataHelper.GetHttpRequestNhmAgentStrin("summary");
-            return GetApiDataBase(port, dataToSend);
+            return GetApiDataBase(port, dataToSend, logGroup);
         }
 
-        public static Task<string> GetApiDataThreads(int port)
+        public static Task<string> GetApiDataThreads(int port, string logGroup)
         {
             var dataToSend = ApiDataHelper.GetHttpRequestNhmAgentStrin("threads");
-            return GetApiDataBase(port, dataToSend);
+            return GetApiDataBase(port, dataToSend, logGroup);
         }
 
         private struct IdPowerHash
@@ -54,9 +56,9 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             public double speed;
         }
 
-        public static async Task<ApiData> GetMinerStatsDataAsync(int port, AlgorithmType algorithmType, IEnumerable<MiningPair> miningPairs)
+        public static async Task<ApiData> GetMinerStatsDataAsync(int port, AlgorithmType algorithmType, IEnumerable<MiningPair> miningPairs, string logGroup)
         {
-            var summaryApiResult = await GetApiDataSummary(port);
+            var summaryApiResult = await GetApiDataSummary(port, logGroup);
             double totalSpeed = 0;
             int totalPower = 0;
             if (!string.IsNullOrEmpty(summaryApiResult))
@@ -75,12 +77,14 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                         }
                     }
                 }
-                catch
-                { }
+                catch(Exception e)
+                {
+                    Logger.Info(logGroup, $"Error occured while getting total data from API: {e.Message}");
+                }
             }
             // TODO if have multiple GPUs call the threads as well, but maybe not as often since it might crash the miner
             //var threadsApiResult = await _httpClient.GetStringAsync($"{localhost}/threads");
-            var threadsApiResult = await GetApiDataThreads(port);
+            var threadsApiResult = await GetApiDataThreads(port, logGroup);
             var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
             var perDevicePowerInfo = new Dictionary<string, int>();
 
@@ -122,8 +126,10 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 
                     }
                 }
-                catch
-                { }
+                catch(Exception e)
+                {
+                    Logger.Info(logGroup, $"Error occured while getting per device data from API: {e.Message}");
+                }
             }
             var ad = new ApiData();
             ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(algorithmType, totalSpeed) };

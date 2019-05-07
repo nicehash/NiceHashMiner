@@ -277,12 +277,14 @@ namespace NiceHashMiner
                 var p = Process.Start(psi);
                 p?.WaitForExit();
                 if (p?.ExitCode != 0)
-                    ConsolePrint("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode);
+                    Logger.Info("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode);
                 else
+                    Logger.Info("NICEHASH", "nvidiasetp0state all OK");
                     ConsolePrint("NICEHASH", "nvidiasetp0state all OK");
             }
             catch (Exception ex)
             {
+                Logger.Error("NICEHASH", "nvidiasetp0state error: " + ex.Message);
                 ConsolePrint("NICEHASH", "nvidiasetp0state error: " + ex.Message);
             }
         }
@@ -326,6 +328,7 @@ namespace NiceHashMiner
             }
             catch (Exception e)
             {
+                Logger.Error("REGISTRY", e.Message);
                 ConsolePrint("REGISTRY", e.Message);
             }
 

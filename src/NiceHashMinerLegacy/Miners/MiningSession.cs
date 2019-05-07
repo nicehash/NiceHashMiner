@@ -15,6 +15,7 @@ using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Miners
 {
@@ -102,7 +103,7 @@ namespace NiceHashMiner.Miners
             _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
         }
 
-        #region Timers stuff
+#region Timers stuff
 
         private void InternetCheckTimer_Tick(object sender, EventArgs e)
         {
@@ -112,9 +113,9 @@ namespace NiceHashMiner.Miners
             }
         }
 
-        #endregion
+#endregion
 
-        #region Start/Stop
+#region Start/Stop
 
         public void StopAllMiners(bool headless)
         {
@@ -183,7 +184,7 @@ namespace NiceHashMiner.Miners
             ApplicationStateManager.ClearRatesAll();
         }
 
-        #endregion Start/Stop
+#endregion Start/Stop
 
         private static string CalcGroupedDevicesKey(GroupedDevices group)
         {
@@ -233,9 +234,11 @@ namespace NiceHashMiner.Miners
                 || !_isMiningRegardlesOfProfit && currentProfitUsd >= ConfigManager.GeneralConfig.MinimumProfit;
             if (log)
             {
+                Logger.Info(Tag, $"Current global profit = {currentProfitUsd.ToString("F8")} USD/Day");
                 Helpers.ConsolePrint(Tag, "Current Global profit: " + currentProfitUsd.ToString("F8") + " USD/Day");
                 if (!_isProfitable)
                 {
+                    Logger.Info(Tag, $"Current global profit = NOT PROFITABLE, MinProfit: {ConfigManager.GeneralConfig.MinimumProfit.ToString("F8")} USD/Day");
                     Helpers.ConsolePrint(Tag,
                         "Current Global profit: NOT PROFITABLE MinProfit " +
                         ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") +
@@ -246,6 +249,7 @@ namespace NiceHashMiner.Miners
                     var profitabilityInfo = _isMiningRegardlesOfProfit
                         ? "mine always regardless of profit"
                         : ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
+                    Logger.Info(Tag, $"Current global profit = IS PROFITABLE, MinProfit: {profitabilityInfo}");
                     Helpers.ConsolePrint(Tag, "Current Global profit: IS PROFITABLE MinProfit " + profitabilityInfo);
                 }
             }
@@ -266,7 +270,11 @@ namespace NiceHashMiner.Miners
                 if (!_isConnectedToInternet)
                 {
                     // change msg
-                    if (log) Helpers.ConsolePrint(Tag, "NO INTERNET!!! Stopping mining.");
+                    if (log)
+                    {
+                        Logger.Info(Tag, $"No internet connection! Not able to min.");
+                        Helpers.ConsolePrint(Tag, "NO INTERNET!!! Stopping mining.");
+                    }
                     ApplicationStateManager.DisplayNoInternetConnection();
                 }
                 else
@@ -344,6 +352,7 @@ namespace NiceHashMiner.Miners
             }
 
             // check profit threshold
+            Logger.Info(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
             Helpers.ConsolePrint(Tag, $"PrevStateProfit {prevStateProfit}, CurrentProfit {currentProfit}");
             if (prevStateProfit > 0 && currentProfit > 0)
             {
@@ -354,6 +363,7 @@ namespace NiceHashMiner.Miners
                 if (percDiff < ConfigManager.GeneralConfig.SwitchProfitabilityThreshold)
                 {
                     // don't switch
+                    Logger.Info(Tag, $"Will NOT switch profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
                     Helpers.ConsolePrint(Tag,
                         $"Will NOT switch profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
                     // RESTORE OLD PROFITS STATE
@@ -364,7 +374,7 @@ namespace NiceHashMiner.Miners
 
                     return;
                 }
-
+                Logger.Info(Tag, $"Will SWITCH profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
                 Helpers.ConsolePrint(Tag,
                     $"Will SWITCH profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
             }
@@ -491,13 +501,22 @@ namespace NiceHashMiner.Miners
                         stringBuilderNoChangeAlgo.Append($"{noChange.DevicesInfoString}: {noChange.AlgorithmUUID}, ");
 
                     if (stringBuilderPreviousAlgo.Length > 0)
+                    {
                         Helpers.ConsolePrint(Tag, $"Stop Mining: {stringBuilderPreviousAlgo}");
+                        Logger.Info(Tag, $"Stop Mining: {stringBuilderPreviousAlgo}");
+                    }
 
                     if (stringBuilderCurrentAlgo.Length > 0)
+                    {
                         Helpers.ConsolePrint(Tag, $"Now Mining : {stringBuilderCurrentAlgo}");
+                        Logger.Info(Tag, $"Now Mining : {stringBuilderCurrentAlgo}");
+                    }
 
                     if (stringBuilderNoChangeAlgo.Length > 0)
+                    {
                         Helpers.ConsolePrint(Tag, $"No change  : {stringBuilderNoChangeAlgo}");
+                        Logger.Info(Tag, $"No change  : {stringBuilderNoChangeAlgo}");
+                    }
                 }
             }
 
@@ -563,7 +582,10 @@ namespace NiceHashMiner.Miners
                 var kwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
                 ApplicationStateManager.DisplayTotalRate(MiningStats.GetProfit(kwhPriceInBtc));
             }
-            catch (Exception e) { Helpers.ConsolePrint(Tag, e.Message); }
+            catch (Exception e) {
+                Logger.Info(Tag, $"Error occured while getting mining stats: {e.Message}");
+                Helpers.ConsolePrint(Tag, e.Message);
+            }        
         }
     }
 }

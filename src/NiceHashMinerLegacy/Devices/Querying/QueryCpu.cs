@@ -1,4 +1,5 @@
 ﻿using NiceHashMiner.Utils;
+using NiceHashMinerLegacy.Common;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +12,7 @@ namespace NiceHashMiner.Devices.Querying
 
         public static IEnumerable<CpuComputeDevice> QueryCpus()
         {
+            Logger.Info(Tag, "QueryCpus START");
             Helpers.ConsolePrint(Tag, "QueryCpus START");
             // get all CPUs
             var cpuCount = CpuID.GetPhysicalProcessorCount();
@@ -22,6 +24,7 @@ namespace NiceHashMiner.Devices.Querying
                 return Enumerable.Empty<CpuComputeDevice>();
             }
 
+            Logger.Info(Tag, WindowsManagementObjectSearcher.IsHypeThreadingEnabled ? "HyperThreadingEnabled = TRUE" : "HyperThreadingEnabled = FALSE");
             Helpers.ConsolePrint(Tag,
                 WindowsManagementObjectSearcher.IsHypeThreadingEnabled
                     ? "HyperThreadingEnabled = TRUE"
@@ -53,6 +56,7 @@ namespace NiceHashMiner.Devices.Querying
                 }
             }
 
+            Logger.Info(Tag, "QueryCpus END");
             Helpers.ConsolePrint(Tag, "QueryCpus END");
 
             return cpus;

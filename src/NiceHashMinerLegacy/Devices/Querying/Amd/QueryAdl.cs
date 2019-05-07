@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using ATI.ADL;
 using NiceHashMiner.Utils;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
@@ -31,6 +32,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
 
                 adlRet = ADL.ADL_Adapter_NumberOfAdapters_Get?.Invoke(ref numberOfAdapters);
                 AdlThrowIfException(adlRet, nameof(ADL.ADL_Adapter_NumberOfAdapters_Get));
+                Logger.Info(Tag, $"Number Of Adapters: {numberOfAdapters}");
                 Helpers.ConsolePrint(Tag, "Number Of Adapters: " + numberOfAdapters);
 
                 if (numberOfAdapters <= 0)
@@ -92,6 +94,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
 
                     if (!amdDeviceUuids.Add(uuid)) continue;
 
+                    Logger.Info(Tag, $"ADL device added BusNumber:{busId}  NAME:{devName}  UUID:{uuid}");
                     Helpers.ConsolePrint(Tag, $"ADL device added BusNumber:{busId}  NAME:{devName}  UUID:{uuid}");
 
                     if (busIdInfos.ContainsKey(busId)) continue;
@@ -115,6 +118,9 @@ namespace NiceHashMiner.Devices.Querying.Amd
             }
             catch (Exception e)
             {
+                Logger.Error(Tag, e.Message);
+                Logger.Info(Tag, "Check if ADL is properly installed!");
+
                 Helpers.ConsolePrint(Tag, e.Message);
                 Helpers.ConsolePrint(Tag, "Check if ADL is properly installed!");
                 numDevs = 0;
@@ -156,6 +162,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
             }
             catch (Exception e)
             {
+                Logger.Error(Tag, e.Message);
                 Helpers.ConsolePrint(Tag, e.Message);
             }
             finally

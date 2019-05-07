@@ -2,6 +2,7 @@
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Utils;
+using NiceHashMinerLegacy.Common;
 using System.Collections.Generic;
 
 namespace NiceHashMiner.Configs
@@ -51,9 +52,11 @@ namespace NiceHashMiner.Configs
                 {
                     if (GeneralConfig.ConfigFileVersion == null)
                     {
+                        Logger.Info(Tag, "Loaded Config file no version detected falling back to defaults.");
                         Helpers.ConsolePrint(Tag, "Loaded Config file no version detected falling back to defaults.");
                         GeneralConfig.SetDefaults();
                     }
+                    Logger.Info(Tag, "Config file is from an older version of NiceHashMiner..");
                     Helpers.ConsolePrint(Tag, "Config file is from an older version of NiceHashMiner..");
                     _isNewVersion = true;
                     GeneralConfigFile.CreateBackup();

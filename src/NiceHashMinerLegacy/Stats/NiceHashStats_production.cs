@@ -85,6 +85,7 @@ namespace NiceHashMiner.Stats
                 }
             } catch (Exception er)
             {
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", er.ToString());
                 Helpers.ConsolePrint("SOCKET", er.ToString());
             }
         }
@@ -148,7 +149,10 @@ namespace NiceHashMiner.Stats
 
                     deviceList.Add(array);
                 }
-                catch (Exception e) { Helpers.ConsolePrint("SOCKET", e.ToString()); }
+                catch (Exception e) {
+                    NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.ToString());
+                    Helpers.ConsolePrint("SOCKET", e.ToString());
+                }
             }
             var data = new DeviceStatusMessage
             {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using NiceHashMinerLegacy.Common;
 
 namespace MinerPluginLoader
 {
@@ -24,6 +25,7 @@ namespace MinerPluginLoader
         {
             if (!Directory.Exists(pluginsRootDirPath))
             {
+                Logger.Info("MinerPluginHost", $"Plugins root directory doesn't exist: {pluginsRootDirPath}");
                 // TODO directory doesn't exist
                 return 0;
             }
@@ -38,13 +40,14 @@ namespace MinerPluginLoader
                 loadedPlugins += LoadPlugin(pluginDirectory);
             }
 
+            Logger.Info("MinerPluginHost", $"Plugins successfully loaded");
             return loadedPlugins;
         }
 
         public static int LoadPlugin(string pluginDirPath)
         {
             if (!Directory.Exists(pluginDirPath)) {
-                // TODO directory doesn't exist
+                Logger.Info("MinerPluginHost", $"Plugins path doesn't exist: {pluginDirPath}");
                 return 0;
             }
 
@@ -64,7 +67,7 @@ namespace MinerPluginLoader
                     }
                     catch (Exception e)
                     {
-                        // TODO logging
+                        Logger.Info("MinerPluginHost", $"Error occured while loading dll files: {e.Message}");
                         return null;
                     }
                 })
@@ -79,7 +82,7 @@ namespace MinerPluginLoader
                     }
                     catch (Exception e)
                     {
-                        // TODO logging
+                        Logger.Info("MinerPluginHost", $"Error occured while transforming dlls to plugins: {e.Message}");
                         return Enumerable.Empty<Type>();
                     }
                 });
@@ -96,12 +99,15 @@ namespace MinerPluginLoader
                         Console.WriteLine($"contains key {plugin.PluginUUID}");
                         Console.WriteLine($"existing {existingPlugin.Name} v{existingPlugin.Version}");
                         Console.WriteLine($"new {plugin.Name} v{plugin.Version}");
+                        Logger.Info("MinerPluginHost", $"Already existing plugin {plugin.PluginUUID}");
+                        Logger.Info("MinerPluginHost", $"Old name {existingPlugin.Name} and version {existingPlugin.Version}\r\n new name {plugin.Name} and version {plugin.Version}");
                     }
                     MinerPlugin[plugin.PluginUUID] = plugin;
                     loadedPlugins++;
                 }
                 catch (Exception e)
                 {
+                    Logger.Info("MinerPluginHost", $"Error occured while loading plugin: {e.Message}");
                     Console.WriteLine($"Exception while loading plugin {e}");
                 }
             }

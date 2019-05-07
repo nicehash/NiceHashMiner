@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Device;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices
 {
@@ -26,6 +27,7 @@ namespace NiceHashMiner.Devices
                 var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
                 if (result != ADL.ADL_SUCCESS)
                 {
+                    Logger.Info("ADL", $"ADL fan getting failed with error code {result}");
                     Helpers.ConsolePrint("ADL", "ADL fan getting failed with error code " + result);
                     return -1;
                 }
@@ -41,6 +43,7 @@ namespace NiceHashMiner.Devices
                 var result = ADL.ADL_Overdrive5_Temperature_Get(_adapterIndex, 0, ref adlt);
                 if (result != ADL.ADL_SUCCESS)
                 {
+                    Logger.Info("ADL", $"ADL temp getting failed with error code {result}");
                     Helpers.ConsolePrint("ADL", "ADL temp getting failed with error code " + result);
                     return -1;
                 }
@@ -56,6 +59,7 @@ namespace NiceHashMiner.Devices
                 var result = ADL.ADL_Overdrive5_CurrentActivity_Get(_adapterIndex, ref adlp);
                 if (result != ADL.ADL_SUCCESS)
                 {
+                    Logger.Info("ADL", $"ADL load getting failed with error code {result}");
                     Helpers.ConsolePrint("ADL", "ADL load getting failed with error code " + result);
                     return -1;
                 }
@@ -77,6 +81,7 @@ namespace NiceHashMiner.Devices
                     }
 
                     // Only alert once
+                    Logger.Info("ADL", $"ADL power getting failed with code {result} for GPU {NameCount}. Turning off power for this GPU.");
                     Helpers.ConsolePrint("ADL", $"ADL power getting failed with code {result} for GPU {NameCount}. Turning off power for this GPU.");
                     _powerHasFailed = true;
                 }

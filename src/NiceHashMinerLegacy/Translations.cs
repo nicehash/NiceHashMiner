@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
@@ -72,6 +73,7 @@ namespace NiceHashMiner
                     _availableLanguages = translations.Languages.Select(pair => new Language { Code = pair.Key, Name = pair.Value }).ToList();
                     foreach (var kvp in _availableLanguages)
                     {
+                        Logger.Info("Translations", $"Found language: code: {kvp.Code}, name: {kvp.Name}");
                         Helpers.ConsolePrint("NICEHASH", $"Found language: code: {kvp.Code}, name: {kvp.Name}");
                     }
                 } 
@@ -105,6 +107,7 @@ namespace NiceHashMiner
             }
             catch (Exception e)
             {
+                Logger.Error("NICEHASH", $"Lang error: {e.Message}");
                 Helpers.ConsolePrint("NICEHASH", "Lang error: " + e.Message);
             }
         }

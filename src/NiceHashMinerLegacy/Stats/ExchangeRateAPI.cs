@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Threading;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Stats
 {
@@ -22,6 +23,7 @@ namespace NiceHashMiner.Stats
                 if (value > 0)
                 {
                     Interlocked.Exchange(ref _usdBtcRate, value);
+                    Logger.Info("ExchangeRateApi", $"USD rate updated: {value} BTC");
                     Helpers.ConsolePrint("NICEHASH", $"USD rate updated: {value} BTC");
                 }
             }
@@ -56,6 +58,7 @@ namespace NiceHashMiner.Stats
             if (ExchangesFiat.TryGetValue(ActiveDisplayCurrency, out var usdExchangeRate))
                 return amount * usdExchangeRate;
 
+            Logger.Info("ExchangeRateApi", $"Unknown Currency Tag: {ActiveDisplayCurrency}, falling back to USD rates");
             Helpers.ConsolePrint("CurrencyConverter", "Unknown Currency Tag: " + ActiveDisplayCurrency + " falling back to USD rates");
             ActiveDisplayCurrency = "USD";
             return amount;
@@ -93,6 +96,7 @@ namespace NiceHashMiner.Stats
             {
                 // Should never happen, indicates error in ExchangesFiat
                 // Fall back with 0
+                Logger.Info("EXCHANGE", "Exchange for currency is 0, power switching disabled.");
                 Helpers.ConsolePrint("EXCHANGE", "Exchange for currency is 0, power switching disabled.");
                 return 0;
             }
@@ -101,6 +105,7 @@ namespace NiceHashMiner.Stats
             // Race condition not a problem since UsdBtcRate will never update to 0
             if (UsdBtcRate <= 0)
             {
+                Logger.Info("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
                 Helpers.ConsolePrint("EXCHANGE", "Bitcoin price is unknown, power switching disabled");
                 return 0;
             }

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using NiceHashMinerLegacy.Common;
 using System;
 using System.IO;
 
@@ -69,6 +70,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             }
             catch (Exception ex)
             {
+                Logger.Error(_tag, $"ReadFile {FilePath}: exception {ex}");
                 Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {ex}");
                 file = null;
             }
@@ -80,6 +82,7 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             CheckAndCreateConfigsFolder();
             if (file == null)
             {
+                Logger.Info(_tag, $"Commit for FILE {FilePath} IGNORED. Passed null object");
                 Helpers.ConsolePrint(_tag, $"Commit for FILE {FilePath} IGNORED. Passed null object");
                 return;
             }
@@ -89,12 +92,14 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
             }
             catch (Exception ex)
             {
+                Logger.Error(_tag, $"Commit {FilePath}: exception {ex}");
                 Helpers.ConsolePrint(_tag, $"Commit {FilePath}: exception {ex}");
             }
         }
 
         public void CreateBackup()
         {
+            Logger.Debug(_tag, $"Backing up {FilePath} to {FilePathOld}..");
             Helpers.ConsolePrint(_tag, $"Backing up {FilePath} to {FilePathOld}..");
             try
             {
@@ -102,7 +107,10 @@ namespace NiceHashMiner.Configs.ConfigJsonFile
                     File.Delete(FilePathOld);
                 File.Copy(FilePath, FilePathOld, true);
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.Error(_tag, $"CreateBackup {FilePath}: exception {ex}");
+            }
         }
     }
 }

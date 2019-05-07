@@ -34,7 +34,11 @@ namespace Phoenix
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
             _algorithmFirstType = singleType.Item1;
             bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
 
             var dualType = MinerToolkit.GetAlgorithmDualType(_miningPairs);
             _algorithmSecondType = dualType.Item1;
@@ -70,7 +74,7 @@ namespace Phoenix
         {
             var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
             var algorithmTypes = new AlgorithmType[] { _algorithmFirstType };
-            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, algorithmTypes);
+            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, algorithmTypes);
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
@@ -95,6 +99,8 @@ namespace Phoenix
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             var benchHashes = 0d;
