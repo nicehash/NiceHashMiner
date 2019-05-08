@@ -74,8 +74,8 @@ namespace NiceHashMiner
             // TODO we have a BUG HERE if device enabled with all disabled algorithms
             var devicesToBenchmark = devicesToStart.Where(dev => BenchmarkChecker.IsDeviceWithAllEnabledAlgorithmsWithoutBenchmarks(dev));
             foreach (var dev in devicesToBenchmark) {
-               dev.State = DeviceState.Benchmarking;
-               BenchmarkManager.StartBenchmarForDevice(dev, true);
+                dev.State = DeviceState.Benchmarking;
+                BenchmarkManager.StartBenchmarForDevice(dev, true);
             }
             
             // TODO check count
@@ -101,9 +101,18 @@ namespace NiceHashMiner
                 return (false, "Device already started");
             }
 
+            var started = true;
+            var failReason = "";
+            var isErrorState = !device.AlgorithmSettings.Any(a => a.Enabled);
             // check if device has any benchmakrs
             var needsBenchmark = BenchmarkChecker.IsDeviceWithAllEnabledAlgorithmsWithoutBenchmarks(device);
-            if (needsBenchmark && !skipBenhcmakrk)
+            if (isErrorState)
+            {
+                device.State = DeviceState.Error;
+                started = false;
+                failReason = "Cannot start a device with all disabled algoirhtms";
+            }
+            else if (needsBenchmark && !skipBenhcmakrk)
             {
                 device.State = DeviceState.Benchmarking;
                 BenchmarkManager.StartBenchmarForDevice(device, true);
@@ -118,7 +127,7 @@ namespace NiceHashMiner
             RefreshDeviceListView?.Invoke(null, null);
             NiceHashStats.StateChanged();
 
-            return (true, "");
+            return (started, failReason);
         }
 
         public static (bool stopped, string failReason) StopAllDevice() {
