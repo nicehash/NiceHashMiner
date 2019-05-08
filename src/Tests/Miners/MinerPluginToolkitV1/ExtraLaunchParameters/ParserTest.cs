@@ -4,7 +4,11 @@ using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
 {
