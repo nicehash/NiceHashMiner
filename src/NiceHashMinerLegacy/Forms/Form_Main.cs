@@ -337,16 +337,6 @@ namespace NiceHashMiner
                 }
 
                 ApplicationStateManager.InitFinished();
-                if (ConfigManager.GeneralConfig.AutoStartMining)
-                {
-                    // well this is started manually as we want it to start at runtime
-                    _isManuallyStarted = true;
-                    if (StartMining(false) != StartMiningReturnType.StartMining)
-                    {
-                        _isManuallyStarted = false;
-                        ApplicationStateManager.StopAllDevice();
-                    }
-                }
             }
         }
 
@@ -368,7 +358,20 @@ namespace NiceHashMiner
             {
                 c.Enabled = true;
             }
-            buttonStopMining.Enabled = false;
+            if (ConfigManager.GeneralConfig.AutoStartMining)
+            {
+                // well this is started manually as we want it to start at runtime
+                _isManuallyStarted = true;
+                if (StartMining(false) != StartMiningReturnType.StartMining)
+                {
+                    _isManuallyStarted = false;
+                    ApplicationStateManager.StopAllDevice();
+                }
+            }
+            else
+            {
+                buttonStopMining.Enabled = false;
+            }
         }
 
         //public void ShowNotProfitable(string msg)
