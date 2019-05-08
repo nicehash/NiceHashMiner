@@ -104,6 +104,9 @@ namespace FirewallRules
                 foreach (var miner in miners)
                 {
                     RemoveFirewallRule(miner.Value);
+                }
+                foreach (var miner in miners)
+                {
                     AllowFirewallRule(miner.Key, miner.Value);
                 }
             }
