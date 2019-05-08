@@ -1,4 +1,8 @@
-﻿using System;
+﻿#if !ENABLE_EXTERNAL_PLUGINS && (TESTNET || TESTNETDEV) 
+#define ENABLE_EXTERNAL_PLUGINS
+#endif
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -22,13 +26,12 @@ using NiceHashMinerLegacy.Common.Device;
 // alias
 using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
 
-
 // TODO fix up the namespace
 namespace NiceHashMiner.Plugin
 {
     public static class MinerPluginsManager
     {
-#if ENABLE_EXTERNAL_PLUGINS || TESTNET || TESTNETDEV
+#if ENABLE_EXTERNAL_PLUGINS
         public static bool IntegratedPluginsOnly => false;
 #else
         public static bool IntegratedPluginsOnly => true;

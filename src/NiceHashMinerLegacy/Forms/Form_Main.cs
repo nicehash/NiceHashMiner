@@ -56,11 +56,12 @@ namespace NiceHashMiner
             FormHelpers.SubscribeAllControls(this);
 
             // Hide plugins button and resize
-#if !ENABLE_EXTERNAL_PLUGINS && !TESTNET && !TESTNETDEV
-            this.buttonHelp.Location = this.buttonPlugins.Location;
-            this.buttonPlugins.Enabled = false;
-            this.buttonPlugins.Visible = false;
-#endif
+            if (MinerPluginsManager.IntegratedPluginsOnly)
+            {
+                this.buttonHelp.Location = this.buttonPlugins.Location;
+                this.buttonPlugins.Enabled = false;
+                this.buttonPlugins.Visible = false;
+            }
 
             Width = ConfigManager.GeneralConfig.MainFormSize.X;
             Height = ConfigManager.GeneralConfig.MainFormSize.Y;
