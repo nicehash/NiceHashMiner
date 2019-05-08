@@ -271,10 +271,10 @@ namespace NiceHashMiner.Forms.Components
             foreach (var lvi in listViewDevices.Items)
             {
                 if (!(lvi is ListViewItem item) || !(item.Tag is ComputeDevice dev)) continue;
-                
-                SetDiagText(item, 0, (int) dev.Load);
-                SetDiagText(item, 1, (int) dev.Temp);
-                SetDiagText(item, 2, dev.FanSpeed);
+                // indexes are all off by 1 fix these indexes
+                SetDiagText(item, 0 - 1, (int) dev.Load);
+                SetDiagText(item, 1 - 1, (int) dev.Temp);
+                SetDiagText(item, 2 - 1, dev.FanSpeed);
             }
         }
 
