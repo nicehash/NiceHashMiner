@@ -38,7 +38,7 @@ namespace NiceHashMiner.Utils
                         FileName = @"FirewallRules.exe",
                         Arguments = $"{Directory.GetCurrentDirectory()} update miner_plugins",
                         Verb = "runas",
-                        UseShellExecute = false,
+                        UseShellExecute = true,
                         CreateNoWindow = true
                     }
                 };
