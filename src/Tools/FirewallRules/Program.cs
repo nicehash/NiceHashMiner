@@ -61,10 +61,10 @@ namespace FirewallRules
             }
 
             var operation = args[1];
-            var isValidOperation = operation == "add" || operation == "rem";
+            var isValidOperation = operation == "add" || operation == "rem" || operation == "update";
             if (!isValidOperation)
             {
-                Console.WriteLine("Invalid operation! Use add or rem\nError usage:*.exe rootPath [add|rem] relativePaths...");
+                Console.WriteLine("Invalid operation! Use add or rem\nError usage:*.exe rootPath [add|rem|update] relativePaths...");
                 return;
             }
 
@@ -97,6 +97,14 @@ namespace FirewallRules
                 foreach (var miner in miners)
                 {
                     RemoveFirewallRule(miner.Value);
+                }
+            }
+            if (operation == "update")
+            {
+                foreach (var miner in miners)
+                {
+                    RemoveFirewallRule(miner.Value);
+                    AllowFirewallRule(miner.Key, miner.Value);
                 }
             }
         }

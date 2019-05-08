@@ -245,22 +245,26 @@ namespace NiceHashMiner
 
         public static void InstallVcRedist()
         {
-            var cudaDevicesDetection = new Process
+            try
             {
-                StartInfo =
+                var cudaDevicesDetection = new Process
                 {
-                    FileName = @"miner_plugins\vc_redist.x64.exe",
-                    Arguments = "/q /norestart",
-                    UseShellExecute = false,
-                    RedirectStandardError = false,
-                    RedirectStandardOutput = false,
-                    CreateNoWindow = false
-                }
-            };
-
-            //const int waitTime = 45 * 1000; // 45seconds
-            //CudaDevicesDetection.WaitForExit(waitTime);
-            cudaDevicesDetection.Start();
+                    StartInfo =
+                    {
+                        FileName = @"miner_plugins\vc_redist.x64.exe",
+                        Arguments = "/q /norestart",
+                        UseShellExecute = false,
+                        RedirectStandardError = false,
+                        RedirectStandardOutput = false,
+                        CreateNoWindow = false
+                    }
+                };
+                cudaDevicesDetection.Start();
+            }
+            catch(Exception e)
+            {
+                Logger.Error("HELPERS", $"InstallVcRedist error: {e.Message}");
+            }
         }
 
         public static void SetNvidiaP0State()
@@ -330,25 +334,6 @@ namespace NiceHashMiner
             }
 
             return guid;
-        }
-
-        public static void SetFirewallRules(string operation)
-        {
-            try
-            {
-                var setFirewallRulesProcess = new Process
-                {
-                    StartInfo =
-                {
-                    FileName = @"FirewallRules.exe",
-                    Arguments = $"{Directory.GetCurrentDirectory()} {operation} miner_plugins",
-                    UseShellExecute = false,
-                    CreateNoWindow = true
-                }
-                };
-                setFirewallRulesProcess.Start();
-            }
-            catch { }
         }
     }
 }

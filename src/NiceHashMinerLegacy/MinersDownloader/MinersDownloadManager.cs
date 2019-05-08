@@ -197,17 +197,17 @@ namespace NiceHashMiner.MinersDownloader
         // This is 2-5 times faster
         #region MyDownloader
 
-        public static Task DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(IProgress<Tuple<string, int>> progress, CancellationToken stop)
+        public static Task DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
             return DownloadAndExtractWithMyDownloaderAsync(StandardDlSetup, progress, stop);
         }
 
-        public static Task DownloadAndExtractThirdPartyMinersWithMyDownloaderAsync(IProgress<Tuple<string, int>> progress, CancellationToken stop)
+        public static Task DownloadAndExtractThirdPartyMinersWithMyDownloaderAsync(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
             return DownloadAndExtractWithMyDownloaderAsync(ThirdPartyDlSetup, progress, stop);
         }
 
-        private static async Task DownloadAndExtractWithMyDownloaderAsync(DownloadSetup downloadSetup, IProgress<Tuple<string, int>> progress, CancellationToken stop)
+        private static async Task DownloadAndExtractWithMyDownloaderAsync(DownloadSetup downloadSetup, IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
             // these extensions must be here otherwise it will not downlaod
             var extensions = new List<IExtension>();
@@ -264,7 +264,7 @@ namespace NiceHashMiner.MinersDownloader
                     return;
                 }
 
-                var unzipProgress = new Progress<int>(perc => progress?.Report(new Tuple<string, int>(Translations.Tr("Unzipping {0} %", perc), perc)));
+                var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", perc), perc)));
                 if (downloadSetup.BinsZipLocation.EndsWith(".7z"))
                 {
                     await Un7zipFileAsync(downloadSetup.BinsZipLocation, "miner_plugins", unzipProgress, stop);
@@ -303,7 +303,7 @@ namespace NiceHashMiner.MinersDownloader
         private delegate void OnDownloadEnded(object sender, DownloaderEventArgs e);
 
         // #2 download the file
-        private static async Task<bool> DownlaodAsync(string url, string downloadLocation, IProgress<Tuple<string, int>> progress, CancellationToken stop)
+        private static async Task<bool> DownlaodAsync(string url, string downloadLocation, IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
             long lastProgress = 0;
             var ticksSinceUpdate = 0;
@@ -330,7 +330,7 @@ namespace NiceHashMiner.MinersDownloader
                 
                 var progPerc = (int)(((double)downloader.Transfered / downloader.FileSize) * 100);
                 var progMessage = $"{speedString}   {percString}   {labelDownloaded}";
-                progress.Report(new Tuple<string, int>(progMessage, progPerc));
+                progress?.Report((progMessage, progPerc));
 
                 // Diagnostic stuff
                 if (downloader.Transfered > lastProgress)

@@ -325,6 +325,27 @@ namespace NiceHashMiner.Plugin
             }
         }
 
+        public static List<string> GetPluginUUIDsAndVersionsList()
+        {
+            var ret = new List<string>();
+            foreach (var integrated in IntegratedPlugins)
+            {
+                ret.Add($"{integrated.PluginUUID}-{integrated.Version.Major}.{integrated.Version.Minor}");
+            }
+            if (IntegratedPluginsOnly) return ret;
+
+            foreach (var kvp in Plugins)
+            {
+                var plugin = kvp.Value;
+                if (plugin.Installed)
+                {
+                    ret.Add($"{plugin.PluginUUID}-{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}");
+                }
+            }
+
+            return ret;
+        }
+
         public static bool GetOnlineMinerPlugins()
         {
             const string pluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
