@@ -28,7 +28,7 @@ namespace NiceHashMiner.Plugin
 {
     public static class MinerPluginsManager
     {
-#if ENABLE_EXTERNAL_PLUGINS
+#if ENABLE_EXTERNAL_PLUGINS || TESTNET || TESTNETDEV
         public static bool IntegratedPluginsOnly => false;
 #else
         public static bool IntegratedPluginsOnly => true;
