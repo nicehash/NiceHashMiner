@@ -182,6 +182,7 @@ namespace NiceHashMiner
                 });
                 await ApplicationStateManager.InitializeManagersAndMiners(loadingControl, progress, progressDownload);
             }
+            devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
 
             foreach (Control c in Controls)
             {
