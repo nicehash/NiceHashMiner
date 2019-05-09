@@ -349,9 +349,11 @@ namespace NiceHashMiner.Plugin
             return ret;
         }
 
+        // TODO this here is blocking
         public static bool GetOnlineMinerPlugins()
         {
-            const string pluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
+            //const string pluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
+            const string pluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
             try
             {
                 using (var client = new WebClient())
