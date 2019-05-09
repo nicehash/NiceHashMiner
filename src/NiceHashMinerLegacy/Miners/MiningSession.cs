@@ -30,7 +30,7 @@ namespace NiceHashMiner.Miners
 
         string _username;
 
-        private List<MiningDevice> _miningDevices;
+        private List<MiningDevice> _miningDevices = new List<MiningDevice>();
 
         private readonly AlgorithmSwitchingManager _switchingManager;
 
@@ -39,14 +39,15 @@ namespace NiceHashMiner.Miners
         //Dictionary<GroupedDevices, GroupMiners> _groupedDevicesMiners;
         private Dictionary<string, GroupMiner> _runningGroupMiners = new Dictionary<string, GroupMiner>();
 
-        private bool _isProfitable;
+        // assume profitable
+        private bool _isProfitable = true;
+        // assume we have internet
+        private bool _isConnectedToInternet = true;
+        private bool _isMiningRegardlesOfProfit => ConfigManager.GeneralConfig.MinimumProfit == 0;
 
-        private bool _isConnectedToInternet;
-        private readonly bool _isMiningRegardlesOfProfit;
-
-        // timers 
-        // check internet connection 
-        private readonly Timer _internetCheckTimer;
+        //// timers 
+        //// check internet connection 
+        //private readonly Timer _internetCheckTimer;
 
 
         public bool IsMiningEnabled => _miningDevices.Count > 0;
@@ -73,34 +74,24 @@ namespace NiceHashMiner.Miners
             }
         }
 
-        public MiningSession(List<ComputeDevice> devices, string username)
+        public MiningSession(string username)
         {
             _username = username;
             _switchingManager = new AlgorithmSwitchingManager();
             _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
 
-            // initial settup
-            SetUsedDevices(devices);
+            //// init timer stuff
+            //// set internet checking
+            //_internetCheckTimer = new Timer();
+            //_internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
+            //_internetCheckTimer.Interval = 1 * 1000 * 60; // every minute
 
-            // init timer stuff
-            // set internet checking
-            _internetCheckTimer = new Timer();
-            _internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
-            _internetCheckTimer.Interval = 1 * 1000 * 60; // every minute
+            //if (IsMiningEnabled)
+            //{
+            //    _internetCheckTimer.Start();
+            //}
 
-            // assume profitable
-            _isProfitable = true;
-            // assume we have internet
-            _isConnectedToInternet = true;
-
-            if (IsMiningEnabled)
-            {
-                _internetCheckTimer.Start();
-            }
-
-            _switchingManager.Start();
-
-            _isMiningRegardlesOfProfit = ConfigManager.GeneralConfig.MinimumProfit == 0;
+            //_switchingManager.Start();
         }
 
 #region Timers stuff
@@ -133,8 +124,7 @@ namespace NiceHashMiner.Miners
 
             ApplicationStateManager.ClearRatesAll();
 
-            _internetCheckTimer.Stop();
-            //Helpers.AllowMonitorPowerdownAndSleep();
+            //_internetCheckTimer?.Stop();
 
             if (headless) return;
 
@@ -186,33 +176,36 @@ namespace NiceHashMiner.Miners
 
 #endregion Start/Stop
 
-        private static string CalcGroupedDevicesKey(GroupedDevices group)
+        private static string CalcGroupedDevicesKey(GroupedDevices group, Algorithm algorithm)
         {
-            return string.Join(", ", group);
+            var key = $"{algorithm.AlgorithmStringID}({string.Join(", ", group)})";
+            return key;
         }
 
-        public void UpdateUsedDevices(IEnumerable<ComputeDevice> devices)
+        public void UpdateMiningSession(IEnumerable<ComputeDevice> devices, string username)
         {
-            _switchingManager.Stop();
+            _username = username;
+            _switchingManager?.Stop();
             SetUsedDevices(devices);
-            _switchingManager.Start();
+            _switchingManager?.Start();
         }
 
-        private void RestartRunningGroupMiners()
+
+        private async Task RestartRunningGroupMiners()
         {
             foreach (var key in _runningGroupMiners.Keys)
             {
-                _runningGroupMiners[key].Stop();
+                await _runningGroupMiners[key].Stop();
                 var miningLocation = StratumService.SelectedServiceLocation;
-                _runningGroupMiners[key].Start(miningLocation, _username);
+                await _runningGroupMiners[key].Start(miningLocation, _username);
             }
         }
 
-        public void RestartMiners()
+        public async Task RestartMiners()
         {
-            _switchingManager.Stop();
-            RestartRunningGroupMiners();
-            _switchingManager.Start();
+            _switchingManager?.Stop();
+            await RestartRunningGroupMiners();
+            _switchingManager?.Start();
         }
 
         private void SetUsedDevices(IEnumerable<ComputeDevice> devices)
@@ -282,8 +275,24 @@ namespace NiceHashMiner.Miners
             return shouldMine;
         }
 
-        private void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
+        private async void SwichMostProfitableGroupUpMethod(object sender, SmaUpdateEventArgs e)
         {
+            await SwichMostProfitableGroupUpMethodTask(sender, e);
+        }
+
+
+        private object _lock = new object();
+        private bool SwichMostProfitableGroupUpMethodTaskLock = false;
+        private async Task SwichMostProfitableGroupUpMethodTask(object sender, SmaUpdateEventArgs e)
+        {
+            lock(_lock)
+            {
+                if (SwichMostProfitableGroupUpMethodTaskLock)
+                {
+                    return;
+                }
+                SwichMostProfitableGroupUpMethodTaskLock = true;
+            }
 #if (SWITCH_TESTING)
             MiningDevice.SetNextTest();
 #endif
@@ -340,7 +349,10 @@ namespace NiceHashMiner.Miners
                 {
                     device.SetNotMining();
                 }
-
+                lock (_lock)
+                {
+                    SwichMostProfitableGroupUpMethodTaskLock = false;
+                }
                 return;
             }
 
@@ -361,7 +373,10 @@ namespace NiceHashMiner.Miners
                     {
                         device.RestoreOldProfitsState();
                     }
-
+                    lock (_lock)
+                    {
+                        SwichMostProfitableGroupUpMethodTaskLock = false;
+                    }
                     return;
                 }
                 Logger.Info(Tag, $"Will SWITCH profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
@@ -375,6 +390,7 @@ namespace NiceHashMiner.Miners
                 for (var first = 0; first < profitableDevices.Count; ++first)
                 {
                     var firstDev = profitableDevices[first].Device;
+                    var firstAlgo = profitableDevices[first].Algorithm;
                     // check if is in group
                     var isInGroup = currentGroupedDevices.Any(groupedDevices => groupedDevices.Contains(firstDev.Uuid));
                     // if device is not in any group create new group and check if other device should group
@@ -400,7 +416,8 @@ namespace NiceHashMiner.Miners
                         }
 
                         currentGroupedDevices.Add(newGroup);
-                        newGroupedMiningPairs[CalcGroupedDevicesKey(newGroup)] = miningPairs;
+                        var newGroupKey = CalcGroupedDevicesKey(newGroup, firstAlgo);
+                        newGroupedMiningPairs[newGroupKey] = miningPairs;
                     }
                 }
             }
@@ -464,7 +481,7 @@ namespace NiceHashMiner.Miners
                     {
                         stringBuilderPreviousAlgo.Append($"{toStop.DevicesInfoString}: {toStop.AlgorithmUUID}, ");
 
-                        toStop.Stop();
+                        await toStop.Stop();
                         _runningGroupMiners.Remove(toStop.Key);
                         // Deviant checker works only for single Device so we skip if there are multiple devices, BUT NOW WE HAVE PER DEVICE SPEEDS AND WE SHOULD MOVE THIS CHECKER OUTSIDE
                         if (toStop.Miner.MiningPairs.Count != 1) continue;
@@ -480,7 +497,7 @@ namespace NiceHashMiner.Miners
                     foreach (var toStart in toRunNewGroupMiners.Values)
                     {
                         stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmUUID}, ");
-                        toStart.Start(miningLocation, _username);
+                        await toStart.Start(miningLocation, _username);
                         _runningGroupMiners[toStart.Key] = toStart;
                     }
 
@@ -505,14 +522,14 @@ namespace NiceHashMiner.Miners
                 }
             }
 
-            // stats quick fix code
-            //if (_currentAllGroupedDevices.Count != _previousAllGroupedDevices.Count) {
-            //await MinerStatsCheck();
-            //}
+            lock (_lock)
+            {
+                SwichMostProfitableGroupUpMethodTaskLock = false;
+            }
 
-            //ApplicationStateManager.ForceMinerStatsUpdate();
+            // stats quick fix code
             // TODO not awaited, but we probably don't care
-            MinerStatsCheck();
+            await MinerStatsCheck();
         }
 
         private static AlgorithmType GetMinerPairAlgorithmType(IEnumerable<MiningPair> miningPairs)
@@ -522,10 +539,9 @@ namespace NiceHashMiner.Miners
 
         public async Task MinerStatsCheck()
         {
-            //_ratesComunication.ClearRates(_runningGroupMiners.Count);
-            var checks = new List<GroupMiner>(_runningGroupMiners.Values);
             try
             {
+                var checks = new List<GroupMiner>(_runningGroupMiners.Values);
                 foreach (var groupMiners in checks)
                 {
                     var m = groupMiners.Miner;

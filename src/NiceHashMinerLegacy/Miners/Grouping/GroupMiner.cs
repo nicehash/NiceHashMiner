@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Common;
+using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.Grouping
 {
@@ -46,13 +47,13 @@ namespace NiceHashMiner.Miners.Grouping
             }
         }
 
-        public void Stop()
+        public async Task Stop()
         {
             if (Miner != null && Miner.IsRunning)
             {
                 Miner.Stop();
                 // wait before going on
-                System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS);
             }
         }
 
@@ -61,7 +62,7 @@ namespace NiceHashMiner.Miners.Grouping
             Miner?.End();
         }
 
-        public void Start(string miningLocation, string username)
+        public async Task Start(string miningLocation, string username)
 
         {
             if (Miner.IsRunning)
@@ -69,7 +70,7 @@ namespace NiceHashMiner.Miners.Grouping
                 return;
             }
             // Wait before new start
-            System.Threading.Thread.Sleep(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+            await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS);
             Miner.Start(miningLocation, username);
         }
     }
