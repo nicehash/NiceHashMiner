@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMinerLegacy.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -22,7 +23,7 @@ namespace DeviceDetectionPrinter
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error calling CUDA get error: {e.Message}");
+                Logger.Error("DEVICE DETECTION", $"Error calling CUDA get error: {e.Message}");
             }
             return "";
         }
@@ -40,7 +41,7 @@ namespace DeviceDetectionPrinter
             }
             catch (Exception e)
             {
-                Console.WriteLine($"Error calling OpenCL get error: {e.Message}");
+                Logger.Error("DEVICE DETECTION", $"Error calling OpenCL get error: {e.Message}");
             }
             return "";
         }

@@ -18,9 +18,9 @@ namespace TTMiner
     {
         public TTMinerPlugin()
         {
-            _pluginUUID = "5ee2e280-4bfc-11e9-a481-e144ccd86993";
+            _pluginUUID = "f1945a30-7237-11e9-b20c-f9f12eb6d835";
         }
-        public TTMinerPlugin(string pluginUUID = "5ee2e280-4bfc-11e9-a481-e144ccd86993")
+        public TTMinerPlugin(string pluginUUID = "f1945a30-7237-11e9-b20c-f9f12eb6d835")
         {
             _pluginUUID = pluginUUID;
         }

@@ -195,7 +195,7 @@ namespace NiceHashMiner.Plugin
                     }
                     catch (Exception e)
                     {
-                        Logger.Debug("MinerPluginsManager", $"Error occured while executing device cross reference in {plugin.Name} plugin: {e.Message}");
+                        Logger.Error("MinerPluginsManager", $"Error occured while executing device cross reference in {plugin.Name} plugin: {e.Message}");
                     }
                 }
             }
@@ -215,7 +215,7 @@ namespace NiceHashMiner.Plugin
                     }
                     catch (Exception e)
                     {
-                        Logger.Debug("MinerPluginsManager", $"Error occured while checking for missing miners: {e.Message}");
+                        Logger.Error("MinerPluginsManager", $"Error occured while checking for missing miners: {e.Message}");
                     }
                 }
             }
@@ -277,7 +277,7 @@ namespace NiceHashMiner.Plugin
                 }
             } catch(Exception e)
             {
-                Logger.Debug("MinerPluginsManager", $"Error occured while removing {pluginUUID} plugin: {e.Message}");
+                Logger.Error("MinerPluginsManager", $"Error occured while removing {pluginUUID} plugin: {e.Message}");
             }       
         }
 

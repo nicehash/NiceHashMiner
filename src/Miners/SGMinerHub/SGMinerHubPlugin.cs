@@ -17,7 +17,7 @@ namespace SGMinerHub
     // SGMinerHubPlugin combines multiple miners
     public class SGMinerHubPlugin : IMinerPlugin, IInitInternals
     {
-        public string PluginUUID => "1b246660-4bcd-11e9-87d3-6b57d758e2c6";
+        public string PluginUUID => "8b2c1300-7237-11e9-b20c-f9f12eb6d835";
 
         public Version Version => new Version(1, 0);
 

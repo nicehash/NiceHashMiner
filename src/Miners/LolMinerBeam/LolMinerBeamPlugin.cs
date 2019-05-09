@@ -23,7 +23,7 @@ namespace LolMinerBeam
 
         public string Author => "Domen Kirn Krefl";
 
-        public string PluginUUID => "aafcf5d0-4bfb-11e9-a481-e144ccd86993";
+        public string PluginUUID => "435f0820-7237-11e9-b20c-f9f12eb6d835";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

@@ -19,9 +19,9 @@ namespace EWBF
     {
         public EwbfPlugin()
         {
-            _pluginUUID = "3e627d60-4bfa-11e9-a481-e144ccd86993";
+            _pluginUUID = "f7d5dfa0-7236-11e9-b20c-f9f12eb6d835";
         }
-        public EwbfPlugin(string pluginUUID = "3e627d60-4bfa-11e9-a481-e144ccd86993")
+        public EwbfPlugin(string pluginUUID = "f7d5dfa0-7236-11e9-b20c-f9f12eb6d835")
         {
             _pluginUUID = pluginUUID;
         }

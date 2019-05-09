@@ -21,9 +21,9 @@ namespace XmrStak
     {
         public XmrStakPlugin()
         {
-            _pluginUUID = "b4cf2181-ca66-4d9c-83ba-cd5a7c6a7499";
+            _pluginUUID = "3d4e56b0-7238-11e9-b20c-f9f12eb6d835";
         }
-        public XmrStakPlugin(string pluginUUID = "b4cf2181-ca66-4d9c-83ba-cd5a7c6a7499")
+        public XmrStakPlugin(string pluginUUID = "3d4e56b0-7238-11e9-b20c-f9f12eb6d835")
         {
             _pluginUUID = pluginUUID;
         }

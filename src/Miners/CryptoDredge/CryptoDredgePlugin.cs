@@ -23,7 +23,7 @@ namespace CryptoDredge
 
         public string Author => "Domen Kirn Krefl";
 
-        public string PluginUUID => "b61b0a20-672f-11e9-8c45-31fdb2caf300";
+        public string PluginUUID => "d9c2e620-7236-11e9-b20c-f9f12eb6d835";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

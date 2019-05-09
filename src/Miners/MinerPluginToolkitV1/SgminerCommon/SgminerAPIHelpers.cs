@@ -43,7 +43,6 @@ namespace MinerPluginToolkitV1.SgminerCommon
                     var bytesToRead = new byte[client.ReceiveBufferSize];
                     var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
                     var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                    Console.WriteLine($"SgminerAPIHelpers.GetApiDevsRootAsync respStr: {respStr}");
                     client.Close();
                     var resp = JsonConvert.DeserializeObject<ApiDevsRoot>(respStr, _jsonSettings);
                     return resp;
@@ -51,8 +50,10 @@ namespace MinerPluginToolkitV1.SgminerCommon
             }
             catch (Exception e)
             {
-                Logger.Info(logGroup, $"Error occured while getting API stats: {e.Message}");
-                Console.WriteLine($"SgminerAPIHelpers.GetApiDevsRootAsync exception: {e.Message}");
+                if (e.Message != "An item with the same key has already been added.")
+                {
+                    Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
+                }
                 return null;
             }
         }
@@ -74,14 +75,12 @@ namespace MinerPluginToolkitV1.SgminerCommon
 
                 foreach (var gpu in miningDevices)
                 {
-                    Console.WriteLine($"GPU_ID={gpu.ID}");
                     var deviceStats = deviveStats
                         .Where(devStat => gpu.ID == devStat.GPU)
                         .FirstOrDefault();
                     if (deviceStats == null)
                     {
                         Logger.Info(logGroup, $"Device stats from api data are empty. Device: {gpu.UUID}");
-                        Console.WriteLine($"SgminerAPIHelpers.ParseApiDataFromApiDevsRoot deviceStats == null");
                         continue;
                     }
                         
@@ -98,9 +97,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
             }
             catch (Exception e)
             {
-                Logger.Info(logGroup, $"Error occured while parsing API stats: {e.Message}");
-                Console.WriteLine($"SgminerAPIHelpers.ParseApiDataFromApiDevsRoot exception: {e.Message}");
-                //return null;
+                Logger.Error(logGroup, $"Error occured while parsing API stats: {e.Message}");
             }
 
             return ad;

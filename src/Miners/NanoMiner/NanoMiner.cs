@@ -143,7 +143,10 @@ namespace NanoMiner
             }
             catch (Exception e)
             {
-                Console.WriteLine($"exception: {e}");
+                if (e.Message != "An item with the same key has already been added.")
+                {
+                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
+                }
             }
 
             return api;
@@ -165,11 +168,12 @@ namespace NanoMiner
                     break;
             }
 
-            var cl = CreateCommandLine(MinerToolkit.DemoUserBTC, _devices);
+            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC, _devices);
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
-            var bp = new BenchmarkProcess(binPath, binCwd, cl, GetEnvironmentVariables());
+            Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
+            var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             var benchHashes = 0d;
             var benchIters = 0;

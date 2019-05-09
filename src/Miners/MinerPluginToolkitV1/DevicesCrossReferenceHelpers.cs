@@ -45,7 +45,7 @@ namespace MinerPluginToolkitV1
             }
             catch (Exception e)
             {
-                Logger.Debug("DevicesCrossReferenceHelpers", $"Error occured while getting miner output: {e.Message}");
+                Logger.Error("DevicesCrossReferenceHelpers", $"Error occured while getting miner output: {e.Message}");
                 return null;
             }
             return output;

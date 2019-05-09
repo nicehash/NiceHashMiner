@@ -123,8 +123,7 @@ namespace XmrStak
             }
             catch (Exception e)
             {
-                Logger.Info(_logGroup, $"Error occured while mapping devices: {e.Message}");
-                Console.WriteLine($"MapMinerDevicesStatsDataAsync exception: {e}");
+                Logger.Error(_logGroup, $"Error occured while mapping devices: {e.Message}");
             }
         }
 
@@ -180,8 +179,10 @@ namespace XmrStak
             }
             catch (Exception e)
             {
-                Logger.Info(_logGroup, $"Error occured while getting API stats: {e.Message}");
-                Console.WriteLine($"exception: {e}");
+                if (e.Message != "An item with the same key has already been added.")
+                {
+                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
+                }
             }
 
             return api;
@@ -235,7 +236,6 @@ namespace XmrStak
             var apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
             var commandLine = $"-o {url} -u {MinerToolkit.DemoUserBTC} --currency {algo} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork {benchmarkTime} --benchwait {benchWait} {deviceConfigParams} {disableDeviceTypes}";
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             var benchHashes = 0d;

@@ -19,9 +19,9 @@ namespace TRex
     {
         public TRexPlugin()
         {
-            _pluginUUID = "0cd49150-4bfc-11e9-a481-e144ccd86993";
+            _pluginUUID = "d47d9b00-7237-11e9-b20c-f9f12eb6d835";
         }
-        public TRexPlugin(string pluginUUID = "0cd49150-4bfc-11e9-a481-e144ccd86993")
+        public TRexPlugin(string pluginUUID = "d47d9b00-7237-11e9-b20c-f9f12eb6d835")
         {
             _pluginUUID = pluginUUID;
         }
