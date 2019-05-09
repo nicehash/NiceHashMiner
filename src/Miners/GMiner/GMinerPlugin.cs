@@ -19,9 +19,9 @@ namespace GMinerPlugin
     {
         public GMinerPlugin()
         {
-            _pluginUUID = "5def7740-4bfb-11e9-a481-e144ccd86993";
+            _pluginUUID = "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
         }
-        public GMinerPlugin(string pluginUUID = "5def7740-4bfb-11e9-a481-e144ccd86993")
+        public GMinerPlugin(string pluginUUID = "1b7019d0-7237-11e9-b20c-f9f12eb6d835")
         {
             _pluginUUID = pluginUUID;
         }

@@ -20,9 +20,9 @@ namespace BMiner
         // mandatory constructor
         public BMinerPlugin()
         {
-            _pluginUUID = "92a7fd10-498d-11e9-87d3-6b57d758e2c6";
+            _pluginUUID = "e5fbd330-7235-11e9-b20c-f9f12eb6d835";
         }
-        public BMinerPlugin(string pluginUUID = "92a7fd10-498d-11e9-87d3-6b57d758e2c6")
+        public BMinerPlugin(string pluginUUID = "e5fbd330-7235-11e9-b20c-f9f12eb6d835")
         {
             _pluginUUID = pluginUUID;
         }

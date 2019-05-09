@@ -2,6 +2,7 @@
 using System.Text;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices.Querying.Amd.OpenCL;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
@@ -37,7 +38,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
                 computeDevs.Add(new AmdComputeDevice(gpu, ++numDevs, IsFallback, gpu.Adl2Index));
             }
 
-            Helpers.ConsolePrint(Tag, stringBuilder);
+            Logger.Info(Tag, stringBuilder.ToString());
 
             return computeDevs;
         }

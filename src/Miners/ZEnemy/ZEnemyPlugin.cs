@@ -22,7 +22,7 @@ namespace ZEnemy
 
         public string Author => "Domen Kirn Krefl";
 
-        public string PluginUUID => "881c5230-4bfc-11e9-a481-e144ccd86993";
+        public string PluginUUID => "5532d300-7238-11e9-b20c-f9f12eb6d835";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

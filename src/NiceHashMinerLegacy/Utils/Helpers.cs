@@ -43,22 +43,6 @@ namespace NiceHashMiner
             return false;
         }
 
-        // TODO replace with Logger => Info, Debug, ...
-        public static void ConsolePrint(string grp, string text)
-        {
-            Logger.Info(grp, text);
-        }
-
-        public static void ConsolePrint(string grp, object obj)
-        {
-            ConsolePrint(grp, obj.ToString());
-        }
-
-        public static void ConsolePrint(string grp, string text, params object[] arg)
-        {
-            ConsolePrint(grp, string.Format(text, arg));
-        }
-
         public static uint GetIdleTime()
         {
             var lastInPut = new LASTINPUTINFO();

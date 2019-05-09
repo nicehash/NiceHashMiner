@@ -18,9 +18,9 @@ namespace TeamRedMiner
     {
         public TeamRedMinerPlugin()
         {
-            _pluginUUID = "189aaf80-4b23-11e9-a481-e144ccd86993";
+            _pluginUUID = "abc3e2a0-7237-11e9-b20c-f9f12eb6d835";
         }
-        public TeamRedMinerPlugin(string pluginUUID = "189aaf80-4b23-11e9-a481-e144ccd86993")
+        public TeamRedMinerPlugin(string pluginUUID = "abc3e2a0-7237-11e9-b20c-f9f12eb6d835")
         {
             _pluginUUID = pluginUUID;
         }

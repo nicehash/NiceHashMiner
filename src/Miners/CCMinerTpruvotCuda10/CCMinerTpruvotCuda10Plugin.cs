@@ -22,7 +22,7 @@ namespace CCMinerTpruvotCuda10
 
         public string Author => "stanko@nicehash.com";
 
-        public string PluginUUID => "563960f0-4990-11e9-87d3-6b57d758e2c6";
+        public string PluginUUID => "2257f160-7236-11e9-b20c-f9f12eb6d835";
 
         public bool CanGroup(MiningPair a, MiningPair b)
         {
