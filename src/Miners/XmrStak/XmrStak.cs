@@ -179,7 +179,10 @@ namespace XmrStak
             }
             catch (Exception e)
             {
-                Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
+                if (e.Message != "An item with the same key has already been added.")
+                {
+                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
+                }
             }
 
             return api;

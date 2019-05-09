@@ -78,7 +78,10 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                 }
                 catch(Exception e)
                 {
-                    Logger.Error(logGroup, $"Error occured while getting total data from API: {e.Message}");
+                    if (e.Message != "An item with the same key has already been added.")
+                    {
+                        Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
+                    }
                 }
             }
             // TODO if have multiple GPUs call the threads as well, but maybe not as often since it might crash the miner
@@ -127,7 +130,10 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                 }
                 catch(Exception e)
                 {
-                    Logger.Error(logGroup, $"Error occured while getting per device data from API: {e.Message}");
+                    if (e.Message != "An item with the same key has already been added.")
+                    {
+                        Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
+                    }
                 }
             }
             var ad = new ApiData();

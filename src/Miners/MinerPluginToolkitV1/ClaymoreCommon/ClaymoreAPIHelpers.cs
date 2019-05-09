@@ -94,7 +94,10 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             }
             catch (Exception e)
             {
-                Logger.Error(logGroup, $"Error occured while getting API stats: {e.ToString()}");
+                if (e.Message != "An item with the same key has already been added.")
+                {
+                    Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
+                }
             }
             return ad;
         }

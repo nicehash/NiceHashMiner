@@ -50,7 +50,10 @@ namespace MinerPluginToolkitV1.SgminerCommon
             }
             catch (Exception e)
             {
-                Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
+                if (e.Message != "An item with the same key has already been added.")
+                {
+                    Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
+                }
                 return null;
             }
         }
