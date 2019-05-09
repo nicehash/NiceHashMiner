@@ -93,7 +93,6 @@ namespace NiceHashMiner.Devices.Querying.Amd
             }
 
             Logger.Info(Tag, $"AMD GPUs count : {amdDevices.Count}");
-            Logger.Debug(Tag, "AMD Getting device name and serial from ADL");
             // ADL
             var isAdlInit = AdlQuery.TryQuery(out var busIdInfos, out var numDevs);
 

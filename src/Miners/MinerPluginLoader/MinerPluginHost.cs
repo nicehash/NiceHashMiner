@@ -96,9 +96,6 @@ namespace MinerPluginLoader
                     if (MinerPlugin.ContainsKey(plugin.PluginUUID))
                     {
                         var existingPlugin = MinerPlugin[plugin.PluginUUID];
-                        Console.WriteLine($"contains key {plugin.PluginUUID}");
-                        Console.WriteLine($"existing {existingPlugin.Name} v{existingPlugin.Version}");
-                        Console.WriteLine($"new {plugin.Name} v{plugin.Version}");
                         Logger.Info("MinerPluginHost", $"Already existing plugin {plugin.PluginUUID}");
                         Logger.Info("MinerPluginHost", $"Old name {existingPlugin.Name} and version {existingPlugin.Version}\r\n new name {plugin.Name} and version {plugin.Version}");
                     }
@@ -107,8 +104,7 @@ namespace MinerPluginLoader
                 }
                 catch (Exception e)
                 {
-                    Logger.Info("MinerPluginHost", $"Error occured while loading plugin: {e.Message}");
-                    Console.WriteLine($"Exception while loading plugin {e}");
+                    Logger.Error("MinerPluginHost", $"Error occured while loading plugin: {e.Message}");
                 }
             }
             return loadedPlugins;

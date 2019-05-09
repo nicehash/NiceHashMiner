@@ -65,7 +65,7 @@ namespace CPUMinerBase
                 }
                 catch (Exception e)
                 {
-                    Logger.Info(_logGroup, $"Error occured while getting API stats: {e.Message}");
+                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
                 }
             }
             var ad = new ApiData();
@@ -102,7 +102,6 @@ namespace CPUMinerBase
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
             // TODO benchmark process add after benchmark
 
@@ -178,7 +177,6 @@ namespace CPUMinerBase
             {
                 var okMsg = ProcessHelpers.AdjustAffinity(pid, _affinityMask);
                 Logger.Info(_logGroup, $"Adjust Affinity returned: {okMsg.Item2}");
-                Logger.Debug(_logGroup, $"Adjust Affinity returned: {okMsg.Item2}");
             }
         }
     }

@@ -75,7 +75,6 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine);
 
 

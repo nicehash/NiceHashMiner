@@ -34,7 +34,7 @@ namespace MinerPluginToolkitV1
             }
             catch (Exception e)
             {
-                Logger.Debug("Etherchain", $"Error occured while getting current block async: {e.Message}");
+                Logger.Error("Etherchain", $"Error occured while getting current block async: {e.Message}");
                 return null;
             }
         }

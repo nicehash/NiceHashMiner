@@ -94,7 +94,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             }
             catch (Exception e)
             {
-                Logger.Info(logGroup, $"Error occured while getting API stats: {e.ToString()}");
+                Logger.Error(logGroup, $"Error occured while getting API stats: {e.ToString()}");
             }
             return ad;
         }

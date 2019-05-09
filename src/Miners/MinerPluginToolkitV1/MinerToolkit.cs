@@ -235,7 +235,6 @@ namespace MinerPluginToolkitV1
                 if (stop.IsCancellationRequested)
                 {
                     Logger.Info("MinerToolkit", "Benchmark process was canceled by user");
-                    Console.WriteLine("Cancelling per user request.");
                     return new BenchmarkResult { ErrorMessage = "Cancelling per user request." };
                 }
 
@@ -243,7 +242,6 @@ namespace MinerPluginToolkitV1
                 if (timeout.IsCancellationRequested)
                 {
                     Logger.Info("MinerToolkit", "Benchmark process timed out");
-                    Console.WriteLine("Operation timed out.");
                     return new BenchmarkResult{ ErrorMessage = "Operation timed out." };
                 }
             }

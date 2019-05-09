@@ -31,8 +31,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             }
             catch (Exception e)
             {
-                Logger.Info(logGroup, $"Error occured while getting api data base: {e.Message}");
-                Console.WriteLine($"CCMinerAPIHelpers.GetApiDataBase exception: {e.Message}");
+                Logger.Error(logGroup, $"Error occured while getting api data base: {e.Message}");
                 return null;
             }
         }
@@ -79,7 +78,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                 }
                 catch(Exception e)
                 {
-                    Logger.Info(logGroup, $"Error occured while getting total data from API: {e.Message}");
+                    Logger.Error(logGroup, $"Error occured while getting total data from API: {e.Message}");
                 }
             }
             // TODO if have multiple GPUs call the threads as well, but maybe not as often since it might crash the miner
@@ -128,7 +127,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                 }
                 catch(Exception e)
                 {
-                    Logger.Info(logGroup, $"Error occured while getting per device data from API: {e.Message}");
+                    Logger.Error(logGroup, $"Error occured while getting per device data from API: {e.Message}");
                 }
             }
             var ad = new ApiData();

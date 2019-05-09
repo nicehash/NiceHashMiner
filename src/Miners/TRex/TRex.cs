@@ -83,8 +83,7 @@ namespace TRex
 
             }
             catch (Exception e) {
-                Logger.Info(_logGroup, $"Error occured while getting API stats: {e.Message}");
-                Console.WriteLine(e.Message);
+                Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
              }
 
             return ad;
@@ -113,7 +112,6 @@ namespace TRex
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
             var benchHashes = 0d;

@@ -2,6 +2,7 @@
 using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NiceHashMinerLegacy.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -62,7 +63,7 @@ namespace XmrStak.Configs
                 }
             } catch(Exception e)
             {
-                Console.WriteLine($"CreateConfigFile {e.Message}");
+                Logger.Error("XMR-CONFIGS", $"Creating of config file failed: {e.Message}");
             }
             return File.Exists(configFilePath);
         }

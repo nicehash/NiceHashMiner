@@ -82,7 +82,6 @@ namespace NBMiner
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
-            Logger.Debug(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
             var id = Shared.MappedCudaIds[_miningPairs.First().Device.UUID];
 
@@ -170,8 +169,7 @@ namespace NBMiner
             }
             catch (Exception e)
             {
-                Logger.Info(_logGroup, $"Error occured while getting API stats: {e.Message}");
-                Console.WriteLine($"NBMiner {e}");
+                Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
             return api;
