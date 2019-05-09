@@ -1,11 +1,25 @@
 ﻿using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Plugin;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace NiceHashMiner.Miners.Grouping
 {
+    // TODO rename to GroupingUtils
     public static class GroupingLogic
     {
+        public static string CalcGroupedDevicesKey(SortedSet<string> sortedKeys, Algorithm algorithm)
+        {
+            var key = $"{algorithm.AlgorithmStringID}({string.Join(", ", sortedKeys)})";
+            return key;
+        }
+
+        public static AlgorithmType GetMinerPairAlgorithmType(IEnumerable<MiningPair> miningPairs)
+        {
+            return miningPairs.FirstOrDefault()?.Algorithm?.AlgorithmUUID ?? AlgorithmType.NONE;
+        }
+
         public static bool ShouldGroup(MiningPair a, MiningPair b)
         {
             // now all are plugin cases

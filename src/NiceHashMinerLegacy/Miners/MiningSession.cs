@@ -19,8 +19,6 @@ using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Miners
 {
-    using GroupedDevices = SortedSet<string>;
-
     public class MiningSession
     {
         private const string Tag = "MiningSession";
@@ -175,12 +173,6 @@ namespace NiceHashMiner.Miners
         }
 
 #endregion Start/Stop
-
-        private static string CalcGroupedDevicesKey(GroupedDevices group, Algorithm algorithm)
-        {
-            var key = $"{algorithm.AlgorithmStringID}({string.Join(", ", group)})";
-            return key;
-        }
 
         public void UpdateMiningSession(IEnumerable<ComputeDevice> devices, string username)
         {
@@ -386,7 +378,7 @@ namespace NiceHashMiner.Miners
             var newGroupedMiningPairs = new Dictionary<string, List<MiningPair>>();
             // group devices with same supported algorithms
             {
-                var currentGroupedDevices = new List<GroupedDevices>();
+                var currentGroupedDevices = new List<SortedSet<string>>();
                 for (var first = 0; first < profitableDevices.Count; ++first)
                 {
                     var firstDev = profitableDevices[first].Device;
@@ -396,7 +388,7 @@ namespace NiceHashMiner.Miners
                     // if device is not in any group create new group and check if other device should group
                     if (isInGroup == false)
                     {
-                        var newGroup = new GroupedDevices();
+                        var newGroup = new SortedSet<string>();
                         var miningPairs = new List<MiningPair>()
                         {
                             profitableDevices[first]
@@ -416,110 +408,47 @@ namespace NiceHashMiner.Miners
                         }
 
                         currentGroupedDevices.Add(newGroup);
-                        var newGroupKey = CalcGroupedDevicesKey(newGroup, firstAlgo);
+                        var newGroupKey = GroupingLogic.CalcGroupedDevicesKey(newGroup, firstAlgo);
                         newGroupedMiningPairs[newGroupKey] = miningPairs;
                     }
                 }
             }
             //bool IsMinerStatsCheckUpdate = false;
+            var hasChanged = false;
             {
+                var currentRunningGroups = _runningGroupMiners.Keys.ToArray();
+
                 // check which groupMiners should be stopped and which ones should be started and which to keep running
-                var toStopGroupMiners = new Dictionary<string, GroupMiner>();
-                var toRunNewGroupMiners = new Dictionary<string, GroupMiner>();
-                var noChangeGroupMiners = new Dictionary<string, GroupMiner>();
-                // check what to stop/update
-                foreach (var runningGroupKey in _runningGroupMiners.Keys)
+                var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid=>uuid).ToArray();
+                var toStartMinerGroupKeys = newGroupedMiningPairs.Where(pair => !currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray(); 
+                var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToArray() ; 
+                
+                // first stop currently running
+                foreach (var stopKey in toStopMinerGroupKeys)
                 {
-                    if (newGroupedMiningPairs.ContainsKey(runningGroupKey) == false)
-                    {
-                        // runningGroupKey not in new group definately needs to be stopped and removed from curently running
-                        toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
-                    }
-                    else
-                    {
-                        // runningGroupKey is contained but needs to check if mining algorithm is changed
-                        var miningPairs = newGroupedMiningPairs[runningGroupKey];
-                        var newAlgoType = GetMinerPairAlgorithmType(miningPairs);
-                        if (newAlgoType != AlgorithmType.NONE && newAlgoType != AlgorithmType.INVALID)
-                        {
-                            // if algoType valid and different from currently running update
-                            if (newAlgoType != _runningGroupMiners[runningGroupKey].AlgorithmUUID)
-                            {
-                                // remove current one and schedule to stop mining
-                                toStopGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
-                                toRunNewGroupMiners[runningGroupKey] = new GroupMiner(miningPairs, runningGroupKey);
-                            }
-                            else
-                                noChangeGroupMiners[runningGroupKey] = _runningGroupMiners[runningGroupKey];
-                        }
-                    }
+                    await _runningGroupMiners[stopKey].Stop();
+                    _runningGroupMiners.Remove(stopKey);
+                }
+                var miningLocation = StratumService.SelectedServiceLocation;
+                // start new
+                foreach (var startKey in toStartMinerGroupKeys)
+                {
+                    var miningPairs = newGroupedMiningPairs[startKey];
+                    var toStart = new GroupMiner(miningPairs, startKey);
+                    _runningGroupMiners[toStart.Key] = toStart;
+                    await toStart.Start(miningLocation, _username);
+                }
+                // log scope
+                {
+                    var stopLog = toStopMinerGroupKeys.Length > 0 ? string.Join(",", toStopMinerGroupKeys) : "EMTPY";
+                    Logger.Info(Tag, $"Stop Old Mining: ({stopLog})");
+                    var startLog = toStartMinerGroupKeys.Length > 0 ? string.Join(",", toStartMinerGroupKeys) : "EMTPY";
+                    Logger.Info(Tag, $"Start New Mining : ({startLog})");
+                    var sameLog = noChangeGroupMinersKeys.Length > 0 ? string.Join(",", noChangeGroupMinersKeys) : "EMTPY";
+                    Logger.Info(Tag, $"No change : ({sameLog})");
                 }
 
-                // check brand new
-                foreach (var kvp in newGroupedMiningPairs)
-                {
-                    var key = kvp.Key;
-                    var miningPairs = kvp.Value;
-                    if (_runningGroupMiners.ContainsKey(key) == false)
-                    {
-                        var newGroupMiner = new GroupMiner(miningPairs, key);
-                        toRunNewGroupMiners[key] = newGroupMiner;
-                    }
-                }
-
-                if ((toStopGroupMiners.Values.Count > 0) || (toRunNewGroupMiners.Values.Count > 0))
-                {
-                    // There is a change in algorithms, change GUI
-                    ApplicationStateManager.ClearRatesAll();
-
-                    var stringBuilderPreviousAlgo = new StringBuilder();
-                    var stringBuilderCurrentAlgo = new StringBuilder();
-                    var stringBuilderNoChangeAlgo = new StringBuilder();
-
-                    // stop old miners                   
-                    foreach (var toStop in toStopGroupMiners.Values)
-                    {
-                        stringBuilderPreviousAlgo.Append($"{toStop.DevicesInfoString}: {toStop.AlgorithmUUID}, ");
-
-                        await toStop.Stop();
-                        _runningGroupMiners.Remove(toStop.Key);
-                        // Deviant checker works only for single Device so we skip if there are multiple devices, BUT NOW WE HAVE PER DEVICE SPEEDS AND WE SHOULD MOVE THIS CHECKER OUTSIDE
-                        if (toStop.Miner.MiningPairs.Count != 1) continue;
-                        var algo = toStop.Miner.MiningPairs.First().Algorithm;
-                        if (_benchCheckers.TryGetValue(algo, out var checker))
-                            checker.Stop();
-                        //if (algo is DualAlgorithm dual && _dualBenchCheckers.TryGetValue(dual, out var sChecker))
-                        //    sChecker.Stop();
-                    }
-
-                    // start new miners
-                    var miningLocation = StratumService.SelectedServiceLocation;
-                    foreach (var toStart in toRunNewGroupMiners.Values)
-                    {
-                        stringBuilderCurrentAlgo.Append($"{toStart.DevicesInfoString}: {toStart.AlgorithmUUID}, ");
-                        await toStart.Start(miningLocation, _username);
-                        _runningGroupMiners[toStart.Key] = toStart;
-                    }
-
-                    // which miners dosen't change
-                    foreach (var noChange in noChangeGroupMiners.Values)
-                        stringBuilderNoChangeAlgo.Append($"{noChange.DevicesInfoString}: {noChange.AlgorithmUUID}, ");
-
-                    if (stringBuilderPreviousAlgo.Length > 0)
-                    {
-                        Logger.Info(Tag, $"Stop Mining: {stringBuilderPreviousAlgo}");
-                    }
-
-                    if (stringBuilderCurrentAlgo.Length > 0)
-                    {
-                        Logger.Info(Tag, $"Now Mining : {stringBuilderCurrentAlgo}");
-                    }
-
-                    if (stringBuilderNoChangeAlgo.Length > 0)
-                    {
-                        Logger.Info(Tag, $"No change  : {stringBuilderNoChangeAlgo}");
-                    }
-                }
+                hasChanged = toStartMinerGroupKeys.Length > 0 || toStopMinerGroupKeys.Length > 0;
             }
 
             lock (_lock)
@@ -527,14 +456,12 @@ namespace NiceHashMiner.Miners
                 SwichMostProfitableGroupUpMethodTaskLock = false;
             }
 
-            // stats quick fix code
-            // TODO not awaited, but we probably don't care
-            await MinerStatsCheck();
-        }
-
-        private static AlgorithmType GetMinerPairAlgorithmType(IEnumerable<MiningPair> miningPairs)
-        {
-            return miningPairs.FirstOrDefault()?.Algorithm?.AlgorithmUUID ?? AlgorithmType.NONE;
+            // There is a change in algorithms, change GUI
+            if (hasChanged)
+            {
+                ApplicationStateManager.ClearRatesAll();
+                await MinerStatsCheck();
+            }            
         }
 
         public async Task MinerStatsCheck()

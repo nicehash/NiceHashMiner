@@ -188,7 +188,7 @@ namespace NiceHashMiner.Miners.Grouping
         }
     }
 
-    public class SpeedSumCount
+    internal class SpeedSumCount
     {
         public double Speed = 0;
         public double SecondarySpeed = 0;
@@ -213,7 +213,7 @@ namespace NiceHashMiner.Miners.Grouping
         }
     }
 
-    public class AveragerGroup
+    internal class AveragerGroup
     {
         public string DeviceName;
 
