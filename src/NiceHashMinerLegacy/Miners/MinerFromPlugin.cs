@@ -22,7 +22,7 @@ namespace NiceHashMiner.Miners
     {
         private readonly IMinerPlugin _plugin;
         private readonly IMiner _miner;
-        List<MiningPair> _miningPairs;
+        List<MiningPair> _miningPairs = new List<MiningPair>();
 
         public MinerFromPlugin(string pluginUUID, List<Miners.Grouping.MiningPair> miningPairs) : base(pluginUUID, miningPairs)
         {
