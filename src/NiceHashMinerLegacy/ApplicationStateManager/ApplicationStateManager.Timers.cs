@@ -96,5 +96,33 @@ namespace NiceHashMiner
             _refreshDeviceListViewTimer = null;
         }
         #endregion RefreshDeviceListView timer
+
+        #region InternetCheck timer
+        private static SystemTimer _internetCheckTimer;
+
+        public static void StartInternetCheckTimer(MiningSession miningSession)
+        {
+            _internetCheckTimer = new SystemTimer();
+            _internetCheckTimer.Elapsed += (object sender, ElapsedEventArgs e) =>
+            {
+                if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess)
+                {
+                    if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess)
+                    {
+                        miningSession.isConnectedToInternet = Helpers.IsConnectedToInternet();
+                    }
+                }
+            };
+            _internetCheckTimer.Interval = 1000 * 60;
+            _internetCheckTimer.Start();
+        }
+
+        public static void StopInternetCheckTimer()
+        {
+            _internetCheckTimer?.Stop();
+            _internetCheckTimer = null;
+        }
+
+        #endregion InternetCheck timer
     }
 }
