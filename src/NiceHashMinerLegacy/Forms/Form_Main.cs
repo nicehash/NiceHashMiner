@@ -685,6 +685,7 @@ namespace NiceHashMiner
         {
             FormHelpers.SafeInvoke(this, () =>
             {
+                buttonPlugins.Enabled = false;
                 textBoxBTCAddress.Enabled = false;
                 textBoxWorkerName.Enabled = false;
                 comboBoxLocation.Enabled = false;
@@ -710,6 +711,7 @@ namespace NiceHashMiner
                 //// Disable IFTTT notification before label call
                 //_isNotProfitable = false;
 
+                buttonPlugins.Enabled = true;
                 textBoxBTCAddress.Enabled = true;
                 textBoxWorkerName.Enabled = true;
                 comboBoxLocation.Enabled = true;
