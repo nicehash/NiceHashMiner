@@ -13,20 +13,20 @@ namespace NiceHashMiner.Miners
         {
             if (algorithm is PluginAlgorithm pAlgo)
             {
-                return new MinerFromPlugin(pAlgo.BaseAlgo.MinerID, null);
+                return new MinerFromPlugin(pAlgo.BaseAlgo.MinerID, null, "");
             }
             return null;
         }
 
         // For mining
-        public static Miner CreateMinerForMining(List<Miners.Grouping.MiningPair> miningPairs)
+        public static Miner CreateMinerForMining(List<Miners.Grouping.MiningPair> miningPairs, string groupKey)
         {
             var pair = miningPairs.FirstOrDefault();
             if (pair == null) return null;
             var algorithm = pair.Algorithm;
             if (algorithm is PluginAlgorithm pAlgo)
             {
-                return new MinerFromPlugin(pAlgo.BaseAlgo.MinerID, miningPairs);
+                return new MinerFromPlugin(pAlgo.BaseAlgo.MinerID, miningPairs, groupKey);
             }
             return null;
         }

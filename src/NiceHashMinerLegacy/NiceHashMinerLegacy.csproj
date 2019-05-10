@@ -400,7 +400,6 @@
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
     <Compile Include="Miners\Grouping\GroupingLogic.cs" />
-    <Compile Include="Miners\Grouping\GroupMiner.cs" />
     <Compile Include="Miners\Grouping\MiningPair.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />

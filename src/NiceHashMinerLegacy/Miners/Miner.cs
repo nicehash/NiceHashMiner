@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MinerPlugin;
 using NiceHashMinerLegacy.Common;
+using System.Threading;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner
 {
@@ -21,7 +23,9 @@ namespace NiceHashMiner
 
         public List<Miners.Grouping.MiningPair> MiningPairs { get; protected set; }
 
-        public bool IsRunning { get; protected set; }
+        public bool IsRunning { get; protected set; } = false;
+        public string GroupKey { get; protected set; } = "";
+        public List<int> DevIndexes { get; private set; } = new List<int>();
 
 
         //// TODO maybe set for individual miner cooldown/retries logic variables
@@ -40,19 +44,27 @@ namespace NiceHashMiner
         //private const int IsCooldownCheckTimerAliveCap = 15;
         //private bool _needsRestart;
 
+        CancellationTokenSource EndMiner { get; } = new CancellationTokenSource();
         public bool _isEnded { get; private set; }
 
         public bool IsUpdatingApi { get; protected set; } = false;
 
 
-        protected Miner(string minerDeviceName, List<Miners.Grouping.MiningPair> miningPairs)
+        protected Miner(string minerDeviceName, List<Miners.Grouping.MiningPair> miningPairs, string groupKey)
         {
             MiningPairs = miningPairs;
             IsInit = MiningPairs != null && MiningPairs.Count > 0;
+            if (IsInit)
+            {
+                foreach (var pair in miningPairs)
+                {
+                    DevIndexes.Add(pair.Device.Index);
+                }
+            }
+
+            GroupKey = groupKey;
 
             MinerDeviceName = minerDeviceName;
-
-            IsRunning = false;
             //_maxCooldownTimeInMilliseconds = GetMaxCooldownTimeInMilliseconds();
             // 
             Logger.Info(MinerTag(), "NEW MINER CREATED");
@@ -84,8 +96,46 @@ namespace NiceHashMiner
 
         public void End()
         {
+            try
+            {
+                EndMiner.Cancel();
+            }
+            catch { }
             _isEnded = true;
             Stop();
+        }
+
+        public async Task StopTask()
+        {
+            try
+            {
+                if (!IsRunning) return;
+                //if (EndMiner.IsCancellationRequested) return;
+                Stop();
+                // wait before going on // TODO state right here
+                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, EndMiner.Token);
+            }
+            catch (Exception e)
+            {
+                Logger.Info("GROUP_MINER", $"Stop: {e.Message}");
+            }
+        }
+
+        public async Task StartTask(string miningLocation, string username)
+        {
+            try
+            {
+                if (IsRunning) return;
+                if (EndMiner.IsCancellationRequested) return;
+                // Wait before new start
+                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, EndMiner.Token);
+                if (EndMiner.IsCancellationRequested) return;
+                Start(miningLocation, username);
+            }
+            catch (Exception e)
+            {
+                Logger.Info("GROUP_MINER", $"Start: {e.Message}");
+            }
         }
 
         #region BENCHMARK DE-COUPLED Decoupled benchmarking routines

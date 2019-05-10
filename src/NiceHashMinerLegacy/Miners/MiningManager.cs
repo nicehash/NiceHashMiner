@@ -31,7 +31,7 @@ namespace NiceHashMiner.Miners
         private static object _lock = new object();
         private static string _username = DemoUser.BTC;
         private static List<MiningDevice> _miningDevices = new List<MiningDevice>();
-        private static Dictionary<string, GroupMiner> _runningGroupMiners = new Dictionary<string, GroupMiner>();
+        private static Dictionary<string, Miner> _runningMiners = new Dictionary<string, Miner>();
 
         // assume profitable
         private static bool _isProfitable = true;
@@ -60,7 +60,7 @@ namespace NiceHashMiner.Miners
             {
                 lock (_lock)
                 {
-                    foreach (var miner in _runningGroupMiners.Values)
+                    foreach (var miner in _runningMiners.Values)
                     {
                         minerIDs.AddRange(miner.DevIndexes);
                     }
@@ -84,11 +84,11 @@ namespace NiceHashMiner.Miners
             EthlargementIntegratedPlugin.Instance.Stop();
             lock(_lock)
             {
-                foreach (var groupMiner in _runningGroupMiners.Values)
+                foreach (var groupMiner in _runningMiners.Values)
                 {
                     groupMiner.End();
                 }
-                _runningGroupMiners.Clear();
+                _runningMiners.Clear();
             }
 
             _switchingManager?.Stop();
@@ -121,9 +121,9 @@ namespace NiceHashMiner.Miners
             var stopTasks = new List<Task>();
             lock (_lock)
             {
-                foreach (var key in _runningGroupMiners.Keys)
+                foreach (var key in _runningMiners.Keys)
                 {
-                    stopTasks.Add(_runningGroupMiners[key].Stop());
+                    stopTasks.Add(_runningMiners[key].StopTask());
                 }
             }
             foreach (var stopTask in stopTasks)
@@ -135,9 +135,9 @@ namespace NiceHashMiner.Miners
             var miningLocation = StratumService.SelectedServiceLocation;
             lock (_lock)
             {
-                foreach (var key in _runningGroupMiners.Keys)
+                foreach (var key in _runningMiners.Keys)
                 {
-                    startTasks.Add(_runningGroupMiners[key].Start(miningLocation, _username));
+                    startTasks.Add(_runningMiners[key].StartTask(miningLocation, _username));
                 }
             }
             foreach (var startTask in startTasks)
@@ -328,7 +328,7 @@ namespace NiceHashMiner.Miners
             string[] currentRunningGroups;
             lock (_lock)
             {
-                currentRunningGroups = _runningGroupMiners.Keys.ToArray();
+                currentRunningGroups = _runningMiners.Keys.ToArray();
             }
             // check which groupMiners should be stopped and which ones should be started and which to keep running
             var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
@@ -336,37 +336,42 @@ namespace NiceHashMiner.Miners
             var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToArray();
 
             // first stop currently running
-            var toStopGroups = new List<GroupMiner>();
+            var toStopGroups = new List<Miner>();
             lock (_lock)
             {
                 foreach (var stopKey in toStopMinerGroupKeys)
                 {
-                    toStopGroups.Add(_runningGroupMiners[stopKey]);
-                    _runningGroupMiners.Remove(stopKey);
+                    toStopGroups.Add(_runningMiners[stopKey]);
+                    _runningMiners.Remove(stopKey);
                     
                 }
             }
             foreach (var stopGroup in toStopGroups)
             {
-                await stopGroup.Stop();
+                await stopGroup.StopTask();
                 stopGroup.End();
             }
             // start new
-            var toStartGroups = new List<GroupMiner>();
+            var toStartGroups = new List<Miner>();
             lock (_lock)
             {
                 foreach (var startKey in toStartMinerGroupKeys)
                 {
                     var miningPairs = newGroupedMiningPairs[startKey];
-                    var toStart = new GroupMiner(miningPairs, startKey);
-                    _runningGroupMiners[toStart.Key] = toStart;
+                    var toStart = MinerFactory.CreateMinerForMining(miningPairs, startKey);
+                    if (toStart == null)
+                    {
+                        Logger.Error(Tag, $"CreateMinerForMining for key='{startKey}' returned <null>");
+                        continue;
+                    }
+                    _runningMiners[startKey] = toStart;
                     toStartGroups.Add(toStart);
                 }
             }
             var miningLocation = StratumService.SelectedServiceLocation;
             foreach (var toStart in toStartGroups)
             {
-                await toStart.Start(miningLocation, _username);
+                await toStart.StartTask(miningLocation, _username);
             }
             // log scope
             {
@@ -392,10 +397,8 @@ namespace NiceHashMiner.Miners
             try
             {
                 // TODO lock
-                foreach (var groupMiners in _runningGroupMiners.Values)
+                foreach (var m in _runningMiners.Values)
                 {
-                    var m = groupMiners.Miner;
-
                     // skip if not running or if await already in progress
                     if (!m.IsRunning || m.IsUpdatingApi) continue;
 

@@ -164,7 +164,7 @@ namespace MinerSmokeTest
                     step++;
                     try {
                         var pair = new List<MiningPair> { new MiningPair(device, algorithm) };
-                        var miner = NiceHashMiner.Miners.MinerFactory.CreateMinerForMining(pair);
+                        var miner = NiceHashMiner.Miners.MinerFactory.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);
 
