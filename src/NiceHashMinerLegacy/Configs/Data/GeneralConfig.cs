@@ -178,6 +178,14 @@ namespace NiceHashMiner.Configs.Data
             {
                 DisplayCurrency = "USD";
             }
+            if (NiceHashMiner.BitcoinAddress.ValidateBitcoinAddress(BitcoinAddress) == false)
+            {
+                BitcoinAddress = "";
+            }
+            if (NiceHashMiner.BitcoinAddress.ValidateWorkerName(WorkerName) == false)
+            {
+                WorkerName = "worker1";
+            }
             if (MinerAPIQueryInterval <= 0)
             {
                 MinerAPIQueryInterval = 5;
