@@ -34,7 +34,7 @@ namespace NiceHashMiner
             _minerStatsCheck?.Stop();
             _minerStatsCheck = null;
         }
-        #endregion
+        #endregion MinerStatsCheck
 
         // TODO This is duplicated with CudaDeviceChecker
         #region ComputeDevicesCheck Lost GPU check
@@ -53,7 +53,7 @@ namespace NiceHashMiner
         {
             _cudaDeviceChecker?.Stop();
         }
-        #endregion
+        #endregion ComputeDevicesCheck Lost GPU check
 
         #region PreventSystemSleepTimer
         private static SystemTimer _preventSleepTimer;
@@ -75,7 +75,7 @@ namespace NiceHashMiner
             _preventSleepTimer?.Stop();
             _preventSleepTimer = null;
         }
-        #endregion
+        #endregion PreventSystemSleepTimer
 
         #region RefreshDeviceListView timer
         private static SystemTimer _refreshDeviceListViewTimer;
@@ -95,6 +95,6 @@ namespace NiceHashMiner
             _refreshDeviceListViewTimer?.Stop();
             _refreshDeviceListViewTimer = null;
         }
-#endregion
+        #endregion RefreshDeviceListView timer
     }
 }
