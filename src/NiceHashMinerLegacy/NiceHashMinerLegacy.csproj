@@ -117,6 +117,7 @@
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkChecker.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
+    <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
