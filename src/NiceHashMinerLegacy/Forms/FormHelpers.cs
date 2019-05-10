@@ -56,6 +56,13 @@ namespace NiceHashMiner.Forms
                     tabControl.TabPages[i].Text = Translations.Tr(tabControl.TabPages[i].Text);
                 }
             }
+            if(c is DataGridView dataGridView)
+            {
+                for(var i =0; i< dataGridView.ColumnCount; i++)
+                {
+                    dataGridView.Columns[i].HeaderText = Translations.Tr(dataGridView.Columns[i].HeaderText);
+                }
+            }
 
             // call on all controls
             foreach (Control childC in c.Controls)
