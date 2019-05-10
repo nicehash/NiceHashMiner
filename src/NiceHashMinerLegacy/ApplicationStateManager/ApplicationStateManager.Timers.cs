@@ -23,7 +23,7 @@ namespace NiceHashMiner
             _minerStatsCheck = new SystemTimer();
             _minerStatsCheck.Elapsed += async (object sender, ElapsedEventArgs e) =>
             {
-                await MinersManager.MinerStatsCheck();
+                await MiningManager.MinerStatsCheck();
             };
             _minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
             _minerStatsCheck.Start();
@@ -34,7 +34,7 @@ namespace NiceHashMiner
             _minerStatsCheck?.Stop();
             _minerStatsCheck = null;
         }
-        #endregion
+        #endregion MinerStatsCheck
 
         // TODO This is duplicated with CudaDeviceChecker
         #region ComputeDevicesCheck Lost GPU check
@@ -53,7 +53,7 @@ namespace NiceHashMiner
         {
             _cudaDeviceChecker?.Stop();
         }
-        #endregion
+        #endregion ComputeDevicesCheck Lost GPU check
 
         #region PreventSystemSleepTimer
         private static SystemTimer _preventSleepTimer;
@@ -75,7 +75,7 @@ namespace NiceHashMiner
             _preventSleepTimer?.Stop();
             _preventSleepTimer = null;
         }
-        #endregion
+        #endregion PreventSystemSleepTimer
 
         #region RefreshDeviceListView timer
         private static SystemTimer _refreshDeviceListViewTimer;
@@ -95,6 +95,33 @@ namespace NiceHashMiner
             _refreshDeviceListViewTimer?.Stop();
             _refreshDeviceListViewTimer = null;
         }
-#endregion
+        #endregion RefreshDeviceListView timer
+
+        #region InternetCheck timer
+        private static SystemTimer _internetCheckTimer;
+
+        public static event EventHandler<bool> OnInternetCheck;
+
+        public static void StartInternetCheckTimer()
+        {
+            _internetCheckTimer = new SystemTimer();
+            _internetCheckTimer.Elapsed += (object sender, ElapsedEventArgs e) =>
+            {
+                if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess)
+                {
+                    OnInternetCheck?.Invoke(null, Helpers.IsConnectedToInternet());
+                }
+            };
+            _internetCheckTimer.Interval = 1000 * 60;
+            _internetCheckTimer.Start();
+        }
+
+        public static void StopInternetCheckTimer()
+        {
+            _internetCheckTimer?.Stop();
+            _internetCheckTimer = null;
+        }
+
+        #endregion InternetCheck timer
     }
 }

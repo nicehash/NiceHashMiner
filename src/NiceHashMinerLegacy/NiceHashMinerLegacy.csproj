@@ -117,6 +117,7 @@
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkChecker.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
+    <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
@@ -297,7 +298,7 @@
     <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
-    <Compile Include="Miners\MiningSession.cs" />
+    <Compile Include="Miners\MiningManager.cs" />
     <Compile Include="Stats\MiningStats.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="MinersDownloader\DownloadSetup.cs" />
@@ -401,7 +402,6 @@
     <Compile Include="Miners\Grouping\GroupingLogic.cs" />
     <Compile Include="Miners\Grouping\GroupMiner.cs" />
     <Compile Include="Miners\Grouping\MiningPair.cs" />
-    <Compile Include="Miners\MinersManager.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="PInvoke\CPUID.cs" />

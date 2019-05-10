@@ -273,7 +273,7 @@ namespace NiceHashMiner
             {
                 BeginInvoke((Action) (async () =>
                 {
-                    await MinersManager.MinerStatsCheck();
+                    await MiningManager.MinerStatsCheck();
                 }));
             }
             catch (Exception e)

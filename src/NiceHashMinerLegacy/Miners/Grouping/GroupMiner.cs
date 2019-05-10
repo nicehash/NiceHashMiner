@@ -3,22 +3,21 @@ using System.Collections.Generic;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Common;
 using System.Threading.Tasks;
+using System.Threading;
+using System;
 
 namespace NiceHashMiner.Miners.Grouping
 {
     public class GroupMiner
     {
+        CancellationTokenSource EndMiner { get; } = new CancellationTokenSource();
         public Miner Miner { get; protected set; }
-        public string DevicesInfoString { get; }
-        public AlgorithmType AlgorithmUUID { get; }
         public string Key { get; }
         public List<int> DevIndexes { get; }
 
         // , string miningLocation, string btcAdress, string worker
         public GroupMiner(List<MiningPair> miningPairs, string key)
         {
-            AlgorithmUUID = AlgorithmType.NONE;
-            DevicesInfoString = "N/A";
             Key = key;
             if (miningPairs.Count > 0)
             {
@@ -33,7 +32,6 @@ namespace NiceHashMiner.Miners.Grouping
                         deviceNames.Add(pair.Device.NameCount);
                         DevIndexes.Add(pair.Device.Index);
                     }
-                    DevicesInfoString = "{ " + string.Join(", ", deviceNames) + " }";
                 }
                 // init miner
                 {
@@ -41,7 +39,6 @@ namespace NiceHashMiner.Miners.Grouping
                     if (Miner != null)
                     {
                         var mPair = miningPairs[0];
-                        AlgorithmUUID = mPair.Algorithm.AlgorithmUUID;
                     }
                 }
             }
@@ -49,29 +46,49 @@ namespace NiceHashMiner.Miners.Grouping
 
         public async Task Stop()
         {
-            if (Miner != null && Miner.IsRunning)
+            try
             {
+                if (Miner == null) return;
+                if (!Miner.IsRunning) return;
+                //if (EndMiner.IsCancellationRequested) return;
                 Miner.Stop();
                 // wait before going on
-                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS);
+                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, EndMiner.Token);
             }
+            catch(Exception e)
+            {
+                Logger.Info("GROUP_MINER", $"Stop: {e.Message}");
+            }
+            
         }
 
         public void End()
         {
+            try
+            {
+                EndMiner.Cancel();
+            }
+            catch { }
             Miner?.End();
         }
 
         public async Task Start(string miningLocation, string username)
-
         {
-            if (Miner.IsRunning)
+            try
             {
-                return;
+                if (Miner == null) return;
+                if (Miner.IsRunning) return;
+                if (EndMiner.IsCancellationRequested) return;
+                // Wait before new start
+                await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, EndMiner.Token);
+                if (EndMiner.IsCancellationRequested) return;
+                Miner.Start(miningLocation, username);
             }
-            // Wait before new start
-            await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS);
-            Miner.Start(miningLocation, username);
+            catch (Exception e)
+            {
+                Logger.Info("GROUP_MINER", $"Start: {e.Message}");
+            }
+            
         }
     }
 }

@@ -130,7 +130,7 @@ namespace NiceHashMiner.Stats
         {
             var devices = AvailableDevices.Devices;
             var deviceList = new List<JArray>();
-            var activeIDs = MinersManager.GetActiveMinersIndexes();
+            var activeIDs = MiningManager.GetActiveMinersIndexes();
             foreach (var device in devices)
             {
                 try
