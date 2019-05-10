@@ -41,17 +41,12 @@ namespace NiceHashMiner.Miners
         // assume profitable
         private bool _isProfitable = true;
         // assume we have internet
-        private bool _isConnectedToInternet = true;
+        internal bool isConnectedToInternet = true;
         private bool _isMiningRegardlesOfProfit => ConfigManager.GeneralConfig.MinimumProfit == 0;
-
-        //// timers 
-        //// check internet connection 
-        //private readonly Timer _internetCheckTimer;
-
 
         public bool IsMiningEnabled => _miningDevices.Count > 0;
 
-        private bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
+        private bool IsCurrentlyIdle => !IsMiningEnabled || !isConnectedToInternet || !_isProfitable;
 
         private readonly Dictionary<Algorithm, BenchChecker> _benchCheckers = new Dictionary<Algorithm, BenchChecker>();
         //private readonly Dictionary<DualAlgorithm, BenchChecker> _dualBenchCheckers = new Dictionary<DualAlgorithm, BenchChecker>();
@@ -79,29 +74,19 @@ namespace NiceHashMiner.Miners
             _switchingManager = new AlgorithmSwitchingManager();
             _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
 
-            //// init timer stuff
-            //// set internet checking
-            //_internetCheckTimer = new Timer();
-            //_internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
-            //_internetCheckTimer.Interval = 1 * 1000 * 60; // every minute
-
-            //if (IsMiningEnabled)
-            //{
-            //    _internetCheckTimer.Start();
-            //}
+            // TODO is this the right calling?
+            if (IsMiningEnabled)
+            {
+                ApplicationStateManager.StartInternetCheckTimer(this);
+            }
+            else
+            {
+                ApplicationStateManager.StopInternetCheckTimer();
+            }
 
             //_switchingManager.Start();
         }
-#region Timers stuff
 
-        private void InternetCheckTimer_Tick(object sender, EventArgs e)
-        {
-            if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess)
-            {
-                _isConnectedToInternet = Helpers.IsConnectedToInternet();
-            }
-        }
-#endregion Timers stuff
 #region Start/Stop
 
         public void StopAllMiners(bool headless)
@@ -231,14 +216,14 @@ namespace NiceHashMiner.Miners
         private bool CheckIfShouldMine(double currentProfit, bool log = true)
         {
             // if profitable and connected to internet mine
-            var shouldMine = CheckIfProfitable(currentProfit, log) && _isConnectedToInternet;
+            var shouldMine = CheckIfProfitable(currentProfit, log) && isConnectedToInternet;
             if (shouldMine)
             {
                 ApplicationStateManager.SetProfitableState(true);
             }
             else
             {
-                if (!_isConnectedToInternet)
+                if (!isConnectedToInternet)
                 {
                     // change msg
                     if (log)
