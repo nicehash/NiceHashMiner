@@ -202,7 +202,7 @@ namespace NiceHashMiner
             ConfigManager.GeneralConfigFileCommit();
             if (IsCurrentlyMining)
             {
-                MinersManager.RestartMiners();
+                MiningManager.RestartMiners();
             }
 
             // notify all components
@@ -241,7 +241,7 @@ namespace NiceHashMiner
             // if mining update the mining manager
             if (IsCurrentlyMining)
             {
-                MinersManager.RestartMiners();
+                MiningManager.RestartMiners();
             }
             // notify all components
             DisplayWorkerName?.Invoke(null, workerName);
@@ -318,6 +318,7 @@ namespace NiceHashMiner
             StartMinerStatsCheckTimer();
             StartComputeDevicesCheckTimer();
             StartPreventSleepTimer();
+            StartInternetCheckTimer();
             DisplayMiningStarted?.Invoke(null, null);
             return true;
         }
@@ -334,13 +335,14 @@ namespace NiceHashMiner
             {
                 return false;
             }
-            MinersManager.StopAllMiners(/*headless*/ true);
+            MiningManager.StopAllMiners();
 
             PInvoke.PInvokeHelpers.AllowMonitorPowerdownAndSleep();
             IsCurrentlyMining = false;
             StopMinerStatsCheckTimer();
             StopComputeDevicesCheckTimer();
             StopPreventSleepTimer();
+            StopInternetCheckTimer();
             DisplayMiningStopped?.Invoke(null, null);
             return true;
         }

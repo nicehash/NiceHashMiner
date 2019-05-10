@@ -20,7 +20,6 @@ using NiceHashMiner.Miners.IntegratedPlugins;
 
 namespace NiceHashMiner.Miners
 {
-    // combination of MinersManager and MiningSession
     public static class MiningManager
     {
         private const string Tag = "MiningManager";
@@ -40,15 +39,20 @@ namespace NiceHashMiner.Miners
         private static bool _isConnectedToInternet = true;
         private static bool _isMiningRegardlesOfProfit => ConfigManager.GeneralConfig.MinimumProfit == 0;
 
-        //// timers 
-        //// check internet connection 
-        //private readonly Timer _internetCheckTimer;
-
 
         public static bool IsMiningEnabled => _miningDevices.Count > 0;
 
         private static bool IsCurrentlyIdle => !IsMiningEnabled || !_isConnectedToInternet || !_isProfitable;
 
+        static MiningManager()
+        {
+            ApplicationStateManager.OnInternetCheck += OnInternetCheck;
+
+            _switchingManager = new AlgorithmSwitchingManager();
+            _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
+        }
+
+        // For PRODUCTION
         public static List<int> GetActiveMinersIndexes()
         {
             var minerIDs = new List<int>();
@@ -65,38 +69,16 @@ namespace NiceHashMiner.Miners
 
             return minerIDs;
         }
-
-        static MiningManager()
+        
+        private static void OnInternetCheck(object sender, bool isConnectedToInternet)
         {
-            //_username = username;
-            _switchingManager = new AlgorithmSwitchingManager();
-            _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
-
-            //// init timer stuff
-            //// set internet checking
-            //_internetCheckTimer = new Timer();
-            //_internetCheckTimer.Elapsed += InternetCheckTimer_Tick;
-            //_internetCheckTimer.Interval = 1 * 1000 * 60; // every minute
-
-            //if (IsMiningEnabled)
-            //{
-            //    _internetCheckTimer.Start();
-            //}
-
-            //_switchingManager.Start();
+            _isConnectedToInternet = isConnectedToInternet;
         }
-        #region Timers stuff
 
-        private static void InternetCheckTimer_Tick(object sender, EventArgs e)
-        {
-            if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess)
-            {
-                _isConnectedToInternet = Helpers.IsConnectedToInternet();
-            }
-        }
-        #endregion Timers stuff
+
         #region Start/Stop
 
+        // TODO make Task
         public static void StopAllMiners()
         {
             EthlargementIntegratedPlugin.Instance.Stop();
@@ -117,6 +99,7 @@ namespace NiceHashMiner.Miners
 
         #endregion Start/Stop
 
+        // TODO make Task
         public static void UpdateMiningSession(IEnumerable<ComputeDevice> devices, string username)
         {
             _username = username;

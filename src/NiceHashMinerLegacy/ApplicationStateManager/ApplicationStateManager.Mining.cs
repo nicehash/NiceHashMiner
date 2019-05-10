@@ -51,7 +51,7 @@ namespace NiceHashMiner
             var devicesToMine = allDevs.Where(dev => dev.State == DeviceState.Mining).ToList();
             if (devicesToMine.Count > 0) {
                 StartMining();
-                MinersManager.UpdateMiningSession(devicesToMine, GetUsername());
+                MiningManager.UpdateMiningSession(devicesToMine, GetUsername());
             } else {
                 StopMining(false);
             }

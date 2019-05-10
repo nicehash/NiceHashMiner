@@ -23,7 +23,7 @@ namespace NiceHashMiner
             _minerStatsCheck = new SystemTimer();
             _minerStatsCheck.Elapsed += async (object sender, ElapsedEventArgs e) =>
             {
-                await MinersManager.MinerStatsCheck();
+                await MiningManager.MinerStatsCheck();
             };
             _minerStatsCheck.Interval = ConfigManager.GeneralConfig.MinerAPIQueryInterval * 1000;
             _minerStatsCheck.Start();
@@ -100,17 +100,16 @@ namespace NiceHashMiner
         #region InternetCheck timer
         private static SystemTimer _internetCheckTimer;
 
-        public static void StartInternetCheckTimer(MiningSession miningSession)
+        public static event EventHandler<bool> OnInternetCheck;
+
+        public static void StartInternetCheckTimer()
         {
             _internetCheckTimer = new SystemTimer();
             _internetCheckTimer.Elapsed += (object sender, ElapsedEventArgs e) =>
             {
                 if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess)
                 {
-                    if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess)
-                    {
-                        miningSession.isConnectedToInternet = Helpers.IsConnectedToInternet();
-                    }
+                    OnInternetCheck?.Invoke(null, Helpers.IsConnectedToInternet());
                 }
             };
             _internetCheckTimer.Interval = 1000 * 60;
