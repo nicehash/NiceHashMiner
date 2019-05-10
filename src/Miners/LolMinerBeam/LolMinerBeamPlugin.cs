@@ -21,7 +21,7 @@ namespace LolMinerBeam
 
         public string Name => "LolMinerBeam";
 
-        public string Author => "Domen Kirn Krefl";
+        public string Author => "domen.kirnkrefl@nicehash.com";
 
         public string PluginUUID => "435f0820-7237-11e9-b20c-f9f12eb6d835";
 

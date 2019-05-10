@@ -32,7 +32,7 @@ namespace TRex
 
         public string Name => "TRex";
 
-        public string Author => "Domen Kirn Krefl";
+        public string Author => "domen.kirnkrefl@nicehash.com";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

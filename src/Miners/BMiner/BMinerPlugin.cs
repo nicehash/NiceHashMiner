@@ -32,7 +32,7 @@ namespace BMiner
         public Version Version => new Version(1, 2);
         public string Name => "BMiner";
 
-        public string Author => "Domen Kirn Krefl";
+        public string Author => "domen.kirnkrefl@nicehash.com";
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

@@ -21,7 +21,7 @@ namespace CryptoDredge
         public Version Version => new Version(1, 1);
         public string Name => "CryptoDredge";
 
-        public string Author => "Domen Kirn Krefl";
+        public string Author => "domen.kirnkrefl@nicehash.com";
 
         public string PluginUUID => "d9c2e620-7236-11e9-b20c-f9f12eb6d835";
 

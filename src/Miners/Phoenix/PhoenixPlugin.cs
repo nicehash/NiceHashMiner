@@ -32,7 +32,7 @@ namespace Phoenix
         public Version Version => new Version(1, 0);
         public string Name => "Phoenix";
 
-        public string Author => "Domen Kirn Krefl";
+        public string Author => "domen.kirnkrefl@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
