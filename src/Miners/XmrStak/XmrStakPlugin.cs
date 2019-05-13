@@ -17,7 +17,7 @@ using XmrStak.Configs;
 
 namespace XmrStak
 {
-    public class XmrStakPlugin : IMinerPlugin, IInitInternals, IXmrStakConfigHandler, IBinaryPackageMissingFilesChecker
+    public class XmrStakPlugin : IMinerPlugin, IInitInternals, IXmrStakConfigHandler, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public XmrStakPlugin()
         {
@@ -336,6 +336,12 @@ namespace XmrStak
                 "msvcp140_2.dll", "nvrtc-builtins64_100.dll", "nvrtc-builtins64_90.dll", "nvrtc64_100_0.dll", "nvrtc64_90.dll", "ssleay32.dll", "vccorlib140.dll", "vcruntime140.dll",
                 "xmr-stak.exe", "xmrstak_cuda_backend.dll", "xmrstak_cuda_backend_cuda10_0.dll", "xmrstak_opencl_backend.dll"
             });
+        }
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            //no new version available
+            return false;
         }
     }
 }

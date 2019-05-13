@@ -15,7 +15,7 @@ using MinerPluginToolkitV1.ExtraLaunchParameters;
 namespace SGMinerHub
 {
     // SGMinerHubPlugin combines multiple miners
-    public class SGMinerHubPlugin : IMinerPlugin, IInitInternals
+    public class SGMinerHubPlugin : IMinerPlugin, IInitInternals, IReBenchmarkChecker
     {
         public string PluginUUID => "8b2c1300-7237-11e9-b20c-f9f12eb6d835";
 
@@ -105,5 +105,11 @@ namespace SGMinerHub
         };
 
         protected static MinerOptionsPackage _minerOptionsPackage = SGMinerBase.DefaultMinerOptionsPackage;
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            //no new version available
+            return false;
+        }
     }
 }

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace NanoMiner
 {
-    public class NanoMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
+    public class NanoMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public NanoMinerPlugin()
         {
@@ -184,6 +184,12 @@ namespace NanoMiner
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nvrtc64_100_0.dll", "nvrtc-builtins64_100.dll", "service.dll", "nanominer.exe" });
+        }
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            //no new version available
+            return false;
         }
     }
 }
