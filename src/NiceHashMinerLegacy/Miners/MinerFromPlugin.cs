@@ -14,6 +14,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
+using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Miners
 {
@@ -40,6 +41,7 @@ namespace NiceHashMiner.Miners
             // create empty stub if it is null
             if (apiData == null)
             {
+                Logger.Debug(MinerTag(), "GetSummary returned null... Will create ZERO fallback");
                 apiData = new ApiData();
             }
             if (apiData.AlgorithmSpeedsPerDevice == null)

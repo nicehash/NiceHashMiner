@@ -11,16 +11,17 @@ using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
 using NiceHashMinerLegacy.Common;
+using System.Diagnostics;
 
 namespace MinerPluginToolkitV1
 {
     // TODO there is no watchdog
     public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
     {
-        private static long _MINER_COUNT_ID = 0;
+        private static ulong _MINER_COUNT_ID = 0;
         protected string _logGroup { get; private set; }
         protected string _uuid { get; private set; }
-        protected MiningProcess _miningProcess;
+        protected Process _miningProcess;
         protected IEnumerable<MiningPair> _miningPairs;
         protected string _miningLocation;
         protected string _username;
@@ -56,6 +57,7 @@ namespace MinerPluginToolkitV1
         {
             _miningLocation = miningLocation;
             _username = username;
+            _password = password;
         }
 
         abstract public Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
@@ -87,13 +89,12 @@ namespace MinerPluginToolkitV1
             var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));
             Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'"); // TODO log or debug???
 
-            var p = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables);
-            _miningProcess = new MiningProcess(p);
-            p.Exited += MinerProcess_Exited;
-            if (!p.Start())
+            _miningProcess = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables);
+            _miningProcess.Exited += MinerProcess_Exited;
+            if (!_miningProcess.Start())
             {
-                Logger.Info(_logGroup, $"Error occured while starting a new process: {p.ToString()}");
-                throw new InvalidOperationException("Could not start process: " + p);
+                Logger.Info(_logGroup, $"Error occured while starting a new process: {_miningProcess.ToString()}");
+                throw new InvalidOperationException("Could not start process: " + _miningProcess);
             }
 
             if (this is IAfterStartMining asm)
@@ -111,16 +112,16 @@ namespace MinerPluginToolkitV1
             try
             {
                 // remove on exited
-                _miningProcess.Handle.Exited -= MinerProcess_Exited;
+                if (_miningProcess != null) _miningProcess.Exited -= MinerProcess_Exited;
                 lock (_lock)
                 {
                     _stopCalled = true;
                 }
-                _miningProcess?.Handle?.CloseMainWindow();
+                _miningProcess?.CloseMainWindow();
                 // 5 seconds wait for shutdown
-                if (!_miningProcess?.Handle?.WaitForExit(5 * 1000) ?? false)
+                if (!_miningProcess?.WaitForExit(5 * 1000) ?? false)
                 {
-                    _miningProcess?.Handle?.Kill(); // TODO look for another gracefull shutdown
+                    _miningProcess?.Kill(); // TODO look for another gracefull shutdown
                 }
             }
             catch (Exception e)
@@ -137,9 +138,21 @@ namespace MinerPluginToolkitV1
         // TODO consider using cancelation token instead of boolean stop 
         protected async Task RestartMining()
         {
-            if (_stopCalled) return;
-            await Task.Delay(500);
-            StartMining();
+            try
+            {
+                if (_stopCalled) return;
+                await Task.Delay(500);
+                if (_stopCalled) return;
+                StartMining();
+            }
+            catch(Exception e)
+            {
+
+            }
+            finally
+            {
+
+            }
         }
     }
 }

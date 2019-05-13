@@ -25,7 +25,7 @@ namespace NiceHashMiner.Switching
 
         private int _ticksForStable;
         private int _ticksForUnstable;
-        private double _smaCheckTime;
+        private double _smaCheckTime = 1;
 
         // Simplify accessing config objects
         public static Interval StableRange => ConfigManager.GeneralConfig.SwitchSmaTicksStable;
@@ -64,9 +64,6 @@ namespace NiceHashMiner.Switching
 
         public void Start()
         {
-            // Start right away so we fire up mining, this will fix RPC response
-            SmaCheckTimerOnElapsed(null, null);
-            // 
             _smaCheckTimer = new Timer(_smaCheckTime * 1000);
             _smaCheckTimer.Elapsed += SmaCheckTimerOnElapsed;
 
@@ -83,7 +80,7 @@ namespace NiceHashMiner.Switching
         {
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
             Stop();
-            //SmaCheck?.Invoke(this, args);
+            SmaCheck?.Invoke(this, args);
             Start();
         }
 

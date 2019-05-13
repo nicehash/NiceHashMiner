@@ -267,21 +267,6 @@ namespace NiceHashMiner
         //    }
         //}
 
-        public void ForceMinerStatsUpdate()
-        {
-            try
-            {
-                BeginInvoke((Action) (async () =>
-                {
-                    await MiningManager.MinerStatsCheck();
-                }));
-            }
-            catch (Exception e)
-            {
-                Logger.Error("NiceHash", e.Message);
-            }
-        }
-
         private void UpdateGlobalRate(double totalRate)
         {
             var factorTimeUnit = TimeFactor.TimeUnit;

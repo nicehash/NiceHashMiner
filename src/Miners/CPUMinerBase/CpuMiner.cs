@@ -171,10 +171,7 @@ namespace CPUMinerBase
 
         public void AfterStartMining()
         {
-            int pid = -1;
-            if (_miningProcess != null && _miningProcess.Handle != null) {
-                pid = _miningProcess.Handle.Id;
-            }
+            int pid = _miningProcess?.Id  ?? - 1;
             // TODO C# can have this shorter
             if (_affinityMask != 0 && pid != -1)
             {

@@ -98,11 +98,22 @@ namespace NiceHashMiner
         {
             try
             {
+                if (EndMiner.IsCancellationRequested) return;
                 EndMiner.Cancel();
             }
-            catch { }
-            _isEnded = true;
-            Stop();
+            catch (Exception e)
+            {
+                Logger.Info(MinerTag(), $"End: {e.Message}");
+            }
+            finally
+            {
+                if (!_isEnded)
+                {
+                    Logger.Info(MinerTag(), $"Setting End and Stopping");
+                    _isEnded = true;
+                    Stop();
+                }
+            }
         }
 
         public async Task StopTask()
@@ -110,19 +121,22 @@ namespace NiceHashMiner
             try
             {
                 if (!IsRunning) return;
-                //if (EndMiner.IsCancellationRequested) return;
+                Logger.Debug(MinerTag(), "BEFORE Stopping");
                 Stop();
+                Logger.Debug(MinerTag(), "AFTER Stopping");
+                if (EndMiner.IsCancellationRequested) return;
                 // wait before going on // TODO state right here
                 await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, EndMiner.Token);
             }
             catch (Exception e)
             {
-                Logger.Info("GROUP_MINER", $"Stop: {e.Message}");
+                Logger.Info(MinerTag(), $"Stop: {e.Message}");
             }
         }
 
         public async Task StartTask(string miningLocation, string username)
         {
+            var startCalled = false;
             try
             {
                 if (IsRunning) return;
@@ -130,11 +144,22 @@ namespace NiceHashMiner
                 // Wait before new start
                 await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS, EndMiner.Token);
                 if (EndMiner.IsCancellationRequested) return;
+                Logger.Debug(MinerTag(), "BEFORE Starting");
                 Start(miningLocation, username);
+                startCalled = true;
+                Logger.Debug(MinerTag(), "AFTER Starting");
             }
             catch (Exception e)
             {
-                Logger.Info("GROUP_MINER", $"Start: {e.Message}");
+                Logger.Info(MinerTag(), $"Start: {e.Message}");
+            }
+            finally
+            {
+                var stopOrEndCalled = startCalled && (EndMiner.IsCancellationRequested || _isEnded);
+                if (stopOrEndCalled)
+                {
+                    Stop();
+                }
             }
         }
 

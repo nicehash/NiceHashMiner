@@ -17,6 +17,7 @@ using NiceHashMinerLegacy.Common.Enums;
 using Timer = System.Timers.Timer;
 using NiceHashMinerLegacy.Common;
 using NiceHashMiner.Miners.IntegratedPlugins;
+using MinerPlugin;
 
 namespace NiceHashMiner.Miners
 {
@@ -102,15 +103,18 @@ namespace NiceHashMiner.Miners
         // TODO make Task
         public static void UpdateMiningSession(IEnumerable<ComputeDevice> devices, string username)
         {
-            _username = username;
             _switchingManager?.Stop();
-            // TODO check out if there is a change
-            _miningDevices = GroupSetupUtils.GetMiningDevices(devices, true);
-            if (_miningDevices.Count > 0)
+            lock(_lock)
             {
-                GroupSetupUtils.AvarageSpeeds(_miningDevices);
+                _username = username;
+                // TODO check out if there is a change
+                _miningDevices = GroupSetupUtils.GetMiningDevices(devices, true);
+                if (_miningDevices.Count > 0)
+                {
+                    GroupSetupUtils.AvarageSpeeds(_miningDevices);
+                }
             }
-            _switchingManager?.Start();
+            _switchingManager?.ForceUpdate();
         }
 
         public static async Task RestartMiners()
@@ -144,7 +148,7 @@ namespace NiceHashMiner.Miners
             {
                 await startTask;
             }
-            _switchingManager?.Start();
+            _switchingManager?.ForceUpdate();
         }
 
         // full of state
@@ -236,9 +240,9 @@ namespace NiceHashMiner.Miners
             return (currentProfit, prevStateProfit);
         }
 
-        private static List<MiningPair> GetProfitableMiningPairs()
+        private static List<Grouping.MiningPair> GetProfitableMiningPairs()
         {
-            var profitableMiningPairs = new List<MiningPair>();
+            var profitableMiningPairs = new List<Grouping.MiningPair>();
             foreach (var device in _miningDevices)
             {
                 // check if device has profitable algo
@@ -396,17 +400,21 @@ namespace NiceHashMiner.Miners
         {
             try
             {
-                // TODO lock
-                foreach (var m in _runningMiners.Values)
+                var summaryTasks = new List<Task<ApiData>>();
+                lock (_lock)
                 {
-                    // skip if not running or if await already in progress
-                    if (!m.IsRunning || m.IsUpdatingApi) continue;
-
-                    var ad = await m.GetSummaryAsync();
-                    if (ad == null)
+                    foreach (var m in _runningMiners.Values)
                     {
-                        Logger.Debug(m.MinerTag(), "GetSummary returned null..");
+                        // skip if not running or if await already in progress
+                        if (!m.IsRunning || m.IsUpdatingApi) continue;
+                        summaryTasks.Add(m.GetSummaryAsync());
+                        
                     }
+                }
+                // await tasks
+                foreach (var summaryTask in summaryTasks)
+                {
+                    var ad = await summaryTask;
                 }
                 // Update GUI
                 ApplicationStateManager.RefreshRates();
