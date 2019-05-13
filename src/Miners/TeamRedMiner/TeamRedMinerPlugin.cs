@@ -14,7 +14,7 @@ using MinerPluginToolkitV1;
 
 namespace TeamRedMiner
 {
-    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
+    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public TeamRedMinerPlugin()
         {
@@ -147,6 +147,12 @@ namespace TeamRedMiner
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "teamredminer.exe" });
+        }
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            //no improvements for algorithm speeds in the new version - just stability improvements
+            return false;
         }
     }
 }

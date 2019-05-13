@@ -15,7 +15,7 @@ using MinerPluginToolkitV1;
 
 namespace EWBF
 {
-    public class EwbfPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
+    public class EwbfPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public EwbfPlugin()
         {
@@ -178,6 +178,12 @@ namespace EWBF
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe", "cudart32_91.dll", "cudart64_91.dll" });
+        }
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            //no new version available
+            return false;
         }
     }
 }

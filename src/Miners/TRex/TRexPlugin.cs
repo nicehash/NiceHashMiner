@@ -15,7 +15,7 @@ using System.Text;
 
 namespace TRex
 {
-    public class TRexPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
+    public class TRexPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public TRexPlugin()
         {
@@ -149,6 +149,12 @@ namespace TRex
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "msvcr71.dll", "t-rex.exe" });
+        }
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            //no new version available
+            return false;
         }
     }
 }

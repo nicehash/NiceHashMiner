@@ -15,7 +15,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NBMiner
 {
-    public class NBMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker
+    public class NBMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public NBMinerPlugin()
         {
@@ -185,6 +185,25 @@ namespace NBMiner
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nbminer.exe", "OhGodAnETHlargementPill-r2.exe" });
+        }
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            var benchmarkedVersionIsSame = Version.Major == benchmarkedPluginVersion.Major && Version.Minor == benchmarkedPluginVersion.Minor;
+            var benchmarkedVersionIsOlder = Version.Major >= benchmarkedPluginVersion.Major && Version.Minor > benchmarkedPluginVersion.Minor;
+            if (benchmarkedVersionIsSame || !benchmarkedVersionIsOlder) return false;
+            if (ids.Count() == 0) return false;
+            // plugin version 1.2 bundles NBMiner v21.3
+            // plugin version 1.3 bundles NBMiner v23.2
+            // performance and compatibility optimizations Grin29 and Grin31,
+            // Added support for CuckoCycle
+            // there were 5 releases in between and many changes
+            if (device.DeviceType != DeviceType.NVIDIA) return false;
+            var singleAlgorithm = ids[0];
+            if (singleAlgorithm == AlgorithmType.GrinCuckaroo29) return true;
+            if (singleAlgorithm == AlgorithmType.GrinCuckatoo31) return true;
+
+            return false;
         }
     }
 }

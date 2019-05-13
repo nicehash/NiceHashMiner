@@ -16,7 +16,7 @@ using System.Text;
 namespace CryptoDredge
 {
     // TODO don't use this plugin as it doesn't have GetMinerStatsDataAsync() method miner doesn't support it.
-    class CryptoDredgePlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
+    class CryptoDredgePlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public Version Version => new Version(1, 1);
         public string Name => "CryptoDredge";
@@ -126,6 +126,12 @@ namespace CryptoDredge
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "CryptoDredge.exe" });
+        }
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            //no new version available
+            return false;
         }
     }
 }

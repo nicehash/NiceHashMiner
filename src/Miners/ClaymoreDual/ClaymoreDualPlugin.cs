@@ -15,7 +15,7 @@ using System.Text;
 
 namespace ClaymoreDual
 {
-    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
+    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public ClaymoreDualPlugin()
         {
@@ -368,6 +368,12 @@ namespace ClaymoreDual
                 @"cuda10.0\cudart64_100.dll", @"cuda10.0\EthDcrMiner64.exe", @"cuda6.5\cudart64_65.dll", @"cuda6.5\EthDcrMiner64.exe", @"cuda7.5\cudart64_75.dll", @"cuda7.5\EthDcrMiner64.exe",
                 @"cuda8.0\cudart64_80.dll", @"cuda8.0\EthDcrMiner64.exe", @"Remote manager\EthMan.exe", @"Remote manager\libeay32.dll", @"Remote manager\ssleay32.dll"
             });
+        }
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            //no new version available
+            return false;
         }
     }
 }

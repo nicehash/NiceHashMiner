@@ -13,7 +13,7 @@ using MinerPluginToolkitV1.ExtraLaunchParameters;
 
 namespace CPUMinerBase
 {
-    public class CPUMinerPlugin : IMinerPlugin, IInitInternals 
+    public class CPUMinerPlugin : IMinerPlugin, IInitInternals, IReBenchmarkChecker
     {
         public string PluginUUID => "92fceb00-7236-11e9-b20c-f9f12eb6d835";
 
@@ -114,5 +114,11 @@ namespace CPUMinerBase
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            //no new version available
+            return false;
+        }
     }
 }

@@ -14,7 +14,7 @@ using MinerPluginToolkitV1;
 
 namespace TTMiner
 {
-    public class TTMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
+    public class TTMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public TTMinerPlugin()
         {
@@ -167,6 +167,23 @@ namespace TTMiner
                 @"Algos\AlgoMTP-C92.dll", @"Algos\AlgoMTP.dll", @"Algos\AlgoMyrGr-C100.dll", @"Algos\AlgoMyrGr-C92.dll", @"Algos\AlgoMyrGr.dll", @"Algos\AlgoProgPoW-C100.dll",
                 @"Algos\AlgoProgPoW-C92.dll", @"Algos\AlgoProgPoW.dll", @"Algos\AlgoUbqhash-C100.dll", @"Algos\AlgoUbqhash-C92.dll", @"Algos\AlgoUbqhash.dll"
             });
+        }
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            var benchmarkedVersionIsSame = Version.Major == benchmarkedPluginVersion.Major && Version.Minor == benchmarkedPluginVersion.Minor;
+            var benchmarkedVersionIsOlder = Version.Major >= benchmarkedPluginVersion.Major && Version.Minor > benchmarkedPluginVersion.Minor;
+            if (benchmarkedVersionIsSame || !benchmarkedVersionIsOlder) return false;
+            if (ids.Count() == 0) return false;
+            // plugin version 1.1 bundles TTMiner v2.21
+            // plugin version 1.2 bundles TTMiner v2.23
+            // performance optimizations for MTP
+
+            if (device.DeviceType != DeviceType.NVIDIA) return false;
+            var singleAlgorithm = ids[0];
+            if (singleAlgorithm == AlgorithmType.MTP) return true;
+
+            return false;
         }
     }
 }

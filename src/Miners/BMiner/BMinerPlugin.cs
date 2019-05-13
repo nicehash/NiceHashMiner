@@ -15,7 +15,7 @@ using System.Text;
 
 namespace BMiner
 {
-    public class BMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker
+    public class BMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         // mandatory constructor
         public BMinerPlugin()
@@ -187,5 +187,10 @@ namespace BMiner
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "bminer.exe" });
         }
 
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            //no new version available
+            return false;
+        }
     }
 }
