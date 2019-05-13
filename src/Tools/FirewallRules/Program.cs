@@ -38,12 +38,12 @@ namespace FirewallRules
 
         static void AllowFirewallRule(string programFullPath, string name)
         {
-            SetFirewallRule($"advfirewall firewall add rule name={name} program={programFullPath} protocol=tcp dir=in enable=yes action=allow");
+            SetFirewallRule($"advfirewall firewall add rule name={name}_{programFullPath} program={programFullPath} protocol=tcp dir=in enable=yes action=allow");
         }
 
-        static void RemoveFirewallRule(string name)
+        static void RemoveFirewallRule(string programFullPath, string name)
         {
-            SetFirewallRule($"advfirewall firewall delete rule name={name}");
+            SetFirewallRule($"advfirewall firewall delete rule name={name}_{programFullPath}");
         }
 
         static void Main(string[] args)
@@ -96,14 +96,14 @@ namespace FirewallRules
             {
                 foreach (var miner in miners)
                 {
-                    RemoveFirewallRule(miner.Value);
+                    RemoveFirewallRule(miner.Key, miner.Value);
                 }
             }
             if (operation == "update")
             {
                 foreach (var miner in miners)
                 {
-                    RemoveFirewallRule(miner.Value);
+                    RemoveFirewallRule(miner.Key, miner.Value);
                 }
                 foreach (var miner in miners)
                 {
