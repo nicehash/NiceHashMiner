@@ -35,6 +35,7 @@ namespace MinerPluginToolkitV1
         }
 
         // if stop is called then consider this miner obsolete
+        CancellationTokenSource _stopMiner { get; } = new CancellationTokenSource();
         protected object _lock = new object();
         protected bool _stopCalled = false;
 
@@ -73,33 +74,51 @@ namespace MinerPluginToolkitV1
         // TODO check mining pairs
         public void StartMining()
         {
-            if (this is IBeforeStartMining bsm)
+            try
             {
-                bsm.BeforeStartMining();
+                if (this is IBeforeStartMining bsm)
+                {
+                    bsm.BeforeStartMining();
+                }
+                var binPathBinCwdPair = GetBinAndCwdPaths();
+                var binPath = binPathBinCwdPair.Item1;
+                var binCwd = binPathBinCwdPair.Item2;
+                var commandLine = MiningCreateCommandLine();
+                var environmentVariables = GetEnvironmentVariables();
+
+                // Logging
+                Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
+                // TODO this will not print content
+                var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));
+                Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'"); // TODO log or debug???
+
+                _miningProcess = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables);
+                _miningProcess.Exited += MinerProcess_Exited;
+                if (!_miningProcess.Start())
+                {
+                    Logger.Info(_logGroup, $"Error occured while starting a new process: {_miningProcess.ToString()}");
+                    throw new InvalidOperationException("Could not start process: " + _miningProcess);
+                }
+
+                if (this is IAfterStartMining asm)
+                {
+                    asm.AfterStartMining();
+                }
             }
-            var binPathBinCwdPair = GetBinAndCwdPaths();
-            var binPath = binPathBinCwdPair.Item1;
-            var binCwd = binPathBinCwdPair.Item2;
-            var commandLine = MiningCreateCommandLine();
-            var environmentVariables = GetEnvironmentVariables();
-
-            // Logging
-            Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
-            // TODO this will not print content
-            var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));
-            Logger.Info(_logGroup, $"Starting miner environmentVariables='{environmentVariablesLog}'"); // TODO log or debug???
-
-            _miningProcess = MinerToolkit.CreateMiningProcess(binPath, binCwd, commandLine, environmentVariables);
-            _miningProcess.Exited += MinerProcess_Exited;
-            if (!_miningProcess.Start())
+            finally
             {
-                Logger.Info(_logGroup, $"Error occured while starting a new process: {_miningProcess.ToString()}");
-                throw new InvalidOperationException("Could not start process: " + _miningProcess);
-            }
+                lock (_lock)
+                {
+                    if (_stopCalled || _stopMiner.IsCancellationRequested)
+                    try
+                    {
+                            StopMining();
+                    }
+                    catch
+                    {
 
-            if (this is IAfterStartMining asm)
-            {
-                asm.AfterStartMining();
+                    }
+                }
             }
         }
 
@@ -107,16 +126,21 @@ namespace MinerPluginToolkitV1
         {
             lock (_lock)
             {
-                if (_stopCalled) return;
+                try
+                {
+                    _stopCalled = true;
+                    _stopMiner.Cancel();
+                }
+                catch
+                {
+
+                }
             }
+
             try
             {
                 // remove on exited
                 if (_miningProcess != null) _miningProcess.Exited -= MinerProcess_Exited;
-                lock (_lock)
-                {
-                    _stopCalled = true;
-                }
                 _miningProcess?.CloseMainWindow();
                 // 5 seconds wait for shutdown
                 if (!_miningProcess?.WaitForExit(5 * 1000) ?? false)
@@ -138,20 +162,22 @@ namespace MinerPluginToolkitV1
         // TODO consider using cancelation token instead of boolean stop 
         protected async Task RestartMining()
         {
+            var isRestrat = false;
             try
             {
-                if (_stopCalled) return;
-                await Task.Delay(500);
-                if (_stopCalled) return;
-                StartMining();
+                await Task.Delay(500, _stopMiner.Token);
+                isRestrat = !_stopMiner.IsCancellationRequested;
             }
             catch(Exception e)
             {
-
+                Logger.Error(_logGroup, $"RestartMining error: {e.Message}");
             }
             finally
             {
-
+                if (isRestrat)
+                {
+                    StartMining();
+                }
             }
         }
     }
