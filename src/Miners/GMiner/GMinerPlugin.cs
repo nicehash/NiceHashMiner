@@ -15,7 +15,7 @@ using MinerPluginToolkitV1;
 
 namespace GMinerPlugin
 {
-    public class GMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker
+    public class GMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public GMinerPlugin()
         {
@@ -28,7 +28,7 @@ namespace GMinerPlugin
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 2);
+        public Version Version => new Version(1, 3);
 
         public string Name => "GMinerCuda9.0+";
 
@@ -104,19 +104,6 @@ namespace GMinerPlugin
         }
 
         IReadOnlyList<Algorithm> GetCUDASupportedAlgorithms(CUDADevice gpu) {
-            //var algorithms = new List<Algorithm>{};
-            //const ulong MinZHashMemory = 1879047230; // 1.75GB
-            //if (gpu.GpuRam > MinZHashMemory) {
-            //    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.ZHash));
-            //}
-            //const ulong MinBeamMemory = 3113849695; // 2.9GB
-            //if (gpu.GpuRam > MinBeamMemory) {
-            //    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.Beam));
-            //}
-            //const ulong MinGrinCuckaroo29Memory = 6012951136; // 5.6GB
-            //if (gpu.GpuRam > MinGrinCuckaroo29Memory) {
-            //    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29));
-            //}
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.ZHash),
@@ -130,13 +117,6 @@ namespace GMinerPlugin
 
         IReadOnlyList<Algorithm> GetAMDSupportedAlgorithms(AMDDevice gpu)
         {
-            //var algorithms = new List<Algorithm> { };
-            //const ulong MinBeamMemory = 3113849695; // 2.9GB
-            //if (gpu.GpuRam > MinBeamMemory)
-            //{
-            //    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.Beam));
-            //}
-            //return algorithms;
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
@@ -188,6 +168,18 @@ namespace GMinerPlugin
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "gminer_electricity",
                     LongName = "--electricity_cost"
+                },
+                /// <summary>
+                /// option to control GPU intensity (--intensity, 1-100)
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "gminer_intensity",
+                    LongName = "--intensity",
+                    // assume it is like the others
+                    DefaultValue = "-1",
+                    Delimiter = " "
                 }
             },
             TemperatureOptions = new List<MinerOption>{
@@ -232,6 +224,23 @@ namespace GMinerPlugin
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe" });
+        }
+
+        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            var benchmarkedVersionIsSame = Version.Major == benchmarkedPluginVersion.Major && Version.Minor == benchmarkedPluginVersion.Minor;
+            var benchmarkedVersionIsOlder = Version.Major >= benchmarkedPluginVersion.Major && Version.Minor > benchmarkedPluginVersion.Minor;
+            if (benchmarkedVersionIsSame || !benchmarkedVersionIsOlder) return false;
+            if (ids.Count() == 0) return false;
+            // plugin version 1.2 bundles GMiner v1.36
+            // plugin version 1.3 bundles GMiner v1.42
+            // performance optimizations Beam (Significant performance improvements) and Grin29,
+            // since there are improvements on AMD and NVIDIA we will not check device type, also there were 4 releases in between and many changes
+            var singleAlgorithm = ids[0];
+            if (singleAlgorithm == AlgorithmType.Beam) return true;
+            if (singleAlgorithm == AlgorithmType.GrinCuckaroo29) return true;
+
+            return false;
         }
     }
 }

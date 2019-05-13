@@ -121,6 +121,8 @@ namespace NiceHashMiner.Plugin
                 _integratedPluginsInitialized[pluginUuid] = true;
             }
 
+            CheckPluginsReBenchmarkAlgorithmsForDevices();
+
             EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
 
             if (is3rdPartyEnabled) return;
@@ -244,6 +246,7 @@ namespace NiceHashMiner.Plugin
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                 }
             }
+            CheckPluginsReBenchmarkAlgorithmsForDevices();
         }
 
         private static void RemovePluginAlgorithms(string pluginUUID)
@@ -371,6 +374,45 @@ namespace NiceHashMiner.Plugin
                 Logger.Error("MinerPluginsManager", $"Error occured while getting online miner plugins: {e.Message}");
             }
             return false;
+        }
+
+        private static void CheckPluginsReBenchmarkAlgorithmsForDevices()
+        {
+            // Integrated
+            var reBenchmarkCheckersPlugins = IntegratedPlugins.Where(plugin => plugin is IReBenchmarkChecker).Cast<IMinerPlugin>().ToList();
+            if (!IntegratedPluginsOnly)
+            {
+                // Dynamic/Online
+                var dynamicReBenchmarkCheckers = MinerPluginHost.MinerPlugin.Values.Where(plugin => plugin is IReBenchmarkChecker).ToList();
+                reBenchmarkCheckersPlugins.AddRange(dynamicReBenchmarkCheckers);
+            }
+
+            // get devices
+            var allDevs = AvailableDevices.Devices;
+            foreach (var plugin in reBenchmarkCheckersPlugins)
+            {
+                try
+                {
+                    var reBenchCheckPlugin = plugin as IReBenchmarkChecker;
+                    if (reBenchCheckPlugin == null) continue;
+                    foreach (var dev in allDevs)
+                    {
+                        var baseDev = dev.PluginDevice;
+                        var pluginAlgos = dev.AlgorithmSettings.Where(a => a.MinerUUID == plugin.PluginUUID).ToArray();
+                        foreach (var algo in pluginAlgos)
+                        {
+                            var pAlgo = algo as PluginAlgorithm;
+                            if (pAlgo == null) continue;
+                            var isReBenchmark = reBenchCheckPlugin.ShouldReBenchmarkAlgorithmOnDevice(baseDev, pAlgo.ConfigVersion, pAlgo.IDs);
+                            pAlgo.IsReBenchmark = isReBenchmark;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error("MinerPluginsManager", $"CheckPluginsReBenchmarkAlgorithmsForDevices error: {e.Message}");
+                }
+            }
         }
 
         public static IMinerPlugin GetPluginWithUuid(string pluginUuid)

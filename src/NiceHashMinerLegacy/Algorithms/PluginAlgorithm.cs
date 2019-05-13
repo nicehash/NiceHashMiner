@@ -11,12 +11,14 @@ namespace NiceHashMiner.Algorithms
 
     public class PluginAlgorithm : Algorithm
     {
-        public AlgorithmCommon.Algorithm BaseAlgo;
+        public AlgorithmCommon.Algorithm BaseAlgo { get; private set; }
 
-        public readonly string PluginName;
+        public string PluginName { get; private set; }
 
-        public Version ConfigVersion = new Version(1, 0);
+        public Version ConfigVersion { get; set; } = new Version(1, 0);
         public Version PluginVersion { get; private set; } = new Version(1, 0);
+
+        public bool IsReBenchmark { get; set; } = false;
 
         public PluginAlgorithm(string pluginName, AlgorithmCommon.Algorithm algorithm, Version pluginVersion)
         {
