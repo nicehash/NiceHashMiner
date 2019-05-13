@@ -351,13 +351,7 @@ namespace NiceHashMiner
         private void LinkLabelCheckStats_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             if (!VerifyMiningAddress(true)) return;
-
-            //in testnet there is no option to see stats without logging in
-#if TESTNET || TESTNETDEV
-            Process.Start(Links.CheckStats);
-#else
-            Process.Start(Links.CheckStats + textBoxBTCAddress.Text.Trim());
-#endif
+            ApplicationStateManager.VisitMiningStatsPage();
         }
 
 
@@ -675,9 +669,9 @@ namespace NiceHashMiner
                 textBoxWorkerName.Enabled = false;
                 comboBoxLocation.Enabled = false;
                 buttonBenchmark.Enabled = false;
-                buttonStartMining.Enabled = false;
+                buttonStartMining.Enabled = !ApplicationStateManager.AllInMiningState();
                 buttonSettings.Enabled = false;
-                buttonStopMining.Enabled = true;
+                buttonStopMining.Enabled = ApplicationStateManager.AnyInMiningState();
                 //// Disable profitable notification on start
                 //_isNotProfitable = false;
                 HideWarning();
@@ -701,9 +695,9 @@ namespace NiceHashMiner
                 textBoxWorkerName.Enabled = true;
                 comboBoxLocation.Enabled = true;
                 buttonBenchmark.Enabled = true;
-                buttonStartMining.Enabled = true;
+                buttonStartMining.Enabled = !ApplicationStateManager.AllInMiningState();
                 buttonSettings.Enabled = true;
-                buttonStopMining.Enabled = false;
+                buttonStopMining.Enabled = ApplicationStateManager.AnyInMiningState();
                 labelDemoMode.Visible = false;
                 _demoMode = false; // TODO this is logic
 

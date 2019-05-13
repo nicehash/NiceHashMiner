@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using static NiceHashMiner.Translations;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner
 {
@@ -34,6 +35,17 @@ namespace NiceHashMiner
             }
         }
         #endregion BuildTag
+
+        public static void VisitMiningStatsPage()
+        {
+            //in testnet there is no option to see stats without logging in
+#if TESTNET || TESTNETDEV
+            Process.Start(Links.CheckStats);
+#else
+            var btc = ConfigManager.GeneralConfig.BitcoinAddress.Trim();
+            Process.Start(Links.CheckStats + btc);
+#endif
+        }
 
         public static CancellationTokenSource ExitApplication { get; } = new CancellationTokenSource();
 

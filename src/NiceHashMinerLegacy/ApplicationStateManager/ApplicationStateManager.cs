@@ -118,13 +118,7 @@ namespace NiceHashMiner
             {
                 // Reset credentials
                 var (btc, worker, group) = ConfigManager.GeneralConfig.GetCredentials();
-                // TESTNET
-#if TESTNET || TESTNETDEV
                 NiceHashStats.SetCredentials(btc, worker, group);
-#else
-                // PRODUCTION
-                NiceHashStats.SetCredentials(btc, worker);
-#endif
             }
             else
             {
@@ -301,7 +295,13 @@ namespace NiceHashMiner
         {
             var allDevs = AvailableDevices.Devices;
             return allDevs.Any(dev => dev.State == DeviceState.Mining);
-        } 
+        }
+
+        public static bool AllInMiningState()
+        {
+            var allDevs = AvailableDevices.Devices;
+            return allDevs.All(dev => dev.State == DeviceState.Mining);
+        }
 
 
         public static bool IsCurrentlyMining { get; private set; }
