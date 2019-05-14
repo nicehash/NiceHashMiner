@@ -158,11 +158,11 @@ namespace NBMiner
                     totalPowerUsage += (int)device.power;
                     var uuid = Shared.GetUUIDFromMinerID(device.id);
                     if (uuid == null) continue;
-                    perDeviceSpeedInfo.Add(uuid, new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, device.hashrate_raw) });
+                    perDeviceSpeedInfo.Add(uuid, new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, device.hashrate_raw * (1 - DevFee * 0.01)) });
                     perDevicePowerInfo.Add(uuid, (int)device.power);
                 }
 
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 api.PowerUsageTotal = totalPowerUsage;
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;

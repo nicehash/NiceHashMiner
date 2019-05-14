@@ -55,7 +55,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             public double speed;
         }
 
-        public static async Task<ApiData> GetMinerStatsDataAsync(int port, AlgorithmType algorithmType, IEnumerable<MiningPair> miningPairs, string logGroup)
+        public static async Task<ApiData> GetMinerStatsDataAsync(int port, AlgorithmType algorithmType, IEnumerable<MiningPair> miningPairs, string logGroup, double DevFee)
         {
             var summaryApiResult = await GetApiDataSummary(port, logGroup);
             double totalSpeed = 0;
@@ -121,7 +121,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                         var device = miningPairs.Where(kvp => kvp.Device.ID == gpuData.id).Select(kvp => kvp.Device).FirstOrDefault();
                         if (device != null)
                         {
-                            perDeviceSpeedInfo.Add(device.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(algorithmType, gpuData.speed) });
+                            perDeviceSpeedInfo.Add(device.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(algorithmType, gpuData.speed * (1 - DevFee * 0.01)) });
                             perDevicePowerInfo.Add(device.UUID, gpuData.power);
                             totalPower += gpuData.power;
                         }
@@ -137,7 +137,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                 }
             }
             var ad = new ApiData();
-            ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(algorithmType, totalSpeed) };
+            ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
             ad.PowerUsageTotal = totalPower;
             ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             ad.PowerUsagePerDevice = perDevicePowerInfo;
