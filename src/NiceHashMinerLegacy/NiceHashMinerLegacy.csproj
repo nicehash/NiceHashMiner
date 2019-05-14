@@ -398,7 +398,7 @@
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
-    <Compile Include="Miners\Grouping\GroupingLogic.cs" />
+    <Compile Include="Miners\Grouping\GroupingUtils.cs" />
     <Compile Include="PInvoke\NiceHashProcess.cs" />
     <Compile Include="Utils\BitcoinAddress.cs" />
     <Compile Include="PInvoke\CPUID.cs" />

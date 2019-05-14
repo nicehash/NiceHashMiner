@@ -7,8 +7,7 @@ using MinerPlugin;
 
 namespace NiceHashMiner.Miners.Grouping
 {
-    // TODO rename to GroupingUtils
-    public static class GroupingLogic
+    public static class GroupingUtils
     {
         public static string CalcGroupedDevicesKey(SortedSet<string> sortedKeys, string algorithmStringID)
         {

@@ -122,7 +122,6 @@ namespace NiceHashMiner
             return string.Join("+", names);
         }
 
-        // TODO rename to FormatSpeedOutput
         public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed, params AlgorithmType[] ids)
         {
             string ret;
