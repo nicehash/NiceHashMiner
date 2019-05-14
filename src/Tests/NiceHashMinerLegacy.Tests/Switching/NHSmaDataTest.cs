@@ -48,8 +48,8 @@ namespace NiceHashMinerLegacy.Tests.Switching
                 Assert.AreEqual(0, paying);
             }
 
-            // Should be false since DaggerDecred does not have a valid SMA
-            Assert.IsFalse(NHSmaData.TryGetPaying(AlgorithmType.DaggerDecred, out _));
+            //// Should be false since DaggerDecred does not have a valid SMA
+            //Assert.IsFalse(NHSmaData.TryGetPaying(AlgorithmType.DaggerDecred, out _));
         }
 
         [TestMethod]

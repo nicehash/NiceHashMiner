@@ -135,13 +135,6 @@ namespace NiceHashMiner
 
 #region ServiceLocation
 
-        public static string GetSelectedServiceLocationLocationUrl(AlgorithmType algorithmType, NhmConectionType conectionType)
-        {
-            // TODO make sure the ServiceLocation index is always valid
-            var location = StratumService.SelectedServiceLocation;
-            return StratumServiceHelpers.GetLocationUrl(algorithmType, location, conectionType);
-        }
-
         public static SetResult SetServiceLocationIfValidOrDifferent(int serviceLocation)
         {
             if (serviceLocation == ConfigManager.GeneralConfig.ServiceLocation)

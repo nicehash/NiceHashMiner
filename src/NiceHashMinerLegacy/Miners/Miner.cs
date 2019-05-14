@@ -7,6 +7,7 @@ using MinerPlugin;
 using NiceHashMinerLegacy.Common;
 using System.Threading;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner
 {
@@ -21,7 +22,7 @@ namespace NiceHashMiner
         // mining algorithm stuff
         protected bool IsInit { get; private set; }
 
-        public List<Miners.Grouping.MiningPair> MiningPairs { get; protected set; }
+        public List<MiningPair> MiningPairs { get; protected set; }
 
         public bool IsRunning { get; protected set; } = false;
         public string GroupKey { get; protected set; } = "";
@@ -50,7 +51,7 @@ namespace NiceHashMiner
         public bool IsUpdatingApi { get; protected set; } = false;
 
 
-        protected Miner(string minerDeviceName, List<Miners.Grouping.MiningPair> miningPairs, string groupKey)
+        protected Miner(string minerDeviceName, List<MiningPair> miningPairs, string groupKey)
         {
             MiningPairs = miningPairs;
             IsInit = MiningPairs != null && MiningPairs.Count > 0;
@@ -58,7 +59,11 @@ namespace NiceHashMiner
             {
                 foreach (var pair in miningPairs)
                 {
-                    DevIndexes.Add(pair.Device.Index);
+                    // for PRODUCTION we still need these indexes get rid of this when possible
+                    var cDev = AvailableDevices.GetDeviceWithUuidOrB64Uuid(pair.Device.UUID);
+                    var index = cDev?.Index ?? -1;
+                    if (index < 0) continue;
+                    DevIndexes.Add(index);
                 }
             }
 

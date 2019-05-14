@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Management;
 using System.Security.Principal;
 using NiceHashMinerLegacy.Common.Enums;
-using System.IO;
+using System.Linq;
 using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner
@@ -116,7 +116,14 @@ namespace NiceHashMiner
             return ret;
         }
 
-        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed=0, AlgorithmType algo = AlgorithmType.NONE)
+        public static string GetNameFromAlgorithmTypes(params AlgorithmType[] ids)
+        {
+            var names = ids.Where(id => (int)id > -1).Select(id => Enum.GetName(typeof(AlgorithmType), id));
+            return string.Join("+", names);
+        }
+
+        // TODO rename to FormatSpeedOutput
+        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed, params AlgorithmType[] ids)
         {
             string ret;
             if (secondarySpeed > 0)
@@ -129,7 +136,7 @@ namespace NiceHashMiner
             }
 
             string unit;
-
+            var algo = ids[0];
             switch (algo)
             {
                 //case AlgorithmType.Equihash:
@@ -274,32 +281,6 @@ namespace NiceHashMiner
                 Logger.Error("NICEHASH", "nvidiasetp0state error: " + ex.Message);
             }
         }
-
-#pragma warning disable 0618
-        public static AlgorithmType DualAlgoFromAlgos(AlgorithmType primary, AlgorithmType secondary)
-        {
-            if (primary == AlgorithmType.DaggerHashimoto)
-            {
-                switch (secondary)
-                {
-                    case AlgorithmType.Decred:
-                       return AlgorithmType.DaggerDecred;
-                    case AlgorithmType.Lbry:
-                        return AlgorithmType.DaggerLbry;
-                    case AlgorithmType.Pascal:
-                        return AlgorithmType.DaggerPascal;
-                    case AlgorithmType.Sia:
-                        return AlgorithmType.DaggerSia;
-                    case AlgorithmType.Blake2s:
-                        return AlgorithmType.DaggerBlake2s;
-                    case AlgorithmType.Keccak:
-                        return AlgorithmType.DaggerKeccak;
-                }
-            }
-
-            return primary;
-        }
-#pragma warning restore 0618
 
         public static string GetMachineGuid()
         {

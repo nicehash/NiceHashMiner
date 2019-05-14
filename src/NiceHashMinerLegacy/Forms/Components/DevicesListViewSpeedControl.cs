@@ -387,8 +387,7 @@ namespace NiceHashMiner.Forms.Components
                 // get data
                 var algorithmFirstType = minerStats.Speeds.Count > 0 ? minerStats.Speeds[0].type : AlgorithmType.NONE;
                 var algorithmSecondType = minerStats.Speeds.Count > 1 ? minerStats.Speeds[1].type : AlgorithmType.NONE;
-                var algorithmUUID = Helpers.DualAlgoFromAlgos(algorithmFirstType, algorithmSecondType);
-                var algorithmName = AlgorithmNiceHashNames.GetName(algorithmUUID);
+                var algorithmName = Helpers.GetNameFromAlgorithmTypes(algorithmFirstType, algorithmSecondType);
                 var minerName = minerStats.MinerName;
                 var name = minerName != "" ? $"{algorithmName} ({minerName})" : algorithmName;
                 var firstSpeed = minerStats.Speeds.Count > 0 ? minerStats.Speeds[0].speed : 0d;
@@ -422,7 +421,7 @@ namespace NiceHashMiner.Forms.Components
                         // This is a total row
                         var minerRevenue = minerStats.TotalPayingRate();
                         var minerProfit = minerStats.TotalPayingRateDeductPowerCost(kwhPriceInBtc);
-                        UpdateRowInfo(item, firstSpeed, secondSpeed, algorithmUUID, minerRevenue, minerProfit, minerStats.PowerCost(kwhPriceInBtc), minerStats.GetPowerUsage());
+                        UpdateRowInfo(item, firstSpeed, secondSpeed, algorithmFirstType, minerRevenue, minerProfit, minerStats.PowerCost(kwhPriceInBtc), minerStats.GetPowerUsage());
                     }
                     else if (item.Tag is ComputeDevice dev && minerStats.DeviceUUIDs.Any(uuid => uuid == dev.Uuid))
                     {
@@ -433,7 +432,7 @@ namespace NiceHashMiner.Forms.Components
                         var secondtDeviceSpeed = deviceStat.Speeds.Count > 1 ? deviceStat.Speeds[1].speed : 0d;
                         var deviceRevenue = deviceStat.TotalPayingRate();
                         var deviceProfit = deviceStat.TotalPayingRateDeductPowerCost(kwhPriceInBtc);
-                        UpdateRowInfo(item, firstDeviceSpeed, secondtDeviceSpeed, algorithmUUID, deviceRevenue, deviceProfit, deviceStat.PowerCost(kwhPriceInBtc), deviceStat.GetPowerUsage());
+                        UpdateRowInfo(item, firstDeviceSpeed, secondtDeviceSpeed, algorithmFirstType, deviceRevenue, deviceProfit, deviceStat.PowerCost(kwhPriceInBtc), deviceStat.GetPowerUsage());
                     }
                 }
             }

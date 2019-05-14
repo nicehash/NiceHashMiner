@@ -240,9 +240,9 @@ namespace NiceHashMiner.Miners
             return (currentProfit, prevStateProfit);
         }
 
-        private static List<Grouping.MiningPair> GetProfitableMiningPairs()
+        private static List<MiningPair> GetProfitableMiningPairs()
         {
-            var profitableMiningPairs = new List<Grouping.MiningPair>();
+            var profitableMiningPairs = new List<MiningPair>();
             foreach (var device in _miningDevices)
             {
                 // check if device has profitable algo

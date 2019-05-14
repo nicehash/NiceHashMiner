@@ -32,8 +32,6 @@ namespace NiceHashMiner.Algorithms
         /// </summary>
         public abstract AlgorithmType[] IDs { get; }
 
-        // for now we will rely on negative dual enums
-        public abstract AlgorithmType AlgorithmUUID { get; }
         public abstract string MinerUUID { get; }
         public abstract bool IsDual { get; }
         #endregion
@@ -189,7 +187,7 @@ namespace NiceHashMiner.Algorithms
             }
             if (BenchmarkSpeed > 0)
             {
-                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, SecondaryBenchmarkSpeed, AlgorithmUUID);
+                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, SecondaryBenchmarkSpeed, IDs);
             }
             if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
             {

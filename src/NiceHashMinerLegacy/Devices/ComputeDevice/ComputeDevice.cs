@@ -148,7 +148,7 @@ namespace NiceHashMiner.Devices
         {
             foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings)
             { 
-                var setAlgo = AlgorithmSettings.Where(a => a.MinerUUID == copyFromAlgo.MinerUUID && a.AlgorithmUUID == copyFromAlgo.AlgorithmUUID).FirstOrDefault();
+                var setAlgo = AlgorithmSettings.Where(a => a.AlgorithmStringID == copyFromAlgo.AlgorithmStringID).FirstOrDefault();
                 if (setAlgo != null)
                 {
                     setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
