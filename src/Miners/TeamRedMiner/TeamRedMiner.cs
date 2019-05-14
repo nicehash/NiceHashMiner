@@ -75,7 +75,7 @@ namespace TeamRedMiner
         private string CreateCommandLine(string username)
         {
             // API port function might be blocking
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var cmd = $"-a {AlgoName} -o {url} -u {username} --platform={_openClAmdPlatformNum} -d {_devices} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;

@@ -233,7 +233,7 @@ namespace XmrStak
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
             // API port function might be blocking
-            var apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
+            var apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
             var commandLine = $"-o {url} -u {MinerToolkit.DemoUserBTC} --currency {algo} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork {benchmarkTime} --benchwait {benchWait} {deviceConfigParams} {disableDeviceTypes}";
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
@@ -310,7 +310,7 @@ namespace XmrStak
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
             // instant non blocking
             var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
 
@@ -422,7 +422,7 @@ namespace XmrStak
         protected async Task<Tuple<bool, string>> CreateConfigFile(DeviceType deviceType)
         {
             // API port function might be blocking
-            var apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
+            var apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
             // instant non blocking
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
 

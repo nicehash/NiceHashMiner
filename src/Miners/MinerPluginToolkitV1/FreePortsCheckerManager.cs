@@ -6,11 +6,12 @@ using System.Net.NetworkInformation;
 
 namespace MinerPluginToolkitV1
 {
-    // RENAME MinersApiPortsManager to FreePortsCheckerManager
-    public static class MinersApiPortsManager
+    public static class FreePortsCheckerManager
     {
-        const int _reserveTimeSeconds = 5;
-        private static Dictionary<int, DateTime> _reservedPortsAtTime = new Dictionary<int, DateTime>();
+        private static int _reserveTimeSeconds => 5;
+        private static Dictionary<int, DateTime> _reservedPortsAtTime { get; set; } = new Dictionary<int, DateTime>();
+        public static int ApiBindPortPoolStart { get; set; }  = 4000;
+        private static int _portPlusRange => 2300;
 
         private static bool IsPortFree(int port, IPEndPoint[] tcpOrUdpPorts)
         {
@@ -29,7 +30,12 @@ namespace MinerPluginToolkitV1
             return true;
         }
 
-        public static int GetAvaliablePortInRange(int portStart = 4000, int next = 2300)
+        public static int GetAvaliablePortFromSettings()
+        {
+            return GetAvaliablePortInRange(ApiBindPortPoolStart, _portPlusRange);
+        }
+
+        public static int GetAvaliablePortInRange(int portStart, int next = 2300)
         {
             var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
             var tcpIpEndpoints = ipGlobalProperties.GetActiveTcpListeners();

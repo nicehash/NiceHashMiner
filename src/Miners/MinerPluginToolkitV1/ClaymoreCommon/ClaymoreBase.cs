@@ -162,7 +162,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
         protected override string MiningCreateCommandLine()
         {
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
             return CreateCommandLine(_username) + $" -mport 127.0.0.1:-{_apiPort}";
         }
 

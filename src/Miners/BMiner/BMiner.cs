@@ -204,7 +204,7 @@ namespace BMiner
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
             // instant non blocking
             var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var split = urlWithPort.Split(':');

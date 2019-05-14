@@ -214,7 +214,7 @@ namespace NanoMiner
 
         private string CreateCommandLine(string username, string deviceId)
         {
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
 
             var algo = AlgorithmName(_algorithmType);
 

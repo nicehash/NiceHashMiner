@@ -132,7 +132,7 @@ namespace NBMiner
 
         private string CreateCommandLine(string username)
         {
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             
             var devs = string.Join(",", _miningPairs.Select(p => Shared.MappedCudaIds[p.Device.UUID]));
