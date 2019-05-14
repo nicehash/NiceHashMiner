@@ -192,7 +192,7 @@ namespace TeamRedMiner
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "teamredminer-v0.4.2-win");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "teamredminer-v0.4.5-win");
             var binPath = Path.Combine(pluginRootBins, "teamredminer.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
