@@ -254,9 +254,6 @@ namespace NiceHashMiner.Miners
 
         private static async Task SwichMostProfitableGroupUpMethodTask(object sender, SmaUpdateEventArgs e)
         {
-#if (SWITCH_TESTING)
-            MiningDevice.SetNextTest();
-#endif
             CalculateAndUpdateMiningDevicesProfits(e.NormalizedProfits);
             var (currentProfit, prevStateProfit) = GetCurrentAndPreviousProfits();
 
