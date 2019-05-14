@@ -48,6 +48,8 @@ namespace NiceHashMiner.Miners
                         return "cuckatoo";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
+                    case AlgorithmType.CuckooCycle:
+                        return "cuckoo_ae";
                     default:
                         return "";
                 }

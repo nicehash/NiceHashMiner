@@ -16,6 +16,7 @@ namespace NiceHashMiner.Devices.Algorithms
         const ulong MinBeamMemory = 3113849695; // 2.9GB
         const ulong MinGrinCuckaroo29Memory = 6012951136; // 5.6GB
         const ulong MinGrin31Mem = 8UL << 30; // 8GB
+        const ulong MinCuckooCycleMem = 6UL << 30; // 6GB
 
         private static readonly Dictionary<AlgorithmType, ulong> minMemoryPerAlgo = new Dictionary<AlgorithmType, ulong>
         {
@@ -24,6 +25,7 @@ namespace NiceHashMiner.Devices.Algorithms
             { AlgorithmType.Beam, MinBeamMemory },
             { AlgorithmType.GrinCuckaroo29, MinGrinCuckaroo29Memory },
             { AlgorithmType.GrinCuckatoo31, MinGrin31Mem },
+            { AlgorithmType.CuckooCycle, MinCuckooCycleMem },
         };
 
         private static List<AlgorithmType> InsufficientDeviceMemoryAlgorithnms(ulong Ram, IEnumerable<AlgorithmType> algos)
@@ -342,6 +344,7 @@ namespace NiceHashMiner.Devices.Algorithms
             {
                 new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(MinerBaseType.NBMiner, AlgorithmType.GrinCuckatoo31),
+                new Algorithm(MinerBaseType.NBMiner, AlgorithmType.CuckooCycle),
             };
             // filter RAM requirements
             algos = FilterInsufficientRamAlgorithmsList(dev.GpuRam, algos);
