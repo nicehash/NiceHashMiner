@@ -312,8 +312,8 @@ namespace NiceHashMiner.Forms
                     //    return;
                     //}
 
-                    // get unbenchmarked from criteria and disable
-                    BenchmarkManager.DisableTodoAlgos();
+                    // update algos status
+                    BenchmarkManager.CalcBenchDevAlgoQueue();
                 }
 
                 if (_exitWhenFinished || StartMiningOnFinish) Close();
