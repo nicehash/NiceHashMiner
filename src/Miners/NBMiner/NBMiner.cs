@@ -35,6 +35,8 @@ namespace NBMiner
                         return "cuckatoo";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
+                    case AlgorithmType.CuckooCycle:
+                        return "cuckoo_ae";
                     default:
                         return "";
                 }

@@ -15,6 +15,7 @@ namespace MinerPluginToolkitV1
         public const ulong MinBeamMemory = 3113849695; // 2.9GB
         public const ulong MinGrinCuckaroo29Memory = 6012951136; // 5.6GB
         public const ulong MinGrin31Mem = 8UL << 30; // 8GB
+        public const ulong MinCuckooCycleMem = 6UL << 30; // 6GB
 
         public static readonly Dictionary<AlgorithmType, ulong> minMemoryPerAlgo = new Dictionary<AlgorithmType, ulong>
         {
@@ -23,6 +24,7 @@ namespace MinerPluginToolkitV1
             { AlgorithmType.Beam, MinBeamMemory },
             { AlgorithmType.GrinCuckaroo29, MinGrinCuckaroo29Memory },
             { AlgorithmType.GrinCuckatoo31, MinGrin31Mem },
+            { AlgorithmType.CuckooCycle, MinCuckooCycleMem },
         };
 
         public static List<AlgorithmType> InsufficientDeviceMemoryAlgorithnms(ulong Ram, IEnumerable<AlgorithmType> algos)

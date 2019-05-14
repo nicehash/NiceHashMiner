@@ -97,6 +97,8 @@ namespace NiceHashMinerLegacy.Common.Enums
         MTP = 41,
         //[Obsolete("UNUSED Algorithm")]
         CryptoNightR = 42,
+        //[Obsolete("UNUSED Algorithm")]
+        CuckooCycle = 43,
         #endregion // NiceHashAPI
     }
 }
