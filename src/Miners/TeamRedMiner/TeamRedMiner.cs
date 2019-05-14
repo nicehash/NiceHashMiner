@@ -65,9 +65,9 @@ namespace TeamRedMiner
                     case AlgorithmType.CryptoNightV8:
                     case AlgorithmType.CryptoNightR:
                     case AlgorithmType.Lyra2REv3:
-                        return 0.025d; // 2.5%
+                        return 2.5;
                     default:
-                        return 0.03d; // 3.0%
+                        return 3.0; 
                 }
             }
         }
@@ -108,17 +108,20 @@ namespace TeamRedMiner
 
                     var speedHS = deviceStats.KHS_av * 1000;
                     totalSpeed += speedHS;
-                    perDeviceSpeedInfo.Add(gpuUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, speedHS) });
+                    perDeviceSpeedInfo.Add(gpuUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, speedHS * (1 - DevFee * 0.01)) });
                     // TODO check PowerUsage API
                 }
-                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 ad.PowerUsagePerDevice = perDevicePowerInfo;
             }
             catch (Exception e)
             {
-                Logger.Error(_logGroup, $"Error occured while parsing API stats: {e.Message}");
+                if (e.Message != "An item with the same key has already been added.")
+                {
+                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
+                }
             }
 
             return ad;
@@ -171,7 +174,7 @@ namespace TeamRedMiner
                 benchHashesSum += hashrate;
                 benchIters++;
 
-                benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee);
+                benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee * 0.01);
 
                 return new BenchmarkResult
                 {

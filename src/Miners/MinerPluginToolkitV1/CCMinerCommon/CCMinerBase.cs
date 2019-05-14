@@ -39,7 +39,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup);
+            var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup, DevFee);
             return ret;
         }
 

@@ -76,13 +76,13 @@ namespace BMiner
 
                     var currentSpeed = summary.miners[$"{gpu.ID}"].solver.solution_rate;
                     totalSpeed += currentSpeed;
-                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed) });
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
                     var currentPower = summary.miners[$"{gpu.ID}"].device.power;
                     totalPowerUsage += currentPower;
                     perDevicePowerInfo.Add(gpu.UUID, currentPower);
                 }
 
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 api.PowerUsageTotal = totalPowerUsage;
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;
