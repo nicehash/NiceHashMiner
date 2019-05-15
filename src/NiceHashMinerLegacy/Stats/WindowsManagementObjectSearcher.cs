@@ -16,13 +16,17 @@ namespace NiceHashMiner.Stats
         {
             using (var query = new ManagementObjectSearcher("root\\CIMV2", "SELECT TotalVisibleMemorySize,TotalVirtualMemorySize FROM Win32_OperatingSystem").Get())
             {
-                foreach (var item in query)
+                try
                 {
-                    var totalRam = long.Parse(item.GetPropertyValue("TotalVisibleMemorySize").ToString()) / 1024;
-                    var pageFileSize = (long.Parse(item.GetPropertyValue("TotalVirtualMemorySize").ToString()) / 1024) - totalRam;
-                    Helpers.ConsolePrint("NICEHASH", "Total RAM: " + totalRam + "MB");
-                    Helpers.ConsolePrint("NICEHASH", "Page File Size: " + pageFileSize + "MB");
+                    foreach (var item in query)
+                    {
+                        var totalRam = long.Parse(item.GetPropertyValue("TotalVisibleMemorySize").ToString()) / 1024;
+                        var pageFileSize = (long.Parse(item.GetPropertyValue("TotalVirtualMemorySize").ToString()) / 1024) - totalRam;
+                        Helpers.ConsolePrint("NICEHASH", "Total RAM: " + totalRam + "MB");
+                        Helpers.ConsolePrint("NICEHASH", "Page File Size: " + pageFileSize + "MB");
+                    }
                 }
+                catch { }
             }
         }
 
@@ -56,7 +60,7 @@ namespace NiceHashMiner.Stats
             {
                 foreach (var manObj in query)
                 {
-                    ulong.TryParse(manObj.GetPropertyValue("AdapterRAM").ToString() ?? "key is null", out var memTmp);
+                    ulong.TryParse(manObj.GetPropertyValue("AdapterRAM")?.ToString() ?? "key is null", out var memTmp);
                     var vidController = new VideoControllerData
                     (
                         manObj.GetPropertyValue("Name")?.ToString() ?? "key is null",
@@ -86,7 +90,7 @@ namespace NiceHashMiner.Stats
             {
                 foreach (var item in query)
                 {
-                    coreCount += int.Parse(item.GetPropertyValue("NumberOfLogicalProcessors").ToString());
+                    coreCount += int.Parse(item.GetPropertyValue("NumberOfLogicalProcessors")?.ToString() ?? "value is null");
                 }
             }
             return coreCount;
@@ -99,7 +103,7 @@ namespace NiceHashMiner.Stats
             {
                 foreach (var item in query)
                 {
-                    coreCount += int.Parse(item.GetPropertyValue("NumberOfCores").ToString());
+                    coreCount += int.Parse(item.GetPropertyValue("NumberOfCores")?.ToString() ?? "value is null");
                 }
             }
             return coreCount;
@@ -114,7 +118,7 @@ namespace NiceHashMiner.Stats
                 {
                     foreach (var item in query)
                     {
-                        serial = item.GetPropertyValue("ProcessorID").ToString();
+                        serial = item.GetPropertyValue("ProcessorID")?.ToString() ?? "value is null";
                     }
                 }
             }
@@ -129,7 +133,7 @@ namespace NiceHashMiner.Stats
             {
                 foreach (var item in query)
                 {
-                    serial = item.GetPropertyValue("SerialNumber").ToString();
+                    serial = item.GetPropertyValue("SerialNumber")?.ToString() ?? "value is null";
                 }
             }
             return serial;
