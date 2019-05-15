@@ -14,9 +14,9 @@ namespace NiceHashMiner.Stats
 
         public static void GetRamAndPageFileSize()
         {
-            using (var query = new ManagementObjectSearcher("root\\CIMV2", "SELECT TotalVisibleMemorySize,TotalVirtualMemorySize FROM Win32_OperatingSystem").Get())
+            try
             {
-                try
+                using (var query = new ManagementObjectSearcher("root\\CIMV2", "SELECT TotalVisibleMemorySize,TotalVirtualMemorySize FROM Win32_OperatingSystem").Get())
                 {
                     foreach (var item in query)
                     {
@@ -26,8 +26,8 @@ namespace NiceHashMiner.Stats
                         Helpers.ConsolePrint("NICEHASH", "Page File Size: " + pageFileSize + "MB");
                     }
                 }
-                catch { }
             }
+            catch { }
         }
 
         public static Tuple<ulong, ulong> GetSystemSpecs()
@@ -35,16 +35,21 @@ namespace NiceHashMiner.Stats
             var winQuery = new ObjectQuery("SELECT FreePhysicalMemory,FreeVirtualMemory FROM Win32_OperatingSystem");
             ulong FreePhysicalMemory = 0;
             ulong FreeVirtualMemory = 0;
-            using (var searcher = new ManagementObjectSearcher(winQuery).Get())
+            try
             {
-                foreach (var obj in searcher)
+                using (var searcher = new ManagementObjectSearcher(winQuery).Get())
                 {
-                    if (!(obj is ManagementObject item)) continue;
+                    foreach (var obj in searcher)
+                    {
+                        if (!(obj is ManagementObject item)) continue;
 
-                    FreePhysicalMemory = Convert.ToUInt64(item.GetPropertyValue("FreePhysicalMemory"));
-                    FreeVirtualMemory = Convert.ToUInt64(item.GetPropertyValue("FreeVirtualMemory"));
+                        FreePhysicalMemory = Convert.ToUInt64(item.GetPropertyValue("FreePhysicalMemory"));
+                        FreeVirtualMemory = Convert.ToUInt64(item.GetPropertyValue("FreeVirtualMemory"));
+                    }
                 }
             }
+            catch { }
+
             return Tuple.Create(FreePhysicalMemory, FreeVirtualMemory);
         }
 
@@ -55,29 +60,34 @@ namespace NiceHashMiner.Stats
             stringBuilder.AppendLine("");
             stringBuilder.AppendLine("QueryVideoControllers: ");
 
-            using (var query = new ManagementObjectSearcher("root\\CIMV2",
-                "SELECT AdapterRAM,Name,Description,PNPDeviceID,DriverVersion,Status,InfSection FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get())
+            try
             {
-                foreach (var manObj in query)
+                using (var query = new ManagementObjectSearcher("root\\CIMV2",
+                "SELECT AdapterRAM,Name,Description,PNPDeviceID,DriverVersion,Status,InfSection FROM Win32_VideoController WHERE PNPDeviceID LIKE 'PCI%'").Get())
                 {
-                    ulong.TryParse(manObj.GetPropertyValue("AdapterRAM")?.ToString() ?? "key is null", out var memTmp);
-                    var vidController = new VideoControllerData
-                    (
-                        manObj.GetPropertyValue("Name")?.ToString() ?? "key is null",
-                        manObj.GetPropertyValue("Description")?.ToString() ?? "key is null",
-                        manObj.GetPropertyValue("PNPDeviceID")?.ToString() ?? "key is null",
-                        manObj.GetPropertyValue("DriverVersion")?.ToString() ?? "key is null",
-                        manObj.GetPropertyValue("Status")?.ToString() ?? "key is null",
-                        manObj.GetPropertyValue("InfSection")?.ToString() ?? "key is null",
-                        memTmp
-                    );
+                    foreach (var manObj in query)
+                    {
+                        ulong.TryParse(manObj.GetPropertyValue("AdapterRAM")?.ToString() ?? "key is null", out var memTmp);
+                        var vidController = new VideoControllerData
+                        (
+                            manObj.GetPropertyValue("Name")?.ToString() ?? "key is null",
+                            manObj.GetPropertyValue("Description")?.ToString() ?? "key is null",
+                            manObj.GetPropertyValue("PNPDeviceID")?.ToString() ?? "key is null",
+                            manObj.GetPropertyValue("DriverVersion")?.ToString() ?? "key is null",
+                            manObj.GetPropertyValue("Status")?.ToString() ?? "key is null",
+                            manObj.GetPropertyValue("InfSection")?.ToString() ?? "key is null",
+                            memTmp
+                        );
 
-                    stringBuilder.AppendLine("\tWin32_VideoController detected:");
-                    stringBuilder.AppendLine($"{vidController.GetFormattedString()}");
+                        stringBuilder.AppendLine("\tWin32_VideoController detected:");
+                        stringBuilder.AppendLine($"{vidController.GetFormattedString()}");
 
-                    vidControllers.Add(vidController);
+                        vidControllers.Add(vidController);
+                    }
                 }
             }
+            catch { }
+
             Helpers.ConsolePrint("SystemSpecs", stringBuilder.ToString());
 
             return vidControllers;
@@ -86,26 +96,36 @@ namespace NiceHashMiner.Stats
         public static int GetVirtualCoresCount()
         {
             var coreCount = 0;
-            using (var query = new ManagementObjectSearcher("Select NumberOfLogicalProcessors from Win32_ComputerSystem").Get())
+            try
             {
-                foreach (var item in query)
+                using (var query = new ManagementObjectSearcher("Select NumberOfLogicalProcessors from Win32_ComputerSystem").Get())
                 {
-                    coreCount += int.Parse(item.GetPropertyValue("NumberOfLogicalProcessors")?.ToString() ?? "value is null");
+                    foreach (var item in query)
+                    {
+                        coreCount += int.Parse(item.GetPropertyValue("NumberOfLogicalProcessors")?.ToString() ?? "value is null");
+                    }
                 }
             }
+            catch { }
+
             return coreCount;
         }
 
         public static int GetNumberOfCores()
         {
             var coreCount = 0;
-            using (var query = new ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
+            try
             {
-                foreach (var item in query)
+                using (var query = new ManagementObjectSearcher("Select NumberOfCores from Win32_Processor").Get())
                 {
-                    coreCount += int.Parse(item.GetPropertyValue("NumberOfCores")?.ToString() ?? "value is null");
+                    foreach (var item in query)
+                    {
+                        coreCount += int.Parse(item.GetPropertyValue("NumberOfCores")?.ToString() ?? "value is null");
+                    }
                 }
             }
+            catch { }
+
             return coreCount;
         }
 
@@ -123,19 +143,25 @@ namespace NiceHashMiner.Stats
                 }
             }
             catch { }
+
             return serial;
         }
 
         public static string GetMotherboardID()
         {
             var serial = "";
-            using (var query = new ManagementObjectSearcher("Select SerialNumber from Win32_BaseBoard").Get())
+            try
             {
-                foreach (var item in query)
+                using (var query = new ManagementObjectSearcher("Select SerialNumber from Win32_BaseBoard").Get())
                 {
-                    serial = item.GetPropertyValue("SerialNumber")?.ToString() ?? "value is null";
+                    foreach (var item in query)
+                    {
+                        serial = item.GetPropertyValue("SerialNumber")?.ToString() ?? "value is null";
+                    }
                 }
             }
+            catch { }
+
             return serial;
         }
 
@@ -153,15 +179,16 @@ namespace NiceHashMiner.Stats
             {
                 Helpers.ConsolePrint("NICEHASH", "ManagementObjectSearcher not working need WMI service to be running");
             }
+            
             return false;
         }
 
         public static NvidiaSmiDriver GetNvSmiDriver()
         {
             List<NvidiaSmiDriver> drivers = new List<NvidiaSmiDriver>();
-            using (var searcher = new ManagementObjectSearcher(new WqlObjectQuery("SELECT DriverVersion FROM Win32_VideoController")).Get())
+            try
             {
-                try
+                using (var searcher = new ManagementObjectSearcher(new WqlObjectQuery("SELECT DriverVersion FROM Win32_VideoController")).Get())
                 {
                     foreach (ManagementObject devicesInfo in searcher)
                     {
@@ -194,8 +221,8 @@ namespace NiceHashMiner.Stats
                     }
                     return drivers[0]; // TODO if we will support multiple drivers this must be changed
                 }
-                catch (Exception e) { }
             }
+            catch (Exception e) { }
             return new NvidiaSmiDriver(-1, -1);
         }
     }
