@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace MinerPluginToolkitV1
 
         public delegate BenchmarkResult CheckDataFun(string data);
         public CheckDataFun CheckData { get; set; }
-
+        public Dictionary<string, string> BenchmarkExceptions { get; set; }
         public Process Handle { get; }
         public BenchmarkResult Result { get; private set; } = default(BenchmarkResult);
         public bool Success { get; private set; } = default(bool);
@@ -35,7 +36,18 @@ namespace MinerPluginToolkitV1
             {
                 return;
             }
-            
+
+            if(BenchmarkExceptions != null)
+            {
+                var foundKey = BenchmarkExceptions.Keys.Where(errorString => e.Data.Contains(errorString)).FirstOrDefault();
+                if (!string.IsNullOrEmpty(foundKey))
+                {
+                    Result.ErrorMessage = BenchmarkExceptions[foundKey];
+                    TryExit();
+                    return;
+                }
+            }
+
             Result  = CheckData(e.Data);
             if (Result.Success)
             {
