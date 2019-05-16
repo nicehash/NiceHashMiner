@@ -52,9 +52,10 @@
             this.buttonBenchmark = new System.Windows.Forms.Button();
             this.buttonSettings = new System.Windows.Forms.Button();
             this.buttonLogo = new System.Windows.Forms.Button();
-            this.linkLabelChooseBTCWallet = new System.Windows.Forms.LinkLabel();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItemShow = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelDemoMode = new System.Windows.Forms.Label();
             this.buttonHelp = new System.Windows.Forms.Button();
@@ -62,8 +63,6 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.buttonPlugins = new System.Windows.Forms.Button();
             this.devicesMainBoard1 = new NiceHashMiner.Forms.Components.DevicesMainBoardDevicesListViewSpeedControl();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemShow = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -214,7 +213,7 @@
             // linkLabelCheckStats
             // 
             this.linkLabelCheckStats.AutoSize = true;
-            this.linkLabelCheckStats.Location = new System.Drawing.Point(175, 90);
+            this.linkLabelCheckStats.Location = new System.Drawing.Point(12, 88);
             this.linkLabelCheckStats.Name = "linkLabelCheckStats";
             this.linkLabelCheckStats.Size = new System.Drawing.Size(113, 13);
             this.linkLabelCheckStats.TabIndex = 9;
@@ -292,17 +291,6 @@
             this.buttonLogo.UseVisualStyleBackColor = true;
             this.buttonLogo.Click += new System.EventHandler(this.ButtonLogo_Click);
             // 
-            // linkLabelChooseBTCWallet
-            // 
-            this.linkLabelChooseBTCWallet.AutoSize = true;
-            this.linkLabelChooseBTCWallet.Location = new System.Drawing.Point(7, 90);
-            this.linkLabelChooseBTCWallet.Name = "linkLabelChooseBTCWallet";
-            this.linkLabelChooseBTCWallet.Size = new System.Drawing.Size(165, 13);
-            this.linkLabelChooseBTCWallet.TabIndex = 10;
-            this.linkLabelChooseBTCWallet.TabStop = true;
-            this.linkLabelChooseBTCWallet.Text = "Help me choose my Bitcoin wallet";
-            this.linkLabelChooseBTCWallet.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelChooseBTCWallet_LinkClicked);
-            // 
             // notifyIcon1
             // 
             this.notifyIcon1.ContextMenuStrip = this.contextMenuStrip1;
@@ -316,12 +304,24 @@
             this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(104, 54);
+            // 
+            // toolStripMenuItemShow
+            // 
+            this.toolStripMenuItemShow.Name = "toolStripMenuItemShow";
+            this.toolStripMenuItemShow.Size = new System.Drawing.Size(103, 22);
+            this.toolStripMenuItemShow.Text = "Show";
+            this.toolStripMenuItemShow.Click += new System.EventHandler(this.ToolStripMenuItemShow_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(100, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(103, 22);
             this.exitToolStripMenuItem.Text = "Quit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -381,18 +381,6 @@
             this.devicesMainBoard1.Size = new System.Drawing.Size(664, 160);
             this.devicesMainBoard1.TabIndex = 111;
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // toolStripMenuItemShow
-            // 
-            this.toolStripMenuItemShow.Name = "toolStripMenuItemShow";
-            this.toolStripMenuItemShow.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItemShow.Text = "Show";
-            this.toolStripMenuItemShow.Click += new System.EventHandler(this.ToolStripMenuItemShow_Click);
-            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -403,7 +391,6 @@
             this.Controls.Add(this.linkLabelNewVersion);
             this.Controls.Add(this.buttonHelp);
             this.Controls.Add(this.labelDemoMode);
-            this.Controls.Add(this.linkLabelChooseBTCWallet);
             this.Controls.Add(this.buttonLogo);
             this.Controls.Add(this.buttonSettings);
             this.Controls.Add(this.buttonBenchmark);
@@ -459,7 +446,6 @@
         private System.Windows.Forms.TextBox textBoxBTCAddress;
         private System.Windows.Forms.ComboBox comboBoxLocation;
         private System.Windows.Forms.TextBox textBoxWorkerName;
-        private System.Windows.Forms.LinkLabel linkLabelChooseBTCWallet;
         private System.Windows.Forms.Label labelDemoMode;
         private System.Windows.Forms.Button buttonHelp;
         private System.Windows.Forms.LinkLabel linkLabelNewVersion;
