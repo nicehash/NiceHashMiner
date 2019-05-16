@@ -145,12 +145,6 @@
     <Compile Include="Devices\Querying\QueryGpu.cs" />
     <Compile Include="Devices\Querying\QueryResult.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
-    <Compile Include="Forms\Components\AlgorithmsDataGridView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\Components\AlgorithmsDataGridView.Designer.cs">
-      <DependentUpon>AlgorithmsDataGridView.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

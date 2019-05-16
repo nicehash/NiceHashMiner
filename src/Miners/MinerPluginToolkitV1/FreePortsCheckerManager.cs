@@ -32,20 +32,17 @@ namespace MinerPluginToolkitV1
 
         public static int GetAvaliablePortFromSettings()
         {
-            return GetAvaliablePortInRange(ApiBindPortPoolStart, _portPlusRange);
+            return GetAvaliablePortInRange(Enumerable.Range(ApiBindPortPoolStart, _portPlusRange));
         }
 
-        public static int GetAvaliablePortInRange(int portStart, int next = 2300)
+        public static int GetAvaliablePortInRange(IEnumerable<int> portsRange)
         {
             var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
             var tcpIpEndpoints = ipGlobalProperties.GetActiveTcpListeners();
             var udpIpEndpoints = ipGlobalProperties.GetActiveUdpListeners();
 
             var now = DateTime.UtcNow;
-
-            var port = portStart;
-            var newPortEnd = portStart + next;
-            for (; port < newPortEnd; ++port)
+            foreach (var port in portsRange)
             {
                 var tcpFree = IsPortFree(port, tcpIpEndpoints);
                 var udpFree = IsPortFree(port, udpIpEndpoints);

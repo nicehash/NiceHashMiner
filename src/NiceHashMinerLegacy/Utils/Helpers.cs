@@ -100,7 +100,7 @@ namespace NiceHashMiner
             }
         }
 
-        public static string FormatSpeedOutput(double speed, string separator = " ")
+        public static string FormatSpeedOutput(double speed, AlgorithmType algorithmType, string separator = " ")
         {
             string ret;
 
@@ -113,30 +113,8 @@ namespace NiceHashMiner
             else
                 ret = (speed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + separator + "G";
 
-            return ret;
-        }
-
-        public static string GetNameFromAlgorithmTypes(params AlgorithmType[] ids)
-        {
-            var names = ids.Where(id => (int)id > -1).Select(id => Enum.GetName(typeof(AlgorithmType), id));
-            return string.Join("+", names);
-        }
-
-        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed, params AlgorithmType[] ids)
-        {
-            string ret;
-            if (secondarySpeed > 0)
-            {
-                ret = FormatSpeedOutput(primarySpeed, "") + "/" + FormatSpeedOutput(secondarySpeed, "") + " ";
-            }
-            else
-            {
-                ret = FormatSpeedOutput(primarySpeed);
-            }
-
-            string unit;
-            var algo = ids[0];
-            switch (algo)
+            string unit = "";
+            switch (algorithmType)
             {
                 //case AlgorithmType.Equihash:
                 case AlgorithmType.ZHash:
@@ -153,6 +131,27 @@ namespace NiceHashMiner
             }
 
             return ret + unit;
+        }
+
+        public static string GetNameFromAlgorithmTypes(params AlgorithmType[] ids)
+        {
+            var names = ids.Where(id => (int)id > -1).Select(id => Enum.GetName(typeof(AlgorithmType), id));
+            return string.Join("+", names);
+        }
+
+        // TODO disable params for ids
+        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed, params AlgorithmType[] ids)
+        {
+            if (secondarySpeed > 0 && ids.Length > 0)
+            {
+                // TODO second uses first
+                return FormatSpeedOutput(primarySpeed, ids[0]) + " + " + FormatSpeedOutput(secondarySpeed, ids[0]);
+            }
+            else if (ids.Length > 0)
+            {
+                return FormatSpeedOutput(primarySpeed, ids[0]);
+            }
+            return "N/A";
         }
 
         // Checking the version using >= will enable forward compatibility, 
