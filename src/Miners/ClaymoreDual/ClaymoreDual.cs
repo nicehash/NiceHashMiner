@@ -16,7 +16,7 @@ namespace ClaymoreDual
 {
     public class ClaymoreDual : ClaymoreBase, IAfterStartMining
     {
-        public ClaymoreDual(string uuid) : base(uuid)
+        public ClaymoreDual(string uuid, Dictionary<string, int> mappedIDs) : base(uuid, mappedIDs)
         {
         }
 

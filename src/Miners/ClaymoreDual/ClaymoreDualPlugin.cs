@@ -12,10 +12,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ClaymoreDual
 {
-    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public ClaymoreDualPlugin()
         {
@@ -28,21 +29,27 @@ namespace ClaymoreDual
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
 
         public string Name => "ClaymoreDual";
 
         public string Author => "domen.kirnkrefl@nicehash.com";
 
+        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
+            int claymoreIndex = -1;
             // AMD
-            var amdGpus = devices.Where(dev => dev is AMDDevice).Cast<AMDDevice>();
+            var amdGpus = devices
+                .Where(dev => dev is AMDDevice)
+                .Cast<AMDDevice>()
+                .OrderBy(amd => amd.PCIeBusID);
             foreach (var gpu in amdGpus)
             {
+                _mappedIDs[gpu.UUID] = ++claymoreIndex;
                 var algorithms = GetSupportedAlgorithms(gpu).ToList();
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
@@ -53,10 +60,12 @@ namespace ClaymoreDual
 
             var cudaGpus = devices
                 .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3)
-                .Cast<CUDADevice>();
+                .Cast<CUDADevice>()
+                .OrderBy(gpu => gpu.PCIeBusID); ;
 
             foreach (var gpu in cudaGpus)
             {
+                _mappedIDs[gpu.UUID] = ++claymoreIndex;
                 var algorithms = GetSupportedAlgorithms(gpu).ToList();
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
@@ -82,7 +91,7 @@ namespace ClaymoreDual
 
         public IMiner CreateMiner()
         {
-            return new ClaymoreDual(PluginUUID)
+            return new ClaymoreDual(PluginUUID, _mappedIDs)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
@@ -359,6 +368,27 @@ namespace ClaymoreDual
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         #endregion Internal Settings
 
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerCwd = miner.GetBinAndCwdPaths().Item2;
+            // no device list so 'start mining'
+            var logFile = "noappend_cross_ref_devs.txt";
+            var logFilePath = Path.Combine(minerCwd, logFile);
+            var args = $"-benchmark 1 -wd 0 -colors 0 -dbg 1 -logfile {logFile}";
+            var output = await DevicesCrossReferenceHelpers.ReadLinesUntil(minerBinPath, minerCwd, args, logFilePath, new List<string> { "Total cards", "Stratum - connecting to" });
+            var mappedDevs = DevicesListParser.ParseClaymoreDualOutput(output, devices.ToList());
+
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                _mappedIDs[uuid] = indexID;
+            }
+        }
+
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
@@ -372,8 +402,9 @@ namespace ClaymoreDual
 
         public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            //no new version available
-            return false;
+            // error/bug in v1.0
+            // because the previous miner plugin mapped wrong GPU indexes rebench everything
+            return true;
         }
     }
 }

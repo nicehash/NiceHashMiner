@@ -22,5 +22,12 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
             return -1;
         }
+
+        private static string deviceIDs => "0123456789abcdefghijkmnopqrstuvwxyz";
+        public static char GetClaymoreDeviceID(int index)
+        {
+            if (index < deviceIDs.Length) return deviceIDs[index];
+            return '-'; // invalid 
+        }
     }
 }

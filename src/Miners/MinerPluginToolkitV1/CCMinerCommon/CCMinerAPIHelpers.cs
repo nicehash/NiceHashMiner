@@ -55,14 +55,13 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             public double speed;
         }
 
-        public static async Task<ApiData> GetMinerStatsDataAsync(int port, AlgorithmType algorithmType, IEnumerable<MiningPair> miningPairs, string logGroup, double DevFee)
+        public static async Task<ApiData> GetMinerStatsDataAsync(int port, AlgorithmType algorithmType, IEnumerable<MiningPair> miningPairs, string logGroup, double devFee)
         {
             var summaryApiResult = await GetApiDataSummary(port, logGroup);
             double totalSpeed = 0;
             int totalPower = 0;
             if (!string.IsNullOrEmpty(summaryApiResult))
             {
-                // TODO return empty
                 try
                 {
                     var summaryOptvals = summaryApiResult.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -84,15 +83,12 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                     }
                 }
             }
-            // TODO if have multiple GPUs call the threads as well, but maybe not as often since it might crash the miner
-            //var threadsApiResult = await _httpClient.GetStringAsync($"{localhost}/threads");
             var threadsApiResult = await GetApiDataThreads(port, logGroup);
             var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
             var perDevicePowerInfo = new Dictionary<string, int>();
 
             if (!string.IsNullOrEmpty(threadsApiResult))
             {
-                // TODO return empty
                 try
                 {
                     var gpus = threadsApiResult.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
@@ -117,11 +113,10 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                                 gpuData.speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
                             }
                         }
-                        // TODO do stuff with it gpuData
                         var device = miningPairs.Where(kvp => kvp.Device.ID == gpuData.id).Select(kvp => kvp.Device).FirstOrDefault();
                         if (device != null)
                         {
-                            perDeviceSpeedInfo.Add(device.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(algorithmType, gpuData.speed * (1 - DevFee * 0.01)) });
+                            perDeviceSpeedInfo.Add(device.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(algorithmType, gpuData.speed * (1 - devFee * 0.01)) });
                             perDevicePowerInfo.Add(device.UUID, gpuData.power);
                             totalPower += gpuData.power;
                         }
@@ -137,7 +132,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                 }
             }
             var ad = new ApiData();
-            ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+            ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(algorithmType, totalSpeed * (1 - devFee * 0.01)) };
             ad.PowerUsageTotal = totalPower;
             ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             ad.PowerUsagePerDevice = perDevicePowerInfo;

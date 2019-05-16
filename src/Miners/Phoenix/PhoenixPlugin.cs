@@ -29,7 +29,7 @@ namespace Phoenix
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
         public string Name => "Phoenix";
 
         public string Author => "domen.kirnkrefl@nicehash.com";
@@ -40,20 +40,24 @@ namespace Phoenix
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            // Require 377.xx
-            var minDrivers = new Version(377, 0);
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
-
             var supportedGpus = devices
                 .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3 || dev is AMDDevice)
                 .Cast<IGpuDevice>()
                 .OrderBy(dev => dev.PCIeBusID)
                 .ToList();
 
+            // NVIDIA 377.xx
+            var minDrivers = new Version(377, 0);
+            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers)
+            {
+                // filter out NVIDIAs
+                supportedGpus = supportedGpus.Where(dev => dev is AMDDevice).ToList();
+            }
+
             var pcieID = 0;
             foreach (var gpu in supportedGpus)
             {
-                Shared.MappedCudaIds[gpu.UUID] = pcieID;
+                _mappedIDs[gpu.UUID] = pcieID;
                 ++pcieID;
                 var algos = GetSupportedAlgorithms(gpu).ToList();
                 if (algos.Count > 0 && gpu is CUDADevice cuda) supported.Add(cuda, algos);
@@ -75,7 +79,7 @@ namespace Phoenix
 
         public IMiner CreateMiner()
         {
-            return new Phoenix(PluginUUID)
+            return new Phoenix(PluginUUID, _mappedIDs)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
@@ -515,7 +519,7 @@ namespace Phoenix
             {
                 var uuid = kvp.Key;
                 var indexID = kvp.Value;
-                Shared.MappedCudaIds[uuid] = indexID;
+                _mappedIDs[uuid] = indexID;
             }
         }
 
@@ -529,8 +533,9 @@ namespace Phoenix
 
         public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            //no new version available
-            return false;
+            // error/bug in v1.0
+            // because the previous miner plugin mapped wrong GPU indexes rebench everything
+            return true;
         }
     }
 }
