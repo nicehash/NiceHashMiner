@@ -234,8 +234,7 @@ namespace NiceHashMiner.Devices
                         ExtraLaunchParameters = pluginAlgo.ExtraLaunchParameters,
                         PluginVersion = $"{pluginAlgo.PluginVersion.Major}.{pluginAlgo.PluginVersion.Minor}",
                         PowerUsage = pluginAlgo.PowerUsage,
-                        // TODO dual not supported ATM
-                        Speeds = new List<double> { pluginAlgo.BenchmarkSpeed }
+                        Speeds = pluginAlgo.Speeds
                     };
                     ret.PluginAlgorithmSettings.Add(pluginConf);
                 }

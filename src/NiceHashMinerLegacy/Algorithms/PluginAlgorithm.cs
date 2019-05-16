@@ -67,23 +67,23 @@ namespace NiceHashMiner.Algorithms
         {
             get
             {
-                return Speeds[0];
+                return BaseAlgo.Speeds[0];
             }
             set
             {
-                Speeds[0] = value;
+                BaseAlgo.Speeds[0] = value;
             }
         }
         public override double SecondaryBenchmarkSpeed
         {
             get
             {
-                if (IsDual) return Speeds[1];
+                if (IsDual) return BaseAlgo.Speeds[1];
                 return 0d;
             }
             set
             {
-                if (IsDual) Speeds[1] = value;
+                if (IsDual) BaseAlgo.Speeds[1] = value;
             }
         }
         public override List<double> Speeds
