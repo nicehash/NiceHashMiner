@@ -32,7 +32,23 @@ namespace Phoenix
         {
             var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
             var algorithmTypes = new AlgorithmType[] { _algorithmFirstType };
-            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
+            // multiply dagger API data 
+            var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
+            var totalCount = ad.AlgorithmSpeedsTotal?.Count ?? 0;
+            for (var i = 0; i < totalCount; i++)
+            {
+                ad.AlgorithmSpeedsTotal[i].Speed *= 1000; // speed is in khs
+            }
+            var keys = ad.AlgorithmSpeedsPerDevice.Keys.ToArray();
+            foreach (var key in keys)
+            {
+                var devSpeedtotalCount = (ad.AlgorithmSpeedsPerDevice[key])?.Count ?? 0;
+                for (var i = 0; i < devSpeedtotalCount; i++)
+                {
+                    ad.AlgorithmSpeedsPerDevice[key][i].Speed *= 1000; // speed is in khs
+                }
+            }
+            return ad;
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)

@@ -149,7 +149,23 @@ namespace ClaymoreDual
 
             var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
             var algorithmTypes = IsDual() ? new AlgorithmType[] { _algorithmFirstType, _algorithmSecondType } : new AlgorithmType[] { _algorithmFirstType };
-            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, DualDevFee, algorithmTypes);
+            // multiply dagger API data 
+            var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, DualDevFee, algorithmTypes);
+            var totalCount = ad.AlgorithmSpeedsTotal?.Count ?? 0;
+            for (var i = 0; i < totalCount; i++)
+            {
+                ad.AlgorithmSpeedsTotal[i].Speed *= 1000; // speed is in khs
+            }
+            var keys = ad.AlgorithmSpeedsPerDevice.Keys.ToArray();
+            foreach (var key in keys)
+            {
+                var devSpeedtotalCount = (ad.AlgorithmSpeedsPerDevice[key])?.Count ?? 0;
+                for (var i = 0; i < devSpeedtotalCount; i++)
+                {
+                    ad.AlgorithmSpeedsPerDevice[key][i].Speed *= 1000; // speed is in khs
+                }
+            }
+            return ad;
         }
     }
 }
