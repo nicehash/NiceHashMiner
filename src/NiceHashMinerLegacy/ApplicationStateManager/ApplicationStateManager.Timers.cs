@@ -32,6 +32,7 @@ namespace NiceHashMiner
         private static void StopMinerStatsCheckTimer()
         {
             _minerStatsCheck?.Stop();
+            _minerStatsCheck?.Dispose();
             _minerStatsCheck = null;
         }
         #endregion MinerStatsCheck
@@ -73,6 +74,7 @@ namespace NiceHashMiner
         private static void StopPreventSleepTimer()
         {
             _preventSleepTimer?.Stop();
+            _preventSleepTimer?.Dispose();
             _preventSleepTimer = null;
         }
         #endregion PreventSystemSleepTimer
@@ -93,6 +95,7 @@ namespace NiceHashMiner
         private static void StopRefreshDeviceListViewTimer()
         {
             _refreshDeviceListViewTimer?.Stop();
+            _refreshDeviceListViewTimer?.Dispose();
             _refreshDeviceListViewTimer = null;
         }
         #endregion RefreshDeviceListView timer
@@ -119,6 +122,7 @@ namespace NiceHashMiner
         public static void StopInternetCheckTimer()
         {
             _internetCheckTimer?.Stop();
+            _internetCheckTimer?.Dispose();
             _internetCheckTimer = null;
         }
 

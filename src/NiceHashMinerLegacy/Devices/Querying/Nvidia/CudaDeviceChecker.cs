@@ -70,7 +70,10 @@ namespace NiceHashMiner.Devices
                 {
                     WindowStyle = ProcessWindowStyle.Minimized
                 };
-                Process.Start(onGpusLost);
+                using (var p = Process.Start(onGpusLost))
+                {
+                    //p.WaitForExit(10 * 1000);
+                }
             }
             catch (Exception ex)
             {

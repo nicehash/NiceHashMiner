@@ -31,29 +31,29 @@ namespace NiceHashMiner.Utils
         {
             try
             {
-                var setFirewallRulesProcess = new Process
+                var startInfo = new ProcessStartInfo
                 {
-                    StartInfo =
-                    {
-                        FileName = @"FirewallRules.exe",
-                        Arguments = $"{Directory.GetCurrentDirectory()} update miner_plugins",
-                        Verb = "runas",
-                        UseShellExecute = true,
-                        CreateNoWindow = true
-                    }
+                    FileName = @"FirewallRules.exe",
+                    Arguments = $"{Directory.GetCurrentDirectory()} update miner_plugins",
+                    Verb = "runas",
+                    UseShellExecute = true,
+                    CreateNoWindow = true
                 };
-                setFirewallRulesProcess.Start();
-                setFirewallRulesProcess?.WaitForExit();
-                if (setFirewallRulesProcess?.ExitCode != 0)
+                using (var setFirewallRulesProcess = new Process { StartInfo = startInfo })
                 {
-                    Logger.Info("NICEHASH", "setFirewallRulesProcess returned error code: " + setFirewallRulesProcess.ExitCode);
-                }
-                else
-                {
-                    Logger.Info("NICEHASH", "setFirewallRulesProcess all OK");
-                    var installedPlugins = Plugin.MinerPluginsManager.GetPluginUUIDsAndVersionsList();
-                    _pluginsUUIDsWithVersions = installedPlugins;
-                    InternalConfigs.WriteFileSettings(_firewallRulesAddedFilePath, _pluginsUUIDsWithVersions);
+                    setFirewallRulesProcess.Start();
+                    setFirewallRulesProcess?.WaitForExit(10 * 1000);
+                    if (setFirewallRulesProcess?.ExitCode != 0)
+                    {
+                        Logger.Info("NICEHASH", "setFirewallRulesProcess returned error code: " + setFirewallRulesProcess.ExitCode);
+                    }
+                    else
+                    {
+                        Logger.Info("NICEHASH", "setFirewallRulesProcess all OK");
+                        var installedPlugins = Plugin.MinerPluginsManager.GetPluginUUIDsAndVersionsList();
+                        _pluginsUUIDsWithVersions = installedPlugins;
+                        InternalConfigs.WriteFileSettings(_firewallRulesAddedFilePath, _pluginsUUIDsWithVersions);
+                    }
                 }
             }
             catch (Exception ex)

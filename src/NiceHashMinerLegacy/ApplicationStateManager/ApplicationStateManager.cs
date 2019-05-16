@@ -56,7 +56,7 @@ namespace NiceHashMiner
             {
                 url = Links.VisitNewVersionReleaseUrl + OnlineVersion;
             }
-            Process.Start(url);
+            Helpers.VisitUrlLink(url);
         }
 #endregion
 

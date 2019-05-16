@@ -40,11 +40,12 @@ namespace NiceHashMiner
         {
             //in testnet there is no option to see stats without logging in
 #if TESTNET || TESTNETDEV
-            Process.Start(Links.CheckStats);
+            var urlLink = Links.CheckStats;
 #else
             var btc = ConfigManager.GeneralConfig.BitcoinAddress.Trim();
-            Process.Start(Links.CheckStats + btc);
+            var urlLink = Links.CheckStats + btc;
 #endif
+            Helpers.VisitUrlLink(urlLink);
         }
 
         public static CancellationTokenSource ExitApplication { get; } = new CancellationTokenSource();
@@ -66,14 +67,11 @@ namespace NiceHashMiner
 
         public static void RestartProgram()
         {
-            var pHandle = new Process
+            var startInfo = new ProcessStartInfo { FileName = Application.ExecutablePath };
+            using (var pHandle = new Process { StartInfo = startInfo })
             {
-                StartInfo =
-                {
-                    FileName = Application.ExecutablePath
-                }
-            };
-            pHandle.Start();
+                pHandle.Start();
+            }
             Application.Exit();
         }
 

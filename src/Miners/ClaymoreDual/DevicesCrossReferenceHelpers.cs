@@ -47,9 +47,9 @@ namespace ClaymoreDual
                     };
                     ct.Token.Register(() => getDevicesHandleStop("from cancel token"));
                     // async file tailing
-                    var fs = new FileStream(fileToTail, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     using (var semaphore = new SemaphoreSlim(1))
                     using (var fsw = new FileSystemWatcher(cwd))
+                    using (var fs = new FileStream(fileToTail, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     using (var sr = new StreamReader(fs))
                     {
                         fsw.Filter = fileToTail;
@@ -62,7 +62,7 @@ namespace ClaymoreDual
                             line = await sr.ReadLineAsync();
                             if (line != null)
                             {
-                                Console.WriteLine(line);
+                                //Console.WriteLine(line);
                                 if (breakLines.Any(breakLine => line.Contains(breakLine)))
                                 {
                                     getDevicesHandleStop("from file tail loop");

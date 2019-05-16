@@ -237,19 +237,19 @@ namespace NiceHashMiner
         {
             try
             {
-                var cudaDevicesDetection = new Process
+                var startInfo = new ProcessStartInfo
                 {
-                    StartInfo =
-                    {
-                        FileName = @"miner_plugins\vc_redist.x64.exe",
-                        Arguments = "/q /norestart",
-                        UseShellExecute = false,
-                        RedirectStandardError = false,
-                        RedirectStandardOutput = false,
-                        CreateNoWindow = false
-                    }
+                    FileName = @"miner_plugins\vc_redist.x64.exe",
+                    Arguments = "/q /norestart",
+                    UseShellExecute = false,
+                    RedirectStandardError = false,
+                    RedirectStandardOutput = false,
+                    CreateNoWindow = false
                 };
-                cudaDevicesDetection.Start();
+                using (var cudaDevicesDetection = new Process { StartInfo = startInfo })
+                {
+                    cudaDevicesDetection.Start();
+                }
             }
             catch(Exception e)
             {
@@ -261,23 +261,38 @@ namespace NiceHashMiner
         {
             try
             {
-                var psi = new ProcessStartInfo
+                var startInfo = new ProcessStartInfo
                 {
                     FileName = "nvidiasetp0state.exe",
                     Verb = "runas",
                     UseShellExecute = true,
                     CreateNoWindow = true
                 };
-                var p = Process.Start(psi);
-                p?.WaitForExit();
-                if (p?.ExitCode != 0)
-                    Logger.Info("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode);
-                else
-                    Logger.Info("NICEHASH", "nvidiasetp0state all OK");
+                using (var p = new Process { StartInfo = startInfo })
+                {
+                    p.Start();
+                    p?.WaitForExit(10*1000);
+                    if (p?.ExitCode != 0)
+                        Logger.Info("NICEHASH", "nvidiasetp0state returned error code: " + p.ExitCode);
+                    else
+                        Logger.Info("NICEHASH", "nvidiasetp0state all OK");
+                }
             }
             catch (Exception ex)
             {
                 Logger.Error("NICEHASH", "nvidiasetp0state error: " + ex.Message);
+            }
+        }
+
+        public static void VisitUrlLink(string urlLink)
+        {
+            try
+            {
+                using (var p = Process.Start(urlLink)) {}
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("NICEHASH", "VisitLink error: " + ex.Message);
             }
         }
 

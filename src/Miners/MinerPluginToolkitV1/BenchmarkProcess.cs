@@ -1,10 +1,9 @@
-﻿using System;
+﻿using MinerPlugin;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MinerPlugin;
 
 namespace MinerPluginToolkitV1
 {
@@ -28,11 +27,11 @@ namespace MinerPluginToolkitV1
         public BenchmarkResult Result { get; private set; } = default(BenchmarkResult);
         public bool Success { get; private set; } = default(bool);
 
-        private bool exitCalled = false;
+        private bool _exitCalled = false;
 
         private void BenchmarkOutputErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if (Success || CheckData == null || string.IsNullOrEmpty(e.Data) || exitCalled)
+            if (Success || CheckData == null || string.IsNullOrEmpty(e.Data) || _exitCalled)
             {
                 return;
             }
@@ -76,7 +75,7 @@ namespace MinerPluginToolkitV1
             //tcs.SetCanceled()
 
             Handle.Exited += (s, ea) => {
-                exitCalled = true;
+                _exitCalled = true;
                 tcs.SetResult(Result);
             };
             Handle.OutputDataReceived += BenchmarkOutputErrorDataReceived;

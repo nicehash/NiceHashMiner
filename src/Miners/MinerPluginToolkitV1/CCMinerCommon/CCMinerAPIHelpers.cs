@@ -13,39 +13,16 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 {
     public static class CCMinerAPIHelpers
     {
-        public static async Task<string> GetApiDataBase(int port, string dataToSend, string logGroup)
-        {
-            try
-            {
-                using (var client = new TcpClient("127.0.0.1", port))
-                using (var nwStream = client.GetStream())
-                {
-                    var bytesToSend = Encoding.ASCII.GetBytes(dataToSend);
-                    await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
-                    var bytesToRead = new byte[client.ReceiveBufferSize];
-                    var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
-                    var respStr = Encoding.ASCII.GetString(bytesToRead, 0, bytesRead);
-                    client.Close();
-                    return respStr;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(logGroup, $"Error occured while getting api data base: {e.Message}");
-                return null;
-            }
-        }
-
         public static Task<string> GetApiDataSummary(int port, string logGroup)
         {
-            var dataToSend = ApiDataHelper.GetHttpRequestNhmAgentStrin("summary");
-            return GetApiDataBase(port, dataToSend, logGroup);
+            var dataToSend = ApiDataHelpers.GetHttpRequestNhmAgentString("summary");
+            return ApiDataHelpers.GetApiDataAsync(port, dataToSend, logGroup);
         }
 
         public static Task<string> GetApiDataThreads(int port, string logGroup)
         {
-            var dataToSend = ApiDataHelper.GetHttpRequestNhmAgentStrin("threads");
-            return GetApiDataBase(port, dataToSend, logGroup);
+            var dataToSend = ApiDataHelpers.GetHttpRequestNhmAgentString("threads");
+            return ApiDataHelpers.GetApiDataAsync(port, dataToSend, logGroup);
         }
 
         private struct IdPowerHash

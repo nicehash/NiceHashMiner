@@ -27,8 +27,6 @@ namespace CPUMinerBase
         private string _extraLaunchParameters = "";
         private int _apiPort;
 
-        private ApiDataHelper apiReader = new ApiDataHelper(); // consider replacing with HttpClient
-
         public CpuMiner(string uuid) : base(uuid)
         {}
 
@@ -44,7 +42,7 @@ namespace CPUMinerBase
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var summaryApiResult = await apiReader.GetApiDataAsync(_apiPort, ApiDataHelper.GetHttpRequestNhmAgentStrin("summary"));
+            var summaryApiResult = await ApiDataHelpers.GetApiDataAsync(_apiPort, ApiDataHelpers.GetHttpRequestNhmAgentString("summary"), _logGroup);
             double totalSpeed = 0;
             int totalPower = 0;
             if (!string.IsNullOrEmpty(summaryApiResult))
