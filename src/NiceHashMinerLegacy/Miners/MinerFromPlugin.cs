@@ -23,9 +23,8 @@ namespace NiceHashMiner.Miners
     {
         private readonly IMinerPlugin _plugin;
         private IMiner _miner;
-        List<MiningPair> _miningPairs = new List<MiningPair>();
 
-        public MinerFromPlugin(string pluginUUID, List<Miners.Grouping.MiningPair> miningPairs, string groupKey) : base(pluginUUID, miningPairs, groupKey)
+        public MinerFromPlugin(string pluginUUID, List<MiningPair> miningPairs, string groupKey) : base(pluginUUID, miningPairs, groupKey)
         {
             _plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
             //_miner = _plugin.CreateMiner();
@@ -49,11 +48,12 @@ namespace NiceHashMiner.Miners
                 apiData = new ApiData();
                 var perDevicePowerDict = new Dictionary<string, int>();
                 var perDeviceSpeedsDict = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
-                var perDeviceSpeeds = _miningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => new AlgorithmTypeSpeedPair(type, 0d))));
+                var perDeviceSpeeds = MiningPairs.Select(pair => (pair.Device.UUID, pair.Algorithm.IDs.Select(type => new AlgorithmTypeSpeedPair(type, 0d))));
                 foreach (var kvp in perDeviceSpeeds)
                 {
-                    perDeviceSpeedsDict[kvp.UUID] = kvp.Item2.ToList();
-                    perDevicePowerDict[kvp.UUID] = 0;
+                    var uuid = kvp.Item1; // kvp.UUID compiler doesn't recognize ValueTypes lib???
+                    perDeviceSpeedsDict[uuid] = kvp.Item2.ToList();
+                    perDevicePowerDict[uuid] = 0;
                 }
                 apiData.AlgorithmSpeedsPerDevice = perDeviceSpeedsDict;
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
@@ -72,17 +72,8 @@ namespace NiceHashMiner.Miners
         {
             _miner = _plugin.CreateMiner();
             _miner.InitMiningLocationAndUsername(miningLocation, username);
-
-            _miningPairs = this.MiningPairs
-                .Where(pair => pair.Algorithm is PluginAlgorithm)
-                .Select(pair => new MinerPlugin.MiningPair
-                {
-                    Device = pair.Device.PluginDevice,
-                    Algorithm = ((PluginAlgorithm) pair.Algorithm).BaseAlgo
-                }).ToList();
-            _miner.InitMiningPairs(_miningPairs);
-
-            EthlargementIntegratedPlugin.Instance.Start(_miningPairs);
+            _miner.InitMiningPairs(MiningPairs);
+            EthlargementIntegratedPlugin.Instance.Start(MiningPairs);
             _miner.StartMining();
             IsRunning = true;
         }
@@ -92,7 +83,7 @@ namespace NiceHashMiner.Miners
             if (_miner == null) return;
             // TODO thing about this case, closing opening on switching
             // EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
-            MiningStats.RemoveGroup(_miningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
+            MiningStats.RemoveGroup(MiningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             IsRunning = false;
             _miner.StopMining();
             if (_miner is IDisposable disposableMiner)

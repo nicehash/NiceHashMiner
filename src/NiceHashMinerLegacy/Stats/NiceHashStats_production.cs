@@ -24,7 +24,6 @@ namespace NiceHashMiner.Stats
         private const int DeviceUpdateInterval = 60 * 1000;
 
         // Event handlers for socket
-        public static event EventHandler OnBalanceUpdate;
         public static event EventHandler OnVersionUpdate;
         public static event EventHandler OnConnectionEstablished;
         public static event EventHandler<SocketEventArgs> OnVersionBurn;
@@ -110,7 +109,7 @@ namespace NiceHashMiner.Stats
 
         #region Outgoing socket calls
 
-        public static void SetCredentials(string btc, string worker)
+        public static void SetCredentials(string btc, string worker, string group = "UNUSED STUB ONLY TO BE SAME AS TESTNET")
         {
             var data = new NicehashCredentials
             {

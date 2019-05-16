@@ -39,7 +39,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup);
+            var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup, DevFee);
             return ret;
         }
 
@@ -177,7 +177,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             //throw new NotImplementedException();
 
             // API port function might be blocking
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
             // instant non blocking
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);

@@ -11,6 +11,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NiceHashMinerLegacy.Common;
+using MinerPlugin;
 
 namespace MinerSmokeTest
 {
@@ -163,7 +164,8 @@ namespace MinerSmokeTest
                 {
                     step++;
                     try {
-                        var pair = new List<MiningPair> { new MiningPair(device, algorithm) };
+                        var pAlgo = algorithm as PluginAlgorithm;
+                        var pair = new List<MiningPair> { new MiningPair { Device = device.PluginDevice, Algorithm = pAlgo.BaseAlgo } };
                         var miner = NiceHashMiner.Miners.MinerFactory.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);

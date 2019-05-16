@@ -3,27 +3,25 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Plugin;
 using System.Collections.Generic;
 using System.Linq;
+using MinerPlugin;
 
 namespace NiceHashMiner.Miners.Grouping
 {
-    // TODO rename to GroupingUtils
-    public static class GroupingLogic
+    public static class GroupingUtils
     {
-        public static string CalcGroupedDevicesKey(SortedSet<string> sortedKeys, Algorithm algorithm)
+        public static string CalcGroupedDevicesKey(SortedSet<string> sortedKeys, string algorithmStringID)
         {
-            var key = $"{algorithm.AlgorithmStringID}({string.Join(",", sortedKeys)})";
+            var key = $"{algorithmStringID}({string.Join(",", sortedKeys)})";
             return key;
-        }
-
-        public static AlgorithmType GetMinerPairAlgorithmType(IEnumerable<MiningPair> miningPairs)
-        {
-            return miningPairs.FirstOrDefault()?.Algorithm?.AlgorithmUUID ?? AlgorithmType.NONE;
         }
 
         public static bool ShouldGroup(MiningPair a, MiningPair b)
         {
-            // now all are plugin cases
-            return CheckPluginCanGroup(a, b);
+            if (a.Algorithm.MinerID != b.Algorithm.MinerID) return false;
+            var plugin = MinerPluginsManager.GetPluginWithUuid(a.Algorithm.MinerID);
+            if (plugin == null) return false;
+            var canGroup = plugin.CanGroup(a, b);
+            return canGroup;
         }
 
         public static Dictionary<string, List<MiningPair>> GetGroupedMiningPairs(List<MiningPair> profitableMiningPairs)
@@ -37,7 +35,7 @@ namespace NiceHashMiner.Miners.Grouping
                 var firstDev = profitableMiningPairs[first].Device;
                 var firstAlgo = profitableMiningPairs[first].Algorithm;
                 // check if is in group
-                var isInGroup = currentGroupedDevices.Any(groupedDevices => groupedDevices.Contains(firstDev.Uuid));
+                var isInGroup = currentGroupedDevices.Any(groupedDevices => groupedDevices.Contains(firstDev.UUID));
                 // if device is not in any group create new group and check if other device should group
                 if (isInGroup == false)
                 {
@@ -46,48 +44,27 @@ namespace NiceHashMiner.Miners.Grouping
                         {
                             profitableMiningPairs[first]
                         };
-                    newGroup.Add(firstDev.Uuid);
+                    newGroup.Add(firstDev.UUID);
                     for (var second = first + 1; second < profitableMiningPairs.Count; ++second)
                     {
                         // check if we should group
                         var firstPair = profitableMiningPairs[first];
                         var secondPair = profitableMiningPairs[second];
-                        if (GroupingLogic.ShouldGroup(firstPair, secondPair))
+                        if (ShouldGroup(firstPair, secondPair))
                         {
                             var secondDev = profitableMiningPairs[second].Device;
-                            newGroup.Add(secondDev.Uuid);
+                            newGroup.Add(secondDev.UUID);
                             miningPairs.Add(profitableMiningPairs[second]);
                         }
                     }
 
                     currentGroupedDevices.Add(newGroup);
-                    var newGroupKey = GroupingLogic.CalcGroupedDevicesKey(newGroup, firstAlgo);
+                    var newGroupKey = CalcGroupedDevicesKey(newGroup, firstAlgo.AlgorithmStringID);
                     newGroupedMiningPairs[newGroupKey] = miningPairs;
                 }
             }
 
             return newGroupedMiningPairs;
-        }
-
-        private static bool CheckPluginCanGroup(MiningPair a, MiningPair b)
-        {
-            var pluginA = new MinerPlugin.MiningPair
-            {
-                Device = a.Device.PluginDevice,
-                Algorithm = ((PluginAlgorithm) a.Algorithm).BaseAlgo
-            };
-            var pluginB = new MinerPlugin.MiningPair
-            {
-                Device = b.Device.PluginDevice,
-                Algorithm = ((PluginAlgorithm) b.Algorithm).BaseAlgo
-            };
-
-            if (pluginA.Algorithm.MinerID != pluginB.Algorithm.MinerID) return false;
-
-            var plugin = MinerPluginsManager.GetPluginWithUuid(pluginA.Algorithm.MinerID);
-            // TODO can plugin be null?
-            var canGroup = plugin.CanGroup(pluginA, pluginB);
-            return canGroup;
         }
     }
 }

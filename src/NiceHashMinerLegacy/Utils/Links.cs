@@ -2,14 +2,16 @@
 {
     public static class Links
     {
-        // TODO implement TESTDEV
-        #if TESTNET || TESTNETDEV
+#if TESTNET
         public const string VisitUrl = "https://test.nicehash.com";
         public const string CheckStats = "https://test.nicehash.com/mining/stats";
-        #else
+#elif TESTNETDEV
+        public const string VisitUrl = "https://test-dev.nicehash.com";
+        public const string CheckStats = "https://test-dev.nicehash.com/mining/stats";
+#else
         public const string VisitUrl = "https://www.nicehash.com";
         public const string CheckStats = "https://www.nicehash.com/index.jsp?p=miners&addr=";
-        #endif
+#endif
         // add version
         public const string VisitReleasesUrl = "https://github.com/NiceHash/NiceHashMinerLegacy/releases/";
         public const string VisitNewVersionReleaseUrl = "https://github.com/NiceHash/NiceHashMinerLegacy/releases/tag/";

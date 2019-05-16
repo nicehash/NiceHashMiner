@@ -16,37 +16,42 @@ namespace MinerPluginToolkitV1
             string output = "";
             try
             {
-                var getDevicesHandle = new Process
+                var startInfo = new ProcessStartInfo
                 {
-                    StartInfo =
-                    {
-                                FileName = path,
-                                Arguments = arguments,
-                                CreateNoWindow = true,
-                                UseShellExecute = false,
-                                RedirectStandardOutput = true
-                    },
-                    EnableRaisingEvents = true,
+                    FileName = path,
+                    Arguments = arguments,
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
                 };
-                getDevicesHandle.Start();
+
+                using (var getDevicesHandle = new Process { StartInfo = startInfo, EnableRaisingEvents = true })
                 using (var ct = new CancellationTokenSource(timeoutMilliseconds))
                 {
-                    ct.Token.Register(() =>
-                    {
+                    getDevicesHandle.Start();
+                    Action<string> getDevicesHandleStop = (string stopFrom) => {
                         try
                         {
-                            getDevicesHandle.Kill();
+                            var isRunning = !getDevicesHandle?.HasExited ?? false;
+                            if (!isRunning) return;
+                            getDevicesHandle.CloseMainWindow();
+                            var hasExited = getDevicesHandle?.WaitForExit(1000) ?? false;
+                            if (!hasExited) getDevicesHandle.Kill();
                         }
-                        catch { }
-                    });
+                        catch (Exception e)
+                        {
+                            // TODO log
+                        }
+                    };
+                    ct.Token.Register(() => getDevicesHandleStop("from cancel token"));
                     output = await getDevicesHandle.StandardOutput.ReadToEndAsync();
-                    getDevicesHandle.WaitForExit();
+                    getDevicesHandleStop("after read to end");
                 }
             }
             catch (Exception e)
             {
                 Logger.Error("DevicesCrossReferenceHelpers", $"Error occured while getting miner output: {e.Message}");
-                return null;
+                return "";
             }
             return output;
         }

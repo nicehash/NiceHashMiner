@@ -260,18 +260,6 @@ namespace NiceHashMiner.Benchmarking
             OnBenchmarkEnd?.Invoke(null, _hasFailedAlgorithms);
         }
 
-        public static void DisableTodoAlgos()
-        {
-            CalcBenchDevAlgoQueue();
-            foreach (var q in BenchDevAlgoQueue.Select(q => q.Item2))
-            {
-                foreach (var a in q)
-                {
-                    a.Enabled = false;
-                }
-            }
-        }
-
         public static void ClearQueue()
         {
             lock (_benchDevAlgoQueue)

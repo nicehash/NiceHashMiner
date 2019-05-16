@@ -85,6 +85,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Miners\MinerPlugin\MinerPlugin.csproj">
+      <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
+      <Name>MinerPlugin</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NiceHashMinerLegacy.Common</Name>

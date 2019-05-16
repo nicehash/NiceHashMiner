@@ -62,7 +62,7 @@ namespace TTMiner
         {
             get
             {
-                return 0.01d; // 1% for all
+                return 1.0;
             }
         }
 
@@ -107,7 +107,7 @@ namespace TTMiner
                 {
                     benchHashes += hashrate;
                     benchIters++;
-                    benchHashResult = (benchHashes / benchIters) * (1.0d - DevFee);
+                    benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
                 }
                 return new BenchmarkResult
                 {
@@ -138,7 +138,7 @@ namespace TTMiner
 
         private string CreateCommandLine(string username)
         {
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var cmd = $"-a {AlgoName} -url {url} -u {username} -d {_devices} --api-bind 127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;
@@ -155,7 +155,7 @@ namespace TTMiner
 
             var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
             var algorithmTypes = new AlgorithmType[] { _algorithmType };
-            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, algorithmTypes);
+            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
         }
 
         protected override void Init()

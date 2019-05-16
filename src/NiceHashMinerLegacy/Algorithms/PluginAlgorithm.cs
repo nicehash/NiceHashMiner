@@ -54,24 +54,12 @@ namespace NiceHashMiner.Algorithms
 
         public override bool IsDual => BaseAlgo.IDs.Count > 1;
 
-        public override AlgorithmType AlgorithmUUID
-        {
-            get
-            {
-                if (IsDual)
-                {
-                    return Helpers.DualAlgoFromAlgos(BaseAlgo.FirstAlgorithmType, BaseAlgo.SecondAlgorithmType);
-                }
-                return BaseAlgo.FirstAlgorithmType;
-            }
-        }
-
 
         public override string MinerUUID => BaseAlgo?.MinerID;
 
-        public override string AlgorithmName => AlgorithmUUID.ToString();
+        public override string AlgorithmName => BaseAlgo?.AlgorithmName ?? "";
 
-        public override string AlgorithmStringID => $"{AlgorithmName}_{MinerUUID}";
+        public override string AlgorithmStringID => BaseAlgo?.AlgorithmStringID ?? "";
 
         public override AlgorithmType[] IDs => BaseAlgo.IDs.ToArray();
 

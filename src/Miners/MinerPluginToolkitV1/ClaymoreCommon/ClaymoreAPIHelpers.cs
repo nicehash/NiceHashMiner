@@ -19,7 +19,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
         private static readonly List<double> _emptySpeeds = new List<double>();
 
-        public static async Task<ApiData> GetMinerStatsDataAsync(int apiPort, IReadOnlyList<BaseDevice> miningDevices, string logGroup, params AlgorithmType[] algorithmTypes)
+        public static async Task<ApiData> GetMinerStatsDataAsync(int apiPort, IReadOnlyList<BaseDevice> miningDevices, string logGroup, double DevFee, double DualDevFee, params AlgorithmType[] algorithmTypes)
         {
             var ad = new ApiData();
 
@@ -68,10 +68,10 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
                             primaryTotalSpeed += primaryCurrentSpeed;
                             secondaryTotalSpeed += secondaryCurrentSpeed;
 
-                            var perDeviceSpeeds = new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(firstAlgoType, primaryCurrentSpeed) };
+                            var perDeviceSpeeds = new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(firstAlgoType, primaryCurrentSpeed * (1 - DevFee * 0.01)) };
                             if (isDual)
                             {
-                                perDeviceSpeeds.Add(new AlgorithmTypeSpeedPair(secondAlgoType, secondaryCurrentSpeed));
+                                perDeviceSpeeds.Add(new AlgorithmTypeSpeedPair(secondAlgoType, secondaryCurrentSpeed * (1 - DualDevFee * 0.01)));
                             }
                             perDeviceSpeedInfo.Add(uuid, perDeviceSpeeds );
                             // no power usage info
@@ -79,10 +79,10 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
                         }
 
                         var totalSpeed = new List<AlgorithmTypeSpeedPair>();
-                        totalSpeed.Add(new AlgorithmTypeSpeedPair(firstAlgoType, primaryTotalSpeed));
+                        totalSpeed.Add(new AlgorithmTypeSpeedPair(firstAlgoType, primaryTotalSpeed * (1 - DevFee * 0.01)));
                         if (isDual)
                         {
-                            totalSpeed.Add(new AlgorithmTypeSpeedPair(secondAlgoType, secondaryTotalSpeed));
+                            totalSpeed.Add(new AlgorithmTypeSpeedPair(secondAlgoType, secondaryTotalSpeed * (1 - DualDevFee * 0.01)));
                         }
 
                         ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;

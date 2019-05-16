@@ -143,7 +143,8 @@ namespace MinerPluginToolkitV1
                 if (_miningProcess != null) _miningProcess.Exited -= MinerProcess_Exited;
                 _miningProcess?.CloseMainWindow();
                 // 5 seconds wait for shutdown
-                if (!_miningProcess?.WaitForExit(5 * 1000) ?? false)
+                var hasExited = !_miningProcess?.WaitForExit(5 * 1000) ?? false;
+                if (!hasExited)
                 {
                     _miningProcess?.Kill(); // TODO look for another gracefull shutdown
                 }

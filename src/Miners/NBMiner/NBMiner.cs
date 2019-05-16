@@ -35,6 +35,8 @@ namespace NBMiner
                         return "cuckatoo";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
+                    case AlgorithmType.CuckooCycle:
+                        return "cuckoo_ae";
                     default:
                         return "";
                 }
@@ -132,7 +134,7 @@ namespace NBMiner
 
         private string CreateCommandLine(string username)
         {
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             
             var devs = string.Join(",", _miningPairs.Select(p => Shared.MappedCudaIds[p.Device.UUID]));
@@ -158,11 +160,11 @@ namespace NBMiner
                     totalPowerUsage += (int)device.power;
                     var uuid = Shared.GetUUIDFromMinerID(device.id);
                     if (uuid == null) continue;
-                    perDeviceSpeedInfo.Add(uuid, new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, device.hashrate_raw) });
+                    perDeviceSpeedInfo.Add(uuid, new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, device.hashrate_raw * (1 - DevFee * 0.01)) });
                     perDevicePowerInfo.Add(uuid, (int)device.power);
                 }
 
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 api.PowerUsageTotal = totalPowerUsage;
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;

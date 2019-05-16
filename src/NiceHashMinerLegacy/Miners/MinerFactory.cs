@@ -1,5 +1,7 @@
-﻿using NiceHashMiner.Algorithms;
+﻿using MinerPlugin;
+using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Plugin;
 using NiceHashMinerLegacy.Common.Enums;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +21,15 @@ namespace NiceHashMiner.Miners
         }
 
         // For mining
-        public static Miner CreateMinerForMining(List<Miners.Grouping.MiningPair> miningPairs, string groupKey)
+        public static Miner CreateMinerForMining(List<MiningPair> miningPairs, string groupKey)
         {
             var pair = miningPairs.FirstOrDefault();
-            if (pair == null) return null;
+            if (pair == null || pair.Algorithm == null) return null;
             var algorithm = pair.Algorithm;
-            if (algorithm is PluginAlgorithm pAlgo)
+            var plugin = MinerPluginsManager.GetPluginWithUuid(algorithm.MinerID);
+            if (plugin != null)
             {
-                return new MinerFromPlugin(pAlgo.BaseAlgo.MinerID, miningPairs, groupKey);
+                return new MinerFromPlugin(algorithm.MinerID, miningPairs, groupKey);
             }
             return null;
         }

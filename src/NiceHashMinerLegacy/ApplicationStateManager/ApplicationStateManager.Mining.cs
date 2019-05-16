@@ -23,8 +23,7 @@ namespace NiceHashMiner
                 return DemoUser.BTC;
             }
 
-            var btc = ConfigManager.GeneralConfig.BitcoinAddress?.Trim();
-            var worker = ConfigManager.GeneralConfig.WorkerName?.Trim();
+            var (btc, worker, _unused) = ConfigManager.GeneralConfig.GetCredentials();
 
             // TESTNET
 #if TESTNET || TESTNETDEV

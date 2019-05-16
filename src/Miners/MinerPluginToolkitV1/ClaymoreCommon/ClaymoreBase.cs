@@ -34,9 +34,12 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
         // command line parts
         public string _platform;
+        protected Dictionary<string, int> _mappedIDs;
 
-        public ClaymoreBase(string uuid) : base(uuid)
-        { }
+        public ClaymoreBase(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        {
+            _mappedIDs = mappedIDs;
+        }
 
         private static int GetPlatformIDForType(DeviceType type)
         {
@@ -122,17 +125,10 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             ok = dualType.Item2;
             if (!ok) _algorithmSecondType = AlgorithmType.NONE;
             // all good continue on
-
-            // TODO fix sorting and also fix device indexing
-            // Order pairs and parse ELP
-            var gpus = _miningPairs
-                .Select(pair => pair.Device)
-                .Cast<IGpuDevice>()
-                .OrderBy(gpu => gpu.PCIeBusID);
-
+            
             _orderedMiningPairs = _miningPairs.ToList();
-            _orderedMiningPairs.Sort((a, b) => a.Device.UUID.CompareTo(b.Device.UUID));
-            _devices = string.Join("", _orderedMiningPairs.Select(p => p.Device.ID)); // TODO PCIe bus ids
+            _orderedMiningPairs.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            _devices = string.Join("", _orderedMiningPairs.Select(p => ClaymoreHelpers.GetClaymoreDeviceID(_mappedIDs[p.Device.UUID])));
             _platform = $"{GetPlatformIDForType(_orderedMiningPairs.First().Device.DeviceType)}";
 
             if (MinerOptionsPackage != null)
@@ -162,7 +158,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
 
         protected override string MiningCreateCommandLine()
         {
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
             return CreateCommandLine(_username) + $" -mport 127.0.0.1:-{_apiPort}";
         }
 

@@ -17,9 +17,8 @@ namespace Phoenix
 {
     public class Phoenix : ClaymoreBase
     {
-        public Phoenix(string uuid) : base(uuid)
-        {
-        }
+        public Phoenix(string uuid, Dictionary<string, int> mappedIDs) : base(uuid, mappedIDs)
+        {}
 
         public new double DevFee
         {
@@ -29,52 +28,11 @@ namespace Phoenix
             }
         }
 
-        protected override void Init()
-        {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmFirstType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-
-            var dualType = MinerToolkit.GetAlgorithmDualType(_miningPairs);
-            _algorithmSecondType = dualType.Item1;
-            ok = dualType.Item2;
-            if (!ok) _algorithmSecondType = AlgorithmType.NONE;
-            // all good continue on
-
-            // Order pairs and parse ELP
-            _orderedMiningPairs = _miningPairs.ToList();
-            _orderedMiningPairs.Sort((a, b) => {
-                var aGpu = a.Device as IGpuDevice;
-                var bGpu = b.Device as IGpuDevice;
-                return aGpu.PCIeBusID.CompareTo(bGpu.PCIeBusID);
-            });
-            //_devices = string.Join("", _orderedMiningPairs.Select(p => _mappedIDs[p.Device.]));
-            _devices = string.Join("", _orderedMiningPairs.Select(p => {
-                var pGpu = p.Device as IGpuDevice;
-                return Shared.MappedCudaIds[pGpu.UUID];
-            }));
-            var deviceTypes = _orderedMiningPairs.Select(pair => pair.Device.DeviceType);
-            _platform = $"{ClaymoreHelpers.GetPlatformIDForType(deviceTypes)}";
-
-            if (MinerOptionsPackage != null)
-            {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(_orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(_orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
-        }
-
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
             var algorithmTypes = new AlgorithmType[] { _algorithmFirstType };
-            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, algorithmTypes);
+            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)

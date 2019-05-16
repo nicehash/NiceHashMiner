@@ -125,7 +125,7 @@ namespace NanoMiner
                                 var devId = int.Parse(data.Key.Remove(0, 3), System.Globalization.NumberStyles.HexNumber); //remove GPU from GPU XX string to get ID
                                 var gpu = gpus.Where(dev => dev.ID == devId).FirstOrDefault();
                                 var speed = data.Value.ToString();
-                                perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, JsonApiHelpers.HashrateFromApiData(speed)) });
+                                perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, JsonApiHelpers.HashrateFromApiData(speed) * (1 - DevFee * 0.01)) });
                             }
                             else if (data.Key == "Total")
                             {
@@ -137,7 +137,7 @@ namespace NanoMiner
                 }
 
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 api.PowerUsagePerDevice = perDevicePowerInfo;
                 api.PowerUsageTotal = totalPowerUsage;
             }
@@ -214,7 +214,7 @@ namespace NanoMiner
 
         private string CreateCommandLine(string username, string deviceId)
         {
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange();
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
 
             var algo = AlgorithmName(_algorithmType);
 

@@ -7,17 +7,6 @@ namespace NiceHashMinerLegacy.Common.Enums
     /// </summary>
     public enum AlgorithmType
     {
-        // dual algos for grouping
-        DaggerKeccak = -8,
-        DaggerBlake2s = -7,
-        [Obsolete("UNUSED DUAL Algorithm")]
-        DaggerSia = -6,
-        DaggerDecred = -5,
-        [Obsolete("UNUSED DUAL Algorithm")]
-        DaggerLbry = -4,
-        [Obsolete("UNUSED DUAL Algorithm")]
-        DaggerPascal = -3,
-
         INVALID = -2,
         NONE = -1,
 
@@ -108,6 +97,8 @@ namespace NiceHashMinerLegacy.Common.Enums
         MTP = 41,
         //[Obsolete("UNUSED Algorithm")]
         CryptoNightR = 42,
+        //[Obsolete("UNUSED Algorithm")]
+        CuckooCycle = 43,
         #endregion // NiceHashAPI
     }
 }

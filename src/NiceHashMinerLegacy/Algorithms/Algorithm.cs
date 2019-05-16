@@ -32,8 +32,6 @@ namespace NiceHashMiner.Algorithms
         /// </summary>
         public abstract AlgorithmType[] IDs { get; }
 
-        // for now we will rely on negative dual enums
-        public abstract AlgorithmType AlgorithmUUID { get; }
         public abstract string MinerUUID { get; }
         public abstract bool IsDual { get; }
         #endregion
@@ -84,7 +82,8 @@ namespace NiceHashMiner.Algorithms
         /// Current SMA profitability for this algorithm type in BTC/GH/Day
         /// </summary>
         public double CurNhmSmaDataVal { get; private set; }
-        
+        public double SecondaryCurNhmSmaDataVal { get; private set; }
+
         /// <summary>
         /// Power consumption of this algorithm, in Watts
         /// </summary>
@@ -189,7 +188,7 @@ namespace NiceHashMiner.Algorithms
             }
             if (BenchmarkSpeed > 0)
             {
-                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, SecondaryBenchmarkSpeed, AlgorithmUUID);
+                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, SecondaryBenchmarkSpeed, IDs);
             }
             if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
             {
@@ -205,11 +204,20 @@ namespace NiceHashMiner.Algorithms
         public virtual void UpdateCurProfit(Dictionary<AlgorithmType, double> profits)
         {
             var newProfit = 0d;
-            foreach (var id in IDs)
+            for (int i = 0; i < IDs.Length; i++)
             {
-                if(profits.TryGetValue(id, out var paying) == false) continue;
-                CurNhmSmaDataVal = paying; // Duals will not work
-                newProfit += CurNhmSmaDataVal * AvaragedSpeed * Mult;
+                var id = IDs[i];
+                if (profits.TryGetValue(id, out var paying) == false) continue;
+                if (i == 0)
+                {
+                    CurNhmSmaDataVal = paying;
+                    newProfit += CurNhmSmaDataVal * AvaragedSpeed * Mult;
+                }
+                else if(i == 1)
+                {
+                    SecondaryCurNhmSmaDataVal = paying;
+                    newProfit += SecondaryCurNhmSmaDataVal * SecondaryAveragedSpeed * Mult;
+                }
             }
             CurrentProfit = newProfit;
             //profits.TryGetValue(NiceHashID, out var paying);

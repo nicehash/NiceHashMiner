@@ -16,7 +16,7 @@ namespace ClaymoreDual
 {
     public class ClaymoreDual : ClaymoreBase, IAfterStartMining
     {
-        public ClaymoreDual(string uuid) : base(uuid)
+        public ClaymoreDual(string uuid, Dictionary<string, int> mappedIDs) : base(uuid, mappedIDs)
         {
         }
 
@@ -115,10 +115,10 @@ namespace ClaymoreDual
                 var benchHashResultFirst = benchItersFirst == 0 ? 0d : benchHashesFirstSum / benchItersFirst;
                 var benchHashResultSecond = benchItersSecond == 0 ? 0d : benchHashesSecondSum / benchItersSecond;
                 var success = benchHashResultFirst > 0d;
-                var speeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmFirstType, benchHashResultFirst) };
+                var speeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmFirstType, benchHashResultFirst * (1 - DevFee * 0.01)) };
                 if (IsDual())
                 {
-                    speeds.Add(new AlgorithmTypeSpeedPair(_algorithmSecondType, benchHashResultSecond));
+                    speeds.Add(new AlgorithmTypeSpeedPair(_algorithmSecondType, benchHashResultSecond * (1 - DualDevFee * 0.01)));
                 }
                 // return
                 return new BenchmarkResult
@@ -149,7 +149,7 @@ namespace ClaymoreDual
 
             var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
             var algorithmTypes = IsDual() ? new AlgorithmType[] { _algorithmFirstType, _algorithmSecondType } : new AlgorithmType[] { _algorithmFirstType };
-            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, algorithmTypes);
+            return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, DualDevFee, algorithmTypes);
         }
     }
 }

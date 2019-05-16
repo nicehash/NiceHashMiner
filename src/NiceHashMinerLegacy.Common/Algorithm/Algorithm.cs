@@ -12,6 +12,7 @@ namespace NiceHashMinerLegacy.Common.Algorithm
             MinerID = minerID;
             IDs = ids;
             Speeds = ids.Select(id => 0d).ToList();
+            AlgorithmName = string.Join("+", IDs.Select(type => Enum.GetName(typeof(AlgorithmType), type)));
         }
         // Identity
         public IReadOnlyList<AlgorithmType> IDs { get; }
@@ -30,6 +31,16 @@ namespace NiceHashMinerLegacy.Common.Algorithm
             {
                 if (IDs.Count > 1) return IDs[1];
                 return AlgorithmType.NONE;
+            }
+        }
+
+        public string AlgorithmName { get; private set; }
+
+        public string AlgorithmStringID
+        {
+            get
+            {
+                return $"{AlgorithmName}_{MinerID}";
             }
         }
 

@@ -67,10 +67,10 @@ namespace LolMinerBeam
                 {
                     var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuDevice.ID).FirstOrDefault(); //todo index == ID ????
                     if (currentStats == null) continue;
-                    perDeviceSpeedInfo.Add(gpuDevice.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair (_algorithmType, currentStats.Performance) });
+                    perDeviceSpeedInfo.Add(gpuDevice.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair (_algorithmType, currentStats.Performance * (1 - DevFee * 0.01)) });
                 }
 
-                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
 
             }
@@ -176,7 +176,7 @@ namespace LolMinerBeam
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
             // instant non blocking
             var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var split = urlWithPort.Split(':');

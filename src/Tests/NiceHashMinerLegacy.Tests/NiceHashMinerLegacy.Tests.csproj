@@ -56,7 +56,6 @@
     <Compile Include="Switching\AlgorithmSwitchingManagerTest.cs" />
     <Compile Include="Switching\NHSmaDataTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\AlgorithmNiceHashNamesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -74,6 +73,9 @@
       <Project>{a70b0aee-15c4-49e1-9dc9-b936a1ebc2b5}</Project>
       <Name>NiceHashMinerLegacy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utils\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

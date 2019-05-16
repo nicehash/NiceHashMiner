@@ -23,8 +23,7 @@ namespace NiceHashMiner.Configs.Data
         public bool AutoStartMining = false;
 
 
-        public bool _hideMiningWindows = false;
-        public bool _minimizeMiningWindows = false;
+        private bool _hideMiningWindows = false;
         public bool HideMiningWindows
         {
             get => _hideMiningWindows;
@@ -34,6 +33,8 @@ namespace NiceHashMiner.Configs.Data
                 MinerPluginToolkitV1.MinerToolkit.HideMiningWindows = value;
             }
         }
+
+        private bool _minimizeMiningWindows = false;
         public bool MinimizeMiningWindows
         {
             get => _minimizeMiningWindows;
@@ -68,8 +69,17 @@ namespace NiceHashMiner.Configs.Data
         public bool DisableWindowsErrorReporting = true;
         public bool ShowInternetConnectionWarning = true;
         public bool NVIDIAP0State = false;
-        
-        public int ApiBindPortPoolStart = 5100;
+
+        private int _apiBindPortPoolStart = 4000;
+        public int ApiBindPortPoolStart
+        {
+            get => _apiBindPortPoolStart;
+            set
+            {
+                _apiBindPortPoolStart = value;
+                MinerPluginToolkitV1.FreePortsCheckerManager.ApiBindPortPoolStart = value;
+            }
+        }
         public double MinimumProfit = 0;
         public bool IdleWhenNoInternetAccess = true;
         public bool UseIFTTT = false;

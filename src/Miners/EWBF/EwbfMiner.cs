@@ -20,7 +20,7 @@ namespace EWBF
     public class EwbfMiner : MinerBase
     {
         // default is 2% and can be changed with --fee parameter
-        private double DevFee = 0.02;
+        private double DevFee = 2.0;
         private int _apiPort;
 
         // can mine only one algorithm at a given time
@@ -47,7 +47,7 @@ namespace EWBF
         private string CreateCommandLine(string username)
         {
             // API port function might be blocking
-            _apiPort = MinersApiPortsManager.GetAvaliablePortInRange(); // use the default range
+            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
 
             var algo = AlgorithmName(_algorithmType);
 
@@ -103,12 +103,12 @@ namespace EWBF
                     var currentDevStats = results.Where(r => r.cudaid == gpu.ID).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed_sps;
-                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed_sps) });
+                    perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed_sps * (1 - DevFee * 0.01)) });
                     totalPowerUsage += (int)currentDevStats.gpu_power_usage;
                     perDevicePowerInfo.Add(gpu.UUID, (int)currentDevStats.gpu_power_usage);
 
                 }
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 api.PowerUsageTotal = totalPowerUsage;
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
                 api.PowerUsagePerDevice = perDevicePowerInfo;
@@ -170,7 +170,7 @@ namespace EWBF
                 benchHashesSum += hashrate;
                 benchIters++;
 
-                benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee);
+                benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee * 0.01);
 
                 return new BenchmarkResult
                 {

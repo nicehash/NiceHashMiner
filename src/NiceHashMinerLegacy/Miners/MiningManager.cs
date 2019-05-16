@@ -240,9 +240,9 @@ namespace NiceHashMiner.Miners
             return (currentProfit, prevStateProfit);
         }
 
-        private static List<Grouping.MiningPair> GetProfitableMiningPairs()
+        private static List<MiningPair> GetProfitableMiningPairs()
         {
-            var profitableMiningPairs = new List<Grouping.MiningPair>();
+            var profitableMiningPairs = new List<MiningPair>();
             foreach (var device in _miningDevices)
             {
                 // check if device has profitable algo
@@ -254,9 +254,6 @@ namespace NiceHashMiner.Miners
 
         private static async Task SwichMostProfitableGroupUpMethodTask(object sender, SmaUpdateEventArgs e)
         {
-#if (SWITCH_TESTING)
-            MiningDevice.SetNextTest();
-#endif
             CalculateAndUpdateMiningDevicesProfits(e.NormalizedProfits);
             var (currentProfit, prevStateProfit) = GetCurrentAndPreviousProfits();
 
@@ -276,14 +273,13 @@ namespace NiceHashMiner.Miners
                             $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
                             $"\t[{algo.AlgorithmStringID}]"
                         );
-                        // TODO second paying ratio logging
-                        //if (algo is PluginAlgorithm dualAlg && dualAlg.IsDual)
-                        //{
-                        //    stringBuilderDevice.AppendLine(
-                        //        $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
-                        //        $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
-                        //    );
-                        //}
+                        if (algo is PluginAlgorithm dualAlg && dualAlg.IsDual)
+                        {
+                            stringBuilderDevice.AppendLine(
+                                $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
+                                $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
+                            );
+                        }
                     }
                     // most profitable
                     stringBuilderDevice.AppendLine(
@@ -327,7 +323,7 @@ namespace NiceHashMiner.Miners
             }
 
             // group new miners 
-            var newGroupedMiningPairs = GroupingLogic.GetGroupedMiningPairs(GetProfitableMiningPairs());
+            var newGroupedMiningPairs = GroupingUtils.GetGroupedMiningPairs(GetProfitableMiningPairs());
             // check newGroupedMiningPairs and running Groups to figure out what to start/stop and keep running
             string[] currentRunningGroups;
             lock (_lock)
