@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Timers;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Common;
@@ -78,6 +79,20 @@ namespace NiceHashMiner.Switching
 
         public void ForceUpdate()
         {
+            var isAllZeroPaying = _lastLegitPaying.Values.Any(paying => paying == 0);
+            if (isAllZeroPaying)
+            {
+                foreach (var kvp in NHSmaData.FilteredCurrentProfits(true))
+                {
+                    _stableHistory[kvp.Key] = new AlgorithmHistory(MaxHistory);
+                    _lastLegitPaying[kvp.Key] = kvp.Value;
+                }
+                foreach (var kvp in NHSmaData.FilteredCurrentProfits(false))
+                {
+                    _unstableHistory[kvp.Key] = new AlgorithmHistory(MaxHistory);
+                    _lastLegitPaying[kvp.Key] = kvp.Value;
+                }
+            }
             var args = new SmaUpdateEventArgs(_lastLegitPaying);
             Stop();
             SmaCheck?.Invoke(this, args);

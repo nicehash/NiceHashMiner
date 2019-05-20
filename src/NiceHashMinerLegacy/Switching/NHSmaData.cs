@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common;
@@ -37,19 +38,7 @@ namespace NiceHashMiner.Switching
             _currentPayingRates = new Dictionary<AlgorithmType, double>();
             _stableAlgorithms = new HashSet<AlgorithmType>();
 
-            Dictionary<AlgorithmType, double> cacheDict = null;
-            try
-            {
-                var cache = File.ReadAllText(CachedFile);
-                cacheDict = JsonConvert.DeserializeObject<Dictionary<AlgorithmType, double>>(cache);
-            }
-            catch (FileNotFoundException)
-            {
-            }
-            catch (Exception e)
-            {
-                Logger.Error(Tag, e.ToString());
-            }
+            var cacheDict = InternalConfigs.ReadFileSettings<Dictionary<AlgorithmType, double>>(CachedFile);
 
             // _recentPaying = new Dictionary<AlgorithmType, List<double>>();
             foreach (AlgorithmType algo in Enum.GetValues(typeof(AlgorithmType)))
@@ -104,20 +93,8 @@ namespace NiceHashMiner.Switching
                 if (ConfigManager.GeneralConfig.UseSmaCache)
                 {
                     // Cache while in lock so file is not accessed on multiple threads
-                    try
-                    {
-                        var cache = JsonConvert.SerializeObject(newSma);
-                        var dirPath = Path.GetDirectoryName(CachedFile);
-                        if (Directory.Exists(dirPath) == false)
-                        {
-                            Directory.CreateDirectory(dirPath);
-                        }
-                        File.WriteAllText(CachedFile, cache);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error(Tag, e.ToString());
-                    }
+                    var isFileSaved = InternalConfigs.WriteFileSettings(CachedFile, newSma);
+                    if (!isFileSaved) Logger.Error(Tag, "CachedSma not saved");
                 }
             }
 

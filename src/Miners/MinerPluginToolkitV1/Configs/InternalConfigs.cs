@@ -38,7 +38,7 @@ namespace MinerPluginToolkitV1.Configs
             }
             catch (Exception e)
             {
-                Logger.Info("InternalConfigs", $"Error occured while reading file settings from {filePath}: {e.Message}");
+                Logger.Error("InternalConfigs", $"Error occured while reading file settings from {filePath}: {e.Message}");
                 //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {e}");
                 return null;
             }
@@ -62,7 +62,7 @@ namespace MinerPluginToolkitV1.Configs
             }
             catch (Exception e)
             {
-                Logger.Info("InternalConfigs", $"Error occured while writing file settings to {filePath}: {e.Message}");
+                Logger.Error("InternalConfigs", $"Error occured while writing file settings to {filePath}: {e.Message}");
                 //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {e}");
                 return false;
             }
