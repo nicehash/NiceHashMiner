@@ -28,7 +28,7 @@ namespace EWBF
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 1);
+        public Version Version => new Version(1, 2);
 
         public string Name => "Ewbf";
 

@@ -19,7 +19,7 @@ namespace SGMinerHub
     {
         public string PluginUUID => "8b2c1300-7237-11e9-b20c-f9f12eb6d835";
 
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
 
         public string Name => "SGMinerHub";
 

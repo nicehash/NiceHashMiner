@@ -29,7 +29,7 @@ namespace BMiner
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 2);
+        public Version Version => new Version(1, 3);
         public string Name => "BMiner";
 
         public string Author => "domen.kirnkrefl@nicehash.com";

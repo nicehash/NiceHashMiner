@@ -17,7 +17,7 @@ namespace CPUMinerBase
     {
         public string PluginUUID => "92fceb00-7236-11e9-b20c-f9f12eb6d835";
 
-        public Version Version => new Version(1,1);
+        public Version Version => new Version(1, 2);
 
         public string Name => "cpuminer-opt";
 

@@ -18,7 +18,7 @@ namespace CryptoDredge
     // TODO don't use this plugin as it doesn't have GetMinerStatsDataAsync() method miner doesn't support it.
     class CryptoDredgePlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
-        public Version Version => new Version(1, 1);
+        public Version Version => new Version(1, 2);
         public string Name => "CryptoDredge";
 
         public string Author => "domen.kirnkrefl@nicehash.com";

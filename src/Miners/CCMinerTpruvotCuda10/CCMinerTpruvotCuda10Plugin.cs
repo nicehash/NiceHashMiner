@@ -16,7 +16,7 @@ namespace CCMinerTpruvotCuda10
 {
     public class CCMinerTpruvotCuda10Plugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
-        public Version Version => new Version(1, 1);
+        public Version Version => new Version(1, 2);
 
         public string Name => "CCMinerTpruvotCuda10";
 

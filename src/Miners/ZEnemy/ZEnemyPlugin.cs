@@ -16,7 +16,7 @@ namespace ZEnemy
 {
     class ZEnemyPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
-        public Version Version => new Version(1, 1);
+        public Version Version => new Version(1, 2);
 
         public string Name => "ZEnemy";
 
