@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace ClaymoreDual
 {
-    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals/*, IDevicesCrossReference*/, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
     {
         public ClaymoreDualPlugin()
         {
@@ -373,26 +373,27 @@ namespace ClaymoreDual
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
         #endregion Internal Settings
 
-        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
-        {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-            var minerCwd = miner.GetBinAndCwdPaths().Item2;
-            // no device list so 'start mining'
-            var logFile = "noappend_cross_ref_devs.txt";
-            var logFilePath = Path.Combine(minerCwd, logFile);
-            var args = $"-benchmark 1 -wd 0 -colors 0 -dbg 1 -logfile {logFile}";
-            var output = await DevicesCrossReferenceHelpers.ReadLinesUntil(minerBinPath, minerCwd, args, logFilePath, new List<string> { "Total cards", "Stratum - connecting to" });
-            var mappedDevs = DevicesListParser.ParseClaymoreDualOutput(output, devices.ToList());
+        //// TODO leaking background process
+        //public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        //{
+        //    //var miner = CreateMiner() as IBinAndCwdPathsGettter;
+        //    //if (miner == null) return;
+        //    //var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+        //    //var minerCwd = miner.GetBinAndCwdPaths().Item2;
+        //    //// no device list so 'start mining'
+        //    //var logFile = "noappend_cross_ref_devs.txt";
+        //    //var logFilePath = Path.Combine(minerCwd, logFile);
+        //    //var args = $"-benchmark 1 -wd 0 -colors 0 -dbg 1 -logfile {logFile}";
+        //    //var output = await DevicesCrossReferenceHelpers.ReadLinesUntil(minerBinPath, minerCwd, args, logFilePath, new List<string> { "Total cards", "Stratum - connecting to" });
+        //    //var mappedDevs = DevicesListParser.ParseClaymoreDualOutput(output, devices.ToList());
 
-            foreach (var kvp in mappedDevs)
-            {
-                var uuid = kvp.Key;
-                var indexID = kvp.Value;
-                _mappedIDs[uuid] = indexID;
-            }
-        }
+        //    //foreach (var kvp in mappedDevs)
+        //    //{
+        //    //    var uuid = kvp.Key;
+        //    //    var indexID = kvp.Value;
+        //    //    _mappedIDs[uuid] = indexID;
+        //    //}
+        //}
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
