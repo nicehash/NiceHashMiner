@@ -118,6 +118,7 @@ namespace NiceHashMiner.Devices.Algorithms
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.ZHash),
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam),
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.GrinCuckaroo29),
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.CuckooCycle) { Enabled = false },
                 };
             }
             // AMD only allow Gcn4+
@@ -126,6 +127,7 @@ namespace NiceHashMiner.Devices.Algorithms
                 algos = new List<Algorithm>
                 {
                     new Algorithm(MinerBaseType.GMiner, AlgorithmType.Beam),
+                    new Algorithm(MinerBaseType.GMiner, AlgorithmType.CuckooCycle) { Enabled = false },
                 };
             }
             // filter RAM requirements
