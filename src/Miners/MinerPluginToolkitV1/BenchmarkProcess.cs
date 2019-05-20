@@ -37,15 +37,12 @@ namespace MinerPluginToolkitV1
                 return;
             }
 
-            if(BenchmarkExceptions != null)
+            var errorMessage = BenchmarkProcessSettings.IsBenchmarkExceptionLine(e.Data, BenchmarkExceptions);
+            if (!string.IsNullOrEmpty(errorMessage))
             {
-                var foundKey = BenchmarkExceptions.Keys.Where(errorString => e.Data.Contains(errorString)).FirstOrDefault();
-                if (!string.IsNullOrEmpty(foundKey))
-                {
-                    Result = new BenchmarkResult{ ErrorMessage = BenchmarkExceptions[foundKey] };
-                    TryExit();
-                    return;
-                }
+                Result = new BenchmarkResult { ErrorMessage = errorMessage };
+                TryExit();
+                return;
             }
 
             Result  = CheckData(e.Data);

@@ -167,47 +167,6 @@ namespace NiceHashMiner
                 }
             }
         }
-
-        #region BENCHMARK DE-COUPLED Decoupled benchmarking routines
-
-        // Put this in internals common error lines when benchmarking
-        protected void CheckOutdata(string outdata)
-        {
-            // Benchmark stuff
-            Exception BenchmarkException;
-            //Helpers.ConsolePrint("BENCHMARK" + benchmarkLogPath, outdata);
-            // ccminer, cpuminer
-            if (outdata.Contains("Cuda error"))
-                BenchmarkException = new Exception("CUDA error");
-            if (outdata.Contains("is not supported"))
-                BenchmarkException = new Exception("N/A");
-            if (outdata.Contains("illegal memory access"))
-                BenchmarkException = new Exception("CUDA error");
-            if (outdata.Contains("unknown error"))
-                BenchmarkException = new Exception("Unknown error");
-            if (outdata.Contains("No servers could be used! Exiting."))
-                BenchmarkException = new Exception("No pools or work can be used for benchmarking");
-            if (outdata.Contains("Error CL_INVALID_KERNEL"))
-                BenchmarkException = new Exception("Error CL_INVALID_KERNEL");
-            if (outdata.Contains("Error CL_INVALID_KERNEL_ARGS"))
-                BenchmarkException = new Exception("Error CL_INVALID_KERNEL_ARGS");
-            //if (outdata.Contains("error") || outdata.Contains("Error"))
-            //    BenchmarkException = new Exception("Unknown error #2");
-            // Ethminer
-            if (outdata.Contains("No GPU device with sufficient memory was found"))
-                BenchmarkException = new Exception("[daggerhashimoto] No GPU device with sufficient memory was found.");
-            // xmr-stak
-            if (outdata.Contains("Press any key to exit"))
-                BenchmarkException = new Exception("Xmr-Stak erred, check its logs");
-
-            //// lastly parse data
-            //if (BenchmarkParseLine(outdata))
-            //{
-            //    BenchmarkSignalFinnished = true;
-            //}
-        }
-
-        #endregion //BENCHMARK DE-COUPLED Decoupled benchmarking routines
         
 
         //protected virtual NiceHashProcess _Start()
