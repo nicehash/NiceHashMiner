@@ -49,6 +49,8 @@ namespace GMinerPlugin
                     return "grin29";
                 case AlgorithmType.GrinCuckatoo31:
                     return "grin31";
+                case AlgorithmType.CuckooCycle:
+                    return "aeternity";
                 default:
                     return "";
             }

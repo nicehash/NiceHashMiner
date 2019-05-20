@@ -28,7 +28,7 @@ namespace GMinerPlugin
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 3);
+        public Version Version => new Version(1, 4);
 
         public string Name => "GMinerCuda9.0+";
 
@@ -111,6 +111,7 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
+                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false },
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
@@ -121,6 +122,7 @@ namespace GMinerPlugin
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
+                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false },
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
