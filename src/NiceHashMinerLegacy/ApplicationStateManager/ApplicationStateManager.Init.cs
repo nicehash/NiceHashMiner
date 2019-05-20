@@ -173,12 +173,6 @@ namespace NiceHashMiner
             }
 
             // STEP
-            // Cross reference plugin indexes
-            progress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
-            // Detected devices cross reference with miner indexes
-            await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
-
-            // STEP
             // VC_REDIST check
             progress?.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
             if (runVCRed)
@@ -194,6 +188,12 @@ namespace NiceHashMiner
                 // TODO show message box
                 FirewallRules.UpdateFirewallRules();
             }
+
+            // STEP
+            // Cross reference plugin indexes
+            progress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
+            // Detected devices cross reference with miner indexes
+            await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
 
             InitFinished();
         }
