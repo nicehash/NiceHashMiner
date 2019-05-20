@@ -177,7 +177,7 @@ namespace CCMinerTpruvotCuda10
             //throw new NotImplementedException();
 
             // API port function might be blocking
-            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
+            _apiPort = GetAvaliablePort();
             // instant non blocking
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);

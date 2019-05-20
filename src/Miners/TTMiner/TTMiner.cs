@@ -130,7 +130,7 @@ namespace TTMiner
 
         private string CreateCommandLine(string username)
         {
-            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings();
+            _apiPort = GetAvaliablePort();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var cmd = $"-a {AlgoName} -url {url} -u {username} -d {_devices} --api-bind 127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;

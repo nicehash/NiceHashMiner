@@ -82,7 +82,8 @@ namespace Phoenix
             return new Phoenix(PluginUUID, _mappedIDs)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
+                MinerReservedApiPorts = _minerReservedApiPorts
             };
         }
 
@@ -101,6 +102,9 @@ namespace Phoenix
 
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
+
+            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
+            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
         }
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
@@ -504,8 +508,10 @@ namespace Phoenix
                 {"GPU_FORCE_64BIT_PTR", "0"}
             },
         };
+
+        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
         #endregion Internal Settings
-        
+
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             // TODO will break

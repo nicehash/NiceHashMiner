@@ -42,6 +42,8 @@ namespace MinerPluginToolkitV1
         public MinerOptionsPackage MinerOptionsPackage { get; set; }
         public MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; }
 
+        public MinerReservedPorts MinerReservedApiPorts { get; set; }
+
         abstract public Task<ApiData> GetMinerStatsDataAsync();
 
         abstract protected void Init();
@@ -70,6 +72,23 @@ namespace MinerPluginToolkitV1
         protected virtual Dictionary<string, string> GetEnvironmentVariables() => null;
 
 
+        public int GetAvaliablePort()
+        {
+            Dictionary<string, List<int>> reservedPorts = null;
+            if (MinerReservedApiPorts != null && MinerReservedApiPorts.UseUserSettings)
+            {
+                reservedPorts = MinerReservedApiPorts.AlgorithmReservedPorts;
+            }
+            var reservedPortsKey = MinerToolkit.GetAlgorithmPortsKey(_miningPairs);
+            if (reservedPorts != null && reservedPorts.ContainsKey(reservedPortsKey) && reservedPorts[reservedPortsKey] != null)
+            {
+                var reservedPortsRange = reservedPorts[reservedPortsKey];
+                var port = FreePortsCheckerManager.GetAvaliablePortInRange(reservedPortsRange); // retrive custom user port
+                if (port > -1) return port;
+            }
+            // if no custom port return a port in the default range
+            return FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
+        }
 
         // TODO check mining pairs
         public void StartMining()

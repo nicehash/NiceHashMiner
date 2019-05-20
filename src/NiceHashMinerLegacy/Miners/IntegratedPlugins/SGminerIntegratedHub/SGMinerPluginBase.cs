@@ -32,7 +32,8 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             return new SGminerIntegratedMiner(PluginUUID, AMDDevice.OpenCLPlatformID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
+                MinerReservedApiPorts = _minerReservedApiPorts
             };
         }
 
@@ -53,6 +54,9 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
+
+            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
+            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
         }
 
         // TODO make sure avemore has the same settings
@@ -70,6 +74,8 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         };
 
         protected static MinerOptionsPackage _minerOptionsPackage = SGMinerBase.DefaultMinerOptionsPackage;
+
+        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
 
         public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
     }

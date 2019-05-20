@@ -51,7 +51,8 @@ namespace ZEnemy
             return new ZEnemy(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
+                MinerReservedApiPorts = _minerReservedApiPorts
             };
         }
 
@@ -70,6 +71,9 @@ namespace ZEnemy
 
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
+
+            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
+            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
         }
 
         private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
@@ -147,6 +151,7 @@ namespace ZEnemy
         };
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
+        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
         #endregion Internal Settings
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()

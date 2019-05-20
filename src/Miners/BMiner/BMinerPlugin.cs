@@ -88,7 +88,8 @@ namespace BMiner
             return new BMiner(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
+                MinerReservedApiPorts = _minerReservedApiPorts
             };
         }
 
@@ -107,6 +108,9 @@ namespace BMiner
 
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
+
+            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
+            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
         }
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
@@ -177,6 +181,7 @@ namespace BMiner
         };
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables{};
+        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
         #endregion Internal settings
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()

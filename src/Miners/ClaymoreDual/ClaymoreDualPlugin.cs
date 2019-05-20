@@ -94,13 +94,14 @@ namespace ClaymoreDual
             return new ClaymoreDual(PluginUUID, _mappedIDs)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables
+                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
+                MinerReservedApiPorts = _minerReservedApiPorts
             };
         }
 
         public bool CanGroup(MiningPair a, MiningPair b)
         {
-            return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
+            return MinerToolkit.IsSameAlgorithmType(a.Algorithm, b.Algorithm);
         }
 
         #region Internal Settings
@@ -113,6 +114,9 @@ namespace ClaymoreDual
 
             var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
             if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
+
+            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
+            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
         }
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
@@ -366,6 +370,7 @@ namespace ClaymoreDual
             }
         };
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
+        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
         #endregion Internal Settings
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)

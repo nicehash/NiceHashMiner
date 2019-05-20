@@ -124,5 +124,21 @@ namespace MinerPluginToolkitV1.Configs
                  return null;
             }
         }
+
+        public static MinerReservedPorts InitMinerReservedPorts(string pluginRoot, MinerReservedPorts minerReservedPorts)
+        {
+            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
+            var minerOptionsPackagePath = Path.Combine(pluginRootIntenrals, "MinerReservedPorts.json");
+            var fileMinerOptionsPackage = ReadFileSettings<MinerReservedPorts>(minerOptionsPackagePath);
+            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
+            {
+                return fileMinerOptionsPackage;
+            }
+            else
+            {
+                WriteFileSettings(minerOptionsPackagePath, minerReservedPorts);
+                return null;
+            }
+        }
     }
 }

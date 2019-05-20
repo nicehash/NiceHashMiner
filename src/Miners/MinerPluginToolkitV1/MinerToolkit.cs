@@ -48,6 +48,12 @@ namespace MinerPluginToolkitV1
             return Tuple.Create(mustIncludeDual.First(), true);
         }
 
+        public static string GetAlgorithmPortsKey(this IEnumerable<MiningPair> mps)
+        {
+            if (mps.Count() == 0) return "";
+            return mps.First().Algorithm.AlgorithmName;
+        }
+
         public static IEnumerable<string> GetDevicesIDsInOrder(this IEnumerable<MiningPair> mps)
         {
             var deviceIds = mps.Select(pair => pair.Device.ID).OrderBy(id => id).Select(id => id.ToString());
@@ -246,6 +252,19 @@ namespace MinerPluginToolkitV1
                 }
             }
             return new BenchmarkResult();
+        }
+
+        public static bool IsSameAlgorithmType(Algorithm a, Algorithm b)
+        {
+            if (a.IDs.Count != b.IDs.Count) return false;
+            if (a.MinerID != b.MinerID) return false;
+
+            for (int i = 0; i < a.IDs.Count; i++)
+            {
+                if (a.IDs[i] != b.IDs[i]) return false;
+            }
+
+            return true;
         }
     }
 }

@@ -172,7 +172,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
         protected override string MiningCreateCommandLine()
         {
             // API port function might be blocking
-            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
+            _apiPort = GetAvaliablePort();
             return CreateCommandLine(_username) + $" --api-listen --api-port={_apiPort}";
         }
 

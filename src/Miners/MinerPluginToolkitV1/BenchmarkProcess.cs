@@ -42,7 +42,7 @@ namespace MinerPluginToolkitV1
                 var foundKey = BenchmarkExceptions.Keys.Where(errorString => e.Data.Contains(errorString)).FirstOrDefault();
                 if (!string.IsNullOrEmpty(foundKey))
                 {
-                    Result.ErrorMessage = BenchmarkExceptions[foundKey];
+                    Result = new BenchmarkResult{ ErrorMessage = BenchmarkExceptions[foundKey] };
                     TryExit();
                     return;
                 }

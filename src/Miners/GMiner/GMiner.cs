@@ -57,7 +57,7 @@ namespace GMinerPlugin
         private string CreateCommandLine(string username)
         {
             // API port function might be blocking
-            _apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
+            _apiPort = GetAvaliablePort();
 
             var algo = AlgorithmName(_algorithmType);
 

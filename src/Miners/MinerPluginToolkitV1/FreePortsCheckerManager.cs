@@ -8,10 +8,12 @@ namespace MinerPluginToolkitV1
 {
     public static class FreePortsCheckerManager
     {
+        public static int ApiBindPortPoolStart { get; set; } = 4000;
+        private static int _portPlusRange => 2300;
+
+        private static object _lock = new object();
         private static int _reserveTimeSeconds => 5;
         private static Dictionary<int, DateTime> _reservedPortsAtTime { get; set; } = new Dictionary<int, DateTime>();
-        public static int ApiBindPortPoolStart { get; set; }  = 4000;
-        private static int _portPlusRange => 2300;
 
         private static bool IsPortFree(int port, IPEndPoint[] tcpOrUdpPorts)
         {
@@ -46,12 +48,15 @@ namespace MinerPluginToolkitV1
             {
                 var tcpFree = IsPortFree(port, tcpIpEndpoints);
                 var udpFree = IsPortFree(port, udpIpEndpoints);
-                var canReserve = CanReservePort(port, now);
-                if (tcpFree && udpFree && canReserve)
+                lock(_lock)
                 {
-                    // reserve port and return
-                    _reservedPortsAtTime[port] = now;
-                    return port;
+                    var canReserve = CanReservePort(port, now);
+                    if (tcpFree && udpFree && canReserve)
+                    {
+                        // reserve port and return
+                        _reservedPortsAtTime[port] = now;
+                        return port;
+                    }
                 }
             }
             return -1; // we can't retrive free port
