@@ -26,11 +26,13 @@ namespace NiceHashMiner
             var (btc, worker, _unused) = ConfigManager.GeneralConfig.GetCredentials();
 
             // TESTNET
-#if TESTNET || TESTNETDEV
+#if (TESTNET || TESTNETDEV)
+#if SEND_STRATUM_WORKERNAME
             if (worker.Length > 0 && BitcoinAddress.ValidateWorkerName(worker))
             {
                 return $"{btc}.{worker}${Globals.RigID}";
             }
+#endif
 
             return $"{btc}${Globals.RigID}";
 #else
