@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MinerPlugin;
+using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Plugin;
 using NiceHashMiner.Switching;
@@ -284,6 +285,21 @@ namespace NiceHashMiner.Stats
                 var algo = dev.GetAlgorithm(minerUUID, apiData.AlgorithmSpeedsPerDevice[dev.Uuid].Select(info => info.AlgorithmType).ToArray());
                 stat.PowerUsageAlgorithmSetting = algo == null ? 0d : algo.PowerUsage;
             }
+
+            //// TODO enable StabilityAnalyzer
+            //// TODO not the best place but here is where we get our per device speeds
+            //var algorithmName = string.Join("+", stat.Speeds.Select(speedPair => Enum.GetName(typeof(AlgorithmType), speedPair.type)));
+            //var algorithmStringID = $"{algorithmName}_{minerUUID}";
+            //var speedID = $"{deviceUuid}-{algorithmStringID}";
+            //var primarySpeed = stat.Speeds.Count > 0 ? stat.Speeds[0].speed : 0d;
+            //var secondarySpeed = stat.Speeds.Count > 1 ? stat.Speeds[1].speed : 0d;
+            //var miningSpeed = new BenchmarkingAnalyzer.MiningSpeed
+            //{
+            //    PrimarySpeed = primarySpeed,
+            //    SecondarySpeed = secondarySpeed,
+            //    Timestamp = DateTime.Now
+            //};
+            //BenchmarkingAnalyzer.UpdateMiningSpeeds(speedID, miningSpeed);
         }
 
         public static void ClearApiDataGroups()
