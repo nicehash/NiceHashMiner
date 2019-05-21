@@ -58,7 +58,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
         /// <summary>
         /// Main Parse function which gets List of Mining Pairs <see cref="MiningPair"/>, List of Miner Options <see cref="MinerOption"/> and UseIfDefaults (bool) as arguments
         /// UseIfDefaults argument is set to true if you would like to parse default values for extra launch parameters
-        /// It returns parsed string ready for miner command
+        /// It returns parsed string ready for adding to miner command
         /// </summary>
         public static string Parse(List<MiningPair> miningPairs, List<MinerOption> options, bool useIfDefaults = false)
         {
