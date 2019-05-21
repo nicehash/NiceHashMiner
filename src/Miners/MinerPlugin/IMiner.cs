@@ -22,10 +22,16 @@ namespace MinerPlugin
         //// enumerable must be read only 
         //IEnumerable<AlgorithmType> CurrentAlgorithms { get; }
 
+        /// <summary>
+        /// Sets mining pairs (<see cref="MiningPair"/>)
+        /// </summary>
         void InitMiningPairs(IEnumerable<MiningPair> miningPairs);
 
 
         // change miningLocation with URL, optional password
+        /// <summary>
+        /// Sets Mining location and username; password is optional
+        /// </summary>
         void InitMiningLocationAndUsername(string miningLocation, string username, string password = "x");
 
         // TODO add optional before and after start cases
@@ -37,6 +43,10 @@ namespace MinerPlugin
         // TODO no dual algorithm support
         // TODO start benchmark
         // TODO when we update to C#7 use tuple values
+
+        /// <summary>
+        /// Returns Benchmark result (<see cref="BenchmarkResult"/>)
+        /// </summary>
         Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard); // IBenchmarker
         // TODO add interface for parallel benchmarking
         //Task StopBenchmark();
@@ -44,7 +54,6 @@ namespace MinerPlugin
         /// <summary>
         /// Returns a task that retrives mining 
         /// </summary>
-        /// <returns></returns>
         Task<ApiData> GetMinerStatsDataAsync();
     }
 }

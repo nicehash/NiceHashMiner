@@ -31,7 +31,6 @@ namespace MinerPlugin
         /// Checks supported devices for the plugin and returns devices and algorithms that can be mined with the plugin.
         /// </summary>
         /// <param name="devices"></param>
-        /// <returns></returns>
         Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices);
 
         /// <summary>
@@ -54,7 +53,6 @@ namespace MinerPlugin
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        /// <returns></returns>
         bool CanGroup(MiningPair a, MiningPair b);
     }
 }

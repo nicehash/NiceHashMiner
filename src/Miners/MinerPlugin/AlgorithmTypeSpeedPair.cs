@@ -2,8 +2,16 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace MinerPlugin
 {
+    /// <summary>
+    /// This class is used to create a pair of AlgorithmType and its speed
+    /// </summary>
     public class AlgorithmTypeSpeedPair
     {
+        /// <summary>
+        /// Constructor that takes AlgorithmType (<see cref="AlgorithmType."/> and speed as arguments and create AlgorithmTypeSpeedPair with it
+        /// </summary>
+        /// <param name="algorithmType"></param>
+        /// <param name="speed"></param>
         public AlgorithmTypeSpeedPair(AlgorithmType algorithmType, double speed)
         {
             AlgorithmType = algorithmType;
