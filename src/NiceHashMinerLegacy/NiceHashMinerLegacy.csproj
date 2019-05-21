@@ -112,8 +112,6 @@
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Program.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Refactoring.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Timers.cs" />
-    <Compile Include="Benchmarking\BenchChecker.cs" />
-    <Compile Include="Benchmarking\BenchDeviationInfo.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
     <Compile Include="Benchmarking\BenchmarkChecker.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
