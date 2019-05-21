@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace MinerPluginToolkitV1.Configs
 {
+    /// <summary>
+    /// MinerReservedPorts class is used to reserve specific ports for each algorithm
+    /// </summary>
     [Serializable]
     public class MinerReservedPorts
     {

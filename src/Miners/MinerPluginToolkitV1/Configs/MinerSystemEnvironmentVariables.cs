@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MinerPluginToolkitV1.Configs
 {
+    /// <summary>
+    /// MinerSystemEnvironmentVariables class is used to define 
+    /// </summary>
     [Serializable]
     public class MinerSystemEnvironmentVariables
     {
