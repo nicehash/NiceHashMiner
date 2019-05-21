@@ -26,8 +26,6 @@ namespace NiceHashMiner.Benchmarking
 
         private const double StabilityThreshold = 0.05;
 
-        private const int IgnoreMinutes = -30;
-
         private const int MaxHistoryTimeRangeInMinutes = 10;
 
         //this is 10 min of speed data comming every 5 seconds
@@ -77,18 +75,21 @@ namespace NiceHashMiner.Benchmarking
         public static bool IsDeviant(string speedID)
         {
             if (!MiningSpeeds.ContainsKey(speedID)) return false;
+            if (MiningSpeeds[speedID].Count() < 5) return false;
 
             var speeds = MiningSpeeds[speedID];
             var primarySpeeds = new List<double>();
             var secondarySpeeds = new List<double>();
+
+            var timestamps = speeds.Select(speedMeassurment => speedMeassurment.Timestamp).ToList();
+
+            var timestampDiffs = timestamps.Zip(timestamps.GetRange(1, timestamps.Count - 1), (first, second) => second.Subtract(first) > TimeSpan.FromMinutes(2));
+            if (timestampDiffs.Any(thresholdExceded => thresholdExceded)) return false;
+
             foreach (var kvp in speeds)
             {
-                // TODO fix this to check internal sub range
-                if(DateTime.Compare(kvp.Timestamp, DateTime.Now.AddMinutes(IgnoreMinutes)) > 0) //if speed is older than 30 minutes we won't use it in calculations
-                {
-                    if (kvp.PrimarySpeed != 0) primarySpeeds.Add(kvp.PrimarySpeed);
-                    if (kvp.SecondarySpeed != 0) secondarySpeeds.Add(kvp.SecondarySpeed);
-                }
+                if (kvp.PrimarySpeed != 0) primarySpeeds.Add(kvp.PrimarySpeed);
+                if (kvp.SecondarySpeed != 0) secondarySpeeds.Add(kvp.SecondarySpeed);
             }
 
             //primary speeds
