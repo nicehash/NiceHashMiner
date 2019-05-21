@@ -1954,6 +1954,16 @@
       "ru": "Поддерживаемые устройства не найдены. Нажмите кнопку «ОК» для получения справки или «Отмена» для продолжения.",
       "zh_cn": "未找到支持的设备。选择“确认”查看帮助或单击“取消”。"
     },
+    "Not all benchmarks finished successfully.": {
+      "bg": "Не всички тестове за скорост приключиха успешно.",
+      "es": "Algunos benchmark han fallado.",
+      "it": "Non tutti i benchmark hanno avuto esito positivo.",
+      "pl": "Nie wszystkie pomiary zostały wykonane poprawnie.",
+      "pt": "Nem todos os benchmarks foram concluídos com sucesso.",
+      "ro": "Nu toate benchmarkurile au fost cu succes.",
+      "ru": "Не все тесты прошли успешно.",
+      "zh_cn": "有个别基准测试失败。"
+    },
     "Not all benchmarks finished successfully. Retry to re-run the benchmark process against unbenchmarked algos or Cancel to disable unbenchmarked algorithms.": {
       "bg": "Не всички тестове за скорост приключиха успешно. Натиснете 'Опитай отново', за да опитате повторно тестване на неизмерените алгоритми или изберете 'Отказ', за да ги деактивирате.",
       "es": "Algunos benchmark han fallado. Intente reiniciar los benchamark de tales algoritmos o pulsee No para cancelar y desactivar los algoritmos que han fallado.",
