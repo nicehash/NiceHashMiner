@@ -2,21 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using MinerPlugin;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common;
 
 namespace MinerPluginToolkitV1.ExtraLaunchParameters
 {
+    /// <summary>
+    /// This class is used to Parse Extra Launch Parameters
+    /// </summary>
     public static class Parser
     {
-
+        /// <summary>
+        /// ParsedMinerOption is used to set parsed value to MinerOption <see cref="MinerOption"/>
+        /// </summary>
         private class ParsedMinerOption
         {
             public MinerOption Option { get; set; }
             public string Value { get; set; } = null;
         }
 
+        /// <summary>
+        /// ParsedDeviceMinerOptions is used to parse all MinerOptions and parameters for each device
+        /// </summary>
         private class ParsedDeviceMinerOptions
         {
             public string DeviceUUID { get; set; }
@@ -24,6 +30,9 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             public List<ParsedMinerOption> ParsedMinerOptions { get; set; }
         }
 
+        /// <summary>
+        /// MergedParsedMinerOption is used to merge parameters and values for devices. They are merged in device order.
+        /// </summary>
         private class MergedParsedMinerOption
         {
             public MinerOption Option { get; set; }
@@ -31,6 +40,9 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             public bool IsDefaults { get; set; }
         }
 
+        /// <summary>
+        /// IsOptionDefaultValue checks if parsed value is same as default value of MinerOption
+        /// </summary>
         private static bool IsOptionDefaultValue(MinerOption option, string value)
         {
             // Check if value is null or empty
@@ -43,6 +55,11 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             return true;
         }
 
+        /// <summary>
+        /// Main Parse function which gets List of Mining Pairs <see cref="MiningPair"/>, List of Miner Options <see cref="MinerOption"/> and UseIfDefaults (bool) as arguments
+        /// UseIfDefaults argument is set to true if you would like to parse default values for extra launch parameters
+        /// It returns parsed string ready for miner command
+        /// </summary>
         public static string Parse(List<MiningPair> miningPairs, List<MinerOption> options, bool useIfDefaults = false)
         {
             if (options == null || options.Count == 0) return "";

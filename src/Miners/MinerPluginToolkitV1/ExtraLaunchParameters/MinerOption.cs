@@ -6,11 +6,15 @@ using System.Text;
 
 namespace MinerPluginToolkitV1.ExtraLaunchParameters
 {
+    /// <summary>
+    /// MinerOption class gives user option to define extra launch parameter
+    /// Definition of properties should not be changed!!!
+    /// </summary>
     [Serializable]
     public class MinerOption
     {
         /// <summary>
-        /// Type member indicates how to parse following values. User should not change definition!
+        /// Type member indicates how to parse following values
         /// </summary>
         /// <example>MinerOptionType.OptionWithMultiParameters</example>
         [JsonConverter(typeof(StringEnumConverter))]
@@ -18,7 +22,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
         public MinerOptionType Type { get; set; }
 
         /// <summary>
-        /// User should not change!
+        /// Id for extra launch parameter
         /// </summary>
         /// <example>"ttminer_intensity"</example>
         [JsonProperty("id")]
