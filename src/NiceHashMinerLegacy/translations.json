@@ -2176,7 +2176,7 @@
       "pl": "Kurs BTC/GH/Dzień",
       "pt": "Taxa BTC/GH/Dia",
       "ro": "Rație BTC/GH/Zi",
-      "ru": "Отн. BTC/GH/дн",
+      "ru": "Отн. BTC/GH/сут",
       "zh_cn": "算力售价 BTC/GH/天"
     },
     "Reduce the number of threads used on each CPU by LessThreads.": {
