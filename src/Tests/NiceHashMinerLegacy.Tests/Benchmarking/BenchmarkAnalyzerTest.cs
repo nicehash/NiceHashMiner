@@ -42,11 +42,11 @@ namespace NiceHashMinerLegacy.Tests.Benchmarking
             //here we test Mining Speeds List with cap size (120)
             for (int i = 0; i < 120; i++)
             {
-                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 1, secondarySpeed = 0 });
+                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 1, SecondarySpeed = 0 });
             }
-            BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 2, secondarySpeed = 2 });
+            BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 2, SecondarySpeed = 2 });
 
-            var exp = new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 2, secondarySpeed = 2 };
+            var exp = new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 2, SecondarySpeed = 2 };
 
             Assert.IsTrue(BenchmarkingAnalyzer.MiningSpeeds["test"].Count == 120);
             Assert.AreEqual(BenchmarkingAnalyzer.MiningSpeeds["test"][119], exp);
@@ -77,7 +77,7 @@ namespace NiceHashMinerLegacy.Tests.Benchmarking
             //only primary speeds
             for (int i = 0; i < 10; i++)
             {
-                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 10.0, secondarySpeed = 0.0, time = DateTime.Now });
+                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 10.0, SecondarySpeed = 0.0, Timestamp = DateTime.Now });
             }
             var ret = BenchmarkingAnalyzer.IsDeviant("test");
             var exp = true;
@@ -86,7 +86,7 @@ namespace NiceHashMinerLegacy.Tests.Benchmarking
             //we add secondary speed
             for (int i = 0; i < 5; i++)
             {
-                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 10.0, secondarySpeed = 5.0, time = DateTime.Now });
+                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 10.0, SecondarySpeed = 5.0, Timestamp = DateTime.Now });
             }
             ret = BenchmarkingAnalyzer.IsDeviant("test");
             exp = true;
@@ -95,11 +95,11 @@ namespace NiceHashMinerLegacy.Tests.Benchmarking
             //secondary speed is not deviant
             for (int i = 0; i < 5; i++)
             {
-                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 10.0, secondarySpeed = 5.0, time = DateTime.Now });
+                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 10.0, SecondarySpeed = 5.0, Timestamp = DateTime.Now });
             }
             for (int i = 0; i < 5; i++)
             {
-                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 10.0, secondarySpeed = 20.0, time = DateTime.Now });
+                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 10.0, SecondarySpeed = 20.0, Timestamp = DateTime.Now });
             }
             ret = BenchmarkingAnalyzer.IsDeviant("test");
             exp = false;
@@ -111,13 +111,13 @@ namespace NiceHashMinerLegacy.Tests.Benchmarking
             //primary speed is not deviant
             for (int i = 0; i < 5; i++)
             {
-                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 15.0, secondarySpeed = 10.0, time = DateTime.Now });
+                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 15.0, SecondarySpeed = 10.0, Timestamp = DateTime.Now });
             }
             for (int i = 0; i < 5; i++)
             {
-                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 9.0, secondarySpeed = 10.0, time = DateTime.Now });
+                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 9.0, SecondarySpeed = 10.0, Timestamp = DateTime.Now });
             }
-            BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 30.0, secondarySpeed = 10.0, time = DateTime.Now });
+            BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 30.0, SecondarySpeed = 10.0, Timestamp = DateTime.Now });
 
             ret = BenchmarkingAnalyzer.IsDeviant("test");
             exp = false;
@@ -127,15 +127,15 @@ namespace NiceHashMinerLegacy.Tests.Benchmarking
             BenchmarkingAnalyzer.MiningSpeeds.Clear();
             for (int i = 0; i < 5; i++)
             {
-                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 15.0, secondarySpeed = 0.0, time = DateTime.Now.AddHours(-2) });
+                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 15.0, SecondarySpeed = 0.0, Timestamp = DateTime.Now.AddHours(-2) });
             }
             for (int i = 0; i < 5; i++)
             {
-                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 30.0, secondarySpeed = 0.0, time = DateTime.Now });
+                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 30.0, SecondarySpeed = 0.0, Timestamp = DateTime.Now });
             }
             for (int i = 0; i < 5; i++)
             {
-                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { primarySpeed = 31.0, secondarySpeed = 0.0, time = DateTime.Now });
+                BenchmarkingAnalyzer.UpdateMiningSpeeds("test", new BenchmarkingAnalyzer.MiningSpeed { PrimarySpeed = 31.0, SecondarySpeed = 0.0, Timestamp = DateTime.Now });
             }
 
             ret = BenchmarkingAnalyzer.IsDeviant("test");

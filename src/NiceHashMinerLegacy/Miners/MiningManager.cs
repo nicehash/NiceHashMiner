@@ -90,12 +90,31 @@ namespace NiceHashMiner.Miners
                     groupMiner.End();
                 }
                 _runningMiners.Clear();
+
+                //// TODO enable StabilityAnalyzer
+                //// Speed stability analyzer was here or deviant algo checker
+                //foreach (var miningDev in _miningDevices)
+                //{
+                //    var deviceUuid = miningDev.Device.Uuid;
+                //    foreach (var algorithm in miningDev.Algorithms)
+                //    {
+                //        var speedID = $"{deviceUuid}-{algorithm.AlgorithmStringID}";
+                //        var isDeviant = BenchmarkingAnalyzer.IsDeviant(speedID);
+                //        if (isDeviant)
+                //        {
+                //            var stableSpeeds = BenchmarkingAnalyzer.GetStableSpeeds(speedID);
+                //            if (stableSpeeds != null)
+                //            {
+                //                algorithm.Speeds = stableSpeeds;
+                //            }
+                //        }
+                //    }
+                //}
             }
 
             _switchingManager?.Stop();
             ApplicationStateManager.ClearRatesAll();
             //_internetCheckTimer?.Stop();
-            // Speed stability anamlyzer was here or deviant algo checker
         }
 
         #endregion Start/Stop
@@ -112,6 +131,21 @@ namespace NiceHashMiner.Miners
                 if (_miningDevices.Count > 0)
                 {
                     GroupSetupUtils.AvarageSpeeds(_miningDevices);
+                    //// TODO enable StabilityAnalyzer
+                    //// set benchmarked speeds for BenchmarkingAnalyzer
+                    //foreach (var miningDev in _miningDevices)
+                    //{
+                    //    var deviceUuid = miningDev.Device.Uuid;
+                    //    foreach (var algorithm in miningDev.Algorithms)
+                    //    {
+                    //        var speedID = $"{deviceUuid}-{algorithm.AlgorithmStringID}";
+                    //        var benchmarkSpeed = new BenchmarkingAnalyzer.BenchmarkSpeed {
+                    //            PrimarySpeed = algorithm.BenchmarkSpeed,
+                    //            SecondarySpeed = algorithm.SecondaryAveragedSpeed,
+                    //        };
+                    //        BenchmarkingAnalyzer.SetBenchmarkSpeeds(speedID, benchmarkSpeed);
+                    //    }
+                    //}
                 }
             }
             _switchingManager?.ForceUpdate();

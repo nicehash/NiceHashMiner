@@ -9,15 +9,15 @@ namespace NiceHashMiner.Benchmarking
 
         public struct BenchmarkSpeed
         {
-            public double primarySpeed { get; set; }
-            public double secondarySpeed { get; set; }
+            public double PrimarySpeed { get; set; }
+            public double SecondarySpeed { get; set; }
         }
 
         public struct MiningSpeed
         {
-            public double primarySpeed { get; set; }
-            public double secondarySpeed { get; set; }
-            public DateTime time { get; set; } //TODO maybe not needed
+            public double PrimarySpeed { get; set; }
+            public double SecondarySpeed { get; set; }
+            public DateTime Timestamp { get; set; }
         }
 
         public static Dictionary<string, BenchmarkSpeed> BenchmarkedSpeeds = new Dictionary<string, BenchmarkSpeed>();
@@ -26,32 +26,46 @@ namespace NiceHashMiner.Benchmarking
 
         private const double StabilityThreshold = 0.05;
 
+        private const int IgnoreMinutes = -30;
+
+        private const int MaxHistoryTimeRangeInMinutes = 10;
+
+        //this is 10 min of speed data comming every 5 seconds
+        private static int MaxHistory => (MaxHistoryTimeRangeInMinutes * 60) / Configs.ConfigManager.GeneralConfig.MinerAPIQueryInterval;
+
+        // SpeedID => {DeviceUUID}-{AlgorithmUUID}
+
         public static void SetBenchmarkSpeeds(string speedID, BenchmarkSpeed speeds)
         {
-            if (BenchmarkedSpeeds.Where(t => t.Key == speedID).Count() == 0)
-            {
-                BenchmarkedSpeeds.Add(speedID, speeds);
-            }
-            else
-            {
-                BenchmarkedSpeeds[speedID] = speeds;
-            }
+            BenchmarkedSpeeds[speedID] = speeds;
         }
 
         public static void UpdateMiningSpeeds(string speedID, MiningSpeed measurements)
         {
-            if (MiningSpeeds.Where(t => t.Key == speedID).Count() == 0)
+            if (!MiningSpeeds.ContainsKey(speedID))
             {
-                MiningSpeeds.Add(speedID, new List<MiningSpeed>() { measurements });
+                MiningSpeeds[speedID] = new List<MiningSpeed>();
             }
-            else
+
+            if (MiningSpeeds[speedID].Count() == MaxHistory) 
             {
-                if(MiningSpeeds[speedID].Count() == 120) //this is 10 min of speed data comming every 5 seconds
-                {
-                    MiningSpeeds[speedID].RemoveAt(0);
-                }
-                MiningSpeeds[speedID].Add(measurements);
+                MiningSpeeds[speedID].RemoveAt(0);
             }
+            MiningSpeeds[speedID].Add(measurements);
+        }
+
+        public static List<double> GetStableSpeeds(string speedID)
+        {
+            // TODO this could be problematic
+            if (!MiningSpeeds.ContainsKey(speedID)) return null;
+
+            var speeds = MiningSpeeds[speedID];
+            var primarySpeeds = speeds.Select(miningSpeed => miningSpeed.PrimarySpeed).ToList();
+            var secondarySpeeds = speeds.Select(miningSpeed => miningSpeed.SecondarySpeed).ToList();
+            var averagedPrimarySpeed = CalcAverageSpeed(primarySpeeds);
+            var averagedSecondarySpeeds = CalcAverageSpeed(secondarySpeeds);
+
+            return new List<double> { averagedPrimarySpeed, averagedSecondarySpeeds };
         }
 
         public void Clear()
@@ -62,15 +76,18 @@ namespace NiceHashMiner.Benchmarking
 
         public static bool IsDeviant(string speedID)
         {
+            if (!MiningSpeeds.ContainsKey(speedID)) return false;
+
             var speeds = MiningSpeeds[speedID];
             var primarySpeeds = new List<double>();
             var secondarySpeeds = new List<double>();
             foreach (var kvp in speeds)
             {
-                if(DateTime.Compare(kvp.time, DateTime.Now.AddMinutes(-30)) > 0) //if speed is older than 30 minutes we won't use it in calculations
+                // TODO fix this to check internal sub range
+                if(DateTime.Compare(kvp.Timestamp, DateTime.Now.AddMinutes(IgnoreMinutes)) > 0) //if speed is older than 30 minutes we won't use it in calculations
                 {
-                    if (kvp.primarySpeed != 0) primarySpeeds.Add(kvp.primarySpeed);
-                    if (kvp.secondarySpeed != 0) secondarySpeeds.Add(kvp.secondarySpeed);
+                    if (kvp.PrimarySpeed != 0) primarySpeeds.Add(kvp.PrimarySpeed);
+                    if (kvp.SecondarySpeed != 0) secondarySpeeds.Add(kvp.SecondarySpeed);
                 }
             }
 
@@ -89,6 +106,8 @@ namespace NiceHashMiner.Benchmarking
 
         public static double CalcAverageSpeed(List<double> speeds)
         {
+            if (speeds == null || speeds.Count() == 0) return 0d;
+
             var avg = 0.0;
             for(int i=0; i<speeds.Count(); i++)
             {

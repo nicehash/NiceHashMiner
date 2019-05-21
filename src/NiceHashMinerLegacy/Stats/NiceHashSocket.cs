@@ -118,6 +118,15 @@ namespace NiceHashMiner.Stats
         // Don't call SendData on UI threads, since it will block the thread for a bit if a reconnect is needed
         public bool SendData(string data, bool recurs = false)
         {
+            //TESTNET
+#if TESTNET || TESTNETDEV
+            // skip sending if no btc set send only login
+            if (BitcoinAddress.ValidateBitcoinAddress(_login.btc) == false && data.Contains("{\"method\":\"login\"") == false)
+            {
+                NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "Skipping SendData no BTC address");
+                return false;
+            }
+#endif
             try
             {
                 // Make sure connection is open
