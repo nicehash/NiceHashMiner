@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NiceHashMinerLegacy.Common;
 using MinerPlugin;
+using NiceHashMiner.Plugin;
+using NiceHashMiner.Utils;
 
 namespace MinerSmokeTest
 {
@@ -41,9 +43,11 @@ namespace MinerSmokeTest
             return rowData;
         }
 
-        private static async Task QueryDevices()
+        private static async Task InitNhmlDevsPlugins()
         {
-            await ComputeDeviceManager.QueryDevicesAsync(null, true);
+            await Task.Run(() => WindowsManagementObjectSearcherSmoketestWorkaround.Init());
+            await ComputeDeviceManager.QueryDevicesAsync(null, false);
+            MinerPluginsManager.LoadMinerPlugins();
         }
 
         private async void FormShown(object sender, EventArgs e)
@@ -51,7 +55,7 @@ namespace MinerSmokeTest
             ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
             try
             {
-                await ComputeDeviceManager.QueryDevicesAsync(null, false);
+                await InitNhmlDevsPlugins();
             }
             catch (Exception ex)
             {
@@ -182,12 +186,11 @@ namespace MinerSmokeTest
 
                         await Task.Delay(miningTime);
                         tbx_info.Text += $"Stopping" + Environment.NewLine;
-                        var checkedButton = gb_stopMiningBy.Controls.OfType<RadioButton>()
-                                      .FirstOrDefault(r => r.Checked);
-                        if(checkedButton.Name == "rb_endMining")
+                        if(rb_endMining.Checked)
                         {
                             miner.End();
-                        } else
+                        }
+                        else // rb_stopMining.Checked
                         {
                             miner.Stop();
                         }

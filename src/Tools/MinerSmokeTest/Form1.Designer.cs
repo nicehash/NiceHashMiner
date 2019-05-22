@@ -287,13 +287,13 @@
             this.rb_endMining.Name = "rb_endMining";
             this.rb_endMining.Size = new System.Drawing.Size(44, 17);
             this.rb_endMining.TabIndex = 28;
-            this.rb_endMining.TabStop = true;
             this.rb_endMining.Text = "End";
             this.rb_endMining.UseVisualStyleBackColor = true;
             // 
             // rb_stopMining
             // 
             this.rb_stopMining.AutoSize = true;
+            this.rb_stopMining.Checked = true;
             this.rb_stopMining.Location = new System.Drawing.Point(6, 43);
             this.rb_stopMining.Name = "rb_stopMining";
             this.rb_stopMining.Size = new System.Drawing.Size(47, 17);

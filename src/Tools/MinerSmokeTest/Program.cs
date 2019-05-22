@@ -26,6 +26,7 @@ namespace MinerSmokeTest
             var path = Path.GetDirectoryName(Application.ExecutablePath);
             if (path != null)
             {
+                Paths.Root = path;
                 Environment.CurrentDirectory = path;
                 pathSet = true;
             }
