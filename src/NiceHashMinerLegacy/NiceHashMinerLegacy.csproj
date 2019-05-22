@@ -103,6 +103,7 @@
     <Compile Include="3rdParty\NVAPI.cs" />
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithms\Algorithm.cs" />
+    <Compile Include="Algorithms\AlgorithmStatus.cs" />
     <Compile Include="Algorithms\PluginAlgorithm.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.DataVizualizers.cs" />

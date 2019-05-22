@@ -244,7 +244,7 @@ namespace MinerPluginToolkitV1
                     return new BenchmarkResult { ErrorMessage = "Cancelling per user request." };
                 }
 
-                if (ret != null && ret.HasNonZeroSpeeds()) return ret;
+                if (ret != null && ret.HasNonZeroSpeeds() || string.IsNullOrEmpty(ret.ErrorMessage) == false) return ret;
                 if (timeout.IsCancellationRequested)
                 {
                     Logger.Info("MinerToolkit", "Benchmark process timed out");

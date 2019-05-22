@@ -100,23 +100,9 @@ namespace NiceHashMiner.Forms.Components
             {
                 var lvi = new ListViewItem();
 
-                var name = "";
-                var minerName = "";
-                var payingRatio = "";
-                if (alg is PluginAlgorithm plugAlg)
-                {
-                    var plugin = MinerPluginsManager.GetPluginWithUuid(plugAlg.BaseAlgo.MinerID);
-                    var isIntegrated = plugin is IntegratedPlugin;
-                    name = $"{alg.AlgorithmName}";
-                    minerName = plugin.Name + (isIntegrated ? "" : "(PLUGIN)");
-                    payingRatio = alg.CurPayingRatio;
-                }
-                else
-                {
-                    // TODO this case should never happen
-                    name = $"{alg.AlgorithmName} ({alg.MinerBaseTypeName})";
-                    payingRatio = alg.CurPayingRatio;
-                }
+                var name = alg.AlgorithmName;
+                var minerName = alg.MinerBaseTypeName;
+                var payingRatio = alg.CurPayingRatio;
 
                 lvi.SubItems.Add(name);
 

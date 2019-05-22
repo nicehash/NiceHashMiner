@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NiceHashMiner.Miners.IntegratedPlugins;
+using NiceHashMiner.Plugin;
 using NiceHashMinerLegacy.Common.Enums;
 using AlgorithmCommon = NiceHashMinerLegacy.Common.Algorithm;
 
@@ -36,6 +38,19 @@ namespace NiceHashMiner.Algorithms
             set
             {
                 if (BaseAlgo != null) BaseAlgo.ExtraLaunchParameters = value;
+            }
+        }
+
+        public override string MinerBaseTypeName
+        {
+            get
+            {
+                if (BaseAlgo == null) return "";
+                var plugin = MinerPluginsManager.GetPluginWithUuid(BaseAlgo.MinerID);
+                if (plugin == null) return "";
+                var isIntegrated = plugin is IntegratedPlugin;
+                var minerName = plugin.Name + (isIntegrated ? "" : "(PLUGIN)");
+                return minerName;
             }
         }
 

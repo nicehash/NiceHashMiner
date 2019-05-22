@@ -82,7 +82,6 @@ namespace NiceHashMiner.Forms.Components
                 groupBoxSelectedAlgorithmSettings.Text = string.Format(
                     Translations.Tr("Selected Algorithm: {0}"),
                     $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})");
-                ;
 
                 field_PowerUsage.EntryText = ParseDoubleDefault(algorithm.PowerUsage);
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
