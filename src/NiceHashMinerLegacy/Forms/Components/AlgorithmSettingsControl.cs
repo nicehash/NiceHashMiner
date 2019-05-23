@@ -169,7 +169,8 @@ namespace NiceHashMiner.Forms.Components
             // update lvi speed
             if (_currentlySelectedLvi != null)
             {
-                _currentlySelectedLvi.SubItems[2].Text = speedString;
+                var speedIndex = (int)AlgorithmsListView.Column.SPEEDS;
+                _currentlySelectedLvi.SubItems[speedIndex].Text = speedString;
             }
         }
 

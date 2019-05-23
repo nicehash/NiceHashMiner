@@ -12,12 +12,15 @@ namespace NiceHashMiner.Forms.Components
 {
     public partial class AlgorithmsListView : UserControl
     {
-        private const int ENABLED = 0;
-        private const int ALGORITHM = 1;
-        private const int MINER = 2;
-        private const int SPEEDS = 3;
-        private const int RATIO = 4;
-        private const int RATE = 5;
+        public enum Column : int
+        {
+            ENABLED = 0,
+            ALGORITHM,
+            MINER,
+            SPEEDS,
+            RATIO,
+            RATE,
+        }
 
         public interface IAlgorithmsListView
         {
@@ -127,7 +130,7 @@ namespace NiceHashMiner.Forms.Components
                 foreach (ListViewItem lvi in listViewAlgorithms.Items)
                 {
                     var algo = lvi.Tag as Algorithm;
-                    lvi.SubItems[SPEEDS].Text = algo?.BenchmarkSpeedString();
+                    lvi.SubItems[(int)Column.SPEEDS].Text = algo?.BenchmarkSpeedString();
                     _listItemCheckColorSetter.LviSetColor(lvi);
                 }
 
@@ -186,10 +189,10 @@ namespace NiceHashMiner.Forms.Components
                         if (lvi.Tag is Algorithm algo && algo.AlgorithmStringID == algorithm.AlgorithmStringID)
                         {
                             // TODO handle numbers
-                            lvi.SubItems[SPEEDS].Text = algorithm.BenchmarkSpeedString();
-                            lvi.SubItems[RATE].Text = algorithm.CurPayingRate;
+                            lvi.SubItems[(int)Column.SPEEDS].Text = algorithm.BenchmarkSpeedString();
+                            lvi.SubItems[(int)Column.RATE].Text = algorithm.CurPayingRate;
                             // TODO handle DUAL first + second paying ratio X+Y
-                            lvi.SubItems[RATIO].Text = algorithm.CurPayingRatio;
+                            lvi.SubItems[(int)Column.RATIO].Text = algorithm.CurPayingRatio;
 
                             _listItemCheckColorSetter.LviSetColor(lvi);
                             break;
