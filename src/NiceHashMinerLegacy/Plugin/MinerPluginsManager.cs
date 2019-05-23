@@ -36,6 +36,7 @@ namespace NiceHashMiner.Plugin
 #else
         public static bool IntegratedPluginsOnly => true;
 #endif
+
         public static List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
         {
             // open source
@@ -93,7 +94,10 @@ namespace NiceHashMiner.Plugin
                         var bd = pair.Key;
                         var algos = pair.Value;
                         var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
-                        var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a, plugin.Version)).ToList();
+                        var pluginAlgos = algos
+                        .Where(a => SupportedAlgorithmsFilter.IsSupported(a.IDs))
+                        .Select(a => new PluginAlgorithm(pluginName, a, plugin.Version))
+                        .ToList();
                         dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                     }
                     continue;
@@ -108,7 +112,10 @@ namespace NiceHashMiner.Plugin
                     var bd = pair.Key;
                     var algos = pair.Value;
                     var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
-                    var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a, plugin.Version)).ToList();
+                    var pluginAlgos = algos
+                        .Where(a => SupportedAlgorithmsFilter.IsSupported(a.IDs))
+                        .Select(a => new PluginAlgorithm(pluginName, a, plugin.Version))
+                        .ToList();
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                 }
             }
@@ -242,7 +249,10 @@ namespace NiceHashMiner.Plugin
                     var bd = pair.Key;
                     var algos = pair.Value;
                     var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
-                    var pluginAlgos = algos.Select(a => new PluginAlgorithm(pluginName, a, plugin.Version)).ToList();
+                    var pluginAlgos = algos
+                        .Where(a => SupportedAlgorithmsFilter.IsSupported(a.IDs))
+                        .Select(a => new PluginAlgorithm(pluginName, a, plugin.Version))
+                        .ToList();
                     dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
                 }
             }
