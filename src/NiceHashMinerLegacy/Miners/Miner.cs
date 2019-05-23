@@ -46,7 +46,7 @@ namespace NiceHashMiner
         //private bool _needsRestart;
 
         CancellationTokenSource EndMiner { get; } = new CancellationTokenSource();
-        public bool _isEnded { get; private set; }
+        protected bool _isEnded { get; private set; }
 
         public bool IsUpdatingApi { get; protected set; } = false;
 
@@ -104,6 +104,7 @@ namespace NiceHashMiner
             try
             {
                 if (EndMiner.IsCancellationRequested) return;
+                _isEnded = true;
                 EndMiner.Cancel();
             }
             catch (Exception e)
@@ -112,12 +113,8 @@ namespace NiceHashMiner
             }
             finally
             {
-                if (!_isEnded)
-                {
-                    Logger.Info(MinerTag(), $"Setting End and Stopping");
-                    _isEnded = true;
-                    Stop();
-                }
+                Logger.Info(MinerTag(), $"Setting End and Stopping");
+                Stop();
             }
         }
 

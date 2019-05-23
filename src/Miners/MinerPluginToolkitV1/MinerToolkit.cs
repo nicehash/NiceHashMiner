@@ -24,9 +24,10 @@ namespace MinerPluginToolkitV1
         /// </summary>
         public static string DemoUserBTC => DemoUser.BTC;
 
-        public static bool HideMiningWindows { set; get; }
-        public static bool MinimizeMiningWindows { set; get; }
+        public static bool HideMiningWindows { set; get; } = false;
+        public static bool MinimizeMiningWindows { set; get; } = false;
 
+        public static int MinerRestartDelayMS { set; get; } = 500;
 
         public static Tuple<AlgorithmType, bool> GetAlgorithmSingleType(this IEnumerable<MiningPair> mps)
         {
