@@ -16,6 +16,9 @@ namespace MinerPluginToolkitV1.Configs
         [JsonProperty("use_user_settings")]
         public bool UseUserSettings { get; set; } = false;
 
+        /// <summary>
+        /// AlgorithmReservedPorts is a Dictionary with AlgorithmName for key and list of ports for value
+        /// </summary>
         [JsonProperty("algorithm_reserved_ports")]
         public Dictionary<string, List<int>> AlgorithmReservedPorts { get; set; } = null;
     }
