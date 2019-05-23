@@ -10,6 +10,15 @@ namespace MinerPluginToolkitV1.Configs
     /// <summary>
     /// MinerReservedPorts class is used to reserve specific ports for each algorithm
     /// </summary>
+    /// <example>
+    /// {
+    ///     "use_user_settings": "true",
+    ///     "algorithm_reserved_ports": {
+    ///         "Beam": [4001, 4002],
+    ///         "CuckooCycle": [4005, 4010]
+    ///      }
+    /// }
+    /// </example>
     [Serializable]
     public class MinerReservedPorts
     {

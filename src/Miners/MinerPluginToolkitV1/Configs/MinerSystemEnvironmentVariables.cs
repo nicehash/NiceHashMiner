@@ -6,8 +6,18 @@ using System.Text;
 namespace MinerPluginToolkitV1.Configs
 {
     /// <summary>
-    /// MinerSystemEnvironmentVariables class is used to define 
+    /// MinerSystemEnvironmentVariables class is used to define system environment variables in miner plugin
     /// </summary>
+    /// <example>            
+    /// DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
+    /// {
+    ///     {"GPU_MAX_ALLOC_PERCENT", "100"},
+    ///     {"GPU_USE_SYNC_OBJECTS", "1"},
+    ///     {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+    ///     {"GPU_MAX_HEAP_SIZE", "100"},
+    ///     {"GPU_FORCE_64BIT_PTR", "1"}
+    /// }
+    /// </example>
     [Serializable]
     public class MinerSystemEnvironmentVariables
     {

@@ -9,8 +9,16 @@ using System.Text;
 
 namespace MinerPluginToolkitV1.Configs
 {
+    /// <summary>
+    /// InternalConfigs is the main class for configs residing in internals folder
+    /// </summary>
     public static class InternalConfigs
     {
+        // All internal configs are JSON based
+
+        /// <summary>
+        /// settings for json serialization
+        /// </summary>
         private static JsonSerializerSettings _jsonSettings = new JsonSerializerSettings
         {
                 NullValueHandling = NullValueHandling.Ignore,
@@ -18,7 +26,10 @@ namespace MinerPluginToolkitV1.Configs
                 Culture = CultureInfo.InvariantCulture
         };
 
-        // all internal configs are JSON based 
+        /// <summary>
+        /// ReadFileSettings method is used to deserialize and read settings from file. It returns deserialized object.
+        /// <typeparam name="T"></typeparam> represents type of deserialized object
+        /// <param name="filePath"></param> represents file path to json file
         public static T ReadFileSettings<T>(string filePath) where T : class
         {
             if (File.Exists(filePath) == false) return null;
@@ -45,7 +56,12 @@ namespace MinerPluginToolkitV1.Configs
             return null;
         }
 
-        // all internal configs are JSON based 
+        /// <summary>
+        /// WriteFileSettings is used to serialize and write settings to file. It returns true if saving was successfull and false otherwise.
+        /// </summary>
+        /// <typeparam name="T"></typeparam> represents type of object that will be serialized
+        /// <param name="filePath"></param> represents file path to json file
+        /// <param name="settingsValue"></param> represent object that will be serialized
         public static bool WriteFileSettings<T>(string filePath, T settingsValue) where T : class
         {
             if (settingsValue == null) return false;
@@ -68,6 +84,11 @@ namespace MinerPluginToolkitV1.Configs
             }
         }
 
+        /// <summary>
+        /// WriteFileSettings is used to save text settings to file. It returns true if saving was successfull and false otherwise.
+        /// </summary>
+        /// <param name="filePath"></param> represents file path to json file
+        /// <param name="settingsText"></param> represents text that will be saved to file as it is
         public static bool WriteFileSettings(string filePath, string settingsText)
         {
             if (settingsText == null) return false;
