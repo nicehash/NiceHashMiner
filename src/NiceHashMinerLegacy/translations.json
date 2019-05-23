@@ -743,7 +743,7 @@
       "pl": "Sprawdź statystyki online!",
       "pt": "Verificar stats online!",
       "ro": "Verifică statistici online!",
-      "ru": "Проверить статистику!",
+      "ru": "Открыть статистику на сайте!",
       "zh_cn": "查看挖矿状态"
     },
     "Checking AMD OpenCL GPUs": {
@@ -968,7 +968,7 @@
       "zh_cn": "禁用Windows错误报告"
     },
     "Disabled": {
-      "ru": "Отключён"
+      "ru": "Отключено"
     },
     "Disabled Devices": {
       "bg": "Деактивирани устройства",
@@ -977,7 +977,7 @@
       "pl": "Wyłączone urządzenia",
       "pt": "Dispositivos Desativados",
       "ro": "Dispozitive Dezactivate",
-      "ru": "Отключ. устройства",
+      "ru": "Отключённые устройства",
       "zh_cn": "已禁用设备"
     },
     "Disclaimer on usage of 3rd party software": {
@@ -1140,7 +1140,7 @@
       "pl": "Błąd! Wprowadź prawidłową wartość dla LessThreads.",
       "pt": "Erro! Digite um número válido para LessThreads.",
       "ro": "Eroare! Introduceți un număr valid pentru LessThreads.",
-      "ru": "Ошибка! Введите, пожалуйста, допустимое значение для уменьшителя количества потоков.",
+      "ru": "Ошибка! Введите, пожалуйста, допустимое значение для уменьшителя числа потоков.",
       "zh_cn": "错误！请为LessThreads输入有效的数值。"
     },
     "Ethminer API Port AMD": {
@@ -1307,7 +1307,7 @@
       "pl": "Tempo łączne:",
       "pt": "Taxa global:",
       "ro": "Rată globală:",
-      "ru": "Ставка:",
+      "ru": "Общая ставка:",
       "zh_cn": "全局收益:"
     },
     "Group": {
@@ -1538,7 +1538,7 @@
       "pl": "Nieprawidłowa liczba dla LessThreads!",
       "pt": "Número inválido para LessThreads!",
       "ro": "Număr invalid pentru LessThreads!",
-      "ru": "Неверное значение уменьшителя кол-ва потоков!",
+      "ru": "Неверное значение уменьшителя числа потоков!",
       "zh_cn": "LessThreads数值无效！"
     },
     "Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long).": {
@@ -1569,7 +1569,7 @@
       "bg": "Свободни нишки",
       "es": "Núcleos",
       "ro": "Mai puține Threaduri",
-      "ru": "Уменьшитель кол-ва потоков",
+      "ru": "Уменьшитель числа потоков",
       "zh_cn": "Less Threads"
     },
     "LessThreads greater than number of threads per CPU. Ignore setting.": {
@@ -1579,7 +1579,7 @@
       "pl": "LessThreads większy niż liczba wątków na CPU. Ignoruję.",
       "pt": "LessThreads maior que o número de threads por CPU. Ignorando a configuração.",
       "ro": "LessThreads mai mare decât numărul de threaduri al CPUului. Setare ignorată.",
-      "ru": "Уменьшитель кол-ва потоков больше, чем число ядер в CPU. Майнинг на CPU будет отключён.",
+      "ru": "Уменьшитель числа потоков больше, чем число ядер в CPU. Майнинг на CPU будет отключён.",
       "zh_cn": "LessThreads值大于每处理器上已分配的线程数。该设置将被忽略。"
     },
     "Link": {
@@ -1598,7 +1598,7 @@
       "pl": "Proszę czekać, będzie kopanie...",
       "pt": "Carregando, por favor aguarde...",
       "ro": "Încărcare, vă rugăm așteptați...",
-      "ru": "Загрузка, подождите, пожалуйста…",
+      "ru": "Загрузка, пожалуйста, подождите…",
       "zh_cn": "加载中，请稍后..."
     },
     "Localization:": {
@@ -1954,6 +1954,16 @@
       "ru": "Поддерживаемые устройства не найдены. Нажмите кнопку «ОК» для получения справки или «Отмена» для продолжения.",
       "zh_cn": "未找到支持的设备。选择“确认”查看帮助或单击“取消”。"
     },
+    "Not all benchmarks finished successfully.": {
+      "bg": "Не всички тестове за скорост приключиха успешно.",
+      "es": "Algunos benchmark han fallado.",
+      "it": "Non tutti i benchmark hanno avuto esito positivo.",
+      "pl": "Nie wszystkie pomiary zostały wykonane poprawnie.",
+      "pt": "Nem todos os benchmarks foram concluídos com sucesso.",
+      "ro": "Nu toate benchmarkurile au fost cu succes.",
+      "ru": "Не все тесты прошли успешно.",
+      "zh_cn": "有个别基准测试失败。"
+    },
     "Not all benchmarks finished successfully. Retry to re-run the benchmark process against unbenchmarked algos or Cancel to disable unbenchmarked algorithms.": {
       "bg": "Не всички тестове за скорост приключиха успешно. Натиснете 'Опитай отново', за да опитате повторно тестване на неизмерените алгоритми или изберете 'Отказ', за да ги деактивирате.",
       "es": "Algunos benchmark han fallado. Intente reiniciar los benchamark de tales algoritmos o pulsee No para cancelar y desactivar los algoritmos que han fallado.",
@@ -2176,7 +2186,7 @@
       "pl": "Kurs BTC/GH/Dzień",
       "pt": "Taxa BTC/GH/Dia",
       "ro": "Rație BTC/GH/Zi",
-      "ru": "Отн. BTC/GH/дн",
+      "ru": "Отн. BTC/GH/сут",
       "zh_cn": "算力售价 BTC/GH/天"
     },
     "Reduce the number of threads used on each CPU by LessThreads.": {
@@ -2618,7 +2628,7 @@
       "pl": "Czas maksymalny [s]:",
       "pt": "Mudar Máximo [s]:",
       "ro": "Comută Maxim [s]:",
-      "ru": "Макс. переключение [s]:",
+      "ru": "Макс. переключение [с]:",
       "zh_cn": "切换最大值 [s]:"
     },
     "Switch Minimum AMD [s]": {
@@ -2654,7 +2664,7 @@
       "pl": "Czas przełączania [s]:",
       "pt": "Mudar Mínimo [s]:",
       "ro": "Comută Minim [s]:",
-      "ru": "Мин. переключение [s]:",
+      "ru": "Мин. переключение [с]:",
       "zh_cn": "开关最小 [s]:"
     },
     "Switch Profitability Threshold:": {
@@ -3198,7 +3208,7 @@
       "pl": "Nie wprowadziłeś adresu bitcoin. NiceHash Miner Legacy będzie pracować w trybie DEMO. Możesz testować program i obserwować, jak dużo możesz zarobić za pomocą komputera. Kontynuować w trybie DEMO?\n\nINFORMACJA: NIC NIE ZARABIASZ W TRYBIE DEMO!",
       "pt": "Você não colocou um endereço bitcoin. NiceHash Miner Legacy vai começar a minerar no modo DEMO. No modo DEMO você pode testar o minerador e poderá ver quando pode ganhar usando seu computador. Você gostaria de continuar no modo de DEMONSTRAÇÃO?\n\nAVISO: VOCÊ NÃO VAI GANHAR NADA DURANTE O MODO DE DEMNOSNTRAÇÃO!!",
       "ro": "Nu ați introdus o adresă bitcoin. NiceHash Miner Legacy va rula în mod DEMO. În mod DEMO, puteți testa minerii și vedea cât puteți câștiga cu acest calculator. Doriți să continuați în mod DEMO?\n\nATENȚIE: NU VEȚI CÂȘTIGA NIMIC ÎN MOD DEMO!",
-      "ru": "Вы не ввели Биткоин-адрес. NiceHash Miner Legacy начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nДИСКЛАМАЦИЯ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!",
+      "ru": "Вы не ввели Биткоин-адрес. NiceHash Miner Legacy начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nВНИМАНИЕ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!",
       "zh_cn": "您并没有指定比特币提现地址。NiceHash Miner Legacy将进入演示模式。您可以在演示模式下测试您的计算机及其挖矿收益。是否继续进入演示模式？\n\n注意，在演示模式下您将不会获发任何挖矿所得！"
     },
     "You have not run benchmark for device {0}. Without benchmarking first, NiceHash Miner Legacy will not be able to switch to the most profitable algorithm. To continue mining, choose Yes. If you wish to benchmark first, choose No and click on the benchmark button.": {
