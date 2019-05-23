@@ -143,6 +143,18 @@ namespace MinerSmokeTest
 
         private async void btn_startTest_Click(object sender, EventArgs e)
         {
+            if (radioButtonTest01.Checked)
+            {
+                await Test01();
+            }
+            else /*if(radioButtonTest02.Checked)*/
+            {
+                await Test02();
+            }
+        }
+
+        private async Task Test01()
+        {
             //var miningTime = TimeSpan.FromSeconds(30);
             int minM, minS, minMS;
             int.TryParse(tbx_minTimeM.Text, out minM);
@@ -167,7 +179,8 @@ namespace MinerSmokeTest
                 foreach (var algorithm in enabledAlgorithms)
                 {
                     step++;
-                    try {
+                    try
+                    {
                         var pAlgo = algorithm as PluginAlgorithm;
                         var pair = new List<MiningPair> { new MiningPair { Device = device.PluginDevice, Algorithm = pAlgo.BaseAlgo } };
                         var miner = NiceHashMiner.Miners.MinerFactory.CreateMinerForMining(pair, "");
@@ -186,7 +199,7 @@ namespace MinerSmokeTest
 
                         await Task.Delay(miningTime);
                         tbx_info.Text += $"Stopping" + Environment.NewLine;
-                        if(rb_endMining.Checked)
+                        if (rb_endMining.Checked)
                         {
                             miner.End();
                         }
@@ -198,12 +211,114 @@ namespace MinerSmokeTest
                         tbx_info.Text += $"Delay after stop {stopDelayTime.ToString()}" + Environment.NewLine;
                         await Task.Delay(stopDelayTime);
                         tbx_info.Text += $"DONE" + Environment.NewLine + Environment.NewLine;
-                    } catch (Exception ex)
+                    }
+                    catch (Exception ex)
                     {
                         tbx_info.Text += $"Exception {ex}" + Environment.NewLine;
                     }
-                } 
+                }
             }
+        }
+
+        private async Task Test02()
+        {
+            //var miningTime = TimeSpan.FromSeconds(30);
+            int minM, minS, minMS;
+            int.TryParse(tbx_minTimeM.Text, out minM);
+            int.TryParse(tbx_minTimeS.Text, out minS);
+            int.TryParse(tbx_minTimeMS.Text, out minMS);
+            int minTime = (60 * minM * 1000) + (1000 * minS) + minMS;
+            var miningTime = TimeSpan.FromMilliseconds(minTime);
+
+            int delayM, delayS, delayMS;
+            int.TryParse(tbx_stopDelayM.Text, out delayM);
+            int.TryParse(tbx_stopDelayS.Text, out delayS);
+            int.TryParse(tbx_stopDelayMS.Text, out delayMS);
+            int delayTime = (60 * delayM * 1000) + (1000 * delayS) + delayMS;
+            var stopDelayTime = TimeSpan.FromMilliseconds(delayTime); //TimeSpan.FromSeconds(1);
+            var enabledDevs = AvailableDevices.Devices.Where(dev => dev.Enabled);
+
+            var testSteps = enabledDevs.Select(dev => dev.AlgorithmSettings.Where(algo => algo.Enabled).Count()).Sum();
+            var step = 0;
+            foreach (var device in enabledDevs)
+            {
+                var enabledAlgorithms = device.AlgorithmSettings.Where(algo => algo.Enabled);
+                foreach (var algorithm in enabledAlgorithms)
+                {
+                    step++;
+                    try
+                    {
+                        var pAlgo = algorithm as PluginAlgorithm;
+                        var pair = new List<MiningPair> { new MiningPair { Device = device.PluginDevice, Algorithm = pAlgo.BaseAlgo } };
+                        var miner = NiceHashMiner.Miners.MinerFactory.CreateMinerForMining(pair, "");
+                        //var miningSetup = new MiningSetup(pair);
+                        //miner.InitMiningSetup(miningSetup);
+
+                        tbx_info.Text += $"TESTING: {Environment.NewLine}";
+                        tbx_info.Text += $"Device: {device.GetFullName()} {Environment.NewLine}";
+                        tbx_info.Text += $"Miner base: {algorithm.MinerBaseTypeName}" + Environment.NewLine;
+                        tbx_info.Text += $"Algorithm: {algorithm.AlgorithmName}" + Environment.NewLine;
+
+                        label1.Text = $"{step} / {testSteps}";
+
+                        tbx_info.Text += $"Starting miner #1" + Environment.NewLine;
+                        miner.Start("eu", DemoUser.BTC);
+                        tbx_info.Text += $"Starting miner #2" + Environment.NewLine;
+                        miner.Start("eu", DemoUser.BTC);
+                        tbx_info.Text += $"Starting miner #3" + Environment.NewLine;
+                        miner.Start("eu", DemoUser.BTC);
+
+                        await Task.Delay(miningTime);
+                        tbx_info.Text += $"Stopping miner #1" + Environment.NewLine;
+                        miner.Stop();
+                        tbx_info.Text += $"Stopping miner #2" + Environment.NewLine;
+                        miner.Stop();
+                        tbx_info.Text += $"Stopping miner #3" + Environment.NewLine;
+                        miner.Stop();
+
+
+                        tbx_info.Text += $"Starting miner #4" + Environment.NewLine;
+                        miner.Start("eu", DemoUser.BTC);
+                        await Task.Delay(10 * 1000);
+                        tbx_info.Text += $"Stopping miner #4" + Environment.NewLine;
+                        miner.Stop();
+                        tbx_info.Text += $"Starting miner #5" + Environment.NewLine;
+                        miner.Start("eu", DemoUser.BTC);
+                        await Task.Delay(5 * 1000);
+                        tbx_info.Text += $"Stopping miner #5" + Environment.NewLine;
+                        miner.Stop();
+                        tbx_info.Text += $"Starting miner #6" + Environment.NewLine;
+                        miner.Start("eu", DemoUser.BTC);
+                        await Task.Delay(1000);
+                        tbx_info.Text += $"Stopping miner #6" + Environment.NewLine;
+                        miner.Stop();
+                        tbx_info.Text += $"Starting miner #7" + Environment.NewLine;
+                        miner.Start("eu", DemoUser.BTC);
+                        tbx_info.Text += $"Stopping miner #7" + Environment.NewLine;
+                        miner.Stop();
+
+
+                        tbx_info.Text += $"Starting miner #8" + Environment.NewLine;
+                        miner.Start("eu", DemoUser.BTC);
+                        tbx_info.Text += $"End miner #1" + Environment.NewLine;
+                        miner.End();
+
+                        tbx_info.Text += $"Starting miner #9 (MUST NOT START)" + Environment.NewLine;
+                        miner.Start("eu", DemoUser.BTC);
+
+                        tbx_info.Text += $"DONE" + Environment.NewLine + Environment.NewLine;
+                    }
+                    catch (Exception ex)
+                    {
+                        tbx_info.Text += $"Exception {ex}" + Environment.NewLine;
+                    }
+                }
+            }
+        }
+
+        private void Gb_stopMiningBy_Enter(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -55,9 +55,13 @@
             this.rb_endMining = new System.Windows.Forms.RadioButton();
             this.rb_stopMining = new System.Windows.Forms.RadioButton();
             this.gb_stopMiningBy = new System.Windows.Forms.GroupBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButtonTest01 = new System.Windows.Forms.RadioButton();
+            this.radioButtonTest02 = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_devices)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgv_algo)).BeginInit();
             this.gb_stopMiningBy.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tbx_info
@@ -312,12 +316,48 @@
             this.gb_stopMiningBy.TabIndex = 31;
             this.gb_stopMiningBy.TabStop = false;
             this.gb_stopMiningBy.Text = "Stop by";
+            this.gb_stopMiningBy.Enter += new System.EventHandler(this.Gb_stopMiningBy_Enter);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButtonTest02);
+            this.groupBox1.Controls.Add(this.radioButtonTest01);
+            this.groupBox1.Location = new System.Drawing.Point(961, 14);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(200, 100);
+            this.groupBox1.TabIndex = 32;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Tests";
+            // 
+            // radioButtonTest01
+            // 
+            this.radioButtonTest01.AutoSize = true;
+            this.radioButtonTest01.Checked = true;
+            this.radioButtonTest01.Location = new System.Drawing.Point(7, 20);
+            this.radioButtonTest01.Name = "radioButtonTest01";
+            this.radioButtonTest01.Size = new System.Drawing.Size(58, 17);
+            this.radioButtonTest01.TabIndex = 0;
+            this.radioButtonTest01.TabStop = true;
+            this.radioButtonTest01.Text = "Test01";
+            this.radioButtonTest01.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonTest02
+            // 
+            this.radioButtonTest02.AutoSize = true;
+            this.radioButtonTest02.Location = new System.Drawing.Point(7, 42);
+            this.radioButtonTest02.Name = "radioButtonTest02";
+            this.radioButtonTest02.Size = new System.Drawing.Size(58, 17);
+            this.radioButtonTest02.TabIndex = 1;
+            this.radioButtonTest02.TabStop = true;
+            this.radioButtonTest02.Text = "Test02";
+            this.radioButtonTest02.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1203, 450);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.gb_stopMiningBy);
             this.Controls.Add(this.tbx_stopDelayMS);
             this.Controls.Add(this.tbx_stopDelayS);
@@ -344,6 +384,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dgv_algo)).EndInit();
             this.gb_stopMiningBy.ResumeLayout(false);
             this.gb_stopMiningBy.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -377,6 +419,9 @@
         private System.Windows.Forms.RadioButton rb_endMining;
         private System.Windows.Forms.RadioButton rb_stopMining;
         private System.Windows.Forms.GroupBox gb_stopMiningBy;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.RadioButton radioButtonTest02;
+        private System.Windows.Forms.RadioButton radioButtonTest01;
     }
 }
 
