@@ -45,10 +45,10 @@ namespace NiceHashMiner.Forms.Components
                 Translations.Tr("Power Usage (W):"),
                 Translations.Tr("The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0."));
             fieldBoxBenchmarkSpeed.InitLocale(toolTip1,
-                Translations.Tr("Benchmark Speed (H/s):"),
+                Translations.Tr("Benchmark Speed") + ":",
                 Translations.Tr("Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm."));
             secondaryFieldBoxBenchmarkSpeed.InitLocale(toolTip1,
-                Translations.Tr("Secondary Benchmark Speed (H/s):"),
+                Translations.Tr("Secondary Benchmark Speed") + ":",
                 Translations.Tr("Speed for the secondary algorithm when using dual algo mining."));
             groupBoxExtraLaunchParameters.Text = Translations.Tr("Extra Launch Parameters");
             toolTip1.SetToolTip(groupBoxExtraLaunchParameters,
@@ -82,18 +82,22 @@ namespace NiceHashMiner.Forms.Components
                 groupBoxSelectedAlgorithmSettings.Text = string.Format(
                     Translations.Tr("Selected Algorithm: {0}"),
                     $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})");
-                ;
 
                 field_PowerUsage.EntryText = ParseDoubleDefault(algorithm.PowerUsage);
+                var unit = Helpers.GetUnitForAlgorithmType(algorithm.IDs[0]);
+                fieldBoxBenchmarkSpeed.LabelText = Translations.Tr("Benchmark Speed") + $" ({unit}):";
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
                 if (algorithm.IsDual) 
                 {
+                    var secondaryUnit = Helpers.GetUnitForAlgorithmType(algorithm.IDs[0]);
+                    secondaryFieldBoxBenchmarkSpeed.LabelText = Translations.Tr("Secondary Benchmark Speed") + $" ({secondaryUnit}):";
                     secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.SecondaryBenchmarkSpeed);
                     secondaryFieldBoxBenchmarkSpeed.Enabled = true;
                 } 
                 else 
                 {
+                    secondaryFieldBoxBenchmarkSpeed.LabelText = Translations.Tr("Secondary Benchmark Speed") + ":";
                     secondaryFieldBoxBenchmarkSpeed.Enabled = false;
                 }
                 
@@ -165,7 +169,8 @@ namespace NiceHashMiner.Forms.Components
             // update lvi speed
             if (_currentlySelectedLvi != null)
             {
-                _currentlySelectedLvi.SubItems[2].Text = speedString;
+                var speedIndex = (int)AlgorithmsListView.Column.SPEEDS;
+                _currentlySelectedLvi.SubItems[speedIndex].Text = speedString;
             }
         }
 

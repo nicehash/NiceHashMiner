@@ -49,7 +49,18 @@ namespace NiceHashMiner.Configs.Data
 
         public double SwitchProfitabilityThreshold = 0.05; // percent
         public int MinerAPIQueryInterval = 5;
-        public int MinerRestartDelayMS = 500;
+
+
+        private int _minerRestartDelayMS = 500;
+        public int MinerRestartDelayMS
+        {
+            get => _minerRestartDelayMS;
+            set
+            {
+                _minerRestartDelayMS = value;
+                MinerPluginToolkitV1.MinerToolkit.MinerRestartDelayMS = value;
+            }
+        }
 
         // TODO deprecate this
         public DeviceDetectionConfig DeviceDetection = new DeviceDetectionConfig();

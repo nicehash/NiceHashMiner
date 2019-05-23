@@ -18,11 +18,11 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// Friendly display name for this algorithm
         /// </summary>
-        public abstract string AlgorithmName { get;  }
+        public abstract string AlgorithmName { get; }
         /// <summary>
         /// Friendly name for miner type
         /// </summary>
-        public readonly string MinerBaseTypeName;
+        public abstract string MinerBaseTypeName { get; }
         /// <summary>
         /// Friendly name for this algorithm/miner combo
         /// </summary>
