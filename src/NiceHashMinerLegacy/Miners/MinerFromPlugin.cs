@@ -22,12 +22,12 @@ namespace NiceHashMiner.Miners
     public class MinerFromPlugin : Miner
     {
         private readonly IMinerPlugin _plugin;
-        private IMiner _miner;
+        private readonly IMiner _miner;
 
         public MinerFromPlugin(string pluginUUID, List<MiningPair> miningPairs, string groupKey) : base(pluginUUID, miningPairs, groupKey)
         {
             _plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
-            //_miner = _plugin.CreateMiner();
+            _miner = _plugin.CreateMiner();
         }
 
         public override async Task<ApiData> GetSummaryAsync()
@@ -70,7 +70,7 @@ namespace NiceHashMiner.Miners
         // TODO this thing 
         public override void Start(string miningLocation, string username)
         {
-            _miner = _plugin.CreateMiner();
+            if (_isEnded) return;
             _miner.InitMiningLocationAndUsername(miningLocation, username);
             _miner.InitMiningPairs(MiningPairs);
             EthlargementIntegratedPlugin.Instance.Start(MiningPairs);
@@ -80,16 +80,15 @@ namespace NiceHashMiner.Miners
 
         public override void Stop()
         {
-            if (_miner == null) return;
             // TODO thing about this case, closing opening on switching
             // EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
             MiningStats.RemoveGroup(MiningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             IsRunning = false;
             _miner.StopMining();
-            if (_miner is IDisposable disposableMiner)
-            {
-                disposableMiner.Dispose();
-            }
+            //if (_miner is IDisposable disposableMiner)
+            //{
+            //    disposableMiner.Dispose();
+            //}
         }
     }
 }
