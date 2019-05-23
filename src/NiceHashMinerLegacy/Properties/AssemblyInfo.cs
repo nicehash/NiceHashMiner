@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NiceHashMinerLegacy")]
-[assembly: AssemblyDescription("NiceHashMinerLegacy is simple to use mining tool")]
+[assembly: AssemblyTitle("NiceHashMiner")]
+[assembly: AssemblyDescription("NiceHashMiner is simple to use mining tool")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("NiceHash")]
-[assembly: AssemblyProduct("NiceHashMinerLegacy")]
-[assembly: AssemblyCopyright("NiceHash ©  2019")]
+[assembly: AssemblyCompany("H-BIT, d.o.o")]
+[assembly: AssemblyProduct("NiceHashMiner")]
+[assembly: AssemblyCopyright("H-BIT, d.o.o ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
