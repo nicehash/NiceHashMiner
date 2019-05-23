@@ -211,7 +211,8 @@ namespace GMinerPlugin
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            // TODO will break
+            if (Shared.MappedCudaIds.Count == 0) return;
+            // TODO will block
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;

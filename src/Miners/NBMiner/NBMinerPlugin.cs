@@ -170,6 +170,7 @@ namespace NBMiner
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
+            if (Shared.MappedCudaIds.Count == 0) return;
             // TODO will break
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
