@@ -102,7 +102,7 @@ namespace NiceHashMiner
 
         public static string FormatSpeedOutput(double speed, AlgorithmType algorithmType, string separator = " ")
         {
-            string ret;
+            string ret = "";
 
             if (speed < 1000)
                 ret = (speed).ToString("F3", CultureInfo.InvariantCulture) + separator;
@@ -113,24 +113,24 @@ namespace NiceHashMiner
             else
                 ret = (speed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + separator + "G";
 
-            string unit = "";
+            var unit = GetUnitForAlgorithmType(algorithmType);        
+            return ret + unit;
+        }
+
+        public static string GetUnitForAlgorithmType(AlgorithmType algorithmType)
+        {
             switch (algorithmType)
             {
                 //case AlgorithmType.Equihash:
                 case AlgorithmType.ZHash:
                 case AlgorithmType.Beam:
-                    unit = "Sol/s";
-                    break;
+                    return "Sol/s";
                 case AlgorithmType.GrinCuckaroo29:
                 case AlgorithmType.GrinCuckatoo31:
-                    unit = "G/s";
-                    break;
+                    return "G/s";
                 default:
-                    unit = "H/s";
-                    break;
+                    return "H/s";
             }
-
-            return ret + unit;
         }
 
         public static string GetNameFromAlgorithmTypes(params AlgorithmType[] ids)

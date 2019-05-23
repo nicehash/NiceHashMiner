@@ -512,15 +512,15 @@
       "ru": "Бенчмарк выбранных непротестированных алгоритмов",
       "zh_cn": "仅测试未经测试的启用算法"
     },
-    "Benchmark Speed (H/s):": {
-      "bg": "Тествана скорост (H/s):",
-      "es": "Velocidad del benchmark (H/s):",
-      "it": "Velocità Benchmark (H/s):",
-      "pl": "Zmierzone tempo (H/s):",
-      "pt": "Velocidade de Benchmark (H/s):",
-      "ro": "Viteză Benchmark (H/s):",
-      "ru": "Скорость бенчмарка (H/s):",
-      "zh_cn": "测得速率 (H/s):"
+    "Benchmark Speed": {
+      "bg": "Тествана скорост",
+      "es": "Velocidad del benchmark",
+      "it": "Velocità Benchmark",
+      "pl": "Zmierzone tempo",
+      "pt": "Velocidade de Benchmark",
+      "ro": "Viteză Benchmark",
+      "ru": "Скорость бенчмарка",
+      "zh_cn": "测得速率"
     },
     "Benchmark Time Limits": {
       "bg": "Лимити на времената за тестване",
@@ -2253,15 +2253,15 @@
       "ru": "Сохранение конфигурации…",
       "zh_cn": "正在保存设置..."
     },
-    "Secondary Benchmark Speed (H/s):": {
-      "bg": "Вторична тествана скорост (H/s):",
-      "es": "Velocidad de referencia secundaria (H/s):",
-      "it": "Velocità Benchmark Secondaria (H/s):",
-      "pl": "Zmierzone tempo dodatkowe (H/s):",
-      "pt": "Velocidade de Benchmark Secundária (H/s):",
-      "ro": "Viteză Secundară Benchmark (H/s):",
-      "ru": "Средняя контрольная скорость (H/s):",
-      "zh_cn": "第二测得速率 (H/s):"
+    "Secondary Benchmark Speed": {
+      "bg": "Вторична тествана скорост",
+      "es": "Velocidad de referencia secundaria",
+      "it": "Velocità Benchmark Secondaria",
+      "pl": "Zmierzone tempo dodatkowe",
+      "pt": "Velocidade de Benchmark Secundária",
+      "ro": "Viteză Secundară Benchmark",
+      "ru": "Средняя контрольная скорость",
+      "zh_cn": "第二测得速率"
     },
     "Secondary Speed": {
       "ru": "Доп. скорость:"

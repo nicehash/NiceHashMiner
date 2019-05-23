@@ -76,7 +76,7 @@
             this.fieldBoxBenchmarkSpeed.AutoSize = true;
             this.fieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
             this.fieldBoxBenchmarkSpeed.EntryText = "";
-            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed (H/s):";
+            this.fieldBoxBenchmarkSpeed.LabelText = "Benchmark Speed";
             this.fieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 56);
             this.fieldBoxBenchmarkSpeed.Name = "fieldBoxBenchmarkSpeed";
             this.fieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(220, 47);
@@ -87,7 +87,7 @@
             this.secondaryFieldBoxBenchmarkSpeed.AutoSize = true;
             this.secondaryFieldBoxBenchmarkSpeed.BackColor = System.Drawing.Color.Transparent;
             this.secondaryFieldBoxBenchmarkSpeed.EntryText = "";
-            this.secondaryFieldBoxBenchmarkSpeed.LabelText = "Secondary Benchmark Speed (H/s):";
+            this.secondaryFieldBoxBenchmarkSpeed.LabelText = "Secondary Benchmark Speed";
             this.secondaryFieldBoxBenchmarkSpeed.Location = new System.Drawing.Point(3, 109);
             this.secondaryFieldBoxBenchmarkSpeed.Name = "secondaryFieldBoxBenchmarkSpeed";
             this.secondaryFieldBoxBenchmarkSpeed.Size = new System.Drawing.Size(220, 47);
