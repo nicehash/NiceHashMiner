@@ -75,7 +75,7 @@ namespace NiceHashMiner.Benchmarking
         public static bool IsDeviant(string speedID)
         {
             if (!MiningSpeeds.ContainsKey(speedID)) return false;
-            if (MiningSpeeds[speedID].Count() < 5) return false;
+            if (MiningSpeeds[speedID].Count() < 36) return false;
 
             var speeds = MiningSpeeds[speedID];
             var primarySpeeds = new List<double>();
