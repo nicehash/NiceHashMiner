@@ -116,7 +116,7 @@ namespace NiceHashMiner
             // check if files are mising
             if (!MinersExistanceChecker.IsMinersBinsInit())
             {
-                var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue."),
+                var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Click Yes to reinitialize NiceHash Miner to try to fix this issue."),
                     Tr("Warning!"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
@@ -153,7 +153,7 @@ namespace NiceHashMiner
                 // check if files are mising
                 if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit())
                 {
-                    var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue."),
+                    var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Click Yes to reinitialize NiceHash Miner to try to fix this issue."),
                         Tr("Warning!"),
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     if (result == DialogResult.Yes)
@@ -204,7 +204,7 @@ namespace NiceHashMiner
             {
                 MessageBox.Show(string.Format(
                         Tr(
-                            "We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner Legacy to work correctly you should upgrade your drivers to recommended {1} or newer. If you still see this warning after updating the driver please uninstall all your Nvidia drivers and make a clean install of the latest official driver from http://www.nvidia.com."),
+                            "We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner to work correctly you should upgrade your drivers to recommended {1} or newer. If you still see this warning after updating the driver please uninstall all your Nvidia drivers and make a clean install of the latest official driver from http://www.nvidia.com."),
                         query.MinDriverString,
                         query.RecommendedDriverString),
                     Tr("Nvidia Recomended driver"),
@@ -235,14 +235,14 @@ namespace NiceHashMiner
 
             if (query.FailedRamCheck)
             {
-                MessageBox.Show(Tr("NiceHash Miner Legacy recommends increasing virtual memory size so that all algorithms would work fine."),
+                MessageBox.Show(Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine."),
                     Tr("Warning!"),
                     MessageBoxButtons.OK);
             }
 
             if (query.FailedVidControllerStatus)
             {
-                var msg = Tr("We have detected a Video Controller that is not working properly. NiceHash Miner Legacy will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
+                var msg = Tr("We have detected a Video Controller that is not working properly. NiceHash Miner will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
                 msg += '\n' + query.FailedVidControllerInfo;
                 MessageBox.Show(msg,
                     Tr("Warning! Video Controller not operating correctly"),
@@ -251,7 +251,7 @@ namespace NiceHashMiner
 
             //if (query.FailedCpuCount)
             //{
-            //    MessageBox.Show(Tr("NiceHash Miner Legacy does not support more than 64 virtual cores. CPU mining will be disabled."),
+            //    MessageBox.Show(Tr("NiceHash Miner does not support more than 64 virtual cores. CPU mining will be disabled."),
             //        Tr("Warning!"),
             //        MessageBoxButtons.OK, MessageBoxIcon.Warning);
             //}

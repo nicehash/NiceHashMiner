@@ -378,15 +378,15 @@
       "ru": "Разрешить несколько экземпляров",
       "zh_cn": "允许多实例运行"
     },
-    "Amount of time (in milliseconds) that NiceHash Miner Legacy will wait before restarting the miner.": {
-      "bg": "Интервал време (в милисекунди) с който NiceHash Miner Legacy ще забави рестартирането на изчислителната програма.",
-      "es": "Cantidad de tiempo (en milisegundos) que NiceHash Miner Legacy esperará antes de reiniciar el minero.",
-      "it": "Quantità di tempo (in millisecondi) che NiceHash Miner Legacy aspetterà prima di riavviare il miner.",
-      "pl": "Czas (w milisekundach) przez który NiceHash Miner Legacy czeka przed przełączeniem górnika.",
-      "pt": "Quantidade de tempo (em milissegundos) que NiceHash Miner Legacy aguardará antes de reiniciar o minerador.",
-      "ro": "Timp (în milisecunde) în care NiceHash Miner Legacy așteaptă înainte de repornirea minerului.",
-      "ru": "Количество времени в миллисекундах, которое NiceHash Miner Legacy будет ждать перед перезапуском майнера.",
-      "zh_cn": "切换算法时，NiceHash Miner Legacy自中止到重启挖矿程序之间等待的延迟（毫秒）。"
+    "Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner.": {
+      "bg": "Интервал време (в милисекунди) с който NiceHash Miner ще забави рестартирането на изчислителната програма.",
+      "es": "Cantidad de tiempo (en milisegundos) que NiceHash Miner esperará antes de reiniciar el minero.",
+      "it": "Quantità di tempo (in millisecondi) che NiceHash Miner aspetterà prima di riavviare il miner.",
+      "pl": "Czas (w milisekundach) przez który NiceHash Miner czeka przed przełączeniem górnika.",
+      "pt": "Quantidade de tempo (em milissegundos) que NiceHash Miner aguardará antes de reiniciar o minerador.",
+      "ro": "Timp (în milisecunde) în care NiceHash Miner așteaptă înainte de repornirea minerului.",
+      "ru": "Количество времени в миллисекундах, которое NiceHash Miner будет ждать перед перезапуском майнера.",
+      "zh_cn": "切换算法时，NiceHash Miner自中止到重启挖矿程序之间等待的延迟（毫秒）。"
     },
     "Amount of time (in seconds) for {0} benchmarking the {1}": {
       "bg": "Интервал време (в секунди) за който {0} да измери {1}",
@@ -398,24 +398,24 @@
       "ru": "Количество времени в секундах для {0} бенчмарка {1}",
       "zh_cn": "设备 {0} 执行算法 {1} 基准测试的时间（秒）"
     },
-    "Any devices that are checked will be skipped by NiceHash Miner Legacy (only for this algorithm).": {
-      "bg": "Всички маркирани устройства ще бъдат игнорирани от NiceHash Miner Legacy (само за този алгоритъм).",
-      "es": "Todos los dispositivos marcados serán ignorados por NiceHash Miner Legacy (solo para este algoritmo).",
-      "it": "Tutti i dispositivi che sono spuntati verranno saltati da NiceHash Miner Legacy (solo per questo algoritmo).",
-      "pl": "Wszystkie zaznaczone urządzenia będą pominijane przez  NiceHash Miner Legacy (tylko ten algorytm).",
-      "pt": "Quaisquer dispositivos que estejam marcados serão ignorados pelo NiceHash Miner Legacy (somente para este algoritmo).",
-      "ro": "Orice dispozitive marcate vor fi ignorate de NiceHash Miner Legacy (doar pentru acest algoritm).",
-      "ru": "Отмеченные устройства будут пропущены NiceHash Miner Legacy (только для этого алгоритма).",
-      "zh_cn": "所有被选中的设备将会被NiceHash Miner Legacy忽略（仅针对此算法）。"
+    "Any devices that are checked will be skipped by NiceHash Miner (only for this algorithm).": {
+      "bg": "Всички маркирани устройства ще бъдат игнорирани от NiceHash Miner (само за този алгоритъм).",
+      "es": "Todos los dispositivos marcados serán ignorados por NiceHash Miner (solo para este algoritmo).",
+      "it": "Tutti i dispositivi che sono spuntati verranno saltati da NiceHash Miner (solo per questo algoritmo).",
+      "pl": "Wszystkie zaznaczone urządzenia będą pominijane przez  NiceHash Miner (tylko ten algorytm).",
+      "pt": "Quaisquer dispositivos que estejam marcados serão ignorados pelo NiceHash Miner (somente para este algoritmo).",
+      "ro": "Orice dispozitive marcate vor fi ignorate de NiceHash Miner (doar pentru acest algoritm).",
+      "ru": "Отмеченные устройства будут пропущены NiceHash Miner (только для этого алгоритма).",
+      "zh_cn": "所有被选中的设备将会被NiceHash Miner忽略（仅针对此算法）。"
     },
-    "Any devices that are checked will be skipped by NiceHash Miner Legacy.": {
-      "bg": "Всички маркирани устройства ще бъдат игнорирани от NiceHash Miner Legacy.",
-      "es": "NiceHash Miner Legacy ignorará los dispositivos marcados.",
-      "it": "Tutti i dispositivi selezionati saranno saltati da NiceHash Miner Legacy.",
-      "pl": "Wszystkie zaznaczone tu urządzenia będą pomijane przez NiceHash Miner Legacy.",
-      "ro": "Orice dispozitive bifate vor fi ignorate de NiceHash Miner Legacy.",
-      "ru": "Отмеченные устройства будут пропущены в NiceHash Miner Legacy.",
-      "zh_cn": "所有被选中的设备将会被NiceHash Miner Legacy忽略。"
+    "Any devices that are checked will be skipped by NiceHash Miner.": {
+      "bg": "Всички маркирани устройства ще бъдат игнорирани от NiceHash Miner.",
+      "es": "NiceHash Miner ignorará los dispositivos marcados.",
+      "it": "Tutti i dispositivi selezionati saranno saltati da NiceHash Miner.",
+      "pl": "Wszystkie zaznaczone tu urządzenia będą pomijane przez NiceHash Miner.",
+      "ro": "Orice dispozitive bifate vor fi ignorate de NiceHash Miner.",
+      "ru": "Отмеченные устройства будут пропущены в NiceHash Miner.",
+      "zh_cn": "所有被选中的设备将会被NiceHash Miner忽略。"
     },
     "Are you sure you want to copy settings from {0} to {1}?": {
       "bg": "Сигурни ли сте, че искате да копирате параметри от {0} към {1}?",
@@ -427,15 +427,15 @@
       "ru": "Вы уверены, что хотите скопировать настройки из {0} в {1}?",
       "zh_cn": "是否确认从{0}复制配置至{1}?"
     },
-    "Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner Legacy automatically.": {
-      "bg": "Сигурни ли сте, че искате да върнете всички настройки към стойностите по подразбиране? Това ще рестартира автоматично NiceHash Miner Legacy.",
-      "es": "¿Está seguro de que quiere establecer la configuración predeterminada? NiceHash Miner Legacy se reiniciará automáticamente.",
-      "it": "Sei sicuro di voler tornare alle impostazioni di default? Questo riavvierà NiceHash Miner Legacy in automatico.",
-      "pl": "Jeśteś pewny, że chcesz zresetować wszystkie ustawienia? To spowoduje automatyczny restart NiceHash Miner Legacy",
-      "pt": "Tem certeza de que deseja configurar tudo de volta aos padrões? Isso irá reiniciar o NiceHash Miner Legacy automaticamente.",
-      "ro": "Sunteți sigur că doriți revenirea la setările implicite? Acest lucru o să repornească NiceHash Miner Legacy automat.",
-      "ru": "Вы уверены, что хотите вернуть все настройки по умолчанию? Это перезапустит NiceHash Miner Legacy.",
-      "zh_cn": "您确定要恢复所有设置为默认吗？NiceHash Miner Legacy将会自动重启。"
+    "Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner automatically.": {
+      "bg": "Сигурни ли сте, че искате да върнете всички настройки към стойностите по подразбиране? Това ще рестартира автоматично NiceHash Miner.",
+      "es": "¿Está seguro de que quiere establecer la configuración predeterminada? NiceHash Miner se reiniciará automáticamente.",
+      "it": "Sei sicuro di voler tornare alle impostazioni di default? Questo riavvierà NiceHash Miner in automatico.",
+      "pl": "Jeśteś pewny, że chcesz zresetować wszystkie ustawienia? To spowoduje automatyczny restart NiceHash Miner",
+      "pt": "Tem certeza de que deseja configurar tudo de volta aos padrões? Isso irá reiniciar o NiceHash Miner automaticamente.",
+      "ro": "Sunteți sigur că doriți revenirea la setările implicite? Acest lucru o să repornească NiceHash Miner automat.",
+      "ru": "Вы уверены, что хотите вернуть все настройки по умолчанию? Это перезапустит NiceHash Miner.",
+      "zh_cn": "您确定要恢复所有设置为默认吗？NiceHash Miner将会自动重启。"
     },
     "Automatically start mining when computer is idle and stop mining when computer is being used.": {
       "bg": "Автоматично стартиране на изчисленията, когато компютърът не се използва; спиране на работата, когато компютърът се използва за други задачи.",
@@ -628,15 +628,15 @@
       "ru": "МАЙНИНГ СЕЙЧАС НЕ РАБОТАЕТ. НЕТ ПОДКЛЮЧЕНИЯ К ИНТЕРНЕТУ.",
       "zh_cn": "警告：挖矿已停止。未连接至互联网。"
     },
-    "Changes the default language for NiceHash Miner Legacy.": {
-      "bg": "Смяна на езика на интерфейса на NiceHash Miner Legacy.",
-      "es": "Cambia el lenguaje predeterminado de NiceHash Miner Legacy.",
-      "it": "Cambia la lingua di default per NiceHash Miner Legacy.",
-      "pl": "Ustawia domyślny język dla NiceHash Miner Legacy.",
-      "pt": "Muda o idioma do NiceHash Miner Legacy.",
-      "ro": "Schimbă limba implicită pentru NiceHash Miner Legacy.",
-      "ru": "Изменяет язык по умолчанию для NiceHash Miner Legacy.",
-      "zh_cn": "更改NiceHash Miner Legacy的默认界面语言"
+    "Changes the default language for NiceHash Miner.": {
+      "bg": "Смяна на езика на интерфейса на NiceHash Miner.",
+      "es": "Cambia el lenguaje predeterminado de NiceHash Miner.",
+      "it": "Cambia la lingua di default per NiceHash Miner.",
+      "pl": "Ustawia domyślny język dla NiceHash Miner.",
+      "pt": "Muda o idioma do NiceHash Miner.",
+      "ro": "Schimbă limba implicită pentru NiceHash Miner.",
+      "ru": "Изменяет язык по умолчанию для NiceHash Miner.",
+      "zh_cn": "更改NiceHash Miner的默认界面语言"
     },
     "Changing all supported NVIDIA GPUs to P0 state...": {
       "bg": "Установяване на всички поддържани NVIDIA графични карти в режим P0...",
@@ -1415,37 +1415,37 @@
       "ru": "Простаивать, когда нет интернета",
       "zh_cn": "断网时停止挖矿"
     },
-    "If enabled NiceHash Miner Legacy will stop mining without internet connectivity": {
-      "bg": "Ако тази опция е активна, NiceHash Miner Legacy ще прекрати изчисленията при липса на интернет свързаност",
-      "it": "Se attivato NiceHash Miner Legacy smetterà di minare in assenza di Internet",
-      "pl": "Kiedy zaznaczone, NiceHash Miner Legacy przerwie pracę po stwierdzeniu braku połączenia z internetem",
-      "pt": "Se habilitado, o NiceHash Miner Legacy irá parar a mineração quando o computador não estiver conectado a internet.",
-      "ro": "Dacă activați NiceHash Miner Legacy o să oprească minarea când nu există conexiune Internet",
-      "ru": "Если включено, NiceHash Miner Legacy будет останавливать майнинг при отсутствии доступа к интернету.",
-      "zh_cn": "开启此选项后NiceHash Miner Legacy将在失去互联网连接时停止挖矿。"
+    "If enabled NiceHash Miner will stop mining without internet connectivity": {
+      "bg": "Ако тази опция е активна, NiceHash Miner ще прекрати изчисленията при липса на интернет свързаност",
+      "it": "Se attivato NiceHash Miner smetterà di minare in assenza di Internet",
+      "pl": "Kiedy zaznaczone, NiceHash Miner przerwie pracę po stwierdzeniu braku połączenia z internetem",
+      "pt": "Se habilitado, o NiceHash Miner irá parar a mineração quando o computador não estiver conectado a internet.",
+      "ro": "Dacă activați NiceHash Miner o să oprească minarea când nu există conexiune Internet",
+      "ru": "Если включено, NiceHash Miner будет останавливать майнинг при отсутствии доступа к интернету.",
+      "zh_cn": "开启此选项后NiceHash Miner将在失去互联网连接时停止挖矿。"
     },
     "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.": {
       "ru": "Если включено, NHML произведёт бенчмарк для всех указанных значений dcri и запишет их скорость.\nNHML будет использовать для майнинга наиболее прибыльные комбинации скоростей.\nЭтот режим игнорирует дополнительный параметр -dcri, если тот указан."
     },
-    "If enabled, NiceHash Miner Legacy will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.": {
-      "bg": "Ако тази опция е активирана, NiceHash Miner Legacy ще използва въведения API ключ за If This Then That (IFTTT) да ви уведоми, когато рентабилността е по-ниска от зададената от вас. \nВижте инструкциите за употреба, за да научите как да конфигурирате тази функционалност.",
-      "es": "Si está habilitada, NiceHash Miner Legacy usará la Clave de API que proporciona para notificarle cuando la rentabilidad se ha quedado por debajo de la rentabilidad que ha configurado. \nConsulte las instrucciones para obtener detalles sobre cómo configurar esta funcionalidad.",
-      "it": "Se attivato, NiceHash Miner Legacy userà la API Key che hai inserito per segnalarti quando la redditività è scesa sotto la redditività che tu hai impostato.\nGuarda le istruzioni per dettagli per configurare questa funzionalità.",
-      "pl": "Kiedy włączone, NiceHash Miner Legacy użyje klucza API który wprowadzisz, aby powiadomić Cię o spadku zyskowności poniżej określonego poziomu.\nObejrzyj dodatkowe instrukcje jak to skonfigurować.",
-      "pt": "Se habilitado, o NiceHash Miner Legacy usará a chave de API que você fornecerá para notificá-lo quando a lucratividade estiver abaixo da lucratividade que você configurou. \nConsulte as instruções para obter detalhes sobre como configurar essa funcionalidade.",
-      "ro": "Când activați, NiceHash Miner Legacy o să utilizeze cheia API furnizată pentru a vă notifica atunci când profitabilitatea a scăzut sub profitabilitatea configurată.\nVedeți instrucțiunile pentru detalii cu privire la configurarea acestei funcționalități.",
-      "ru": "Если включено, NiceHash Miner Legacy будет использовать API-ключ, который вы предоставите, \nчтобы уведомить вас, когда прибыльность снизилась ниже вашей прибыльности. \nСм. инструкции по настройке этой функции.",
-      "zh_cn": "IF This Than That，简称IFTTT。 开启此选项后，NiceHashNiceHash Miner Legacy会在收益跌至设定阈值以下时通过您的API密钥来发送提醒。\n预知配置此功能的详细信息，请参见帮助文档。"
+    "If enabled, NiceHash Miner will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.": {
+      "bg": "Ако тази опция е активирана, NiceHash Miner ще използва въведения API ключ за If This Then That (IFTTT) да ви уведоми, когато рентабилността е по-ниска от зададената от вас. \nВижте инструкциите за употреба, за да научите как да конфигурирате тази функционалност.",
+      "es": "Si está habilitada, NiceHash Miner usará la Clave de API que proporciona para notificarle cuando la rentabilidad se ha quedado por debajo de la rentabilidad que ha configurado. \nConsulte las instrucciones para obtener detalles sobre cómo configurar esta funcionalidad.",
+      "it": "Se attivato, NiceHash Miner userà la API Key che hai inserito per segnalarti quando la redditività è scesa sotto la redditività che tu hai impostato.\nGuarda le istruzioni per dettagli per configurare questa funzionalità.",
+      "pl": "Kiedy włączone, NiceHash Miner użyje klucza API który wprowadzisz, aby powiadomić Cię o spadku zyskowności poniżej określonego poziomu.\nObejrzyj dodatkowe instrukcje jak to skonfigurować.",
+      "pt": "Se habilitado, o NiceHash Miner usará a chave de API que você fornecerá para notificá-lo quando a lucratividade estiver abaixo da lucratividade que você configurou. \nConsulte as instruções para obter detalhes sobre como configurar essa funcionalidade.",
+      "ro": "Când activați, NiceHash Miner o să utilizeze cheia API furnizată pentru a vă notifica atunci când profitabilitatea a scăzut sub profitabilitatea configurată.\nVedeți instrucțiunile pentru detalii cu privire la configurarea acestei funcționalități.",
+      "ru": "Если включено, NiceHash Miner будет использовать API-ключ, который вы предоставите, \nчтобы уведомить вас, когда прибыльность снизилась ниже вашей прибыльности. \nСм. инструкции по настройке этой функции.",
+      "zh_cn": "IF This Than That，简称IFTTT。 开启此选项后，NiceHashNiceHash Miner会在收益跌至设定阈值以下时通过您的API密钥来发送提醒。\n预知配置此功能的详细信息，请参见帮助文档。"
     },
-    "If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount.": {
-      "bg": "Ако зададете стойност, по-голяма от 0 (USD), NiceHash Miner Legacy ще спре работа\nпри спад на изчислената доходност под зададения праг.",
-      "es": "Si se establece cualquier valor diferente a 0 (USD), NiceHash Miner Legacy parará de minar\nsi la rentabilidad cae por debajo del mínimo indicado.",
-      "it": "Se impostato un valore maggiore di 0 (USD), NiceHash Miner Legacy smetterà di minare\nse il profitto calcolato scende sotto la cifra impostata.",
-      "pl": "Kiedy ustawisz więcej niż 0 (USD), NiceHash Miner Legacy przestanie kopać\nkiedy zyskowność spadnie poniżej ustawionej wartości.",
-      "pt": "Se configurado para qualquer valor superior a 0 (USD), NiceHash Miner Legacy vai parar de minerar\nse o lucro calculado for inferior ao valor fixado.",
-      "ro": "Dacă setați o valoare mai mare de 0 (USD), NiceHash Miner Legacy o să se oprească din minat\ndacă profitul calculat scade sub suma setată.",
-      "ru": "Если указано значение выше 0 (USD), NiceHash Miner Legacy будет останавливать майнинг,\nкогда рассчитанная прибыль ниже установленного значения.",
-      "zh_cn": "如设置成大于0 (USD)的任意值，NiceHash Miner Legacy将会在\n预估每日收益跌至此金额以下时停止挖矿。"
+    "If set to any value more than 0 (USD), NiceHash Miner will stop mining\nif the calculated profit falls below the set amount.": {
+      "bg": "Ако зададете стойност, по-голяма от 0 (USD), NiceHash Miner ще спре работа\nпри спад на изчислената доходност под зададения праг.",
+      "es": "Si se establece cualquier valor diferente a 0 (USD), NiceHash Miner parará de minar\nsi la rentabilidad cae por debajo del mínimo indicado.",
+      "it": "Se impostato un valore maggiore di 0 (USD), NiceHash Miner smetterà di minare\nse il profitto calcolato scende sotto la cifra impostata.",
+      "pl": "Kiedy ustawisz więcej niż 0 (USD), NiceHash Miner przestanie kopać\nkiedy zyskowność spadnie poniżej ustawionej wartości.",
+      "pt": "Se configurado para qualquer valor superior a 0 (USD), NiceHash Miner vai parar de minerar\nse o lucro calculado for inferior ao valor fixado.",
+      "ro": "Dacă setați o valoare mai mare de 0 (USD), NiceHash Miner o să se oprească din minat\ndacă profitul calculat scade sub suma setată.",
+      "ru": "Если указано значение выше 0 (USD), NiceHash Miner будет останавливать майнинг,\nкогда рассчитанная прибыль ниже установленного значения.",
+      "zh_cn": "如设置成大于0 (USD)的任意值，NiceHash Miner将会在\n预估每日收益跌至此金额以下时停止挖矿。"
     },
     "India - Chennai": {
       "ru": "Индия - Ченнаи",
@@ -1796,113 +1796,113 @@
       "ru": "Имя: {0}, Статус {1}, PNPDeviceID {2}",
       "zh_cn": "名称：{0}，状态{1}，PNPDeviceID {2}"
     },
-    "NiceHash Miner Legacy cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner Legacy to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner Legacy.": {
-      "bg": "NiceHash Miner Legacy не може да стартира някои компоненти, необходими за неговата работа. Изглежда, че услугата Windows Management Instrumentation на вашия компютър е деактивирана. За правилната работа на NiceHash Miner Legacy е необходимо да активирате Windows Management Instrumentation. Тази услуга се използва за следене на употребата на RAM паметта и за извличане на информация за наличните видео контролери. Активирайте Windows Management Instrumentation ръчно и рестартирайте NiceHash Miner Legacy.",
-      "es": "NiceHash Miner Legacy no puede inicializar sus componentes requeridos. Parece que su sistema tiene el servicio de Windows Management Instrumentation deshabilitado. Para que NiceHash Miner Legacy funcione correctamente, el servicio de Administración de Instrumentos de Windows debe estar habilitado. Este servicio es necesario para detectar el uso de RAM y la información del driver disponible. Habilite el servicio de Administración de Instrumentos de Windows manualmente e inicie NiceHash Miner Legacy.",
-      "it": "NiceHash Miner Legacy non può eseguire i componenti richiesti. Sembra che il tuo sistema abbia Windows Management Instrumentation disabilitato. Per fare in modo che NiceHash Miner Legacy funzioni correttamente, Windows Management Instrumentation deve essere abilitato. Questo servizio è necessario per rilevare l'utilizzo della RAM e le informazioni sui Controller Video disponibili. Abilita Windows Management Instrumentation manualmente e avvia NiceHash Miner Legacy.",
-      "pl": "NiceHash Miner Legacy nie może uruchomić wymaganych komponentów. Możliwe, że usługa Instrumentacja zarzadzania Windows jest wyłączona. Aby NiceHash Miner Legacy mógł pracować, usługa Instrumentacja zarzadzania Windows musi być włączona. Pozwala to na pomiary używania pamięci oraz informacji na temat dostępnych urządzeń. Włącz usługę Instrumentacja zarzadzania Windows i wróć do NiceHash Miner Legacy.",
-      "pt": "O NiceHash Miner Legacy não pode executar os componentes necessários. Parece que seu sistema possui o serviço Windows Management Instrumentation Desativado. Para que o Bombo da NiceHash funcione corretamente, o serviço de Instrução de Gerenciamento do Windows precisa ser Ativado. Este serviço é necessário para detectar o uso da RAM e as informações do Controlador de vídeo. Ative o serviço Windows Management Instrumentation manualmente e inicie o NiceHash Miner Legacy.",
-      "ro": "NiceHash Miner Legacy nu poate rula componente necesare. Se pare că sistemul dumneavoastră are serviciul Windows Management Instrumentation Dezactivat. Pentru ca NiceHash Miner Legacy să funcționeze corect serviciul Windows Management Instrumentation trebuie să fie Activ. Acest serviciu este necesar pentru a detecta consumul RAM și informații despre controlerele Video Disponibile. Activați serviciul Windows Management Instrumentation manual și porniți NiceHash Miner Legacy.",
-      "ru": "NiceHash Miner Legacy не может запустить необходимые компоненты. Похоже, что в вашей системе отключена служба «Инструментарий управления Windows». Для корректной работы NiceHash Miner Legacy служба «Инструментарий управления Windows» должна быть включена. Эта служба нужна для определения использования RAM и доступной информации видеоконтроллера. Включите службу «Инструментарий управления Windows» вручную и запустите NiceHash Miner Legacy.",
-      "zh_cn": "NiceHash Miner Legacy无法执行必要的组件。这可能是因为您的系统禁用了Windows Management Instrumentation服务。如需使NiceHash Miner Legacy正常运作，您需要开启Windows Management Instrumentation服务。我们使用该系统服务来检测内存使用以及可用图形处理器的信息。请在确保开启Windows Management Instrumentation服务后再启动NiceHash Miner Legacy。"
+    "NiceHash Miner cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner.": {
+      "bg": "NiceHash Miner не може да стартира някои компоненти, необходими за неговата работа. Изглежда, че услугата Windows Management Instrumentation на вашия компютър е деактивирана. За правилната работа на NiceHash Miner е необходимо да активирате Windows Management Instrumentation. Тази услуга се използва за следене на употребата на RAM паметта и за извличане на информация за наличните видео контролери. Активирайте Windows Management Instrumentation ръчно и рестартирайте NiceHash Miner.",
+      "es": "NiceHash Miner no puede inicializar sus componentes requeridos. Parece que su sistema tiene el servicio de Windows Management Instrumentation deshabilitado. Para que NiceHash Miner funcione correctamente, el servicio de Administración de Instrumentos de Windows debe estar habilitado. Este servicio es necesario para detectar el uso de RAM y la información del driver disponible. Habilite el servicio de Administración de Instrumentos de Windows manualmente e inicie NiceHash Miner.",
+      "it": "NiceHash Miner non può eseguire i componenti richiesti. Sembra che il tuo sistema abbia Windows Management Instrumentation disabilitato. Per fare in modo che NiceHash Miner funzioni correttamente, Windows Management Instrumentation deve essere abilitato. Questo servizio è necessario per rilevare l'utilizzo della RAM e le informazioni sui Controller Video disponibili. Abilita Windows Management Instrumentation manualmente e avvia NiceHash Miner.",
+      "pl": "NiceHash Miner nie może uruchomić wymaganych komponentów. Możliwe, że usługa Instrumentacja zarzadzania Windows jest wyłączona. Aby NiceHash Miner mógł pracować, usługa Instrumentacja zarzadzania Windows musi być włączona. Pozwala to na pomiary używania pamięci oraz informacji na temat dostępnych urządzeń. Włącz usługę Instrumentacja zarzadzania Windows i wróć do NiceHash Miner.",
+      "pt": "O NiceHash Miner não pode executar os componentes necessários. Parece que seu sistema possui o serviço Windows Management Instrumentation Desativado. Para que o Bombo da NiceHash funcione corretamente, o serviço de Instrução de Gerenciamento do Windows precisa ser Ativado. Este serviço é necessário para detectar o uso da RAM e as informações do Controlador de vídeo. Ative o serviço Windows Management Instrumentation manualmente e inicie o NiceHash Miner.",
+      "ro": "NiceHash Miner nu poate rula componente necesare. Se pare că sistemul dumneavoastră are serviciul Windows Management Instrumentation Dezactivat. Pentru ca NiceHash Miner să funcționeze corect serviciul Windows Management Instrumentation trebuie să fie Activ. Acest serviciu este necesar pentru a detecta consumul RAM și informații despre controlerele Video Disponibile. Activați serviciul Windows Management Instrumentation manual și porniți NiceHash Miner.",
+      "ru": "NiceHash Miner не может запустить необходимые компоненты. Похоже, что в вашей системе отключена служба «Инструментарий управления Windows». Для корректной работы NiceHash Miner служба «Инструментарий управления Windows» должна быть включена. Эта служба нужна для определения использования RAM и доступной информации видеоконтроллера. Включите службу «Инструментарий управления Windows» вручную и запустите NiceHash Miner.",
+      "zh_cn": "NiceHash Miner无法执行必要的组件。这可能是因为您的系统禁用了Windows Management Instrumentation服务。如需使NiceHash Miner正常运作，您需要开启Windows Management Instrumentation服务。我们使用该系统服务来检测内存使用以及可用图形处理器的信息。请在确保开启Windows Management Instrumentation服务后再启动NiceHash Miner。"
     },
-    "NiceHash Miner Legacy cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.": {
-      "bg": "NiceHash Miner Legacy не може да започне работа. Уверете се, че сте активирали поне едно устройство за изчисления и че за него има поне един активен алгоритъм..",
-      "es": "NiceHash Miner Legacy no puede empezar a minar. Asegúrese de que ha habilitado al menos un dispisitivo y un algoritmo.",
-      "it": "NiceHash Miner Legacy non può cominciare a minare. Assicurati di avere almeno un dispositivo abilitato che abbia almeno un algoritmo selezionato e con il benchmark.",
-      "pl": "NiceHash Miner Legacy nie może kopać. Upewnij się, że zaznaczyłeś co najmniej jedno urządzenie mające co najmniej jeden wykonany benchmark.",
-      "pt": "NiceHash Miner Legacy não pode iniciar a mineração. Certifique-se de ter pelo menos um dispositivo habilitado que tenha pelo menos um algoritmo habilitado e comparado.",
-      "ro": "NiceHash Miner Legacy nu poate începe minarea. Asigurați-vă că aveți cel puțin un dispozitiv activat care are cel puțin un algoritm cu benchmark activat.",
-      "ru": "NiceHash Miner Legacy не может начать майнинг. Убедитесь, что хотя бы одно устройство включено с хотя бы одним включённым и прошедшим бенчмарк алгоритмом",
-      "zh_cn": "NiceHash Miner Legacy无法开始挖矿。请确保您至少启用了一台设备以及该设备下的一种算法。启用的算法必须通过基准测试。"
+    "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.": {
+      "bg": "NiceHash Miner не може да започне работа. Уверете се, че сте активирали поне едно устройство за изчисления и че за него има поне един активен алгоритъм..",
+      "es": "NiceHash Miner no puede empezar a minar. Asegúrese de que ha habilitado al menos un dispisitivo y un algoritmo.",
+      "it": "NiceHash Miner non può cominciare a minare. Assicurati di avere almeno un dispositivo abilitato che abbia almeno un algoritmo selezionato e con il benchmark.",
+      "pl": "NiceHash Miner nie może kopać. Upewnij się, że zaznaczyłeś co najmniej jedno urządzenie mające co najmniej jeden wykonany benchmark.",
+      "pt": "NiceHash Miner não pode iniciar a mineração. Certifique-se de ter pelo menos um dispositivo habilitado que tenha pelo menos um algoritmo habilitado e comparado.",
+      "ro": "NiceHash Miner nu poate începe minarea. Asigurați-vă că aveți cel puțin un dispozitiv activat care are cel puțin un algoritm cu benchmark activat.",
+      "ru": "NiceHash Miner не может начать майнинг. Убедитесь, что хотя бы одно устройство включено с хотя бы одним включённым и прошедшим бенчмарк алгоритмом",
+      "zh_cn": "NiceHash Miner无法开始挖矿。请确保您至少启用了一台设备以及该设备下的一种算法。启用的算法必须通过基准测试。"
     },
-    "NiceHash Miner Legacy does not support more than 64 virtual cores. CPU mining will be disabled.": {
-      "bg": "NiceHash Miner Legacy не поддържа повече от 64 виртуални ядра. Използването на CPU ще бъде изключено.",
-      "es": "NiceHash Miner Legacy no soporta más de 64 núcleos virtuales. El minado CPU será desactivado.",
-      "it": "NiceHash Miner Legacy non supporta più di 64 core virtuali. Il CPU mining sarà disabilitato.",
-      "pl": "NiceHash Miner Legacy obsługuje maksymalnie 64 virtualne jądra. Kopanie CPU jest wyłączone.",
-      "pt": "NiceHash Miner Legacy não suporta mais de 64 cores virtuais. A mineração com CPU será desativada.",
-      "ro": "NiceHash Miner Legacy nu suportă mai mult de 64 nuclee virtuale. Minarea CPU o sa fie dezactivată.",
-      "ru": "NiceHash Miner Legacy не поддерживает более 64 виртуальных ядер. Майнинг на CPU будет отключён.",
-      "zh_cn": "NiceHash Miner Legacy不支持含多于64个逻辑处理器的系统。CPU挖矿现已禁用。"
+    "NiceHash Miner does not support more than 64 virtual cores. CPU mining will be disabled.": {
+      "bg": "NiceHash Miner не поддържа повече от 64 виртуални ядра. Използването на CPU ще бъде изключено.",
+      "es": "NiceHash Miner no soporta más de 64 núcleos virtuales. El minado CPU será desactivado.",
+      "it": "NiceHash Miner non supporta più di 64 core virtuali. Il CPU mining sarà disabilitato.",
+      "pl": "NiceHash Miner obsługuje maksymalnie 64 virtualne jądra. Kopanie CPU jest wyłączone.",
+      "pt": "NiceHash Miner não suporta mais de 64 cores virtuais. A mineração com CPU será desativada.",
+      "ro": "NiceHash Miner nu suportă mai mult de 64 nuclee virtuale. Minarea CPU o sa fie dezactivată.",
+      "ru": "NiceHash Miner не поддерживает более 64 виртуальных ядер. Майнинг на CPU будет отключён.",
+      "zh_cn": "NiceHash Miner不支持含多于64个逻辑处理器的系统。CPU挖矿现已禁用。"
     },
-    "NiceHash Miner Legacy has detected change of the hardware ID. If you did not download and install NiceHash Miner Legacy, your computer may be compromised. In that case, we suggest you to install an antivirus program or reinstall Windows.\r\n\r\nContinue with NiceHash Miner Legacy?": {
-      "bg": "NiceHash Miner Legacy регистрира промяна в хардуерните идентификатори. Ако не сте свалили и инсталирали NiceHash Miner Legacy собственоръчно, това може да означава, че компютърът ви е компрометиран. В такъв случай ви съветваме да инсталирате антивирусна програма или да преинсталирате Windows.\r\n\r\nЖелаете ли да продължите работата с NiceHash Miner Legacy?",
-      "es": "NiceHash Miner Legacy ha detectado un cambio en la identificación del hardware. Si no has descargado e instalado NiceHash Miner Legacy, tu ordenador puede estar en peligro. En tal caso, se recomienda instalar un software antivirus o reinstalar Windows.\r\n\r\n¿Continuar con NiceHash Miner Legacy?",
-      "it": "NiceHash Miner Legacy ha rilevato un cambio dell'ID hardware. Se non hai scaricato e installato NiceHash Miner Legacy, il tuo computer potrebbe essere compromesso. In quel caso, ti consigliamo di installare un antivirus o reinstallare Windows.\r\n\r\nContinuare con NiceHash Miner Legacy?",
-      "pl": "Wykryto zmianę hardware ID. Jeśli pobrałeś i zainstalowałeś  NiceHash Miner Legacy, Twój komputer może być zarobaczony. Sugerujemy zainstalować antywirusa lub przeinstalować Windows.\r\n\r\nKontynuować z NiceHash Miner Legacy?",
-      "pt": "NiceHash Miner Legacy detectou uma mudança de identificação de hardware. Se você não fez o download nem instalou o NiceHash Miner Legacy, seu computador pode estar infectado. Nesse caso, sugerimos que você instale um programa antivírus ou reinstale seu Windows.\r\n\r\nContinuar com o NiceHash Miner Legacy aberto?",
-      "ro": "NiceHash Miner Legacy a detectat o modificare a IDului hardware. Dacă nu ați descărcat și instalat NiceHash Miner Legacy, calculatorul dumneavoastră poate fi compromis. În acest caz, vă sugerăm să instalați un program antivirus sau să reinstalați Windows.\r\n\r\nContinuați cu NiceHash Miner Legacy?",
-      "ru": "NiceHash Miner Legacy обнаружил изменение ID оборудования. Если вы не загружали и не устанавливали NiceHash Miner Legacy, ваш компьютер может быть взломан. В этом случае, мы советуем вам установить антивирус или переустановить ваш Windows.\r\n\r\nПродолжить работу с NiceHash Miner Legacy?",
-      "zh_cn": "NiceHash Miner Legacy检测到硬件识别码变化。如果您并没有手动下载并安装NiceHash Miner Legacy，您的电脑可能存在安全风险。如上述情况属实，我们建议您安装反病毒软件或重新按照Windows。是否继续运行NiceHash Miner Legacy？"
+    "NiceHash Miner has detected change of the hardware ID. If you did not download and install NiceHash Miner, your computer may be compromised. In that case, we suggest you to install an antivirus program or reinstall Windows.\r\n\r\nContinue with NiceHash Miner?": {
+      "bg": "NiceHash Miner регистрира промяна в хардуерните идентификатори. Ако не сте свалили и инсталирали NiceHash Miner собственоръчно, това може да означава, че компютърът ви е компрометиран. В такъв случай ви съветваме да инсталирате антивирусна програма или да преинсталирате Windows.\r\n\r\nЖелаете ли да продължите работата с NiceHash Miner?",
+      "es": "NiceHash Miner ha detectado un cambio en la identificación del hardware. Si no has descargado e instalado NiceHash Miner, tu ordenador puede estar en peligro. En tal caso, se recomienda instalar un software antivirus o reinstalar Windows.\r\n\r\n¿Continuar con NiceHash Miner?",
+      "it": "NiceHash Miner ha rilevato un cambio dell'ID hardware. Se non hai scaricato e installato NiceHash Miner, il tuo computer potrebbe essere compromesso. In quel caso, ti consigliamo di installare un antivirus o reinstallare Windows.\r\n\r\nContinuare con NiceHash Miner?",
+      "pl": "Wykryto zmianę hardware ID. Jeśli pobrałeś i zainstalowałeś  NiceHash Miner, Twój komputer może być zarobaczony. Sugerujemy zainstalować antywirusa lub przeinstalować Windows.\r\n\r\nKontynuować z NiceHash Miner?",
+      "pt": "NiceHash Miner detectou uma mudança de identificação de hardware. Se você não fez o download nem instalou o NiceHash Miner, seu computador pode estar infectado. Nesse caso, sugerimos que você instale um programa antivírus ou reinstale seu Windows.\r\n\r\nContinuar com o NiceHash Miner aberto?",
+      "ro": "NiceHash Miner a detectat o modificare a IDului hardware. Dacă nu ați descărcat și instalat NiceHash Miner, calculatorul dumneavoastră poate fi compromis. În acest caz, vă sugerăm să instalați un program antivirus sau să reinstalați Windows.\r\n\r\nContinuați cu NiceHash Miner?",
+      "ru": "NiceHash Miner обнаружил изменение ID оборудования. Если вы не загружали и не устанавливали NiceHash Miner, ваш компьютер может быть взломан. В этом случае, мы советуем вам установить антивирус или переустановить ваш Windows.\r\n\r\nПродолжить работу с NiceHash Miner?",
+      "zh_cn": "NiceHash Miner检测到硬件识别码变化。如果您并没有手动下载并安装NiceHash Miner，您的电脑可能存在安全风险。如上述情况属实，我们建议您安装反病毒软件或重新按照Windows。是否继续运行NiceHash Miner？"
     },
-    "NiceHash Miner Legacy is running in DEMO mode!": {
-      "bg": "NiceHash Miner Legacy работи в ДЕМО режим!",
-      "es": "¡NiceHash Miner Legacy está ejecutandose en modo DEMO!",
-      "it": "NiceHash Miner Legacy sta lavorando in modalità DEMO!",
-      "pl": "NiceHash Miner Legacy pracuje w trybie DEMO!",
-      "pt": "NiceHash Miner Legacy está rodando no modo DEMONSTRAÇÃO!",
-      "ro": "NiceHash Miner Legacy rulează în mod DEMO!",
-      "ru": "NiceHash Miner Legacy работает в режиме ДЕМО!",
-      "zh_cn": "NiceHash Miner Legacy正在演示模式下运行！"
+    "NiceHash Miner is running in DEMO mode!": {
+      "bg": "NiceHash Miner работи в ДЕМО режим!",
+      "es": "¡NiceHash Miner está ejecutandose en modo DEMO!",
+      "it": "NiceHash Miner sta lavorando in modalità DEMO!",
+      "pl": "NiceHash Miner pracuje w trybie DEMO!",
+      "pt": "NiceHash Miner está rodando no modo DEMONSTRAÇÃO!",
+      "ro": "NiceHash Miner rulează în mod DEMO!",
+      "ru": "NiceHash Miner работает в режиме ДЕМО!",
+      "zh_cn": "NiceHash Miner正在演示模式下运行！"
     },
-    "NiceHash Miner Legacy recommends increasing virtual memory size so that all algorithms would work fine.": {
-      "bg": "NiceHash Miner Legacy препоръчва увеличаване на размера на виртуалната памет за правилната работа на  всички алгоритми.",
-      "it": "NiceHash Miner Legacy raccomanda di aumentare la dimensione della memoria virtuale così che tutti gli algoritmi possano lavorare correttamente.",
-      "pl": "NiceHash Miner Legacy zaleca zwiększenie pamięci wirtualnej, aby algorytmy mogły działać sprawnie.",
-      "pt": "O NiceHash Miner Legacy recomenda aumentar o tamanho da memória virtual para que todos os algoritmos funcionem bem.",
-      "ro": "NiceHash Miner Legacy recomandă creșterea memoriei virtuale astfel încât toți algoritmii să lucreze bine.",
-      "ru": "NiceHash Miner Legacy рекомендует увеличить размер виртуальной памяти для нормальной работы всех алгоритмов.",
-      "zh_cn": "NiceHash Miner Legacy建议您增大虚拟内存以确保所有挖矿算法正常运作。"
+    "NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine.": {
+      "bg": "NiceHash Miner препоръчва увеличаване на размера на виртуалната памет за правилната работа на  всички алгоритми.",
+      "it": "NiceHash Miner raccomanda di aumentare la dimensione della memoria virtuale così che tutti gli algoritmi possano lavorare correttamente.",
+      "pl": "NiceHash Miner zaleca zwiększenie pamięci wirtualnej, aby algorytmy mogły działać sprawnie.",
+      "pt": "O NiceHash Miner recomenda aumentar o tamanho da memória virtual para que todos os algoritmos funcionem bem.",
+      "ro": "NiceHash Miner recomandă creșterea memoriei virtuale astfel încât toți algoritmii să lucreze bine.",
+      "ru": "NiceHash Miner рекомендует увеличить размер виртуальной памяти для нормальной работы всех алгоритмов.",
+      "zh_cn": "NiceHash Miner建议您增大虚拟内存以确保所有挖矿算法正常运作。"
     },
-    "NiceHash Miner Legacy requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5": {
-      "bg": "NiceHash Miner Legacy изисква .NET Framework 4.5 или по-нова версия, за да функционира правилно. Моля инсталирайте Microsoft .NET Framework 4.5",
-      "es": "NiceHash Miner Legacy requiere .NET Framework 4.5 o mayor para funcionar correctamente. Por favor reinstala Microsoft .NET Framework 4.5",
-      "it": "NiceHash Miner Legacy richiede .NET Framework 4.5 o superiori per lavorare correttamente. Per favore, installa Microsoft .NET Framework 4.5",
-      "pl": "NiceHash Miner Legacy wymaga pakietu .NET Framework 4.5 lub wyższego do pracy. Zainstaluj najpierw Microsoft .NET Framework 4.5",
-      "ro": "NiceHash Miner Legacy necesită .NET Framework 4.5 sau mai nou pentru a funcționa corect. Vă rugăm instalați Microsoft .NET Framework 4.5",
-      "ru": "Для корректной работы NiceHash Miner Legacy требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
-      "zh_cn": "NiceHash Miner Legacy 依赖 .NET Framework 4.5或更高版本。请安装Microsoft .NET Framework 4.5"
+    "NiceHash Miner requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5": {
+      "bg": "NiceHash Miner изисква .NET Framework 4.5 или по-нова версия, за да функционира правилно. Моля инсталирайте Microsoft .NET Framework 4.5",
+      "es": "NiceHash Miner requiere .NET Framework 4.5 o mayor para funcionar correctamente. Por favor reinstala Microsoft .NET Framework 4.5",
+      "it": "NiceHash Miner richiede .NET Framework 4.5 o superiori per lavorare correttamente. Per favore, installa Microsoft .NET Framework 4.5",
+      "pl": "NiceHash Miner wymaga pakietu .NET Framework 4.5 lub wyższego do pracy. Zainstaluj najpierw Microsoft .NET Framework 4.5",
+      "ro": "NiceHash Miner necesită .NET Framework 4.5 sau mai nou pentru a funcționa corect. Vă rugăm instalați Microsoft .NET Framework 4.5",
+      "ru": "Для корректной работы NiceHash Miner требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
+      "zh_cn": "NiceHash Miner 依赖 .NET Framework 4.5或更高版本。请安装Microsoft .NET Framework 4.5"
     },
-    "NiceHash Miner Legacy requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner Legacy. Would you like to continue?": {
-      "bg": "NiceHash Miner Legacy се нуждае от достъп до интернет, за да работи. Уверете се, че вашата връзка към интернет работи, преди да стартирате NiceHash Miner Legacy. Желаете ли да продължите?",
-      "es": "NiceHash Miner Legacy requiere una conexión a Internet. Asegúrese de que tiene una conexión a internet antes de continuar. ¿Le gustaría continuar?",
-      "it": "NiceHash Miner Legacy richiede una connessione a Internet per funzionare. Per favore assicurati di essere connesso a Internet prima di eseguire NiceHash Miner Legacy. Desideri continuare?",
-      "pl": "NiceHash Miner Legacy wymaga połączenia z internetem. Upewnij się, że działa zanim właczysz NiceHash Miner Legacy. Czy chcesz kontynuować?",
-      "pt": "NiceHash Miner Legacy requer conexão com a internet para funcionar. Certifique-se de estar conectado à Internet antes de executar o NiceHash Miner Legacy. Você gostaria de continuar?",
-      "ro": "NiceHash Miner Legacy necesită o conexiune la internet pentru a rula. Vă rugăm să vă asigurați că sunteți conectați la Internet înainte de a rulaNiceHash Miner Legacy. Doriți să continuați?",
-      "ru": "NiceHash Miner Legacy запрашивает интернет-соединение для работы. Убедитесь, что вы подключены к интернету перед запуском NiceHash Miner Legacy. Хотели бы вы продолжить?",
-      "zh_cn": "NiceHash Miner Legacy依赖互联网连接运行。请在运行软件前确保您已连接至互联网。是否继续？"
+    "NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner. Would you like to continue?": {
+      "bg": "NiceHash Miner се нуждае от достъп до интернет, за да работи. Уверете се, че вашата връзка към интернет работи, преди да стартирате NiceHash Miner. Желаете ли да продължите?",
+      "es": "NiceHash Miner requiere una conexión a Internet. Asegúrese de que tiene una conexión a internet antes de continuar. ¿Le gustaría continuar?",
+      "it": "NiceHash Miner richiede una connessione a Internet per funzionare. Per favore assicurati di essere connesso a Internet prima di eseguire NiceHash Miner. Desideri continuare?",
+      "pl": "NiceHash Miner wymaga połączenia z internetem. Upewnij się, że działa zanim właczysz NiceHash Miner. Czy chcesz kontynuować?",
+      "pt": "NiceHash Miner requer conexão com a internet para funcionar. Certifique-se de estar conectado à Internet antes de executar o NiceHash Miner. Você gostaria de continuar?",
+      "ro": "NiceHash Miner necesită o conexiune la internet pentru a rula. Vă rugăm să vă asigurați că sunteți conectați la Internet înainte de a rulaNiceHash Miner. Doriți să continuați?",
+      "ru": "NiceHash Miner запрашивает интернет-соединение для работы. Убедитесь, что вы подключены к интернету перед запуском NiceHash Miner. Хотели бы вы продолжить?",
+      "zh_cn": "NiceHash Miner依赖互联网连接运行。请在运行软件前确保您已连接至互联网。是否继续？"
     },
-    "NiceHash Miner Legacy supports only x64 platforms. You will not be able to use NiceHash Miner Legacy with x86": {
-      "bg": "NiceHash Miner Legacy поддържа само x64 платформи. Не е възможно да използвате програмата с x86 операционна система.",
-      "es": "NiceHash Miner Legacy solo soporta sistemas de 64 bit. No se podrá usar NiceHash Miner Legacy con un equipo de 32 bit.",
-      "it": "NiceHash Miner Legacy supporta solo piattaforme x64. Non potrai usare NiceHash Miner Legacy con x86",
-      "pl": "NiceHash Miner Legacy wspiera tylko platformy x64. Nie możesz go używać na platformie x86",
-      "pt": "O NiceHash Miner Legacy suporta apenas plataformas x64. Você não poderá usar NiceHash Miner Legacy com x86",
-      "ro": "NiceHash Miner Legacy suportă doar platforme x64. Nu veți putea utiliza NiceHash Miner Legacy cu x86",
-      "ru": "NiceHash Miner Legacy поддерживает только платформы x64. Вы не сможете использовать NiceHash Miner Legacy на x86",
-      "zh_cn": "NiceHash Miner Legacy仅支持64位操作系统。您无法在32位(x86)系统上使用NiceHash Miner Legacy。"
+    "NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86": {
+      "bg": "NiceHash Miner поддържа само x64 платформи. Не е възможно да използвате програмата с x86 операционна система.",
+      "es": "NiceHash Miner solo soporta sistemas de 64 bit. No se podrá usar NiceHash Miner con un equipo de 32 bit.",
+      "it": "NiceHash Miner supporta solo piattaforme x64. Non potrai usare NiceHash Miner con x86",
+      "pl": "NiceHash Miner wspiera tylko platformy x64. Nie możesz go używać na platformie x86",
+      "pt": "O NiceHash Miner suporta apenas plataformas x64. Você não poderá usar NiceHash Miner com x86",
+      "ro": "NiceHash Miner suportă doar platforme x64. Nu veți putea utiliza NiceHash Miner cu x86",
+      "ru": "NiceHash Miner поддерживает только платформы x64. Вы не сможете использовать NiceHash Miner на x86",
+      "zh_cn": "NiceHash Miner仅支持64位操作系统。您无法在32位(x86)系统上使用NiceHash Miner。"
     },
-    "NiceHash Miner Legacy works only on 64-bit version of OS for CPU mining. CPU mining will be disabled.": {
-      "bg": "NiceHash Miner Legacy работи само на 64-битови версии на операционната система при използване на процесор за изчисления. Използването на CPU ще бъде изключено.",
-      "es": "NiceHash Miner Legacy solo funciona en sistemas de 64bit (para el minado con CPU). El minado CPU será desactivado.",
-      "it": "NiceHash Miner Legacy funziona solo con versioni del sistema operativo a 64-bit per CPU mining. Il CPU mining sarà disabilitato.",
-      "pl": "NiceHash Miner Legacy działa wyłącznie na 64-bitowym systemie operacyjnym. Kopanie CPU jest wyłączone.",
-      "pt": "NiceHash Miner Legacy só funciona na versão 64 bit do seu sistema operacional para minerar com a CPU. A mineração com CPU será desativada.",
-      "ro": "NiceHash Miner Legacy funcționează pentru minarea CPU doar cu versiuni SO pe 64 de biți. Minarea CPU va fi dezactivată.",
-      "ru": "NiceHash Miner Legacy работает только на 64-разрядной версии ОС для майнинга на CPU. Майнинг на CPU будет отключён.",
-      "zh_cn": "NiceHash Miner Legacy仅在64位操作系统下支持CPU挖矿。CPU挖矿现已禁用。"
+    "NiceHash Miner works only on 64-bit version of OS for CPU mining. CPU mining will be disabled.": {
+      "bg": "NiceHash Miner работи само на 64-битови версии на операционната система при използване на процесор за изчисления. Използването на CPU ще бъде изключено.",
+      "es": "NiceHash Miner solo funciona en sistemas de 64bit (para el minado con CPU). El minado CPU será desactivado.",
+      "it": "NiceHash Miner funziona solo con versioni del sistema operativo a 64-bit per CPU mining. Il CPU mining sarà disabilitato.",
+      "pl": "NiceHash Miner działa wyłącznie na 64-bitowym systemie operacyjnym. Kopanie CPU jest wyłączone.",
+      "pt": "NiceHash Miner só funciona na versão 64 bit do seu sistema operacional para minerar com a CPU. A mineração com CPU será desativada.",
+      "ro": "NiceHash Miner funcționează pentru minarea CPU doar cu versiuni SO pe 64 de biți. Minarea CPU va fi dezactivată.",
+      "ru": "NiceHash Miner работает только на 64-разрядной версии ОС для майнинга на CPU. Майнинг на CPU будет отключён.",
+      "zh_cn": "NiceHash Miner仅在64位操作系统下支持CPU挖矿。CPU挖矿现已禁用。"
     },
-    "NiceHash Miner Legacy's Term Of Use NiceHash operates as in intermediate service by providing hashing power from hashing power owners to hashing power buyers. NiceHash does not directly provide it's own hashing power. We will do our best to provide stable, secure, and feature full service. We do not take responsibility for any kind of hashing power loss or funds loss and do not take any kind of financial, material, legal, or other responsibilities for any issues that my arise from using NiceHash Miner Legacy. NiceHash service and it's products (NiceHash Miner Legacy, etc.) is still in development, therefore some bugs or other issues may arise. We will work hard to fix any issues as soon as possible, add new features and overall improve our service. NiceHash reserves the rights to seize any funds of suspicious illegal activity such as mining with botnets, money laundering, hacking attempts, etc.\r\n\r\nAs a user of NiceHash Miner Legacy, you are providing your hashing power (your are a seller) to the hashing power buyers though NiceHash's hashing power marketplace. You earn Bitcoins from selling your hashing power for every valid share your miner generates and is accepted by NiceHash service. In some cases no shares are sent to or are accepted by NiceHash service. These cases are rare and includes usage of slower hardware, software, network errors, or simmilar. In these cases (no shares generated and accepted by NiceHash service) no reward in form of Bitcoins can be accounted to you. Payouts are automatic and are paid to BTC address, used in NiceHash Miner Legacy. Payment schedule can be found in FAQ on our website and is subject to change. You can always monitor your statistics on this site: https://www.nicehash.com/?p=myminer\r\n\r\nIf you have any questions relating to these Terms of Use, your rights and obligations arising from these Terms and/or your use of the NiceHash service, or any other matter, please contact us at support@nicehash.com.": {
-      "bg": "Общи условия за ползване на NiceHash Miner Legacy\n\rNiceHash функционира като посредническа услуга, като осигурява изчислителна мощност от продавачите на купувачите. NiceHash не предлага директно собствени изчислителни ресурси. Ние се стараем да осигуряваме стабилна, надеждна и богата откъм функции услуга. Не носим отговорност за каквито и да е загуби на изчислителна мощност или парични средства. Не носим отговорност за всякакви финансови, материални, юридически или други проблеми, които биха могли да възникнат от употребата на NiceHash Miner Legacy.\n\rУслугата на NiceHash и нейните продукти (NiceHash Legacy и др.) са все още в процес на разработка, така че е възможна появата на бъгове или други проблеми. Ние ще положим максимални усилия, за да коригираме всякакви проблеми максимално бързо, както и за да добавяме нови функции и да подобряваме цялостно нашата услуга. NiceHash си запазва правото да блокира всички парични средства от подозрителна незаконна дейност като използване на бот мрежи, пране на пари, опити за неоторизиран достъп и т.н.\r\n\r\nКато потребител на NiceHash Legacy, вие осигурявате своята изчислителна мощност (вие се явявате продавач) на купувачите на изчислителна мощност чрез пазара на NiceHash. Вие получавате възнаграждение в биткойни от продажбата на вашата изчислителна мощност за всеки валиден дял, който вашият компютър генерира и услугата NiceHash приеме. В някои случаи не се изпращат никакви дялове, или дяловете не се приемат изцяло от услугата на NiceHash. Тези случаи са рядкост и обикновено се дължат на употребата на по-бавен хаурдер или на софтуерни/мрежови грешки и други подобни причини. В такъв случай (дяловете не са генерирани или не са приети от услугата на NiceHash), не може да ви бъде предоставено възнаграждение в биткойни. Разплащанията се извършват автоматично и се изпращат към BTC адреса, посочен в NiceHash Miner Legacy. Графикът на плащанията може да бъде намерен в раздел FAQ (Често задавани въпроси) на нашия уеб сайт и подлежи на промяна. Вие можете по всяко време да следите вашата статистика на адрес https://www.nicehash.com/?p=myminer\r\n\r\nАко имате въпроси относно настоящите Общи условия; вашите права и задължения, произтичащи от тези Общи условия; използването на услугата на NiceHash, или запитвания от различен характер, моля свържете се с нас на support@nicehash.com.",
-      "es": "Términos de uso de NiceHash Miner Legacy \r\n\r\nNiceHash opera como en servicio intermedio, proporcionando poder de hashing de los propietarios de poder de hashing a los compradores de poder hashing. NiceHash no proporciona directamente su propio poder de hashing. Haremos nuestro mejor para proporcionar el servicio completo estable, seguro y de la característica. No asumimos la responsabilidad de ningún tipo de pérdida de energía de hashing o pérdida de fondos y no tomamos ningún tipo de responsabilidad financiera, material, legal u otras responsabilidades por cualquier problema que surja de usar NiceHash Miner Legacy. El servicio NiceHash y sus productos (NiceHash Miner Legacy, etc.) aún están en desarrollo, por lo que pueden surgir algunos errores u otros problemas. Trabajaremos duro para solucionar cualquier problema tan pronto como sea posible, agregar nuevas características y mejorar en general nuestro servicio. NiceHash se reserva el derecho de aprovechar los fondos de actividades ilegales sospechosas como la minería con botnets, el lavado de dinero, los intentos de hacking, etc. \r\n\r\nComo usuario de NiceHash Miner Legacy, está proporcionando su poder (como hing Vendedor) a los compradores de la energía del hashing en el mercado de la energía del hashing de NiceHash. Usted gana Bitcoins al vender su poder de hashing por cada acción válida que su minero genera y es aceptada por el servicio de NiceHash. En algunos casos, no se envían acciones o no son aceptadas por el servicio NiceHash. Estos casos son raros e incluyen el uso de hardware más lento, software o errores de red o similar. En estos casos (sin acciones generadas y sin aceptadas por el servicio de NiceHash) ninguna recompensa en forma de Bitcoins pule será contabilizada. Los pagos son automáticos y se pagan a la dirección de BTC, utilizada en NiceHash Miner Legacy. El horario de pago se puede encontrar en FAQ en nuestro sitio web y está sujeto a cambios. Siempre puede supervisar sus estadísticas en este sitio: https://www.nicehash.com/?p=myminer \r\n\r\nSi tiene alguna pregunta relacionada con estos Términos de uso, sus derechos y obligaciones derivados de estos Términos y/o su uso del servicio NiceHash, o cualquier otro asunto, póngase en contacto con nosotros en support@nicehash.com",
-      "it": "Termini di Utilizzo di NiceHash Miner Legacy. NiceHash come un servizio intermediario fornendo hashing power da possessori di hashing power ai compratori di hashing power. NiceHash fornisce direttamente il proprio hashing power. Faremo del nostro meglio per fornire un servizio stabile e sicuro. Non ci assumiamo nessuna responsabiità per ogni tipo di perdita di hashing power o di fondi e non ci assumiamo nessun tipo di responsabilità finanziaria, materiale, legale, o altre responsabilità per problemi che potrebbero presentarsi utilizzando NiceHash Miner Legacy. Il servizio di NiceHash ed i suoi prodotti (NiceHash Miner Legacy, etc.) sono ancora in sviluppo, quindi è possibile l'insorgere di bug o altri problemi. Lavoreremo duramente per cercare di risolvere qualsiasi problema il più presto possibile, aggiungere nuove funzioni migliorare il nostro servizio in generale. NiceHash si riserva il diritto di requisire tutti i fondi di sospette attività illegali come minare con botnet, riciclaggio di denaro, tentativi di hacking, etc.\r\n\r\nCome utente di NiceHash Miner Legacy, stai fornendo hashing power (sei un venditore) ai compratori di hashing power tramite il mercato di hashing power di NiceHash. Guadagni Bitcoins vendendo il tuo hashing power per ogni quota valida che il tuo miner genera e viene accettata dai servizi di NiceHash. In alcuni casi non vengono mandate quote o non vengono accettate dai servizi di NiceHash. Questi casi sono rari e includono l'uso hardware o software lenti, errori di rete, o simili. In questi casi (nessuna quota generata o accettata dai servizi di NiceHash) nessun pagamento in forma di Bitcoins può esserti assegnato. I pagamenti sono automatici e vengono indirizzati verso indirizzi Bitcoin, usati in NiceHash Miner Legacy. Il programma dei pagamenti può essere trovato nelle FAQ sul nostro sito ed è soggetto a pagamenti. Puoi sempre controllare le tue statistiche sul questo sito: https://www.nicehash.com/?p=myminer\r\n\r\nSe hai qualche domanda in relazione a questi Termini di Utilizzo, ai tuoi diritti ed ai tuoi doveri derivanti da questi Termini e/o del tuo utilizzo dei servizi di NiceHash, o qualsiasi altra domanda, contattaci a support@nicehash.com.",
-      "pl": "Licencja użytkownika NiceHash Miner Legacy: NiceHash pracuje jako serwis dostarczający mocy  obliczeniowej od właścicieli tej mocy do jej kupców. NiceHash nie dostarcza jej bezpośrednio. Będziemy robić co w naszej mocy, aby dostarczać stabilną, bezpieczną, i pełną obsługę serwisu. Nie bierzemy odpowiedzialności za żadne straty mocy obliczeniowej i nie bierzemy za nie odpowiedzialności finansowej, materialnej, prawnej ani żadnych innych odpowiedzialności za jakiekolwiek błędy podczas użytkownaia NiceHash Miner Legacy. Serwis NiceHash oraz jego produkty (NiceHash Miner Legacy, itd.) jest ciągle w opracowaniu, więc błędy i problemy mogą się przydarzyć. Będziemy ciężko pracować, aby naprawić wszelkie stwierdzone problemy i błędy oraz naprawiać je niezwłocznie, a także dodawać nowe funkcje służące do poprawy naszego serwisu. NiceHash zastrzega sobie prawo do odebrania zarobku w przypadku podejrzenia nielegalnej działalności takiej jak botnety, wyłudzanie pieniędzy, próby włamań, itp.\r\n\r\nJako użytkownik NiceHash Miner Legacy, dostarczasz swoją moc obliczeniową (jesteś sprzedawcą) do odbiorców tej mocy poprzez giełdę NiceHash. Zarabiasz bitcoiny ze sprzedaży tej mocy za każdy poprawny udział (share) wygenerowany przez Twojego górnika (miner) zaakceptowany przez serwis Nicehash. W niektórych przypadkach żadne udziały nie są przesyłane albo akceptowane przez serwis NiceHash. Takie przypadki są rzadkie i wynikają z problemów z pracą sprzętu, nieprawidłową pracą oprogramowania, połączenia internetowego i podobnych problemów. W tych przypadkach nie otrzymasz wynagrodzenia od serwisu Nicehash w formie bitcoinów. Wypłaty są zautomatyzowane i płacone w bitcoinach na Twój adres BTC użyty w programie NiceHash Miner Legacy. Harmonogram płatności jest opisany w dziale FAQ na naszej stronie i może podlegać zmianom. Zawsze możesz monitorować swoje statystyki na stronie: https://www.nicehash.com/?p=myminer\r\n\r\nJeśli masz pytania dotyczace liczencji użytkowania, swoich praw i obowiązków wynikających z tej licencji lub użytkowania serwisu NiceHash, lub jakiejkolwiek innej sprawie, skontaktuj się z naszym działem pomocy support@nicehash.com.",
-      "pt": "Termos de Uso dos Mineradores NiceHash \r\n\r\nO NiceHash opera como um serviço intermediário, fornecendo o poder de hashing dos proprietários para compradores de poder de hashing. NiceHash não fornece diretamente seu próprio poder de hashing. Faremos o nosso melhor para fornecer serviços estáveis, seguros e funcional. Nós não assumimos a responsabilidade por qualquer tipo de perda de poder de hashing ou perda de fundos e não assumimos qualquer tipo de responsabilidades financeiras, materiais, legais ou outras por quaisquer problemas que surja do uso do NiceHash Miner Legacy. O serviço NiceHash e seus produtos (NiceHash Miner Legacy, etc.) ainda estão em desenvolvimento, portanto, alguns bugs ou outros problemas podem surgir. Vamos trabalhar duro para corrigir quaisquer problemas o mais rápido possível, adicionar novas funcionalidades e melhorar o nosso serviço. NiceHash reserva o direito de apreender quaisquer fundos de actividade ilegal suspeita, como de mineração com botnets, lavagem de dinheiro, tentativas de invasão, etc.\r\n\r\nComo um usuário de NiceHash Miner Legacy, você está fornecendo seu poder de hashing (você é um vendedor) para os compradores de poder de hashing no mercado do NiceHash. Você ganha a Bitcoins vender seu poder de hashing para cada compartilhamento válido que seu mineiro gera e é aceito pelo serviço NiceHash. Em alguns casos, nenhum compartilhamento é enviado ou aceito pelo serviço NiceHash. Estes casos são raros e incluem o uso de erros de hardware, software ou rede mais lentos ou similares. Nesses casos (sem ações geradas e aceitas pelo serviço NiceHash) nenhuma recompensa na forma de Bitcoins pode ser contabilizada para você. Os pagamentos são automáticos e são pagos ao endereço BTC, usado no mineiro NiceHash. O cronograma de pagamento pode ser encontrado em FAQ em nosso site e está sujeito a alterações. Você sempre pode monitorar suas estatísticas neste site:https://www.nicehash.com/?p=myminer\r\n\r\nSe você tiver alguma dúvida relacionada com estes Termos de Uso, seus direitos e obrigações decorrentes destes Termos e / ou o uso do serviço NiceHash, ou qualquer outro assunto, entre em contato conosco (em inglês) em support@nicehash.com.",
-      "ro": "Termenii de utilizare NiceHash Miner Legacy NiceHash opereaza ca un serviciu intermediar furnizând putere de hash de la proprietarii de putere de hash către cumpărătorii de putere de hash. NiceHash nu furnizează direct propria putere de hash. Facem tot posibilul pentru a furniza un serviciu stabil, sigur și plin de funcționalități. Nu ne asumăm nici o responsabilitate pentru nici o pierdere de putere de hash sau pierdere de fonduri și nu ne asumăm nici o răspundere financiară, materială, legală sau de orice altă natură pentru nici o problemă care poate apărea din utilizarea NiceHash Miner Legacy. Serviciul NiceHash și produsele sale (NiceHash Miner Legacy, etc.) sunt încă în dezvoltare și deci pot apărea buguri sau alte probleme. Vom lucra din greu pentru remedierea problemelor cât mai repede posibil, să adaugăm noi funcționalități și să îmbunătățim serviciul nostru. NiceHash își rezervă dreptul să rețină orice fonduri rezultate din activități ilegale cum ar fi minarea cu botnet, spălarea de bani, tentative de hack, etc.\r\n\r\nCa utilizator al NiceHash Miner Legacy, vă furnizați puterea de hash (sunteți vânzător) către cumpărătorii de putere de hash prin piața de putere de hash a NiceHash. Câștigați Bitcoini prin vânzarea de putere de hash pentru fiecare share valid pe care minerul dumneavoastră îl generează și este acceptat de serviciul NiceHash. În unele cazuri nici un share nu este trimis către sau acceptat de serviciul NiceHash. Aceste cazuri sunt rare și includ utilizarea de hardware lent, software, erori de rețea sau similar. În aceste cazuri (nici un share generat și acceptat de serviciul NiceHash) nici o răsplată sub forma de Bitcoini nu poate fi contabilizată către dumneavoastră. plățile sunt automare și se fac către adresa BTC folosită în NiceHash Miner Legacy. Programul de plăți poate fi găsit în secțiunea FAQ pe websiteul nostru și poate fi modificată. Puteți să monitorizați oricând statisticile dumneavoastră pe acest site: https://www.nicehash.com/?p=myminer\r\n\r\nDacă aveți orice întrebări legate de acești Termeni de Utilizare, drepturile și obligațiile dumneavoastră care reies din acesti Termeni și/sau utilizarea serviciului NiceHash, sau orice alt subiect, vă rugăm să ne contactați la support@nicehash.com.",
-      "ru": "Условия использования NiceHash Miner Legacy\r\nNiceHash работает как посреднический сервис, предоставляющий вычислительную мощность продавцов мощности ее покупателям. NiceHash не предлагает непосредственно собственные вычислительные ресурсы. Мы сделаем все возможное, чтобы предоставить стабильный, безопасный и полнофункциональный сервис. Мы не несём ответственности за потерю мощности или денежных средств. Мы не несём ответственности за финансовые, материальные, юридические или другие проблемы, которые могут возникнуть в результате использования NiceHash Miner Legacy. Сервис NiceHash и её продукция (NiceHash Legacy и прочее) всё ещё находятся в стадии разработки, поэтому возможно появление ошибок или иных проблем. Мы приложим максимум усилий, чтобы как можно быстрее исправить проблемы, а также добавить новые функции и улучшить наш сервис. NiceHash оставляет за собой право конфисковать любые средства от подозрительной незаконной деятельности, такой как использование ботнетов, отмывание денег, попытки взлома и т. д.\r\n\r\nКак пользователь NiceHash Legacy, вы предоставляете свою вычислительную мощность (вы являетесь продавцом) покупателям мощности через рынок NiceHash. Вы зарабатываете биткоины от продажи своей мощности для майнинга за каждую валидную шару, которую генерирует ваш майнер и которая принята сервисом NiceHash. В некоторых случаях шары не отправляются на сервис NiceHash или не принимаются им. Эти случаи редки и происходят из-за использования медленного оборудования, программного обеспечения, сетевых ошибок и подобных проблем. В этих случаях (когда шары не генерируются и не принимаются сервисом NiceHash), вы не можете получить вознаграждение в виде биткоинов. Выплаты осуществляются автоматически и отправляются на Биткоин-адрес, используемый в NiceHash Miner Legacy. Расписание выплат можно найти в справке на нашем сайте, и оно может быть изменено. Вы можете отслеживать свою статистику на сайте: https://www.nicehash.com/?p=myminer\r\n\r\nЕсли у вас есть какие-либо вопросы, связанные с настоящими Условиями использования, вашими правами и обязанностями, вытекающими из этих Условий и/или вашим использованием сервиса NiceHash, либо любые другие вопросы, пожалуйста, свяжитесь с нами по адресу support-ru@nicehash.com.",
-      "zh_cn": "NiceHash Miner Legacy 使用条款 NiceHash operates as in intermediate service by providing hashing power from hashing power owners to hashing power buyers. NiceHash does not directly provide it's own hashing power. We will do our best to provide stable, secure, and feature full service. We do not take responsibility for any kind of hashing power loss or funds loss and do not take any kind of financial, material, legal, or other responsibilities for any issues that my arise from using NiceHash Miner Legacy. NiceHash service and it's products (NiceHash Miner Legacy, etc.) is still in development, therefore some bugs or other issues may arise. We will work hard to fix any issues as soon as possible, add new features and overall improve our service. NiceHash reserves the rights to seize any funds of suspicious illegal activity such as mining with botnets, money laundering, hacking attempts, etc.\r\n\r\nAs a user of NiceHash Miner Legacy, you are providing your hashing power (your are a seller) to the hashing power buyers though NiceHash's hashing power marketplace. You earn Bitcoins from selling your hashing power for every valid share your miner generates and is accepted by NiceHash service. In some cases no shares are sent to or are accepted by NiceHash service. These cases are rare and includes usage of slower hardware, software, network errors, or simmilar. In these cases (no shares generated and accepted by NiceHash service) no reward in form of Bitcoins can be accounted to you. Payouts are automatic and are paid to BTC address, used in NiceHash Miner Legacy. Payment schedule can be found in FAQ on our website and is subject to change. You can always monitor your statistics on this site: https://www.nicehash.com/?p=myminer\r\n\r\nIf you have any questions relating to these Terms of Use, your rights and obligations arising from these Terms and/or your use of the NiceHash service, or any other matter, please contact us at support@nicehash.com."
+    "NiceHash Miner's Term Of Use NiceHash operates as in intermediate service by providing hashing power from hashing power owners to hashing power buyers. NiceHash does not directly provide it's own hashing power. We will do our best to provide stable, secure, and feature full service. We do not take responsibility for any kind of hashing power loss or funds loss and do not take any kind of financial, material, legal, or other responsibilities for any issues that my arise from using NiceHash Miner. NiceHash service and it's products (NiceHash Miner, etc.) is still in development, therefore some bugs or other issues may arise. We will work hard to fix any issues as soon as possible, add new features and overall improve our service. NiceHash reserves the rights to seize any funds of suspicious illegal activity such as mining with botnets, money laundering, hacking attempts, etc.\r\n\r\nAs a user of NiceHash Miner, you are providing your hashing power (your are a seller) to the hashing power buyers though NiceHash's hashing power marketplace. You earn Bitcoins from selling your hashing power for every valid share your miner generates and is accepted by NiceHash service. In some cases no shares are sent to or are accepted by NiceHash service. These cases are rare and includes usage of slower hardware, software, network errors, or simmilar. In these cases (no shares generated and accepted by NiceHash service) no reward in form of Bitcoins can be accounted to you. Payouts are automatic and are paid to BTC address, used in NiceHash Miner. Payment schedule can be found in FAQ on our website and is subject to change. You can always monitor your statistics on this site: https://www.nicehash.com/?p=myminer\r\n\r\nIf you have any questions relating to these Terms of Use, your rights and obligations arising from these Terms and/or your use of the NiceHash service, or any other matter, please contact us at support@nicehash.com.": {
+      "bg": "Общи условия за ползване на NiceHash Miner\n\rNiceHash функционира като посредническа услуга, като осигурява изчислителна мощност от продавачите на купувачите. NiceHash не предлага директно собствени изчислителни ресурси. Ние се стараем да осигуряваме стабилна, надеждна и богата откъм функции услуга. Не носим отговорност за каквито и да е загуби на изчислителна мощност или парични средства. Не носим отговорност за всякакви финансови, материални, юридически или други проблеми, които биха могли да възникнат от употребата на NiceHash Miner.\n\rУслугата на NiceHash и нейните продукти (NiceHash Legacy и др.) са все още в процес на разработка, така че е възможна появата на бъгове или други проблеми. Ние ще положим максимални усилия, за да коригираме всякакви проблеми максимално бързо, както и за да добавяме нови функции и да подобряваме цялостно нашата услуга. NiceHash си запазва правото да блокира всички парични средства от подозрителна незаконна дейност като използване на бот мрежи, пране на пари, опити за неоторизиран достъп и т.н.\r\n\r\nКато потребител на NiceHash Legacy, вие осигурявате своята изчислителна мощност (вие се явявате продавач) на купувачите на изчислителна мощност чрез пазара на NiceHash. Вие получавате възнаграждение в биткойни от продажбата на вашата изчислителна мощност за всеки валиден дял, който вашият компютър генерира и услугата NiceHash приеме. В някои случаи не се изпращат никакви дялове, или дяловете не се приемат изцяло от услугата на NiceHash. Тези случаи са рядкост и обикновено се дължат на употребата на по-бавен хаурдер или на софтуерни/мрежови грешки и други подобни причини. В такъв случай (дяловете не са генерирани или не са приети от услугата на NiceHash), не може да ви бъде предоставено възнаграждение в биткойни. Разплащанията се извършват автоматично и се изпращат към BTC адреса, посочен в NiceHash Miner. Графикът на плащанията може да бъде намерен в раздел FAQ (Често задавани въпроси) на нашия уеб сайт и подлежи на промяна. Вие можете по всяко време да следите вашата статистика на адрес https://www.nicehash.com/?p=myminer\r\n\r\nАко имате въпроси относно настоящите Общи условия; вашите права и задължения, произтичащи от тези Общи условия; използването на услугата на NiceHash, или запитвания от различен характер, моля свържете се с нас на support@nicehash.com.",
+      "es": "Términos de uso de NiceHash Miner \r\n\r\nNiceHash opera como en servicio intermedio, proporcionando poder de hashing de los propietarios de poder de hashing a los compradores de poder hashing. NiceHash no proporciona directamente su propio poder de hashing. Haremos nuestro mejor para proporcionar el servicio completo estable, seguro y de la característica. No asumimos la responsabilidad de ningún tipo de pérdida de energía de hashing o pérdida de fondos y no tomamos ningún tipo de responsabilidad financiera, material, legal u otras responsabilidades por cualquier problema que surja de usar NiceHash Miner. El servicio NiceHash y sus productos (NiceHash Miner, etc.) aún están en desarrollo, por lo que pueden surgir algunos errores u otros problemas. Trabajaremos duro para solucionar cualquier problema tan pronto como sea posible, agregar nuevas características y mejorar en general nuestro servicio. NiceHash se reserva el derecho de aprovechar los fondos de actividades ilegales sospechosas como la minería con botnets, el lavado de dinero, los intentos de hacking, etc. \r\n\r\nComo usuario de NiceHash Miner, está proporcionando su poder (como hing Vendedor) a los compradores de la energía del hashing en el mercado de la energía del hashing de NiceHash. Usted gana Bitcoins al vender su poder de hashing por cada acción válida que su minero genera y es aceptada por el servicio de NiceHash. En algunos casos, no se envían acciones o no son aceptadas por el servicio NiceHash. Estos casos son raros e incluyen el uso de hardware más lento, software o errores de red o similar. En estos casos (sin acciones generadas y sin aceptadas por el servicio de NiceHash) ninguna recompensa en forma de Bitcoins pule será contabilizada. Los pagos son automáticos y se pagan a la dirección de BTC, utilizada en NiceHash Miner. El horario de pago se puede encontrar en FAQ en nuestro sitio web y está sujeto a cambios. Siempre puede supervisar sus estadísticas en este sitio: https://www.nicehash.com/?p=myminer \r\n\r\nSi tiene alguna pregunta relacionada con estos Términos de uso, sus derechos y obligaciones derivados de estos Términos y/o su uso del servicio NiceHash, o cualquier otro asunto, póngase en contacto con nosotros en support@nicehash.com",
+      "it": "Termini di Utilizzo di NiceHash Miner. NiceHash come un servizio intermediario fornendo hashing power da possessori di hashing power ai compratori di hashing power. NiceHash fornisce direttamente il proprio hashing power. Faremo del nostro meglio per fornire un servizio stabile e sicuro. Non ci assumiamo nessuna responsabiità per ogni tipo di perdita di hashing power o di fondi e non ci assumiamo nessun tipo di responsabilità finanziaria, materiale, legale, o altre responsabilità per problemi che potrebbero presentarsi utilizzando NiceHash Miner. Il servizio di NiceHash ed i suoi prodotti (NiceHash Miner, etc.) sono ancora in sviluppo, quindi è possibile l'insorgere di bug o altri problemi. Lavoreremo duramente per cercare di risolvere qualsiasi problema il più presto possibile, aggiungere nuove funzioni migliorare il nostro servizio in generale. NiceHash si riserva il diritto di requisire tutti i fondi di sospette attività illegali come minare con botnet, riciclaggio di denaro, tentativi di hacking, etc.\r\n\r\nCome utente di NiceHash Miner, stai fornendo hashing power (sei un venditore) ai compratori di hashing power tramite il mercato di hashing power di NiceHash. Guadagni Bitcoins vendendo il tuo hashing power per ogni quota valida che il tuo miner genera e viene accettata dai servizi di NiceHash. In alcuni casi non vengono mandate quote o non vengono accettate dai servizi di NiceHash. Questi casi sono rari e includono l'uso hardware o software lenti, errori di rete, o simili. In questi casi (nessuna quota generata o accettata dai servizi di NiceHash) nessun pagamento in forma di Bitcoins può esserti assegnato. I pagamenti sono automatici e vengono indirizzati verso indirizzi Bitcoin, usati in NiceHash Miner. Il programma dei pagamenti può essere trovato nelle FAQ sul nostro sito ed è soggetto a pagamenti. Puoi sempre controllare le tue statistiche sul questo sito: https://www.nicehash.com/?p=myminer\r\n\r\nSe hai qualche domanda in relazione a questi Termini di Utilizzo, ai tuoi diritti ed ai tuoi doveri derivanti da questi Termini e/o del tuo utilizzo dei servizi di NiceHash, o qualsiasi altra domanda, contattaci a support@nicehash.com.",
+      "pl": "Licencja użytkownika NiceHash Miner: NiceHash pracuje jako serwis dostarczający mocy  obliczeniowej od właścicieli tej mocy do jej kupców. NiceHash nie dostarcza jej bezpośrednio. Będziemy robić co w naszej mocy, aby dostarczać stabilną, bezpieczną, i pełną obsługę serwisu. Nie bierzemy odpowiedzialności za żadne straty mocy obliczeniowej i nie bierzemy za nie odpowiedzialności finansowej, materialnej, prawnej ani żadnych innych odpowiedzialności za jakiekolwiek błędy podczas użytkownaia NiceHash Miner. Serwis NiceHash oraz jego produkty (NiceHash Miner, itd.) jest ciągle w opracowaniu, więc błędy i problemy mogą się przydarzyć. Będziemy ciężko pracować, aby naprawić wszelkie stwierdzone problemy i błędy oraz naprawiać je niezwłocznie, a także dodawać nowe funkcje służące do poprawy naszego serwisu. NiceHash zastrzega sobie prawo do odebrania zarobku w przypadku podejrzenia nielegalnej działalności takiej jak botnety, wyłudzanie pieniędzy, próby włamań, itp.\r\n\r\nJako użytkownik NiceHash Miner, dostarczasz swoją moc obliczeniową (jesteś sprzedawcą) do odbiorców tej mocy poprzez giełdę NiceHash. Zarabiasz bitcoiny ze sprzedaży tej mocy za każdy poprawny udział (share) wygenerowany przez Twojego górnika (miner) zaakceptowany przez serwis Nicehash. W niektórych przypadkach żadne udziały nie są przesyłane albo akceptowane przez serwis NiceHash. Takie przypadki są rzadkie i wynikają z problemów z pracą sprzętu, nieprawidłową pracą oprogramowania, połączenia internetowego i podobnych problemów. W tych przypadkach nie otrzymasz wynagrodzenia od serwisu Nicehash w formie bitcoinów. Wypłaty są zautomatyzowane i płacone w bitcoinach na Twój adres BTC użyty w programie NiceHash Miner. Harmonogram płatności jest opisany w dziale FAQ na naszej stronie i może podlegać zmianom. Zawsze możesz monitorować swoje statystyki na stronie: https://www.nicehash.com/?p=myminer\r\n\r\nJeśli masz pytania dotyczace liczencji użytkowania, swoich praw i obowiązków wynikających z tej licencji lub użytkowania serwisu NiceHash, lub jakiejkolwiek innej sprawie, skontaktuj się z naszym działem pomocy support@nicehash.com.",
+      "pt": "Termos de Uso dos Mineradores NiceHash \r\n\r\nO NiceHash opera como um serviço intermediário, fornecendo o poder de hashing dos proprietários para compradores de poder de hashing. NiceHash não fornece diretamente seu próprio poder de hashing. Faremos o nosso melhor para fornecer serviços estáveis, seguros e funcional. Nós não assumimos a responsabilidade por qualquer tipo de perda de poder de hashing ou perda de fundos e não assumimos qualquer tipo de responsabilidades financeiras, materiais, legais ou outras por quaisquer problemas que surja do uso do NiceHash Miner. O serviço NiceHash e seus produtos (NiceHash Miner, etc.) ainda estão em desenvolvimento, portanto, alguns bugs ou outros problemas podem surgir. Vamos trabalhar duro para corrigir quaisquer problemas o mais rápido possível, adicionar novas funcionalidades e melhorar o nosso serviço. NiceHash reserva o direito de apreender quaisquer fundos de actividade ilegal suspeita, como de mineração com botnets, lavagem de dinheiro, tentativas de invasão, etc.\r\n\r\nComo um usuário de NiceHash Miner, você está fornecendo seu poder de hashing (você é um vendedor) para os compradores de poder de hashing no mercado do NiceHash. Você ganha a Bitcoins vender seu poder de hashing para cada compartilhamento válido que seu mineiro gera e é aceito pelo serviço NiceHash. Em alguns casos, nenhum compartilhamento é enviado ou aceito pelo serviço NiceHash. Estes casos são raros e incluem o uso de erros de hardware, software ou rede mais lentos ou similares. Nesses casos (sem ações geradas e aceitas pelo serviço NiceHash) nenhuma recompensa na forma de Bitcoins pode ser contabilizada para você. Os pagamentos são automáticos e são pagos ao endereço BTC, usado no mineiro NiceHash. O cronograma de pagamento pode ser encontrado em FAQ em nosso site e está sujeito a alterações. Você sempre pode monitorar suas estatísticas neste site:https://www.nicehash.com/?p=myminer\r\n\r\nSe você tiver alguma dúvida relacionada com estes Termos de Uso, seus direitos e obrigações decorrentes destes Termos e / ou o uso do serviço NiceHash, ou qualquer outro assunto, entre em contato conosco (em inglês) em support@nicehash.com.",
+      "ro": "Termenii de utilizare NiceHash Miner NiceHash opereaza ca un serviciu intermediar furnizând putere de hash de la proprietarii de putere de hash către cumpărătorii de putere de hash. NiceHash nu furnizează direct propria putere de hash. Facem tot posibilul pentru a furniza un serviciu stabil, sigur și plin de funcționalități. Nu ne asumăm nici o responsabilitate pentru nici o pierdere de putere de hash sau pierdere de fonduri și nu ne asumăm nici o răspundere financiară, materială, legală sau de orice altă natură pentru nici o problemă care poate apărea din utilizarea NiceHash Miner. Serviciul NiceHash și produsele sale (NiceHash Miner, etc.) sunt încă în dezvoltare și deci pot apărea buguri sau alte probleme. Vom lucra din greu pentru remedierea problemelor cât mai repede posibil, să adaugăm noi funcționalități și să îmbunătățim serviciul nostru. NiceHash își rezervă dreptul să rețină orice fonduri rezultate din activități ilegale cum ar fi minarea cu botnet, spălarea de bani, tentative de hack, etc.\r\n\r\nCa utilizator al NiceHash Miner, vă furnizați puterea de hash (sunteți vânzător) către cumpărătorii de putere de hash prin piața de putere de hash a NiceHash. Câștigați Bitcoini prin vânzarea de putere de hash pentru fiecare share valid pe care minerul dumneavoastră îl generează și este acceptat de serviciul NiceHash. În unele cazuri nici un share nu este trimis către sau acceptat de serviciul NiceHash. Aceste cazuri sunt rare și includ utilizarea de hardware lent, software, erori de rețea sau similar. În aceste cazuri (nici un share generat și acceptat de serviciul NiceHash) nici o răsplată sub forma de Bitcoini nu poate fi contabilizată către dumneavoastră. plățile sunt automare și se fac către adresa BTC folosită în NiceHash Miner. Programul de plăți poate fi găsit în secțiunea FAQ pe websiteul nostru și poate fi modificată. Puteți să monitorizați oricând statisticile dumneavoastră pe acest site: https://www.nicehash.com/?p=myminer\r\n\r\nDacă aveți orice întrebări legate de acești Termeni de Utilizare, drepturile și obligațiile dumneavoastră care reies din acesti Termeni și/sau utilizarea serviciului NiceHash, sau orice alt subiect, vă rugăm să ne contactați la support@nicehash.com.",
+      "ru": "Условия использования NiceHash Miner\r\nNiceHash работает как посреднический сервис, предоставляющий вычислительную мощность продавцов мощности ее покупателям. NiceHash не предлагает непосредственно собственные вычислительные ресурсы. Мы сделаем все возможное, чтобы предоставить стабильный, безопасный и полнофункциональный сервис. Мы не несём ответственности за потерю мощности или денежных средств. Мы не несём ответственности за финансовые, материальные, юридические или другие проблемы, которые могут возникнуть в результате использования NiceHash Miner. Сервис NiceHash и её продукция (NiceHash Legacy и прочее) всё ещё находятся в стадии разработки, поэтому возможно появление ошибок или иных проблем. Мы приложим максимум усилий, чтобы как можно быстрее исправить проблемы, а также добавить новые функции и улучшить наш сервис. NiceHash оставляет за собой право конфисковать любые средства от подозрительной незаконной деятельности, такой как использование ботнетов, отмывание денег, попытки взлома и т. д.\r\n\r\nКак пользователь NiceHash Legacy, вы предоставляете свою вычислительную мощность (вы являетесь продавцом) покупателям мощности через рынок NiceHash. Вы зарабатываете биткоины от продажи своей мощности для майнинга за каждую валидную шару, которую генерирует ваш майнер и которая принята сервисом NiceHash. В некоторых случаях шары не отправляются на сервис NiceHash или не принимаются им. Эти случаи редки и происходят из-за использования медленного оборудования, программного обеспечения, сетевых ошибок и подобных проблем. В этих случаях (когда шары не генерируются и не принимаются сервисом NiceHash), вы не можете получить вознаграждение в виде биткоинов. Выплаты осуществляются автоматически и отправляются на Биткоин-адрес, используемый в NiceHash Miner. Расписание выплат можно найти в справке на нашем сайте, и оно может быть изменено. Вы можете отслеживать свою статистику на сайте: https://www.nicehash.com/?p=myminer\r\n\r\nЕсли у вас есть какие-либо вопросы, связанные с настоящими Условиями использования, вашими правами и обязанностями, вытекающими из этих Условий и/или вашим использованием сервиса NiceHash, либо любые другие вопросы, пожалуйста, свяжитесь с нами по адресу support-ru@nicehash.com.",
+      "zh_cn": "NiceHash Miner 使用条款 NiceHash operates as in intermediate service by providing hashing power from hashing power owners to hashing power buyers. NiceHash does not directly provide it's own hashing power. We will do our best to provide stable, secure, and feature full service. We do not take responsibility for any kind of hashing power loss or funds loss and do not take any kind of financial, material, legal, or other responsibilities for any issues that my arise from using NiceHash Miner. NiceHash service and it's products (NiceHash Miner, etc.) is still in development, therefore some bugs or other issues may arise. We will work hard to fix any issues as soon as possible, add new features and overall improve our service. NiceHash reserves the rights to seize any funds of suspicious illegal activity such as mining with botnets, money laundering, hacking attempts, etc.\r\n\r\nAs a user of NiceHash Miner, you are providing your hashing power (your are a seller) to the hashing power buyers though NiceHash's hashing power marketplace. You earn Bitcoins from selling your hashing power for every valid share your miner generates and is accepted by NiceHash service. In some cases no shares are sent to or are accepted by NiceHash service. These cases are rare and includes usage of slower hardware, software, network errors, or simmilar. In these cases (no shares generated and accepted by NiceHash service) no reward in form of Bitcoins can be accounted to you. Payouts are automatic and are paid to BTC address, used in NiceHash Miner. Payment schedule can be found in FAQ on our website and is subject to change. You can always monitor your statistics on this site: https://www.nicehash.com/?p=myminer\r\n\r\nIf you have any questions relating to these Terms of Use, your rights and obligations arising from these Terms and/or your use of the NiceHash service, or any other matter, please contact us at support@nicehash.com."
     },
     "No Supported Devices": {
       "bg": "Липсват поддържани устройства",
@@ -2159,15 +2159,15 @@
     "RPM": {
       "ru": "об/мин"
     },
-    "Random part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nRandom part is used to prevent all world-wide NiceHash Miner Legacy users to have the exact same switching pattern.": {
-      "bg": "Случайна компонента на минималния интервал време в секунди) преди програмата да превключи изчислителния алгоритъм.\nОбщият интервал е SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nСлучайната компонента е необходима, за да се избегне възможността всички потребители на NiceHash Miner Legacy в целия свят да имат еднакъв ритъм на превключване на алгоритмите.",
-      "es": "Parte aleatoria del tiempo mínimo (en segundos) antes de que el minero cambie de algoritmo.\nEl tiempo total es SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nEsta parte aleatoria es usada para que no todos los usuarios de NiceHash Miner Legacy tengan los mismos patrones de cambio de algoritmo.",
-      "it": "Tempo minimo casuale (in secondi) prima che il miner cambi algoritmo.\nIl tempo totale è dato da Passaggio minimo fisso + Passaggio minimo dinamico.\nIl tempo casuale è usato per prevenire che tutti gli utenti di NiceHash Miner Legacy cambino allo stesso momento.",
+    "Random part of minimal time (in seconds) before miner switches algorithm.\nTotal time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nRandom part is used to prevent all world-wide NiceHash Miner users to have the exact same switching pattern.": {
+      "bg": "Случайна компонента на минималния интервал време в секунди) преди програмата да превключи изчислителния алгоритъм.\nОбщият интервал е SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nСлучайната компонента е необходима, за да се избегне възможността всички потребители на NiceHash Miner в целия свят да имат еднакъв ритъм на превключване на алгоритмите.",
+      "es": "Parte aleatoria del tiempo mínimo (en segundos) antes de que el minero cambie de algoritmo.\nEl tiempo total es SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nEsta parte aleatoria es usada para que no todos los usuarios de NiceHash Miner tengan los mismos patrones de cambio de algoritmo.",
+      "it": "Tempo minimo casuale (in secondi) prima che il miner cambi algoritmo.\nIl tempo totale è dato da Passaggio minimo fisso + Passaggio minimo dinamico.\nIl tempo casuale è usato per prevenire che tutti gli utenti di NiceHash Miner cambino allo stesso momento.",
       "pl": "Część dynamiczna (losowana) minimalnego czasu (w sekundach) pomiędzy przełaczeniami algorytmów.\nŁączny czas to Czas stały + Czas dynamiczny.\nSłuży to do zapobiegania przeciążeniom serwerów.",
-      "pt": "Parte aleatória do tempo mínimo (em segundos) antes de trocar de algoritimo de mineração.\nTempo total é SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nA parte aleatória é usada para evitar que todos os usuários de NiceHash Miner Legacy em todo o mundo tenham exatamente o mesmo padrão de mudança.",
-      "ro": "Partea aleatoare a timpului minim (în secunde) înainte ca minerul să comute algoritmul.\nTimpul total este SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nPartea aleatoare este necesară pentru a preveni ca toți utilizatorii NiceHash Miner Legacy de pe glob să aibă exact același comportament de comutare.",
-      "ru": "Случайная часть минимального времени в секундах перед переключением алгоритма майнером. \nОбщее время складывается из \"Мин. переключение фикс.\" + \"Мин. переключение дин.\". \nСлучайная часть используется для предотвращения наличия одинакового шаблона переключения\nдля всех пользователей NiceHash Miner Legacy.",
-      "zh_cn": "调整算法之前挖矿程序保持运行的最小动态/随机部分时间（秒）。\n挖矿程序在调整算法之前将至少保持运行（最小静态切换间隔 + 最小动态切换间隔）秒。\n此间隔被设置为随机，以防止所有的NiceHash Miner Legacy用户拥有完全相同的算法切换规律。"
+      "pt": "Parte aleatória do tempo mínimo (em segundos) antes de trocar de algoritimo de mineração.\nTempo total é SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nA parte aleatória é usada para evitar que todos os usuários de NiceHash Miner em todo o mundo tenham exatamente o mesmo padrão de mudança.",
+      "ro": "Partea aleatoare a timpului minim (în secunde) înainte ca minerul să comute algoritmul.\nTimpul total este SwitchMinSecondsFixed + SwitchMinSecondsDynamic.\nPartea aleatoare este necesară pentru a preveni ca toți utilizatorii NiceHash Miner de pe glob să aibă exact același comportament de comutare.",
+      "ru": "Случайная часть минимального времени в секундах перед переключением алгоритма майнером. \nОбщее время складывается из \"Мин. переключение фикс.\" + \"Мин. переключение дин.\". \nСлучайная часть используется для предотвращения наличия одинакового шаблона переключения\nдля всех пользователей NiceHash Miner.",
+      "zh_cn": "调整算法之前挖矿程序保持运行的最小动态/随机部分时间（秒）。\n挖矿程序在调整算法之前将至少保持运行（最小静态切换间隔 + 最小动态切换间隔）秒。\n此间隔被设置为随机，以防止所有的NiceHash Miner用户拥有完全相同的算法切换规律。"
     },
     "Rate:": {
       "bg": "Доход:",
@@ -2435,15 +2435,15 @@
       "ru": "Настройки",
       "zh_cn": "设置"
     },
-    "Settings change requires NiceHash Miner Legacy to restart.": {
-      "bg": "Промяната в настройките налага рестарт на NiceHash Miner Legacy.",
-      "es": "Algunas opciones exigen que NiceHash Miner Legacy se reinicie.",
-      "it": "Modifiche delle impostazioni necessitano il riavvio di NiceHash Miner Legacy.",
-      "pl": "Zmiana ustawień wymaga restartu NiceHash Miner Legacy.",
-      "pt": "A alteração de configurações requer que NiceHash Miner Legacy seja reiniciado.",
-      "ro": "Modificările setărilor necesită repornirea NiceHash Miner Legacy.",
-      "ru": "Смена настроек требует перезапуска NiceHash Miner Legacy.",
-      "zh_cn": "设置变更需要NiceHash Miner Legacy重新启动才能生效。"
+    "Settings change requires NiceHash Miner to restart.": {
+      "bg": "Промяната в настройките налага рестарт на NiceHash Miner.",
+      "es": "Algunas opciones exigen que NiceHash Miner se reinicie.",
+      "it": "Modifiche delle impostazioni necessitano il riavvio di NiceHash Miner.",
+      "pl": "Zmiana ustawień wymaga restartu NiceHash Miner.",
+      "pt": "A alteração de configurações requer que NiceHash Miner seja reiniciado.",
+      "ro": "Modificările setărilor necesită repornirea NiceHash Miner.",
+      "ru": "Смена настроек требует перезапуска NiceHash Miner.",
+      "zh_cn": "设置变更需要NiceHash Miner重新启动才能生效。"
     },
     "Settings saved!": {
       "bg": "Настройките са записани!",
@@ -2702,15 +2702,15 @@
     "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
       "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину затрат на электроэнергию,\nесли стоимость электроэнергии и потребление мощности больше 0."
     },
-    "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue.": {
-      "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. NiceHash Miner Legacy няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно NiceHash Miner Legacy и да опитате да поправите този проблем.",
-      "es": "Faltan algunos archivos desde el último inicio. Asegúrese de que su antivirus no bloquea la aplicación. NiceHash Miner Legacy podría no funcionar correctamente al faltar algunos archivos. Elige Sí para reinicializar NiceHash Miner Legacy e intentar repararlo.",
-      "it": "Ci sono file mancanti dall'ultima inizializzazione miners. Assicurati che l'antivirus non stia bloccando l'applicazione. NiceHash Miner Legacy potrebbe non funzionare correttamente senza i file mancanti. Clicca Si per reinizializzare NiceHash Miner Legacy per provare a risolvere il problema.",
-      "pl": "Wykryto brak plików od ostatniej inicjalizacji górników. Upewnij się, że antywirus nie blokuje programu. NiceHash Miner Legacy może ale nie musi pracować poprawnie kiedy brakuje plików. Wybierz Tak by zrestartować NiceHash Miner Legacy, aby spróbował to naprawić.",
-      "pt": "Faltam arquivos da última Inicialização do Minerador. Certifique-se de que seu antivírus não está bloqueando o aplicativo. O mineiro NiceHash pode não funcionar corretamente sem arquivos ausentes. Clique em Sim para reinicializar o NiceHash Miner Legacy para tentar resolver esse problema.",
-      "ro": "Lipsesc fișiere de la ultima Inițializare a Minerilor. Vă rugăm să vă asigurați ca anitvirusul nu blochează aplicația. NiceHash Miner Legacy poate să nu funcționeze corect fără fișierele lipsă. Apăsați Da pentru a reinițializa NiceHash Miner Legacy pentru a încerca remedierea situației.",
-      "ru": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. NiceHash Miner Legacy может не работать правильно без недостающих файлов. Нажмите «Да» для переустановки NiceHash Miner Legacy, чтобы попробовать исправить ошибку.",
-      "zh_cn": "自上次程序初始化后有文件缺失。请确保杀毒软件没有干扰此程序的正常运行。在缺失文件的情况下NiceHash Miner Legacy可能无法正常运作。点击“是”来重新初始化NiceHash Miner Legacy并尝试修复此异常。"
+    "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Click Yes to reinitialize NiceHash Miner to try to fix this issue.": {
+      "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. NiceHash Miner няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно NiceHash Miner и да опитате да поправите този проблем.",
+      "es": "Faltan algunos archivos desde el último inicio. Asegúrese de que su antivirus no bloquea la aplicación. NiceHash Miner podría no funcionar correctamente al faltar algunos archivos. Elige Sí para reinicializar NiceHash Miner e intentar repararlo.",
+      "it": "Ci sono file mancanti dall'ultima inizializzazione miners. Assicurati che l'antivirus non stia bloccando l'applicazione. NiceHash Miner potrebbe non funzionare correttamente senza i file mancanti. Clicca Si per reinizializzare NiceHash Miner per provare a risolvere il problema.",
+      "pl": "Wykryto brak plików od ostatniej inicjalizacji górników. Upewnij się, że antywirus nie blokuje programu. NiceHash Miner może ale nie musi pracować poprawnie kiedy brakuje plików. Wybierz Tak by zrestartować NiceHash Miner, aby spróbował to naprawić.",
+      "pt": "Faltam arquivos da última Inicialização do Minerador. Certifique-se de que seu antivírus não está bloqueando o aplicativo. O mineiro NiceHash pode não funcionar corretamente sem arquivos ausentes. Clique em Sim para reinicializar o NiceHash Miner para tentar resolver esse problema.",
+      "ro": "Lipsesc fișiere de la ultima Inițializare a Minerilor. Vă rugăm să vă asigurați ca anitvirusul nu blochează aplicația. NiceHash Miner poate să nu funcționeze corect fără fișierele lipsă. Apăsați Da pentru a reinițializa NiceHash Miner pentru a încerca remedierea situației.",
+      "ru": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. NiceHash Miner может не работать правильно без недостающих файлов. Нажмите «Да» для переустановки NiceHash Miner, чтобы попробовать исправить ошибку.",
+      "zh_cn": "自上次程序初始化后有文件缺失。请确保杀毒软件没有干扰此程序的正常运行。在缺失文件的情况下NiceHash Miner可能无法正常运作。点击“是”来重新初始化NiceHash Miner并尝试修复此异常。"
     },
     "There are no enabled algorithms for selected devices. Go to Settings or Benchmarks and enable at least 1 Algorithm.": {
       "bg": "Няма активирани алгоритми за избраното устройство. Отидете в 'Настройки' или 'Тест за скорост' и активирайте поне един алгоритъм.",
@@ -2978,15 +2978,15 @@
       "ru": "Предупреждение! Вы выбираете закрытие настроек без сохранения. Вы уверены, что хотите продолжить?",
       "zh_cn": "警告！您选择了关闭并不保存设置。是否继续？"
     },
-    "We have detected a Video Controller that is not working properly. NiceHash Miner Legacy will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.": {
-      "bg": "Открихме неизправен видеоконтролер. NiceHash Miner Legacy няма да може да използва този контролер за изчисления. Съветваме ви да рестартирате компютъра или да преинсталирате драйверите на видео контролера.",
-      "es": "Hemos detectado que un controlador de vídeo no está funcionando correctamente. NiceHash Miner Legacy no será capaz de usar este controlador de vídeo para minar. Le recomendamos reiniciar el ordenador o reinstalar los drivers o controladores de vídeo.",
-      "it": "Abbiamo rilevato un Controller Video che non sta funzionando correttamente. NiceHash Miner Legacy non sarà in grado di usare questo controller video per minare. Ti suggeriamo di riavviare il computer, o reinstallare i driver del tuo Controller Video.",
-      "pl": "Wykryto nieprawidłową pracę kontrolera video. NiceHash Miner Legacy nie będzie go używać do kopania. Zalecamy zrestartować komputer lub przeinstalować sterowniki.",
-      "pt": "Detectamos um controlador de vídeo que não está funcionando. O NiceHash Miner Legacy não poderá usar este controlador de vídeo para mineração. Recomendamos que você reinicie o computador ou reinstale os controladores de video.",
-      "ro": "Am detectat un Controler Video care nu funcționează corect. NiceHash Miner Legacy nu va putea să folosească acest Controler Video pentru minare. Vă recomandăm să reporniți calculatorul sau să reinstalați driverele Controlerului Video.",
-      "ru": "Мы обнаружили, что видеоконтроллер не работает нормально. NiceHash Miner Legacy не сможет использовать этот видеоконтроллер для майнинга. Мы советуем вам перезагрузить ваш компьютер, либо переустановить драйверы видеоконтроллера.",
-      "zh_cn": "检测到有图形处理器工作异常。NiceHash Miner Legacy无法使用此图形处理器进行挖矿。我们建议您重启计算机，或重新安装图形处理器的驱动程序。"
+    "We have detected a Video Controller that is not working properly. NiceHash Miner will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.": {
+      "bg": "Открихме неизправен видеоконтролер. NiceHash Miner няма да може да използва този контролер за изчисления. Съветваме ви да рестартирате компютъра или да преинсталирате драйверите на видео контролера.",
+      "es": "Hemos detectado que un controlador de vídeo no está funcionando correctamente. NiceHash Miner no será capaz de usar este controlador de vídeo para minar. Le recomendamos reiniciar el ordenador o reinstalar los drivers o controladores de vídeo.",
+      "it": "Abbiamo rilevato un Controller Video che non sta funzionando correttamente. NiceHash Miner non sarà in grado di usare questo controller video per minare. Ti suggeriamo di riavviare il computer, o reinstallare i driver del tuo Controller Video.",
+      "pl": "Wykryto nieprawidłową pracę kontrolera video. NiceHash Miner nie będzie go używać do kopania. Zalecamy zrestartować komputer lub przeinstalować sterowniki.",
+      "pt": "Detectamos um controlador de vídeo que não está funcionando. O NiceHash Miner não poderá usar este controlador de vídeo para mineração. Recomendamos que você reinicie o computador ou reinstale os controladores de video.",
+      "ro": "Am detectat un Controler Video care nu funcționează corect. NiceHash Miner nu va putea să folosească acest Controler Video pentru minare. Vă recomandăm să reporniți calculatorul sau să reinstalați driverele Controlerului Video.",
+      "ru": "Мы обнаружили, что видеоконтроллер не работает нормально. NiceHash Miner не сможет использовать этот видеоконтроллер для майнинга. Мы советуем вам перезагрузить ваш компьютер, либо переустановить драйверы видеоконтроллера.",
+      "zh_cn": "检测到有图形处理器工作异常。NiceHash Miner无法使用此图形处理器进行挖矿。我们建议您重启计算机，或重新安装图形处理器的驱动程序。"
     },
     "We have detected that your Nvidia Driver is older than {0}{1}. We recommend you to update to {2} or newer.": {
       "bg": "Вашият драйвер за Nvidia е по-стар от {0}{1}. Препоръчваме актуализация до {2} или по-нова версия.",
@@ -2997,14 +2997,14 @@
       "ru": "Мы обнаружили, что ваш драйвер старее {0}{1}. Мы рекомендуем вам обновиться до {2} или новее.",
       "zh_cn": "我们检测到您的Nvidia驱动旧于{0}{1}。我们建议您升级至{2}或更高版本。"
     },
-    "We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner Legacy to work correctly you should upgrade your drivers to recommended {1} or newer. If you still see this warning after updating the driver please uninstall all your Nvidia drivers and make a clean install of the latest official driver from http://www.nvidia.com.": {
-      "bg": "Установихме, че системата ви има видеокарта Nvidia, но драйверът е по-стар от {0}. За коректната работа на NiceHash Miner Legacy е необходимо да актуализирате драйвера до препоръчаната версия {1} или по-нов. Ако все още виждате това предупреждение след актуализация на драйвера, деинсталирайте всички драйвери на Nvidia и инсталирайте на чисто последният официален драйвер от http://www.nvidia.com.",
-      "es": "Hemos detectado que el sistema tiene GPUs de NVIDIA, pero tu driver es más antiguo que {0}. Para que NiceHash Miner Legacy funcione correctamente debería actualizar su driver a la versión recomendada {1} o mayor.",
-      "it": "Abbiamo rilevato che il tuo sistema ha GPU NVIDIA, ma i tuoi driver sono più vecchi di {0}. Per fare in modo che NiceHash Miner Legacy funzioni correttamente dovresti aggiornare i driver alla versione {1} o superiori. Se vedi ancora questo avviso dopo aver aggiornato i driver disinstalla tutti i tuoi driver NVIDIA ed esegui una installazione pulita dei driver ufficiali più recenti da http://www.nvidia.com.",
-      "pl": "Wykryto, ze masz karty Nvidia, ale sterownik jest starszy niż {0}. Aby NiceHash Miner Legacy pracował poprawnie należy zaktualizować sterownik do {1} lub nowszego. Jeśli nadal będziesz po tym widzieć ten komunikat, odinstaluj wszystkie sterowniki Nvidia i wykonaj czystą instalację (taki ptaszek w instalatorze Nvidia). Pobierz sterowniki z http://www.nvidia.com.",
-      "ro": "Am detectat că sistemul dumneavoastră are GPUuri Nvidia, dar driverul este mai vechi de {0}. Pentru ca NiceHash Miner Legacy să funcționeze corect trebuie să upgradați driverele la versiunea recomandată {1} sau mai nouă. Dacaă vedeți această avertizare și după actualizarea driverului vă rugăm să dezinstalați toate driverele Nvidia și să instalați pe curat cel mai nou driver oficial de la http://www.nvidia.com.",
-      "ru": "Мы обнаружили, что в вашей системе есть устройства Nvidia GPU, но ваш драйвер старее, чем {0}. Для правильной работы NiceHash Miner Legacy вам следует обновить ваши драйверы до рекомендуемых {1} или новее. Если вы все ещё видите это предупреждение после обновления драйверов, удалите, пожалуйста, все ваши драйверы для Nvidia и выполните чистую установку последних официальных драйверов с http://www.nvidia.com.",
-      "zh_cn": "我们检测到您的系统装有Nvidia图形处理器，但是您的驱动版本旧于{0}。为确保NiceHash Miner Legacy的正常运作，您应该将驱动升级至推荐版本 {1} 或更高。若您在升级驱动后仍遇此警告，请删除现有驱动并从官网 http://www.nvidia.com 下载并重新安装最新版本。"
+    "We have detected that your system has Nvidia GPUs, but your driver is older than {0}. In order for NiceHash Miner to work correctly you should upgrade your drivers to recommended {1} or newer. If you still see this warning after updating the driver please uninstall all your Nvidia drivers and make a clean install of the latest official driver from http://www.nvidia.com.": {
+      "bg": "Установихме, че системата ви има видеокарта Nvidia, но драйверът е по-стар от {0}. За коректната работа на NiceHash Miner е необходимо да актуализирате драйвера до препоръчаната версия {1} или по-нов. Ако все още виждате това предупреждение след актуализация на драйвера, деинсталирайте всички драйвери на Nvidia и инсталирайте на чисто последният официален драйвер от http://www.nvidia.com.",
+      "es": "Hemos detectado que el sistema tiene GPUs de NVIDIA, pero tu driver es más antiguo que {0}. Para que NiceHash Miner funcione correctamente debería actualizar su driver a la versión recomendada {1} o mayor.",
+      "it": "Abbiamo rilevato che il tuo sistema ha GPU NVIDIA, ma i tuoi driver sono più vecchi di {0}. Per fare in modo che NiceHash Miner funzioni correttamente dovresti aggiornare i driver alla versione {1} o superiori. Se vedi ancora questo avviso dopo aver aggiornato i driver disinstalla tutti i tuoi driver NVIDIA ed esegui una installazione pulita dei driver ufficiali più recenti da http://www.nvidia.com.",
+      "pl": "Wykryto, ze masz karty Nvidia, ale sterownik jest starszy niż {0}. Aby NiceHash Miner pracował poprawnie należy zaktualizować sterownik do {1} lub nowszego. Jeśli nadal będziesz po tym widzieć ten komunikat, odinstaluj wszystkie sterowniki Nvidia i wykonaj czystą instalację (taki ptaszek w instalatorze Nvidia). Pobierz sterowniki z http://www.nvidia.com.",
+      "ro": "Am detectat că sistemul dumneavoastră are GPUuri Nvidia, dar driverul este mai vechi de {0}. Pentru ca NiceHash Miner să funcționeze corect trebuie să upgradați driverele la versiunea recomandată {1} sau mai nouă. Dacaă vedeți această avertizare și după actualizarea driverului vă rugăm să dezinstalați toate driverele Nvidia și să instalați pe curat cel mai nou driver oficial de la http://www.nvidia.com.",
+      "ru": "Мы обнаружили, что в вашей системе есть устройства Nvidia GPU, но ваш драйвер старее, чем {0}. Для правильной работы NiceHash Miner вам следует обновить ваши драйверы до рекомендуемых {1} или новее. Если вы все ещё видите это предупреждение после обновления драйверов, удалите, пожалуйста, все ваши драйверы для Nvidia и выполните чистую установку последних официальных драйверов с http://www.nvidia.com.",
+      "zh_cn": "我们检测到您的系统装有Nvidia图形处理器，但是您的驱动版本旧于{0}。为确保NiceHash Miner的正常运作，您应该将驱动升级至推荐版本 {1} 或更高。若您在升级驱动后仍遇此警告，请删除现有驱动并从官网 http://www.nvidia.com 下载并重新安装最新版本。"
     },
     "We have integrated 3rd party mining software that should speed up your mining and give you more stable mining experience - this could potentially result in more earnings over a shorter period of time even after developer's fee is deducted. However, since this is 3rd party software that is fully closed-source, we have no chance to inspect it in any way. NiceHash can not vouch for using that software and is refusing to take any responsibility for any damage caused, security breaches, loss of data or funds, system or hardware error, and other issues. By agreeing to this disclaimer you take full responsibility for using these closed-source miners as they are.": {
       "bg": "Програмата интегрира изчислителен софтуер на трето лице (разработен от Claymore), който би трябвало да увеличи скоростта на изчисленията и да осигури по-стабилна работа. Това може да доведе до по-голяма печалба за по-кратък период от време дори след удържането на таксата на разработчика. Тъй като обаче този допълнителен софтуер е с изцяло затворен изходен код, ние нямаме възможност да го инспектираме по какъвто и да е начин. NiceHash не може да гарантира за употребата на този софтуер и отказва отговорност за всякакви щети, причинени от неговата употреба: пробиви в сигурността, загуба на данни или пари, системни или хардуерни грешки, или други проблеми. Потвърждавайки своето съгласие с тази декларация за отказ от отговорност, вие поемате пълна отговорност за използването на софтуера със затворен код на Claymore 'такъв, какъвто е'.",
@@ -3043,87 +3043,87 @@
       "ru": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг\nпотенциально более стабильным, но значительно медленнее (особенно для карт AMD).",
       "zh_cn": "选中此复选框将禁用所有默认优化配置。这将使得挖矿更为稳定但速度更慢（尤其对于AMD设备）。"
     },
-    "When checked, NiceHash Miner Legacy will automatically start mining when launched.": {
-      "bg": "Когато тази опция е маркирана, NiceHash Miner Legacy автоматично ще започне изчисления с пускането на програмата.",
-      "es": "Si está marcada, NiceHash Miner Legacy empezará a minar al abrirse.",
-      "it": "Quando spuntato, NiceHash Miner Legacy inizierà a minare automaticamente appena avviato.",
-      "pl": "Spowoduje automatyczny start kopania po uruchomieniu programu NiceHash Miner Legacy.",
-      "pt": "Quando marcado, o NiceHash Miner Legacy iniciará automaticamente a mineração quando iniciado.",
-      "ro": "Când bifați, NiceHash Miner Legacy o să mineze automat la pornire.",
-      "ru": "Если отмечено, NiceHash Miner Legacy будет автоматически \nначинать майнинг при запуске программы.",
+    "When checked, NiceHash Miner will automatically start mining when launched.": {
+      "bg": "Когато тази опция е маркирана, NiceHash Miner автоматично ще започне изчисления с пускането на програмата.",
+      "es": "Si está marcada, NiceHash Miner empezará a minar al abrirse.",
+      "it": "Quando spuntato, NiceHash Miner inizierà a minare automaticamente appena avviato.",
+      "pl": "Spowoduje automatyczny start kopania po uruchomieniu programu NiceHash Miner.",
+      "pt": "Quando marcado, o NiceHash Miner iniciará automaticamente a mineração quando iniciado.",
+      "ro": "Când bifați, NiceHash Miner o să mineze automat la pornire.",
+      "ru": "Если отмечено, NiceHash Miner будет автоматически \nначинать майнинг при запуске программы.",
       "zh_cn": "选择此处以在程序开启后自动开始挖矿。"
     },
-    "When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще установи всички поддържани NVIDIA видеокарти в режим P0.\nТова води до леко повишаване на производителността при някои алгоритми.\nТази опция изисква административни привилегии, за да бъде активирана.",
-      "es": "Si está marcado, NiceHash Miner Legacy pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
-      "it": "Quando spuntato, NiceHash Miner Legacy cambierà lo stato di tutte le GPU NVIDIA allo stato P0.\nQuesto migliorerà le prestazioni con certi algoritmi.\nQuesta funzione richiede privilegi di amministratore per essere eseguita.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner Legacy ustawi kartom NVIDIA GPUs tzw. P0 state.\nMoże to znacznie zwiększyć wydajność dla niektórych algorytmów.\nWymaga uprawnień administratora Windows.",
-      "ro": "Când bifați, NiceHash Miner Legacy o să treacă toate GPUurile NVIDIA suportate îm starea P0.\nAcest lucru o să îmbunătățească ușor performanța anumitor algoritmi.\nAceastă funcționalitate necesită ca drepturile administrative să fie activate.",
-      "ru": "Если отмечено, NiceHash Miner Legacy изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会把所有受支持的NVIDIA图形处理器调整到P0状态。\n这将略微增强部分算法的执行速率。\n开启此功能需要管理员权限。"
+    "When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.": {
+      "bg": "Когато тази опция е активна, NiceHash Miner ще установи всички поддържани NVIDIA видеокарти в режим P0.\nТова води до леко повишаване на производителността при някои алгоритми.\nТази опция изисква административни привилегии, за да бъде активирана.",
+      "es": "Si está marcado, NiceHash Miner pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
+      "it": "Quando spuntato, NiceHash Miner cambierà lo stato di tutte le GPU NVIDIA allo stato P0.\nQuesto migliorerà le prestazioni con certi algoritmi.\nQuesta funzione richiede privilegi di amministratore per essere eseguita.",
+      "pl": "Kiedy zaznaczone, NiceHash Miner ustawi kartom NVIDIA GPUs tzw. P0 state.\nMoże to znacznie zwiększyć wydajność dla niektórych algorytmów.\nWymaga uprawnień administratora Windows.",
+      "ro": "Când bifați, NiceHash Miner o să treacă toate GPUurile NVIDIA suportate îm starea P0.\nAcest lucru o să îmbunătățească ușor performanța anumitor algoritmi.\nAceastă funcționalitate necesită ca drepturile administrative să fie activate.",
+      "ru": "Если отмечено, NiceHash Miner изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора.",
+      "zh_cn": "若选择此复选框，NiceHash Miner将会把所有受支持的NVIDIA图形处理器调整到P0状态。\n这将略微增强部分算法的执行速率。\n开启此功能需要管理员权限。"
     },
-    "When checked, NiceHash Miner Legacy will minimize to tray.": {
-      "bg": "Когато тази опция е маркирана, NiceHash Miner Legacy ще се минимизира като икона в статус лентата.",
-      "es": "Si está marcada, NiceHash Miner Legacy se minimizará a la bandeja (Tray).",
-      "it": "Quando spuntato, NiceHash Miner Legacy verrà ridotto a icona.",
-      "pl": "Spowoduje minimalizowanie NiceHash Miner Legacy do ikony obok zegara systemowego.",
-      "pt": "Quando marcado, o NiceHash Miner Legacy minimizará para a bandeja.",
-      "ro": "Când bifați, NiceHash Miner Legacy va fi minimizat în tray.",
-      "ru": "Если отмечено, NiceHash Miner Legacy будет сворачиваться в трей.",
-      "zh_cn": "选择此处使NiceHash Miner Legacy最小化至托盘。"
+    "When checked, NiceHash Miner will minimize to tray.": {
+      "bg": "Когато тази опция е маркирана, NiceHash Miner ще се минимизира като икона в статус лентата.",
+      "es": "Si está marcada, NiceHash Miner se minimizará a la bandeja (Tray).",
+      "it": "Quando spuntato, NiceHash Miner verrà ridotto a icona.",
+      "pl": "Spowoduje minimalizowanie NiceHash Miner do ikony obok zegara systemowego.",
+      "pt": "Quando marcado, o NiceHash Miner minimizará para a bandeja.",
+      "ro": "Când bifați, NiceHash Miner va fi minimizat în tray.",
+      "ru": "Если отмечено, NiceHash Miner будет сворачиваться в трей.",
+      "zh_cn": "选择此处使NiceHash Miner最小化至托盘。"
     },
-    "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
-      "it": "Quando spuntato, NiceHash Miner Legacy eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner Legacy uruchomi skrypt OnGPUsLost.bat w wypadku gdy\nwykryje utratę co najmniej jednego GPU CUDA, domyślnie skrypt zrestartuje całą maszynę.",
-      "ro": "Când bifați, NiceHash Miner Legacy o să ruleze OnGPUsLost.bat atunci când cel puțin un GPU CUDA este pierdut,\nimplicit scriptul o să restarteze întregul sistem.",
-      "ru": "Если отмечено, NiceHash Miner Legacy запустит OnGPUsLost.bat \nпри потере хотя бы одного устройства CUDA GPU,\nпо умолчанию скрипт должен перезапускать всю систему.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将在探测到有CUDA GPU停止响应后执行OnGPUsLost.bat脚本。默认脚本会重新启动计算机。"
+    "When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
+      "bg": "Когато тази опция е активна, NiceHash Miner ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
+      "it": "Quando spuntato, NiceHash Miner eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
+      "pl": "Kiedy zaznaczone, NiceHash Miner uruchomi skrypt OnGPUsLost.bat w wypadku gdy\nwykryje utratę co najmniej jednego GPU CUDA, domyślnie skrypt zrestartuje całą maszynę.",
+      "ro": "Când bifați, NiceHash Miner o să ruleze OnGPUsLost.bat atunci când cel puțin un GPU CUDA este pierdut,\nimplicit scriptul o să restarteze întregul sistem.",
+      "ru": "Если отмечено, NiceHash Miner запустит OnGPUsLost.bat \nпри потере хотя бы одного устройства CUDA GPU,\nпо умолчанию скрипт должен перезапускать всю систему.",
+      "zh_cn": "若选择此复选框，NiceHash Miner将在探测到有CUDA GPU停止响应后执行OnGPUsLost.bat脚本。默认脚本会重新启动计算机。"
     },
-    "When checked, NiceHash Miner Legacy will run on login.": {
-      "bg": "Когато тази опция е маркирана, NiceHash Miner Legacy ще се стартира при първоначално зареждане.",
-      "es": "Cuando se selecciona, NiceHash Miner Legacy se ejecutará al iniciar sesión.",
-      "it": "Quando spuntato, NiceHash Miner Legacy verrà avviato all'avvio di Windows.",
-      "pl": "Spowoduje automatyczne uruchomienie NiceHash Miner Legacy po starcie Windows.",
-      "pt": "Quando marcado, NiceHash Miner Legacy será executado no login.",
-      "ro": "Când este bifat, NiceHash Miner Legacy va rula la login.",
-      "ru": "Если отмечено, NiceHash Miner Legacy будет запущен при входе в систему.",
-      "zh_cn": "选择此处使NiceHash Miner Legacy开机自动启动。"
+    "When checked, NiceHash Miner will run on login.": {
+      "bg": "Когато тази опция е маркирана, NiceHash Miner ще се стартира при първоначално зареждане.",
+      "es": "Cuando se selecciona, NiceHash Miner se ejecutará al iniciar sesión.",
+      "it": "Quando spuntato, NiceHash Miner verrà avviato all'avvio di Windows.",
+      "pl": "Spowoduje automatyczne uruchomienie NiceHash Miner po starcie Windows.",
+      "pt": "Quando marcado, NiceHash Miner será executado no login.",
+      "ro": "Când este bifat, NiceHash Miner va rula la login.",
+      "ru": "Если отмечено, NiceHash Miner будет запущен при входе в систему.",
+      "zh_cn": "选择此处使NiceHash Miner开机自动启动。"
     },
-    "When checked, NiceHash Miner Legacy would issue a warning if\na less optimal version of a driver is installed.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще ви предупреждава, ако\nе инсталирана неоптимална версия на драйвера за видеокартата.",
-      "es": "Si está marcado, NiceHash Miner Legacy dará un aviso si\nla versión óptima del driver está instalada.",
-      "it": "Quando spuntato, NiceHash Miner Legacy mostrerà un avviso se\nun driver non ottimale è installato.",
-      "pl": "Po zaznaczeniu NiceHash Miner Legacy pokaże ostrzeżenie\njeśli wykryje nieoptymalny sterownik.",
-      "ro": "Când bifați, NiceHash Miner Legacy o sa genereze o avertizare dacă\no versiune mai puțin optimă de driver este instalată.",
-      "ru": "Если отмечено, NiceHash Miner Legacy будет показывать предупреждение,\nесли установлена не самая оптимальная версия драйвера.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会在\n检测到非最优驱动版本时显示警告。"
+    "When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed.": {
+      "bg": "Когато тази опция е активна, NiceHash Miner ще ви предупреждава, ако\nе инсталирана неоптимална версия на драйвера за видеокартата.",
+      "es": "Si está marcado, NiceHash Miner dará un aviso si\nla versión óptima del driver está instalada.",
+      "it": "Quando spuntato, NiceHash Miner mostrerà un avviso se\nun driver non ottimale è installato.",
+      "pl": "Po zaznaczeniu NiceHash Miner pokaże ostrzeżenie\njeśli wykryje nieoptymalny sterownik.",
+      "ro": "Când bifați, NiceHash Miner o sa genereze o avertizare dacă\no versiune mai puțin optimă de driver este instalată.",
+      "ru": "Если отмечено, NiceHash Miner будет показывать предупреждение,\nесли установлена не самая оптимальная версия драйвера.",
+      "zh_cn": "若选择此复选框，NiceHash Miner将会在\n检测到非最优驱动版本时显示警告。"
     },
-    "When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще покаже предупреждение,\nако няма работеща връзка към интернет.",
-      "it": "Quando spuntato, NiceHash Miner Legacy mostrerà un avviso se\nla connessione a Internet non è disponibile.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner Legacy pokaże ostrzeżenie, \njeśli straci połączenie internetowe.",
-      "ro": "Când bifați, NiceHash Miner Legacy o să vă avertizeze dacă\nnu este disponibilă conexiunea la internet.",
-      "ru": "Если отмечено, NiceHash Miner Legacy будет показывать предупреждение,\nкогда соединение с интернетом недоступно.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会在\n互联网连接不可用时显示警告。"
+    "When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available.": {
+      "bg": "Когато тази опция е активна, NiceHash Miner ще покаже предупреждение,\nако няма работеща връзка към интернет.",
+      "it": "Quando spuntato, NiceHash Miner mostrerà un avviso se\nla connessione a Internet non è disponibile.",
+      "pl": "Kiedy zaznaczone, NiceHash Miner pokaże ostrzeżenie, \njeśli straci połączenie internetowe.",
+      "ro": "Când bifați, NiceHash Miner o să vă avertizeze dacă\nnu este disponibilă conexiunea la internet.",
+      "ru": "Если отмечено, NiceHash Miner будет показывать предупреждение,\nкогда соединение с интернетом недоступно.",
+      "zh_cn": "若选择此复选框，NiceHash Miner将会在\n互联网连接不可用时显示警告。"
     },
-    "When checked, NiceHash Miner Legacy would use the new settings page.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще използва новия панел за настройки.",
-      "es": "Si está marcado, NiceHash Miner Legacy usará la nueva página de configuración.",
-      "it": "Quando spuntato, NiceHash Miner Legacy userà la nuova pagina delle impostazioni.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner Legacy będzie używać nowej strony ustawień.",
-      "ro": "Cînd bifați, NiceHash Miner Legacy o să folosească noua pagină de setări.",
-      "ru": "Если отмечено, NiceHash Miner Legacy будет использовать новую страницу настроек.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将启用新版的设置页面。"
+    "When checked, NiceHash Miner would use the new settings page.": {
+      "bg": "Когато тази опция е активна, NiceHash Miner ще използва новия панел за настройки.",
+      "es": "Si está marcado, NiceHash Miner usará la nueva página de configuración.",
+      "it": "Quando spuntato, NiceHash Miner userà la nuova pagina delle impostazioni.",
+      "pl": "Kiedy zaznaczone, NiceHash Miner będzie używać nowej strony ustawień.",
+      "ro": "Cînd bifați, NiceHash Miner o să folosească noua pagină de setări.",
+      "ru": "Если отмечено, NiceHash Miner будет использовать новую страницу настроек.",
+      "zh_cn": "若选择此复选框，NiceHash Miner将启用新版的设置页面。"
     },
-    "When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.": {
-      "bg": "Когато тази опция е активна, при блокиране на програмата за изчисления\nNiceHash Miner Legacy ще може да я рестартира, тъй като контролът няма да бъде\r\nблокиран от съобщението за грешка на Windows.\r\n\r\nПрепоръчително е тази настройка да бъде активирана, за да се гарантира\r\nнепрекъснатост на изчислителния процес, тъй като програмите\r\nот този тип не са 100% стабилни.",
-      "es": "Si está marcado, si un minero crasheara,NiceHash Miner Legacy sería capaz de reabrirlo si no está bloqueado por algún mensaje de error de Windows.\nEs recomendable dejarlo activado para que se pueda minar ininterrunpidamente con unos mineros que no sean completamente estables.",
-      "it": "Quando spuntato, nel caso di un crash del miner,\nNiceHash Miner Legacy sarà ancora in grado di riavviare ancora il miner se non è bloccato da un messaggio di errore di Windows.\nÈ consigliabile spuntare questa opzione per minare ininterrottamente in quanto i programmi di mining non sono stabili al 100%.",
-      "pl": "Kiedy zaznaczone, w przypadku wykrzaczenia się górnika,\nNiceHash Miner Legacy będzie próbować uruchomić go ponownie i nie będzie to blokowane przez raportowanie błędów Windows.\nZalecane kiedy program kopiący nie jest całkowicie stabilny, co się niestety zdarza.",
-      "ro": "Când bifați, în caz că minerul se blochează,\nNiceHash Miner Legacy o să poată sa-l repornească nefiind blocat de mesaj de eroare Windows.\nEste recomandat ca această setare să fie bifată pentru minare neîntreruptă din cauză ca programele miner nu sunt 100% stabile.",
-      "ru": "Если отмечено, в случае аварийного завершения работы майнера NiceHash Miner Legacy \nперезапустит майнер без блокирования сообщением об ошибке Windows. \nРекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将可以\n自动重启奔溃的挖矿程序。Windows错误报告会阻止NiceHash Miner Legacy执行这一重启。\n由于挖矿程序不尽完善，我们推荐开启此选项。"
+    "When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.": {
+      "bg": "Когато тази опция е активна, при блокиране на програмата за изчисления\nNiceHash Miner ще може да я рестартира, тъй като контролът няма да бъде\r\nблокиран от съобщението за грешка на Windows.\r\n\r\nПрепоръчително е тази настройка да бъде активирана, за да се гарантира\r\nнепрекъснатост на изчислителния процес, тъй като програмите\r\nот този тип не са 100% стабилни.",
+      "es": "Si está marcado, si un minero crasheara,NiceHash Miner sería capaz de reabrirlo si no está bloqueado por algún mensaje de error de Windows.\nEs recomendable dejarlo activado para que se pueda minar ininterrunpidamente con unos mineros que no sean completamente estables.",
+      "it": "Quando spuntato, nel caso di un crash del miner,\nNiceHash Miner sarà ancora in grado di riavviare ancora il miner se non è bloccato da un messaggio di errore di Windows.\nÈ consigliabile spuntare questa opzione per minare ininterrottamente in quanto i programmi di mining non sono stabili al 100%.",
+      "pl": "Kiedy zaznaczone, w przypadku wykrzaczenia się górnika,\nNiceHash Miner będzie próbować uruchomić go ponownie i nie będzie to blokowane przez raportowanie błędów Windows.\nZalecane kiedy program kopiący nie jest całkowicie stabilny, co się niestety zdarza.",
+      "ro": "Când bifați, în caz că minerul se blochează,\nNiceHash Miner o să poată sa-l repornească nefiind blocat de mesaj de eroare Windows.\nEste recomandat ca această setare să fie bifată pentru minare neîntreruptă din cauză ca programele miner nu sunt 100% stabile.",
+      "ru": "Если отмечено, в случае аварийного завершения работы майнера NiceHash Miner \nперезапустит майнер без блокирования сообщением об ошибке Windows. \nРекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны.",
+      "zh_cn": "若选择此复选框，NiceHash Miner将可以\n自动重启奔溃的挖矿程序。Windows错误报告会阻止NiceHash Miner执行这一重启。\n由于挖矿程序不尽完善，我们推荐开启此选项。"
     },
     "When checked, it displays debug console.": {
       "bg": "Когато маркирате тази опция, debug конзолата ще се показва.",
@@ -3155,15 +3155,15 @@
       "ru": "Если отмечено, окна sgminer, ccminer, cpuminer и ethmier будут спрятаны.",
       "zh_cn": "选择此处来隐藏挖矿程序 (sgminer, ccminer, cpuminer and ethminer) 的命令行窗口。"
     },
-    "When unchecked NiceHash Miner Legacy will allow only one instance running (it will close a new started instance if there is an opened instance running).": {
-      "bg": "Ако не е поставена отметка, NiceHash Miner Legacy ще позволява само едно копие на програмата да работи в даден момент (ако програмата вече е стартирана, новото копие ще се самозатвори).",
-      "es": "Cuando está desactivado, NiceHash Miner Legacy solo podrá estar ejecutandose una ver al mismo tiempo (cerraá cuaquier instancia adicional).",
-      "it": "Quando senza spunta NiceHash Miner Legacy consentirà solo una istanza aperta (se è presente una istanza attiva quella nuova verrà automaticamente chiusa).",
-      "pl": "Kiedy nie zaznaczone, NiceHash Miner Legacy pozwoli tylko na jedną instancję programu.",
-      "pt": "Quando desmarcado, o NiceHash Miner Legacy permitirá que apenas uma instância seja executada (fechará uma nova instância iniciada se houver uma instância aberta em execução).",
-      "ro": "Când nu este bifat NiceHash Miner Legacy o să permită să ruleze o singură instanță (o să închidă o nouă instanță pornită dacă exista deja o instantță care rulează).",
-      "ru": "Если не отмечено, NiceHash Miner Legacy разрешит работу только одного экземпляра\n(он закроет новый запущенный экземпляр, если один экземпляр уже работает).",
-      "zh_cn": "如果未选中此复选框，NiceHash Miner Legacy仅允许一个NML应用程序实例运行（如果NML已在运行，您将无法启动第二个NML实例）。"
+    "When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running).": {
+      "bg": "Ако не е поставена отметка, NiceHash Miner ще позволява само едно копие на програмата да работи в даден момент (ако програмата вече е стартирана, новото копие ще се самозатвори).",
+      "es": "Cuando está desactivado, NiceHash Miner solo podrá estar ejecutandose una ver al mismo tiempo (cerraá cuaquier instancia adicional).",
+      "it": "Quando senza spunta NiceHash Miner consentirà solo una istanza aperta (se è presente una istanza attiva quella nuova verrà automaticamente chiusa).",
+      "pl": "Kiedy nie zaznaczone, NiceHash Miner pozwoli tylko na jedną instancję programu.",
+      "pt": "Quando desmarcado, o NiceHash Miner permitirá que apenas uma instância seja executada (fechará uma nova instância iniciada se houver uma instância aberta em execução).",
+      "ro": "Când nu este bifat NiceHash Miner o să permită să ruleze o singură instanță (o să închidă o nouă instanță pornită dacă exista deja o instantță care rulează).",
+      "ru": "Если не отмечено, NiceHash Miner разрешит работу только одного экземпляра\n(он закроет новый запущенный экземпляр, если один экземпляр уже работает).",
+      "zh_cn": "如果未选中此复选框，NiceHash Miner仅允许一个NML应用程序实例运行（如果NML已在运行，您将无法启动第二个NML实例）。"
     },
     "Windows Management Instrumentation Error": {
       "bg": "Windows Management Instrumentation грешка",
@@ -3201,25 +3201,25 @@
       "ru": "Вы можете использовать прежние значения бенчмарка. Выберите «Да», для использования прежних значений бенчмарка или выберите «Нет» для перезапуска бенчмарка.",
       "zh_cn": "您可以使用之前的测试结果。请点击“是”使用之前的结果，或点击“否”重新执行测试。"
     },
-    "You have not entered a bitcoin address. NiceHash Miner Legacy will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {
-      "bg": "Не сте въвели bitcoin адрес. NiceHash Miner Legacy ще започне работа в ДЕМО режим. Използвайте ДЕМО режима, за да тествате приложението и да видите колко можете да спечелите, използвайки своя компютър. Искате ли да продължите в ДЕМО режим?\n\nВНИМАНИЕ: НЯМА 'Да' ПОЛУЧИТЕ НИКАКВО ВЪЗНАГРАЖДЕНИЕ, ДОКАТО РАБОТИТЕ В ДЕМО РЕЖИМ!",
-      "es": "No has introducido una dirección Bitcoin. NiceHash Miner Legacy empezará a minar en modo DEMO. En el modo DEMO, pueder probar al minero y ver cuanto puedes ganar usando tu ordenador. ¿Quieres continuar en modo DEMO?\n\nAVISO: ¡No ganarás nada en modo DEMO!",
-      "it": "Non hai inserito un indirizzo Bitcoin. NiceHash Miner Legacy inizierà a minare in modalità DEMO. In modalità DEMO, puoi testare il miner e vedere quanto puoi guadagnare usando il tuo computer. Vuoi continuare in modalità DEMO?\n\nAVVERTENZA: NON GUADAGNERAI NIENTE DURANTE LA MODALITÀ DEMO!",
-      "pl": "Nie wprowadziłeś adresu bitcoin. NiceHash Miner Legacy będzie pracować w trybie DEMO. Możesz testować program i obserwować, jak dużo możesz zarobić za pomocą komputera. Kontynuować w trybie DEMO?\n\nINFORMACJA: NIC NIE ZARABIASZ W TRYBIE DEMO!",
-      "pt": "Você não colocou um endereço bitcoin. NiceHash Miner Legacy vai começar a minerar no modo DEMO. No modo DEMO você pode testar o minerador e poderá ver quando pode ganhar usando seu computador. Você gostaria de continuar no modo de DEMONSTRAÇÃO?\n\nAVISO: VOCÊ NÃO VAI GANHAR NADA DURANTE O MODO DE DEMNOSNTRAÇÃO!!",
-      "ro": "Nu ați introdus o adresă bitcoin. NiceHash Miner Legacy va rula în mod DEMO. În mod DEMO, puteți testa minerii și vedea cât puteți câștiga cu acest calculator. Doriți să continuați în mod DEMO?\n\nATENȚIE: NU VEȚI CÂȘTIGA NIMIC ÎN MOD DEMO!",
-      "ru": "Вы не ввели Биткоин-адрес. NiceHash Miner Legacy начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nВНИМАНИЕ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!",
-      "zh_cn": "您并没有指定比特币提现地址。NiceHash Miner Legacy将进入演示模式。您可以在演示模式下测试您的计算机及其挖矿收益。是否继续进入演示模式？\n\n注意，在演示模式下您将不会获发任何挖矿所得！"
+    "You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {
+      "bg": "Не сте въвели bitcoin адрес. NiceHash Miner ще започне работа в ДЕМО режим. Използвайте ДЕМО режима, за да тествате приложението и да видите колко можете да спечелите, използвайки своя компютър. Искате ли да продължите в ДЕМО режим?\n\nВНИМАНИЕ: НЯМА 'Да' ПОЛУЧИТЕ НИКАКВО ВЪЗНАГРАЖДЕНИЕ, ДОКАТО РАБОТИТЕ В ДЕМО РЕЖИМ!",
+      "es": "No has introducido una dirección Bitcoin. NiceHash Miner empezará a minar en modo DEMO. En el modo DEMO, pueder probar al minero y ver cuanto puedes ganar usando tu ordenador. ¿Quieres continuar en modo DEMO?\n\nAVISO: ¡No ganarás nada en modo DEMO!",
+      "it": "Non hai inserito un indirizzo Bitcoin. NiceHash Miner inizierà a minare in modalità DEMO. In modalità DEMO, puoi testare il miner e vedere quanto puoi guadagnare usando il tuo computer. Vuoi continuare in modalità DEMO?\n\nAVVERTENZA: NON GUADAGNERAI NIENTE DURANTE LA MODALITÀ DEMO!",
+      "pl": "Nie wprowadziłeś adresu bitcoin. NiceHash Miner będzie pracować w trybie DEMO. Możesz testować program i obserwować, jak dużo możesz zarobić za pomocą komputera. Kontynuować w trybie DEMO?\n\nINFORMACJA: NIC NIE ZARABIASZ W TRYBIE DEMO!",
+      "pt": "Você não colocou um endereço bitcoin. NiceHash Miner vai começar a minerar no modo DEMO. No modo DEMO você pode testar o minerador e poderá ver quando pode ganhar usando seu computador. Você gostaria de continuar no modo de DEMONSTRAÇÃO?\n\nAVISO: VOCÊ NÃO VAI GANHAR NADA DURANTE O MODO DE DEMNOSNTRAÇÃO!!",
+      "ro": "Nu ați introdus o adresă bitcoin. NiceHash Miner va rula în mod DEMO. În mod DEMO, puteți testa minerii și vedea cât puteți câștiga cu acest calculator. Doriți să continuați în mod DEMO?\n\nATENȚIE: NU VEȚI CÂȘTIGA NIMIC ÎN MOD DEMO!",
+      "ru": "Вы не ввели Биткоин-адрес. NiceHash Miner начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nВНИМАНИЕ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!",
+      "zh_cn": "您并没有指定比特币提现地址。NiceHash Miner将进入演示模式。您可以在演示模式下测试您的计算机及其挖矿收益。是否继续进入演示模式？\n\n注意，在演示模式下您将不会获发任何挖矿所得！"
     },
-    "You have not run benchmark for device {0}. Without benchmarking first, NiceHash Miner Legacy will not be able to switch to the most profitable algorithm. To continue mining, choose Yes. If you wish to benchmark first, choose No and click on the benchmark button.": {
-      "bg": "До момента не сте изпълнявали тестове за скорост за {0}. Без най-напред да тества неговата производителност, NiceHash Miner Legacy няма да може да избира най-доходоносния алгоритъм. За да продължите с изчисленията, изберете 'Yes'. Ако предпочитате първо да изпълните тестовете за скорост, изберете 'No' и след това кликнете бутона 'Тест скорост'.",
-      "es": "No ha hecho ningún benchmark para el dispositivo {0}. Sin hacer un benchmark primero, NiceHash Miner Legacy no podrá cambiar al algoritmo más rentable. Para continuar, pulsa Sí. Si le gustaría hacer un benchmark primero, pulse No y haga click en Benchmark.",
-      "it": "Non hai eseguito il benchmark per il dispositivo {0}. Senza prima un benchmark, NiceHash Miner Legacy non sarà in grado di passare all'algoritmo più redditizio. Per continuare a minare, clicca Si. Se vuoi prima eseguire un benchmark, clicca No e clicca sul pulsante benchmark.",
-      "pl": "Nie wykonałeś benchmarków urządzenia {0}. Bez tego NiceHash Miner Legacy nie może przełączać się na najbardziej zyskowny algorytm. aby kontynuować kopanie, wybierz Tak. Aby przejść do benchmarków, wybierz Nie i kliknij na Benchmark.",
-      "pt": "Você não executou benchmark para o dispositivo {0}. Sem fazer o benchmark primeiro, o NiceHash Miner Legacy não poderá escolher o algoritmo mais lucrativo. Para continuar a mineração, escolha Sim. Se você deseja fazer o benchmark primeiro, escolha Não e clique no botão de benchmark.",
-      "ro": "Nu ați rulat benchmark pentru dispozitivul {0}. Fără rularea mai întâi a benchmarkului, NiceHash Miner Legacy nu va avea posibilitatea de a comuta la cel mai profitabil algoritm. Pentru a continua minarea, alegeți Da. Dacă doriți să rulați mai întâi benchmark, alegeți Nu și apăsați butonul benchmark.",
-      "ru": "Вы ещё не сделали бенчмарк для устройства {0}. Без бенчмарка NiceHash Miner Legacy не сможет переключаться на наиболее прибыльный алгоритм. Для продолжения майнинга, нажмите «Да». Если вы хотите сперва сделать бенчмарк, выберите «Нет» и нажмите на кнопку «Бенчмарк».",
-      "zh_cn": "您还没有对设备{0}进行基准测试。NiceHash Miner Legacy在没有基准测试的情况下将无法对您的设备使用收益最优的挖矿算法。如要继续挖矿，请点击“是”。如果您想进行基准测试，请点击“否”然后在主界面中选择“基准测试”按钮。"
+    "You have not run benchmark for device {0}. Without benchmarking first, NiceHash Miner will not be able to switch to the most profitable algorithm. To continue mining, choose Yes. If you wish to benchmark first, choose No and click on the benchmark button.": {
+      "bg": "До момента не сте изпълнявали тестове за скорост за {0}. Без най-напред да тества неговата производителност, NiceHash Miner няма да може да избира най-доходоносния алгоритъм. За да продължите с изчисленията, изберете 'Yes'. Ако предпочитате първо да изпълните тестовете за скорост, изберете 'No' и след това кликнете бутона 'Тест скорост'.",
+      "es": "No ha hecho ningún benchmark para el dispositivo {0}. Sin hacer un benchmark primero, NiceHash Miner no podrá cambiar al algoritmo más rentable. Para continuar, pulsa Sí. Si le gustaría hacer un benchmark primero, pulse No y haga click en Benchmark.",
+      "it": "Non hai eseguito il benchmark per il dispositivo {0}. Senza prima un benchmark, NiceHash Miner non sarà in grado di passare all'algoritmo più redditizio. Per continuare a minare, clicca Si. Se vuoi prima eseguire un benchmark, clicca No e clicca sul pulsante benchmark.",
+      "pl": "Nie wykonałeś benchmarków urządzenia {0}. Bez tego NiceHash Miner nie może przełączać się na najbardziej zyskowny algorytm. aby kontynuować kopanie, wybierz Tak. Aby przejść do benchmarków, wybierz Nie i kliknij na Benchmark.",
+      "pt": "Você não executou benchmark para o dispositivo {0}. Sem fazer o benchmark primeiro, o NiceHash Miner não poderá escolher o algoritmo mais lucrativo. Para continuar a mineração, escolha Sim. Se você deseja fazer o benchmark primeiro, escolha Não e clique no botão de benchmark.",
+      "ro": "Nu ați rulat benchmark pentru dispozitivul {0}. Fără rularea mai întâi a benchmarkului, NiceHash Miner nu va avea posibilitatea de a comuta la cel mai profitabil algoritm. Pentru a continua minarea, alegeți Da. Dacă doriți să rulați mai întâi benchmark, alegeți Nu și apăsați butonul benchmark.",
+      "ru": "Вы ещё не сделали бенчмарк для устройства {0}. Без бенчмарка NiceHash Miner не сможет переключаться на наиболее прибыльный алгоритм. Для продолжения майнинга, нажмите «Да». Если вы хотите сперва сделать бенчмарк, выберите «Нет» и нажмите на кнопку «Бенчмарк».",
+      "zh_cn": "您还没有对设备{0}进行基准测试。NiceHash Miner在没有基准测试的情况下将无法对您的设备使用收益最优的挖矿算法。如要继续挖矿，请点击“是”。如果您想进行基准测试，请点击“否”然后在主界面中选择“基准测试”按钮。"
     },
     "You're not using the optimal AMD Driver version. The most stable driver for mining is the 15.7.1 version.\nWe strongly suggest you to use this driver version.": {
       "bg": "Не използвате оптимална версия на драйвера за AMD. Най-стабилната версия за изчисления е 15.7.1.\nГорещо ви препоръчваме да използвате тази версия.",
@@ -3261,15 +3261,15 @@
       "ru": "{0}% : Бенчмарк {1}… Подождите, пожалуйста…",
       "zh_cn": "{0}% : 正在测试{1}.. 请稍后.."
     },
-    "{0}: File {1} is not found!\n\nPlease make sure that the file is accessible and that your anti-virus is not blocking the application.\nPlease refer the section \"My anti-virus is blocking the application\" at the Troubleshooting section ({2}).\n\nA re-download of NiceHash Miner Legacy might be needed.": {
-      "bg": "{0}: Файлът {1} не може да бъде открит!\n\nУверете се, че файлът е достъпен и антивирусната ви програма не блокира приложението.\nЗа повече информация вижте раздела \"My anti-virus is blocking the application\" в страницата за поддръка ({2}).\n\nМоже да се наложи да свалите повторно NiceHash Miner Legacy.",
-      "es": "{0}: No se ha encontrado el archivo {1}!\n\nPor favor asegúrate de que el archivo as accesible y que tu antivirus no está bloqueando la aplicación.\nPor favor vea la sección \"My anti-virus is blocking the application\" en la sección de corrección de errores {2}.\n\nSe podría necesitar reinstalar NiceHash Miner Legacy",
-      "it": "{0}: Il file {1} non è stato trovato!\n\nAssicurati che il file sia accessibile e che il tuo antivirus non stia bloccando l'applicazione.\nGuarda la sezione \"My anti-virus is blocking the application\" nella scheda Troubleshooting ({2}).\n\nPotrebbe essere necessario riscaricare NiceHash Miner Legacy.",
+    "{0}: File {1} is not found!\n\nPlease make sure that the file is accessible and that your anti-virus is not blocking the application.\nPlease refer the section \"My anti-virus is blocking the application\" at the Troubleshooting section ({2}).\n\nA re-download of NiceHash Miner might be needed.": {
+      "bg": "{0}: Файлът {1} не може да бъде открит!\n\nУверете се, че файлът е достъпен и антивирусната ви програма не блокира приложението.\nЗа повече информация вижте раздела \"My anti-virus is blocking the application\" в страницата за поддръка ({2}).\n\nМоже да се наложи да свалите повторно NiceHash Miner.",
+      "es": "{0}: No se ha encontrado el archivo {1}!\n\nPor favor asegúrate de que el archivo as accesible y que tu antivirus no está bloqueando la aplicación.\nPor favor vea la sección \"My anti-virus is blocking the application\" en la sección de corrección de errores {2}.\n\nSe podría necesitar reinstalar NiceHash Miner",
+      "it": "{0}: Il file {1} non è stato trovato!\n\nAssicurati che il file sia accessibile e che il tuo antivirus non stia bloccando l'applicazione.\nGuarda la sezione \"My anti-virus is blocking the application\" nella scheda Troubleshooting ({2}).\n\nPotrebbe essere necessario riscaricare NiceHash Miner.",
       "pl": "{0}: Plik {1} nie znaleziony!\n\nUpewnij się, że plik jest dla Ciebie dostępny oraz że antywirus go nie blokuje.\nPrzeczytaj \"Mój antywirus blokuje program\" w dziale pomocy ({2}).\n\nMoże być konieczne ponowne pobranie programu.",
-      "pt": "{0}: O arquivo {1} não foi encontrado!\n\nVerifique se o arquivo está acessível e seu antivírus não está bloqueando o aplicativo.\nConsulte a seção \"Meu anti-vírus está bloqueando o aplicativo\" Na seção de solução de problemas ({2}).\n\nBaixar NiceHash Miner Legacy novamente pode ser necessário.",
-      "ro": "{0}: Fișierul {1} nu este găsit!\n\nVă rog să vă asigurați că fișierul este accesibil și antivirusul nu blochează aplicația.\nVerificați secțiunea \"My anti-virus is blocking the application\" în secțiunea Troubleshooting ({2}).\n\nDescărcarea din nou a NiceHash Miner Legacy poate fi necesară.",
-      "ru": "{0}: Файл {1} не найден!\n\nУбедитесь, пожалуйста, что этот файл доступен и что ваш антивирус не блокирует приложение.\nОбратитесь, пожалуйста, к разделу \"My anti-virus is blocking the application\" \nв разделе решения проблем ({2}).\n\nМожет понадобиться повторная загрузка NiceHash Miner Legacy.",
-      "zh_cn": "{0}：文件{1}未找到！\n\n请确认文件可访问并确认杀毒软件没有阻挡此程序。\n请参照Troubleshooting章节中的\"My anti-virus is blocking the application\"小节({2})。\n\n您可能需要重新下载NiceHash Miner Legacy。"
+      "pt": "{0}: O arquivo {1} não foi encontrado!\n\nVerifique se o arquivo está acessível e seu antivírus não está bloqueando o aplicativo.\nConsulte a seção \"Meu anti-vírus está bloqueando o aplicativo\" Na seção de solução de problemas ({2}).\n\nBaixar NiceHash Miner novamente pode ser necessário.",
+      "ro": "{0}: Fișierul {1} nu este găsit!\n\nVă rog să vă asigurați că fișierul este accesibil și antivirusul nu blochează aplicația.\nVerificați secțiunea \"My anti-virus is blocking the application\" în secțiunea Troubleshooting ({2}).\n\nDescărcarea din nou a NiceHash Miner poate fi necesară.",
+      "ru": "{0}: Файл {1} не найден!\n\nУбедитесь, пожалуйста, что этот файл доступен и что ваш антивирус не блокирует приложение.\nОбратитесь, пожалуйста, к разделу \"My anti-virus is blocking the application\" \nв разделе решения проблем ({2}).\n\nМожет понадобиться повторная загрузка NiceHash Miner.",
+      "zh_cn": "{0}：文件{1}未找到！\n\n请确认文件可访问并确认杀毒软件没有阻挡此程序。\n请参照Troubleshooting章节中的\"My anti-virus is blocking the application\"小节({2})。\n\n您可能需要重新下载NiceHash Miner。"
     }
   }
 }

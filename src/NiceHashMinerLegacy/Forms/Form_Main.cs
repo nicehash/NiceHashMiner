@@ -310,7 +310,7 @@ namespace NiceHashMiner
                 _showWarningNiceHashData)
             {
                 _showWarningNiceHashData = false;
-                var dialogResult = MessageBox.Show(Tr("NiceHash Miner Legacy requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner Legacy. Would you like to continue?"),
+                var dialogResult = MessageBox.Show(Tr("NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner. Would you like to continue?"),
                     Tr("Check internet connection"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
@@ -395,7 +395,7 @@ namespace NiceHashMiner
             if (settings.IsChange && settings.IsChangeSaved && settings.IsRestartNeeded)
             {
                 MessageBox.Show(
-                    Tr("Settings change requires NiceHash Miner Legacy to restart."),
+                    Tr("Settings change requires NiceHash Miner to restart."),
                     Tr("Restart Notice"),
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ApplicationStateManager.RestartProgram();
@@ -417,7 +417,7 @@ namespace NiceHashMiner
             {
                 _isManuallyStarted = false;
                 ApplicationStateManager.StopAllDevice();
-                MessageBox.Show(Tr("NiceHash Miner Legacy cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm."),
+                MessageBox.Show(Tr("NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm."),
                     Tr("Warning!"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -527,7 +527,7 @@ namespace NiceHashMiner
             {
                 if (showWarnings)
                 {
-                    var result = MessageBox.Show(Tr("You have not entered a bitcoin address. NiceHash Miner Legacy will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"),
+                    var result = MessageBox.Show(Tr("You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"),
                         Tr("Start mining in DEMO mode?"),
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -535,7 +535,7 @@ namespace NiceHashMiner
                     {
                         _demoMode = true;
                         labelDemoMode.Visible = true;
-                        labelDemoMode.Text = Tr("NiceHash Miner Legacy is running in DEMO mode!");
+                        labelDemoMode.Text = Tr("NiceHash Miner is running in DEMO mode!");
                     }
                     else
                     {
