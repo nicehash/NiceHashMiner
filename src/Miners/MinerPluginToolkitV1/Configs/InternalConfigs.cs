@@ -50,7 +50,6 @@ namespace MinerPluginToolkitV1.Configs
             catch (Exception e)
             {
                 Logger.Error("InternalConfigs", $"Error occured while reading file settings from {filePath}: {e.Message}");
-                //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {e}");
                 return null;
             }
             return null;
@@ -79,7 +78,6 @@ namespace MinerPluginToolkitV1.Configs
             catch (Exception e)
             {
                 Logger.Error("InternalConfigs", $"Error occured while writing file settings to {filePath}: {e.Message}");
-                //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {e}");
                 return false;
             }
         }
@@ -106,12 +104,16 @@ namespace MinerPluginToolkitV1.Configs
             catch (Exception e)
             {
                 Logger.Info("InternalConfigs", $"Error occured while writing file settings to {filePath}: {e.Message}");
-                //Helpers.ConsolePrint(_tag, $"ReadFile {FilePath}: exception {e}");
                 return false;
             }
         }
 
-        // this checks if there are user settings and returns that if not then it saves the given defaultSettings to a file
+        /// <summary>
+        /// InitMinerSystemEnvironmentVariablesSettings checks if there is MinerSystemEnvironmentVariables json file and returns file settings from it
+        /// If there is no file, the new one is generated with default settings
+        /// </summary>
+        /// <param name="pluginRoot"></param> represents root path of plugin
+        /// <param name="defaultSettings"></param> represents default settings to write if there are no custom settings available
         public static MinerSystemEnvironmentVariables InitMinerSystemEnvironmentVariablesSettings(string pluginRoot, MinerSystemEnvironmentVariables defaultSettings)
         {
             var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
@@ -131,6 +133,12 @@ namespace MinerPluginToolkitV1.Configs
             return null;
         }
 
+        /// <summary>
+        /// InitInternalsHelper checks if there is MinerOptionsPackage json file and returns MinerOptionsPackage <see cref="MinerOptionsPackage"/> from it
+        /// If file doesn't exist or UseUserSettings equals false, the new file is generated with settings from parameter <paramref name="minerOptionsPackage"/> 
+        /// </summary>
+        /// <param name="pluginRoot"></param> represents root path of plugin
+        /// <param name="minerOptionsPackage"></param> represents MinerOptionsPackage that will be written to file if the file doesn't exist and UseUserSettings equals false
         public static MinerOptionsPackage InitInternalsHelper(string pluginRoot, MinerOptionsPackage minerOptionsPackage)
         {
             var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
@@ -146,6 +154,13 @@ namespace MinerPluginToolkitV1.Configs
             }
         }
 
+        /// <summary>
+        /// InitMinerReservedPorts checks if there is MinerReservedPorts json file and returns MinerReservedPorts <see cref="MinerReservedPorts"/> from it
+        /// If file doesn't exist or UseUserSettings equals false, the new file is generated with settings from parameter <paramref name="minerReservedPorts"/> 
+        /// </summary>
+        /// <param name="pluginRoot"></param> represents root path of plugin
+        /// <param name="minerReservedPorts"></param> represents MinerReservedPorts that will be written to file if the file doesn't exist and UseUserSettings equals false
+        /// <returns></returns>
         public static MinerReservedPorts InitMinerReservedPorts(string pluginRoot, MinerReservedPorts minerReservedPorts)
         {
             var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
