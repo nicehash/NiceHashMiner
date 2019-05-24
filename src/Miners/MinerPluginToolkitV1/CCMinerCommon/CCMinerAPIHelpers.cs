@@ -71,6 +71,8 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                     var gpus = threadsApiResult.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var gpu in gpus)
                     {
+                        if (gpu == "\0") continue;
+
                         var gpuOptvalPairs = gpu.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         var gpuData = new IdPowerHash();
                         foreach (var optvalPairs in gpuOptvalPairs)
