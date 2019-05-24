@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NiceHashMinerLegacy.Common;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Devices.Querying.Nvidia
 {
@@ -23,8 +24,18 @@ namespace NiceHashMiner.Devices.Querying.Nvidia
                 cudaDevices = cudaQueryResult.CudaDevices;
 
                 if (cudaDevices != null && cudaDevices.Count != 0) {
-                    var driverVer = cudaQueryResult.DriverVersion.Split('.').Select(s => int.Parse(s)).ToArray();
-                    CUDADevice.INSTALLED_NVIDIA_DRIVERS = new Version(driverVer[0], driverVer[1]);
+                    // NVIDIA drivers
+                    if (cudaQueryResult?.NvmlLoaded ?? false)
+                    {
+                        var driverVer = cudaQueryResult.DriverVersion.Split('.').Select(s => int.Parse(s)).ToArray();
+                        CUDADevice.INSTALLED_NVIDIA_DRIVERS = new Version(driverVer[0], driverVer[1]);
+                    }
+                    else
+                    {
+                        Logger.Error(Tag, $"CudaDevicesDetection NVIDIA DCH driver detected");
+                        var nvidiaDriver = WindowsManagementObjectSearcher.NvidiaDriver;
+                        CUDADevice.INSTALLED_NVIDIA_DRIVERS = new Version(nvidiaDriver.LeftPart, nvidiaDriver.RightPart);
+                    }
                     return true;
                 }
                 
