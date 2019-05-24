@@ -21,11 +21,29 @@ namespace MinerPluginToolkitV1
     /// </summary>
     public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
     {
+        /// <summary>
+        /// This is internal ID counter used for logging
+        /// </summary>
         private static ulong _MINER_COUNT_ID = 0;
+        /// <summary>
+        /// This is tag used for logging, specific for each <see cref="MinerBase"/> object
+        /// </summary>
         private string _baseTag { get; set; }
+        /// <summary>
+        /// LogGroup is used to deferentiate between different miners in logs
+        /// </summary>
         protected string _logGroup { get; private set; }
+        /// <summary>
+        /// UUID is universal unique identifier for each <see cref="MinerBase"/> object
+        /// </summary>
         protected string _uuid { get; private set; }
+        /// <summary>
+        /// This holds MinerProcess (<see cref="Process"/>)
+        /// </summary>
         protected Process _miningProcess;
+        /// <summary>
+        /// This is a collection of <see cref="MiningPair"/>s 
+        /// </summary>
         protected IEnumerable<MiningPair> _miningPairs;
         protected string _miningLocation;
         protected string _username;
