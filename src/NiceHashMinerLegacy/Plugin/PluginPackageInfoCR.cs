@@ -86,7 +86,7 @@ namespace NiceHashMiner.Plugin
         {
             get
             {
-                var supportedDevicesAlgorithms = LocalInfo?.SupportedDevicesAlgorithms ?? OnlineInfo?.SupportedDevicesAlgorithms;
+                var supportedDevicesAlgorithms = LocalInfo?.SupportedDevicesAlgorithms ?? OnlineInfo?.SupportedDevicesAlgorithms ?? new Dictionary<string, List<string>>();
                 return supportedDevicesAlgorithms;
             }
         }

@@ -1,4 +1,4 @@
-echo "DeviceDetectionPrinter.exe cuda p" >> device_detection_test_output.txt
+echo "DeviceDetectionPrinter.exe cuda p" > device_detection_test_output.txt
 .\DeviceDetectionPrinter.exe cuda p >> device_detection_test_output.txt
 echo. >> device_detection_test_output.txt
 

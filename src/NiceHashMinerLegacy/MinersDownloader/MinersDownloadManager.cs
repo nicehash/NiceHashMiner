@@ -20,11 +20,11 @@ namespace NiceHashMiner.MinersDownloader
     public static class MinersDownloadManager
     {
         private static readonly DownloadSetup StandardDlSetup = new DownloadSetup(
-            "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/bin.7z",
+            "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.4/bin.7z",
             "bins.7z");
 
         private static readonly DownloadSetup ThirdPartyDlSetup = new DownloadSetup(
-            "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/bin_3rdparty.7z",
+            "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.4/bin_3rdparty.7z",
             "bins_3rdparty.7z");
 
         static MinersDownloadManager()
