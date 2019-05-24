@@ -19,8 +19,8 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
     ///     DefaultValue = "90",
     ///     Delimiter = " "
     /// }
-/// </example>
-[Serializable]
+    /// </example>
+    [Serializable]
     public class MinerOption
     {
         /// <summary>

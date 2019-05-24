@@ -3,16 +3,23 @@ using System.Collections.Generic;
 namespace MinerPlugin
 {
     /// <summary>
-    /// This class is used to save Benchmark results
-    /// It has 3 properties
-    /// 1) AlgorithmTypeSpeeds which is list of AlgorithmTypeSpeedPair; for more info about this class <see cref="AlgorithmTypeSpeedPair"/>
-    /// 2) Success which tells us if benchmark was successfull
-    /// 3) ErrorMessage which gives us error message in case of unsuccessfull benchmarking
+    /// This class is used to report Benchmark results
     /// </summary>
     public class BenchmarkResult
     {
+        /// <summary>
+        /// AlgorithmTypeSpeeds is list of AlgorithmTypeSpeedPair (one or two elements depending on if algorithm is single or dual); for more info about this class <see cref="AlgorithmTypeSpeedPair"/>
+        /// </summary>
         public IReadOnlyList<AlgorithmTypeSpeedPair> AlgorithmTypeSpeeds { get; set; } = null;
+      
+        /// <summary>
+        /// Success tells us if benchmark finished (we can still have some unsuccessfull benchmarks with speeds - this indicates that the benchmarks weren't executed as planned)
+        /// </summary>
         public bool Success  { get; set; } = false;
+      
+        /// <summary>
+        /// ErrorMessage gives us error message in case of unsuccessfull benchmarking
+        /// </summary>
         public string ErrorMessage { get; set; } = "";
 
         /// <summary>

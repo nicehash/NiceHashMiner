@@ -16,7 +16,7 @@ using System.ComponentModel;
 
 namespace MinerPluginToolkitV1
 {
-    // TODO there is no watchdog
+
     public abstract class MinerBase : IMiner, IBinAndCwdPathsGettter
     {
         private static ulong _MINER_COUNT_ID = 0;

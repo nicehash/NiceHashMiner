@@ -6,6 +6,9 @@ using System.Net.NetworkInformation;
 
 namespace MinerPluginToolkitV1
 {
+    /// <summary>
+    /// naloga tega classa je da je integriran z nhm in da preverja rezervirane porte za minerje (MinerBase implementacija) , integriran je s clientom... user si lahko strogo rezervira porte za posebne algorithme
+    /// </summary>
     public static class FreePortsCheckerManager
     {
         public static int ApiBindPortPoolStart { get; set; } = 4000;

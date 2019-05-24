@@ -8,10 +8,8 @@ namespace MinerPlugin
     public class AlgorithmTypeSpeedPair
     {
         /// <summary>
-        /// Constructor that takes AlgorithmType (<see cref="AlgorithmType."/> and speed as arguments and create AlgorithmTypeSpeedPair with it
+        /// Constructor that takes <see cref="NiceHashMinerLegacy.Common.Enums.AlgorithmType"/> and speed as arguments and create AlgorithmTypeSpeedPair with it
         /// </summary>
-        /// <param name="algorithmType"></param>
-        /// <param name="speed"></param>
         public AlgorithmTypeSpeedPair(AlgorithmType algorithmType, double speed)
         {
             AlgorithmType = algorithmType;
