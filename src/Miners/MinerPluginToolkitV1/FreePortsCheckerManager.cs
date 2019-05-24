@@ -7,7 +7,8 @@ using System.Net.NetworkInformation;
 namespace MinerPluginToolkitV1
 {
     /// <summary>
-    /// naloga tega classa je da je integriran z nhm in da preverja rezervirane porte za minerje (MinerBase implementacija) , integriran je s clientom... user si lahko strogo rezervira porte za posebne algorithme
+    /// FreePortsCheckerManager class is checking reserved ports for miners (<see cref="MinerBase"/>).
+    /// It is integrated with NiceHash Miner and client. User can specify ports for each algorithm.
     /// </summary>
     public static class FreePortsCheckerManager
     {
