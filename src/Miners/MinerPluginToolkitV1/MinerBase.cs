@@ -222,7 +222,7 @@ namespace MinerPluginToolkitV1
                             }
                             catch (Exception e)
                             {
-                                Logger.Info(_logGroup, $"Error occured in StartMining : {e.Message}");
+                                Logger.Error(_logGroup, $"Error occured in StartMining : {e.Message}");
                             }
                             finally
                             {
@@ -231,13 +231,13 @@ namespace MinerPluginToolkitV1
                                 run = IsStart() && stopMiner.IsCancellationRequested == false;
                                 if (run)
                                 {
-                                    Logger.Error(_logGroup, $"Restart Mining in {MinerToolkit.MinerRestartDelayMS}ms");
+                                    Logger.Info(_logGroup, $"Restart Mining in {MinerToolkit.MinerRestartDelayMS}ms");
                                     Task.Delay(MinerToolkit.MinerRestartDelayMS).Wait();
                                 }
                             }
                         }
                     }
-                    Logger.Error(_logGroup, $"Exited miner watchdog");
+                    Logger.Info(_logGroup, $"Exited miner watchdog");
                     lock (_lock)
                     {
                         _stopMiners.Remove(stopMiner);
