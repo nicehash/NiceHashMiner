@@ -117,7 +117,9 @@ namespace MinerPluginToolkitV1
         // most don't require extra enviorment vars
         protected virtual Dictionary<string, string> GetEnvironmentVariables() => null;
 
-
+        /// <summary>
+        /// Provides available port for miner API binding
+        /// </summary>
         public int GetAvaliablePort()
         {
             Dictionary<string, List<int>> reservedPorts = null;
@@ -137,6 +139,9 @@ namespace MinerPluginToolkitV1
         }
 
         // TODO check mining pairs
+        /// <summary>
+        /// Sets <see cref="DesiredRunningState"/> to Start if not already so. Then creates a miningProcess and awaits for stop token. Also handles restarts of miningProcess in case of errors.
+        /// </summary>
         public void StartMining()
         {
             lock(_lock)
@@ -266,6 +271,9 @@ namespace MinerPluginToolkitV1
             });
         }
 
+        /// <summary>
+        /// Checks if <see cref="DesiredRunningState"/> is Stop and if so throw <see cref="StopMinerWatchdogException"/>, also throw that exception if param "<paramref name="isTokenCanceled"/>" equals true
+        /// </summary>
         private void ThrowIfIsStop(bool isTokenCanceled)
         {
             var isStopped = false;
@@ -276,6 +284,9 @@ namespace MinerPluginToolkitV1
             if (isStopped || isTokenCanceled) throw new StopMinerWatchdogException();
         }
 
+        /// <summary>
+        /// Checks if <see cref="DesiredRunningState"/> is Start
+        /// </summary>
         private bool IsStart()
         {
             lock (_lock)
@@ -284,6 +295,9 @@ namespace MinerPluginToolkitV1
             }
         }
 
+        /// <summary>
+        /// Changes <see cref="DesiredRunningState"/> to Stop and sends Cancel token to all miners that need to be stopped
+        /// </summary>
         public virtual void StopMining()
         {
             Logger.Info(_logGroup, $"Stop miner called");
