@@ -13,7 +13,7 @@ using MinerPluginToolkitV1.ExtraLaunchParameters;
 
 namespace CPUMinerBase
 {
-    public class CPUMinerPlugin : IMinerPlugin, IInitInternals, IReBenchmarkChecker
+    public class CPUMinerPlugin : IMinerPlugin, IInitInternals, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public string PluginUUID => "92fceb00-7236-11e9-b20c-f9f12eb6d835";
 
@@ -119,6 +119,11 @@ namespace CPUMinerBase
         {
             //no new version available
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(1, 5, 0);
         }
     }
 }

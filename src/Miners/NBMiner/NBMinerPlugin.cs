@@ -15,7 +15,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NBMiner
 {
-    public class NBMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class NBMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public NBMinerPlugin()
         {
@@ -211,6 +211,11 @@ namespace NBMiner
             if (singleAlgorithm == AlgorithmType.GrinCuckatoo31) return true;
 
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 1, 0);
         }
     }
 }

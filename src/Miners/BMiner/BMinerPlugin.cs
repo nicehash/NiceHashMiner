@@ -15,7 +15,7 @@ using System.Text;
 
 namespace BMiner
 {
-    public class BMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class BMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         // mandatory constructor
         public BMinerPlugin()
@@ -196,6 +196,11 @@ namespace BMiner
         {
             //no new version available
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 5, 0);
         }
     }
 }

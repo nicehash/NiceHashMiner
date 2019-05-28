@@ -15,7 +15,7 @@ using MinerPluginToolkitV1;
 
 namespace GMinerPlugin
 {
-    public class GMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class GMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public GMinerPlugin()
         {
@@ -250,6 +250,11 @@ namespace GMinerPlugin
             if (singleAlgorithm == AlgorithmType.GrinCuckaroo29) return true;
 
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 2, 0);
         }
     }
 }

@@ -15,6 +15,7 @@ using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common;
+using MinerPluginToolkitV1.Interfaces;
 
 namespace NiceHashMiner.Miners
 {
@@ -35,6 +36,8 @@ namespace NiceHashMiner.Miners
             IsUpdatingApi = true;
             var apiData = await _miner.GetMinerStatsDataAsync();
             IsUpdatingApi = false;
+
+            UpdateApiTimestamp(apiData);
 
             // TODO workaround plugins should return this info
             // create empty stub if it is null
@@ -76,12 +79,14 @@ namespace NiceHashMiner.Miners
             EthlargementIntegratedPlugin.Instance.Start(MiningPairs);
             _miner.StartMining();
             IsRunning = true;
+            MinerApiWatchdog.AddGroup(GroupKey, GetApiMaxTimeout(), DateTime.UtcNow);
         }
 
         public override void Stop()
         {
             // TODO thing about this case, closing opening on switching
             // EthlargementIntegratedPlugin.Instance.Stop(_miningPairs);
+            MinerApiWatchdog.RemoveGroup(GroupKey);
             MiningStats.RemoveGroup(MiningPairs.Select(pair => pair.Device.UUID), _plugin.PluginUUID);
             IsRunning = false;
             _miner.StopMining();
@@ -90,5 +95,54 @@ namespace NiceHashMiner.Miners
             //    disposableMiner.Dispose();
             //}
         }
+
+        #region MinerApiWatchdog
+        // ConfigManager.GeneralConfig.CoolDownCheckEnabled
+        private TimeSpan GetApiMaxTimeout()
+        {
+            if (_plugin is IGetApiMaxTimeout t)
+            {
+                return t.GetApiMaxTimeout();
+            }
+            // make default 30minutes
+            return new TimeSpan(0, 30, 0);
+        }
+
+        private double _lastSpeedsTotalSum = 0d;
+        private double _lastPerDevSpeedsTotalSum = 0d;
+
+        private void UpdateApiTimestamp(ApiData apiData)
+        {
+            // we will not update api timestamps if we have no data or speeds are zero
+            if (apiData == null)
+            {
+                // TODO debug log no api data
+                return;
+            }
+            if (apiData.AlgorithmSpeedsTotal == null && apiData.AlgorithmSpeedsPerDevice == null)
+            {
+                // TODO debug log cannot get speeds
+                return;
+            }
+            var speedsTotalSum = apiData.AlgorithmSpeedsTotal?.Select(p => p.Speed).Sum() ?? 0d;
+            var perDevSpeedsTotalSum = apiData.AlgorithmSpeedsPerDevice?.Values.SelectMany(pl => pl).Select(p => p.Speed).Sum() ?? 0d;
+            if (speedsTotalSum == 0d && perDevSpeedsTotalSum == 0d)
+            {
+                // TODO debug log speeds are zero
+                return;
+            }
+            if (speedsTotalSum == _lastSpeedsTotalSum && perDevSpeedsTotalSum == _lastPerDevSpeedsTotalSum)
+            {
+                // TODO debug log speeds seem to be stuck
+                return;
+            }
+            // update 
+            _lastSpeedsTotalSum = speedsTotalSum;
+            _lastPerDevSpeedsTotalSum = perDevSpeedsTotalSum;
+            MinerApiWatchdog.UpdateApiTimestamp(GroupKey, DateTime.UtcNow);
+        }
+        #endregion MinerApiWatchdog
+
+
     }
 }

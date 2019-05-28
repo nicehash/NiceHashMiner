@@ -18,6 +18,7 @@ using Timer = System.Timers.Timer;
 using NiceHashMinerLegacy.Common;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using MinerPlugin;
+using System.Threading;
 
 namespace NiceHashMiner.Miners
 {
@@ -27,9 +28,8 @@ namespace NiceHashMiner.Miners
         private const string DoubleFormat = "F12";
 
         private static readonly AlgorithmSwitchingManager _switchingManager;
+        private static readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-        // session varibles fixed
-        private static object _lock = new object();
         private static string _username = DemoUser.BTC;
         private static List<MiningDevice> _miningDevices = new List<MiningDevice>();
         private static Dictionary<string, Miner> _runningMiners = new Dictionary<string, Miner>();
@@ -59,12 +59,17 @@ namespace NiceHashMiner.Miners
             var minerIDs = new List<int>();
             if (!IsCurrentlyIdle)
             {
-                lock (_lock)
+                _semaphore.Wait();
+                try
                 {
                     foreach (var miner in _runningMiners.Values)
                     {
                         minerIDs.AddRange(miner.DevIndexes);
                     }
+                }
+                finally
+                {
+                    _semaphore.Release();
                 }
             }
 
@@ -79,11 +84,11 @@ namespace NiceHashMiner.Miners
 
         #region Start/Stop
 
-        // TODO make Task
-        public static void StopAllMiners()
+        public static async Task StopAllMiners()
         {
             EthlargementIntegratedPlugin.Instance.Stop();
-            lock(_lock)
+            await _semaphore.WaitAsync();
+            try
             {
                 foreach (var groupMiner in _runningMiners.Values)
                 {
@@ -111,6 +116,10 @@ namespace NiceHashMiner.Miners
                 //    }
                 //}
             }
+            finally
+            {
+                _semaphore.Release();
+            }
 
             _switchingManager?.Stop();
             ApplicationStateManager.ClearRatesAll();
@@ -120,10 +129,11 @@ namespace NiceHashMiner.Miners
         #endregion Start/Stop
 
         // TODO make Task
-        public static void UpdateMiningSession(IEnumerable<ComputeDevice> devices, string username)
+        public static async Task UpdateMiningSession(IEnumerable<ComputeDevice> devices, string username)
         {
             _switchingManager?.Stop();
-            lock(_lock)
+            await _semaphore.WaitAsync();
+            try
             {
                 _username = username;
                 // TODO check out if there is a change
@@ -148,39 +158,34 @@ namespace NiceHashMiner.Miners
                     //}
                 }
             }
+            finally
+            {
+                _semaphore.Release();
+            }
             _switchingManager?.ForceUpdate();
         }
 
         public static async Task RestartMiners()
         {
             _switchingManager?.Stop();
-
-            // STOP
-            var stopTasks = new List<Task>();
-            lock (_lock)
+            await _semaphore.WaitAsync();
+            try
             {
+                // STOP
                 foreach (var key in _runningMiners.Keys)
                 {
-                    stopTasks.Add(_runningMiners[key].StopTask());
+                    await _runningMiners[key].StopTask();
                 }
-            }
-            foreach (var stopTask in stopTasks)
-            {
-                await stopTask;
-            }
-            // START
-            var startTasks = new List<Task>();
-            var miningLocation = StratumService.SelectedServiceLocation;
-            lock (_lock)
-            {
+                // START
+                var miningLocation = StratumService.SelectedServiceLocation;
                 foreach (var key in _runningMiners.Keys)
                 {
-                    startTasks.Add(_runningMiners[key].StartTask(miningLocation, _username));
+                    await _runningMiners[key].StartTask(miningLocation, _username);
                 }
             }
-            foreach (var startTask in startTasks)
+            finally
             {
-                await startTask;
+                _semaphore.Release();
             }
             _switchingManager?.ForceUpdate();
         }
@@ -356,39 +361,28 @@ namespace NiceHashMiner.Miners
                 Logger.Info(Tag, $"Will SWITCH profit diff is {percDiff}, current threshold {ConfigManager.GeneralConfig.SwitchProfitabilityThreshold}");
             }
 
-            // group new miners 
-            var newGroupedMiningPairs = GroupingUtils.GetGroupedMiningPairs(GetProfitableMiningPairs());
-            // check newGroupedMiningPairs and running Groups to figure out what to start/stop and keep running
-            string[] currentRunningGroups;
-            lock (_lock)
+            await _semaphore.WaitAsync();
+            var hasChanged = false;
+            try
             {
-                currentRunningGroups = _runningMiners.Keys.ToArray();
-            }
-            // check which groupMiners should be stopped and which ones should be started and which to keep running
-            var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
-            var toStartMinerGroupKeys = newGroupedMiningPairs.Where(pair => !currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
-            var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToArray();
-
-            // first stop currently running
-            var toStopGroups = new List<Miner>();
-            lock (_lock)
-            {
+                // group new miners 
+                var newGroupedMiningPairs = GroupingUtils.GetGroupedMiningPairs(GetProfitableMiningPairs());
+                // check newGroupedMiningPairs and running Groups to figure out what to start/stop and keep running
+                var currentRunningGroups = _runningMiners.Keys.ToArray();
+                // check which groupMiners should be stopped and which ones should be started and which to keep running
+                var noChangeGroupMinersKeys = newGroupedMiningPairs.Where(pair => currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
+                var toStartMinerGroupKeys = newGroupedMiningPairs.Where(pair => !currentRunningGroups.Contains(pair.Key)).Select(pair => pair.Key).OrderBy(uuid => uuid).ToArray();
+                var toStopMinerGroupKeys = currentRunningGroups.Where(runningKey => !newGroupedMiningPairs.Keys.Contains(runningKey)).OrderBy(uuid => uuid).ToArray();
+                // first stop currently running
                 foreach (var stopKey in toStopMinerGroupKeys)
                 {
-                    toStopGroups.Add(_runningMiners[stopKey]);
+                    var stopGroup = _runningMiners[stopKey];
                     _runningMiners.Remove(stopKey);
-                    
+                    await stopGroup.StopTask();
+                    stopGroup.End();
                 }
-            }
-            foreach (var stopGroup in toStopGroups)
-            {
-                await stopGroup.StopTask();
-                stopGroup.End();
-            }
-            // start new
-            var toStartGroups = new List<Miner>();
-            lock (_lock)
-            {
+                // start new
+                var miningLocation = StratumService.SelectedServiceLocation;
                 foreach (var startKey in toStartMinerGroupKeys)
                 {
                     var miningPairs = newGroupedMiningPairs[startKey];
@@ -399,25 +393,25 @@ namespace NiceHashMiner.Miners
                         continue;
                     }
                     _runningMiners[startKey] = toStart;
-                    toStartGroups.Add(toStart);
+                    await toStart.StartTask(miningLocation, _username);
                 }
+                // log scope
+                {
+                    var stopLog = toStopMinerGroupKeys.Length > 0 ? string.Join(",", toStopMinerGroupKeys) : "EMTPY";
+                    Logger.Info(Tag, $"Stop Old Mining: ({stopLog})");
+                    var startLog = toStartMinerGroupKeys.Length > 0 ? string.Join(",", toStartMinerGroupKeys) : "EMTPY";
+                    Logger.Info(Tag, $"Start New Mining : ({startLog})");
+                    var sameLog = noChangeGroupMinersKeys.Length > 0 ? string.Join(",", noChangeGroupMinersKeys) : "EMTPY";
+                    Logger.Info(Tag, $"No change : ({sameLog})");
+                }
+                hasChanged = toStartMinerGroupKeys.Length > 0 || toStopMinerGroupKeys.Length > 0;
             }
-            var miningLocation = StratumService.SelectedServiceLocation;
-            foreach (var toStart in toStartGroups)
+            finally
             {
-                await toStart.StartTask(miningLocation, _username);
-            }
-            // log scope
-            {
-                var stopLog = toStopMinerGroupKeys.Length > 0 ? string.Join(",", toStopMinerGroupKeys) : "EMTPY";
-                Logger.Info(Tag, $"Stop Old Mining: ({stopLog})");
-                var startLog = toStartMinerGroupKeys.Length > 0 ? string.Join(",", toStartMinerGroupKeys) : "EMTPY";
-                Logger.Info(Tag, $"Start New Mining : ({startLog})");
-                var sameLog = noChangeGroupMinersKeys.Length > 0 ? string.Join(",", noChangeGroupMinersKeys) : "EMTPY";
-                Logger.Info(Tag, $"No change : ({sameLog})");
+                _semaphore.Release();
             }
 
-            var hasChanged = toStartMinerGroupKeys.Length > 0 || toStopMinerGroupKeys.Length > 0;
+            
             // There is a change in groups, change GUI
             if (hasChanged)
             {
@@ -428,23 +422,14 @@ namespace NiceHashMiner.Miners
 
         public static async Task MinerStatsCheck()
         {
+            await _semaphore.WaitAsync();
             try
             {
-                var summaryTasks = new List<Task<ApiData>>();
-                lock (_lock)
+                foreach (var m in _runningMiners.Values)
                 {
-                    foreach (var m in _runningMiners.Values)
-                    {
-                        // skip if not running or if await already in progress
-                        if (!m.IsRunning || m.IsUpdatingApi) continue;
-                        summaryTasks.Add(m.GetSummaryAsync());
-                        
-                    }
-                }
-                // await tasks
-                foreach (var summaryTask in summaryTasks)
-                {
-                    var ad = await summaryTask;
+                    // skip if not running or if await already in progress
+                    if (!m.IsRunning || m.IsUpdatingApi) continue;
+                    var ad = m.GetSummaryAsync();
                 }
                 // Update GUI
                 ApplicationStateManager.RefreshRates();
@@ -455,6 +440,35 @@ namespace NiceHashMiner.Miners
             catch (Exception e)
             {
                 Logger.Error(Tag, $"Error occured while getting mining stats: {e.Message}");
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+            // TODO put this somewhere else maybe
+            await RestartStagnatedMiners();
+        }
+
+        private static async Task RestartStagnatedMiners()
+        {
+            var restartGroups = MinerApiWatchdog.GetTimedoutGroups(DateTime.UtcNow);
+            if (restartGroups == null) return;
+            await _semaphore.WaitAsync();
+            try
+            {
+                var miningLocation = StratumService.SelectedServiceLocation;
+                foreach (var groupKey in restartGroups)
+                {
+                    if (_runningMiners.ContainsKey(groupKey) == false) continue;
+
+                    Logger.Info(Tag, $"Restarting miner group='{groupKey}' API timestamp exceeded");
+                    await _runningMiners[groupKey].StopTask();
+                    await _runningMiners[groupKey].StartTask(miningLocation, _username);
+                }
+            }
+            finally
+            {
+                _semaphore.Release();
             }
         }
     }

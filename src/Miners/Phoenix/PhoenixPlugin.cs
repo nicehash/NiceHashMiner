@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Phoenix
 {
-    public class PhoenixPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class PhoenixPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public PhoenixPlugin()
         {
@@ -543,6 +543,11 @@ namespace Phoenix
             // error/bug in v1.0
             // because the previous miner plugin mapped wrong GPU indexes rebench everything
             return true;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0,5,0);
         }
     }
 }

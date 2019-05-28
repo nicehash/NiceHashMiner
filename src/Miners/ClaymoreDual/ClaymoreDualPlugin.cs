@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace ClaymoreDual
 {
-    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals/*, IDevicesCrossReference*/, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals/*, IDevicesCrossReference*/, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public ClaymoreDualPlugin()
         {
@@ -411,6 +411,11 @@ namespace ClaymoreDual
             // error/bug in v1.0
             // because the previous miner plugin mapped wrong GPU indexes rebench everything
             return true;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 5, 0);
         }
     }
 }

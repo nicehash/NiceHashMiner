@@ -15,7 +15,7 @@ using System.Text;
 
 namespace TRex
 {
-    public class TRexPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class TRexPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public TRexPlugin()
         {
@@ -160,6 +160,11 @@ namespace TRex
         {
             //no new version available
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 1, 0);
         }
     }
 }

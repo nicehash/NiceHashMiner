@@ -47,7 +47,7 @@ namespace ClaymoreDual
                     };
                     ct.Token.Register(() => getDevicesHandleStop("from cancel token"));
                     // async file tailing
-                    using (var semaphore = new SemaphoreSlim(1))
+                    using (var semaphore = new SemaphoreSlim(1, 1))
                     using (var fsw = new FileSystemWatcher(cwd))
                     using (var fs = new FileStream(fileToTail, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                     using (var sr = new StreamReader(fs))

@@ -14,7 +14,7 @@ using MinerPluginToolkitV1;
 
 namespace TTMiner
 {
-    public class TTMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class TTMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public TTMinerPlugin()
         {
@@ -189,6 +189,12 @@ namespace TTMiner
             if (singleAlgorithm == AlgorithmType.MTP) return true;
 
             return false;
+        }
+
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 3, 0);
         }
     }
 }

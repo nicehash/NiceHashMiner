@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace ZEnemy
 {
-    class ZEnemyPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    class ZEnemyPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public Version Version => new Version(1, 2);
 
@@ -166,6 +166,11 @@ namespace ZEnemy
         {
             //no new version available
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 3, 0);
         }
     }
 }

@@ -16,7 +16,7 @@ using System.Text;
 namespace CryptoDredge
 {
     // TODO don't use this plugin as it doesn't have GetMinerStatsDataAsync() method miner doesn't support it.
-    class CryptoDredgePlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    class CryptoDredgePlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public Version Version => new Version(1, 2);
         public string Name => "CryptoDredge";
@@ -137,6 +137,11 @@ namespace CryptoDredge
         {
             //no new version available
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 5, 0);
         }
     }
 }

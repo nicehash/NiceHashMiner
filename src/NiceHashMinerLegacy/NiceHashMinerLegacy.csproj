@@ -291,6 +291,7 @@
     <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
+    <Compile Include="Miners\MinerApiWatchdog.cs" />
     <Compile Include="Miners\MiningManager.cs" />
     <Compile Include="Plugin\SupportedAlgorithmsFilter.cs" />
     <Compile Include="Stats\MiningStats.cs" />
