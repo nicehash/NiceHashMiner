@@ -66,46 +66,64 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 
             if (!string.IsNullOrEmpty(threadsApiResult))
             {
-                try
+                var gpus = threadsApiResult.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var gpu in gpus)
                 {
-                    var gpus = threadsApiResult.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var gpu in gpus)
+                    // try inside loop so an error in one value will not prevent the others from being reported
+                    try
                     {
+                        // RemoveEmptyEntries will not remove NUL chars as they are technically not empty, and result is NUL-terminated
                         if (gpu == "\0") continue;
 
                         var gpuOptvalPairs = gpu.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                         var gpuData = new IdPowerHash();
+
+                        var idFound = false;
+
                         foreach (var optvalPairs in gpuOptvalPairs)
                         {
-                            var optval = optvalPairs.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                            var optval = optvalPairs.Split(new char[] { '=' },
+                                StringSplitOptions.RemoveEmptyEntries);
                             if (optval.Length != 2) continue;
                             if (optval[0] == "GPU")
                             {
                                 gpuData.id = int.Parse(optval[1], CultureInfo.InvariantCulture);
+                                idFound = true;
                             }
+
                             if (optval[0] == "POWER")
                             {
                                 gpuData.power = int.Parse(optval[1], CultureInfo.InvariantCulture);
                             }
+
                             if (optval[0] == "KHS")
                             {
                                 gpuData.speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
                             }
                         }
-                        var device = miningPairs.Where(kvp => kvp.Device.ID == gpuData.id).Select(kvp => kvp.Device).FirstOrDefault();
-                        if (device != null)
-                        {
-                            perDeviceSpeedInfo.Add(device.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(algorithmType, gpuData.speed * (1 - devFee * 0.01)) });
-                            perDevicePowerInfo.Add(device.UUID, gpuData.power);
-                            totalPower += gpuData.power;
-                        }
 
+                        // gpuData.id will have its default value of 0 if for some reason the data did not 
+                        // contain a valid GPU entry. So, skip in this case (otherwise it will set bad data for first GPU)
+                        if (!idFound) continue;
+
+                        var device = miningPairs
+                            .Where(kvp => kvp.Device.ID == gpuData.id)
+                            .Select(kvp => kvp.Device)
+                            .FirstOrDefault();
+
+                        if (device == null) continue;
+
+                        perDeviceSpeedInfo[device.UUID] =
+                            new List<AlgorithmTypeSpeedPair>
+                            {
+                                new AlgorithmTypeSpeedPair(algorithmType, gpuData.speed * (1 - devFee * 0.01))
+                            };
+                        perDevicePowerInfo[device.UUID] = gpuData.power;
+                        totalPower += gpuData.power;
                     }
-                }
-                catch(Exception e)
-                {
-                    if (e.Message != "An item with the same key has already been added.")
+                    catch (Exception e)
                     {
+                        // Catch and proceed to try next entry
                         Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
                     }
                 }
