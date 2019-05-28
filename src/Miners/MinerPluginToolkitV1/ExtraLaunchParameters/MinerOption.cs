@@ -11,6 +11,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
     /// Definition of properties should not be changed!!!
     /// </summary>
     /// <example>
+    /// <code>
     /// {
     ///     Type = MinerOptionType.OptionWithMultipleParameters,
     ///     ID = "gminer_templimit",
@@ -19,6 +20,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
     ///     DefaultValue = "90",
     ///     Delimiter = " "
     /// }
+    /// </code>
     /// </example>
     [Serializable]
     public class MinerOption
