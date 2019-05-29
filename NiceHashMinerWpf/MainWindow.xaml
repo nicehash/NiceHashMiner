@@ -16,16 +16,16 @@
         <Label Content="Worker Name:" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="107"/>
         <TextBox HorizontalAlignment="Left" Height="23" Margin="122,75,0,0" TextWrapping="Wrap" Text="worker1" VerticalAlignment="Top" Width="120"/>
         <Button Content="Check my stats online!" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top" Width="107" FontSize="10"/>
-        <DataGrid Margin="10,124,97.333,35.667">
+        <DataGrid x:Name="DevGrid" Margin="10,124,97.333,35.667" AutoGenerateColumns="False" CanUserResizeRows="False" SelectionMode="Single">
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Enabled"/>
-                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Device"/>
-                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Status"/>
-                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Temp (C)"/>
-                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Load (%)"/>
-                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="RPM"/>
+                <DataGridCheckBoxColumn Binding="{Binding Enabled}" ClipboardContentBinding="{x:Null}" Header="Enabled"/>
+                <DataGridTextColumn Binding="{Binding Device}" ClipboardContentBinding="{x:Null}" Header="Device"/>
+                <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status"/>
+                <DataGridTextColumn Binding="{Binding Temp}" ClipboardContentBinding="{x:Null}" Header="Temp (C)"/>
+                <DataGridTextColumn Binding="{Binding Load}" ClipboardContentBinding="{x:Null}" Header="Load (%)"/>
+                <DataGridTextColumn Binding="{Binding RPM}" ClipboardContentBinding="{x:Null}" Header="RPM"/>
                 <DataGridTemplateColumn ClipboardContentBinding="{x:Null}" Header="Start/Stop"/>
-                <DataGridTextColumn Binding="{x:Null}" ClipboardContentBinding="{x:Null}" Header="Algorithms/Enabled/Benchmarked"/>
+                <DataGridTextColumn Binding="{Binding AlgoDetail}" ClipboardContentBinding="{x:Null}" Header="Algorithms/Enabled/Benchmarked"/>
             </DataGrid.Columns>
         </DataGrid>
         <Button Content="Benchmark" Margin="0,124,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
