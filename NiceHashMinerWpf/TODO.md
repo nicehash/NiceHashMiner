@@ -6,6 +6,11 @@
 
 ## Phase 1 - In Progress
 
+### Complications
+
+* WPF does not have a LinkLabel so "Show my stats online!" is implemented as a button
+* Will need a 3rd-party library for minimize to tray
+
 ### Re-implement form surfaces - In Progress
 
 * `Form_Main` -> `MainWindow`
@@ -18,6 +23,7 @@
 * Minimize to tray
 * Linking buttons to windows
 * Setup application identity (name, icon, etc.)
+* Translations
 * and others...
 
 ## Phase 2
