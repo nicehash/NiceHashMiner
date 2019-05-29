@@ -95,6 +95,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Miners", "src\Tests\Miners\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateLogReport", "src\Tools\CreateLogReport\CreateLogReport.csproj", "{663285C0-8F68-4638-BEB2-4BB042868445}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerWpf", "NiceHashMinerWpf\NiceHashMinerWpf.csproj", "{5A607F0F-F5E6-429E-814C-509BB3899DB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug_Ubuntu|Any CPU = Debug_Ubuntu|Any CPU
@@ -1719,6 +1721,46 @@ Global
 		{663285C0-8F68-4638-BEB2-4BB042868445}.Release|Win32.Build.0 = Release|Any CPU
 		{663285C0-8F68-4638-BEB2-4BB042868445}.Release|x64.ActiveCfg = Release|Any CPU
 		{663285C0-8F68-4638-BEB2-4BB042868445}.Release|x64.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug_Ubuntu|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug_Ubuntu|Any CPU.Build.0 = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug_Ubuntu|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug_Ubuntu|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug_Ubuntu|Win32.ActiveCfg = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug_Ubuntu|Win32.Build.0 = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug_Ubuntu|x64.ActiveCfg = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug_Ubuntu|x64.Build.0 = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug|Win32.Build.0 = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Debug|x64.Build.0 = Debug|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.FillSMA|Any CPU.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.FillSMA|Any CPU.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.FillSMA|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.FillSMA|Mixed Platforms.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.FillSMA|Win32.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.FillSMA|Win32.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.FillSMA|x64.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.FillSMA|x64.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release_Ubuntu|Any CPU.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release_Ubuntu|Any CPU.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release_Ubuntu|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release_Ubuntu|Mixed Platforms.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release_Ubuntu|Win32.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release_Ubuntu|Win32.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release_Ubuntu|x64.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release_Ubuntu|x64.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release|Win32.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release|Win32.Build.0 = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release|x64.ActiveCfg = Release|Any CPU
+		{5A607F0F-F5E6-429E-814C-509BB3899DB9}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
