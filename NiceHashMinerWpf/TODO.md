@@ -17,6 +17,7 @@
 
 * Minimize to tray
 * Linking buttons to windows
+* Setup application identity (name, icon, etc.)
 * and others...
 
 ## Phase 2
