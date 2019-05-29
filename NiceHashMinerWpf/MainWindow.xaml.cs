@@ -45,6 +45,7 @@ namespace NiceHashMinerWpf
         public int Load { get; }
         public int? RPM { get; }
         public string AlgoDetail { get; }
+        public string ButtonText => Enabled ? "Start" : "N/A";
 
         public DeviceInfo(bool enabled, string dev, int? temp, int load, int? rpm, string detail)
         {
