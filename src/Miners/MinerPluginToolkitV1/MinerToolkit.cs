@@ -20,7 +20,7 @@ namespace MinerPluginToolkitV1
     public static class MinerToolkit
     {
         /// <summary>
-        /// Use DemoUser if the miner requires a network benchmark the plugin will blacklist users
+        /// Use DemoUser if the miner requires a network benchmark, the plugin will blacklist users
         /// </summary>
         public static string DemoUserBTC => DemoUser.BTC;
 
@@ -29,6 +29,9 @@ namespace MinerPluginToolkitV1
 
         public static int MinerRestartDelayMS { set; get; } = 500;
 
+        /// <summary>
+        /// GetAlgorithmSingleType returns Tuple of single <see cref="AlgorithmType"/> and success status.
+        /// </summary>
         public static Tuple<AlgorithmType, bool> GetAlgorithmSingleType(this IEnumerable<MiningPair> mps)
         {
             var algorithmTypes = mps.Select(pair => pair.Algorithm.IDs.First());
@@ -40,6 +43,9 @@ namespace MinerPluginToolkitV1
             return Tuple.Create(AlgorithmType.NONE, false);
         }
 
+        /// <summary>
+        /// GetAlgorithmSingleType returns Tuple of dual <see cref="AlgorithmType"/> and success status.
+        /// </summary>
         public static Tuple<AlgorithmType, bool> GetAlgorithmDualType(this IEnumerable<MiningPair> mps)
         {
             if (mps.Select(pair => pair.Algorithm.IDs.Count).ToList()[0] == 1) return Tuple.Create(AlgorithmType.NONE, false);
@@ -49,12 +55,20 @@ namespace MinerPluginToolkitV1
             return Tuple.Create(mustIncludeDual.First(), true);
         }
 
+        /// <summary>
+        /// GetAlgorithmPortsKey returns first Algorithm name from MiningPairs
+        /// </summary>
         public static string GetAlgorithmPortsKey(this IEnumerable<MiningPair> mps)
         {
             if (mps.Count() == 0) return "";
             return mps.First().Algorithm.AlgorithmName;
         }
 
+        /// <summary>
+        /// GetDevicesIDsInOrder returns ordered device IDs
+        /// </summary>
+        /// <param name="mps"></param>
+        /// <returns></returns>
         public static IEnumerable<string> GetDevicesIDsInOrder(this IEnumerable<MiningPair> mps)
         {
             var deviceIds = mps.Select(pair => pair.Device.ID).OrderBy(id => id).Select(id => id.ToString());
@@ -62,6 +76,9 @@ namespace MinerPluginToolkitV1
         }
 
         //shamelessly copied from StringsExt in extensions library/package
+        /// <summary>
+        /// GetStringAfter returns substring after first occurance of "<paramref name="after"/>" string
+        /// </summary>
         public static string GetStringAfter(this string s, string after)
         {
             var index = s.IndexOf(after, StringComparison.Ordinal);
