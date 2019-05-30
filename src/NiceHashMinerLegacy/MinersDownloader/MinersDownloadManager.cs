@@ -3,6 +3,7 @@ using MyDownloader.Core.Extensions;
 using MyDownloader.Core.UI;
 using MyDownloader.Extension.Protocols;
 using Newtonsoft.Json;
+using NiceHashMiner.Utils;
 using NiceHashMinerLegacy.Common;
 using SharpCompress.Archives.SevenZip;
 using System;
@@ -19,6 +20,18 @@ namespace NiceHashMiner.MinersDownloader
 {
     public static class MinersDownloadManager
     {
+        #region DownloadSetup - Internal settings 
+        internal class DownloadSetup
+        {
+            public DownloadSetup(string url, string dlName)
+            {
+                BinsDownloadUrl = url;
+                BinsZipLocation = dlName;
+            }
+
+            public string BinsDownloadUrl { get; set; }
+            public string BinsZipLocation { get; set; }
+        }
         private static readonly DownloadSetup StandardDlSetup = new DownloadSetup(
             "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.4/bin.7z",
             "bins.7z");
@@ -29,12 +42,6 @@ namespace NiceHashMiner.MinersDownloader
 
         static MinersDownloadManager()
         {
-            //ServicePointManager.Expect100Continue = true;
-            //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
-            //       | SecurityProtocolType.Tls11
-            //       | SecurityProtocolType.Tls12
-            //       | SecurityProtocolType.Ssl3;
-
             const string binsUrlSettings = "bins_urls.json";
             if (File.Exists(binsUrlSettings))
             {
@@ -52,150 +59,7 @@ namespace NiceHashMiner.MinersDownloader
                 }
             }
         }
-
-        public static Task DownloadAndExtractOpenSourceMinersAsync(IProgress<Tuple<ProgressState, int>> progress, CancellationToken stop)
-        {
-            return DownloadAndExtractAsync(StandardDlSetup, progress, stop);
-        }
-
-        public static Task DownloadAndExtractThirdPartyMinersAsync(IProgress<Tuple<ProgressState, int>> progress, CancellationToken stop)
-        {
-            return DownloadAndExtractAsync(ThirdPartyDlSetup, progress, stop);
-        }
-
-        private static async Task DownloadAndExtractAsync(DownloadSetup downloadSetup, IProgress<Tuple<ProgressState, int>> progress, CancellationToken stop)
-        {
-            var downloadMinersProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(new Tuple<ProgressState, int>(ProgressState.DownloadingMiners, perc)));
-            var zipProgressMinersChangedEventHandler = new Progress<int>(perc => progress?.Report(new Tuple<ProgressState, int>(ProgressState.ExtractingMiners, perc)));
-
-            try
-            {
-                var downloadPluginOK = await DownloadFileAsync(downloadSetup.BinsDownloadUrl, downloadSetup.BinsZipLocation, downloadMinersProgressChangedEventHandler, stop);
-                if (!downloadPluginOK || stop.IsCancellationRequested) return;
-                // unzip 
-                var unzipPluginOK = false;
-                if (downloadSetup.BinsZipLocation.EndsWith(".7z"))
-                {
-                    unzipPluginOK = await Un7zipFileAsync(downloadSetup.BinsZipLocation, "miner_plugins", zipProgressMinersChangedEventHandler, stop);
-                }
-                else
-                {
-                    unzipPluginOK = await UnzipFileAsync(downloadSetup.BinsZipLocation, "miner_plugins", zipProgressMinersChangedEventHandler, stop);
-                }
-                if (!unzipPluginOK || stop.IsCancellationRequested) return;
-                File.Delete(downloadSetup.BinsZipLocation);
-            }
-            catch (Exception e)
-            {
-                Logger.Error("MinersDownloadManager", $"Error occured while downloading and extracting of miners: {e.Message}");
-            }
-        }
-
-        public static async Task<bool> DownloadFileAsync(string url, string downloadFileLocation, IProgress<int> progress, CancellationToken stop)
-        {
-            var downloadStatus = false;
-            using (var client = new WebClient())
-            {
-                client.Proxy = null;
-                client.DownloadProgressChanged += (s, e1) => {
-                    progress?.Report(e1.ProgressPercentage);
-                };
-                client.DownloadFileCompleted += (s, e) =>
-                {
-                    downloadStatus = !e.Cancelled && e.Error == null;
-                };
-                stop.Register(client.CancelAsync);
-                // Starts the download
-                await client.DownloadFileTaskAsync(new Uri(url), downloadFileLocation);
-            }
-            return downloadStatus;
-        }
-
-        public static async Task<bool> UnzipFileAsync(string zipLocation, string unzipLocation, IProgress<int> progress, CancellationToken stop)
-        {
-            try
-            {
-                using (var archive = ZipFile.OpenRead(zipLocation))
-                {
-                    float entriesCount = archive.Entries.Count;
-                    float extractedEntries = 0;
-                    foreach (var entry in archive.Entries)
-                    {
-                        if (stop.IsCancellationRequested) break;
-
-                        extractedEntries += 1;
-                        var isDirectory = entry.Name == "";
-                        if (isDirectory) continue;
-
-                        var prog = ((extractedEntries / entriesCount) * 100.0f);
-                        progress?.Report((int)prog);
-
-                        var extractPath = Path.Combine(unzipLocation, entry.FullName);
-                        var dirPath = Path.GetDirectoryName(extractPath);
-                        if (!Directory.Exists(dirPath))
-                        {
-                            Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
-                        }
-                        //entry.ExtractToFile(extractPath, true);
-
-                        using (var zipStream = entry.Open())
-                        using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write))
-                        {
-                            await zipStream.CopyToAsync(fileStream);
-                        }
-                    }
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Info("MinersDownloadManager", $"Error occured while unzipping file: {e.Message}");
-                return false;
-            }
-        }
-
-        public static async Task<bool> Un7zipFileAsync(string fileLocation, string extractLocation, IProgress<int> progress, CancellationToken stop)
-        {
-            try
-            {
-                using (Stream stream = File.OpenRead(fileLocation))
-                using (var archive = SevenZipArchive.Open(stream))
-                using (var reader = archive.ExtractAllEntries())
-                {
-                    float extractedEntries = 0;  
-                    float entriesCount = archive.Entries.Count;
-                    while (reader.MoveToNextEntry())
-                    {
-                        extractedEntries += 1;
-                        if (!reader.Entry.IsDirectory)
-                        {
-                            var extractPath = Path.Combine(extractLocation, reader.Entry.Key);
-                            var dirPath = Path.GetDirectoryName(extractPath);
-                            if (!Directory.Exists(dirPath))
-                            {
-                                Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
-                            }
-                            using (var entryStream = reader.OpenEntryStream())
-                            using (var fileStream = new FileStream(extractPath, FileMode.Create, FileAccess.Write))
-                            {
-                                await entryStream.CopyToAsync(fileStream);
-                            }
-                        }
-                        var prog = ((extractedEntries / entriesCount) * 100.0f);
-                        progress?.Report((int)prog);
-                    }
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Info("MinersDownloadManager", $"Error occured while unzipping file with 7zip: {e.Message}");
-                return false;
-            }
-        }
-
-        // This is 2-5 times faster
-        #region MyDownloader
+        #endregion DownloadSetup - Internal settings 
 
         public static Task DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
@@ -209,15 +73,6 @@ namespace NiceHashMiner.MinersDownloader
 
         private static async Task DownloadAndExtractWithMyDownloaderAsync(DownloadSetup downloadSetup, IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
-            // these extensions must be here otherwise it will not downlaod
-            var extensions = new List<IExtension>();
-            try
-            {
-                extensions.Add(new CoreExtention());
-                extensions.Add(new HttpFtpProtocolExtension());
-            }
-            catch { }
-
             // if something not right delete previous and download new
             try
             {
@@ -238,12 +93,15 @@ namespace NiceHashMiner.MinersDownloader
 
             try
             {
-                var downloadedSuccess = await DownlaodAsync(downloadSetup.BinsDownloadUrl, downloadSetup.BinsZipLocation, progress, stop);
+                var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", perc), perc)));
+                var result = await NHM.MinersDownloader.MinersDownloadManager.DownloadFileAsync(downloadSetup.BinsDownloadUrl, "", downloadSetup.BinsZipLocation.Split('.').First(), downloadProgress, stop);
+                var downloadedSuccess = result.success;
                 if (!downloadedSuccess || stop.IsCancellationRequested) {
                     Logger.Info("MinersDownloadManager", $"Download success={downloadedSuccess} || cancel={stop.IsCancellationRequested}");
                     return;
                 }
 
+                var zipFilePath = result.downloadedFilePath;
                 var zipFileExists = false;
                 const int maxWait = 3000;
                 const int stepWait = 300;
@@ -251,7 +109,7 @@ namespace NiceHashMiner.MinersDownloader
                 while (waitLeft > 0)
                 {
                     waitLeft -= stepWait;
-                    if (File.Exists(downloadSetup.BinsZipLocation))
+                    if (File.Exists(zipFilePath))
                     {
                         zipFileExists = true;
                         break;
@@ -260,24 +118,17 @@ namespace NiceHashMiner.MinersDownloader
                 }
                 if (!zipFileExists)
                 {
-                    Logger.Info("MinersDownloadManager", $"Downloaded file {downloadSetup.BinsZipLocation} doesn't exist, exiting");
+                    Logger.Info("MinersDownloadManager", $"Downloaded file {zipFilePath} doesn't exist, exiting");
                     return;
                 }
 
                 var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", perc), perc)));
-                if (downloadSetup.BinsZipLocation.EndsWith(".7z"))
-                {
-                    await Un7zipFileAsync(downloadSetup.BinsZipLocation, "miner_plugins", unzipProgress, stop);
-                }
-                else
-                {
-                    await UnzipFileAsync(downloadSetup.BinsZipLocation, "miner_plugins", unzipProgress, stop);
-                }
+                await ArchiveHelpers.ExtractFileAsync(zipFilePath, "miner_plugins", unzipProgress, stop);
                 
                 await Task.Delay(300);
-                if (File.Exists(downloadSetup.BinsZipLocation))
+                if (File.Exists(zipFilePath))
                 {
-                    File.Delete(downloadSetup.BinsZipLocation);
+                    File.Delete(zipFilePath);
                 }
             }
             catch (Exception e)
@@ -285,101 +136,5 @@ namespace NiceHashMiner.MinersDownloader
                 Logger.Error("MinersDownloadManager", $"Error occured while downloading and extracting with myDownloader: {e.Message}");
             }
         }
-
-        private static Downloader CreateDownloader(string url, string downloadLocation)
-        {
-            var location = ResourceLocation.FromURL(url);
-            var mirrors = new ResourceLocation[0];
-            var downloader = DownloadManager.Instance.Add(
-                location,
-                mirrors,
-                downloadLocation,
-                10,
-                true);
-
-            return downloader;
-        }
-
-        private delegate void OnDownloadEnded(object sender, DownloaderEventArgs e);
-
-        // #2 download the file
-        private static async Task<bool> DownlaodAsync(string url, string downloadLocation, IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
-        {
-            long lastProgress = 0;
-            var ticksSinceUpdate = 0;
-            bool _isDownloadSizeInit = false;
-            var downloader = CreateDownloader(url, downloadLocation);
-
-            var timer = new Timer((object stateInfo) =>
-            {
-                if (downloader.State != DownloaderState.Working) return;
-                if (!_isDownloadSizeInit)
-                {
-                    _isDownloadSizeInit = true;
-                }
-
-                if (downloader.LastError != null)
-                {
-                    Logger.Info("MinersDownloadManager", $"Error occured while downloading: {downloader.LastError.Message}");
-                }
-
-                var speedString = $"{downloader.Rate / 1024d:0.00} kb/s";
-                var percString = downloader.Progress.ToString("0.00") + "%";
-                var labelDownloaded =
-                    $"{downloader.Transfered / 1024d / 1024d:0.00} MB / {downloader.FileSize / 1024d / 1024d:0.00} MB";
-                
-                var progPerc = (int)(((double)downloader.Transfered / downloader.FileSize) * 100);
-                var progMessage = $"{speedString}   {percString}   {labelDownloaded}";
-                progress?.Report((progMessage, progPerc));
-
-                // Diagnostic stuff
-                if (downloader.Transfered > lastProgress)
-                {
-                    ticksSinceUpdate = 0;
-                    lastProgress = downloader.Transfered;
-                }
-                else if (ticksSinceUpdate > 20)
-                {
-                    Logger.Debug("MinersDownloadManager", "Maximum ticks reached, retrying");
-                    ticksSinceUpdate = 0;
-                }
-                else
-                {
-                    Logger.Debug("MinersDownloadManager", $"No progress in ticks {ticksSinceUpdate}");
-                    ticksSinceUpdate++;
-                }
-            });
-            timer.Change(0, 500);
-
-            stop.Register(() => {
-                DownloadManager.Instance.RemoveDownload(downloader);
-                timer.Dispose();
-            });
-
-            var tcs = new TaskCompletionSource<bool>();
-            var onDownloadEnded = new EventHandler<DownloaderEventArgs>((object sender, DownloaderEventArgs e) =>
-            {
-                timer.Dispose();
-                if (downloader != null)
-                {
-                    if (downloader.State == DownloaderState.EndedWithError)
-                    {
-                        Logger.Info("MinersDownloadManager", $"Download didn't complete successfully: {downloader.LastError.Message}");
-                        tcs.SetResult(false);
-                    }
-                    else if (downloader.State == DownloaderState.Ended)
-                    {
-                        Logger.Info("MinersDownloadManager", "DownloadCompleted Success");
-                        tcs.SetResult(true);
-                    }
-                }
-            });
-            DownloadManager.Instance.DownloadEnded += onDownloadEnded;
-            var result = await tcs.Task;
-            DownloadManager.Instance.DownloadEnded -= onDownloadEnded;
-
-            return result;
-        }
-        #endregion MyDownloader
     }
 }
