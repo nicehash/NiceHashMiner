@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using NiceHashMiner.Miners;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -113,7 +114,12 @@ namespace NiceHashMiner.Configs.Data
 
         public int agreedWithTOS = 0;
 
-        public bool CoolDownCheckEnabled = true;
+
+        public bool CoolDownCheckEnabled
+        {
+            get => MinerApiWatchdog.Enabled;
+            set => MinerApiWatchdog.Enabled = value;
+        }
 
         // Overriding AMDOpenCLDeviceDetection returned Bus IDs (in case of driver error, e.g. 17.12.1)
         public string OverrideAMDBusIds = "";

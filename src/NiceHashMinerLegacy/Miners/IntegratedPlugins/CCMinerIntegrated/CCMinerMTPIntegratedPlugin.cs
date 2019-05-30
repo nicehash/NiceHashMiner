@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Interfaces;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class CCMinerMTPIntegratedPlugin : CCMinersPluginBase
+    class CCMinerMTPIntegratedPlugin : CCMinersPluginBase, IGetApiMaxTimeout
     {
         public override string PluginUUID => "CCMinerMTP";
 
@@ -40,6 +41,11 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             }
 
             return supported;
+        }
+
+        public new TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 2, 0);
         }
     }
 }

@@ -14,7 +14,7 @@ using MinerPluginToolkitV1;
 
 namespace CCMinerTpruvotCuda10
 {
-    public class CCMinerTpruvotCuda10Plugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class CCMinerTpruvotCuda10Plugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public Version Version => new Version(1, 2);
 
@@ -206,6 +206,11 @@ namespace CCMinerTpruvotCuda10
         {
             //no new version available
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 1, 0);
         }
     }
 }

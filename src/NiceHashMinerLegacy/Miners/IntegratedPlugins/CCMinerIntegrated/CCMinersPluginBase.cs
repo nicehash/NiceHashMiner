@@ -12,7 +12,7 @@ using System.IO;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    abstract class CCMinersPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin
+    abstract class CCMinersPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IGetApiMaxTimeout
     {
         public bool Is3rdParty => false;
 
@@ -119,5 +119,10 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
         #endregion Internal Settings
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 1, 0);
+        }
     }
 }

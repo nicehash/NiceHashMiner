@@ -14,7 +14,7 @@ using MinerPluginToolkitV1;
 
 namespace TeamRedMiner
 {
-    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public TeamRedMinerPlugin()
         {
@@ -159,6 +159,11 @@ namespace TeamRedMiner
         {
             //no improvements for algorithm speeds in the new version - just stability improvements
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 5, 0);
         }
     }
 }

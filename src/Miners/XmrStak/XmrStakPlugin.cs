@@ -17,7 +17,7 @@ using XmrStak.Configs;
 
 namespace XmrStak
 {
-    public class XmrStakPlugin : IMinerPlugin, IInitInternals, IXmrStakConfigHandler, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class XmrStakPlugin : IMinerPlugin, IInitInternals, IXmrStakConfigHandler, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public XmrStakPlugin()
         {
@@ -347,6 +347,11 @@ namespace XmrStak
         {
             //no new version available
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 5, 0);
         }
     }
 }

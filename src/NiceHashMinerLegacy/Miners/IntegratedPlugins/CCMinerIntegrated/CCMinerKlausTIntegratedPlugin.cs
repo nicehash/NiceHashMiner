@@ -5,10 +5,11 @@ using MinerPluginToolkitV1;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
+using MinerPluginToolkitV1.Interfaces;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class CCMinerKlausTIntegratedPlugin : CCMinersPluginBase
+    class CCMinerKlausTIntegratedPlugin : CCMinersPluginBase, IGetApiMaxTimeout
     {
         public override string PluginUUID => "CCMinerKlausT";
 

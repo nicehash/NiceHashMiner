@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker
+    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker, IGetApiMaxTimeout
     {
         public bool Is3rdParty => false;
 
@@ -78,5 +78,10 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
 
         public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 5, 0);
+        }
     }
 }

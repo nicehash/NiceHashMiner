@@ -9,8 +9,14 @@ using System.Threading.Tasks;
 
 namespace MinerPluginToolkitV1
 {
+    /// <summary>
+    /// DevicesCrossReferenceHelpers class is used in combinaton with IDevicesCrossReference to get mapped device Ids
+    /// </summary>
     public class DevicesCrossReferenceHelpers
     {
+        /// <summary>
+        /// MinerOutput creates new process and gets its StandardOutput
+        /// </summary>
         public static async Task<string> MinerOutput(string path, string arguments, int timeoutMilliseconds = 30 * 1000)
         {
             string output = "";

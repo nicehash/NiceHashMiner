@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -21,7 +20,8 @@ using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Configs;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Common.Device;
-
+using NHM.MinersDownloader;
+using NiceHashMiner.Utils;
 
 // alias
 using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
@@ -434,7 +434,7 @@ namespace NiceHashMiner.Plugin
             return MinerPluginHost.MinerPlugin[pluginUuid];
         }
 
-#region Downloading
+#region DownloadingInstalling
 
         // TODO refactor ProgressState this tells us in what kind of a state the installation is
         public enum ProgressState
@@ -463,21 +463,23 @@ namespace NiceHashMiner.Plugin
                 Directory.CreateDirectory(installingPluginPath);
 
                 // download plugin dll
-                var pluginPackageDownloaded = Path.Combine(installingPluginPath, "plugin.zip");
-                var downloadPluginOK = await DownloadFile(plugin.PluginPackageURL, pluginPackageDownloaded, downloadPluginProgressChangedEventHandler, stop);
+                var downloadPluginResult = await MinersDownloadManager.DownloadFileAsync(plugin.PluginPackageURL, installingPluginPath, "plugin", downloadPluginProgressChangedEventHandler, stop);
+                var pluginPackageDownloaded = downloadPluginResult.downloadedFilePath;
+                var downloadPluginOK = downloadPluginResult.success;
                 if (!downloadPluginOK || stop.IsCancellationRequested) return;
                 // unzip 
-                var unzipPluginOK = await UnzipFile(pluginPackageDownloaded, installingPluginPath, zipProgressPluginChangedEventHandler, stop);
+                var unzipPluginOK = await ArchiveHelpers.ExtractFileAsync(pluginPackageDownloaded, installingPluginPath, zipProgressPluginChangedEventHandler, stop);
                 if (!unzipPluginOK || stop.IsCancellationRequested) return;
                 File.Delete(pluginPackageDownloaded);
 
                 // download plugin dll
-                var binsPackageDownloaded = Path.Combine(installingPluginPath, "miner_bins.zip");
-                var downloadMinerBinsOK = await DownloadFile(plugin.MinerPackageURL, binsPackageDownloaded, downloadMinerProgressChangedEventHandler, stop);
+                var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(plugin.MinerPackageURL, installingPluginPath, "miner_bins", downloadMinerProgressChangedEventHandler, stop);
+                var binsPackageDownloaded = downloadMinerBinsResult.downloadedFilePath;
+                var downloadMinerBinsOK = downloadMinerBinsResult.success;
                 if (!downloadMinerBinsOK || stop.IsCancellationRequested) return;
                 // unzip 
                 var binsUnzipPath = Path.Combine(installingPluginPath, "bins");
-                var unzipMinerBinsOK = await UnzipFile(binsPackageDownloaded, binsUnzipPath, zipProgressMinerChangedEventHandler, stop);
+                var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(binsPackageDownloaded, binsUnzipPath, zipProgressMinerChangedEventHandler, stop);
                 if (!unzipMinerBinsOK || stop.IsCancellationRequested) return;
                 File.Delete(binsPackageDownloaded);
 
@@ -509,68 +511,6 @@ namespace NiceHashMiner.Plugin
                 //downloadAndInstallUpdate();
             }
         }
-
-        public static async Task<bool> DownloadFile(string url, string downloadFileLocation, IProgress<int> progress, CancellationToken stop)
-        {
-            var downloadStatus = false;
-            using (var client = new WebClient())
-            {
-                client.DownloadProgressChanged += (s, e1) => {
-                    progress?.Report(e1.ProgressPercentage);
-                };
-                client.DownloadFileCompleted += (s, e) =>
-                {
-                    downloadStatus = !e.Cancelled && e.Error == null;
-                };
-                stop.Register(client.CancelAsync);
-                // Starts the download
-                await client.DownloadFileTaskAsync(new Uri(url), downloadFileLocation);
-            }
-            return downloadStatus;
-        }
-        
-        public static async Task<bool> UnzipFile(string zipLocation, string unzipLocation, IProgress<int> progress, CancellationToken stop)
-        {
-            try
-            {
-                using (var archive = ZipFile.OpenRead(zipLocation))
-                {
-                    float entriesCount = archive.Entries.Count;
-                    float extractedEntries = 0;
-                    foreach (var entry in archive.Entries)
-                    {
-                        if (stop.IsCancellationRequested) break;
-
-                        extractedEntries += 1;
-                        var isDirectory = entry.Name == "";
-                        if (isDirectory) continue;
-
-                        var prog = ((extractedEntries / entriesCount) * 100.0f);
-                        progress?.Report((int)prog);
-
-                        var extractPath = Path.Combine(unzipLocation, entry.FullName);
-                        var dirPath = Path.GetDirectoryName(extractPath);
-                        if (!Directory.Exists(dirPath))
-                        {
-                            Directory.CreateDirectory(Path.GetDirectoryName(extractPath));
-                        }
-                        //entry.ExtractToFile(extractPath, true);
-
-                        using (var zipStream = entry.Open())
-                        using (var fileStream = new FileStream(extractPath, FileMode.CreateNew))
-                        {
-                            await zipStream.CopyToAsync(fileStream);
-                        }
-                    }
-                }
-                return true;
-            }
-            catch (Exception e)
-            {
-                Logger.Info("MinerPluginsManager", $"Error occured while unzipping file: {e.Message}");
-                return false;
-            }
-        }
-#endregion Downloading
+        #endregion DownloadingInstalling
     }
 }

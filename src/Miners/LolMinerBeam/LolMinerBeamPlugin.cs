@@ -15,7 +15,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace LolMinerBeam
 {
-    class LolMinerBeamPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    class LolMinerBeamPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public Version Version => new Version(1, 2);
 
@@ -145,6 +145,11 @@ namespace LolMinerBeam
         {
             //no new version available
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 5, 0);
         }
     }
 }

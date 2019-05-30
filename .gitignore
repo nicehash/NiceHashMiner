@@ -287,3 +287,4 @@ _LOCAL_RELEASES
 .idea
 Debug*
 Release*
+*.exe

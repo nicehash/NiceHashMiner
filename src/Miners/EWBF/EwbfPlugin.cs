@@ -15,7 +15,7 @@ using MinerPluginToolkitV1;
 
 namespace EWBF
 {
-    public class EwbfPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class EwbfPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public EwbfPlugin()
         {
@@ -189,6 +189,11 @@ namespace EWBF
         {
             //no new version available
             return false;
+        }
+
+        public TimeSpan GetApiMaxTimeout()
+        {
+            return new TimeSpan(0, 5, 0);
         }
     }
 }

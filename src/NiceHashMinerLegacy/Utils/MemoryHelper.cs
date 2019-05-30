@@ -3,6 +3,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace NiceHashMiner
 {
+    // TODO delete this
     internal static class MemoryHelper
     {
         public static T DeepClone<T>(T obj)

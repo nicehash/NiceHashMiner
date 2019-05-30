@@ -7,7 +7,7 @@ namespace MinerPlugin
 {
     /// <summary>
     /// IMinerPlugin is the base interface for registering a plugin in NiceHashMinerLegacy.
-    /// This Interface should convey the name, version, grouping logic and most improtantly should filter supported devices and algorithms.
+    /// This Interface should convey the name, version, grouping logic and most importantly should filter supported devices and algorithms.
     /// </summary>
     public interface IMinerPlugin
     {
@@ -31,11 +31,10 @@ namespace MinerPlugin
         /// Checks supported devices for the plugin and returns devices and algorithms that can be mined with the plugin.
         /// </summary>
         /// <param name="devices"></param>
-        /// <returns></returns>
         Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices);
 
         /// <summary>
-        /// Creates the plugin miner instance that is used inside NiceHashMinerLegacy. 
+        /// Creates the plugin miner instance that is used for mining inside NiceHashMinerLegacy. 
         /// </summary>
         /// <returns>Returns the underlying IMiner instance.</returns>
         IMiner CreateMiner();
@@ -46,15 +45,13 @@ namespace MinerPlugin
         string PluginUUID { get; }
 
         /// <summary>
-        /// Checks if mining pairs a and b can be executed inside the same miner instance.
+        /// Checks if mining pairs a and b can be executed inside the same miner (IMiner) instance.
         /// For example if we want to mine NeoScrypt on the two GPUs with ccminer we will create only one miner instance and run both on it.
         /// On certain miners like cpuminer if we would have dual socket CPUs and would mine the same algorithm we would run two instances.
         /// This is case by case and it depends on the miner.
-        /// In most cases if multiple devices should mine the same algorithm on the same miner binary they should be grouped.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        /// <returns></returns>
         bool CanGroup(MiningPair a, MiningPair b);
     }
 }
