@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace MinerPluginToolkitV1
 {
+    /// <summary>
+    /// Filters class consists of functions that filter out algorithms for devices
+    /// </summary>
     public static class Filters
     {
         public const ulong MinDaggerHashimotoMemory = 3UL << 30; // 3GB

@@ -20,7 +20,7 @@ namespace MinerPluginToolkitV1
     public static class MinerToolkit
     {
         /// <summary>
-        /// Use DemoUser if the miner requires a network benchmark the plugin will blacklist users
+        /// Use DemoUser if the miner requires a network benchmark, the plugin will blacklist users
         /// </summary>
         public static string DemoUserBTC => DemoUser.BTC;
 
@@ -29,6 +29,9 @@ namespace MinerPluginToolkitV1
 
         public static int MinerRestartDelayMS { set; get; } = 500;
 
+        /// <summary>
+        /// GetAlgorithmSingleType returns Tuple of single <see cref="AlgorithmType"/> and success status.
+        /// </summary>
         public static Tuple<AlgorithmType, bool> GetAlgorithmSingleType(this IEnumerable<MiningPair> mps)
         {
             var algorithmTypes = mps.Select(pair => pair.Algorithm.IDs.First());
@@ -40,6 +43,9 @@ namespace MinerPluginToolkitV1
             return Tuple.Create(AlgorithmType.NONE, false);
         }
 
+        /// <summary>
+        /// GetAlgorithmSingleType returns Tuple of dual <see cref="AlgorithmType"/> and success status.
+        /// </summary>
         public static Tuple<AlgorithmType, bool> GetAlgorithmDualType(this IEnumerable<MiningPair> mps)
         {
             if (mps.Select(pair => pair.Algorithm.IDs.Count).ToList()[0] == 1) return Tuple.Create(AlgorithmType.NONE, false);
@@ -49,12 +55,18 @@ namespace MinerPluginToolkitV1
             return Tuple.Create(mustIncludeDual.First(), true);
         }
 
+        /// <summary>
+        /// GetAlgorithmPortsKey returns first Algorithm name from MiningPairs
+        /// </summary>
         public static string GetAlgorithmPortsKey(this IEnumerable<MiningPair> mps)
         {
             if (mps.Count() == 0) return "";
             return mps.First().Algorithm.AlgorithmName;
         }
 
+        /// <summary>
+        /// GetDevicesIDsInOrder returns ordered device IDs from <paramref name="mps"/>
+        /// </summary>
         public static IEnumerable<string> GetDevicesIDsInOrder(this IEnumerable<MiningPair> mps)
         {
             var deviceIds = mps.Select(pair => pair.Device.ID).OrderBy(id => id).Select(id => id.ToString());
@@ -62,6 +74,9 @@ namespace MinerPluginToolkitV1
         }
 
         //shamelessly copied from StringsExt in extensions library/package
+        /// <summary>
+        /// GetStringAfter returns substring after first occurance of "<paramref name="after"/>" string
+        /// </summary>
         public static string GetStringAfter(this string s, string after)
         {
             var index = s.IndexOf(after, StringComparison.Ordinal);
@@ -83,6 +98,12 @@ namespace MinerPluginToolkitV1
 
         // TODO this will work on Sol-rates and G-rates but will skip prefixes
         // Hashrate and found pair
+        /// <summary>
+        /// TryGetHashrateAfter gets -Hashrate and found- pair from string.
+        /// </summary>
+        /// <param name="s">Is the line of text we are searching hashrate in</param>
+        /// <param name="after">Is the token we are searching for - after that token there should be hashrate</param>
+        /// <returns>Hashrate and success boolean</returns>
         public static Tuple<double, bool> TryGetHashrateAfter(this string s, string after)
         {
             if (!s.Contains(after))
@@ -135,6 +156,9 @@ namespace MinerPluginToolkitV1
         }
 
         // TODO make one with Start NiceHashProcess
+        /// <summary>
+        /// CreateMiningProcess creates a new process used in mining
+        /// </summary>
         public static Process CreateMiningProcess(string binPath, string workingDir, string commandLine, Dictionary<string, string> environmentVariables = null)
         {
             var miningHandle = new Process
@@ -182,6 +206,9 @@ namespace MinerPluginToolkitV1
             return miningHandle;
         }
 
+        /// <summary>
+        /// CreateBenchmarkProcess creates a new process used in benchmarks
+        /// </summary>
         public static Process CreateBenchmarkProcess(string binPath, string workingDir, string commandLine, Dictionary<string, string> environmentVariables = null)
         {
             var benchmarkHandle = new Process
@@ -213,6 +240,14 @@ namespace MinerPluginToolkitV1
             return benchmarkHandle;
         }
 
+        /// <summary>
+        /// WaitBenchmarkResult returns <see cref="BenchmarkResult"/> after one of 3 conditions is fullfiled.  
+        /// Conditions are: Benchmark fails with error message, Benchmarks timeouts, Benchmark returns non-zero speed
+        /// </summary>
+        /// <param name="benchmarkProcess">Is the running <see cref="BenchmarkProcess"/></param>
+        /// <param name="timeoutTime">Is the time after which we get timeout</param>
+        /// <param name="delayTime">Is the delay time after which <paramref name="timeoutTime"/> starts counting</param>
+        /// <param name="stop">Is the <see cref="CancellationToken"/> for stopping <paramref name="benchmarkProcess"/></param>
         public static async Task<BenchmarkResult> WaitBenchmarkResult(BenchmarkProcess benchmarkProcess, TimeSpan timeoutTime, TimeSpan delayTime, CancellationToken stop)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -255,6 +290,9 @@ namespace MinerPluginToolkitV1
             return new BenchmarkResult();
         }
 
+        /// <summary>
+        /// IsSameAlgorithmType checks if the <see cref="Algorithm"/> <paramref name="a"/> and <see cref="Algorithm"/> <paramref name="b"/> are of same type
+        /// </summary>
         public static bool IsSameAlgorithmType(Algorithm a, Algorithm b)
         {
             if (a.IDs.Count != b.IDs.Count) return false;

@@ -30,6 +30,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NiceHashMinerLegacy", "src\NiceHashMinerLegacy\NiceHashMinerLegacy.csproj", "{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Miners", "Miners", "{F40126B4-5B3B-4085-B47D-A5EF4B51570C}"
+	ProjectSection(SolutionItems) = preProject
+		src\Miners\Miners.md = src\Miners\Miners.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MinerPlugin", "src\Miners\MinerPlugin\MinerPlugin.csproj", "{AD369259-FE29-4832-BD46-12A6D4B181C5}"
 EndProject

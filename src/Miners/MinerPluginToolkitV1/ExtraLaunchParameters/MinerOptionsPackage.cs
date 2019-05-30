@@ -5,6 +5,10 @@ using System.Text;
 
 namespace MinerPluginToolkitV1.ExtraLaunchParameters
 {
+    /// <summary>
+    /// MinerOptionsPackage combines General and Temperature options (both of type MinerOption<see cref="MinerOption"/>)
+    /// With UseUserSettings property user can define if Miner options should be used from local MinerOptionsPackage.json file
+    /// </summary>
     [Serializable]
     public class MinerOptionsPackage
     {
