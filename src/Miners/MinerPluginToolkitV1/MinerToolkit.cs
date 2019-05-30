@@ -65,10 +65,8 @@ namespace MinerPluginToolkitV1
         }
 
         /// <summary>
-        /// GetDevicesIDsInOrder returns ordered device IDs
+        /// GetDevicesIDsInOrder returns ordered device IDs from <paramref name="mps"/>
         /// </summary>
-        /// <param name="mps"></param>
-        /// <returns></returns>
         public static IEnumerable<string> GetDevicesIDsInOrder(this IEnumerable<MiningPair> mps)
         {
             var deviceIds = mps.Select(pair => pair.Device.ID).OrderBy(id => id).Select(id => id.ToString());
@@ -100,6 +98,12 @@ namespace MinerPluginToolkitV1
 
         // TODO this will work on Sol-rates and G-rates but will skip prefixes
         // Hashrate and found pair
+        /// <summary>
+        /// TryGetHashrateAfter gets -Hashrate and found- pair from string.
+        /// </summary>
+        /// <param name="s">Is the line of text we are searching hashrate in</param>
+        /// <param name="after">Is the token we are searching for - after that token there should be hashrate</param>
+        /// <returns>Hashrate and success boolean</returns>
         public static Tuple<double, bool> TryGetHashrateAfter(this string s, string after)
         {
             if (!s.Contains(after))
@@ -152,6 +156,9 @@ namespace MinerPluginToolkitV1
         }
 
         // TODO make one with Start NiceHashProcess
+        /// <summary>
+        /// CreateMiningProcess creates a new process used in mining
+        /// </summary>
         public static Process CreateMiningProcess(string binPath, string workingDir, string commandLine, Dictionary<string, string> environmentVariables = null)
         {
             var miningHandle = new Process
@@ -199,6 +206,9 @@ namespace MinerPluginToolkitV1
             return miningHandle;
         }
 
+        /// <summary>
+        /// CreateBenchmarkProcess creates a new process used in benchmarks
+        /// </summary>
         public static Process CreateBenchmarkProcess(string binPath, string workingDir, string commandLine, Dictionary<string, string> environmentVariables = null)
         {
             var benchmarkHandle = new Process
@@ -230,6 +240,14 @@ namespace MinerPluginToolkitV1
             return benchmarkHandle;
         }
 
+        /// <summary>
+        /// WaitBenchmarkResult returns <see cref="BenchmarkResult"/> after one of 3 conditions is fullfiled.  
+        /// Conditions are: Benchmark fails with error message, Benchmarks timeouts, Benchmark returns non-zero speed
+        /// </summary>
+        /// <param name="benchmarkProcess">Is the running <see cref="BenchmarkProcess"/></param>
+        /// <param name="timeoutTime">Is the time after which we get timeout</param>
+        /// <param name="delayTime">Is the delay time after which <paramref name="timeoutTime"/> starts counting</param>
+        /// <param name="stop">Is the <see cref="CancellationToken"/> for stopping <paramref name="benchmarkProcess"/></param>
         public static async Task<BenchmarkResult> WaitBenchmarkResult(BenchmarkProcess benchmarkProcess, TimeSpan timeoutTime, TimeSpan delayTime, CancellationToken stop)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
@@ -272,6 +290,9 @@ namespace MinerPluginToolkitV1
             return new BenchmarkResult();
         }
 
+        /// <summary>
+        /// IsSameAlgorithmType checks if the <see cref="Algorithm"/> <paramref name="a"/> and <see cref="Algorithm"/> <paramref name="b"/> are of same type
+        /// </summary>
         public static bool IsSameAlgorithmType(Algorithm a, Algorithm b)
         {
             if (a.IDs.Count != b.IDs.Count) return false;
