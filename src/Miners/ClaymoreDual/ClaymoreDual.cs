@@ -18,6 +18,7 @@ namespace ClaymoreDual
     {
         public ClaymoreDual(string uuid, Dictionary<string, int> mappedIDs) : base(uuid, mappedIDs)
         {
+            _started = DateTime.UtcNow;
         }
 
 
@@ -36,7 +37,7 @@ namespace ClaymoreDual
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "Claymore's Dual Ethereum+Decred_Siacoin_Lbry_Pascal_Blake2s_Keccak AMD+NVIDIA GPU Miner v12.0");
             var binPath = Path.Combine(pluginRootBins, "EthDcrMiner64.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
@@ -133,15 +134,16 @@ namespace ClaymoreDual
             }
             return t;
         }
+
         public void AfterStartMining()
         {
-            _started = DateTime.Now;
+            _started = DateTime.UtcNow;
         }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var api = new ApiData();
-            var elapsedSeconds = DateTime.Now.Subtract(_started).Seconds;
+            var elapsedSeconds = DateTime.UtcNow.Subtract(_started).Seconds;
             if (elapsedSeconds < 15)
             {
                 return api;

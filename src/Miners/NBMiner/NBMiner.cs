@@ -121,7 +121,7 @@ namespace NBMiner
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "NBMiner_Win");
             var binPath = Path.Combine(pluginRootBins, "nbminer.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
