@@ -4,6 +4,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Devices.Querying;
 using NiceHashMiner.Forms.Components;
 using NiceHashMiner.Miners;
+using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Plugin;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Utils;
@@ -32,7 +33,7 @@ namespace NiceHashMiner
 
         public static async Task InitializeManagersAndMiners(StartupLoadingControl loadingControl, IProgress<(string loadMessageText, int prog)> progress, IProgress<(string loadMessageText, int prog)> progressDownload)
         {
-            var allSteps = 14; 
+            var allSteps = 13; 
             var currentStep = 0;
             var nextProgPerc = new Func<int>(() =>
             {
@@ -41,7 +42,6 @@ namespace NiceHashMiner
                 if (perc > 100) return 100;
                 return perc;
             });
-            var runVCRed = !MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit;
 
             // STEP
             // Checking System Memory
@@ -100,85 +100,38 @@ namespace NiceHashMiner
             }
 
             // STEP
-            // Download open source miners
-            // standard miners check scope
-            // check if download needed
-            if (!MinersExistanceChecker.IsMinersBinsInit() && !ConfigManager.GeneralConfig.DownloadInit)
+            // Downloading integrated plugins bins, TODO put this in some internals settings
+            var thirdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+            var hasMissingMinerBins = MinerPluginsManager.GetMissingMiners().Count > 0;
+            if (hasMissingMinerBins)
             {
-                loadingControl.LoadTitleTextSecond = Tr("Downloading Open Source Miners");
+                loadingControl.LoadTitleTextSecond = Tr("Downloading Miner Binaries");
                 loadingControl.ShowSecondProgressBar = true;
 
-                progress?.Report((Tr("Downloading Open Source Miners..."), nextProgPerc()));
-                await MinersDownloader.MinersDownloadManager.DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(progressDownload, ExitApplication.Token);
+                progress?.Report((Tr("Downloading Miner Binaries..."), nextProgPerc()));
+                await MinerPluginsManager.DownloadMissingIntegratedMinersBins(progressDownload, ExitApplication.Token);
+                //await MinersDownloader.MinersDownloadManager.DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(progressDownload, ExitApplication.Token);
                 loadingControl.ShowSecondProgressBar = false;
                 if (ExitApplication.IsCancellationRequested) return;
             }
-            // check if files are mising
-            if (!MinersExistanceChecker.IsMinersBinsInit())
+            // re-check after download we should have all miner files
+            var missingMinerBins = MinerPluginsManager.GetMissingMiners().Count > 0;
+            if (missingMinerBins)
             {
                 var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue."),
                     Tr("Warning!"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                 if (result == DialogResult.Yes)
                 {
-                    ConfigManager.GeneralConfig.DownloadInit = false;
-                    ConfigManager.GeneralConfigFileCommit();
-                    ApplicationStateManager.RestartProgram();
+                    RestartProgram();
                     return;
-                }
-            }
-            else if (!ConfigManager.GeneralConfig.DownloadInit)
-            {
-                // all good
-                ConfigManager.GeneralConfig.DownloadInit = true;
-                ConfigManager.GeneralConfigFileCommit();
-            }
-
-            // STEP
-            // 3rdparty miners check
-            // 3rdparty miners check scope #2
-            // check if download needed
-            if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES)
-            {
-                if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit() && !ConfigManager.GeneralConfig.DownloadInit3rdParty)
-                {
-                    loadingControl.LoadTitleTextSecond = Tr("Downloading 3rd party Miners");
-                    loadingControl.ShowSecondProgressBar = true;
-
-                    progress?.Report((Tr("Downloading 3rd party Miners..."), nextProgPerc()));
-                    await MinersDownloader.MinersDownloadManager.DownloadAndExtractThirdPartyMinersWithMyDownloaderAsync(progressDownload, ExitApplication.Token);
-                    loadingControl.ShowSecondProgressBar = false;
-                    if (ExitApplication.IsCancellationRequested) return;
-                }
-                // check if files are mising
-                if (!MinersExistanceChecker.IsMiners3rdPartyBinsInit())
-                {
-                    var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue."),
-                        Tr("Warning!"),
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-                    if (result == DialogResult.Yes)
-                    {
-                        ConfigManager.GeneralConfig.DownloadInit3rdParty = false;
-                        ConfigManager.GeneralConfigFileCommit();
-                        ApplicationStateManager.RestartProgram();
-                        return;
-                    }
-                }
-                else if (!ConfigManager.GeneralConfig.DownloadInit3rdParty)
-                {
-                    // all good
-                    ConfigManager.GeneralConfig.DownloadInit3rdParty = true;
-                    ConfigManager.GeneralConfigFileCommit();
                 }
             }
 
             // STEP
             // VC_REDIST check
             progress?.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
-            if (runVCRed)
-            {
-                Helpers.InstallVcRedist();
-            }
+            VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
 
             // STEP
             progress?.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));

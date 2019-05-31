@@ -278,7 +278,9 @@
     <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\IMinerBinsSource.cs" />
     <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\MinersBinsUrls.cs" />
     <Compile Include="Miners\IntegratedPlugins\NanoMinerIntegrated\NanoMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\PhoenixIntegrated\PhoenixIntegratedPlugin.cs" />
@@ -290,13 +292,13 @@
     <Compile Include="Miners\IntegratedPlugins\TeamRedMinerIntegrated\TeamRedMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
     <Compile Include="Miners\MinerApiWatchdog.cs" />
     <Compile Include="Miners\MiningManager.cs" />
     <Compile Include="Plugin\SupportedAlgorithmsFilter.cs" />
     <Compile Include="Stats\MiningStats.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
-    <Compile Include="MinersDownloader\MinersDownloadManager.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="PInvoke\DeviceDetection.cs" />
     <Compile Include="Stats\ErrorCode.cs" />
@@ -409,7 +411,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
-    <Compile Include="Utils\MinersExistanceChecker.cs" />
     <Compile Include="Utils\WindowsManagementObjectSearcherSmoketestWorkaround.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>

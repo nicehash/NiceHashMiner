@@ -63,7 +63,10 @@ namespace NiceHashMiner.Plugin
             //new NanoMinerIntegratedPlugin(),
 
             // service plugin
-            EthlargementIntegratedPlugin.Instance
+            EthlargementIntegratedPlugin.Instance,
+
+            // plugin dependencies
+            VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance
         };
 
         private static HashSet<string> _compatiblePlugins = new HashSet<string>();
@@ -105,6 +108,7 @@ namespace NiceHashMiner.Plugin
 
                 // register and add 
                 if (plugin is IBackroundService) _compatiblePlugins.Add(pluginUuid);
+                if (plugin is IPluginDependency) _compatiblePlugins.Add(pluginUuid);
                 var supported = plugin.GetSupportedAlgorithms(baseDevices);
                 _integratedPluginsCachedAlgorithms[pluginUuid] = supported;
                 // check out the supported algorithms
@@ -239,12 +243,13 @@ namespace NiceHashMiner.Plugin
         }
 
         // for now integrated only
-        public static List<string> GetMissingMiners(bool is3rdParty)
+        public static List<string> GetMissingMiners()
         {
             var ret = new List<string>();
             foreach (var plugin in IntegratedPlugins)
             {
-                if (plugin.Is3rdParty == is3rdParty && plugin is IBinaryPackageMissingFilesChecker pluginCheckBins)
+                if (_compatiblePlugins.Contains(plugin.PluginUUID) == false) continue;
+                if (plugin is IBinaryPackageMissingFilesChecker pluginCheckBins)
                 {
                     try
                     {
