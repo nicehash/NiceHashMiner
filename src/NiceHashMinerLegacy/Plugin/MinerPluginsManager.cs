@@ -45,7 +45,7 @@ namespace NiceHashMiner.Plugin
             new CCMinerMTPIntegratedPlugin(),
             new CCMinerTpruvotIntegratedPlugin(),
             new CCMinerX16RIntegratedPlugin(),
-            new SGminerAvemoreIntegratedPlugin(),
+            //new SGminerAvemoreIntegratedPlugin(),
             new SGminerGMIntegratedPlugin(),
             new SGminerNHGeneralIntegratedPlugin(),
             new XmrStakIntegratedPlugin(),
