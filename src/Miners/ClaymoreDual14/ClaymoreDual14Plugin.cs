@@ -31,7 +31,7 @@ namespace ClaymoreDual14
 
         public Version Version => new Version(1, 0);
 
-        public string Name => "ClaymoreDual14";
+        public string Name => "ClaymoreDual14+";
 
         public string Author => "domen.kirnkrefl@nicehash.com";
 
@@ -467,7 +467,7 @@ namespace ClaymoreDual14
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "cudart64_80.dll", "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
-                @"cuda10.0\cudart64_100.dll", @"cuda10.0\EthDcrMiner64.exe", @"RemoteManager\EthMan.exe", @"RemoteManager\libeay32.dll", @"RemoteManager\ssleay32.dll"
+                @"cuda10\cudart64_100.dll", @"cuda10\EthDcrMiner64.exe", @"RemoteManager\EthMan.exe", @"RemoteManager\libeay32.dll", @"RemoteManager\ssleay32.dll"
             });
         }
 

@@ -22,6 +22,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {  "CCMinerTpruvot", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/CCMinerX16R.7z" /*"https://github.com/tpruvot/ccminer/releases/download/2.3.1-tpruvot/ccminer-2.3.1-cuda10.7z"*/ } }, // TODO original link might not work because of naming
             {  "CCMinerX16R", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/CCMinerX16R.7z" } }, // TODO
             {  "ClaymoreDual", new List<string>{ "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?2sBXjCTY" } },
+            {  "ClaymoreDual14+", new List<string>{ "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?fwoyhCoa" } },
             {  "Ethlargement", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/Ethlargement.7z" } }, // TODO change to original link
             {  "Ewbf", new List<string>{ "https://mega.nz/#F!fsAlmZQS!CwVgFfBDduQI-CbwVkUEpQ?Tlp22YKT" } },
             {  "GMiner", new List<string>{ "https://github.com/develsoftware/GMinerRelease/releases/download/1.43/gminer_1_43_windows64.zip" } },
