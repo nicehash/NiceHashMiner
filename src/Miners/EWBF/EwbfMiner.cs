@@ -188,7 +188,7 @@ namespace EWBF
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "EWBF Equihash miner v0.6");
             var binPath = Path.Combine(pluginRootBins, "miner.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);

@@ -95,14 +95,11 @@ namespace NiceHashMiner.Configs.Data
         public double MinimumProfit = 0;
         public bool IdleWhenNoInternetAccess = true;
         public bool UseIFTTT = false;
-        public bool DownloadInit = false;
 
         public bool RunScriptOnCUDA_GPU_Lost = false;
 
         // 3rd party miners
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
-
-        public bool DownloadInit3rdParty = false;
 
         public bool AllowMultipleInstances = true;
 
@@ -176,12 +173,10 @@ namespace NiceHashMiner.Configs.Data
             DisplayCurrency = "USD";
             ApiBindPortPoolStart = 4000;
             MinimumProfit = 0;
-            DownloadInit = false;
             //ContinueMiningIfNoInternetAccess = false;
             IdleWhenNoInternetAccess = true;
             IdleCheckType = IdleCheckType.SessionLock;
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
-            DownloadInit3rdParty = false;
             AllowMultipleInstances = true;
             UseIFTTT = false;
             CoolDownCheckEnabled = true;

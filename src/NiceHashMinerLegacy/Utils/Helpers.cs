@@ -10,6 +10,7 @@ using System.Security.Principal;
 using NiceHashMinerLegacy.Common.Enums;
 using System.Linq;
 using NiceHashMinerLegacy.Common;
+using NiceHashMiner.Miners.IntegratedPlugins;
 
 namespace NiceHashMiner
 {
@@ -127,6 +128,7 @@ namespace NiceHashMiner
                     return "Sol/s";
                 case AlgorithmType.GrinCuckaroo29:
                 case AlgorithmType.GrinCuckatoo31:
+                case AlgorithmType.CuckooCycle:
                     return "G/s";
                 default:
                     return "H/s";
@@ -229,30 +231,6 @@ namespace NiceHashMiner
             catch
             {
                 return 0;
-            }
-        }
-
-        public static void InstallVcRedist()
-        {
-            try
-            {
-                var startInfo = new ProcessStartInfo
-                {
-                    FileName = @"miner_plugins\vc_redist.x64.exe",
-                    Arguments = "/q /norestart",
-                    UseShellExecute = false,
-                    RedirectStandardError = false,
-                    RedirectStandardOutput = false,
-                    CreateNoWindow = false
-                };
-                using (var cudaDevicesDetection = new Process { StartInfo = startInfo })
-                {
-                    cudaDevicesDetection.Start();
-                }
-            }
-            catch(Exception e)
-            {
-                Logger.Error("HELPERS", $"InstallVcRedist error: {e.Message}");
             }
         }
 

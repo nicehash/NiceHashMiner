@@ -14,24 +14,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClaymoreDual
+namespace ClaymoreDual14
 {
-    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals/*, IDevicesCrossReference*/, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class ClaymoreDual14Plugin : IMinerPlugin, IInitInternals/*, IDevicesCrossReference*/, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
-        public ClaymoreDualPlugin()
+        public ClaymoreDual14Plugin()
         {
-            _pluginUUID = "70984aa0-7236-11e9-b20c-f9f12eb6d835";
+            _pluginUUID = "78d0bd8b-4d8f-4b7e-b393-e8ac6a83ae76";
         }
-        public ClaymoreDualPlugin(string pluginUUID = "70984aa0-7236-11e9-b20c-f9f12eb6d835")
+        public ClaymoreDual14Plugin(string pluginUUID = "78d0bd8b-4d8f-4b7e-b393-e8ac6a83ae76")
         {
             _pluginUUID = pluginUUID;
         }
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 2);
+        public Version Version => new Version(1, 0);
 
-        public string Name => "ClaymoreDual";
+        public string Name => "ClaymoreDual14+";
 
         public string Author => "domen.kirnkrefl@nicehash.com";
 
@@ -44,7 +44,7 @@ namespace ClaymoreDual
             int claymoreIndex = -1;
             // AMD
             var amdGpus = devices
-                .Where(dev => dev is AMDDevice gpu && !Checkers.IsGcn4(gpu))
+                .Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu))
                 .Cast<AMDDevice>()
                 .OrderBy(amd => amd.PCIeBusID);
             foreach (var gpu in amdGpus)
@@ -59,7 +59,7 @@ namespace ClaymoreDual
             if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3 && gpu.SM_major < 6)
+                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 6)
                 .Cast<CUDADevice>()
                 .OrderBy(gpu => gpu.PCIeBusID); ;
 
@@ -91,7 +91,7 @@ namespace ClaymoreDual
 
         public IMiner CreateMiner()
         {
-            return new ClaymoreDual(PluginUUID, _mappedIDs)
+            return new ClaymoreDual14(PluginUUID, _mappedIDs)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -218,6 +218,72 @@ namespace ClaymoreDual
                     ID = "claymoreDual_computeMode",
                     ShortName = "-y",
                     DefaultValue = "1",
+                },
+                /// <summary>
+                /// enables additional boost for AMD Polaris cards and old AMD cards (Hawaii, Tonga, Tahiti, Pitcairn). This option is available for Windows only. It mproves hashrate up to 5% by applying some additional memory settings. 
+                /// To enable it, use "-rxboost 1", you can use your own straps or use "-strap" option, you will get boost anyway. If your card is unstable, you can specify custome boost value (2..100), for example, "-rxboost 5".
+                /// You can also specify values for every card, for example "-rxboost 1,0,10,30".
+                /// Default value is "0" which means no boost at all.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_rxboost",
+                    ShortName = "-rxboost",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// applies specified memory timings (strap). This option is available for Windows only and requires AMD blockchain drivers or drivers 18.x or newer (most tests were performed on 19.4.3) for AMD cards, any recent Nvidia drivers for Nvidia cards. 
+                /// Miner has built-in straps database, all straps are separated by memory (4GB or 8GB) and memory type (Samsung, Elpida, Hynix, Micron).
+                /// Straps are sorted by intensity, i.e. "-strap 1" supports higher memory clock than "-strap 2", etc. For the best hashrate you must also set high memory clock, so "-strap 1" is a good start point for tests.
+                /// You can specify just strap index, for example "-strap 1" will apply first strap from database for all Polaris GPUs based on GPU memory size and memory type, miner will show full strap name detected.
+                /// Or you can specify strap directly in format "POL8S1": "POL" means Polaris, "8" means 8GB, "S" means Samsung memory, "1" means index.
+                /// Zero index means default strap from VBIOS, i.e. no strap is applied.
+                /// You can also use "@" character after strap to specify memory clock, it works like "-mclock" but overrides it, for example, "-strap POL4E2@1900". For Nvidia you can also specify delta, for example, "-strap 2@+700".
+                /// You can also specify values for every card, for example "-strap 1@2100,POL4H3,0".
+                /// If strap is applied, miner will return old strap and memory clock when miner is closed.
+                /// The best approach to find best strap is to set "-strap 1,0" (it sets strap #1 for first card and no straps for the rest of GPUs) and then raise memory clock to see what clocks and hashrate you can reach.
+                /// Then so the same for strap #2 etc.
+                /// You can also specify raw strap string (96 characters). Note that single option value means that this strap is applied for all GPUs, use "0" to apply strap on single GPU,
+                /// for example "-strap 0,1@2200,0" applies strap #1 and memory clock 2200MHz for second GPU only.
+                /// NOTE: if specified strap fails, Windows is crashed. After reboot default timings are restored and you can try some different settings.
+                /// NOTE: Polaris cards have different number of straps (depends on memory type and size).
+                /// Vega cards have "-strap 1" ... "-strap 5" values.
+                /// Nvidia cards have "-strap 1" ... "-strap 6" values (1...3 are normal straps and 4...6 are low-intensity straps).
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_strap",
+                    ShortName = "-strap",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// strap intensity for Nvidia cards, in %. Use this option to adjust strap intensity for Nvidia cards if even straps with lowest intensity ("-strap 1" and "-strap 4") are unstable on your cards. 
+                /// To find best value, use "-strap 4 -sintensity 1" and see if it is stable. Then increase "-sintensity" value (maximum value is 100) to find best stable hashrate. Then try other "-strap" values.
+                /// You can also specify values for every card, for example "-sintensity 10,0,100,30".
+                /// Default value is "0" which means no changes in default strap settings.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_strapIntensity",
+                    ShortName = "-sintensity",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// installs or uninstalls the driver which is required to apply memory timings (straps), enables or disables Windows Test Mode and closes miner after it. This option is available for Windows only and requires admin rights to execute, 
+                /// also you need to disable "Secure Boot" in UEFI BIOS if you use it.
+                /// Use "-driver install" to install the driver and enable Windows Test Mode, "-driver uninstall" to uninstall the driver and disable Windows Test Mode. Since the driver is not signed, miner enables "Test mode" in Windows, you need to reboot to apply it.
+                /// This option is necessary only if you want to install or uninstall the driver separately, miner anyway will install the driver automatically if "-strap" option is used.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_driver",
+                    ShortName = "-driver"
                 }
             },
             TemperatureOptions = new List<MinerOption>
@@ -400,9 +466,8 @@ namespace ClaymoreDual
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
-                @"cuda10.0\cudart64_100.dll", @"cuda10.0\EthDcrMiner64.exe", @"cuda6.5\cudart64_65.dll", @"cuda6.5\EthDcrMiner64.exe", @"cuda7.5\cudart64_75.dll", @"cuda7.5\EthDcrMiner64.exe",
-                @"Remote manager\EthMan.exe", @"Remote manager\libeay32.dll", @"Remote manager\ssleay32.dll"
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "cudart64_80.dll", "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
+                @"cuda10\cudart64_100.dll", @"cuda10\EthDcrMiner64.exe", @"RemoteManager\EthMan.exe", @"RemoteManager\libeay32.dll", @"RemoteManager\ssleay32.dll"
             });
         }
 

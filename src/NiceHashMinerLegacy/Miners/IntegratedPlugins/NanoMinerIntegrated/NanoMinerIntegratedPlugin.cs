@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class NanoMinerIntegratedPlugin : NanoMiner.NanoMinerPlugin, IntegratedPlugin
+    class NanoMinerIntegratedPlugin : NanoMiner.NanoMinerPlugin, IntegratedPlugin, IMinerBinsSource
     {
         public NanoMinerIntegratedPlugin() : base("NanoMiner") { }
 
         public bool Is3rdParty => true;
+
+        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        {
+            return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
+        }
     }
 }

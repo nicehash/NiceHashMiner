@@ -1,17 +1,17 @@
-﻿using MinerPlugin;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class PhoenixIntegratedPlugin : Phoenix.PhoenixPlugin, IntegratedPlugin
+    class PhoenixIntegratedPlugin : Phoenix.PhoenixPlugin, IntegratedPlugin, IMinerBinsSource
     {
         public PhoenixIntegratedPlugin() : base("Phoenix")
         { }
 
         public bool Is3rdParty => true;
+
+        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        {
+            return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
+        }
     }
 }

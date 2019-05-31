@@ -164,7 +164,7 @@ namespace BMiner
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "bminer-lite-v15.5.3-747d98e");
             var binPath = Path.Combine(pluginRootBins, "bminer.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);

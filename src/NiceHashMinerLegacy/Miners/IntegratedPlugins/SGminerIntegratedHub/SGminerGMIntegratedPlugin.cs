@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class SGminerGMIntegratedPlugin : SGMinerPluginBase
+    class SGminerGMIntegratedPlugin : SGMinerPluginBase, IMinerBinsSource
     {
         const string _pluginUUIDName = "SGminerGM";
 
@@ -48,6 +48,11 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "sgminer.exe" });
+        }
+
+        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        {
+            return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class ClaymoreDualIntegratedPlugin : ClaymoreDual.ClaymoreDualPlugin, IntegratedPlugin, IMinerBinsSource
+    class ClaymoreDual14IntegratedPlugin : ClaymoreDual14.ClaymoreDual14Plugin, IntegratedPlugin, IMinerBinsSource
     {
-        public ClaymoreDualIntegratedPlugin() : base("ClaymoreDual")
+        public ClaymoreDual14IntegratedPlugin() : base("ClaymoreDual14+")
         { }
 
         public bool Is3rdParty => true;
