@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 namespace Ethlargement
 {
     // TODO replace with integrated
-    public class Ethlargement : IMinerPlugin, IInitInternals, IBackroundService
+    public class Ethlargement : IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker
     {
         public Ethlargement()
         {
@@ -272,5 +272,13 @@ namespace Ethlargement
             SupportedDeviceNames = new List<string> { "1080", "1080 Ti", "Titan Xp" }
         };
         #endregion Internal settings
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "OhGodAnETHlargementPill-r2.exe" });
+        }
     }
 }
