@@ -59,7 +59,7 @@ namespace ClaymoreDual
             if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3)
+                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3 && gpu.SM_major < 6)
                 .Cast<CUDADevice>()
                 .OrderBy(gpu => gpu.PCIeBusID); ;
 
