@@ -111,7 +111,7 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
-                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle),
+                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
@@ -123,7 +123,7 @@ namespace GMinerPlugin
             {
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
-                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle),
+                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
@@ -237,17 +237,12 @@ namespace GMinerPlugin
 
         public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            /*
             var benchmarkedVersionIsSame = Version.Major == benchmarkedPluginVersion.Major && Version.Minor == benchmarkedPluginVersion.Minor;
             var benchmarkedVersionIsOlder = Version.Major >= benchmarkedPluginVersion.Major && Version.Minor > benchmarkedPluginVersion.Minor;
             if (benchmarkedVersionIsSame || !benchmarkedVersionIsOlder) return false;
             if (ids.Count() == 0) return false;
-            // plugin version 1.2 bundles GMiner v1.36
-            // plugin version 1.3 bundles GMiner v1.42
-            // performance optimizations Beam (Significant performance improvements) and Grin29,
-            // since there are improvements on AMD and NVIDIA we will not check device type, also there were 4 releases in between and many changes
-            var singleAlgorithm = ids[0];
-            if (singleAlgorithm == AlgorithmType.Beam) return true;
-            if (singleAlgorithm == AlgorithmType.GrinCuckaroo29) return true;
+            */
 
             return false;
         }
