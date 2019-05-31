@@ -14,24 +14,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClaymoreDual
+namespace ClaymoreDual14
 {
-    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals/*, IDevicesCrossReference*/, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class ClaymoreDual14Plugin : IMinerPlugin, IInitInternals/*, IDevicesCrossReference*/, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
-        public ClaymoreDualPlugin()
+        public ClaymoreDual14Plugin()
         {
-            _pluginUUID = "70984aa0-7236-11e9-b20c-f9f12eb6d835";
+            _pluginUUID = "78d0bd8b-4d8f-4b7e-b393-e8ac6a83ae76";
         }
-        public ClaymoreDualPlugin(string pluginUUID = "70984aa0-7236-11e9-b20c-f9f12eb6d835")
+        public ClaymoreDual14Plugin(string pluginUUID = "78d0bd8b-4d8f-4b7e-b393-e8ac6a83ae76")
         {
             _pluginUUID = pluginUUID;
         }
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 2);
+        public Version Version => new Version(1, 0);
 
-        public string Name => "ClaymoreDual";
+        public string Name => "ClaymoreDual14";
 
         public string Author => "domen.kirnkrefl@nicehash.com";
 
@@ -44,7 +44,7 @@ namespace ClaymoreDual
             int claymoreIndex = -1;
             // AMD
             var amdGpus = devices
-                .Where(dev => dev is AMDDevice gpu && !Checkers.IsGcn4(gpu))
+                .Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu))
                 .Cast<AMDDevice>()
                 .OrderBy(amd => amd.PCIeBusID);
             foreach (var gpu in amdGpus)
@@ -59,7 +59,7 @@ namespace ClaymoreDual
             if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3)
+                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 6)
                 .Cast<CUDADevice>()
                 .OrderBy(gpu => gpu.PCIeBusID); ;
 
@@ -91,7 +91,7 @@ namespace ClaymoreDual
 
         public IMiner CreateMiner()
         {
-            return new ClaymoreDual(PluginUUID, _mappedIDs)
+            return new ClaymoreDual14(PluginUUID, _mappedIDs)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -400,9 +400,8 @@ namespace ClaymoreDual
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "cudart64_91.dll", "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
-                @"cuda10.0\cudart64_100.dll", @"cuda10.0\EthDcrMiner64.exe", @"cuda6.5\cudart64_65.dll", @"cuda6.5\EthDcrMiner64.exe", @"cuda7.5\cudart64_75.dll", @"cuda7.5\EthDcrMiner64.exe",
-                @"cuda8.0\cudart64_80.dll", @"cuda8.0\EthDcrMiner64.exe", @"Remote manager\EthMan.exe", @"Remote manager\libeay32.dll", @"Remote manager\ssleay32.dll"
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "cudart64_80.dll", "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
+                @"cuda10.0\cudart64_100.dll", @"cuda10.0\EthDcrMiner64.exe", @"RemoteManager\EthMan.exe", @"RemoteManager\libeay32.dll", @"RemoteManager\ssleay32.dll"
             });
         }
 
