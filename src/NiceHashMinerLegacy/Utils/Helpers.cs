@@ -127,6 +127,7 @@ namespace NiceHashMiner
                     return "Sol/s";
                 case AlgorithmType.GrinCuckaroo29:
                 case AlgorithmType.GrinCuckatoo31:
+                case AlgorithmType.CuckooCycle:
                     return "G/s";
                 default:
                     return "H/s";
