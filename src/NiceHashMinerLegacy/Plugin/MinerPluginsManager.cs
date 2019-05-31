@@ -61,6 +61,7 @@ namespace NiceHashMiner.Plugin
             new TRexIntegratedPlugin(),
             new TTMinerIntegratedPlugin(),
             //new NanoMinerIntegratedPlugin(),
+            new ClaymoreDual14IntegratedPlugin(),
 
             // service plugin
             EthlargementIntegratedPlugin.Instance
