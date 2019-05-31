@@ -1,0 +1,1 @@
+git@github.com:nicehash/NiceHashMinerLegacy1L7JXrvj3ffaNL65QVSeBuMe6QMc3icA6kgit
