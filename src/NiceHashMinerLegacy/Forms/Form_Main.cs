@@ -392,22 +392,20 @@ namespace NiceHashMiner
             settings.ShowDialog();
             ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Main;
 
-            if (settings.IsChange && settings.IsChangeSaved && settings.IsRestartNeeded)
+            if (settings.IsRestartNeeded)
             {
                 MessageBox.Show(
                     Tr("Settings change requires NiceHash Miner Legacy to restart."),
                     Tr("Restart Notice"),
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ApplicationStateManager.RestartProgram();
+                return;
             }
-            else if (settings.IsChange && settings.IsChangeSaved)
-            {
-                InitLocalization();
-                FormHelpers.TranslateFormControls(this);
-                InitMainConfigGuiData();
-                // TODO check this later
-                IdleCheckManager.StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
-            }
+            InitLocalization();
+            FormHelpers.TranslateFormControls(this);
+            InitMainConfigGuiData();
+            // TODO check this later
+            IdleCheckManager.StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
         }
 
         private void ButtonStartMining_Click(object sender, EventArgs e)

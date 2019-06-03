@@ -63,9 +63,6 @@ namespace NiceHashMiner.Configs.Data
             }
         }
 
-        // TODO deprecate this
-        public DeviceDetectionConfig DeviceDetection = new DeviceDetectionConfig();
-
         public bool AutoScaleBTCValues = true;
 
         public bool StartMiningWhenIdle = false;
@@ -155,7 +152,6 @@ namespace NiceHashMiner.Configs.Data
             DebugConsole = false;
             HideMiningWindows = false;
             MinimizeToTray = false;
-            DeviceDetection = new DeviceDetectionConfig();
             AutoScaleBTCValues = true;
             StartMiningWhenIdle = false;
             LogToFile = true;
@@ -225,10 +221,6 @@ namespace NiceHashMiner.Configs.Data
             if (ApiBindPortPoolStart > (65535 - 2000))
             {
                 ApiBindPortPoolStart = 5100;
-            }
-            if (DeviceDetection == null)
-            {
-                DeviceDetection = new DeviceDetectionConfig();
             }
 
             if (KwhPrice < 0)

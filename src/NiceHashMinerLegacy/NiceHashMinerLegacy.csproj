@@ -333,7 +333,6 @@
     <Compile Include="Configs\ConfigManager.cs" />
     <Compile Include="Configs\Data\DeviceConfig.cs" />
     <Compile Include="Configs\Data\GeneralConfig.cs" />
-    <Compile Include="Configs\Data\DeviceDetectionConfig.cs" />
     <Compile Include="Devices\AmdGpuDevice.cs" />
     <Compile Include="Devices\ComputeDevice\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceManager.cs" />
