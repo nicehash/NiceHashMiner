@@ -3,6 +3,7 @@
 - [Introduction](#introduction)
 - [What are the benefits?](#benefits)
 - [What is a Plugin?](#plugin)
+- [What is MinerPluginToolkitV1 used for?](#toolkit)
 
 # <a name="introduction"></a> Introduction
 
@@ -23,3 +24,9 @@ A plugin can be written by anyone with some knowledge of programming in C#.
 Each plugin must have its Plugin file. In our case this is [ExamplePlugin](Example/ExamplePlugin.cs).
 Miner plugins also have Miner file. Example of this file is [ExampleMiner](Example/ExampleMiner.cs).
 These two files are backbone for any Miner Plugin, while Background Service Plugins need only Plugin file to operate correctly (see [EthlargementPill](Ethlargement/EthlargementPlugin.cs) plugin for example).
+
+# <a name="toolkit"></a> What is MinerPluginToolkitV1 used for?
+
+So along the way you stumbled across [MinerPluginToolkitV1](MinerPluginToolkitV1). But what is its addition to MinerPlugin you would ask.
+Miner plugin can be written completely without any use of MinerPluginToolkitV1, but there is a handfull of additional functionalities in it that using it is recommended.
+MinerPluginToolkitV1 allows developer to use Configs, Extra Launch Parameters, different interfaces and a lot of helper classes. It is also home to MinerBase, supporting all basic actions like Start/Stop mining, Start benchmarking, get data from API, create command line, etc.
