@@ -141,7 +141,6 @@
     <Compile Include="Devices\Querying\Nvidia\NvidiaSmiDriver.cs" />
     <Compile Include="Devices\Querying\QueryCpu.cs" />
     <Compile Include="Devices\Querying\Amd\OpenCL\QueryOpenCL.cs" />
-    <Compile Include="Devices\Querying\QueryGpu.cs" />
     <Compile Include="Devices\Querying\QueryResult.cs" />
     <Compile Include="Devices\Querying\VideoControllerData.cs" />
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
@@ -331,15 +330,10 @@
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
     <Compile Include="Switching\Interval.cs" />
     <Compile Include="Translations.cs" />
-    <Compile Include="Configs\ConfigJsonFile\FOLDERS.cs" />
     <Compile Include="Configs\ConfigManager.cs" />
-    <Compile Include="Configs\Data\DeviceBenchmarkConfig.cs" />
-    <Compile Include="Configs\ConfigJsonFile\ConfigFile.cs" />
-    <Compile Include="Configs\Data\ComputeDeviceConfig.cs" />
+    <Compile Include="Configs\Data\DeviceConfig.cs" />
     <Compile Include="Configs\Data\GeneralConfig.cs" />
     <Compile Include="Configs\Data\DeviceDetectionConfig.cs" />
-    <Compile Include="Configs\ConfigJsonFile\DeviceBenchmarkConfigFile.cs" />
-    <Compile Include="Configs\ConfigJsonFile\GeneralConfigFile.cs" />
     <Compile Include="Devices\AmdGpuDevice.cs" />
     <Compile Include="Devices\ComputeDevice\ComputeDevice.cs" />
     <Compile Include="Devices\ComputeDeviceManager.cs" />

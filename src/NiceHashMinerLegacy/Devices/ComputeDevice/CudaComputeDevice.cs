@@ -25,9 +25,6 @@ namespace NiceHashMiner.Devices
         private readonly uint _defaultPowerLimit;
         private readonly uint _maxPowerLimit;
 
-        public uint PowerTarget { get; private set; }
-        public PowerLevel PowerLevel { get; private set; }
-
         public bool PowerLimitsEnabled { get; private set; }
 
         public override float Load
@@ -130,9 +127,10 @@ namespace NiceHashMiner.Devices
                 string.Format(Translations.Tr("GPU#{0}"), gpuCount),
                 cudaDevice.DeviceGlobalMemory)
         {
-            BusID = cudaDevice.pciBusID;
+            //BusID = cudaDevice.pciBusID;
             SMMajor = cudaDevice.SM_major;
             SMMinor = cudaDevice.SM_minor;
+            string Uuid;
             // if no nvml loaded fallback ID
             if (string.IsNullOrEmpty(cudaDevice.UUID))
             {
@@ -261,27 +259,27 @@ namespace NiceHashMiner.Devices
             return SetPowerTarget((uint)Math.Round(percent * 1000));
         }
 
-        public override void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
-        {
-            base.SetFromComputeDeviceConfig(config);
+        //public override void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
+        //{
+        //    base.SetFromComputeDeviceConfig(config);
 
-            if (config.PowerLevel != PowerLevel.Custom)  // Placeholder
-            {
-                SetPowerTarget(config.PowerLevel);
-            }
-            else
-            {
-                SetPowerTarget(config.PowerTarget);
-            }
-        }
+        //    if (config.PowerLevel != PowerLevel.Custom)  // Placeholder
+        //    {
+        //        SetPowerTarget(config.PowerLevel);
+        //    }
+        //    else
+        //    {
+        //        SetPowerTarget(config.PowerTarget);
+        //    }
+        //}
 
-        public override ComputeDeviceConfig GetComputeDeviceConfig()
-        {
-            var config = base.GetComputeDeviceConfig();
-            config.PowerTarget = PowerTarget;
-            config.PowerLevel = PowerLevel;
+        //public override ComputeDeviceConfig GetComputeDeviceConfig()
+        //{
+        //    var config = base.GetComputeDeviceConfig();
+        //    config.PowerTarget = PowerTarget;
+        //    config.PowerLevel = PowerLevel;
 
-            return config;
-        }
+        //    return config;
+        //}
     }
 }

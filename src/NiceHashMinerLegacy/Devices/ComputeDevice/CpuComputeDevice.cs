@@ -41,7 +41,7 @@ namespace NiceHashMiner.Devices
 
             var hashedInfo = $"{id}--{name}--{threads}";
             var uuidHEX = UUID.V5(UUID.Nil().AsGuid(), hashedInfo).AsGuid().ToString();
-            Uuid = $"CPU-{uuidHEX}";
+            var Uuid = $"CPU-{uuidHEX}";
 
             _cpuCounter = new PerformanceCounter
             {

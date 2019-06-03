@@ -101,11 +101,11 @@ namespace NiceHashMiner.Devices
                 infoToHashed = $"{ID}--{DeviceType.AMD}--{amdDevice.DeviceGlobalMemory}--{amdDevice.Codename}--{Name}";
             }
             var uuidHEX = UUID.V5(UUID.Nil().AsGuid(), infoToHashed).AsGuid().ToString();
-            Uuid = $"AMD-{uuidHEX}";
+            var Uuid = $"AMD-{uuidHEX}";
 
-            BusID = amdDevice.BusID;
-            Codename = amdDevice.Codename;
-            InfSection = amdDevice.InfSection;
+            //BusID = amdDevice.BusID;
+            //Codename = amdDevice.Codename;
+            //InfSection = amdDevice.InfSection;
             Index = ID + AvailableDevices.AvailCpus + AvailableDevices.AvailNVGpus;
             _adapterIndex = amdDevice.Adl1Index;
 
@@ -114,7 +114,7 @@ namespace NiceHashMiner.Devices
 
             // plugin device
             var bd = new BaseDevice(DeviceType.AMD, Uuid, Name, ID);
-            PluginDevice = new AMDDevice(bd, amdDevice.BusID, amdDevice.DeviceGlobalMemory, Codename, InfSection);
+            PluginDevice = new AMDDevice(bd, amdDevice.BusID, amdDevice.DeviceGlobalMemory, amdDevice.Codename, amdDevice.InfSection);
         }
     }
 }

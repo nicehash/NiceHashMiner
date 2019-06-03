@@ -51,7 +51,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         static MinersBinsUrls()
         {
-            string binsUrlSettings = Path.Combine(Paths.Root, "miner_bins_urls.json");
+            string binsUrlSettings = Paths.RootPath("miner_bins_urls.json");
             var fileSettings = InternalConfigs.ReadFileSettings<MinersBinsUrlsSettings>(binsUrlSettings);
             if (fileSettings != null && fileSettings.UseFileSettings && fileSettings.PluginsUrls != null)
             {

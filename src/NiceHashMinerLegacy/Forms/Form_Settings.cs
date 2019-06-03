@@ -799,12 +799,6 @@ namespace NiceHashMiner.Forms
             Close();
         }
 
-        private void ButtonCloseNoSave_Click(object sender, EventArgs e)
-        {
-            IsChangeSaved = false;
-            Close();
-        }
-
 #endregion // Form Buttons
 
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
@@ -855,10 +849,6 @@ namespace NiceHashMiner.Forms
                         Logger.Error("REGISTRY", er.Message);
                     }
                 }
-            }
-            else
-            {
-                ConfigManager.RestoreBackup();
             }
         }
 

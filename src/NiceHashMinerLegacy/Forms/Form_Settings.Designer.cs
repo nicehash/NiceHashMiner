@@ -141,7 +141,6 @@
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
-            this.buttonCloseNoSave = new System.Windows.Forms.Button();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
@@ -1524,6 +1523,7 @@
             this.devicesListViewEnableControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.devicesListViewEnableControl1.FirstColumnText = "Enabled";
+            this.devicesListViewEnableControl1.IsMining = false;
             this.devicesListViewEnableControl1.Location = new System.Drawing.Point(6, 6);
             this.devicesListViewEnableControl1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.devicesListViewEnableControl1.Name = "devicesListViewEnableControl1";
@@ -1544,7 +1544,7 @@
             // buttonSaveClose
             // 
             this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(348, 495);
+            this.buttonSaveClose.Location = new System.Drawing.Point(491, 493);
             this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonSaveClose.Name = "buttonSaveClose";
             this.buttonSaveClose.Size = new System.Drawing.Size(134, 23);
@@ -1556,7 +1556,7 @@
             // buttonDefaults
             // 
             this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(270, 495);
+            this.buttonDefaults.Location = new System.Drawing.Point(413, 493);
             this.buttonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.buttonDefaults.Name = "buttonDefaults";
             this.buttonDefaults.Size = new System.Drawing.Size(74, 23);
@@ -1564,18 +1564,6 @@
             this.buttonDefaults.Text = "&Defaults";
             this.buttonDefaults.UseVisualStyleBackColor = true;
             this.buttonDefaults.Click += new System.EventHandler(this.ButtonDefaults_Click);
-            // 
-            // buttonCloseNoSave
-            // 
-            this.buttonCloseNoSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonCloseNoSave.Location = new System.Drawing.Point(486, 495);
-            this.buttonCloseNoSave.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonCloseNoSave.Name = "buttonCloseNoSave";
-            this.buttonCloseNoSave.Size = new System.Drawing.Size(134, 23);
-            this.buttonCloseNoSave.TabIndex = 45;
-            this.buttonCloseNoSave.Text = "&Close without Saving";
-            this.buttonCloseNoSave.UseVisualStyleBackColor = true;
-            this.buttonCloseNoSave.Click += new System.EventHandler(this.ButtonCloseNoSave_Click);
             // 
             // Form_Settings
             // 
@@ -1585,7 +1573,6 @@
             this.Controls.Add(this.buttonDefaults);
             this.Controls.Add(this.buttonSaveClose);
             this.Controls.Add(this.tabControlGeneral);
-            this.Controls.Add(this.buttonCloseNoSave);
             this.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -1657,7 +1644,6 @@
 
         private System.Windows.Forms.Button buttonSaveClose;
         private System.Windows.Forms.Button buttonDefaults;
-        private System.Windows.Forms.Button buttonCloseNoSave;
         private System.Windows.Forms.TabControl tabControlGeneral;
         private System.Windows.Forms.TabPage tabPageGeneral;
         private System.Windows.Forms.Label label_displayCurrency;

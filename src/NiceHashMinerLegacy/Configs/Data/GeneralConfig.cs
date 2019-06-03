@@ -103,9 +103,6 @@ namespace NiceHashMiner.Configs.Data
 
         public bool AllowMultipleInstances = true;
 
-        // device enabled disabled stuff
-        public List<ComputeDeviceConfig> LastDevicesSettup = new List<ComputeDeviceConfig>();
-
         // 
         public string hwid = "";
 
@@ -233,10 +230,7 @@ namespace NiceHashMiner.Configs.Data
             {
                 DeviceDetection = new DeviceDetectionConfig();
             }
-            if (LastDevicesSettup == null)
-            {
-                LastDevicesSettup = new List<ComputeDeviceConfig>();
-            }
+
             if (KwhPrice < 0)
             {
                 KwhPrice = 0;

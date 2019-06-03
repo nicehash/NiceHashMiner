@@ -40,12 +40,10 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {
                 return base.GetBinAndCwdPaths();
             }
-            // avemore is differently packed
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+
+            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins");
             var binPath = Path.Combine(pluginRootBins, "ccminer-x64.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
+            return Tuple.Create(binPath, pluginRootBins);
         }
     }
 }
