@@ -19,7 +19,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {  "CCMinerAlexis", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/CCMinerAlexis.7z" } }, // TODO change link
             {  "CCMinerKlausT", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/CCMinerKlausT.7z" } }, // TODO change link
             {  "CCMinerMTP", new List<string>{ "https://github.com/nicehash/ccminer/releases/download/1.1.14/ccminer_mtp.7z" } },
-            {  "CCMinerTpruvot", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/CCMinerX16R.7z" /*"https://github.com/tpruvot/ccminer/releases/download/2.3.1-tpruvot/ccminer-2.3.1-cuda10.7z"*/ } }, // TODO original link might not work because of naming
+            {  "CCMinerTpruvot", new List<string>{ "https://github.com/tpruvot/ccminer/releases/download/2.3.1-tpruvot/ccminer-2.3.1-cuda10.7z" } },
             {  "CCMinerX16R", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/CCMinerX16R.7z" } }, // TODO
             {  "ClaymoreDual", new List<string>{ "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?2sBXjCTY" } },
             {  "ClaymoreDual14+", new List<string>{ "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?fwoyhCoa" } },
