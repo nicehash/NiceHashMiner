@@ -19,4 +19,7 @@ A plugin is addition to program with additional features. In most cases we are t
 Integrated come with the NHM distribution while external must be manually downloaded from plugin marketplace.
 
 A plugin can be written by anyone with some knowledge of programming in C#.
-[Here](Example) is also an example of how to implement one by yourself.
+[Here](Example) is also an example of how to implement Miner Plugin by yourself.
+Each plugin must have its Plugin file. In our case this is [ExamplePlugin](Example/ExamplePlugin.cs).
+Miner plugins also have Miner file. In our case this is [ExampleMiner](Example/ExampleMiner.cs).
+There two files are backbone for any Miner Plugin while Background Service Plugins need only Plugin file to operate correctly (see [EthlargementPill plugin](Ethlargement/EthlargementPlugin.cs) for example).
