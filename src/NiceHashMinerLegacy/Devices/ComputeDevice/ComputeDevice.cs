@@ -7,9 +7,9 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using NiceHashMiner.Algorithms;
-using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Common.Device;
+using NHM.UUID;
 
 namespace NiceHashMiner.Devices
 {
@@ -44,10 +44,24 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                var type = DeviceType == DeviceType.CPU ? 1 : 2;
-                var uuid = UUID.V5(UUID.Nil().AsGuid(), Uuid);
-                var b64 = Convert.ToBase64String(uuid.AsGuid().ToByteArray());
-                return $"{type}-{b64.Trim('=').Replace('/', '-')}";
+                //UUIDs
+                //RIG - 0
+                //CPU - 1
+                //GPU - 2 // NVIDIA
+                //AMD - 3
+                // types 
+
+                int type = 1; // assume type is CPU
+                if (DeviceType == DeviceType.NVIDIA)
+                {
+                    type = 2;
+                }
+                else if (DeviceType == DeviceType.AMD)
+                {
+                    type = 3;
+                }
+                var b64Web = UUID.GetB64UUID(Uuid);
+                return $"{type}-{b64Web}";
             }
         }
 

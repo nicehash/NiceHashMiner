@@ -44,7 +44,7 @@ namespace NiceHashMiner.Stats
             _connectionAttempted = true;
             // TESTNET
 #if TESTNET || TESTNETDEV
-            _login.rig = Globals.RigID;
+            _login.rig = ApplicationStateManager.RigID;
 
             if (btc != null) _login.btc = btc;
             if (worker != null) _login.worker = worker;

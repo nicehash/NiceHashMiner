@@ -1,7 +1,7 @@
 ﻿using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 
-namespace NiceHashMiner.Utils.Guid.Providers
+namespace Guid.Providers
 {
 
     /// <summary>

@@ -4,9 +4,9 @@ using System;
 using System.Diagnostics;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMiner.Configs.Data;
-using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common;
+using NHM.UUID;
 
 namespace NiceHashMiner.Devices
 {
@@ -135,7 +135,7 @@ namespace NiceHashMiner.Devices
             if (string.IsNullOrEmpty(cudaDevice.UUID))
             {
                 var infoToHashed = $"{ID}--{DeviceType.NVIDIA}--{cudaDevice.DeviceGlobalMemory}--{SMMajor}--{SMMinor}--{Name}";
-                var uuidHEX = UUID.V5(UUID.Nil().AsGuid(), infoToHashed).AsGuid().ToString();
+                var uuidHEX = UUID.GetHexUUID(infoToHashed);
                 Uuid = $"GPU-{uuidHEX}";
             }
             else

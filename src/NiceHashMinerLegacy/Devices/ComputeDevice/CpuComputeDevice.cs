@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using NiceHashMiner.Utils.Guid;
+using NHM.UUID;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
@@ -40,7 +40,7 @@ namespace NiceHashMiner.Devices
             Index = ID; // Don't increment for CPU
 
             var hashedInfo = $"{id}--{name}--{threads}";
-            var uuidHEX = UUID.V5(UUID.Nil().AsGuid(), hashedInfo).AsGuid().ToString();
+            var uuidHEX = UUID.GetHexUUID(hashedInfo);
             var Uuid = $"CPU-{uuidHEX}";
 
             _cpuCounter = new PerformanceCounter

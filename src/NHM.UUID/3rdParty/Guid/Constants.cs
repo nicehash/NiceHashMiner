@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NiceHashMiner.Utils.Guid
+namespace Guid
 {
     /// <summary>
     /// Random number generate modes supported
@@ -10,7 +10,7 @@ namespace NiceHashMiner.Utils.Guid
     /// <summary>
     /// Default GUID namespaces for V3 and V5 GUIDs from the spec
     /// </summary>
-    public static class GuidNamespaces
+    internal static class GuidNamespaces
     {
         public static System.Guid DNS = System.Guid.Parse("6ba7b810-9dad-11d1-80b4-00c04fd430c8");
         public static System.Guid URL = System.Guid.Parse("6ba7b811-9dad-11d1-80b4-00c04fd430c8");
@@ -18,7 +18,7 @@ namespace NiceHashMiner.Utils.Guid
         public static System.Guid X500_DN = System.Guid.Parse("6ba7b814-9dad-11d1-80b4-00c04fd430c8");
     }
 
-    public static class Constants
+    internal static class Constants
     {
         /// <summary>
         /// Length of the time bytes segment
