@@ -44,7 +44,7 @@ namespace NiceHashMiner.Devices
             {
                 AvailableDevices.NumDetectedNvDevs = nvDevs.Count;
 
-                if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA)
+                if (false /*ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA*/)
                 {
                     Logger.Info(Tag, "Skipping NVIDIA device detection, settings are set to disabled");
                 }
@@ -68,7 +68,7 @@ namespace NiceHashMiner.Devices
             {
                 AvailableDevices.NumDetectedAmdDevs = amdDevs.Count;
 
-                if (ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD)
+                if (false/*ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD*/)
                 {
                     Logger.Info(Tag, "Skipping AMD device detection, settings set to disabled");
                 }

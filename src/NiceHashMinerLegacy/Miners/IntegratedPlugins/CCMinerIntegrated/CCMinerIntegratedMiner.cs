@@ -33,5 +33,17 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             return "";
         }
 #pragma warning restore 0618
+
+        public override Tuple<string, string> GetBinAndCwdPaths()
+        {
+            if (_uuid != "CCMinerTpruvot")
+            {
+                return base.GetBinAndCwdPaths();
+            }
+
+            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins");
+            var binPath = Path.Combine(pluginRootBins, "ccminer-x64.exe");
+            return Tuple.Create(binPath, pluginRootBins);
+        }
     }
 }

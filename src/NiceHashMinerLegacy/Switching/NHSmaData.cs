@@ -17,7 +17,7 @@ namespace NiceHashMiner.Switching
     public static class NHSmaData
     {
         private const string Tag = "NHSMAData";
-        private const string CachedFile = "internals\\cached_sma.json";
+        private static string CachedFile => Paths.InternalsPath("cached_sma.json");
 
         public static bool Initialized { get; private set; }
         /// <summary>

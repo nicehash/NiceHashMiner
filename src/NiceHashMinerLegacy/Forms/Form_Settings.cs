@@ -23,16 +23,6 @@ namespace NiceHashMiner.Forms
     public partial class Form_Settings : Form, IDataVisualizer, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer
     {
         private readonly bool _isInitFinished = false;
-        private bool _isChange = false;
-
-        public bool IsChange
-        {
-            get => _isChange;
-            private set => _isChange = _isInitFinished && value;
-        }
-
-        private bool _isCredChange = false;
-        public bool IsChangeSaved { get; private set; }
         public bool IsRestartNeeded { get; private set; }
 
         // most likely we wil have settings only per unique devices
@@ -43,6 +33,7 @@ namespace NiceHashMiner.Forms
         private readonly RegistryKey _rkStartup;
 
         private bool _isStartupChanged = false;
+        private bool _isCredChange = false;
 
         public Form_Settings()
         {
@@ -50,10 +41,6 @@ namespace NiceHashMiner.Forms
             ApplicationStateManager.SubscribeStateDisplayer(this);
 
             Icon = Properties.Resources.logo;
-
-            //ret = 1; // default
-            IsChange = false;
-            IsChangeSaved = false;
 
             // backup settings
             ConfigManager.CreateBackup();
@@ -198,14 +185,14 @@ namespace NiceHashMiner.Forms
             //benchmarkLimitControlNVIDIA.SetToolTip(ref toolTip1, "NVIDIA GPUs");
             //benchmarkLimitControlAMD.SetToolTip(ref toolTip1, "AMD GPUs");
 
-            toolTip1.SetToolTip(checkBox_DisableDetectionNVIDIA,
-                string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "NVIDIA"));
-            toolTip1.SetToolTip(checkBox_DisableDetectionAMD,
-                string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "AMD"));
-            toolTip1.SetToolTip(pictureBox_DisableDetectionNVIDIA,
-                string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "NVIDIA"));
-            toolTip1.SetToolTip(pictureBox_DisableDetectionAMD,
-                string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "AMD"));
+            //toolTip1.SetToolTip(checkBox_DisableDetectionNVIDIA,
+            //    string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "NVIDIA"));
+            //toolTip1.SetToolTip(checkBox_DisableDetectionAMD,
+            //    string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "AMD"));
+            //toolTip1.SetToolTip(pictureBox_DisableDetectionNVIDIA,
+            //    string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "NVIDIA"));
+            //toolTip1.SetToolTip(pictureBox_DisableDetectionAMD,
+            //    string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "AMD"));
 
             toolTip1.SetToolTip(checkBox_AutoScaleBTCValues,
                 Tr("Check it, if you would like to see the BTC values autoscale to the appropriate scale."));
@@ -334,10 +321,10 @@ namespace NiceHashMiner.Forms
 // TODO THIS IS LOGIC INSIDE CONTENT
         private void InitializeGeneralTabTranslations()
         {
-            checkBox_DisableDetectionNVIDIA.Text =
-                string.Format(Tr("Disable Detection of {0}"), "NVIDIA");
-            checkBox_DisableDetectionAMD.Text =
-                string.Format(Tr("Disable Detection of {0}"), "AMD");
+            //checkBox_DisableDetectionNVIDIA.Text =
+            //    string.Format(Tr("Disable Detection of {0}"), "NVIDIA");
+            //checkBox_DisableDetectionAMD.Text =
+            //    string.Format(Tr("Disable Detection of {0}"), "AMD");
 
             //// Benchmark time limits
             //// internationalization change
@@ -362,8 +349,8 @@ namespace NiceHashMiner.Forms
             // Add EventHandler for all the general tab's checkboxes
             {
                 checkBox_AutoScaleBTCValues.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_DisableDetectionAMD.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_DisableDetectionNVIDIA.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                //checkBox_DisableDetectionAMD.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
+                //checkBox_DisableDetectionNVIDIA.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_MinimizeToTray.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
                 checkBox_HideMiningWindows.CheckedChanged += CheckBox_HideMiningWindows_CheckChanged;
                 checkBox_DebugConsole.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
@@ -439,9 +426,6 @@ namespace NiceHashMiner.Forms
                 checkBox_AutoStartMining.Checked = ConfigManager.GeneralConfig.AutoStartMining;
                 checkBox_HideMiningWindows.Checked = ConfigManager.GeneralConfig.HideMiningWindows;
                 checkBox_MinimizeToTray.Checked = ConfigManager.GeneralConfig.MinimizeToTray;
-                checkBox_DisableDetectionNVIDIA.Checked =
-                    ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA;
-                checkBox_DisableDetectionAMD.Checked = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
                 checkBox_AutoScaleBTCValues.Checked = ConfigManager.GeneralConfig.AutoScaleBTCValues;
                 checkBox_StartMiningWhenIdle.Checked = ConfigManager.GeneralConfig.StartMiningWhenIdle;
                 checkBox_ShowDriverVersionWarning.Checked = ConfigManager.GeneralConfig.ShowDriverVersionWarning;
@@ -565,15 +549,10 @@ namespace NiceHashMiner.Forms
         private void GeneralCheckBoxes_CheckedChanged(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
-            // indicate there has been a change
-            IsChange = true;
             ConfigManager.GeneralConfig.DebugConsole = checkBox_DebugConsole.Checked;
             ConfigManager.GeneralConfig.AutoStartMining = checkBox_AutoStartMining.Checked;
             ConfigManager.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             ConfigManager.GeneralConfig.MinimizeToTray = checkBox_MinimizeToTray.Checked;
-            ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionNVIDIA =
-                checkBox_DisableDetectionNVIDIA.Checked;
-            ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD = checkBox_DisableDetectionAMD.Checked;
             ConfigManager.GeneralConfig.AutoScaleBTCValues = checkBox_AutoScaleBTCValues.Checked;
             ConfigManager.GeneralConfig.ShowDriverVersionWarning = checkBox_ShowDriverVersionWarning.Checked;
             ConfigManager.GeneralConfig.DisableWindowsErrorReporting = checkBox_DisableWindowsErrorReporting.Checked;
@@ -665,7 +644,6 @@ namespace NiceHashMiner.Forms
         private void GeneralTextBoxes_Leave(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
-            IsChange = true;
             if (ConfigManager.GeneralConfig.BitcoinAddress != textBox_BitcoinAddress.Text.Trim()) _isCredChange = true;
             ConfigManager.GeneralConfig.BitcoinAddress = textBox_BitcoinAddress.Text.Trim();
             if (ConfigManager.GeneralConfig.WorkerName != textBox_WorkerName.Text.Trim()) _isCredChange = true;
@@ -711,8 +689,6 @@ namespace NiceHashMiner.Forms
         private void GeneralComboBoxes_Leave(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
-            IsChange = true;
-
             ConfigManager.GeneralConfig.Language = Translations.GetLanguageCodeFromIndex(comboBox_Language.SelectedIndex);
             ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
@@ -720,12 +696,6 @@ namespace NiceHashMiner.Forms
             //    (DagGenerationType) comboBox_DagLoadMode.SelectedIndex;
             ConfigManager.GeneralConfig.IdleCheckType = (IdleCheckType) comboBox_IdleType.SelectedIndex;
         }
-
-        //private void ComboBox_CPU0_ForceCPUExtension_SelectedIndexChanged(object sender, EventArgs e)
-        //{
-        //    var cmbbox = (ComboBox) sender;
-        //    ConfigManager.GeneralConfig.ForceCPUExtension = (CpuExtensionType) cmbbox.SelectedIndex;
-        //}
 
 #endregion //Tab General
 
@@ -774,8 +744,6 @@ namespace NiceHashMiner.Forms
 
             if (result == DialogResult.Yes)
             {
-                IsChange = true;
-                IsChangeSaved = true;
                 SetLanguage("en");
                 ConfigManager.GeneralConfig.SetDefaults();
                 InitializeGeneralTabFieldValuesReferences();
@@ -785,23 +753,11 @@ namespace NiceHashMiner.Forms
 
         private void ButtonSaveClose_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(Tr("Settings saved!"),
-                Tr("Settings saved!"),
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
-            IsChange = true;
-            IsChangeSaved = true;
-
             if (_isCredChange)
             {
                 ApplicationStateManager.ResetNiceHashStatsCredentials();
             }
 
-            Close();
-        }
-
-        private void ButtonCloseNoSave_Click(object sender, EventArgs e)
-        {
-            IsChangeSaved = false;
             Close();
         }
 
@@ -812,53 +768,33 @@ namespace NiceHashMiner.Forms
             if (ApplicationStateManager.BurnCalled) {
                 return;
             }
-            if (IsChange && !IsChangeSaved)
-            {
-                var result = MessageBox.Show(Tr("Warning! You are choosing to close settings without saving. Are you sure you would like to continue?"),
-                    Tr("Warning!"),
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-
-                if (result == DialogResult.No)
-                {
-                    e.Cancel = true;
-                    return;
-                }
-            }
 
             // check restart parameters change
             IsRestartNeeded = ConfigManager.IsRestartNeeded();
+            ConfigManager.GeneralConfigFileCommit();
+            ConfigManager.CommitBenchmarks();
 
-            if (IsChangeSaved)
+            SetLanguage(ConfigManager.GeneralConfig.Language);
+
+            if (_isStartupChanged)
             {
-                ConfigManager.GeneralConfigFileCommit();
-                ConfigManager.CommitBenchmarks();
-
-                SetLanguage(ConfigManager.GeneralConfig.Language);
-
-                if (_isStartupChanged)
+                // Commit to registry
+                try
                 {
-                    // Commit to registry
-                    try
+                    if (checkBox_RunAtStartup.Checked)
                     {
-                        if (checkBox_RunAtStartup.Checked)
-                        {
-                            // Add NHML to startup registry
-                            _rkStartup?.SetValue(Application.ProductName, Application.ExecutablePath);
-                        }
-                        else
-                        {
-                            _rkStartup?.DeleteValue(Application.ProductName, false);
-                        }
+                        // Add NHML to startup registry
+                        _rkStartup?.SetValue(Application.ProductName, Application.ExecutablePath);
                     }
-                    catch (Exception er)
+                    else
                     {
-                        Logger.Error("REGISTRY", er.Message);
+                        _rkStartup?.DeleteValue(Application.ProductName, false);
                     }
                 }
-            }
-            else
-            {
-                ConfigManager.RestoreBackup();
+                catch (Exception er)
+                {
+                    Logger.Error("REGISTRY", er.Message);
+                }
             }
         }
 
@@ -906,7 +842,6 @@ namespace NiceHashMiner.Forms
         private void CheckBox_HideMiningWindows_CheckChanged(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
-            IsChange = true;
             ConfigManager.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
             checkBox_MinimizeMiningWindows.Enabled = !checkBox_HideMiningWindows.Checked;
         }
@@ -914,7 +849,6 @@ namespace NiceHashMiner.Forms
         private void CheckBox_UseIFTTT_CheckChanged(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
-            IsChange = true;
 
             ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
 
@@ -932,7 +866,6 @@ namespace NiceHashMiner.Forms
 private void CheckBox_MineOnIdle_CheckChanged(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
-            IsChange = true;
             ConfigManager.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
             comboBox_IdleType.Enabled = checkBox_StartMiningWhenIdle.Checked;
         }

@@ -23,7 +23,7 @@ namespace NiceHashMiner.Devices
         public int Index { get; protected set; } // For socket control, unique
 
         // to identify equality;
-        public readonly string Name; // { get; set; }
+        public string Name { get; private set; } // => PluginDevice.Name;
 
         // name count is the short name for displaying in moning groups
         public readonly string NameCount;
@@ -38,7 +38,7 @@ namespace NiceHashMiner.Devices
         public readonly DeviceType DeviceType;
 
         // UUID now used for saving
-        public string Uuid { get; protected set; }
+        public string Uuid => PluginDevice.UUID;
 
         public string B64Uuid
         {
@@ -51,9 +51,9 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        // used for Claymore indexing
-        public int BusID { get; protected set; } = -1;
-        public int IDByBus = -1;
+        //// used for Claymore indexing
+        //public int BusID { get; protected set; } = -1;
+        ////public int IDByBus = -1;
 
 
         // CPU extras
@@ -63,18 +63,20 @@ namespace NiceHashMiner.Devices
         // GPU extras
         public readonly ulong GpuRam;
 
+        // copy pasted from CUDA Compute device
+        public uint PowerTarget { get; protected set; }
+        public PowerLevel PowerLevel { get; protected set; }
+
         // sgminer extra quickfix
         //public readonly bool IsOptimizedVersion;
-        public string Codename { get; protected set; }
-
-        public string InfSection { get; protected set; }
+        //public string Codename { get; protected set; }
+        //public string InfSection { get; protected set; }
 
         public List<Algorithm> AlgorithmSettings { get; protected set; } = new List<Algorithm>();
 
         public double MinimumProfit { get; set; }
 
         public string BenchmarkCopyUuid { get; set; }
-        public string TuningCopyUuid { get; set; }
 
         public virtual float Load => -1;
         public virtual float Temp => -1;
@@ -164,22 +166,18 @@ namespace NiceHashMiner.Devices
         }
 
         #region Config Setters/Getters
-
-        // settings
-        // setters
-        public virtual void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
+        
+        public void SetDeviceConfig(DeviceConfig config)
         {
-            if (config != null && config.UUID == Uuid)
-            {
-                SetEnabled(config.Enabled);
-                MinimumProfit = config.MinimumProfit;
-            }
-        }
+            if (config == null || config.DeviceUUID != Uuid) return;
+            // set device settings
+            Enabled = config.Enabled;
+            MinimumProfit = config.MinimumProfit;
+            PowerTarget = config.PowerTarget;
+            PowerLevel = config.PowerLevel;
 
-        // TODO this has to change or is obsolete
-        public void SetAlgorithmDeviceConfig(DeviceBenchmarkConfig config)
-        {
-            if (config == null || config.DeviceUUID != Uuid || config.PluginAlgorithmSettings == null) return;
+
+            if (config.PluginAlgorithmSettings == null) return;
             // plugin algorithms
             var pluginAlgos = AlgorithmSettings.Where(algo => algo is PluginAlgorithm).Cast<PluginAlgorithm>();
             foreach (var pluginConf in config.PluginAlgorithmSettings)
@@ -198,27 +196,16 @@ namespace NiceHashMiner.Devices
             }
         }
 
-
-
-        // getters
-        public virtual ComputeDeviceConfig GetComputeDeviceConfig()
+        public DeviceConfig GetDeviceConfig()
         {
-            var ret = new ComputeDeviceConfig
-            {
-                Enabled = Enabled,
-                Name = Name,
-                UUID = Uuid,
-                MinimumProfit = MinimumProfit
-            };
-            return ret;
-        }
-
-        public DeviceBenchmarkConfig GetAlgorithmDeviceConfig()
-        {
-            var ret = new DeviceBenchmarkConfig
+            var ret = new DeviceConfig
             {
                 DeviceName = Name,
-                DeviceUUID = Uuid
+                DeviceUUID = Uuid,
+                Enabled = Enabled,
+                MinimumProfit = MinimumProfit,
+                PowerLevel = PowerLevel,
+                PowerTarget = PowerTarget
             };
             // init algo settings
             foreach (var algo in AlgorithmSettings)

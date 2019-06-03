@@ -2,6 +2,7 @@
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ClaymoreCommon;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Interfaces;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Phoenix
 {
-    public class Phoenix : ClaymoreBase
+    public class Phoenix : ClaymoreBase, IBeforeStartMining
     {
         public Phoenix(string uuid, Dictionary<string, int> mappedIDs) : base(uuid, mappedIDs)
         {}
@@ -115,6 +116,35 @@ namespace Phoenix
             var binPath = Path.Combine(pluginRootBins, "PhoenixMiner.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
+        }
+
+        private static HashSet<string> _deleteConfigs = new HashSet<string> { "config.txt", "dpools.txt", "epools.txt" };
+        private static bool IsDeleteConfigFile(string file)
+        {
+            foreach(var conf in _deleteConfigs)
+            {
+                if (file.Contains(conf)) return true;
+            }
+            return false;
+        }
+
+        public void BeforeStartMining()
+        {
+            var binCwd = GetBinAndCwdPaths().Item2;
+            var txtFiles = Directory.GetFiles(binCwd, "*.txt", SearchOption.AllDirectories)
+                .Where(file => IsDeleteConfigFile(file))
+                .ToArray();
+            foreach(var deleteFile in txtFiles)
+            {
+                try
+                {
+                    File.Delete(deleteFile);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(_logGroup, $"BeforeStartMining error while deleting file '{deleteFile}': {e.Message}");
+                }
+            }
         }
     }
 }

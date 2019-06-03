@@ -23,32 +23,32 @@ namespace NiceHashMinerLegacy.Tests.Devices.Querying.Nvidia
             }
         }
 
-        [TestMethod]
-        public void QueryDevices_ShouldMatch()
-        {
-            var query = new NvidiaQueryDummy();
-            var cudaDevs = query.QueryCudaDevices();
+        //[TestMethod]
+        //public void QueryDevices_ShouldMatch()
+        //{
+        //    var query = new NvidiaQueryDummy();
+        //    var cudaDevs = query.QueryCudaDevices();
 
-            Assert.AreEqual(2, cudaDevs.Count);
+        //    Assert.AreEqual(2, cudaDevs.Count);
 
-            foreach (var dev in cudaDevs)
-            {
-                Assert.AreEqual("EVGA GeForce GTX 1080 Ti", dev.Name);
-                //Assert.AreEqual(DeviceGroupType.NVIDIA_6_x, dev.DeviceGroupType);
-                Assert.AreEqual(DeviceType.NVIDIA, dev.DeviceType);
-                Assert.AreEqual(11811160064ul, dev.GpuRam);
-                Assert.IsTrue(dev.ShouldRunEthlargement);
-            }
+        //    foreach (var dev in cudaDevs)
+        //    {
+        //        Assert.AreEqual("EVGA GeForce GTX 1080 Ti", dev.Name);
+        //        //Assert.AreEqual(DeviceGroupType.NVIDIA_6_x, dev.DeviceGroupType);
+        //        Assert.AreEqual(DeviceType.NVIDIA, dev.DeviceType);
+        //        Assert.AreEqual(11811160064ul, dev.GpuRam);
+        //        Assert.IsTrue(dev.ShouldRunEthlargement);
+        //    }
 
-            Assert.AreEqual(0, cudaDevs[0].ID);
-            Assert.AreEqual(0, cudaDevs[0].IDByBus);
-            Assert.AreEqual(1, cudaDevs[0].BusID);
-            Assert.AreEqual("GPU-5f6a9bb5-6d82-22d7-5d3f-4e11f4fa9576", cudaDevs[0].Uuid);
+        //    Assert.AreEqual(0, cudaDevs[0].ID);
+        //    Assert.AreEqual(0, cudaDevs[0].IDByBus);
+        //    Assert.AreEqual(1, cudaDevs[0].BusID);
+        //    Assert.AreEqual("GPU-5f6a9bb5-6d82-22d7-5d3f-4e11f4fa9576", cudaDevs[0].Uuid);
 
-            Assert.AreEqual(1, cudaDevs[1].ID);
-            Assert.AreEqual(1, cudaDevs[1].IDByBus);
-            Assert.AreEqual(2, cudaDevs[1].BusID);
-            Assert.AreEqual("GPU-1590f69d-2d74-d4a7-9520-eacd1431971d", cudaDevs[1].Uuid);
-        }
+        //    Assert.AreEqual(1, cudaDevs[1].ID);
+        //    Assert.AreEqual(1, cudaDevs[1].IDByBus);
+        //    Assert.AreEqual(2, cudaDevs[1].BusID);
+        //    Assert.AreEqual("GPU-1590f69d-2d74-d4a7-9520-eacd1431971d", cudaDevs[1].Uuid);
+        //}
     }
 }

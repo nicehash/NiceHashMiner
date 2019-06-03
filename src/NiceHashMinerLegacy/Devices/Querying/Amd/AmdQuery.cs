@@ -10,7 +10,7 @@ using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Devices.Querying.Amd
 {
-    internal class AmdQuery : QueryGpu
+    internal class AmdQuery
     {
         private const string Tag = "AmdQuery";
         
@@ -49,8 +49,6 @@ namespace NiceHashMiner.Devices.Querying.Amd
             var amdDevices = _openCLSuccess ? ProcessDevices(_openCLResult) : null;
 
             Logger.Info(Tag, "QueryAMD END");
-
-            if (amdDevices != null) SortBusIDs(amdDevices);
 
             return amdDevices;
         }

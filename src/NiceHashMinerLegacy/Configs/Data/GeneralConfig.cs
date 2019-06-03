@@ -63,9 +63,6 @@ namespace NiceHashMiner.Configs.Data
             }
         }
 
-        // TODO deprecate this
-        public DeviceDetectionConfig DeviceDetection = new DeviceDetectionConfig();
-
         public bool AutoScaleBTCValues = true;
 
         public bool StartMiningWhenIdle = false;
@@ -102,9 +99,6 @@ namespace NiceHashMiner.Configs.Data
         public Use3rdPartyMiners Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
 
         public bool AllowMultipleInstances = true;
-
-        // device enabled disabled stuff
-        public List<ComputeDeviceConfig> LastDevicesSettup = new List<ComputeDeviceConfig>();
 
         // 
         public string hwid = "";
@@ -158,7 +152,6 @@ namespace NiceHashMiner.Configs.Data
             DebugConsole = false;
             HideMiningWindows = false;
             MinimizeToTray = false;
-            DeviceDetection = new DeviceDetectionConfig();
             AutoScaleBTCValues = true;
             StartMiningWhenIdle = false;
             LogToFile = true;
@@ -229,14 +222,7 @@ namespace NiceHashMiner.Configs.Data
             {
                 ApiBindPortPoolStart = 5100;
             }
-            if (DeviceDetection == null)
-            {
-                DeviceDetection = new DeviceDetectionConfig();
-            }
-            if (LastDevicesSettup == null)
-            {
-                LastDevicesSettup = new List<ComputeDeviceConfig>();
-            }
+
             if (KwhPrice < 0)
             {
                 KwhPrice = 0;

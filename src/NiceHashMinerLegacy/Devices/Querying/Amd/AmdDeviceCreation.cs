@@ -24,7 +24,7 @@ namespace NiceHashMiner.Devices.Querying.Amd
 
             foreach (var gpu in gpus)
             {
-                var isDisabledGroup = ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
+                var isDisabledGroup = false; // ConfigManager.GeneralConfig.DeviceDetection.DisableDetectionAMD;
                 var skipOrAdd = isDisabledGroup ? "SKIPED" : "ADDED";
                 var isDisabledGroupStr = isDisabledGroup ? " (AMD group disabled)" : "";
 

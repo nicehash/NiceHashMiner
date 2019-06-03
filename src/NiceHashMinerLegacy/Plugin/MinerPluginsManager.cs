@@ -45,7 +45,7 @@ namespace NiceHashMiner.Plugin
             new CCMinerMTPIntegratedPlugin(),
             new CCMinerTpruvotIntegratedPlugin(),
             new CCMinerX16RIntegratedPlugin(),
-            new SGminerAvemoreIntegratedPlugin(),
+            //new SGminerAvemoreIntegratedPlugin(),
             new SGminerGMIntegratedPlugin(),
             new SGminerNHGeneralIntegratedPlugin(),
             new XmrStakIntegratedPlugin(),
@@ -84,6 +84,7 @@ namespace NiceHashMiner.Plugin
             // examine all plugins and what to use
             foreach (var plugin in IntegratedPlugins)
             {
+                //_compatiblePlugins.Add(plugin.PluginUUID); // TODO to download all miners uncomment this line
                 var pluginUuid = plugin.PluginUUID;
                 var pluginName = plugin.Name;
 

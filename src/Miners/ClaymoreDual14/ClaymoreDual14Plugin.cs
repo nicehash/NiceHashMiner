@@ -55,7 +55,7 @@ namespace ClaymoreDual14
             }
 
             // CUDA
-            var minDrivers = new Version(398, 26);
+            var minDrivers = new Version(411, 31);
             if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             var cudaGpus = devices
