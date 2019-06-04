@@ -1,13 +1,14 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.IO.Compression;
+using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
 using MinerPluginToolkitV1.Configs;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Utils;
 using NiceHashMinerLegacy.Common;
-using System.Collections.Generic;
-using System.IO;
 
 namespace NiceHashMiner.Configs
 {
@@ -102,7 +103,7 @@ namespace NiceHashMiner.Configs
 
         public static void CreateBackup()
         {
-            _generalConfigBackup = MemoryHelper.DeepClone(GeneralConfig);
+            _generalConfigBackup = DeepClone(GeneralConfig);
             _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
             foreach (var cDev in AvailableDevices.Devices)
             {
@@ -167,6 +168,18 @@ namespace NiceHashMiner.Configs
             }
             // save settings
             GeneralConfigFileCommit();
+        }
+
+        private static T DeepClone<T>(T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                var formatter = new BinaryFormatter();
+                formatter.Serialize(ms, obj);
+                ms.Position = 0;
+
+                return (T)formatter.Deserialize(ms);
+            }
         }
     }
 }
