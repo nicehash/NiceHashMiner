@@ -71,8 +71,9 @@ namespace NiceHashMiner.Devices.Algorithms
         private static List<Algorithm> ClaymoreDualAlgorithmsForDevice(ComputeDevice dev)
         {
             if (dev.DeviceType == DeviceType.CPU) return null;
-            // SM5.0+
-            if (dev is CudaComputeDevice cudaDev && cudaDev.SMMajor < 5) return null;
+            // SM6.0+
+            if (dev is CudaComputeDevice cudaDev && cudaDev.SMMajor < 6) return null;
+            if (dev is AmdComputeDevice amdDev && !amdDev.IsGcn4) return null;
 
             var algos = new List<Algorithm>
             {
