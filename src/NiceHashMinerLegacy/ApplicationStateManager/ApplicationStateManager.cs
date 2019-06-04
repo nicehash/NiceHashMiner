@@ -1,3 +1,4 @@
+using NHM.UUID;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces.DataVisualizer;
@@ -17,7 +18,9 @@ namespace NiceHashMiner
 {
     static partial class ApplicationStateManager
     {
-#region Version
+        public static string RigID => UUID.GetDeviceB64UUID();
+
+        #region Version
         public static string LocalVersion { get; private set; }
         public static string OnlineVersion { get; private set; }
 
@@ -189,7 +192,7 @@ namespace NiceHashMiner
             ConfigManager.GeneralConfigFileCommit();
             if (IsCurrentlyMining)
             {
-                MiningManager.RestartMiners();
+                MiningManager.RestartMiners(GetUsername());
             }
 
             // notify all components
@@ -228,7 +231,7 @@ namespace NiceHashMiner
             // if mining update the mining manager
             if (IsCurrentlyMining)
             {
-                MiningManager.RestartMiners();
+                MiningManager.RestartMiners(GetUsername());
             }
             // notify all components
             DisplayWorkerName?.Invoke(null, workerName);

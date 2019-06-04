@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using NiceHashMiner.Utils.Guid.Providers;
+using Guid.Providers;
 
-namespace NiceHashMiner.Utils.Guid
+namespace Guid
 {
     public enum GuidVersion { Unknown = 0, Time = 1, DCE = 2, MD5 = 3, Random = 4, SHA1 = 5 }
     public enum GuidVariant { Unknown = 0, NCSReserved = 1, RFC4122 = 2, MicrosoftReserved = 3, FutureReserved = 4 }
@@ -13,7 +13,7 @@ namespace NiceHashMiner.Utils.Guid
     /// Factory for generating GUIDs
     /// </summary>
     /// <seealso cref="http://www.ietf.org/rfc/rfc4122.txt">A Universally Unique IDentifier (UUID) URN Namespace</seealso>
-    public partial class UUID
+    internal partial class UUID
     {
         private static object _lock = new object();
 

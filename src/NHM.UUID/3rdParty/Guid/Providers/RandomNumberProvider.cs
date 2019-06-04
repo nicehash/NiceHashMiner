@@ -1,7 +1,7 @@
 ﻿using System;
 using Org.BouncyCastle.Security;
 
-namespace NiceHashMiner.Utils.Guid.Providers
+namespace Guid.Providers
 {
     /// <summary>
     /// Provide support for quicker pseudo-random numbers as well as support for cryptographically strong random numbers 

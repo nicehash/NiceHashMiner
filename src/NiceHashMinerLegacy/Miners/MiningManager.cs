@@ -165,12 +165,13 @@ namespace NiceHashMiner.Miners
             _switchingManager?.ForceUpdate();
         }
 
-        public static async Task RestartMiners()
+        public static async Task RestartMiners(string username)
         {
             _switchingManager?.Stop();
             await _semaphore.WaitAsync();
             try
             {
+                _username = username;
                 // STOP
                 foreach (var key in _runningMiners.Keys)
                 {

@@ -30,11 +30,11 @@ namespace NiceHashMiner
 #if SEND_STRATUM_WORKERNAME
             if (worker.Length > 0 && BitcoinAddress.ValidateWorkerName(worker))
             {
-                return $"{btc}.{worker}${Globals.RigID}";
+                return $"{btc}.{worker}${RigID}";
             }
 #endif
 
-            return $"{btc}${Globals.RigID}";
+            return $"{btc}${RigID}";
 #else
             // PRODUCTION
             if (worker.Length > 0 && BitcoinAddress.ValidateWorkerName(worker))

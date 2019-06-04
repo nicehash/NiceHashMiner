@@ -3,9 +3,9 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMiner.Utils.Guid;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common;
+using NHM.UUID;
 
 namespace NiceHashMiner.Devices
 {
@@ -100,7 +100,7 @@ namespace NiceHashMiner.Devices
                 // some static data
                 infoToHashed = $"{ID}--{DeviceType.AMD}--{amdDevice.DeviceGlobalMemory}--{amdDevice.Codename}--{Name}";
             }
-            var uuidHEX = UUID.V5(UUID.Nil().AsGuid(), infoToHashed).AsGuid().ToString();
+            var uuidHEX = UUID.GetHexUUID(infoToHashed);
             var Uuid = $"AMD-{uuidHEX}";
 
             //BusID = amdDevice.BusID;

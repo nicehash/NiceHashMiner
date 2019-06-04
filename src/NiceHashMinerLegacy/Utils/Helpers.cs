@@ -272,24 +272,5 @@ namespace NiceHashMiner
                 Logger.Error("NICEHASH", "VisitLink error: " + ex.Message);
             }
         }
-
-        public static string GetMachineGuid()
-        {
-            const string hklm = "HKEY_LOCAL_MACHINE";
-            const string keyPath = hklm + @"\SOFTWARE\Microsoft\Cryptography";
-            const string value = "MachineGuid";
-
-            string guid = null;
-            try
-            {
-                guid = (string) Registry.GetValue(keyPath, value, new object());
-            }
-            catch (Exception e)
-            {
-                Logger.Error("REGISTRY", e.Message);
-            }
-
-            return guid;
-        }
     }
 }

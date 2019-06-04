@@ -1,23 +1,17 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Forms;
-using NiceHashMiner.Interfaces;
 using NiceHashMiner.Interfaces.DataVisualizer;
-using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.IdleChecking;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
-using NiceHashMiner.Utils;
-using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Management;
 using System.Threading;
 using System.Windows.Forms;
-using Timer = System.Windows.Forms.Timer;
 using static NiceHashMiner.Translations; // consider using static
 
 namespace NiceHashMiner
@@ -25,8 +19,6 @@ namespace NiceHashMiner
     using NiceHashMiner.Forms.Components;
     using NiceHashMiner.Plugin;
     using NiceHashMinerLegacy.Common;
-    using System.IO;
-    using System.Threading.Tasks;
 
     public partial class Form_Main : Form, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IStartMiningDisplayer, IStopMiningDisplayer
     {

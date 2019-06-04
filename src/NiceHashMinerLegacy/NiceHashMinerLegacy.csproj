@@ -70,9 +70,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BouncyCastle.Crypto, Version=1.8.5.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
-      <HintPath>..\..\packages\BouncyCastle.1.8.5\lib\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -379,10 +376,6 @@
     <Compile Include="Globals_shared.cs" />
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
-    <Compile Include="Utils\Guid\Constants.cs" />
-    <Compile Include="Utils\Guid\Providers\HashProvider.cs" />
-    <Compile Include="Utils\Guid\Providers\RandomNumberProvider.cs" />
-    <Compile Include="Utils\Guid\UUID.cs" />
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
@@ -516,10 +509,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NHM.MinersDownloader\NHM.MinersDownloader.csproj">
-      <Project>{6bdc0b57-e7d9-43e1-8534-55ae8a1b12ed}</Project>
-      <Name>NHM.MinersDownloader</Name>
-    </ProjectReference>
     <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Core\MyDownloader.Core.csproj">
       <Project>{e763345e-6696-4c53-8764-47e4abd67def}</Project>
       <Name>MyDownloader.Core</Name>
@@ -603,6 +592,14 @@
     <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj">
       <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
       <Name>XmrStak</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.MinersDownloader\NHM.MinersDownloader.csproj">
+      <Project>{6bdc0b57-e7d9-43e1-8534-55ae8a1b12ed}</Project>
+      <Name>NHM.MinersDownloader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.UUID\NHM.UUID.csproj">
+      <Project>{ee6160cc-8c19-4ad8-bb1e-c295347203ee}</Project>
+      <Name>NHM.UUID</Name>
     </ProjectReference>
     <ProjectReference Include="..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
