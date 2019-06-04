@@ -16,7 +16,7 @@ Miners folder is home to all Plugins, Plugin interfaces and their helpers.
 
 # <a name="plugin"></a> What is a Plugin?
 
-A plugin is addition to program with additional features. In most cases we are talking about Miner Plugins, but there are also Background Service Plugins. We know integrated and external plugins. 
+A plugin is a module that connects with main program to bring additional features. In most cases we are talking about Miner Plugins, but there are also Background Service Plugins. We know integrated and external plugins. 
 Integrated ones come with the NHM distribution while external must be manually downloaded from plugin marketplace.
 
 A plugin can be written by anyone with some knowledge of programming in C#.
