@@ -29,7 +29,7 @@ namespace NHM.UUID
                 return $"{0}-{System.Guid.NewGuid()}";
             }
 
-            var hexUuid = GetHexUUID($"NHML{guid}");
+            var hexUuid = GetHexUUID($"NHM/{guid}");
             return $"{0}-{GetB64UUID(hexUuid)}";
         }
 
