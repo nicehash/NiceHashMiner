@@ -377,7 +377,6 @@
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Utils\Links.cs" />
-    <Compile Include="Utils\MemoryHelper.cs" />
     <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
