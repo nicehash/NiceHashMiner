@@ -29,4 +29,5 @@ These two files are backbone for any Miner Plugin, while Background Service Plug
 
 So along the way you stumbled across [MinerPluginToolkitV1](MinerPluginToolkitV1). But what is its addition to MinerPlugin you would ask.
 Miner plugin can be written completely without any use of MinerPluginToolkitV1, but there is a handfull of additional functionalities in it that using it is recommended.
-MinerPluginToolkitV1 allows developer to use Configs, Extra Launch Parameters, different interfaces and a lot of helper classes. It is also home to MinerBase, supporting all basic actions like Start/Stop mining, Start benchmarking, get data from API, create command line, etc.
+MinerPluginToolkitV1 allows developer to use Configs, Extra Launch Parameters, different interfaces and a lot of helper classes. It is also home to MinerBase, supporting all basic actions like Start/Stop mining, Start benchmarking, retreive data from API, create command line, etc.
+To sum it all, the MinerPluginToolkitV1 is a project with helper functionalities that can be used to implement your plugin.
