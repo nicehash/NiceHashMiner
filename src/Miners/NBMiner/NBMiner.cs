@@ -22,6 +22,7 @@ namespace NBMiner
         private string _extraLaunchParameters = "";
         private AlgorithmType _algorithmType;
         private readonly HttpClient _http = new HttpClient();
+        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
         private string AlgoName
         {
@@ -60,8 +61,10 @@ namespace NBMiner
             }
         }
 
-        public NBMiner(string uuid) : base(uuid)
-        {}
+        public NBMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        {
+            _mappedIDs = mappedIDs;
+        }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
@@ -85,7 +88,7 @@ namespace NBMiner
             var binCwd = binPathBinCwdPair.Item2;
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
-            var id = Shared.MappedCudaIds[_miningPairs.First().Device.UUID];
+            var id = _mappedIDs[_miningPairs.First().Device.UUID];
 
             var benchHashes = 0d;
             var benchIters = 0;
@@ -137,7 +140,7 @@ namespace NBMiner
             _apiPort = GetAvaliablePort();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             
-            var devs = string.Join(",", _miningPairs.Select(p => Shared.MappedCudaIds[p.Device.UUID]));
+            var devs = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
             return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} -d {devs} -RUN {_extraLaunchParameters}";
         }
         
@@ -154,14 +157,19 @@ namespace NBMiner
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
 
-                foreach (var device in summary.miner.devices)
+                var apiDevices = summary.miner.devices;
+
+                foreach (var miningPair in _miningPairs)
                 {
-                    totalSpeed += device.hashrate_raw;
-                    totalPowerUsage += (int)device.power;
-                    var uuid = Shared.GetUUIDFromMinerID(device.id);
-                    if (uuid == null) continue;
-                    perDeviceSpeedInfo.Add(uuid, new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, device.hashrate_raw * (1 - DevFee * 0.01)) });
-                    perDevicePowerInfo.Add(uuid, (int)device.power);
+                    var deviceUUID = miningPair.Device.UUID;
+                    var minerID = _mappedIDs[deviceUUID];
+                    var apiDevice = apiDevices.Find(apiDev => apiDev.id == minerID);
+                    if (apiDevice == null) continue;
+
+                    totalSpeed += apiDevice.hashrate_raw;
+                    totalPowerUsage += (int)apiDevice.power;
+                    perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, apiDevice.hashrate_raw * (1 - DevFee * 0.01)) });
+                    perDevicePowerInfo.Add(deviceUUID, (int)apiDevice.power);
                 }
 
                 api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
@@ -171,10 +179,7 @@ namespace NBMiner
             }
             catch (Exception e)
             {
-                if (e.Message != "An item with the same key has already been added.")
-                {
-                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
-                }
+                Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
             return api;

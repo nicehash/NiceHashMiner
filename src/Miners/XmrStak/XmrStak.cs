@@ -130,7 +130,7 @@ namespace XmrStak
         // XmrStak doesn't report power usage
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            if (_threadsForDeviceUUIDs == null)
+            if (_threadsForDeviceUUIDs == null || _threadsForDeviceUUIDs.Count == 0)
             {
                 await MapMinerDevicesStatsDataAsync();
             }
@@ -179,10 +179,7 @@ namespace XmrStak
             }
             catch (Exception e)
             {
-                if (e.Message != "An item with the same key has already been added.")
-                {
-                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
-                }
+                Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
             return api;
