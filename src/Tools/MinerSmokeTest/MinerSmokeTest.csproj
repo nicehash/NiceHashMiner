@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>MinerSmokeTest</RootNamespace>
     <AssemblyName>MinerSmokeTest</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -88,6 +88,10 @@
     <ProjectReference Include="..\..\Miners\MinerPlugin\MinerPlugin.csproj">
       <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
       <Name>MinerPlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\NHM.DeviceDetection\NHM.DeviceDetection.csproj">
+      <Project>{9b4e5761-4c68-41f8-86bb-26f3382c6189}</Project>
+      <Name>NHM.DeviceDetection</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>

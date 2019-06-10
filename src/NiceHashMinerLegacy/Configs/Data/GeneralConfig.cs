@@ -112,9 +112,6 @@ namespace NiceHashMiner.Configs.Data
             set => MinerApiWatchdog.Enabled = value;
         }
 
-        // Overriding AMDOpenCLDeviceDetection returned Bus IDs (in case of driver error, e.g. 17.12.1)
-        public string OverrideAMDBusIds = "";
-
         public Interval SwitchSmaTimeChangeSeconds = new Interval(34, 55);
         public Interval SwitchSmaTicksStable = new Interval(2, 3);
         public Interval SwitchSmaTicksUnstable = new Interval(5, 13);
@@ -174,7 +171,6 @@ namespace NiceHashMiner.Configs.Data
             UseIFTTT = false;
             CoolDownCheckEnabled = true;
             RunScriptOnCUDA_GPU_Lost = false;
-            OverrideAMDBusIds = "";
             SwitchSmaTimeChangeSeconds = new Interval(34, 55);
             SwitchSmaTicksStable = new Interval(2, 3);
             SwitchSmaTicksUnstable = new Interval(5, 13);

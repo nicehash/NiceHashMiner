@@ -56,7 +56,7 @@ namespace MinerDeviceDetection
 
         private static async Task QueryDevices()
         {
-            await ComputeDeviceManager.QueryDevicesAsync(null, true);
+            //await ComputeDeviceManager.QueryDevicesAsync(null, true);
         }
 
         static void Main(string[] args)
@@ -75,7 +75,7 @@ namespace MinerDeviceDetection
 
             foreach (var dev in devices)
             {
-                baseDevices.Add(dev.PluginDevice);
+                baseDevices.Add(dev.BaseDevice);
             }
 
             var binPaths = new List<string>() { "bin", "bin_3rdparty" };

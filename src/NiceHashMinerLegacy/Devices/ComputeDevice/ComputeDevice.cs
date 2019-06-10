@@ -10,35 +10,33 @@ using NiceHashMiner.Algorithms;
 using NiceHashMinerLegacy.Common.Enums;
 using NiceHashMinerLegacy.Common.Device;
 using NHM.UUID;
+using NHM.DeviceMonitoring;
 
 namespace NiceHashMiner.Devices
 {
     public class ComputeDevice
     {
         // migrate ComputeDevice to BaseDevice
-        public BaseDevice PluginDevice { get; protected set; }
+        public BaseDevice BaseDevice { get; private set; }
 
-        public readonly int ID;
-
-        public int Index { get; protected set; } // For socket control, unique
-
+        public int ID => BaseDevice?.ID ?? -1;
+        // CPU, NVIDIA, AMD
+        public DeviceType DeviceType => BaseDevice?.DeviceType ?? (DeviceType)(-1);
+        // UUID now used for saving
+        public string Uuid => BaseDevice?.UUID ?? "-1";
         // to identify equality;
-        public string Name { get; private set; } // => PluginDevice.Name;
+        public string Name => BaseDevice?.Name ?? "-1";
+
+        public int Index { get; private set; } // For socket control, unique
 
         // name count is the short name for displaying in moning groups
-        public readonly string NameCount;
+        public string NameCount { get; private set; }
         public bool Enabled { get; protected set; }
 
         // disabled state check
         public bool IsDisabled => (!Enabled || State == DeviceState.Disabled);
 
         public DeviceState State { get; set; } = DeviceState.Stopped;
-
-        // CPU, NVIDIA, AMD
-        public readonly DeviceType DeviceType;
-
-        // UUID now used for saving
-        public string Uuid => PluginDevice.UUID;
 
         public string B64Uuid
         {
@@ -65,47 +63,83 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        //// used for Claymore indexing
-        //public int BusID { get; protected set; } = -1;
-        ////public int IDByBus = -1;
-
-
-        // CPU extras
-        public int Threads { get; protected set; }
-        public ulong AffinityMask { get; protected set; }
-
-        // GPU extras
-        public readonly ulong GpuRam;
-
-        // copy pasted from CUDA Compute device
-        public uint PowerTarget { get; protected set; }
-        public PowerLevel PowerLevel { get; protected set; }
-
-        // sgminer extra quickfix
-        //public readonly bool IsOptimizedVersion;
-        //public string Codename { get; protected set; }
-        //public string InfSection { get; protected set; }
-
         public List<Algorithm> AlgorithmSettings { get; protected set; } = new List<Algorithm>();
 
         public double MinimumProfit { get; set; }
 
         public string BenchmarkCopyUuid { get; set; }
 
-        public virtual float Load => -1;
-        public virtual float Temp => -1;
-        public virtual int FanSpeed => -1;
-        public virtual double PowerUsage => -1;
+        #region DeviceMonitor
+        public DeviceMonitor DeviceMonitor { get; set; }
 
-        // Ambiguous constructor
-        protected ComputeDevice(int id, string name, bool enabled, DeviceType type, string nameCount, ulong gpuRam)
+        #region Getters
+
+        public uint PowerTarget
         {
-            ID = id;
-            Name = name;
-            SetEnabled(enabled);
-            DeviceType = type;
+            get
+            {
+                if (DeviceMonitor != null && DeviceMonitor is IPowerTarget get) return get.PowerTarget;
+                //throw new NotSupportedException($"Device with {Uuid} doesn't support PowerTarget");
+                return 0;
+            }
+        }
+        public PowerLevel PowerLevel
+        {
+            get
+            {
+                if (DeviceMonitor != null && DeviceMonitor is IPowerLevel get) return get.PowerLevel;
+                return PowerLevel.Unsupported;
+            }
+        }
+
+        public float Load
+        {
+            get
+            {
+                if (DeviceMonitor != null && DeviceMonitor is ILoad get) return get.Load;
+                return -1;
+            }
+        }
+        public float Temp
+        {
+            get
+            {
+                if (DeviceMonitor != null && DeviceMonitor is ITemp get) return get.Temp;
+                return -1;
+            }
+        }
+        public int FanSpeed
+        {
+            get
+            {
+                if (DeviceMonitor != null && DeviceMonitor is IFanSpeed get) return get.FanSpeed;
+                return -1;
+            }
+        }
+        public double PowerUsage
+        {
+            get
+            {
+                if (DeviceMonitor != null && DeviceMonitor is IPowerUsage get) return get.PowerUsage;
+                return -1;
+            }
+        }
+        #endregion Getters
+
+        #region Setters
+
+        #endregion
+        
+        #endregion DeviceMonitor
+
+
+        // constructor
+        public ComputeDevice(BaseDevice baseDevice, int index, string nameCount)
+        {
+            BaseDevice = baseDevice;
+            Index = index;
             NameCount = nameCount;
-            GpuRam = gpuRam;
+            SetEnabled(true);
         }
 
         public void SetEnabled(bool isEnabled)
@@ -117,7 +151,7 @@ namespace NiceHashMiner.Devices
         // combines long and short name
         public string GetFullName()
         {
-            return string.Format(Translations.Tr("{0} {1}"), NameCount, Name);
+            return $"{NameCount} {Name}";
         }
          
         // TODO double check adding and removing plugin algos
@@ -185,10 +219,12 @@ namespace NiceHashMiner.Devices
         {
             if (config == null || config.DeviceUUID != Uuid) return;
             // set device settings
-            Enabled = config.Enabled;
+            //Enabled = config.Enabled;
+            SetEnabled(config.Enabled);
             MinimumProfit = config.MinimumProfit;
-            PowerTarget = config.PowerTarget;
-            PowerLevel = config.PowerLevel;
+            //// TODO set via DeviceMonitor
+            //PowerTarget = config.PowerTarget;
+            //PowerLevel = config.PowerLevel;
 
 
             if (config.PluginAlgorithmSettings == null) return;
@@ -245,43 +281,5 @@ namespace NiceHashMiner.Devices
         }
 
         #endregion Config Setters/Getters
-
-        // static methods
-        internal bool IsAlgorithmSettingsInitialized()
-        {
-            return AlgorithmSettings != null;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj is null) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == GetType() && Equals((ComputeDevice) obj);
-        }
-
-        protected bool Equals(ComputeDevice other)
-        {
-            return ID == other.ID && DeviceType == other.DeviceType;
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = ID;
-                hashCode = (hashCode * 397) ^ (int) DeviceType;
-                return hashCode;
-            }
-        }
-
-        public static bool operator ==(ComputeDevice left, ComputeDevice right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(ComputeDevice left, ComputeDevice right)
-        {
-            return !Equals(left, right);
-        }
     }
 }
