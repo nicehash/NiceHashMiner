@@ -100,7 +100,7 @@ namespace NiceHashMiner.Benchmarking
             var miner = plugin.CreateMiner();
             var miningPair = new MinerPlugin.MiningPair
             {
-                Device = Device.PluginDevice,
+                Device = Device.BaseDevice,
                 Algorithm = algo.BaseAlgo
             };
             // check ethlargement

@@ -80,7 +80,7 @@ namespace NiceHashMiner.Plugin
             var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             // get devices
             var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
             // examine all plugins and what to use
             foreach (var plugin in IntegratedPlugins)
             {
@@ -200,7 +200,7 @@ namespace NiceHashMiner.Plugin
             var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             // get devices
             var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
             foreach (var plugin in IntegratedPlugins)
             {
                 var pluginUuid = plugin.PluginUUID;
@@ -270,7 +270,7 @@ namespace NiceHashMiner.Plugin
         {
             // get devices
             var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
             // examine all plugins and what to use
             foreach (var kvp in MinerPluginHost.MinerPlugin)
             {
@@ -442,7 +442,7 @@ namespace NiceHashMiner.Plugin
                     if (reBenchCheckPlugin == null) continue;
                     foreach (var dev in allDevs)
                     {
-                        var baseDev = dev.PluginDevice;
+                        var baseDev = dev.BaseDevice;
                         var pluginAlgos = dev.AlgorithmSettings.Where(a => a.MinerUUID == plugin.PluginUUID).ToArray();
                         foreach (var algo in pluginAlgos)
                         {

@@ -78,7 +78,7 @@ namespace NiceHashMiner.Miners.Grouping
             var pAlgo = Algorithms[GetMostProfitableIndex()] as PluginAlgorithm;
             return new MiningPair
             {
-                Device = Device.PluginDevice,
+                Device = Device.BaseDevice,
                 Algorithm = pAlgo.BaseAlgo
             };
         }
