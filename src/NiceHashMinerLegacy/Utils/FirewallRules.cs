@@ -39,6 +39,7 @@ namespace NiceHashMiner.Utils
                     UseShellExecute = true,
                     CreateNoWindow = true
                 };
+                startInfo.WindowStyle = ProcessWindowStyle.Hidden; // used for hidden window
                 using (var setFirewallRulesProcess = new Process { StartInfo = startInfo })
                 {
                     setFirewallRulesProcess.Start();
