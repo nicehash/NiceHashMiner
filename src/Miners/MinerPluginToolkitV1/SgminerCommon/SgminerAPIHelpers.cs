@@ -90,7 +90,11 @@ namespace MinerPluginToolkitV1.SgminerCommon
                 }
                 var totalAlgoSpeedPair = new AlgorithmTypeSpeedPair(algorithmType, totalSpeed);
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair>() { totalAlgoSpeedPair };
+                ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+
+                ad.PowerUsagePerDevice = perDevicePowerInfo;
                 ad.PowerUsageTotal = totalPowerUsage;
+
             }
             catch (Exception e)
             {
