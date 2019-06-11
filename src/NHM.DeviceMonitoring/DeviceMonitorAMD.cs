@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ATI.ADL;
+using NiceHashMinerLegacy.Common;
 
 namespace NHM.DeviceMonitoring
 {
@@ -15,6 +16,8 @@ namespace NHM.DeviceMonitoring
         private readonly int _adapterIndex2; // For ADL2
         private readonly IntPtr _adlContext;
         private bool _powerHasFailed;
+
+        private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(5);
 
         internal DeviceMonitorAMD(AmdBusIDInfo info)
         {
@@ -36,7 +39,7 @@ namespace NHM.DeviceMonitoring
                 var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
                 if (result != ADL.ADL_SUCCESS)
                 {
-                    //Logger.Info("ADL", $"ADL fan getting failed with error code {result}");
+                    Logger.InfoDelayed("ADL", $"ADL fan getting failed with error code {result}", _delayedLogging);
                     return -1;
                 }
                 return adlf.FanSpeed;
@@ -51,7 +54,7 @@ namespace NHM.DeviceMonitoring
                 var result = ADL.ADL_Overdrive5_Temperature_Get(_adapterIndex, 0, ref adlt);
                 if (result != ADL.ADL_SUCCESS)
                 {
-                    //Logger.Info("ADL", $"ADL temp getting failed with error code {result}");
+                    Logger.InfoDelayed("ADL", $"ADL temp getting failed with error code {result}", _delayedLogging);
                     return -1;
                 }
                 return adlt.Temperature * 0.001f;
@@ -66,7 +69,7 @@ namespace NHM.DeviceMonitoring
                 var result = ADL.ADL_Overdrive5_CurrentActivity_Get(_adapterIndex, ref adlp);
                 if (result != ADL.ADL_SUCCESS)
                 {
-                    //Logger.Info("ADL", $"ADL load getting failed with error code {result}");
+                    Logger.InfoDelayed("ADL", $"ADL load getting failed with error code {result}", _delayedLogging);
                     return -1;
                 }
                 return adlp.ActivityPercent;
@@ -87,7 +90,7 @@ namespace NHM.DeviceMonitoring
                     }
 
                     // Only alert once
-                    //Logger.Info("ADL", $"ADL power getting failed with code {result} for GPU {NameCount}. Turning off power for this GPU.");
+                    Logger.InfoDelayed("ADL", $"ADL power getting failed with code {result} for GPU BusID={BusID}. Turning off power for this GPU.", _delayedLogging);
                     _powerHasFailed = true;
                 }
 

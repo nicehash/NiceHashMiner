@@ -32,8 +32,7 @@ namespace NHM.DeviceMonitoring
                 }
                 catch (Exception e)
                 {
-                    // TODO add delayed logger
-                    Logger.Error("CPUDIAG", e.ToString());
+                    Logger.ErrorDelayed("CPUDIAG", e.ToString(), TimeSpan.FromMinutes(5));
                 }
                 return -1;
             }

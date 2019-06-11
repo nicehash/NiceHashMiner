@@ -222,9 +222,18 @@ namespace NiceHashMiner.Devices
             //Enabled = config.Enabled;
             SetEnabled(config.Enabled);
             MinimumProfit = config.MinimumProfit;
-            //// TODO set via DeviceMonitor
-            //PowerTarget = config.PowerTarget;
-            //PowerLevel = config.PowerLevel;
+
+            if (config.PowerLevel != PowerLevel.Unsupported && config.PowerLevel != PowerLevel.Custom && DeviceMonitor is ISetPowerLevel setPowerLevel)
+            {
+                //PowerLevel = config.PowerLevel;
+                setPowerLevel.SetPowerTarget(config.PowerLevel);
+            }
+            if (config.PowerLevel == PowerLevel.Custom && DeviceMonitor is ISetPowerTargetPercentage setPowerTargetPercentage)
+            {
+                //PowerTarget = config.PowerTarget;
+                setPowerTargetPercentage.SetPowerTarget(config.PowerTarget);
+            }
+            
 
 
             if (config.PluginAlgorithmSettings == null) return;

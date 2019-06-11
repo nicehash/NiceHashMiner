@@ -29,6 +29,8 @@ namespace NHM.DeviceMonitoring
             }
         }
 
+        private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(5);
+
         public int BusID { get; private set; }
         private readonly NvPhysicalGpuHandle _nvHandle; // For NVAPI
         private readonly nvmlDevice _nvmlDevice; // For NVML
@@ -70,6 +72,12 @@ namespace NHM.DeviceMonitoring
                 _defaultPowerLimit = powerInfo.Entries[0].DefPower;
 
                 PowerLimitsEnabled = true;
+                // set to high by default
+                var success = SetPowerTarget(PowerLevel.High);
+                if (!success)
+                {
+                    Logger.Info("NVML", $"Cannot set power target ({PowerLevel.High.ToString()}) for device with BusID={BusID}");
+                }
             }
             catch (Exception e)
             {
@@ -96,7 +104,7 @@ namespace NHM.DeviceMonitoring
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("NVML", e.ToString());
+                    Logger.ErrorDelayed("NVML", e.ToString(), _delayedLogging);
                 }
 
                 return load;
@@ -121,7 +129,7 @@ namespace NHM.DeviceMonitoring
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("NVML", e.ToString());
+                    Logger.ErrorDelayed("NVML", e.ToString(), _delayedLogging);
                 }
 
                 return temp;
@@ -139,7 +147,7 @@ namespace NHM.DeviceMonitoring
                     if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
                     {
                         // GPUs without fans are not uncommon, so don't treat as error and just return -1
-                        Logger.Info("NVAPI", $"Tach get failed with status: {result}");
+                        Logger.ErrorDelayed("NVAPI", $"Tach get failed with status: {result}", _delayedLogging);
                         return -1;
                     }
                 }
@@ -162,7 +170,7 @@ namespace NHM.DeviceMonitoring
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("NVML", e.ToString());
+                    Logger.ErrorDelayed("NVML", e.ToString(), _delayedLogging);
                 }
 
                 return -1;
@@ -171,7 +179,7 @@ namespace NHM.DeviceMonitoring
 
         public uint PowerTarget { get; private set; }
 
-        public PowerLevel PowerLevel { get; private set; }
+        public PowerLevel PowerLevel { get; private set; } = PowerLevel.High;
 
         // nvPercent in thousands of percent, e.g. 100000 for 100%
         private bool SetPowerTarget(uint nvPercent)
@@ -179,7 +187,7 @@ namespace NHM.DeviceMonitoring
             if (!PowerLimitsEnabled) return false;
             if (NVAPI.NvAPI_DLL_ClientPowerPoliciesSetStatus == null)
             {
-                Logger.Info("NVAPI", "Missing power set delegate, disabling power");
+                Logger.InfoDelayed("NVAPI", "Missing power set delegate, disabling power", _delayedLogging);
                 PowerLimitsEnabled = false;
                 return false;
             }
@@ -213,7 +221,7 @@ namespace NHM.DeviceMonitoring
             }
             catch (Exception e)
             {
-                Logger.Info("NVAPI", e.Message);
+                Logger.InfoDelayed("NVAPI", e.Message, _delayedLogging);
                 return false;
             }
 
@@ -243,31 +251,9 @@ namespace NHM.DeviceMonitoring
         // percent is in hundreds, e.g. 100%
         public bool SetPowerTarget(double percent)
         {
+            PowerLevel = PowerLevel.Custom;
             return SetPowerTarget((uint)Math.Round(percent * 1000));
         }
-
-        //public override void SetFromComputeDeviceConfig(ComputeDeviceConfig config)
-        //{
-        //    base.SetFromComputeDeviceConfig(config);
-
-        //    if (config.PowerLevel != PowerLevel.Custom)  // Placeholder
-        //    {
-        //        SetPowerTarget(config.PowerLevel);
-        //    }
-        //    else
-        //    {
-        //        SetPowerTarget(config.PowerTarget);
-        //    }
-        //}
-
-        //public override ComputeDeviceConfig GetComputeDeviceConfig()
-        //{
-        //    var config = base.GetComputeDeviceConfig();
-        //    config.PowerTarget = PowerTarget;
-        //    config.PowerLevel = PowerLevel;
-
-        //    return config;
-        //}
     }
 
 }

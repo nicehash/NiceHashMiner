@@ -64,7 +64,7 @@ namespace XmrStak
                 if (algorithms.Count > 0)
                 {
                     supported.Add(dev, algorithms);
-                    _registeredDeviceUUIDTypes.Add(dev.UUID, dev.DeviceType);
+                    _registeredDeviceUUIDTypes[dev.UUID] = dev.DeviceType;
                     foreach (var algorithm in algorithms)
                     {
                         _registeredAlgorithmTypes.Add(algorithm.FirstAlgorithmType);

@@ -23,6 +23,7 @@ using WebSocketSharp;
 using NiceHashMiner.Configs;
 // static imports
 using static NiceHashMiner.Stats.StatusCodes;
+using NHM.DeviceMonitoring;
 
 namespace NiceHashMiner.Stats
 {
@@ -413,13 +414,13 @@ namespace NiceHashMiner.Stats
                 AvailableDevices.Devices : 
                 AvailableDevices.Devices.Where(d => d.B64Uuid == device);
 
-            var found = false;
+            var found = devs.Count() > 0;
 
             foreach (var dev in devs)
             {
-                if (!(dev is CudaComputeDevice cuda)) continue;
-                cuda.SetPowerTarget(level);
-                found = true;
+                if (!(dev.DeviceMonitor is ISetPowerLevel set)) continue;
+                // TODO check if set
+                set.SetPowerTarget(level);
             }
 
             if (!found)
@@ -486,14 +487,7 @@ namespace NiceHashMiner.Stats
                     array.Add((int) Math.Round(device.PowerUsage));
 
                     // Power mode
-                    if (device is CudaComputeDevice cuda)
-                    {
-                        array.Add((int) cuda.PowerLevel);
-                    }
-                    else
-                    {
-                        array.Add(0);
-                    }
+                    array.Add((int)device.PowerLevel);
 
                     // Intensity mode
                     array.Add(0);

@@ -129,7 +129,7 @@ namespace NiceHashMiner
                 MinerPluginsManager.LoadMinerPlugins();
                 /////////////////////////////////////////////
                 /////// from here on we have our devices and Miners initialized
-                ApplicationStateManager.AfterDeviceQueryInitialization();
+                AfterDeviceQueryInitialization();
 
                 // STEP
                 // connect to nhmws
