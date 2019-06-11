@@ -91,7 +91,7 @@ namespace XmrStak
 
         public IMiner CreateMiner()
         {
-            return new XmrStak(PluginUUID, AMDDevice.OpenCLPlatformID, this)
+            return new XmrStak(PluginUUID, AMDDevice.GlobalOpenCLPlatformID, this)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,

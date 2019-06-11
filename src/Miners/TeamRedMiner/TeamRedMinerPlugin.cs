@@ -40,7 +40,7 @@ namespace TeamRedMiner
 
         public IMiner CreateMiner()
         {
-            return new TeamRedMiner(PluginUUID, AMDDevice.OpenCLPlatformID)
+            return new TeamRedMiner(PluginUUID, AMDDevice.GlobalOpenCLPlatformID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,

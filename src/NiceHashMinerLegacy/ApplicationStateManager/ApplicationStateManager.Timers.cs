@@ -1,6 +1,8 @@
+using NHM.DeviceDetection;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
+using NiceHashMinerLegacy.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -37,22 +39,51 @@ namespace NiceHashMiner
         }
         #endregion MinerStatsCheck
 
-        // TODO This is duplicated with CudaDeviceChecker
+
         #region ComputeDevicesCheck Lost GPU check
-        private static CudaDeviceChecker _cudaDeviceChecker;
+        private static SystemTimer _cudaDeviceCheckerTimer;
 
         private static void StartComputeDevicesCheckTimer()
         {
-            if (_cudaDeviceChecker == null)
-            {
-                _cudaDeviceChecker = new CudaDeviceChecker();
-            }
-            _cudaDeviceChecker.Start();
+            if (!ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost)
+                return;
+
+            _cudaDeviceCheckerTimer = new SystemTimer();
+            _cudaDeviceCheckerTimer.Elapsed += async (object sender, ElapsedEventArgs e) => {
+                // this function checks if count of CUDA devices is same as it was on application start, reason for that is
+                // because of some reason (especially when algo switching occure) CUDA devices are dissapiring from system
+                // creating tons of problems e.g. miners stop mining, lower rig hashrate etc.
+                var nvidiaCount = await DeviceDetection.CUDADevicesNumCheck();
+                var isDevicesCountMistmatch = nvidiaCount != AvailableDevices.AvailNVGpus;
+                if (isDevicesCountMistmatch)
+                {
+                    try
+                    {
+                        var onGpusLost = new ProcessStartInfo
+                        {
+                            FileName = Paths.RootPath("OnGPUsLost.bat"),
+                            WindowStyle = ProcessWindowStyle.Minimized
+                        };
+                        using (var p = Process.Start(onGpusLost))
+                        {
+                            //p.WaitForExit(10 * 1000);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Error("ApplicationStateManager.Timers", $"OnGPUsMismatch.bat error: {ex.Message}");
+                    }
+                }
+            };
+            _cudaDeviceCheckerTimer.Interval = 60 * 1000;
+            _cudaDeviceCheckerTimer.Start();
         }
 
         private static void StopComputeDevicesCheckTimer()
         {
-            _cudaDeviceChecker?.Stop();
+            _cudaDeviceCheckerTimer?.Stop();
+            _cudaDeviceCheckerTimer?.Dispose();
+            _cudaDeviceCheckerTimer = null;
         }
         #endregion ComputeDevicesCheck Lost GPU check
 

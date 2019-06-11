@@ -32,7 +32,7 @@ namespace SGMinerHub
 
         public IMiner CreateMiner()
         {
-            return new SGMiner(PluginUUID, AMDDevice.OpenCLPlatformID)
+            return new SGMiner(PluginUUID, AMDDevice.GlobalOpenCLPlatformID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables

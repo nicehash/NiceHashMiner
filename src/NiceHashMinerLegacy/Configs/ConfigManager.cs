@@ -67,7 +67,7 @@ namespace NiceHashMiner.Configs
             TryMigrate();
             // init defaults
             GeneralConfig.SetDefaults();
-            GeneralConfig.hwid = WindowsManagementObjectSearcher.GetCpuID();
+            GeneralConfig.hwid = SystemSpecs.GetCpuID();
             // load file if it exist
             var fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);
             if (fromFile != null)
@@ -154,8 +154,6 @@ namespace NiceHashMiner.Configs
         // TODO this should be obsolete
         public static void AfterDeviceQueryInitialization()
         {
-            // extra check (probably will never happen but just in case)
-            AvailableDevices.RemoveInvalidDevs();
             // create/init device configs
             foreach (var device in AvailableDevices.Devices)
             {

@@ -9,6 +9,7 @@ namespace NiceHashMinerLegacy.Common.Enums
         Low,
         Medium,
         High,
-        Custom
+        Custom,
+        Unsupported
     }
 }
