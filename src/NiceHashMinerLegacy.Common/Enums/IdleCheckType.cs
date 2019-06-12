@@ -4,9 +4,9 @@ using System.Text;
 
 namespace NiceHashMinerLegacy.Common.Enums
 {
-    public enum IdleCheckType
+    public enum IdleCheckType : int
     {
-        InputTimeout,
+        InputTimeout = 0,
         SessionLock
     }
 }

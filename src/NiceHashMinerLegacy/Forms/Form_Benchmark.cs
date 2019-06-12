@@ -20,7 +20,7 @@ using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Forms
 {
-    public partial class Form_Benchmark : Form, IListItemCheckColorSetter, IBenchmarkForm, IBenchmarkCalculation
+    public partial class Form_Benchmark : Form, FormHelpers.ICustomTranslate, IListItemCheckColorSetter, IBenchmarkForm, IBenchmarkCalculation
     {
         private static readonly Color DisabledColor = Color.DarkGray;
         private static readonly Color BenchmarkedColor = Color.LightGreen;
@@ -49,8 +49,6 @@ namespace NiceHashMiner.Forms
             // benchmark only unique devices
             devicesListViewEnableControl1.SetIListItemCheckColorSetter(this);
             devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
-
-            InitLocale();
 
             _benchmarkingTimer = new Timer();
             _benchmarkingTimer.Tick += BenchmarkingTimer_Tick;
@@ -169,8 +167,7 @@ namespace NiceHashMiner.Forms
             if (_dotCount > 3) _dotCount = 1;
             return new string('.', _dotCount);
         }
-
-        private void InitLocale()
+        void FormHelpers.ICustomTranslate.CustomTranslate()
         {
             // TODO fix locale for benchmark enabled label
             devicesListViewEnableControl1.InitLocale();
@@ -400,6 +397,6 @@ namespace NiceHashMiner.Forms
             progressBarBenchmarkSteps.Value = 0;
         }
 
-#endregion // Benchmark progress GUI stuff
+        #endregion // Benchmark progress GUI stuff
     }
 }

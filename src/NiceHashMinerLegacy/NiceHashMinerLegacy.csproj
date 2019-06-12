@@ -112,7 +112,11 @@
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
+    <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
+    <Compile Include="Configs\IdleMiningSettings.cs" />
+    <Compile Include="Configs\RunAtStartup.cs" />
+    <Compile Include="Configs\TranslationsSettings.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
     <Compile Include="Devices\PowerOutOfRangeException.cs" />
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
@@ -215,14 +219,12 @@
     <Compile Include="IFTTT.cs" />
     <Compile Include="Interfaces\DataVisualizer\IBalanceBTCDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IBalanceFiatDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IBTCDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IDevicesStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IGlobalMiningRateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IGroupDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IMiningNotProfitableDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IMiningProfitableDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\INoInternetConnectionDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IServiceLocationDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IStartMiningDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IStopMiningDisplayer.cs" />
@@ -349,8 +351,7 @@
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
     <Compile Include="Miners\Grouping\GroupingUtils.cs" />
-    <Compile Include="PInvoke\NiceHashProcess.cs" />
-    <Compile Include="Utils\BitcoinAddress.cs" />
+    <Compile Include="Utils\CredentialValidators.cs" />
     <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Miners\Miner.cs" />
     <Compile Include="Forms\MinerFileNotFoundDialog.cs">

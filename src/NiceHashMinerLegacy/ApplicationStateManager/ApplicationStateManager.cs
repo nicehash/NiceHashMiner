@@ -99,11 +99,11 @@ namespace NiceHashMiner
             // assume it is valid
             var ret = CredentialsValidState.VALID;
 
-            if (!BitcoinAddress.ValidateBitcoinAddress(ConfigManager.GeneralConfig.BitcoinAddress))
+            if (!CredentialValidators.ValidateBitcoinAddress(ConfigManager.GeneralConfig.BitcoinAddress))
             {
                 ret |= CredentialsValidState.INVALID_BTC;
             }
-            if (!BitcoinAddress.ValidateWorkerName(ConfigManager.GeneralConfig.WorkerName))
+            if (!CredentialValidators.ValidateWorkerName(ConfigManager.GeneralConfig.WorkerName))
             {
                 ret |= CredentialsValidState.INVALID_WORKER;
             }
@@ -136,34 +136,6 @@ namespace NiceHashMiner
             CHANGED
         }
 
-#region ServiceLocation
-
-        public static SetResult SetServiceLocationIfValidOrDifferent(int serviceLocation)
-        {
-            if (serviceLocation == ConfigManager.GeneralConfig.ServiceLocation)
-            {
-                return SetResult.NOTHING_TO_CHANGE;
-            }
-            if (serviceLocation >= 0 && serviceLocation < StratumService.MiningLocations.Count)
-            {
-                SetServiceLocation(serviceLocation);
-                return SetResult.CHANGED;
-            }
-            // invalid service location will default to first valid one - 0
-            SetServiceLocation(0);
-            return SetResult.INVALID;
-        }
-
-        private static void SetServiceLocation(int serviceLocation)
-        {
-            // change in memory and save changes to file
-            ConfigManager.GeneralConfig.ServiceLocation = serviceLocation;
-            ConfigManager.GeneralConfigFileCommit();
-            // notify all components
-            DisplayServiceLocation?.Invoke(null, serviceLocation);
-        }
-#endregion
-
 #region BTC setter
 
         // make sure to pass in trimmedBtc
@@ -173,8 +145,9 @@ namespace NiceHashMiner
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
-            if (!BitcoinAddress.ValidateBitcoinAddress(btc))
+            if (!CredentialValidators.ValidateBitcoinAddress(btc))
             {
+                ConfigManager.GeneralConfig.BitcoinAddress = btc;
                 return SetResult.INVALID;
             }
             SetBTC(btc);
@@ -194,9 +167,6 @@ namespace NiceHashMiner
             {
                 MiningManager.RestartMiners(GetUsername());
             }
-
-            // notify all components
-            DisplayBTC?.Invoke(null, btc);
         }
 #endregion
 
@@ -210,7 +180,7 @@ namespace NiceHashMiner
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
-            if (!BitcoinAddress.ValidateWorkerName(workerName))
+            if (!CredentialValidators.ValidateWorkerName(workerName))
             {
                 return SetResult.INVALID;
             }

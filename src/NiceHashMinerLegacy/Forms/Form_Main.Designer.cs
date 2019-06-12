@@ -63,8 +63,10 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.buttonPlugins = new System.Windows.Forms.Button();
             this.devicesMainBoard1 = new NiceHashMiner.Forms.Components.DevicesMainBoardDevicesListViewSpeedControl();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonStartMining
@@ -85,7 +87,6 @@
             this.textBoxBTCAddress.Name = "textBoxBTCAddress";
             this.textBoxBTCAddress.Size = new System.Drawing.Size(237, 20);
             this.textBoxBTCAddress.TabIndex = 1;
-            this.textBoxBTCAddress.Leave += new System.EventHandler(this.textBoxBTCAddress_Leave);
             // 
             // labelServiceLocation
             // 
@@ -111,7 +112,6 @@
             this.comboBoxLocation.Name = "comboBoxLocation";
             this.comboBoxLocation.Size = new System.Drawing.Size(121, 21);
             this.comboBoxLocation.TabIndex = 0;
-            this.comboBoxLocation.SelectedIndexChanged += new System.EventHandler(this.comboBoxLocation_SelectedIndexChanged);
             // 
             // labelBitcoinAddress
             // 
@@ -236,7 +236,6 @@
             this.textBoxWorkerName.Name = "textBoxWorkerName";
             this.textBoxWorkerName.Size = new System.Drawing.Size(120, 20);
             this.textBoxWorkerName.TabIndex = 2;
-            this.textBoxWorkerName.Leave += new System.EventHandler(this.textBoxWorkerName_Leave);
             // 
             // buttonStopMining
             // 
@@ -381,6 +380,10 @@
             this.devicesMainBoard1.Size = new System.Drawing.Size(664, 160);
             this.devicesMainBoard1.TabIndex = 111;
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -415,6 +418,7 @@
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -456,6 +460,7 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShow;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ErrorProvider errorProvider1;
     }
 }
 

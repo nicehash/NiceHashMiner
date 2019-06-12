@@ -20,7 +20,7 @@ using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Forms
 {
-    public partial class Form_Settings : Form, IDataVisualizer, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer
+    public partial class Form_Settings : Form, IDataVisualizer, IWorkerNameDisplayer, FormHelpers.ICustomTranslate
     {
         private readonly bool _isInitFinished = false;
         public bool IsRestartNeeded { get; private set; }
@@ -29,10 +29,6 @@ namespace NiceHashMiner.Forms
         private const bool ShowUniqueDeviceList = true;
 
         private ComputeDevice _selectedComputeDevice;
-
-        private readonly RegistryKey _rkStartup;
-
-        private bool _isStartupChanged = false;
         private bool _isCredChange = false;
 
         public Form_Settings()
@@ -44,9 +40,6 @@ namespace NiceHashMiner.Forms
 
             // backup settings
             ConfigManager.CreateBackup();
-
-            // Initialize toolTip
-            InitializeToolTip();
 
             // Initialize tabs
             InitializeGeneralTab();
@@ -68,252 +61,173 @@ namespace NiceHashMiner.Forms
                     _selectedComputeDevice.Name);
             }
 
+            checkBox_DebugConsole.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DebugConsole));
+            checkBox_AutoStartMining.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AutoStartMining));
+            checkBox_HideMiningWindows.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.HideMiningWindows));
+            checkBox_MinimizeToTray.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.MinimizeToTray));
+            checkBox_AutoScaleBTCValues.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AutoScaleBTCValues));
+            checkBox_ShowDriverVersionWarning.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ShowDriverVersionWarning));
+            checkBox_DisableWindowsErrorReporting.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableWindowsErrorReporting));
+            checkBox_ShowInternetConnectionWarning.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ShowInternetConnectionWarning));
+            checkBox_NVIDIAP0State.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.NVIDIAP0State));
+            checkBox_LogToFile.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.LogToFile));
+            checkBox_AllowMultipleInstances.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AllowMultipleInstances));
+            checkBox_MinimizeMiningWindows.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.MinimizeMiningWindows));
+            checkBox_RunScriptOnCUDA_GPU_Lost.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost));
+            checkBox_RunAtStartup.DataBindings.Add("Checked", ConfigManager.RunAtStartup , nameof(ConfigManager.RunAtStartup.Enabled));
+
+            // idle mining
+            checkBox_IdleWhenNoInternetAccess.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.IdleWhenNoInternetAccess));
+            checkBox_StartMiningWhenIdle.DataBindings.Add("Checked", ConfigManager.IdleMiningSettings, nameof(ConfigManager.IdleMiningSettings.StartMiningWhenIdle), false, DataSourceUpdateMode.OnPropertyChanged);
+            comboBox_IdleType.DataBindings.Add("Enabled", ConfigManager.IdleMiningSettings, nameof(ConfigManager.IdleMiningSettings.StartMiningWhenIdle), false, DataSourceUpdateMode.OnPropertyChanged);
+            comboBox_IdleType.DataBindings.Add("SelectedIndex", ConfigManager.IdleMiningSettings, nameof(ConfigManager.IdleMiningSettings.IdleCheckTypeIndex), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_MinIdleSeconds.DataBindings.Add("Enabled", ConfigManager.IdleMiningSettings, nameof(ConfigManager.IdleMiningSettings.IsIdleCheckTypeInputTimeout), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            // comboBox indexes
+            comboBox_ServiceLocation.DataBindings.Add("SelectedIndex", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ServiceLocation), false, DataSourceUpdateMode.OnPropertyChanged);
+            comboBox_Language.DataBindings.Add("SelectedIndex", ConfigManager.TranslationsSettings, nameof(ConfigManager.TranslationsSettings.LanguageIndex), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            // IFTTT textbox
+            checkBox_UseIFTTT.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseIFTTT), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_IFTTTKey.DataBindings.Add("Enabled", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseIFTTT));
+            textBox_IFTTTKey.DataBindings.Add("Text", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.IFTTTKey));
+
+            // credentials
+            textBox_BitcoinAddress.DataBindings.Add("Text", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.BitcoinAddress));
+            textBox_WorkerName.DataBindings.Add("Text", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.WorkerName));
+
+
             // At the very end set to true
             _isInitFinished = true;
 
-            try
-            {
-                _rkStartup = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            }
-            catch (SecurityException)
-            {
-            }
-            catch (Exception e)
-            {
-                Logger.Error("SETTINGS", e.Message);
-            }
+            
             FormHelpers.TranslateFormControls(this);
         }
 
-#region Initializations
+        #region Initializations
 
-        private void InitializeToolTip()
+        void FormHelpers.ICustomTranslate.CustomTranslate()
         {
             // Setup Tooltips
-            toolTip1.SetToolTip(comboBox_Language, Tr("Changes the default language for NiceHash Miner Legacy."));
-            toolTip1.SetToolTip(label_Language, Tr("Changes the default language for NiceHash Miner Legacy."));
-            toolTip1.SetToolTip(pictureBox_Language, Tr("Changes the default language for NiceHash Miner Legacy."));
+            SetToolTip(Tr("Changes the default language for NiceHash Miner Legacy."),
+                comboBox_Language, label_Language, pictureBox_Language);
 
-            toolTip1.SetToolTip(checkBox_DebugConsole,
-                Tr("When checked, it displays debug console."));
-            toolTip1.SetToolTip(pictureBox_DebugConsole,
-                Tr("When checked, it displays debug console."));
+            SetToolTip(Tr("When checked, it displays debug console."),
+                checkBox_DebugConsole, pictureBox_DebugConsole);
 
-            toolTip1.SetToolTip(textBox_BitcoinAddress, Tr("User's bitcoin address for mining."));
-            toolTip1.SetToolTip(label_BitcoinAddress, Tr("User's bitcoin address for mining."));
-            toolTip1.SetToolTip(pictureBox_Info_BitcoinAddress,
-                Tr("User's bitcoin address for mining."));
+            SetToolTip(Tr("User's bitcoin address for mining."),
+                textBox_BitcoinAddress, label_BitcoinAddress, pictureBox_Info_BitcoinAddress);
 
-            toolTip1.SetToolTip(textBox_WorkerName, Tr("To identify the user's computer."));
-            toolTip1.SetToolTip(label_WorkerName, Tr("To identify the user's computer."));
-            toolTip1.SetToolTip(pictureBox_WorkerName, Tr("To identify the user's computer."));
+            SetToolTip(Tr("To identify the user's computer."),
+                textBox_WorkerName, label_WorkerName, pictureBox_WorkerName);
 
-            toolTip1.SetToolTip(comboBox_ServiceLocation,
-                Tr("Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency."));
-            toolTip1.SetToolTip(label_ServiceLocation, Tr("Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency."));
-            toolTip1.SetToolTip(pictureBox_ServiceLocation,
-                Tr("Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency."));
+            SetToolTip(Tr("Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency."),
+                comboBox_ServiceLocation, label_ServiceLocation, pictureBox_ServiceLocation);
 
-            toolTip1.SetToolTip(comboBox_TimeUnit, Tr("Sets the time unit to report BTC rates."));
-            toolTip1.SetToolTip(label_TimeUnit, Tr("Sets the time unit to report BTC rates."));
-            toolTip1.SetToolTip(pictureBox_TimeUnit, Tr("Sets the time unit to report BTC rates."));
+            SetToolTip(Tr("Sets the time unit to report BTC rates."),
+                comboBox_TimeUnit, label_TimeUnit, pictureBox_TimeUnit);
 
-            toolTip1.SetToolTip(checkBox_HideMiningWindows,
-                Tr("When checked, sgminer, ccminer, cpuminer and ethminer console windows will be hidden."));
-            toolTip1.SetToolTip(pictureBox_HideMiningWindows,
-                Tr("When checked, sgminer, ccminer, cpuminer and ethminer console windows will be hidden."));
+            SetToolTip(Tr("When checked, sgminer, ccminer, cpuminer and ethminer console windows will be hidden."),
+                checkBox_HideMiningWindows, pictureBox_HideMiningWindows);
 
-            toolTip1.SetToolTip(checkBox_MinimizeToTray,
-                Tr("When checked, NiceHash Miner Legacy will minimize to tray."));
-            toolTip1.SetToolTip(pictureBox_MinimizeToTray,
-                Tr("When checked, NiceHash Miner Legacy will minimize to tray."));
+            SetToolTip(Tr("When checked, NiceHash Miner Legacy will minimize to tray."),
+                checkBox_MinimizeToTray, pictureBox_MinimizeToTray);
 
-            toolTip1.SetToolTip(checkBox_Use3rdPartyMiners,
-                Tr("Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility."));
-            toolTip1.SetToolTip(pictureBox_Use3rdPartyMiners,
-                Tr("Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility."));
+            SetToolTip(Tr("Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility."),
+                checkBox_Use3rdPartyMiners, pictureBox_Use3rdPartyMiners);
 
-            toolTip1.SetToolTip(checkBox_AllowMultipleInstances,
-                Tr("When unchecked NiceHash Miner Legacy will allow only one instance running (it will close a new started instance if there is an opened instance running)."));
-            toolTip1.SetToolTip(pictureBox_AllowMultipleInstances,
-                Tr("When unchecked NiceHash Miner Legacy will allow only one instance running (it will close a new started instance if there is an opened instance running)."));
-            
-            toolTip1.SetToolTip(label_MinProfit, Tr("If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount."));
-            toolTip1.SetToolTip(pictureBox_MinProfit, Tr("If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount."));
-            toolTip1.SetToolTip(textBox_MinProfit, Tr("If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount."));
+            SetToolTip(Tr("When unchecked NiceHash Miner Legacy will allow only one instance running (it will close a new started instance if there is an opened instance running)."),
+                checkBox_AllowMultipleInstances, pictureBox_AllowMultipleInstances);
 
-            toolTip1.SetToolTip(textBox_SwitchMaxSeconds,
-                Tr("Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high."));
-            toolTip1.SetToolTip(label_SwitchMaxSeconds,
-                Tr("Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high."));
-            toolTip1.SetToolTip(pictureBox_SwitchMaxSeconds,
-                Tr("Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high."));
+            SetToolTip(Tr("If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount."),
+                label_MinProfit, pictureBox_MinProfit, textBox_MinProfit);
 
-            toolTip1.SetToolTip(textBox_SwitchMinSeconds,
-                Tr("Lower bound for the randomly chosen profit check interval.\nDo not set too low."));
-            toolTip1.SetToolTip(label_SwitchMinSeconds,
-                Tr("Lower bound for the randomly chosen profit check interval.\nDo not set too low."));
-            toolTip1.SetToolTip(pictureBox_SwitchMinSeconds,
-                Tr("Lower bound for the randomly chosen profit check interval.\nDo not set too low."));
+            SetToolTip(Tr("Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high."),
+                textBox_SwitchMaxSeconds, label_SwitchMaxSeconds, pictureBox_SwitchMaxSeconds);
 
-            toolTip1.SetToolTip(textBox_MinerAPIQueryInterval,
-                Tr("API query interval for ccminer, sgminer cpuminer and ethminer."));
-            toolTip1.SetToolTip(label_MinerAPIQueryInterval,
-                Tr("API query interval for ccminer, sgminer cpuminer and ethminer."));
-            toolTip1.SetToolTip(pictureBox_MinerAPIQueryInterval,
-                Tr("API query interval for ccminer, sgminer cpuminer and ethminer."));
+            SetToolTip(Tr("Lower bound for the randomly chosen profit check interval.\nDo not set too low."),
+                textBox_SwitchMinSeconds, label_SwitchMinSeconds, pictureBox_SwitchMinSeconds);
 
-            toolTip1.SetToolTip(textBox_MinerRestartDelayMS,
-                Tr("Amount of time (in milliseconds) that NiceHash Miner Legacy will wait before restarting the miner."));
-            toolTip1.SetToolTip(label_MinerRestartDelayMS,
-                Tr("Amount of time (in milliseconds) that NiceHash Miner Legacy will wait before restarting the miner."));
-            toolTip1.SetToolTip(pictureBox_MinerRestartDelayMS,
-                Tr("Amount of time (in milliseconds) that NiceHash Miner Legacy will wait before restarting the miner."));
+            SetToolTip(Tr("API query interval for ccminer, sgminer cpuminer and ethminer."),
+                textBox_MinerAPIQueryInterval, label_MinerAPIQueryInterval, pictureBox_MinerAPIQueryInterval);
 
-            toolTip1.SetToolTip(textBox_APIBindPortStart,
-                Tr("Set starting port number from which miner API Bind ports will be set for communication."));
-            toolTip1.SetToolTip(label_APIBindPortStart,
-                Tr("Set starting port number from which miner API Bind ports will be set for communication."));
-            toolTip1.SetToolTip(pictureBox_APIBindPortStart,
-                Tr("Set starting port number from which miner API Bind ports will be set for communication."));
+            SetToolTip(Tr("Amount of time (in milliseconds) that NiceHash Miner Legacy will wait before restarting the miner."),
+                textBox_MinerRestartDelayMS, label_MinerRestartDelayMS, pictureBox_MinerRestartDelayMS);
 
-            //toolTip1.SetToolTip(comboBox_DagLoadMode, Tr("Sets Dag Load Mode for ethminers."));
-            //toolTip1.SetToolTip(label_DagGeneration, Tr("Sets Dag Load Mode for ethminers."));
-            //toolTip1.SetToolTip(pictureBox_DagGeneration, Tr("Sets Dag Load Mode for ethminers."));
+            SetToolTip(Tr("Set starting port number from which miner API Bind ports will be set for communication."),
+                textBox_APIBindPortStart, label_APIBindPortStart, pictureBox_APIBindPortStart);
 
-            //benchmarkLimitControlCPU.SetToolTip(ref toolTip1, "CPUs");
-            //benchmarkLimitControlNVIDIA.SetToolTip(ref toolTip1, "NVIDIA GPUs");
-            //benchmarkLimitControlAMD.SetToolTip(ref toolTip1, "AMD GPUs");
+            SetToolTip(Tr("Check it, if you would like to see the BTC values autoscale to the appropriate scale."),
+                checkBox_AutoScaleBTCValues, pictureBox_AutoScaleBTCValues);
 
-            //toolTip1.SetToolTip(checkBox_DisableDetectionNVIDIA,
-            //    string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "NVIDIA"));
-            //toolTip1.SetToolTip(checkBox_DisableDetectionAMD,
-            //    string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "AMD"));
-            //toolTip1.SetToolTip(pictureBox_DisableDetectionNVIDIA,
-            //    string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "NVIDIA"));
-            //toolTip1.SetToolTip(pictureBox_DisableDetectionAMD,
-            //    string.Format(Tr("Check it, if you would like to skip the detection of {0} GPUs."), "AMD"));
+            SetToolTip(Tr("Automatically start mining when computer is idle and stop mining when computer is being used."),
+                checkBox_StartMiningWhenIdle, pictureBox_StartMiningWhenIdle);
 
-            toolTip1.SetToolTip(checkBox_AutoScaleBTCValues,
-                Tr("Check it, if you would like to see the BTC values autoscale to the appropriate scale."));
-            toolTip1.SetToolTip(pictureBox_AutoScaleBTCValues,
-                Tr("Check it, if you would like to see the BTC values autoscale to the appropriate scale."));
+            SetToolTip(Tr("When StartMiningWhenIdle is checked, MinIdleSeconds tells how\nmany seconds computer has to be idle before mining starts."),
+                textBox_MinIdleSeconds, label_MinIdleSeconds, pictureBox_MinIdleSeconds);
 
-            toolTip1.SetToolTip(checkBox_StartMiningWhenIdle,
-                Tr("Automatically start mining when computer is idle and stop mining when computer is being used."));
-            toolTip1.SetToolTip(pictureBox_StartMiningWhenIdle,
-                Tr("Automatically start mining when computer is idle and stop mining when computer is being used."));
+            SetToolTip(Tr("Check it, to log console output to file."),
+                checkBox_LogToFile, pictureBox_LogToFile);
 
-            toolTip1.SetToolTip(textBox_MinIdleSeconds, Tr("When StartMiningWhenIdle is checked, MinIdleSeconds tells how\nmany seconds computer has to be idle before mining starts."));
-            toolTip1.SetToolTip(label_MinIdleSeconds, Tr("When StartMiningWhenIdle is checked, MinIdleSeconds tells how\nmany seconds computer has to be idle before mining starts."));
-            toolTip1.SetToolTip(pictureBox_MinIdleSeconds,
-                Tr("When StartMiningWhenIdle is checked, MinIdleSeconds tells how\nmany seconds computer has to be idle before mining starts."));
+            SetToolTip(Tr("Sets the maximum size for the log file."),
+                textBox_LogMaxFileSize, label_LogMaxFileSize, pictureBox_LogMaxFileSize);
 
-            toolTip1.SetToolTip(checkBox_LogToFile, Tr("Check it, to log console output to file."));
-            toolTip1.SetToolTip(pictureBox_LogToFile,
-                Tr("Check it, to log console output to file."));
+            SetToolTip(Tr("When checked, NiceHash Miner Legacy would issue a warning if\na less optimal version of a driver is installed."),
+                checkBox_ShowDriverVersionWarning, pictureBox_ShowDriverVersionWarning);
 
+            SetToolTip(Tr("When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable."),
+                checkBox_DisableWindowsErrorReporting, pictureBox_DisableWindowsErrorReporting);
 
-            toolTip1.SetToolTip(textBox_LogMaxFileSize, Tr("Sets the maximum size for the log file."));
-            toolTip1.SetToolTip(label_LogMaxFileSize, Tr("Sets the maximum size for the log file."));
-            toolTip1.SetToolTip(pictureBox_LogMaxFileSize,
-                Tr("Sets the maximum size for the log file."));
+            SetToolTip(Tr("When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available."),
+                checkBox_ShowInternetConnectionWarning, pictureBox_ShowInternetConnectionWarning);
 
-            toolTip1.SetToolTip(checkBox_ShowDriverVersionWarning,
-                Tr("When checked, NiceHash Miner Legacy would issue a warning if\na less optimal version of a driver is installed."));
-            toolTip1.SetToolTip(pictureBox_ShowDriverVersionWarning,
-                Tr("When checked, NiceHash Miner Legacy would issue a warning if\na less optimal version of a driver is installed."));
+            SetToolTip(Tr("When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated."),
+                checkBox_NVIDIAP0State, pictureBox_NVIDIAP0State);
 
-            toolTip1.SetToolTip(checkBox_DisableWindowsErrorReporting,
-                Tr("When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable."));
-            toolTip1.SetToolTip(pictureBox_DisableWindowsErrorReporting,
-                Tr("When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable."));
+            SetToolTip(Tr("When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system."),
+                checkBox_RunScriptOnCUDA_GPU_Lost, pictureBox_RunScriptOnCUDA_GPU_Lost);
 
-            toolTip1.SetToolTip(checkBox_ShowInternetConnectionWarning,
-                Tr("When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available."));
-            toolTip1.SetToolTip(pictureBox_ShowInternetConnectionWarning,
-                Tr("When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available."));
+            SetToolTip(Tr("When checked, NiceHash Miner Legacy will run on login."),
+                checkBox_RunAtStartup, pictureBox_RunAtStartup);
 
-            toolTip1.SetToolTip(checkBox_NVIDIAP0State,
-                Tr("When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated."));
-            toolTip1.SetToolTip(pictureBox_NVIDIAP0State,
-                Tr("When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated."));
+            SetToolTip(Tr("When checked, NiceHash Miner Legacy will automatically start mining when launched."),
+                checkBox_AutoStartMining, pictureBox_AutoStartMining);
 
-            toolTip1.SetToolTip(checkBox_RunScriptOnCUDA_GPU_Lost,
-                Tr("When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system."));
-            toolTip1.SetToolTip(pictureBox_RunScriptOnCUDA_GPU_Lost,
-                Tr("When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system."));
-
-            toolTip1.SetToolTip(checkBox_RunAtStartup,
-                Tr("When checked, NiceHash Miner Legacy will run on login."));
-            toolTip1.SetToolTip(pictureBox_RunAtStartup,
-                Tr("When checked, NiceHash Miner Legacy will run on login."));
-
-
-            toolTip1.SetToolTip(checkBox_AutoStartMining,
-                Tr("When checked, NiceHash Miner Legacy will automatically start mining when launched."));
-            toolTip1.SetToolTip(pictureBox_AutoStartMining,
-                Tr("When checked, NiceHash Miner Legacy will automatically start mining when launched."));
-
-
-            //toolTip1.SetToolTip(textBox_ethminerDefaultBlockHeight,
-            //    Tr("Sets the default block height used for benchmarking if API call fails."));
-            //toolTip1.SetToolTip(label_ethminerDefaultBlockHeight,
-            //    Tr("Sets the default block height used for benchmarking if API call fails."));
-            //toolTip1.SetToolTip(pictureBox_ethminerDefaultBlockHeight,
-            //    Tr("Sets the default block height used for benchmarking if API call fails."));
-
-            toolTip1.SetToolTip(label_displayCurrency, Tr("Choose what Currency to Display mining profit."));
-            toolTip1.SetToolTip(pictureBox_displayCurrency,
-                Tr("Choose what Currency to Display mining profit."));
-            toolTip1.SetToolTip(currencyConverterCombobox,
-                Tr("Choose what Currency to Display mining profit."));
-
-            //// Setup Tooltips CPU
-            //toolTip1.SetToolTip(comboBox_CPU0_ForceCPUExtension,
-            //    Tr("Force certain CPU extension miner."));
-            //toolTip1.SetToolTip(label_CPU0_ForceCPUExtension,
-            //    Tr("Force certain CPU extension miner."));
-            //toolTip1.SetToolTip(pictureBox_CPU0_ForceCPUExtension,
-            //    Tr("Force certain CPU extension miner."));
+            SetToolTip(Tr("Choose what Currency to Display mining profit."),
+                label_displayCurrency, pictureBox_displayCurrency, currencyConverterCombobox);
 
             // internet connection mining check
-            toolTip1.SetToolTip(checkBox_IdleWhenNoInternetAccess,
-                Tr("If enabled NiceHash Miner Legacy will stop mining without internet connectivity"));
-            toolTip1.SetToolTip(pictureBox_IdleWhenNoInternetAccess,
-                Tr("If enabled NiceHash Miner Legacy will stop mining without internet connectivity"));
+            SetToolTip(Tr("If enabled NiceHash Miner Legacy will stop mining without internet connectivity"),
+                checkBox_IdleWhenNoInternetAccess, pictureBox_IdleWhenNoInternetAccess);
 
             // IFTTT notification check
-            toolTip1.SetToolTip(checkBox_UseIFTTT, Tr("If enabled, NiceHash Miner Legacy will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality."));
-            toolTip1.SetToolTip(pictureBox_UseIFTTT, Tr("If enabled, NiceHash Miner Legacy will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality."));
+            SetToolTip(Tr("If enabled, NiceHash Miner Legacy will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality."),
+                checkBox_UseIFTTT, pictureBox_UseIFTTT);
 
-            toolTip1.SetToolTip(pictureBox_SwitchProfitabilityThreshold,
-                Tr("Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]"));
-            toolTip1.SetToolTip(label_SwitchProfitabilityThreshold,
-                Tr("Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]"));
+            SetToolTip(Tr("Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]"),
+                pictureBox_SwitchProfitabilityThreshold, label_SwitchProfitabilityThreshold);
 
-            toolTip1.SetToolTip(pictureBox_MinimizeMiningWindows,
-                Tr("When checked, mining windows will start minimized."));
-            toolTip1.SetToolTip(checkBox_MinimizeMiningWindows,
-                Tr("When checked, mining windows will start minimized."));
+            SetToolTip(Tr("When checked, mining windows will start minimized."),
+                pictureBox_MinimizeMiningWindows, checkBox_MinimizeMiningWindows);
 
             // Electricity cost
-            toolTip1.SetToolTip(label_ElectricityCost, Tr("Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality."));
-            toolTip1.SetToolTip(textBox_ElectricityCost, Tr("Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality."));
-            toolTip1.SetToolTip(pictureBox_ElectricityCost, Tr("Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality."));
+            SetToolTip(Tr("Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality."),
+                label_ElectricityCost, textBox_ElectricityCost, pictureBox_ElectricityCost);
 
-            SetToolTip(Tr("Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners."), checkBox_RunEthlargement, pictureBox_RunEthlargement);
+            SetToolTip(Tr("Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners."),
+                checkBox_RunEthlargement, pictureBox_RunEthlargement);
+
+            SetToolTip(Tr("Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds."),
+                comboBox_IdleType, label_IdleType, pictureBox_IdleType);
 
             algorithmSettingsControl1.InitLocale(toolTip1);
-
-            SetToolTip("Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds.", comboBox_IdleType, label_IdleType, pictureBox_IdleType);
         }
 
-        private void SetToolTip(string internationalKey, params Control[] controls)
+        private void SetToolTip(string text, params Control[] controls)
         {
             foreach (var control in controls)
             {
-                toolTip1.SetToolTip(control, Tr(internationalKey));
+                toolTip1.SetToolTip(control, text);
             }
         }
 
@@ -321,19 +235,6 @@ namespace NiceHashMiner.Forms
 // TODO THIS IS LOGIC INSIDE CONTENT
         private void InitializeGeneralTabTranslations()
         {
-            //checkBox_DisableDetectionNVIDIA.Text =
-            //    string.Format(Tr("Disable Detection of {0}"), "NVIDIA");
-            //checkBox_DisableDetectionAMD.Text =
-            //    string.Format(Tr("Disable Detection of {0}"), "AMD");
-
-            //// Benchmark time limits
-            //// internationalization change
-            //benchmarkLimitControlCPU.GroupName =
-            //    Tr("(CPU) [s]:");
-            //benchmarkLimitControlNVIDIA.GroupName =
-            //    Tr("(NVIDIA) [s]:");
-            //benchmarkLimitControlAMD.GroupName =
-            //    Tr("(AMD) [s]:");
 
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             foreach (var type in Enum.GetNames(typeof(IdleCheckType)))
@@ -341,36 +242,14 @@ namespace NiceHashMiner.Forms
                 // translations will handle enum names
 	                    comboBox_IdleType.Items.Add(Tr(type));
             }
-            comboBox_IdleType.Enabled = ConfigManager.GeneralConfig.StartMiningWhenIdle;
         }
 
         private void InitializeGeneralTabCallbacks()
         {
-            // Add EventHandler for all the general tab's checkboxes
-            {
-                checkBox_AutoScaleBTCValues.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                //checkBox_DisableDetectionAMD.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                //checkBox_DisableDetectionNVIDIA.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_MinimizeToTray.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_HideMiningWindows.CheckedChanged += CheckBox_HideMiningWindows_CheckChanged;
-                checkBox_DebugConsole.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_ShowDriverVersionWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_DisableWindowsErrorReporting.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_ShowInternetConnectionWarning.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_StartMiningWhenIdle.CheckedChanged += CheckBox_MineOnIdle_CheckChanged;
-                checkBox_NVIDIAP0State.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_LogToFile.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_AutoStartMining.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_AllowMultipleInstances.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_MinimizeMiningWindows.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-                checkBox_UseIFTTT.CheckedChanged += CheckBox_UseIFTTT_CheckChanged;
-                checkBox_RunScriptOnCUDA_GPU_Lost.CheckedChanged += GeneralCheckBoxes_CheckedChanged;
-            }
             // Add EventHandler for all the general tab's textboxes
             {
                 textBox_BitcoinAddress.Leave += textBox_BitcoinAddress_Leave;
                 textBox_WorkerName.Leave += textBox_WorkerName_Leave;
-                textBox_IFTTTKey.Leave += GeneralTextBoxes_Leave;
                 // these are ints only
                 textBox_SwitchMaxSeconds.Leave += GeneralTextBoxes_Leave;
                 textBox_SwitchMinSeconds.Leave += GeneralTextBoxes_Leave;
@@ -397,53 +276,17 @@ namespace NiceHashMiner.Forms
             // Add EventHandler for all the general tab's textboxes
             {
                 comboBox_Language.Leave += GeneralComboBoxes_Leave;
-                comboBox_ServiceLocation.SelectedIndexChanged += comboBox_ServiceLocation_SelectedIndexChanged;
                 comboBox_TimeUnit.Leave += GeneralComboBoxes_Leave;
-                //comboBox_DagLoadMode.Leave += GeneralComboBoxes_Leave;
                 comboBox_IdleType.Leave += GeneralComboBoxes_Leave;
             }
-
-            //// CPU exceptions
-            //comboBox_CPU0_ForceCPUExtension.SelectedIndex = (int) ConfigManager.GeneralConfig.ForceCPUExtension;
-            //comboBox_CPU0_ForceCPUExtension.SelectedIndexChanged +=
-            //    ComboBox_CPU0_ForceCPUExtension_SelectedIndexChanged;
-            //// fill dag dropdown
-            //comboBox_DagLoadMode.Items.Clear();
-            //for (var i = 0; i < (int) DagGenerationType.END; ++i)
-            //{
-            //    comboBox_DagLoadMode.Items.Add(MinerEtherum.GetDagGenerationString((DagGenerationType) i));
-            //}
-
-            //// set selected
-            //comboBox_DagLoadMode.SelectedIndex = (int) ConfigManager.GeneralConfig.EthminerDagGenerationType;
         }
 
         private void InitializeGeneralTabFieldValuesReferences()
         {
             // Checkboxes set checked value
             {
-                checkBox_DebugConsole.Checked = ConfigManager.GeneralConfig.DebugConsole;
-                checkBox_AutoStartMining.Checked = ConfigManager.GeneralConfig.AutoStartMining;
-                checkBox_HideMiningWindows.Checked = ConfigManager.GeneralConfig.HideMiningWindows;
-                checkBox_MinimizeToTray.Checked = ConfigManager.GeneralConfig.MinimizeToTray;
-                checkBox_AutoScaleBTCValues.Checked = ConfigManager.GeneralConfig.AutoScaleBTCValues;
-                checkBox_StartMiningWhenIdle.Checked = ConfigManager.GeneralConfig.StartMiningWhenIdle;
-                checkBox_ShowDriverVersionWarning.Checked = ConfigManager.GeneralConfig.ShowDriverVersionWarning;
-                checkBox_DisableWindowsErrorReporting.Checked =
-                    ConfigManager.GeneralConfig.DisableWindowsErrorReporting;
-                checkBox_ShowInternetConnectionWarning.Checked =
-                    ConfigManager.GeneralConfig.ShowInternetConnectionWarning;
-                checkBox_NVIDIAP0State.Checked = ConfigManager.GeneralConfig.NVIDIAP0State;
-                checkBox_LogToFile.Checked = ConfigManager.GeneralConfig.LogToFile;
-                checkBox_IdleWhenNoInternetAccess.Checked = ConfigManager.GeneralConfig.IdleWhenNoInternetAccess;
                 checkBox_Use3rdPartyMiners.Checked =
                     ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
-                checkBox_AllowMultipleInstances.Checked = ConfigManager.GeneralConfig.AllowMultipleInstances;
-                checkBox_RunAtStartup.Checked = IsInStartupRegistry();
-                checkBox_MinimizeMiningWindows.Checked = ConfigManager.GeneralConfig.MinimizeMiningWindows;
-                checkBox_MinimizeMiningWindows.Enabled = !ConfigManager.GeneralConfig.HideMiningWindows;
-                checkBox_UseIFTTT.Checked = ConfigManager.GeneralConfig.UseIFTTT;
-                checkBox_RunScriptOnCUDA_GPU_Lost.Checked = ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost;
                 checkBox_RunEthlargement.Checked = ConfigManager.GeneralConfig.UseEthlargement;
             }
 
@@ -451,8 +294,6 @@ namespace NiceHashMiner.Forms
             {
                 textBox_BitcoinAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
                 textBox_WorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
-                textBox_IFTTTKey.Text = ConfigManager.GeneralConfig.IFTTTKey;
-                textBox_IFTTTKey.Enabled = ConfigManager.GeneralConfig.UseIFTTT;
                 textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
                 textBox_SwitchMinSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower.ToString();
                 textBox_MinerAPIQueryInterval.Text = ConfigManager.GeneralConfig.MinerAPIQueryInterval.ToString();
@@ -471,12 +312,7 @@ namespace NiceHashMiner.Forms
 
             // set custom control referances
             {
-                //benchmarkLimitControlCPU.TimeLimits = ConfigManager.GeneralConfig.BenchmarkTimeLimits.CPU;
-                //benchmarkLimitControlNVIDIA.TimeLimits = ConfigManager.GeneralConfig.BenchmarkTimeLimits.NVIDIA;
-                //benchmarkLimitControlAMD.TimeLimits = ConfigManager.GeneralConfig.BenchmarkTimeLimits.AMD;
-
                 // here we want all devices
-
                 devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
                 devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
                 devicesListViewEnableControl1.SaveToGeneralConfig = true;
@@ -509,10 +345,8 @@ namespace NiceHashMiner.Forms
                 comboBox_Language.SelectedIndex = GetLanguageIndexFromCode(ConfigManager.GeneralConfig.Language);
 
 
-                comboBox_ServiceLocation.SelectedIndex = ConfigManager.GeneralConfig.ServiceLocation;
                 comboBox_TimeUnit.SelectedItem = Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
                 currencyConverterCombobox.SelectedItem = ConfigManager.GeneralConfig.DisplayCurrency;
-                comboBox_IdleType.SelectedIndex = (int) ConfigManager.GeneralConfig.IdleCheckType;
             }
         }
 
@@ -545,47 +379,6 @@ namespace NiceHashMiner.Forms
 #region Form Callbacks
 
 #region Tab General
-
-        private void GeneralCheckBoxes_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!_isInitFinished) return;
-            ConfigManager.GeneralConfig.DebugConsole = checkBox_DebugConsole.Checked;
-            ConfigManager.GeneralConfig.AutoStartMining = checkBox_AutoStartMining.Checked;
-            ConfigManager.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
-            ConfigManager.GeneralConfig.MinimizeToTray = checkBox_MinimizeToTray.Checked;
-            ConfigManager.GeneralConfig.AutoScaleBTCValues = checkBox_AutoScaleBTCValues.Checked;
-            ConfigManager.GeneralConfig.ShowDriverVersionWarning = checkBox_ShowDriverVersionWarning.Checked;
-            ConfigManager.GeneralConfig.DisableWindowsErrorReporting = checkBox_DisableWindowsErrorReporting.Checked;
-            ConfigManager.GeneralConfig.ShowInternetConnectionWarning = checkBox_ShowInternetConnectionWarning.Checked;
-            ConfigManager.GeneralConfig.NVIDIAP0State = checkBox_NVIDIAP0State.Checked;
-            ConfigManager.GeneralConfig.LogToFile = checkBox_LogToFile.Checked;
-            ConfigManager.GeneralConfig.IdleWhenNoInternetAccess = checkBox_IdleWhenNoInternetAccess.Checked;
-            ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
-            ConfigManager.GeneralConfig.AllowMultipleInstances = checkBox_AllowMultipleInstances.Checked;
-            ConfigManager.GeneralConfig.MinimizeMiningWindows = checkBox_MinimizeMiningWindows.Checked;
-            ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost = checkBox_RunScriptOnCUDA_GPU_Lost.Checked;
-        }
-
-        private void CheckBox_RunAtStartup_CheckedChanged(object sender, EventArgs e)
-        {
-            _isStartupChanged = true;
-        }
-
-        private bool IsInStartupRegistry()
-        {
-            // Value is stored in registry
-            var startVal = "";
-            try
-            {
-                startVal = (string) _rkStartup?.GetValue(Application.ProductName, "");
-            }
-            catch (Exception e)
-            {
-                Logger.Error("REGISTRY", e.Message);
-            }
-
-            return startVal == Application.ExecutablePath;
-        }
 
         // TODO copy paste from Form_Main
         private void textBox_BitcoinAddress_Leave(object sender, EventArgs e)
@@ -624,23 +417,6 @@ namespace NiceHashMiner.Forms
             }
         }
 
-        private void comboBox_ServiceLocation_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var locationIndex = comboBox_ServiceLocation.SelectedIndex;
-            var result = ApplicationStateManager.SetServiceLocationIfValidOrDifferent(locationIndex);
-            // TODO GUI stuff get back to this, here we can't really break anything
-            switch (result)
-            {
-                case ApplicationStateManager.SetResult.INVALID:
-                    break;
-                case ApplicationStateManager.SetResult.CHANGED:
-                    _isCredChange = true;
-                    break;
-                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
-                    break;
-            }
-        }
-
         private void GeneralTextBoxes_Leave(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
@@ -663,8 +439,6 @@ namespace NiceHashMiner.Forms
             ConfigManager.GeneralConfig.MinimumProfit = Helpers.ParseDouble(textBox_MinProfit.Text);
             ConfigManager.GeneralConfig.SwitchProfitabilityThreshold =
                 Helpers.ParseDouble(textBox_SwitchProfitabilityThreshold.Text);
-
-            ConfigManager.GeneralConfig.IFTTTKey = textBox_IFTTTKey.Text.Trim();
 
             ConfigManager.GeneralConfig.KwhPrice = Helpers.ParseDouble(textBox_ElectricityCost.Text);
 
@@ -689,12 +463,7 @@ namespace NiceHashMiner.Forms
         private void GeneralComboBoxes_Leave(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
-            ConfigManager.GeneralConfig.Language = Translations.GetLanguageCodeFromIndex(comboBox_Language.SelectedIndex);
-            ConfigManager.GeneralConfig.ServiceLocation = comboBox_ServiceLocation.SelectedIndex;
             ConfigManager.GeneralConfig.TimeUnit = (TimeUnitType) comboBox_TimeUnit.SelectedIndex;
-            //ConfigManager.GeneralConfig.EthminerDagGenerationType =
-            //    (DagGenerationType) comboBox_DagLoadMode.SelectedIndex;
-            ConfigManager.GeneralConfig.IdleCheckType = (IdleCheckType) comboBox_IdleType.SelectedIndex;
         }
 
 #endregion //Tab General
@@ -773,29 +542,6 @@ namespace NiceHashMiner.Forms
             IsRestartNeeded = ConfigManager.IsRestartNeeded();
             ConfigManager.GeneralConfigFileCommit();
             ConfigManager.CommitBenchmarks();
-
-            SetLanguage(ConfigManager.GeneralConfig.Language);
-
-            if (_isStartupChanged)
-            {
-                // Commit to registry
-                try
-                {
-                    if (checkBox_RunAtStartup.Checked)
-                    {
-                        // Add NHML to startup registry
-                        _rkStartup?.SetValue(Application.ProductName, Application.ExecutablePath);
-                    }
-                    else
-                    {
-                        _rkStartup?.DeleteValue(Application.ProductName, false);
-                    }
-                }
-                catch (Exception er)
-                {
-                    Logger.Error("REGISTRY", er.Message);
-                }
-            }
         }
 
         private void CurrencyConverterCombobox_SelectedIndexChanged(object sender, EventArgs e)
@@ -839,22 +585,6 @@ namespace NiceHashMiner.Forms
             MinerPluginsManager.InitIntegratedPlugins();
         }
 
-        private void CheckBox_HideMiningWindows_CheckChanged(object sender, EventArgs e)
-        {
-            if (!_isInitFinished) return;
-            ConfigManager.GeneralConfig.HideMiningWindows = checkBox_HideMiningWindows.Checked;
-            checkBox_MinimizeMiningWindows.Enabled = !checkBox_HideMiningWindows.Checked;
-        }
-
-        private void CheckBox_UseIFTTT_CheckChanged(object sender, EventArgs e)
-        {
-            if (!_isInitFinished) return;
-
-            ConfigManager.GeneralConfig.UseIFTTT = checkBox_UseIFTTT.Checked;
-
-            textBox_IFTTTKey.Enabled = checkBox_UseIFTTT.Checked;
-        }
-
         private void checkBox_RunEthlargement_CheckedChanged(object sender, EventArgs e)
         {
             ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
@@ -863,34 +593,11 @@ namespace NiceHashMiner.Forms
             EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
         }
 
-private void CheckBox_MineOnIdle_CheckChanged(object sender, EventArgs e)
-        {
-            if (!_isInitFinished) return;
-            ConfigManager.GeneralConfig.StartMiningWhenIdle = checkBox_StartMiningWhenIdle.Checked;
-            comboBox_IdleType.Enabled = checkBox_StartMiningWhenIdle.Checked;
-        }
-
-        void IBTCDisplayer.DisplayBTC(object sender, string btc)
-        {
-            FormHelpers.SafeInvoke(this, () =>
-            {
-                textBox_BitcoinAddress.Text = btc;
-            });
-        }
-
         void IWorkerNameDisplayer.DisplayWorkerName(object sender, string workerName)
         {
             FormHelpers.SafeInvoke(this, () =>
             {
                 textBox_WorkerName.Text = workerName;
-            });
-        }
-
-        void IServiceLocationDisplayer.DisplayServiceLocation(object sender, int serviceLocation)
-        {
-            FormHelpers.SafeInvoke(this, () =>
-            {
-                comboBox_ServiceLocation.SelectedIndex = serviceLocation;
             });
         }
     }

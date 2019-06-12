@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace NiceHashMiner
 {
-    public class BitcoinAddress
+    public static class CredentialValidators
     {
         public static bool ValidateBitcoinAddress(string address)
         {

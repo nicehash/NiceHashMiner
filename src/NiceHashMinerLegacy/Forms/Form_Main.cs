@@ -19,8 +19,9 @@ namespace NiceHashMiner
     using NiceHashMiner.Forms.Components;
     using NiceHashMiner.Plugin;
     using NiceHashMinerLegacy.Common;
+    using NiceHashMinerLegacy.Common.Enums;
 
-    public partial class Form_Main : Form, IBTCDisplayer, IWorkerNameDisplayer, IServiceLocationDisplayer, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IStartMiningDisplayer, IStopMiningDisplayer
+    public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IWorkerNameDisplayer, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IStartMiningDisplayer, IStopMiningDisplayer
     {
         private bool _showWarningNiceHashData;
         private bool _demoMode;
@@ -43,7 +44,6 @@ namespace NiceHashMiner
             CenterToScreen();
             Icon = Properties.Resources.logo;
 
-            textBoxBTCAddress.TextChanged += textBoxBTCAddress_TextChanged;
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
             FormHelpers.SubscribeAllControls(this);
 
@@ -58,7 +58,6 @@ namespace NiceHashMiner
             Width = ConfigManager.GeneralConfig.MainFormSize.X;
             Height = ConfigManager.GeneralConfig.MainFormSize.Y;
 
-            InitLocalization();
             Text += ApplicationStateManager.Title;
 
             notifyIcon1.Icon = Properties.Resources.logo;
@@ -66,10 +65,68 @@ namespace NiceHashMiner
                                "\nDouble-click to restore..";
 
             InitMainConfigGuiData();
+            InitControlValidators();
             FormHelpers.TranslateFormControls(this);
         }
 
-        private void InitLocalization()
+        private void InitDataBindings()
+        {
+            comboBoxLocation.DataBindings.Add("SelectedIndex", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ServiceLocation), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBoxBTCAddress.DataBindings.Add("Text", ConfigManager.CredentialsSettings, nameof(ConfigManager.CredentialsSettings.BitcoinAddress), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBoxWorkerName.DataBindings.Add("Text", ConfigManager.CredentialsSettings, nameof(ConfigManager.CredentialsSettings.WorkerName), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            linkLabelCheckStats.DataBindings.Add("Enabled", ConfigManager.CredentialsSettings, nameof(ConfigManager.CredentialsSettings.IsCredentialsValid), false, DataSourceUpdateMode.OnPropertyChanged);
+        }
+
+        private void textBoxBTCAddress_TextChanged(object sender, EventArgs e)
+        {
+            var trimmedBtcText = textBoxBTCAddress.Text.Trim();
+            var result = ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
+            if (ApplicationStateManager.SetResult.INVALID == result)
+            {
+                //var dialogResult = MessageBox.Show(Tr("Invalid Bitcoin address!\n\nPlease enter a valid Bitcoin address or choose Yes to create one."),
+                //Tr("Error!"),
+                //MessageBoxButtons.YesNo, MessageBoxIcon.Error);
+
+                //if (dialogResult == DialogResult.Yes)
+                //    Process.Start(Links.NhmBtcWalletFaq);
+
+                //textBoxBTCAddress.Focus();
+                errorProvider1.SetError(textBoxBTCAddress, Tr("Invalid Bitcoin address!"));
+            }
+            else
+            {
+                errorProvider1.SetError(textBoxBTCAddress, "");
+            }
+        }
+
+        private void textBoxWorkerName_ValidateCorrect(object sender, EventArgs e)
+        {
+            var trimmedWorkerNameText = textBoxWorkerName.Text.Trim();
+            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
+            if (ApplicationStateManager.SetResult.INVALID == result)
+            {
+                errorProvider1.SetError(textBoxWorkerName, Tr("Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long)."));
+            }
+            else
+            {
+                errorProvider1.SetError(textBoxWorkerName, "");
+            }
+        }
+
+        private void InitControlValidators()
+        {
+            textBoxBTCAddress.TextChanged += textBoxBTCAddress_TextChanged;
+            //textBoxBTCAddress.Validating += textBoxBTCAddress_TextChanged;
+            //textBoxBTCAddress.Validated += textBoxBTCAddress_TextChanged;
+
+            textBoxWorkerName.TextChanged += textBoxWorkerName_ValidateCorrect;
+            //textBoxWorkerName.Validating += textBoxWorkerName_ValidateCorrect;
+            //textBoxWorkerName.Validated += textBoxWorkerName_ValidateCorrect;
+            
+        }
+
+        void FormHelpers.ICustomTranslate.CustomTranslate()
         {
             MessageBoxManager.Unregister();
             MessageBoxManager.Yes = Tr("&Yes");
@@ -180,6 +237,10 @@ namespace NiceHashMiner
             {
                 c.Enabled = true;
             }
+
+            // Data bindings
+            InitDataBindings();
+
             if (ConfigManager.GeneralConfig.AutoStartMining)
             {
                 // well this is started manually as we want it to start at runtime
@@ -313,43 +374,10 @@ namespace NiceHashMiner
             }
         }
 
-        private bool VerifyMiningAddress(bool showError)
-        {
-            if (!BitcoinAddress.ValidateBitcoinAddress(textBoxBTCAddress.Text.Trim()) && showError)
-            {
-                var result = MessageBox.Show(Tr("Invalid Bitcoin address!\n\nPlease enter a valid Bitcoin address or choose Yes to create one."),
-                    Tr("Error!"),
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-
-                if (result == DialogResult.Yes)
-                    Process.Start(Links.NhmBtcWalletFaq);
-
-                textBoxBTCAddress.Focus();
-                return false;
-            }
-            if (!BitcoinAddress.ValidateWorkerName(textBoxWorkerName.Text.Trim()) && showError)
-            {
-                var result = MessageBox.Show(Tr("Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long)."),
-                    Tr("Error!"),
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                textBoxWorkerName.Focus();
-                return false;
-            }
-
-            return true;
-        }
-
         private void LinkLabelCheckStats_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            if (!VerifyMiningAddress(true)) return;
+            if (ConfigManager.CredentialsSettings.IsCredentialsValid == false) return;
             ApplicationStateManager.VisitMiningStatsPage();
-        }
-
-
-        private void LinkLabelChooseBTCWallet_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            Process.Start(Links.NhmBtcWalletFaq);
         }
 
         private void LinkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -393,11 +421,10 @@ namespace NiceHashMiner
                 ApplicationStateManager.RestartProgram();
                 return;
             }
-            InitLocalization();
             FormHelpers.TranslateFormControls(this);
             InitMainConfigGuiData();
             // TODO check this later
-            IdleCheckManager.StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
+            IdleCheckManager.StartIdleCheck((IdleCheckType)ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
         }
 
         private void ButtonStartMining_Click(object sender, EventArgs e)
@@ -444,63 +471,6 @@ namespace NiceHashMiner
             statusStrip1.Cursor = Cursors.Default;
         }
 
-        private void textBoxBTCAddress_Leave(object sender, EventArgs e)
-        {
-            var trimmedBtcText = textBoxBTCAddress.Text.Trim();
-            var result = ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
-            // TODO GUI stuff get back to this
-            switch (result)
-            {
-                case ApplicationStateManager.SetResult.INVALID:
-                    //var dialogResult = MessageBox.Show(Tr("Invalid Bitcoin address!\n\nPlease enter a valid Bitcoin address or choose Yes to create one."),
-                    //Tr("Error!"),
-                    //MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-
-                    //if (dialogResult == DialogResult.Yes)
-                    //    Process.Start(Links.NhmBtcWalletFaq);
-
-                    //textBoxBTCAddress.Focus();
-                    break;
-                case ApplicationStateManager.SetResult.CHANGED:
-                    break;
-                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
-                    break;
-            }
-        }
-
-        private void textBoxWorkerName_Leave(object sender, EventArgs e)
-        {
-            var trimmedWorkerNameText = textBoxWorkerName.Text.Trim();
-            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
-            // TODO GUI stuff get back to this
-            switch (result)
-            {
-                case ApplicationStateManager.SetResult.INVALID:
-                    // TODO workername invalid handling
-                    break;
-                case ApplicationStateManager.SetResult.CHANGED:
-                    break;
-                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
-                    break;
-            }
-        }
-
-        private void comboBoxLocation_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var locationIndex = comboBoxLocation.SelectedIndex;
-            var result = ApplicationStateManager.SetServiceLocationIfValidOrDifferent(locationIndex);
-            // TODO GUI stuff get back to this, here we can't really break anything
-            switch (result)
-            {
-                case ApplicationStateManager.SetResult.INVALID:
-                    break;
-                case ApplicationStateManager.SetResult.CHANGED:
-                    break;
-                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
-                    break;
-            }
-        }
-
         ///////////////////////////////////////
         // Miner control functions
         private enum StartMiningReturnType
@@ -510,6 +480,7 @@ namespace NiceHashMiner
             IgnoreMsg
         }
 
+        // TODO this thing needs to be completely removed
         // TODO this will be moved outside of GUI code, replace textBoxBTCAddress.Text with ConfigManager.GeneralConfig.BitcoinAddress
         private StartMiningReturnType StartMining(bool showWarnings)
         {
@@ -537,7 +508,7 @@ namespace NiceHashMiner
                     return StartMiningReturnType.IgnoreMsg;
                 }
             }
-            else if (!VerifyMiningAddress(true)) return StartMiningReturnType.IgnoreMsg;
+            //else if (!VerifyMiningAddress(true)) return StartMiningReturnType.IgnoreMsg; // TODO this whole shitty thing
 
             var hasData = NHSmaData.HasData;
 
@@ -582,27 +553,12 @@ namespace NiceHashMiner
         }
 
         // StateDisplay interfaces
-        void IBTCDisplayer.DisplayBTC(object sender, string btc)
-        {
-            FormHelpers.SafeInvoke(this, () =>
-            {
-                textBoxBTCAddress.Text = btc;
-            });
-        }
 
         void IWorkerNameDisplayer.DisplayWorkerName(object sender, string workerName)
         {
             FormHelpers.SafeInvoke(this, () =>
             {
                 textBoxWorkerName.Text = workerName;
-            });
-        }
-
-        void IServiceLocationDisplayer.DisplayServiceLocation(object sender, int serviceLocation)
-        {
-            FormHelpers.SafeInvoke(this, () =>
-            {
-                comboBoxLocation.SelectedIndex = serviceLocation;
             });
         }
 
@@ -694,30 +650,6 @@ namespace NiceHashMiner
                 UpdateGlobalRate(0);
                 devicesMainBoard1.HidePanel2();
             });
-        }
-
-        private void textBoxBTCAddress_TextChanged(object sender, EventArgs e)
-        {
-            var trimmedBtcText = textBoxBTCAddress.Text.Trim();
-            var result = ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
-            // TODO GUI stuff get back to this
-            switch (result)
-            {
-                case ApplicationStateManager.SetResult.INVALID:
-                    //var dialogResult = MessageBox.Show(Tr("Invalid Bitcoin address!\n\nPlease enter a valid Bitcoin address or choose Yes to create one."),
-                    //Tr("Error!"),
-                    //MessageBoxButtons.YesNo, MessageBoxIcon.Error);
-
-                    //if (dialogResult == DialogResult.Yes)
-                    //    Process.Start(Links.NhmBtcWalletFaq);
-
-                    //textBoxBTCAddress.Focus();
-                    break;
-                case ApplicationStateManager.SetResult.CHANGED:
-                    break;
-                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
-                    break;
-            }
         }
 
         private void ButtonPlugins_Click(object sender, EventArgs e)

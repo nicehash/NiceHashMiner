@@ -121,7 +121,7 @@ namespace NiceHashMiner.Stats
             //TESTNET
 #if TESTNET || TESTNETDEV
             // skip sending if no btc set send only login
-            if (BitcoinAddress.ValidateBitcoinAddress(_login.btc) == false && data.Contains("{\"method\":\"login\"") == false)
+            if (CredentialValidators.ValidateBitcoinAddress(_login.btc) == false && data.Contains("{\"method\":\"login\"") == false)
             {
                 NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "Skipping SendData no BTC address");
                 return false;

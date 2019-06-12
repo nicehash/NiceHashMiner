@@ -15,7 +15,14 @@ namespace NiceHashMiner.Configs
     public static class ConfigManager
     {
         private const string Tag = "ConfigManager";
+
         public static GeneralConfig GeneralConfig = new GeneralConfig();
+        
+        // extra composed settings
+        public static RunAtStartup RunAtStartup = RunAtStartup.Instance;
+        public static IdleMiningSettings IdleMiningSettings = IdleMiningSettings.Instance;
+        public static TranslationsSettings TranslationsSettings = TranslationsSettings.Instance;
+        public static CredentialsSettings CredentialsSettings = CredentialsSettings.Instance;
 
         private static string GeneralConfigPath => Paths.ConfigsPath("General.json");
 

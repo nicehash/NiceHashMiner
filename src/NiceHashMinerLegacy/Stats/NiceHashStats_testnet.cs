@@ -435,7 +435,7 @@ namespace NiceHashMiner.Stats
 
         public static void SetCredentials(string btc, string worker, string group)
         {
-            if (BitcoinAddress.ValidateBitcoinAddress(btc) && BitcoinAddress.ValidateWorkerName(worker))
+            if (CredentialValidators.ValidateBitcoinAddress(btc) && CredentialValidators.ValidateWorkerName(worker))
             {
                 // Send as task since SetCredentials is called from UI threads
                 Task.Factory.StartNew(() =>

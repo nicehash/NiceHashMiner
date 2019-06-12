@@ -49,23 +49,6 @@ namespace NiceHashMiner
         }
 #endregion IBalanceFiatDisplayer DisplayFiatBalance (double fiatBalance, string fiatCurrencySymbol)
 
-#region IBTCDisplayer DisplayBTC string
-        static event EventHandler<string> DisplayBTC;
-        private static void subscribeIBTCDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IBTCDisplayer sIBTCDisplayer)) return;
-            DisplayBTC += sIBTCDisplayer.DisplayBTC;
-            // emit on single shot
-            EventHandler<string> singleShotEvent = sIBTCDisplayer.DisplayBTC;
-            singleShotEvent.Invoke(null, ConfigManager.GeneralConfig.BitcoinAddress);
-        }
-
-        private static void unsubscribeIBTCDisplayer(IDataVisualizer s)
-        {
-            if (s is IBTCDisplayer sIBTCDisplayer) DisplayBTC -= sIBTCDisplayer.DisplayBTC;
-        }
-#endregion IBTCDisplayer DisplayBTC string
-
 #region IGlobalMiningRateDisplayer DisplayGlobalMiningRate double
         static event EventHandler<double> DisplayGlobalMiningRate;
         private static void subscribeIGlobalMiningRateDisplayer(IDataVisualizer s)
@@ -135,23 +118,6 @@ namespace NiceHashMiner
             if (s is INoInternetConnectionDisplayer sINoInternetConnectionDisplayer) _DisplayNoInternetConnection -= sINoInternetConnectionDisplayer.DisplayNoInternetConnection;
         }
 #endregion INoInternetConnectionDisplayer DisplayNoInternetConnection EventArgs
-
-#region IServiceLocationDisplayer DisplayServiceLocation int
-        static event EventHandler<int> DisplayServiceLocation;
-        private static void subscribeIServiceLocationDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IServiceLocationDisplayer sIServiceLocationDisplayer)) return;
-            DisplayServiceLocation += sIServiceLocationDisplayer.DisplayServiceLocation;
-            // emit on single shot
-            EventHandler<int> singleShotEvent = sIServiceLocationDisplayer.DisplayServiceLocation;
-            singleShotEvent.Invoke(null, ConfigManager.GeneralConfig.ServiceLocation);
-        }
-
-        private static void unsubscribeIServiceLocationDisplayer(IDataVisualizer s)
-        {
-            if (s is IServiceLocationDisplayer sIServiceLocationDisplayer) DisplayServiceLocation -= sIServiceLocationDisplayer.DisplayServiceLocation;
-        }
-#endregion IServiceLocationDisplayer DisplayServiceLocation int
 
 #region IStartMiningDisplayer DisplayMiningStarted EventArgs
         static event EventHandler<EventArgs> DisplayMiningStarted;
@@ -236,8 +202,6 @@ namespace NiceHashMiner
 
                 subscribeIBalanceFiatDisplayer(s);
 
-                subscribeIBTCDisplayer(s);
-
                 subscribeIGlobalMiningRateDisplayer(s);
 
                 subscribeIGroupDisplayer(s);
@@ -247,8 +211,6 @@ namespace NiceHashMiner
                 subscribeIMiningProfitableDisplayer(s);
 
                 subscribeINoInternetConnectionDisplayer(s);
-
-                subscribeIServiceLocationDisplayer(s);
 
                 subscribeIStartMiningDisplayer(s);
 
@@ -272,8 +234,6 @@ namespace NiceHashMiner
 
                 unsubscribeIBalanceFiatDisplayer(s);
 
-                unsubscribeIBTCDisplayer(s);
-
                 unsubscribeIGlobalMiningRateDisplayer(s);
 
                 unsubscribeIGroupDisplayer(s);
@@ -283,8 +243,6 @@ namespace NiceHashMiner
                 unsubscribeIMiningProfitableDisplayer(s);
 
                 unsubscribeINoInternetConnectionDisplayer(s);
-
-                unsubscribeIServiceLocationDisplayer(s);
 
                 unsubscribeIStartMiningDisplayer(s);
 

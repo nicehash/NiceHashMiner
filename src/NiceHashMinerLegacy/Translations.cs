@@ -170,10 +170,16 @@ namespace NiceHashMiner
             {
                 return _entries[text][_selectedLanguage];
             }
+            var containsTransformed = _transformedEntries.ContainsKey(text);
             // check transformed entry
-            if (_transformedEntries.ContainsKey(text) && _transformedEntries[text].ContainsKey(_selectedLanguage))
+            if (containsTransformed && _transformedEntries[text].ContainsKey(_selectedLanguage))
             {
                 return _transformedEntries[text][_selectedLanguage];
+            }
+            // check transformed entry en
+            if (containsTransformed && _transformedEntries[text].ContainsKey("en"))
+            {
+                return _transformedEntries[text]["en"];
             }
             // didn't find text with language key so just return the text 
             return text;

@@ -11,6 +11,20 @@ namespace NiceHashMiner.Forms
 {
     public static class FormHelpers
     {
+        public interface ICustomTranslate
+        {
+            void CustomTranslate();
+        }
+
+        public static void TranslateAllOpenForms()
+        {
+
+            for (int index = 0; index < Application.OpenForms.Count; index++)
+            {
+                var f = Application.OpenForms[index];
+                TranslateFormControls(f);
+            }
+        }
 
         public static void TranslateFormControls(Control c)
         {
@@ -28,6 +42,12 @@ namespace NiceHashMiner.Forms
             catch(Exception e)
             {
                 //Helpers.ConsolePrint("FormHelpers.TranslateFormControls", $"Cannot translate ControlName: {name}, exception: {e}");
+            }
+
+            // custom case
+            if (c is ICustomTranslate custom)
+            {
+                custom.CustomTranslate();
             }
 
             // special cases
