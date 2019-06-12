@@ -52,9 +52,8 @@ namespace NBMiner
                 {
                     case AlgorithmType.GrinCuckaroo29:
                     case AlgorithmType.GrinCuckatoo31:
+                    case AlgorithmType.CuckooCycle:
                         return 2.0;
-                    case AlgorithmType.DaggerHashimoto:
-                        return 0.65;
                     default:
                         return 0;
                 }
