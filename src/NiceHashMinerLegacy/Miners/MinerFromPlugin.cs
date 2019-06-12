@@ -81,7 +81,7 @@ namespace NiceHashMiner.Miners
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
                 apiData.PowerUsageTotal = 0;
                 apiData.AlgorithmSpeedsTotal = perDeviceSpeedsDict.First().Value;
-            } else if(apiData.AlgorithmSpeedsPerDevice != null && apiData.PowerUsagePerDevice == null)
+            } else if(apiData.AlgorithmSpeedsPerDevice != null && apiData.PowerUsagePerDevice.Count == 0)
             {
                 var perDevicePowerDict = new Dictionary<string, int>();
                 foreach (var kvp in MiningPairs)
