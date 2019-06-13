@@ -184,10 +184,12 @@ namespace MinerPluginToolkitV1
                             {
                                 try
                                 {
+                                    var pid = miningProcess?.Id ?? -1;
                                     miningProcess?.CloseMainWindow();
                                     // 5 seconds wait for shutdown
                                     var hasExited = !miningProcess?.WaitForExit(5 * 1000) ?? false;
-                                    if (!hasExited)
+                                    var stillRunning = pid > -1 ? Process.GetProcessById(pid) != null : false;
+                                    if (!hasExited || stillRunning)
                                     {
                                         miningProcess?.Kill(); // TODO look for another gracefull shutdown
                                     }

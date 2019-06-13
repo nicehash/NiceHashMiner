@@ -194,13 +194,13 @@ namespace MinerPluginToolkitV1
             {
                 miningHandle.StartInfo.CreateNoWindow = true;
                 miningHandle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                miningHandle.StartInfo.UseShellExecute = false;
+                miningHandle.StartInfo.UseShellExecute = true && IsUseShellExecute(environmentVariables);
             }
             else if(minimizeMiningWindow)
             {
                 miningHandle.StartInfo.CreateNoWindow = false;
                 miningHandle.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
-                miningHandle.StartInfo.UseShellExecute = false;
+                miningHandle.StartInfo.UseShellExecute = true && IsUseShellExecute(environmentVariables);
             }
 
             return miningHandle;
