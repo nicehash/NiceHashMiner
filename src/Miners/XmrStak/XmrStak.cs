@@ -63,6 +63,22 @@ namespace XmrStak
 
         protected virtual double DevFee => 0d;
 
+        private IEnumerable<int> GetThreadsForDeviceUUID(string uuid)
+        {
+            if (_threadsForDeviceUUIDs != null)
+            {
+                foreach (var kvp in _threadsForDeviceUUIDs)
+                {
+                    var thread = kvp.Key;
+                    var compareUuid = kvp.Value;
+                    if (uuid == compareUuid)
+                    {
+                        yield return thread;
+                    }
+                }
+            }
+        }
+
         // call to map device ids parse html first
         private async Task MapMinerDevicesStatsDataAsync()
         {
@@ -140,33 +156,21 @@ namespace XmrStak
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/api.json");
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
 
-                //var gpus = _miningPairs.Select(pair => pair.Device);
                 var totalSpeed = 0d;
-                var perDeviceSpeedSum = new Dictionary<string, double>();
+                var threadsSpeeds = summary.hashrate.threads;
+                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+                var perDevicePowerInfo = new Dictionary<string, int>();
                 // init per device sums
                 foreach (var pair in _miningPairs)
                 {
-                    perDeviceSpeedSum[pair.Device.UUID] = 0d;
-                }
-
-                for (int threadIndex = 0; threadIndex < summary.hashrate.threads.Count; threadIndex++)
-                {
-                    var thread = summary.hashrate.threads[threadIndex];
-                    var currentSpeed = thread.FirstOrDefault() ?? 0d;
-
+                    var UUID = pair.Device.UUID;
+                    var threads = GetThreadsForDeviceUUID(UUID);
+                    var speedsPerThread = threads
+                        .Where(thread => thread < threadsSpeeds.Count)
+                        .Select(thread => threadsSpeeds[thread]?.FirstOrDefault() ?? 0d);
+                    
+                    var currentSpeed = speedsPerThread.Sum();
                     totalSpeed += currentSpeed;
-                    var currentUUID = _threadsForDeviceUUIDs?[threadIndex] ?? "";
-                    if (string.IsNullOrEmpty(currentUUID)) continue;
-                    perDeviceSpeedSum[currentUUID] += currentSpeed;
-                }
-
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
-                var perDevicePowerInfo = new Dictionary<string, int>();
-
-                foreach (var kvp in perDeviceSpeedSum)
-                {
-                    var UUID = kvp.Key;
-                    var currentSpeed = kvp.Value;
                     perDeviceSpeedInfo.Add(UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
                     // no power usage info
                     perDevicePowerInfo.Add(UUID, -1);
