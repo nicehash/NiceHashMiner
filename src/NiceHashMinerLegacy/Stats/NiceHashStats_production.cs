@@ -116,7 +116,7 @@ namespace NiceHashMiner.Stats
                 btc = btc,
                 worker = worker
             };
-            if (BitcoinAddress.ValidateBitcoinAddress(data.btc) && BitcoinAddress.ValidateWorkerName(worker))
+            if (CredentialValidators.ValidateBitcoinAddress(data.btc) && CredentialValidators.ValidateWorkerName(worker))
             {
                 var sendData = JsonConvert.SerializeObject(data);
 

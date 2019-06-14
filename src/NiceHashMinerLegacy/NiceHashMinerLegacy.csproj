@@ -107,8 +107,10 @@
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Program.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Refactoring.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Timers.cs" />
+    <Compile Include="ApplicationStateManager\ControlBindingsCollectionExtensions.cs" />
+    <Compile Include="ApplicationStateManager\MiningState.cs" />
+    <Compile Include="ApplicationStateManager\RatesAndStatsStates.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
-    <Compile Include="Benchmarking\BenchmarkChecker.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
@@ -118,7 +120,6 @@
     <Compile Include="Configs\RunAtStartup.cs" />
     <Compile Include="Configs\TranslationsSettings.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
-    <Compile Include="Devices\PowerOutOfRangeException.cs" />
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -225,11 +226,8 @@
     <Compile Include="Interfaces\DataVisualizer\IMiningNotProfitableDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IMiningProfitableDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\INoInternetConnectionDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IStartMiningDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IStateDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IStopMiningDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IVersionDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IWorkerNameDisplayer.cs" />
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Interfaces\IRatesComunication.cs" />
     <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
@@ -298,6 +296,7 @@
     <Compile Include="StratumService.cs" />
     <Compile Include="Utils\ArchiveHelpers.cs" />
     <Compile Include="Utils\FirewallRules.cs" />
+    <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
     <Compile Include="Utils\SystemSpecs.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
@@ -306,7 +305,7 @@
     <Compile Include="Configs\ConfigManager.cs" />
     <Compile Include="Configs\Data\DeviceConfig.cs" />
     <Compile Include="Configs\Data\GeneralConfig.cs" />
-    <Compile Include="Devices\ComputeDevice\ComputeDevice.cs" />
+    <Compile Include="Devices\ComputeDevice.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
     </Compile>

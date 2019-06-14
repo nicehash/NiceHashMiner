@@ -113,7 +113,7 @@ namespace NiceHashMiner.Forms.Components
                 lvi.SubItems.Add(minerName);
                 lvi.SubItems.Add(alg.BenchmarkSpeedString());
                 lvi.SubItems.Add(payingRatio);
-                lvi.SubItems.Add(alg.CurPayingRate);
+                lvi.SubItems.Add(alg.CurPayingRateStr);
                 lvi.Tag = alg;
                 lvi.Checked = alg.Enabled;
                 listViewAlgorithms.Items.Add(lvi);
@@ -190,7 +190,7 @@ namespace NiceHashMiner.Forms.Components
                         {
                             // TODO handle numbers
                             lvi.SubItems[(int)Column.SPEEDS].Text = algorithm.BenchmarkSpeedString();
-                            lvi.SubItems[(int)Column.RATE].Text = algorithm.CurPayingRate;
+                            lvi.SubItems[(int)Column.RATE].Text = algorithm.CurPayingRateStr;
                             // TODO handle DUAL first + second paying ratio X+Y
                             lvi.SubItems[(int)Column.RATIO].Text = algorithm.CurPayingRatio;
 

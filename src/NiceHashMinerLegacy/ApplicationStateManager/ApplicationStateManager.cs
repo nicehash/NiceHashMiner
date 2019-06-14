@@ -141,7 +141,7 @@ namespace NiceHashMiner
         // make sure to pass in trimmedBtc
         public static SetResult SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
         {
-            if (btc == ConfigManager.GeneralConfig.BitcoinAddress)
+            if (btc == ConfigManager.GeneralConfig.BitcoinAddress && btc != "")
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
@@ -163,7 +163,7 @@ namespace NiceHashMiner
             // change in memory and save changes to file
             ConfigManager.GeneralConfig.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
-            if (IsCurrentlyMining)
+            if (MiningState.Instance.IsCurrentlyMining)
             {
                 MiningManager.RestartMiners(GetUsername());
             }
@@ -199,12 +199,10 @@ namespace NiceHashMiner
             ConfigManager.GeneralConfig.WorkerName = workerName;
             ConfigManager.GeneralConfigFileCommit();
             // if mining update the mining manager
-            if (IsCurrentlyMining)
+            if (MiningState.Instance.IsCurrentlyMining)
             {
                 MiningManager.RestartMiners(GetUsername());
             }
-            // notify all components
-            DisplayWorkerName?.Invoke(null, workerName);
         }
 #endregion
 
@@ -243,49 +241,15 @@ namespace NiceHashMiner
         }
 #endregion
 
-        public static void ToggleActiveInactiveDisplay()
-        {
-            var allDevs = AvailableDevices.Devices;
-            var devicesNotActive = allDevs.All(dev => dev.State != DeviceState.Mining && dev.State != DeviceState.Benchmarking);
-            if (devicesNotActive)
-            {
-                DisplayMiningStopped?.Invoke(null, null);
-            }
-            else
-            {
-                DisplayMiningStarted?.Invoke(null, null);
-            }
-        }
-
-        public static bool AnyInMiningState()
-        {
-            var allDevs = AvailableDevices.Devices;
-            return allDevs.Any(dev => dev.State == DeviceState.Mining);
-        }
-
-        public static bool AllInMiningState()
-        {
-            var allDevs = AvailableDevices.Devices;
-            return allDevs.All(dev => dev.State == DeviceState.Mining);
-        }
-
-
-        public static bool IsCurrentlyMining { get; private set; }
         // StartMining function should be called only if all mining requirements are met, btc or demo, valid workername, and sma data
         // don't call this function ever unless credentials are valid or if we will be using Demo mining
         // And if there are missing mining requirements
         private static bool StartMining()
         {
-            if (IsCurrentlyMining)
-            {
-                return false;
-            }
-            IsCurrentlyMining = true;
             StartMinerStatsCheckTimer();
             StartComputeDevicesCheckTimer();
             StartPreventSleepTimer();
             StartInternetCheckTimer();
-            DisplayMiningStarted?.Invoke(null, null);
             return true;
         }
 
@@ -297,19 +261,13 @@ namespace NiceHashMiner
 
         private static bool StopMining(bool headless)
         {
-            if (!IsCurrentlyMining)
-            {
-                return false;
-            }
             MiningManager.StopAllMiners();
 
             PInvoke.PInvokeHelpers.AllowMonitorPowerdownAndSleep();
-            IsCurrentlyMining = false;
             StopMinerStatsCheckTimer();
             StopComputeDevicesCheckTimer();
             StopPreventSleepTimer();
             StopInternetCheckTimer();
-            DisplayMiningStopped?.Invoke(null, null);
             return true;
         }
 
@@ -318,6 +276,7 @@ namespace NiceHashMiner
         public static void AfterDeviceQueryInitialization()
         {
             ConfigManager.AfterDeviceQueryInitialization();
+            MiningState.Instance.CalculateDevicesStateChange();
             RefreshDeviceListView?.Invoke(null, null);
             StartRefreshDeviceListViewTimer();
         }

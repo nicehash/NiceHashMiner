@@ -18,7 +18,6 @@ namespace NiceHashMiner.Forms
 
         public static void TranslateAllOpenForms()
         {
-
             for (int index = 0; index < Application.OpenForms.Count; index++)
             {
                 var f = Application.OpenForms[index];

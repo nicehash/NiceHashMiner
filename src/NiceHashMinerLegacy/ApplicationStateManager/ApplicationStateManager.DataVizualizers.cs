@@ -119,34 +119,6 @@ namespace NiceHashMiner
         }
 #endregion INoInternetConnectionDisplayer DisplayNoInternetConnection EventArgs
 
-#region IStartMiningDisplayer DisplayMiningStarted EventArgs
-        static event EventHandler<EventArgs> DisplayMiningStarted;
-        private static void subscribeIStartMiningDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IStartMiningDisplayer sIStartMiningDisplayer)) return;
-            DisplayMiningStarted += sIStartMiningDisplayer.DisplayMiningStarted;
-        }
-
-        private static void unsubscribeIStartMiningDisplayer(IDataVisualizer s)
-        {
-            if (s is IStartMiningDisplayer sIStartMiningDisplayer) DisplayMiningStarted -= sIStartMiningDisplayer.DisplayMiningStarted;
-        }
-#endregion IStartMiningDisplayer DisplayMiningStarted EventArgs
-
-#region IStopMiningDisplayer DisplayMiningStopped EventArgs
-        static event EventHandler<EventArgs> DisplayMiningStopped;
-        private static void subscribeIStopMiningDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IStopMiningDisplayer sIStopMiningDisplayer)) return;
-            DisplayMiningStopped += sIStopMiningDisplayer.DisplayMiningStopped;
-        }
-
-        private static void unsubscribeIStopMiningDisplayer(IDataVisualizer s)
-        {
-            if (s is IStopMiningDisplayer sIStopMiningDisplayer) DisplayMiningStopped -= sIStopMiningDisplayer.DisplayMiningStopped;
-        }
-#endregion IStopMiningDisplayer DisplayMiningStopped EventArgs
-
 #region IVersionDisplayer DisplayVersion string
         static event EventHandler<string> DisplayVersion;
         private static void subscribeIVersionDisplayer(IDataVisualizer s)
@@ -160,23 +132,6 @@ namespace NiceHashMiner
             if (s is IVersionDisplayer sIVersionDisplayer) DisplayVersion -= sIVersionDisplayer.DisplayVersion;
         }
 #endregion IVersionDisplayer DisplayVersion string
-
-#region IWorkerNameDisplayer DisplayWorkerName string
-        static event EventHandler<string> DisplayWorkerName;
-        private static void subscribeIWorkerNameDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IWorkerNameDisplayer sIWorkerNameDisplayer)) return;
-            DisplayWorkerName += sIWorkerNameDisplayer.DisplayWorkerName;
-            // emit on single shot
-            EventHandler<string> singleShotEvent = sIWorkerNameDisplayer.DisplayWorkerName;
-            singleShotEvent.Invoke(null, ConfigManager.GeneralConfig.WorkerName);
-        }
-
-        private static void unsubscribeIWorkerNameDisplayer(IDataVisualizer s)
-        {
-            if (s is IWorkerNameDisplayer sIWorkerNameDisplayer) DisplayWorkerName -= sIWorkerNameDisplayer.DisplayWorkerName;
-        }
-#endregion IWorkerNameDisplayer DisplayWorkerName string
 
 #region IDevicesStateDisplayer RefreshDeviceListView EventArgs
         static event EventHandler<EventArgs> RefreshDeviceListView;
@@ -212,13 +167,7 @@ namespace NiceHashMiner
 
                 subscribeINoInternetConnectionDisplayer(s);
 
-                subscribeIStartMiningDisplayer(s);
-
-                subscribeIStopMiningDisplayer(s);
-
                 subscribeIVersionDisplayer(s);
-
-                subscribeIWorkerNameDisplayer(s);
 
                 subscribeIDevicesStateDisplayer(s);
 
@@ -244,13 +193,7 @@ namespace NiceHashMiner
 
                 unsubscribeINoInternetConnectionDisplayer(s);
 
-                unsubscribeIStartMiningDisplayer(s);
-
-                unsubscribeIStopMiningDisplayer(s);
-
                 unsubscribeIVersionDisplayer(s);
-
-                unsubscribeIWorkerNameDisplayer(s);
 
                 unsubscribeIDevicesStateDisplayer(s);
 

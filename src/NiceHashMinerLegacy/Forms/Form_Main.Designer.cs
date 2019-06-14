@@ -335,7 +335,6 @@
             this.labelDemoMode.Size = new System.Drawing.Size(498, 25);
             this.labelDemoMode.TabIndex = 100;
             this.labelDemoMode.Text = "NiceHash Miner Legacy is running in DEMO mode!";
-            this.labelDemoMode.Visible = false;
             // 
             // buttonHelp
             // 
@@ -377,6 +376,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.devicesMainBoard1.Location = new System.Drawing.Point(10, 109);
             this.devicesMainBoard1.Name = "devicesMainBoard1";
+            this.devicesMainBoard1.SecondPanelVisible = false;
             this.devicesMainBoard1.Size = new System.Drawing.Size(664, 160);
             this.devicesMainBoard1.TabIndex = 111;
             // 

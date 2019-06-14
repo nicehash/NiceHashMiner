@@ -175,7 +175,7 @@ namespace NiceHashMiner.Configs.Data
         public void SetDefaults()
         {
             ConfigFileVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            //Language = "en";
+            Language = "";
             BitcoinAddress = "";
             WorkerName = "worker1";
             TimeUnit = TimeUnitType.Day;

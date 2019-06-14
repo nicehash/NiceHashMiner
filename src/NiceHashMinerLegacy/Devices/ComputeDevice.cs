@@ -36,7 +36,16 @@ namespace NiceHashMiner.Devices
         // disabled state check
         public bool IsDisabled => (!Enabled || State == DeviceState.Disabled);
 
-        public DeviceState State { get; set; } = DeviceState.Stopped;
+        private DeviceState _state = DeviceState.Stopped;
+        public DeviceState State
+        {
+            get => _state;
+            set
+            {
+                _state = value;
+                MiningState.Instance.CalculateDevicesStateChange();
+            }
+        }
 
         public string B64Uuid
         {
@@ -290,5 +299,27 @@ namespace NiceHashMiner.Devices
         }
 
         #endregion Config Setters/Getters
+
+        #region Checker
+        public bool AllEnabledAlgorithmsWithoutBenchmarks()
+        {
+            var allEnabledAlgorithms = AlgorithmSettings.Where(algo => algo.Enabled);
+            var allEnabledAlgorithmsWithoutBenchmarks = allEnabledAlgorithms.Where(algo => algo.BenchmarkNeeded);
+            return allEnabledAlgorithms.Count() == allEnabledAlgorithmsWithoutBenchmarks.Count();
+        }
+
+        public bool AnyAlgorithmEnabled()
+        {
+            var anyEnabled= AlgorithmSettings.Any(a => a.Enabled);
+            return anyEnabled;
+        }
+
+        public bool AllEnabledAlgorithmsZeroPaying()
+        {
+            var isAllZeroPayingState = AlgorithmSettings.Where(a => a.Enabled).Select(a => a.CurPayingRate == 0d);
+            var ret = isAllZeroPayingState.All(t => t);
+            return ret;
+        }
+        #endregion Checker
     }
 }

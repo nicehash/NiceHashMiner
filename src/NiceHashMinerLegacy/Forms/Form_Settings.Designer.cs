@@ -36,18 +36,9 @@
             this.pictureBox_TimeUnit = new System.Windows.Forms.PictureBox();
             this.label_TimeUnit = new System.Windows.Forms.Label();
             this.comboBox_TimeUnit = new System.Windows.Forms.ComboBox();
-            this.pictureBox_WorkerName = new System.Windows.Forms.PictureBox();
             this.pictureBox_MinProfit = new System.Windows.Forms.PictureBox();
-            this.pictureBox_ServiceLocation = new System.Windows.Forms.PictureBox();
-            this.pictureBox_Info_BitcoinAddress = new System.Windows.Forms.PictureBox();
             this.textBox_MinProfit = new System.Windows.Forms.TextBox();
-            this.label_BitcoinAddress = new System.Windows.Forms.Label();
             this.label_MinProfit = new System.Windows.Forms.Label();
-            this.label_WorkerName = new System.Windows.Forms.Label();
-            this.label_ServiceLocation = new System.Windows.Forms.Label();
-            this.comboBox_ServiceLocation = new System.Windows.Forms.ComboBox();
-            this.textBox_BitcoinAddress = new System.Windows.Forms.TextBox();
-            this.textBox_WorkerName = new System.Windows.Forms.TextBox();
             this.groupBox_Localization = new System.Windows.Forms.GroupBox();
             this.label_Language = new System.Windows.Forms.Label();
             this.pictureBox5 = new System.Windows.Forms.PictureBox();
@@ -134,23 +125,20 @@
             this.checkBox_UseIFTTT = new System.Windows.Forms.CheckBox();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.buttonSaveClose = new System.Windows.Forms.Button();
-            this.buttonDefaults = new System.Windows.Forms.Button();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.minDeviceProfitField = new NiceHashMiner.Forms.Components.Field();
+            this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
+            this.buttonSaveClose = new System.Windows.Forms.Button();
+            this.buttonDefaults = new System.Windows.Forms.Button();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Main.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TimeUnit)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WorkerName)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ServiceLocation)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Info_BitcoinAddress)).BeginInit();
             this.groupBox_Localization.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_displayCurrency)).BeginInit();
@@ -240,23 +228,14 @@
             this.groupBox_Main.Controls.Add(this.pictureBox_TimeUnit);
             this.groupBox_Main.Controls.Add(this.label_TimeUnit);
             this.groupBox_Main.Controls.Add(this.comboBox_TimeUnit);
-            this.groupBox_Main.Controls.Add(this.pictureBox_WorkerName);
             this.groupBox_Main.Controls.Add(this.pictureBox_MinProfit);
-            this.groupBox_Main.Controls.Add(this.pictureBox_ServiceLocation);
-            this.groupBox_Main.Controls.Add(this.pictureBox_Info_BitcoinAddress);
             this.groupBox_Main.Controls.Add(this.textBox_MinProfit);
-            this.groupBox_Main.Controls.Add(this.label_BitcoinAddress);
             this.groupBox_Main.Controls.Add(this.label_MinProfit);
-            this.groupBox_Main.Controls.Add(this.label_WorkerName);
-            this.groupBox_Main.Controls.Add(this.label_ServiceLocation);
-            this.groupBox_Main.Controls.Add(this.comboBox_ServiceLocation);
-            this.groupBox_Main.Controls.Add(this.textBox_BitcoinAddress);
-            this.groupBox_Main.Controls.Add(this.textBox_WorkerName);
             this.groupBox_Main.Location = new System.Drawing.Point(6, 6);
             this.groupBox_Main.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Main.Name = "groupBox_Main";
             this.groupBox_Main.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Main.Size = new System.Drawing.Size(344, 231);
+            this.groupBox_Main.Size = new System.Drawing.Size(344, 128);
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
@@ -264,7 +243,7 @@
             // pictureBox_ElectricityCost
             // 
             this.pictureBox_ElectricityCost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ElectricityCost.Location = new System.Drawing.Point(130, 160);
+            this.pictureBox_ElectricityCost.Location = new System.Drawing.Point(131, 66);
             this.pictureBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_ElectricityCost.Name = "pictureBox_ElectricityCost";
             this.pictureBox_ElectricityCost.Size = new System.Drawing.Size(18, 18);
@@ -274,7 +253,7 @@
             // 
             // textBox_ElectricityCost
             // 
-            this.textBox_ElectricityCost.Location = new System.Drawing.Point(10, 180);
+            this.textBox_ElectricityCost.Location = new System.Drawing.Point(11, 86);
             this.textBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_ElectricityCost.Name = "textBox_ElectricityCost";
             this.textBox_ElectricityCost.Size = new System.Drawing.Size(138, 20);
@@ -283,7 +262,7 @@
             // label_ElectricityCost
             // 
             this.label_ElectricityCost.AutoSize = true;
-            this.label_ElectricityCost.Location = new System.Drawing.Point(10, 160);
+            this.label_ElectricityCost.Location = new System.Drawing.Point(11, 66);
             this.label_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_ElectricityCost.Name = "label_ElectricityCost";
             this.label_ElectricityCost.Size = new System.Drawing.Size(117, 13);
@@ -293,7 +272,7 @@
             // pictureBox_TimeUnit
             // 
             this.pictureBox_TimeUnit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_TimeUnit.Location = new System.Drawing.Point(302, 109);
+            this.pictureBox_TimeUnit.Location = new System.Drawing.Point(303, 15);
             this.pictureBox_TimeUnit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_TimeUnit.Name = "pictureBox_TimeUnit";
             this.pictureBox_TimeUnit.Size = new System.Drawing.Size(18, 18);
@@ -304,7 +283,7 @@
             // label_TimeUnit
             // 
             this.label_TimeUnit.AutoSize = true;
-            this.label_TimeUnit.Location = new System.Drawing.Point(160, 109);
+            this.label_TimeUnit.Location = new System.Drawing.Point(161, 15);
             this.label_TimeUnit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_TimeUnit.Name = "label_TimeUnit";
             this.label_TimeUnit.Size = new System.Drawing.Size(55, 13);
@@ -315,27 +294,16 @@
             // 
             this.comboBox_TimeUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_TimeUnit.FormattingEnabled = true;
-            this.comboBox_TimeUnit.Location = new System.Drawing.Point(160, 130);
+            this.comboBox_TimeUnit.Location = new System.Drawing.Point(161, 36);
             this.comboBox_TimeUnit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBox_TimeUnit.Name = "comboBox_TimeUnit";
             this.comboBox_TimeUnit.Size = new System.Drawing.Size(160, 21);
             this.comboBox_TimeUnit.TabIndex = 370;
             // 
-            // pictureBox_WorkerName
-            // 
-            this.pictureBox_WorkerName.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_WorkerName.Location = new System.Drawing.Point(130, 59);
-            this.pictureBox_WorkerName.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_WorkerName.Name = "pictureBox_WorkerName";
-            this.pictureBox_WorkerName.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_WorkerName.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_WorkerName.TabIndex = 364;
-            this.pictureBox_WorkerName.TabStop = false;
-            // 
             // pictureBox_MinProfit
             // 
             this.pictureBox_MinProfit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_MinProfit.Location = new System.Drawing.Point(130, 110);
+            this.pictureBox_MinProfit.Location = new System.Drawing.Point(131, 16);
             this.pictureBox_MinProfit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinProfit.Name = "pictureBox_MinProfit";
             this.pictureBox_MinProfit.Size = new System.Drawing.Size(18, 18);
@@ -343,108 +311,23 @@
             this.pictureBox_MinProfit.TabIndex = 364;
             this.pictureBox_MinProfit.TabStop = false;
             // 
-            // pictureBox_ServiceLocation
-            // 
-            this.pictureBox_ServiceLocation.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ServiceLocation.Location = new System.Drawing.Point(302, 59);
-            this.pictureBox_ServiceLocation.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_ServiceLocation.Name = "pictureBox_ServiceLocation";
-            this.pictureBox_ServiceLocation.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_ServiceLocation.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_ServiceLocation.TabIndex = 364;
-            this.pictureBox_ServiceLocation.TabStop = false;
-            // 
-            // pictureBox_Info_BitcoinAddress
-            // 
-            this.pictureBox_Info_BitcoinAddress.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_Info_BitcoinAddress.Location = new System.Drawing.Point(308, 16);
-            this.pictureBox_Info_BitcoinAddress.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_Info_BitcoinAddress.Name = "pictureBox_Info_BitcoinAddress";
-            this.pictureBox_Info_BitcoinAddress.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_Info_BitcoinAddress.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_Info_BitcoinAddress.TabIndex = 364;
-            this.pictureBox_Info_BitcoinAddress.TabStop = false;
-            // 
             // textBox_MinProfit
             // 
-            this.textBox_MinProfit.Location = new System.Drawing.Point(10, 130);
+            this.textBox_MinProfit.Location = new System.Drawing.Point(11, 36);
             this.textBox_MinProfit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_MinProfit.Name = "textBox_MinProfit";
             this.textBox_MinProfit.Size = new System.Drawing.Size(138, 20);
             this.textBox_MinProfit.TabIndex = 334;
             // 
-            // label_BitcoinAddress
-            // 
-            this.label_BitcoinAddress.AutoSize = true;
-            this.label_BitcoinAddress.Location = new System.Drawing.Point(10, 16);
-            this.label_BitcoinAddress.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_BitcoinAddress.Name = "label_BitcoinAddress";
-            this.label_BitcoinAddress.Size = new System.Drawing.Size(83, 13);
-            this.label_BitcoinAddress.TabIndex = 355;
-            this.label_BitcoinAddress.Text = "Bitcoin Address:";
-            // 
             // label_MinProfit
             // 
             this.label_MinProfit.AutoSize = true;
-            this.label_MinProfit.Location = new System.Drawing.Point(10, 110);
+            this.label_MinProfit.Location = new System.Drawing.Point(11, 16);
             this.label_MinProfit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_MinProfit.Name = "label_MinProfit";
             this.label_MinProfit.Size = new System.Drawing.Size(115, 13);
             this.label_MinProfit.TabIndex = 357;
             this.label_MinProfit.Text = "Minimum Profit ($/day):";
-            // 
-            // label_WorkerName
-            // 
-            this.label_WorkerName.AutoSize = true;
-            this.label_WorkerName.Location = new System.Drawing.Point(10, 59);
-            this.label_WorkerName.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_WorkerName.Name = "label_WorkerName";
-            this.label_WorkerName.Size = new System.Drawing.Size(76, 13);
-            this.label_WorkerName.TabIndex = 354;
-            this.label_WorkerName.Text = "Worker Name:";
-            // 
-            // label_ServiceLocation
-            // 
-            this.label_ServiceLocation.AutoSize = true;
-            this.label_ServiceLocation.Location = new System.Drawing.Point(160, 59);
-            this.label_ServiceLocation.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_ServiceLocation.Name = "label_ServiceLocation";
-            this.label_ServiceLocation.Size = new System.Drawing.Size(86, 13);
-            this.label_ServiceLocation.TabIndex = 363;
-            this.label_ServiceLocation.Text = "Service location:";
-            // 
-            // comboBox_ServiceLocation
-            // 
-            this.comboBox_ServiceLocation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox_ServiceLocation.FormattingEnabled = true;
-            this.comboBox_ServiceLocation.Items.AddRange(new object[] {
-            "Europe - Amsterdam",
-            "USA - San Jose",
-            "China - Hong Kong",
-            "Japan - Tokyo",
-            "India - Chennai",
-            "Brazil - Sao Paulo"});
-            this.comboBox_ServiceLocation.Location = new System.Drawing.Point(160, 80);
-            this.comboBox_ServiceLocation.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.comboBox_ServiceLocation.Name = "comboBox_ServiceLocation";
-            this.comboBox_ServiceLocation.Size = new System.Drawing.Size(160, 21);
-            this.comboBox_ServiceLocation.TabIndex = 330;
-            // 
-            // textBox_BitcoinAddress
-            // 
-            this.textBox_BitcoinAddress.Location = new System.Drawing.Point(10, 36);
-            this.textBox_BitcoinAddress.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_BitcoinAddress.Name = "textBox_BitcoinAddress";
-            this.textBox_BitcoinAddress.Size = new System.Drawing.Size(316, 20);
-            this.textBox_BitcoinAddress.TabIndex = 329;
-            // 
-            // textBox_WorkerName
-            // 
-            this.textBox_WorkerName.Location = new System.Drawing.Point(10, 80);
-            this.textBox_WorkerName.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.textBox_WorkerName.Name = "textBox_WorkerName";
-            this.textBox_WorkerName.Size = new System.Drawing.Size(138, 20);
-            this.textBox_WorkerName.TabIndex = 339;
             // 
             // groupBox_Localization
             // 
@@ -1469,6 +1352,19 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Selected Device Settings";
             // 
+            // minDeviceProfitField
+            // 
+            this.minDeviceProfitField.AutoSize = true;
+            this.minDeviceProfitField.BackColor = System.Drawing.Color.Transparent;
+            this.minDeviceProfitField.Enabled = false;
+            this.minDeviceProfitField.EntryText = "";
+            this.minDeviceProfitField.LabelText = "Minimum Profit ($/day):";
+            this.minDeviceProfitField.Location = new System.Drawing.Point(6, 18);
+            this.minDeviceProfitField.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.minDeviceProfitField.Name = "minDeviceProfitField";
+            this.minDeviceProfitField.Size = new System.Drawing.Size(440, 83);
+            this.minDeviceProfitField.TabIndex = 0;
+            // 
             // groupBoxAlgorithmSettings
             // 
             this.groupBoxAlgorithmSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1483,47 +1379,6 @@
             this.groupBoxAlgorithmSettings.TabIndex = 395;
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
-            // 
-            // buttonSaveClose
-            // 
-            this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(486, 482);
-            this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonSaveClose.Name = "buttonSaveClose";
-            this.buttonSaveClose.Size = new System.Drawing.Size(134, 23);
-            this.buttonSaveClose.TabIndex = 44;
-            this.buttonSaveClose.Text = "&Save and Close";
-            this.buttonSaveClose.UseVisualStyleBackColor = true;
-            this.buttonSaveClose.Click += new System.EventHandler(this.ButtonSaveClose_Click);
-            // 
-            // buttonDefaults
-            // 
-            this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(408, 482);
-            this.buttonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonDefaults.Name = "buttonDefaults";
-            this.buttonDefaults.Size = new System.Drawing.Size(74, 23);
-            this.buttonDefaults.TabIndex = 43;
-            this.buttonDefaults.Text = "&Defaults";
-            this.buttonDefaults.UseVisualStyleBackColor = true;
-            this.buttonDefaults.Click += new System.EventHandler(this.ButtonDefaults_Click);
-            // 
-            // errorProvider1
-            // 
-            this.errorProvider1.ContainerControl = this;
-            // 
-            // minDeviceProfitField
-            // 
-            this.minDeviceProfitField.AutoSize = true;
-            this.minDeviceProfitField.BackColor = System.Drawing.Color.Transparent;
-            this.minDeviceProfitField.Enabled = false;
-            this.minDeviceProfitField.EntryText = "";
-            this.minDeviceProfitField.LabelText = "Minimum Profit ($/day):";
-            this.minDeviceProfitField.Location = new System.Drawing.Point(6, 18);
-            this.minDeviceProfitField.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.minDeviceProfitField.Name = "minDeviceProfitField";
-            this.minDeviceProfitField.Size = new System.Drawing.Size(440, 83);
-            this.minDeviceProfitField.TabIndex = 0;
             // 
             // algorithmsListView1
             // 
@@ -1563,6 +1418,34 @@
             this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 293);
             this.algorithmSettingsControl1.TabIndex = 396;
             // 
+            // buttonSaveClose
+            // 
+            this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSaveClose.Location = new System.Drawing.Point(486, 482);
+            this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonSaveClose.Name = "buttonSaveClose";
+            this.buttonSaveClose.Size = new System.Drawing.Size(134, 23);
+            this.buttonSaveClose.TabIndex = 44;
+            this.buttonSaveClose.Text = "&Save and Close";
+            this.buttonSaveClose.UseVisualStyleBackColor = true;
+            this.buttonSaveClose.Click += new System.EventHandler(this.ButtonSaveClose_Click);
+            // 
+            // buttonDefaults
+            // 
+            this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDefaults.Location = new System.Drawing.Point(408, 482);
+            this.buttonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonDefaults.Name = "buttonDefaults";
+            this.buttonDefaults.Size = new System.Drawing.Size(74, 23);
+            this.buttonDefaults.TabIndex = 43;
+            this.buttonDefaults.Text = "&Defaults";
+            this.buttonDefaults.UseVisualStyleBackColor = true;
+            this.buttonDefaults.Click += new System.EventHandler(this.ButtonDefaults_Click);
+            // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1584,10 +1467,7 @@
             this.groupBox_Main.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ElectricityCost)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_TimeUnit)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WorkerName)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinProfit)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ServiceLocation)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Info_BitcoinAddress)).EndInit();
             this.groupBox_Localization.ResumeLayout(false);
             this.groupBox_Localization.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
@@ -1654,14 +1534,8 @@
         private System.Windows.Forms.TabPage tabPageGeneral;
         private System.Windows.Forms.Label label_displayCurrency;
         private System.Windows.Forms.ComboBox currencyConverterCombobox;
-        private System.Windows.Forms.TextBox textBox_WorkerName;
-        private System.Windows.Forms.TextBox textBox_BitcoinAddress;
         private System.Windows.Forms.Label label_Language;
         private System.Windows.Forms.ComboBox comboBox_Language;
-        private System.Windows.Forms.ComboBox comboBox_ServiceLocation;
-        private System.Windows.Forms.Label label_ServiceLocation;
-        private System.Windows.Forms.Label label_WorkerName;
-        private System.Windows.Forms.Label label_BitcoinAddress;
         private System.Windows.Forms.TabPage tabPageDevicesAlgos;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.GroupBox groupBox_Main;
@@ -1682,10 +1556,7 @@
         private Components.AlgorithmSettingsControl algorithmSettingsControl1;
         private System.Windows.Forms.GroupBox groupBoxAlgorithmSettings;
         private Components.AlgorithmsListView algorithmsListView1;
-        private System.Windows.Forms.PictureBox pictureBox_Info_BitcoinAddress;
-        private System.Windows.Forms.PictureBox pictureBox_WorkerName;
         private System.Windows.Forms.PictureBox pictureBox_MinProfit;
-        private System.Windows.Forms.PictureBox pictureBox_ServiceLocation;
         private System.Windows.Forms.PictureBox pictureBox5;
         private System.Windows.Forms.PictureBox pictureBox_displayCurrency;
         private System.Windows.Forms.PictureBox pictureBox_Language;

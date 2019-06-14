@@ -15,11 +15,9 @@ namespace NiceHashMiner
 {
     static partial class ApplicationStateManager
     {
-        public static bool IsDemoMining { get; set; } = false;
-
         public static string GetUsername()
         {
-            if (IsDemoMining) {
+            if (MiningState.Instance.IsDemoMining) {
                 return DemoUser.BTC;
             }
 
@@ -28,7 +26,7 @@ namespace NiceHashMiner
             // TESTNET
 #if (TESTNET || TESTNETDEV)
 #if SEND_STRATUM_WORKERNAME
-            if (worker.Length > 0 && BitcoinAddress.ValidateWorkerName(worker))
+            if (worker.Length > 0 && CredentialValidators.ValidateWorkerName(worker))
             {
                 return $"{btc}.{worker}${RigID}";
             }
@@ -37,7 +35,7 @@ namespace NiceHashMiner
             return $"{btc}${RigID}";
 #else
             // PRODUCTION
-            if (worker.Length > 0 && BitcoinAddress.ValidateWorkerName(worker))
+            if (worker.Length > 0 && CredentialValidators.ValidateWorkerName(worker))
             {
                 return $"{btc}.{worker}";
             }
@@ -72,14 +70,21 @@ namespace NiceHashMiner
             var failReason = "";
 
             // TODO we have a BUG HERE if device enabled with all disabled algorithms
-            var devicesToBenchmark = devicesToStart.Where(dev => BenchmarkChecker.IsDeviceWithAllEnabledAlgorithmsWithoutBenchmarks(dev));
+            var devicesToBenchmark = devicesToStart.Where(dev => dev.AllEnabledAlgorithmsWithoutBenchmarks());
             foreach (var dev in devicesToBenchmark) {
                 dev.State = DeviceState.Benchmarking;
                 BenchmarkManager.StartBenchmarForDevice(dev, true);
             }
-            
+
+            var devicesInErrorState = devicesToStart.Where(dev => !dev.AnyAlgorithmEnabled() || dev.AllEnabledAlgorithmsZeroPaying()).ToList();
+            var devicesInErrorStateUUIDs = devicesInErrorState.Select(dev => dev.Uuid);
+            foreach (var dev in devicesInErrorState)
+            {
+                dev.State = DeviceState.Error;
+            }
+
             // TODO check count
-            var devicesToMine = devicesToStart.Where(dev => !BenchmarkChecker.IsDeviceWithAllEnabledAlgorithmsWithoutBenchmarks(dev)).ToList();
+            var devicesToMine = devicesToStart.Where(dev => !dev.AllEnabledAlgorithmsWithoutBenchmarks() && !devicesInErrorStateUUIDs.Contains(dev.Uuid)).ToList();
             foreach (var dev in devicesToMine) {
                 dev.State = DeviceState.Mining;
             }
@@ -87,7 +92,6 @@ namespace NiceHashMiner
             if (!isRpcCall) {
                 NiceHashStats.StateChanged();
             }
-            ToggleActiveInactiveDisplay();
             RefreshDeviceListView?.Invoke(null, null);
 
             return (started, "");
@@ -103,14 +107,15 @@ namespace NiceHashMiner
 
             var started = true;
             var failReason = "";
-            var isErrorState = !device.AlgorithmSettings.Any(a => a.Enabled);
+            var isErrorState = !device.AnyAlgorithmEnabled();
+            var isAllZeroPayingState = device.AllEnabledAlgorithmsZeroPaying();
             // check if device has any benchmakrs
-            var needsBenchmark = BenchmarkChecker.IsDeviceWithAllEnabledAlgorithmsWithoutBenchmarks(device);
-            if (isErrorState)
+            var needsBenchmark = device.AllEnabledAlgorithmsWithoutBenchmarks();
+            if (isErrorState || isAllZeroPayingState)
             {
                 device.State = DeviceState.Error;
                 started = false;
-                failReason = "Cannot start a device with all disabled algoirhtms";
+                failReason = isAllZeroPayingState ? "No enabled algorithm is profitable" : "Cannot start a device with all disabled algoirhtms";
             }
             else if (needsBenchmark && !skipBenhcmakrk)
             {
@@ -123,7 +128,6 @@ namespace NiceHashMiner
                 UpdateDevicesToMine();
             }
 
-            ToggleActiveInactiveDisplay();
             RefreshDeviceListView?.Invoke(null, null);
             NiceHashStats.StateChanged();
 
@@ -160,7 +164,6 @@ namespace NiceHashMiner
             //        failReason = msg;
             //    }
             //}
-            ToggleActiveInactiveDisplay();
             NiceHashStats.StateChanged();
             StopMining(true);
             return (stopped, failReason);
@@ -176,7 +179,6 @@ namespace NiceHashMiner
                 case DeviceState.Benchmarking:
                     device.State = DeviceState.Stopped;
                     BenchmarkManager.StopBenchmarForDevice(device);
-                    ToggleActiveInactiveDisplay();
                     if (refreshStateChange) NiceHashStats.StateChanged();
                     return (true, "");
                 case DeviceState.Mining:

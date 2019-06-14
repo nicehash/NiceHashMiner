@@ -429,7 +429,7 @@ namespace NiceHashMiner.Plugin
             {
                 // Dynamic/Online
                 var dynamicReBenchmarkCheckers = MinerPluginHost.MinerPlugin.Values.Where(plugin => plugin is IReBenchmarkChecker).ToList();
-                reBenchmarkCheckersPlugins.AddRange(dynamicReBenchmarkCheckers);
+                if (dynamicReBenchmarkCheckers.Count > 0) reBenchmarkCheckersPlugins.AddRange(dynamicReBenchmarkCheckers);
             }
 
             // get devices

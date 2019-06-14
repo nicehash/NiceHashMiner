@@ -20,16 +20,16 @@ using NiceHashMinerLegacy.Common;
 
 namespace NiceHashMiner.Forms
 {
-    public partial class Form_Settings : Form, IDataVisualizer, IWorkerNameDisplayer, FormHelpers.ICustomTranslate
+    public partial class Form_Settings : Form, FormHelpers.ICustomTranslate, IDataVisualizer
     {
         private readonly bool _isInitFinished = false;
         public bool IsRestartNeeded { get; private set; }
+        public bool SetDefaults { get; private set; } = false;
 
         // most likely we wil have settings only per unique devices
         private const bool ShowUniqueDeviceList = true;
 
         private ComputeDevice _selectedComputeDevice;
-        private bool _isCredChange = false;
 
         public Form_Settings()
         {
@@ -84,17 +84,12 @@ namespace NiceHashMiner.Forms
             textBox_MinIdleSeconds.DataBindings.Add("Enabled", ConfigManager.IdleMiningSettings, nameof(ConfigManager.IdleMiningSettings.IsIdleCheckTypeInputTimeout), false, DataSourceUpdateMode.OnPropertyChanged);
 
             // comboBox indexes
-            comboBox_ServiceLocation.DataBindings.Add("SelectedIndex", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ServiceLocation), false, DataSourceUpdateMode.OnPropertyChanged);
             comboBox_Language.DataBindings.Add("SelectedIndex", ConfigManager.TranslationsSettings, nameof(ConfigManager.TranslationsSettings.LanguageIndex), false, DataSourceUpdateMode.OnPropertyChanged);
 
             // IFTTT textbox
             checkBox_UseIFTTT.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseIFTTT), false, DataSourceUpdateMode.OnPropertyChanged);
-            textBox_IFTTTKey.DataBindings.Add("Enabled", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseIFTTT));
-            textBox_IFTTTKey.DataBindings.Add("Text", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.IFTTTKey));
-
-            // credentials
-            textBox_BitcoinAddress.DataBindings.Add("Text", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.BitcoinAddress));
-            textBox_WorkerName.DataBindings.Add("Text", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.WorkerName));
+            textBox_IFTTTKey.DataBindings.Add("Enabled", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseIFTTT), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_IFTTTKey.DataBindings.Add("Text", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.IFTTTKey), false, DataSourceUpdateMode.OnPropertyChanged);
 
 
             // At the very end set to true
@@ -114,15 +109,6 @@ namespace NiceHashMiner.Forms
 
             SetToolTip(Tr("When checked, it displays debug console."),
                 checkBox_DebugConsole, pictureBox_DebugConsole);
-
-            SetToolTip(Tr("User's bitcoin address for mining."),
-                textBox_BitcoinAddress, label_BitcoinAddress, pictureBox_Info_BitcoinAddress);
-
-            SetToolTip(Tr("To identify the user's computer."),
-                textBox_WorkerName, label_WorkerName, pictureBox_WorkerName);
-
-            SetToolTip(Tr("Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency."),
-                comboBox_ServiceLocation, label_ServiceLocation, pictureBox_ServiceLocation);
 
             SetToolTip(Tr("Sets the time unit to report BTC rates."),
                 comboBox_TimeUnit, label_TimeUnit, pictureBox_TimeUnit);
@@ -248,8 +234,6 @@ namespace NiceHashMiner.Forms
         {
             // Add EventHandler for all the general tab's textboxes
             {
-                textBox_BitcoinAddress.Leave += textBox_BitcoinAddress_Leave;
-                textBox_WorkerName.Leave += textBox_WorkerName_Leave;
                 // these are ints only
                 textBox_SwitchMaxSeconds.Leave += GeneralTextBoxes_Leave;
                 textBox_SwitchMinSeconds.Leave += GeneralTextBoxes_Leave;
@@ -292,8 +276,6 @@ namespace NiceHashMiner.Forms
 
             // Textboxes
             {
-                textBox_BitcoinAddress.Text = ConfigManager.GeneralConfig.BitcoinAddress;
-                textBox_WorkerName.Text = ConfigManager.GeneralConfig.WorkerName;
                 textBox_SwitchMaxSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper.ToString();
                 textBox_SwitchMinSeconds.Text = ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Lower.ToString();
                 textBox_MinerAPIQueryInterval.Text = ConfigManager.GeneralConfig.MinerAPIQueryInterval.ToString();
@@ -372,58 +354,17 @@ namespace NiceHashMiner.Forms
             minDeviceProfitField.Leave += MinDeviceProfitFieldLeft;
         }
 
-#endregion //Tab Devices
+        #endregion //Tab Devices
 
-#endregion // Initializations
+        #endregion // Initializations
 
-#region Form Callbacks
+        #region Form Callbacks
 
-#region Tab General
-
-        // TODO copy paste from Form_Main
-        private void textBox_BitcoinAddress_Leave(object sender, EventArgs e)
-        {
-            var trimmedBtcText = textBox_BitcoinAddress.Text.Trim();
-            var result = ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
-            // TODO get back to this
-            switch (result)
-            {
-                case ApplicationStateManager.SetResult.INVALID:
-                    break;
-                case ApplicationStateManager.SetResult.CHANGED:
-                    _isCredChange = true;
-                    break;
-                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
-                    break;
-            }
-        }
-
-        // TODO copy paste from Form_Main
-        private void textBox_WorkerName_Leave(object sender, EventArgs e)
-        {
-            var trimmedWorkerNameText = textBox_WorkerName.Text.Trim();
-            var result = ApplicationStateManager.SetWorkerIfValidOrDifferent(trimmedWorkerNameText);
-            // TODO GUI stuff get back to this
-            switch (result)
-            {
-                case ApplicationStateManager.SetResult.INVALID:
-                    // TODO workername invalid handling
-                    break;
-                case ApplicationStateManager.SetResult.CHANGED:
-                    _isCredChange = true;
-                    break;
-                case ApplicationStateManager.SetResult.NOTHING_TO_CHANGE:
-                    break;
-            }
-        }
+        #region Tab General
 
         private void GeneralTextBoxes_Leave(object sender, EventArgs e)
         {
             if (!_isInitFinished) return;
-            if (ConfigManager.GeneralConfig.BitcoinAddress != textBox_BitcoinAddress.Text.Trim()) _isCredChange = true;
-            ConfigManager.GeneralConfig.BitcoinAddress = textBox_BitcoinAddress.Text.Trim();
-            if (ConfigManager.GeneralConfig.WorkerName != textBox_WorkerName.Text.Trim()) _isCredChange = true;
-            ConfigManager.GeneralConfig.WorkerName = textBox_WorkerName.Text.Trim();
             
             ConfigManager.GeneralConfig.SwitchSmaTimeChangeSeconds.Upper =
                 Helpers.ParseInt(textBox_SwitchMaxSeconds.Text);
@@ -513,31 +454,27 @@ namespace NiceHashMiner.Forms
 
             if (result == DialogResult.Yes)
             {
+                SetDefaults = true;
                 SetLanguage("en");
                 ConfigManager.GeneralConfig.SetDefaults();
                 InitializeGeneralTabFieldValuesReferences();
                 InitializeGeneralTabTranslations();
+                Close();
             }
         }
 
         private void ButtonSaveClose_Click(object sender, EventArgs e)
         {
-            if (_isCredChange)
-            {
-                ApplicationStateManager.ResetNiceHashStatsCredentials();
-            }
-
             Close();
         }
 
-#endregion // Form Buttons
+        #endregion // Form Buttons
 
         private void FormSettings_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (ApplicationStateManager.BurnCalled) {
                 return;
             }
-
             // check restart parameters change
             IsRestartNeeded = ConfigManager.IsRestartNeeded();
             ConfigManager.GeneralConfigFileCommit();
@@ -591,14 +528,6 @@ namespace NiceHashMiner.Forms
             // update logic
             var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
-        }
-
-        void IWorkerNameDisplayer.DisplayWorkerName(object sender, string workerName)
-        {
-            FormHelpers.SafeInvoke(this, () =>
-            {
-                textBox_WorkerName.Text = workerName;
-            });
         }
     }
 }

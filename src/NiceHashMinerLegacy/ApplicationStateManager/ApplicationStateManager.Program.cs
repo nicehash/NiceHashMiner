@@ -65,8 +65,11 @@ namespace NiceHashMiner
             MessageBoxManager.Unregister();
         }
 
+        private static bool _restartCalled = false;
         public static void RestartProgram()
         {
+            if (_restartCalled) return;
+            _restartCalled = true;
             var startInfo = new ProcessStartInfo { FileName = Application.ExecutablePath };
             using (var pHandle = new Process { StartInfo = startInfo })
             {
