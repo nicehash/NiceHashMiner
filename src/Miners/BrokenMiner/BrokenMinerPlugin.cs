@@ -28,24 +28,20 @@ namespace BrokenMiner
 
         bool IMinerPlugin.CanGroup(MiningPair a, MiningPair b) => GetValueOrErrorSettings.GetValueOrError("CanGroup", false);
 
-        IEnumerable<string> IBinaryPackageMissingFilesChecker.CheckBinaryPackageMissingFiles()
-        {
-            throw new NotImplementedException();
-        }
+        IEnumerable<string> IBinaryPackageMissingFilesChecker.CheckBinaryPackageMissingFiles() =>
+            GetValueOrErrorSettings.GetValueOrError("CheckBinaryPackageMissingFiles", new List<string> { "broken.exe", "broken.dll" });
 
-        IMiner IMinerPlugin.CreateMiner()
-        {
-            throw new NotImplementedException();
-        }
+        IMiner IMinerPlugin.CreateMiner() => GetValueOrErrorSettings.GetValueOrError("CreateMiner", new BrokenMiner());
 
-        TimeSpan IGetApiMaxTimeout.GetApiMaxTimeout()
-        {
-            throw new NotImplementedException();
-        }
+        TimeSpan IGetApiMaxTimeout.GetApiMaxTimeout() => GetValueOrErrorSettings.GetValueOrError("GetApiMaxTimeout", new TimeSpan(1, 10, 5));
 
         Dictionary<BaseDevice, IReadOnlyList<Algorithm>> IMinerPlugin.GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            throw new NotImplementedException();
+            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+            var gpu = new BaseDevice(DeviceType.NVIDIA, "asdv", "name", 0);
+            supported.Add(gpu, new List<Algorithm>() { new Algorithm("uuidPlugin", AlgorithmType.ZHash), new Algorithm("uuidPlugin", AlgorithmType.DaggerHashimoto) });
+
+            return GetValueOrErrorSettings.GetValueOrError("GetSupportedAlgorithms", supported);
         }
 
         void IInitInternals.InitInternals()
