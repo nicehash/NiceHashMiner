@@ -24,6 +24,7 @@ namespace NiceHashMiner
         [STAThread]
         static void Main(string[] argv)
         {
+            BUILD_TAG.ASSERT_COMPATIBLE_BUILDS();
             // Set working directory to exe
             var pathSet = false;
             var path = Path.GetDirectoryName(Application.ExecutablePath);
