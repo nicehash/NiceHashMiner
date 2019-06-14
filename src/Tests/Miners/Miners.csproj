@@ -67,7 +67,7 @@
       <Name>MinerPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Miners\NanoMiner\NanoMiner.csproj">
-      <Project>{B16F5E9E-7D4B-482B-908D-B839457FC766}</Project>
+      <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
       <Name>NanoMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">

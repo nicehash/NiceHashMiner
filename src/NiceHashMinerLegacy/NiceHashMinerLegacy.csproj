@@ -527,7 +527,7 @@
       <Name>MinerPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\NanoMiner\NanoMiner.csproj">
-      <Project>{b16f5e9e-7d4b-482b-908d-b839457fc766}</Project>
+      <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
       <Name>NanoMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\NBMiner\NBMiner.csproj">
@@ -535,7 +535,7 @@
       <Name>NBMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\Phoenix\Phoenix.csproj">
-      <Project>{f0f31c63-c7ef-4945-aefd-62c69f430e48}</Project>
+      <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
       <Name>Phoenix</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj">
