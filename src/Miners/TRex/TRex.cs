@@ -74,8 +74,6 @@ namespace TRex
                     totalPowerUsage += currentStats.power;
                     perDevicePowerInfo.Add(gpuDevice.UUID, currentStats.hashrate);
                 }
-
-
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = Convert.ToInt32(totalPowerUsage);
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
@@ -83,10 +81,7 @@ namespace TRex
 
             }
             catch (Exception e) {
-                if (e.Message != "An item with the same key has already been added.")
-                {
-                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
-                }
+                Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
             return ad;

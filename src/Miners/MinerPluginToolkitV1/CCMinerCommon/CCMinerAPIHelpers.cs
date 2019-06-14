@@ -54,10 +54,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                 }
                 catch(Exception e)
                 {
-                    if (e.Message != "An item with the same key has already been added.")
-                    {
-                        Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
-                    }
+                    Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
                 }
             }
             var threadsApiResult = await GetApiDataThreads(port, logGroup);
@@ -69,6 +66,8 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                 try
                 {
                     var gpus = threadsApiResult.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    var apiDevices = new List<IdPowerHash>();
+
                     foreach (var gpu in gpus)
                     {
                         var gpuOptvalPairs = gpu.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
@@ -90,22 +89,24 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                                 gpuData.speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
                             }
                         }
-                        var device = miningPairs.Where(kvp => kvp.Device.ID == gpuData.id).Select(kvp => kvp.Device).FirstOrDefault();
-                        if (device != null)
-                        {
-                            perDeviceSpeedInfo.Add(device.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(algorithmType, gpuData.speed * (1 - devFee * 0.01)) });
-                            perDevicePowerInfo.Add(device.UUID, gpuData.power);
-                            totalPower += gpuData.power;
-                        }
+                        apiDevices.Add(gpuData);
+                    }
 
+                    foreach (var miningPair in miningPairs)
+                    {
+                        var deviceUUID = miningPair.Device.UUID;
+                        var deviceID = miningPair.Device.ID;
+
+                        var apiDevice = apiDevices.Find(apiDev => apiDev.id == deviceID);
+                        if (apiDevice.Equals(default(IdPowerHash))) continue;                       
+                        perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(algorithmType, apiDevice.speed * (1 - devFee * 0.01)) });
+                        perDevicePowerInfo.Add(deviceUUID, apiDevice.power);
+                        totalPower += apiDevice.power;                       
                     }
                 }
                 catch(Exception e)
                 {
-                    if (e.Message != "An item with the same key has already been added.")
-                    {
-                        Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
-                    }
+                    Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
                 }
             }
             var ad = new ApiData();

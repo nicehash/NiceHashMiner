@@ -34,8 +34,13 @@ namespace GMinerPlugin
         private string _extraLaunchParameters = "";
         private string _devices;
 
-        public GMiner(string uuid) : base(uuid)
-        {}
+        protected readonly Dictionary<string, int> _mappedCudaIds = new Dictionary<string, int>();
+
+
+        public GMiner(string uuid, Dictionary<string, int> mappedCudaIds) : base(uuid)
+        {
+            _mappedCudaIds = mappedCudaIds;
+        }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -95,7 +100,7 @@ namespace GMinerPlugin
                 var totalPowerUsage = 0;
                 foreach (var gpu in gpus)
                 {
-                    var currentDevStats = summary.devices.Where(devStats => devStats.gpu_id == Shared.MappedCudaIds[gpu.UUID]).FirstOrDefault();
+                    var currentDevStats = summary.devices.Where(devStats => devStats.gpu_id == _mappedCudaIds[gpu.UUID]).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed;
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed * (1 - DevFee * 0.01)) });
@@ -109,10 +114,7 @@ namespace GMinerPlugin
             }
             catch (Exception e)
             {
-                if (e.Message != "An item with the same key has already been added.")
-                {
-                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
-                }
+                Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
                 //CurrentMinerReadStatus = MinerApiReadStatus.NETWORK_EXCEPTION;
             }
 
@@ -200,7 +202,7 @@ namespace GMinerPlugin
             //var orderedMiningPairs = _miningPairs.ToList();
             //orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             var minignPairs = _miningPairs.ToList();
-            _devices = string.Join(" ", minignPairs.Select(p => Shared.MappedCudaIds[p.Device.UUID]));
+            _devices = string.Join(" ", minignPairs.Select(p => _mappedCudaIds[p.Device.UUID]));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks
