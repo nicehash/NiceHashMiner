@@ -6,7 +6,6 @@ namespace NiceHashMiner.Benchmarking
 {
     public class BenchmarkingAnalyzer
     {
-
         public struct BenchmarkSpeed
         {
             public double PrimarySpeed { get; set; }
@@ -28,7 +27,16 @@ namespace NiceHashMiner.Benchmarking
 
         private const int MaxHistoryTimeRangeInMinutes = 10;
 
-        //this is 10 min of speed data comming every 5 seconds
+        /// <summary>
+        /// This is a minimum number of <see cref="MiningSpeed"/> elements, required for deviant checking
+        /// Each element is generated every 5 seconds, therefore 36 is 3 minutes of data
+        /// </summary>
+        private static int DeviantCap => (60 / Configs.ConfigManager.GeneralConfig.MinerAPIQueryInterval) * 3;
+
+        /// <summary>
+        /// This is our max number of <see cref="MiningSpeed"/> elements that we use to analyze.
+        /// Equals 10 min of speed data comming every 5 seconds.
+        /// </summary>
         private static int MaxHistory => (MaxHistoryTimeRangeInMinutes * 60) / Configs.ConfigManager.GeneralConfig.MinerAPIQueryInterval;
 
         // SpeedID => {DeviceUUID}-{AlgorithmUUID}
@@ -68,14 +76,25 @@ namespace NiceHashMiner.Benchmarking
 
         public void Clear()
         {
-            BenchmarkedSpeeds.Clear();
-            MiningSpeeds.Clear();
+            //BenchmarkedSpeeds.Clear();
+            //MiningSpeeds.Clear();
+            Clear(BenchmarkedSpeeds);
+            Clear(MiningSpeeds);
+        }
+
+        private void Clear(Dictionary<string, BenchmarkSpeed> benchmarkedSpeeds)
+        {
+            benchmarkedSpeeds.Clear();
+        }
+        private void Clear(Dictionary<string, List<MiningSpeed>> miningSpeed)
+        {
+            miningSpeed.Clear();
         }
 
         public static bool IsDeviant(string speedID)
         {
             if (!MiningSpeeds.ContainsKey(speedID)) return false;
-            if (MiningSpeeds[speedID].Count() < 36) return false;
+            if (MiningSpeeds[speedID].Count() < DeviantCap) return false;
 
             var speeds = MiningSpeeds[speedID];
             var primarySpeeds = new List<double>();
