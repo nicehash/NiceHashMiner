@@ -74,7 +74,7 @@ namespace BMiner
                 foreach(var gpu in gpus)
                 {
                     if (apiDevices == null) continue;
-                    var apiDevice = apiDevices.ElementAt(gpu.ID).Value; //returns exception if element at index doesn't exist
+                    var apiDevice = apiDevices[gpu.ID.ToString()];
                     var currentSpeed = apiDevice.solver.solution_rate;
                     totalSpeed += currentSpeed;
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
