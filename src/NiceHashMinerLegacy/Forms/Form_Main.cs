@@ -57,7 +57,7 @@ namespace NiceHashMiner
             Width = ConfigManager.GeneralConfig.MainFormSize.X;
             Height = ConfigManager.GeneralConfig.MainFormSize.Y;
 
-            Text += ApplicationStateManager.Title;
+            Text = ApplicationStateManager.Title;
 
             notifyIcon1.Icon = Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
