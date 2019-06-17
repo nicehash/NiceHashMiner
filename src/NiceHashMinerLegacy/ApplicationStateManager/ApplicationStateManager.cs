@@ -20,6 +20,9 @@ namespace NiceHashMiner
     {
         public static string RigID => UUID.GetDeviceB64UUID();
 
+        // change this if TOS changes
+        public static int CurrentTosVer => 4;
+
         #region Version
         public static string LocalVersion { get; private set; }
         public static string OnlineVersion { get; private set; }

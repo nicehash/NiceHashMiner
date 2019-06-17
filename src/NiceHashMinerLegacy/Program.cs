@@ -13,6 +13,7 @@ using NiceHashMiner.Stats;
 using log4net.Core;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
+using System.Net;
 
 namespace NiceHashMiner
 {
@@ -45,14 +46,12 @@ namespace NiceHashMiner
             Application.SetCompatibleTextRenderingDefault(false);
 
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-            //Console.OutputEncoding = System.Text.Encoding.Unicode;
-            // #0 set this first so data parsing will work correctly
-            Globals.JsonSettings = new JsonSerializerSettings
-            {
-                NullValueHandling = NullValueHandling.Ignore,
-                MissingMemberHandling = MissingMemberHandling.Ignore,
-                Culture = CultureInfo.InvariantCulture
-            };
+            // set security protocols
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls
+                   | SecurityProtocolType.Tls11
+                   | SecurityProtocolType.Tls12
+                   | SecurityProtocolType.Ssl3;
 
             // #1 first initialize config
             ConfigManager.InitializeConfig();
@@ -95,13 +94,13 @@ namespace NiceHashMiner
             }
 
             // check TOS
-            if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer)
+            if (ConfigManager.GeneralConfig.agreedWithTOS != ApplicationStateManager.CurrentTosVer)
             {
-                Logger.Info("NICEHASH", $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {Globals.CurrentTosVer}. Showing TOS Form.");
+                Logger.Info("NICEHASH", $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}. Showing TOS Form.");
 
                 Application.Run(new FormEula());
                 // check TOS after 
-                if (ConfigManager.GeneralConfig.agreedWithTOS != Globals.CurrentTosVer)
+                if (ConfigManager.GeneralConfig.agreedWithTOS != ApplicationStateManager.CurrentTosVer)
                 {
                     Logger.Info("NICEHASH", "TOS differs AFTER TOS confirmation FORM");
                     // TOS not confirmed return from Main

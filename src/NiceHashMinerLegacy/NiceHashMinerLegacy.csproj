@@ -341,7 +341,6 @@
     <Compile Include="Forms\Form_3rdParty_TOS.Designer.cs">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
     </Compile>
-    <Compile Include="Globals_shared.cs" />
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Utils\Links.cs" />

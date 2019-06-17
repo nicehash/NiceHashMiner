@@ -25,6 +25,7 @@ using NiceHashMiner.Utils;
 
 // alias
 using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
+using System.Globalization;
 
 // TODO fix up the namespace
 namespace NiceHashMiner.Plugin
@@ -422,7 +423,12 @@ namespace NiceHashMiner.Plugin
                     string s = client.DownloadString(pluginsJsonApiUrl);
                     //// local fake string
                     //string s = Properties.Resources.pluginJSON;
-                    var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, Globals.JsonSettings);
+                    var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        Culture = CultureInfo.InvariantCulture
+                    });
                     OnlinePlugins = onlinePlugins;
                 }
 
