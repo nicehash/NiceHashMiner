@@ -15,6 +15,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         private static Dictionary<string, List<string>> _pluginsUrls = new Dictionary<string, List<string>>
         {
+            {  "BrokenMinerPluginUUID", new List<string>{ "https://www.bminercontent.com/releases/bminer-lite-v15.5.3-747d98e-amd64.zip" } },
             {  "BMiner", new List<string>{ "https://www.bminercontent.com/releases/bminer-lite-v15.5.3-747d98e-amd64.zip" } },
             {  "CCMinerAlexis", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/CCMinerAlexis.7z" } }, // TODO change link
             {  "CCMinerKlausT", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/CCMinerKlausT.7z" } }, // TODO change link
@@ -36,7 +37,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {  "TTMiner", new List<string>{ "https://tradeproject.de/download/Miner/TT-Miner-2.2.5.zip" } },
             {  "XmrStak", new List<string>{ "https://github.com/nicehash/xmr-stak/releases/download/nhml-2.9.0/xmr-stak-2.10.2-aa9d88b.7z" } },
             {  "VC_REDIST_x64_2015", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/vc_redist.x64.exe.7z" } },
-            {  "BrokenMinerPluginUUID", new List<string>{ "https://www.bminercontent.com/releases/bminer-lite-v15.5.3-747d98e-amd64.zip" } },
             //{  "NanoMiner", new List<string>{ } },
             //{  "PLUGIN_UUID", new List<string>{ urls... } },
         };

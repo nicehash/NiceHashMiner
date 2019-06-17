@@ -29,7 +29,7 @@ namespace BrokenMiner
         bool IMinerPlugin.CanGroup(MiningPair a, MiningPair b) => GetValueOrErrorSettings.GetValueOrError("CanGroup", false);
 
         IEnumerable<string> IBinaryPackageMissingFilesChecker.CheckBinaryPackageMissingFiles() =>
-            GetValueOrErrorSettings.GetValueOrError("CheckBinaryPackageMissingFiles", new List<string> { "bminer.exe" });
+            GetValueOrErrorSettings.GetValueOrError("CheckBinaryPackageMissingFiles", new List<string> { });
 
         IMiner IMinerPlugin.CreateMiner() => GetValueOrErrorSettings.GetValueOrError("CreateMiner", new BrokenMiner());
 
