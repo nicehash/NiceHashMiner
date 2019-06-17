@@ -16,7 +16,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         private static Dictionary<string, List<string>> _pluginsUrls = new Dictionary<string, List<string>>
         {
             {  "BMiner", new List<string>{ "https://www.bminercontent.com/releases/bminer-lite-v15.5.3-747d98e-amd64.zip" } },
-            {  "CCMinerAlexis", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/CCMinerAlexis.7z" } }, // TODO change link
             {  "CCMinerKlausT", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/CCMinerKlausT.7z" } }, // TODO change link
             {  "CCMinerMTP", new List<string>{ "https://github.com/nicehash/ccminer/releases/download/1.1.14/ccminer_mtp.7z" } },
             {  "CCMinerTpruvot", new List<string>{ "https://github.com/tpruvot/ccminer/releases/download/2.3.1-tpruvot/ccminer-2.3.1-cuda10.7z" } },
