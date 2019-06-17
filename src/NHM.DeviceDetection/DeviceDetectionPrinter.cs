@@ -55,7 +55,7 @@ namespace NHM.DeviceDetection
                             var hasExited = run?.WaitForExit(1000) ?? false;
                             if (!hasExited) run.Kill();
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
                             // TODO log
                         }

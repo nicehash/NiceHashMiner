@@ -21,19 +21,25 @@ namespace FirewallRules
             }
             catch (Exception e)
             {
+                Console.WriteLine($"DirSearch error: {e.Message}!");
             }
             return miners;
         }
 
         static void SetFirewallRule(string ruleArgument)
         {
-            Process setRule = new Process();
-            setRule.StartInfo.FileName = "netsh.exe";
-            setRule.StartInfo.Arguments = ruleArgument;
-            setRule.StartInfo.CreateNoWindow = true;
-            setRule.StartInfo.UseShellExecute = false;
-            setRule.Start();
-            setRule.WaitForExit();
+            var startInfo = new ProcessStartInfo
+            {
+                FileName = "netsh.exe",
+                Arguments = ruleArgument,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
+            using (var setRule = new Process())
+            {
+                setRule.Start();
+                setRule.WaitForExit();
+            }
         }
 
         static void AllowFirewallRule(string programFullPath, string name)
