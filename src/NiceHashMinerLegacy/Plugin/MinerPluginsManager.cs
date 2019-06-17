@@ -396,6 +396,21 @@ namespace NiceHashMiner.Plugin
             return ret;
         }
 
+
+        private class NoKeepAlivesWebClient : WebClient
+        {
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+                var request = base.GetWebRequest(address);
+                if (request is HttpWebRequest)
+                {
+                    ((HttpWebRequest)request).KeepAlive = false;
+                }
+
+                return request;
+            }
+        }
+
         // TODO this here is blocking
         public static bool GetOnlineMinerPlugins()
         {
@@ -403,7 +418,7 @@ namespace NiceHashMiner.Plugin
             const string pluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
             try
             {
-                using (var client = new WebClient())
+                using (var client = new NoKeepAlivesWebClient())
                 {
                     string s = client.DownloadString(pluginsJsonApiUrl);
                     //// local fake string
