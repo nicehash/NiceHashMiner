@@ -41,8 +41,8 @@ namespace MinerPluginToolkitV1.SgminerCommon
                 {
                     case AlgorithmType.NeoScrypt:
                         return "neoscrypt";
-                    case AlgorithmType.Keccak:
-                        return "keccak";
+                    //case AlgorithmType.Keccak:
+                    //    return "keccak";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
                     case AlgorithmType.X16R:

@@ -29,7 +29,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {  "Phoenix", new List<string>{ "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?6UV1FQSZ" } },
             {  "SGminerAvemore", new List<string>{ "https://github.com/brian112358/avermore-miner/releases/download/v1.4.1/avermore-v1.4.1-windows.zip" } },
             {  "SGminerGM", new List<string>{ "https://github.com/nicehash/sgminer-gm/releases/download/5.5.5-8/sgminer-5.5.5-gm-nicehash-8-windows-amd64.zip" } },
-            {  "SGminerNHGeneral", new List<string>{ "https://github.com/nicehash/sgminer/releases/download/5.6.1/sgminer-5.6.1-nicehash-51-windows-amd64.zip" } },
             {  "TeamRedMiner", new List<string>{ "https://github.com/todxx/teamredminer/releases/download/v0.4.5/teamredminer-v0.4.5-win.zip" } },
             {  "TRex", new List<string>{ "https://github.com/trexminer/T-Rex/releases/download/0.11.0/t-rex-0.11.0-win-cuda10.0.zip" } },
             {  "TTMiner", new List<string>{ "https://tradeproject.de/download/Miner/TT-Miner-2.2.5.zip" } },

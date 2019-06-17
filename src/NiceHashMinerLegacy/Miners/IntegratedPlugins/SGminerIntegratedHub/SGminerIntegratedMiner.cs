@@ -37,8 +37,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
                     // nh general
                     case AlgorithmType.NeoScrypt:
                         return "neoscrypt";
-                    case AlgorithmType.Keccak:
-                        return "keccak";
                     default:
                         return "";
                 }

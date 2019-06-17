@@ -184,15 +184,17 @@ namespace NiceHashMiner.Stats
         }
 
         private static void throwIfWeCannotHanldeRPC() {
-            if (ApplicationStateManager.CalcRigStatus() == RigStatus.Pending) {
-                throw new RpcException("Cannot handle RPC call Rig is in PENDING state", ErrorCode.UnableToHandleRpc);
+            var rigStatusPending = ApplicationStateManager.CalcRigStatus() == RigStatus.Pending;
+            var formState = ApplicationStateManager.IsInBenchmarkForm() ? ". Rig is in benchmarks form" : "";
+            if (ApplicationStateManager.IsInSettingsForm())
+            {
+                formState = ". Rig is in settings form";
             }
-            if (ApplicationStateManager.IsInBenchmarkForm()) {
-                throw new RpcException("Cannot handle RPC call Rig is in benchmarks form", ErrorCode.UnableToHandleRpc);
-            }
-            if (ApplicationStateManager.IsInSettingsForm()) {
-                throw new RpcException("Cannot handle RPC call rig is in settings form", ErrorCode.UnableToHandleRpc);
-            }
+            // throw if pending
+            if (rigStatusPending)
+            {
+                throw new RpcException($"Cannot handle RPC call Rig is in PENDING state{formState}", ErrorCode.UnableToHandleRpc);
+            }            
         }
 
 

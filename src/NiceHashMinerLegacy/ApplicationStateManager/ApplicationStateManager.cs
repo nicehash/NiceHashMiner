@@ -288,6 +288,10 @@ namespace NiceHashMiner
             {
                 return RigStatus.Pending;
             }
+            if (IsInBenchmarkForm() || IsInSettingsForm())
+            {
+                return RigStatus.Pending;
+            }
             // TODO check if we are connected to ws if not retrun offline state
 
             // check devices
@@ -331,7 +335,16 @@ namespace NiceHashMiner
             Benchmark,
             Settings,
         }
-        public static CurrentFormState CurrentForm { get; set; } = CurrentFormState.Main;
+        private static CurrentFormState _currentForm = CurrentFormState.Main;
+        public static CurrentFormState CurrentForm
+        {
+            get => _currentForm;
+            set
+            {
+                _currentForm = value;
+                NiceHashStats.StateChanged();
+            }
+        }
         public static bool IsInBenchmarkForm() {
             return CurrentForm == CurrentFormState.Benchmark;
         }

@@ -27,7 +27,6 @@ namespace NiceHashMiner
 
         private bool _exitCalled = false;
 
-        private Form_Benchmark _benchmarkForm;
         private Form_MinerPlugins _minerPluginsForm;
 
         //private bool _isDeviceDetectionInitialized = false;
@@ -207,7 +206,7 @@ namespace NiceHashMiner
                     Logger.Info("NICEHASH", "Resumed from idling");
                 }
             }
-            else if (_benchmarkForm == null && e.IsIdle)
+            else if (ApplicationStateManager.CurrentForm == ApplicationStateManager.CurrentFormState.Main && e.IsIdle)
             {
                 Logger.Info("NICEHASH", "Entering idling state");
                 if (StartMining(false) != StartMiningReturnType.StartMining)
@@ -408,15 +407,14 @@ namespace NiceHashMiner
         private void ButtonBenchmark_Click(object sender, EventArgs e)
         {
             bool startMining = false;
-            using (_benchmarkForm = new Form_Benchmark())
+            using (var benchmarkForm = new Form_Benchmark())
             {
-                SetChildFormCenter(_benchmarkForm);
+                SetChildFormCenter(benchmarkForm);
                 ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Benchmark;
-                _benchmarkForm.ShowDialog();
+                benchmarkForm.ShowDialog();
                 ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Main;
-                startMining = _benchmarkForm.StartMiningOnFinish;
+                startMining = benchmarkForm.StartMiningOnFinish;
             }
-            _benchmarkForm = null;
 
             InitMainConfigGuiData();
             if (startMining)
