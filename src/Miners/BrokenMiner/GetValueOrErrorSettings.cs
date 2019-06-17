@@ -27,25 +27,25 @@ namespace BrokenMiner
         private static Dictionary<string, bool> _settings = new Dictionary<string, bool>
         {
             //plugin
-            { "Version", false },
-            { "Name", false},
+            { "Version", false }, //breaks at MinerPluginsManager.cs:127
+            { "Name", false}, //breaks at MinerPluginsManager.cs:127
             { "Author", false }, //doesn't break anything
-            { "PluginUUID", false },
-            { "CanGroup", false}, //NO
-            { "CheckBinaryPackageMissingFiles", false}, // vse je ok
-            { "CreateMiner", false},
-            { "GetApiMaxTimeout", false},
-            { "GetSupportedAlgorithms", false},
-            { "InitInternals", false},
-            { "ShouldReBenchmarkAlgorithmOnDevice", false},
+            { "PluginUUID", false }, //breaks at MinerPluginsManager.cs:90
+            { "CanGroup", false}, //doesn't break anything
+            { "CheckBinaryPackageMissingFiles", false}, // broken miner doesn't get downloaded
+            { "CreateMiner", false}, // NHML crashes if the mining wants to be started
+            { "GetApiMaxTimeout", false}, // doesn't break anything
+            { "GetSupportedAlgorithms", false}, //breaks at MinerPluginsManager.cs:116
+            { "InitInternals", false}, //breaks at MinerPluginsManager.cs:138
+            { "ShouldReBenchmarkAlgorithmOnDevice", false}, // doesn't break anything
 
             //miner
-            { "GetMinerStatsDataAsync", false},
-            { "InitMiningLocationAndUsername", false},
-            { "InitMiningPairs", false},
-            { "StartBenchmark", false},
-            { "StartMining", false},
-            { "StopMining", false}
+            { "GetMinerStatsDataAsync", false}, // doesn't break anything
+            { "InitMiningLocationAndUsername", false}, // doesn't break anything
+            { "InitMiningPairs", false}, // doesn't break anything
+            { "StartBenchmark", false}, // doesn't break anything
+            { "StartMining", true}, // doesn't break anything
+            { "StopMining", true} // doesn't break anything
             //{ "KEY", false }
         };
 
