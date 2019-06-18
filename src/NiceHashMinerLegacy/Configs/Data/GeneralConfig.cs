@@ -88,7 +88,17 @@ namespace NiceHashMiner.Configs.Data
             }
         }
 
-        public bool AutoScaleBTCValues { get; set; } = true;
+        private bool _autoScaleBTCValues = true;
+        public bool AutoScaleBTCValues
+        {
+            get => _autoScaleBTCValues;
+            set
+            {
+                _autoScaleBTCValues = value;
+                ApplicationStateManager.OnAutoScaleBTCValuesChange();
+            }
+        }
+
 
         public bool StartMiningWhenIdle
         {
