@@ -12,7 +12,7 @@ namespace BrokenMiner
     {
         static GetValueOrErrorSettings()
         {
-            var settingsPath = Paths.MinerPluginsPath("BrokenPlugin", "settings.json");
+            var settingsPath = Paths.MinerPluginsPath("BrokenMinerPluginUUID", "settings.json");
             var globalBenchmarkExceptions = InternalConfigs.ReadFileSettings<Dictionary<string, bool>>(settingsPath);
             if (globalBenchmarkExceptions != null)
             {
@@ -44,8 +44,8 @@ namespace BrokenMiner
             { "InitMiningLocationAndUsername", false}, // doesn't break anything
             { "InitMiningPairs", false}, // doesn't break anything
             { "StartBenchmark", false}, // doesn't break anything
-            { "StartMining", true}, // doesn't break anything
-            { "StopMining", true} // doesn't break anything
+            { "StartMining", false}, // doesn't break anything
+            { "StopMining", false} // doesn't break anything
             //{ "KEY", false }
         };
 
