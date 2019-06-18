@@ -21,7 +21,7 @@ namespace NiceHashMinerLegacy.Common.Enums
         X11 = 3,
         [Obsolete("UNUSED Algorithm")]
         X13 = 4,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         Keccak = 5,
         [Obsolete("UNUSED Algorithm")]
         X15 = 6,

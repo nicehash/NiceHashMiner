@@ -10,10 +10,11 @@ namespace NiceHashMiner.Stats
 {
     public class NiceHashSocket
     {
-        private WebSocket _webSocket;
+        private WebSocket _webSocket = null;
         public bool IsAlive => _webSocket.ReadyState == WebSocketState.Open;
         private bool _attemptingReconnect;
         private bool _endConnection = false;
+        private bool _restartConnection = false;
         private bool _connectionAttempted;
         private bool _connectionEstablished;
         private readonly Random _random = new Random();
@@ -44,7 +45,7 @@ namespace NiceHashMiner.Stats
             _connectionAttempted = true;
             // TESTNET
 #if TESTNET || TESTNETDEV
-            _login.rig = Globals.RigID;
+            _login.rig = ApplicationStateManager.RigID;
 
             if (btc != null) _login.btc = btc;
             if (worker != null) _login.worker = worker;
@@ -67,13 +68,19 @@ namespace NiceHashMiner.Stats
                 }
                 else
                 {
-                    _webSocket.Close();
+                    NiceHashMinerLegacy.Common.Logger.Info("SOCKET", $"Credentials change reconnecting nhmws");
+                    _connectionEstablished = false;
+                    _restartConnection = true;
+                    _webSocket?.Close(CloseStatusCode.Normal, $"Credentials change reconnecting {ApplicationStateManager.Title}.");
                 }
+                NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "Connecting");
                 _webSocket.Connect();
+                NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "Connected");
                 _connectionEstablished = true;
+                _restartConnection = false;
             } catch (Exception e)
             {
-                NiceHashMinerLegacy.Common.Logger.Info("SOCKET", e.ToString());
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.ToString());
             }
         }
 
@@ -82,7 +89,7 @@ namespace NiceHashMiner.Stats
             _endConnection = true;
             // TODO client away
             //CloseStatusCode.Away
-            _webSocket?.Close(CloseStatusCode.Normal, "Exiting NiceHashMiner Legacy");
+            _webSocket?.Close(CloseStatusCode.Normal, $"Exiting {ApplicationStateManager.Title}");
         }
 
         private void ReceiveCallback(object sender, MessageEventArgs e)
@@ -98,7 +105,10 @@ namespace NiceHashMiner.Stats
         private void CloseCallback(object sender, CloseEventArgs e)
         {
             NiceHashMinerLegacy.Common.Logger.Info("NiceHashSocket", $"Connection closed code {e.Code}: {e.Reason}");
-            AttemptReconnect();
+            if(!_restartConnection)
+            {
+                AttemptReconnect();
+            }
         }
 
         private void Login(object sender, EventArgs e)
@@ -121,7 +131,7 @@ namespace NiceHashMiner.Stats
             //TESTNET
 #if TESTNET || TESTNETDEV
             // skip sending if no btc set send only login
-            if (BitcoinAddress.ValidateBitcoinAddress(_login.btc) == false && data.Contains("{\"method\":\"login\"") == false)
+            if (CredentialValidators.ValidateBitcoinAddress(_login.btc) == false && data.Contains("{\"method\":\"login\"") == false)
             {
                 NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "Skipping SendData no BTC address");
                 return false;

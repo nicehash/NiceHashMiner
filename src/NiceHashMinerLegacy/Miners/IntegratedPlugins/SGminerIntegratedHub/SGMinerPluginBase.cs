@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker, IGetApiMaxTimeout
+    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker, IGetApiMaxTimeout, IMinerBinsSource
     {
         public bool Is3rdParty => false;
 
@@ -29,7 +29,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public IMiner CreateMiner()
         {
-            return new SGminerIntegratedMiner(PluginUUID, AMDDevice.OpenCLPlatformID)
+            return new SGminerIntegratedMiner(PluginUUID, AMDDevice.GlobalOpenCLPlatformID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -82,6 +82,11 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         public TimeSpan GetApiMaxTimeout()
         {
             return new TimeSpan(0, 5, 0);
+        }
+
+        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        {
+            return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace ClaymoreDual
             int claymoreIndex = -1;
             // AMD
             var amdGpus = devices
-                .Where(dev => dev is AMDDevice)
+                .Where(dev => dev is AMDDevice gpu && !Checkers.IsGcn4(gpu))
                 .Cast<AMDDevice>()
                 .OrderBy(amd => amd.PCIeBusID);
             foreach (var gpu in amdGpus)
@@ -59,7 +59,7 @@ namespace ClaymoreDual
             if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
 
             var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3)
+                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3 && gpu.SM_major < 6)
                 .Cast<CUDADevice>()
                 .OrderBy(gpu => gpu.PCIeBusID); ;
 
@@ -400,9 +400,9 @@ namespace ClaymoreDual
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "cudart64_91.dll", "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
                 @"cuda10.0\cudart64_100.dll", @"cuda10.0\EthDcrMiner64.exe", @"cuda6.5\cudart64_65.dll", @"cuda6.5\EthDcrMiner64.exe", @"cuda7.5\cudart64_75.dll", @"cuda7.5\EthDcrMiner64.exe",
-                @"cuda8.0\cudart64_80.dll", @"cuda8.0\EthDcrMiner64.exe", @"Remote manager\EthMan.exe", @"Remote manager\libeay32.dll", @"Remote manager\ssleay32.dll"
+                @"Remote manager\EthMan.exe", @"Remote manager\libeay32.dll", @"Remote manager\ssleay32.dll"
             });
         }
 

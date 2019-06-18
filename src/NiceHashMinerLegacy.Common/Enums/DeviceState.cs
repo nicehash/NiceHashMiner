@@ -12,5 +12,6 @@ namespace NiceHashMinerLegacy.Common.Enums
         Error,
         Pending,
         Disabled,
+        // TODO Extra states, NotProfitable
     }
 }

@@ -16,6 +16,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
 using NiceHashMinerLegacy.Common;
 using MinerPluginToolkitV1.Interfaces;
+using System.Threading;
 
 namespace NiceHashMiner.Miners
 {
@@ -25,6 +26,8 @@ namespace NiceHashMiner.Miners
         private readonly IMinerPlugin _plugin;
         private readonly IMiner _miner;
 
+        private readonly SemaphoreSlim _apiSemaphore = new SemaphoreSlim(1, 1);
+
         public MinerFromPlugin(string pluginUUID, List<MiningPair> miningPairs, string groupKey) : base(pluginUUID, miningPairs, groupKey)
         {
             _plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
@@ -33,10 +36,26 @@ namespace NiceHashMiner.Miners
 
         public override async Task<ApiData> GetSummaryAsync()
         {
-            IsUpdatingApi = true;
-            var apiData = await _miner.GetMinerStatsDataAsync();
-            IsUpdatingApi = false;
-
+            var apiData = new ApiData();
+            if (!IsUpdatingApi)
+            {
+                IsUpdatingApi = true;
+                await _apiSemaphore.WaitAsync();
+                try
+                {
+                    apiData = await _miner.GetMinerStatsDataAsync();
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(MinerTag(), $"GetSummaryAsync error: {e.Message}");
+                }
+                finally
+                {
+                    IsUpdatingApi = false;
+                    _apiSemaphore.Release();
+                }
+            }
+            
             UpdateApiTimestamp(apiData);
 
             // TODO workaround plugins should return this info
@@ -62,6 +81,16 @@ namespace NiceHashMiner.Miners
                 apiData.PowerUsagePerDevice = perDevicePowerDict;
                 apiData.PowerUsageTotal = 0;
                 apiData.AlgorithmSpeedsTotal = perDeviceSpeedsDict.First().Value;
+            } else if(apiData.AlgorithmSpeedsPerDevice != null && apiData.PowerUsagePerDevice.Count == 0)
+            {
+                var perDevicePowerDict = new Dictionary<string, int>();
+                foreach (var kvp in MiningPairs)
+                {
+                    var uuid = kvp.Device.UUID;
+                    perDevicePowerDict[uuid] = 0;
+                }
+                apiData.PowerUsagePerDevice = perDevicePowerDict;
+                apiData.PowerUsageTotal = 0;
             }
 
             // TODO temporary here move it outside later

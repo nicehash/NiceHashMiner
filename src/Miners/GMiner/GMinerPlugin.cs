@@ -28,11 +28,13 @@ namespace GMinerPlugin
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 5);
+        public Version Version => new Version(1, 6);
 
         public string Name => "GMinerCuda9.0+";
 
         public string Author => "stanko@nicehash.com";
+
+        protected readonly Dictionary<string, int> _mappedCudaIds = new Dictionary<string, int>();
 
         public bool CanGroup(MiningPair a, MiningPair b)
         {
@@ -41,7 +43,7 @@ namespace GMinerPlugin
 
         public IMiner CreateMiner()
         {
-            return new GMiner(PluginUUID)
+            return new GMiner(PluginUUID, _mappedCudaIds)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -95,7 +97,7 @@ namespace GMinerPlugin
             foreach (var gpu in cudaGpus)
             {
                 // naive method
-                Shared.MappedCudaIds[gpu.UUID] = pcieId;
+                _mappedCudaIds[gpu.UUID] = pcieId;
                 ++pcieId;
                 var algorithms = GetCUDASupportedAlgorithms(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
@@ -111,7 +113,7 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
-                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
@@ -123,7 +125,7 @@ namespace GMinerPlugin
             {
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
-                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false },
+                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
@@ -211,7 +213,7 @@ namespace GMinerPlugin
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (Shared.MappedCudaIds.Count == 0) return;
+            if (_mappedCudaIds.Count == 0) return;
             // TODO will block
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
@@ -223,7 +225,7 @@ namespace GMinerPlugin
             {
                 var uuid = kvp.Key;
                 var indexID = kvp.Value;
-                Shared.MappedCudaIds[uuid] = indexID;
+                _mappedCudaIds[uuid] = indexID;
             }
         }
 
@@ -237,17 +239,12 @@ namespace GMinerPlugin
 
         public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            /*
             var benchmarkedVersionIsSame = Version.Major == benchmarkedPluginVersion.Major && Version.Minor == benchmarkedPluginVersion.Minor;
             var benchmarkedVersionIsOlder = Version.Major >= benchmarkedPluginVersion.Major && Version.Minor > benchmarkedPluginVersion.Minor;
             if (benchmarkedVersionIsSame || !benchmarkedVersionIsOlder) return false;
             if (ids.Count() == 0) return false;
-            // plugin version 1.2 bundles GMiner v1.36
-            // plugin version 1.3 bundles GMiner v1.42
-            // performance optimizations Beam (Significant performance improvements) and Grin29,
-            // since there are improvements on AMD and NVIDIA we will not check device type, also there were 4 releases in between and many changes
-            var singleAlgorithm = ids[0];
-            if (singleAlgorithm == AlgorithmType.Beam) return true;
-            if (singleAlgorithm == AlgorithmType.GrinCuckaroo29) return true;
+            */
 
             return false;
         }

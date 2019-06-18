@@ -23,6 +23,7 @@ using WebSocketSharp;
 using NiceHashMiner.Configs;
 // static imports
 using static NiceHashMiner.Stats.StatusCodes;
+using NHM.DeviceMonitoring;
 
 namespace NiceHashMiner.Stats
 {
@@ -183,15 +184,17 @@ namespace NiceHashMiner.Stats
         }
 
         private static void throwIfWeCannotHanldeRPC() {
-            if (ApplicationStateManager.CalcRigStatus() == RigStatus.Pending) {
-                throw new RpcException("Cannot handle RPC call Rig is in PENDING state", ErrorCode.UnableToHandleRpc);
+            var rigStatusPending = ApplicationStateManager.CalcRigStatus() == RigStatus.Pending;
+            var formState = ApplicationStateManager.IsInBenchmarkForm() ? ". Rig is in benchmarks form" : "";
+            if (ApplicationStateManager.IsInSettingsForm())
+            {
+                formState = ". Rig is in settings form";
             }
-            if (ApplicationStateManager.IsInBenchmarkForm()) {
-                throw new RpcException("Cannot handle RPC call Rig is in benchmarks form", ErrorCode.UnableToHandleRpc);
-            }
-            if (ApplicationStateManager.IsInSettingsForm()) {
-                throw new RpcException("Cannot handle RPC call rig is in settings form", ErrorCode.UnableToHandleRpc);
-            }
+            // throw if pending
+            if (rigStatusPending)
+            {
+                throw new RpcException($"Cannot handle RPC call Rig is in PENDING state{formState}", ErrorCode.UnableToHandleRpc);
+            }            
         }
 
 
@@ -413,13 +416,13 @@ namespace NiceHashMiner.Stats
                 AvailableDevices.Devices : 
                 AvailableDevices.Devices.Where(d => d.B64Uuid == device);
 
-            var found = false;
+            var found = devs.Count() > 0;
 
             foreach (var dev in devs)
             {
-                if (!(dev is CudaComputeDevice cuda)) continue;
-                cuda.SetPowerTarget(level);
-                found = true;
+                if (!(dev.DeviceMonitor is ISetPowerLevel set)) continue;
+                // TODO check if set
+                set.SetPowerTarget(level);
             }
 
             if (!found)
@@ -434,7 +437,7 @@ namespace NiceHashMiner.Stats
 
         public static void SetCredentials(string btc, string worker, string group)
         {
-            if (BitcoinAddress.ValidateBitcoinAddress(btc) && BitcoinAddress.ValidateWorkerName(worker))
+            if (CredentialValidators.ValidateBitcoinAddress(btc) && CredentialValidators.ValidateWorkerName(worker))
             {
                 // Send as task since SetCredentials is called from UI threads
                 Task.Factory.StartNew(() =>
@@ -486,14 +489,7 @@ namespace NiceHashMiner.Stats
                     array.Add((int) Math.Round(device.PowerUsage));
 
                     // Power mode
-                    if (device is CudaComputeDevice cuda)
-                    {
-                        array.Add((int) cuda.PowerLevel);
-                    }
-                    else
-                    {
-                        array.Add(0);
-                    }
+                    array.Add((int)device.PowerLevel);
 
                     // Intensity mode
                     array.Add(0);

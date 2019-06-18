@@ -63,10 +63,7 @@ namespace CPUMinerBase
                 }
                 catch (Exception e)
                 {
-                    if (e.Message != "An item with the same key has already been added.")
-                    {
-                        Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
-                    }
+                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
                 }
             }
             var ad = new ApiData();

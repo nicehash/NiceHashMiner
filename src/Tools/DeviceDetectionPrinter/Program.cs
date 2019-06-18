@@ -28,18 +28,19 @@ namespace DeviceDetectionPrinter
         {
             if (args.Count() < 1)
             {
-                Console.WriteLine("Error usage [ocl|cuda] [-|p]");
+                Console.WriteLine("Error usage [ocl|cuda] [-nvmlFallback] [-p] [-n]");
                 return;
             }
-            var detectionType = GetDetectionType(args[0].ToLower());
+            var typeStr = args.FirstOrDefault() ?? "";
+            var detectionType = GetDetectionType(typeStr.ToLower());
             if (detectionType != DetectionType.CUDA && detectionType != DetectionType.OPEN_CL)
             {
-                Console.WriteLine("Error usage [ocl|cuda] [-|p]");
+                Console.WriteLine("Error usage [ocl|cuda] [-nvmlFallback] [-p] [-n]");
                 return;
             }
-
-            var isPretty = args.Count() >= 2 && args[1] != "-";
-            var isNoNewline = args.Count() >= 2 && args[1] == "-";
+            var nvmlFallback = args.Contains("-nvmlFallback");
+            var isPretty = args.Contains("-p");
+            var isNoNewline = args.Contains("-n");
             string printString = null;
 
             if (detectionType == DetectionType.OPEN_CL)
@@ -47,7 +48,7 @@ namespace DeviceDetectionPrinter
                 printString = DeviceDetection.GetOpenCLDevices(isPretty);
             } else if(detectionType == DetectionType.CUDA)
             {
-                printString = DeviceDetection.GetCUDADevices(isPretty);
+                printString = DeviceDetection.GetCUDADevices(isPretty, nvmlFallback);
             }
 
             Console.Write(printString);

@@ -47,11 +47,7 @@ namespace NiceHashMiner.Benchmarking
 
         public void Start()
         {
-            // TODO ditch the thread and use Task
-            var thread = new Thread(async () => await Benchmark());
-            if (thread.Name == null)
-                thread.Name = $"dev_{Device.DeviceType}-{Device.ID}_benchmark";
-            thread.Start();
+            Task.Run(async () => await Benchmark());
         }
 
         private async Task Benchmark()
@@ -100,7 +96,7 @@ namespace NiceHashMiner.Benchmarking
             var miner = plugin.CreateMiner();
             var miningPair = new MinerPlugin.MiningPair
             {
-                Device = Device.PluginDevice,
+                Device = Device.BaseDevice,
                 Algorithm = algo.BaseAlgo
             };
             // check ethlargement

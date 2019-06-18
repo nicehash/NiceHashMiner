@@ -31,7 +31,7 @@ namespace NiceHashMiner
         {
             get
             {
-                return " v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTag;
+                return "NiceHash Miner Legacy v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTag;
             }
         }
         #endregion BuildTag
@@ -65,8 +65,11 @@ namespace NiceHashMiner
             MessageBoxManager.Unregister();
         }
 
+        private static bool _restartCalled = false;
         public static void RestartProgram()
         {
+            if (_restartCalled) return;
+            _restartCalled = true;
             var startInfo = new ProcessStartInfo { FileName = Application.ExecutablePath };
             using (var pHandle = new Process { StartInfo = startInfo })
             {
@@ -90,7 +93,7 @@ namespace NiceHashMiner
         public static bool SystemRequirementsEnsured()
         {
             // check WMI
-            if (!WindowsManagementObjectSearcher.IsWmiEnabled())
+            if (!SystemSpecs.IsWmiEnabled())
             {
                 MessageBox.Show(Tr("NiceHash Miner Legacy cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner Legacy to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner Legacy."),
                         Tr("Windows Management Instrumentation Error"),

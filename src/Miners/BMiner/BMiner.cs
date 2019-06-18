@@ -69,15 +69,16 @@ namespace BMiner
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
+                var apiDevices = summary.miners;
 
                 foreach(var gpu in gpus)
                 {
-                    if (summary.miners == null) continue;
-
-                    var currentSpeed = summary.miners[$"{gpu.ID}"].solver.solution_rate;
+                    if (apiDevices == null) continue;
+                    var apiDevice = apiDevices[gpu.ID.ToString()];
+                    var currentSpeed = apiDevice.solver.solution_rate;
                     totalSpeed += currentSpeed;
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
-                    var currentPower = summary.miners[$"{gpu.ID}"].device.power;
+                    var currentPower = apiDevice.device.power;
                     totalPowerUsage += currentPower;
                     perDevicePowerInfo.Add(gpu.UUID, currentPower);
                 }
@@ -89,10 +90,7 @@ namespace BMiner
             }
             catch (Exception e)
             {
-                if(e.Message != "An item with the same key has already been added.")
-                {
-                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
-                }
+                Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
             return api;
@@ -163,11 +161,9 @@ namespace BMiner
 
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins", "bminer-lite-v15.5.3-747d98e");
             var binPath = Path.Combine(pluginRootBins, "bminer.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
+            return Tuple.Create(binPath, pluginRootBins);
         }
 
         protected override void Init()

@@ -23,7 +23,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {
                 case AlgorithmType.NeoScrypt: return "neoscrypt";
                 case AlgorithmType.Blake2s: return "blake2s";
-                case AlgorithmType.Keccak: return "keccak";
                 case AlgorithmType.Skunk: return "skunk";
                 case AlgorithmType.X16R: return "x16r";
                 case AlgorithmType.Lyra2REv3: return "lyra2v3";
@@ -33,5 +32,17 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             return "";
         }
 #pragma warning restore 0618
+
+        public override Tuple<string, string> GetBinAndCwdPaths()
+        {
+            if (_uuid != "CCMinerTpruvot")
+            {
+                return base.GetBinAndCwdPaths();
+            }
+
+            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins");
+            var binPath = Path.Combine(pluginRootBins, "ccminer-x64.exe");
+            return Tuple.Create(binPath, pluginRootBins);
+        }
     }
 }

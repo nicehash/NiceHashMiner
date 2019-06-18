@@ -1,5 +1,4 @@
-﻿using NiceHashMinerLegacy.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -8,22 +7,22 @@ using System.Threading.Tasks;
 
 namespace DeviceDetectionPrinter
 {
-    static class DeviceDetection
+    internal static class DeviceDetection
     {
         [DllImport("cuda_device_detection.dll", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr _GetCUDADevices(bool prettyString);
+        private static extern IntPtr _GetCUDADevices(bool prettyString, bool useNvmlFallback);
 
-        public static string GetCUDADevices(bool prettyString)
+        public static string GetCUDADevices(bool prettyString, bool useNvmlFallback)
         {
             try
             {
-                var a = _GetCUDADevices(prettyString);
+                var a = _GetCUDADevices(prettyString, useNvmlFallback);
                 var ret = Marshal.PtrToStringAnsi(a);
                 return ret;
             }
             catch (Exception e)
             {
-                Logger.Error("DEVICE DETECTION", $"Error calling CUDA get error: {e.Message}");
+                Console.WriteLine("DEVICE DETECTION", $"Error calling CUDA get error: {e.Message}");
             }
             return "";
         }
@@ -41,7 +40,7 @@ namespace DeviceDetectionPrinter
             }
             catch (Exception e)
             {
-                Logger.Error("DEVICE DETECTION", $"Error calling OpenCL get error: {e.Message}");
+                Console.WriteLine("DEVICE DETECTION", $"Error calling OpenCL get error: {e.Message}");
             }
             return "";
         }

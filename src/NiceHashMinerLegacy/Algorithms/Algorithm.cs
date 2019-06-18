@@ -122,7 +122,23 @@ namespace NiceHashMiner.Algorithms
             }
         }
 
-        public virtual string CurPayingRate
+        public double CurPayingRate
+        {
+            get
+            {
+                var payingRate = 0d;
+                for (int i = 0; i < IDs.Count(); i++)
+                {
+                    var id = IDs[i];
+                    if (NHSmaData.TryGetPaying(id, out var paying) == false) continue;
+                    var speed = Speeds[i];
+                    payingRate += speed * paying * Mult;
+                }
+                return payingRate;
+            }
+        }
+
+        public string CurPayingRateStr
         {
             get
             {

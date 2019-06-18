@@ -1,4 +1,5 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
@@ -9,10 +10,11 @@ using NiceHashMinerLegacy.Common.Device;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    abstract class CCMinersPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IGetApiMaxTimeout
+    abstract class CCMinersPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IGetApiMaxTimeout, IMinerBinsSource, IBinaryPackageMissingFilesChecker
     {
         public bool Is3rdParty => false;
 
@@ -123,6 +125,23 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         public TimeSpan GetApiMaxTimeout()
         {
             return new TimeSpan(0, 1, 0);
+        }
+
+        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        {
+            return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
+        }
+
+        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            if (PluginUUID != "CCMinerTpruvot")
+            {
+                return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "ccminer.exe" });
+            }
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "ccminer-x64.exe" });
         }
     }
 }

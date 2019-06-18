@@ -101,7 +101,7 @@ namespace BMiner
         #region Internal settings
         public void InitInternals()
         {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
+            var pluginRoot = Paths.MinerPluginsPath(PluginUUID);
 
             var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
             if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;

@@ -25,6 +25,7 @@ using NiceHashMiner.Utils;
 
 // alias
 using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
+using System.Globalization;
 
 // TODO fix up the namespace
 namespace NiceHashMiner.Plugin
@@ -40,14 +41,12 @@ namespace NiceHashMiner.Plugin
         public static List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
         {
             // open source
-            new CCMinerAlexisIntegratedPlugin(),
             new CCMinerKlausTIntegratedPlugin(),
             new CCMinerMTPIntegratedPlugin(),
             new CCMinerTpruvotIntegratedPlugin(),
             new CCMinerX16RIntegratedPlugin(),
-            new SGminerAvemoreIntegratedPlugin(),
+            //new SGminerAvemoreIntegratedPlugin(),
             new SGminerGMIntegratedPlugin(),
-            new SGminerNHGeneralIntegratedPlugin(),
             new XmrStakIntegratedPlugin(),
 
             // 3rd party
@@ -61,12 +60,16 @@ namespace NiceHashMiner.Plugin
             new TRexIntegratedPlugin(),
             new TTMinerIntegratedPlugin(),
             //new NanoMinerIntegratedPlugin(),
+            new ClaymoreDual14IntegratedPlugin(),
 
             // service plugin
-            EthlargementIntegratedPlugin.Instance
+            EthlargementIntegratedPlugin.Instance,
+
+            // plugin dependencies
+            VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance
         };
 
-
+        private static HashSet<string> _compatiblePlugins = new HashSet<string>();
         private static Dictionary<string, bool> _integratedPluginsInitialized = new Dictionary<string, bool>();
         private static Dictionary<string, Dictionary<BaseDevice, IReadOnlyList<CommonAlgorithm.Algorithm>>> _integratedPluginsCachedAlgorithms = new Dictionary<string, Dictionary<BaseDevice, IReadOnlyList<CommonAlgorithm.Algorithm>>>();
 
@@ -76,10 +79,11 @@ namespace NiceHashMiner.Plugin
             var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             // get devices
             var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
             // examine all plugins and what to use
             foreach (var plugin in IntegratedPlugins)
             {
+                //_compatiblePlugins.Add(plugin.PluginUUID); // TODO to download all miners uncomment this line
                 var pluginUuid = plugin.PluginUUID;
                 var pluginName = plugin.Name;
 
@@ -102,13 +106,16 @@ namespace NiceHashMiner.Plugin
                     }
                     continue;
                 }
-                    
+
                 // register and add 
+                if (plugin is IBackroundService) _compatiblePlugins.Add(pluginUuid);
+                if (plugin is IPluginDependency) _compatiblePlugins.Add(pluginUuid);
                 var supported = plugin.GetSupportedAlgorithms(baseDevices);
                 _integratedPluginsCachedAlgorithms[pluginUuid] = supported;
                 // check out the supported algorithms
                 foreach (var pair in supported)
                 {
+                    _compatiblePlugins.Add(pluginUuid);
                     var bd = pair.Key;
                     var algos = pair.Value;
                     var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
@@ -123,6 +130,7 @@ namespace NiceHashMiner.Plugin
             {
                 var pluginUuid = plugin.PluginUUID;
                 if (plugin.Is3rdParty && !is3rdPartyEnabled) continue;
+                if (_compatiblePlugins.Contains(pluginUuid) == false) continue;
                 if (_integratedPluginsInitialized.ContainsKey(pluginUuid) && _integratedPluginsInitialized[pluginUuid]) continue;
                 if (plugin is IInitInternals pluginWithInternals) pluginWithInternals.InitInternals();
                 _integratedPluginsInitialized[pluginUuid] = true;
@@ -191,7 +199,7 @@ namespace NiceHashMiner.Plugin
             var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             // get devices
             var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
             foreach (var plugin in IntegratedPlugins)
             {
                 var pluginUuid = plugin.PluginUUID;
@@ -210,13 +218,39 @@ namespace NiceHashMiner.Plugin
             }
         }
 
+        public static async Task DownloadMissingIntegratedMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
+        {
+            var compatiblePlugins = IntegratedPlugins
+                .Where(p => _compatiblePlugins.Contains(p.PluginUUID))
+                .Where(p => p is IMinerBinsSource)
+                .Where(p => p is IBinaryPackageMissingFilesChecker)
+                .ToArray();
+
+            foreach (var plugin in compatiblePlugins)
+            {
+                var downloadSource = plugin as IMinerBinsSource;
+                var isMissingCheck = plugin as IBinaryPackageMissingFilesChecker;
+                var urls = downloadSource.GetMinerBinsUrls();
+                var missingFiles = isMissingCheck.CheckBinaryPackageMissingFiles();
+                var hasMissingFiles = missingFiles.Count() > 0;
+                var hasUrls = urls.Count() > 0;
+                if (hasMissingFiles && hasUrls)
+                {
+                    var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
+                    var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
+                    await DownloadInternalBins(plugin.PluginUUID, urls.ToList(), downloadProgress, unzipProgress, stop);
+                }
+            }
+        }
+
         // for now integrated only
-        public static List<string> GetMissingMiners(bool is3rdParty)
+        public static List<string> GetMissingMiners()
         {
             var ret = new List<string>();
             foreach (var plugin in IntegratedPlugins)
             {
-                if (plugin.Is3rdParty == is3rdParty && plugin is IBinaryPackageMissingFilesChecker pluginCheckBins)
+                if (_compatiblePlugins.Contains(plugin.PluginUUID) == false) continue;
+                if (plugin is IBinaryPackageMissingFilesChecker pluginCheckBins)
                 {
                     try
                     {
@@ -235,7 +269,7 @@ namespace NiceHashMiner.Plugin
         {
             // get devices
             var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
             // examine all plugins and what to use
             foreach (var kvp in MinerPluginHost.MinerPlugin)
             {
@@ -362,6 +396,21 @@ namespace NiceHashMiner.Plugin
             return ret;
         }
 
+
+        private class NoKeepAlivesWebClient : WebClient
+        {
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+                var request = base.GetWebRequest(address);
+                if (request is HttpWebRequest)
+                {
+                    ((HttpWebRequest)request).KeepAlive = false;
+                }
+
+                return request;
+            }
+        }
+
         // TODO this here is blocking
         public static bool GetOnlineMinerPlugins()
         {
@@ -369,12 +418,17 @@ namespace NiceHashMiner.Plugin
             const string pluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
             try
             {
-                using (var client = new WebClient())
+                using (var client = new NoKeepAlivesWebClient())
                 {
                     string s = client.DownloadString(pluginsJsonApiUrl);
                     //// local fake string
                     //string s = Properties.Resources.pluginJSON;
-                    var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, Globals.JsonSettings);
+                    var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        Culture = CultureInfo.InvariantCulture
+                    });
                     OnlinePlugins = onlinePlugins;
                 }
 
@@ -394,7 +448,7 @@ namespace NiceHashMiner.Plugin
             {
                 // Dynamic/Online
                 var dynamicReBenchmarkCheckers = MinerPluginHost.MinerPlugin.Values.Where(plugin => plugin is IReBenchmarkChecker).ToList();
-                reBenchmarkCheckersPlugins.AddRange(dynamicReBenchmarkCheckers);
+                if (dynamicReBenchmarkCheckers.Count > 0) reBenchmarkCheckersPlugins.AddRange(dynamicReBenchmarkCheckers);
             }
 
             // get devices
@@ -407,7 +461,7 @@ namespace NiceHashMiner.Plugin
                     if (reBenchCheckPlugin == null) continue;
                     foreach (var dev in allDevs)
                     {
-                        var baseDev = dev.PluginDevice;
+                        var baseDev = dev.BaseDevice;
                         var pluginAlgos = dev.AlgorithmSettings.Where(a => a.MinerUUID == plugin.PluginUUID).ToArray();
                         foreach (var algo in pluginAlgos)
                         {
@@ -445,6 +499,44 @@ namespace NiceHashMiner.Plugin
             DownloadingMiner,
             ExtractingMiner,
             // TODO loading
+        }
+
+        public static async Task DownloadInternalBins(string pluginUUID, List<string> urls, IProgress<int> downloadProgress, IProgress<int> unzipProgress, CancellationToken stop)
+        {
+            var installingPluginBinsPath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins");
+            try
+            {
+                if (Directory.Exists(installingPluginBinsPath)) Directory.Delete(installingPluginBinsPath, true);
+                //downloadAndInstallUpdate("Starting");
+                Directory.CreateDirectory(installingPluginBinsPath);
+                var installedBins = false;
+                foreach (var url in urls)
+                {
+                    // download plugin dll
+                    var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(url, installingPluginBinsPath, "miner_bins", downloadProgress, stop);
+                    var binsPackageDownloaded = downloadMinerBinsResult.downloadedFilePath;
+                    var downloadMinerBinsOK = downloadMinerBinsResult.success;
+                    if (!downloadMinerBinsOK || stop.IsCancellationRequested) return;
+                    // unzip 
+                    var binsUnzipPath = installingPluginBinsPath; // Path.Combine(installingPluginPath, "bins");
+                    var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(binsPackageDownloaded, binsUnzipPath, unzipProgress, stop);
+                    if (stop.IsCancellationRequested) return;
+                    if (unzipMinerBinsOK)
+                    {
+                        installedBins = true;
+                        File.Delete(binsPackageDownloaded);
+                        break;
+                    }   
+                }
+                if (!installedBins)
+                {
+                    Logger.Error("MinerPluginsManager", $"Miners bins of {pluginUUID} not installed");
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error("MinerPluginsManager", $"Installation of {pluginUUID} failed: ${e.Message}");
+            }
         }
 
         public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, IProgress<Tuple<ProgressState, int>> progress, CancellationToken stop)

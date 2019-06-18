@@ -34,16 +34,12 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
             foreach (var gpu in cudaGpus)
             {
-#pragma warning disable 0618
                 var algorithms = new List<Algorithm> {
                     new Algorithm(PluginUUID, AlgorithmType.NeoScrypt),
-                    new Algorithm(PluginUUID, AlgorithmType.Blake2s),
-                    new Algorithm(PluginUUID, AlgorithmType.Keccak),
                     new Algorithm(PluginUUID, AlgorithmType.Skunk),
                     new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
                     new Algorithm(PluginUUID, AlgorithmType.X16R), // TODO check performance
                 };
-#pragma warning restore 0618
                 supported.Add(gpu, algorithms);
             }
 

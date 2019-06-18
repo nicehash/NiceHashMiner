@@ -3,6 +3,7 @@ using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
@@ -36,12 +37,24 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
                     // nh general
                     case AlgorithmType.NeoScrypt:
                         return "neoscrypt";
-                    case AlgorithmType.Keccak:
-                        return "keccak";
                     default:
                         return "";
                 }
             }
+        }
+
+        public override Tuple<string, string> GetBinAndCwdPaths()
+        {
+            if (_uuid != "SGminerAvemore")
+            {
+                return base.GetBinAndCwdPaths();
+            }
+            // avemore is differently packed
+            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "avermore-windows");
+            var binPath = Path.Combine(pluginRootBins, "sgminer.exe");
+            var binCwd = pluginRootBins;
+            return Tuple.Create(binPath, binCwd);
         }
     }
 }

@@ -19,19 +19,28 @@ namespace NiceHashMiner.Forms.Components
             devicesListViewSpeedControl1.SetIsMining(true); // always is mining
             devicesListViewSpeedControl1.SaveToGeneralConfig = false;
             SpeedsControl = this.devicesListViewSpeedControl1;
-            HidePanel2();
+            SecondPanelVisible = false;
         }
 
-        public void HidePanel2()
+        public bool SecondPanelVisible
         {
-            splitContainer1.Panel2Collapsed = true;
-            splitContainer1.Panel2.Hide();
-        }
-
-        public void ShowPanel2()
-        {
-            splitContainer1.Panel2Collapsed = false;
-            splitContainer1.Panel2.Show();
+            get
+            {
+                return splitContainer1.Panel2Collapsed;
+            }
+            set
+            {
+                if (value)
+                {
+                    splitContainer1.Panel2Collapsed = false;
+                    splitContainer1.Panel2.Show();
+                }
+                else
+                {
+                    splitContainer1.Panel2Collapsed = true;
+                    splitContainer1.Panel2.Hide();
+                }
+            }
         }
     }
 }

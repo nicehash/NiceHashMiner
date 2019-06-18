@@ -50,8 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmarking\BenchmarkAnalyzerTest.cs" />
-    <Compile Include="Devices\Querying\Amd\OclTestData.cs" />
-    <Compile Include="Devices\Querying\Nvidia\NvidiaQueryTest.cs" />
     <Compile Include="Miners\MinerApiWatchdogTest.cs" />
     <Compile Include="Stats\ExchangeRateApiTest.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManagerTest.cs" />
@@ -59,6 +57,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

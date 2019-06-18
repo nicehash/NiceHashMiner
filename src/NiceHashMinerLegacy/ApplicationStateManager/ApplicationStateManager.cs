@@ -1,3 +1,4 @@
+using NHM.UUID;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces.DataVisualizer;
@@ -17,7 +18,12 @@ namespace NiceHashMiner
 {
     static partial class ApplicationStateManager
     {
-#region Version
+        public static string RigID => UUID.GetDeviceB64UUID();
+
+        // change this if TOS changes
+        public static int CurrentTosVer => 4;
+
+        #region Version
         public static string LocalVersion { get; private set; }
         public static string OnlineVersion { get; private set; }
 
@@ -96,11 +102,11 @@ namespace NiceHashMiner
             // assume it is valid
             var ret = CredentialsValidState.VALID;
 
-            if (!BitcoinAddress.ValidateBitcoinAddress(ConfigManager.GeneralConfig.BitcoinAddress))
+            if (!CredentialValidators.ValidateBitcoinAddress(ConfigManager.GeneralConfig.BitcoinAddress))
             {
                 ret |= CredentialsValidState.INVALID_BTC;
             }
-            if (!BitcoinAddress.ValidateWorkerName(ConfigManager.GeneralConfig.WorkerName))
+            if (!CredentialValidators.ValidateWorkerName(ConfigManager.GeneralConfig.WorkerName))
             {
                 ret |= CredentialsValidState.INVALID_WORKER;
             }
@@ -133,45 +139,18 @@ namespace NiceHashMiner
             CHANGED
         }
 
-#region ServiceLocation
-
-        public static SetResult SetServiceLocationIfValidOrDifferent(int serviceLocation)
-        {
-            if (serviceLocation == ConfigManager.GeneralConfig.ServiceLocation)
-            {
-                return SetResult.NOTHING_TO_CHANGE;
-            }
-            if (serviceLocation >= 0 && serviceLocation < StratumService.MiningLocations.Count)
-            {
-                SetServiceLocation(serviceLocation);
-                return SetResult.CHANGED;
-            }
-            // invalid service location will default to first valid one - 0
-            SetServiceLocation(0);
-            return SetResult.INVALID;
-        }
-
-        private static void SetServiceLocation(int serviceLocation)
-        {
-            // change in memory and save changes to file
-            ConfigManager.GeneralConfig.ServiceLocation = serviceLocation;
-            ConfigManager.GeneralConfigFileCommit();
-            // notify all components
-            DisplayServiceLocation?.Invoke(null, serviceLocation);
-        }
-#endregion
-
 #region BTC setter
 
         // make sure to pass in trimmedBtc
         public static SetResult SetBTCIfValidOrDifferent(string btc, bool skipCredentialsSet = false)
         {
-            if (btc == ConfigManager.GeneralConfig.BitcoinAddress)
+            if (btc == ConfigManager.GeneralConfig.BitcoinAddress && btc != "")
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
-            if (!BitcoinAddress.ValidateBitcoinAddress(btc))
+            if (!CredentialValidators.ValidateBitcoinAddress(btc))
             {
+                ConfigManager.GeneralConfig.BitcoinAddress = btc;
                 return SetResult.INVALID;
             }
             SetBTC(btc);
@@ -187,13 +166,10 @@ namespace NiceHashMiner
             // change in memory and save changes to file
             ConfigManager.GeneralConfig.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
-            if (IsCurrentlyMining)
+            if (MiningState.Instance.IsCurrentlyMining)
             {
-                MiningManager.RestartMiners();
+                MiningManager.RestartMiners(GetUsername());
             }
-
-            // notify all components
-            DisplayBTC?.Invoke(null, btc);
         }
 #endregion
 
@@ -207,7 +183,7 @@ namespace NiceHashMiner
             {
                 return SetResult.NOTHING_TO_CHANGE;
             }
-            if (!BitcoinAddress.ValidateWorkerName(workerName))
+            if (!CredentialValidators.ValidateWorkerName(workerName))
             {
                 return SetResult.INVALID;
             }
@@ -226,12 +202,10 @@ namespace NiceHashMiner
             ConfigManager.GeneralConfig.WorkerName = workerName;
             ConfigManager.GeneralConfigFileCommit();
             // if mining update the mining manager
-            if (IsCurrentlyMining)
+            if (MiningState.Instance.IsCurrentlyMining)
             {
-                MiningManager.RestartMiners();
+                MiningManager.RestartMiners(GetUsername());
             }
-            // notify all components
-            DisplayWorkerName?.Invoke(null, workerName);
         }
 #endregion
 
@@ -270,49 +244,15 @@ namespace NiceHashMiner
         }
 #endregion
 
-        public static void ToggleActiveInactiveDisplay()
-        {
-            var allDevs = AvailableDevices.Devices;
-            var devicesNotActive = allDevs.All(dev => dev.State != DeviceState.Mining && dev.State != DeviceState.Benchmarking);
-            if (devicesNotActive)
-            {
-                DisplayMiningStopped?.Invoke(null, null);
-            }
-            else
-            {
-                DisplayMiningStarted?.Invoke(null, null);
-            }
-        }
-
-        public static bool AnyInMiningState()
-        {
-            var allDevs = AvailableDevices.Devices;
-            return allDevs.Any(dev => dev.State == DeviceState.Mining);
-        }
-
-        public static bool AllInMiningState()
-        {
-            var allDevs = AvailableDevices.Devices;
-            return allDevs.All(dev => dev.State == DeviceState.Mining);
-        }
-
-
-        public static bool IsCurrentlyMining { get; private set; }
         // StartMining function should be called only if all mining requirements are met, btc or demo, valid workername, and sma data
         // don't call this function ever unless credentials are valid or if we will be using Demo mining
         // And if there are missing mining requirements
         private static bool StartMining()
         {
-            if (IsCurrentlyMining)
-            {
-                return false;
-            }
-            IsCurrentlyMining = true;
             StartMinerStatsCheckTimer();
             StartComputeDevicesCheckTimer();
             StartPreventSleepTimer();
             StartInternetCheckTimer();
-            DisplayMiningStarted?.Invoke(null, null);
             return true;
         }
 
@@ -324,19 +264,13 @@ namespace NiceHashMiner
 
         private static bool StopMining(bool headless)
         {
-            if (!IsCurrentlyMining)
-            {
-                return false;
-            }
             MiningManager.StopAllMiners();
 
             PInvoke.PInvokeHelpers.AllowMonitorPowerdownAndSleep();
-            IsCurrentlyMining = false;
             StopMinerStatsCheckTimer();
             StopComputeDevicesCheckTimer();
             StopPreventSleepTimer();
             StopInternetCheckTimer();
-            DisplayMiningStopped?.Invoke(null, null);
             return true;
         }
 
@@ -345,6 +279,7 @@ namespace NiceHashMiner
         public static void AfterDeviceQueryInitialization()
         {
             ConfigManager.AfterDeviceQueryInitialization();
+            MiningState.Instance.CalculateDevicesStateChange();
             RefreshDeviceListView?.Invoke(null, null);
             StartRefreshDeviceListViewTimer();
         }
@@ -353,6 +288,10 @@ namespace NiceHashMiner
         public static RigStatus CalcRigStatus()
         {
             if (!isInitFinished)
+            {
+                return RigStatus.Pending;
+            }
+            if (IsInBenchmarkForm() || IsInSettingsForm())
             {
                 return RigStatus.Pending;
             }
@@ -399,7 +338,16 @@ namespace NiceHashMiner
             Benchmark,
             Settings,
         }
-        public static CurrentFormState CurrentForm { get; set; } = CurrentFormState.Main;
+        private static CurrentFormState _currentForm = CurrentFormState.Main;
+        public static CurrentFormState CurrentForm
+        {
+            get => _currentForm;
+            set
+            {
+                _currentForm = value;
+                NiceHashStats.StateChanged();
+            }
+        }
         public static bool IsInBenchmarkForm() {
             return CurrentForm == CurrentFormState.Benchmark;
         }

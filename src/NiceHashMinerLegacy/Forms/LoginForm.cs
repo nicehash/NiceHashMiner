@@ -94,7 +94,7 @@ namespace NiceHashMiner.Forms
                     {
                         if (!btcAlphabet.Contains(c) || btc.Length > max) break;
                         btc += c;
-                        if (btc.Length > min && BitcoinAddress.ValidateBitcoinAddress(btc))
+                        if (btc.Length > min && CredentialValidators.ValidateBitcoinAddress(btc))
                         {
                             return btc;
                         }
