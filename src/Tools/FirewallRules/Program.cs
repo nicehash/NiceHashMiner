@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace FirewallRules
 {
@@ -35,21 +37,44 @@ namespace FirewallRules
                 CreateNoWindow = true,
                 UseShellExecute = false
             };
-            using (var setRule = new Process())
+            using (var setRule = Process.Start(startInfo))
             {
-                setRule.Start();
                 setRule.WaitForExit();
             }
         }
 
+        static string CalculateMD5Hash(string input)
+        {
+            // step 1, calculate MD5 hash from input
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            // step 2, convert byte array to hex string
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString();
+        }
+
+        static string GetHashedName(string programFullPath, string name)
+        {
+            var hashed = CalculateMD5Hash($"{name}_{programFullPath}");
+            var validName = String.Concat(name.Where(c => !Path.GetInvalidFileNameChars().Contains(c))); 
+            return $"{validName}_{hashed}";
+        }
+
         static void AllowFirewallRule(string programFullPath, string name)
         {
-            SetFirewallRule($"advfirewall firewall add rule name={name}_{programFullPath} program={programFullPath} protocol=tcp dir=in enable=yes action=allow");
+            var escapedPath = programFullPath.Contains(' ') ? $"\"{programFullPath}\"" : programFullPath;
+            SetFirewallRule($"advfirewall firewall add rule name=nhm_{GetHashedName(programFullPath, name)} program={escapedPath} protocol=tcp dir=in enable=yes action=allow");
         }
 
         static void RemoveFirewallRule(string programFullPath, string name)
         {
-            SetFirewallRule($"advfirewall firewall delete rule name={name}_{programFullPath}");
+            SetFirewallRule($"advfirewall firewall delete rule name=nhm_{GetHashedName(programFullPath, name)}");
         }
 
         static void Main(string[] args)
