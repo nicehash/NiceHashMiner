@@ -239,6 +239,7 @@
     <Compile Include="Miners\IdleChecking\InputTimeoutChecker.cs" />
     <Compile Include="Miners\IdleChecking\SessionLockChecker.cs" />
     <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\BrokenPluginIntegrated\BrokenPluginIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerKlausTIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
@@ -491,6 +492,10 @@
     <ProjectReference Include="..\Miners\BMiner\BMiner.csproj">
       <Project>{da54e8c4-73d8-4f1a-be84-0d548b77a2c0}</Project>
       <Name>BMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\BrokenMiner\BrokenMiner.csproj">
+      <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
+      <Name>BrokenMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\ClaymoreDual14\ClaymoreDual14.csproj">
       <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
