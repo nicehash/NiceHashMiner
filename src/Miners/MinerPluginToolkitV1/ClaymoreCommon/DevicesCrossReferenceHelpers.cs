@@ -8,15 +8,21 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ClaymoreDual
+namespace MinerPluginToolkitV1.ClaymoreCommon
 {
-    internal class DevicesCrossReferenceHelpers
+    public static class DevicesCrossReferenceHelpers
     {
         public static async Task<string> ReadLinesUntil(string path, string cwd, string arguments, string fileToTail, IEnumerable<string> breakLines, int timeoutMilliseconds = 30 * 1000)
         {
             var output = new StringBuilder();
             try
             {
+                // if no file just create the it and claymore will override it 
+                if (!File.Exists(fileToTail))
+                {
+                    using (File.Create(fileToTail)) { }
+                }
+
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = path,
@@ -36,11 +42,13 @@ namespace ClaymoreDual
                         {
                             var isRunning = !getDevicesHandle?.HasExited ?? false;
                             if (!isRunning) return;
+                            var pid = getDevicesHandle?.Id ?? -1;
                             getDevicesHandle.CloseMainWindow();
                             var hasExited = getDevicesHandle?.WaitForExit(1000) ?? false;
-                            if (!hasExited) getDevicesHandle.Kill();
+                            var stillRunning = pid > -1 ? Process.GetProcessById(pid) != null : false;
+                            if (!hasExited || stillRunning) getDevicesHandle?.Kill();
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             // TODO log
                         }
@@ -80,7 +88,7 @@ namespace ClaymoreDual
             }
             catch (Exception e)
             {
-                Logger.Error("ClaymoreDual.DevicesCrossReferenceHelpers", $"Error occured while getting miner output: {e.Message}");
+                Logger.Error("MinerPluginToolkitV1.ClaymoreCommon", $"Error occured while getting miner output: {e.Message}");
                 return output.ToString();
             }
             return output.ToString();

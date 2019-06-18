@@ -1,11 +1,11 @@
-﻿using NiceHashMinerLegacy.Common.Device;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NiceHashMinerLegacy.Common.Device;
 
-namespace ClaymoreDual
+namespace MinerPluginToolkitV1.ClaymoreCommon
 {
-    internal class DevicesListParser
+    public static class DevicesListParser
     {
         public static Dictionary<string, int> ParseClaymoreDualOutput(string output, List<BaseDevice> baseDevices)
         {
