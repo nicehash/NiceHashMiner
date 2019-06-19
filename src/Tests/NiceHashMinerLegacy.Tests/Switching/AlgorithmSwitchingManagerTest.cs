@@ -17,8 +17,8 @@ namespace NiceHashMinerLegacy.Tests.Switching
         private static readonly AlgorithmType[] TestStables =
         {
             AlgorithmType.DaggerHashimoto,
-            AlgorithmType.Lbry,
-            AlgorithmType.Sia,
+            //AlgorithmType.Lbry,
+            //AlgorithmType.Sia,
             //AlgorithmType.Equihash
         };
 

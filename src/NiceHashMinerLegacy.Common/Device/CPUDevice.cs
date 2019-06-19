@@ -6,15 +6,17 @@ namespace NiceHashMinerLegacy.Common.Device
 {
     public class CPUDevice : BaseDevice
     {
-        public CPUDevice(BaseDevice bd, int threads, bool supportsHyperThreading, ulong affinityMask) : base(bd)
+        public CPUDevice(BaseDevice bd, int cpuCount, int threadsPerCPU, bool supportsHyperThreading, List<ulong> affinityMasks) : base(bd)
         {
-            Threads = threads;
+            PhysicalProcessorCount = cpuCount;
+            ThreadsPerCPU = threadsPerCPU;
             SupportsHyperThreading = supportsHyperThreading;
-            AffinityMask = affinityMask;
+            AffinityMasks = affinityMasks;
         }
 
-        public int Threads { get; }
+        public int PhysicalProcessorCount { get; }
+        public int ThreadsPerCPU { get; }
         public bool SupportsHyperThreading { get; }
-        public ulong AffinityMask { get; protected set; } // TODO check if this makes any sense
+        public List<ulong> AffinityMasks { get; protected set; } // TODO check if this makes any sense
     }
 }

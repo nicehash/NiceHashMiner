@@ -25,6 +25,9 @@ namespace LolMinerBeam
 
         private AlgorithmType _algorithmType;
 
+        // the order of intializing devices is the order how the API responds
+        private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
+
         private readonly HttpClient _http = new HttpClient();
 
         public LolMinerBeam (string uuid) : base(uuid)
@@ -58,28 +61,29 @@ namespace LolMinerBeam
             {
                 var summaryApiResult = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/summary");
                 var summary = JsonConvert.DeserializeObject<ApiJsonResponse>(summaryApiResult);
-
-                var gpuDevices = _miningPairs.Select(pair => pair.Device);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
                 var totalSpeed = summary.Session.Performance_Summary;
 
-                foreach (var gpuDevice in gpuDevices)
+                var apiDevices = summary.GPUs;
+
+
+                // the devices have ordered ids by -d parameter, so -d 4,2 => 4=0;2=1
+                foreach (var kvp in _initOrderMirrorApiOrderUUIDs)
                 {
-                    var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuDevice.ID).FirstOrDefault(); //todo index == ID ????
+                    var gpuID = kvp.Key;
+                    var gpuUUID = kvp.Value;
+
+                    var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuID).FirstOrDefault(); //todo index == ID ????
                     if (currentStats == null) continue;
-                    perDeviceSpeedInfo.Add(gpuDevice.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair (_algorithmType, currentStats.Performance * (1 - DevFee * 0.01)) });
+                    perDeviceSpeedInfo.Add(gpuUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentStats.Performance * (1 - DevFee * 0.01)) });
                 }
 
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-
             }
             catch (Exception e)
             {
-                if (e.Message != "An item with the same key has already been added.")
-                {
-                    Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
-                }
+                Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
             return ad;
@@ -142,7 +146,7 @@ namespace LolMinerBeam
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.1");
             var binPath = Path.Combine(pluginRootBins, "lolMiner.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
@@ -164,6 +168,12 @@ namespace LolMinerBeam
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
+
+            for (int i = 0; i < orderedMiningPairs.Count; i++)
+            {
+                _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].Device.UUID;
+            }
+
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks

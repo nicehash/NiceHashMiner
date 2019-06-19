@@ -29,7 +29,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public IMiner CreateMiner()
         {
-            return new SGminerIntegratedMiner(PluginUUID, AMDDevice.OpenCLPlatformID)
+            return new SGminerIntegratedMiner(PluginUUID, AMDDevice.GlobalOpenCLPlatformID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,

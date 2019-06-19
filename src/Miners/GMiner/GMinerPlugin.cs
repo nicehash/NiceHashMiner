@@ -34,6 +34,8 @@ namespace GMinerPlugin
 
         public string Author => "stanko@nicehash.com";
 
+        protected readonly Dictionary<string, int> _mappedCudaIds = new Dictionary<string, int>();
+
         public bool CanGroup(MiningPair a, MiningPair b)
         {
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
@@ -41,7 +43,7 @@ namespace GMinerPlugin
 
         public IMiner CreateMiner()
         {
-            return new GMiner(PluginUUID)
+            return new GMiner(PluginUUID, _mappedCudaIds)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -95,7 +97,7 @@ namespace GMinerPlugin
             foreach (var gpu in cudaGpus)
             {
                 // naive method
-                Shared.MappedCudaIds[gpu.UUID] = pcieId;
+                _mappedCudaIds[gpu.UUID] = pcieId;
                 ++pcieId;
                 var algorithms = GetCUDASupportedAlgorithms(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
@@ -211,7 +213,7 @@ namespace GMinerPlugin
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (Shared.MappedCudaIds.Count == 0) return;
+            if (_mappedCudaIds.Count == 0) return;
             // TODO will block
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
@@ -223,7 +225,7 @@ namespace GMinerPlugin
             {
                 var uuid = kvp.Key;
                 var indexID = kvp.Value;
-                Shared.MappedCudaIds[uuid] = indexID;
+                _mappedCudaIds[uuid] = indexID;
             }
         }
 

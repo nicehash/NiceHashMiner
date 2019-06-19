@@ -30,7 +30,7 @@ namespace XmrStak
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 1);
+        public Version Version => new Version(1, 2);
         public string Name => "XmrStak";
 
         public string Author => "stanko@nicehash.com";
@@ -64,7 +64,7 @@ namespace XmrStak
                 if (algorithms.Count > 0)
                 {
                     supported.Add(dev, algorithms);
-                    _registeredDeviceUUIDTypes.Add(dev.UUID, dev.DeviceType);
+                    _registeredDeviceUUIDTypes[dev.UUID] = dev.DeviceType;
                     foreach (var algorithm in algorithms)
                     {
                         _registeredAlgorithmTypes.Add(algorithm.FirstAlgorithmType);
@@ -82,8 +82,6 @@ namespace XmrStak
             var AMD_DisabledByDefault = dev.DeviceType != DeviceType.AMD;
             var algos = new List<Algorithm>
             {
-                new Algorithm(PluginUUID, AlgorithmType.CryptoNightHeavy) { Enabled = AMD_DisabledByDefault },
-                new Algorithm(PluginUUID, AlgorithmType.CryptoNightV8) { Enabled = AMD_DisabledByDefault },
                 new Algorithm(PluginUUID, AlgorithmType.CryptoNightR) { Enabled = AMD_DisabledByDefault },
             };
             return algos;
@@ -91,7 +89,7 @@ namespace XmrStak
 
         public IMiner CreateMiner()
         {
-            return new XmrStak(PluginUUID, AMDDevice.OpenCLPlatformID, this)
+            return new XmrStak(PluginUUID, AMDDevice.GlobalOpenCLPlatformID, this)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -222,73 +220,81 @@ namespace XmrStak
             return false;
         }
 
+        private object _configsLock = new object();
+
         public void SaveMoveConfig(DeviceType deviceType, AlgorithmType algorithmType, string sourcePath)
         {
-            try
+            lock(_configsLock)
             {
-                string destinationPath = Path.Combine(GetMinerConfigsRoot(), $"{algorithmType.ToString()}_{deviceType.ToString()}.txt");
-                var dirPath = Path.GetDirectoryName(destinationPath);
-                if (Directory.Exists(dirPath) == false)
+                try
                 {
-                    Directory.CreateDirectory(dirPath);
-                }
+                    string destinationPath = Path.Combine(GetMinerConfigsRoot(), $"{algorithmType.ToString()}_{deviceType.ToString()}.txt");
+                    var dirPath = Path.GetDirectoryName(destinationPath);
+                    if (Directory.Exists(dirPath) == false)
+                    {
+                        Directory.CreateDirectory(dirPath);
+                    }
 
-                var readConfigContent = File.ReadAllText(sourcePath);
-                // make it JSON 
-                readConfigContent = "{" + readConfigContent + "}";
-                // remove old if any
-                if (File.Exists(destinationPath)) File.Delete(destinationPath);
-                // move to path
-                File.Move(sourcePath, destinationPath);
+                    var readConfigContent = File.ReadAllText(sourcePath);
+                    // make it JSON 
+                    readConfigContent = "{" + readConfigContent + "}";
+                    // remove old if any
+                    if (File.Exists(destinationPath)) File.Delete(destinationPath);
+                    // move to path
+                    File.Move(sourcePath, destinationPath);
 
-                var cachedFileSettings = $"cached_{algorithmType.ToString()}_{deviceType.ToString()}.json";
-                var cachedFileSettingsPath = Path.Combine(GetMinerConfigsRoot(), cachedFileSettings);
-                var uuids = _registeredDeviceUUIDTypes.Where(kvp => kvp.Value == deviceType).Select(kvp => kvp.Key).ToList();
-                object cachedSettings = null;
-                //TODO load and save 
-                switch (deviceType)
-                {
-                    case DeviceType.CPU:
-                        var cpuConfig = JsonConvert.DeserializeObject<CpuConfig>(readConfigContent);
-                        SetCpuConfig(algorithmType, cpuConfig);
-                        cachedSettings = new CachedCpuSettings {
-                            CachedConfig = cpuConfig,
-                            DeviceUUIDs = uuids
-                        };
-                        break;
-                    case DeviceType.AMD:
-                        var amdConfig = JsonConvert.DeserializeObject<AmdConfig>(readConfigContent);
-                        SetAmdConfig(algorithmType, amdConfig);
-                        cachedSettings = new CachedAmdSettings
-                        {
-                            CachedConfig = amdConfig,
-                            DeviceUUIDs = uuids
-                        };
-                        break;
-                    case DeviceType.NVIDIA:
-                        var nvidiaConfig = JsonConvert.DeserializeObject<NvidiaConfig>(readConfigContent);
-                        SetNvidiaConfig(algorithmType, nvidiaConfig);
-                        cachedSettings = new CachedNvidiaSettings
-                        {
-                            CachedConfig = nvidiaConfig,
-                            DeviceUUIDs = uuids
-                        };
-                        break;
+                    var cachedFileSettings = $"cached_{algorithmType.ToString()}_{deviceType.ToString()}.json";
+                    var cachedFileSettingsPath = Path.Combine(GetMinerConfigsRoot(), cachedFileSettings);
+                    var uuids = _registeredDeviceUUIDTypes.Where(kvp => kvp.Value == deviceType).Select(kvp => kvp.Key).ToList();
+                    object cachedSettings = null;
+                    //TODO load and save 
+                    switch (deviceType)
+                    {
+                        case DeviceType.CPU:
+                            var cpuConfig = JsonConvert.DeserializeObject<CpuConfig>(readConfigContent);
+                            SetCpuConfig(algorithmType, cpuConfig);
+                            cachedSettings = new CachedCpuSettings
+                            {
+                                CachedConfig = cpuConfig,
+                                DeviceUUIDs = uuids
+                            };
+                            break;
+                        case DeviceType.AMD:
+                            var amdConfig = JsonConvert.DeserializeObject<AmdConfig>(readConfigContent);
+                            SetAmdConfig(algorithmType, amdConfig);
+                            cachedSettings = new CachedAmdSettings
+                            {
+                                CachedConfig = amdConfig,
+                                DeviceUUIDs = uuids
+                            };
+                            break;
+                        case DeviceType.NVIDIA:
+                            var nvidiaConfig = JsonConvert.DeserializeObject<NvidiaConfig>(readConfigContent);
+                            SetNvidiaConfig(algorithmType, nvidiaConfig);
+                            cachedSettings = new CachedNvidiaSettings
+                            {
+                                CachedConfig = nvidiaConfig,
+                                DeviceUUIDs = uuids
+                            };
+                            break;
+                    }
+                    if (cachedSettings != null)
+                    {
+                        var header = "// This config file was autogenerated by NHML.";
+                        header += "\n// \"DeviceUUIDs\" is used to check if we have same devices and should not be edited.";
+                        header += "\n// \"CachedConfig\" can be edited as it is used as config template (edit this only if you know what you are doing)";
+                        header += "\n// If \"DeviceUUIDs\" is different (new devices added or old ones removed) this file will be overwritten and \"CachedConfig\" will be set to defaults.";
+                        header += "\n\n";
+                        var jsonText = JsonConvert.SerializeObject(cachedSettings, Formatting.Indented);
+                        var headerWithConfigs = header + jsonText;
+                        InternalConfigs.WriteFileSettings(cachedFileSettingsPath, headerWithConfigs);
+                    }
                 }
-                if (cachedSettings != null)
+                catch (Exception e)
                 {
-                    var header = "// This config file was autogenerated by NHML.";
-                    header += "\n// \"DeviceUUIDs\" is used to check if we have same devices and should not be edited.";
-                    header += "\n// \"CachedConfig\" can be edited as it is used as config template (edit this only if you know what you are doing)";
-                    header += "\n// If \"DeviceUUIDs\" is different (new devices added or old ones removed) this file will be overwritten and \"CachedConfig\" will be set to defaults.";
-                    header += "\n\n";
-                    var jsonText = JsonConvert.SerializeObject(cachedSettings, Formatting.Indented);
-                    var headerWithConfigs = header + jsonText;
-                    InternalConfigs.WriteFileSettings(cachedFileSettingsPath, headerWithConfigs);
+                    Logger.Error("XmrStakPlugin", $"SaveMoveConfig error: {e.Message}");
                 }
             }
-            catch (Exception)
-            { }
         }
 
         public CpuConfig GetCpuConfig(AlgorithmType algorithmType)
@@ -345,6 +351,10 @@ namespace XmrStak
 
         public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            if (benchmarkedPluginVersion.Major == 1 && benchmarkedPluginVersion.Minor == 1)
+            {
+                return true;
+            }
             //no new version available
             return false;
         }

@@ -28,11 +28,13 @@ namespace NBMiner
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 3);
+        public Version Version => new Version(1, 4);
         public string Name => "NBMiner";
 
         public string Author => "Dillon Newell";
-        
+
+        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
+
         private bool isSupportedVersion(int major, int minor)
         {
             var nbMinerSMSupportedVersions = new List<Version>
@@ -67,7 +69,7 @@ namespace NBMiner
             var pcieID = 0;
             foreach (var gpu in cudaGpus)
             {
-                Shared.MappedCudaIds[gpu.UUID] = pcieID;
+                _mappedIDs[gpu.UUID] = pcieID;
                 ++pcieID;
                 var algos = GetSupportedAlgorithms(gpu).ToList();
                 if (algos.Count > 0) supported.Add(gpu, algos);
@@ -90,7 +92,7 @@ namespace NBMiner
 
         public IMiner CreateMiner()
         {
-            return new NBMiner(PluginUUID)
+            return new NBMiner(PluginUUID, _mappedIDs)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -170,7 +172,7 @@ namespace NBMiner
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (Shared.MappedCudaIds.Count == 0) return;
+            if (_mappedIDs.Count == 0) return;
             // TODO will break
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
@@ -182,7 +184,7 @@ namespace NBMiner
             {
                 var uuid = kvp.Key;
                 var indexID = kvp.Value;
-                Shared.MappedCudaIds[uuid] = indexID;
+                _mappedIDs[uuid] = indexID;
             }
         }
 

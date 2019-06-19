@@ -50,10 +50,7 @@ namespace CryptoDredge
 
             if (dev.GpuRam >= minMem)
             {
-                yield return new Algorithm(PluginUUID, AlgorithmType.CryptoNightHeavy);
-                yield return new Algorithm(PluginUUID, AlgorithmType.CryptoNightV8);
                 yield return new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3);
-                yield return new Algorithm(PluginUUID, AlgorithmType.NeoScrypt);
                 yield return new Algorithm(PluginUUID, AlgorithmType.X16R);
             }
             if(dev.GpuRam >= minMTPMem)

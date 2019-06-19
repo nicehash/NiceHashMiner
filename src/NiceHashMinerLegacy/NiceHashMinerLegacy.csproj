@@ -96,9 +96,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="3rdParty\ADL.cs" />
-    <Compile Include="3rdParty\NVAPI.cs" />
-    <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="Algorithms\Algorithm.cs" />
     <Compile Include="Algorithms\AlgorithmStatus.cs" />
     <Compile Include="Algorithms\PluginAlgorithm.cs" />
@@ -110,36 +107,20 @@
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Program.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Refactoring.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Timers.cs" />
+    <Compile Include="ApplicationStateManager\ControlBindingsCollectionExtensions.cs" />
+    <Compile Include="ApplicationStateManager\MiningState.cs" />
+    <Compile Include="ApplicationStateManager\RatesAndStatsStates.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
-    <Compile Include="Benchmarking\BenchmarkChecker.cs" />
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
+    <Compile Include="BUILD_TAG.cs" />
+    <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
+    <Compile Include="Configs\IdleMiningSettings.cs" />
+    <Compile Include="Configs\RunAtStartup.cs" />
+    <Compile Include="Configs\TranslationsSettings.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
-    <Compile Include="Devices\ComputeDevice\AmdComputeDevice.cs" />
-    <Compile Include="Devices\ComputeDevice\CpuComputeDevice.cs" />
-    <Compile Include="Devices\ComputeDevice\CudaComputeDevice.cs" />
-    <Compile Include="Devices\CpuInfo.cs" />
-    <Compile Include="Devices\PowerOutOfRangeException.cs" />
-    <Compile Include="Devices\Querying\DeviceDetectionPrinter.cs" />
-    <Compile Include="Devices\Querying\Nvidia\CudaDeviceChecker.cs" />
-    <Compile Include="Devices\Querying\Nvidia\CudaDeviceDetectionResult.cs" />
-    <Compile Include="Devices\Querying\Amd\AmdQuery.cs" />
-    <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLDeviceDetectionResult.cs" />
-    <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLPlatform.cs" />
-    <Compile Include="Devices\Querying\Amd\AmdBusIDInfo.cs" />
-    <Compile Include="Devices\Querying\Amd\AmdDeviceCreation.cs" />
-    <Compile Include="Devices\Querying\Amd\AmdDeviceCreationFallback.cs" />
-    <Compile Include="Devices\Querying\Amd\AmdDeviceCreationPrimary.cs" />
-    <Compile Include="Devices\Querying\Nvidia\CudaQuery.cs" />
-    <Compile Include="Devices\Querying\Nvidia\NvidiaQuery.cs" />
-    <Compile Include="Devices\Querying\Amd\QueryAdl.cs" />
-    <Compile Include="Devices\Querying\Nvidia\NvidiaSmiDriver.cs" />
-    <Compile Include="Devices\Querying\QueryCpu.cs" />
-    <Compile Include="Devices\Querying\Amd\OpenCL\QueryOpenCL.cs" />
-    <Compile Include="Devices\Querying\QueryResult.cs" />
-    <Compile Include="Devices\Querying\VideoControllerData.cs" />
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -240,19 +221,14 @@
     <Compile Include="IFTTT.cs" />
     <Compile Include="Interfaces\DataVisualizer\IBalanceBTCDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IBalanceFiatDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IBTCDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IDevicesStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IGlobalMiningRateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IGroupDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IMiningNotProfitableDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IMiningProfitableDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\INoInternetConnectionDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IServiceLocationDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IStartMiningDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IStateDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IStopMiningDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IVersionDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IWorkerNameDisplayer.cs" />
     <Compile Include="Interfaces\IBenchmarkForm.cs" />
     <Compile Include="Interfaces\IRatesComunication.cs" />
     <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
@@ -263,12 +239,11 @@
     <Compile Include="Miners\IdleChecking\InputTimeoutChecker.cs" />
     <Compile Include="Miners\IdleChecking\SessionLockChecker.cs" />
     <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\BrokenPluginIntegrated\BrokenPluginIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerIntegratedMiner.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerKlausTIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerAlexisIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX16RIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\ClaymoreDual14Integrated\ClaymoreDual14IntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\ClaymoreDualIntegrated\ClaymoreDualIntegratedPlugin.cs" />
@@ -284,7 +259,6 @@
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerGMIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerIntegratedMiner.cs" />
-    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerNHGeneralIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGMinerPluginBase.cs" />
     <Compile Include="Miners\IntegratedPlugins\TeamRedMinerIntegrated\TeamRedMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
@@ -297,7 +271,6 @@
     <Compile Include="Stats\MiningStats.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
-    <Compile Include="PInvoke\DeviceDetection.cs" />
     <Compile Include="Stats\ErrorCode.cs" />
     <Compile Include="Stats\Models\ExchangeRateJson.cs" />
     <Compile Include="Stats\Models\MinerStatusMessage.cs" />
@@ -322,7 +295,8 @@
     <Compile Include="StratumService.cs" />
     <Compile Include="Utils\ArchiveHelpers.cs" />
     <Compile Include="Utils\FirewallRules.cs" />
-    <Compile Include="Utils\WindowsManagementObjectSearcher.cs" />
+    <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
+    <Compile Include="Utils\SystemSpecs.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
     <Compile Include="Switching\Interval.cs" />
@@ -330,13 +304,7 @@
     <Compile Include="Configs\ConfigManager.cs" />
     <Compile Include="Configs\Data\DeviceConfig.cs" />
     <Compile Include="Configs\Data\GeneralConfig.cs" />
-    <Compile Include="Devices\AmdGpuDevice.cs" />
-    <Compile Include="Devices\ComputeDevice\ComputeDevice.cs" />
-    <Compile Include="Devices\ComputeDeviceManager.cs" />
-    <Compile Include="Devices\CPUUtils.cs" />
-    <Compile Include="Devices\Querying\Nvidia\CudaDevice.cs" />
-    <Compile Include="Devices\CUDA_Unsupported.cs" />
-    <Compile Include="Devices\Querying\Amd\OpenCL\OpenCLDevice.cs" />
+    <Compile Include="Devices\ComputeDevice.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -373,7 +341,6 @@
     <Compile Include="Forms\Form_3rdParty_TOS.Designer.cs">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
     </Compile>
-    <Compile Include="Globals_shared.cs" />
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Utils\Links.cs" />
@@ -381,9 +348,7 @@
     <Compile Include="Miners\Grouping\MiningDevice.cs" />
     <Compile Include="Miners\MinerFactory.cs" />
     <Compile Include="Miners\Grouping\GroupingUtils.cs" />
-    <Compile Include="PInvoke\NiceHashProcess.cs" />
-    <Compile Include="Utils\BitcoinAddress.cs" />
-    <Compile Include="PInvoke\CPUID.cs" />
+    <Compile Include="Utils\CredentialValidators.cs" />
     <Compile Include="Utils\Helpers.cs" />
     <Compile Include="Miners\Miner.cs" />
     <Compile Include="Forms\MinerFileNotFoundDialog.cs">
@@ -397,7 +362,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
-    <Compile Include="Utils\WindowsManagementObjectSearcherSmoketestWorkaround.cs" />
     <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
       <DependentUpon>AlgorithmsListView.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -516,10 +480,6 @@
       <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
       <Name>MyDownloader.Extension</Name>
     </ProjectReference>
-    <ProjectReference Include="..\3rdparty\managedCuda\Nvml\Nvml.csproj">
-      <Project>{92d51a33-7bf0-47fd-9ece-d758ffe1691d}</Project>
-      <Name>Nvml</Name>
-    </ProjectReference>
     <ProjectReference Include="..\3rdparty\MessageBoxManager\MessageBoxManager.csproj">
       <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
       <Name>MessageBoxManager</Name>
@@ -531,6 +491,10 @@
     <ProjectReference Include="..\Miners\BMiner\BMiner.csproj">
       <Project>{da54e8c4-73d8-4f1a-be84-0d548b77a2c0}</Project>
       <Name>BMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\BrokenMiner\BrokenMiner.csproj">
+      <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
+      <Name>BrokenMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\ClaymoreDual14\ClaymoreDual14.csproj">
       <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
@@ -565,7 +529,7 @@
       <Name>MinerPlugin</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\NanoMiner\NanoMiner.csproj">
-      <Project>{b16f5e9e-7d4b-482b-908d-b839457fc766}</Project>
+      <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
       <Name>NanoMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\NBMiner\NBMiner.csproj">
@@ -573,7 +537,7 @@
       <Name>NBMiner</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\Phoenix\Phoenix.csproj">
-      <Project>{f0f31c63-c7ef-4945-aefd-62c69f430e48}</Project>
+      <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
       <Name>Phoenix</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj">
@@ -592,6 +556,14 @@
       <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
       <Name>XmrStak</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NHM.DeviceDetection\NHM.DeviceDetection.csproj">
+      <Project>{9b4e5761-4c68-41f8-86bb-26f3382c6189}</Project>
+      <Name>NHM.DeviceDetection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
+      <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
+      <Name>NHM.DeviceMonitoring</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NHM.MinersDownloader\NHM.MinersDownloader.csproj">
       <Project>{6bdc0b57-e7d9-43e1-8534-55ae8a1b12ed}</Project>
       <Name>NHM.MinersDownloader</Name>
@@ -605,7 +577,7 @@
       <Name>NiceHashMinerLegacy.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\NiceHashMinerLegacy.Extensions\NiceHashMinerLegacy.Extensions.csproj">
-      <Project>{200498ff-f28e-4c9c-9c6f-535feee099db}</Project>
+      <Project>{12564275-9741-4341-868d-8762448884d0}</Project>
       <Name>NiceHashMinerLegacy.Extensions</Name>
     </ProjectReference>
   </ItemGroup>
@@ -630,8 +602,13 @@ If NOT exist "$(SolutionDir)$(Configuration)\msvcr120.dll" copy /Y "$(SolutionDi
 REM OpenCL.dll inside a separate folder
 If NOT exist "$(SolutionDir)$(Configuration)\OpenCL\" mkdir "$(SolutionDir)$(Configuration)\OpenCL\"
 if NOT exist "$(SolutionDir)$(Configuration)\OpenCL\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL\OpenCL.dll"
+if NOT exist "$(SolutionDir)$(Configuration)\OpenCL\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\README.md" "$(SolutionDir)$(Configuration)\OpenCL\README.md"
 If NOT exist "$(SolutionDir)$(Configuration)\opencl_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\opencl_device_detection.dll" "$(SolutionDir)$(Configuration)\opencl_device_detection.dll"
-
+REM NVIDIA inside a separate folder
+If NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\" mkdir "$(SolutionDir)$(Configuration)\NVIDIA\"
+if NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\nvml.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\nvml.dll" "$(SolutionDir)$(Configuration)\NVIDIA\nvml.dll"
+if NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\README.md" "$(SolutionDir)$(Configuration)\NVIDIA\README.md"
+if NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\license.txt" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\license.txt" "$(SolutionDir)$(Configuration)\NVIDIA\license.txt"
 
 
 REM commons dll's for downloaded miners. Copy only if files don't exist. Remove this after plugin system fully replaces integrated miners

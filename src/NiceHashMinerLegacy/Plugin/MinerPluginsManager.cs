@@ -25,6 +25,7 @@ using NiceHashMiner.Utils;
 
 // alias
 using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
+using System.Globalization;
 
 // TODO fix up the namespace
 namespace NiceHashMiner.Plugin
@@ -39,15 +40,14 @@ namespace NiceHashMiner.Plugin
 
         public static List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
         {
+            //// testing 
+            //new BrokenPluginIntegratedPlugin(),
             // open source
-            new CCMinerAlexisIntegratedPlugin(),
-            new CCMinerKlausTIntegratedPlugin(),
             new CCMinerMTPIntegratedPlugin(),
             new CCMinerTpruvotIntegratedPlugin(),
             new CCMinerX16RIntegratedPlugin(),
             //new SGminerAvemoreIntegratedPlugin(),
             new SGminerGMIntegratedPlugin(),
-            new SGminerNHGeneralIntegratedPlugin(),
             new XmrStakIntegratedPlugin(),
 
             // 3rd party
@@ -80,7 +80,7 @@ namespace NiceHashMiner.Plugin
             var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             // get devices
             var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
             // examine all plugins and what to use
             foreach (var plugin in IntegratedPlugins)
             {
@@ -200,7 +200,7 @@ namespace NiceHashMiner.Plugin
             var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             // get devices
             var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
             foreach (var plugin in IntegratedPlugins)
             {
                 var pluginUuid = plugin.PluginUUID;
@@ -270,7 +270,7 @@ namespace NiceHashMiner.Plugin
         {
             // get devices
             var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.PluginDevice);
+            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
             // examine all plugins and what to use
             foreach (var kvp in MinerPluginHost.MinerPlugin)
             {
@@ -397,6 +397,21 @@ namespace NiceHashMiner.Plugin
             return ret;
         }
 
+
+        private class NoKeepAlivesWebClient : WebClient
+        {
+            protected override WebRequest GetWebRequest(Uri address)
+            {
+                var request = base.GetWebRequest(address);
+                if (request is HttpWebRequest)
+                {
+                    ((HttpWebRequest)request).KeepAlive = false;
+                }
+
+                return request;
+            }
+        }
+
         // TODO this here is blocking
         public static bool GetOnlineMinerPlugins()
         {
@@ -404,12 +419,17 @@ namespace NiceHashMiner.Plugin
             const string pluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
             try
             {
-                using (var client = new WebClient())
+                using (var client = new NoKeepAlivesWebClient())
                 {
                     string s = client.DownloadString(pluginsJsonApiUrl);
                     //// local fake string
                     //string s = Properties.Resources.pluginJSON;
-                    var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, Globals.JsonSettings);
+                    var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
+                    {
+                        NullValueHandling = NullValueHandling.Ignore,
+                        MissingMemberHandling = MissingMemberHandling.Ignore,
+                        Culture = CultureInfo.InvariantCulture
+                    });
                     OnlinePlugins = onlinePlugins;
                 }
 
@@ -429,7 +449,7 @@ namespace NiceHashMiner.Plugin
             {
                 // Dynamic/Online
                 var dynamicReBenchmarkCheckers = MinerPluginHost.MinerPlugin.Values.Where(plugin => plugin is IReBenchmarkChecker).ToList();
-                reBenchmarkCheckersPlugins.AddRange(dynamicReBenchmarkCheckers);
+                if (dynamicReBenchmarkCheckers.Count > 0) reBenchmarkCheckersPlugins.AddRange(dynamicReBenchmarkCheckers);
             }
 
             // get devices
@@ -442,7 +462,7 @@ namespace NiceHashMiner.Plugin
                     if (reBenchCheckPlugin == null) continue;
                     foreach (var dev in allDevs)
                     {
-                        var baseDev = dev.PluginDevice;
+                        var baseDev = dev.BaseDevice;
                         var pluginAlgos = dev.AlgorithmSettings.Where(a => a.MinerUUID == plugin.PluginUUID).ToArray();
                         foreach (var algo in pluginAlgos)
                         {

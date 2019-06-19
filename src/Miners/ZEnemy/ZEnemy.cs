@@ -33,7 +33,6 @@ namespace ZEnemy
             switch (algorithmType)
             {
                 case AlgorithmType.X16R: return "x16r";
-                case AlgorithmType.Skunk: return "skunk";
             }
             return "";
         }

@@ -28,7 +28,7 @@ namespace NiceHashMiner.Forms
             var loginForm = new LoginForm();
             SetChildFormCenter(loginForm);
             loginForm.ShowDialog();
-            if (BitcoinAddress.ValidateBitcoinAddress(loginForm.Btc))
+            if (CredentialValidators.ValidateBitcoinAddress(loginForm.Btc))
             {
                 ConfigManager.GeneralConfig.BitcoinAddress = loginForm.Btc;
                 ConfigManager.GeneralConfigFileCommit();

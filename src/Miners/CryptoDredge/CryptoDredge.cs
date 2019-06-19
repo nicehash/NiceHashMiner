@@ -31,10 +31,7 @@ namespace CryptoDredge
         {
             switch (algorithmType)
             {
-                case AlgorithmType.CryptoNightHeavy: return "cnheavy";
-                case AlgorithmType.CryptoNightV8: return "cnv8";
                 case AlgorithmType.Lyra2REv3: return "lyra2v3";
-                case AlgorithmType.NeoScrypt: return "neoscrypt";
                 case AlgorithmType.X16R: return "x16r";
                 case AlgorithmType.MTP: return "mtp";
                 default: return "";
@@ -47,10 +44,7 @@ namespace CryptoDredge
             {
                 switch (_algorithmType)
                 {
-                    case AlgorithmType.CryptoNightHeavy:
-                    case AlgorithmType.CryptoNightV8:
                     case AlgorithmType.Lyra2REv3:
-                    case AlgorithmType.NeoScrypt:
                     case AlgorithmType.X16R: return 1.0;
                     case AlgorithmType.MTP: return 2.0;
                     default: return 1.0;

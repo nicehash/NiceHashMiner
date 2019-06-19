@@ -84,6 +84,57 @@ namespace NiceHashMinerLegacy.Common
             LogGroupTextType(grp, text, LogType.Error);
         }
 
+        #region Delayed logging
+        static object _lock = new object();
+        static private Dictionary<string, DateTime> _lastLoggedMessages = new Dictionary<string, DateTime>();
+
+        private static bool ShouldLog(string grp, string text, TimeSpan delayTimeSpan)
+        {
+            var key = $"grp({grp})-text({text})";
+            lock (_lock)
+            {
+                if (!_lastLoggedMessages.ContainsKey(key))
+                {
+                    _lastLoggedMessages[key] = DateTime.UtcNow;
+                    return true;
+                }
+                else
+                {
+                    var lastDateTime = _lastLoggedMessages[key];
+                    var timeSpanDiff = DateTime.UtcNow.Subtract(lastDateTime);
+                    var shouldLog = timeSpanDiff > delayTimeSpan;
+                    if (shouldLog) _lastLoggedMessages[key] = DateTime.UtcNow;
+                    return shouldLog;
+                }
+            }
+        }
+
+        public static void InfoDelayed(string grp, string text, TimeSpan delayTimeSpan)
+        {
+            if (!ShouldLog(grp, text, delayTimeSpan)) return;
+            LogGroupTextType(grp, text, LogType.Info);
+        }
+
+        public static void DebugDelayed(string grp, string text, TimeSpan delayTimeSpan)
+        {
+            if (!ShouldLog(grp, text, delayTimeSpan)) return;
+            LogGroupTextType(grp, text, LogType.Debug);
+        }
+
+        public static void WarnDelayed(string grp, string text, TimeSpan delayTimeSpan)
+        {
+            if (!ShouldLog(grp, text, delayTimeSpan)) return;
+            LogGroupTextType(grp, text, LogType.Warn);
+        }
+
+        public static void ErrorDelayed(string grp, string text, TimeSpan delayTimeSpan)
+        {
+            if (!ShouldLog(grp, text, delayTimeSpan)) return;
+            LogGroupTextType(grp, text, LogType.Error);
+        }
+
+        #endregion Delayed logging
+
         public static void ConfigureWithFile(bool enableFileLogging, Level logLevel, long maxFileSize = 1048576)
         {
             Enabled = enableFileLogging;

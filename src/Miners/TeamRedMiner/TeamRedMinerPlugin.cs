@@ -40,7 +40,7 @@ namespace TeamRedMiner
 
         public IMiner CreateMiner()
         {
-            return new TeamRedMiner(PluginUUID, AMDDevice.OpenCLPlatformID)
+            return new TeamRedMiner(PluginUUID, AMDDevice.GlobalOpenCLPlatformID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -66,10 +66,10 @@ namespace TeamRedMiner
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(AMDDevice gpu)
         {
             var algorithms = new List<Algorithm> {
-                new Algorithm(PluginUUID, AlgorithmType.CryptoNightV8),
                 new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
-                //new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
+                new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
+                new Algorithm(PluginUUID, AlgorithmType.X16R),
             };
             return algorithms;
         }

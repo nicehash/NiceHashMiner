@@ -34,11 +34,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
                     // gm 
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
-                    // nh general
-                    case AlgorithmType.NeoScrypt:
-                        return "neoscrypt";
-                    case AlgorithmType.Keccak:
-                        return "keccak";
                     default:
                         return "";
                 }

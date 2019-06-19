@@ -3,6 +3,7 @@ using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
+using MinerPluginToolkitV1.ClaymoreCommon;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
@@ -11,12 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ClaymoreDual14
 {
-    public class ClaymoreDual14Plugin : IMinerPlugin, IInitInternals/*, IDevicesCrossReference*/, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class ClaymoreDual14Plugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
         public ClaymoreDual14Plugin()
         {
@@ -29,7 +29,7 @@ namespace ClaymoreDual14
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
 
         public string Name => "ClaymoreDual14+";
 
@@ -439,35 +439,42 @@ namespace ClaymoreDual14
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
         #endregion Internal Settings
 
-        //// TODO leaking background process
-        //public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
-        //{
-        //    //var miner = CreateMiner() as IBinAndCwdPathsGettter;
-        //    //if (miner == null) return;
-        //    //var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-        //    //var minerCwd = miner.GetBinAndCwdPaths().Item2;
-        //    //// no device list so 'start mining'
-        //    //var logFile = "noappend_cross_ref_devs.txt";
-        //    //var logFilePath = Path.Combine(minerCwd, logFile);
-        //    //var args = $"-benchmark 1 -wd 0 -colors 0 -dbg 1 -logfile {logFile}";
-        //    //var output = await DevicesCrossReferenceHelpers.ReadLinesUntil(minerBinPath, minerCwd, args, logFilePath, new List<string> { "Total cards", "Stratum - connecting to" });
-        //    //var mappedDevs = DevicesListParser.ParseClaymoreDualOutput(output, devices.ToList());
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerCwd = miner.GetBinAndCwdPaths().Item2;
+            // no device list so 'start mining'
+            var logFile = "noappend_cross_ref_devs.txt";
+            var logFilePath = Path.Combine(minerCwd, logFile);
+            var args = $"-mport 0 -benchmark 1 -wd 0 -colors 0 -dbg 1 -logfile {logFile}";
+            var output = await MinerPluginToolkitV1.ClaymoreCommon.DevicesCrossReferenceHelpers.ReadLinesUntil(minerBinPath, minerCwd, args, logFilePath, new List<string> { "Total cards", "Stratum - connecting to" });
+            var mappedDevs = DevicesListParser.ParseClaymoreDualOutput(output, devices.ToList());
 
-        //    //foreach (var kvp in mappedDevs)
-        //    //{
-        //    //    var uuid = kvp.Key;
-        //    //    var indexID = kvp.Value;
-        //    //    _mappedIDs[uuid] = indexID;
-        //    //}
-        //}
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                _mappedIDs[uuid] = indexID;
+            }
+        }
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "cudart64_80.dll", "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
-                @"cuda10\cudart64_100.dll", @"cuda10\EthDcrMiner64.exe", @"RemoteManager\EthMan.exe", @"RemoteManager\libeay32.dll", @"RemoteManager\ssleay32.dll"
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> {
+                "cudart64_80.dll",
+                "EthDcrMiner64.exe",
+                "libcurl.dll",
+                "msvcr110.dll",
+                @"cuda10\cudart64_100.dll",
+                @"cuda10\EthDcrMiner64.exe",
+                @"RemoteManager\EthMan.exe",
+                @"RemoteManager\libeay32.dll",
+                @"RemoteManager\ssleay32.dll"
             });
         }
 

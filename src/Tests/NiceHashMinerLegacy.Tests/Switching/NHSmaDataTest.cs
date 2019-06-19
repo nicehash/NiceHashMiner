@@ -16,14 +16,14 @@ namespace NiceHashMinerLegacy.Tests.Switching
             {
                 //{AlgorithmType.CryptoNight, 0.11},
                 {AlgorithmType.DaggerHashimoto, 0.9},
-                {AlgorithmType.Blake2s, 0}
+                //{AlgorithmType.Blake2s, 0}
             };
 
             var testZero = new List<AlgorithmType>
             {
-                AlgorithmType.Keccak,
-                AlgorithmType.Equihash,
-                AlgorithmType.Pascal
+                //AlgorithmType.Keccak,
+                //AlgorithmType.Equihash,
+                //AlgorithmType.Pascal
             };
 
             // Check initialized flag and initialize
@@ -58,27 +58,27 @@ namespace NiceHashMinerLegacy.Tests.Switching
             // We will update the stable algos multiple times
             var testStable = new List<List<AlgorithmType>>
             {
-                new List<AlgorithmType>
-                {
-                    AlgorithmType.Keccak,
-                    AlgorithmType.Equihash,
-                    AlgorithmType.Pascal
-                },
-                new List<AlgorithmType>
-                {
-                    AlgorithmType.Keccak,
-                    AlgorithmType.Equihash,
-                    AlgorithmType.Pascal,
-                    AlgorithmType.Blake2s
-                },
-                new List<AlgorithmType>
-                {
-                    AlgorithmType.DaggerHashimoto,
-                    AlgorithmType.Equihash,
-                    AlgorithmType.Pascal
-                }
+                //new List<AlgorithmType>
+                //{
+                //    AlgorithmType.Keccak,
+                //    AlgorithmType.Equihash,
+                //    AlgorithmType.Pascal
+                //},
+                //new List<AlgorithmType>
+                //{
+                //    AlgorithmType.Keccak,
+                //    AlgorithmType.Equihash,
+                //    AlgorithmType.Pascal,
+                //    AlgorithmType.Blake2s
+                //},
+                //new List<AlgorithmType>
+                //{
+                //    AlgorithmType.DaggerHashimoto,
+                //    AlgorithmType.Equihash,
+                //    AlgorithmType.Pascal
+                //}
             };
-            
+
             NHSmaData.Initialize();
 
             foreach (var epoch in testStable)

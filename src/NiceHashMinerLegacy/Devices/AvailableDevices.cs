@@ -1,4 +1,5 @@
 ﻿using NiceHashMinerLegacy.Common;
+using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,12 +22,41 @@ namespace NiceHashMiner.Devices
         public static int AvailNVGpus => GetCountForType(DeviceType.NVIDIA);
         public static int AvailAmdGpus => GetCountForType(DeviceType.AMD);
 
-        public static int AvailGpUs => AvailAmdGpus + AvailNVGpus;
+        public static int AvailGpus => AvailAmdGpus + AvailNVGpus;
 
-        public static int NumDetectedNvDevs { get; internal set; }
-        public static int NumDetectedAmdDevs { get; internal set; }
 
-        public static int AmdOpenCLPlatformNum { get; internal set; } = -1;
+        public static ulong AvailNvidiaGpuRam
+        {
+            get
+            {
+                var ramSum = 0ul;
+                var gpuRams = _devices
+                    .Where(dev => dev.BaseDevice is CUDADevice)
+                    .Select(dev => dev.BaseDevice)
+                    .Cast<CUDADevice>()
+                    .Select(gpu => gpu.GpuRam);
+                foreach (var ram in gpuRams) ramSum += ram;
+                return ramSum;
+            }
+        }
+
+        public static ulong AvailAmdGpuRam
+        {
+            get
+            {
+                var ramSum = 0ul;
+                var gpuRams = _devices
+                    .Where(dev => dev.BaseDevice is AMDDevice)
+                    .Select(dev => dev.BaseDevice)
+                    .Cast<AMDDevice>()
+                    .Select(gpu => gpu.GpuRam);
+                foreach (var ram in gpuRams) ramSum += ram;
+                return ramSum;
+            }
+        }
+
+        public static int NumDetectedNvDevs => _devices.Where(d => d.DeviceType == DeviceType.NVIDIA).Count();
+        public static int NumDetectedAmdDevs => _devices.Where(d => d.DeviceType == DeviceType.AMD).Count();
 
         internal static void AddDevice(ComputeDevice dev)
         {
@@ -73,23 +103,6 @@ namespace NiceHashMiner.Devices
             foreach (var dev in Devices.Where(d => d.DeviceType == DeviceType.CPU))
             {
                 dev.SetEnabled(false);
-            }
-        }
-
-        public static void RemoveInvalidDevs()
-        {
-            var invalidDevices = new List<ComputeDevice>();
-            foreach (var cDev in Devices)
-            {
-                if (cDev.IsAlgorithmSettingsInitialized()) continue;
-
-                Logger.Info(Tag, "CRITICAL ISSUE!!! Device has AlgorithmSettings == null. Will remove");
-                invalidDevices.Add(cDev);
-            }
-            // remove invalids
-            foreach (var invalid in invalidDevices)
-            {
-                _devices.Remove(invalid);
             }
         }
     }

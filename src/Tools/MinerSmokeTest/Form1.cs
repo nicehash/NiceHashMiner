@@ -45,8 +45,7 @@ namespace MinerSmokeTest
 
         private static async Task InitNhmlDevsPlugins()
         {
-            await Task.Run(() => WindowsManagementObjectSearcherSmoketestWorkaround.Init());
-            await ComputeDeviceManager.QueryDevicesAsync(null, false);
+            //await ComputeDeviceManager.QueryDevicesAsync(null, false);
             MinerPluginsManager.LoadMinerPlugins();
         }
 
@@ -182,7 +181,7 @@ namespace MinerSmokeTest
                     try
                     {
                         var pAlgo = algorithm as PluginAlgorithm;
-                        var pair = new List<MiningPair> { new MiningPair { Device = device.PluginDevice, Algorithm = pAlgo.BaseAlgo } };
+                        var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = pAlgo.BaseAlgo } };
                         var miner = NiceHashMiner.Miners.MinerFactory.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);
@@ -249,7 +248,7 @@ namespace MinerSmokeTest
                     try
                     {
                         var pAlgo = algorithm as PluginAlgorithm;
-                        var pair = new List<MiningPair> { new MiningPair { Device = device.PluginDevice, Algorithm = pAlgo.BaseAlgo } };
+                        var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = pAlgo.BaseAlgo } };
                         var miner = NiceHashMiner.Miners.MinerFactory.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);

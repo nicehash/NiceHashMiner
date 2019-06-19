@@ -49,23 +49,6 @@ namespace NiceHashMiner
         }
 #endregion IBalanceFiatDisplayer DisplayFiatBalance (double fiatBalance, string fiatCurrencySymbol)
 
-#region IBTCDisplayer DisplayBTC string
-        static event EventHandler<string> DisplayBTC;
-        private static void subscribeIBTCDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IBTCDisplayer sIBTCDisplayer)) return;
-            DisplayBTC += sIBTCDisplayer.DisplayBTC;
-            // emit on single shot
-            EventHandler<string> singleShotEvent = sIBTCDisplayer.DisplayBTC;
-            singleShotEvent.Invoke(null, ConfigManager.GeneralConfig.BitcoinAddress);
-        }
-
-        private static void unsubscribeIBTCDisplayer(IDataVisualizer s)
-        {
-            if (s is IBTCDisplayer sIBTCDisplayer) DisplayBTC -= sIBTCDisplayer.DisplayBTC;
-        }
-#endregion IBTCDisplayer DisplayBTC string
-
 #region IGlobalMiningRateDisplayer DisplayGlobalMiningRate double
         static event EventHandler<double> DisplayGlobalMiningRate;
         private static void subscribeIGlobalMiningRateDisplayer(IDataVisualizer s)
@@ -136,51 +119,6 @@ namespace NiceHashMiner
         }
 #endregion INoInternetConnectionDisplayer DisplayNoInternetConnection EventArgs
 
-#region IServiceLocationDisplayer DisplayServiceLocation int
-        static event EventHandler<int> DisplayServiceLocation;
-        private static void subscribeIServiceLocationDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IServiceLocationDisplayer sIServiceLocationDisplayer)) return;
-            DisplayServiceLocation += sIServiceLocationDisplayer.DisplayServiceLocation;
-            // emit on single shot
-            EventHandler<int> singleShotEvent = sIServiceLocationDisplayer.DisplayServiceLocation;
-            singleShotEvent.Invoke(null, ConfigManager.GeneralConfig.ServiceLocation);
-        }
-
-        private static void unsubscribeIServiceLocationDisplayer(IDataVisualizer s)
-        {
-            if (s is IServiceLocationDisplayer sIServiceLocationDisplayer) DisplayServiceLocation -= sIServiceLocationDisplayer.DisplayServiceLocation;
-        }
-#endregion IServiceLocationDisplayer DisplayServiceLocation int
-
-#region IStartMiningDisplayer DisplayMiningStarted EventArgs
-        static event EventHandler<EventArgs> DisplayMiningStarted;
-        private static void subscribeIStartMiningDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IStartMiningDisplayer sIStartMiningDisplayer)) return;
-            DisplayMiningStarted += sIStartMiningDisplayer.DisplayMiningStarted;
-        }
-
-        private static void unsubscribeIStartMiningDisplayer(IDataVisualizer s)
-        {
-            if (s is IStartMiningDisplayer sIStartMiningDisplayer) DisplayMiningStarted -= sIStartMiningDisplayer.DisplayMiningStarted;
-        }
-#endregion IStartMiningDisplayer DisplayMiningStarted EventArgs
-
-#region IStopMiningDisplayer DisplayMiningStopped EventArgs
-        static event EventHandler<EventArgs> DisplayMiningStopped;
-        private static void subscribeIStopMiningDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IStopMiningDisplayer sIStopMiningDisplayer)) return;
-            DisplayMiningStopped += sIStopMiningDisplayer.DisplayMiningStopped;
-        }
-
-        private static void unsubscribeIStopMiningDisplayer(IDataVisualizer s)
-        {
-            if (s is IStopMiningDisplayer sIStopMiningDisplayer) DisplayMiningStopped -= sIStopMiningDisplayer.DisplayMiningStopped;
-        }
-#endregion IStopMiningDisplayer DisplayMiningStopped EventArgs
-
 #region IVersionDisplayer DisplayVersion string
         static event EventHandler<string> DisplayVersion;
         private static void subscribeIVersionDisplayer(IDataVisualizer s)
@@ -194,23 +132,6 @@ namespace NiceHashMiner
             if (s is IVersionDisplayer sIVersionDisplayer) DisplayVersion -= sIVersionDisplayer.DisplayVersion;
         }
 #endregion IVersionDisplayer DisplayVersion string
-
-#region IWorkerNameDisplayer DisplayWorkerName string
-        static event EventHandler<string> DisplayWorkerName;
-        private static void subscribeIWorkerNameDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IWorkerNameDisplayer sIWorkerNameDisplayer)) return;
-            DisplayWorkerName += sIWorkerNameDisplayer.DisplayWorkerName;
-            // emit on single shot
-            EventHandler<string> singleShotEvent = sIWorkerNameDisplayer.DisplayWorkerName;
-            singleShotEvent.Invoke(null, ConfigManager.GeneralConfig.WorkerName);
-        }
-
-        private static void unsubscribeIWorkerNameDisplayer(IDataVisualizer s)
-        {
-            if (s is IWorkerNameDisplayer sIWorkerNameDisplayer) DisplayWorkerName -= sIWorkerNameDisplayer.DisplayWorkerName;
-        }
-#endregion IWorkerNameDisplayer DisplayWorkerName string
 
 #region IDevicesStateDisplayer RefreshDeviceListView EventArgs
         static event EventHandler<EventArgs> RefreshDeviceListView;
@@ -236,8 +157,6 @@ namespace NiceHashMiner
 
                 subscribeIBalanceFiatDisplayer(s);
 
-                subscribeIBTCDisplayer(s);
-
                 subscribeIGlobalMiningRateDisplayer(s);
 
                 subscribeIGroupDisplayer(s);
@@ -248,15 +167,7 @@ namespace NiceHashMiner
 
                 subscribeINoInternetConnectionDisplayer(s);
 
-                subscribeIServiceLocationDisplayer(s);
-
-                subscribeIStartMiningDisplayer(s);
-
-                subscribeIStopMiningDisplayer(s);
-
                 subscribeIVersionDisplayer(s);
-
-                subscribeIWorkerNameDisplayer(s);
 
                 subscribeIDevicesStateDisplayer(s);
 
@@ -272,8 +183,6 @@ namespace NiceHashMiner
 
                 unsubscribeIBalanceFiatDisplayer(s);
 
-                unsubscribeIBTCDisplayer(s);
-
                 unsubscribeIGlobalMiningRateDisplayer(s);
 
                 unsubscribeIGroupDisplayer(s);
@@ -284,15 +193,7 @@ namespace NiceHashMiner
 
                 unsubscribeINoInternetConnectionDisplayer(s);
 
-                unsubscribeIServiceLocationDisplayer(s);
-
-                unsubscribeIStartMiningDisplayer(s);
-
-                unsubscribeIStopMiningDisplayer(s);
-
                 unsubscribeIVersionDisplayer(s);
-
-                unsubscribeIWorkerNameDisplayer(s);
 
                 unsubscribeIDevicesStateDisplayer(s);
 
