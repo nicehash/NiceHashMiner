@@ -334,7 +334,7 @@
             this.labelDemoMode.Name = "labelDemoMode";
             this.labelDemoMode.Size = new System.Drawing.Size(498, 25);
             this.labelDemoMode.TabIndex = 100;
-            this.labelDemoMode.Text = "NiceHash Miner Legacy is running in DEMO mode!";
+            this.labelDemoMode.Text = "NiceHash Miner is running in DEMO mode!";
             // 
             // buttonHelp
             // 

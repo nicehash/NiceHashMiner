@@ -31,7 +31,7 @@ namespace NiceHashMiner
         {
             get
             {
-                return "NiceHash Miner Legacy v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTag;
+                return "NiceHash Miner v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTag;
             }
         }
         #endregion BuildTag

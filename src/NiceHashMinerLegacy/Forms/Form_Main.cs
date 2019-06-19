@@ -101,7 +101,7 @@ namespace NiceHashMiner
             var result = ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
             if (ApplicationStateManager.SetResult.INVALID == result)
             {
-                errorProvider1.SetError(textBoxBTCAddress, Tr("Invalid Bitcoin address! NiceHash Miner Legacy will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
+                errorProvider1.SetError(textBoxBTCAddress, Tr("Invalid Bitcoin address! NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
             }
             else
             {
@@ -153,8 +153,8 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.InitLocale();
 
             // this one here is probably redundant
-            labelDemoMode.Text = Tr("NiceHash Miner Legacy is running in DEMO mode!");
-            toolTip1.SetToolTip(labelDemoMode, Tr("You have not entered a bitcoin address. NiceHash Miner Legacy will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
+            labelDemoMode.Text = Tr("NiceHash Miner is running in DEMO mode!");
+            toolTip1.SetToolTip(labelDemoMode, Tr("You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
 
             SetToolTip(Tr("User's bitcoin address for mining."),
                 textBoxBTCAddress, labelBitcoinAddress);
@@ -438,7 +438,7 @@ namespace NiceHashMiner
                     if (!settings.SetDefaults)
                     {
                         MessageBox.Show(
-                        Tr("Settings change requires NiceHash Miner Legacy to restart."),
+                        Tr("Settings change requires NiceHash Miner to restart."),
                         Tr("Restart Notice"),
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -513,7 +513,7 @@ namespace NiceHashMiner
             //{
             //    if (showWarnings)
             //    {
-            //        var result = MessageBox.Show(Tr("You have not entered a bitcoin address. NiceHash Miner Legacy will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"),
+            //        var result = MessageBox.Show(Tr("You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"),
             //            Tr("Start mining in DEMO mode?"),
             //            MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 

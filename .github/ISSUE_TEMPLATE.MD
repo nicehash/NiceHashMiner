@@ -2,7 +2,7 @@
 
 For general help there are several community resources available, such as https://reddit.com/r/NiceHash
 
-To keep development of NiceHash Miner Legacy streamlined please make sure the following are true before posting an issue:
+To keep development of NiceHash Miner streamlined please make sure the following are true before posting an issue:
 
 - Please make requests in English
 - The issue has not already been reported.

@@ -169,7 +169,7 @@ namespace NiceHashMiner
                 var missingMinerBins = MinerPluginsManager.GetMissingMiners().Count > 0;
                 if (missingMinerBins)
                 {
-                    var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner Legacy might not work properly without missing files. Click Yes to reinitialize NiceHash Miner Legacy to try to fix this issue."),
+                    var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Click Yes to reinitialize NiceHash Miner to try to fix this issue."),
                         Tr("Warning!"),
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
                     if (result == DialogResult.Yes)
@@ -218,14 +218,14 @@ namespace NiceHashMiner
         //{
         //    if (query.FailedRamCheck)
         //    {
-        //        MessageBox.Show(Tr("NiceHash Miner Legacy recommends increasing virtual memory size so that all algorithms would work fine."),
+        //        MessageBox.Show(Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine."),
         //            Tr("Warning!"),
         //            MessageBoxButtons.OK);
         //    }
 
         //    if (query.FailedVidControllerStatus)
         //    {
-        //        var msg = Tr("We have detected a Video Controller that is not working properly. NiceHash Miner Legacy will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
+        //        var msg = Tr("We have detected a Video Controller that is not working properly. NiceHash Miner will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
         //        msg += '\n' + query.FailedVidControllerInfo;
         //        MessageBox.Show(msg,
         //            Tr("Warning! Video Controller not operating correctly"),
