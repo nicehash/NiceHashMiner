@@ -68,7 +68,8 @@ namespace TeamRedMiner
             var algorithms = new List<Algorithm> {
                 new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
-                //new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
+                new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
+                new Algorithm(PluginUUID, AlgorithmType.X16R),
             };
             return algorithms;
         }
