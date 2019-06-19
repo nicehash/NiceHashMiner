@@ -28,6 +28,7 @@ namespace XmrStak
         protected AlgorithmType _algorithmType;
         protected readonly HttpClient _http = new HttpClient();
         protected IXmrStakConfigHandler _configHandler;
+        protected CancellationTokenSource _stopSource = null;
 
         private readonly int _openClAmdPlatformNum;
 
@@ -40,6 +41,17 @@ namespace XmrStak
         {
             _openClAmdPlatformNum = openClAmdPlatformNum;
             _configHandler = configHandler;
+        }
+
+        protected void StopSource()
+        {
+            try
+            {
+                _stopSource?.Cancel();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         protected override Dictionary<string, string> GetEnvironmentVariables()
@@ -218,7 +230,7 @@ namespace XmrStak
             string deviceConfigParams = "";
             try
             {
-                deviceConfigParams = await PrepareDeviceConfigs();
+                deviceConfigParams = await PrepareDeviceConfigs(stop);
             }
             catch (Exception e)
             {
@@ -320,7 +332,7 @@ namespace XmrStak
             // prepare configs
             var folder = _algorithmType.ToString().ToLower();
             // run in new task so we don't deadlock main thread
-            var deviceConfigParams = Task.Run(PrepareDeviceConfigs).Result;
+            var deviceConfigParams = Task.Run(() => PrepareDeviceConfigs(CancellationToken.None)).Result;
             var generalConfigFilePath = Path.Combine(binCwd, folder, "config.txt");
             var generalConfig = new MainConfig{ httpd_port = _apiPort };
             ConfigHelpers.WriteConfigFile(generalConfigFilePath, generalConfig);
@@ -333,7 +345,7 @@ namespace XmrStak
             return commandLine;
         }
 
-        protected async Task<string> PrepareDeviceConfigs()
+        protected async Task<string> PrepareDeviceConfigs(CancellationToken stop)
         {
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binCwd = binPathBinCwdPair.Item2;
@@ -344,28 +356,32 @@ namespace XmrStak
             var createConfigs = _miningDeviceTypes.All(deviceType => !_configHandler.HasConfig(deviceType, _algorithmType));
             if (createConfigs)
             {
-                try
+                using (_stopSource = new CancellationTokenSource())
+                using (var linked = CancellationTokenSource.CreateLinkedTokenSource(stop, _stopSource.Token))
                 {
-                    var t = CreateConfigFiles(_miningDeviceTypes);
-                    var tupleResult = await t;
-                    var result = tupleResult.Item1;
-                    var configFilePaths = tupleResult.Item2;
-                    if (result)
+                    try
                     {
-                        foreach (var path in configFilePaths)
+                        var t = CreateConfigFiles(_miningDeviceTypes, linked.Token);
+                        var tupleResult = await t;
+                        var result = tupleResult.Item1;
+                        var configFilePaths = tupleResult.Item2;
+                        if (result)
                         {
-                            var deviceTypes = _miningDeviceTypes.Where(deviceType => path.Contains(deviceType.ToString()));
-                            if (deviceTypes.Count() > 0)
+                            foreach (var path in configFilePaths)
                             {
-                                var deviceType = deviceTypes.First();
-                                _configHandler.SaveMoveConfig(deviceType, _algorithmType, path);
+                                var deviceTypes = _miningDeviceTypes.Where(deviceType => path.Contains(deviceType.ToString()));
+                                if (deviceTypes.Count() > 0)
+                                {
+                                    var deviceType = deviceTypes.First();
+                                    _configHandler.SaveMoveConfig(deviceType, _algorithmType, path);
+                                }
                             }
                         }
                     }
-                }
-                catch (Exception e)
-                {
-                    Logger.Info(_logGroup, $"Failed to create config file: {e.Message}");
+                    catch (Exception e)
+                    {
+                        Logger.Info(_logGroup, $"Failed to create config file: {e.Message}");
+                    }
                 }
             }
 
@@ -426,7 +442,7 @@ namespace XmrStak
         }
 
         // TODO add cancel token
-        protected async Task<Tuple<bool, IEnumerable<string>>> CreateConfigFiles(IEnumerable<DeviceType> deviceTypes)
+        protected async Task<Tuple<bool, IEnumerable<string>>> CreateConfigFiles(IEnumerable<DeviceType> deviceTypes, CancellationToken stop)
         {
             //var tag = string.Join("_", _miningPairs.Select(pair => $"{pair.Device.DeviceType.ToString()}_{pair.Device.ID}"));
             //var genPrefix = $"gen_{_algorithmType.ToString()}_{tag}";
@@ -449,7 +465,7 @@ namespace XmrStak
             var binCwd = binPathBinCwdPair.Item2;
             var envVars = GetEnvironmentVariables();
             var configs = enableDeviceFlagsConfigFiles.Select(p => p.Item2);
-            var success = await ConfigHelpers.CreateConfigFiles(configs, binPath, binCwd, commandLine, envVars);
+            var success = await ConfigHelpers.CreateConfigFiles(configs, binPath, binCwd, commandLine, envVars, stop);
             var configsFullPath = configs.Select(path => Path.Combine(binCwd, path));
 
             var deleteFiles = Directory.GetFiles(binCwd, "*.*", SearchOption.TopDirectoryOnly).Where(p => p.Contains(genPrefix) && p.Contains("conf"));
@@ -464,6 +480,12 @@ namespace XmrStak
             }
 
             return Tuple.Create(success, configsFullPath);
+        }
+
+        public override void StopMining()
+        {
+            StopSource();
+            base.StopMining();
         }
     }
 }

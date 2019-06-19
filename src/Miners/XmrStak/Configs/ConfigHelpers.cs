@@ -41,14 +41,15 @@ namespace XmrStak.Configs
             return MinerToolkit.WaitBenchmarkResult(genSettingsHandle, timeoutTime, delayTime, stop);
         }
 
-        public static async Task<bool> CreateConfigFiles(IEnumerable<string> configNames, string binPath, string cwdPath, string commandLine, Dictionary<string, string> environmentVariables = null)
+        public static async Task<bool> CreateConfigFiles(IEnumerable<string> configNames, string binPath, string cwdPath, string commandLine, Dictionary<string, string> environmentVariables, CancellationToken stop)
         {
             var configFilePaths = configNames.Select(configName => Path.Combine(cwdPath, configName));
             try
             {
                 using (var stopProcess = new CancellationTokenSource())
+                using (var linkedCancelation = CancellationTokenSource.CreateLinkedTokenSource(stopProcess.Token, stop))
                 {
-                    var configCreateTask = CreateConfigFileTask(binPath, cwdPath, commandLine, environmentVariables, stopProcess.Token);
+                    var configCreateTask = CreateConfigFileTask(binPath, cwdPath, commandLine, environmentVariables, linkedCancelation.Token);
                     var start = DateTime.Now;
                     while (DateTime.Now.Subtract(start).Seconds < 34)
                     {
@@ -62,7 +63,8 @@ namespace XmrStak.Configs
                         await Task.Delay(300);
                     }
                 }
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Logger.Error("XMR-CONFIGS", $"Creating of config file failed: {e.Message}");
             }
