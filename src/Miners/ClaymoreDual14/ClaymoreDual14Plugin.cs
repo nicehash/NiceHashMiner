@@ -465,8 +465,16 @@ namespace ClaymoreDual14
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "cudart64_80.dll", "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
-                @"cuda10\cudart64_100.dll", @"cuda10\EthDcrMiner64.exe", @"RemoteManager\EthMan.exe", @"RemoteManager\libeay32.dll", @"RemoteManager\ssleay32.dll"
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> {
+                "cudart64_80.dll",
+                "EthDcrMiner64.exe",
+                "libcurl.dll",
+                "msvcr110.dll",
+                @"cuda10\cudart64_100.dll",
+                @"cuda10\EthDcrMiner64.exe",
+                @"RemoteManager\EthMan.exe",
+                @"RemoteManager\libeay32.dll",
+                @"RemoteManager\ssleay32.dll"
             });
         }
 
