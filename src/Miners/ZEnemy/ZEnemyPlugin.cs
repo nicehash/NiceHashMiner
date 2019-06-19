@@ -43,7 +43,6 @@ namespace ZEnemy
         private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
         {
             yield return new Algorithm(PluginUUID, AlgorithmType.X16R);
-            yield return new Algorithm(PluginUUID, AlgorithmType.Skunk);
         }
 
         public IMiner CreateMiner()

@@ -21,9 +21,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         {
             switch (algorithmType)
             {
-                case AlgorithmType.NeoScrypt: return "neoscrypt";
-                case AlgorithmType.Blake2s: return "blake2s";
-                case AlgorithmType.Skunk: return "skunk";
                 case AlgorithmType.X16R: return "x16r";
                 case AlgorithmType.Lyra2REv3: return "lyra2v3";
                 case AlgorithmType.MTP: return "mtp";

@@ -241,7 +241,6 @@
     <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\BrokenPluginIntegrated\BrokenPluginIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerIntegratedMiner.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerKlausTIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />

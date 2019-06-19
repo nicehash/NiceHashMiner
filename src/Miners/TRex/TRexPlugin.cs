@@ -50,7 +50,7 @@ namespace TRex
 
         private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
         {
-            yield return new Algorithm(PluginUUID, AlgorithmType.Skunk);
+            yield return new Algorithm(PluginUUID, AlgorithmType.Lyra2Z);
             yield return new Algorithm(PluginUUID, AlgorithmType.X16R);
         }
 

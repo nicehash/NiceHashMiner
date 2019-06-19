@@ -27,7 +27,7 @@ namespace NiceHashMinerLegacy.Common.Enums
         X15 = 6,
         [Obsolete("UNUSED Algorithm")]
         Nist5 = 7,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         NeoScrypt = 8,
         [Obsolete("UNUSED Algorithm")]
         Lyra2RE = 9,
@@ -69,17 +69,17 @@ namespace NiceHashMinerLegacy.Common.Enums
         Sia = 27,
         [Obsolete("UNUSED Algorithm. USED only as second algorithm.")]
         Blake2s = 28,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         Skunk = 29,
         [Obsolete("UNUSED Algorithm")]
         CryptoNightV7 = 30,
-        //[Obsolete("UNUSED Algorithm")]
-        CryptoNightHeavy = 31,
         [Obsolete("UNUSED Algorithm")]
+        CryptoNightHeavy = 31,
+        //[Obsolete("UNUSED Algorithm")]
         Lyra2Z = 32,
         //[Obsolete("UNUSED Algorithm")]
         X16R = 33,
-        //[Obsolete("UNUSED Algorithm")]
+        [Obsolete("UNUSED Algorithm")]
         CryptoNightV8 = 34,
         [Obsolete("UNUSED Algorithm")]
         SHA256AsicBoost = 35,

@@ -37,8 +37,7 @@ namespace TRex
         {
             switch (algorithmType)
             {
-                //case AlgorithmType.Lyra2Z: return "lyra2z";
-                case AlgorithmType.Skunk: return "skunk";
+                case AlgorithmType.Lyra2Z: return "lyra2z";
                 case AlgorithmType.X16R: return "x16r";
                 default: return "";
             }

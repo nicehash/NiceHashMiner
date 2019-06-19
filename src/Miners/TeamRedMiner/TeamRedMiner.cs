@@ -44,8 +44,6 @@ namespace TeamRedMiner
             {
                 switch (_algorithmType)
                 {
-                    case AlgorithmType.CryptoNightV8:
-                        return "cnv8";
                     case AlgorithmType.CryptoNightR:
                         return "cnr";
                     case AlgorithmType.Lyra2REv3:
@@ -62,7 +60,6 @@ namespace TeamRedMiner
             {
                 switch (_algorithmType)
                 {
-                    case AlgorithmType.CryptoNightV8:
                     case AlgorithmType.CryptoNightR:
                     case AlgorithmType.Lyra2REv3:
                         return 2.5;
