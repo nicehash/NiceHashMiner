@@ -88,7 +88,6 @@ namespace Example
         /// <summary>
         /// GetMinerStatsDataAsync implements behaviour to get data from miner API
         /// </summary>
-        /// <returns></returns>
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             if (_httpClient == null) _httpClient = new HttpClient();
@@ -107,6 +106,7 @@ namespace Example
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
 
+                // go through all devices and find data from api, that belongs to that device
                 foreach (var gpu in gpus)
                 {
                     if (summary.miners == null) continue;
@@ -119,6 +119,7 @@ namespace Example
                     perDevicePowerInfo.Add(gpu.UUID, currentPower);
                 }
                 
+                // fill api data
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) }; // don't forget to substract Developer Fee from speeds
                 ad.PowerUsageTotal = totalPowerUsage;
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
