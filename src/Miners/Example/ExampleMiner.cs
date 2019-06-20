@@ -245,7 +245,7 @@ namespace Example
             var port = split[2];
 
             var algo = AlgorithmName(_algorithmType);
-            var commandLine = $"-uri {algo}://{_username}@{url}:{port} -api 127.0.0.1:{_apiPort} {_devices} -watchdog=false {_extraLaunchParameters}"; // don+t forget to disable miner watchdog otherwise there is a danger for duplicated mining windows
+            var commandLine = $"-uri {algo}://{_username}@{url}:{port} -api 127.0.0.1:{_apiPort} {_devices} -watchdog=false {_extraLaunchParameters}"; // don't forget to disable miner watchdog otherwise there is a danger for duplicated mining windows
             return commandLine;
         }
     }
