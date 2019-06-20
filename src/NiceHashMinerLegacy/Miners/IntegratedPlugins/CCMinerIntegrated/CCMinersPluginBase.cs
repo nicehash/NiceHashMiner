@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    abstract class CCMinersPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IGetApiMaxTimeout, IMinerBinsSource, IBinaryPackageMissingFilesChecker
+    abstract class CCMinersPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IGetApiMaxTimeout, IBinaryPackageMissingFilesChecker
     {
         public bool Is3rdParty => false;
 
@@ -127,7 +127,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             return new TimeSpan(0, 1, 0);
         }
 
-        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
             return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }

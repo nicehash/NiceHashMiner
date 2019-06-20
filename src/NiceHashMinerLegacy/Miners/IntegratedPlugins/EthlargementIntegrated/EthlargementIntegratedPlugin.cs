@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class EthlargementIntegratedPlugin : Ethlargement.Ethlargement, IntegratedPlugin, IMinerBinsSource
+    class EthlargementIntegratedPlugin : Ethlargement.Ethlargement, IntegratedPlugin
     {
         public static EthlargementIntegratedPlugin Instance { get; } = new EthlargementIntegratedPlugin();
         EthlargementIntegratedPlugin() : base("Ethlargement")
@@ -16,7 +16,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public bool Is3rdParty => true;
 
-        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
             return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }

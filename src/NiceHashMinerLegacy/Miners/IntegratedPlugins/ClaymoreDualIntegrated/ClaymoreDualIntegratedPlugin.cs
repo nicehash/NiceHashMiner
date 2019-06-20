@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class ClaymoreDualIntegratedPlugin : ClaymoreDual.ClaymoreDualPlugin, IntegratedPlugin, IMinerBinsSource
+    class ClaymoreDualIntegratedPlugin : ClaymoreDual.ClaymoreDualPlugin, IntegratedPlugin
     {
         public ClaymoreDualIntegratedPlugin() : base("ClaymoreDual")
         { }
 
         public bool Is3rdParty => true;
 
-        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
             return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }
