@@ -28,7 +28,7 @@ namespace TRex
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 2);
+        public Version Version => new Version(1, 3);
 
         public string Name => "TRex";
 
@@ -50,7 +50,7 @@ namespace TRex
 
         private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
         {
-            yield return new Algorithm(PluginUUID, AlgorithmType.Skunk);
+            yield return new Algorithm(PluginUUID, AlgorithmType.Lyra2Z);
             yield return new Algorithm(PluginUUID, AlgorithmType.X16R);
         }
 

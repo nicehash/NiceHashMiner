@@ -41,19 +41,21 @@ namespace XmrStak.Configs
             return MinerToolkit.WaitBenchmarkResult(genSettingsHandle, timeoutTime, delayTime, stop);
         }
 
-        public static async Task<bool> CreateConfigFile(string configName, string binPath, string cwdPath, string commandLine, Dictionary<string, string> environmentVariables = null)
+        public static async Task<bool> CreateConfigFiles(IEnumerable<string> configNames, string binPath, string cwdPath, string commandLine, Dictionary<string, string> environmentVariables, CancellationToken stop)
         {
-            var configFilePath = Path.Combine(cwdPath, configName);
+            var configFilePaths = configNames.Select(configName => Path.Combine(cwdPath, configName));
             try
             {
                 using (var stopProcess = new CancellationTokenSource())
+                using (var linkedCancelation = CancellationTokenSource.CreateLinkedTokenSource(stopProcess.Token, stop))
                 {
-                    var configCreateTask = CreateConfigFileTask(binPath, cwdPath, commandLine, environmentVariables, stopProcess.Token);
+                    var configCreateTask = CreateConfigFileTask(binPath, cwdPath, commandLine, environmentVariables, linkedCancelation.Token);
                     var start = DateTime.Now;
                     while (DateTime.Now.Subtract(start).Seconds < 34)
                     {
                         if (configCreateTask.IsCompleted) break;
-                        if (File.Exists(configFilePath))
+                        var checkSuccess = configFilePaths.All(configFilePath => File.Exists(configFilePath));
+                        if (checkSuccess)
                         {
                             stopProcess.Cancel();
                             return true;
@@ -61,11 +63,13 @@ namespace XmrStak.Configs
                         await Task.Delay(300);
                     }
                 }
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Logger.Error("XMR-CONFIGS", $"Creating of config file failed: {e.Message}");
             }
-            return File.Exists(configFilePath);
+            var success = configFilePaths.All(configFilePath => File.Exists(configFilePath));
+            return success;
         }
     }
 }

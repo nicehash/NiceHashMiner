@@ -88,7 +88,17 @@ namespace NiceHashMiner.Configs.Data
             }
         }
 
-        public bool AutoScaleBTCValues { get; set; } = true;
+        private bool _autoScaleBTCValues = true;
+        public bool AutoScaleBTCValues
+        {
+            get => _autoScaleBTCValues;
+            set
+            {
+                _autoScaleBTCValues = value;
+                ApplicationStateManager.OnAutoScaleBTCValuesChange();
+            }
+        }
+
 
         public bool StartMiningWhenIdle
         {
@@ -171,6 +181,12 @@ namespace NiceHashMiner.Configs.Data
 
         public string RigGroup { get; set; } = "";
 
+        public bool RunAtStartup
+        {
+            get => NiceHashMiner.Configs.RunAtStartup.Instance.Enabled;
+            set => NiceHashMiner.Configs.RunAtStartup.Instance.Enabled = value;
+        }
+
         // methods
         public void SetDefaults()
         {
@@ -199,7 +215,6 @@ namespace NiceHashMiner.Configs.Data
             DisplayCurrency = "USD";
             ApiBindPortPoolStart = 4000;
             MinimumProfit = 0;
-            //ContinueMiningIfNoInternetAccess = false;
             IdleWhenNoInternetAccess = true;
             IdleCheckType = IdleCheckType.SessionLock;
             Use3rdPartyMiners = Use3rdPartyMiners.NOT_SET;
@@ -215,6 +230,7 @@ namespace NiceHashMiner.Configs.Data
             ShowDiagColumns = true;
             UseEthlargement = false;
             RigGroup = "";
+            RunAtStartup = false;
         }
 
         public void FixSettingBounds()

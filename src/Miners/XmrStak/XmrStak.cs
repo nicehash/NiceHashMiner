@@ -18,6 +18,7 @@ namespace XmrStak
 {
     public class XmrStak : MinerBase
     {
+        private static Random _rand { get; } = new Random();
         //private string _devices;
         //protected _cpuDevices = new 
         protected HashSet<DeviceType> _miningDeviceTypes = null;
@@ -27,6 +28,7 @@ namespace XmrStak
         protected AlgorithmType _algorithmType;
         protected readonly HttpClient _http = new HttpClient();
         protected IXmrStakConfigHandler _configHandler;
+        protected CancellationTokenSource _stopSource = null;
 
         private readonly int _openClAmdPlatformNum;
 
@@ -39,6 +41,17 @@ namespace XmrStak
         {
             _openClAmdPlatformNum = openClAmdPlatformNum;
             _configHandler = configHandler;
+        }
+
+        protected void StopSource()
+        {
+            try
+            {
+                _stopSource?.Cancel();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         protected override Dictionary<string, string> GetEnvironmentVariables()
@@ -54,8 +67,6 @@ namespace XmrStak
         {
             switch (algorithmType)
             {
-                case AlgorithmType.CryptoNightHeavy: return "cryptonight_heavy";
-                case AlgorithmType.CryptoNightV8: return "cryptonight_v8";
                 case AlgorithmType.CryptoNightR: return "cryptonight_r";
                 default: return "";
             }
@@ -219,7 +230,7 @@ namespace XmrStak
             string deviceConfigParams = "";
             try
             {
-                deviceConfigParams = await PrepareDeviceConfigs();
+                deviceConfigParams = await PrepareDeviceConfigs(stop);
             }
             catch (Exception e)
             {
@@ -321,7 +332,7 @@ namespace XmrStak
             // prepare configs
             var folder = _algorithmType.ToString().ToLower();
             // run in new task so we don't deadlock main thread
-            var deviceConfigParams = Task.Run(PrepareDeviceConfigs).Result;
+            var deviceConfigParams = Task.Run(() => PrepareDeviceConfigs(CancellationToken.None)).Result;
             var generalConfigFilePath = Path.Combine(binCwd, folder, "config.txt");
             var generalConfig = new MainConfig{ httpd_port = _apiPort };
             ConfigHelpers.WriteConfigFile(generalConfigFilePath, generalConfig);
@@ -334,7 +345,7 @@ namespace XmrStak
             return commandLine;
         }
 
-        protected async Task<string> PrepareDeviceConfigs()
+        protected async Task<string> PrepareDeviceConfigs(CancellationToken stop)
         {
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binCwd = binPathBinCwdPair.Item2;
@@ -342,19 +353,29 @@ namespace XmrStak
             // prepare configs
             var folder = _algorithmType.ToString().ToLower();
             // check if we have configs
-            foreach (var deviceType in _miningDeviceTypes)
+            var createConfigs = _miningDeviceTypes.All(deviceType => !_configHandler.HasConfig(deviceType, _algorithmType));
+            if (createConfigs)
             {
-                if (!_configHandler.HasConfig(deviceType, _algorithmType))
+                using (_stopSource = new CancellationTokenSource())
+                using (var linked = CancellationTokenSource.CreateLinkedTokenSource(stop, _stopSource.Token))
                 {
                     try
                     {
-                        var t = CreateConfigFile(deviceType);
+                        var t = CreateConfigFiles(_miningDeviceTypes, linked.Token);
                         var tupleResult = await t;
                         var result = tupleResult.Item1;
-                        var configFilePath = tupleResult.Item2;
+                        var configFilePaths = tupleResult.Item2;
                         if (result)
                         {
-                            _configHandler.SaveMoveConfig(deviceType, _algorithmType, configFilePath);
+                            foreach (var path in configFilePaths)
+                            {
+                                var deviceTypes = _miningDeviceTypes.Where(deviceType => path.Contains(deviceType.ToString()));
+                                if (deviceTypes.Count() > 0)
+                                {
+                                    var deviceType = deviceTypes.First();
+                                    _configHandler.SaveMoveConfig(deviceType, _algorithmType, path);
+                                }
+                            }
                         }
                     }
                     catch (Exception e)
@@ -363,12 +384,13 @@ namespace XmrStak
                     }
                 }
             }
+
             // wait until we have the algorithms ready, 5 seconds should be enough
             foreach (var deviceType in _miningDeviceTypes)
             {
                 var hasConfig = false;
-                var start = DateTime.Now;
-                while (DateTime.Now.Subtract(start).Seconds < 5)
+                var start = DateTime.UtcNow;
+                while (DateTime.UtcNow.Subtract(start).Seconds < 5)
                 {
                     await Task.Delay(100);
                     hasConfig = _configHandler.HasConfig(deviceType, _algorithmType);
@@ -420,38 +442,50 @@ namespace XmrStak
         }
 
         // TODO add cancel token
-        protected async Task<Tuple<bool, string>> CreateConfigFile(DeviceType deviceType)
+        protected async Task<Tuple<bool, IEnumerable<string>>> CreateConfigFiles(IEnumerable<DeviceType> deviceTypes, CancellationToken stop)
         {
-            // API port function might be blocking
-            var apiPort = FreePortsCheckerManager.GetAvaliablePortFromSettings(); // use the default range
+            //var tag = string.Join("_", _miningPairs.Select(pair => $"{pair.Device.DeviceType.ToString()}_{pair.Device.ID}"));
+            //var genPrefix = $"gen_{_algorithmType.ToString()}_{tag}";
+            var genPrefix = $"gen_{_algorithmType.ToString()}_{_rand.Next().ToString()}";
+            var deviceTypeIDs = _miningPairs.Select(pair => Tuple.Create(pair.Device.DeviceType, pair.Device.ID));
+            var enableDeviceFlagsConfigFiles = CommandLineHelpers.GetConfigCmd(genPrefix, deviceTypeIDs);
+            var enableDeviceTypesStr = string.Join(" ", enableDeviceFlagsConfigFiles.Select(pair => $"{pair.Item1} {pair.Item2}"));
+
+            var configFlagAndFiles = CommandLineHelpers.GetGeneralAndPoolsConf(genPrefix);
+            var configFlagAndFilesStr = string.Join(" ", configFlagAndFiles);
+
             // instant non blocking
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.NONE);
-
-            var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(new List<DeviceType> { deviceType });
+            var disableDeviceTypes = CommandLineHelpers.DisableDevCmd(deviceTypes);
             var currency = AlgorithmName(_algorithmType);
-            var commandLine = $"-o {url} -u {MinerToolkit.DemoUserBTC} --currency {currency} -i {apiPort} --use-nicehash -p x -r x --benchmark 10 --benchwork 60 --benchwait 5 {disableDeviceTypes}";
+            var commandLine = $"-o {url} -u {MinerToolkit.DemoUserBTC} --currency {currency} -i 0 --use-nicehash -p x -r x --benchmark 10 --benchwork 60 --benchwait 5 {disableDeviceTypes} {enableDeviceTypesStr} {configFlagAndFilesStr}";
 
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
-
-            var pathVar = Environment.GetEnvironmentVariable("PATH");
-            pathVar = pathVar + ";" + binCwd;
-            var genSettingsEnvVars = new Dictionary<string, string> { { "PATH", pathVar } };
             var envVars = GetEnvironmentVariables();
-            if (envVars != null)
+            var configs = enableDeviceFlagsConfigFiles.Select(p => p.Item2);
+            var success = await ConfigHelpers.CreateConfigFiles(configs, binPath, binCwd, commandLine, envVars, stop);
+            var configsFullPath = configs.Select(path => Path.Combine(binCwd, path));
+
+            var deleteFiles = Directory.GetFiles(binCwd, "*.*", SearchOption.TopDirectoryOnly).Where(p => p.Contains(genPrefix) && p.Contains("conf"));
+            foreach (var delete in deleteFiles)
             {
-                foreach (var kvp in envVars) genSettingsEnvVars[kvp.Key] = kvp.Value;
+                try
+                {
+                    File.Delete(Path.Combine(binCwd, delete));
+                }
+                catch (Exception)
+                {}
             }
 
-            var tag = string.Join("_", _miningPairs.Select(pair => $"{pair.Device.DeviceType.ToString()}_{pair.Device.ID}"));
-            var genCwdPath = Path.Combine(binCwd, $"gen_{_algorithmType.ToString()}_{tag}");
-            if (Directory.Exists(genCwdPath)) Directory.Delete(genCwdPath);
-            if (!Directory.Exists(genCwdPath)) Directory.CreateDirectory(genCwdPath);
-            var config = $"{deviceType.ToString()}.txt".ToLower();
-            var configFilePath = Path.Combine(genCwdPath, config);
-            var success = await ConfigHelpers.CreateConfigFile(config, binPath, genCwdPath, commandLine, genSettingsEnvVars);
-            return Tuple.Create(success, configFilePath);
+            return Tuple.Create(success, configsFullPath);
+        }
+
+        public override void StopMining()
+        {
+            StopSource();
+            base.StopMining();
         }
     }
 }

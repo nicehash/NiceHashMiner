@@ -78,13 +78,21 @@ namespace NiceHashMiner
             return (fiatBalance, fiatSymbol);
         }
 
+        public static void OnAutoScaleBTCValuesChange()
+        {
+            // btc
+            DisplayBTCBalance?.Invoke(null, BtcBalance);
+            // fiat
+            DisplayFiatBalance?.Invoke(null, getFiatFromBtcBalance(BtcBalance));
+        }
+
         public static void OnBalanceUpdate(double btcBalance)
         {
             BtcBalance = btcBalance;
             // btc
             DisplayBTCBalance?.Invoke(null, BtcBalance);
             // fiat
-            DisplayFiatBalance?.Invoke(null, getFiatFromBtcBalance(btcBalance));
+            DisplayFiatBalance?.Invoke(null, getFiatFromBtcBalance(BtcBalance));
         }
 #endregion
 

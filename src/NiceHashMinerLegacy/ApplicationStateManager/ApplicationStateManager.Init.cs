@@ -207,6 +207,9 @@ namespace NiceHashMiner
             {
                 isInitFinished = true;
                 NiceHashStats.StateChanged();
+#if !(TESTNET || TESTNETDEV)
+                ResetNiceHashStatsCredentials();
+#endif
             }
         }
 

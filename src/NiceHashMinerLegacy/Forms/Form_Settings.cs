@@ -65,7 +65,7 @@ namespace NiceHashMiner.Forms
             checkBox_AutoStartMining.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AutoStartMining));
             checkBox_HideMiningWindows.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.HideMiningWindows));
             checkBox_MinimizeToTray.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.MinimizeToTray));
-            checkBox_AutoScaleBTCValues.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AutoScaleBTCValues));
+            checkBox_AutoScaleBTCValues.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AutoScaleBTCValues), false, DataSourceUpdateMode.OnPropertyChanged);
             checkBox_ShowDriverVersionWarning.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ShowDriverVersionWarning));
             checkBox_DisableWindowsErrorReporting.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableWindowsErrorReporting));
             checkBox_ShowInternetConnectionWarning.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ShowInternetConnectionWarning));

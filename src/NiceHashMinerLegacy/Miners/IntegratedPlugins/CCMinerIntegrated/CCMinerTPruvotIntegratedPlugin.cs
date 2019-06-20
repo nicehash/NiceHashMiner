@@ -35,8 +35,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             foreach (var gpu in cudaGpus)
             {
                 var algorithms = new List<Algorithm> {
-                    new Algorithm(PluginUUID, AlgorithmType.NeoScrypt),
-                    new Algorithm(PluginUUID, AlgorithmType.Skunk),
                     new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
                     new Algorithm(PluginUUID, AlgorithmType.X16R), // TODO check performance
                 };
