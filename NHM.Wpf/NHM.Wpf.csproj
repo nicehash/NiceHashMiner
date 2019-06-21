@@ -54,6 +54,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\BenchmarkViewModel.cs" />
     <Compile Include="Windows\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
     </Compile>

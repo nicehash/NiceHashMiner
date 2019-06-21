@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using NHM.Wpf.ViewModels;
 
 namespace NHM.Wpf.Windows
 {
@@ -19,9 +20,23 @@ namespace NHM.Wpf.Windows
     /// </summary>
     public partial class BenchmarkWindow : Window
     {
+        private readonly BenchmarkViewModel _vm;
+
         public BenchmarkWindow()
         {
             InitializeComponent();
+
+            if (DataContext is BenchmarkViewModel vm)
+            {
+                _vm = vm;
+            }
+            else
+            {
+                _vm = new BenchmarkViewModel();
+                DataContext = _vm;
+            }
+
+            _vm.RefreshData();
         }
     }
 }
