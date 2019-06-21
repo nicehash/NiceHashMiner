@@ -10,26 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using NHM.Wpf.Windows;
 
-namespace NHM.Wpf
+namespace NHM.Wpf.Windows
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for BenchmarkWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class BenchmarkWindow : Window
     {
-        public MainWindow()
+        public BenchmarkWindow()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            var bench = new BenchmarkWindow();
-            bench.ShowDialog();
         }
     }
 }
