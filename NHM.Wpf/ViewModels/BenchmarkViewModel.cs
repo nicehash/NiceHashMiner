@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using NHM.Wpf.Annotations;
 
 namespace NHM.Wpf.ViewModels
 {
-    internal class BenchmarkViewModel
+    internal class BenchmarkViewModel : INotifyPropertyChanged
     {
         internal class FakeDevice
         {
@@ -56,6 +59,8 @@ namespace NHM.Wpf.ViewModels
                 _selectedIndex = value;
 
                 SelectedDev = value == null ? null : Devices[value.Value];
+
+                OnPropertyChanged();
             }
         }
 
@@ -76,6 +81,8 @@ namespace NHM.Wpf.ViewModels
                 {
                     SelectedAlgos.Add(algo);
                 }
+
+                OnPropertyChanged();
             }
         }
 
@@ -98,6 +105,14 @@ namespace NHM.Wpf.ViewModels
                 new FakeAlgo("GPu algo 2"),
                 new FakeAlgo("gpu algo 3")
             }));
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
