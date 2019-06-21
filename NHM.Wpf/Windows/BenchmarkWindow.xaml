@@ -15,7 +15,7 @@
             <RowDefinition/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <ListView Margin="10" ItemsSource="{Binding Devices}">
+        <ListView Margin="10" ItemsSource="{Binding Devices}" SelectedIndex="{Binding SelectedIndex}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Enabled">
@@ -29,10 +29,17 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView Margin="10,10,10,10.5" Grid.Row="1">
+        <ListView Margin="10,10,10,10.5" Grid.Row="1" ItemsSource="{Binding SelectedAlgos}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn/>
+                    <GridViewColumn Header="Enabled">
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding Enabled}" />
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
                 </GridView>
             </ListView.View>
         </ListView>

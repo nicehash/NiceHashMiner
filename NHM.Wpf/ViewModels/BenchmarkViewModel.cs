@@ -24,23 +24,80 @@ namespace NHM.Wpf.ViewModels
 
             public string Name { get; }
 
-            public FakeDevice(string name)
+            public IReadOnlyList<FakeAlgo> Algos { get; }
+
+            public FakeDevice(string name, IReadOnlyList<FakeAlgo> algos)
+            {
+                Name = name;
+                Algos = algos;
+            }
+        }
+
+        internal class FakeAlgo
+        {
+            public string Name { get; }
+            public bool Enabled { get; set; }
+
+            public FakeAlgo(string name)
             {
                 Name = name;
             }
         }
 
         public ObservableCollection<FakeDevice> Devices { get; }
+        public ObservableCollection<FakeAlgo> SelectedAlgos { get; }
+
+        private int? _selectedIndex;
+        public int? SelectedIndex
+        {
+            get => _selectedIndex;
+            set
+            {
+                _selectedIndex = value;
+
+                SelectedDev = value == null ? null : Devices[value.Value];
+            }
+        }
+
+        private FakeDevice _selectedDev;
+        public FakeDevice SelectedDev
+        {
+            get => _selectedDev;
+            set
+            {
+                if (value == _selectedDev) return;
+
+                _selectedDev = value;
+                SelectedAlgos.Clear();
+
+                if (_selectedDev == null) return;
+
+                foreach (var algo in _selectedDev.Algos)
+                {
+                    SelectedAlgos.Add(algo);
+                }
+            }
+        }
 
         public BenchmarkViewModel()
         {
             Devices = new ObservableCollection<FakeDevice>();
+            SelectedAlgos = new ObservableCollection<FakeAlgo>();
         }
 
         public void RefreshData()
         {
-            Devices.Add(new FakeDevice("CPU"));
-            Devices.Add(new FakeDevice("GPU"));
+            Devices.Add(new FakeDevice("CPU", new List<FakeAlgo>
+            {
+                new FakeAlgo("CPU algo 1"),
+                new FakeAlgo("Cpu algo 2")
+            }));
+            Devices.Add(new FakeDevice("GPU", new List<FakeAlgo>
+            {
+                new FakeAlgo("GPU algo 1"),
+                new FakeAlgo("GPu algo 2"),
+                new FakeAlgo("gpu algo 3")
+            }));
         }
     }
 }
