@@ -38,8 +38,14 @@ namespace NHM.Wpf.ViewModels
 
         internal class FakeAlgo
         {
+            private static readonly Random R = new Random();
+
             public string Name { get; }
             public bool Enabled { get; set; }
+            public double Hashrate { get; set; } = R.NextDouble();
+            public double SecondaryHashrate { get; set; } = R.NextDouble();
+            public double Paying { get; set; } = R.NextDouble();
+            public double Profit { get; set; } = R.NextDouble();
 
             public FakeAlgo(string name)
             {
