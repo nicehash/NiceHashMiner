@@ -60,7 +60,7 @@ namespace NiceHashMiner.Plugin
             new TeamRedMinerIntegratedPlugin(),
             new TRexIntegratedPlugin(),
             new TTMinerIntegratedPlugin(),
-            //new NanoMinerIntegratedPlugin(),
+            new NanoMinerIntegratedPlugin(),
             new ClaymoreDual14IntegratedPlugin(),
 
             // service plugin

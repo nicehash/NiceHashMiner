@@ -9,14 +9,16 @@ using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace NanoMiner
 {
-    public class NanoMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker
+    public class NanoMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IDevicesCrossReference
     {
         public NanoMinerPlugin()
         {
@@ -35,6 +37,8 @@ namespace NanoMiner
 
         public string Author => "domen.kirnkrefl@nicehash.com";
 
+        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
+
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
@@ -51,8 +55,12 @@ namespace NanoMiner
 
             var cudaGpus = devices.Where(dev => dev is CUDADevice gpu).Cast<CUDADevice>();
 
+            var pcieId = 0; 
             foreach (var gpu in cudaGpus)
             {
+                // naive method
+                _mappedIDs[gpu.UUID] = pcieId;
+                ++pcieId;
                 var algos = GetNvidiaSupportedAlgorithms(gpu).ToList();
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
@@ -82,7 +90,7 @@ namespace NanoMiner
 
         public IMiner CreateMiner()
         {
-            return new NanoMiner(PluginUUID)
+            return new NanoMiner(PluginUUID, _mappedIDs)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -182,6 +190,25 @@ namespace NanoMiner
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
         #endregion Internal Settings
+
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        {
+            if (_mappedIDs.Count == 0) return;
+            // TODO will break
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-d");
+            var mappedDevs = DevicesListParser.ParseNanoMinerOutput(output, devices.ToList());
+
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                _mappedIDs[uuid] = indexID;
+            }
+        }
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
