@@ -264,6 +264,7 @@
     <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
+    <Compile Include="Miners\IntegratedPlugins\WildRigIntegrated\WildRigIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
     <Compile Include="Miners\MinerApiWatchdog.cs" />
     <Compile Include="Miners\MiningManager.cs" />
@@ -551,6 +552,10 @@
     <ProjectReference Include="..\Miners\TTMiner\TTMiner.csproj">
       <Project>{06e84bad-4317-41e0-ad59-31e70db4c12c}</Project>
       <Name>TTMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\WildRig\WildRig.csproj">
+      <Project>{fa68227d-27a2-4058-8d36-005fadafecc0}</Project>
+      <Name>WildRig</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj">
       <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
