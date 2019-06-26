@@ -158,7 +158,6 @@ namespace NiceHashMiner.Configs
             }
         }
 
-        // TODO this should be obsolete
         public static void InitDeviceSettings()
         {
             // create/init device configs

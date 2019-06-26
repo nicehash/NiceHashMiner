@@ -73,10 +73,11 @@ namespace NHM.DeviceMonitoring
 
                 PowerLimitsEnabled = true;
                 // set to high by default
-                var success = SetPowerTarget(PowerLevel.High);
+                var defaultLevel = PowerLevel.Low;
+                var success = SetPowerTarget(defaultLevel);
                 if (!success)
                 {
-                    Logger.Info("NVML", $"Cannot set power target ({PowerLevel.High.ToString()}) for device with BusID={BusID}");
+                    Logger.Info("NVML", $"Cannot set power target ({defaultLevel.ToString()}) for device with BusID={BusID}");
                 }
             }
             catch (Exception e)
@@ -181,6 +182,53 @@ namespace NHM.DeviceMonitoring
 
         public PowerLevel PowerLevel { get; private set; } = PowerLevel.High;
 
+        private static uint GetUintFromPowerLevel(PowerLevel powerLevel)
+        {
+            switch (powerLevel)
+            {
+                case PowerLevel.Low: return 0;
+                case PowerLevel.Medium: return 1;
+                case PowerLevel.High: return 2;
+                default: throw new Exception("GetUintFromPowerLevel - Unknown PowerLevel");
+            }
+        }
+
+        private bool SetTdp(double tdpPerc, uint defaultLimit)
+        {
+            uint currentLimit = (uint)(tdpPerc * (double)defaultLimit) / 100;
+            var ret = NvmlNativeMethods.nvmlDeviceSetPowerManagementLimit(_nvmlDevice, currentLimit);
+            if (ret != nvmlReturn.Success)
+                throw new Exception($"NVML nvmlDeviceGetPowerManagementLimitConstraints failed with status: {ret}");
+            
+            return true;
+        }
+
+        private bool SetTdpSimple(PowerLevel level)
+        {
+            try
+            {
+                uint minLimit = 0;
+                uint maxLimit = 0;
+                var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(_nvmlDevice, ref minLimit, ref maxLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new Exception($"NVML nvmlDeviceGetPowerManagementLimitConstraints failed with status: {ret}");
+
+                uint defaultLimit = 0;
+                ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(_nvmlDevice, ref defaultLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new Exception($"NVML nvmlDeviceGetPowerManagementDefaultLimit failed with status: {ret}");
+
+                var limit = minLimit + (defaultLimit - minLimit) * GetUintFromPowerLevel(level) / 2;
+                var tdpPerc = (limit * 100.0 / defaultLimit);
+                return SetTdp(tdpPerc, defaultLimit);
+            }
+            catch (Exception e)
+            {
+                Logger.ErrorDelayed("NVML", e.ToString(), _delayedLogging);
+                return false;
+            }
+        }
+
         // nvPercent in thousands of percent, e.g. 100000 for 100%
         private bool SetPowerTarget(uint nvPercent)
         {
@@ -232,6 +280,9 @@ namespace NHM.DeviceMonitoring
 
         public bool SetPowerTarget(PowerLevel level)
         {
+            PowerLevel = level;
+            if(SetTdpSimple(level)) return true;
+
             switch (level)
             {
                 case PowerLevel.Low:
