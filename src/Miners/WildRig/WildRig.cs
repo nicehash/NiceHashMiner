@@ -78,7 +78,7 @@ namespace WildRig
                 if (hashrate != null) {
                     for (int i = 0; i < gpus.Count(); i++)
                     {
-                        var deviceSpeed = hashrate.total.ElementAtOrDefault(i);
+                        var deviceSpeed = hashrate.threads.ElementAtOrDefault(i).FirstOrDefault();
                         totalSpeed += deviceSpeed;
                         perDeviceSpeedInfo.Add(gpus.ElementAt(i)?.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, deviceSpeed * (1 - DevFee * 0.01)) });
                     }
@@ -101,7 +101,7 @@ namespace WildRig
         {
             //only 60s mark is available
             var benchmarkTime = 60; // in seconds
-            var commandLine = $"-a {AlgoName} --benchmark -d {_devices}";
+            var commandLine = $"-a {AlgoName} --benchmark -d {_devices} --multiple-instance {_extraLaunchParameters}";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
@@ -168,7 +168,7 @@ namespace WildRig
         {
             _apiPort = GetAvaliablePort();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            return $"-a {AlgoName} -o {url} -u {username} --api-port={_apiPort} -d {_devices} {_extraLaunchParameters}";
+            return $"-a {AlgoName} -o {url} -u {username} --api-port={_apiPort} -d {_devices} --multiple-instance {_extraLaunchParameters}";
         }
 
         public override Tuple<string, string> GetBinAndCwdPaths()

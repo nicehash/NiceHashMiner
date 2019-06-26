@@ -15,7 +15,7 @@ namespace WildRig
 
     internal class Hashrate
     {
-        public List<int> total { get; set; }
+        public List<List<int>> threads { get; set; }
     }
 
     internal static class BenchmarkHelpers

@@ -57,12 +57,7 @@ namespace WildRig
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-            var minerCwd = miner.GetBinAndCwdPaths().Item2;
-            // no device list so 'start mining'
-            var logFile = "noappend_cross_ref_devs.txt";
-            var logFilePath = Path.Combine(minerCwd, logFile);
-            var args = $"-a x16r --benchmark --log-file={logFile}";
-            var output = await MinerPluginToolkitV1.ClaymoreCommon.DevicesCrossReferenceHelpers.ReadLinesUntil(minerBinPath, minerCwd, args, logFilePath, new List<string> { "Start benchmarking..." });
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--print-devices");
             var mappedDevs = DevicesListParser.ParseWildRigOutput(output, devices.ToList());
 
             foreach (var kvp in mappedDevs)
@@ -72,22 +67,6 @@ namespace WildRig
                 _mappedIDs[uuid] = indexID;
             }
         }
-        //public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
-        //{
-        //    var miner = CreateMiner() as IBinAndCwdPathsGettter;
-        //    if (miner == null) return;
-        //    var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-        //    var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--print-devices");
-        //    var mappedDevs = DevicesListParser.ParseWildRigOutputPrint(output, devices.ToList());
-
-        //    foreach (var kvp in mappedDevs)
-        //    {
-        //        var uuid = kvp.Key;
-        //        var indexID = kvp.Value;
-        //        _mappedIDs[uuid] = indexID;
-        //        Logger.Debug("WILDRIG", $"UUID: {uuid} INDEX: {indexID}");
-        //    }
-        //}
 
         public IMiner CreateMiner()
         {
@@ -105,18 +84,12 @@ namespace WildRig
 
             var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn2(gpu)).Cast<AMDDevice>();
 
-            foreach(var gpu in amdGpus)
-            {
-                var algorithms = GetSupportedAlgorithms(gpu);
-                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
-            }
-
             var pcieId = 0;
             foreach (var gpu in amdGpus)
             {
                 _mappedIDs[gpu.UUID] = pcieId;
                 ++pcieId;
-                var algorithms = GetSupportedAlgorithms(gpu).ToList();
+                var algorithms = GetSupportedAlgorithms(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
 
