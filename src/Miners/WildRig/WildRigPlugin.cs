@@ -72,6 +72,22 @@ namespace WildRig
                 _mappedIDs[uuid] = indexID;
             }
         }
+        //public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        //{
+        //    var miner = CreateMiner() as IBinAndCwdPathsGettter;
+        //    if (miner == null) return;
+        //    var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+        //    var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--print-devices");
+        //    var mappedDevs = DevicesListParser.ParseWildRigOutputPrint(output, devices.ToList());
+
+        //    foreach (var kvp in mappedDevs)
+        //    {
+        //        var uuid = kvp.Key;
+        //        var indexID = kvp.Value;
+        //        _mappedIDs[uuid] = indexID;
+        //        Logger.Debug("WILDRIG", $"UUID: {uuid} INDEX: {indexID}");
+        //    }
+        //}
 
         public IMiner CreateMiner()
         {
