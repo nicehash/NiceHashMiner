@@ -250,7 +250,6 @@
     <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\IMinerBinsSource.cs" />
     <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\MinersBinsUrls.cs" />
     <Compile Include="Miners\IntegratedPlugins\NanoMinerIntegrated\NanoMinerIntegratedPlugin.cs" />
@@ -267,6 +266,7 @@
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
     <Compile Include="Miners\MinerApiWatchdog.cs" />
     <Compile Include="Miners\MiningManager.cs" />
+    <Compile Include="Plugin\PluginContainer.cs" />
     <Compile Include="Plugin\SupportedAlgorithmsFilter.cs" />
     <Compile Include="Stats\MiningStats.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />

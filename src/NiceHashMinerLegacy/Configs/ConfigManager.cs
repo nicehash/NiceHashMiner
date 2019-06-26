@@ -159,7 +159,7 @@ namespace NiceHashMiner.Configs
         }
 
         // TODO this should be obsolete
-        public static void AfterDeviceQueryInitialization()
+        public static void InitDeviceSettings()
         {
             // create/init device configs
             foreach (var device in AvailableDevices.Devices)
