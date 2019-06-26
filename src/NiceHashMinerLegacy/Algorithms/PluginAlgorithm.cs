@@ -48,7 +48,7 @@ namespace NiceHashMiner.Algorithms
                 if (BaseAlgo == null) return "";
                 var plugin = MinerPluginsManager.GetPluginWithUuid(BaseAlgo.MinerID);
                 if (plugin == null) return "";
-                var isIntegrated = plugin is IntegratedPlugin;
+                var isIntegrated = plugin.IsIntegrated;
                 var minerName = plugin.Name + (isIntegrated ? "" : "(PLUGIN)");
                 return minerName;
             }

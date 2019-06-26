@@ -43,7 +43,7 @@ namespace MinerSmokeTest
             return rowData;
         }
 
-        private static async Task InitNhmlDevsPlugins()
+        private static void InitNhmlDevsPlugins()
         {
             //await ComputeDeviceManager.QueryDevicesAsync(null, false);
             MinerPluginsManager.LoadMinerPlugins();
@@ -54,7 +54,7 @@ namespace MinerSmokeTest
             ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
             try
             {
-                await InitNhmlDevsPlugins();
+                InitNhmlDevsPlugins();
             }
             catch (Exception ex)
             {

@@ -97,6 +97,8 @@ namespace NiceHashMiner
                     AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
                 }
                 AvailableDevices.UncheckCpuIfGpu();
+                // now init device settings
+                ConfigManager.InitDeviceSettings();
                 FailedRamCheck = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
                 // no compatible devices? exit
                 if (AvailableDevices.Devices.Count == 0)
@@ -129,7 +131,7 @@ namespace NiceHashMiner
                 MinerPluginsManager.LoadMinerPlugins();
                 /////////////////////////////////////////////
                 /////// from here on we have our devices and Miners initialized
-                AfterDeviceQueryInitialization();
+                UpdateDevicesStatesAndStartDeviceRefreshTimer();
 
                 // STEP
                 // connect to nhmws
