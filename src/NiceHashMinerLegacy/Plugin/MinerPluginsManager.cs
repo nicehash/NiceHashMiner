@@ -42,8 +42,8 @@ namespace NiceHashMiner.Plugin
         {
             var integratedPlugins = new List<IntegratedPlugin>
             {
-                //// testing 
-                new BrokenPluginIntegratedPlugin(),
+                ////// testing 
+                //new BrokenPluginIntegratedPlugin(),
                 // open source
                 new CCMinerMTPIntegratedPlugin(),
                 new CCMinerTpruvotIntegratedPlugin(),
