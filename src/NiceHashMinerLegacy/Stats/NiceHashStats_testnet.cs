@@ -109,6 +109,9 @@ namespace NiceHashMiner.Stats
                     return null;
                 }
 
+                case "markets":
+                    HandleMarkets(data);
+                    break;
                 case "balance":
                     SetBalance(message.value.Value);
                     return null;

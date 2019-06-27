@@ -54,7 +54,47 @@ namespace NiceHashMiner
             } else {
                 StopMining(false);
             }
-            
+        }
+
+        private static void RestartMinersIfMining()
+        {
+            // if mining update the mining manager
+            if (MiningState.Instance.IsCurrentlyMining)
+            {
+                MiningManager.RestartMiners(GetUsername());
+            }
+        }
+
+        public static void ResumeMiners()
+        {
+            if (_resumeOldState)
+            {
+                _resumeOldState = false;
+                foreach (var dev in _resumeDevs)
+                {
+                    StartDevice(dev);
+                }
+                _resumeDevs.Clear();
+            }
+            else
+            {
+                RestartMinersIfMining();
+            }
+        }
+
+        private static bool _resumeOldState = false;
+        private static HashSet<ComputeDevice> _resumeDevs = new HashSet<ComputeDevice>();
+        public static void PauseMiners()
+        {
+            _resumeOldState = CurrentForm == CurrentFormState.Main;
+            foreach(var dev in AvailableDevices.Devices)
+            {
+                if (dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Mining)
+                {
+                    _resumeDevs.Add(dev);
+                    StopAllDevice();
+                }
+            }
         }
 
         // TODO add check for any enabled algorithms

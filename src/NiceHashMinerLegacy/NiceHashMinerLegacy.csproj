@@ -275,6 +275,7 @@
     <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="Stats\ErrorCode.cs" />
     <Compile Include="Stats\Models\ExchangeRateJson.cs" />
+    <Compile Include="Stats\Models\MarketsMessage.cs" />
     <Compile Include="Stats\Models\MinerStatusMessage.cs" />
     <Compile Include="Stats\Models\NicehashCredentials.cs" />
     <Compile Include="Stats\Models\DeviceUpdateEventArgs.cs" />
