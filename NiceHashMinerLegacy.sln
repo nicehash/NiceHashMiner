@@ -104,7 +104,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Phoenix", "src\Miners\Phoen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrokenMiner", "src\Miners\BrokenMiner\BrokenMiner.csproj", "{2271753A-C4AB-4140-8339-08804764719F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Example", "src\Miners\ExamplePlugin\Example.csproj", "{DFC88036-796A-4046-B3B6-DE9FA56EDF28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExamplePlugin", "src\Miners\ExamplePlugin\ExamplePlugin.csproj", "{DFC88036-796A-4046-B3B6-DE9FA56EDF28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
