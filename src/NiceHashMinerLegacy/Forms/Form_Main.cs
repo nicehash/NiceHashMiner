@@ -193,6 +193,8 @@ namespace NiceHashMiner
         // InitMainConfigGuiData gets called after settings are changed and whatnot but this is a crude and tightly coupled way of doing things
         private void InitMainConfigGuiData()
         {
+            textBoxBTCAddress.Text = ConfigManager.CredentialsSettings.BitcoinAddress;
+            textBoxWorkerName.Text = ConfigManager.CredentialsSettings.WorkerName;
             _showWarningNiceHashData = true;
 
             // init active display currency after config load
