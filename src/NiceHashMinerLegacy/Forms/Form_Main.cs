@@ -66,8 +66,24 @@ namespace NiceHashMiner
             devicesMainBoard1.SecondPanelVisible = false;
             labelDemoMode.DataBindings.AddSafeBinding("Visible", MiningState.Instance, nameof(MiningState.Instance.IsDemoMining), true, DataSourceUpdateMode.OnPropertyChanged);
             labelDemoMode.BringToFront();
+            labelDemoMode.VisibleChanged += LabelDemoMode_VisibleChanged;
             InitControlValidators();
             FormHelpers.TranslateFormControls(this);
+        }
+
+        private void LabelDemoMode_VisibleChanged(object sender, EventArgs e)
+        {
+            if (labelDemoMode.Visible)
+            {
+                errorProvider1.SetError(textBoxBTCAddress, "");
+                errorProvider1.SetError(textBoxWorkerName, "");
+            }
+            else
+            {
+                textBoxBTCAddress_Validate();
+                textBoxWorkerName_Validate();
+            }
+            
         }
 
         private void InitDataBindings()
