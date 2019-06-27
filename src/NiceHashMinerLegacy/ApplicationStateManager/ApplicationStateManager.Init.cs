@@ -129,6 +129,8 @@ namespace NiceHashMiner
                 progress?.Report((Tr("Loading miner plugins..."), nextProgPerc()));
                 // Plugin Loading
                 MinerPluginsManager.LoadMinerPlugins();
+                // commit again benchmarks after loading plugins
+                ConfigManager.CommitBenchmarks();
                 /////////////////////////////////////////////
                 /////// from here on we have our devices and Miners initialized
                 UpdateDevicesStatesAndStartDeviceRefreshTimer();

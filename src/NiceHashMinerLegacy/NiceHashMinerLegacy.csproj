@@ -114,11 +114,14 @@
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
+    <Compile Include="Benchmarking\BenchmarkOption.cs" />
+    <Compile Include="Benchmarking\BenchmarkStartSettings.cs" />
     <Compile Include="BUILD_TAG.cs" />
     <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
     <Compile Include="Configs\IdleMiningSettings.cs" />
     <Compile Include="Configs\RunAtStartup.cs" />
+    <Compile Include="Configs\ThirdPartyMinerSettings.cs" />
     <Compile Include="Configs\TranslationsSettings.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
@@ -244,7 +247,6 @@
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX16RIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\ClaymoreDual14Integrated\ClaymoreDual14IntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\ClaymoreDualIntegrated\ClaymoreDualIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />

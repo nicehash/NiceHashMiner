@@ -279,6 +279,7 @@ namespace NiceHashMiner.Devices
                     ret.PluginAlgorithmSettings.Add(pluginConf);
                 }
             }
+            // add old algo configs
 
             return ret;
         }
@@ -291,6 +292,12 @@ namespace NiceHashMiner.Devices
             var allEnabledAlgorithms = AlgorithmSettings.Where(algo => algo.Enabled);
             var allEnabledAlgorithmsWithoutBenchmarks = allEnabledAlgorithms.Where(algo => algo.BenchmarkNeeded);
             return allEnabledAlgorithms.Count() == allEnabledAlgorithmsWithoutBenchmarks.Count();
+        }
+
+        public bool HasEnabledAlgorithmsWithReBenchmark()
+        {
+            var reBenchmarks = AlgorithmSettings.Where(algo => algo.Enabled && algo.IsReBenchmark && !algo.BenchmarkNeeded);
+            return reBenchmarks.Count() > 0;
         }
 
         public bool AnyAlgorithmEnabled()

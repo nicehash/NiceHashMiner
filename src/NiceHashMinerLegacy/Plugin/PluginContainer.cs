@@ -250,6 +250,10 @@ namespace NiceHashMiner.Plugin
                         pluginAlgo.ConfigVersion = pluginConf.GetVersion();
                         // check if re-bench is needed
                         var isReBenchmark = ShouldReBenchmarkAlgorithmOnDevice(dev.BaseDevice, pluginAlgo.ConfigVersion, pluginAlgo.IDs);
+                        if (isReBenchmark)
+                        {
+                            Logger.Info(LogTag, $"Algorithms {pluginAlgo.AlgorithmStringID} SET TO RE-BENCHMARK");
+                        }
                         pluginAlgo.IsReBenchmark = isReBenchmark;
                     }
                     // finally update algorithms

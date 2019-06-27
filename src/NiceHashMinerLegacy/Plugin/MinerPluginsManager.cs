@@ -47,7 +47,6 @@ namespace NiceHashMiner.Plugin
                 // open source
                 new CCMinerMTPIntegratedPlugin(),
                 new CCMinerTpruvotIntegratedPlugin(),
-                new CCMinerX16RIntegratedPlugin(),
                 //new SGminerAvemoreIntegratedPlugin(),
                 new SGminerGMIntegratedPlugin(),
                 new XmrStakIntegratedPlugin(),
@@ -475,6 +474,7 @@ namespace NiceHashMiner.Plugin
                     }
                     var newPlugin = PluginContainer.Create(externalPlugin);
                     var success = newPlugin.InitPluginContainer();
+                    // TODO after add or remove plugins we should clean up the device settings
                     if (success)
                     {
                         newPlugin.AddAlgorithmsToDevices();
