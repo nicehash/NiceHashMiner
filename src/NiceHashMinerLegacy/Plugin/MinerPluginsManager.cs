@@ -147,12 +147,15 @@ namespace NiceHashMiner.Plugin
             CrossReferenceInstalledWithOnline();
         }
 
-        // for now integrated only, it should be safe to call this multiple times 
         public static async Task DevicesCrossReferenceIDsWithMinerIndexes()
         {
             // get devices
             var baseDevices = AvailableDevices.Devices.Select(dev => dev.BaseDevice);
-            foreach (var plugin in PluginContainer.PluginContainers)
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
+                .ToArray();
+            foreach (var plugin in checkPlugins)
             {
                 await plugin.DevicesCrossReference(baseDevices);
             }
@@ -160,12 +163,13 @@ namespace NiceHashMiner.Plugin
 
         public static async Task DownloadMissingIntegratedMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
-            var compatiblePlugins = PluginContainer.PluginContainers
+            var checkPlugins = PluginContainer.PluginContainers
                 .Where(p => p.IsIntegrated)
                 .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
                 .ToArray();
 
-            foreach (var plugin in compatiblePlugins)
+            foreach (var plugin in checkPlugins)
             {
                 var urls = plugin.GetMinerBinsUrls();
                 var missingFiles = plugin.CheckBinaryPackageMissingFiles();
@@ -183,10 +187,14 @@ namespace NiceHashMiner.Plugin
         // for now integrated only
         public static List<string> GetMissingMiners()
         {
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
+                .ToArray();
+
             var ret = new List<string>();
-            foreach (var plugin in PluginContainer.PluginContainers)
+            foreach (var plugin in checkPlugins)
             {
-                if (!plugin.IsCompatible) continue;
                 ret.AddRange(plugin.CheckBinaryPackageMissingFiles());
             }
             return ret;
@@ -237,7 +245,12 @@ namespace NiceHashMiner.Plugin
         {
             // first go over the installed plugins
             // TODO rename installed to externalInstalledPlugin
-            foreach (var installed in PluginContainer.PluginContainers.Where(p => !p.IsIntegrated))
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => !p.IsIntegrated)
+                //.Where(p => p.IsCompatible)
+                //.Where(p => p.Enabled)
+                .ToArray();
+            foreach (var installed in checkPlugins)
             {
                 var uuid = installed.PluginUUID;
                 var localPluginInfo = new PluginPackageInfo
@@ -283,7 +296,11 @@ namespace NiceHashMiner.Plugin
         public static List<string> GetPluginUUIDsAndVersionsList()
         {
             var ret = new List<string>();
-            foreach (var integrated in PluginContainer.PluginContainers)
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
+                .ToArray();
+            foreach (var integrated in checkPlugins)
             {
                 ret.Add($"{integrated.PluginUUID}-{integrated.Version.Major}.{integrated.Version.Minor}");
             }
