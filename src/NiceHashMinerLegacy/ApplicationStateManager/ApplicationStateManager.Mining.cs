@@ -70,7 +70,7 @@ namespace NiceHashMiner
             var failReason = "";
 
             // TODO we have a BUG HERE if device enabled with all disabled algorithms
-            var devicesToBenchmark = devicesToStart.Where(dev => dev.AllEnabledAlgorithmsWithoutBenchmarks());
+            var devicesToBenchmark = devicesToStart.Where(dev => dev.AllEnabledAlgorithmsWithoutBenchmarks() && dev.AnyAlgorithmEnabled());
             var devicesToReBenchmark = devicesToStart.Where(dev => dev.HasEnabledAlgorithmsWithReBenchmark() && !devicesToBenchmark.Contains(dev));
             foreach (var dev in devicesToBenchmark) {
                 dev.State = DeviceState.Benchmarking;
