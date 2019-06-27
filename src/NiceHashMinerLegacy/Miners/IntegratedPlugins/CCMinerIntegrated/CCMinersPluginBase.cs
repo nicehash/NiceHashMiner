@@ -124,7 +124,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public TimeSpan GetApiMaxTimeout()
         {
-            return new TimeSpan(0, 1, 0);
+            return new TimeSpan(0, 5, 0);
         }
 
         IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
