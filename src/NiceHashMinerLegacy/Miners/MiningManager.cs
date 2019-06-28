@@ -241,29 +241,15 @@ namespace NiceHashMiner.Miners
 
         private static bool CheckIfShouldMine(double currentProfit, bool log = true)
         {
-            // if profitable and connected to internet mine
-            var shouldMine = CheckIfProfitable(currentProfit, log) && _isConnectedToInternet;
-            if (shouldMine)
-            {
-                ApplicationStateManager.SetProfitableState(true);
-            }
-            else
-            {
-                if (!_isConnectedToInternet)
-                {
-                    // change msg
-                    if (log)
-                    {
-                        Logger.Info(Tag, $"No internet connection! Not able to min.");
-                    }
-                    ApplicationStateManager.DisplayNoInternetConnection();
-                }
-                else
-                {
-                    ApplicationStateManager.SetProfitableState(false);
-                }
-            }
+            var isProfitable = CheckIfProfitable(currentProfit, log);
 
+            ApplicationStateManager.SetProfitableState(isProfitable);
+            ApplicationStateManager.DisplayNoInternetConnection(!_isConnectedToInternet);
+
+            if (!_isConnectedToInternet && log) Logger.Info(Tag, $"No internet connection! Not able to mine.");
+            
+            // if profitable and connected to internet mine
+            var shouldMine = isProfitable && _isConnectedToInternet;
             return shouldMine;
         }
 

@@ -228,8 +228,7 @@
     <Compile Include="Interfaces\DataVisualizer\IDevicesStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IGlobalMiningRateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IGroupDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IMiningNotProfitableDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IMiningProfitableDisplayer.cs" />
+    <Compile Include="Interfaces\DataVisualizer\IMiningProfitabilityDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\INoInternetConnectionDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IVersionDisplayer.cs" />

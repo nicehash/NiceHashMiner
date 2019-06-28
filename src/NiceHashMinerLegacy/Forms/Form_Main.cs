@@ -22,7 +22,7 @@ namespace NiceHashMiner
     using NiceHashMinerLegacy.Common;
     using NiceHashMinerLegacy.Common.Enums;
 
-    public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer
+    public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IMiningProfitabilityDisplayer, INoInternetConnectionDisplayer
     {
         private bool _showWarningNiceHashData;
 
@@ -747,6 +747,34 @@ namespace NiceHashMiner
             FormHelpers.UnsubscribeAllControls(this);
             ApplicationStateManager.BeforeExit();
             MessageBoxManager.Unregister();
+        }
+
+        void IMiningProfitabilityDisplayer.DisplayMiningProfitable(object sender, bool isProfitable)
+        {
+            FormHelpers.SafeInvoke(this, () => {
+                if (!isProfitable)
+                {
+                    //ShowNotProfitable(Translations.Tr("CURRENTLY MINING NOT PROFITABLE."));
+                }
+                else
+                {
+
+                }
+            });
+        }
+
+        void INoInternetConnectionDisplayer.DisplayNoInternetConnection(object sender, bool noInternet)
+        {
+            FormHelpers.SafeInvoke(this, () => {
+                if (noInternet)
+                {
+                    //ShowNotProfitable(Translations.Tr("CURRENTLY NOT MINING. NO INTERNET CONNECTION.")); 
+                }
+                else
+                {
+
+                }
+            });
         }
     }
 }
