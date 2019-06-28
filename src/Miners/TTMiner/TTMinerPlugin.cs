@@ -55,7 +55,7 @@ namespace TTMiner
         private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
         {
             return new List<Algorithm>{
-                new Algorithm(PluginUUID, AlgorithmType.MTP),
+                new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
             };
         }

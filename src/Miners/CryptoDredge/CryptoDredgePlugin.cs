@@ -55,7 +55,7 @@ namespace CryptoDredge
             }
             if(dev.GpuRam >= minMTPMem)
             {
-                yield return new Algorithm(PluginUUID, AlgorithmType.MTP);
+                yield return new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false };
             }
         }
 

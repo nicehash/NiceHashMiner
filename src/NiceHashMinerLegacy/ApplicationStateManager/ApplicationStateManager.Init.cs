@@ -156,7 +156,6 @@ namespace NiceHashMiner
 
                 // STEP
                 // Downloading integrated plugins bins, TODO put this in some internals settings
-                var thirdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
                 var hasMissingMinerBins = MinerPluginsManager.GetMissingMiners().Count > 0;
                 if (hasMissingMinerBins)
                 {
