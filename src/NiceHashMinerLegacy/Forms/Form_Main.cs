@@ -43,6 +43,7 @@ namespace NiceHashMiner
             CenterToScreen();
             Icon = Properties.Resources.logo;
             errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
+
             InitElevationWarning();
 
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
@@ -104,13 +105,14 @@ namespace NiceHashMiner
             comboBoxLocation.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
             buttonBenchmark.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
             buttonSettings.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
+            linkLabelAdminPrivs.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
             // start stop all
             buttonStartMining.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.AnyDeviceStopped), false, DataSourceUpdateMode.OnPropertyChanged);
             buttonStopMining.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.AnyDeviceRunning), false, DataSourceUpdateMode.OnPropertyChanged);
 
             ////labelDemoMode.DataBindings.Add("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsDemoMining), false, DataSourceUpdateMode.OnPropertyChanged);
             //labelDemoMode.DataBindings.Add("Visible", MiningState.Instance, nameof(MiningState.Instance.IsDemoMining), true, DataSourceUpdateMode.OnPropertyChanged);
-
+            
             devicesMainBoard1.DataBindings.AddSafeBinding(nameof(devicesMainBoard1.SecondPanelVisible), MiningState.Instance, nameof(MiningState.Instance.AnyDeviceRunning), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
@@ -195,7 +197,12 @@ namespace NiceHashMiner
 
         private void InitElevationWarning()
         {
-            if (!Helpers.IsElevated)
+            var isEnabledFeature = false;
+            // Enable this only for new platform
+#if TESTNET || TESTNETDEV
+            isEnabledFeature = true;
+#endif
+            if (!Helpers.IsElevated && isEnabledFeature)
             {
                 errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
                 linkLabelAdminPrivs.Click += (s, e) =>
