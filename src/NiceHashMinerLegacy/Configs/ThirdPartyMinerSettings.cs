@@ -41,6 +41,7 @@ namespace NiceHashMiner.Configs
             {
                 _boolProps.Set(nameof(Enabled3rdPartyMiners), value);
                 CanUseEthlargement = value;
+                if (Use3rdPartyMiners.NOT_SET == Use3rdPartyMiners) return;
                 var enumVal = value ? Use3rdPartyMiners.YES : Use3rdPartyMiners.NO;
                 _prop.Set(nameof(Use3rdPartyMiners), enumVal);
             }

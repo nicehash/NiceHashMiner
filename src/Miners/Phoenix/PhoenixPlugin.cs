@@ -71,7 +71,7 @@ namespace Phoenix
         {
             var algorithms = new List<Algorithm>
             {
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto),
+                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto) { Enabled = false },
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
