@@ -2,14 +2,14 @@
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class PhoenixIntegratedPlugin : Phoenix.PhoenixPlugin, IntegratedPlugin, IMinerBinsSource
+    class PhoenixIntegratedPlugin : Phoenix.PhoenixPlugin, IntegratedPlugin
     {
         public PhoenixIntegratedPlugin() : base("Phoenix")
         { }
 
         public bool Is3rdParty => true;
 
-        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
             return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }

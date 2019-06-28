@@ -120,6 +120,8 @@ namespace NiceHashMiner
                     var dev = AvailableDevices.GetDeviceWithUuid(monitor.UUID);
                     dev.DeviceMonitor = monitor;
                 }
+                // now init device settings
+                ConfigManager.InitDeviceSettings();
                 #endregion Device Detection
 
                 // STEP
@@ -127,9 +129,11 @@ namespace NiceHashMiner
                 progress?.Report((Tr("Loading miner plugins..."), nextProgPerc()));
                 // Plugin Loading
                 MinerPluginsManager.LoadMinerPlugins();
+                // commit again benchmarks after loading plugins
+                ConfigManager.CommitBenchmarks();
                 /////////////////////////////////////////////
                 /////// from here on we have our devices and Miners initialized
-                AfterDeviceQueryInitialization();
+                UpdateDevicesStatesAndStartDeviceRefreshTimer();
 
                 // STEP
                 // connect to nhmws

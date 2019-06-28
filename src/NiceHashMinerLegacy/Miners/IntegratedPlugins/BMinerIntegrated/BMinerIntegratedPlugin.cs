@@ -2,14 +2,14 @@
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class BMinerIntegratedPlugin : BMiner.BMinerPlugin, IntegratedPlugin, IMinerBinsSource
+    class BMinerIntegratedPlugin : BMiner.BMinerPlugin, IntegratedPlugin
     {
         public BMinerIntegratedPlugin() : base("BMiner")
         { }
 
         public bool Is3rdParty => true;
 
-        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
             return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }

@@ -20,8 +20,6 @@ namespace NiceHashMiner.Algorithms
         public Version ConfigVersion { get; set; } = new Version(1, 0);
         public Version PluginVersion { get; private set; } = new Version(1, 0);
 
-        public bool IsReBenchmark { get; set; } = false;
-
         public PluginAlgorithm(string pluginName, AlgorithmCommon.Algorithm algorithm, Version pluginVersion)
         {
             PluginName = pluginName;
@@ -48,7 +46,7 @@ namespace NiceHashMiner.Algorithms
                 if (BaseAlgo == null) return "";
                 var plugin = MinerPluginsManager.GetPluginWithUuid(BaseAlgo.MinerID);
                 if (plugin == null) return "";
-                var isIntegrated = plugin is IntegratedPlugin;
+                var isIntegrated = plugin.IsIntegrated;
                 var minerName = plugin.Name + (isIntegrated ? "" : "(PLUGIN)");
                 return minerName;
             }

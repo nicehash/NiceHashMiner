@@ -66,8 +66,24 @@ namespace NiceHashMiner
             devicesMainBoard1.SecondPanelVisible = false;
             labelDemoMode.DataBindings.AddSafeBinding("Visible", MiningState.Instance, nameof(MiningState.Instance.IsDemoMining), true, DataSourceUpdateMode.OnPropertyChanged);
             labelDemoMode.BringToFront();
+            labelDemoMode.VisibleChanged += LabelDemoMode_VisibleChanged;
             InitControlValidators();
             FormHelpers.TranslateFormControls(this);
+        }
+
+        private void LabelDemoMode_VisibleChanged(object sender, EventArgs e)
+        {
+            if (labelDemoMode.Visible)
+            {
+                errorProvider1.SetError(textBoxBTCAddress, "");
+                errorProvider1.SetError(textBoxWorkerName, "");
+            }
+            else
+            {
+                textBoxBTCAddress_Validate();
+                textBoxWorkerName_Validate();
+            }
+            
         }
 
         private void InitDataBindings()
@@ -177,6 +193,8 @@ namespace NiceHashMiner
         // InitMainConfigGuiData gets called after settings are changed and whatnot but this is a crude and tightly coupled way of doing things
         private void InitMainConfigGuiData()
         {
+            textBoxBTCAddress.Text = ConfigManager.CredentialsSettings.BitcoinAddress;
+            textBoxWorkerName.Text = ConfigManager.CredentialsSettings.WorkerName;
             _showWarningNiceHashData = true;
 
             // init active display currency after config load

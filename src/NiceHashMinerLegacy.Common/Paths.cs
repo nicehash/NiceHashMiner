@@ -14,6 +14,11 @@ namespace NiceHashMinerLegacy.Common
             Root = rootPath;
         }
 
+        public static string MinerPluginsPath()
+        {
+            return RootPath("miner_plugins");
+        }
+
         public static string MinerPluginsPath(params string[] paths) {
             return RootPath("miner_plugins", paths);
         }

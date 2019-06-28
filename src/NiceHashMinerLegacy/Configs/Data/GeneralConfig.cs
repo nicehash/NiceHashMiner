@@ -144,7 +144,11 @@ namespace NiceHashMiner.Configs.Data
         public string IFTTTKey { get; set; } = "";
 
         // 3rd party miners
-        public Use3rdPartyMiners Use3rdPartyMiners { get; set; } = Use3rdPartyMiners.NOT_SET;
+        public Use3rdPartyMiners Use3rdPartyMiners
+        {
+            get => NiceHashMiner.Configs.ThirdPartyMinerSettings.Instance.Use3rdPartyMiners;
+            set => NiceHashMiner.Configs.ThirdPartyMinerSettings.Instance.Use3rdPartyMiners = value;
+        }
 
         // 
         public string hwid = "";
@@ -177,7 +181,11 @@ namespace NiceHashMiner.Configs.Data
 
         public Point MainFormSize = new Point(1000, 400);
 
-        public bool UseEthlargement { get; set; } = false;
+        public bool UseEthlargement
+        {
+            get => NiceHashMiner.Configs.ThirdPartyMinerSettings.Instance.UseEthlargement;
+            set => NiceHashMiner.Configs.ThirdPartyMinerSettings.Instance.UseEthlargement = value;
+        }
 
         public string RigGroup { get; set; } = "";
 

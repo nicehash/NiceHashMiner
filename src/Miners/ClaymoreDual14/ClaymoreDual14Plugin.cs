@@ -29,7 +29,7 @@ namespace ClaymoreDual14
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 1);
+        public Version Version => new Version(1, 2);
 
         public string Name => "ClaymoreDual14+";
 
@@ -482,7 +482,15 @@ namespace ClaymoreDual14
         {
             // error/bug in v1.0
             // because the previous miner plugin mapped wrong GPU indexes rebench everything
-            return true;
+            try
+            {
+                var reBench = benchmarkedPluginVersion.Major == 1 && benchmarkedPluginVersion.Minor < 2;
+                return reBench;
+            }
+            catch (Exception)
+            {
+            }
+            return false;
         }
 
         public TimeSpan GetApiMaxTimeout()
