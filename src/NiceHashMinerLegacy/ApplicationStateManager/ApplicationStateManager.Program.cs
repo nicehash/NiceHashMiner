@@ -19,7 +19,7 @@ namespace NiceHashMiner
     static partial class ApplicationStateManager
     {
         #region BuildTag
-        private const string BetaAlphaPostfixString = " - Alpha";
+        private const string BetaAlphaPostfixString = "";
 #if TESTNET
         private static readonly string BuildTag = " (TESTNET)";
 #elif TESTNETDEV
