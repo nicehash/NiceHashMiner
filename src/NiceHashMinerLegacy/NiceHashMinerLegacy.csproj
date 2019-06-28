@@ -215,6 +215,7 @@
     <Compile Include="Forms\Form_Settings.Designer.cs">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\IconEx.cs" />
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -299,6 +300,7 @@
     <Compile Include="Utils\ArchiveHelpers.cs" />
     <Compile Include="Utils\FirewallRules.cs" />
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
+    <Compile Include="Utils\RunAsAdmin.cs" />
     <Compile Include="Utils\SystemSpecs.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />

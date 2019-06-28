@@ -18,6 +18,7 @@ namespace NiceHashMiner
 {
     using NiceHashMiner.Forms.Components;
     using NiceHashMiner.Plugin;
+    using NiceHashMiner.Utils;
     using NiceHashMinerLegacy.Common;
     using NiceHashMinerLegacy.Common.Enums;
 
@@ -41,6 +42,8 @@ namespace NiceHashMiner
             InitializeComponent();
             CenterToScreen();
             Icon = Properties.Resources.logo;
+
+            InitElevationWarning();
 
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
             FormHelpers.SubscribeAllControls(this);
@@ -187,6 +190,27 @@ namespace NiceHashMiner
             foreach (var control in controls)
             {
                 toolTip1.SetToolTip(control, text);
+            }
+        }
+
+        private void InitElevationWarning()
+        {
+            if (!Helpers.IsElevated)
+            {
+                errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
+                errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
+                linkLabelAdminPrivs.Click += (s, e) =>
+                {
+                    var dialogResult = MessageBox.Show(Tr("Click yes if you with to run NiceHash Miner Legacy as Administrator."),
+                    Tr("Run as Administrator"),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                        RunAsAdmin.SelfElevate();                    
+                };
+            }
+            else
+            {
+                linkLabelAdminPrivs.Visible = false;
             }
         }
 
