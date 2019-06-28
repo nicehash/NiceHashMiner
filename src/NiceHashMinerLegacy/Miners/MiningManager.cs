@@ -126,6 +126,25 @@ namespace NiceHashMiner.Miners
             //_internetCheckTimer?.Stop();
         }
 
+        public static async Task PauseAllMiners()
+        {
+            EthlargementIntegratedPlugin.Instance.Stop();
+            await _semaphore.WaitAsync();
+            try
+            {
+                foreach (var groupMiner in _runningMiners.Values)
+                {
+                    groupMiner.End();
+                }
+                _runningMiners.Clear();
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+            ApplicationStateManager.ClearRatesAll();
+        }
+
         #endregion Start/Stop
 
         // TODO make Task
@@ -191,14 +210,18 @@ namespace NiceHashMiner.Miners
             _switchingManager?.ForceUpdate();
         }
 
+
         // full of state
         private static bool CheckIfProfitable(double currentProfit, bool log = true)
         {
+            if (_isMiningRegardlesOfProfit) {
+                if (log) Logger.Info(Tag, $"Mine always regardless of profit");
+                return true;
+            }
+
             // TODO FOR NOW USD ONLY
             var currentProfitUsd = (currentProfit * ExchangeRateApi.GetUsdExchangeRate());
-            _isProfitable =
-                _isMiningRegardlesOfProfit
-                || !_isMiningRegardlesOfProfit && currentProfitUsd >= ConfigManager.GeneralConfig.MinimumProfit;
+            _isProfitable = currentProfitUsd >= ConfigManager.GeneralConfig.MinimumProfit;
             if (log)
             {
                 Logger.Info(Tag, $"Current global profit = {currentProfitUsd.ToString("F8")} USD/Day");
@@ -208,9 +231,7 @@ namespace NiceHashMiner.Miners
                 }
                 else
                 {
-                    var profitabilityInfo = _isMiningRegardlesOfProfit
-                        ? "mine always regardless of profit"
-                        : ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
+                    var profitabilityInfo = ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
                     Logger.Info(Tag, $"Current global profit = IS PROFITABLE, MinProfit: {profitabilityInfo}");
                 }
             }
@@ -241,9 +262,6 @@ namespace NiceHashMiner.Miners
                 {
                     ApplicationStateManager.SetProfitableState(false);
                 }
-
-                // return don't group
-                StopAllMiners();
             }
 
             return shouldMine;
@@ -337,6 +355,7 @@ namespace NiceHashMiner.Miners
                 {
                     device.SetNotMining();
                 }
+                await PauseAllMiners();
                 return;
             }
 
