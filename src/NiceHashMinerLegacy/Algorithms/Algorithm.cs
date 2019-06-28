@@ -91,6 +91,8 @@ namespace NiceHashMiner.Algorithms
 
         #endregion
 
+        public bool IsReBenchmark { get; set; } = false;
+
         #region Benchmark info
 
         public string BenchmarkStatus { get; set; }

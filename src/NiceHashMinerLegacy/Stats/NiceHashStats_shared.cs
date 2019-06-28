@@ -1,16 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿//#define DEBUG_MARKETS
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Miners;
 using NiceHashMiner.Switching;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using NiceHashMinerLegacy.Common.Enums;
 using WebSocketSharp;
 using NiceHashMiner.Stats.Models;
@@ -65,7 +60,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.Message);
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", $"SetAlgorithmRates error: {e.Message}");
             }
         }
 
@@ -86,7 +81,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.Message);
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", $"SetBalance error: {e.Message}");
             }
         }
 
@@ -113,10 +108,60 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.Message);
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", $"SetExchangeRates error: {e.Message}");
             }
         }
 
-        #endregion Incoming socket calls
+#if DEBUG_MARKETS
+        private static bool debugEU = false;
+        private static bool debugUSA = false;
+        private static int index = 0;
+        private static void changeDebugMarkets()
+        {
+            if (index == 0)
+            {
+                debugEU = true;
+                debugUSA = true;
+            }
+            if (index == 1)
+            {
+                debugEU = false;
+                debugUSA = true;
+            }
+            if (index == 2)
+            {
+                debugEU = true;
+                debugUSA = false;
+            }
+            if (index == 3)
+            {
+                debugEU = false;
+                debugUSA = false;
+            }
+            index = (index + 1) % 4;
+        }
+#endif
+
+        private static void HandleMarkets(string data)
+        {
+            try
+            {
+                var markets = JsonConvert.DeserializeObject<MarketsMessage>(data);
+                var hasEU = markets.data.Contains("EU");
+                var hasUSA = markets.data.Contains("USA");
+#if !DEBUG_MARKETS
+                StratumService.SetEnabled(hasEU, hasUSA);
+#else
+                changeDebugMarkets();
+                StratumService.SetEnabled(debugEU, debugUSA);
+#endif
+            }
+            catch (Exception e)
+            {
+                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", $"HandleMarkets error: {e.Message}");
+            }
+        }
+
+#endregion Incoming socket calls
     }
 }

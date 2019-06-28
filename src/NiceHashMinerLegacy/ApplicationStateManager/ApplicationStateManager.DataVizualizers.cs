@@ -77,36 +77,22 @@ namespace NiceHashMiner
         }
 #endregion IGroupDisplayer DisplayGroup string
 
-#region IMiningNotProfitableDisplayer DisplayMiningNotProfitable EventArgs
-        static event EventHandler<EventArgs> _DisplayMiningNotProfitable;
-        private static void subscribeIMiningNotProfitableDisplayer(IDataVisualizer s)
-        {
-            if (!(s is IMiningNotProfitableDisplayer sIMiningNotProfitableDisplayer)) return;
-            _DisplayMiningNotProfitable += sIMiningNotProfitableDisplayer.DisplayMiningNotProfitable;
-        }
-
-        private static void unsubscribeIMiningNotProfitableDisplayer(IDataVisualizer s)
-        {
-            if (s is IMiningNotProfitableDisplayer sIMiningNotProfitableDisplayer) _DisplayMiningNotProfitable -= sIMiningNotProfitableDisplayer.DisplayMiningNotProfitable;
-        }
-#endregion IMiningNotProfitableDisplayer DisplayMiningNotProfitable EventArgs
-
 #region IMiningProfitableDisplayer DisplayMiningProfitable EventArgs
-        static event EventHandler<EventArgs> _DisplayMiningProfitable;
+        static event EventHandler<bool> _DisplayMiningProfitability;
         private static void subscribeIMiningProfitableDisplayer(IDataVisualizer s)
         {
-            if (!(s is IMiningProfitableDisplayer sIMiningProfitableDisplayer)) return;
-            _DisplayMiningProfitable += sIMiningProfitableDisplayer.DisplayMiningProfitable;
+            if (!(s is IMiningProfitabilityDisplayer sIMiningProfitableDisplayer)) return;
+            _DisplayMiningProfitability += sIMiningProfitableDisplayer.DisplayMiningProfitable;
         }
 
         private static void unsubscribeIMiningProfitableDisplayer(IDataVisualizer s)
         {
-            if (s is IMiningProfitableDisplayer sIMiningProfitableDisplayer) _DisplayMiningProfitable -= sIMiningProfitableDisplayer.DisplayMiningProfitable;
+            if (s is IMiningProfitabilityDisplayer sIMiningProfitableDisplayer) _DisplayMiningProfitability -= sIMiningProfitableDisplayer.DisplayMiningProfitable;
         }
 #endregion IMiningProfitableDisplayer DisplayMiningProfitable EventArgs
 
 #region INoInternetConnectionDisplayer DisplayNoInternetConnection EventArgs
-        static event EventHandler<EventArgs> _DisplayNoInternetConnection;
+        static event EventHandler<bool> _DisplayNoInternetConnection;
         private static void subscribeINoInternetConnectionDisplayer(IDataVisualizer s)
         {
             if (!(s is INoInternetConnectionDisplayer sINoInternetConnectionDisplayer)) return;
@@ -161,8 +147,6 @@ namespace NiceHashMiner
 
                 subscribeIGroupDisplayer(s);
 
-                subscribeIMiningNotProfitableDisplayer(s);
-
                 subscribeIMiningProfitableDisplayer(s);
 
                 subscribeINoInternetConnectionDisplayer(s);
@@ -186,8 +170,6 @@ namespace NiceHashMiner
                 unsubscribeIGlobalMiningRateDisplayer(s);
 
                 unsubscribeIGroupDisplayer(s);
-
-                unsubscribeIMiningNotProfitableDisplayer(s);
 
                 unsubscribeIMiningProfitableDisplayer(s);
 

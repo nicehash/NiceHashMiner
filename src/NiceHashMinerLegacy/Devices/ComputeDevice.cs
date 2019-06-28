@@ -74,6 +74,8 @@ namespace NiceHashMiner.Devices
 
         public List<Algorithm> AlgorithmSettings { get; protected set; } = new List<Algorithm>();
 
+        public List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; protected set; } = new List<PluginAlgorithmConfig>();
+
         public double MinimumProfit { get; set; }
 
         public string BenchmarkCopyUuid { get; set; }
@@ -162,45 +164,27 @@ namespace NiceHashMiner.Devices
         {
             return $"{NameCount} {Name}";
         }
-         
-        // TODO double check adding and removing plugin algos
-        public void UpdatePluginAlgorithms(string pluginUuid, IList<PluginAlgorithm> pluginAlgos)
-        {
-            var pluginUuidAlgos = AlgorithmSettings
-                .Where(algo => algo is PluginAlgorithm pAlgo && pAlgo.BaseAlgo.MinerID == pluginUuid)
-                .Cast<PluginAlgorithm>();
-
-            // filter out old plugin algorithms if any
-            if (pluginUuidAlgos.Count() > 0)
-            {
-                AlgorithmSettings = AlgorithmSettings.Where(algo => pluginUuidAlgos.Contains(algo) == false).ToList();
-            }
-
-            // keep old algorithms with settings and filter out obsolete ones
-            var newAlgorithmIDs = pluginAlgos.Select(algo => algo.AlgorithmStringID);
-            var oldAlgosWithSettings = pluginUuidAlgos.Where(algo => newAlgorithmIDs.Contains(algo.AlgorithmStringID));
-
-            // filter out old algorithms with settings and keep only brand new ones
-            var oldAlgosWithSettingsIDs = oldAlgosWithSettings.Select(algo => algo.AlgorithmStringID).ToList();
-            var newPluginAlgos = pluginAlgos.Where(algo => oldAlgosWithSettingsIDs.Contains(algo.AlgorithmStringID) == false);
-            
-            // add back old ones that are in the new module
-            if (oldAlgosWithSettings.Count() > 0) AlgorithmSettings.AddRange(oldAlgosWithSettings);
-            // add new ones 
-            //if (newPluginAlgos.Count() > 0) AlgorithmSettings.AddRange(newPluginAlgos);
-            var newPluginAlgosList = newPluginAlgos.ToList();
-            foreach (var pluginAlgo in newPluginAlgos)
-            {
-                AlgorithmSettings.Add(pluginAlgo);
-            }
-        }
 
         public void RemovePluginAlgorithms(string pluginUUID)
         {
+            // TODO save removed algorithm configs
             var toRemove = AlgorithmSettings.Where(algo => algo is PluginAlgorithm pAlgo && pAlgo.BaseAlgo.MinerID == pluginUUID);
             if (toRemove.Count() == 0) return;
             var newList = AlgorithmSettings.Where(algo => toRemove.Contains(algo) == false).ToList();
             AlgorithmSettings = newList;
+        }
+
+        public void RemovePluginAlgorithms(IEnumerable<Algorithm> algos)
+        {
+            foreach (var algo in algos)
+            {
+                AlgorithmSettings.Remove(algo);
+            }
+        }
+
+        public void AddPluginAlgorithms(IEnumerable<Algorithm> algos)
+        {
+            if(algos.Count() > 0) AlgorithmSettings.AddRange(algos);
         }
 
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)
@@ -246,6 +230,7 @@ namespace NiceHashMiner.Devices
 
 
             if (config.PluginAlgorithmSettings == null) return;
+            PluginAlgorithmSettings = config.PluginAlgorithmSettings;
             // plugin algorithms
             var pluginAlgos = AlgorithmSettings.Where(algo => algo is PluginAlgorithm).Cast<PluginAlgorithm>();
             foreach (var pluginConf in config.PluginAlgorithmSettings)
@@ -294,6 +279,7 @@ namespace NiceHashMiner.Devices
                     ret.PluginAlgorithmSettings.Add(pluginConf);
                 }
             }
+            // add old algo configs
 
             return ret;
         }
@@ -306,6 +292,12 @@ namespace NiceHashMiner.Devices
             var allEnabledAlgorithms = AlgorithmSettings.Where(algo => algo.Enabled);
             var allEnabledAlgorithmsWithoutBenchmarks = allEnabledAlgorithms.Where(algo => algo.BenchmarkNeeded);
             return allEnabledAlgorithms.Count() == allEnabledAlgorithmsWithoutBenchmarks.Count();
+        }
+
+        public bool HasEnabledAlgorithmsWithReBenchmark()
+        {
+            var reBenchmarks = AlgorithmSettings.Where(algo => algo.Enabled && algo.IsReBenchmark && !algo.BenchmarkNeeded);
+            return reBenchmarks.Count() > 0;
         }
 
         public bool AnyAlgorithmEnabled()

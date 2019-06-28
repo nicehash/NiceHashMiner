@@ -68,6 +68,9 @@ namespace NiceHashMiner.Stats
                                 break;
                             }
 
+                        case "markets":
+                            HandleMarkets(e.Data);
+                            break;
                         case "balance":
                             SetBalance(message.value.Value);
                             break;
