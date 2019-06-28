@@ -13,6 +13,7 @@ namespace MinerPlugin
 
     /// <summary>
     /// IMiner is the mandatory interface for all miners containing bare minimum functionalities
+	/// It is used as miner process instance created by IMinerPlugin
     /// </summary>
     public interface IMiner
     {
