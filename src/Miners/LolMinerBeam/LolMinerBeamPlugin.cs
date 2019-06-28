@@ -17,7 +17,7 @@ namespace LolMinerBeam
 {
     class LolMinerBeamPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
     {
-        public Version Version => new Version(1, 2);
+        public Version Version => new Version(1, 3);
 
         public string Name => "LolMinerBeam";
 

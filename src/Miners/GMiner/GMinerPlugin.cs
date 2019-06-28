@@ -28,7 +28,7 @@ namespace GMinerPlugin
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 6);
+        public Version Version => new Version(1, 7);
 
         public string Name => "GMinerCuda9.0+";
 
