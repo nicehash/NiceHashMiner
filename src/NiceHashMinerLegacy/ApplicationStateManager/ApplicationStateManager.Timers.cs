@@ -177,6 +177,11 @@ namespace NiceHashMiner
 
         public static void StartInternetCheckTimer()
         {
+            if (ConfigManager.GeneralConfig.IdleWhenNoInternetAccess)
+            {
+                OnInternetCheck?.Invoke(null, Helpers.IsConnectedToInternet());
+            }
+
             if (_internetCheckTimer?.IsActive ?? false) return;
             _internetCheckTimer = new AppTimer((object sender, ElapsedEventArgs e) =>
             {

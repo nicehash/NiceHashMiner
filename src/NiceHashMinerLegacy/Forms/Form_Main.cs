@@ -43,7 +43,7 @@ namespace NiceHashMiner
             CenterToScreen();
             Icon = Properties.Resources.logo;
             errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
-
+            labelWarningNotProfitableOrNoIntenret.Visible = false;
             InitElevationWarning();
 
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
@@ -65,6 +65,8 @@ namespace NiceHashMiner
             notifyIcon1.Icon = Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
                                "\nDouble-click to restore..";
+
+            linkLabelNewVersion.Text = "";
 
             InitMainConfigGuiData();
             devicesMainBoard1.SecondPanelVisible = false;
@@ -327,69 +329,6 @@ namespace NiceHashMiner
             }
         }
 
-        //public void ShowNotProfitable(string msg)
-        //{
-        //    if (ConfigManager.GeneralConfig.UseIFTTT)
-        //    {
-        //        if (!_isNotProfitable)
-        //        {
-        //            Ifttt.PostToIfttt("nicehash", msg);
-        //            _isNotProfitable = true;
-        //        }
-        //    }
-
-        //    if (InvokeRequired)
-        //    {
-        //        Invoke((Action) delegate
-        //        {
-        //            ShowNotProfitable(msg);
-        //        });
-        //    }
-        //    else
-        //    {
-        //        //label_NotProfitable.Visible = true;
-        //        //label_NotProfitable.Text = msg;
-        //        //label_NotProfitable.Invalidate();
-        //    }
-        //}
-
-        private void ShowWarning(string msg)
-        {
-            // Doesn't exist enymore but this was used for showing mining not profitable and internet connection drop
-            //label_NotProfitable.Visible = true;
-            //label_NotProfitable.Text = msg;
-            //label_NotProfitable.Invalidate();
-        }
-
-        private void HideWarning()
-        {
-            // Doesn't exist enymore but this was used for showing mining not profitable and internet connection drop
-            //label_NotProfitable.Visible = false;
-            //label_NotProfitable.Invalidate();
-        }
-
-        //public void HideNotProfitable()
-        //{
-        //    if (ConfigManager.GeneralConfig.UseIFTTT)
-        //    {
-        //        if (_isNotProfitable)
-        //        {
-        //            Ifttt.PostToIfttt("nicehash", "Mining is once again profitable and has resumed.");
-        //            _isNotProfitable = false;
-        //        }
-        //    }
-
-        //    if (InvokeRequired)
-        //    {
-        //        Invoke((Action) HideNotProfitable);
-        //    }
-        //    else
-        //    {
-        //        //label_NotProfitable.Visible = false;
-        //        //label_NotProfitable.Invalidate();
-        //    }
-        //}
-
         private void UpdateGlobalRate(double totalRate)
         {
             var factorTimeUnit = TimeFactor.TimeUnit;
@@ -626,6 +565,7 @@ namespace NiceHashMiner
             FormHelpers.SafeInvoke(this, () =>
             {
                 linkLabelNewVersion.Text = version;
+                errorWarningProvider2.SetError(linkLabelNewVersion, version);
             });
         }
 
@@ -749,30 +689,52 @@ namespace NiceHashMiner
             MessageBoxManager.Unregister();
         }
 
+        private bool _isProfitable = true;
+        private bool _noInternet = false;
+
         void IMiningProfitabilityDisplayer.DisplayMiningProfitable(object sender, bool isProfitable)
         {
-            FormHelpers.SafeInvoke(this, () => {
-                if (!isProfitable)
+            if (ConfigManager.GeneralConfig.UseIFTTT)
+            {
+                if (isProfitable)
                 {
-                    //ShowNotProfitable(Translations.Tr("CURRENTLY MINING NOT PROFITABLE."));
+                    Ifttt.PostToIfttt("nicehash", "Mining is once again profitable and has resumed.");
                 }
                 else
                 {
-
+                    Ifttt.PostToIfttt("nicehash", "Mining NOT profitable and has stopped.");
                 }
-            });
+            }
+            _isProfitable = isProfitable;
+            ShowOrHideWarningLabel(_isProfitable, _noInternet);
         }
 
         void INoInternetConnectionDisplayer.DisplayNoInternetConnection(object sender, bool noInternet)
         {
+            _noInternet = noInternet;
+            ShowOrHideWarningLabel(_isProfitable, _noInternet);
+        }
+
+        private void ShowOrHideWarningLabel(bool isProfitable, bool noInternet)
+        {
             FormHelpers.SafeInvoke(this, () => {
-                if (noInternet)
+                if (!isProfitable || noInternet)
                 {
-                    //ShowNotProfitable(Translations.Tr("CURRENTLY NOT MINING. NO INTERNET CONNECTION.")); 
+                    var text = "";
+                    if (!isProfitable)
+                    {
+                        text += Environment.NewLine + Tr("CURRENTLY MINING NOT PROFITABLE.");
+                    }
+                    if (noInternet)
+                    {
+                        text += Environment.NewLine + Tr("CURRENTLY NOT MINING. NO INTERNET CONNECTION.");
+                    }
+                    labelWarningNotProfitableOrNoIntenret.Text = text;
+                    labelWarningNotProfitableOrNoIntenret.Visible = true;
                 }
                 else
                 {
-
+                    labelWarningNotProfitableOrNoIntenret.Visible = false;
                 }
             });
         }

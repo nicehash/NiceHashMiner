@@ -66,6 +66,7 @@
             this.errorWarningProvider2 = new System.Windows.Forms.ErrorProvider(this.components);
             this.linkLabelAdminPrivs = new System.Windows.Forms.LinkLabel();
             this.devicesMainBoard1 = new NiceHashMiner.Forms.Components.DevicesMainBoardDevicesListViewSpeedControl();
+            this.labelWarningNotProfitableOrNoIntenret = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
@@ -354,10 +355,12 @@
             // linkLabelNewVersion
             // 
             this.linkLabelNewVersion.AutoSize = true;
-            this.linkLabelNewVersion.Location = new System.Drawing.Point(292, 77);
+            this.linkLabelNewVersion.Location = new System.Drawing.Point(581, 68);
             this.linkLabelNewVersion.Name = "linkLabelNewVersion";
-            this.linkLabelNewVersion.Size = new System.Drawing.Size(0, 13);
+            this.linkLabelNewVersion.Size = new System.Drawing.Size(84, 13);
             this.linkLabelNewVersion.TabIndex = 110;
+            this.linkLabelNewVersion.TabStop = true;
+            this.linkLabelNewVersion.Text = "NEW VERSION";
             this.linkLabelNewVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelNewVersion_LinkClicked);
             // 
             // buttonPlugins
@@ -397,15 +400,28 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.devicesMainBoard1.Location = new System.Drawing.Point(10, 109);
             this.devicesMainBoard1.Name = "devicesMainBoard1";
-            this.devicesMainBoard1.SecondPanelVisible = false;
+            this.devicesMainBoard1.SecondPanelVisible = true;
             this.devicesMainBoard1.Size = new System.Drawing.Size(664, 160);
             this.devicesMainBoard1.TabIndex = 111;
+            // 
+            // labelWarningNotProfitableOrNoIntenret
+            // 
+            this.labelWarningNotProfitableOrNoIntenret.AutoSize = true;
+            this.labelWarningNotProfitableOrNoIntenret.BackColor = System.Drawing.Color.Transparent;
+            this.labelWarningNotProfitableOrNoIntenret.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelWarningNotProfitableOrNoIntenret.ForeColor = System.Drawing.Color.Red;
+            this.labelWarningNotProfitableOrNoIntenret.Location = new System.Drawing.Point(12, 81);
+            this.labelWarningNotProfitableOrNoIntenret.Name = "labelWarningNotProfitableOrNoIntenret";
+            this.labelWarningNotProfitableOrNoIntenret.Size = new System.Drawing.Size(612, 25);
+            this.labelWarningNotProfitableOrNoIntenret.TabIndex = 114;
+            this.labelWarningNotProfitableOrNoIntenret.Text = "WARNING NOT MINING NOT PROFITABLE OR NO INTERNET";
             // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(776, 299);
+            this.Controls.Add(this.labelWarningNotProfitableOrNoIntenret);
             this.Controls.Add(this.linkLabelAdminPrivs);
             this.Controls.Add(this.buttonPlugins);
             this.Controls.Add(this.devicesMainBoard1);
@@ -482,6 +498,7 @@
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.ErrorProvider errorWarningProvider2;
         private System.Windows.Forms.LinkLabel linkLabelAdminPrivs;
+        private System.Windows.Forms.Label labelWarningNotProfitableOrNoIntenret;
     }
 }
 
