@@ -31,5 +31,11 @@ namespace NHM.Wpf
             var bench = new BenchmarkWindow();
             bench.ShowDialog();
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var settings = new SettingsWindow();
+            settings.ShowDialog();
+        }
     }
 }
