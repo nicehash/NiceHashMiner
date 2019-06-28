@@ -25,7 +25,6 @@
                 <TreeViewItem Header="Benchmarking" />
             </TreeViewItem>
         </TreeView>
-        <Frame Content="Frame" Grid.Column="1" Margin="0,0,0,0.5"/>
-
+        <ContentControl Content="ContentControl" Grid.Column="1" Margin="10,10,10,10.5"/>
     </Grid>
 </Window>
