@@ -42,7 +42,7 @@ namespace NiceHashMiner
             InitializeComponent();
             CenterToScreen();
             Icon = Properties.Resources.logo;
-
+            errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
             InitElevationWarning();
 
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
@@ -197,7 +197,6 @@ namespace NiceHashMiner
         {
             if (!Helpers.IsElevated)
             {
-                errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
                 errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
                 linkLabelAdminPrivs.Click += (s, e) =>
                 {
