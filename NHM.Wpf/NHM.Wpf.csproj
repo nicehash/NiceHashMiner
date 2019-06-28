@@ -55,7 +55,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
+    <Compile Include="ViewModels\Settings\GeneralSettingsVM.cs" />
+    <Compile Include="ViewModels\Settings\SettingsBaseVM.cs" />
     <Compile Include="Windows\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
     </Compile>
