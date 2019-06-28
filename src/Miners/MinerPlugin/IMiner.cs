@@ -12,7 +12,7 @@ namespace MinerPlugin
     // TODO when we update to C#7 use tuple values or System.ValueTuple for .NET version that don't support C#7
 
     /// <summary>
-    /// IMiner is the mandatory interface for all miners
+    /// IMiner is the mandatory interface for all miners containing bare minimum functionalities
     /// </summary>
     public interface IMiner
     {
