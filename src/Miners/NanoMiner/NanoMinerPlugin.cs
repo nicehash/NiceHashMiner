@@ -73,6 +73,7 @@ namespace NanoMiner
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
+                new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
