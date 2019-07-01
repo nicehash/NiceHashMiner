@@ -210,7 +210,7 @@ namespace NiceHashMiner
             {
                 isInitFinished = true;
                 NiceHashStats.StateChanged();
-#if !(TESTNET || TESTNETDEV)
+#if !(TESTNET || TESTNETDEV || PRODUCTION_NEW)
                 ResetNiceHashStatsCredentials();
 #endif
             }

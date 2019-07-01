@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace NiceHashMiner.Stats.Models
 {
-    // TESTNET || TESTNETDEV
+    // TESTNET || TESTNETDEV || PRODUCTION_NEW
 #pragma warning disable 649, IDE1006
     class MinerStatusMessage
     {

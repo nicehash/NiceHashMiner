@@ -39,7 +39,7 @@ namespace NiceHashMiner
         public static void VisitMiningStatsPage()
         {
             //in testnet there is no option to see stats without logging in
-#if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             var urlLink = Links.CheckStats;
 #else
             var btc = ConfigManager.GeneralConfig.BitcoinAddress.Trim();
