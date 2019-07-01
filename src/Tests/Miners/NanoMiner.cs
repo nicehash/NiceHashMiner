@@ -40,9 +40,28 @@ namespace Miners
                         if (data.Key == "Total")
                         {
                             var speed = data.Value.ToString();
-                            var num = JsonApiHelpers.HashrateFromApiData(speed);
+                            var num = JsonApiHelpers.HashrateFromApiData(speed, "TestGroup");
                         }
                     }
+                }
+            }
+        }
+        [TestMethod]
+        public void ParseOutputData()
+        {
+            var output = new List<string>() { "GPU 0  PCI 01:00.0  8192 MB GeForce GTX 1070 Ti" , "GPU 1  PCI 0a:00.0  6144 MB GeForce GTX 1060 6GB" };
+            if (output.Count != 0)
+            {
+                foreach (var line in output)
+                {
+                    if (!line.Contains("GPU")) continue;
+                    var tmpArray = line.Split(new[] { "PCI" }, StringSplitOptions.RemoveEmptyEntries);
+                    var fullPciId = tmpArray[1].Split(':');
+                    var pciId = fullPciId[0];
+                    var id = tmpArray[0].Remove(0, 3);
+                    var indexID = Convert.ToInt32(id);
+                    int comparePCIeBusID = int.Parse(pciId, System.Globalization.NumberStyles.HexNumber);
+                    var i = 0;
                 }
             }
         }
