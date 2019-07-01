@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NiceHashMinerLegacy.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,17 +26,17 @@ namespace NanoMiner
 
     public static class JsonApiHelpers
     {
-        public static double HashrateFromApiData(string data)
+        public static double HashrateFromApiData(string data, string logGroup)
         {
             try
             {
                 var hashSplit = data.Substring(data.IndexOf("Hashrate")).Replace("\"", "").Split(':');
                 var hash = hashSplit[1].Substring(0, hashSplit[1].IndexOf('\r'));
-                return Convert.ToDouble(hash);
+                return double.Parse(hash, System.Globalization.CultureInfo.InvariantCulture);
             }
             catch (Exception e)
             {
-                //TODO log
+                Logger.Error(logGroup, $"Failed parsing hashrate: {e.Message}");
                 return 0.0;
             }
         }

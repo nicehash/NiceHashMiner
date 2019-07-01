@@ -201,7 +201,7 @@ namespace NiceHashMiner
         {
             var isEnabledFeature = false;
             // Enable this only for new platform
-#if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             isEnabledFeature = true;
 #endif
             if (!Helpers.IsElevated && isEnabledFeature)

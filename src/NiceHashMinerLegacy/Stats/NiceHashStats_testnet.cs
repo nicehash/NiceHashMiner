@@ -1,5 +1,5 @@
 ﻿// TESTNET
-#if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Devices;

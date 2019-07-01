@@ -22,6 +22,19 @@ namespace MinerPluginToolkitV1
             return false;
         }
 
+        /// <summary>
+        /// Get whether AMD device is GCN 2th gen or higher (300/400/500/Vega)
+        /// </summary>
+        public static bool IsGcn2(AMDDevice dev)
+        {
+            if (dev.Name.Contains("Vega"))
+                return true;
+            if (!dev.InfSection.ToLower().Contains("pitcairn ") && !dev.InfSection.ToLower().Contains("tahiti") && !dev.InfSection.ToLower().Contains("oland") && !dev.InfSection.ToLower().Contains("cape verde"))
+                return true;
+
+            return false;
+        }
+
         // https://docs.nvidia.com/cuda/cuda-toolkit-release-notes/index.html
         public enum CudaVersion
         {

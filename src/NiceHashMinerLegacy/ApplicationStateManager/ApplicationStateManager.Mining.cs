@@ -24,7 +24,7 @@ namespace NiceHashMiner
             var (btc, worker, _unused) = ConfigManager.GeneralConfig.GetCredentials();
 
             // TESTNET
-#if (TESTNET || TESTNETDEV)
+#if (TESTNET || TESTNETDEV || PRODUCTION_NEW)
 #if SEND_STRATUM_WORKERNAME
             if (worker.Length > 0 && CredentialValidators.ValidateWorkerName(worker))
             {
