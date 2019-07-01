@@ -10,20 +10,24 @@ namespace NiceHashMinerLegacy.Common
 {
     public static class StratumServiceHelpers
     {
-        #region CUSTOM_ENDPOINTS
+#region CUSTOM_ENDPOINTS
 #if CUSTOM_ENDPOINTS
+        class StratumTemplateEntry
+        {
+            public string Template { get; set; } = "";
+            public int Port { get; set; } = -1;
+        }
         class ServiceCustomSettings
         {
             public string NhmSocketAddress { get; set; } = "";
-            public Dictionary<AlgorithmType, int> AlgorithmTypePort { get; set; } = new Dictionary<AlgorithmType, int>();
-            public Dictionary<AlgorithmType, string> AlgorithmTypeEndpoint { get; set; } = new Dictionary<AlgorithmType, string>();
-            public bool IgnoreProtocolPrefix { get; set; } = false;
+            public Dictionary<AlgorithmType, StratumTemplateEntry> StratumEndpointTemplatesByAlgorithmType { get; set; } = new Dictionary<AlgorithmType, StratumTemplateEntry>();
         }
-
+        const string LOCATION_TEMPLATE = "{LOCATION}";
+        const string PREFIX_TEMPLATE = "{PREFIX://}";
+        const string PORT_TEMPLATE = "{:PORT}";
+        //const string NAME_TEMPLATE = "NAME";
         public static string NhmSocketAddress { get; private set; }
-        private static Dictionary<AlgorithmType, int> _algorithmTypePort = new Dictionary<AlgorithmType, int>();
-        private static Dictionary<AlgorithmType, string> _algorithmTypeEndpoint = new Dictionary<AlgorithmType, string>();
-        private static bool _ignoreProtocolPrefix = false;
+        private static Dictionary<AlgorithmType, StratumTemplateEntry> _stratumEndpointTemplatesByAlgorithmType { get; set; } = new Dictionary<AlgorithmType, StratumTemplateEntry>();
         static StratumServiceHelpers()
         {
             var jsonSettings = new JsonSerializerSettings
@@ -39,38 +43,35 @@ namespace NiceHashMinerLegacy.Common
                 if (customSettings != null)
                 {
                     NhmSocketAddress = customSettings.NhmSocketAddress;
-                    _algorithmTypePort = customSettings.AlgorithmTypePort;
-                    _algorithmTypeEndpoint = customSettings.AlgorithmTypeEndpoint;
-                    _ignoreProtocolPrefix = customSettings.IgnoreProtocolPrefix;
+                    _stratumEndpointTemplatesByAlgorithmType = customSettings.StratumEndpointTemplatesByAlgorithmType;
                 }
             }
             else
             {
-                var algorithmTypePort = new Dictionary<AlgorithmType, int>();
-                var algorithmTypeEndpoint = new Dictionary<AlgorithmType, string>();
                 foreach (AlgorithmType algorithmType in Enum.GetValues(typeof(AlgorithmType)))
                 {
                     if (algorithmType < 0) continue;
                     var nPort = 3333 + algorithmType;
                     var name = GetAlgorithmUrlName(algorithmType);
-                    var endpoint = $"PREFIX://{name}.LOCATION.nicehash.com";
-                    algorithmTypePort[algorithmType] = (int)nPort;
-                    algorithmTypeEndpoint[algorithmType] = endpoint;
+                    var endpointTemplate = $"{PREFIX_TEMPLATE}{name}.{LOCATION_TEMPLATE}.nicehash.com{PORT_TEMPLATE}";
+                    _stratumEndpointTemplatesByAlgorithmType[algorithmType] = new StratumTemplateEntry
+                    {
+                        Template = endpointTemplate,
+                        Port = (int)nPort
+                    };
                 }
 
                 // create defaults
                 var defaultCustomSettings = new ServiceCustomSettings
                 {
                     NhmSocketAddress = "https://nhmws.nicehash.com/v2/nhm",
-                    IgnoreProtocolPrefix = false,
-                    AlgorithmTypePort = algorithmTypePort,
-                    AlgorithmTypeEndpoint = algorithmTypeEndpoint
+                    StratumEndpointTemplatesByAlgorithmType = _stratumEndpointTemplatesByAlgorithmType,
                 };
                 File.WriteAllText(customSettingsFile, JsonConvert.SerializeObject(defaultCustomSettings, Formatting.Indented));
             }
         }
 #endif
-        #endregion CUSTOM_ENDPOINTS
+#endregion CUSTOM_ENDPOINTS
 
         private static string GetAlgorithmUrlName(AlgorithmType algorithmType)
         {
@@ -115,13 +116,17 @@ namespace NiceHashMinerLegacy.Common
             }
 
 #if CUSTOM_ENDPOINTS
-            if (_ignoreProtocolPrefix)
+            var customEndpointTemplateEntry = _stratumEndpointTemplatesByAlgorithmType[algorithmType];
+            var customPort = customEndpointTemplateEntry.Port;
+            if (conectionType == NhmConectionType.STRATUM_SSL)
             {
-                prefix = "";
+                customPort = customPort + 30000;
             }
-            var customEndpoint = _algorithmTypeEndpoint[algorithmType];
-            var customPort = _algorithmTypeEndpoint[algorithmType];
-            return $"{prefix}{customEndpoint}:{customPort}";
+            var customEndpointTemplate = customEndpointTemplateEntry.Template;
+            customEndpointTemplate = customEndpointTemplate.Replace(PREFIX_TEMPLATE, prefix);
+            customEndpointTemplate = customEndpointTemplate.Replace(LOCATION_TEMPLATE, miningLocation);
+            customEndpointTemplate = customEndpointTemplate.Replace(PORT_TEMPLATE, $":{customPort}");
+            return customEndpointTemplate;
 #elif TESTNET
             return prefix
                    + name
@@ -131,6 +136,12 @@ namespace NiceHashMinerLegacy.Common
 #elif TESTNETDEV
             return prefix
                    + "stratum-test." + miningLocation
+                   + ".nicehash.com:"
+                   + port;
+#elif PRODUCTION_NEW
+            return prefix
+                   + name
+                   + "." + miningLocation
                    + ".nicehash.com:"
                    + port;
 #else
