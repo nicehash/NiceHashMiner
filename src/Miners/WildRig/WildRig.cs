@@ -6,7 +6,6 @@ using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -99,8 +98,21 @@ namespace WildRig
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            //only 60s mark is available
             var benchmarkTime = 60; // in seconds
+            switch (benchmarkType)
+            {
+                case BenchmarkPerformanceType.Quick:
+                    benchmarkTime = 60;
+                    break;
+                case BenchmarkPerformanceType.Standard:
+                    benchmarkTime = 60;
+                    break;
+                case BenchmarkPerformanceType.Precise:
+                    benchmarkTime = 120;
+                    break;
+            }
+
+
             var commandLine = $"-a {AlgoName} --benchmark -d {_devices} --multiple-instance {_extraLaunchParameters}";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
@@ -115,12 +127,14 @@ namespace WildRig
 
                 var hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "60s:");
                 var hashrate = hashrateFoundPair.Item1;
+                // TODO temporary fix for N/A speeds at 60s mark... will be fixed when developer fixes benchmarking
+                if (hashrate == 15) hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "10s:");
+                hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
-                if (found)
-                {
-                    benchHashResult = hashrate * (1 - DevFee * 0.01);
-                }
+                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+
+                benchHashResult = hashrate * (1 - DevFee * 0.01);
 
                 return new BenchmarkResult
                 {
