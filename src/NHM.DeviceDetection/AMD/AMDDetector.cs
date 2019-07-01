@@ -25,7 +25,33 @@ namespace NHM.DeviceDetection.AMD
             var openCLResult = await OpenCLDetector.TryQueryOpenCLDevicesAsync();
             Logger.Info(Tag, $"TryQueryOpenCLDevicesAsync RAW: '{openCLResult.rawOutput}'");
 
-            var result = openCLResult.parsed;
+
+            OpenCLDeviceDetectionResult result = null;
+            // check if we have duplicated platforms
+            Logger.Info(Tag, "Checking duplicate devices...");
+            if (DuplicatedDevices(openCLResult.parsed))
+            {
+                Logger.Info(Tag, "Found duplicate devices. Trying fallback detection");
+                var openCLResult2 = await OpenCLDetector.TryQueryOpenCLDevicesAsyncFallback();
+                Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback RAW: '{openCLResult2.rawOutput}'");
+                if (DuplicatedDevices(openCLResult2.parsed))
+                {
+                    Logger.Info(Tag, $"TryQueryOpenCLDevicesAsyncFallback has duplicate files as well... Taking filtering lower platform devices");
+                    // #3 try merging both results and take lower platform unique devices
+                    result =  MergeResults(openCLResult.parsed, openCLResult2.parsed);
+                }
+                else
+                {
+                    // #2 try good
+                    result = openCLResult2.parsed;
+                }
+            }
+            else
+            {
+                // #1 try good
+                result = openCLResult.parsed;
+            }
+
             if (result?.Platforms?.Count > 0)
             {
                 var amdPlatforms = result.Platforms.Where(platform => IsAMDPlatform(platform)).ToList();
@@ -34,7 +60,10 @@ namespace NHM.DeviceDetection.AMD
                     var platformNum = platform.PlatformNum;
                     if (platform.Devices.Count > 0)
                     {
+#pragma warning disable 0618
+                        // KEEP for backward compatibility reasons
                         AMDDevice.GlobalOpenCLPlatformID = platformNum;
+#pragma warning restore 0618
                     }
                     foreach (var oclDev in platform.Devices)
                     {
@@ -74,6 +103,79 @@ namespace NHM.DeviceDetection.AMD
             return platform.PlatformName == "AMD Accelerated Parallel Processing"
                 || platform.PlatformVendor == "Advanced Micro Devices, Inc."
                 || platform.PlatformName.Contains("AMD");
+        }
+
+        private static bool DuplicatedDevices(OpenCLDeviceDetectionResult data)
+        {
+            if (data?.Platforms?.Count > 0)
+            {
+                var devicesWithBusID = new HashSet<int>();
+                var amdPlatforms = data.Platforms.Where(platform => IsAMDPlatform(platform)).ToList();
+                foreach (var platform in amdPlatforms)
+                {
+                    foreach (var oclDev in platform.Devices)
+                    {
+                        var id = oclDev.AMD_BUS_ID;
+                        if (devicesWithBusID.Contains(id))
+                        {
+                            return true;
+                        }
+                        devicesWithBusID.Add(id);
+                    }
+                }
+            }
+            return false;
+        }
+
+        // take lower platform
+        private static OpenCLDeviceDetectionResult MergeResults(OpenCLDeviceDetectionResult a, OpenCLDeviceDetectionResult b)
+        {
+            var addedDevicesWithBusID = new HashSet<int>();
+            var platformDevices = new Dictionary<int, OpenCLPlatform>();
+            Action<OpenCLDeviceDetectionResult> fillUniquePlatformDevices = (OpenCLDeviceDetectionResult r) =>
+            {
+                if (r?.Platforms?.Count > 0)
+                {
+                    var amdPlatforms = r.Platforms
+                    .Where(platform => IsAMDPlatform(platform))
+                    .OrderBy(p => p.PlatformNum)
+                    .ToList();
+                    foreach (var platform in amdPlatforms)
+                    {
+                        if (!platformDevices.ContainsKey(platform.PlatformNum))
+                        {
+                            platformDevices[platform.PlatformNum] = new OpenCLPlatform
+                            {
+                                PlatformNum = platform.PlatformNum,
+                                //Devices = WE ADD DEVICES, 
+                                PlatformName = platform.PlatformName,
+                                PlatformVendor = platform.PlatformVendor,
+                            };
+                        }
+                        var curPlatform = platformDevices[platform.PlatformNum];
+                        foreach (var oclDev in platform.Devices)
+                        {
+                            if (!addedDevicesWithBusID.Contains(oclDev.AMD_BUS_ID))
+                            {
+                                addedDevicesWithBusID.Add(oclDev.AMD_BUS_ID);
+                                curPlatform.Devices.Add(oclDev);
+                            }
+                        }
+                    }
+                }
+            };
+
+            fillUniquePlatformDevices(a);
+            fillUniquePlatformDevices(b);
+
+            var ret = new OpenCLDeviceDetectionResult
+            {
+                Platforms = platformDevices.Values.ToList(),
+                ErrorString = "",
+                Status = "",
+            };
+
+            return ret;
         }
     }
 }
