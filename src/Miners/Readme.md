@@ -24,9 +24,8 @@ MinerPluginToolkitV1 also enables creation of <b>Background Services</b>, check 
   <th>Disadvantages</th>
 </tr>
 <tr>
-  <td>Implementation of all basic actions like Start/Stop mining, Start benchmarking, retrieve data from API, create command line, etc.\
-
-  Use of additional features like Configs and Extra Launch Parameters
+  <td><p>Implementation of all basic actions like Start/Stop mining, Start benchmarking, retrieve data from API, create command line, etc.<p>
+  <p>Use of additional features like Configs and Extra Launch Parameters<p>
 
   Access to usefull [interfaces](MinerPluginToolkitV1/Interfaces) providing features like checking for missing files, device cross referencing, initializing internal settings, etc.
 </td>
