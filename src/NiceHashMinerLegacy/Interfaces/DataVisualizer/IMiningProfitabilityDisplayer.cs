@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Interfaces.DataVisualizer
 {
-    interface IMiningNotProfitableDisplayer : IDataVisualizer
+    interface IMiningProfitabilityDisplayer : IDataVisualizer
     {
-        void DisplayMiningNotProfitable(object sender, EventArgs empty);
+        void DisplayMiningProfitable(object sender, bool isProfitable);
     }
 }

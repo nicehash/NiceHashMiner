@@ -18,10 +18,11 @@ namespace NiceHashMiner
 {
     using NiceHashMiner.Forms.Components;
     using NiceHashMiner.Plugin;
+    using NiceHashMiner.Utils;
     using NiceHashMinerLegacy.Common;
     using NiceHashMinerLegacy.Common.Enums;
 
-    public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer
+    public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IMiningProfitabilityDisplayer, INoInternetConnectionDisplayer
     {
         private bool _showWarningNiceHashData;
 
@@ -41,6 +42,9 @@ namespace NiceHashMiner
             InitializeComponent();
             CenterToScreen();
             Icon = Properties.Resources.logo;
+            errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
+            labelWarningNotProfitableOrNoIntenret.Visible = false;
+            InitElevationWarning();
 
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
             FormHelpers.SubscribeAllControls(this);
@@ -61,6 +65,8 @@ namespace NiceHashMiner
             notifyIcon1.Icon = Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
                                "\nDouble-click to restore..";
+
+            linkLabelNewVersion.Text = "";
 
             InitMainConfigGuiData();
             devicesMainBoard1.SecondPanelVisible = false;
@@ -101,13 +107,14 @@ namespace NiceHashMiner
             comboBoxLocation.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
             buttonBenchmark.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
             buttonSettings.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
+            linkLabelAdminPrivs.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsNotBenchmarkingOrMining), false, DataSourceUpdateMode.OnPropertyChanged);
             // start stop all
             buttonStartMining.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.AnyDeviceStopped), false, DataSourceUpdateMode.OnPropertyChanged);
             buttonStopMining.DataBindings.AddSafeBinding("Enabled", MiningState.Instance, nameof(MiningState.Instance.AnyDeviceRunning), false, DataSourceUpdateMode.OnPropertyChanged);
 
             ////labelDemoMode.DataBindings.Add("Enabled", MiningState.Instance, nameof(MiningState.Instance.IsDemoMining), false, DataSourceUpdateMode.OnPropertyChanged);
             //labelDemoMode.DataBindings.Add("Visible", MiningState.Instance, nameof(MiningState.Instance.IsDemoMining), true, DataSourceUpdateMode.OnPropertyChanged);
-
+            
             devicesMainBoard1.DataBindings.AddSafeBinding(nameof(devicesMainBoard1.SecondPanelVisible), MiningState.Instance, nameof(MiningState.Instance.AnyDeviceRunning), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
@@ -187,6 +194,31 @@ namespace NiceHashMiner
             foreach (var control in controls)
             {
                 toolTip1.SetToolTip(control, text);
+            }
+        }
+
+        private void InitElevationWarning()
+        {
+            var isEnabledFeature = false;
+            // Enable this only for new platform
+#if TESTNET || TESTNETDEV
+            isEnabledFeature = true;
+#endif
+            if (!Helpers.IsElevated && isEnabledFeature)
+            {
+                errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
+                linkLabelAdminPrivs.Click += (s, e) =>
+                {
+                    var dialogResult = MessageBox.Show(Tr("Click yes if you with to run NiceHash Miner Legacy as Administrator."),
+                    Tr("Run as Administrator"),
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                    if (dialogResult == DialogResult.Yes)
+                        RunAsAdmin.SelfElevate();                    
+                };
+            }
+            else
+            {
+                linkLabelAdminPrivs.Visible = false;
             }
         }
 
@@ -296,69 +328,6 @@ namespace NiceHashMiner
                 }
             }
         }
-
-        //public void ShowNotProfitable(string msg)
-        //{
-        //    if (ConfigManager.GeneralConfig.UseIFTTT)
-        //    {
-        //        if (!_isNotProfitable)
-        //        {
-        //            Ifttt.PostToIfttt("nicehash", msg);
-        //            _isNotProfitable = true;
-        //        }
-        //    }
-
-        //    if (InvokeRequired)
-        //    {
-        //        Invoke((Action) delegate
-        //        {
-        //            ShowNotProfitable(msg);
-        //        });
-        //    }
-        //    else
-        //    {
-        //        //label_NotProfitable.Visible = true;
-        //        //label_NotProfitable.Text = msg;
-        //        //label_NotProfitable.Invalidate();
-        //    }
-        //}
-
-        private void ShowWarning(string msg)
-        {
-            // Doesn't exist enymore but this was used for showing mining not profitable and internet connection drop
-            //label_NotProfitable.Visible = true;
-            //label_NotProfitable.Text = msg;
-            //label_NotProfitable.Invalidate();
-        }
-
-        private void HideWarning()
-        {
-            // Doesn't exist enymore but this was used for showing mining not profitable and internet connection drop
-            //label_NotProfitable.Visible = false;
-            //label_NotProfitable.Invalidate();
-        }
-
-        //public void HideNotProfitable()
-        //{
-        //    if (ConfigManager.GeneralConfig.UseIFTTT)
-        //    {
-        //        if (_isNotProfitable)
-        //        {
-        //            Ifttt.PostToIfttt("nicehash", "Mining is once again profitable and has resumed.");
-        //            _isNotProfitable = false;
-        //        }
-        //    }
-
-        //    if (InvokeRequired)
-        //    {
-        //        Invoke((Action) HideNotProfitable);
-        //    }
-        //    else
-        //    {
-        //        //label_NotProfitable.Visible = false;
-        //        //label_NotProfitable.Invalidate();
-        //    }
-        //}
 
         private void UpdateGlobalRate(double totalRate)
         {
@@ -596,6 +565,7 @@ namespace NiceHashMiner
             FormHelpers.SafeInvoke(this, () =>
             {
                 linkLabelNewVersion.Text = version;
+                errorWarningProvider2.SetError(linkLabelNewVersion, version);
             });
         }
 
@@ -717,6 +687,56 @@ namespace NiceHashMiner
             FormHelpers.UnsubscribeAllControls(this);
             ApplicationStateManager.BeforeExit();
             MessageBoxManager.Unregister();
+        }
+
+        private bool _isProfitable = true;
+        private bool _noInternet = false;
+
+        void IMiningProfitabilityDisplayer.DisplayMiningProfitable(object sender, bool isProfitable)
+        {
+            if (ConfigManager.GeneralConfig.UseIFTTT)
+            {
+                if (isProfitable)
+                {
+                    Ifttt.PostToIfttt("nicehash", "Mining is once again profitable and has resumed.");
+                }
+                else
+                {
+                    Ifttt.PostToIfttt("nicehash", "Mining NOT profitable and has stopped.");
+                }
+            }
+            _isProfitable = isProfitable;
+            ShowOrHideWarningLabel(_isProfitable, _noInternet);
+        }
+
+        void INoInternetConnectionDisplayer.DisplayNoInternetConnection(object sender, bool noInternet)
+        {
+            _noInternet = noInternet;
+            ShowOrHideWarningLabel(_isProfitable, _noInternet);
+        }
+
+        private void ShowOrHideWarningLabel(bool isProfitable, bool noInternet)
+        {
+            FormHelpers.SafeInvoke(this, () => {
+                if (!isProfitable || noInternet)
+                {
+                    var text = "";
+                    if (!isProfitable)
+                    {
+                        text += Environment.NewLine + Tr("CURRENTLY MINING NOT PROFITABLE.");
+                    }
+                    if (noInternet)
+                    {
+                        text += Environment.NewLine + Tr("CURRENTLY NOT MINING. NO INTERNET CONNECTION.");
+                    }
+                    labelWarningNotProfitableOrNoIntenret.Text = text;
+                    labelWarningNotProfitableOrNoIntenret.Visible = true;
+                }
+                else
+                {
+                    labelWarningNotProfitableOrNoIntenret.Visible = false;
+                }
+            });
         }
     }
 }

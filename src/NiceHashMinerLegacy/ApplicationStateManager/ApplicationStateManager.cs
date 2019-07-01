@@ -272,6 +272,8 @@ namespace NiceHashMiner
             StopComputeDevicesCheckTimer();
             StopPreventSleepTimer();
             StopInternetCheckTimer();
+            DisplayNoInternetConnection(false); // hide warning
+            DisplayMiningProfitable(true); // hide warning
             return true;
         }
 

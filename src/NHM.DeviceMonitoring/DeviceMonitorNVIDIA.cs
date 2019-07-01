@@ -73,7 +73,7 @@ namespace NHM.DeviceMonitoring
 
                 PowerLimitsEnabled = true;
                 // set to high by default
-                var defaultLevel = PowerLevel.Low;
+                var defaultLevel = PowerLevel.High;
                 var success = SetPowerTarget(defaultLevel);
                 if (!success)
                 {

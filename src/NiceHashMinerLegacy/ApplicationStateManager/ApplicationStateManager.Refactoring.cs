@@ -25,29 +25,7 @@ namespace NiceHashMiner
         {
             _ratesComunication?.RefreshRates();
         }
-
-        //public static void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException)
-        //{
-        //    _ratesComunication?.AddRateInfo(iApiData, paying, isApiGetException);
-        //}
-
-        // The following four must use an invoker since they may be called from non-UI thread
-
-        //public static void ShowNotProfitable(string msg)
-        //{
-        //    _ratesComunication?.ShowNotProfitable(msg);
-        //}
-
-        //public static void HideNotProfitable()
-        //{
-        //    _ratesComunication?.HideNotProfitable();
-        //}
         #endregion
-
-        // 
-        public static void ShowNoInternetConnection(string msg)
-        {
-        }
 
         #region Set Mining Profitable or NOT Profitable
         //// TODO we got a problem here with displaying and sending IFTTT stuff, since we can start/stop 
@@ -61,14 +39,14 @@ namespace NiceHashMiner
                 {
                     Ifttt.PostToIfttt("nicehash", "Mining is once again profitable and has resumed.");
                 }
-                DisplayMiningProfitable();
+                DisplayMiningProfitable(isProfitable);
             } else
             {
                 if (ConfigManager.GeneralConfig.UseIFTTT)
                 {
                     Ifttt.PostToIfttt("nicehash", "CURRENTLY MINING NOT PROFITABLE.");
                 }
-                DisplayMiningNotProfitable();
+                DisplayMiningProfitable(isProfitable);
             }
         }
         #endregion
@@ -78,21 +56,14 @@ namespace NiceHashMiner
             DisplayGlobalMiningRate?.Invoke(null, totalMiningRate);
         }
 
-        public static void DisplayMiningNotProfitable()
+        public static void DisplayMiningProfitable(bool isProfitable)
         {
-            //ShowNotProfitable(Translations.Tr("CURRENTLY MINING NOT PROFITABLE."));
-            _DisplayMiningNotProfitable?.Invoke(null, null);
+            _DisplayMiningProfitability?.Invoke(null, isProfitable);
         }
 
-        public static void DisplayMiningProfitable()
+        public static void DisplayNoInternetConnection(bool noInternet)
         {
-            _DisplayMiningProfitable?.Invoke(null, null);
-        }
-
-        public static void DisplayNoInternetConnection()
-        {
-            //ShowNotProfitable(Translations.Tr("CURRENTLY NOT MINING. NO INTERNET CONNECTION.")); 
-            _DisplayNoInternetConnection?.Invoke(null, null);
+            _DisplayNoInternetConnection?.Invoke(null, noInternet);
         }
     }
 }
