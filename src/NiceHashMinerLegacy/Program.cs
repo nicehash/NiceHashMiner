@@ -132,6 +132,7 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET)
             {
                 Application.Run(new Form_3rdParty_TOS());
+                ConfigManager.GeneralConfigFileCommit();
             }
 
             // PRODUCTION
