@@ -60,7 +60,10 @@ namespace NHM.DeviceDetection.AMD
                     var platformNum = platform.PlatformNum;
                     if (platform.Devices.Count > 0)
                     {
+#pragma warning disable 0618
+                        // KEEP for backward compatibility reasons
                         AMDDevice.GlobalOpenCLPlatformID = platformNum;
+#pragma warning restore 0618
                     }
                     foreach (var oclDev in platform.Devices)
                     {
