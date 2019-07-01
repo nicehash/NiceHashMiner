@@ -167,7 +167,7 @@ namespace NiceHashMiner.Forms
             SetToolTip(Tr("When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed."),
                 checkBox_ShowDriverVersionWarning, pictureBox_ShowDriverVersionWarning);
 
-            SetToolTip(Tr("When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable."),
+            SetToolTip(Tr("When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable."),
                 checkBox_DisableWindowsErrorReporting, pictureBox_DisableWindowsErrorReporting);
 
             SetToolTip(Tr("When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available."),
