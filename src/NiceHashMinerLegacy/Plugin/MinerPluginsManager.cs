@@ -1,4 +1,4 @@
-﻿#if !ENABLE_EXTERNAL_PLUGINS && (TESTNET || TESTNETDEV) 
+﻿#if !ENABLE_EXTERNAL_PLUGINS && (TESTNET || TESTNETDEV || PRODUCTION_NEW) 
 #define ENABLE_EXTERNAL_PLUGINS
 #endif
 
@@ -47,7 +47,7 @@ namespace NiceHashMiner.Plugin
                 // open source
                 new CCMinerMTPIntegratedPlugin(),
                 new CCMinerTpruvotIntegratedPlugin(),
-                //new SGminerAvemoreIntegratedPlugin(),
+                new SGminerAvemoreIntegratedPlugin(),
                 new SGminerGMIntegratedPlugin(),
                 new XmrStakIntegratedPlugin(),
 
