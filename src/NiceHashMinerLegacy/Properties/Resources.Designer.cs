@@ -19,7 +19,7 @@ namespace NiceHashMiner.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -128,26 +128,6 @@ namespace NiceHashMiner.Properties {
             get {
                 object obj = ResourceManager.GetObject("NHM_logo_xsmall_light", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [
-        ///  {
-        ///    &quot;PluginUUID&quot;: &quot;330238cd-e9d7-424b-94bf-0a0fa8682a8a&quot;,
-        ///    &quot;PluginVersion&quot;: {
-        ///      &quot;major&quot;: &quot;1&quot;,
-        ///      &quot;minor&quot;: &quot;0&quot;
-        ///    },
-        ///    &quot;PluginPackageURL&quot;: &quot;https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/CCMinerTpruvotCuda10_v1.0-330238cd-e9d7-424b-94bf-0a0fa8682a8a.zip&quot;,
-        ///    &quot;MinerPackageURL&quot;: &quot;https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/ccminer_tpruvot.zip&quot;,
-        ///    &quot;SupportedDevicesAlgorithms&quot;: {
-        ///      &quot;NVIDIA&quot;: [
-        ///        &quot;NeoScrypt [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string pluginJSON {
-            get {
-                return ResourceManager.GetString("pluginJSON", resourceCulture);
             }
         }
     }
