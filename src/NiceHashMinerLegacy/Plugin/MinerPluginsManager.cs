@@ -63,6 +63,7 @@ namespace NiceHashMiner.Plugin
                 new TTMinerIntegratedPlugin(),
                 //new NanoMinerIntegratedPlugin(),
                 new ClaymoreDual14IntegratedPlugin(),
+                // new WildRigIntegratedPlugin(),
 
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,
