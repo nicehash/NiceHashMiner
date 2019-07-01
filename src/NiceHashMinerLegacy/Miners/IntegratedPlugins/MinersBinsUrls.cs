@@ -1,12 +1,8 @@
 ﻿using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
@@ -15,7 +11,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         private static Dictionary<string, List<string>> _pluginsUrls = new Dictionary<string, List<string>>
         {
-            {  "BrokenMinerPluginUUID", new List<string>{ "https://www.bminercontent.com/releases/bminer-lite-v15.5.3-747d98e-amd64.zip" } },
+            //{  "BrokenMinerPluginUUID", new List<string>{ "set new URL" } },
             {  "BMiner", new List<string>{ "https://www.bminercontent.com/releases/bminer-lite-v15.5.3-747d98e-amd64.zip" } },
             {  "CCMinerMTP", new List<string>{ "https://github.com/nicehash/ccminer/releases/download/1.1.14/ccminer_mtp.7z" } },
             {  "CCMinerTpruvot", new List<string>{ "https://github.com/tpruvot/ccminer/releases/download/2.3.1-tpruvot/ccminer-2.3.1-cuda10.7z" } },

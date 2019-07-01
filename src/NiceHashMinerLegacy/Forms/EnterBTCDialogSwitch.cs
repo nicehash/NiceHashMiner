@@ -43,7 +43,7 @@ namespace NiceHashMiner.Forms
 
         private void LinkButtonRegister_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Process.Start("https://www.nicehash.com/register");
+            Process.Start(Links.Register);
         }
     }
 }
