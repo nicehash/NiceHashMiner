@@ -325,13 +325,11 @@ namespace NiceHashMiner.Plugin
         // TODO this here is blocking
         public static bool GetOnlineMinerPlugins()
         {
-            //const string pluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
-            const string pluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
             try
             {
                 using (var client = new NoKeepAlivesWebClient())
                 {
-                    string s = client.DownloadString(pluginsJsonApiUrl);
+                    string s = client.DownloadString(Links.PluginsJsonApiUrl);
                     //// local fake string
                     //string s = Properties.Resources.pluginJSON;
                     var onlinePlugins = JsonConvert.DeserializeObject<List<PluginPackageInfo>>(s, new JsonSerializerSettings
