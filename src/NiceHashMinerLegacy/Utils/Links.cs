@@ -8,6 +8,9 @@
 #elif TESTNETDEV
         public const string VisitUrl = "https://test-dev.nicehash.com";
         public const string CheckStats = "https://test-dev.nicehash.com/mining/stats";
+#elif PRODUCTION_NEW
+        public const string VisitUrl = "https://new.nicehash.com";
+        public const string CheckStats = "https://new.nicehash.com/mining/stats";
 #else
         public const string VisitUrl = "https://www.nicehash.com";
         public const string CheckStats = "https://www.nicehash.com/index.jsp?p=miners&addr=";
@@ -23,17 +26,17 @@
         public const string NhmNoDevHelp = "https://github.com/nicehash/NiceHashMinerLegacy/wiki/Troubleshooting#nosupportdev";
 
         // faq
-        public const string NhmBtcWalletFaq = "https://www.nicehash.com/help/how-to-create-the-bitcoin-addresswallet";
+        //public const string NhmBtcWalletFaq = "https://www.nicehash.com/help/how-to-create-the-bitcoin-addresswallet";
         public const string NhmPayingFaq = "https://www.nicehash.com/help/when-and-how-do-you-get-paid";
 
         // API
         // btc adress as parameter
-        public const string NhmApiStats = "https://api.nicehash.com/api?method=stats.provider&addr=";
-        public const string NhmApiInfo = "https://api.nicehash.com/api?method=simplemultialgo.info";
-        public const string NhmApiVersion = "https://api.nicehash.com/nicehashminer?method=version&legacy";
+        //public const string NhmApiStats = "https://api.nicehash.com/api?method=stats.provider&addr=";
+        //public const string NhmApiInfo = "https://api.nicehash.com/api?method=simplemultialgo.info";
+        //public const string NhmApiVersion = "https://api.nicehash.com/nicehashminer?method=version&legacy";
         //public static string NHM_API_stats_provider_workers = "https://api.nicehash.com/api?method=stats.provider.workers&addr=";
 
         // device profits
-        public const string NhmProfitCheck = "https://api.nicehash.com/p=calc&name=";
+        //public const string NhmProfitCheck = "https://api.nicehash.com/p=calc&name=";
     }
 }
