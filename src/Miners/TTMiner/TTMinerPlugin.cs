@@ -27,7 +27,7 @@ namespace TTMiner
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 2);
+        public Version Version => new Version(1, 3);
         public string Name => "TTMiner";
         public string Author => "stanko@nicehash.com";
 
@@ -55,7 +55,7 @@ namespace TTMiner
         private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
         {
             return new List<Algorithm>{
-                new Algorithm(PluginUUID, AlgorithmType.MTP),
+                new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
             };
         }
@@ -176,18 +176,6 @@ namespace TTMiner
 
         public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            var benchmarkedVersionIsSame = Version.Major == benchmarkedPluginVersion.Major && Version.Minor == benchmarkedPluginVersion.Minor;
-            var benchmarkedVersionIsOlder = Version.Major >= benchmarkedPluginVersion.Major && Version.Minor > benchmarkedPluginVersion.Minor;
-            if (benchmarkedVersionIsSame || !benchmarkedVersionIsOlder) return false;
-            if (ids.Count() == 0) return false;
-            // plugin version 1.1 bundles TTMiner v2.21
-            // plugin version 1.2 bundles TTMiner v2.23
-            // performance optimizations for MTP
-
-            if (device.DeviceType != DeviceType.NVIDIA) return false;
-            var singleAlgorithm = ids[0];
-            if (singleAlgorithm == AlgorithmType.MTP) return true;
-
             return false;
         }
 

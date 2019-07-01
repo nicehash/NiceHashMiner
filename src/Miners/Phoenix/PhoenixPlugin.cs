@@ -29,7 +29,7 @@ namespace Phoenix
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 2);
+        public Version Version => new Version(1, 3);
         public string Name => "Phoenix";
 
         public string Author => "domen.kirnkrefl@nicehash.com";
@@ -71,7 +71,7 @@ namespace Phoenix
         {
             var algorithms = new List<Algorithm>
             {
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto),
+                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto) { Enabled = false },
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
@@ -542,7 +542,7 @@ namespace Phoenix
         {
             // error/bug in v1.0
             // because the previous miner plugin mapped wrong GPU indexes rebench everything
-            return true;
+            return false;
         }
 
         public TimeSpan GetApiMaxTimeout()

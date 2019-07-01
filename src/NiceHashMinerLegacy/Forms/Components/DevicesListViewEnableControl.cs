@@ -60,7 +60,7 @@ namespace NiceHashMiner.Forms.Components
             listViewDevices.ItemChecked += ListViewDevicesItemChecked;
             //listViewDevices.CheckBoxes = false;
             // TESTNET
-#if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             NiceHashStats.OnDeviceUpdate += UpdateDevices;
 #endif
         }

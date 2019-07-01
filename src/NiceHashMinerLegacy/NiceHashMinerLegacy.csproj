@@ -114,11 +114,14 @@
     <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
+    <Compile Include="Benchmarking\BenchmarkOption.cs" />
+    <Compile Include="Benchmarking\BenchmarkStartSettings.cs" />
     <Compile Include="BUILD_TAG.cs" />
     <Compile Include="Configs\CredentialsSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
     <Compile Include="Configs\IdleMiningSettings.cs" />
     <Compile Include="Configs\RunAtStartup.cs" />
+    <Compile Include="Configs\ThirdPartyMinerSettings.cs" />
     <Compile Include="Configs\TranslationsSettings.cs" />
     <Compile Include="Devices\AvailableDevices.cs" />
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
@@ -212,6 +215,7 @@
     <Compile Include="Forms\Form_Settings.Designer.cs">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\IconEx.cs" />
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -224,8 +228,7 @@
     <Compile Include="Interfaces\DataVisualizer\IDevicesStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IGlobalMiningRateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IGroupDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IMiningNotProfitableDisplayer.cs" />
-    <Compile Include="Interfaces\DataVisualizer\IMiningProfitableDisplayer.cs" />
+    <Compile Include="Interfaces\DataVisualizer\IMiningProfitabilityDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\INoInternetConnectionDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IStateDisplayer.cs" />
     <Compile Include="Interfaces\DataVisualizer\IVersionDisplayer.cs" />
@@ -244,13 +247,11 @@
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerX16RIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\ClaymoreDual14Integrated\ClaymoreDual14IntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\ClaymoreDualIntegrated\ClaymoreDualIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\IMinerBinsSource.cs" />
     <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\MinersBinsUrls.cs" />
     <Compile Include="Miners\IntegratedPlugins\NanoMinerIntegrated\NanoMinerIntegratedPlugin.cs" />
@@ -268,12 +269,14 @@
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
     <Compile Include="Miners\MinerApiWatchdog.cs" />
     <Compile Include="Miners\MiningManager.cs" />
+    <Compile Include="Plugin\PluginContainer.cs" />
     <Compile Include="Plugin\SupportedAlgorithmsFilter.cs" />
     <Compile Include="Stats\MiningStats.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="Stats\ErrorCode.cs" />
     <Compile Include="Stats\Models\ExchangeRateJson.cs" />
+    <Compile Include="Stats\Models\MarketsMessage.cs" />
     <Compile Include="Stats\Models\MinerStatusMessage.cs" />
     <Compile Include="Stats\Models\NicehashCredentials.cs" />
     <Compile Include="Stats\Models\DeviceUpdateEventArgs.cs" />
@@ -297,6 +300,7 @@
     <Compile Include="Utils\ArchiveHelpers.cs" />
     <Compile Include="Utils\FirewallRules.cs" />
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
+    <Compile Include="Utils\RunAsAdmin.cs" />
     <Compile Include="Utils\SystemSpecs.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
     <Compile Include="Switching\AlgorithmSwitchingManager.cs" />

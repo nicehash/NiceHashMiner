@@ -2,7 +2,7 @@
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    public class TRexIntegratedPlugin : TRex.TRexPlugin, IntegratedPlugin, IMinerBinsSource
+    public class TRexIntegratedPlugin : TRex.TRexPlugin, IntegratedPlugin
     {
 
         public TRexIntegratedPlugin() : base("TRex")
@@ -10,7 +10,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public bool Is3rdParty => true;
 
-        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
             return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }

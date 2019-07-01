@@ -1,5 +1,5 @@
 ﻿// TESTNET
-#if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Devices;
@@ -109,6 +109,9 @@ namespace NiceHashMiner.Stats
                     return null;
                 }
 
+                case "markets":
+                    HandleMarkets(data);
+                    break;
                 case "balance":
                     SetBalance(message.value.Value);
                     return null;
@@ -214,26 +217,6 @@ namespace NiceHashMiner.Stats
             {
                 SetVersion(ess.Versions[1][0], ess.Versions[1][1]);
             }
-
-
-            // this isn't really used anymore
-            //if (ess?.Devices != null)
-            //{
-            //    foreach (var map in ess.Devices)
-            //    {
-            //        // Hacky way temporary
-
-            //        if (!(map is JArray m && m.Count > 1)) continue;
-            //        var name = m.Last().Value<string>();
-            //        var i = m.First().Value<int>();
-
-            //        foreach (var dev in AvailableDevices.Devices)
-            //        {
-            //            if (dev.Name.Contains(name))
-            //                dev.TypeID = i;
-            //        }
-            //    }
-            //}
         }
 
         private static void SetVersion(string version, string link)
@@ -417,17 +400,31 @@ namespace NiceHashMiner.Stats
                 AvailableDevices.Devices.Where(d => d.B64Uuid == device);
 
             var found = devs.Count() > 0;
-
+            var hasEnabled = false;
+            var setSuccess = new List<bool>();
             foreach (var dev in devs)
             {
+                if (!dev.Enabled) continue;
                 if (!(dev.DeviceMonitor is ISetPowerLevel set)) continue;
+                hasEnabled = true;
                 // TODO check if set
-                set.SetPowerTarget(level);
+                var result = set.SetPowerTarget(level);
+                setSuccess.Add(result);
+            }
+
+            if (setSuccess.Any(t => t) && !setSuccess.All(t => t))
+            {
+                throw new RpcException("Not able to set power modes for all devices", ErrorCode.UnableToHandleRpc);
+            }
+
+            if (found && !hasEnabled)
+            {
+                throw new RpcException("No settable devices found", ErrorCode.UnableToHandleRpc);
             }
 
             if (!found)
             {
-                throw new RpcException("No devices settable devices found", ErrorCode.UnableToHandleRpc);
+                throw new RpcException("No settable devices found", ErrorCode.UnableToHandleRpc);
             }
         }
 

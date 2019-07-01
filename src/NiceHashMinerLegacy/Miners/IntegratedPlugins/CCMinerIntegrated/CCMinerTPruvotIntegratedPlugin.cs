@@ -11,11 +11,11 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class CCMinerTpruvotIntegratedPlugin : CCMinersPluginBase
+    class CCMinerTpruvotIntegratedPlugin : CCMinersPluginBase, IReBenchmarkChecker
     {
         public override string PluginUUID => "CCMinerTpruvot";
 
-        public override Version Version => new Version(1,0);
+        public override Version Version => new Version(1,1);
 
         public override string Name => "CCMinerTpruvot";
 
@@ -42,6 +42,21 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             }
 
             return supported;
+        }
+
+        bool IReBenchmarkChecker.ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            try
+            {
+                // X16 R is overestimated in version v1.0
+                var isX16R = ids.Contains(AlgorithmType.X16R);
+                var isOverestimatedVersion = benchmarkedPluginVersion.Major == 1 && benchmarkedPluginVersion.Minor == 0;
+                return isX16R && isOverestimatedVersion;
+            }
+            catch (Exception)
+            {
+            }
+            return false;
         }
     }
 }

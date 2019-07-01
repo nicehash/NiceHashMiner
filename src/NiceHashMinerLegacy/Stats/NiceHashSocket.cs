@@ -23,7 +23,7 @@ namespace NiceHashMiner.Stats
         {
             version = "NHML/" + Application.ProductVersion,
             // TESTNET
-#if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             protocol = 3
 #else
             protocol = 1
@@ -44,7 +44,7 @@ namespace NiceHashMiner.Stats
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
             // TESTNET
-#if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             _login.rig = ApplicationStateManager.RigID;
 
             if (btc != null) _login.btc = btc;
@@ -129,7 +129,7 @@ namespace NiceHashMiner.Stats
         public bool SendData(string data, bool recurs = false)
         {
             //TESTNET
-#if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             // skip sending if no btc set send only login
             if (CredentialValidators.ValidateBitcoinAddress(_login.btc) == false && data.Contains("{\"method\":\"login\"") == false)
             {

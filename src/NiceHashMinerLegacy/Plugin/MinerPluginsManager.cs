@@ -1,4 +1,4 @@
-﻿#if !ENABLE_EXTERNAL_PLUGINS && (TESTNET || TESTNETDEV) 
+﻿#if !ENABLE_EXTERNAL_PLUGINS && (TESTNET || TESTNETDEV || PRODUCTION_NEW) 
 #define ENABLE_EXTERNAL_PLUGINS
 #endif
 
@@ -38,126 +38,74 @@ namespace NiceHashMiner.Plugin
         public static bool IntegratedPluginsOnly => true;
 #endif
 
-        public static List<IntegratedPlugin> IntegratedPlugins = new List<IntegratedPlugin>
+        static MinerPluginsManager()
         {
-            //// testing 
-            //new BrokenPluginIntegratedPlugin(),
-            // open source
-            //new CCMinerMTPIntegratedPlugin(),
-            //new CCMinerTpruvotIntegratedPlugin(),
-            //new CCMinerX16RIntegratedPlugin(),
-            ////new SGminerAvemoreIntegratedPlugin(),
-            //new SGminerGMIntegratedPlugin(),
-            //new XmrStakIntegratedPlugin(),
+            var integratedPlugins = new List<IntegratedPlugin>
+            {
+                ////// testing 
+                //new BrokenPluginIntegratedPlugin(),
+                // open source
+                new CCMinerMTPIntegratedPlugin(),
+                new CCMinerTpruvotIntegratedPlugin(),
+                new SGminerAvemoreIntegratedPlugin(),
+                new SGminerGMIntegratedPlugin(),
+                new XmrStakIntegratedPlugin(),
 
-            //// 3rd party
-            //new BMinerIntegratedPlugin(),
-            //new ClaymoreDualIntegratedPlugin(),
-            //new EWBFIntegratedPlugin(),
-            //new GMinerIntegratedPlugin(),
-            //new NBMinerIntegratedPlugin(),
-            //new PhoenixIntegratedPlugin(),
-            //new TeamRedMinerIntegratedPlugin(),
-            //new TRexIntegratedPlugin(),
-            //new TTMinerIntegratedPlugin(),
-            ////new NanoMinerIntegratedPlugin(),
-            //new ClaymoreDual14IntegratedPlugin(),
-            new WildRigIntegratedPlugin(),
+                // 3rd party
+                new BMinerIntegratedPlugin(),
+                new ClaymoreDualIntegratedPlugin(),
+                new EWBFIntegratedPlugin(),
+                new GMinerIntegratedPlugin(),
+                new NBMinerIntegratedPlugin(),
+                new PhoenixIntegratedPlugin(),
+                new TeamRedMinerIntegratedPlugin(),
+                new TRexIntegratedPlugin(),
+                new TTMinerIntegratedPlugin(),
+                //new NanoMinerIntegratedPlugin(),
+                new ClaymoreDual14IntegratedPlugin(),
+                // new WildRigIntegratedPlugin(),
 
-            // service plugin
-            EthlargementIntegratedPlugin.Instance,
+                // service plugin
+                EthlargementIntegratedPlugin.Instance,
 
-            // plugin dependencies
-            VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance
-        };
+                // plugin dependencies
+                VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance
+            };
+            foreach (var integratedPlugin in integratedPlugins)
+            {
+                PluginContainer.Create(integratedPlugin);
+            }
+        }
 
-        private static HashSet<string> _compatiblePlugins = new HashSet<string>();
-        private static Dictionary<string, bool> _integratedPluginsInitialized = new Dictionary<string, bool>();
-        private static Dictionary<string, Dictionary<BaseDevice, IReadOnlyList<CommonAlgorithm.Algorithm>>> _integratedPluginsCachedAlgorithms = new Dictionary<string, Dictionary<BaseDevice, IReadOnlyList<CommonAlgorithm.Algorithm>>>();
-
-        // TODO add use3rdParty flag
         public static void InitIntegratedPlugins()
         {
+            foreach (var plugin in PluginContainer.PluginContainers.Where(p => p.IsIntegrated))
+            {
+                if (!plugin.IsInitialized)
+                {
+                    plugin.InitPluginContainer();
+                }
+                if (plugin.Enabled)
+                {
+                    plugin.AddAlgorithmsToDevices();
+                }
+                else
+                {
+                    plugin.RemoveAlgorithmsFromDevices();
+                }
+            }
+
+            // global scope here
             var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
-            // get devices
-            var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
-            // examine all plugins and what to use
-            foreach (var plugin in IntegratedPlugins)
-            {
-                //_compatiblePlugins.Add(plugin.PluginUUID); // TODO to download all miners uncomment this line
-                var pluginUuid = plugin.PluginUUID;
-                var pluginName = plugin.Name;
-
-
-                if (plugin.Is3rdParty && !is3rdPartyEnabled) continue;
-                if (_integratedPluginsInitialized.ContainsKey(pluginUuid) && _integratedPluginsInitialized[pluginUuid])
-                {
-                    // add from cache
-                    var supportedCached = _integratedPluginsCachedAlgorithms[pluginUuid];
-                    foreach (var pair in supportedCached)
-                    {
-                        var bd = pair.Key;
-                        var algos = pair.Value;
-                        var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
-                        var pluginAlgos = algos
-                        .Where(a => SupportedAlgorithmsFilter.IsSupported(a.IDs))
-                        .Select(a => new PluginAlgorithm(pluginName, a, plugin.Version))
-                        .ToList();
-                        dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
-                    }
-                    continue;
-                }
-
-                // register and add 
-                if (plugin is IBackroundService) _compatiblePlugins.Add(pluginUuid);
-                if (plugin is IPluginDependency) _compatiblePlugins.Add(pluginUuid);
-                var supported = plugin.GetSupportedAlgorithms(baseDevices);
-                _integratedPluginsCachedAlgorithms[pluginUuid] = supported;
-                // check out the supported algorithms
-                foreach (var pair in supported)
-                {
-                    _compatiblePlugins.Add(pluginUuid);
-                    var bd = pair.Key;
-                    var algos = pair.Value;
-                    var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
-                    var pluginAlgos = algos
-                        .Where(a => SupportedAlgorithmsFilter.IsSupported(a.IDs))
-                        .Select(a => new PluginAlgorithm(pluginName, a, plugin.Version))
-                        .ToList();
-                    dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
-                }
-            }
-            foreach (var plugin in IntegratedPlugins)
-            {
-                var pluginUuid = plugin.PluginUUID;
-                if (plugin.Is3rdParty && !is3rdPartyEnabled) continue;
-                if (_compatiblePlugins.Contains(pluginUuid) == false) continue;
-                if (_integratedPluginsInitialized.ContainsKey(pluginUuid) && _integratedPluginsInitialized[pluginUuid]) continue;
-                if (plugin is IInitInternals pluginWithInternals) pluginWithInternals.InitInternals();
-                _integratedPluginsInitialized[pluginUuid] = true;
-            }
-
-            CheckPluginsReBenchmarkAlgorithmsForDevices();
-
             EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
-
-            if (is3rdPartyEnabled) return;
-            // filter out 3rdParty
-            var thirdPartyPluginUUIDs = IntegratedPlugins
-                .Where(plugin => plugin.Is3rdParty)
-                .Select(plugin => plugin.PluginUUID);
-            foreach (var uuid in thirdPartyPluginUUIDs)
-            {
-                RemovePluginAlgorithms(uuid);
-            }
             Logger.Info("MinerPluginsManager", "Finished initialization of miners.");
         }
 
+        // API data
         private static List<PluginPackageInfo> OnlinePlugins { get; set; }
-        private static Dictionary<string, IMinerPlugin> MinerPlugins { get => MinerPluginHost.MinerPlugin; }
-
         public static Dictionary<string, PluginPackageInfoCR> Plugins { get; set; } = new Dictionary<string, PluginPackageInfoCR>();
+
+        //private static Dictionary<string, IMinerPlugin> MinerPlugins { get => MinerPluginHost.MinerPlugin; }
 
         public static List<PluginPackageInfoCR> RankedPlugins
         {
@@ -172,71 +120,62 @@ namespace NiceHashMiner.Plugin
             }
         }
 
-        private static void InitPluginInternals()
-        {
-            foreach (var kvp in MinerPlugins)
-            {
-                var plugin = kvp.Value;
-                if (plugin is IInitInternals pluginWithInternals) pluginWithInternals.InitInternals();
-            }
-        }
-
         public static void LoadMinerPlugins()
         {
             // TODO only integrated
             InitIntegratedPlugins();
             if (IntegratedPluginsOnly) return;
-
-            MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath());
-            // init internals
-            InitPluginInternals();
-            UpdatePluginAlgorithms();
+            var loadedPlugins = MinerPluginHost.LoadPlugins(Paths.MinerPluginsPath());
+            foreach (var pluginUUID in loadedPlugins)
+            {
+                var externalPlugin = MinerPluginHost.MinerPlugin[pluginUUID];
+                var plugin = PluginContainer.Create(externalPlugin);
+                if (!plugin.IsInitialized)
+                {
+                    plugin.InitPluginContainer();
+                }
+                if (plugin.Enabled)
+                {
+                    plugin.AddAlgorithmsToDevices();
+                }
+                else
+                {
+                    plugin.RemoveAlgorithmsFromDevices();
+                }
+            }
             // cross reference local and online list
             CrossReferenceInstalledWithOnline();
         }
 
-        // for now integrated only, it should be safe to call this multiple times 
         public static async Task DevicesCrossReferenceIDsWithMinerIndexes()
         {
-            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             // get devices
-            var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
-            foreach (var plugin in IntegratedPlugins)
+            var baseDevices = AvailableDevices.Devices.Select(dev => dev.BaseDevice);
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
+                .ToArray();
+            foreach (var plugin in checkPlugins)
             {
-                var pluginUuid = plugin.PluginUUID;
-                if (plugin.Is3rdParty && !is3rdPartyEnabled) continue;
-                if (plugin is IDevicesCrossReference pluginWithDCR)
-                {
-                    try
-                    {
-                        await pluginWithDCR.DevicesCrossReference(baseDevices);
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error("MinerPluginsManager", $"Error occured while executing device cross reference in {plugin.Name} plugin: {e.Message}");
-                    }
-                }
+                await plugin.DevicesCrossReference(baseDevices);
             }
         }
 
         public static async Task DownloadMissingIntegratedMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
-            var compatiblePlugins = IntegratedPlugins
-                .Where(p => _compatiblePlugins.Contains(p.PluginUUID))
-                .Where(p => p is IMinerBinsSource)
-                .Where(p => p is IBinaryPackageMissingFilesChecker)
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsIntegrated)
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
                 .ToArray();
 
-            foreach (var plugin in compatiblePlugins)
+            foreach (var plugin in checkPlugins)
             {
-                var downloadSource = plugin as IMinerBinsSource;
-                var isMissingCheck = plugin as IBinaryPackageMissingFilesChecker;
-                var urls = downloadSource.GetMinerBinsUrls();
-                var missingFiles = isMissingCheck.CheckBinaryPackageMissingFiles();
+                var urls = plugin.GetMinerBinsUrls();
+                var missingFiles = plugin.CheckBinaryPackageMissingFiles();
                 var hasMissingFiles = missingFiles.Count() > 0;
                 var hasUrls = urls.Count() > 0;
-                if (hasMissingFiles && hasUrls)
+                if (hasMissingFiles && hasUrls && !plugin.IsBroken)
                 {
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
                     var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
@@ -248,51 +187,17 @@ namespace NiceHashMiner.Plugin
         // for now integrated only
         public static List<string> GetMissingMiners()
         {
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
+                .ToArray();
+
             var ret = new List<string>();
-            foreach (var plugin in IntegratedPlugins)
+            foreach (var plugin in checkPlugins)
             {
-                if (_compatiblePlugins.Contains(plugin.PluginUUID) == false) continue;
-                if (plugin is IBinaryPackageMissingFilesChecker pluginCheckBins)
-                {
-                    try
-                    {
-                        ret.AddRange(pluginCheckBins.CheckBinaryPackageMissingFiles());
-                    }
-                    catch (Exception e)
-                    {
-                        Logger.Error("MinerPluginsManager", $"Error occured while checking for missing miners: {e.Message}");
-                    }
-                }
+                ret.AddRange(plugin.CheckBinaryPackageMissingFiles());
             }
             return ret;
-        }
-
-        private static void UpdatePluginAlgorithms()
-        {
-            // get devices
-            var allDevs = AvailableDevices.Devices;
-            var baseDevices = allDevs.Select(dev => dev.BaseDevice);
-            // examine all plugins and what to use
-            foreach (var kvp in MinerPluginHost.MinerPlugin)
-            {
-                var pluginUuid = kvp.Key;
-                var plugin = kvp.Value;
-                var pluginName = plugin.Name;
-                var supported = plugin.GetSupportedAlgorithms(baseDevices);
-                // check out the supported algorithms
-                foreach (var pair in supported)
-                {
-                    var bd = pair.Key;
-                    var algos = pair.Value;
-                    var dev = AvailableDevices.GetDeviceWithUuid(bd.UUID);
-                    var pluginAlgos = algos
-                        .Where(a => SupportedAlgorithmsFilter.IsSupported(a.IDs))
-                        .Select(a => new PluginAlgorithm(pluginName, a, plugin.Version))
-                        .ToList();
-                    dev.UpdatePluginAlgorithms(pluginUuid, pluginAlgos);
-                }
-            }
-            CheckPluginsReBenchmarkAlgorithmsForDevices();
         }
 
         private static void RemovePluginAlgorithms(string pluginUUID)
@@ -309,6 +214,12 @@ namespace NiceHashMiner.Plugin
             {
                 var deletePath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID);
                 MinerPluginHost.MinerPlugin.Remove(pluginUUID);
+                var oldPlugins = PluginContainer.PluginContainers.Where(p => p.PluginUUID == pluginUUID).ToArray();
+                foreach (var old in oldPlugins)
+                {
+                    PluginContainer.RemovePluginContainer(old);
+                    old.RemoveAlgorithmsFromDevices();
+                }
                 RemovePluginAlgorithms(pluginUUID);
 
                 Plugins[pluginUUID].LocalInfo = null;
@@ -333,10 +244,15 @@ namespace NiceHashMiner.Plugin
         public static void CrossReferenceInstalledWithOnline()
         {
             // first go over the installed plugins
-            foreach (var installedPluginKvp in MinerPlugins)
+            // TODO rename installed to externalInstalledPlugin
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => !p.IsIntegrated)
+                //.Where(p => p.IsCompatible)
+                //.Where(p => p.Enabled)
+                .ToArray();
+            foreach (var installed in checkPlugins)
             {
-                var uuid = installedPluginKvp.Key;
-                var installed = installedPluginKvp.Value;
+                var uuid = installed.PluginUUID;
                 var localPluginInfo = new PluginPackageInfo
                 {
                     PluginAuthor = installed.Author,
@@ -380,21 +296,14 @@ namespace NiceHashMiner.Plugin
         public static List<string> GetPluginUUIDsAndVersionsList()
         {
             var ret = new List<string>();
-            foreach (var integrated in IntegratedPlugins)
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
+                .ToArray();
+            foreach (var integrated in checkPlugins)
             {
                 ret.Add($"{integrated.PluginUUID}-{integrated.Version.Major}.{integrated.Version.Minor}");
             }
-            if (IntegratedPluginsOnly) return ret;
-
-            foreach (var kvp in Plugins)
-            {
-                var plugin = kvp.Value;
-                if (plugin.Installed)
-                {
-                    ret.Add($"{plugin.PluginUUID}-{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}");
-                }
-            }
-
             return ret;
         }
 
@@ -442,52 +351,10 @@ namespace NiceHashMiner.Plugin
             return false;
         }
 
-        private static void CheckPluginsReBenchmarkAlgorithmsForDevices()
+        public static PluginContainer GetPluginWithUuid(string pluginUuid)
         {
-            // Integrated
-            var reBenchmarkCheckersPlugins = IntegratedPlugins.Where(plugin => plugin is IReBenchmarkChecker).Cast<IMinerPlugin>().ToList();
-            if (!IntegratedPluginsOnly)
-            {
-                // Dynamic/Online
-                var dynamicReBenchmarkCheckers = MinerPluginHost.MinerPlugin.Values.Where(plugin => plugin is IReBenchmarkChecker).ToList();
-                if (dynamicReBenchmarkCheckers.Count > 0) reBenchmarkCheckersPlugins.AddRange(dynamicReBenchmarkCheckers);
-            }
-
-            // get devices
-            var allDevs = AvailableDevices.Devices;
-            foreach (var plugin in reBenchmarkCheckersPlugins)
-            {
-                try
-                {
-                    var reBenchCheckPlugin = plugin as IReBenchmarkChecker;
-                    if (reBenchCheckPlugin == null) continue;
-                    foreach (var dev in allDevs)
-                    {
-                        var baseDev = dev.BaseDevice;
-                        var pluginAlgos = dev.AlgorithmSettings.Where(a => a.MinerUUID == plugin.PluginUUID).ToArray();
-                        foreach (var algo in pluginAlgos)
-                        {
-                            var pAlgo = algo as PluginAlgorithm;
-                            if (pAlgo == null) continue;
-                            var isReBenchmark = reBenchCheckPlugin.ShouldReBenchmarkAlgorithmOnDevice(baseDev, pAlgo.ConfigVersion, pAlgo.IDs);
-                            pAlgo.IsReBenchmark = isReBenchmark;
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.Error("MinerPluginsManager", $"CheckPluginsReBenchmarkAlgorithmsForDevices error: {e.Message}");
-                }
-            }
-        }
-
-        public static IMinerPlugin GetPluginWithUuid(string pluginUuid)
-        {
-            // search for integrated
-            var integratedPlugin = IntegratedPlugins.Find(p => p.PluginUUID == pluginUuid);
-            if (integratedPlugin != null) return integratedPlugin;
-            if (!MinerPluginHost.MinerPlugin.ContainsKey(pluginUuid)) return null;
-            return MinerPluginHost.MinerPlugin[pluginUuid];
+            var ret = PluginContainer.PluginContainers.Where(p => p.PluginUUID == pluginUuid).FirstOrDefault();
+            return ret;
         }
 
 #region DownloadingInstalling
@@ -579,7 +446,7 @@ namespace NiceHashMiner.Plugin
 
 
                 var loadedPlugins = MinerPluginHost.LoadPlugin(installingPluginPath);
-                if (loadedPlugins == 0)
+                if (loadedPlugins.Count() == 0)
                 {
                     //downloadAndInstallUpdate($"Loaded ZERO PLUGINS");
                     Directory.Delete(installingPluginPath, true);
@@ -595,7 +462,31 @@ namespace NiceHashMiner.Plugin
                 }
                 //downloadAndInstallUpdate($"Loaded {loadedPlugins} PLUGIN");
                 Directory.Move(installingPluginPath, pluginPath);
-                UpdatePluginAlgorithms();
+                // add or update plugins
+                foreach (var pluginUUID in loadedPlugins)
+                {
+                    var externalPlugin = MinerPluginHost.MinerPlugin[pluginUUID];
+                    // remove old
+                    var oldPlugins = PluginContainer.PluginContainers.Where(p => p.PluginUUID == pluginUUID).ToArray();
+                    foreach (var old in oldPlugins)
+                    {
+                        PluginContainer.RemovePluginContainer(old);
+                        old.RemoveAlgorithmsFromDevices();
+                    }
+                    var newPlugin = PluginContainer.Create(externalPlugin);
+                    var success = newPlugin.InitPluginContainer();
+                    // TODO after add or remove plugins we should clean up the device settings
+                    if (success)
+                    {
+                        newPlugin.AddAlgorithmsToDevices();
+                        await newPlugin.DevicesCrossReference(AvailableDevices.Devices.Select(d => d.BaseDevice));
+                    }
+                    else
+                    {
+                        // TODO mark that this plugin wasn't loaded
+                        Logger.Error("MinerPluginsManager", $"DownloadAndInstall unable to init and install {pluginUUID}");
+                    }
+                }
                 // cross reference local and online list
                 CrossReferenceInstalledWithOnline();
             }

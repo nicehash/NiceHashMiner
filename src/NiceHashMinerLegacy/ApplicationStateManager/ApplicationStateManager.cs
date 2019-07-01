@@ -174,10 +174,7 @@ namespace NiceHashMiner
             // change in memory and save changes to file
             ConfigManager.GeneralConfig.BitcoinAddress = btc;
             ConfigManager.GeneralConfigFileCommit();
-            if (MiningState.Instance.IsCurrentlyMining)
-            {
-                MiningManager.RestartMiners(GetUsername());
-            }
+            RestartMinersIfMining();
         }
 #endregion
 
@@ -209,11 +206,7 @@ namespace NiceHashMiner
             // change in memory and save changes to file
             ConfigManager.GeneralConfig.WorkerName = workerName;
             ConfigManager.GeneralConfigFileCommit();
-            // if mining update the mining manager
-            if (MiningState.Instance.IsCurrentlyMining)
-            {
-                MiningManager.RestartMiners(GetUsername());
-            }
+            RestartMinersIfMining();
         }
 #endregion
 
@@ -279,14 +272,15 @@ namespace NiceHashMiner
             StopComputeDevicesCheckTimer();
             StopPreventSleepTimer();
             StopInternetCheckTimer();
+            DisplayNoInternetConnection(false); // hide warning
+            DisplayMiningProfitable(true); // hide warning
             return true;
         }
 
 
-        // TODO temporary here AfterDeviceQueryInitialization
-        public static void AfterDeviceQueryInitialization()
+        // TODO this thing should be dropped when we have bindable properties
+        public static void UpdateDevicesStatesAndStartDeviceRefreshTimer()
         {
-            ConfigManager.AfterDeviceQueryInitialization();
             MiningState.Instance.CalculateDevicesStateChange();
             RefreshDeviceListView?.Invoke(null, null);
             StartRefreshDeviceListViewTimer();

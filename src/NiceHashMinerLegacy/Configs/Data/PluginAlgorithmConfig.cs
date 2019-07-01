@@ -38,6 +38,13 @@ namespace NiceHashMiner.Configs.Data
             return ret;
         }
 
+        public string GetAlgorithmStringID()
+        {
+            var IDs = GetAlgorithmIDs();
+            var algorithmName = string.Join("+", IDs.Select(type => Enum.GetName(typeof(AlgorithmType), type)));
+            return $"{algorithmName}_{PluginUUID}";
+        }
+
         public Version GetVersion()
         {
             int major = 1;

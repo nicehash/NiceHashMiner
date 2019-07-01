@@ -15,7 +15,7 @@ namespace NiceHashMiner.Stats.Models
 
         // Or maybe use omit emtpy 
         // TESTNET
-#if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
         public string btc { get; set; } = "";
         public string worker { get; set; } = "";
         public string group { get; set; } = "";

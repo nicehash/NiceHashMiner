@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    public class WildRigIntegratedPlugin : WildRig.WildRigPlugin, IntegratedPlugin, IMinerBinsSource
+    public class WildRigIntegratedPlugin : WildRig.WildRigPlugin, IntegratedPlugin
     {
         public WildRigIntegratedPlugin() : base("WildRig")
         { }
 
         public bool Is3rdParty => true;
 
-        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
             return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }
