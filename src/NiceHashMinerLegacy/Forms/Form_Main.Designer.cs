@@ -62,11 +62,15 @@
             this.linkLabelNewVersion = new System.Windows.Forms.LinkLabel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.buttonPlugins = new System.Windows.Forms.Button();
-            this.devicesMainBoard1 = new NiceHashMiner.Forms.Components.DevicesMainBoardDevicesListViewSpeedControl();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.errorWarningProvider2 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.linkLabelAdminPrivs = new System.Windows.Forms.LinkLabel();
+            this.devicesMainBoard1 = new NiceHashMiner.Forms.Components.DevicesMainBoardDevicesListViewSpeedControl();
+            this.labelWarningNotProfitableOrNoIntenret = new System.Windows.Forms.Label();
             this.statusStrip1.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorWarningProvider2)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonStartMining
@@ -158,7 +162,7 @@
             // toolStripStatusLabelBTCDayText
             // 
             this.toolStripStatusLabelBTCDayText.Name = "toolStripStatusLabelBTCDayText";
-            this.toolStripStatusLabelBTCDayText.Size = new System.Drawing.Size(52, 20);
+            this.toolStripStatusLabelBTCDayText.Size = new System.Drawing.Size(51, 20);
             this.toolStripStatusLabelBTCDayText.Text = "BTC/Day";
             // 
             // toolStripStatusLabelBTCDayValue
@@ -184,7 +188,7 @@
             // toolStripStatusLabelBalanceBTCCode
             // 
             this.toolStripStatusLabelBalanceBTCCode.Name = "toolStripStatusLabelBalanceBTCCode";
-            this.toolStripStatusLabelBalanceBTCCode.Size = new System.Drawing.Size(27, 20);
+            this.toolStripStatusLabelBalanceBTCCode.Size = new System.Drawing.Size(26, 20);
             this.toolStripStatusLabelBalanceBTCCode.Text = "BTC";
             // 
             // toolStripStatusLabelBalanceDollarText
@@ -351,10 +355,12 @@
             // linkLabelNewVersion
             // 
             this.linkLabelNewVersion.AutoSize = true;
-            this.linkLabelNewVersion.Location = new System.Drawing.Point(292, 77);
+            this.linkLabelNewVersion.Location = new System.Drawing.Point(581, 68);
             this.linkLabelNewVersion.Name = "linkLabelNewVersion";
-            this.linkLabelNewVersion.Size = new System.Drawing.Size(0, 13);
+            this.linkLabelNewVersion.Size = new System.Drawing.Size(84, 13);
             this.linkLabelNewVersion.TabIndex = 110;
+            this.linkLabelNewVersion.TabStop = true;
+            this.linkLabelNewVersion.Text = "NEW VERSION";
             this.linkLabelNewVersion.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LinkLabelNewVersion_LinkClicked);
             // 
             // buttonPlugins
@@ -369,6 +375,24 @@
             this.buttonPlugins.UseVisualStyleBackColor = true;
             this.buttonPlugins.Click += new System.EventHandler(this.ButtonPlugins_Click);
             // 
+            // errorProvider1
+            // 
+            this.errorProvider1.ContainerControl = this;
+            // 
+            // errorWarningProvider2
+            // 
+            this.errorWarningProvider2.ContainerControl = this;
+            // 
+            // linkLabelAdminPrivs
+            // 
+            this.linkLabelAdminPrivs.AutoSize = true;
+            this.linkLabelAdminPrivs.Location = new System.Drawing.Point(168, 88);
+            this.linkLabelAdminPrivs.Name = "linkLabelAdminPrivs";
+            this.linkLabelAdminPrivs.Size = new System.Drawing.Size(182, 13);
+            this.linkLabelAdminPrivs.TabIndex = 113;
+            this.linkLabelAdminPrivs.TabStop = true;
+            this.linkLabelAdminPrivs.Text = "Enable NVIDIA power mode settings!";
+            // 
             // devicesMainBoard1
             // 
             this.devicesMainBoard1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -376,19 +400,29 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.devicesMainBoard1.Location = new System.Drawing.Point(10, 109);
             this.devicesMainBoard1.Name = "devicesMainBoard1";
-            this.devicesMainBoard1.SecondPanelVisible = false;
+            this.devicesMainBoard1.SecondPanelVisible = true;
             this.devicesMainBoard1.Size = new System.Drawing.Size(664, 160);
             this.devicesMainBoard1.TabIndex = 111;
             // 
-            // errorProvider1
+            // labelWarningNotProfitableOrNoIntenret
             // 
-            this.errorProvider1.ContainerControl = this;
+            this.labelWarningNotProfitableOrNoIntenret.AutoSize = true;
+            this.labelWarningNotProfitableOrNoIntenret.BackColor = System.Drawing.Color.Transparent;
+            this.labelWarningNotProfitableOrNoIntenret.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelWarningNotProfitableOrNoIntenret.ForeColor = System.Drawing.Color.Red;
+            this.labelWarningNotProfitableOrNoIntenret.Location = new System.Drawing.Point(12, 81);
+            this.labelWarningNotProfitableOrNoIntenret.Name = "labelWarningNotProfitableOrNoIntenret";
+            this.labelWarningNotProfitableOrNoIntenret.Size = new System.Drawing.Size(612, 25);
+            this.labelWarningNotProfitableOrNoIntenret.TabIndex = 114;
+            this.labelWarningNotProfitableOrNoIntenret.Text = "WARNING NOT MINING NOT PROFITABLE OR NO INTERNET";
             // 
             // Form_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(776, 299);
+            this.Controls.Add(this.labelWarningNotProfitableOrNoIntenret);
+            this.Controls.Add(this.linkLabelAdminPrivs);
             this.Controls.Add(this.buttonPlugins);
             this.Controls.Add(this.devicesMainBoard1);
             this.Controls.Add(this.linkLabelNewVersion);
@@ -419,6 +453,7 @@
             this.statusStrip1.PerformLayout();
             this.contextMenuStrip1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.errorWarningProvider2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -461,6 +496,9 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemShow;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.ErrorProvider errorWarningProvider2;
+        private System.Windows.Forms.LinkLabel linkLabelAdminPrivs;
+        private System.Windows.Forms.Label labelWarningNotProfitableOrNoIntenret;
     }
 }
 

@@ -9,6 +9,7 @@ using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Utils;
 using NiceHashMinerLegacy.Common;
+using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Configs
 {
@@ -31,7 +32,7 @@ namespace NiceHashMiner.Configs
         private static bool _isGeneralConfigFileInit;
 
         // backups
-        private static GeneralConfig _generalConfigBackup = new GeneralConfig();
+        private static GeneralConfigBackup _generalConfigBackup = new GeneralConfigBackup();
         private static Dictionary<string, DeviceConfig> _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
 
         private static void CreateBackupArchive(Version backupVersion)
@@ -110,7 +111,14 @@ namespace NiceHashMiner.Configs
 
         public static void CreateBackup()
         {
-            _generalConfigBackup = DeepClone(GeneralConfig);
+            _generalConfigBackup = new GeneralConfigBackup
+            {
+                DebugConsole = GeneralConfig.DebugConsole,
+                NVIDIAP0State = GeneralConfig.NVIDIAP0State,
+                LogToFile = GeneralConfig.LogToFile,
+                DisableWindowsErrorReporting = GeneralConfig.DisableWindowsErrorReporting,
+                Use3rdPartyMiners = GeneralConfig.Use3rdPartyMiners,
+            };
             _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
             foreach (var cDev in AvailableDevices.Devices)
             {
@@ -158,8 +166,7 @@ namespace NiceHashMiner.Configs
             }
         }
 
-        // TODO this should be obsolete
-        public static void AfterDeviceQueryInitialization()
+        public static void InitDeviceSettings()
         {
             // create/init device configs
             foreach (var device in AvailableDevices.Devices)
@@ -175,16 +182,13 @@ namespace NiceHashMiner.Configs
             GeneralConfigFileCommit();
         }
 
-        private static T DeepClone<T>(T obj)
+        private class GeneralConfigBackup
         {
-            using (var ms = new MemoryStream())
-            {
-                var formatter = new BinaryFormatter();
-                formatter.Serialize(ms, obj);
-                ms.Position = 0;
-
-                return (T)formatter.Deserialize(ms);
-            }
+            public bool DebugConsole { get; set; }
+            public bool NVIDIAP0State { get; set; }
+            public bool LogToFile { get; set; }
+            public bool DisableWindowsErrorReporting { get; set; }
+            public Use3rdPartyMiners Use3rdPartyMiners { get; set; }
         }
     }
 }

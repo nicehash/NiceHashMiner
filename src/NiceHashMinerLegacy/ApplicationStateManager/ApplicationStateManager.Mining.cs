@@ -24,7 +24,7 @@ namespace NiceHashMiner
             var (btc, worker, _unused) = ConfigManager.GeneralConfig.GetCredentials();
 
             // TESTNET
-#if (TESTNET || TESTNETDEV)
+#if (TESTNET || TESTNETDEV || PRODUCTION_NEW)
 #if SEND_STRATUM_WORKERNAME
             if (worker.Length > 0 && CredentialValidators.ValidateWorkerName(worker))
             {
@@ -54,7 +54,47 @@ namespace NiceHashMiner
             } else {
                 StopMining(false);
             }
-            
+        }
+
+        private static void RestartMinersIfMining()
+        {
+            // if mining update the mining manager
+            if (MiningState.Instance.IsCurrentlyMining)
+            {
+                MiningManager.RestartMiners(GetUsername());
+            }
+        }
+
+        public static void ResumeMiners()
+        {
+            if (_resumeOldState)
+            {
+                _resumeOldState = false;
+                foreach (var dev in _resumeDevs)
+                {
+                    StartDevice(dev);
+                }
+                _resumeDevs.Clear();
+            }
+            else
+            {
+                RestartMinersIfMining();
+            }
+        }
+
+        private static bool _resumeOldState = false;
+        private static HashSet<ComputeDevice> _resumeDevs = new HashSet<ComputeDevice>();
+        public static void PauseMiners()
+        {
+            _resumeOldState = CurrentForm == CurrentFormState.Main;
+            foreach(var dev in AvailableDevices.Devices)
+            {
+                if (dev.State == DeviceState.Benchmarking || dev.State == DeviceState.Mining)
+                {
+                    _resumeDevs.Add(dev);
+                    StopAllDevice();
+                }
+            }
         }
 
         // TODO add check for any enabled algorithms
@@ -70,10 +110,26 @@ namespace NiceHashMiner
             var failReason = "";
 
             // TODO we have a BUG HERE if device enabled with all disabled algorithms
-            var devicesToBenchmark = devicesToStart.Where(dev => dev.AllEnabledAlgorithmsWithoutBenchmarks());
+            var devicesToBenchmark = devicesToStart.Where(dev => dev.AllEnabledAlgorithmsWithoutBenchmarks() && dev.AnyAlgorithmEnabled());
+            var devicesToReBenchmark = devicesToStart.Where(dev => dev.HasEnabledAlgorithmsWithReBenchmark() && !devicesToBenchmark.Contains(dev));
             foreach (var dev in devicesToBenchmark) {
                 dev.State = DeviceState.Benchmarking;
-                BenchmarkManager.StartBenchmarForDevice(dev, true);
+                BenchmarkManager.StartBenchmarForDevice(dev, new BenchmarkStartSettings
+                {
+                    StartMiningAfterBenchmark = true,
+                    BenchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+                    BenchmarkOption = BenchmarkOption.ZeroOrReBenchOnly
+                });
+            }
+            foreach (var dev in devicesToReBenchmark)
+            {
+                dev.State = DeviceState.Benchmarking;
+                BenchmarkManager.StartBenchmarForDevice(dev, new BenchmarkStartSettings
+                {
+                    StartMiningAfterBenchmark = true,
+                    BenchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+                    BenchmarkOption = BenchmarkOption.ReBecnhOnly
+                });
             }
 
             var devicesInErrorState = devicesToStart.Where(dev => !dev.AnyAlgorithmEnabled() || dev.AllEnabledAlgorithmsZeroPaying()).ToList();
@@ -111,6 +167,7 @@ namespace NiceHashMiner
             var isAllZeroPayingState = device.AllEnabledAlgorithmsZeroPaying();
             // check if device has any benchmakrs
             var needsBenchmark = device.AllEnabledAlgorithmsWithoutBenchmarks();
+            var needsReBenchmark = device.HasEnabledAlgorithmsWithReBenchmark();
             if (isErrorState || isAllZeroPayingState)
             {
                 device.State = DeviceState.Error;
@@ -120,7 +177,21 @@ namespace NiceHashMiner
             else if (needsBenchmark && !skipBenhcmakrk)
             {
                 device.State = DeviceState.Benchmarking;
-                BenchmarkManager.StartBenchmarForDevice(device, true);
+                BenchmarkManager.StartBenchmarForDevice(device, new BenchmarkStartSettings {
+                    StartMiningAfterBenchmark = true,
+                    BenchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+                    BenchmarkOption = BenchmarkOption.ZeroOnly
+                });
+            }
+            else if (needsReBenchmark && !skipBenhcmakrk)
+            {
+                device.State = DeviceState.Benchmarking;
+                BenchmarkManager.StartBenchmarForDevice(device, new BenchmarkStartSettings
+                {
+                    StartMiningAfterBenchmark = true,
+                    BenchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+                    BenchmarkOption = BenchmarkOption.ReBecnhOnly
+                });
             }
             else
             {

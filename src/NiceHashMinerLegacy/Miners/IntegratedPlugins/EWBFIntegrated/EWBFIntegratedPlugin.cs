@@ -2,14 +2,14 @@
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class EWBFIntegratedPlugin : EWBF.EwbfPlugin, IntegratedPlugin, IMinerBinsSource
+    class EWBFIntegratedPlugin : EWBF.EwbfPlugin, IntegratedPlugin
     {
         public EWBFIntegratedPlugin() : base("Ewbf")
         { }
 
         public bool Is3rdParty => true;
 
-        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrls()
+        IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
             return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }

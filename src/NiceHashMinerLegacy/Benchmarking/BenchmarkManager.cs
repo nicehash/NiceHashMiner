@@ -208,11 +208,28 @@ namespace NiceHashMiner.Benchmarking
             InBenchmark = true;
         }
 
+        private static bool ShouldBenchmark(Algorithm algo, BenchmarkOption benchmarkOption)
+        {
+            switch (benchmarkOption)
+            {
+                case BenchmarkOption.ZeroOnly:
+                    return algo.BenchmarkNeeded;
+                case BenchmarkOption.ReBecnhOnly:
+                    return algo.IsReBenchmark;
+                case BenchmarkOption.ZeroOrReBenchOnly:
+                    return algo.BenchmarkNeeded || algo.IsReBenchmark;
+            }
+            return true;
+        }
+
         // network benchmark starts benchmarking on a device
         // assume device is enabled and it exists
-        public static void StartBenchmarForDevice(ComputeDevice device, bool startMiningAfterBenchmark = false, BenchmarkPerformanceType perfType = BenchmarkPerformanceType.Standard)
+        public static void StartBenchmarForDevice(ComputeDevice device, BenchmarkStartSettings benchmarkStartSettings)
         {
-            var unbenchmarkedAlgorithms = device.AlgorithmSettings.Where(algo => algo.Enabled && algo.BenchmarkNeeded).ToQueue();
+            var startMiningAfterBenchmark = benchmarkStartSettings.StartMiningAfterBenchmark;
+            var perfType = benchmarkStartSettings.BenchmarkPerformanceType;
+            var benchmarkOption = benchmarkStartSettings.BenchmarkOption;
+            var unbenchmarkedAlgorithms = device.AlgorithmSettings.Where(algo => algo.Enabled && ShouldBenchmark(algo, benchmarkOption)).ToQueue();
             lock (_runningBenchmarkThreads)
             lock (_statusCheckAlgos)
             {

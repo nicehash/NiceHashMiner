@@ -23,7 +23,7 @@ namespace NiceHashMiner.Miners
     // pretty much just implement what we need and ignore everything else
     public class MinerFromPlugin : Miner
     {
-        private readonly IMinerPlugin _plugin;
+        private readonly PluginContainer _plugin;
         private readonly IMiner _miner;
 
         private readonly SemaphoreSlim _apiSemaphore = new SemaphoreSlim(1, 1);
@@ -108,7 +108,9 @@ namespace NiceHashMiner.Miners
             EthlargementIntegratedPlugin.Instance.Start(MiningPairs);
             _miner.StartMining();
             IsRunning = true;
-            MinerApiWatchdog.AddGroup(GroupKey, GetApiMaxTimeout(), DateTime.UtcNow);
+            // maxTimeout = ConfigManager.GeneralConfig.CoolDownCheckEnabled
+            var maxTimeout = _plugin.GetApiMaxTimeout();
+            MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
         }
 
         public override void Stop()
@@ -126,17 +128,6 @@ namespace NiceHashMiner.Miners
         }
 
         #region MinerApiWatchdog
-        // ConfigManager.GeneralConfig.CoolDownCheckEnabled
-        private TimeSpan GetApiMaxTimeout()
-        {
-            if (_plugin is IGetApiMaxTimeout t)
-            {
-                return t.GetApiMaxTimeout();
-            }
-            // make default 30minutes
-            return new TimeSpan(0, 30, 0);
-        }
-
         private double _lastSpeedsTotalSum = 0d;
         private double _lastPerDevSpeedsTotalSum = 0d;
 

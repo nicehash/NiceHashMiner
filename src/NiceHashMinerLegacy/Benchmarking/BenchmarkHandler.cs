@@ -62,6 +62,7 @@ namespace NiceHashMiner.Benchmarking
                     BenchmarkManager.AddToStatusCheck(Device, currentAlgorithm);
                     await BenchmarkAlgorithm(currentAlgorithm);
                     if (_stopBenchmark.IsCancellationRequested) break;
+                    currentAlgorithm.IsReBenchmark = false;
                     BenchmarkManager.StepUpBenchmarkStepProgress();
                     ConfigManager.CommitBenchmarksForDevice(Device);
                 }

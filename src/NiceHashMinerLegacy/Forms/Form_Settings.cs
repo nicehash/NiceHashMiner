@@ -91,6 +91,12 @@ namespace NiceHashMiner.Forms
             textBox_IFTTTKey.DataBindings.Add("Enabled", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.UseIFTTT), false, DataSourceUpdateMode.OnPropertyChanged);
             textBox_IFTTTKey.DataBindings.Add("Text", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.IFTTTKey), false, DataSourceUpdateMode.OnPropertyChanged);
 
+            checkBox_RunEthlargement.DataBindings.Add("Checked", ThirdPartyMinerSettings.Instance, nameof(ThirdPartyMinerSettings.Instance.UseEthlargement), false, DataSourceUpdateMode.OnPropertyChanged);
+            checkBox_RunEthlargement.DataBindings.Add("Enabled", ThirdPartyMinerSettings.Instance, nameof(ThirdPartyMinerSettings.Instance.CanUseEthlargement), false, DataSourceUpdateMode.OnPropertyChanged);
+
+
+            checkBox_Use3rdPartyMiners.CheckedChanged += CheckBox_Use3rdPartyMiners_CheckedChanged;
+            //checkBox_RunEthlargement.CheckedChanged += CheckBox_RunEthlargement_CheckedChanged;
 
             // At the very end set to true
             _isInitFinished = true;
@@ -221,12 +227,10 @@ namespace NiceHashMiner.Forms
 // TODO THIS IS LOGIC INSIDE CONTENT
         private void InitializeGeneralTabTranslations()
         {
-
-            checkBox_RunEthlargement.Enabled = Helpers.IsElevated && ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             foreach (var type in Enum.GetNames(typeof(IdleCheckType)))
             {
                 // translations will handle enum names
-	                    comboBox_IdleType.Items.Add(Tr(type));
+                comboBox_IdleType.Items.Add(Tr(type));
             }
         }
 
@@ -522,12 +526,12 @@ namespace NiceHashMiner.Forms
             MinerPluginsManager.InitIntegratedPlugins();
         }
 
-        private void checkBox_RunEthlargement_CheckedChanged(object sender, EventArgs e)
-        {
-            ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
-            // update logic
-            var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
-            EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
-        }
+        //private void CheckBox_RunEthlargement_CheckedChanged(object sender, EventArgs e)
+        //{
+        //    ConfigManager.GeneralConfig.UseEthlargement = checkBox_RunEthlargement.Checked;
+        //    // update logic
+        //    var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
+        //    EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
+        //}
     }
 }

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using MinerPlugin;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
 
@@ -14,6 +16,25 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         public CCMinerIntegratedMiner(string uuid, string dirPath) : base(uuid)
         {
             _noTimeLimitOption = "ccminer_klaust" == dirPath;
+        }
+
+        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        {
+            var ret = await base.StartBenchmark(stop, benchmarkType);
+            if (_algorithmType == AlgorithmType.X16R)
+            {
+                try
+                {
+                    foreach (var infoPair in ret.AlgorithmTypeSpeeds)
+                    {
+                        infoPair.Speed = infoPair.Speed * 0.4563831001472754;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return ret;
         }
 
 #pragma warning disable 0618

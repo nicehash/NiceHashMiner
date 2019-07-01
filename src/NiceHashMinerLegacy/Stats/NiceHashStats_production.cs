@@ -1,19 +1,12 @@
 ﻿// PRODUCTION
-#if !(TESTNET || TESTNETDEV)
+#if !(TESTNET || TESTNETDEV || PRODUCTION_NEW)
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
-using NiceHashMiner.Switching;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using NiceHashMinerLegacy.Common.Enums;
 using WebSocketSharp;
 using NiceHashMiner.Stats.Models;
 
@@ -24,9 +17,7 @@ namespace NiceHashMiner.Stats
         private const int DeviceUpdateInterval = 60 * 1000;
 
         // Event handlers for socket
-        public static event EventHandler OnVersionUpdate;
         public static event EventHandler OnConnectionEstablished;
-        public static event EventHandler<SocketEventArgs> OnVersionBurn;
         
         private static System.Threading.Timer _deviceUpdateTimer;
 
@@ -68,6 +59,9 @@ namespace NiceHashMiner.Stats
                                 break;
                             }
 
+                        case "markets":
+                            HandleMarkets(e.Data);
+                            break;
                         case "balance":
                             SetBalance(message.value.Value);
                             break;
@@ -75,7 +69,7 @@ namespace NiceHashMiner.Stats
                             SetVersion(message.legacy.Value);
                             break;
                         case "burn":
-                            OnVersionBurn?.Invoke(null, new SocketEventArgs(message.message.Value));
+                            ApplicationStateManager.Burn(message.message.Value);
                             break;
                         case "exchange_rates":
                             SetExchangeRates(message.data.Value);
@@ -102,7 +96,7 @@ namespace NiceHashMiner.Stats
         private static void SetVersion(string version)
         {
             Version = version;
-            OnVersionUpdate?.Invoke(null, EventArgs.Empty);
+            ApplicationStateManager.OnVersionUpdate(version);
         }
 
         #endregion

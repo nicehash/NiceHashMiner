@@ -19,7 +19,7 @@ namespace NiceHashMiner
     static partial class ApplicationStateManager
     {
         #region BuildTag
-        private const string BetaAlphaPostfixString = " - Alpha";
+        private const string BetaAlphaPostfixString = "";
 #if TESTNET
         private static readonly string BuildTag = " (TESTNET)";
 #elif TESTNETDEV
@@ -39,7 +39,7 @@ namespace NiceHashMiner
         public static void VisitMiningStatsPage()
         {
             //in testnet there is no option to see stats without logging in
-#if TESTNET || TESTNETDEV
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             var urlLink = Links.CheckStats;
 #else
             var btc = ConfigManager.GeneralConfig.BitcoinAddress.Trim();
