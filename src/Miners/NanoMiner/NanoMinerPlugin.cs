@@ -157,6 +157,23 @@ namespace NanoMiner
                     ID = "nanominer_logPath",
                     ShortName = "logPath=",
                     DefaultValue = "logs/"
+                },
+                /// <summary>
+                /// Can be set to modify AMD GPU timings on the fly for Ethash algorithm.
+                /// The following AMD ASICs are currently supported: gfx900, gfx901, gfx906, gfx907, Baffin, Ellesmere, gfx804, Hawaii, Tahiti, Pitcairn, Tonga.
+                /// Default memory tweak value is 1 which means slightly improving memory timings. Zero value means timings are left as is without modifications.
+                /// Parameter values must be separated by a comma or space (first value is for GPU0, second is for GPU1, and so on).
+                /// Supported memory tweak value range is from 0 to 10 (0 means disabling timings modification, 1 is the least intense, 10 is the most intense).
+                /// You can also apply same settings for each GPU by defining only one memory tweak value.
+                /// Miner must be launched using admin/root privileges in order to change timings.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "nanominer_memTweak",
+                    ShortName = "memTweak=",
+                    DefaultValue = "1",
+                    Delimiter = ","
                 }
             },
             TemperatureOptions = new List<MinerOption>
