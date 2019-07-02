@@ -67,10 +67,20 @@ namespace MinerPluginToolkitV1
         /// <summary>
         /// GetDevicesIDsInOrder returns ordered device IDs from <paramref name="mps"/>
         /// </summary>
-        public static IEnumerable<string> GetDevicesIDsInOrder(this IEnumerable<MiningPair> mps)
+        public static Tuple<int, bool> GetOpenCLPlatformID(this IEnumerable<MiningPair> mps)
         {
-            var deviceIds = mps.Select(pair => pair.Device.ID).OrderBy(id => id).Select(id => id.ToString());
-            return deviceIds;
+            if (mps == null || mps.Count() == 0)
+            {
+                return Tuple.Create(-1, false);
+            }
+            var openCLPlatformIDGroups = mps.Select(mp => mp.Device)
+                .Where(dev => dev is AMDDevice)
+                .Cast<AMDDevice>()
+                .GroupBy(amd => amd.OpenCLPlatformID);
+
+            var platformID = openCLPlatformIDGroups.Select(group => group.Key).OrderBy(key => key).FirstOrDefault();
+            var isUnique = !(openCLPlatformIDGroups.Count() > 1);
+            return Tuple.Create(platformID, isUnique);
         }
 
         //shamelessly copied from StringsExt in extensions library/package

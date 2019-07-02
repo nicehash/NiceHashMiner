@@ -15,11 +15,7 @@ namespace NiceHashMinerLegacy.Common.Device
             OpenCLPlatformID = openCLPlatformID;
         }
 
-        // TODO does it make sense to set static OpenCLPlatform ID
-        // we can have multiple OpenCL platorm IDs for same device types AMD
-        [Obsolete("We can have multiple AMD platforms remove this and use OpenCLPlatformID per AMDDevice instance. Re-check all IMinerPlugin.CanGroup implementations.")]
-        public static int GlobalOpenCLPlatformID = -1;
-        // and does it make sense to set static AMD driver version
+        // TODO does it make sense to set static AMD driver version
 
         public int OpenCLPlatformID { get; }
 

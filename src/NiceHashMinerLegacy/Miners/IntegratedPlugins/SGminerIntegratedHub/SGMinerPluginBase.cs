@@ -29,7 +29,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public IMiner CreateMiner()
         {
-            return new SGminerIntegratedMiner(PluginUUID, AMDDevice.GlobalOpenCLPlatformID)
+            return new SGminerIntegratedMiner(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -39,6 +39,11 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public bool CanGroup(MiningPair a, MiningPair b)
         {
+            if (a.Device is AMDDevice aDev && b.Device is AMDDevice bDev && aDev.OpenCLPlatformID != bDev.OpenCLPlatformID)
+            {
+                // OpenCLPlatorm IDs must match
+                return false;
+            }
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
         }
 

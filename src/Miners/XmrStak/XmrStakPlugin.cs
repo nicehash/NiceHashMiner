@@ -89,7 +89,7 @@ namespace XmrStak
 
         public IMiner CreateMiner()
         {
-            return new XmrStak(PluginUUID, AMDDevice.GlobalOpenCLPlatformID, this)
+            return new XmrStak(PluginUUID, this)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -99,6 +99,11 @@ namespace XmrStak
 
         public bool CanGroup(MiningPair a, MiningPair b)
         {
+            if (a.Device is AMDDevice aDev && b.Device is AMDDevice bDev && aDev.OpenCLPlatformID != bDev.OpenCLPlatformID)
+            {
+                // OpenCLPlatorm IDs must match
+                return false;
+            }
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
         }
 

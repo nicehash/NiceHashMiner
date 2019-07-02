@@ -9,7 +9,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 {
     class SGminerIntegratedMiner : SGMinerBase
     {
-        public SGminerIntegratedMiner(string uuid, int openClAmdPlatformNum) : base(uuid, openClAmdPlatformNum)
+        public SGminerIntegratedMiner(string uuid) : base(uuid)
         {
         }
 
