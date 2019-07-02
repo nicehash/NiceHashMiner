@@ -27,6 +27,10 @@ namespace WildRig
             }
 
             var afterString = s.GetStringAfter(after).ToLower();
+            var na = afterString.Substring(0, 4);
+
+            if (na.Contains("n/a")) return Tuple.Create(0d, false);
+
             var numString = new string(afterString
                 .ToCharArray()
                 .SkipWhile(c => !char.IsDigit(c))
@@ -44,9 +48,9 @@ namespace WildRig
 
             for (var i = 0; i < postfixString.Length - 1; ++i)
             {
-                var c = afterNumString[i];
+                var c = postfixString[i];
                 if (!Char.IsLetter(c)) continue;
-                var c2 = afterNumString[i + 1];
+                var c2 = postfixString[i + 1];
 
                 foreach (var kvp in _postfixes)
                 {

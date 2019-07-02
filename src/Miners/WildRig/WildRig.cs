@@ -124,11 +124,15 @@ namespace WildRig
 
             bp.CheckData = (string data) =>
             {
-
+                if (!data.Contains("hashrate:"))
+                {
+                    return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, 0d) }, Success = false };
+                }
                 var hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "60s:");
                 var hashrate = hashrateFoundPair.Item1;
+
                 // TODO temporary fix for N/A speeds at 60s mark... will be fixed when developer fixes benchmarking
-                if (hashrate == 15) hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "10s:");
+                if (hashrate == 0) hashrateFoundPair = BenchmarkHelpers.TryGetHashrateAfter(data, "10s:");
                 hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
