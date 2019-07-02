@@ -64,19 +64,38 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
         }
 
-        // TODO make sure avemore has the same settings
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
+        protected abstract MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables { get; set; }
+
+        protected static MinerSystemEnvironmentVariables GetMinerSystemEnvironmentVariables(bool isAvemore)
         {
-            // we have same env vars for all miners now, check avemore env vars if they differ and use custom env vars instead of defaults
-            DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
+            if (isAvemore)
             {
-                {"GPU_MAX_ALLOC_PERCENT", "100"},
-                {"GPU_USE_SYNC_OBJECTS", "1"},
-                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
-                {"GPU_MAX_HEAP_SIZE", "100"},
-                {"GPU_FORCE_64BIT_PTR", "1"}
-            },
-        };
+                return new MinerSystemEnvironmentVariables
+                {
+                    DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
+                    {
+                        {"GPU_MAX_ALLOC_PERCENT", "100"},
+                        {"GPU_USE_SYNC_OBJECTS", "1"},
+                        {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+                        {"GPU_MAX_HEAP_SIZE", "100"},
+                        {"GPU_FORCE_64BIT_PTR", "0"}
+                    },
+                };
+            }
+            return new MinerSystemEnvironmentVariables
+            {
+                DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
+                {
+                    {"GPU_MAX_ALLOC_PERCENT", "100"},
+                    {"GPU_USE_SYNC_OBJECTS", "1"},
+                    {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+                    {"GPU_MAX_HEAP_SIZE", "100"},
+                    {"GPU_FORCE_64BIT_PTR", "1"}
+                },
+            };
+        }
+
+
 
         protected static MinerOptionsPackage _minerOptionsPackage = SGMinerBase.DefaultMinerOptionsPackage;
 
