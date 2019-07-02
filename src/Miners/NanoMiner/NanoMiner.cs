@@ -63,7 +63,7 @@ namespace NanoMiner
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "nanominer-windows-1.3.4");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "nanominer-windows-1.4.0");
             var binPath = Path.Combine(pluginRootBins, "nanominer.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
@@ -143,13 +143,13 @@ namespace NanoMiner
             switch (benchmarkType)
             {
                 case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 20;
+                    benchmarkTime = 60;
                     break;
                 case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
+                    benchmarkTime = 180;
                     break;
                 default:
-                    benchmarkTime = 60;
+                    benchmarkTime = 120;
                     break;
             }
 
@@ -162,7 +162,7 @@ namespace NanoMiner
 
             var benchHashes = 0d;
             var benchIters = 0;
-            var benchHashResult = 0d;  // Not too sure what this is..
+            var benchHashResult = 0d;
             var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
 
             bp.CheckData = (string data) =>
