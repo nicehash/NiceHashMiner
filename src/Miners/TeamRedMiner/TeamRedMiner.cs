@@ -1,8 +1,6 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
-using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Linq;
@@ -12,8 +10,6 @@ using System.Threading.Tasks;
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
 using System.IO;
 using NiceHashMinerLegacy.Common;
-using System.Net.Sockets;
-using System.Text;
 using MinerPluginToolkitV1.SgminerCommon;
 
 namespace TeamRedMiner
@@ -22,7 +18,6 @@ namespace TeamRedMiner
     {
         private int _apiPort;
         private string _extraLaunchParameters = "";
-        private readonly int _openClAmdPlatformNum;
 
         // can mine only one algorithm at a given time
         private AlgorithmType _algorithmType;
@@ -33,9 +28,12 @@ namespace TeamRedMiner
         // command line parts
         private string _devices;
 
-        public TeamRedMiner(string uuid, int openClAmdPlatformNum) : base(uuid)
+        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
+
+
+        public TeamRedMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
         {
-            _openClAmdPlatformNum = openClAmdPlatformNum;
+            _mappedIDs = mappedIDs;
         }
 
         private string AlgoName
@@ -79,7 +77,7 @@ namespace TeamRedMiner
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var cmd = $"-a {AlgoName} -o {url} -u {username} --platform={_openClAmdPlatformNum} -d {_devices} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
+            var cmd = $"-a {AlgoName} -o {url} -u {username} --bus_reorder -d {_devices} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
 
@@ -212,7 +210,7 @@ namespace TeamRedMiner
             // Order pairs and parse ELP
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
+            _devices = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
             
             for(int i = 0; i < orderedMiningPairs.Count; i++)
             {
