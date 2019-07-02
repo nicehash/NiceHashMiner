@@ -50,8 +50,6 @@ namespace MinerPluginToolkitV1.SgminerCommon
             }
         }
 
-        
-
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var apiDevsResult = await SgminerAPIHelpers.GetApiDevsRootAsync(_apiPort, _logGroup);
@@ -169,7 +167,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
             return Tuple.Create(binPath, binCwd);
         }
 
-        private string CreateCommandLine(string username)
+        protected string CreateCommandLine(string username)
         {
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var cmd = $"-k {AlgoName} -o {url} -u {username} -p x {_extraLaunchParameters} {_devicesOnPlatform}";
