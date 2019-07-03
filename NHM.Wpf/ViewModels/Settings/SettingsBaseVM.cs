@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
@@ -7,16 +6,15 @@ namespace NHM.Wpf.ViewModels.Settings
     {
         public string Name { get; }
 
-        protected readonly ObservableCollection<SettingsBaseVM> _children;
-        public IReadOnlyList<SettingsBaseVM> Children => _children;
+        public IReadOnlyList<SettingsBaseVM> Children { get; }
 
         protected dynamic SettingsInstance;
 
-        protected SettingsBaseVM(object settingsObj, string name)
+        protected SettingsBaseVM(object settingsObj, string name, params SettingsBaseVM[] children)
         {
             Name = name;
             SettingsInstance = settingsObj;
-            _children = new ObservableCollection<SettingsBaseVM>();
+            Children = new List<SettingsBaseVM>(children);
         }
     }
 }

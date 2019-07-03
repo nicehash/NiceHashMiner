@@ -1,4 +1,5 @@
-﻿using NHM.Wpf.ViewModels.Settings;
+﻿using System.Linq;
+using NHM.Wpf.ViewModels.Settings;
 using System.Windows;
 
 namespace NHM.Wpf.Windows
@@ -25,7 +26,9 @@ namespace NHM.Wpf.Windows
 
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            if (e.NewValue is SettingsBaseVM svm)
+            if (e.NewValue is SettingsContainerVM cvm)
+                _vm.SelectedPageVM = cvm.Children.FirstOrDefault();
+            else if (e.NewValue is SettingsBaseVM svm)
                 _vm.SelectedPageVM = svm;
         }
     }

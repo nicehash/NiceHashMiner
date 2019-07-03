@@ -23,32 +23,21 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
-        <TreeView Margin="10,10,10,10.5" ItemsSource="{Binding PageVMs}" SelectedItemChanged="TreeView_OnSelectedItemChanged">
-            <!--<TreeViewItem Header="General" />
-            <TreeViewItem Header="Profitability" />
-            <TreeViewItem Header="Mining" IsExpanded="True" >
-                <TreeViewItem Header="General" />
-                <TreeViewItem Header="Switching" />
-                <TreeViewItem Header="Advanced" />
-            </TreeViewItem>
-            <TreeViewItem Header="Advanced" IsExpanded="True">
-                <TreeViewItem Header="General" />
-                <TreeViewItem Header="Detection" />
-                <TreeViewItem Header="Benchmarking" />
-            </TreeViewItem>-->
-        </TreeView>
+
+        <TreeView Margin="10,10,10,10.5" ItemsSource="{Binding PageVMs}" SelectedItemChanged="TreeView_OnSelectedItemChanged" />
+
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
         <ScrollViewer Grid.Column="2" Margin="10,10,10,10.5">
             <ScrollViewer.Resources>
                 <DataTemplate DataType="{x:Type vm:GeneralSettingsVM}">
                     <local:GeneralPage />
                 </DataTemplate>
-                <DataTemplate DataType="{x:Type vm:MiningSettingsVM}">
+                <DataTemplate DataType="{x:Type vm:MiningGeneralVM}">
                     <local:MiningPage />
                 </DataTemplate>
             </ScrollViewer.Resources>
             <ContentControl Content="{Binding SelectedPageVM}"/>
-
         </ScrollViewer>
     </Grid>
 </Window>
