@@ -1,0 +1,82 @@
+﻿<Window x:Class="NHM.Wpf.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Label Content="Service Location:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" Width="107"/>
+        <ComboBox HorizontalAlignment="Left" Margin="122,13,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0">
+            <ComboBoxItem Content="USA - San Jose"/>
+        </ComboBox>
+        <Label Content="Bitcoin Address:" HorizontalAlignment="Left" Margin="10,40,0,0" VerticalAlignment="Top" Width="107"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="122,43,0,0" TextWrapping="Wrap" Text="3KpWmp49Cdbswr23KhjagNbwqiwcFh8Br2" VerticalAlignment="Top" Width="256" />
+        <Label Content="Worker Name:" HorizontalAlignment="Left" Margin="10,71,0,0" VerticalAlignment="Top" Width="107"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="122,75,0,0" TextWrapping="Wrap" Text="worker1" VerticalAlignment="Top" Width="120"/>
+        <Button Content="Check my stats online!" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top" Width="107" FontSize="10"/>
+        <DataGrid x:Name="DevGrid" Margin="10,124,97.333,25.667" AutoGenerateColumns="False" CanUserResizeRows="False" SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Binding="{Binding Enabled}" ClipboardContentBinding="{x:Null}" Header="Enabled"/>
+                <DataGridTextColumn Binding="{Binding Device}" ClipboardContentBinding="{x:Null}" Header="Device"/>
+                <DataGridTextColumn Binding="{Binding Status}" ClipboardContentBinding="{x:Null}" Header="Status"/>
+                <DataGridTextColumn Binding="{Binding Temp}" ClipboardContentBinding="{x:Null}" Header="Temp (C)"/>
+                <DataGridTextColumn Binding="{Binding Load}" ClipboardContentBinding="{x:Null}" Header="Load (%)"/>
+                <DataGridTextColumn Binding="{Binding RPM}" ClipboardContentBinding="{x:Null}" Header="RPM"/>
+                <DataGridTemplateColumn ClipboardContentBinding="{x:Null}" Header="Start/Stop">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding ButtonText}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Binding="{Binding AlgoDetail}" ClipboardContentBinding="{x:Null}" Header="Algorithms/Enabled/Benchmarked"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Content="Benchmark" Margin="0,124,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_Click"/>
+        <Button Content="Settings" Margin="0,149,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_Click_1"/>
+        <Button Content="Start All" Margin="0,175,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
+        <Button Content="Stop All" Margin="0,199,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
+        <Button Content="Plugins" Margin="0,223,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
+        <Button Content="Help" Margin="0,247,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
+        <StatusBar Height="21" VerticalAlignment="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="Global rate:" FontSize="10" Width="64" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="0.00000000" FontSize="10" FontWeight="Bold"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="BTC/Day" FontSize="10" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="0.00" FontSize="10" FontWeight="Bold"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="$/Day" FontSize="10" />
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <TextBlock Text="Balance:" FontSize="10" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="0.00000000" FontSize="10" FontWeight="Bold"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="BTC" FontSize="10" />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="0.00" FontSize="10" FontWeight="Bold"/>
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="$" FontSize="10"/>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <Image Source="Resources/NHM_Cash_Register_Bitcoin_transparent.png" Width="34"></Image>
+            </StatusBarItem>
+        </StatusBar>
+        <Image Height="63" Margin="0,10,10,0" VerticalAlignment="Top" Source="Resources/NHM_logo_big_light.png" HorizontalAlignment="Right" Width="239"/>
+
+    </Grid>
+</Window>
