@@ -71,6 +71,9 @@
     <Compile Include="Windows\Settings\Pages\GeneralPage.xaml.cs">
       <DependentUpon>GeneralPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Settings\Pages\MiningPage.xaml.cs">
+      <DependentUpon>MiningPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Settings\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -87,6 +90,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Settings\Pages\GeneralPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Settings\Pages\MiningPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
