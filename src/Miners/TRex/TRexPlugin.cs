@@ -82,6 +82,9 @@ namespace TRex
 
             var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
             if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
+
+            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
+            if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
         }
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage{
@@ -148,7 +151,7 @@ namespace TRex
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
         protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
         {
-            GeneralTimeout = new TimeSpan(0, 1, 0)
+            GeneralTimeout =  _defaultTimeout,
         };
         #endregion Internal Settings
 
@@ -169,10 +172,10 @@ namespace TRex
         #region IGetApiMaxTimeoutV2
         public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
 
-        protected static TimeSpan defaultTimeout = new TimeSpan(0, 1, 0);
+        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 1, 0);
         public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
         {
-            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
+            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
         }
         #endregion IGetApiMaxTimeoutV2
     }

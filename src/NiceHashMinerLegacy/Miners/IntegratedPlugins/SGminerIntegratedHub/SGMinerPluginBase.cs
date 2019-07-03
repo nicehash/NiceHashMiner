@@ -104,7 +104,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
         {
-            GeneralTimeout = new TimeSpan(0, 5, 0)
+            GeneralTimeout =  _defaultTimeout,
         };
 
         public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
@@ -124,10 +124,10 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         }
 
 
-        protected static TimeSpan defaultTimeout = new TimeSpan(0, 5, 0);
+        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 5, 0);
         public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
         {
-            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
+            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
         }
         #endregion IGetApiMaxTimeoutV2
 

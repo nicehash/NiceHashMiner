@@ -18,7 +18,7 @@ namespace MinerPluginToolkitV1.Configs
         public bool Enabled { get; set; } = true;
 
         [JsonProperty("general_timeout")]
-        public TimeSpan GeneralTimeout { get; set; } = new TimeSpan();
+        public TimeSpan GeneralTimeout { get; set; } = new TimeSpan(0, 5, 0); // 5 minutes is the default
 
         [JsonProperty("timeout_per_algorithm")]
         public Dictionary<string, TimeSpan> TimeoutPerAlgorithm { get; set; } = new Dictionary<string, TimeSpan>();

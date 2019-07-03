@@ -144,7 +144,7 @@ namespace MinerPluginToolkitV1.Configs
         }
 
         // TODO document
-        public static MinerApiMaxTimeoutSetting InitMinerReservedPorts(string pluginRoot, MinerApiMaxTimeoutSetting minerApiMaxTimeoutSetting)
+        public static MinerApiMaxTimeoutSetting InitMinerApiMaxTimeoutSetting(string pluginRoot, MinerApiMaxTimeoutSetting minerApiMaxTimeoutSetting)
         {
             return InitInternalSetting(pluginRoot, minerApiMaxTimeoutSetting, "MinerApiMaxTimeoutSetting.json");
         }
