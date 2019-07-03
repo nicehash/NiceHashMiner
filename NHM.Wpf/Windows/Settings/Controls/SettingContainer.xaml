@@ -17,9 +17,20 @@
                       IsChecked="{Binding Enabled}" 
                       Visibility="{Binding Enabled, Converter={StaticResource Converter}}"
                       IsEnabled="True" />
-            <TextBlock Text="{Binding Title}" />
+            <TextBlock Text="{Binding Title}" >
+                <TextBlock.Style>
+                    <!-- This extra boilerplate is needed for TextBlock to look disabled -->
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Style.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
         </StackPanel>
-        <Label Content="Subtitle" />
+        <Label Content="{Binding Subtitle}" FontWeight="Light" FontSize="10" />
         <StackPanel Name="ChildrenStackPanel" IsEnabled="{Binding DisplayEnabled}" />
     </StackPanel>
 </UserControl>

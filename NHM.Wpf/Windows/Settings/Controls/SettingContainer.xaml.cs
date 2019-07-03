@@ -63,6 +63,8 @@ namespace NHM.Wpf.Windows.Settings.Controls
         //    set => SetValue(TitleProperty, value);
         //}
 
+        public string Subtitle { get; set; } = "Subtitle";
+
         public SettingsContainer()
         {
             InitializeComponent();

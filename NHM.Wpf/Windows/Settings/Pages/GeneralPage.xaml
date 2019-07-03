@@ -8,14 +8,25 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
-        <controls:SettingsContainer Title="Language:">
+        <controls:SettingsContainer 
+            Title="Language:"
+            Subtitle="Changes the default display language for NiceHash Miner.">
             <ComboBox />
         </controls:SettingsContainer>
-        <controls:SettingsContainer Title="Display Currency:" Enabled="False">
+        <controls:SettingsContainer 
+            Title="Display Currency:" 
+            Enabled="False"
+            Subtitle="Choose what Currency to Display mining profit.">
             <ComboBox />
         </controls:SettingsContainer>
-        <controls:SettingsContainer Title="Log to File" Enabled="True">
-            <controls:SettingsContainer Title="Log Max File Size [bytes]" Margin="10,0,0,0">
+        <controls:SettingsContainer 
+            Title="Log to File" 
+            Enabled="True"
+            Subtitle="Check it, to log console output to file.">
+            <controls:SettingsContainer 
+                Title="Log Max File Size [bytes]" 
+                Margin="10,0,0,0"
+                Subtitle="Sets the maximum size for the log file.">
                 <TextBox />
             </controls:SettingsContainer>
         </controls:SettingsContainer>
