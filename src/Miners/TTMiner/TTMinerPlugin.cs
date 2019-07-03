@@ -159,7 +159,7 @@ namespace TTMiner
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
-        protected static GetApiMaxTimeoutConfig _getApiMaxTimeoutConfig = new GetApiMaxTimeoutConfig
+        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
         {
             GeneralTimeout = new TimeSpan(0, 3, 0)
         };
@@ -184,19 +184,12 @@ namespace TTMiner
         }
 
         #region IGetApiMaxTimeoutV2
-        public bool IsGetApiMaxTimeoutEnabled
-        {
-            get
-            {
-                if (_getApiMaxTimeoutConfig?.UseUserSettings ?? false) return _getApiMaxTimeoutConfig.Enabled;
-                return true;
-            }
-        }
+        public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
 
         protected static TimeSpan defaultTimeout = new TimeSpan(0, 3, 0);
         public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
         {
-            return MinerToolkit.ParseApiMaxTimeoutConfig(defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
+            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
         }
         #endregion IGetApiMaxTimeoutV2
     }

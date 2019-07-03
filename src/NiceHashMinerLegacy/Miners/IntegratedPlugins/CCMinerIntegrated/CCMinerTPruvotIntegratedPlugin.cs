@@ -19,8 +19,6 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public override string Name => "CCMinerTpruvot";
 
-        public override bool IsGetApiMaxTimeoutEnabled => false;
-
         protected override string DirPath => "ccminer_tpruvot";
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
