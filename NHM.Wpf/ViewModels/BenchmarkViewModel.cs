@@ -121,6 +121,7 @@ namespace NHM.Wpf.ViewModels
         {
             Devices = new ObservableCollection<FakeDevice>();
             SelectedAlgos = new ObservableCollection<FakeAlgo>();
+            RefreshData();
         }
 
         public void RefreshData()
