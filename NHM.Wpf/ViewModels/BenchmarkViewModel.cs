@@ -56,22 +56,22 @@ namespace NHM.Wpf.ViewModels
         public ObservableCollection<FakeDevice> Devices { get; }
         public ObservableCollection<FakeAlgo> SelectedAlgos { get; }
 
-        private int? _selectedIndex;
-        public int? SelectedIndex
+        private int _selectedIndex = -1;
+        public int SelectedIndex
         {
             get => _selectedIndex;
             set
             {
                 _selectedIndex = value;
 
-                SelectedDev = value == null ? null : Devices[value.Value];
+                SelectedDev = value >= 0 ? Devices[value] : null;
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HasSelection));
             }
         }
 
-        public bool HasSelection => SelectedIndex.HasValue;
+        public bool HasSelection => SelectedIndex >= 0;
 
         private FakeDevice _selectedDev;
         public FakeDevice SelectedDev
