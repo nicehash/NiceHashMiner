@@ -7,6 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <StackPanel Margin="10" FlowDirection="RightToLeft">
+            <Label Content="Label"/>
+        </StackPanel>
+
     </Grid>
 </UserControl>

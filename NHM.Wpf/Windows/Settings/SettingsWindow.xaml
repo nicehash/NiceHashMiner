@@ -3,12 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NHM.Wpf.Windows"
+        xmlns:local="clr-namespace:NHM.Wpf.Windows.Settings.Pages"
+        xmlns:vm="clr-namespace:NHM.Wpf.ViewModels.Settings"
         mc:Ignorable="d"
         Title="SettingsWindow" Height="450" Width="800">
+    <Window.DataContext>
+        <vm:SettingsVM />
+    </Window.DataContext>
+
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type vm:GeneralSettingsVM}">
+            <local:GeneralPage />
+        </DataTemplate>
+    </Window.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="5" />
             <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
         <TreeView Margin="10,10,10,10.5">
@@ -25,6 +37,10 @@
                 <TreeViewItem Header="Benchmarking" />
             </TreeViewItem>
         </TreeView>
-        <ContentControl Content="ContentControl" Grid.Column="1" Margin="10,10,10,10.5"/>
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+        <ScrollViewer  Grid.Column="2" Margin="10,10,10,10.5">
+            <ContentControl Content="{Binding SelectedPageVM}"/>
+
+        </ScrollViewer>
     </Grid>
 </Window>
