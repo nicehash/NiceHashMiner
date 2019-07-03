@@ -2,17 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using NHM.Wpf.Annotations;
 
 namespace NHM.Wpf.ViewModels
 {
-    public class BenchmarkViewModel : INotifyPropertyChanged
+    public class BenchmarkViewModel : BaseVM
     {
-        public class FakeDevice
+        public class FakeDevice : INotifyPropertyChanged
         {
             private bool _enabled;
             public bool Enabled
@@ -21,7 +18,7 @@ namespace NHM.Wpf.ViewModels
                 set
                 {
                     _enabled = value;
-
+                    OnPropertyChanged();
                 }
             }
 
@@ -33,6 +30,14 @@ namespace NHM.Wpf.ViewModels
             {
                 Name = name;
                 Algos = algos;
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            [NotifyPropertyChangedInvocator]
+            protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
@@ -67,11 +72,13 @@ namespace NHM.Wpf.ViewModels
                 SelectedDev = value >= 0 ? Devices[value] : null;
 
                 OnPropertyChanged();
-                OnPropertyChanged(nameof(HasSelection));
             }
         }
 
-        public bool HasSelection => SelectedIndex >= 0;
+        /// <summary>
+        /// True iff a device is selected and enabled
+        /// </summary>
+        public bool AlgosEnabled => SelectedDev?.Enabled ?? false;
 
         private FakeDevice _selectedDev;
         public FakeDevice SelectedDev
@@ -81,10 +88,17 @@ namespace NHM.Wpf.ViewModels
             {
                 if (value == _selectedDev) return;
 
+                // Remove old handler
+                if (_selectedDev != null)
+                    _selectedDev.PropertyChanged -= SelectedDevOnPropertyChanged;
+
                 _selectedDev = value;
                 SelectedAlgos.Clear();
 
                 if (_selectedDev == null) return;
+
+                // Add new handler
+                _selectedDev.PropertyChanged += SelectedDevOnPropertyChanged;
 
                 foreach (var algo in _selectedDev.Algos)
                 {
@@ -92,7 +106,15 @@ namespace NHM.Wpf.ViewModels
                 }
 
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(AlgosEnabled));
             }
+        }
+
+        private void SelectedDevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // Forward device enabled change notification to AlgosEnabled
+            if (e.PropertyName == nameof(_selectedDev.Enabled))
+                OnPropertyChanged(nameof(AlgosEnabled));
         }
 
         public BenchmarkViewModel()
@@ -114,14 +136,6 @@ namespace NHM.Wpf.ViewModels
                 new FakeAlgo("GPu algo 2"),
                 new FakeAlgo("gpu algo 3")
             }));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
