@@ -15,7 +15,9 @@
             <ComboBox />
         </controls:SettingsContainer>
         <controls:SettingsContainer Title="Log to File" Enabled="True">
-            <TextBox />
+            <controls:SettingsContainer Title="Log Max File Size [bytes]" Margin="10,0,0,0">
+                <TextBox />
+            </controls:SettingsContainer>
         </controls:SettingsContainer>
     </StackPanel>
 </UserControl>
