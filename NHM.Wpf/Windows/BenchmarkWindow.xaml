@@ -29,7 +29,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView Margin="10,10,10,10.5" Grid.Row="1" ItemsSource="{Binding SelectedAlgos}" IsEnabled="{Binding SelectedIndex.HasValue, Mode=OneWay}">
+        <ListView Margin="10,10,10,10.5" Grid.Row="1" ItemsSource="{Binding SelectedAlgos}" IsEnabled="{Binding HasSelection, Mode=OneWay}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Enabled">

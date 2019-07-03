@@ -33,8 +33,8 @@
                 <DataGridTextColumn Binding="{Binding AlgoDetail}" ClipboardContentBinding="{x:Null}" Header="Algorithms/Enabled/Benchmarked"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Content="Benchmark" Margin="0,124,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_Click"/>
-        <Button Content="Settings" Margin="0,149,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="Button_Click_1"/>
+        <Button Content="Benchmark" Margin="0,124,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="BenchButton_Click"/>
+        <Button Content="Settings" Margin="0,149,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="SettingsButton_Click"/>
         <Button Content="Start All" Margin="0,175,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
         <Button Content="Stop All" Margin="0,199,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
         <Button Content="Plugins" Margin="0,223,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>

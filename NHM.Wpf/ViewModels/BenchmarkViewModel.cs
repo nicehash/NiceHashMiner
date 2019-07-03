@@ -10,9 +10,9 @@ using NHM.Wpf.Annotations;
 
 namespace NHM.Wpf.ViewModels
 {
-    internal class BenchmarkViewModel : INotifyPropertyChanged
+    public class BenchmarkViewModel : INotifyPropertyChanged
     {
-        internal class FakeDevice
+        public class FakeDevice
         {
             private bool _enabled;
             public bool Enabled
@@ -36,7 +36,7 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        internal class FakeAlgo
+        public class FakeAlgo
         {
             private static readonly Random R = new Random();
 
@@ -67,8 +67,11 @@ namespace NHM.Wpf.ViewModels
                 SelectedDev = value == null ? null : Devices[value.Value];
 
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(HasSelection));
             }
         }
+
+        public bool HasSelection => SelectedIndex.HasValue;
 
         private FakeDevice _selectedDev;
         public FakeDevice SelectedDev

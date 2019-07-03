@@ -28,14 +28,16 @@ namespace NHM.Wpf.Windows
             DevGrid.ItemsSource = _devs;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void BenchButton_Click(object sender, RoutedEventArgs e)
         {
-            _devs[1].Temp++;
+            var bench = new BenchmarkWindow();
+            bench.ShowDialog();
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            _devs.Add(_devs[1]);
+            var settings = new SettingsWindow();
+            settings.ShowDialog();
         }
     }
 
