@@ -688,7 +688,9 @@ namespace NiceHashMiner
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (ConfigManager.GeneralConfig.MinimizeToTray && !_exitCalled)
+            if (e.CloseReason == CloseReason.UserClosing && 
+                ConfigManager.GeneralConfig.MinimizeToTray && 
+                !_exitCalled)
             {
                 notifyIcon1.Visible = true;
                 Hide();
