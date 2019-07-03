@@ -73,10 +73,10 @@
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
-                <Image Source="Resources/NHM_Cash_Register_Bitcoin_transparent.png" Width="34"></Image>
+                <Image Source="../Resources/NHM_Cash_Register_Bitcoin_transparent.png" Width="34"></Image>
             </StatusBarItem>
         </StatusBar>
-        <Image Height="63" Margin="0,10,10,0" VerticalAlignment="Top" Source="Resources/NHM_logo_big_light.png" HorizontalAlignment="Right" Width="239"/>
+        <Image Height="63" Margin="0,10,10,0" VerticalAlignment="Top" Source="../Resources/NHM_logo_big_light.png" HorizontalAlignment="Right" Width="239"/>
 
     </Grid>
 </Window>
