@@ -12,9 +12,9 @@
     </Window.DataContext>
 
     <Window.Resources>
-        <DataTemplate DataType="{x:Type vm:GeneralSettingsVM}">
-            <local:GeneralPage />
-        </DataTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type vm:SettingsBaseVM}" ItemsSource="{Binding Children}">
+            <TextBlock Text="{Binding Name}" />
+        </HierarchicalDataTemplate>
     </Window.Resources>
 
     <Grid>
@@ -23,8 +23,8 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
-        <TreeView Margin="10,10,10,10.5">
-            <TreeViewItem Header="General" />
+        <TreeView Margin="10,10,10,10.5" ItemsSource="{Binding PageVMs}" SelectedItemChanged="TreeView_OnSelectedItemChanged">
+            <!--<TreeViewItem Header="General" />
             <TreeViewItem Header="Profitability" />
             <TreeViewItem Header="Mining" IsExpanded="True" >
                 <TreeViewItem Header="General" />
@@ -35,10 +35,15 @@
                 <TreeViewItem Header="General" />
                 <TreeViewItem Header="Detection" />
                 <TreeViewItem Header="Benchmarking" />
-            </TreeViewItem>
+            </TreeViewItem>-->
         </TreeView>
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
-        <ScrollViewer  Grid.Column="2" Margin="10,10,10,10.5">
+        <ScrollViewer Grid.Column="2" Margin="10,10,10,10.5">
+            <ScrollViewer.Resources>
+                <DataTemplate DataType="{x:Type vm:GeneralSettingsVM}">
+                    <local:GeneralPage />
+                </DataTemplate>
+            </ScrollViewer.Resources>
             <ContentControl Content="{Binding SelectedPageVM}"/>
 
         </ScrollViewer>

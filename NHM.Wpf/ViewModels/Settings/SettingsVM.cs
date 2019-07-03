@@ -19,9 +19,13 @@ namespace NHM.Wpf.ViewModels.Settings
 
         public SettingsVM()
         {
+            // placeholder
+            object settingsObj = null;
+
             PageVMs = new List<SettingsBaseVM>
             {
-                new GeneralSettingsVM(null)
+                new GeneralSettingsVM(settingsObj),
+                new MiningSettingsVM(settingsObj)
             };
 
             SelectedPageVM = PageVMs[0];

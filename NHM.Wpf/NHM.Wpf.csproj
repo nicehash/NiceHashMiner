@@ -58,6 +58,8 @@
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
     <Compile Include="ViewModels\Settings\GeneralSettingsVM.cs" />
+    <Compile Include="ViewModels\Settings\MiningGeneralVM.cs" />
+    <Compile Include="ViewModels\Settings\MiningSettingsVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsBaseVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsVM.cs" />
     <Compile Include="Windows\BenchmarkWindow.xaml.cs">

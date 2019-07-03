@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NHM.Wpf.ViewModels.Settings;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace NHM.Wpf.Windows
 {
@@ -19,9 +8,25 @@ namespace NHM.Wpf.Windows
     /// </summary>
     public partial class SettingsWindow : Window
     {
+        private readonly SettingsVM _vm;
+
         public SettingsWindow()
         {
             InitializeComponent();
+
+            if (DataContext is SettingsVM vm)
+                _vm = vm;
+            else
+            {
+                _vm = new SettingsVM();
+                DataContext = _vm;
+            }
+        }
+
+        private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            if (e.NewValue is SettingsBaseVM svm)
+                _vm.SelectedPageVM = svm;
         }
     }
 }
