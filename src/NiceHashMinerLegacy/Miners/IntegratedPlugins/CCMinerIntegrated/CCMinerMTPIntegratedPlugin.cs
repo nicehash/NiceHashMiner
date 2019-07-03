@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
 using NiceHashMinerLegacy.Common.Algorithm;
@@ -11,7 +12,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    class CCMinerMTPIntegratedPlugin : CCMinersPluginBase, IGetApiMaxTimeout
+    class CCMinerMTPIntegratedPlugin : CCMinersPluginBase, IGetApiMaxTimeoutV2
     {
         public override string PluginUUID => "CCMinerMTP";
 
@@ -43,9 +44,19 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             return supported;
         }
 
-        public new TimeSpan GetApiMaxTimeout()
+        #region IGetApiMaxTimeoutV2
+        public override bool IsGetApiMaxTimeoutEnabled
         {
-            return new TimeSpan(0, 2, 0);
+            get
+            {
+                if (_getApiMaxTimeoutConfig?.UseUserSettings ?? false) return _getApiMaxTimeoutConfig.Enabled;
+                return true;
+            }
         }
+        public new TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
+        {
+            return MinerToolkit.ParseApiMaxTimeoutConfig(new TimeSpan(0,2,0), _getApiMaxTimeoutConfig, miningPairs);
+        }
+        #endregion IGetApiMaxTimeoutV2
     }
 }

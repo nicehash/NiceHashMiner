@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace TeamRedMiner
 {
-    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
         public TeamRedMinerPlugin()
         {
@@ -151,6 +151,11 @@ namespace TeamRedMiner
                 }
             }
         };
+
+        protected static GetApiMaxTimeoutConfig _getApiMaxTimeoutConfig = new GetApiMaxTimeoutConfig
+        {
+            GeneralTimeout = new TimeSpan(0, 5, 0)
+        };
         #endregion Internal Settings
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
@@ -165,11 +170,6 @@ namespace TeamRedMiner
         {
             //no improvements for algorithm speeds in the new version - just stability improvements
             return false;
-        }
-
-        public TimeSpan GetApiMaxTimeout()
-        {
-            return new TimeSpan(0, 5, 0);
         }
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
@@ -187,5 +187,22 @@ namespace TeamRedMiner
                 _mappedMinerIds[uuid] = indexID;
             }
         }
+
+        #region IGetApiMaxTimeoutV2
+        public bool IsGetApiMaxTimeoutEnabled
+        {
+            get
+            {
+                if (_getApiMaxTimeoutConfig?.UseUserSettings ?? false) return _getApiMaxTimeoutConfig.Enabled;
+                return true;
+            }
+        }
+
+        protected static TimeSpan defaultTimeout = new TimeSpan(0, 5, 0);
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
+        {
+            return MinerToolkit.ParseApiMaxTimeoutConfig(defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
+        }
+        #endregion IGetApiMaxTimeoutV2
     }
 }

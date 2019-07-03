@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    abstract class CCMinersPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IGetApiMaxTimeout, IBinaryPackageMissingFilesChecker
+    abstract class CCMinersPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IGetApiMaxTimeoutV2, IBinaryPackageMissingFilesChecker
     {
         public bool Is3rdParty => false;
 
@@ -120,12 +120,11 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
 
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
-        #endregion Internal Settings
-
-        public TimeSpan GetApiMaxTimeout()
+        protected static GetApiMaxTimeoutConfig _getApiMaxTimeoutConfig = new GetApiMaxTimeoutConfig
         {
-            return new TimeSpan(0, 5, 0);
-        }
+            GeneralTimeout = new TimeSpan(0, 5, 0)
+        };
+        #endregion Internal Settings
 
         IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
@@ -143,5 +142,15 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             }
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "ccminer-x64.exe" });
         }
+
+        #region IGetApiMaxTimeoutV2
+        public abstract bool IsGetApiMaxTimeoutEnabled { get; }
+
+        protected static TimeSpan defaultTimeout = new TimeSpan(0, 5, 0);
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
+        {
+            return MinerToolkit.ParseApiMaxTimeoutConfig(defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
+        }
+        #endregion IGetApiMaxTimeoutV2
     }
 }

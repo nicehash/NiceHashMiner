@@ -14,6 +14,7 @@ using MinerPlugin;
 
 // alias
 using TimersTimer = System.Timers.Timer;
+using MinerPluginToolkitV1.Configs;
 
 namespace MinerPluginToolkitV1
 {
@@ -62,6 +63,36 @@ namespace MinerPluginToolkitV1
         {
             if (mps.Count() == 0) return "";
             return mps.First().Algorithm.AlgorithmName;
+        }
+
+
+        public static TimeSpan ParseApiMaxTimeoutConfig(TimeSpan defaultMaxTimeout, GetApiMaxTimeoutConfig config, IEnumerable<MiningPair> miningPairs)
+        {
+            if (config.UseUserSettings)
+            {
+                // this one is static
+                var deviceTypePriority = new List<DeviceType> { DeviceType.CPU, DeviceType.AMD, DeviceType.NVIDIA };
+                // TimeoutPerDeviceType has #1 priority
+                var pairDeviceTypeTimeout = config.TimeoutPerDeviceType;
+                var deviceTypes = miningPairs.Select(mp => mp.Device.DeviceType);
+                foreach (var deviceType in deviceTypePriority)
+                {
+                    if (pairDeviceTypeTimeout != null && pairDeviceTypeTimeout.ContainsKey(deviceType) && deviceTypes.Contains(deviceType))
+                    {
+                        return pairDeviceTypeTimeout[deviceType];
+                    }
+                }
+                // TimeoutPerAlgorithm has #2 priority
+                var pairAlgorithmTimeout = config.TimeoutPerAlgorithm;
+                var algorithmName = miningPairs.FirstOrDefault()?.Algorithm?.AlgorithmName ?? "";
+                if (pairAlgorithmTimeout != null && !string.IsNullOrEmpty(algorithmName) && pairAlgorithmTimeout.ContainsKey(algorithmName))
+                {
+                    return pairAlgorithmTimeout[algorithmName];
+                }
+
+                return config.GeneralTimeout;
+            }
+            return defaultMaxTimeout;
         }
 
         /// <summary>

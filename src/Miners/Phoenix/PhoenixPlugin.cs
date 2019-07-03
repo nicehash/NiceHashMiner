@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Phoenix
 {
-    public class PhoenixPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class PhoenixPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
         public PhoenixPlugin()
         {
@@ -510,6 +510,11 @@ namespace Phoenix
         };
 
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
+
+        protected static GetApiMaxTimeoutConfig _getApiMaxTimeoutConfig = new GetApiMaxTimeoutConfig
+        {
+            GeneralTimeout = new TimeSpan(0, 5, 0)
+        };
         #endregion Internal Settings
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
@@ -545,9 +550,21 @@ namespace Phoenix
             return false;
         }
 
-        public TimeSpan GetApiMaxTimeout()
+        #region IGetApiMaxTimeoutV2
+        public bool IsGetApiMaxTimeoutEnabled
         {
-            return new TimeSpan(0,5,0);
+            get
+            {
+                if (_getApiMaxTimeoutConfig?.UseUserSettings ?? false) return _getApiMaxTimeoutConfig.Enabled;
+                return true;
+            }
         }
+
+        protected static TimeSpan defaultTimeout = new TimeSpan(0, 5, 0);
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
+        {
+            return MinerToolkit.ParseApiMaxTimeoutConfig(defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
+        }
+        #endregion IGetApiMaxTimeoutV2
     }
 }
