@@ -52,7 +52,7 @@ namespace NiceHashMiner.Plugin
                 new XmrStakIntegratedPlugin(),
 
                 // 3rd party
-                new BMinerIntegratedPlugin(),
+                //new BMinerIntegratedPlugin(),
                 new ClaymoreDualIntegratedPlugin(),
                 new EWBFIntegratedPlugin(),
                 new GMinerIntegratedPlugin(),
