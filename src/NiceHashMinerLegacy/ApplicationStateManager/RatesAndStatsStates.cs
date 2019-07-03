@@ -16,7 +16,7 @@ namespace NiceHashMiner
 
         private RatesAndStatsStates()
         {
-            LabelBalanceText = getLabelBalanceText();
+            //LabelBalanceText = getLabelBalanceText();
         }
 
         //public event PropertyChangedEventHandler PropertyChanged;
@@ -33,7 +33,7 @@ namespace NiceHashMiner
             return (currency + "/") + Tr(timeUnit) + "     " + Tr("Balance") + ":";
         }
 
-        public string LabelBalanceText { get; set; }
+        public string LabelBalanceText => getLabelBalanceText(); //{ get; set; }
 
 
     }
