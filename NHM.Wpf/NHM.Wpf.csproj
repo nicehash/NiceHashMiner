@@ -57,6 +57,7 @@
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
+    <Compile Include="ViewModels\Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\Settings\GeneralSettingsVM.cs" />
     <Compile Include="ViewModels\Settings\MiningGeneralVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsBaseVM.cs" />
@@ -67,6 +68,9 @@
     </Compile>
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Settings\Controls\SettingContainer.xaml.cs">
+      <DependentUpon>SettingContainer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Settings\Pages\GeneralPage.xaml.cs">
       <DependentUpon>GeneralPage.xaml</DependentUpon>
@@ -88,6 +92,10 @@
     <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Settings\Controls\SettingContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Settings\Pages\GeneralPage.xaml">
       <SubType>Designer</SubType>

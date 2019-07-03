@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="NHM.Wpf.Windows.Settings.Controls.SettingsContainer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
+             xmlns:conv="clr-namespace:NHM.Wpf.ViewModels.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <conv:NulBoolToVisibilityConverter x:Key="Converter" />
+    </UserControl.Resources>
+
+    <StackPanel Margin="10">
+        <StackPanel Orientation="Horizontal">
+            <CheckBox Margin="0,0,10,0" 
+                      IsChecked="{Binding Enabled}" 
+                      Visibility="{Binding Enabled, Converter={StaticResource Converter}}"
+                      IsEnabled="True" />
+            <TextBlock Text="{Binding Title}" />
+        </StackPanel>
+        <Label Content="Subtitle" />
+        <StackPanel Name="ChildrenStackPanel" IsEnabled="{Binding DisplayEnabled}" />
+    </StackPanel>
+</UserControl>
