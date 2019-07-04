@@ -45,6 +45,7 @@ namespace NiceHashMiner
             errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
             labelWarningNotProfitableOrNoIntenret.Visible = false;
             InitElevationWarning();
+            this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
 
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
             FormHelpers.SubscribeAllControls(this);

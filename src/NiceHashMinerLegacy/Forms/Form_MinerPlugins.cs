@@ -16,6 +16,7 @@ using NiceHashMiner.Forms;
 using System.Net;
 using System.Threading;
 using static NiceHashMiner.Plugin.MinerPluginsManager;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Forms
 {
@@ -27,6 +28,7 @@ namespace NiceHashMiner.Forms
             flowLayoutPanelPluginsLV.Controls.Clear();
             CenterToScreen();
             Icon = Properties.Resources.logo;
+            this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
             FormHelpers.TranslateFormControls(this);
 
             Shown += new EventHandler(FormShown);

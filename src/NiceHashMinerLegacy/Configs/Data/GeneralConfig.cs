@@ -195,6 +195,8 @@ namespace NiceHashMiner.Configs.Data
             set => NiceHashMiner.Configs.RunAtStartup.Instance.Enabled = value;
         }
 
+        public bool GUIWindowsAlwaysOnTop { get; set; } = false;
+
         // methods
         public void SetDefaults()
         {

@@ -133,6 +133,8 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.pictureBox_WindowAlwaysOnTop = new System.Windows.Forms.PictureBox();
+            this.checkBox_WindowAlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Main.SuspendLayout();
@@ -184,6 +186,7 @@
             this.groupBox1.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WindowAlwaysOnTop)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -490,6 +493,8 @@
             this.groupBox_Misc.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox_Misc.Controls.Add(this.pictureBox_WindowAlwaysOnTop);
+            this.groupBox_Misc.Controls.Add(this.checkBox_WindowAlwaysOnTop);
             this.groupBox_Misc.Controls.Add(this.pictureBox_RunAtStartup);
             this.groupBox_Misc.Controls.Add(this.checkBox_RunAtStartup);
             this.groupBox_Misc.Controls.Add(this.checkBox_AllowMultipleInstances);
@@ -512,7 +517,7 @@
             this.groupBox_Misc.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Misc.Name = "groupBox_Misc";
             this.groupBox_Misc.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Misc.Size = new System.Drawing.Size(392, 219);
+            this.groupBox_Misc.Size = new System.Drawing.Size(392, 249);
             this.groupBox_Misc.TabIndex = 395;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
@@ -724,7 +729,7 @@
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogToFile);
             this.groupBox_Logging.Controls.Add(this.checkBox_DebugConsole);
-            this.groupBox_Logging.Location = new System.Drawing.Point(2, 228);
+            this.groupBox_Logging.Location = new System.Drawing.Point(2, 258);
             this.groupBox_Logging.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Logging.Name = "groupBox_Logging";
             this.groupBox_Logging.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -818,7 +823,7 @@
             this.groupBox2.Controls.Add(this.pictureBox_IdleType);
             this.groupBox2.Controls.Add(this.comboBox_IdleType);
             this.groupBox2.Controls.Add(this.label_IdleType);
-            this.groupBox2.Location = new System.Drawing.Point(3, 304);
+            this.groupBox2.Location = new System.Drawing.Point(3, 334);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(390, 123);
             this.groupBox2.TabIndex = 390;
@@ -937,7 +942,7 @@
             this.groupBox3.Controls.Add(this.checkBox_NVIDIAP0State);
             this.groupBox3.Controls.Add(this.pictureBox_RunEthlargement);
             this.groupBox3.Controls.Add(this.checkBox_RunEthlargement);
-            this.groupBox3.Location = new System.Drawing.Point(3, 433);
+            this.groupBox3.Location = new System.Drawing.Point(3, 463);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(390, 91);
             this.groupBox3.TabIndex = 391;
@@ -1021,7 +1026,7 @@
             this.groupBox5.Controls.Add(this.pictureBox_SwitchMinSeconds);
             this.groupBox5.Controls.Add(this.label_SwitchMaxSeconds);
             this.groupBox5.Controls.Add(this.textBox_SwitchMaxSeconds);
-            this.groupBox5.Location = new System.Drawing.Point(3, 530);
+            this.groupBox5.Location = new System.Drawing.Point(3, 560);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(390, 120);
             this.groupBox5.TabIndex = 394;
@@ -1130,7 +1135,7 @@
             this.groupBox_Miners.Controls.Add(this.textBox_APIBindPortStart);
             this.groupBox_Miners.Controls.Add(this.textBox_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.textBox_MinerAPIQueryInterval);
-            this.groupBox_Miners.Location = new System.Drawing.Point(2, 656);
+            this.groupBox_Miners.Location = new System.Drawing.Point(2, 686);
             this.groupBox_Miners.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Miners.Name = "groupBox_Miners";
             this.groupBox_Miners.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1276,7 +1281,7 @@
             this.groupBox4.Controls.Add(this.textBox_IFTTTKey);
             this.groupBox4.Controls.Add(this.pictureBox_UseIFTTT);
             this.groupBox4.Controls.Add(this.checkBox_UseIFTTT);
-            this.groupBox4.Location = new System.Drawing.Point(3, 818);
+            this.groupBox4.Location = new System.Drawing.Point(3, 848);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(390, 62);
             this.groupBox4.TabIndex = 394;
@@ -1446,6 +1451,28 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // pictureBox_WindowAlwaysOnTop
+            // 
+            this.pictureBox_WindowAlwaysOnTop.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_WindowAlwaysOnTop.Location = new System.Drawing.Point(222, 221);
+            this.pictureBox_WindowAlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_WindowAlwaysOnTop.Name = "pictureBox_WindowAlwaysOnTop";
+            this.pictureBox_WindowAlwaysOnTop.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_WindowAlwaysOnTop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_WindowAlwaysOnTop.TabIndex = 377;
+            this.pictureBox_WindowAlwaysOnTop.TabStop = false;
+            // 
+            // checkBox_WindowAlwaysOnTop
+            // 
+            this.checkBox_WindowAlwaysOnTop.AutoSize = true;
+            this.checkBox_WindowAlwaysOnTop.Location = new System.Drawing.Point(6, 221);
+            this.checkBox_WindowAlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_WindowAlwaysOnTop.Name = "checkBox_WindowAlwaysOnTop";
+            this.checkBox_WindowAlwaysOnTop.Size = new System.Drawing.Size(171, 17);
+            this.checkBox_WindowAlwaysOnTop.TabIndex = 376;
+            this.checkBox_WindowAlwaysOnTop.Text = "Form Windows Always On Top";
+            this.checkBox_WindowAlwaysOnTop.UseVisualStyleBackColor = true;
+            // 
             // Form_Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1522,6 +1549,7 @@
             this.groupBox1.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WindowAlwaysOnTop)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1635,5 +1663,7 @@
         private System.Windows.Forms.CheckBox checkBox_IdleWhenNoInternetAccess;
         private System.Windows.Forms.PictureBox pictureBox_IdleWhenNoInternetAccess;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.PictureBox pictureBox_WindowAlwaysOnTop;
+        private System.Windows.Forms.CheckBox checkBox_WindowAlwaysOnTop;
     }
 }

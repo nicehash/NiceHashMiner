@@ -120,6 +120,7 @@ namespace NiceHashMiner.Configs
                 LogToFile = GeneralConfig.LogToFile,
                 DisableWindowsErrorReporting = GeneralConfig.DisableWindowsErrorReporting,
                 Use3rdPartyMiners = GeneralConfig.Use3rdPartyMiners,
+                GUIWindowsAlwaysOnTop = GeneralConfig.GUIWindowsAlwaysOnTop,
             };
             _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
             foreach (var cDev in AvailableDevices.Devices)
@@ -134,7 +135,8 @@ namespace NiceHashMiner.Configs
                    || GeneralConfig.NVIDIAP0State != _generalConfigBackup.NVIDIAP0State
                    || GeneralConfig.LogToFile != _generalConfigBackup.LogToFile
                    || GeneralConfig.DisableWindowsErrorReporting != _generalConfigBackup.DisableWindowsErrorReporting
-                   || GeneralConfig.Use3rdPartyMiners != _generalConfigBackup.Use3rdPartyMiners;
+                   || GeneralConfig.Use3rdPartyMiners != _generalConfigBackup.Use3rdPartyMiners
+                   || GeneralConfig.GUIWindowsAlwaysOnTop != _generalConfigBackup.GUIWindowsAlwaysOnTop;
         }
 
         public static void GeneralConfigFileCommit()
@@ -191,6 +193,7 @@ namespace NiceHashMiner.Configs
             public bool LogToFile { get; set; }
             public bool DisableWindowsErrorReporting { get; set; }
             public Use3rdPartyMiners Use3rdPartyMiners { get; set; }
+            public bool GUIWindowsAlwaysOnTop { get; set; }
         }
     }
 }

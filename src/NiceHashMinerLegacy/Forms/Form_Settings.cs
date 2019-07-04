@@ -37,6 +37,7 @@ namespace NiceHashMiner.Forms
             ApplicationStateManager.SubscribeStateDisplayer(this);
 
             Icon = Properties.Resources.logo;
+            this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
 
             // backup settings
             ConfigManager.CreateBackup();
@@ -72,6 +73,7 @@ namespace NiceHashMiner.Forms
             checkBox_NVIDIAP0State.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.NVIDIAP0State));
             checkBox_LogToFile.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.LogToFile));
             checkBox_AllowMultipleInstances.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AllowMultipleInstances));
+            checkBox_WindowAlwaysOnTop.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop));
             checkBox_MinimizeMiningWindows.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.MinimizeMiningWindows));
             checkBox_RunScriptOnCUDA_GPU_Lost.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost));
             checkBox_RunAtStartup.DataBindings.Add("Checked", ConfigManager.RunAtStartup , nameof(ConfigManager.RunAtStartup.Enabled));
@@ -130,6 +132,9 @@ namespace NiceHashMiner.Forms
 
             SetToolTip(Tr("When unchecked NiceHash Miner Legacy will allow only one instance running (it will close a new started instance if there is an opened instance running)."),
                 checkBox_AllowMultipleInstances, pictureBox_AllowMultipleInstances);
+
+            SetToolTip(Tr("When checked, NiceHash Miner Legacy Form Windows will be set as Top Most and will be covered only by other Top Most Windows."),
+                checkBox_WindowAlwaysOnTop, pictureBox_WindowAlwaysOnTop);
 
             SetToolTip(Tr("If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount."),
                 label_MinProfit, pictureBox_MinProfit, textBox_MinProfit);
