@@ -31,7 +31,7 @@ namespace WildRig
 
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1,0);
+        public Version Version => new Version(1,1);
 
         public string Name => "WildRig";
 
