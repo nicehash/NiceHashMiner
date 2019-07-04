@@ -136,10 +136,10 @@ namespace NiceHashMiner.Forms
             SetToolTip(Tr("When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running)."),
                 checkBox_AllowMultipleInstances, pictureBox_AllowMultipleInstances);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy Form Windows will be set as Top Most and will be covered only by other Top Most Windows."),
+            SetToolTip(Tr("When checked, NiceHash Miner Form Windows will be set as Top Most and will be covered only by other Top Most Windows."),
                 checkBox_WindowAlwaysOnTop, pictureBox_WindowAlwaysOnTop);
 
-            SetToolTip(Tr("If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount."),
+            SetToolTip(Tr("If set to any value more than 0 (USD), NiceHash Miner will stop mining\nif the calculated profit falls below the set amount."),
                 label_MinProfit, pictureBox_MinProfit, textBox_MinProfit);
 
             SetToolTip(Tr("Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high."),
@@ -220,10 +220,10 @@ namespace NiceHashMiner.Forms
             SetToolTip(Tr("Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds."),
                 comboBox_IdleType, label_IdleType, pictureBox_IdleType);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage)."),
+            SetToolTip(Tr("When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage)."),
                 checkBox_DisableDeviceStatusMonitoring, pictureBox_DisableDeviceStatusMonitoring);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy will not attempt to set device power mode settings (currently NVIDIA only)."),
+            SetToolTip(Tr("When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only)."),
                             checkBox_DisableDevicePowerModeSettings, pictureBox_DisableDevicePowerModeSettings);
 
             algorithmSettingsControl1.InitLocale(toolTip1);
