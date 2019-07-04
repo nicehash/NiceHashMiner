@@ -897,6 +897,7 @@
       "ru": "Устройство",
       "zh_cn": "设备"
     },
+    "Device Monitoring:": {},
     "Devices/Algorithms": {
       "bg": "Устройства/Алгоритми",
       "es": "Dispositivos/Algoritmos",
@@ -957,6 +958,8 @@
       "ru": "Отключить устройство",
       "zh_cn": "禁用设备"
     },
+    "Disable Device Status Monitoring": {},
+    "Disable Device Power Mode Settings": {},
     "Disable Windows Error Reporting": {
       "bg": "Изкл. журнала за грешки на Windows",
       "es": "Desactivar reportes de errores de Windows",
@@ -1000,6 +1003,7 @@
       "ru": "Валюта:",
       "zh_cn": "显示货币:"
     },
+    "Double-click to restore...": {},
     "Downloading miners": {
       "bg": "Сваляне на изчислителни програми",
       "es": "Descargando mineros",
@@ -1261,6 +1265,7 @@
       "ru": "Использовать определённую технологию для CPU.",
       "zh_cn": "强制启用某些CPU指令集扩展。"
     },
+    "Form Windows Always On Top": {},
     "GPU#{0}": {},
     "General": {
       "bg": "Общи",
@@ -3043,87 +3048,90 @@
       "ru": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг\nпотенциально более стабильным, но значительно медленнее (особенно для карт AMD).",
       "zh_cn": "选中此复选框将禁用所有默认优化配置。这将使得挖矿更为稳定但速度更慢（尤其对于AMD设备）。"
     },
-    "When checked, NiceHash Miner will automatically start mining when launched.": {
-      "bg": "Когато тази опция е маркирана, NiceHash Miner автоматично ще започне изчисления с пускането на програмата.",
-      "es": "Si está marcada, NiceHash Miner empezará a minar al abrirse.",
-      "it": "Quando spuntato, NiceHash Miner inizierà a minare automaticamente appena avviato.",
-      "pl": "Spowoduje automatyczny start kopania po uruchomieniu programu NiceHash Miner.",
-      "pt": "Quando marcado, o NiceHash Miner iniciará automaticamente a mineração quando iniciado.",
-      "ro": "Când bifați, NiceHash Miner o să mineze automat la pornire.",
-      "ru": "Если отмечено, NiceHash Miner будет автоматически \nначинать майнинг при запуске программы.",
+    "When checked, NiceHash Miner Legacy Form Windows will be set as Top Most and will be covered only by other Top Most Windows.": {},
+    "When checked, NiceHash Miner Legacy will automatically start mining when launched.": {
+      "bg": "Когато тази опция е маркирана, NiceHash Miner Legacy автоматично ще започне изчисления с пускането на програмата.",
+      "es": "Si está marcada, NiceHash Miner Legacy empezará a minar al abrirse.",
+      "it": "Quando spuntato, NiceHash Miner Legacy inizierà a minare automaticamente appena avviato.",
+      "pl": "Spowoduje automatyczny start kopania po uruchomieniu programu NiceHash Miner Legacy.",
+      "pt": "Quando marcado, o NiceHash Miner Legacy iniciará automaticamente a mineração quando iniciado.",
+      "ro": "Când bifați, NiceHash Miner Legacy o să mineze automat la pornire.",
+      "ru": "Если отмечено, NiceHash Miner Legacy будет автоматически \nначинать майнинг при запуске программы.",
       "zh_cn": "选择此处以在程序开启后自动开始挖矿。"
     },
-    "When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner ще установи всички поддържани NVIDIA видеокарти в режим P0.\nТова води до леко повишаване на производителността при някои алгоритми.\nТази опция изисква административни привилегии, за да бъде активирана.",
-      "es": "Si está marcado, NiceHash Miner pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
-      "it": "Quando spuntato, NiceHash Miner cambierà lo stato di tutte le GPU NVIDIA allo stato P0.\nQuesto migliorerà le prestazioni con certi algoritmi.\nQuesta funzione richiede privilegi di amministratore per essere eseguita.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner ustawi kartom NVIDIA GPUs tzw. P0 state.\nMoże to znacznie zwiększyć wydajność dla niektórych algorytmów.\nWymaga uprawnień administratora Windows.",
-      "ro": "Când bifați, NiceHash Miner o să treacă toate GPUurile NVIDIA suportate îm starea P0.\nAcest lucru o să îmbunătățească ușor performanța anumitor algoritmi.\nAceastă funcționalitate necesită ca drepturile administrative să fie activate.",
-      "ru": "Если отмечено, NiceHash Miner изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора.",
-      "zh_cn": "若选择此复选框，NiceHash Miner将会把所有受支持的NVIDIA图形处理器调整到P0状态。\n这将略微增强部分算法的执行速率。\n开启此功能需要管理员权限。"
+    "When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.": {
+      "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще установи всички поддържани NVIDIA видеокарти в режим P0.\nТова води до леко повишаване на производителността при някои алгоритми.\nТази опция изисква административни привилегии, за да бъде активирана.",
+      "es": "Si está marcado, NiceHash Miner Legacy pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
+      "it": "Quando spuntato, NiceHash Miner Legacy cambierà lo stato di tutte le GPU NVIDIA allo stato P0.\nQuesto migliorerà le prestazioni con certi algoritmi.\nQuesta funzione richiede privilegi di amministratore per essere eseguita.",
+      "pl": "Kiedy zaznaczone, NiceHash Miner Legacy ustawi kartom NVIDIA GPUs tzw. P0 state.\nMoże to znacznie zwiększyć wydajność dla niektórych algorytmów.\nWymaga uprawnień administratora Windows.",
+      "ro": "Când bifați, NiceHash Miner Legacy o să treacă toate GPUurile NVIDIA suportate îm starea P0.\nAcest lucru o să îmbunătățească ușor performanța anumitor algoritmi.\nAceastă funcționalitate necesită ca drepturile administrative să fie activate.",
+      "ru": "Если отмечено, NiceHash Miner Legacy изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора.",
+      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会把所有受支持的NVIDIA图形处理器调整到P0状态。\n这将略微增强部分算法的执行速率。\n开启此功能需要管理员权限。"
     },
-    "When checked, NiceHash Miner will minimize to tray.": {
-      "bg": "Когато тази опция е маркирана, NiceHash Miner ще се минимизира като икона в статус лентата.",
-      "es": "Si está marcada, NiceHash Miner se minimizará a la bandeja (Tray).",
-      "it": "Quando spuntato, NiceHash Miner verrà ridotto a icona.",
-      "pl": "Spowoduje minimalizowanie NiceHash Miner do ikony obok zegara systemowego.",
-      "pt": "Quando marcado, o NiceHash Miner minimizará para a bandeja.",
-      "ro": "Când bifați, NiceHash Miner va fi minimizat în tray.",
-      "ru": "Если отмечено, NiceHash Miner будет сворачиваться в трей.",
-      "zh_cn": "选择此处使NiceHash Miner最小化至托盘。"
+    "When checked, NiceHash Miner Legacy will minimize to tray.": {
+      "bg": "Когато тази опция е маркирана, NiceHash Miner Legacy ще се минимизира като икона в статус лентата.",
+      "es": "Si está marcada, NiceHash Miner Legacy se minimizará a la bandeja (Tray).",
+      "it": "Quando spuntato, NiceHash Miner Legacy verrà ridotto a icona.",
+      "pl": "Spowoduje minimalizowanie NiceHash Miner Legacy do ikony obok zegara systemowego.",
+      "pt": "Quando marcado, o NiceHash Miner Legacy minimizará para a bandeja.",
+      "ro": "Când bifați, NiceHash Miner Legacy va fi minimizat în tray.",
+      "ru": "Если отмечено, NiceHash Miner Legacy будет сворачиваться в трей.",
+      "zh_cn": "选择此处使NiceHash Miner Legacy最小化至托盘。"
     },
-    "When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
-      "it": "Quando spuntato, NiceHash Miner eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner uruchomi skrypt OnGPUsLost.bat w wypadku gdy\nwykryje utratę co najmniej jednego GPU CUDA, domyślnie skrypt zrestartuje całą maszynę.",
-      "ro": "Când bifați, NiceHash Miner o să ruleze OnGPUsLost.bat atunci când cel puțin un GPU CUDA este pierdut,\nimplicit scriptul o să restarteze întregul sistem.",
-      "ru": "Если отмечено, NiceHash Miner запустит OnGPUsLost.bat \nпри потере хотя бы одного устройства CUDA GPU,\nпо умолчанию скрипт должен перезапускать всю систему.",
-      "zh_cn": "若选择此复选框，NiceHash Miner将在探测到有CUDA GPU停止响应后执行OnGPUsLost.bat脚本。默认脚本会重新启动计算机。"
+    "When checked, NiceHash Miner Legacy will not attempt to set device power mode settings (currently NVIDIA only).": {},
+    "When checked, NiceHash Miner Legacy will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {},
+    "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
+      "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
+      "it": "Quando spuntato, NiceHash Miner Legacy eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
+      "pl": "Kiedy zaznaczone, NiceHash Miner Legacy uruchomi skrypt OnGPUsLost.bat w wypadku gdy\nwykryje utratę co najmniej jednego GPU CUDA, domyślnie skrypt zrestartuje całą maszynę.",
+      "ro": "Când bifați, NiceHash Miner Legacy o să ruleze OnGPUsLost.bat atunci când cel puțin un GPU CUDA este pierdut,\nimplicit scriptul o să restarteze întregul sistem.",
+      "ru": "Если отмечено, NiceHash Miner Legacy запустит OnGPUsLost.bat \nпри потере хотя бы одного устройства CUDA GPU,\nпо умолчанию скрипт должен перезапускать всю систему.",
+      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将在探测到有CUDA GPU停止响应后执行OnGPUsLost.bat脚本。默认脚本会重新启动计算机。"
     },
-    "When checked, NiceHash Miner will run on login.": {
-      "bg": "Когато тази опция е маркирана, NiceHash Miner ще се стартира при първоначално зареждане.",
-      "es": "Cuando se selecciona, NiceHash Miner se ejecutará al iniciar sesión.",
-      "it": "Quando spuntato, NiceHash Miner verrà avviato all'avvio di Windows.",
-      "pl": "Spowoduje automatyczne uruchomienie NiceHash Miner po starcie Windows.",
-      "pt": "Quando marcado, NiceHash Miner será executado no login.",
-      "ro": "Când este bifat, NiceHash Miner va rula la login.",
-      "ru": "Если отмечено, NiceHash Miner будет запущен при входе в систему.",
-      "zh_cn": "选择此处使NiceHash Miner开机自动启动。"
+    "When checked, NiceHash Miner Legacy will run on login.": {
+      "bg": "Когато тази опция е маркирана, NiceHash Miner Legacy ще се стартира при първоначално зареждане.",
+      "es": "Cuando se selecciona, NiceHash Miner Legacy se ejecutará al iniciar sesión.",
+      "it": "Quando spuntato, NiceHash Miner Legacy verrà avviato all'avvio di Windows.",
+      "pl": "Spowoduje automatyczne uruchomienie NiceHash Miner Legacy po starcie Windows.",
+      "pt": "Quando marcado, NiceHash Miner Legacy será executado no login.",
+      "ro": "Când este bifat, NiceHash Miner Legacy va rula la login.",
+      "ru": "Если отмечено, NiceHash Miner Legacy будет запущен при входе в систему.",
+      "zh_cn": "选择此处使NiceHash Miner Legacy开机自动启动。"
     },
-    "When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner ще ви предупреждава, ако\nе инсталирана неоптимална версия на драйвера за видеокартата.",
-      "es": "Si está marcado, NiceHash Miner dará un aviso si\nla versión óptima del driver está instalada.",
-      "it": "Quando spuntato, NiceHash Miner mostrerà un avviso se\nun driver non ottimale è installato.",
-      "pl": "Po zaznaczeniu NiceHash Miner pokaże ostrzeżenie\njeśli wykryje nieoptymalny sterownik.",
-      "ro": "Când bifați, NiceHash Miner o sa genereze o avertizare dacă\no versiune mai puțin optimă de driver este instalată.",
-      "ru": "Если отмечено, NiceHash Miner будет показывать предупреждение,\nесли установлена не самая оптимальная версия драйвера.",
-      "zh_cn": "若选择此复选框，NiceHash Miner将会在\n检测到非最优驱动版本时显示警告。"
+    "When checked, NiceHash Miner Legacy would issue a warning if\na less optimal version of a driver is installed.": {
+      "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще ви предупреждава, ако\nе инсталирана неоптимална версия на драйвера за видеокартата.",
+      "es": "Si está marcado, NiceHash Miner Legacy dará un aviso si\nla versión óptima del driver está instalada.",
+      "it": "Quando spuntato, NiceHash Miner Legacy mostrerà un avviso se\nun driver non ottimale è installato.",
+      "pl": "Po zaznaczeniu NiceHash Miner Legacy pokaże ostrzeżenie\njeśli wykryje nieoptymalny sterownik.",
+      "ro": "Când bifați, NiceHash Miner Legacy o sa genereze o avertizare dacă\no versiune mai puțin optimă de driver este instalată.",
+      "ru": "Если отмечено, NiceHash Miner Legacy будет показывать предупреждение,\nесли установлена не самая оптимальная версия драйвера.",
+      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会在\n检测到非最优驱动版本时显示警告。"
     },
-    "When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner ще покаже предупреждение,\nако няма работеща връзка към интернет.",
-      "it": "Quando spuntato, NiceHash Miner mostrerà un avviso se\nla connessione a Internet non è disponibile.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner pokaże ostrzeżenie, \njeśli straci połączenie internetowe.",
-      "ro": "Când bifați, NiceHash Miner o să vă avertizeze dacă\nnu este disponibilă conexiunea la internet.",
-      "ru": "Если отмечено, NiceHash Miner будет показывать предупреждение,\nкогда соединение с интернетом недоступно.",
-      "zh_cn": "若选择此复选框，NiceHash Miner将会在\n互联网连接不可用时显示警告。"
+    "When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available.": {
+      "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще покаже предупреждение,\nако няма работеща връзка към интернет.",
+      "it": "Quando spuntato, NiceHash Miner Legacy mostrerà un avviso se\nla connessione a Internet non è disponibile.",
+      "pl": "Kiedy zaznaczone, NiceHash Miner Legacy pokaże ostrzeżenie, \njeśli straci połączenie internetowe.",
+      "ro": "Când bifați, NiceHash Miner Legacy o să vă avertizeze dacă\nnu este disponibilă conexiunea la internet.",
+      "ru": "Если отмечено, NiceHash Miner Legacy будет показывать предупреждение,\nкогда соединение с интернетом недоступно.",
+      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会在\n互联网连接不可用时显示警告。"
     },
-    "When checked, NiceHash Miner would use the new settings page.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner ще използва новия панел за настройки.",
-      "es": "Si está marcado, NiceHash Miner usará la nueva página de configuración.",
-      "it": "Quando spuntato, NiceHash Miner userà la nuova pagina delle impostazioni.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner będzie używać nowej strony ustawień.",
-      "ro": "Cînd bifați, NiceHash Miner o să folosească noua pagină de setări.",
-      "ru": "Если отмечено, NiceHash Miner будет использовать новую страницу настроек.",
-      "zh_cn": "若选择此复选框，NiceHash Miner将启用新版的设置页面。"
+    "When checked, NiceHash Miner Legacy would use the new settings page.": {
+      "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще използва новия панел за настройки.",
+      "es": "Si está marcado, NiceHash Miner Legacy usará la nueva página de configuración.",
+      "it": "Quando spuntato, NiceHash Miner Legacy userà la nuova pagina delle impostazioni.",
+      "pl": "Kiedy zaznaczone, NiceHash Miner Legacy będzie używać nowej strony ustawień.",
+      "ro": "Cînd bifați, NiceHash Miner Legacy o să folosească noua pagină de setări.",
+      "ru": "Если отмечено, NiceHash Miner Legacy будет использовать новую страницу настроек.",
+      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将启用新版的设置页面。"
     },
-    "When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.": {
-      "bg": "Когато тази опция е активна, при блокиране на програмата за изчисления\nNiceHash Miner ще може да я рестартира, тъй като контролът няма да бъде\r\nблокиран от съобщението за грешка на Windows.\r\n\r\nПрепоръчително е тази настройка да бъде активирана, за да се гарантира\r\nнепрекъснатост на изчислителния процес, тъй като програмите\r\nот този тип не са 100% стабилни.",
-      "es": "Si está marcado, si un minero crasheara,NiceHash Miner sería capaz de reabrirlo si no está bloqueado por algún mensaje de error de Windows.\nEs recomendable dejarlo activado para que se pueda minar ininterrunpidamente con unos mineros que no sean completamente estables.",
-      "it": "Quando spuntato, nel caso di un crash del miner,\nNiceHash Miner sarà ancora in grado di riavviare ancora il miner se non è bloccato da un messaggio di errore di Windows.\nÈ consigliabile spuntare questa opzione per minare ininterrottamente in quanto i programmi di mining non sono stabili al 100%.",
-      "pl": "Kiedy zaznaczone, w przypadku wykrzaczenia się górnika,\nNiceHash Miner będzie próbować uruchomić go ponownie i nie będzie to blokowane przez raportowanie błędów Windows.\nZalecane kiedy program kopiący nie jest całkowicie stabilny, co się niestety zdarza.",
-      "ro": "Când bifați, în caz că minerul se blochează,\nNiceHash Miner o să poată sa-l repornească nefiind blocat de mesaj de eroare Windows.\nEste recomandat ca această setare să fie bifată pentru minare neîntreruptă din cauză ca programele miner nu sunt 100% stabile.",
-      "ru": "Если отмечено, в случае аварийного завершения работы майнера NiceHash Miner \nперезапустит майнер без блокирования сообщением об ошибке Windows. \nРекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны.",
-      "zh_cn": "若选择此复选框，NiceHash Miner将可以\n自动重启奔溃的挖矿程序。Windows错误报告会阻止NiceHash Miner执行这一重启。\n由于挖矿程序不尽完善，我们推荐开启此选项。"
+    "When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.": {
+      "bg": "Когато тази опция е активна, при блокиране на програмата за изчисления\nNiceHash Miner Legacy ще може да я рестартира, тъй като контролът няма да бъде\r\nблокиран от съобщението за грешка на Windows.\r\n\r\nПрепоръчително е тази настройка да бъде активирана, за да се гарантира\r\nнепрекъснатост на изчислителния процес, тъй като програмите\r\nот този тип не са 100% стабилни.",
+      "es": "Si está marcado, si un minero crasheara,NiceHash Miner Legacy sería capaz de reabrirlo si no está bloqueado por algún mensaje de error de Windows.\nEs recomendable dejarlo activado para que se pueda minar ininterrunpidamente con unos mineros que no sean completamente estables.",
+      "it": "Quando spuntato, nel caso di un crash del miner,\nNiceHash Miner Legacy sarà ancora in grado di riavviare ancora il miner se non è bloccato da un messaggio di errore di Windows.\nÈ consigliabile spuntare questa opzione per minare ininterrottamente in quanto i programmi di mining non sono stabili al 100%.",
+      "pl": "Kiedy zaznaczone, w przypadku wykrzaczenia się górnika,\nNiceHash Miner Legacy będzie próbować uruchomić go ponownie i nie będzie to blokowane przez raportowanie błędów Windows.\nZalecane kiedy program kopiący nie jest całkowicie stabilny, co się niestety zdarza.",
+      "ro": "Când bifați, în caz că minerul se blochează,\nNiceHash Miner Legacy o să poată sa-l repornească nefiind blocat de mesaj de eroare Windows.\nEste recomandat ca această setare să fie bifată pentru minare neîntreruptă din cauză ca programele miner nu sunt 100% stabile.",
+      "ru": "Если отмечено, в случае аварийного завершения работы майнера NiceHash Miner Legacy \nперезапустит майнер без блокирования сообщением об ошибке Windows. \nРекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны.",
+      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将可以\n自动重启奔溃的挖矿程序。Windows错误报告会阻止NiceHash Miner Legacy执行这一重启。\n由于挖矿程序不尽完善，我们推荐开启此选项。"
     },
     "When checked, it displays debug console.": {
       "bg": "Когато маркирате тази опция, debug конзолата ще се показва.",

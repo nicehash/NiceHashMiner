@@ -39,6 +39,7 @@ namespace TRex
             {
                 case AlgorithmType.Lyra2Z: return "lyra2z";
                 case AlgorithmType.X16R: return "x16r";
+                case AlgorithmType.MTP: return "mtp";
                 default: return "";
             }
         }
@@ -102,14 +103,8 @@ namespace TRex
                     break;
             }
 
-            var algo = AlgorithmName(_algorithmType);
-
-            ////UNTIL BENCHMARKING FIXED ON MINER SIDE
-            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var commandLine = $"--algo {algo} --url {url} --user {_username} --devices {_devices} {_extraLaunchParameters} --no-watchdog --time-limit {benchmarkTime}";
-            ///////
-                 
-            //var commandLine = $"--algo {algo} --devices {_devices} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";            
+            var algo = AlgorithmName(_algorithmType);               
+            var commandLine = $"--algo {algo} --devices {_devices} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";            
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
@@ -122,34 +117,22 @@ namespace TRex
 
             bp.CheckData = (string data) =>
             {
-                 
-                ////UNTIL BENCHMARKING FIXED ON MINER SIDE
-                if (!data.Contains("[ OK ]")) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
-                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, " - ");
-                ///////
-
-                //var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total");
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total");
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
-                if (data.Contains("Time limit is reached."))
-                    return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = true };
-
                 if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
-
 
                 benchHashes += hashrate;
                 counter++;
 
                 benchHashResult = (benchHashes / counter) * (1 - DevFee * 0.01);
 
-                ////UNTIL BENCHMARKING FIXED ON MINER SIDE
-                //if (_algorithmType == AlgorithmType.X16R)
-                //{
-                //    // Quick adjustment, x16r speeds are overestimated by around 3.5
-                //    benchHashResult /= 3.5;
-                //}
-                /////////////
+                if (_algorithmType == AlgorithmType.X16R)
+                {
+                    // Quick adjustment, x16r speeds are overestimated by around 3.5
+                    benchHashResult /= 3.5;
+                }
 
                 return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
             };

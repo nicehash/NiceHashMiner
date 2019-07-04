@@ -246,13 +246,18 @@ namespace GMinerPlugin
 
         public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            /*
-            var benchmarkedVersionIsSame = Version.Major == benchmarkedPluginVersion.Major && Version.Minor == benchmarkedPluginVersion.Minor;
-            var benchmarkedVersionIsOlder = Version.Major >= benchmarkedPluginVersion.Major && Version.Minor > benchmarkedPluginVersion.Minor;
-            if (benchmarkedVersionIsSame || !benchmarkedVersionIsOlder) return false;
-            if (ids.Count() == 0) return false;
-            */
-
+            try
+            {
+                if (ids.Count() == 0) return false;
+                if (benchmarkedPluginVersion.Major == 1 && benchmarkedPluginVersion.Minor < 8)
+                {
+                    if (device.Name.Contains("1060 3GB") && ids.FirstOrDefault() == AlgorithmType.MTP) return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            }
             return false;
         }
 

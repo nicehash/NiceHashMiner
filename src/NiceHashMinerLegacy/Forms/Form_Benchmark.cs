@@ -38,6 +38,7 @@ namespace NiceHashMiner.Forms
         {
             InitializeComponent();
             Icon = Resources.logo;
+            this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
 
             // clear prev pending statuses
             foreach (var dev in AvailableDevices.Devices)
