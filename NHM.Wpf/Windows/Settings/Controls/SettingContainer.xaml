@@ -12,13 +12,19 @@
         <conv:NulBoolToVisibilityConverter x:Key="Converter" />
     </UserControl.Resources>
 
-    <StackPanel Margin="10">
+    <StackPanel Margin="10"
+                DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsContainer}}}"
+                x:Name="LayoutRoot">
         <StackPanel Orientation="Horizontal">
+            <!-- When the Enabled property is bound, we show a checkbox with a title. Otherwise, just a title -->
+            <!-- It would be easier to always use the TextBlock for title, but using CheckBox allows toggling by clicking the title -->
             <CheckBox Margin="0,0,10,0" 
                       IsChecked="{Binding Enabled}" 
                       Visibility="{Binding Enabled, Converter={StaticResource Converter}}"
-                      IsEnabled="True" />
-            <TextBlock Text="{Binding Title}" >
+                      IsEnabled="True" 
+                      Content="{Binding Title}"/>
+            <TextBlock Text="{Binding Title}"
+                       Visibility="{Binding Enabled, Converter={StaticResource Converter}, ConverterParameter=1}">
                 <TextBlock.Style>
                     <!-- This extra boilerplate is needed for TextBlock to look disabled -->
                     <Style TargetType="{x:Type TextBlock}">
@@ -32,9 +38,10 @@
             </TextBlock>
         </StackPanel>
         <Label Content="{Binding Subtitle}" FontWeight="Light" FontSize="10" />
-        <Grid IsEnabled="{Binding DisplayEnabled}">
+        <Grid IsEnabled="{Binding Enabled}">
             <!-- The data context sets all children's data contexts to the settings page, so binding can be done there -->
-            <StackPanel x:Name="ChildrenStackPanel" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Pages:ISettingsPage}}}"/>
+            <StackPanel x:Name="ChildrenStackPanel" 
+                        DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Pages:ISettingsPage}}}" />
         </Grid>
     </StackPanel>
 </UserControl>

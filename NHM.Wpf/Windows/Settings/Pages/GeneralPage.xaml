@@ -21,14 +21,16 @@
         </controls:SettingsContainer>
         <controls:SettingsContainer 
             Title="Log to File" 
-            Enabled="True"
+            Enabled="{Binding LogToFile}"
             Subtitle="Check it, to log console output to file.">
             <controls:SettingsContainer 
                 Title="Log Max File Size [bytes]" 
                 Margin="10,0,0,0"
-                Subtitle="Sets the maximum size for the log file.">
+                Subtitle="Sets the maximum size for the log file."
+                Enabled="True">
                 <TextBox />
             </controls:SettingsContainer>
         </controls:SettingsContainer>
+        <Button Click="ButtonBase_OnClick"></Button>
     </StackPanel>
 </UserControl>

@@ -23,14 +23,18 @@ namespace NHM.Wpf.Windows.Settings.Controls
     /// Interaction logic for SettingsContainer.xaml
     /// </summary>
     [ContentProperty(nameof(Children))]
-    public partial class SettingsContainer : UserControl, INotifyPropertyChanged
+    public partial class SettingsContainer : UserControl
     {
-
         public static readonly DependencyPropertyKey ChildrenProperty = DependencyProperty.RegisterReadOnly(
             nameof(Children),
             typeof(UIElementCollection),
             typeof(SettingsContainer),
             new PropertyMetadata());
+
+        public static readonly DependencyProperty EnabledProperty = DependencyProperty.Register(
+            nameof(Enabled),
+            typeof(bool?),
+            typeof(SettingsContainer));
 
         public UIElementCollection Children
         {
@@ -38,17 +42,10 @@ namespace NHM.Wpf.Windows.Settings.Controls
             private set => SetValue(ChildrenProperty, value);
         }
 
-        private bool? _enabled;
-
         public bool? Enabled
         {
-            get => _enabled;
-            set
-            {
-                _enabled = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(DisplayEnabled));
-            }
+            get => (bool?) GetValue(EnabledProperty);
+            set => SetValue(EnabledProperty, value);
         }
 
         public bool DisplayEnabled => Enabled ?? true;
@@ -69,15 +66,7 @@ namespace NHM.Wpf.Windows.Settings.Controls
         {
             InitializeComponent();
             Children = ChildrenStackPanel.Children;
-            DataContext = this;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            //DataContext = this;
         }
     }
 }
