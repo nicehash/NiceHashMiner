@@ -197,6 +197,9 @@ namespace NiceHashMiner.Configs.Data
 
         public bool GUIWindowsAlwaysOnTop { get; set; } = false;
 
+        public bool DisableDeviceStatusMonitoring { get; set; } = false;
+        public bool DisableDevicePowerModeSettings { get; set; } = false;
+
         // methods
         public void SetDefaults()
         {
@@ -241,7 +244,10 @@ namespace NiceHashMiner.Configs.Data
             UseEthlargement = false;
             RigGroup = "";
             RunAtStartup = false;
-        }
+            GUIWindowsAlwaysOnTop = false;
+            DisableDeviceStatusMonitoring = false;
+            DisableDevicePowerModeSettings = false;
+    }
 
         public void FixSettingBounds()
         {

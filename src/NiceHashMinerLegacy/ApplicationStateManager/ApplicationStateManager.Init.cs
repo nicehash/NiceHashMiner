@@ -113,12 +113,13 @@ namespace NiceHashMiner
                 }
 
                 // STEP
+                DeviceMonitorManager.DisableDevicePowerModeSettings = ConfigManager.GeneralConfig.DisableDevicePowerModeSettings;
                 progress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));
                 var monitors = await DeviceMonitorManager.GetDeviceMonitors(AvailableDevices.Devices.Select(d => d.BaseDevice), detectionResult.IsDCHDriver);
                 foreach (var monitor in monitors)
                 {
                     var dev = AvailableDevices.GetDeviceWithUuid(monitor.UUID);
-                    dev.DeviceMonitor = monitor;
+                    dev.SetDeviceMonitor(monitor);
                 }
                 // now init device settings
                 ConfigManager.InitDeviceSettings();

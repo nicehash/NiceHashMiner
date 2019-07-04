@@ -78,6 +78,9 @@ namespace NiceHashMiner.Forms
             checkBox_RunScriptOnCUDA_GPU_Lost.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost));
             checkBox_RunAtStartup.DataBindings.Add("Checked", ConfigManager.RunAtStartup , nameof(ConfigManager.RunAtStartup.Enabled));
 
+            checkBox_DisableDeviceStatusMonitoring.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring));
+            checkBox_DisableDevicePowerModeSettings.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableDevicePowerModeSettings));
+
             // idle mining
             checkBox_IdleWhenNoInternetAccess.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.IdleWhenNoInternetAccess));
             checkBox_StartMiningWhenIdle.DataBindings.Add("Checked", ConfigManager.IdleMiningSettings, nameof(ConfigManager.IdleMiningSettings.StartMiningWhenIdle), false, DataSourceUpdateMode.OnPropertyChanged);
@@ -216,6 +219,12 @@ namespace NiceHashMiner.Forms
 
             SetToolTip(Tr("Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds."),
                 comboBox_IdleType, label_IdleType, pictureBox_IdleType);
+
+            SetToolTip(Tr("When checked, NiceHash Miner Legacy will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage)."),
+                checkBox_DisableDeviceStatusMonitoring, pictureBox_DisableDeviceStatusMonitoring);
+
+            SetToolTip(Tr("When checked, NiceHash Miner Legacy will not attempt to set device power mode settings (currently NVIDIA only)."),
+                            checkBox_DisableDevicePowerModeSettings, pictureBox_DisableDevicePowerModeSettings);
 
             algorithmSettingsControl1.InitLocale(toolTip1);
         }
