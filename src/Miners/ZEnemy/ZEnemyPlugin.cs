@@ -16,7 +16,7 @@ namespace ZEnemy
 {
     class ZEnemyPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
-        public Version Version => new Version(1, 3);
+        public Version Version => new Version(1, 4);
 
         public string Name => "ZEnemy";
 

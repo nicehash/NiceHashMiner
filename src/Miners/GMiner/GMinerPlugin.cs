@@ -34,7 +34,7 @@ namespace GMinerPlugin
 
         public string Author => "stanko@nicehash.com";
 
-        protected readonly Dictionary<string, int> _mappedCudaIds = new Dictionary<string, int>();
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
         public bool CanGroup(MiningPair a, MiningPair b)
         {
@@ -43,7 +43,7 @@ namespace GMinerPlugin
 
         public IMiner CreateMiner()
         {
-            return new GMiner(PluginUUID, _mappedCudaIds)
+            return new GMiner(PluginUUID, _mappedDeviceIds)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -77,30 +77,27 @@ namespace GMinerPlugin
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu)).Cast<AMDDevice>();
-            foreach (var gpu in amdGpus)
-            {
-                var algorithms = GetAMDSupportedAlgorithms(gpu).ToList();
-                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
-            }
+            var gpus = devices
+                .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev))
+                .Where(dev => dev is IGpuDevice)
+                .Cast<IGpuDevice>()
+                .OrderBy(gpu => gpu.PCIeBusID);
 
-            //CUDA 9.0+: minimum drivers 384.xx
-            var minDrivers = new Version(384, 0);
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
-
-            // we filter CUDA SM5.0+ and order them by PCIe IDs
-            var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 5)
-                .Select(dev => (CUDADevice)dev)
-                .OrderBy(dev => dev.PCIeBusID);
-            var pcieId = 0; // GMiner takes CUDA devices by 
-            foreach (var gpu in cudaGpus)
+            var pcieId = 0; // GMiner sortes devices by PCIe
+            foreach (var gpu in gpus)
             {
-                // naive method
-                _mappedCudaIds[gpu.UUID] = pcieId;
+                _mappedDeviceIds[gpu.UUID] = pcieId;
                 ++pcieId;
-                var algorithms = GetCUDASupportedAlgorithms(gpu);
-                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
+                if (gpu is AMDDevice amd)
+                {
+                    var algorithms = GetAMDSupportedAlgorithms(amd).ToList();
+                    if (algorithms.Count > 0) supported.Add(amd, algorithms);
+                }
+                if (gpu is CUDADevice cuda)
+                {
+                    var algorithms = GetCUDASupportedAlgorithms(cuda);
+                    if (algorithms.Count > 0) supported.Add(cuda, algorithms);
+                }
             }
 
             return supported;
@@ -129,6 +126,21 @@ namespace GMinerPlugin
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
+        }
+
+        private static bool IsSupportedAMDDevice(BaseDevice dev)
+        {
+            var isSupported = dev is AMDDevice gpu && Checkers.IsGcn4(gpu);
+            return isSupported;
+        }
+
+        private static bool IsSupportedNVIDIADevice(BaseDevice dev)
+        {
+            //CUDA 9.0+: minimum drivers 384.xx
+            var minDrivers = new Version(384, 0);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
+            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 5;
+            return isSupported && isDriverSupported;
         }
 
         #region Internal Settings
@@ -220,7 +232,7 @@ namespace GMinerPlugin
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (_mappedCudaIds.Count == 0) return;
+            if (_mappedDeviceIds.Count == 0) return;
             // TODO will block
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
@@ -232,7 +244,7 @@ namespace GMinerPlugin
             {
                 var uuid = kvp.Key;
                 var indexID = kvp.Value;
-                _mappedCudaIds[uuid] = indexID;
+                _mappedDeviceIds[uuid] = indexID;
             }
         }
 
