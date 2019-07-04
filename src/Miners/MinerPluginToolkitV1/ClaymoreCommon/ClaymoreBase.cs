@@ -33,25 +33,11 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
         public string _extraLaunchParameters = "";
 
         // command line parts
-        public string _platform;
         protected Dictionary<string, int> _mappedIDs;
 
         public ClaymoreBase(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
         {
             _mappedIDs = mappedIDs;
-        }
-
-        private static int GetPlatformIDForType(DeviceType type)
-        {
-            switch (type)
-            {
-                case DeviceType.AMD:
-                    return 1;
-                case DeviceType.NVIDIA:
-                    return 2;
-                default:
-                    return 3;
-            }
         }
 
         protected virtual string SingleAlgoName
@@ -129,7 +115,6 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             _orderedMiningPairs = _miningPairs.ToList();
             _orderedMiningPairs.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
             _devices = string.Join("", _orderedMiningPairs.Select(p => ClaymoreHelpers.GetClaymoreDeviceID(_mappedIDs[p.Device.UUID])));
-            _platform = $"{GetPlatformIDForType(_orderedMiningPairs.First().Device.DeviceType)}";
 
             if (MinerOptionsPackage != null)
             {
@@ -146,12 +131,12 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             var cmd = "";
             if (_algorithmSecondType == AlgorithmType.NONE) //noDual
             {
-                cmd = $"-di {_devices} -platform {_platform} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 {_extraLaunchParameters} -wd 0";
+                cmd = $"-di {_devices} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 {_extraLaunchParameters} -wd 0";
             }
             else
             {
                 var urlSecond = StratumServiceHelpers.GetLocationUrl(_algorithmSecondType, _miningLocation, NhmConectionType.STRATUM_TCP);
-                cmd = $"-di {_devices} -platform {_platform} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dcoin {DualAlgoName} -dpool {urlSecond} -dwal {username} -dpsw x {_extraLaunchParameters} -wd 0";
+                cmd = $"-di {_devices} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dcoin {DualAlgoName} -dpool {urlSecond} -dwal {username} -dpsw x {_extraLaunchParameters} -wd 0";
             }
             return cmd;
         }
