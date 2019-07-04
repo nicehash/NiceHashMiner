@@ -1,0 +1,184 @@
+Algorithms/Algorithm.cs:                return Translations.Tr("N/A");
+Algorithms/Algorithm.cs:                return Translations.Tr("N/A"); ;
+Algorithms/Algorithm.cs:            BenchmarkStatus = Translations.Tr("Waiting benchmark");
+Algorithms/Algorithm.cs:            return BenchmarkStatus == Translations.Tr("Waiting benchmark")
+Algorithms/Algorithm.cs:            return Translations.Tr("none");
+ApplicationStateManager/ApplicationStateManager.cs:                var displayNewVer = string.Format(Translations.Tr("IMPORTANT! New version v{0} has\r\nbeen released. Click here to download it."), version);
+ApplicationStateManager/ApplicationStateManager.Init.cs:                progress?.Report((Tr("Checking System Specs"), nextProgPerc()));
+ApplicationStateManager/ApplicationStateManager.Init.cs:                            return Tr("Checking CPU Info");
+ApplicationStateManager/ApplicationStateManager.Init.cs:                            return Tr("Querying CUDA devices");
+ApplicationStateManager/ApplicationStateManager.Init.cs:                            return Tr("Checking AMD OpenCL GPUs");
+ApplicationStateManager/ApplicationStateManager.Init.cs:                            return Tr("Checking Windows Video Controllers");
+ApplicationStateManager/ApplicationStateManager.Init.cs:                    var result = MessageBox.Show(Tr("No supported devices are found. Select the OK button for help or cancel to continue."),
+ApplicationStateManager/ApplicationStateManager.Init.cs:                        Tr("No Supported Devices"),
+ApplicationStateManager/ApplicationStateManager.Init.cs:                progress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));
+ApplicationStateManager/ApplicationStateManager.Init.cs:                progress?.Report((Tr("Loading miner plugins..."), nextProgPerc()));
+ApplicationStateManager/ApplicationStateManager.Init.cs:                progress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
+ApplicationStateManager/ApplicationStateManager.Init.cs:                progress?.Report((Tr("Setting Windows error reporting..."), nextProgPerc()));
+ApplicationStateManager/ApplicationStateManager.Init.cs:                progress?.Report((Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
+ApplicationStateManager/ApplicationStateManager.Init.cs:                    loadingControl.LoadTitleTextSecond = Tr("Downloading Miner Binaries");
+ApplicationStateManager/ApplicationStateManager.Init.cs:                    progress?.Report((Tr("Downloading Miner Binaries..."), nextProgPerc()));
+ApplicationStateManager/ApplicationStateManager.Init.cs:                    var result = MessageBox.Show(Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Click Yes to reinitialize NiceHash Miner to try to fix this issue."),
+ApplicationStateManager/ApplicationStateManager.Init.cs:                        Tr("Warning!"),
+ApplicationStateManager/ApplicationStateManager.Init.cs:                progress?.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
+ApplicationStateManager/ApplicationStateManager.Init.cs:                progress?.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
+ApplicationStateManager/ApplicationStateManager.Init.cs:                progress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
+ApplicationStateManager/ApplicationStateManager.Init.cs:        //        MessageBox.Show(Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine."),
+ApplicationStateManager/ApplicationStateManager.Init.cs:        //            Tr("Warning!"),
+ApplicationStateManager/ApplicationStateManager.Init.cs:        //        var msg = Tr("We have detected a Video Controller that is not working properly. NiceHash Miner will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
+ApplicationStateManager/ApplicationStateManager.Init.cs:        //            Tr("Warning! Video Controller not operating correctly"),
+ApplicationStateManager/ApplicationStateManager.Program.cs:            MessageBox.Show(message, Tr("Error!"), MessageBoxButtons.OK, MessageBoxIcon.Error);
+ApplicationStateManager/ApplicationStateManager.Program.cs:                MessageBox.Show(Tr("NiceHash Miner cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner."),
+ApplicationStateManager/ApplicationStateManager.Program.cs:                        Tr("Windows Management Instrumentation Error"),
+ApplicationStateManager/ApplicationStateManager.Program.cs:                MessageBox.Show(Tr("NiceHash Miner requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5"),
+ApplicationStateManager/ApplicationStateManager.Program.cs:                    Tr("Warning!"),
+ApplicationStateManager/ApplicationStateManager.Program.cs:                MessageBox.Show(Tr("NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86"),
+ApplicationStateManager/ApplicationStateManager.Program.cs:                    Tr("Warning!"),
+ApplicationStateManager/RatesAndStatsStates.cs:            return (currency + "/") + Tr(timeUnit) + "     " + Tr("Balance") + ":";
+Forms/Components/AlgorithmSettingsControl.cs:            groupBoxSelectedAlgorithmSettings.Text = string.Format(Translations.Tr("Selected Algorithm: {0}"),
+Forms/Components/AlgorithmSettingsControl.cs:                Translations.Tr("NONE"));
+Forms/Components/AlgorithmSettingsControl.cs:                Translations.Tr("Power Usage (W):"),
+Forms/Components/AlgorithmSettingsControl.cs:                Translations.Tr("The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0."));
+Forms/Components/AlgorithmSettingsControl.cs:                Translations.Tr("Benchmark Speed") + ":",
+Forms/Components/AlgorithmSettingsControl.cs:                Translations.Tr("Fine tune algorithm ratios by manually setting benchmark speeds for each algorithm."));
+Forms/Components/AlgorithmSettingsControl.cs:                Translations.Tr("Secondary Benchmark Speed") + ":",
+Forms/Components/AlgorithmSettingsControl.cs:                Translations.Tr("Speed for the secondary algorithm when using dual algo mining."));
+Forms/Components/AlgorithmSettingsControl.cs:            groupBoxExtraLaunchParameters.Text = Translations.Tr("Extra Launch Parameters");
+Forms/Components/AlgorithmSettingsControl.cs:                Translations.Tr("Additional launch parameters when launching miner and this algorithm."));
+Forms/Components/AlgorithmSettingsControl.cs:            toolTip1.SetToolTip(pictureBox1, Translations.Tr("Additional launch parameters when launching miner and this algorithm."));
+Forms/Components/AlgorithmSettingsControl.cs:                    Translations.Tr("Selected Algorithm: {0}"),
+Forms/Components/AlgorithmSettingsControl.cs:                fieldBoxBenchmarkSpeed.LabelText = Translations.Tr("Benchmark Speed") + $" ({unit}):";
+Forms/Components/AlgorithmSettingsControl.cs:                    secondaryFieldBoxBenchmarkSpeed.LabelText = Translations.Tr("Secondary Benchmark Speed") + $" ({secondaryUnit}):";
+Forms/Components/AlgorithmSettingsControl.cs:                    secondaryFieldBoxBenchmarkSpeed.LabelText = Translations.Tr("Secondary Benchmark Speed") + ":";
+Forms/Components/AlgorithmsListView.cs:                        Text = Translations.Tr("Disable All Algorithms")
+Forms/Components/AlgorithmsListView.cs:                        Text = Translations.Tr("Enable All Algorithms")
+Forms/Components/AlgorithmsListView.cs:                        Text = Translations.Tr("Enable Only This")
+Forms/Components/AlgorithmsListView.cs:                        Text = Translations.Tr("Enable Benchmarked Only")
+Forms/Components/AlgorithmsListView.cs:                        Text = Translations.Tr("Clear Algorithm Speed")
+Forms/Components/DevicesListViewBenchmarkControl.cs:                                copyBenchItem.Text = Translations.Tr("Copy Settings From (Benchmarks, algorithm parameters, ...)");
+Forms/Components/DevicesListViewBenchmarkControl.cs:                                copyTuningItem.Text = Translations.Tr("Copy tuning settings only");
+Forms/Components/DevicesListViewBenchmarkControl.cs:                        Translations.Tr("Are you sure you want to copy settings from {0} to {1}?"),
+Forms/Components/DevicesListViewBenchmarkControl.cs:                    Translations.Tr("Confirm Settings Copy"),
+Forms/Components/DevicesListViewEnableControl.cs:            devicesHeader.Text = Translations.Tr("Device");
+Forms/Components/DevicesListViewSpeedControl.cs:            speedHeader.Text = Translations.Tr("Speeds");
+Forms/Components/DevicesListViewSpeedControl.cs:                Text = Translations.Tr("Total"),
+Forms/Components/DevicesListViewSpeedControl.cs:                        return Translations.Tr("Power Cost ({0})", CurrencyPerTimeUnit());
+Forms/Components/DevicesListViewSpeedControl.cs:                        return Translations.Tr("Profit ({0})", CurrencyPerTimeUnit());
+Forms/Components/DevicesListViewSpeedControl.cs:            return Translations.Tr(langKey);
+Forms/Components/DevicesListViewSpeedControl.cs:                var disGrp = new ListViewGroup(DefaultKey, Translations.Tr("Disabled"));
+Forms/Components/DevicesListViewSpeedControl.cs:            var timeUnit = Translations.Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+Forms/Components/DevicesMainBoard.cs:            return Tr(buttonLabel);
+Forms/Components/DevicesMainBoard.cs:            return Tr(state.ToString());
+Forms/Components/DevicesMainBoard.cs:                return Tr("N/A");
+Forms/Components/DevicesMainBoard.cs:            return Tr(num.ToString());
+Forms/Components/DevicesMainBoard.cs:                        button.Value = Tr("Starting");
+Forms/Components/DevicesMainBoard.cs:                        button.Value = Tr("Stopping");
+Forms/FormHelpers.cs:                trText = Translations.Tr(fromTxt);
+Forms/FormHelpers.cs:                        comboBox.Items[i] = Translations.Tr(text);
+Forms/FormHelpers.cs:                    listView.Columns[i].Text = Translations.Tr(listView.Columns[i].Text);
+Forms/FormHelpers.cs:                    tabControl.TabPages[i].Text = Translations.Tr(tabControl.TabPages[i].Text);
+Forms/FormHelpers.cs:                    dataGridView.Columns[i].HeaderText = Translations.Tr(dataGridView.Columns[i].HeaderText);
+Forms/Form_Benchmark.cs:                StartStopBtn.Text = Translations.Tr("St&op benchmark");
+Forms/Form_Benchmark.cs:            StartStopBtn.Text = Translations.Tr("Start &benchmark");
+Forms/Form_Benchmark.cs:                    MessageBox.Show(Translations.Tr("No device has been selected there is nothing to benchmark"),
+Forms/Form_Benchmark.cs:                        Translations.Tr("No device selected"),
+Forms/Form_Benchmark.cs:                    MessageBox.Show(Translations.Tr("Current benchmark settings are already executed. There is nothing to do."),
+Forms/Form_Benchmark.cs:                        Translations.Tr("Nothing to benchmark"),
+Forms/Form_Benchmark.cs:                        Translations.Tr("All benchmarks have been successful"),
+Forms/Form_Benchmark.cs:                        Translations.Tr("Benchmark finished report"),
+Forms/Form_Benchmark.cs:                        //Translations.Tr("Not all benchmarks finished successfully. Retry to re-run the benchmark process against unbenchmarked algos or Cancel to disable unbenchmarked algorithms."),
+Forms/Form_Benchmark.cs:                        Translations.Tr("Not all benchmarks finished successfully."),
+Forms/Form_Benchmark.cs:                        Translations.Tr("Benchmark finished report"),
+Forms/Form_Benchmark.cs:                string.Format(Translations.Tr("Benchmark step ( {0} / {1} )"), current, max);
+Forms/Form_Main.cs:                               "\n" + Tr("Double-click to restore...");
+Forms/Form_Main.cs:                errorProvider1.SetError(textBoxBTCAddress, Tr("Invalid Bitcoin address! NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
+Forms/Form_Main.cs:                errorProvider1.SetError(textBoxWorkerName, Tr("Invalid workername!\n\nPlease enter a valid workername (Aa-Zz, 0-9, up to 15 character long)."));
+Forms/Form_Main.cs:            MessageBoxManager.Yes = Tr("&Yes");
+Forms/Form_Main.cs:            MessageBoxManager.No = Tr("&No");
+Forms/Form_Main.cs:            MessageBoxManager.OK = Tr("&OK");
+Forms/Form_Main.cs:            MessageBoxManager.Cancel = Tr("&Cancel");
+Forms/Form_Main.cs:            MessageBoxManager.Retry = Tr("&Retry");
+Forms/Form_Main.cs:            toolStripStatusLabelGlobalRateText.Text = Tr("Global rate:");
+Forms/Form_Main.cs:                "BTC/" + Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+Forms/Form_Main.cs:            labelDemoMode.Text = Tr("NiceHash Miner is running in DEMO mode!");
+Forms/Form_Main.cs:            toolTip1.SetToolTip(labelDemoMode, Tr("You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
+Forms/Form_Main.cs:            SetToolTip(Tr("User's bitcoin address for mining."),
+Forms/Form_Main.cs:            SetToolTip(Tr("To identify the user's computer."),
+Forms/Form_Main.cs:            SetToolTip(Tr("Sets the mining location. Choosing Hong Kong or Tokyo will add extra latency."),
+Forms/Form_Main.cs:                errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
+Forms/Form_Main.cs:                    var dialogResult = MessageBox.Show(Tr("Click yes if you with to run NiceHash Miner as Administrator."),
+Forms/Form_Main.cs:                    Tr("Run as Administrator"),
+Forms/Form_Main.cs:            using (var loadingControl = new StartupLoadingControl(Tr("Loading, please wait...")))
+Forms/Form_Main.cs:            var displayTimeUnit = Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+Forms/Form_Main.cs:                var currencyRate = Tr("N/A");
+Forms/Form_Main.cs:                var dialogResult = MessageBox.Show(Tr("NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner. Would you like to continue?"),
+Forms/Form_Main.cs:                    Tr("Check internet connection"),
+Forms/Form_Main.cs:                        Tr("Settings change requires NiceHash Miner to restart."),
+Forms/Form_Main.cs:                        Tr("Restart Notice"),
+Forms/Form_Main.cs:                MessageBox.Show(Tr("NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm."),
+Forms/Form_Main.cs:                    Tr("Warning!"),
+Forms/Form_Main.cs:            //        var result = MessageBox.Show(Tr("You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"),
+Forms/Form_Main.cs:            //            Tr("Start mining in DEMO mode?"),
+Forms/Form_Main.cs:                    MessageBox.Show(Tr("Unable to get NiceHash profitability data. If you are connected to internet, try again later."),
+Forms/Form_Main.cs:                        Tr("Error!"),
+Forms/Form_Main.cs:                        text += Environment.NewLine + Tr("CURRENTLY MINING NOT PROFITABLE.");
+Forms/Form_Main.cs:                        text += Environment.NewLine + Tr("CURRENTLY NOT MINING. NO INTERNET CONNECTION.");
+Forms/Form_MinerPlugins.cs:            if (plugin.Installed) return Tr("Remove");
+Forms/Form_MinerPlugins.cs:            if (plugin.OnlineSupportedDeviceCount > 0) return Tr("Install");
+Forms/Form_MinerPlugins.cs:            return Tr("Not Supported");
+Forms/Form_MinerPlugins.cs:            pluginInfoItem.PluginVersion = Tr("Version: {0}", $"{plugin.PluginVersion.Major}.{plugin.PluginVersion.Minor}");
+Forms/Form_MinerPlugins.cs:            pluginInfoItem.PluginAuthor = Tr("Author: {0}", plugin.PluginAuthor);
+Forms/Form_Settings.cs:                groupBoxAlgorithmSettings.Text = string.Format(Tr("Algorithm settings for {0} :"),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Changes the default language for NiceHash Miner."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, it displays debug console."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Sets the time unit to report BTC rates."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, sgminer, ccminer, cpuminer and ethminer console windows will be hidden."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, NiceHash Miner will minimize to tray."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running)."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, NiceHash Miner Form Windows will be set as Top Most and will be covered only by other Top Most Windows."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("If set to any value more than 0 (USD), NiceHash Miner will stop mining\nif the calculated profit falls below the set amount."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Lower bound for the randomly chosen profit check interval.\nDo not set too low."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("API query interval for ccminer, sgminer cpuminer and ethminer."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Set starting port number from which miner API Bind ports will be set for communication."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Check it, if you would like to see the BTC values autoscale to the appropriate scale."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Automatically start mining when computer is idle and stop mining when computer is being used."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When StartMiningWhenIdle is checked, MinIdleSeconds tells how\nmany seconds computer has to be idle before mining starts."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Check it, to log console output to file."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Sets the maximum size for the log file."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, NiceHash Miner will run on login."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, NiceHash Miner will automatically start mining when launched."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Choose what Currency to Display mining profit."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("If enabled NiceHash Miner will stop mining without internet connectivity"),
+Forms/Form_Settings.cs:            SetToolTip(Tr("If enabled, NiceHash Miner will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]"),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, mining windows will start minimized."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage)."),
+Forms/Form_Settings.cs:            SetToolTip(Tr("When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only)."),
+Forms/Form_Settings.cs:                comboBox_IdleType.Items.Add(Tr(type));
+Forms/Form_Settings.cs:                    timeunits.Add(timeunit, Tr(timeunit.ToString()));
+Forms/Form_Settings.cs:                comboBox_TimeUnit.SelectedItem = Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+Forms/Form_Settings.cs:            groupBoxAlgorithmSettings.Text = string.Format(Tr("Algorithm settings for {0} :"),
+Forms/Form_Settings.cs:            toolTip1.ToolTipTitle = Tr("Explanation");
+Forms/Form_Settings.cs:            var result = MessageBox.Show(Tr("Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner automatically."),
+Forms/Form_Settings.cs:                Tr("Set default settings?"),
+Forms/MinerFileNotFoundDialog.cs:            linkLabelError.Text = string.Format(Translations.Tr("{0}: File {1} is not found!\n\nPlease make sure that the file is accessible and that your anti-virus is not blocking the application.\nPlease refer the section \"My anti-virus is blocking the application\" at the Troubleshooting section ({2}).\n\nA re-download of NiceHash Miner might be needed."),
+Forms/MinerFileNotFoundDialog.cs:                minerDeviceName, path, Translations.Tr("Link"));
+Forms/MinerFileNotFoundDialog.cs:                new LinkArea(linkLabelError.Text.IndexOf(Translations.Tr("Link")),
+Forms/MinerFileNotFoundDialog.cs:                    Translations.Tr("Link").Length);
+Plugin/MinerPluginsManager.cs:                    var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
+Plugin/MinerPluginsManager.cs:                    var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
+Stats/ExchangeRateAPI.cs:                   + Translations.Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
+Translations.cs:        public static string Tr(string text)
+Translations.cs:        public static string Tr(string text, params object[] args)
+Translations.cs:            return string.Format(Tr(text), args);

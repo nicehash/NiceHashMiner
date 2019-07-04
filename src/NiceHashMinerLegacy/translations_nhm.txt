@@ -1,0 +1,34 @@
+TR change:
+
+Tr("There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Click Yes to reinitialize NiceHash Miner to try to fix this issue."),
+Tr("NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine."),
+Tr("We have detected a Video Controller that is not working properly. NiceHash Miner will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.");
+Tr("NiceHash Miner cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner."),
+Tr("NiceHash Miner requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5"),
+Tr("NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86"),
+Tr("Invalid Bitcoin address! NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
+Tr("NiceHash Miner is running in DEMO mode!");
+Tr("You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
+Tr("Click yes if you with to run NiceHash Miner as Administrator."),
+Tr("NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner. Would you like to continue?"),
+Tr("Settings change requires NiceHash Miner to restart."),
+Tr("NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm."),
+Tr("Changes the default language for NiceHash Miner."),
+Tr("When checked, NiceHash Miner will minimize to tray."),
+Tr("When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running)."),
+Tr("When checked, NiceHash Miner Form Windows will be set as Top Most and will be covered only by other Top Most Windows."),
+Tr("If set to any value more than 0 (USD), NiceHash Miner will stop mining\nif the calculated profit falls below the set amount."),
+Tr("Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner."),
+Tr("When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed."),
+Tr("When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable."),
+Tr("When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available."),
+Tr("When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated."),
+Tr("When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system."),
+Tr("When checked, NiceHash Miner will run on login."),
+Tr("When checked, NiceHash Miner will automatically start mining when launched."),
+Tr("If enabled NiceHash Miner will stop mining without internet connectivity"),
+Tr("If enabled, NiceHash Miner will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality."),
+Tr("When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage)."),
+Tr("When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only)."),
+Tr("Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner automatically."),
+Tr("{0}: File {1} is not found!\n\nPlease make sure that the file is accessible and that your anti-virus is not blocking the application.\nPlease refer the section \"My anti-virus is blocking the application\" at the Troubleshooting section ({2}).\n\nA re-download of NiceHash Miner might be needed."),
