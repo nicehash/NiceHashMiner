@@ -31,6 +31,5 @@
                 <TextBox />
             </controls:SettingsContainer>
         </controls:SettingsContainer>
-        <Button Click="ButtonBase_OnClick"></Button>
     </StackPanel>
 </UserControl>

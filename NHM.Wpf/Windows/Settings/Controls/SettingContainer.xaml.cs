@@ -34,7 +34,8 @@ namespace NHM.Wpf.Windows.Settings.Controls
         public static readonly DependencyProperty EnabledProperty = DependencyProperty.Register(
             nameof(Enabled),
             typeof(bool?),
-            typeof(SettingsContainer));
+            typeof(SettingsContainer),
+            new FrameworkPropertyMetadata { BindsTwoWayByDefault = true });
 
         public UIElementCollection Children
         {

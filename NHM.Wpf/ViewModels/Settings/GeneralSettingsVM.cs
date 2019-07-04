@@ -15,7 +15,17 @@ namespace NHM.Wpf.ViewModels.Settings
         // More placeholders
         public string SelectedCurrency { get; set; } = "CAD";
         public int SelectedLangIndex { get; set; } = 0;
-        public bool LogToFile { get; set; } = false;
+        private bool _logToFile = false;
+
+        public bool LogToFile
+        {
+            get => _logToFile;
+            set
+            {
+                _logToFile = value;
+                OnPropertyChanged();
+            }
+        }
 
         public GeneralSettingsVM(object settingsObj)
             : base(settingsObj, "General")
