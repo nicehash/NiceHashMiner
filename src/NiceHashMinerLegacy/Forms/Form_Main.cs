@@ -64,7 +64,7 @@ namespace NiceHashMiner
 
             notifyIcon1.Icon = Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
-                               "\nDouble-click to restore..";
+                               "\n" + Tr("Double-click to restore...");
 
             linkLabelNewVersion.Text = "";
 
