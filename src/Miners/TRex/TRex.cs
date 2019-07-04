@@ -39,6 +39,7 @@ namespace TRex
             {
                 case AlgorithmType.Lyra2Z: return "lyra2z";
                 case AlgorithmType.X16R: return "x16r";
+                case AlgorithmType.MTP: return "mtp";
                 default: return "";
             }
         }
