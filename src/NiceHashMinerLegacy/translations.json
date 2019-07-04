@@ -1000,6 +1000,7 @@
       "ru": "Валюта:",
       "zh_cn": "显示货币:"
     },
+    "Double-click to restore...": {},
     "Downloading miners": {
       "bg": "Сваляне на изчислителни програми",
       "es": "Descargando mineros",
@@ -1261,6 +1262,7 @@
       "ru": "Использовать определённую технологию для CPU.",
       "zh_cn": "强制启用某些CPU指令集扩展。"
     },
+    "Form Windows Always On Top": {},
     "GPU#{0}": {},
     "General": {
       "bg": "Общи",
@@ -3043,6 +3045,7 @@
       "ru": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг\nпотенциально более стабильным, но значительно медленнее (особенно для карт AMD).",
       "zh_cn": "选中此复选框将禁用所有默认优化配置。这将使得挖矿更为稳定但速度更慢（尤其对于AMD设备）。"
     },
+    "When checked, NiceHash Miner Legacy Form Windows will be set as Top Most and will be covered only by other Top Most Windows.": {},
     "When checked, NiceHash Miner Legacy will automatically start mining when launched.": {
       "bg": "Когато тази опция е маркирана, NiceHash Miner Legacy автоматично ще започне изчисления с пускането на програмата.",
       "es": "Si está marcada, NiceHash Miner Legacy empezará a minar al abrirse.",
