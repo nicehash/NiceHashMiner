@@ -57,7 +57,7 @@ namespace NiceHashMiner.Plugin
         {
             get
             {
-                var ver = LocalInfo?.PluginVersion ?? OnlineInfo?.PluginVersion;
+                var ver = LocalInfo?.PluginVersion ?? OnlineInfo?.PluginVersion ?? new Version(0,0);
                 return ver;
             }
         }
