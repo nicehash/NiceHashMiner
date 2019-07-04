@@ -897,6 +897,7 @@
       "ru": "Устройство",
       "zh_cn": "设备"
     },
+    "Device Monitoring:": {},
     "Devices/Algorithms": {
       "bg": "Устройства/Алгоритми",
       "es": "Dispositivos/Algoritmos",
@@ -957,6 +958,8 @@
       "ru": "Отключить устройство",
       "zh_cn": "禁用设备"
     },
+    "Disable Device Status Monitoring": {},
+    "Disable Device Power Mode Settings": {},
     "Disable Windows Error Reporting": {
       "bg": "Изкл. журнала за грешки на Windows",
       "es": "Desactivar reportes de errores de Windows",
@@ -3075,6 +3078,8 @@
       "ru": "Если отмечено, NiceHash Miner Legacy будет сворачиваться в трей.",
       "zh_cn": "选择此处使NiceHash Miner Legacy最小化至托盘。"
     },
+    "When checked, NiceHash Miner Legacy will not attempt to set device power mode settings (currently NVIDIA only).": {},
+    "When checked, NiceHash Miner Legacy will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {},
     "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
       "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
       "it": "Quando spuntato, NiceHash Miner Legacy eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",

@@ -52,6 +52,7 @@ namespace TRex
         {
             yield return new Algorithm(PluginUUID, AlgorithmType.Lyra2Z);
             yield return new Algorithm(PluginUUID, AlgorithmType.X16R);
+            yield return new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false };
         }
 
         public IMiner CreateMiner()
