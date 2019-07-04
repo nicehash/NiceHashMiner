@@ -20,9 +20,9 @@ namespace WildRig
     {
         public WildRigPlugin()
         {
-            _pluginUUID = "7de4c3d8-0417-4d56-b6be-6c43820ca809";
+            _pluginUUID = "2edd8080-9cb6-11e9-a6b8-09e27549d5bb";
         }
-        public WildRigPlugin(string pluginUUID = "7de4c3d8-0417-4d56-b6be-6c43820ca809")
+        public WildRigPlugin(string pluginUUID = "2edd8080-9cb6-11e9-a6b8-09e27549d5bb")
         {
             _pluginUUID = pluginUUID;
         }

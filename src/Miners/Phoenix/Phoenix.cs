@@ -70,7 +70,7 @@ namespace Phoenix
 
             // local benchmark
             // TODO hardcoded epoch
-            var commandLine = $"-di {_devices} -platform {_platform} {_extraLaunchParameters} -benchmark 200 -wd 0";
+            var commandLine = $"-di {_devices} {_extraLaunchParameters} -benchmark 200 -wd 0";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
