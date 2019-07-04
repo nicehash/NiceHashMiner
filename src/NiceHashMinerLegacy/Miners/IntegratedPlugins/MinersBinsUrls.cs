@@ -19,7 +19,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {  "ClaymoreDual14+", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/Claymore.s.Dual.Ethereum.AMD+NVIDIA.GPU.Miner.v14.7.7z", "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?ngYyTARY" } },
             {  "Ethlargement", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/Ethlargement.7z" } }, // TODO change to original link
             {  "Ewbf", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/EWBF.Equihash.miner.v0.6.7z", "https://mega.nz/#F!fsAlmZQS!CwVgFfBDduQI-CbwVkUEpQ?Tlp22YKT" } },
-            {  "GMiner", new List<string>{ "https://github.com/develsoftware/GMinerRelease/releases/download/1.49/gminer_1_49_windows64.zip" } },
+            {  "GMiner", new List<string>{ "https://github.com/develsoftware/GMinerRelease/releases/download/1.50/gminer_1_50_windows64.zip" } },
             {  "NBMiner", new List<string>{ "https://github.com/NebuTech/NBMiner/releases/download/v23.3/NBMiner_23.3_Win.zip" } },
             {  "Phoenix", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/PhoenixMiner_4.2c_Windows.7z", "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?6UV1FQSZ" } },
             {  "SGminerAvemore", new List<string>{ "https://github.com/brian112358/avermore-miner/releases/download/v1.4.1/avermore-v1.4.1-windows.zip" } },
