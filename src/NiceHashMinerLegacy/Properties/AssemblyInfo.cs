@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NiceHashMinerLegacy")]
-[assembly: AssemblyDescription("NiceHashMinerLegacy is simple to use mining tool")]
+[assembly: AssemblyTitle("NiceHashMiner")]
+[assembly: AssemblyDescription("NiceHashMiner is simple to use mining tool")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("NiceHash")]
-[assembly: AssemblyProduct("NiceHashMinerLegacy")]
-[assembly: AssemblyCopyright("NiceHash ©  2019")]
+[assembly: AssemblyCompany("H-BIT, d.o.o")]
+[assembly: AssemblyProduct("NiceHashMiner")]
+[assembly: AssemblyCopyright("H-BIT, d.o.o ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -34,5 +34,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.9.1.6")]
-[assembly: AssemblyFileVersion("1.9.1.6")]
+[assembly: AssemblyVersion("1.9.2.6")]
+[assembly: AssemblyFileVersion("1.9.2.6")]

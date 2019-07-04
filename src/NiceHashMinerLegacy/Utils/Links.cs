@@ -16,7 +16,7 @@
         public const string PluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
 #elif PRODUCTION_NEW
         public const string VisitUrl = "https://new.nicehash.com";
-        public const string CheckStats = "https://new.nicehash.com/mining/stats";
+        public const string CheckStats = "https://new.nicehash.com/my/mining/stats";
         public const string Register = "https://new.nicehash.com/my/register";
         public const string Login = "NO_URL";
         public const string PluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";

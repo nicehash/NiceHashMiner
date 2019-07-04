@@ -67,7 +67,7 @@
             this.MinimumSize = new System.Drawing.Size(600, 400);
             this.Name = "FormEula";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "NiceHash Miner Legacy Terms Of Use";
+            this.Text = "NiceHash Miner Terms Of Use";
             this.ResumeLayout(false);
 
         }

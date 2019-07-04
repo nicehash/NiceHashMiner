@@ -115,7 +115,7 @@ namespace NiceHashMiner.Forms
         void FormHelpers.ICustomTranslate.CustomTranslate()
         {
             // Setup Tooltips
-            SetToolTip(Tr("Changes the default language for NiceHash Miner Legacy."),
+            SetToolTip(Tr("Changes the default language for NiceHash Miner."),
                 comboBox_Language, label_Language, pictureBox_Language);
 
             SetToolTip(Tr("When checked, it displays debug console."),
@@ -127,19 +127,19 @@ namespace NiceHashMiner.Forms
             SetToolTip(Tr("When checked, sgminer, ccminer, cpuminer and ethminer console windows will be hidden."),
                 checkBox_HideMiningWindows, pictureBox_HideMiningWindows);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy will minimize to tray."),
+            SetToolTip(Tr("When checked, NiceHash Miner will minimize to tray."),
                 checkBox_MinimizeToTray, pictureBox_MinimizeToTray);
 
             SetToolTip(Tr("Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility."),
                 checkBox_Use3rdPartyMiners, pictureBox_Use3rdPartyMiners);
 
-            SetToolTip(Tr("When unchecked NiceHash Miner Legacy will allow only one instance running (it will close a new started instance if there is an opened instance running)."),
+            SetToolTip(Tr("When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running)."),
                 checkBox_AllowMultipleInstances, pictureBox_AllowMultipleInstances);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy Form Windows will be set as Top Most and will be covered only by other Top Most Windows."),
+            SetToolTip(Tr("When checked, NiceHash Miner Form Windows will be set as Top Most and will be covered only by other Top Most Windows."),
                 checkBox_WindowAlwaysOnTop, pictureBox_WindowAlwaysOnTop);
 
-            SetToolTip(Tr("If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount."),
+            SetToolTip(Tr("If set to any value more than 0 (USD), NiceHash Miner will stop mining\nif the calculated profit falls below the set amount."),
                 label_MinProfit, pictureBox_MinProfit, textBox_MinProfit);
 
             SetToolTip(Tr("Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high."),
@@ -151,7 +151,7 @@ namespace NiceHashMiner.Forms
             SetToolTip(Tr("API query interval for ccminer, sgminer cpuminer and ethminer."),
                 textBox_MinerAPIQueryInterval, label_MinerAPIQueryInterval, pictureBox_MinerAPIQueryInterval);
 
-            SetToolTip(Tr("Amount of time (in milliseconds) that NiceHash Miner Legacy will wait before restarting the miner."),
+            SetToolTip(Tr("Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner."),
                 textBox_MinerRestartDelayMS, label_MinerRestartDelayMS, pictureBox_MinerRestartDelayMS);
 
             SetToolTip(Tr("Set starting port number from which miner API Bind ports will be set for communication."),
@@ -172,36 +172,36 @@ namespace NiceHashMiner.Forms
             SetToolTip(Tr("Sets the maximum size for the log file."),
                 textBox_LogMaxFileSize, label_LogMaxFileSize, pictureBox_LogMaxFileSize);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy would issue a warning if\na less optimal version of a driver is installed."),
+            SetToolTip(Tr("When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed."),
                 checkBox_ShowDriverVersionWarning, pictureBox_ShowDriverVersionWarning);
 
-            SetToolTip(Tr("When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable."),
+            SetToolTip(Tr("When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable."),
                 checkBox_DisableWindowsErrorReporting, pictureBox_DisableWindowsErrorReporting);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy would issue a warning if\nthe internet connection is not available."),
+            SetToolTip(Tr("When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available."),
                 checkBox_ShowInternetConnectionWarning, pictureBox_ShowInternetConnectionWarning);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated."),
+            SetToolTip(Tr("When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated."),
                 checkBox_NVIDIAP0State, pictureBox_NVIDIAP0State);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system."),
+            SetToolTip(Tr("When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system."),
                 checkBox_RunScriptOnCUDA_GPU_Lost, pictureBox_RunScriptOnCUDA_GPU_Lost);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy will run on login."),
+            SetToolTip(Tr("When checked, NiceHash Miner will run on login."),
                 checkBox_RunAtStartup, pictureBox_RunAtStartup);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy will automatically start mining when launched."),
+            SetToolTip(Tr("When checked, NiceHash Miner will automatically start mining when launched."),
                 checkBox_AutoStartMining, pictureBox_AutoStartMining);
 
             SetToolTip(Tr("Choose what Currency to Display mining profit."),
                 label_displayCurrency, pictureBox_displayCurrency, currencyConverterCombobox);
 
             // internet connection mining check
-            SetToolTip(Tr("If enabled NiceHash Miner Legacy will stop mining without internet connectivity"),
+            SetToolTip(Tr("If enabled NiceHash Miner will stop mining without internet connectivity"),
                 checkBox_IdleWhenNoInternetAccess, pictureBox_IdleWhenNoInternetAccess);
 
             // IFTTT notification check
-            SetToolTip(Tr("If enabled, NiceHash Miner Legacy will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality."),
+            SetToolTip(Tr("If enabled, NiceHash Miner will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality."),
                 checkBox_UseIFTTT, pictureBox_UseIFTTT);
 
             SetToolTip(Tr("Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]"),
@@ -220,10 +220,10 @@ namespace NiceHashMiner.Forms
             SetToolTip(Tr("Choose how to check if computer is idle when start mining on idle is enabled.\nSession Lock will start when the computer is locked (generally when the screen has turned off).\nInput Timeout will start when there has been no system input for the idle time seconds."),
                 comboBox_IdleType, label_IdleType, pictureBox_IdleType);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage)."),
+            SetToolTip(Tr("When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage)."),
                 checkBox_DisableDeviceStatusMonitoring, pictureBox_DisableDeviceStatusMonitoring);
 
-            SetToolTip(Tr("When checked, NiceHash Miner Legacy will not attempt to set device power mode settings (currently NVIDIA only)."),
+            SetToolTip(Tr("When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only)."),
                             checkBox_DisableDevicePowerModeSettings, pictureBox_DisableDevicePowerModeSettings);
 
             algorithmSettingsControl1.InitLocale(toolTip1);
@@ -466,7 +466,7 @@ namespace NiceHashMiner.Forms
 
         private void ButtonDefaults_Click(object sender, EventArgs e)
         {
-            var result = MessageBox.Show(Tr("Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner Legacy automatically."),
+            var result = MessageBox.Show(Tr("Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner automatically."),
                 Tr("Set default settings?"),
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 

@@ -31,7 +31,7 @@ namespace NiceHashMiner
         {
             get
             {
-                return "NiceHash Miner Legacy v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTag;
+                return "NiceHash Miner v" + Application.ProductVersion + BetaAlphaPostfixString + BuildTag;
             }
         }
         #endregion BuildTag
@@ -95,7 +95,7 @@ namespace NiceHashMiner
             // check WMI
             if (!SystemSpecs.IsWmiEnabled())
             {
-                MessageBox.Show(Tr("NiceHash Miner Legacy cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner Legacy to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner Legacy."),
+                MessageBox.Show(Tr("NiceHash Miner cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner."),
                         Tr("Windows Management Instrumentation Error"),
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -104,7 +104,7 @@ namespace NiceHashMiner
 
             if (!Helpers.Is45NetOrHigher())
             {
-                MessageBox.Show(Tr("NiceHash Miner Legacy requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5"),
+                MessageBox.Show(Tr("NiceHash Miner requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5"),
                     Tr("Warning!"),
                     MessageBoxButtons.OK);
 
@@ -113,7 +113,7 @@ namespace NiceHashMiner
 
             if (!Helpers.Is64BitOperatingSystem)
             {
-                MessageBox.Show(Tr("NiceHash Miner Legacy supports only x64 platforms. You will not be able to use NiceHash Miner Legacy with x86"),
+                MessageBox.Show(Tr("NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86"),
                     Tr("Warning!"),
                     MessageBoxButtons.OK);
 

@@ -36,7 +36,7 @@
             this.label_Instruction.Name = "label_Instruction";
             this.label_Instruction.Size = new System.Drawing.Size(357, 17);
             this.label_Instruction.TabIndex = 0;
-            this.label_Instruction.Text = "Choose a default language for NiceHash Miner Legacy:";
+            this.label_Instruction.Text = "Choose a default language for NiceHash Miner:";
             this.label_Instruction.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // comboBox_Languages
