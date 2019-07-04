@@ -1,10 +1,11 @@
-﻿<UserControl x:Class="NHM.Wpf.Windows.Settings.Controls.SettingsContainer"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
              xmlns:conv="clr-namespace:NHM.Wpf.ViewModels.Converters"
+             xmlns:Pages="clr-namespace:NHM.Wpf.Windows.Settings.Pages" x:Class="NHM.Wpf.Windows.Settings.Controls.SettingsContainer"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -31,6 +32,9 @@
             </TextBlock>
         </StackPanel>
         <Label Content="{Binding Subtitle}" FontWeight="Light" FontSize="10" />
-        <StackPanel Name="ChildrenStackPanel" IsEnabled="{Binding DisplayEnabled}" />
+        <Grid IsEnabled="{Binding DisplayEnabled}">
+            <!-- The data context sets all children's data contexts to the settings page, so binding can be done there -->
+            <StackPanel x:Name="ChildrenStackPanel" DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Pages:ISettingsPage}}}"/>
+        </Grid>
     </StackPanel>
 </UserControl>

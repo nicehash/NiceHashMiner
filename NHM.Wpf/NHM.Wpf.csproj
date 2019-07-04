@@ -75,6 +75,7 @@
     <Compile Include="Windows\Settings\Pages\GeneralPage.xaml.cs">
       <DependentUpon>GeneralPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Settings\Pages\ISettingsPage.cs" />
     <Compile Include="Windows\Settings\Pages\MiningPage.xaml.cs">
       <DependentUpon>MiningPage.xaml</DependentUpon>
     </Compile>

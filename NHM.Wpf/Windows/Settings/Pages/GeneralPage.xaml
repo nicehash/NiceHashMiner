@@ -5,19 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Windows.Settings.Pages"
              xmlns:controls="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
+             xmlns:vm="clr-namespace:NHM.Wpf.ViewModels.Settings"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
         <controls:SettingsContainer 
             Title="Language:"
             Subtitle="Changes the default display language for NiceHash Miner.">
-            <ComboBox />
+            <ComboBox ItemsSource="{Binding LanguageOptions}" SelectedIndex="{Binding SelectedLangIndex}" />
         </controls:SettingsContainer>
         <controls:SettingsContainer 
-            Title="Display Currency:" 
-            Enabled="False"
+            Title="Display Currency:"
             Subtitle="Choose what Currency to Display mining profit.">
-            <ComboBox />
+            <ComboBox ItemsSource="{Binding CurrencyOptions}" SelectedItem="{Binding SelectedCurrency}" />
         </controls:SettingsContainer>
         <controls:SettingsContainer 
             Title="Log to File" 
