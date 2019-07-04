@@ -109,7 +109,7 @@ namespace NiceHashMiner.Miners
             _miner.StartMining();
             IsRunning = true;
             // maxTimeout = ConfigManager.GeneralConfig.CoolDownCheckEnabled
-            var maxTimeout = _plugin.GetApiMaxTimeout();
+            var maxTimeout = _plugin.GetApiMaxTimeout(MiningPairs);
             MinerApiWatchdog.AddGroup(GroupKey, maxTimeout, DateTime.UtcNow);
         }
 

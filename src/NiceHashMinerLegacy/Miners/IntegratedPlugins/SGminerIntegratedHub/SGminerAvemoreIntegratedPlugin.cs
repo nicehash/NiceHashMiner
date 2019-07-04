@@ -1,5 +1,6 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
@@ -42,6 +43,8 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
             return supported;
         }
+
+        protected override MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables { get; set; } = GetMinerSystemEnvironmentVariables(true);
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {

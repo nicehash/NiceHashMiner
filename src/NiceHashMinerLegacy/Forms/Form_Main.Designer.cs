@@ -88,6 +88,7 @@
             // textBoxBTCAddress
             // 
             this.textBoxBTCAddress.Location = new System.Drawing.Point(113, 39);
+            this.textBoxBTCAddress.MaxLength = 34;
             this.textBoxBTCAddress.Name = "textBoxBTCAddress";
             this.textBoxBTCAddress.Size = new System.Drawing.Size(237, 20);
             this.textBoxBTCAddress.TabIndex = 1;
@@ -400,7 +401,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.devicesMainBoard1.Location = new System.Drawing.Point(10, 109);
             this.devicesMainBoard1.Name = "devicesMainBoard1";
-            this.devicesMainBoard1.SecondPanelVisible = true;
+            this.devicesMainBoard1.SecondPanelVisible = false;
             this.devicesMainBoard1.Size = new System.Drawing.Size(664, 160);
             this.devicesMainBoard1.TabIndex = 111;
             // 

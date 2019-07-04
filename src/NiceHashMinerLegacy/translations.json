@@ -1,14 +1,14 @@
 {
   "Languages": {
     "en": "English",
-    "ru": "Русский",
-    "es": "Español",
-    "pt": "Português",
-    "bg": "Български",
-    "it": "Italiano",
-    "pl": "Polski",
-    "zh_cn": "简体中文",
-    "ro": "Română"
+    "ru": "Русский (Unofficial)",
+    "es": "Español (Unofficial)",
+    "pt": "Português (Unofficial)",
+    "bg": "Български (Unofficial)",
+    "it": "Italiano (Unofficial)",
+    "pl": "Polski (Unofficial)",
+    "zh_cn": "简体中文 (Unofficial)",
+    "ro": "Română (Unofficial)"
   },
   "Translations": {
     " (current {0})": {

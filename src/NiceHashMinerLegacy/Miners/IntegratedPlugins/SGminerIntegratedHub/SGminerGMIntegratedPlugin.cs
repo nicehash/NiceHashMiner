@@ -1,11 +1,14 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
+using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Algorithm;
 using NiceHashMinerLegacy.Common.Device;
 using NiceHashMinerLegacy.Common.Enums;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
@@ -41,6 +44,8 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
             return supported;
         }
+
+        protected override MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables { get; set; } = GetMinerSystemEnvironmentVariables(false);
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {

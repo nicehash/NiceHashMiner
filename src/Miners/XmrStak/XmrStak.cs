@@ -30,16 +30,13 @@ namespace XmrStak
         protected IXmrStakConfigHandler _configHandler;
         protected CancellationTokenSource _stopSource = null;
 
-        private readonly int _openClAmdPlatformNum;
-
         // running configs
         protected CpuConfig _cpuConfig;
         protected AmdConfig _amdConfig;
         protected NvidiaConfig _nvidiaConfig;
 
-        public XmrStak(string uuid, int openClAmdPlatformNum, IXmrStakConfigHandler configHandler) : base(uuid)
+        public XmrStak(string uuid, IXmrStakConfigHandler configHandler) : base(uuid)
         {
-            _openClAmdPlatformNum = openClAmdPlatformNum;
             _configHandler = configHandler;
         }
 
@@ -432,8 +429,16 @@ namespace XmrStak
                 }
                 if (_amdConfig == null && DeviceType.AMD == deviceType)
                 {
+                    var openClAmdPlatformResult = MinerToolkit.GetOpenCLPlatformID(_miningPairs);
+                    var openClAmdPlatformNum = openClAmdPlatformResult.Item1;
+                    bool openClAmdPlatformNumUnique = openClAmdPlatformResult.Item2;
+                    if (!openClAmdPlatformNumUnique)
+                    {
+                        Logger.Error(_logGroup, "Initialization of miner failed. Multiple OpenCLPlatform IDs found!");
+                        throw new InvalidOperationException("Invalid mining initialization");
+                    }
                     var amdTemplate = _configHandler.GetAmdConfig(_algorithmType);
-                    _amdConfig = new AmdConfig() { platform_index = _openClAmdPlatformNum };
+                    _amdConfig = new AmdConfig() { platform_index = openClAmdPlatformNum };
                     _amdConfig.gpu_threads_conf = amdTemplate.gpu_threads_conf.Where(t => deviceIDs.Contains(t.index)).ToList();
                     ConfigHelpers.WriteConfigFile(deviceConfigFilePath, _amdConfig);
                 }

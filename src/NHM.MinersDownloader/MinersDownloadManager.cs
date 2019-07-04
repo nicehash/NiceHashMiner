@@ -16,7 +16,8 @@ namespace NHM.MinersDownloader
 {
     public static class MinersDownloadManager
     {
-        public static bool UseMyDownloader { get; set; } = true;
+        // don't use this it is faster but less stable
+        public static bool UseMyDownloader { get; set; } = false;
 
         static MinersDownloadManager()
         {

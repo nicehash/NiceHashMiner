@@ -11,10 +11,11 @@ using NiceHashMinerLegacy.Common;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1;
+using System.Threading.Tasks;
 
 namespace TeamRedMiner
 {
-    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
         public TeamRedMinerPlugin()
         {
@@ -33,6 +34,8 @@ namespace TeamRedMiner
 
         public string Author => "stanko@nicehash.com";
 
+        protected readonly Dictionary<string, int> _mappedMinerIds = new Dictionary<string, int>();
+
         public bool CanGroup(MiningPair a, MiningPair b)
         {
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
@@ -40,7 +43,7 @@ namespace TeamRedMiner
 
         public IMiner CreateMiner()
         {
-            return new TeamRedMiner(PluginUUID, AMDDevice.GlobalOpenCLPlatformID)
+            return new TeamRedMiner(PluginUUID, _mappedMinerIds)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -52,10 +55,13 @@ namespace TeamRedMiner
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             // Get AMD GCN4+
-            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu)).Cast<AMDDevice>();
+            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu)).Cast<AMDDevice>().OrderBy(amd => amd.PCIeBusID);
 
+            var pcieId = 0;
             foreach (var gpu in amdGpus)
             {
+                _mappedMinerIds[gpu.UUID] = pcieId;
+                ++pcieId;
                 var algorithms = GetSupportedAlgorithms(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
@@ -87,6 +93,9 @@ namespace TeamRedMiner
 
             var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
             if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
+
+            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
+            if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
         }
 
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
@@ -145,6 +154,11 @@ namespace TeamRedMiner
                 }
             }
         };
+
+        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
+        {
+            GeneralTimeout =  _defaultTimeout,
+        };
         #endregion Internal Settings
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
@@ -161,9 +175,30 @@ namespace TeamRedMiner
             return false;
         }
 
-        public TimeSpan GetApiMaxTimeout()
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            return new TimeSpan(0, 5, 0);
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices --bus_reorder");
+            var mappedDevs = DevicesListParser.ParseTeamRedMinerOutput(output, devices.ToList());
+
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                _mappedMinerIds[uuid] = indexID;
+            }
         }
+
+        #region IGetApiMaxTimeoutV2
+        public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
+
+        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 5, 0);
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
+        {
+            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
+        }
+        #endregion IGetApiMaxTimeoutV2
     }
 }
