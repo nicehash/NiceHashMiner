@@ -31,6 +31,8 @@ namespace NiceHashMiner.Configs
         // helper variables
         private static bool _isGeneralConfigFileInit;
 
+        public static bool IsMiningRegardlesOfProfit => GeneralConfig.MinimumProfit == 0;
+
         // backups
         private static GeneralConfigBackup _generalConfigBackup = new GeneralConfigBackup();
         private static Dictionary<string, DeviceConfig> _benchmarkConfigsBackup = new Dictionary<string, DeviceConfig>();
