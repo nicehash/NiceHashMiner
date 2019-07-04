@@ -38,7 +38,6 @@ namespace NiceHashMiner.Miners
         private static bool _isProfitable = true;
         // assume we have internet
         private static bool _isConnectedToInternet = true;
-        private static bool _isMiningRegardlesOfProfit => ConfigManager.GeneralConfig.MinimumProfit == 0;
 
 
         public static bool IsMiningEnabled => _miningDevices.Count > 0;
@@ -214,24 +213,25 @@ namespace NiceHashMiner.Miners
         // full of state
         private static bool CheckIfProfitable(double currentProfit, bool log = true)
         {
-            if (_isMiningRegardlesOfProfit) {
+            if (ConfigManager.IsMiningRegardlesOfProfit) {
                 if (log) Logger.Info(Tag, $"Mine always regardless of profit");
                 return true;
             }
 
             // TODO FOR NOW USD ONLY
             var currentProfitUsd = (currentProfit * ExchangeRateApi.GetUsdExchangeRate());
-            _isProfitable = currentProfitUsd >= ConfigManager.GeneralConfig.MinimumProfit;
+            var minProfit = ConfigManager.GeneralConfig.MinimumProfit;
+            _isProfitable = currentProfitUsd >= minProfit;
             if (log)
             {
                 Logger.Info(Tag, $"Current global profit = {currentProfitUsd.ToString("F8")} USD/Day");
                 if (!_isProfitable)
                 {
-                    Logger.Info(Tag, $"Current global profit = NOT PROFITABLE, MinProfit: {ConfigManager.GeneralConfig.MinimumProfit.ToString("F8")} USD/Day");
+                    Logger.Info(Tag, $"Current global profit = NOT PROFITABLE, MinProfit: {minProfit.ToString("F8")} USD/Day");
                 }
                 else
                 {
-                    var profitabilityInfo = ConfigManager.GeneralConfig.MinimumProfit.ToString("F8") + " USD/Day";
+                    var profitabilityInfo = minProfit.ToString("F8") + " USD/Day";
                     Logger.Info(Tag, $"Current global profit = IS PROFITABLE, MinProfit: {profitabilityInfo}");
                 }
             }

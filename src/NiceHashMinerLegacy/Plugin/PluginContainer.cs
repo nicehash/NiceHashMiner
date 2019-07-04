@@ -325,17 +325,28 @@ namespace NiceHashMiner.Plugin
         }
         #endregion IDevicesCrossReference
 
-        #region IGetApiMaxTimeout
-        public TimeSpan GetApiMaxTimeout()
+        #region IGetApiMaxTimeout/IGetApiMaxTimeoutV2
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
         {
-            if (_plugin is IGetApiMaxTimeout impl)
+            if (_plugin is IGetApiMaxTimeoutV2 impl)
             {
-                return CheckExec(nameof(impl.GetApiMaxTimeout), () => impl.GetApiMaxTimeout(), new TimeSpan(0, 30, 0));
+                var enabled = CheckExec(nameof(impl.IsGetApiMaxTimeoutEnabled) + "V2", () => impl.IsGetApiMaxTimeoutEnabled, false);
+                if (!enabled)
+                {
+                    // 10 years for a timeout this is basically like being disabled
+                    return new TimeSpan(3650, 0, 30, 0);
+                }
+                return CheckExec(nameof(impl.GetApiMaxTimeout) + "V2", () => impl.GetApiMaxTimeout(miningPairs), new TimeSpan(0, 30, 0));
+            }
+
+            if (_plugin is IGetApiMaxTimeout implOld)
+            {
+                return CheckExec(nameof(impl.GetApiMaxTimeout), () => implOld.GetApiMaxTimeout(), new TimeSpan(0, 30, 0));
             }
             // make default 30minutes
             return new TimeSpan(0, 30, 0);            
         }
-        #endregion IGetApiMaxTimeout
+        #endregion IGetApiMaxTimeout/IGetApiMaxTimeoutV2
 
         #region IReBenchmarkChecker
         private bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)

@@ -1,9 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using MinerPluginToolkitV1.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinerPluginToolkitV1.Configs
 {
@@ -20,7 +18,7 @@ namespace MinerPluginToolkitV1.Configs
     /// }
     /// </jsonSerializationExample>
     [Serializable]
-    public class MinerReservedPorts
+    public class MinerReservedPorts : IInternalSetting
     {
         [JsonProperty("use_user_settings")]
         public bool UseUserSettings { get; set; } = false;

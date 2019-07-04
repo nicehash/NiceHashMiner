@@ -108,10 +108,10 @@ namespace NiceHashMiner.Stats
             return price / UsdBtcRate;
         }
 
-        public static double GetKwhPriceInFiat()
-        {
-            var price = ConfigManager.GeneralConfig.KwhPrice;
-            return price > 0 ? price : 0;
-        }
+        //public static double GetKwhPriceInFiat()
+        //{
+        //    var price = ConfigManager.GeneralConfig.KwhPrice;
+        //    return price > 0 ? price : 0;
+        //}
     }
 }

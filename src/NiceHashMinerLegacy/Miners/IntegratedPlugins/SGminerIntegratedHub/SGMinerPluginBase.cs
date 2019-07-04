@@ -1,4 +1,5 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker, IGetApiMaxTimeout
+    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker, IGetApiMaxTimeoutV2
     {
         public bool Is3rdParty => false;
 
@@ -101,16 +102,34 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
 
-        public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
-
-        public TimeSpan GetApiMaxTimeout()
+        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
         {
-            return new TimeSpan(0, 5, 0);
-        }
+            GeneralTimeout =  _defaultTimeout,
+        };
 
+        public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
         IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
             return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }
+
+        #region IGetApiMaxTimeoutV2
+        public bool IsGetApiMaxTimeoutEnabled
+        {
+            get
+            {
+                if (_getApiMaxTimeoutConfig?.UseUserSettings ?? false) return _getApiMaxTimeoutConfig.Enabled;
+                return true;
+            }
+        }
+
+
+        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 5, 0);
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
+        {
+            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
+        }
+        #endregion IGetApiMaxTimeoutV2
+
     }
 }

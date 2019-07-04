@@ -15,7 +15,7 @@ using NiceHashMinerLegacy.Common.Enums;
 
 namespace NBMiner
 {
-    public class NBMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class NBMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
         public NBMinerPlugin()
         {
@@ -118,6 +118,9 @@ namespace NBMiner
 
             var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
             if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
+
+            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
+            if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
         }
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
@@ -168,6 +171,10 @@ namespace NBMiner
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
+        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
+        {
+            GeneralTimeout =  _defaultTimeout,
+        };
         #endregion Internal Settings
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
@@ -201,9 +208,14 @@ namespace NBMiner
             return false;
         }
 
-        public TimeSpan GetApiMaxTimeout()
+        #region IGetApiMaxTimeoutV2
+        public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
+
+        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 1, 0);
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
         {
-            return new TimeSpan(0, 1, 0);
+            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
         }
+        #endregion IGetApiMaxTimeoutV2
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common;
 using System;
@@ -116,21 +117,7 @@ namespace MinerPluginToolkitV1.Configs
         /// <param name="defaultSettings">Represents default settings to write if there are no custom settings available</param>
         public static MinerSystemEnvironmentVariables InitMinerSystemEnvironmentVariablesSettings(string pluginRoot, MinerSystemEnvironmentVariables defaultSettings)
         {
-            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
-            var settingsPath = Path.Combine(pluginRootIntenrals, "MinerSystemEnvironmentVariables.json");
-            if (File.Exists(settingsPath))
-            {
-                var fileSettings = ReadFileSettings<MinerSystemEnvironmentVariables>(settingsPath);
-                if (fileSettings != null && fileSettings.UseUserSettings)
-                {
-                    // use file settings
-                    return fileSettings;
-                }
-            }
-
-            // if we get here then create/override the settings file
-            WriteFileSettings(settingsPath, defaultSettings);
-            return null;
+            return InitInternalSetting(pluginRoot, defaultSettings, "MinerSystemEnvironmentVariables.json");
         }
 
         /// <summary>
@@ -141,17 +128,7 @@ namespace MinerPluginToolkitV1.Configs
         /// <param name="minerOptionsPackage">Represents MinerOptionsPackage that will be written to file if the file doesn't exist and UseUserSettings equals false</param>
         public static MinerOptionsPackage InitInternalsHelper(string pluginRoot, MinerOptionsPackage minerOptionsPackage)
         {
-            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
-            var minerOptionsPackagePath = Path.Combine(pluginRootIntenrals, "MinerOptionsPackage.json");
-            var fileMinerOptionsPackage = ReadFileSettings<MinerOptionsPackage>(minerOptionsPackagePath);
-            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings) {
-                return fileMinerOptionsPackage;
-            }
-            else
-            { 
-                 WriteFileSettings(minerOptionsPackagePath, minerOptionsPackage);
-                 return null;
-            }
+            return InitInternalSetting(pluginRoot, minerOptionsPackage, "MinerOptionsPackage.json");
         }
 
         /// <summary>
@@ -163,16 +140,27 @@ namespace MinerPluginToolkitV1.Configs
         /// <returns></returns>
         public static MinerReservedPorts InitMinerReservedPorts(string pluginRoot, MinerReservedPorts minerReservedPorts)
         {
+            return InitInternalSetting(pluginRoot, minerReservedPorts, "MinerReservedPorts.json");
+        }
+
+        // TODO document
+        public static MinerApiMaxTimeoutSetting InitMinerApiMaxTimeoutSetting(string pluginRoot, MinerApiMaxTimeoutSetting minerApiMaxTimeoutSetting)
+        {
+            return InitInternalSetting(pluginRoot, minerApiMaxTimeoutSetting, "MinerApiMaxTimeoutSetting.json");
+        }
+
+        public static T InitInternalSetting<T>(string pluginRoot, T setting, string settingName) where T : class, IInternalSetting
+        {
             var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
-            var minerOptionsPackagePath = Path.Combine(pluginRootIntenrals, "MinerReservedPorts.json");
-            var fileMinerOptionsPackage = ReadFileSettings<MinerReservedPorts>(minerOptionsPackagePath);
-            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
+            var settingPath = Path.Combine(pluginRootIntenrals, settingName);
+            var settingPackage = ReadFileSettings<T>(settingPath);
+            if (settingPackage != null && settingPackage.UseUserSettings)
             {
-                return fileMinerOptionsPackage;
+                return settingPackage;
             }
             else
             {
-                WriteFileSettings(minerOptionsPackagePath, minerReservedPorts);
+                WriteFileSettings(settingPath, setting);
                 return null;
             }
         }

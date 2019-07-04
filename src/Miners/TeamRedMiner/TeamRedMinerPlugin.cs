@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace TeamRedMiner
 {
-    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
         public TeamRedMinerPlugin()
         {
@@ -93,6 +93,9 @@ namespace TeamRedMiner
 
             var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
             if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
+
+            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
+            if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
         }
 
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
@@ -151,6 +154,11 @@ namespace TeamRedMiner
                 }
             }
         };
+
+        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
+        {
+            GeneralTimeout =  _defaultTimeout,
+        };
         #endregion Internal Settings
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
@@ -165,11 +173,6 @@ namespace TeamRedMiner
         {
             //no improvements for algorithm speeds in the new version - just stability improvements
             return false;
-        }
-
-        public TimeSpan GetApiMaxTimeout()
-        {
-            return new TimeSpan(0, 5, 0);
         }
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
@@ -187,5 +190,15 @@ namespace TeamRedMiner
                 _mappedMinerIds[uuid] = indexID;
             }
         }
+
+        #region IGetApiMaxTimeoutV2
+        public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
+
+        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 5, 0);
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
+        {
+            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
+        }
+        #endregion IGetApiMaxTimeoutV2
     }
 }

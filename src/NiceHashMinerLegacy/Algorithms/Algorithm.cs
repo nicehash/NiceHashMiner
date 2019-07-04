@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMinerLegacy.Common.Enums;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Algorithms
 {
@@ -241,7 +242,7 @@ namespace NiceHashMiner.Algorithms
             //profits.TryGetValue(NiceHashID, out var paying);
             //CurNhmSmaDataVal = paying;
             //CurrentProfit = CurNhmSmaDataVal * AvaragedSpeed * Mult;
-            SubtractPowerFromProfit();
+            if (!ConfigManager.IsMiningRegardlesOfProfit) SubtractPowerFromProfit();
         }
 
         protected void SubtractPowerFromProfit()

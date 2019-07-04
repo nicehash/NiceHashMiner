@@ -14,6 +14,7 @@ using MinerPlugin;
 
 // alias
 using TimersTimer = System.Timers.Timer;
+using MinerPluginToolkitV1.Configs;
 
 namespace MinerPluginToolkitV1
 {
