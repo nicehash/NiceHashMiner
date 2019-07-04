@@ -205,7 +205,7 @@ namespace NiceHashMiner
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW
             isEnabledFeature = true;
 #endif
-            if (!Helpers.IsElevated && isEnabledFeature)
+            if (!Helpers.IsElevated && isEnabledFeature && !ConfigManager.GeneralConfig.DisableDevicePowerModeSettings)
             {
                 errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
                 linkLabelAdminPrivs.Click += (s, e) =>

@@ -6,6 +6,7 @@ namespace NiceHashMinerLegacy.Common.Enums
 {
     public enum PowerLevel
     {
+        Disabled = -2,
         Unsupported = -1,
         Low,
         Medium,
