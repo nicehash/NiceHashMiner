@@ -1,4 +1,4 @@
-# Algorithm ExtraLaunchParameters
+# [OBSOLETE] Algorithm ExtraLaunchParameters
 ## How does it work:
 If you are an advanced user that wants to tweak the performance of your GPUs or CPUs you can set **supported** options in the **ExtraLaunchParameters** for selected Device and Algorithm.
 

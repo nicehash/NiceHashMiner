@@ -5,12 +5,18 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW // NEW PRODUCTION
+[assembly: AssemblyTitle("NiceHashMiner")]
+[assembly: AssemblyDescription("NiceHashMiner is simple to use mining tool")]
+[assembly: AssemblyProduct("NiceHashMiner")]
+#else  // OLD PRODUCTION
 [assembly: AssemblyTitle("NiceHashMinerLegacy")]
 [assembly: AssemblyDescription("NiceHashMinerLegacy is simple to use mining tool")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("NiceHash")]
 [assembly: AssemblyProduct("NiceHashMinerLegacy")]
-[assembly: AssemblyCopyright("NiceHash ©  2019")]
+#endif
+[assembly: AssemblyCompany("H-BIT, d.o.o")]
+[assembly: AssemblyCopyright("H-BIT, d.o.o ©  2019")]
+[assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -34,5 +40,11 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
+
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW // NEW PRODUCTION
+[assembly: AssemblyVersion("1.9.2.6")]
+[assembly: AssemblyFileVersion("1.9.2.6")]
+#else  // OLD PRODUCTION 
 [assembly: AssemblyVersion("1.9.1.6")]
 [assembly: AssemblyFileVersion("1.9.1.6")]
+#endif

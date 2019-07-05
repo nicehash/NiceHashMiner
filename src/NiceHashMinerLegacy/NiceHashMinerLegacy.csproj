@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NiceHashMiner</RootNamespace>
-    <AssemblyName>NiceHashMinerLegacy</AssemblyName>
+    <AssemblyName>NiceHashMiner</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -37,7 +37,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;PRODUCTION_NEW</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -47,7 +47,7 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;PRODUCTION_NEW</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -269,6 +269,7 @@
     <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
     <Compile Include="Miners\MinerApiWatchdog.cs" />
     <Compile Include="Miners\MiningManager.cs" />
+    <Compile Include="NHMProductInfo.cs" />
     <Compile Include="Plugin\PluginContainer.cs" />
     <Compile Include="Plugin\SupportedAlgorithmsFilter.cs" />
     <Compile Include="Plugin\SupportedPluginsFilter.cs" />

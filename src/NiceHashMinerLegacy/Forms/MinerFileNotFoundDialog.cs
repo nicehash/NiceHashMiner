@@ -18,8 +18,7 @@ namespace NiceHashMiner
             FormHelpers.TranslateFormControls(this);
 
 
-            linkLabelError.Text = string.Format(Translations.Tr("{0}: File {1} is not found!\n\nPlease make sure that the file is accessible and that your anti-virus is not blocking the application.\nPlease refer the section \"My anti-virus is blocking the application\" at the Troubleshooting section ({2}).\n\nA re-download of NiceHash Miner Legacy might be needed."),
-                minerDeviceName, path, Translations.Tr("Link"));
+            linkLabelError.Text = Translations.Tr("{0}: File {1} is not found!\n\nPlease make sure that the file is accessible and that your anti-virus is not blocking the application.\nPlease refer the section \"My anti-virus is blocking the application\" at the Troubleshooting section ({2}).\n\nA re-download of {3} might be needed.", minerDeviceName, path, Translations.Tr("Link"), NHMProductInfo.Name);
             linkLabelError.LinkArea =
                 new LinkArea(linkLabelError.Text.IndexOf(Translations.Tr("Link")),
                     Translations.Tr("Link").Length);
