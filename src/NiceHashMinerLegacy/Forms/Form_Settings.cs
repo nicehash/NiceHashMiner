@@ -78,6 +78,8 @@ namespace NiceHashMiner.Forms
             checkBox_RunScriptOnCUDA_GPU_Lost.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.RunScriptOnCUDA_GPU_Lost));
             checkBox_RunAtStartup.DataBindings.Add("Checked", ConfigManager.RunAtStartup , nameof(ConfigManager.RunAtStartup.Enabled));
 
+            checkBox_ShowGPUPCIeBusIDs.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs));
+
             checkBox_DisableDeviceStatusMonitoring.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring));
             checkBox_DisableDevicePowerModeSettings.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableDevicePowerModeSettings));
 
@@ -225,6 +227,9 @@ namespace NiceHashMiner.Forms
 
             SetToolTip(Tr("When checked, {0} will not attempt to set device power mode settings (currently NVIDIA only).", NHMProductInfo.Name),
                             checkBox_DisableDevicePowerModeSettings, pictureBox_DisableDevicePowerModeSettings);
+
+            SetToolTip(Tr("When checked, GPUs PCIe bus IDs will be visible in the device name dashboard."),
+                            checkBox_ShowGPUPCIeBusIDs, pictureBox_ShowGPUPCIeBusIDs);
 
             algorithmSettingsControl1.InitLocale(toolTip1);
         }

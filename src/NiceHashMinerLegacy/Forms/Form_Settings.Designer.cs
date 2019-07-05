@@ -50,6 +50,8 @@
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.pictureBox_WindowAlwaysOnTop = new System.Windows.Forms.PictureBox();
+            this.checkBox_WindowAlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.pictureBox_RunAtStartup = new System.Windows.Forms.PictureBox();
             this.checkBox_RunAtStartup = new System.Windows.Forms.CheckBox();
             this.checkBox_AllowMultipleInstances = new System.Windows.Forms.CheckBox();
@@ -68,6 +70,11 @@
             this.checkBox_AutoScaleBTCValues = new System.Windows.Forms.CheckBox();
             this.checkBox_DisableWindowsErrorReporting = new System.Windows.Forms.CheckBox();
             this.checkBox_ShowDriverVersionWarning = new System.Windows.Forms.CheckBox();
+            this.groupBoxDeviceMonitoring = new System.Windows.Forms.GroupBox();
+            this.checkBox_DisableDevicePowerModeSettings = new System.Windows.Forms.CheckBox();
+            this.pictureBox_DisableDevicePowerModeSettings = new System.Windows.Forms.PictureBox();
+            this.checkBox_DisableDeviceStatusMonitoring = new System.Windows.Forms.CheckBox();
+            this.pictureBox_DisableDeviceStatusMonitoring = new System.Windows.Forms.PictureBox();
             this.groupBox_Logging = new System.Windows.Forms.GroupBox();
             this.label_LogMaxFileSize = new System.Windows.Forms.Label();
             this.textBox_LogMaxFileSize = new System.Windows.Forms.TextBox();
@@ -125,21 +132,16 @@
             this.checkBox_UseIFTTT = new System.Windows.Forms.CheckBox();
             this.tabPageDevicesAlgos = new System.Windows.Forms.TabPage();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
-            this.buttonSaveClose = new System.Windows.Forms.Button();
-            this.buttonDefaults = new System.Windows.Forms.Button();
-            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.pictureBox_WindowAlwaysOnTop = new System.Windows.Forms.PictureBox();
-            this.checkBox_WindowAlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.minDeviceProfitField = new NiceHashMiner.Forms.Components.Field();
+            this.groupBoxAlgorithmSettings = new System.Windows.Forms.GroupBox();
             this.algorithmsListView1 = new NiceHashMiner.Forms.Components.AlgorithmsListView();
             this.devicesListViewEnableControl1 = new NiceHashMiner.Forms.Components.DevicesListViewEnableControl();
             this.algorithmSettingsControl1 = new NiceHashMiner.Forms.Components.AlgorithmSettingsControl();
-            this.groupBoxDeviceMonitoring = new System.Windows.Forms.GroupBox();
-            this.checkBox_DisableDevicePowerModeSettings = new System.Windows.Forms.CheckBox();
-            this.pictureBox_DisableDevicePowerModeSettings = new System.Windows.Forms.PictureBox();
-            this.checkBox_DisableDeviceStatusMonitoring = new System.Windows.Forms.CheckBox();
-            this.pictureBox_DisableDeviceStatusMonitoring = new System.Windows.Forms.PictureBox();
+            this.buttonSaveClose = new System.Windows.Forms.Button();
+            this.buttonDefaults = new System.Windows.Forms.Button();
+            this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.pictureBox_ShowGPUPCIeBusIDs = new System.Windows.Forms.PictureBox();
+            this.checkBox_ShowGPUPCIeBusIDs = new System.Windows.Forms.CheckBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Main.SuspendLayout();
@@ -153,6 +155,7 @@
             this.tabPageAdvanced.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WindowAlwaysOnTop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).BeginInit();
@@ -162,6 +165,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Use3rdPartyMiners)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeToTray)).BeginInit();
+            this.groupBoxDeviceMonitoring.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDevicePowerModeSettings)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDeviceStatusMonitoring)).BeginInit();
             this.groupBox_Logging.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DebugConsole)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_LogMaxFileSize)).BeginInit();
@@ -191,10 +197,7 @@
             this.groupBox1.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WindowAlwaysOnTop)).BeginInit();
-            this.groupBoxDeviceMonitoring.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDevicePowerModeSettings)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDeviceStatusMonitoring)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowGPUPCIeBusIDs)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -502,6 +505,8 @@
             this.groupBox_Misc.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox_Misc.Controls.Add(this.pictureBox_ShowGPUPCIeBusIDs);
+            this.groupBox_Misc.Controls.Add(this.checkBox_ShowGPUPCIeBusIDs);
             this.groupBox_Misc.Controls.Add(this.pictureBox_WindowAlwaysOnTop);
             this.groupBox_Misc.Controls.Add(this.checkBox_WindowAlwaysOnTop);
             this.groupBox_Misc.Controls.Add(this.pictureBox_RunAtStartup);
@@ -526,10 +531,32 @@
             this.groupBox_Misc.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Misc.Name = "groupBox_Misc";
             this.groupBox_Misc.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Misc.Size = new System.Drawing.Size(392, 249);
+            this.groupBox_Misc.Size = new System.Drawing.Size(392, 268);
             this.groupBox_Misc.TabIndex = 395;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
+            // 
+            // pictureBox_WindowAlwaysOnTop
+            // 
+            this.pictureBox_WindowAlwaysOnTop.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_WindowAlwaysOnTop.Location = new System.Drawing.Point(222, 221);
+            this.pictureBox_WindowAlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_WindowAlwaysOnTop.Name = "pictureBox_WindowAlwaysOnTop";
+            this.pictureBox_WindowAlwaysOnTop.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_WindowAlwaysOnTop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_WindowAlwaysOnTop.TabIndex = 377;
+            this.pictureBox_WindowAlwaysOnTop.TabStop = false;
+            // 
+            // checkBox_WindowAlwaysOnTop
+            // 
+            this.checkBox_WindowAlwaysOnTop.AutoSize = true;
+            this.checkBox_WindowAlwaysOnTop.Location = new System.Drawing.Point(6, 221);
+            this.checkBox_WindowAlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_WindowAlwaysOnTop.Name = "checkBox_WindowAlwaysOnTop";
+            this.checkBox_WindowAlwaysOnTop.Size = new System.Drawing.Size(171, 17);
+            this.checkBox_WindowAlwaysOnTop.TabIndex = 376;
+            this.checkBox_WindowAlwaysOnTop.Text = "Form Windows Always On Top";
+            this.checkBox_WindowAlwaysOnTop.UseVisualStyleBackColor = true;
             // 
             // pictureBox_RunAtStartup
             // 
@@ -729,6 +756,68 @@
             this.checkBox_ShowDriverVersionWarning.Text = "Show Driver Version Warning";
             this.checkBox_ShowDriverVersionWarning.UseVisualStyleBackColor = true;
             // 
+            // groupBoxDeviceMonitoring
+            // 
+            this.groupBoxDeviceMonitoring.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxDeviceMonitoring.Controls.Add(this.checkBox_DisableDevicePowerModeSettings);
+            this.groupBoxDeviceMonitoring.Controls.Add(this.pictureBox_DisableDevicePowerModeSettings);
+            this.groupBoxDeviceMonitoring.Controls.Add(this.checkBox_DisableDeviceStatusMonitoring);
+            this.groupBoxDeviceMonitoring.Controls.Add(this.pictureBox_DisableDeviceStatusMonitoring);
+            this.groupBoxDeviceMonitoring.Location = new System.Drawing.Point(2, 277);
+            this.groupBoxDeviceMonitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxDeviceMonitoring.Name = "groupBoxDeviceMonitoring";
+            this.groupBoxDeviceMonitoring.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.groupBoxDeviceMonitoring.Size = new System.Drawing.Size(392, 72);
+            this.groupBoxDeviceMonitoring.TabIndex = 396;
+            this.groupBoxDeviceMonitoring.TabStop = false;
+            this.groupBoxDeviceMonitoring.Text = "Device Monitoring:";
+            // 
+            // checkBox_DisableDevicePowerModeSettings
+            // 
+            this.checkBox_DisableDevicePowerModeSettings.AutoSize = true;
+            this.checkBox_DisableDevicePowerModeSettings.Location = new System.Drawing.Point(6, 42);
+            this.checkBox_DisableDevicePowerModeSettings.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_DisableDevicePowerModeSettings.Name = "checkBox_DisableDevicePowerModeSettings";
+            this.checkBox_DisableDevicePowerModeSettings.Size = new System.Drawing.Size(202, 17);
+            this.checkBox_DisableDevicePowerModeSettings.TabIndex = 373;
+            this.checkBox_DisableDevicePowerModeSettings.Text = "Disable Device Power Mode Settings";
+            this.checkBox_DisableDevicePowerModeSettings.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox_DisableDevicePowerModeSettings
+            // 
+            this.pictureBox_DisableDevicePowerModeSettings.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_DisableDevicePowerModeSettings.Location = new System.Drawing.Point(222, 42);
+            this.pictureBox_DisableDevicePowerModeSettings.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_DisableDevicePowerModeSettings.Name = "pictureBox_DisableDevicePowerModeSettings";
+            this.pictureBox_DisableDevicePowerModeSettings.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_DisableDevicePowerModeSettings.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_DisableDevicePowerModeSettings.TabIndex = 372;
+            this.pictureBox_DisableDevicePowerModeSettings.TabStop = false;
+            // 
+            // checkBox_DisableDeviceStatusMonitoring
+            // 
+            this.checkBox_DisableDeviceStatusMonitoring.AutoSize = true;
+            this.checkBox_DisableDeviceStatusMonitoring.Location = new System.Drawing.Point(6, 19);
+            this.checkBox_DisableDeviceStatusMonitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_DisableDeviceStatusMonitoring.Name = "checkBox_DisableDeviceStatusMonitoring";
+            this.checkBox_DisableDeviceStatusMonitoring.Size = new System.Drawing.Size(183, 17);
+            this.checkBox_DisableDeviceStatusMonitoring.TabIndex = 315;
+            this.checkBox_DisableDeviceStatusMonitoring.Text = "Disable Device Status Monitoring";
+            this.checkBox_DisableDeviceStatusMonitoring.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox_DisableDeviceStatusMonitoring
+            // 
+            this.pictureBox_DisableDeviceStatusMonitoring.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_DisableDeviceStatusMonitoring.Location = new System.Drawing.Point(222, 19);
+            this.pictureBox_DisableDeviceStatusMonitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_DisableDeviceStatusMonitoring.Name = "pictureBox_DisableDeviceStatusMonitoring";
+            this.pictureBox_DisableDeviceStatusMonitoring.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_DisableDeviceStatusMonitoring.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_DisableDeviceStatusMonitoring.TabIndex = 364;
+            this.pictureBox_DisableDeviceStatusMonitoring.TabStop = false;
+            // 
             // groupBox_Logging
             // 
             this.groupBox_Logging.Controls.Add(this.label_LogMaxFileSize);
@@ -738,7 +827,7 @@
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogMaxFileSize);
             this.groupBox_Logging.Controls.Add(this.pictureBox_LogToFile);
             this.groupBox_Logging.Controls.Add(this.checkBox_DebugConsole);
-            this.groupBox_Logging.Location = new System.Drawing.Point(2, 336);
+            this.groupBox_Logging.Location = new System.Drawing.Point(2, 355);
             this.groupBox_Logging.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Logging.Name = "groupBox_Logging";
             this.groupBox_Logging.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -832,7 +921,7 @@
             this.groupBox2.Controls.Add(this.pictureBox_IdleType);
             this.groupBox2.Controls.Add(this.comboBox_IdleType);
             this.groupBox2.Controls.Add(this.label_IdleType);
-            this.groupBox2.Location = new System.Drawing.Point(3, 412);
+            this.groupBox2.Location = new System.Drawing.Point(3, 431);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(390, 123);
             this.groupBox2.TabIndex = 390;
@@ -951,7 +1040,7 @@
             this.groupBox3.Controls.Add(this.checkBox_NVIDIAP0State);
             this.groupBox3.Controls.Add(this.pictureBox_RunEthlargement);
             this.groupBox3.Controls.Add(this.checkBox_RunEthlargement);
-            this.groupBox3.Location = new System.Drawing.Point(3, 541);
+            this.groupBox3.Location = new System.Drawing.Point(3, 560);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(390, 91);
             this.groupBox3.TabIndex = 391;
@@ -1035,7 +1124,7 @@
             this.groupBox5.Controls.Add(this.pictureBox_SwitchMinSeconds);
             this.groupBox5.Controls.Add(this.label_SwitchMaxSeconds);
             this.groupBox5.Controls.Add(this.textBox_SwitchMaxSeconds);
-            this.groupBox5.Location = new System.Drawing.Point(3, 638);
+            this.groupBox5.Location = new System.Drawing.Point(3, 657);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(390, 120);
             this.groupBox5.TabIndex = 394;
@@ -1144,7 +1233,7 @@
             this.groupBox_Miners.Controls.Add(this.textBox_APIBindPortStart);
             this.groupBox_Miners.Controls.Add(this.textBox_MinerRestartDelayMS);
             this.groupBox_Miners.Controls.Add(this.textBox_MinerAPIQueryInterval);
-            this.groupBox_Miners.Location = new System.Drawing.Point(2, 764);
+            this.groupBox_Miners.Location = new System.Drawing.Point(2, 783);
             this.groupBox_Miners.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Miners.Name = "groupBox_Miners";
             this.groupBox_Miners.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
@@ -1290,7 +1379,7 @@
             this.groupBox4.Controls.Add(this.textBox_IFTTTKey);
             this.groupBox4.Controls.Add(this.pictureBox_UseIFTTT);
             this.groupBox4.Controls.Add(this.checkBox_UseIFTTT);
-            this.groupBox4.Location = new System.Drawing.Point(3, 926);
+            this.groupBox4.Location = new System.Drawing.Point(3, 945);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(390, 62);
             this.groupBox4.TabIndex = 394;
@@ -1366,6 +1455,19 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Selected Device Settings";
             // 
+            // minDeviceProfitField
+            // 
+            this.minDeviceProfitField.AutoSize = true;
+            this.minDeviceProfitField.BackColor = System.Drawing.Color.Transparent;
+            this.minDeviceProfitField.Enabled = false;
+            this.minDeviceProfitField.EntryText = "";
+            this.minDeviceProfitField.LabelText = "Minimum Profit ($/day):";
+            this.minDeviceProfitField.Location = new System.Drawing.Point(6, 18);
+            this.minDeviceProfitField.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.minDeviceProfitField.Name = "minDeviceProfitField";
+            this.minDeviceProfitField.Size = new System.Drawing.Size(440, 83);
+            this.minDeviceProfitField.TabIndex = 0;
+            // 
             // groupBoxAlgorithmSettings
             // 
             this.groupBoxAlgorithmSettings.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -1380,69 +1482,6 @@
             this.groupBoxAlgorithmSettings.TabIndex = 395;
             this.groupBoxAlgorithmSettings.TabStop = false;
             this.groupBoxAlgorithmSettings.Text = "Algorithm settings for selected device:";
-            // 
-            // buttonSaveClose
-            // 
-            this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSaveClose.Location = new System.Drawing.Point(486, 482);
-            this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonSaveClose.Name = "buttonSaveClose";
-            this.buttonSaveClose.Size = new System.Drawing.Size(134, 23);
-            this.buttonSaveClose.TabIndex = 44;
-            this.buttonSaveClose.Text = "&Save and Close";
-            this.buttonSaveClose.UseVisualStyleBackColor = true;
-            this.buttonSaveClose.Click += new System.EventHandler(this.ButtonSaveClose_Click);
-            // 
-            // buttonDefaults
-            // 
-            this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonDefaults.Location = new System.Drawing.Point(408, 482);
-            this.buttonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.buttonDefaults.Name = "buttonDefaults";
-            this.buttonDefaults.Size = new System.Drawing.Size(74, 23);
-            this.buttonDefaults.TabIndex = 43;
-            this.buttonDefaults.Text = "&Defaults";
-            this.buttonDefaults.UseVisualStyleBackColor = true;
-            this.buttonDefaults.Click += new System.EventHandler(this.ButtonDefaults_Click);
-            // 
-            // errorProvider1
-            // 
-            this.errorProvider1.ContainerControl = this;
-            // 
-            // pictureBox_WindowAlwaysOnTop
-            // 
-            this.pictureBox_WindowAlwaysOnTop.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_WindowAlwaysOnTop.Location = new System.Drawing.Point(222, 221);
-            this.pictureBox_WindowAlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_WindowAlwaysOnTop.Name = "pictureBox_WindowAlwaysOnTop";
-            this.pictureBox_WindowAlwaysOnTop.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_WindowAlwaysOnTop.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_WindowAlwaysOnTop.TabIndex = 377;
-            this.pictureBox_WindowAlwaysOnTop.TabStop = false;
-            // 
-            // checkBox_WindowAlwaysOnTop
-            // 
-            this.checkBox_WindowAlwaysOnTop.AutoSize = true;
-            this.checkBox_WindowAlwaysOnTop.Location = new System.Drawing.Point(6, 221);
-            this.checkBox_WindowAlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_WindowAlwaysOnTop.Name = "checkBox_WindowAlwaysOnTop";
-            this.checkBox_WindowAlwaysOnTop.Size = new System.Drawing.Size(171, 17);
-            this.checkBox_WindowAlwaysOnTop.TabIndex = 376;
-            this.checkBox_WindowAlwaysOnTop.Text = "Form Windows Always On Top";
-            this.checkBox_WindowAlwaysOnTop.UseVisualStyleBackColor = true;
-            // 
-            // minDeviceProfitField
-            // 
-            this.minDeviceProfitField.AutoSize = true;
-            this.minDeviceProfitField.BackColor = System.Drawing.Color.Transparent;
-            this.minDeviceProfitField.Enabled = false;
-            this.minDeviceProfitField.EntryText = "";
-            this.minDeviceProfitField.LabelText = "Minimum Profit ($/day):";
-            this.minDeviceProfitField.Location = new System.Drawing.Point(6, 18);
-            this.minDeviceProfitField.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.minDeviceProfitField.Name = "minDeviceProfitField";
-            this.minDeviceProfitField.Size = new System.Drawing.Size(440, 83);
-            this.minDeviceProfitField.TabIndex = 0;
             // 
             // algorithmsListView1
             // 
@@ -1482,67 +1521,55 @@
             this.algorithmSettingsControl1.Size = new System.Drawing.Size(238, 293);
             this.algorithmSettingsControl1.TabIndex = 396;
             // 
-            // groupBoxDeviceMonitoring
+            // buttonSaveClose
             // 
-            this.groupBoxDeviceMonitoring.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBoxDeviceMonitoring.Controls.Add(this.checkBox_DisableDevicePowerModeSettings);
-            this.groupBoxDeviceMonitoring.Controls.Add(this.pictureBox_DisableDevicePowerModeSettings);
-            this.groupBoxDeviceMonitoring.Controls.Add(this.checkBox_DisableDeviceStatusMonitoring);
-            this.groupBoxDeviceMonitoring.Controls.Add(this.pictureBox_DisableDeviceStatusMonitoring);
-            this.groupBoxDeviceMonitoring.Location = new System.Drawing.Point(2, 258);
-            this.groupBoxDeviceMonitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxDeviceMonitoring.Name = "groupBoxDeviceMonitoring";
-            this.groupBoxDeviceMonitoring.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBoxDeviceMonitoring.Size = new System.Drawing.Size(392, 72);
-            this.groupBoxDeviceMonitoring.TabIndex = 396;
-            this.groupBoxDeviceMonitoring.TabStop = false;
-            this.groupBoxDeviceMonitoring.Text = "Device Monitoring:";
+            this.buttonSaveClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSaveClose.Location = new System.Drawing.Point(486, 482);
+            this.buttonSaveClose.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonSaveClose.Name = "buttonSaveClose";
+            this.buttonSaveClose.Size = new System.Drawing.Size(134, 23);
+            this.buttonSaveClose.TabIndex = 44;
+            this.buttonSaveClose.Text = "&Save and Close";
+            this.buttonSaveClose.UseVisualStyleBackColor = true;
+            this.buttonSaveClose.Click += new System.EventHandler(this.ButtonSaveClose_Click);
             // 
-            // checkBox_DisableDevicePowerModeSettings
+            // buttonDefaults
             // 
-            this.checkBox_DisableDevicePowerModeSettings.AutoSize = true;
-            this.checkBox_DisableDevicePowerModeSettings.Location = new System.Drawing.Point(6, 42);
-            this.checkBox_DisableDevicePowerModeSettings.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_DisableDevicePowerModeSettings.Name = "checkBox_DisableDevicePowerModeSettings";
-            this.checkBox_DisableDevicePowerModeSettings.Size = new System.Drawing.Size(202, 17);
-            this.checkBox_DisableDevicePowerModeSettings.TabIndex = 373;
-            this.checkBox_DisableDevicePowerModeSettings.Text = "Disable Device Power Mode Settings";
-            this.checkBox_DisableDevicePowerModeSettings.UseVisualStyleBackColor = true;
+            this.buttonDefaults.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDefaults.Location = new System.Drawing.Point(408, 482);
+            this.buttonDefaults.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.buttonDefaults.Name = "buttonDefaults";
+            this.buttonDefaults.Size = new System.Drawing.Size(74, 23);
+            this.buttonDefaults.TabIndex = 43;
+            this.buttonDefaults.Text = "&Defaults";
+            this.buttonDefaults.UseVisualStyleBackColor = true;
+            this.buttonDefaults.Click += new System.EventHandler(this.ButtonDefaults_Click);
             // 
-            // pictureBox_DisableDevicePowerModeSettings
+            // errorProvider1
             // 
-            this.pictureBox_DisableDevicePowerModeSettings.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableDevicePowerModeSettings.Location = new System.Drawing.Point(222, 42);
-            this.pictureBox_DisableDevicePowerModeSettings.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_DisableDevicePowerModeSettings.Name = "pictureBox_DisableDevicePowerModeSettings";
-            this.pictureBox_DisableDevicePowerModeSettings.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_DisableDevicePowerModeSettings.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_DisableDevicePowerModeSettings.TabIndex = 372;
-            this.pictureBox_DisableDevicePowerModeSettings.TabStop = false;
+            this.errorProvider1.ContainerControl = this;
             // 
-            // checkBox_DisableDeviceStatusMonitoring
+            // pictureBox_ShowGPUPCIeBusIDs
             // 
-            this.checkBox_DisableDeviceStatusMonitoring.AutoSize = true;
-            this.checkBox_DisableDeviceStatusMonitoring.Location = new System.Drawing.Point(6, 19);
-            this.checkBox_DisableDeviceStatusMonitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_DisableDeviceStatusMonitoring.Name = "checkBox_DisableDeviceStatusMonitoring";
-            this.checkBox_DisableDeviceStatusMonitoring.Size = new System.Drawing.Size(183, 17);
-            this.checkBox_DisableDeviceStatusMonitoring.TabIndex = 315;
-            this.checkBox_DisableDeviceStatusMonitoring.Text = "Disable Device Status Monitoring";
-            this.checkBox_DisableDeviceStatusMonitoring.UseVisualStyleBackColor = true;
+            this.pictureBox_ShowGPUPCIeBusIDs.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ShowGPUPCIeBusIDs.Location = new System.Drawing.Point(222, 244);
+            this.pictureBox_ShowGPUPCIeBusIDs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_ShowGPUPCIeBusIDs.Name = "pictureBox_ShowGPUPCIeBusIDs";
+            this.pictureBox_ShowGPUPCIeBusIDs.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ShowGPUPCIeBusIDs.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ShowGPUPCIeBusIDs.TabIndex = 379;
+            this.pictureBox_ShowGPUPCIeBusIDs.TabStop = false;
             // 
-            // pictureBox_DisableDeviceStatusMonitoring
+            // checkBox_ShowGPUPCIeBusIDs
             // 
-            this.pictureBox_DisableDeviceStatusMonitoring.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_DisableDeviceStatusMonitoring.Location = new System.Drawing.Point(222, 19);
-            this.pictureBox_DisableDeviceStatusMonitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_DisableDeviceStatusMonitoring.Name = "pictureBox_DisableDeviceStatusMonitoring";
-            this.pictureBox_DisableDeviceStatusMonitoring.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_DisableDeviceStatusMonitoring.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_DisableDeviceStatusMonitoring.TabIndex = 364;
-            this.pictureBox_DisableDeviceStatusMonitoring.TabStop = false;
+            this.checkBox_ShowGPUPCIeBusIDs.AutoSize = true;
+            this.checkBox_ShowGPUPCIeBusIDs.Location = new System.Drawing.Point(6, 244);
+            this.checkBox_ShowGPUPCIeBusIDs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_ShowGPUPCIeBusIDs.Name = "checkBox_ShowGPUPCIeBusIDs";
+            this.checkBox_ShowGPUPCIeBusIDs.Size = new System.Drawing.Size(145, 17);
+            this.checkBox_ShowGPUPCIeBusIDs.TabIndex = 378;
+            this.checkBox_ShowGPUPCIeBusIDs.Text = "Show GPU PCIe Bus IDs";
+            this.checkBox_ShowGPUPCIeBusIDs.UseVisualStyleBackColor = true;
             // 
             // Form_Settings
             // 
@@ -1575,6 +1602,7 @@
             this.flowLayoutPanel1.ResumeLayout(false);
             this.groupBox_Misc.ResumeLayout(false);
             this.groupBox_Misc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WindowAlwaysOnTop)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowInternetConnectionWarning)).EndInit();
@@ -1584,6 +1612,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_Use3rdPartyMiners)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AutoStartMining)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MinimizeToTray)).EndInit();
+            this.groupBoxDeviceMonitoring.ResumeLayout(false);
+            this.groupBoxDeviceMonitoring.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDevicePowerModeSettings)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDeviceStatusMonitoring)).EndInit();
             this.groupBox_Logging.ResumeLayout(false);
             this.groupBox_Logging.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DebugConsole)).EndInit();
@@ -1620,11 +1652,7 @@
             this.groupBox1.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WindowAlwaysOnTop)).EndInit();
-            this.groupBoxDeviceMonitoring.ResumeLayout(false);
-            this.groupBoxDeviceMonitoring.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDevicePowerModeSettings)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_DisableDeviceStatusMonitoring)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowGPUPCIeBusIDs)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1745,5 +1773,7 @@
         private System.Windows.Forms.PictureBox pictureBox_DisableDevicePowerModeSettings;
         private System.Windows.Forms.CheckBox checkBox_DisableDeviceStatusMonitoring;
         private System.Windows.Forms.PictureBox pictureBox_DisableDeviceStatusMonitoring;
+        private System.Windows.Forms.PictureBox pictureBox_ShowGPUPCIeBusIDs;
+        private System.Windows.Forms.CheckBox checkBox_ShowGPUPCIeBusIDs;
     }
 }

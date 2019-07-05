@@ -185,6 +185,10 @@ namespace NiceHashMiner.Devices
         // combines long and short name
         public string GetFullName()
         {
+            if (ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs && BaseDevice is IGpuDevice gpu)
+            {
+                return $"{NameCount} {Name} (pcie {gpu.PCIeBusID})";
+            }
             return $"{NameCount} {Name}";
         }
 

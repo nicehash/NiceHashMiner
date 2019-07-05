@@ -200,6 +200,8 @@ namespace NiceHashMiner.Configs.Data
         public bool DisableDeviceStatusMonitoring { get; set; } = false;
         public bool DisableDevicePowerModeSettings { get; set; } = false;
 
+        public bool ShowGPUPCIeBusIDs { get; set; } = false;
+
         // methods
         public void SetDefaults()
         {

@@ -441,7 +441,8 @@ namespace NiceHashMiner.Miners
                 ApplicationStateManager.RefreshRates();
                 // now we shoud have new global/total rate display it
                 var kwhPriceInBtc = ExchangeRateApi.GetKwhPriceInBtc();
-                ApplicationStateManager.DisplayTotalRate(MiningStats.GetProfit(kwhPriceInBtc));
+                var profitInBTC = MiningStats.GetProfit(kwhPriceInBtc);
+                ApplicationStateManager.DisplayTotalRate(profitInBTC);
             }
             catch (Exception e)
             {
