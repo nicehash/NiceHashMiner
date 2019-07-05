@@ -14,11 +14,11 @@
         </controls:SettingsContainer>
         <controls:SettingsContainer Title="Minimum Profit ($/day):"
                                     Description="If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount.">
-            <TextBox />
+            <TextBox Text="0.00" />
         </controls:SettingsContainer>
         <controls:SettingsContainer Title="Electricity Cost (/KWh):"
                                     Description="Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.">
-            <TextBox />
+            <TextBox Text="0.0000" />
         </controls:SettingsContainer>
     </StackPanel>
 </UserControl>
