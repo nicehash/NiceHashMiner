@@ -31,5 +31,11 @@
                 <TextBox />
             </controls:SettingsContainer>
         </controls:SettingsContainer>
+        <controls:SettingsContainer Title="Run With Windows" 
+                                    Enabled="False"
+                                    Description="When checked, NiceHash Miner Legacy will run on login." />
+        <controls:SettingsContainer Title="Autostart Mining"
+                                    Enabled="False"
+                                    Description="When checked, NiceHash Miner Legacy will automatically start mining when launched." />
     </StackPanel>
 </UserControl>

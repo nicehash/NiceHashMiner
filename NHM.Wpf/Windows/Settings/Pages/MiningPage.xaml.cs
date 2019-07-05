@@ -18,7 +18,7 @@ namespace NHM.Wpf.Windows.Settings.Pages
     /// <summary>
     /// Interaction logic for MiningPage.xaml
     /// </summary>
-    public partial class MiningPage : UserControl
+    public partial class MiningPage : UserControl, ISettingsPage
     {
         public MiningPage()
         {

@@ -29,5 +29,8 @@
                 <ComboBox />
             </controls:SettingsContainer>
         </controls:SettingsContainer>
+        <controls:SettingsContainer Title="Idle When No Internet Access" 
+                                    Enabled="True"
+                                    Description="If enabled NiceHash Miner Legacy will stop mining without internet connectivity" />
     </StackPanel>
 </UserControl>
