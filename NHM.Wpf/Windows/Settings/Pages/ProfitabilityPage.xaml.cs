@@ -18,7 +18,7 @@ namespace NHM.Wpf.Windows.Settings.Pages
     /// <summary>
     /// Interaction logic for ProfitabilityPage.xaml
     /// </summary>
-    public partial class ProfitabilityPage : UserControl
+    public partial class ProfitabilityPage : UserControl, ISettingsPage
     {
         public ProfitabilityPage()
         {

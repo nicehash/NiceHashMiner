@@ -24,7 +24,15 @@
             <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
 
-        <TreeView Margin="10,10,10,10.5" ItemsSource="{Binding PageVMs}" SelectedItemChanged="TreeView_OnSelectedItemChanged" />
+        <TreeView Margin="10,10,10,10.5" 
+                  ItemsSource="{Binding PageVMs}" 
+                  SelectedItemChanged="TreeView_OnSelectedItemChanged">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsExpanded" Value="True"/>
+                </Style>
+            </TreeView.ItemContainerStyle>
+        </TreeView>
 
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
 
