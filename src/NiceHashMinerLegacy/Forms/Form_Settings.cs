@@ -80,6 +80,9 @@ namespace NiceHashMiner.Forms
 
             checkBox_ShowGPUPCIeBusIDs.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.ShowGPUPCIeBusIDs));
 
+            checkBox_MineRegardlessOfProfit.DataBindings.Add("Checked", MiningProfitSettings.Instance, nameof(MiningProfitSettings.MineRegardlessOfProfit), false, DataSourceUpdateMode.OnPropertyChanged);
+            textBox_MinProfit.DataBindings.Add("Enabled", MiningProfitSettings.Instance, nameof(MiningProfitSettings.IsMinimumProfitProfitEnabled), false, DataSourceUpdateMode.OnPropertyChanged);
+
             checkBox_DisableDeviceStatusMonitoring.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring));
             checkBox_DisableDevicePowerModeSettings.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableDevicePowerModeSettings));
 
@@ -141,7 +144,7 @@ namespace NiceHashMiner.Forms
             SetToolTip(Tr("When checked, {0} Form Windows will be set as Top Most and will be covered only by other Top Most Windows.", NHMProductInfo.Name),
                 checkBox_WindowAlwaysOnTop, pictureBox_WindowAlwaysOnTop);
 
-            SetToolTip(Tr("If set to any value more than 0 (USD), {0} will stop mining\nif the calculated profit falls below the set amount.", NHMProductInfo.Name),
+            SetToolTip(Tr("If 'MineRegardlessOfProfit' is unchecked, {0} will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.", NHMProductInfo.Name),
                 label_MinProfit, pictureBox_MinProfit, textBox_MinProfit);
 
             SetToolTip(Tr("Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high."),
@@ -231,6 +234,9 @@ namespace NiceHashMiner.Forms
             SetToolTip(Tr("When checked, GPUs PCIe bus IDs will be visible in the device name dashboard."),
                             checkBox_ShowGPUPCIeBusIDs, pictureBox_ShowGPUPCIeBusIDs);
 
+            SetToolTip(Tr("When checked, {0} will mine regardless of profit.", NHMProductInfo.Name),
+                            checkBox_MineRegardlessOfProfit, pictureBox_MineRegardlessOfProfit);
+
             algorithmSettingsControl1.InitLocale(toolTip1);
         }
 
@@ -277,7 +283,7 @@ namespace NiceHashMiner.Forms
                 //textBox_ethminerDefaultBlockHeight.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 textBox_APIBindPortStart.KeyPress += TextBoxKeyPressEvents.TextBoxIntsOnly_KeyPress;
                 // set double only keypress
-                textBox_MinProfit.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
+                //textBox_MinProfit.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
                 textBox_ElectricityCost.KeyPress += TextBoxKeyPressEvents.TextBoxDoubleOnly_KeyPress;
             }
             // Add EventHandler for all the general tab's textboxes

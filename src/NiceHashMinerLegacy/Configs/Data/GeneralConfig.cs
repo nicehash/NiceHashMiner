@@ -133,7 +133,16 @@ namespace NiceHashMiner.Configs.Data
                 MinerPluginToolkitV1.FreePortsCheckerManager.ApiBindPortPoolStart = value;
             }
         }
-        public double MinimumProfit { get; set; } = 0;
+        public double MinimumProfit
+        {
+            get => NiceHashMiner.Configs.MiningProfitSettings.Instance.MinimumProfit;
+            set => NiceHashMiner.Configs.MiningProfitSettings.Instance.MinimumProfit = value;
+        }
+        public bool MineRegardlessOfProfit
+        {
+            get => NiceHashMiner.Configs.MiningProfitSettings.Instance.MineRegardlessOfProfit;
+            set => NiceHashMiner.Configs.MiningProfitSettings.Instance.MineRegardlessOfProfit = value;
+        }
 
         public bool IdleWhenNoInternetAccess { get; set; } = true;
         public bool RunScriptOnCUDA_GPU_Lost { get; set; } = false;
@@ -249,7 +258,8 @@ namespace NiceHashMiner.Configs.Data
             GUIWindowsAlwaysOnTop = false;
             DisableDeviceStatusMonitoring = false;
             DisableDevicePowerModeSettings = false;
-    }
+            MineRegardlessOfProfit = true;
+        }
 
         public void FixSettingBounds()
         {

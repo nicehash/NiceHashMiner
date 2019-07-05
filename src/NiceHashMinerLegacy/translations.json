@@ -1423,16 +1423,7 @@
       "ru": "Если включено, {0} будет использовать API-ключ, который вы предоставите, \nчтобы уведомить вас, когда прибыльность снизилась ниже вашей прибыльности. \nСм. инструкции по настройке этой функции.",
       "zh_cn": "IF This Than That，简称IFTTT。 开启此选项后，NiceHash{0}会在收益跌至设定阈值以下时通过您的API密钥来发送提醒。\n预知配置此功能的详细信息，请参见帮助文档。"
     },
-    "If set to any value more than 0 (USD), {0} will stop mining\nif the calculated profit falls below the set amount.": {
-      "bg": "Ако зададете стойност, по-голяма от 0 (USD), {0} ще спре работа\nпри спад на изчислената доходност под зададения праг.",
-      "es": "Si se establece cualquier valor diferente a 0 (USD), {0} parará de minar\nsi la rentabilidad cae por debajo del mínimo indicado.",
-      "it": "Se impostato un valore maggiore di 0 (USD), {0} smetterà di minare\nse il profitto calcolato scende sotto la cifra impostata.",
-      "pl": "Kiedy ustawisz więcej niż 0 (USD), {0} przestanie kopać\nkiedy zyskowność spadnie poniżej ustawionej wartości.",
-      "pt": "Se configurado para qualquer valor superior a 0 (USD), {0} vai parar de minerar\nse o lucro calculado for inferior ao valor fixado.",
-      "ro": "Dacă setați o valoare mai mare de 0 (USD), {0} o să se oprească din minat\ndacă profitul calculat scade sub suma setată.",
-      "ru": "Если указано значение выше 0 (USD), {0} будет останавливать майнинг,\nкогда рассчитанная прибыль ниже установленного значения.",
-      "zh_cn": "如设置成大于0 (USD)的任意值，{0}将会在\n预估每日收益跌至此金额以下时停止挖矿。"
-    },
+    "If 'MineRegardlessOfProfit' is unchecked, {0} will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.": {},
     "India - Chennai": {
       "ru": "Индия - Ченнаи",
       "zh_cn": "印度 - 金奈"

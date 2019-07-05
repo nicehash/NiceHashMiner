@@ -114,7 +114,7 @@ namespace NiceHashMiner.Miners.Grouping
             }
 
             // find max paying value and save key
-            double maxProfit = 0;
+            double maxProfit = double.NegativeInfinity;
             foreach (var algo in Algorithms)
             {
                 if (maxProfit < algo.CurrentProfit)

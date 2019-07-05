@@ -50,6 +50,8 @@
             this.tabPageAdvanced = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.groupBox_Misc = new System.Windows.Forms.GroupBox();
+            this.pictureBox_ShowGPUPCIeBusIDs = new System.Windows.Forms.PictureBox();
+            this.checkBox_ShowGPUPCIeBusIDs = new System.Windows.Forms.CheckBox();
             this.pictureBox_WindowAlwaysOnTop = new System.Windows.Forms.PictureBox();
             this.checkBox_WindowAlwaysOnTop = new System.Windows.Forms.CheckBox();
             this.pictureBox_RunAtStartup = new System.Windows.Forms.PictureBox();
@@ -140,8 +142,8 @@
             this.buttonSaveClose = new System.Windows.Forms.Button();
             this.buttonDefaults = new System.Windows.Forms.Button();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
-            this.pictureBox_ShowGPUPCIeBusIDs = new System.Windows.Forms.PictureBox();
-            this.checkBox_ShowGPUPCIeBusIDs = new System.Windows.Forms.CheckBox();
+            this.checkBox_MineRegardlessOfProfit = new System.Windows.Forms.CheckBox();
+            this.pictureBox_MineRegardlessOfProfit = new System.Windows.Forms.PictureBox();
             this.tabControlGeneral.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
             this.groupBox_Main.SuspendLayout();
@@ -155,6 +157,7 @@
             this.tabPageAdvanced.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.groupBox_Misc.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowGPUPCIeBusIDs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WindowAlwaysOnTop)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).BeginInit();
@@ -197,7 +200,7 @@
             this.groupBox1.SuspendLayout();
             this.groupBoxAlgorithmSettings.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowGPUPCIeBusIDs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MineRegardlessOfProfit)).BeginInit();
             this.SuspendLayout();
             // 
             // toolTip1
@@ -236,6 +239,8 @@
             // 
             // groupBox_Main
             // 
+            this.groupBox_Main.Controls.Add(this.checkBox_MineRegardlessOfProfit);
+            this.groupBox_Main.Controls.Add(this.pictureBox_MineRegardlessOfProfit);
             this.groupBox_Main.Controls.Add(this.pictureBox_ElectricityCost);
             this.groupBox_Main.Controls.Add(this.textBox_ElectricityCost);
             this.groupBox_Main.Controls.Add(this.label_ElectricityCost);
@@ -249,7 +254,7 @@
             this.groupBox_Main.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.groupBox_Main.Name = "groupBox_Main";
             this.groupBox_Main.Padding = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.groupBox_Main.Size = new System.Drawing.Size(344, 128);
+            this.groupBox_Main.Size = new System.Drawing.Size(344, 156);
             this.groupBox_Main.TabIndex = 386;
             this.groupBox_Main.TabStop = false;
             this.groupBox_Main.Text = "Main:";
@@ -257,7 +262,7 @@
             // pictureBox_ElectricityCost
             // 
             this.pictureBox_ElectricityCost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ElectricityCost.Location = new System.Drawing.Point(131, 66);
+            this.pictureBox_ElectricityCost.Location = new System.Drawing.Point(131, 101);
             this.pictureBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_ElectricityCost.Name = "pictureBox_ElectricityCost";
             this.pictureBox_ElectricityCost.Size = new System.Drawing.Size(18, 18);
@@ -267,7 +272,7 @@
             // 
             // textBox_ElectricityCost
             // 
-            this.textBox_ElectricityCost.Location = new System.Drawing.Point(11, 86);
+            this.textBox_ElectricityCost.Location = new System.Drawing.Point(11, 121);
             this.textBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_ElectricityCost.Name = "textBox_ElectricityCost";
             this.textBox_ElectricityCost.Size = new System.Drawing.Size(138, 20);
@@ -276,7 +281,7 @@
             // label_ElectricityCost
             // 
             this.label_ElectricityCost.AutoSize = true;
-            this.label_ElectricityCost.Location = new System.Drawing.Point(11, 66);
+            this.label_ElectricityCost.Location = new System.Drawing.Point(11, 101);
             this.label_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_ElectricityCost.Name = "label_ElectricityCost";
             this.label_ElectricityCost.Size = new System.Drawing.Size(117, 13);
@@ -286,7 +291,7 @@
             // pictureBox_TimeUnit
             // 
             this.pictureBox_TimeUnit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_TimeUnit.Location = new System.Drawing.Point(303, 15);
+            this.pictureBox_TimeUnit.Location = new System.Drawing.Point(303, 50);
             this.pictureBox_TimeUnit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_TimeUnit.Name = "pictureBox_TimeUnit";
             this.pictureBox_TimeUnit.Size = new System.Drawing.Size(18, 18);
@@ -297,7 +302,7 @@
             // label_TimeUnit
             // 
             this.label_TimeUnit.AutoSize = true;
-            this.label_TimeUnit.Location = new System.Drawing.Point(161, 15);
+            this.label_TimeUnit.Location = new System.Drawing.Point(161, 50);
             this.label_TimeUnit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_TimeUnit.Name = "label_TimeUnit";
             this.label_TimeUnit.Size = new System.Drawing.Size(55, 13);
@@ -308,7 +313,7 @@
             // 
             this.comboBox_TimeUnit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox_TimeUnit.FormattingEnabled = true;
-            this.comboBox_TimeUnit.Location = new System.Drawing.Point(161, 36);
+            this.comboBox_TimeUnit.Location = new System.Drawing.Point(161, 71);
             this.comboBox_TimeUnit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.comboBox_TimeUnit.Name = "comboBox_TimeUnit";
             this.comboBox_TimeUnit.Size = new System.Drawing.Size(160, 21);
@@ -317,7 +322,7 @@
             // pictureBox_MinProfit
             // 
             this.pictureBox_MinProfit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_MinProfit.Location = new System.Drawing.Point(131, 16);
+            this.pictureBox_MinProfit.Location = new System.Drawing.Point(131, 51);
             this.pictureBox_MinProfit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinProfit.Name = "pictureBox_MinProfit";
             this.pictureBox_MinProfit.Size = new System.Drawing.Size(18, 18);
@@ -327,7 +332,7 @@
             // 
             // textBox_MinProfit
             // 
-            this.textBox_MinProfit.Location = new System.Drawing.Point(11, 36);
+            this.textBox_MinProfit.Location = new System.Drawing.Point(11, 71);
             this.textBox_MinProfit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.textBox_MinProfit.Name = "textBox_MinProfit";
             this.textBox_MinProfit.Size = new System.Drawing.Size(138, 20);
@@ -336,7 +341,7 @@
             // label_MinProfit
             // 
             this.label_MinProfit.AutoSize = true;
-            this.label_MinProfit.Location = new System.Drawing.Point(11, 16);
+            this.label_MinProfit.Location = new System.Drawing.Point(11, 51);
             this.label_MinProfit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_MinProfit.Name = "label_MinProfit";
             this.label_MinProfit.Size = new System.Drawing.Size(115, 13);
@@ -535,6 +540,28 @@
             this.groupBox_Misc.TabIndex = 395;
             this.groupBox_Misc.TabStop = false;
             this.groupBox_Misc.Text = "Misc:";
+            // 
+            // pictureBox_ShowGPUPCIeBusIDs
+            // 
+            this.pictureBox_ShowGPUPCIeBusIDs.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ShowGPUPCIeBusIDs.Location = new System.Drawing.Point(222, 244);
+            this.pictureBox_ShowGPUPCIeBusIDs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_ShowGPUPCIeBusIDs.Name = "pictureBox_ShowGPUPCIeBusIDs";
+            this.pictureBox_ShowGPUPCIeBusIDs.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_ShowGPUPCIeBusIDs.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_ShowGPUPCIeBusIDs.TabIndex = 379;
+            this.pictureBox_ShowGPUPCIeBusIDs.TabStop = false;
+            // 
+            // checkBox_ShowGPUPCIeBusIDs
+            // 
+            this.checkBox_ShowGPUPCIeBusIDs.AutoSize = true;
+            this.checkBox_ShowGPUPCIeBusIDs.Location = new System.Drawing.Point(6, 244);
+            this.checkBox_ShowGPUPCIeBusIDs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_ShowGPUPCIeBusIDs.Name = "checkBox_ShowGPUPCIeBusIDs";
+            this.checkBox_ShowGPUPCIeBusIDs.Size = new System.Drawing.Size(145, 17);
+            this.checkBox_ShowGPUPCIeBusIDs.TabIndex = 378;
+            this.checkBox_ShowGPUPCIeBusIDs.Text = "Show GPU PCIe Bus IDs";
+            this.checkBox_ShowGPUPCIeBusIDs.UseVisualStyleBackColor = true;
             // 
             // pictureBox_WindowAlwaysOnTop
             // 
@@ -1549,27 +1576,27 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
-            // pictureBox_ShowGPUPCIeBusIDs
+            // checkBox_MineRegardlessOfProfit
             // 
-            this.pictureBox_ShowGPUPCIeBusIDs.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
-            this.pictureBox_ShowGPUPCIeBusIDs.Location = new System.Drawing.Point(222, 244);
-            this.pictureBox_ShowGPUPCIeBusIDs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.pictureBox_ShowGPUPCIeBusIDs.Name = "pictureBox_ShowGPUPCIeBusIDs";
-            this.pictureBox_ShowGPUPCIeBusIDs.Size = new System.Drawing.Size(18, 18);
-            this.pictureBox_ShowGPUPCIeBusIDs.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pictureBox_ShowGPUPCIeBusIDs.TabIndex = 379;
-            this.pictureBox_ShowGPUPCIeBusIDs.TabStop = false;
+            this.checkBox_MineRegardlessOfProfit.AutoSize = true;
+            this.checkBox_MineRegardlessOfProfit.Location = new System.Drawing.Point(14, 22);
+            this.checkBox_MineRegardlessOfProfit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.checkBox_MineRegardlessOfProfit.Name = "checkBox_MineRegardlessOfProfit";
+            this.checkBox_MineRegardlessOfProfit.Size = new System.Drawing.Size(146, 17);
+            this.checkBox_MineRegardlessOfProfit.TabIndex = 376;
+            this.checkBox_MineRegardlessOfProfit.Text = "Mine Regardless Of Profit";
+            this.checkBox_MineRegardlessOfProfit.UseVisualStyleBackColor = true;
             // 
-            // checkBox_ShowGPUPCIeBusIDs
+            // pictureBox_MineRegardlessOfProfit
             // 
-            this.checkBox_ShowGPUPCIeBusIDs.AutoSize = true;
-            this.checkBox_ShowGPUPCIeBusIDs.Location = new System.Drawing.Point(6, 244);
-            this.checkBox_ShowGPUPCIeBusIDs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            this.checkBox_ShowGPUPCIeBusIDs.Name = "checkBox_ShowGPUPCIeBusIDs";
-            this.checkBox_ShowGPUPCIeBusIDs.Size = new System.Drawing.Size(145, 17);
-            this.checkBox_ShowGPUPCIeBusIDs.TabIndex = 378;
-            this.checkBox_ShowGPUPCIeBusIDs.Text = "Show GPU PCIe Bus IDs";
-            this.checkBox_ShowGPUPCIeBusIDs.UseVisualStyleBackColor = true;
+            this.pictureBox_MineRegardlessOfProfit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MineRegardlessOfProfit.Location = new System.Drawing.Point(201, 22);
+            this.pictureBox_MineRegardlessOfProfit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            this.pictureBox_MineRegardlessOfProfit.Name = "pictureBox_MineRegardlessOfProfit";
+            this.pictureBox_MineRegardlessOfProfit.Size = new System.Drawing.Size(18, 18);
+            this.pictureBox_MineRegardlessOfProfit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pictureBox_MineRegardlessOfProfit.TabIndex = 377;
+            this.pictureBox_MineRegardlessOfProfit.TabStop = false;
             // 
             // Form_Settings
             // 
@@ -1602,6 +1629,7 @@
             this.flowLayoutPanel1.ResumeLayout(false);
             this.groupBox_Misc.ResumeLayout(false);
             this.groupBox_Misc.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowGPUPCIeBusIDs)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_WindowAlwaysOnTop)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_RunAtStartup)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox_AllowMultipleInstances)).EndInit();
@@ -1652,7 +1680,7 @@
             this.groupBox1.PerformLayout();
             this.groupBoxAlgorithmSettings.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_ShowGPUPCIeBusIDs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox_MineRegardlessOfProfit)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1775,5 +1803,7 @@
         private System.Windows.Forms.PictureBox pictureBox_DisableDeviceStatusMonitoring;
         private System.Windows.Forms.PictureBox pictureBox_ShowGPUPCIeBusIDs;
         private System.Windows.Forms.CheckBox checkBox_ShowGPUPCIeBusIDs;
+        private System.Windows.Forms.CheckBox checkBox_MineRegardlessOfProfit;
+        private System.Windows.Forms.PictureBox pictureBox_MineRegardlessOfProfit;
     }
 }
