@@ -71,8 +71,9 @@ namespace TRex
                     var currentStats = summary.gpus.Where(devStats => devStats.gpu_id == gpuDevice.ID).FirstOrDefault();
                     if (currentStats == null) continue;
                     perDeviceSpeedInfo.Add(gpuDevice.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentStats.hashrate * (1 - DevFee * 0.01)) });
-                    totalPowerUsage += currentStats.power;
-                    perDevicePowerInfo.Add(gpuDevice.UUID, currentStats.power);
+                    var kPower = currentStats.power * 1000;
+                    totalPowerUsage += kPower;
+                    perDevicePowerInfo.Add(gpuDevice.UUID, kPower);
                 }
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = Convert.ToInt32(totalPowerUsage);

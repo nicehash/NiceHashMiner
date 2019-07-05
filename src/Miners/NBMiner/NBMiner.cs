@@ -166,9 +166,10 @@ namespace NBMiner
                     if (apiDevice == null) continue;
 
                     totalSpeed += apiDevice.hashrate_raw;
-                    totalPowerUsage += (int)apiDevice.power;
+                    var kPower = (int)apiDevice.power * 1000;
+                    totalPowerUsage += kPower;
                     perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, apiDevice.hashrate_raw * (1 - DevFee * 0.01)) });
-                    perDevicePowerInfo.Add(deviceUUID, (int)apiDevice.power);
+                    perDevicePowerInfo.Add(deviceUUID, kPower);
                 }
 
                 api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };

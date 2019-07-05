@@ -104,8 +104,9 @@ namespace GMinerPlugin
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed;
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed * (1 - DevFee * 0.01)) });
-                    totalPowerUsage += currentDevStats.power_usage;
-                    perDevicePowerInfo.Add(gpu.UUID, currentDevStats.power_usage);
+                    var kPower = currentDevStats.power_usage * 1000;
+                    totalPowerUsage += kPower;
+                    perDevicePowerInfo.Add(gpu.UUID, kPower);
                 }
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.PowerUsageTotal = totalPowerUsage;

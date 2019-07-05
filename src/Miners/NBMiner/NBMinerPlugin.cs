@@ -28,7 +28,7 @@ namespace NBMiner
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 5);
+        public Version Version => new Version(1, 6);
         public string Name => "NBMiner";
 
         public string Author => "Dillon Newell";
