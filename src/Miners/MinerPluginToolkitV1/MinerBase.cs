@@ -213,6 +213,8 @@ namespace MinerPluginToolkitV1
                                 ThrowIfIsStop(stopMiner.IsCancellationRequested);
 
                                 // Logging
+                                Logger.Info(_logGroup, $"Starting miner binPath='{binPath}'");
+                                Logger.Info(_logGroup, $"Starting miner binCwd='{binCwd}'");
                                 Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
                                 // TODO this will not print content
                                 var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));
