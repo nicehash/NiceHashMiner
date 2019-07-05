@@ -29,7 +29,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {  "TTMiner", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/TT-Miner-2.2.5.7z", "https://tradeproject.de/download/Miner/TT-Miner-2.2.5.zip" } },
             {  "XmrStak", new List<string>{ "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.5/xmr-stak_2.10.5_495625c.7z" } },
             {  "VC_REDIST_x64_2015", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/vc_redist.x64.exe.7z" } },
-            {  "NanoMiner", new List<string>{ "https://github.com/nanopool/nanominer/releases/download/v1.3.4/nanominer-windows-1.3.4.zip" } },
+            {  "NanoMiner", new List<string>{ "https://github.com/nanopool/nanominer/releases/download/v1.4.0/nanominer-windows-1.4.0.zip" } },
             {  "WildRig", new List<string>{ "https://github.com/andru-kun/wildrig-multi/releases/download/0.17.9/wildrig-multi-windows-0.17.9-beta.7z" }}
             //{  "PLUGIN_UUID", new List<string>{ urls... } },
         };

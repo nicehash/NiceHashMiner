@@ -82,7 +82,10 @@ namespace WildRig
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn2(gpu)).Cast<AMDDevice>();
+            var amdGpus = devices
+                .Where(dev => dev is AMDDevice gpu && Checkers.IsGcn2(gpu))
+                .Cast<AMDDevice>()
+                .OrderBy(amd => amd.PCIeBusID);
 
             var pcieId = 0;
             foreach (var gpu in amdGpus)
