@@ -36,6 +36,9 @@
                 <DataTemplate DataType="{x:Type vm:MiningGeneralVM}">
                     <local:MiningPage />
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:ProfitabilitySettingsVM}">
+                    <local:ProfitabilityPage />
+                </DataTemplate>
             </ScrollViewer.Resources>
             <ContentControl Content="{Binding SelectedPageVM}"/>
         </ScrollViewer>

@@ -25,6 +25,7 @@ namespace NHM.Wpf.ViewModels.Settings
             PageVMs = new List<SettingsBaseVM>
             {
                 new GeneralSettingsVM(settingsObj),
+                new ProfitabilitySettingsVM(settingsObj),
                 SettingsContainerVM.MiningContainer(settingsObj)
             };
 

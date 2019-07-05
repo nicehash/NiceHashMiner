@@ -60,6 +60,7 @@
     <Compile Include="ViewModels\Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\Settings\GeneralSettingsVM.cs" />
     <Compile Include="ViewModels\Settings\MiningGeneralVM.cs" />
+    <Compile Include="ViewModels\Settings\ProfitabilitySettingsVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsBaseVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsContainerVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsVM.cs" />
@@ -78,6 +79,9 @@
     <Compile Include="Windows\Settings\Pages\ISettingsPage.cs" />
     <Compile Include="Windows\Settings\Pages\MiningPage.xaml.cs">
       <DependentUpon>MiningPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Settings\Pages\ProfitabilityPage.xaml.cs">
+      <DependentUpon>ProfitabilityPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Settings\SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
@@ -103,6 +107,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Settings\Pages\MiningPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Settings\Pages\ProfitabilityPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

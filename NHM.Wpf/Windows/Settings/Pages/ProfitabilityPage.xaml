@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="NHM.Wpf.Windows.Settings.Pages.ProfitabilityPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NHM.Wpf.Windows.Settings.Pages"
+             xmlns:controls="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel>
+        <controls:SettingsContainer Title="Time Unit:"
+                                    Subtitle="Sets the time unit to report BTC rates.">
+            <ComboBox />
+        </controls:SettingsContainer>
+        <controls:SettingsContainer Title="Minimum Profit ($/day):"
+                                    Subtitle="If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount.">
+            <TextBox />
+        </controls:SettingsContainer>
+        <controls:SettingsContainer Title="Electricity Cost (/KWh):"
+                                    Subtitle="Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.">
+            <TextBox />
+        </controls:SettingsContainer>
+    </StackPanel>
+</UserControl>
