@@ -37,7 +37,18 @@
                 </TextBlock.Style>
             </TextBlock>
         </StackPanel>
-        <Label Content="{Binding Subtitle}" FontWeight="Light" FontSize="10" />
+        <TextBlock Text="{Binding Description}" FontWeight="Light" FontSize="10" TextWrapping="Wrap" Margin="5">
+            <TextBlock.Style>
+                <!-- This extra boilerplate is needed for TextBlock to look disabled -->
+                <Style TargetType="{x:Type TextBlock}">
+                    <Style.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
         <Grid IsEnabled="{Binding Enabled}">
             <!-- The data context sets all children's data contexts to the settings page, so binding can be done there -->
             <StackPanel x:Name="ChildrenStackPanel" 

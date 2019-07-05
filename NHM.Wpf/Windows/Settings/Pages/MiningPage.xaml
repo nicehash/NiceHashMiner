@@ -10,22 +10,22 @@
     <StackPanel>
         <controls:SettingsContainer Title="Autostart Mining" 
                                     Enabled="True"
-                                    Subtitle="When checked, NiceHash Miner Legacy will automatically start mining when launched." />
+                                    Description="When checked, NiceHash Miner Legacy will automatically start mining when launched." />
         <controls:SettingsContainer Title="Hide Mining Windows" 
                                     Enabled="False"
-                                    Subtitle="When checked, sgminer, ccminer, cpuminer and ethminer console windows will be hidden.">
+                                    Description="When checked, sgminer, ccminer, cpuminer and ethminer console windows will be hidden.">
             <controls:SettingsContainer Title="Minimize Mining Windows" 
                                         Enabled="True"
-                                        Subtitle="When checked, mining windows will start minimized."/>
+                                        Description="When checked, mining windows will start minimized."/>
         </controls:SettingsContainer>
         <controls:SettingsContainer Title="Enable 3rd Party Miners" 
                                     Enabled="True"
-                                    Subtitle="Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility." />
+                                    Description="Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility." />
         <controls:SettingsContainer Title="Start Mining When Idle" 
                                     Enabled="False"
-                                    Subtitle="Automatically start mining when computer is idle and stop mining when computer is being used.">
+                                    Description="Automatically start mining when computer is idle and stop mining when computer is being used.">
             <controls:SettingsContainer Title="Idle Detection Method"
-                                        Subtitle="Change the method used to detect when the system is idle.">
+                                        Description="Change the method used to detect when the system is idle.">
                 <ComboBox />
             </controls:SettingsContainer>
         </controls:SettingsContainer>

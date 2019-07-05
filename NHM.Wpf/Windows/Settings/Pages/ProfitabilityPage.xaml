@@ -9,15 +9,15 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <StackPanel>
         <controls:SettingsContainer Title="Time Unit:"
-                                    Subtitle="Sets the time unit to report BTC rates.">
+                                    Description="Sets the time unit to report BTC rates.">
             <ComboBox />
         </controls:SettingsContainer>
         <controls:SettingsContainer Title="Minimum Profit ($/day):"
-                                    Subtitle="If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount.">
+                                    Description="If set to any value more than 0 (USD), NiceHash Miner Legacy will stop mining\nif the calculated profit falls below the set amount.">
             <TextBox />
         </controls:SettingsContainer>
         <controls:SettingsContainer Title="Electricity Cost (/KWh):"
-                                    Subtitle="Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.">
+                                    Description="Set this to a positive value to factor in electricity costs when switching.\nValue is cost per kW-hour in your chosen display currency.\nSet to 0 to disable power switching functionality.">
             <TextBox />
         </controls:SettingsContainer>
     </StackPanel>
