@@ -13,6 +13,7 @@ namespace MinerPluginToolkitV1
     /// </summary>
     public static class Filters
     {
+        //https://investoon.com/tools/dag_size
         public const ulong MinDaggerHashimotoMemory = 3UL << 30; // 3GB
         public const ulong MinZHashMemory = 1879047230; // 1.75GB
         public const ulong MinBeamMemory = 3113849695; // 2.9GB
