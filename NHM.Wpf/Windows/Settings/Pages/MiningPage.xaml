@@ -28,6 +28,10 @@
                                         Description="Change the method used to detect when the system is idle.">
                 <ComboBox />
             </controls:SettingsContainer>
+            <controls:SettingsContainer Title="Minimum Idle [s]:"
+                                        Description="When StartMiningWhenIdle is checked, MinIdleSeconds tells how\nmany seconds computer has to be idle before mining starts.">
+                <TextBox Text="600" />
+            </controls:SettingsContainer>
         </controls:SettingsContainer>
         <controls:SettingsContainer Title="Idle When No Internet Access" 
                                     Enabled="True"
