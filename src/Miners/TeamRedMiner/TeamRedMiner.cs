@@ -24,16 +24,13 @@ namespace TeamRedMiner
 
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
-
+        private int _openClAmdPlatformNum;
         // command line parts
         private string _devices;
 
-        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
-
-        public TeamRedMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        public TeamRedMiner(string uuid) : base(uuid)
         {
-            _mappedIDs = mappedIDs;
         }
 
         private string AlgoName
@@ -77,7 +74,7 @@ namespace TeamRedMiner
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var cmd = $"-a {AlgoName} -o {url} -u {username} --bus_reorder -d {_devices} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
+            var cmd = $"-a {AlgoName} -o {url} -u {username} --platform={_openClAmdPlatformNum} -d {_devices} --api_listen=127.0.0.1:{_apiPort} {_extraLaunchParameters}";
             return cmd;
         }
 
@@ -210,9 +207,18 @@ namespace TeamRedMiner
             // Order pairs and parse ELP
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
-            
-            for(int i = 0; i < orderedMiningPairs.Count; i++)
+            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
+
+            var openClAmdPlatformResult = MinerToolkit.GetOpenCLPlatformID(_miningPairs);
+            _openClAmdPlatformNum = openClAmdPlatformResult.Item1;
+            bool openClAmdPlatformNumUnique = openClAmdPlatformResult.Item2;
+            if (!openClAmdPlatformNumUnique)
+            {
+                Logger.Error(_logGroup, "Initialization of miner failed. Multiple OpenCLPlatform IDs found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
+
+            for (int i = 0; i < orderedMiningPairs.Count; i++)
             {
                 _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].Device.UUID;
             }

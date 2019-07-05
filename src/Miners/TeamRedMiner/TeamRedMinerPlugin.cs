@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace TeamRedMiner
 {
-    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
+    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
         public TeamRedMinerPlugin()
         {
@@ -34,16 +34,19 @@ namespace TeamRedMiner
 
         public string Author => "stanko@nicehash.com";
 
-        protected readonly Dictionary<string, int> _mappedMinerIds = new Dictionary<string, int>();
-
         public bool CanGroup(MiningPair a, MiningPair b)
         {
+            if (a.Device is AMDDevice aDev && b.Device is AMDDevice bDev && aDev.OpenCLPlatformID != bDev.OpenCLPlatformID)
+            {
+                // OpenCLPlatorm IDs must match
+                return false;
+            }
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
         }
 
         public IMiner CreateMiner()
         {
-            return new TeamRedMiner(PluginUUID, _mappedMinerIds)
+            return new TeamRedMiner(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -55,13 +58,10 @@ namespace TeamRedMiner
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             // Get AMD GCN4+
-            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu)).Cast<AMDDevice>().OrderBy(amd => amd.PCIeBusID);
+            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu)).Cast<AMDDevice>();
 
-            var pcieId = 0;
             foreach (var gpu in amdGpus)
             {
-                _mappedMinerIds[gpu.UUID] = pcieId;
-                ++pcieId;
                 var algorithms = GetSupportedAlgorithms(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
@@ -289,22 +289,6 @@ namespace TeamRedMiner
         {
             //no improvements for algorithm speeds in the new version - just stability improvements
             return false;
-        }
-
-        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
-        {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices --bus_reorder");
-            var mappedDevs = DevicesListParser.ParseTeamRedMinerOutput(output, devices.ToList());
-
-            foreach (var kvp in mappedDevs)
-            {
-                var uuid = kvp.Key;
-                var indexID = kvp.Value;
-                _mappedMinerIds[uuid] = indexID;
-            }
         }
 
         #region IGetApiMaxTimeoutV2
