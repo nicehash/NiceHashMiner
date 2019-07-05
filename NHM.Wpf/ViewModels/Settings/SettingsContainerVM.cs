@@ -18,5 +18,12 @@ namespace NHM.Wpf.ViewModels.Settings
                 "Mining",
                 new MiningGeneralVM(settingsObj));
         }
+
+        public static SettingsContainerVM AdvancedContainer(object settingsObj)
+        {
+            return new SettingsContainerVM(settingsObj,
+                "Advanced",
+                new AdvancedGeneral(settingsObj));
+        }
     }
 }

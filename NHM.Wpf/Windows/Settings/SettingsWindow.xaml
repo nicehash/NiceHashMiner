@@ -47,6 +47,9 @@
                 <DataTemplate DataType="{x:Type vm:ProfitabilitySettingsVM}">
                     <local:ProfitabilityPage />
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:AdvancedGeneral}">
+                    <local:AdvancedPage />
+                </DataTemplate>
             </ScrollViewer.Resources>
             <ContentControl Content="{Binding SelectedPageVM}"/>
         </ScrollViewer>
