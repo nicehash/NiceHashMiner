@@ -101,14 +101,11 @@ namespace WildRig
             var benchmarkTime = 60; // in seconds
             switch (benchmarkType)
             {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    break;
                 case BenchmarkPerformanceType.Precise:
                     benchmarkTime = 120;
+                    break;
+                default: 
+                    benchmarkTime = 60;
                     break;
             }
 
