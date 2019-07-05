@@ -24,11 +24,10 @@
             Enabled="{Binding LogToFile}"
             Description="Check it, to log console output to file.">
             <controls:SettingsContainer 
-                Title="Log Max File Size [bytes]" 
-                Margin="10,0,0,0"
+                Title="Log Max File Size [bytes]"
                 Description="Sets the maximum size for the log file."
                 Enabled="True">
-                <TextBox />
+                <TextBox Text="1048576" />
             </controls:SettingsContainer>
         </controls:SettingsContainer>
         <controls:SettingsContainer Title="Run With Windows" 
