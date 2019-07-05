@@ -125,7 +125,7 @@ namespace NiceHashMiner
             var result = ApplicationStateManager.SetBTCIfValidOrDifferent(trimmedBtcText);
             if (ApplicationStateManager.SetResult.INVALID == result)
             {
-                errorProvider1.SetError(textBoxBTCAddress, Tr("Invalid Bitcoin address! NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
+                errorProvider1.SetError(textBoxBTCAddress, Tr("Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!", NHMProductInfo.Name));
             }
             else
             {
@@ -177,8 +177,8 @@ namespace NiceHashMiner
             devicesListViewEnableControl1.InitLocale();
 
             // this one here is probably redundant
-            labelDemoMode.Text = Tr("NiceHash Miner is running in DEMO mode!");
-            toolTip1.SetToolTip(labelDemoMode, Tr("You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"));
+            labelDemoMode.Text = Tr("{0} is running in DEMO mode!", NHMProductInfo.Name);
+            toolTip1.SetToolTip(labelDemoMode, Tr("You have not entered a bitcoin address. {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!", NHMProductInfo.Name));
 
             SetToolTip(Tr("User's bitcoin address for mining."),
                 textBoxBTCAddress, labelBitcoinAddress);
@@ -210,7 +210,7 @@ namespace NiceHashMiner
                 errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
                 linkLabelAdminPrivs.Click += (s, e) =>
                 {
-                    var dialogResult = MessageBox.Show(Tr("Click yes if you with to run NiceHash Miner as Administrator."),
+                    var dialogResult = MessageBox.Show(Tr("Click yes if you with to run {0} as Administrator.", NHMProductInfo.Name),
                     Tr("Run as Administrator"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     if (dialogResult == DialogResult.Yes)
@@ -370,7 +370,7 @@ namespace NiceHashMiner
                 _showWarningNiceHashData)
             {
                 _showWarningNiceHashData = false;
-                var dialogResult = MessageBox.Show(Tr("NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner. Would you like to continue?"),
+                var dialogResult = MessageBox.Show(Tr("{0} requires internet connection to run. Please ensure that you are connected to the internet before running {0}. Would you like to continue?", NHMProductInfo.Name),
                     Tr("Check internet connection"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Error);
 
@@ -426,7 +426,7 @@ namespace NiceHashMiner
                     if (!settings.SetDefaults)
                     {
                         MessageBox.Show(
-                        Tr("Settings change requires NiceHash Miner to restart."),
+                        Tr("Settings change requires {0} to restart.", NHMProductInfo.Name),
                         Tr("Restart Notice"),
                         MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
@@ -447,7 +447,7 @@ namespace NiceHashMiner
             {
                 _isManuallyStarted = false;
                 ApplicationStateManager.StopAllDevice();
-                MessageBox.Show(Tr("NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm."),
+                MessageBox.Show(Tr("{0} cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.", NHMProductInfo.Name),
                     Tr("Warning!"),
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
@@ -501,7 +501,7 @@ namespace NiceHashMiner
             //{
             //    if (showWarnings)
             //    {
-            //        var result = MessageBox.Show(Tr("You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"),
+            //        var result = MessageBox.Show(Tr("You have not entered a bitcoin address. {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!"),
             //            Tr("Start mining in DEMO mode?"),
             //            MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 

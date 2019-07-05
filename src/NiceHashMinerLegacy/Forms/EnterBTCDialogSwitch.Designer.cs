@@ -83,7 +83,7 @@
             this.MinimizeBox = false;
             this.Name = "EnterBTCDialogSwitch";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "NiceHash Miner";
+            this.Text = NHMProductInfo.Name;
             this.ResumeLayout(false);
             this.PerformLayout();
 

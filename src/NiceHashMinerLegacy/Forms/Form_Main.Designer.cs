@@ -339,7 +339,7 @@
             this.labelDemoMode.Name = "labelDemoMode";
             this.labelDemoMode.Size = new System.Drawing.Size(498, 25);
             this.labelDemoMode.TabIndex = 100;
-            this.labelDemoMode.Text = "NiceHash Miner is running in DEMO mode!";
+            this.labelDemoMode.Text = NHMProductInfo.Name + " is running in DEMO mode!";
             // 
             // buttonHelp
             // 
@@ -445,7 +445,7 @@
             this.MinimumSize = new System.Drawing.Size(572, 303);
             this.Name = "Form_Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "NiceHash Miner";
+            this.Text = NHMProductInfo.Name;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.Shown += new System.EventHandler(this.Form_Main_Shown);
             this.ResizeEnd += new System.EventHandler(this.Form_Main_ResizeEnd);

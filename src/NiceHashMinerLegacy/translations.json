@@ -378,15 +378,15 @@
       "ru": "Разрешить несколько экземпляров",
       "zh_cn": "允许多实例运行"
     },
-    "Amount of time (in milliseconds) that NiceHash Miner will wait before restarting the miner.": {
-      "bg": "Интервал време (в милисекунди) с който NiceHash Miner ще забави рестартирането на изчислителната програма.",
-      "es": "Cantidad de tiempo (en milisegundos) que NiceHash Miner esperará antes de reiniciar el minero.",
-      "it": "Quantità di tempo (in millisecondi) che NiceHash Miner aspetterà prima di riavviare il miner.",
-      "pl": "Czas (w milisekundach) przez który NiceHash Miner czeka przed przełączeniem górnika.",
-      "pt": "Quantidade de tempo (em milissegundos) que NiceHash Miner aguardará antes de reiniciar o minerador.",
-      "ro": "Timp (în milisecunde) în care NiceHash Miner așteaptă înainte de repornirea minerului.",
-      "ru": "Количество времени в миллисекундах, которое NiceHash Miner будет ждать перед перезапуском майнера.",
-      "zh_cn": "切换算法时，NiceHash Miner自中止到重启挖矿程序之间等待的延迟（毫秒）。"
+    "Amount of time (in milliseconds) that {0} will wait before restarting the miner.": {
+      "bg": "Интервал време (в милисекунди) с който {0} ще забави рестартирането на изчислителната програма.",
+      "es": "Cantidad de tiempo (en milisegundos) que {0} esperará antes de reiniciar el minero.",
+      "it": "Quantità di tempo (in millisecondi) che {0} aspetterà prima di riavviare il miner.",
+      "pl": "Czas (w milisekundach) przez który {0} czeka przed przełączeniem górnika.",
+      "pt": "Quantidade de tempo (em milissegundos) que {0} aguardará antes de reiniciar o minerador.",
+      "ro": "Timp (în milisecunde) în care {0} așteaptă înainte de repornirea minerului.",
+      "ru": "Количество времени в миллисекундах, которое {0} будет ждать перед перезапуском майнера.",
+      "zh_cn": "切换算法时，{0}自中止到重启挖矿程序之间等待的延迟（毫秒）。"
     },
     "Amount of time (in seconds) for {0} benchmarking the {1}": {
       "bg": "Интервал време (в секунди) за който {0} да измери {1}",
@@ -427,15 +427,15 @@
       "ru": "Вы уверены, что хотите скопировать настройки из {0} в {1}?",
       "zh_cn": "是否确认从{0}复制配置至{1}?"
     },
-    "Are you sure you would like to set everything back to defaults? This will restart NiceHash Miner automatically.": {
-      "bg": "Сигурни ли сте, че искате да върнете всички настройки към стойностите по подразбиране? Това ще рестартира автоматично NiceHash Miner.",
-      "es": "¿Está seguro de que quiere establecer la configuración predeterminada? NiceHash Miner se reiniciará automáticamente.",
-      "it": "Sei sicuro di voler tornare alle impostazioni di default? Questo riavvierà NiceHash Miner in automatico.",
-      "pl": "Jeśteś pewny, że chcesz zresetować wszystkie ustawienia? To spowoduje automatyczny restart NiceHash Miner",
-      "pt": "Tem certeza de que deseja configurar tudo de volta aos padrões? Isso irá reiniciar o NiceHash Miner automaticamente.",
-      "ro": "Sunteți sigur că doriți revenirea la setările implicite? Acest lucru o să repornească NiceHash Miner automat.",
-      "ru": "Вы уверены, что хотите вернуть все настройки по умолчанию? Это перезапустит NiceHash Miner.",
-      "zh_cn": "您确定要恢复所有设置为默认吗？NiceHash Miner将会自动重启。"
+    "Are you sure you would like to set everything back to defaults? This will restart {0} automatically.": {
+      "bg": "Сигурни ли сте, че искате да върнете всички настройки към стойностите по подразбиране? Това ще рестартира автоматично {0}.",
+      "es": "¿Está seguro de que quiere establecer la configuración predeterminada? {0} se reiniciará automáticamente.",
+      "it": "Sei sicuro di voler tornare alle impostazioni di default? Questo riavvierà {0} in automatico.",
+      "pl": "Jeśteś pewny, że chcesz zresetować wszystkie ustawienia? To spowoduje automatyczny restart {0}",
+      "pt": "Tem certeza de que deseja configurar tudo de volta aos padrões? Isso irá reiniciar o {0} automaticamente.",
+      "ro": "Sunteți sigur că doriți revenirea la setările implicite? Acest lucru o să repornească {0} automat.",
+      "ru": "Вы уверены, что хотите вернуть все настройки по умолчанию? Это перезапустит {0}.",
+      "zh_cn": "您确定要恢复所有设置为默认吗？{0}将会自动重启。"
     },
     "Automatically start mining when computer is idle and stop mining when computer is being used.": {
       "bg": "Автоматично стартиране на изчисленията, когато компютърът не се използва; спиране на работата, когато компютърът се използва за други задачи.",
@@ -628,15 +628,15 @@
       "ru": "МАЙНИНГ СЕЙЧАС НЕ РАБОТАЕТ. НЕТ ПОДКЛЮЧЕНИЯ К ИНТЕРНЕТУ.",
       "zh_cn": "警告：挖矿已停止。未连接至互联网。"
     },
-    "Changes the default language for NiceHash Miner.": {
-      "bg": "Смяна на езика на интерфейса на NiceHash Miner.",
-      "es": "Cambia el lenguaje predeterminado de NiceHash Miner.",
-      "it": "Cambia la lingua di default per NiceHash Miner.",
-      "pl": "Ustawia domyślny język dla NiceHash Miner.",
-      "pt": "Muda o idioma do NiceHash Miner.",
-      "ro": "Schimbă limba implicită pentru NiceHash Miner.",
-      "ru": "Изменяет язык по умолчанию для NiceHash Miner.",
-      "zh_cn": "更改NiceHash Miner的默认界面语言"
+    "Changes the default language for {0}.": {
+      "bg": "Смяна на езика на интерфейса на {0}.",
+      "es": "Cambia el lenguaje predeterminado de {0}.",
+      "it": "Cambia la lingua di default per {0}.",
+      "pl": "Ustawia domyślny język dla {0}.",
+      "pt": "Muda o idioma do {0}.",
+      "ro": "Schimbă limba implicită pentru {0}.",
+      "ru": "Изменяет язык по умолчанию для {0}.",
+      "zh_cn": "更改{0}的默认界面语言"
     },
     "Changing all supported NVIDIA GPUs to P0 state...": {
       "bg": "Установяване на всички поддържани NVIDIA графични карти в режим P0...",
@@ -1420,37 +1420,37 @@
       "ru": "Простаивать, когда нет интернета",
       "zh_cn": "断网时停止挖矿"
     },
-    "If enabled NiceHash Miner will stop mining without internet connectivity": {
-      "bg": "Ако тази опция е активна, NiceHash Miner ще прекрати изчисленията при липса на интернет свързаност",
-      "it": "Se attivato NiceHash Miner smetterà di minare in assenza di Internet",
-      "pl": "Kiedy zaznaczone, NiceHash Miner przerwie pracę po stwierdzeniu braku połączenia z internetem",
-      "pt": "Se habilitado, o NiceHash Miner irá parar a mineração quando o computador não estiver conectado a internet.",
-      "ro": "Dacă activați NiceHash Miner o să oprească minarea când nu există conexiune Internet",
-      "ru": "Если включено, NiceHash Miner будет останавливать майнинг при отсутствии доступа к интернету.",
-      "zh_cn": "开启此选项后NiceHash Miner将在失去互联网连接时停止挖矿。"
+    "If enabled {0} will stop mining without internet connectivity": {
+      "bg": "Ако тази опция е активна, {0} ще прекрати изчисленията при липса на интернет свързаност",
+      "it": "Se attivato {0} smetterà di minare in assenza di Internet",
+      "pl": "Kiedy zaznaczone, {0} przerwie pracę po stwierdzeniu braku połączenia z internetem",
+      "pt": "Se habilitado, o {0} irá parar a mineração quando o computador não estiver conectado a internet.",
+      "ro": "Dacă activați {0} o să oprească minarea când nu există conexiune Internet",
+      "ru": "Если включено, {0} будет останавливать майнинг при отсутствии доступа к интернету.",
+      "zh_cn": "开启此选项后{0}将在失去互联网连接时停止挖矿。"
     },
     "If enabled, NHML will benchmark through all listed dcri values and store the speeds.\nNHML will then use the most profitable speed combination for mining.\nThis mode ignores the -dcri Extra Launch Paramater.": {
       "ru": "Если включено, NHML произведёт бенчмарк для всех указанных значений dcri и запишет их скорость.\nNHML будет использовать для майнинга наиболее прибыльные комбинации скоростей.\nЭтот режим игнорирует дополнительный параметр -dcri, если тот указан."
     },
-    "If enabled, NiceHash Miner will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.": {
-      "bg": "Ако тази опция е активирана, NiceHash Miner ще използва въведения API ключ за If This Then That (IFTTT) да ви уведоми, когато рентабилността е по-ниска от зададената от вас. \nВижте инструкциите за употреба, за да научите как да конфигурирате тази функционалност.",
-      "es": "Si está habilitada, NiceHash Miner usará la Clave de API que proporciona para notificarle cuando la rentabilidad se ha quedado por debajo de la rentabilidad que ha configurado. \nConsulte las instrucciones para obtener detalles sobre cómo configurar esta funcionalidad.",
-      "it": "Se attivato, NiceHash Miner userà la API Key che hai inserito per segnalarti quando la redditività è scesa sotto la redditività che tu hai impostato.\nGuarda le istruzioni per dettagli per configurare questa funzionalità.",
-      "pl": "Kiedy włączone, NiceHash Miner użyje klucza API który wprowadzisz, aby powiadomić Cię o spadku zyskowności poniżej określonego poziomu.\nObejrzyj dodatkowe instrukcje jak to skonfigurować.",
-      "pt": "Se habilitado, o NiceHash Miner usará a chave de API que você fornecerá para notificá-lo quando a lucratividade estiver abaixo da lucratividade que você configurou. \nConsulte as instruções para obter detalhes sobre como configurar essa funcionalidade.",
-      "ro": "Când activați, NiceHash Miner o să utilizeze cheia API furnizată pentru a vă notifica atunci când profitabilitatea a scăzut sub profitabilitatea configurată.\nVedeți instrucțiunile pentru detalii cu privire la configurarea acestei funcționalități.",
-      "ru": "Если включено, NiceHash Miner будет использовать API-ключ, который вы предоставите, \nчтобы уведомить вас, когда прибыльность снизилась ниже вашей прибыльности. \nСм. инструкции по настройке этой функции.",
-      "zh_cn": "IF This Than That，简称IFTTT。 开启此选项后，NiceHashNiceHash Miner会在收益跌至设定阈值以下时通过您的API密钥来发送提醒。\n预知配置此功能的详细信息，请参见帮助文档。"
+    "If enabled, {0} will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.": {
+      "bg": "Ако тази опция е активирана, {0} ще използва въведения API ключ за If This Then That (IFTTT) да ви уведоми, когато рентабилността е по-ниска от зададената от вас. \nВижте инструкциите за употреба, за да научите как да конфигурирате тази функционалност.",
+      "es": "Si está habilitada, {0} usará la Clave de API que proporciona para notificarle cuando la rentabilidad se ha quedado por debajo de la rentabilidad que ha configurado. \nConsulte las instrucciones para obtener detalles sobre cómo configurar esta funcionalidad.",
+      "it": "Se attivato, {0} userà la API Key che hai inserito per segnalarti quando la redditività è scesa sotto la redditività che tu hai impostato.\nGuarda le istruzioni per dettagli per configurare questa funzionalità.",
+      "pl": "Kiedy włączone, {0} użyje klucza API który wprowadzisz, aby powiadomić Cię o spadku zyskowności poniżej określonego poziomu.\nObejrzyj dodatkowe instrukcje jak to skonfigurować.",
+      "pt": "Se habilitado, o {0} usará a chave de API que você fornecerá para notificá-lo quando a lucratividade estiver abaixo da lucratividade que você configurou. \nConsulte as instruções para obter detalhes sobre como configurar essa funcionalidade.",
+      "ro": "Când activați, {0} o să utilizeze cheia API furnizată pentru a vă notifica atunci când profitabilitatea a scăzut sub profitabilitatea configurată.\nVedeți instrucțiunile pentru detalii cu privire la configurarea acestei funcționalități.",
+      "ru": "Если включено, {0} будет использовать API-ключ, который вы предоставите, \nчтобы уведомить вас, когда прибыльность снизилась ниже вашей прибыльности. \nСм. инструкции по настройке этой функции.",
+      "zh_cn": "IF This Than That，简称IFTTT。 开启此选项后，NiceHash{0}会在收益跌至设定阈值以下时通过您的API密钥来发送提醒。\n预知配置此功能的详细信息，请参见帮助文档。"
     },
-    "If set to any value more than 0 (USD), NiceHash Miner will stop mining\nif the calculated profit falls below the set amount.": {
-      "bg": "Ако зададете стойност, по-голяма от 0 (USD), NiceHash Miner ще спре работа\nпри спад на изчислената доходност под зададения праг.",
-      "es": "Si se establece cualquier valor diferente a 0 (USD), NiceHash Miner parará de minar\nsi la rentabilidad cae por debajo del mínimo indicado.",
-      "it": "Se impostato un valore maggiore di 0 (USD), NiceHash Miner smetterà di minare\nse il profitto calcolato scende sotto la cifra impostata.",
-      "pl": "Kiedy ustawisz więcej niż 0 (USD), NiceHash Miner przestanie kopać\nkiedy zyskowność spadnie poniżej ustawionej wartości.",
-      "pt": "Se configurado para qualquer valor superior a 0 (USD), NiceHash Miner vai parar de minerar\nse o lucro calculado for inferior ao valor fixado.",
-      "ro": "Dacă setați o valoare mai mare de 0 (USD), NiceHash Miner o să se oprească din minat\ndacă profitul calculat scade sub suma setată.",
-      "ru": "Если указано значение выше 0 (USD), NiceHash Miner будет останавливать майнинг,\nкогда рассчитанная прибыль ниже установленного значения.",
-      "zh_cn": "如设置成大于0 (USD)的任意值，NiceHash Miner将会在\n预估每日收益跌至此金额以下时停止挖矿。"
+    "If set to any value more than 0 (USD), {0} will stop mining\nif the calculated profit falls below the set amount.": {
+      "bg": "Ако зададете стойност, по-голяма от 0 (USD), {0} ще спре работа\nпри спад на изчислената доходност под зададения праг.",
+      "es": "Si se establece cualquier valor diferente a 0 (USD), {0} parará de minar\nsi la rentabilidad cae por debajo del mínimo indicado.",
+      "it": "Se impostato un valore maggiore di 0 (USD), {0} smetterà di minare\nse il profitto calcolato scende sotto la cifra impostata.",
+      "pl": "Kiedy ustawisz więcej niż 0 (USD), {0} przestanie kopać\nkiedy zyskowność spadnie poniżej ustawionej wartości.",
+      "pt": "Se configurado para qualquer valor superior a 0 (USD), {0} vai parar de minerar\nse o lucro calculado for inferior ao valor fixado.",
+      "ro": "Dacă setați o valoare mai mare de 0 (USD), {0} o să se oprească din minat\ndacă profitul calculat scade sub suma setată.",
+      "ru": "Если указано значение выше 0 (USD), {0} будет останавливать майнинг,\nкогда рассчитанная прибыль ниже установленного значения.",
+      "zh_cn": "如设置成大于0 (USD)的任意值，{0}将会在\n预估每日收益跌至此金额以下时停止挖矿。"
     },
     "India - Chennai": {
       "ru": "Индия - Ченнаи",
@@ -1801,25 +1801,25 @@
       "ru": "Имя: {0}, Статус {1}, PNPDeviceID {2}",
       "zh_cn": "名称：{0}，状态{1}，PNPDeviceID {2}"
     },
-    "NiceHash Miner cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for NiceHash Miner to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start NiceHash Miner.": {
-      "bg": "NiceHash Miner не може да стартира някои компоненти, необходими за неговата работа. Изглежда, че услугата Windows Management Instrumentation на вашия компютър е деактивирана. За правилната работа на NiceHash Miner е необходимо да активирате Windows Management Instrumentation. Тази услуга се използва за следене на употребата на RAM паметта и за извличане на информация за наличните видео контролери. Активирайте Windows Management Instrumentation ръчно и рестартирайте NiceHash Miner.",
-      "es": "NiceHash Miner no puede inicializar sus componentes requeridos. Parece que su sistema tiene el servicio de Windows Management Instrumentation deshabilitado. Para que NiceHash Miner funcione correctamente, el servicio de Administración de Instrumentos de Windows debe estar habilitado. Este servicio es necesario para detectar el uso de RAM y la información del driver disponible. Habilite el servicio de Administración de Instrumentos de Windows manualmente e inicie NiceHash Miner.",
-      "it": "NiceHash Miner non può eseguire i componenti richiesti. Sembra che il tuo sistema abbia Windows Management Instrumentation disabilitato. Per fare in modo che NiceHash Miner funzioni correttamente, Windows Management Instrumentation deve essere abilitato. Questo servizio è necessario per rilevare l'utilizzo della RAM e le informazioni sui Controller Video disponibili. Abilita Windows Management Instrumentation manualmente e avvia NiceHash Miner.",
-      "pl": "NiceHash Miner nie może uruchomić wymaganych komponentów. Możliwe, że usługa Instrumentacja zarzadzania Windows jest wyłączona. Aby NiceHash Miner mógł pracować, usługa Instrumentacja zarzadzania Windows musi być włączona. Pozwala to na pomiary używania pamięci oraz informacji na temat dostępnych urządzeń. Włącz usługę Instrumentacja zarzadzania Windows i wróć do NiceHash Miner.",
-      "pt": "O NiceHash Miner não pode executar os componentes necessários. Parece que seu sistema possui o serviço Windows Management Instrumentation Desativado. Para que o Bombo da NiceHash funcione corretamente, o serviço de Instrução de Gerenciamento do Windows precisa ser Ativado. Este serviço é necessário para detectar o uso da RAM e as informações do Controlador de vídeo. Ative o serviço Windows Management Instrumentation manualmente e inicie o NiceHash Miner.",
-      "ro": "NiceHash Miner nu poate rula componente necesare. Se pare că sistemul dumneavoastră are serviciul Windows Management Instrumentation Dezactivat. Pentru ca NiceHash Miner să funcționeze corect serviciul Windows Management Instrumentation trebuie să fie Activ. Acest serviciu este necesar pentru a detecta consumul RAM și informații despre controlerele Video Disponibile. Activați serviciul Windows Management Instrumentation manual și porniți NiceHash Miner.",
-      "ru": "NiceHash Miner не может запустить необходимые компоненты. Похоже, что в вашей системе отключена служба «Инструментарий управления Windows». Для корректной работы NiceHash Miner служба «Инструментарий управления Windows» должна быть включена. Эта служба нужна для определения использования RAM и доступной информации видеоконтроллера. Включите службу «Инструментарий управления Windows» вручную и запустите NiceHash Miner.",
-      "zh_cn": "NiceHash Miner无法执行必要的组件。这可能是因为您的系统禁用了Windows Management Instrumentation服务。如需使NiceHash Miner正常运作，您需要开启Windows Management Instrumentation服务。我们使用该系统服务来检测内存使用以及可用图形处理器的信息。请在确保开启Windows Management Instrumentation服务后再启动NiceHash Miner。"
+    "{0} cannot run needed components. It seems that your system has Windows Management Instrumentation service Disabled. In order for {0} to work properly Windows Management Instrumentation service needs to be Enabled. This service is needed to detect RAM usage and Avaliable Video controler information. Enable Windows Management Instrumentation service manually and start {0}.": {
+      "bg": "{0} не може да стартира някои компоненти, необходими за неговата работа. Изглежда, че услугата Windows Management Instrumentation на вашия компютър е деактивирана. За правилната работа на {0} е необходимо да активирате Windows Management Instrumentation. Тази услуга се използва за следене на употребата на RAM паметта и за извличане на информация за наличните видео контролери. Активирайте Windows Management Instrumentation ръчно и рестартирайте {0}.",
+      "es": "{0} no puede inicializar sus componentes requeridos. Parece que su sistema tiene el servicio de Windows Management Instrumentation deshabilitado. Para que {0} funcione correctamente, el servicio de Administración de Instrumentos de Windows debe estar habilitado. Este servicio es necesario para detectar el uso de RAM y la información del driver disponible. Habilite el servicio de Administración de Instrumentos de Windows manualmente e inicie {0}.",
+      "it": "{0} non può eseguire i componenti richiesti. Sembra che il tuo sistema abbia Windows Management Instrumentation disabilitato. Per fare in modo che {0} funzioni correttamente, Windows Management Instrumentation deve essere abilitato. Questo servizio è necessario per rilevare l'utilizzo della RAM e le informazioni sui Controller Video disponibili. Abilita Windows Management Instrumentation manualmente e avvia {0}.",
+      "pl": "{0} nie może uruchomić wymaganych komponentów. Możliwe, że usługa Instrumentacja zarzadzania Windows jest wyłączona. Aby {0} mógł pracować, usługa Instrumentacja zarzadzania Windows musi być włączona. Pozwala to na pomiary używania pamięci oraz informacji na temat dostępnych urządzeń. Włącz usługę Instrumentacja zarzadzania Windows i wróć do {0}.",
+      "pt": "O {0} não pode executar os componentes necessários. Parece que seu sistema possui o serviço Windows Management Instrumentation Desativado. Para que o Bombo da NiceHash funcione corretamente, o serviço de Instrução de Gerenciamento do Windows precisa ser Ativado. Este serviço é necessário para detectar o uso da RAM e as informações do Controlador de vídeo. Ative o serviço Windows Management Instrumentation manualmente e inicie o {0}.",
+      "ro": "{0} nu poate rula componente necesare. Se pare că sistemul dumneavoastră are serviciul Windows Management Instrumentation Dezactivat. Pentru ca {0} să funcționeze corect serviciul Windows Management Instrumentation trebuie să fie Activ. Acest serviciu este necesar pentru a detecta consumul RAM și informații despre controlerele Video Disponibile. Activați serviciul Windows Management Instrumentation manual și porniți {0}.",
+      "ru": "{0} не может запустить необходимые компоненты. Похоже, что в вашей системе отключена служба «Инструментарий управления Windows». Для корректной работы {0} служба «Инструментарий управления Windows» должна быть включена. Эта служба нужна для определения использования RAM и доступной информации видеоконтроллера. Включите службу «Инструментарий управления Windows» вручную и запустите {0}.",
+      "zh_cn": "{0}无法执行必要的组件。这可能是因为您的系统禁用了Windows Management Instrumentation服务。如需使{0}正常运作，您需要开启Windows Management Instrumentation服务。我们使用该系统服务来检测内存使用以及可用图形处理器的信息。请在确保开启Windows Management Instrumentation服务后再启动{0}。"
     },
-    "NiceHash Miner cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.": {
-      "bg": "NiceHash Miner не може да започне работа. Уверете се, че сте активирали поне едно устройство за изчисления и че за него има поне един активен алгоритъм..",
-      "es": "NiceHash Miner no puede empezar a minar. Asegúrese de que ha habilitado al menos un dispisitivo y un algoritmo.",
-      "it": "NiceHash Miner non può cominciare a minare. Assicurati di avere almeno un dispositivo abilitato che abbia almeno un algoritmo selezionato e con il benchmark.",
-      "pl": "NiceHash Miner nie może kopać. Upewnij się, że zaznaczyłeś co najmniej jedno urządzenie mające co najmniej jeden wykonany benchmark.",
-      "pt": "NiceHash Miner não pode iniciar a mineração. Certifique-se de ter pelo menos um dispositivo habilitado que tenha pelo menos um algoritmo habilitado e comparado.",
-      "ro": "NiceHash Miner nu poate începe minarea. Asigurați-vă că aveți cel puțin un dispozitiv activat care are cel puțin un algoritm cu benchmark activat.",
-      "ru": "NiceHash Miner не может начать майнинг. Убедитесь, что хотя бы одно устройство включено с хотя бы одним включённым и прошедшим бенчмарк алгоритмом",
-      "zh_cn": "NiceHash Miner无法开始挖矿。请确保您至少启用了一台设备以及该设备下的一种算法。启用的算法必须通过基准测试。"
+    "{0} cannot start mining. Make sure you have at least one enabled device that has at least one enabled and benchmarked algorithm.": {
+      "bg": "{0} не може да започне работа. Уверете се, че сте активирали поне едно устройство за изчисления и че за него има поне един активен алгоритъм..",
+      "es": "{0} no puede empezar a minar. Asegúrese de que ha habilitado al menos un dispisitivo y un algoritmo.",
+      "it": "{0} non può cominciare a minare. Assicurati di avere almeno un dispositivo abilitato che abbia almeno un algoritmo selezionato e con il benchmark.",
+      "pl": "{0} nie może kopać. Upewnij się, że zaznaczyłeś co najmniej jedno urządzenie mające co najmniej jeden wykonany benchmark.",
+      "pt": "{0} não pode iniciar a mineração. Certifique-se de ter pelo menos um dispositivo habilitado que tenha pelo menos um algoritmo habilitado e comparado.",
+      "ro": "{0} nu poate începe minarea. Asigurați-vă că aveți cel puțin un dispozitiv activat care are cel puțin un algoritm cu benchmark activat.",
+      "ru": "{0} не может начать майнинг. Убедитесь, что хотя бы одно устройство включено с хотя бы одним включённым и прошедшим бенчмарк алгоритмом",
+      "zh_cn": "{0}无法开始挖矿。请确保您至少启用了一台设备以及该设备下的一种算法。启用的算法必须通过基准测试。"
     },
     "NiceHash Miner does not support more than 64 virtual cores. CPU mining will be disabled.": {
       "bg": "NiceHash Miner не поддържа повече от 64 виртуални ядра. Използването на CPU ще бъде изключено.",
@@ -1841,53 +1841,53 @@
       "ru": "NiceHash Miner обнаружил изменение ID оборудования. Если вы не загружали и не устанавливали NiceHash Miner, ваш компьютер может быть взломан. В этом случае, мы советуем вам установить антивирус или переустановить ваш Windows.\r\n\r\nПродолжить работу с NiceHash Miner?",
       "zh_cn": "NiceHash Miner检测到硬件识别码变化。如果您并没有手动下载并安装NiceHash Miner，您的电脑可能存在安全风险。如上述情况属实，我们建议您安装反病毒软件或重新按照Windows。是否继续运行NiceHash Miner？"
     },
-    "NiceHash Miner is running in DEMO mode!": {
-      "bg": "NiceHash Miner работи в ДЕМО режим!",
-      "es": "¡NiceHash Miner está ejecutandose en modo DEMO!",
-      "it": "NiceHash Miner sta lavorando in modalità DEMO!",
-      "pl": "NiceHash Miner pracuje w trybie DEMO!",
-      "pt": "NiceHash Miner está rodando no modo DEMONSTRAÇÃO!",
-      "ro": "NiceHash Miner rulează în mod DEMO!",
-      "ru": "NiceHash Miner работает в режиме ДЕМО!",
-      "zh_cn": "NiceHash Miner正在演示模式下运行！"
+    "{0} is running in DEMO mode!": {
+      "bg": "{0} работи в ДЕМО режим!",
+      "es": "¡{0} está ejecutandose en modo DEMO!",
+      "it": "{0} sta lavorando in modalità DEMO!",
+      "pl": "{0} pracuje w trybie DEMO!",
+      "pt": "{0} está rodando no modo DEMONSTRAÇÃO!",
+      "ro": "{0} rulează în mod DEMO!",
+      "ru": "{0} работает в режиме ДЕМО!",
+      "zh_cn": "{0}正在演示模式下运行！"
     },
-    "NiceHash Miner recommends increasing virtual memory size so that all algorithms would work fine.": {
-      "bg": "NiceHash Miner препоръчва увеличаване на размера на виртуалната памет за правилната работа на  всички алгоритми.",
-      "it": "NiceHash Miner raccomanda di aumentare la dimensione della memoria virtuale così che tutti gli algoritmi possano lavorare correttamente.",
-      "pl": "NiceHash Miner zaleca zwiększenie pamięci wirtualnej, aby algorytmy mogły działać sprawnie.",
-      "pt": "O NiceHash Miner recomenda aumentar o tamanho da memória virtual para que todos os algoritmos funcionem bem.",
-      "ro": "NiceHash Miner recomandă creșterea memoriei virtuale astfel încât toți algoritmii să lucreze bine.",
-      "ru": "NiceHash Miner рекомендует увеличить размер виртуальной памяти для нормальной работы всех алгоритмов.",
-      "zh_cn": "NiceHash Miner建议您增大虚拟内存以确保所有挖矿算法正常运作。"
+    "{0} recommends increasing virtual memory size so that all algorithms would work fine.": {
+      "bg": "{0} препоръчва увеличаване на размера на виртуалната памет за правилната работа на  всички алгоритми.",
+      "it": "{0} raccomanda di aumentare la dimensione della memoria virtuale così che tutti gli algoritmi possano lavorare correttamente.",
+      "pl": "{0} zaleca zwiększenie pamięci wirtualnej, aby algorytmy mogły działać sprawnie.",
+      "pt": "O {0} recomenda aumentar o tamanho da memória virtual para que todos os algoritmos funcionem bem.",
+      "ro": "{0} recomandă creșterea memoriei virtuale astfel încât toți algoritmii să lucreze bine.",
+      "ru": "{0} рекомендует увеличить размер виртуальной памяти для нормальной работы всех алгоритмов.",
+      "zh_cn": "{0}建议您增大虚拟内存以确保所有挖矿算法正常运作。"
     },
-    "NiceHash Miner requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5": {
-      "bg": "NiceHash Miner изисква .NET Framework 4.5 или по-нова версия, за да функционира правилно. Моля инсталирайте Microsoft .NET Framework 4.5",
-      "es": "NiceHash Miner requiere .NET Framework 4.5 o mayor para funcionar correctamente. Por favor reinstala Microsoft .NET Framework 4.5",
-      "it": "NiceHash Miner richiede .NET Framework 4.5 o superiori per lavorare correttamente. Per favore, installa Microsoft .NET Framework 4.5",
-      "pl": "NiceHash Miner wymaga pakietu .NET Framework 4.5 lub wyższego do pracy. Zainstaluj najpierw Microsoft .NET Framework 4.5",
-      "ro": "NiceHash Miner necesită .NET Framework 4.5 sau mai nou pentru a funcționa corect. Vă rugăm instalați Microsoft .NET Framework 4.5",
-      "ru": "Для корректной работы NiceHash Miner требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
-      "zh_cn": "NiceHash Miner 依赖 .NET Framework 4.5或更高版本。请安装Microsoft .NET Framework 4.5"
+    "{0} requires .NET Framework 4.5 or higher to work properly. Please install Microsoft .NET Framework 4.5": {
+      "bg": "{0} изисква .NET Framework 4.5 или по-нова версия, за да функционира правилно. Моля инсталирайте Microsoft .NET Framework 4.5",
+      "es": "{0} requiere .NET Framework 4.5 o mayor para funcionar correctamente. Por favor reinstala Microsoft .NET Framework 4.5",
+      "it": "{0} richiede .NET Framework 4.5 o superiori per lavorare correttamente. Per favore, installa Microsoft .NET Framework 4.5",
+      "pl": "{0} wymaga pakietu .NET Framework 4.5 lub wyższego do pracy. Zainstaluj najpierw Microsoft .NET Framework 4.5",
+      "ro": "{0} necesită .NET Framework 4.5 sau mai nou pentru a funcționa corect. Vă rugăm instalați Microsoft .NET Framework 4.5",
+      "ru": "Для корректной работы {0} требуется .NET Framework 4.5 или выше. Установите, пожалуйста, Microsoft .NET Framework 4.5",
+      "zh_cn": "{0} 依赖 .NET Framework 4.5或更高版本。请安装Microsoft .NET Framework 4.5"
     },
-    "NiceHash Miner requires internet connection to run. Please ensure that you are connected to the internet before running NiceHash Miner. Would you like to continue?": {
-      "bg": "NiceHash Miner се нуждае от достъп до интернет, за да работи. Уверете се, че вашата връзка към интернет работи, преди да стартирате NiceHash Miner. Желаете ли да продължите?",
-      "es": "NiceHash Miner requiere una conexión a Internet. Asegúrese de que tiene una conexión a internet antes de continuar. ¿Le gustaría continuar?",
-      "it": "NiceHash Miner richiede una connessione a Internet per funzionare. Per favore assicurati di essere connesso a Internet prima di eseguire NiceHash Miner. Desideri continuare?",
-      "pl": "NiceHash Miner wymaga połączenia z internetem. Upewnij się, że działa zanim właczysz NiceHash Miner. Czy chcesz kontynuować?",
-      "pt": "NiceHash Miner requer conexão com a internet para funcionar. Certifique-se de estar conectado à Internet antes de executar o NiceHash Miner. Você gostaria de continuar?",
-      "ro": "NiceHash Miner necesită o conexiune la internet pentru a rula. Vă rugăm să vă asigurați că sunteți conectați la Internet înainte de a rulaNiceHash Miner. Doriți să continuați?",
-      "ru": "NiceHash Miner запрашивает интернет-соединение для работы. Убедитесь, что вы подключены к интернету перед запуском NiceHash Miner. Хотели бы вы продолжить?",
-      "zh_cn": "NiceHash Miner依赖互联网连接运行。请在运行软件前确保您已连接至互联网。是否继续？"
+    "{0} requires internet connection to run. Please ensure that you are connected to the internet before running {0}. Would you like to continue?": {
+      "bg": "{0} се нуждае от достъп до интернет, за да работи. Уверете се, че вашата връзка към интернет работи, преди да стартирате {0}. Желаете ли да продължите?",
+      "es": "{0} requiere una conexión a Internet. Asegúrese de que tiene una conexión a internet antes de continuar. ¿Le gustaría continuar?",
+      "it": "{0} richiede una connessione a Internet per funzionare. Per favore assicurati di essere connesso a Internet prima di eseguire {0}. Desideri continuare?",
+      "pl": "{0} wymaga połączenia z internetem. Upewnij się, że działa zanim właczysz {0}. Czy chcesz kontynuować?",
+      "pt": "{0} requer conexão com a internet para funcionar. Certifique-se de estar conectado à Internet antes de executar o {0}. Você gostaria de continuar?",
+      "ro": "{0} necesită o conexiune la internet pentru a rula. Vă rugăm să vă asigurați că sunteți conectați la Internet înainte de a rula{0}. Doriți să continuați?",
+      "ru": "{0} запрашивает интернет-соединение для работы. Убедитесь, что вы подключены к интернету перед запуском {0}. Хотели бы вы продолжить?",
+      "zh_cn": "{0}依赖互联网连接运行。请在运行软件前确保您已连接至互联网。是否继续？"
     },
-    "NiceHash Miner supports only x64 platforms. You will not be able to use NiceHash Miner with x86": {
-      "bg": "NiceHash Miner поддържа само x64 платформи. Не е възможно да използвате програмата с x86 операционна система.",
-      "es": "NiceHash Miner solo soporta sistemas de 64 bit. No se podrá usar NiceHash Miner con un equipo de 32 bit.",
-      "it": "NiceHash Miner supporta solo piattaforme x64. Non potrai usare NiceHash Miner con x86",
-      "pl": "NiceHash Miner wspiera tylko platformy x64. Nie możesz go używać na platformie x86",
-      "pt": "O NiceHash Miner suporta apenas plataformas x64. Você não poderá usar NiceHash Miner com x86",
-      "ro": "NiceHash Miner suportă doar platforme x64. Nu veți putea utiliza NiceHash Miner cu x86",
-      "ru": "NiceHash Miner поддерживает только платформы x64. Вы не сможете использовать NiceHash Miner на x86",
-      "zh_cn": "NiceHash Miner仅支持64位操作系统。您无法在32位(x86)系统上使用NiceHash Miner。"
+    "{0} supports only x64 platforms. You will not be able to use {0} with x86": {
+      "bg": "{0} поддържа само x64 платформи. Не е възможно да използвате програмата с x86 операционна система.",
+      "es": "{0} solo soporta sistemas de 64 bit. No se podrá usar {0} con un equipo de 32 bit.",
+      "it": "{0} supporta solo piattaforme x64. Non potrai usare {0} con x86",
+      "pl": "{0} wspiera tylko platformy x64. Nie możesz go używać na platformie x86",
+      "pt": "O {0} suporta apenas plataformas x64. Você não poderá usar {0} com x86",
+      "ro": "{0} suportă doar platforme x64. Nu veți putea utiliza {0} cu x86",
+      "ru": "{0} поддерживает только платформы x64. Вы не сможете использовать {0} на x86",
+      "zh_cn": "{0}仅支持64位操作系统。您无法在32位(x86)系统上使用{0}。"
     },
     "NiceHash Miner works only on 64-bit version of OS for CPU mining. CPU mining will be disabled.": {
       "bg": "NiceHash Miner работи само на 64-битови версии на операционната система при използване на процесор за изчисления. Използването на CPU ще бъде изключено.",
@@ -2440,15 +2440,15 @@
       "ru": "Настройки",
       "zh_cn": "设置"
     },
-    "Settings change requires NiceHash Miner to restart.": {
-      "bg": "Промяната в настройките налага рестарт на NiceHash Miner.",
-      "es": "Algunas opciones exigen que NiceHash Miner se reinicie.",
-      "it": "Modifiche delle impostazioni necessitano il riavvio di NiceHash Miner.",
-      "pl": "Zmiana ustawień wymaga restartu NiceHash Miner.",
-      "pt": "A alteração de configurações requer que NiceHash Miner seja reiniciado.",
-      "ro": "Modificările setărilor necesită repornirea NiceHash Miner.",
-      "ru": "Смена настроек требует перезапуска NiceHash Miner.",
-      "zh_cn": "设置变更需要NiceHash Miner重新启动才能生效。"
+    "Settings change requires {0} to restart.": {
+      "bg": "Промяната в настройките налага рестарт на {0}.",
+      "es": "Algunas opciones exigen que {0} se reinicie.",
+      "it": "Modifiche delle impostazioni necessitano il riavvio di {0}.",
+      "pl": "Zmiana ustawień wymaga restartu {0}.",
+      "pt": "A alteração de configurações requer que {0} seja reiniciado.",
+      "ro": "Modificările setărilor necesită repornirea {0}.",
+      "ru": "Смена настроек требует перезапуска {0}.",
+      "zh_cn": "设置变更需要{0}重新启动才能生效。"
     },
     "Settings saved!": {
       "bg": "Настройките са записани!",
@@ -2707,15 +2707,15 @@
     "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
       "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину затрат на электроэнергию,\nесли стоимость электроэнергии и потребление мощности больше 0."
     },
-    "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. NiceHash Miner might not work properly without missing files. Click Yes to reinitialize NiceHash Miner to try to fix this issue.": {
-      "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. NiceHash Miner няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно NiceHash Miner и да опитате да поправите този проблем.",
-      "es": "Faltan algunos archivos desde el último inicio. Asegúrese de que su antivirus no bloquea la aplicación. NiceHash Miner podría no funcionar correctamente al faltar algunos archivos. Elige Sí para reinicializar NiceHash Miner e intentar repararlo.",
-      "it": "Ci sono file mancanti dall'ultima inizializzazione miners. Assicurati che l'antivirus non stia bloccando l'applicazione. NiceHash Miner potrebbe non funzionare correttamente senza i file mancanti. Clicca Si per reinizializzare NiceHash Miner per provare a risolvere il problema.",
-      "pl": "Wykryto brak plików od ostatniej inicjalizacji górników. Upewnij się, że antywirus nie blokuje programu. NiceHash Miner może ale nie musi pracować poprawnie kiedy brakuje plików. Wybierz Tak by zrestartować NiceHash Miner, aby spróbował to naprawić.",
-      "pt": "Faltam arquivos da última Inicialização do Minerador. Certifique-se de que seu antivírus não está bloqueando o aplicativo. O mineiro NiceHash pode não funcionar corretamente sem arquivos ausentes. Clique em Sim para reinicializar o NiceHash Miner para tentar resolver esse problema.",
-      "ro": "Lipsesc fișiere de la ultima Inițializare a Minerilor. Vă rugăm să vă asigurați ca anitvirusul nu blochează aplicația. NiceHash Miner poate să nu funcționeze corect fără fișierele lipsă. Apăsați Da pentru a reinițializa NiceHash Miner pentru a încerca remedierea situației.",
-      "ru": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. NiceHash Miner может не работать правильно без недостающих файлов. Нажмите «Да» для переустановки NiceHash Miner, чтобы попробовать исправить ошибку.",
-      "zh_cn": "自上次程序初始化后有文件缺失。请确保杀毒软件没有干扰此程序的正常运行。在缺失文件的情况下NiceHash Miner可能无法正常运作。点击“是”来重新初始化NiceHash Miner并尝试修复此异常。"
+    "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. {0} might not work properly without missing files. Click Yes to reinitialize {0} to try to fix this issue.": {
+      "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. {0} няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно {0} и да опитате да поправите този проблем.",
+      "es": "Faltan algunos archivos desde el último inicio. Asegúrese de que su antivirus no bloquea la aplicación. {0} podría no funcionar correctamente al faltar algunos archivos. Elige Sí para reinicializar {0} e intentar repararlo.",
+      "it": "Ci sono file mancanti dall'ultima inizializzazione miners. Assicurati che l'antivirus non stia bloccando l'applicazione. {0} potrebbe non funzionare correttamente senza i file mancanti. Clicca Si per reinizializzare {0} per provare a risolvere il problema.",
+      "pl": "Wykryto brak plików od ostatniej inicjalizacji górników. Upewnij się, że antywirus nie blokuje programu. {0} może ale nie musi pracować poprawnie kiedy brakuje plików. Wybierz Tak by zrestartować {0}, aby spróbował to naprawić.",
+      "pt": "Faltam arquivos da última Inicialização do Minerador. Certifique-se de que seu antivírus não está bloqueando o aplicativo. O mineiro NiceHash pode não funcionar corretamente sem arquivos ausentes. Clique em Sim para reinicializar o {0} para tentar resolver esse problema.",
+      "ro": "Lipsesc fișiere de la ultima Inițializare a Minerilor. Vă rugăm să vă asigurați ca anitvirusul nu blochează aplicația. {0} poate să nu funcționeze corect fără fișierele lipsă. Apăsați Da pentru a reinițializa {0} pentru a încerca remedierea situației.",
+      "ru": "Отсутствуют файлы с последней инициализации майнеров. Убедитесь, что ваш антивирус не блокирует приложение. {0} может не работать правильно без недостающих файлов. Нажмите «Да» для переустановки {0}, чтобы попробовать исправить ошибку.",
+      "zh_cn": "自上次程序初始化后有文件缺失。请确保杀毒软件没有干扰此程序的正常运行。在缺失文件的情况下{0}可能无法正常运作。点击“是”来重新初始化{0}并尝试修复此异常。"
     },
     "There are no enabled algorithms for selected devices. Go to Settings or Benchmarks and enable at least 1 Algorithm.": {
       "bg": "Няма активирани алгоритми за избраното устройство. Отидете в 'Настройки' или 'Тест за скорост' и активирайте поне един алгоритъм.",
@@ -2983,15 +2983,15 @@
       "ru": "Предупреждение! Вы выбираете закрытие настроек без сохранения. Вы уверены, что хотите продолжить?",
       "zh_cn": "警告！您选择了关闭并不保存设置。是否继续？"
     },
-    "We have detected a Video Controller that is not working properly. NiceHash Miner will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.": {
-      "bg": "Открихме неизправен видеоконтролер. NiceHash Miner няма да може да използва този контролер за изчисления. Съветваме ви да рестартирате компютъра или да преинсталирате драйверите на видео контролера.",
-      "es": "Hemos detectado que un controlador de vídeo no está funcionando correctamente. NiceHash Miner no será capaz de usar este controlador de vídeo para minar. Le recomendamos reiniciar el ordenador o reinstalar los drivers o controladores de vídeo.",
-      "it": "Abbiamo rilevato un Controller Video che non sta funzionando correttamente. NiceHash Miner non sarà in grado di usare questo controller video per minare. Ti suggeriamo di riavviare il computer, o reinstallare i driver del tuo Controller Video.",
-      "pl": "Wykryto nieprawidłową pracę kontrolera video. NiceHash Miner nie będzie go używać do kopania. Zalecamy zrestartować komputer lub przeinstalować sterowniki.",
-      "pt": "Detectamos um controlador de vídeo que não está funcionando. O NiceHash Miner não poderá usar este controlador de vídeo para mineração. Recomendamos que você reinicie o computador ou reinstale os controladores de video.",
-      "ro": "Am detectat un Controler Video care nu funcționează corect. NiceHash Miner nu va putea să folosească acest Controler Video pentru minare. Vă recomandăm să reporniți calculatorul sau să reinstalați driverele Controlerului Video.",
-      "ru": "Мы обнаружили, что видеоконтроллер не работает нормально. NiceHash Miner не сможет использовать этот видеоконтроллер для майнинга. Мы советуем вам перезагрузить ваш компьютер, либо переустановить драйверы видеоконтроллера.",
-      "zh_cn": "检测到有图形处理器工作异常。NiceHash Miner无法使用此图形处理器进行挖矿。我们建议您重启计算机，或重新安装图形处理器的驱动程序。"
+    "We have detected a Video Controller that is not working properly. {0} will not be able to use this Video Controller for mining. We advise you to restart your computer, or reinstall your Video Controller drivers.": {
+      "bg": "Открихме неизправен видеоконтролер. {0} няма да може да използва този контролер за изчисления. Съветваме ви да рестартирате компютъра или да преинсталирате драйверите на видео контролера.",
+      "es": "Hemos detectado que un controlador de vídeo no está funcionando correctamente. {0} no será capaz de usar este controlador de vídeo para minar. Le recomendamos reiniciar el ordenador o reinstalar los drivers o controladores de vídeo.",
+      "it": "Abbiamo rilevato un Controller Video che non sta funzionando correttamente. {0} non sarà in grado di usare questo controller video per minare. Ti suggeriamo di riavviare il computer, o reinstallare i driver del tuo Controller Video.",
+      "pl": "Wykryto nieprawidłową pracę kontrolera video. {0} nie będzie go używać do kopania. Zalecamy zrestartować komputer lub przeinstalować sterowniki.",
+      "pt": "Detectamos um controlador de vídeo que não está funcionando. O {0} não poderá usar este controlador de vídeo para mineração. Recomendamos que você reinicie o computador ou reinstale os controladores de video.",
+      "ro": "Am detectat un Controler Video care nu funcționează corect. {0} nu va putea să folosească acest Controler Video pentru minare. Vă recomandăm să reporniți calculatorul sau să reinstalați driverele Controlerului Video.",
+      "ru": "Мы обнаружили, что видеоконтроллер не работает нормально. {0} не сможет использовать этот видеоконтроллер для майнинга. Мы советуем вам перезагрузить ваш компьютер, либо переустановить драйверы видеоконтроллера.",
+      "zh_cn": "检测到有图形处理器工作异常。{0}无法使用此图形处理器进行挖矿。我们建议您重启计算机，或重新安装图形处理器的驱动程序。"
     },
     "We have detected that your Nvidia Driver is older than {0}{1}. We recommend you to update to {2} or newer.": {
       "bg": "Вашият драйвер за Nvidia е по-стар от {0}{1}. Препоръчваме актуализация до {2} или по-нова версия.",
@@ -3048,72 +3048,72 @@
       "ru": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг\nпотенциально более стабильным, но значительно медленнее (особенно для карт AMD).",
       "zh_cn": "选中此复选框将禁用所有默认优化配置。这将使得挖矿更为稳定但速度更慢（尤其对于AMD设备）。"
     },
-    "When checked, NiceHash Miner Form Windows will be set as Top Most and will be covered only by other Top Most Windows.": {},
-    "When checked, NiceHash Miner will automatically start mining when launched.": {
-      "bg": "Когато тази опция е маркирана, NiceHash Miner автоматично ще започне изчисления с пускането на програмата.",
-      "es": "Si está marcada, NiceHash Miner empezará a minar al abrirse.",
-      "it": "Quando spuntato, NiceHash Miner inizierà a minare automaticamente appena avviato.",
-      "pl": "Spowoduje automatyczny start kopania po uruchomieniu programu NiceHash Miner.",
-      "pt": "Quando marcado, o NiceHash Miner iniciará automaticamente a mineração quando iniciado.",
-      "ro": "Când bifați, NiceHash Miner o să mineze automat la pornire.",
-      "ru": "Если отмечено, NiceHash Miner будет автоматически \nначинать майнинг при запуске программы.",
+    "When checked, {0} Form Windows will be set as Top Most and will be covered only by other Top Most Windows.": {},
+    "When checked, {0} will automatically start mining when launched.": {
+      "bg": "Когато тази опция е маркирана, {0} автоматично ще започне изчисления с пускането на програмата.",
+      "es": "Si está marcada, {0} empezará a minar al abrirse.",
+      "it": "Quando spuntato, {0} inizierà a minare automaticamente appena avviato.",
+      "pl": "Spowoduje automatyczny start kopania po uruchomieniu programu {0}.",
+      "pt": "Quando marcado, o {0} iniciará automaticamente a mineração quando iniciado.",
+      "ro": "Când bifați, {0} o să mineze automat la pornire.",
+      "ru": "Если отмечено, {0} будет автоматически \nначинать майнинг при запуске программы.",
       "zh_cn": "选择此处以在程序开启后自动开始挖矿。"
     },
-    "When checked, NiceHash Miner will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner ще установи всички поддържани NVIDIA видеокарти в режим P0.\nТова води до леко повишаване на производителността при някои алгоритми.\nТази опция изисква административни привилегии, за да бъде активирана.",
-      "es": "Si está marcado, NiceHash Miner pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
-      "it": "Quando spuntato, NiceHash Miner cambierà lo stato di tutte le GPU NVIDIA allo stato P0.\nQuesto migliorerà le prestazioni con certi algoritmi.\nQuesta funzione richiede privilegi di amministratore per essere eseguita.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner ustawi kartom NVIDIA GPUs tzw. P0 state.\nMoże to znacznie zwiększyć wydajność dla niektórych algorytmów.\nWymaga uprawnień administratora Windows.",
-      "ro": "Când bifați, NiceHash Miner o să treacă toate GPUurile NVIDIA suportate îm starea P0.\nAcest lucru o să îmbunătățească ușor performanța anumitor algoritmi.\nAceastă funcționalitate necesită ca drepturile administrative să fie activate.",
-      "ru": "Если отмечено, NiceHash Miner изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会把所有受支持的NVIDIA图形处理器调整到P0状态。\n这将略微增强部分算法的执行速率。\n开启此功能需要管理员权限。"
+    "When checked, {0} will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.": {
+      "bg": "Когато тази опция е активна, {0} ще установи всички поддържани NVIDIA видеокарти в режим P0.\nТова води до леко повишаване на производителността при някои алгоритми.\nТази опция изисква административни привилегии, за да бъде активирана.",
+      "es": "Si está marcado, {0} pondrá todas las GPUs de NVIDIA al estado P0.\nEsto incrementará ligeramente el rendimiento en algunos algoritmos.\nSe necesitan privilegios de administrador.",
+      "it": "Quando spuntato, {0} cambierà lo stato di tutte le GPU NVIDIA allo stato P0.\nQuesto migliorerà le prestazioni con certi algoritmi.\nQuesta funzione richiede privilegi di amministratore per essere eseguita.",
+      "pl": "Kiedy zaznaczone, {0} ustawi kartom NVIDIA GPUs tzw. P0 state.\nMoże to znacznie zwiększyć wydajność dla niektórych algorytmów.\nWymaga uprawnień administratora Windows.",
+      "ro": "Când bifați, {0} o să treacă toate GPUurile NVIDIA suportate îm starea P0.\nAcest lucru o să îmbunătățească ușor performanța anumitor algoritmi.\nAceastă funcționalitate necesită ca drepturile administrative să fie activate.",
+      "ru": "Если отмечено, {0} изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора.",
+      "zh_cn": "若选择此复选框，{0} Legacy将会把所有受支持的NVIDIA图形处理器调整到P0状态。\n这将略微增强部分算法的执行速率。\n开启此功能需要管理员权限。"
     },
-    "When checked, NiceHash Miner will minimize to tray.": {
-      "bg": "Когато тази опция е маркирана, NiceHash Miner ще се минимизира като икона в статус лентата.",
-      "es": "Si está marcada, NiceHash Miner se minimizará a la bandeja (Tray).",
-      "it": "Quando spuntato, NiceHash Miner verrà ridotto a icona.",
-      "pl": "Spowoduje minimalizowanie NiceHash Miner do ikony obok zegara systemowego.",
-      "pt": "Quando marcado, o NiceHash Miner minimizará para a bandeja.",
-      "ro": "Când bifați, NiceHash Miner va fi minimizat în tray.",
-      "ru": "Если отмечено, NiceHash Miner будет сворачиваться в трей.",
-      "zh_cn": "选择此处使NiceHash Miner Legacy最小化至托盘。"
+    "When checked, {0} will minimize to tray.": {
+      "bg": "Когато тази опция е маркирана, {0} ще се минимизира като икона в статус лентата.",
+      "es": "Si está marcada, {0} se minimizará a la bandeja (Tray).",
+      "it": "Quando spuntato, {0} verrà ridotto a icona.",
+      "pl": "Spowoduje minimalizowanie {0} do ikony obok zegara systemowego.",
+      "pt": "Quando marcado, o {0} minimizará para a bandeja.",
+      "ro": "Când bifați, {0} va fi minimizat în tray.",
+      "ru": "Если отмечено, {0} будет сворачиваться в трей.",
+      "zh_cn": "选择此处使{0} Legacy最小化至托盘。"
     },
-    "When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only).": {},
-    "When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {},
-    "When checked, NiceHash Miner will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
-      "it": "Quando spuntato, NiceHash Miner eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner uruchomi skrypt OnGPUsLost.bat w wypadku gdy\nwykryje utratę co najmniej jednego GPU CUDA, domyślnie skrypt zrestartuje całą maszynę.",
-      "ro": "Când bifați, NiceHash Miner o să ruleze OnGPUsLost.bat atunci când cel puțin un GPU CUDA este pierdut,\nimplicit scriptul o să restarteze întregul sistem.",
-      "ru": "Если отмечено, NiceHash Miner запустит OnGPUsLost.bat \nпри потере хотя бы одного устройства CUDA GPU,\nпо умолчанию скрипт должен перезапускать всю систему.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将在探测到有CUDA GPU停止响应后执行OnGPUsLost.bat脚本。默认脚本会重新启动计算机。"
+    "When checked, {0} will not attempt to set device power mode settings (currently NVIDIA only).": {},
+    "When checked, {0} will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {},
+    "When checked, {0} will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
+      "bg": "Когато тази опция е активна, {0} ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
+      "it": "Quando spuntato, {0} eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
+      "pl": "Kiedy zaznaczone, {0} uruchomi skrypt OnGPUsLost.bat w wypadku gdy\nwykryje utratę co najmniej jednego GPU CUDA, domyślnie skrypt zrestartuje całą maszynę.",
+      "ro": "Când bifați, {0} o să ruleze OnGPUsLost.bat atunci când cel puțin un GPU CUDA este pierdut,\nimplicit scriptul o să restarteze întregul sistem.",
+      "ru": "Если отмечено, {0} запустит OnGPUsLost.bat \nпри потере хотя бы одного устройства CUDA GPU,\nпо умолчанию скрипт должен перезапускать всю систему.",
+      "zh_cn": "若选择此复选框，{0} Legacy将在探测到有CUDA GPU停止响应后执行OnGPUsLost.bat脚本。默认脚本会重新启动计算机。"
     },
-    "When checked, NiceHash Miner will run on login.": {
-      "bg": "Когато тази опция е маркирана, NiceHash Miner ще се стартира при първоначално зареждане.",
-      "es": "Cuando se selecciona, NiceHash Miner se ejecutará al iniciar sesión.",
-      "it": "Quando spuntato, NiceHash Miner verrà avviato all'avvio di Windows.",
-      "pl": "Spowoduje automatyczne uruchomienie NiceHash Miner po starcie Windows.",
-      "pt": "Quando marcado, NiceHash Miner será executado no login.",
-      "ro": "Când este bifat, NiceHash Miner va rula la login.",
-      "ru": "Если отмечено, NiceHash Miner будет запущен при входе в систему.",
-      "zh_cn": "选择此处使NiceHash Miner Legacy开机自动启动。"
+    "When checked, {0} will run on login.": {
+      "bg": "Когато тази опция е маркирана, {0} ще се стартира при първоначално зареждане.",
+      "es": "Cuando se selecciona, {0} se ejecutará al iniciar sesión.",
+      "it": "Quando spuntato, {0} verrà avviato all'avvio di Windows.",
+      "pl": "Spowoduje automatyczne uruchomienie {0} po starcie Windows.",
+      "pt": "Quando marcado, {0} será executado no login.",
+      "ro": "Când este bifat, {0} va rula la login.",
+      "ru": "Если отмечено, {0} будет запущен при входе в систему.",
+      "zh_cn": "选择此处使{0} Legacy开机自动启动。"
     },
-    "When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner ще ви предупреждава, ако\nе инсталирана неоптимална версия на драйвера за видеокартата.",
-      "es": "Si está marcado, NiceHash Miner dará un aviso si\nla versión óptima del driver está instalada.",
-      "it": "Quando spuntato, NiceHash Miner mostrerà un avviso se\nun driver non ottimale è installato.",
-      "pl": "Po zaznaczeniu NiceHash Miner pokaże ostrzeżenie\njeśli wykryje nieoptymalny sterownik.",
-      "ro": "Când bifați, NiceHash Miner o sa genereze o avertizare dacă\no versiune mai puțin optimă de driver este instalată.",
-      "ru": "Если отмечено, NiceHash Miner будет показывать предупреждение,\nесли установлена не самая оптимальная версия драйвера.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会在\n检测到非最优驱动版本时显示警告。"
+    "When checked, {0} would issue a warning if\na less optimal version of a driver is installed.": {
+      "bg": "Когато тази опция е активна, {0} ще ви предупреждава, ако\nе инсталирана неоптимална версия на драйвера за видеокартата.",
+      "es": "Si está marcado, {0} dará un aviso si\nla versión óptima del driver está instalada.",
+      "it": "Quando spuntato, {0} mostrerà un avviso se\nun driver non ottimale è installato.",
+      "pl": "Po zaznaczeniu {0} pokaże ostrzeżenie\njeśli wykryje nieoptymalny sterownik.",
+      "ro": "Când bifați, {0} o sa genereze o avertizare dacă\no versiune mai puțin optimă de driver este instalată.",
+      "ru": "Если отмечено, {0} будет показывать предупреждение,\nесли установлена не самая оптимальная версия драйвера.",
+      "zh_cn": "若选择此复选框，{0} Legacy将会在\n检测到非最优驱动版本时显示警告。"
     },
-    "When checked, NiceHash Miner would issue a warning if\nthe internet connection is not available.": {
-      "bg": "Когато тази опция е активна, NiceHash Miner ще покаже предупреждение,\nако няма работеща връзка към интернет.",
-      "it": "Quando spuntato, NiceHash Miner mostrerà un avviso se\nla connessione a Internet non è disponibile.",
-      "pl": "Kiedy zaznaczone, NiceHash Miner pokaże ostrzeżenie, \njeśli straci połączenie internetowe.",
-      "ro": "Când bifați, NiceHash Miner o să vă avertizeze dacă\nnu este disponibilă conexiunea la internet.",
-      "ru": "Если отмечено, NiceHash Miner будет показывать предупреждение,\nкогда соединение с интернетом недоступно.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将会在\n互联网连接不可用时显示警告。"
+    "When checked, {0} would issue a warning if\nthe internet connection is not available.": {
+      "bg": "Когато тази опция е активна, {0} ще покаже предупреждение,\nако няма работеща връзка към интернет.",
+      "it": "Quando spuntato, {0} mostrerà un avviso se\nla connessione a Internet non è disponibile.",
+      "pl": "Kiedy zaznaczone, {0} pokaże ostrzeżenie, \njeśli straci połączenie internetowe.",
+      "ro": "Când bifați, {0} o să vă avertizeze dacă\nnu este disponibilă conexiunea la internet.",
+      "ru": "Если отмечено, {0} будет показывать предупреждение,\nкогда соединение с интернетом недоступно.",
+      "zh_cn": "若选择此复选框，{0} Legacy将会在\n互联网连接不可用时显示警告。"
     },
     "When checked, NiceHash Miner would use the new settings page.": {
       "bg": "Когато тази опция е активна, NiceHash Miner ще използва новия панел за настройки.",
@@ -3124,14 +3124,14 @@
       "ru": "Если отмечено, NiceHash Miner будет использовать новую страницу настроек.",
       "zh_cn": "若选择此复选框，NiceHash Miner Legacy将启用新版的设置页面。"
     },
-    "When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.": {
-      "bg": "Когато тази опция е активна, при блокиране на програмата за изчисления\nNiceHash Miner ще може да я рестартира, тъй като контролът няма да бъде\r\nблокиран от съобщението за грешка на Windows.\r\n\r\nПрепоръчително е тази настройка да бъде активирана, за да се гарантира\r\nнепрекъснатост на изчислителния процес, тъй като програмите\r\nот този тип не са 100% стабилни.",
-      "es": "Si está marcado, si un minero crasheara,NiceHash Miner sería capaz de reabrirlo si no está bloqueado por algún mensaje de error de Windows.\nEs recomendable dejarlo activado para que se pueda minar ininterrunpidamente con unos mineros que no sean completamente estables.",
-      "it": "Quando spuntato, nel caso di un crash del miner,\nNiceHash Miner sarà ancora in grado di riavviare ancora il miner se non è bloccato da un messaggio di errore di Windows.\nÈ consigliabile spuntare questa opzione per minare ininterrottamente in quanto i programmi di mining non sono stabili al 100%.",
-      "pl": "Kiedy zaznaczone, w przypadku wykrzaczenia się górnika,\nNiceHash Miner będzie próbować uruchomić go ponownie i nie będzie to blokowane przez raportowanie błędów Windows.\nZalecane kiedy program kopiący nie jest całkowicie stabilny, co się niestety zdarza.",
-      "ro": "Când bifați, în caz că minerul se blochează,\nNiceHash Miner o să poată sa-l repornească nefiind blocat de mesaj de eroare Windows.\nEste recomandat ca această setare să fie bifată pentru minare neîntreruptă din cauză ca programele miner nu sunt 100% stabile.",
-      "ru": "Если отмечено, в случае аварийного завершения работы майнера NiceHash Miner \nперезапустит майнер без блокирования сообщением об ошибке Windows. \nРекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны.",
-      "zh_cn": "若选择此复选框，NiceHash Miner Legacy将可以\n自动重启奔溃的挖矿程序。Windows错误报告会阻止NiceHash Miner Legacy执行这一重启。\n由于挖矿程序不尽完善，我们推荐开启此选项。"
+    "When checked, in the event of a miner crash,\n{0} would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable.": {
+      "bg": "Когато тази опция е активна, при блокиране на програмата за изчисления\n{0} ще може да я рестартира, тъй като контролът няма да бъде\r\nблокиран от съобщението за грешка на Windows.\r\n\r\nПрепоръчително е тази настройка да бъде активирана, за да се гарантира\r\nнепрекъснатост на изчислителния процес, тъй като програмите\r\nот този тип не са 100% стабилни.",
+      "es": "Si está marcado, si un minero crasheara,{0} sería capaz de reabrirlo si no está bloqueado por algún mensaje de error de Windows.\nEs recomendable dejarlo activado para que se pueda minar ininterrunpidamente con unos mineros que no sean completamente estables.",
+      "it": "Quando spuntato, nel caso di un crash del miner,\n{0} sarà ancora in grado di riavviare ancora il miner se non è bloccato da un messaggio di errore di Windows.\nÈ consigliabile spuntare questa opzione per minare ininterrottamente in quanto i programmi di mining non sono stabili al 100%.",
+      "pl": "Kiedy zaznaczone, w przypadku wykrzaczenia się górnika,\n{0} będzie próbować uruchomić go ponownie i nie będzie to blokowane przez raportowanie błędów Windows.\nZalecane kiedy program kopiący nie jest całkowicie stabilny, co się niestety zdarza.",
+      "ro": "Când bifați, în caz că minerul se blochează,\n{0} o să poată sa-l repornească nefiind blocat de mesaj de eroare Windows.\nEste recomandat ca această setare să fie bifată pentru minare neîntreruptă din cauză ca programele miner nu sunt 100% stabile.",
+      "ru": "Если отмечено, в случае аварийного завершения работы майнера {0} \nперезапустит майнер без блокирования сообщением об ошибке Windows. \nРекомендуется включить эту настройку, поскольку программы для майнинга не на 100% стабильны.",
+      "zh_cn": "若选择此复选框，{0} Legacy将可以\n自动重启奔溃的挖矿程序。Windows错误报告会阻止{0} Legacy执行这一重启。\n由于挖矿程序不尽完善，我们推荐开启此选项。"
     },
     "When checked, it displays debug console.": {
       "bg": "Когато маркирате тази опция, debug конзолата ще се показва.",
@@ -3163,15 +3163,15 @@
       "ru": "Если отмечено, окна sgminer, ccminer, cpuminer и ethmier будут спрятаны.",
       "zh_cn": "选择此处来隐藏挖矿程序 (sgminer, ccminer, cpuminer and ethminer) 的命令行窗口。"
     },
-    "When unchecked NiceHash Miner will allow only one instance running (it will close a new started instance if there is an opened instance running).": {
-      "bg": "Ако не е поставена отметка, NiceHash Miner ще позволява само едно копие на програмата да работи в даден момент (ако програмата вече е стартирана, новото копие ще се самозатвори).",
-      "es": "Cuando está desactivado, NiceHash Miner solo podrá estar ejecutandose una ver al mismo tiempo (cerraá cuaquier instancia adicional).",
-      "it": "Quando senza spunta NiceHash Miner consentirà solo una istanza aperta (se è presente una istanza attiva quella nuova verrà automaticamente chiusa).",
-      "pl": "Kiedy nie zaznaczone, NiceHash Miner pozwoli tylko na jedną instancję programu.",
-      "pt": "Quando desmarcado, o NiceHash Miner permitirá que apenas uma instância seja executada (fechará uma nova instância iniciada se houver uma instância aberta em execução).",
-      "ro": "Când nu este bifat NiceHash Miner o să permită să ruleze o singură instanță (o să închidă o nouă instanță pornită dacă exista deja o instantță care rulează).",
-      "ru": "Если не отмечено, NiceHash Miner разрешит работу только одного экземпляра\n(он закроет новый запущенный экземпляр, если один экземпляр уже работает).",
-      "zh_cn": "如果未选中此复选框，NiceHash Miner仅允许一个NML应用程序实例运行（如果NML已在运行，您将无法启动第二个NML实例）。"
+    "When unchecked {0} will allow only one instance running (it will close a new started instance if there is an opened instance running).": {
+      "bg": "Ако не е поставена отметка, {0} ще позволява само едно копие на програмата да работи в даден момент (ако програмата вече е стартирана, новото копие ще се самозатвори).",
+      "es": "Cuando está desactivado, {0} solo podrá estar ejecutandose una ver al mismo tiempo (cerraá cuaquier instancia adicional).",
+      "it": "Quando senza spunta {0} consentirà solo una istanza aperta (se è presente una istanza attiva quella nuova verrà automaticamente chiusa).",
+      "pl": "Kiedy nie zaznaczone, {0} pozwoli tylko na jedną instancję programu.",
+      "pt": "Quando desmarcado, o {0} permitirá que apenas uma instância seja executada (fechará uma nova instância iniciada se houver uma instância aberta em execução).",
+      "ro": "Când nu este bifat {0} o să permită să ruleze o singură instanță (o să închidă o nouă instanță pornită dacă exista deja o instantță care rulează).",
+      "ru": "Если не отмечено, {0} разрешит работу только одного экземпляра\n(он закроет новый запущенный экземпляр, если один экземпляр уже работает).",
+      "zh_cn": "如果未选中此复选框，{0}仅允许一个NML应用程序实例运行（如果NML已在运行，您将无法启动第二个NML实例）。"
     },
     "Windows Management Instrumentation Error": {
       "bg": "Windows Management Instrumentation грешка",
@@ -3209,15 +3209,15 @@
       "ru": "Вы можете использовать прежние значения бенчмарка. Выберите «Да», для использования прежних значений бенчмарка или выберите «Нет» для перезапуска бенчмарка.",
       "zh_cn": "您可以使用之前的测试结果。请点击“是”使用之前的结果，或点击“否”重新执行测试。"
     },
-    "You have not entered a bitcoin address. NiceHash Miner will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {
-      "bg": "Не сте въвели bitcoin адрес. NiceHash Miner ще започне работа в ДЕМО режим. Използвайте ДЕМО режима, за да тествате приложението и да видите колко можете да спечелите, използвайки своя компютър. Искате ли да продължите в ДЕМО режим?\n\nВНИМАНИЕ: НЯМА 'Да' ПОЛУЧИТЕ НИКАКВО ВЪЗНАГРАЖДЕНИЕ, ДОКАТО РАБОТИТЕ В ДЕМО РЕЖИМ!",
-      "es": "No has introducido una dirección Bitcoin. NiceHash Miner empezará a minar en modo DEMO. En el modo DEMO, pueder probar al minero y ver cuanto puedes ganar usando tu ordenador. ¿Quieres continuar en modo DEMO?\n\nAVISO: ¡No ganarás nada en modo DEMO!",
-      "it": "Non hai inserito un indirizzo Bitcoin. NiceHash Miner inizierà a minare in modalità DEMO. In modalità DEMO, puoi testare il miner e vedere quanto puoi guadagnare usando il tuo computer. Vuoi continuare in modalità DEMO?\n\nAVVERTENZA: NON GUADAGNERAI NIENTE DURANTE LA MODALITÀ DEMO!",
-      "pl": "Nie wprowadziłeś adresu bitcoin. NiceHash Miner będzie pracować w trybie DEMO. Możesz testować program i obserwować, jak dużo możesz zarobić za pomocą komputera. Kontynuować w trybie DEMO?\n\nINFORMACJA: NIC NIE ZARABIASZ W TRYBIE DEMO!",
-      "pt": "Você não colocou um endereço bitcoin. NiceHash Miner vai começar a minerar no modo DEMO. No modo DEMO você pode testar o minerador e poderá ver quando pode ganhar usando seu computador. Você gostaria de continuar no modo de DEMONSTRAÇÃO?\n\nAVISO: VOCÊ NÃO VAI GANHAR NADA DURANTE O MODO DE DEMNOSNTRAÇÃO!!",
-      "ro": "Nu ați introdus o adresă bitcoin. NiceHash Miner va rula în mod DEMO. În mod DEMO, puteți testa minerii și vedea cât puteți câștiga cu acest calculator. Doriți să continuați în mod DEMO?\n\nATENȚIE: NU VEȚI CÂȘTIGA NIMIC ÎN MOD DEMO!",
-      "ru": "Вы не ввели Биткоин-адрес. NiceHash Miner начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nВНИМАНИЕ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!",
-      "zh_cn": "您并没有指定比特币提现地址。NiceHash Miner将进入演示模式。您可以在演示模式下测试您的计算机及其挖矿收益。是否继续进入演示模式？\n\n注意，在演示模式下您将不会获发任何挖矿所得！"
+    "You have not entered a bitcoin address. {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {
+      "bg": "Не сте въвели bitcoin адрес. {0} ще започне работа в ДЕМО режим. Използвайте ДЕМО режима, за да тествате приложението и да видите колко можете да спечелите, използвайки своя компютър. Искате ли да продължите в ДЕМО режим?\n\nВНИМАНИЕ: НЯМА 'Да' ПОЛУЧИТЕ НИКАКВО ВЪЗНАГРАЖДЕНИЕ, ДОКАТО РАБОТИТЕ В ДЕМО РЕЖИМ!",
+      "es": "No has introducido una dirección Bitcoin. {0} empezará a minar en modo DEMO. En el modo DEMO, pueder probar al minero y ver cuanto puedes ganar usando tu ordenador. ¿Quieres continuar en modo DEMO?\n\nAVISO: ¡No ganarás nada en modo DEMO!",
+      "it": "Non hai inserito un indirizzo Bitcoin. {0} inizierà a minare in modalità DEMO. In modalità DEMO, puoi testare il miner e vedere quanto puoi guadagnare usando il tuo computer. Vuoi continuare in modalità DEMO?\n\nAVVERTENZA: NON GUADAGNERAI NIENTE DURANTE LA MODALITÀ DEMO!",
+      "pl": "Nie wprowadziłeś adresu bitcoin. {0} będzie pracować w trybie DEMO. Możesz testować program i obserwować, jak dużo możesz zarobić za pomocą komputera. Kontynuować w trybie DEMO?\n\nINFORMACJA: NIC NIE ZARABIASZ W TRYBIE DEMO!",
+      "pt": "Você não colocou um endereço bitcoin. {0} vai começar a minerar no modo DEMO. No modo DEMO você pode testar o minerador e poderá ver quando pode ganhar usando seu computador. Você gostaria de continuar no modo de DEMONSTRAÇÃO?\n\nAVISO: VOCÊ NÃO VAI GANHAR NADA DURANTE O MODO DE DEMNOSNTRAÇÃO!!",
+      "ro": "Nu ați introdus o adresă bitcoin. {0} va rula în mod DEMO. În mod DEMO, puteți testa minerii și vedea cât puteți câștiga cu acest calculator. Doriți să continuați în mod DEMO?\n\nATENȚIE: NU VEȚI CÂȘTIGA NIMIC ÎN MOD DEMO!",
+      "ru": "Вы не ввели Биткоин-адрес. {0} начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя ваш компьютер. Продолжить в режиме ДЕМО?\n\nВНИМАНИЕ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!",
+      "zh_cn": "您并没有指定比特币提现地址。{0}将进入演示模式。您可以在演示模式下测试您的计算机及其挖矿收益。是否继续进入演示模式？\n\n注意，在演示模式下您将不会获发任何挖矿所得！"
     },
     "You have not run benchmark for device {0}. Without benchmarking first, NiceHash Miner will not be able to switch to the most profitable algorithm. To continue mining, choose Yes. If you wish to benchmark first, choose No and click on the benchmark button.": {
       "bg": "До момента не сте изпълнявали тестове за скорост за {0}. Без най-напред да тества неговата производителност, NiceHash Miner няма да може да избира най-доходоносния алгоритъм. За да продължите с изчисленията, изберете 'Yes'. Ако предпочитате първо да изпълните тестовете за скорост, изберете 'No' и след това кликнете бутона 'Тест скорост'.",
@@ -3269,16 +3269,18 @@
       "ru": "{0}% : Бенчмарк {1}… Подождите, пожалуйста…",
       "zh_cn": "{0}% : 正在测试{1}.. 请稍后.."
     },
-    "{0}: File {1} is not found!\n\nPlease make sure that the file is accessible and that your anti-virus is not blocking the application.\nPlease refer the section \"My anti-virus is blocking the application\" at the Troubleshooting section ({2}).\n\nA re-download of NiceHash Miner might be needed.": {
-      "bg": "{0}: Файлът {1} не може да бъде открит!\n\nУверете се, че файлът е достъпен и антивирусната ви програма не блокира приложението.\nЗа повече информация вижте раздела \"My anti-virus is blocking the application\" в страницата за поддръка ({2}).\n\nМоже да се наложи да свалите повторно NiceHash Miner.",
-      "es": "{0}: No se ha encontrado el archivo {1}!\n\nPor favor asegúrate de que el archivo as accesible y que tu antivirus no está bloqueando la aplicación.\nPor favor vea la sección \"My anti-virus is blocking the application\" en la sección de corrección de errores {2}.\n\nSe podría necesitar reinstalar NiceHash Miner",
-      "it": "{0}: Il file {1} non è stato trovato!\n\nAssicurati che il file sia accessibile e che il tuo antivirus non stia bloccando l'applicazione.\nGuarda la sezione \"My anti-virus is blocking the application\" nella scheda Troubleshooting ({2}).\n\nPotrebbe essere necessario riscaricare NiceHash Miner.",
+    "{0}: File {1} is not found!\n\nPlease make sure that the file is accessible and that your anti-virus is not blocking the application.\nPlease refer the section \"My anti-virus is blocking the application\" at the Troubleshooting section ({2}).\n\nA re-download of {3} might be needed.": {
+      "bg": "{0}: Файлът {1} не може да бъде открит!\n\nУверете се, че файлът е достъпен и антивирусната ви програма не блокира приложението.\nЗа повече информация вижте раздела \"My anti-virus is blocking the application\" в страницата за поддръка ({2}).\n\nМоже да се наложи да свалите повторно {3}.",
+      "es": "{0}: No se ha encontrado el archivo {1}!\n\nPor favor asegúrate de que el archivo as accesible y que tu antivirus no está bloqueando la aplicación.\nPor favor vea la sección \"My anti-virus is blocking the application\" en la sección de corrección de errores {2}.\n\nSe podría necesitar reinstalar {3}",
+      "it": "{0}: Il file {1} non è stato trovato!\n\nAssicurati che il file sia accessibile e che il tuo antivirus non stia bloccando l'applicazione.\nGuarda la sezione \"My anti-virus is blocking the application\" nella scheda Troubleshooting ({2}).\n\nPotrebbe essere necessario riscaricare {3}.",
       "pl": "{0}: Plik {1} nie znaleziony!\n\nUpewnij się, że plik jest dla Ciebie dostępny oraz że antywirus go nie blokuje.\nPrzeczytaj \"Mój antywirus blokuje program\" w dziale pomocy ({2}).\n\nMoże być konieczne ponowne pobranie programu.",
-      "pt": "{0}: O arquivo {1} não foi encontrado!\n\nVerifique se o arquivo está acessível e seu antivírus não está bloqueando o aplicativo.\nConsulte a seção \"Meu anti-vírus está bloqueando o aplicativo\" Na seção de solução de problemas ({2}).\n\nBaixar NiceHash Miner novamente pode ser necessário.",
-      "ro": "{0}: Fișierul {1} nu este găsit!\n\nVă rog să vă asigurați că fișierul este accesibil și antivirusul nu blochează aplicația.\nVerificați secțiunea \"My anti-virus is blocking the application\" în secțiunea Troubleshooting ({2}).\n\nDescărcarea din nou a NiceHash Miner poate fi necesară.",
-      "ru": "{0}: Файл {1} не найден!\n\nУбедитесь, пожалуйста, что этот файл доступен и что ваш антивирус не блокирует приложение.\nОбратитесь, пожалуйста, к разделу \"My anti-virus is blocking the application\" \nв разделе решения проблем ({2}).\n\nМожет понадобиться повторная загрузка NiceHash Miner.",
-      "zh_cn": "{0}：文件{1}未找到！\n\n请确认文件可访问并确认杀毒软件没有阻挡此程序。\n请参照Troubleshooting章节中的\"My anti-virus is blocking the application\"小节({2})。\n\n您可能需要重新下载NiceHash Miner。"
-    }
+      "pt": "{0}: O arquivo {1} não foi encontrado!\n\nVerifique se o arquivo está acessível e seu antivírus não está bloqueando o aplicativo.\nConsulte a seção \"Meu anti-vírus está bloqueando o aplicativo\" Na seção de solução de problemas ({2}).\n\nBaixar {3} novamente pode ser necessário.",
+      "ro": "{0}: Fișierul {1} nu este găsit!\n\nVă rog să vă asigurați că fișierul este accesibil și antivirusul nu blochează aplicația.\nVerificați secțiunea \"My anti-virus is blocking the application\" în secțiunea Troubleshooting ({2}).\n\nDescărcarea din nou a {3} poate fi necesară.",
+      "ru": "{0}: Файл {1} не найден!\n\nУбедитесь, пожалуйста, что этот файл доступен и что ваш антивирус не блокирует приложение.\nОбратитесь, пожалуйста, к разделу \"My anti-virus is blocking the application\" \nв разделе решения проблем ({2}).\n\nМожет понадобиться повторная загрузка {3}.",
+      "zh_cn": "{0}：文件{1}未找到！\n\n请确认文件可访问并确认杀毒软件没有阻挡此程序。\n请参照Troubleshooting章节中的\"My anti-virus is blocking the application\"小节({2})。\n\n您可能需要重新下载{3}。"
+    },
+    "Click yes if you with to run {0} as Administrator.": {},
+    "Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {}
   }
 }
 
