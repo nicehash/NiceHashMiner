@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="NHM.Wpf.Windows.Settings.Pages.AdvancedMiningPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NHM.Wpf.Windows.Settings.Pages"
+             xmlns:control="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <StackPanel>
+        <control:SettingsContainer Title="Run Ethlargement"
+                                   Enabled="False"
+                                   Description="Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners." />
+        <control:SettingsContainer Title="API Bind port pool start:"
+                                   Description="Set starting port number from which miner API Bind ports will be set for communication.">
+            <TextBox Text="8085" />
+        </control:SettingsContainer>
+        <control:SettingsContainer Title="Miner API Query Interval [s]:"
+                                   Description="API query interval for ccminer, sgminer cpuminer and ethminer.">
+            <TextBox Text="5" />
+        </control:SettingsContainer>
+    </StackPanel>
+</UserControl>

@@ -59,6 +59,7 @@
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
     <Compile Include="ViewModels\Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\Settings\AdvancedGeneral.cs" />
+    <Compile Include="ViewModels\Settings\AdvancedMiningVM.cs" />
     <Compile Include="ViewModels\Settings\AdvancedSwitchingVM.cs" />
     <Compile Include="ViewModels\Settings\GeneralSettingsVM.cs" />
     <Compile Include="ViewModels\Settings\MiningGeneralVM.cs" />
@@ -74,6 +75,9 @@
     </Compile>
     <Compile Include="Windows\Settings\Controls\SettingContainer.xaml.cs">
       <DependentUpon>SettingContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Settings\Pages\AdvancedMiningPage.xaml.cs">
+      <DependentUpon>AdvancedMiningPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Settings\Pages\AdvancedPage.xaml.cs">
       <DependentUpon>AdvancedPage.xaml</DependentUpon>
@@ -107,6 +111,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Windows\Settings\Controls\SettingContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Settings\Pages\AdvancedMiningPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace NHM.Wpf.Windows.Settings.Pages
 {
     /// <summary>
-    /// Interaction logic for AdvancedSwitchingPage.xaml
+    /// Interaction logic for AdvancedMiningPage.xaml
     /// </summary>
-    public partial class AdvancedSwitchingPage : UserControl, ISettingsPage
+    public partial class AdvancedMiningPage : UserControl, ISettingsPage
     {
-        public AdvancedSwitchingPage()
+        public AdvancedMiningPage()
         {
             InitializeComponent();
         }

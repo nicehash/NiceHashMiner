@@ -24,7 +24,8 @@ namespace NHM.Wpf.ViewModels.Settings
             return new SettingsContainerVM(settingsObj,
                 "Advanced",
                 new AdvancedGeneral(settingsObj),
-                new AdvancedSwitchingVM(settingsObj));
+                new AdvancedSwitchingVM(settingsObj),
+                new AdvancedMiningVM(settingsObj));
         }
     }
 }

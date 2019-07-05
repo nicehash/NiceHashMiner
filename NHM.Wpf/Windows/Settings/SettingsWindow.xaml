@@ -53,6 +53,9 @@
                 <DataTemplate DataType="{x:Type vm:AdvancedSwitchingVM}">
                     <local:AdvancedSwitchingPage />
                 </DataTemplate>
+                <DataTemplate DataType="{x:Type vm:AdvancedMiningVM}">
+                    <local:AdvancedMiningPage />
+                </DataTemplate>
             </ScrollViewer.Resources>
             <ContentControl Content="{Binding SelectedPageVM}"/>
         </ScrollViewer>
