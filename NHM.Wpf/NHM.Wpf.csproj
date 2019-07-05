@@ -59,6 +59,7 @@
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
     <Compile Include="ViewModels\Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\Settings\AdvancedGeneral.cs" />
+    <Compile Include="ViewModels\Settings\AdvancedSwitchingVM.cs" />
     <Compile Include="ViewModels\Settings\GeneralSettingsVM.cs" />
     <Compile Include="ViewModels\Settings\MiningGeneralVM.cs" />
     <Compile Include="ViewModels\Settings\ProfitabilitySettingsVM.cs" />
@@ -76,6 +77,9 @@
     </Compile>
     <Compile Include="Windows\Settings\Pages\AdvancedPage.xaml.cs">
       <DependentUpon>AdvancedPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Settings\Pages\AdvancedSwitchingPage.xaml.cs">
+      <DependentUpon>AdvancedSwitchingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Settings\Pages\GeneralPage.xaml.cs">
       <DependentUpon>GeneralPage.xaml</DependentUpon>
@@ -107,6 +111,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Settings\Pages\AdvancedPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Settings\Pages\AdvancedSwitchingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

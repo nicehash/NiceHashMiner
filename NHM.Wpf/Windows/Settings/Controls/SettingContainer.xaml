@@ -49,7 +49,7 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <Grid IsEnabled="{Binding Enabled}">
+        <Grid IsEnabled="{Binding Enabled}" Margin="10,0">
             <!-- The data context sets all children's data contexts to the settings page, so binding can be done there -->
             <StackPanel x:Name="ChildrenStackPanel" 
                         DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Pages:ISettingsPage}}}" />
