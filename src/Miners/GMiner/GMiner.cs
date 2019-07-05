@@ -34,12 +34,12 @@ namespace GMinerPlugin
         private string _extraLaunchParameters = "";
         private string _devices;
 
-        protected readonly Dictionary<string, int> _mappedCudaIds = new Dictionary<string, int>();
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
 
-        public GMiner(string uuid, Dictionary<string, int> mappedCudaIds) : base(uuid)
+        public GMiner(string uuid, Dictionary<string, int> mappedDeviceIds) : base(uuid)
         {
-            _mappedCudaIds = mappedCudaIds;
+            _mappedDeviceIds = mappedDeviceIds;
         }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
@@ -100,7 +100,7 @@ namespace GMinerPlugin
                 var totalPowerUsage = 0;
                 foreach (var gpu in gpus)
                 {
-                    var currentDevStats = summary.devices.Where(devStats => devStats.gpu_id == _mappedCudaIds[gpu.UUID]).FirstOrDefault();
+                    var currentDevStats = summary.devices.Where(devStats => devStats.gpu_id == _mappedDeviceIds[gpu.UUID]).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed;
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed * (1 - DevFee * 0.01)) });
@@ -202,7 +202,7 @@ namespace GMinerPlugin
             //var orderedMiningPairs = _miningPairs.ToList();
             //orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             var minignPairs = _miningPairs.ToList();
-            _devices = string.Join(" ", minignPairs.Select(p => _mappedCudaIds[p.Device.UUID]));
+            _devices = string.Join(" ", minignPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks

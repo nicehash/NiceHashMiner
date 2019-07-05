@@ -271,6 +271,7 @@
     <Compile Include="Miners\MiningManager.cs" />
     <Compile Include="Plugin\PluginContainer.cs" />
     <Compile Include="Plugin\SupportedAlgorithmsFilter.cs" />
+    <Compile Include="Plugin\SupportedPluginsFilter.cs" />
     <Compile Include="Stats\MiningStats.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />

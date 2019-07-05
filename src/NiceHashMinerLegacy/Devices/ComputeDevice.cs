@@ -81,7 +81,11 @@ namespace NiceHashMiner.Devices
         public string BenchmarkCopyUuid { get; set; }
 
         #region DeviceMonitor
-        public DeviceMonitor DeviceMonitor { get; set; }
+        public void SetDeviceMonitor(DeviceMonitor deviceMonitor)
+        {
+            DeviceMonitor = deviceMonitor;
+        }
+        protected DeviceMonitor DeviceMonitor { get; private set; }
 
         #region Getters
 
@@ -89,7 +93,7 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (DeviceMonitor != null && DeviceMonitor is IPowerTarget get) return get.PowerTarget;
+                if (!ConfigManager.GeneralConfig.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is IPowerTarget get) return get.PowerTarget;
                 //throw new NotSupportedException($"Device with {Uuid} doesn't support PowerTarget");
                 return 0;
             }
@@ -98,6 +102,7 @@ namespace NiceHashMiner.Devices
         {
             get
             {
+                if (ConfigManager.GeneralConfig.DisableDevicePowerModeSettings) return PowerLevel.Disabled;
                 if (DeviceMonitor != null && DeviceMonitor is IPowerLevel get) return get.PowerLevel;
                 return PowerLevel.Unsupported;
             }
@@ -107,7 +112,7 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (DeviceMonitor != null && DeviceMonitor is ILoad get) return get.Load;
+                if (!ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ILoad get) return get.Load;
                 return -1;
             }
         }
@@ -115,7 +120,7 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (DeviceMonitor != null && DeviceMonitor is ITemp get) return get.Temp;
+                if (!ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is ITemp get) return get.Temp;
                 return -1;
             }
         }
@@ -123,7 +128,7 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (DeviceMonitor != null && DeviceMonitor is IFanSpeed get) return get.FanSpeed;
+                if (!ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IFanSpeed get) return get.FanSpeed;
                 return -1;
             }
         }
@@ -131,16 +136,34 @@ namespace NiceHashMiner.Devices
         {
             get
             {
-                if (DeviceMonitor != null && DeviceMonitor is IPowerUsage get) return get.PowerUsage;
+                if (!ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IPowerUsage get) return get.PowerUsage;
                 return -1;
+            }
+        }
+
+        public bool CanSetPowerMode
+        {
+            get
+            {
+                var canSet = !ConfigManager.GeneralConfig.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ISetPowerLevel;
+                return canSet;
             }
         }
         #endregion Getters
 
         #region Setters
 
+        public bool SetPowerMode(PowerLevel level)
+        {
+            if (!ConfigManager.GeneralConfig.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ISetPowerLevel set)
+            {
+                return set.SetPowerTarget(level);
+            }
+            return false;
+        }
+
         #endregion
-        
+
         #endregion DeviceMonitor
 
 

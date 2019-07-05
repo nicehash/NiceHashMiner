@@ -14,7 +14,7 @@ using MinerPluginToolkitV1;
 
 namespace TTMiner
 {
-    public class TTMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class TTMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
         public TTMinerPlugin()
         {
@@ -89,6 +89,9 @@ namespace TTMiner
 
             var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
             if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
+
+            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
+            if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
         }
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
@@ -159,6 +162,10 @@ namespace TTMiner
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
+        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
+        {
+            GeneralTimeout =  _defaultTimeout,
+        };
         #endregion Internal Settings
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
@@ -179,10 +186,14 @@ namespace TTMiner
             return false;
         }
 
+        #region IGetApiMaxTimeoutV2
+        public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
 
-        public TimeSpan GetApiMaxTimeout()
+        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 3, 0);
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
         {
-            return new TimeSpan(0, 3, 0);
+            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
         }
+        #endregion IGetApiMaxTimeoutV2
     }
 }

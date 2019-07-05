@@ -405,10 +405,10 @@ namespace NiceHashMiner.Stats
             foreach (var dev in devs)
             {
                 if (!dev.Enabled) continue;
-                if (!(dev.DeviceMonitor is ISetPowerLevel set)) continue;
+                if (!dev.CanSetPowerMode) continue;
                 hasEnabled = true;
                 // TODO check if set
-                var result = set.SetPowerTarget(level);
+                var result = dev.SetPowerMode(level);
                 setSuccess.Add(result);
             }
 

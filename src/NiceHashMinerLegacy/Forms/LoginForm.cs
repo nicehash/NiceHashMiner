@@ -19,8 +19,7 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
             CenterToScreen();
             Icon = Properties.Resources.logo;
-            //webBrowser1.Navigate("https://www.nicehash.com/login-app");
-            webBrowser1.Navigate("https://www.nicehash.com/login-app?back");
+            webBrowser1.Navigate(Links.Login);
             webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
             //webBrowser1.SizeChanged += WebBrowser1_SizeChanged;
             FormHelpers.TranslateFormControls(this);

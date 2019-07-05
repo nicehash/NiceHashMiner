@@ -45,6 +45,7 @@ namespace NiceHashMiner
             errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
             labelWarningNotProfitableOrNoIntenret.Visible = false;
             InitElevationWarning();
+            this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
 
             devicesListViewEnableControl1 = devicesMainBoard1.SpeedsControl;
             FormHelpers.SubscribeAllControls(this);
@@ -64,7 +65,7 @@ namespace NiceHashMiner
 
             notifyIcon1.Icon = Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
-                               "\nDouble-click to restore..";
+                               "\n" + Tr("Double-click to restore...");
 
             linkLabelNewVersion.Text = "";
 
@@ -204,7 +205,7 @@ namespace NiceHashMiner
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW
             isEnabledFeature = true;
 #endif
-            if (!Helpers.IsElevated && isEnabledFeature)
+            if (!Helpers.IsElevated && isEnabledFeature && !ConfigManager.GeneralConfig.DisableDevicePowerModeSettings)
             {
                 errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
                 linkLabelAdminPrivs.Click += (s, e) =>

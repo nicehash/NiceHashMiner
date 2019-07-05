@@ -1,4 +1,5 @@
 ﻿using MinerPlugin;
+using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
-    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker, IGetApiMaxTimeout
+    abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker, IGetApiMaxTimeoutV2
     {
         public bool Is3rdParty => false;
 
@@ -29,7 +30,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public IMiner CreateMiner()
         {
-            return new SGminerIntegratedMiner(PluginUUID, AMDDevice.GlobalOpenCLPlatformID)
+            return new SGminerIntegratedMiner(PluginUUID)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -39,6 +40,11 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public bool CanGroup(MiningPair a, MiningPair b)
         {
+            if (a.Device is AMDDevice aDev && b.Device is AMDDevice bDev && aDev.OpenCLPlatformID != bDev.OpenCLPlatformID)
+            {
+                // OpenCLPlatorm IDs must match
+                return false;
+            }
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
         }
 
@@ -59,34 +65,71 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
         }
 
-        // TODO make sure avemore has the same settings
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
+        protected abstract MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables { get; set; }
+
+        protected static MinerSystemEnvironmentVariables GetMinerSystemEnvironmentVariables(bool isAvemore)
         {
-            // we have same env vars for all miners now, check avemore env vars if they differ and use custom env vars instead of defaults
-            DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
+            if (isAvemore)
             {
-                {"GPU_MAX_ALLOC_PERCENT", "100"},
-                {"GPU_USE_SYNC_OBJECTS", "1"},
-                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
-                {"GPU_MAX_HEAP_SIZE", "100"},
-                {"GPU_FORCE_64BIT_PTR", "1"}
-            },
-        };
+                return new MinerSystemEnvironmentVariables
+                {
+                    DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
+                    {
+                        {"GPU_MAX_ALLOC_PERCENT", "100"},
+                        {"GPU_USE_SYNC_OBJECTS", "1"},
+                        {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+                        {"GPU_MAX_HEAP_SIZE", "100"},
+                        {"GPU_FORCE_64BIT_PTR", "0"}
+                    },
+                };
+            }
+            return new MinerSystemEnvironmentVariables
+            {
+                DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
+                {
+                    {"GPU_MAX_ALLOC_PERCENT", "100"},
+                    {"GPU_USE_SYNC_OBJECTS", "1"},
+                    {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+                    {"GPU_MAX_HEAP_SIZE", "100"},
+                    {"GPU_FORCE_64BIT_PTR", "1"}
+                },
+            };
+        }
+
+
 
         protected static MinerOptionsPackage _minerOptionsPackage = SGMinerBase.DefaultMinerOptionsPackage;
 
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
 
-        public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
-
-        public TimeSpan GetApiMaxTimeout()
+        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
         {
-            return new TimeSpan(0, 5, 0);
-        }
+            GeneralTimeout =  _defaultTimeout,
+        };
 
+        public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
         IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
         {
             return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
         }
+
+        #region IGetApiMaxTimeoutV2
+        public bool IsGetApiMaxTimeoutEnabled
+        {
+            get
+            {
+                if (_getApiMaxTimeoutConfig?.UseUserSettings ?? false) return _getApiMaxTimeoutConfig.Enabled;
+                return true;
+            }
+        }
+
+
+        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 5, 0);
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
+        {
+            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
+        }
+        #endregion IGetApiMaxTimeoutV2
+
     }
 }

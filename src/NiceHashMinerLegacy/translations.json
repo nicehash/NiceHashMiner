@@ -1,14 +1,14 @@
 {
   "Languages": {
     "en": "English",
-    "ru": "Русский",
-    "es": "Español",
-    "pt": "Português",
-    "bg": "Български",
-    "it": "Italiano",
-    "pl": "Polski",
-    "zh_cn": "简体中文",
-    "ro": "Română"
+    "ru": "Русский (Unofficial)",
+    "es": "Español (Unofficial)",
+    "pt": "Português (Unofficial)",
+    "bg": "Български (Unofficial)",
+    "it": "Italiano (Unofficial)",
+    "pl": "Polski (Unofficial)",
+    "zh_cn": "简体中文 (Unofficial)",
+    "ro": "Română (Unofficial)"
   },
   "Translations": {
     " (current {0})": {
@@ -897,6 +897,7 @@
       "ru": "Устройство",
       "zh_cn": "设备"
     },
+    "Device Monitoring:": {},
     "Devices/Algorithms": {
       "bg": "Устройства/Алгоритми",
       "es": "Dispositivos/Algoritmos",
@@ -957,6 +958,8 @@
       "ru": "Отключить устройство",
       "zh_cn": "禁用设备"
     },
+    "Disable Device Status Monitoring": {},
+    "Disable Device Power Mode Settings": {},
     "Disable Windows Error Reporting": {
       "bg": "Изкл. журнала за грешки на Windows",
       "es": "Desactivar reportes de errores de Windows",
@@ -1000,6 +1003,7 @@
       "ru": "Валюта:",
       "zh_cn": "显示货币:"
     },
+    "Double-click to restore...": {},
     "Downloading miners": {
       "bg": "Сваляне на изчислителни програми",
       "es": "Descargando mineros",
@@ -1261,6 +1265,7 @@
       "ru": "Использовать определённую технологию для CPU.",
       "zh_cn": "强制启用某些CPU指令集扩展。"
     },
+    "Form Windows Always On Top": {},
     "GPU#{0}": {},
     "General": {
       "bg": "Общи",
@@ -3043,6 +3048,7 @@
       "ru": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг\nпотенциально более стабильным, но значительно медленнее (особенно для карт AMD).",
       "zh_cn": "选中此复选框将禁用所有默认优化配置。这将使得挖矿更为稳定但速度更慢（尤其对于AMD设备）。"
     },
+    "When checked, NiceHash Miner Legacy Form Windows will be set as Top Most and will be covered only by other Top Most Windows.": {},
     "When checked, NiceHash Miner Legacy will automatically start mining when launched.": {
       "bg": "Когато тази опция е маркирана, NiceHash Miner Legacy автоматично ще започне изчисления с пускането на програмата.",
       "es": "Si está marcada, NiceHash Miner Legacy empezará a minar al abrirse.",
@@ -3072,6 +3078,8 @@
       "ru": "Если отмечено, NiceHash Miner Legacy будет сворачиваться в трей.",
       "zh_cn": "选择此处使NiceHash Miner Legacy最小化至托盘。"
     },
+    "When checked, NiceHash Miner Legacy will not attempt to set device power mode settings (currently NVIDIA only).": {},
+    "When checked, NiceHash Miner Legacy will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {},
     "When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
       "bg": "Когато тази опция е активна, NiceHash Miner Legacy ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
       "it": "Quando spuntato, NiceHash Miner Legacy eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",

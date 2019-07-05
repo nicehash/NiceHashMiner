@@ -154,7 +154,7 @@ namespace CryptoDredge
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "CryptoDredge_0.20.1");
             var binPath = Path.Combine(pluginRootBins, "CryptoDredge.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);

@@ -74,11 +74,19 @@ namespace NHM.DeviceMonitoring
                 PowerLimitsEnabled = true;
                 // set to high by default
                 var defaultLevel = PowerLevel.High;
-                var success = SetPowerTarget(defaultLevel);
-                if (!success)
+                if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
                 {
-                    Logger.Info("NVML", $"Cannot set power target ({defaultLevel.ToString()}) for device with BusID={BusID}");
+                    var success = SetPowerTarget(defaultLevel);
+                    if (!success)
+                    {
+                        Logger.Info("NVML", $"Cannot set power target ({defaultLevel.ToString()}) for device with BusID={BusID}");
+                    }
                 }
+                else
+                {
+                    PowerLevel = PowerLevel.Disabled;
+                }
+                
             }
             catch (Exception e)
             {

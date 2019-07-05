@@ -15,7 +15,7 @@ using MinerPluginToolkitV1;
 
 namespace GMinerPlugin
 {
-    public class GMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class GMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
         public GMinerPlugin()
         {
@@ -34,7 +34,7 @@ namespace GMinerPlugin
 
         public string Author => "stanko@nicehash.com";
 
-        protected readonly Dictionary<string, int> _mappedCudaIds = new Dictionary<string, int>();
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
         public bool CanGroup(MiningPair a, MiningPair b)
         {
@@ -43,7 +43,7 @@ namespace GMinerPlugin
 
         public IMiner CreateMiner()
         {
-            return new GMiner(PluginUUID, _mappedCudaIds)
+            return new GMiner(PluginUUID, _mappedDeviceIds)
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
@@ -77,30 +77,27 @@ namespace GMinerPlugin
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn4(gpu)).Cast<AMDDevice>();
-            foreach (var gpu in amdGpus)
-            {
-                var algorithms = GetAMDSupportedAlgorithms(gpu).ToList();
-                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
-            }
+            var gpus = devices
+                .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev))
+                .Where(dev => dev is IGpuDevice)
+                .Cast<IGpuDevice>()
+                .OrderBy(gpu => gpu.PCIeBusID);
 
-            //CUDA 9.0+: minimum drivers 384.xx
-            var minDrivers = new Version(384, 0);
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
-
-            // we filter CUDA SM5.0+ and order them by PCIe IDs
-            var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 5)
-                .Select(dev => (CUDADevice)dev)
-                .OrderBy(dev => dev.PCIeBusID);
-            var pcieId = 0; // GMiner takes CUDA devices by 
-            foreach (var gpu in cudaGpus)
+            var pcieId = 0; // GMiner sortes devices by PCIe
+            foreach (var gpu in gpus)
             {
-                // naive method
-                _mappedCudaIds[gpu.UUID] = pcieId;
+                _mappedDeviceIds[gpu.UUID] = pcieId;
                 ++pcieId;
-                var algorithms = GetCUDASupportedAlgorithms(gpu);
-                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
+                if (gpu is AMDDevice amd)
+                {
+                    var algorithms = GetAMDSupportedAlgorithms(amd).ToList();
+                    if (algorithms.Count > 0) supported.Add(amd, algorithms);
+                }
+                if (gpu is CUDADevice cuda)
+                {
+                    var algorithms = GetCUDASupportedAlgorithms(cuda);
+                    if (algorithms.Count > 0) supported.Add(cuda, algorithms);
+                }
             }
 
             return supported;
@@ -131,6 +128,21 @@ namespace GMinerPlugin
             return filteredAlgorithms;
         }
 
+        private static bool IsSupportedAMDDevice(BaseDevice dev)
+        {
+            var isSupported = dev is AMDDevice gpu && Checkers.IsGcn4(gpu);
+            return isSupported;
+        }
+
+        private static bool IsSupportedNVIDIADevice(BaseDevice dev)
+        {
+            //CUDA 9.0+: minimum drivers 384.xx
+            var minDrivers = new Version(384, 0);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
+            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 5;
+            return isSupported && isDriverSupported;
+        }
+
         #region Internal Settings
         public void InitInternals()
         {
@@ -144,6 +156,9 @@ namespace GMinerPlugin
 
             var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
             if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
+
+            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
+            if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
         }
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
@@ -209,11 +224,15 @@ namespace GMinerPlugin
 
         protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
+        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
+        {
+            GeneralTimeout =  _defaultTimeout,
+        };
         #endregion Internal Settings
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (_mappedCudaIds.Count == 0) return;
+            if (_mappedDeviceIds.Count == 0) return;
             // TODO will block
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
@@ -225,7 +244,7 @@ namespace GMinerPlugin
             {
                 var uuid = kvp.Key;
                 var indexID = kvp.Value;
-                _mappedCudaIds[uuid] = indexID;
+                _mappedDeviceIds[uuid] = indexID;
             }
         }
 
@@ -239,19 +258,30 @@ namespace GMinerPlugin
 
         public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            /*
-            var benchmarkedVersionIsSame = Version.Major == benchmarkedPluginVersion.Major && Version.Minor == benchmarkedPluginVersion.Minor;
-            var benchmarkedVersionIsOlder = Version.Major >= benchmarkedPluginVersion.Major && Version.Minor > benchmarkedPluginVersion.Minor;
-            if (benchmarkedVersionIsSame || !benchmarkedVersionIsOlder) return false;
-            if (ids.Count() == 0) return false;
-            */
-
+            try
+            {
+                if (ids.Count() == 0) return false;
+                if (benchmarkedPluginVersion.Major == 1 && benchmarkedPluginVersion.Minor < 8)
+                {
+                    if (device.Name.Contains("1060 3GB") && ids.FirstOrDefault() == AlgorithmType.MTP) return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            }
             return false;
         }
 
-        public TimeSpan GetApiMaxTimeout()
+        #region IGetApiMaxTimeoutV2
+        public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
+
+
+        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 2, 0);
+        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
         {
-            return new TimeSpan(0, 2, 0);
+            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
         }
+        #endregion IGetApiMaxTimeoutV2
     }
 }

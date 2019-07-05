@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace MinerPluginToolkitV1.Interfaces
 {
-    [Obsolete("Use IGetApiMaxTimeoutV2 instead")]
-    public interface IGetApiMaxTimeout
+    public interface IInternalSetting
     {
-        TimeSpan GetApiMaxTimeout();
+        bool UseUserSettings { get; set; }
     }
 }

@@ -18,7 +18,6 @@ namespace MinerPluginToolkitV1.SgminerCommon
     public class SGMinerBase : MinerBase
     {
         private int _apiPort;
-        private readonly int _openClAmdPlatformNum;
         
         // can mine only one algorithm at a given time
         protected AlgorithmType _algorithmType;
@@ -27,10 +26,8 @@ namespace MinerPluginToolkitV1.SgminerCommon
         private string _devicesOnPlatform;
         private string _extraLaunchParameters;
 
-        public SGMinerBase(string uuid, int openClAmdPlatformNum) : base(uuid)
-        {
-            _openClAmdPlatformNum = openClAmdPlatformNum;
-        }
+        public SGMinerBase(string uuid) : base(uuid)
+        {}
 
         // override for your sgminer case
         protected virtual string AlgoName
@@ -53,8 +50,6 @@ namespace MinerPluginToolkitV1.SgminerCommon
             }
         }
 
-        
-
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var apiDevsResult = await SgminerAPIHelpers.GetApiDevsRootAsync(_apiPort, _logGroup);
@@ -69,16 +64,26 @@ namespace MinerPluginToolkitV1.SgminerCommon
             bool ok = singleType.Item2;
             if (!ok)
             {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                Logger.Error(_logGroup, "Initialization of miner failed. Algorithm not found!");
                 throw new InvalidOperationException("Invalid mining initialization");
             }
+            // check platform id
+            var openClAmdPlatformResult = MinerToolkit.GetOpenCLPlatformID(_miningPairs);
+            var openClAmdPlatformNum = openClAmdPlatformResult.Item1;
+            bool openClAmdPlatformNumUnique = openClAmdPlatformResult.Item2;
+            if (!openClAmdPlatformNumUnique)
+            {
+                Logger.Error(_logGroup, "Initialization of miner failed. Multiple OpenCLPlatform IDs found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
+
             // all good continue on
 
             // Order pairs and parse ELP
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             var deviceIds = orderedMiningPairs.Select(pair => pair.Device.ID);
-            _devicesOnPlatform = $"--gpu-platform {_openClAmdPlatformNum} -d {string.Join(",", deviceIds)}";
+            _devicesOnPlatform = $"--gpu-platform {openClAmdPlatformNum} -d {string.Join(",", deviceIds)}";
 
 
             if (MinerOptionsPackage != null)
@@ -162,7 +167,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
             return Tuple.Create(binPath, binCwd);
         }
 
-        private string CreateCommandLine(string username)
+        protected string CreateCommandLine(string username)
         {
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var cmd = $"-k {AlgoName} -o {url} -u {username} -p x {_extraLaunchParameters} {_devicesOnPlatform}";
