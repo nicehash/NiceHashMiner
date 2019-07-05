@@ -9,7 +9,7 @@ namespace NHM.Wpf.ViewModels.Settings
     public class MiningGeneralVM : SettingsBaseVM
     {
         public MiningGeneralVM(object settingsObj) 
-            : base(settingsObj, "General")
+            : base(settingsObj, "Mining")
         { }
     }
 }

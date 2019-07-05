@@ -12,12 +12,12 @@ namespace NHM.Wpf.ViewModels.Settings
             : base(settingsObj, name, children)
         { }
 
-        public static SettingsContainerVM MiningContainer(object settingsObj)
-        {
-            return new SettingsContainerVM(settingsObj,
-                "Mining",
-                new MiningGeneralVM(settingsObj));
-        }
+        //public static SettingsContainerVM MiningContainer(object settingsObj)
+        //{
+        //    return new SettingsContainerVM(settingsObj,
+        //        "Mining",
+        //        new MiningGeneralVM(settingsObj));
+        //}
 
         public static SettingsContainerVM AdvancedContainer(object settingsObj)
         {

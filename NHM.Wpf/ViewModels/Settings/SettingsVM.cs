@@ -26,7 +26,7 @@ namespace NHM.Wpf.ViewModels.Settings
             {
                 new GeneralSettingsVM(settingsObj),
                 new ProfitabilitySettingsVM(settingsObj),
-                SettingsContainerVM.MiningContainer(settingsObj),
+                new MiningGeneralVM(settingsObj),
                 SettingsContainerVM.AdvancedContainer(settingsObj)
             };
 
