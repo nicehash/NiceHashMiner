@@ -136,7 +136,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             else
             {
                 var urlSecond = StratumServiceHelpers.GetLocationUrl(_algorithmSecondType, _miningLocation, NhmConectionType.STRATUM_TCP);
-                cmd = $"-di {_devices} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -dcoin {DualAlgoName} -dpool {urlSecond} -dwal {username} -dpsw x -wd 1 {_extraLaunchParameters}";
+                cmd = $"-di {_devices} -epool {urlFirst} -ewal {username} -esm 3 -epsw x -allpools 1 -wd 1 -dcoin {DualAlgoName} -dpool {urlSecond} -dwal {username} -dpsw x {_extraLaunchParameters}";
             }
             return cmd;
         }
