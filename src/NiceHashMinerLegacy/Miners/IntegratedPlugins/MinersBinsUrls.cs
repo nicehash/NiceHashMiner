@@ -24,7 +24,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {  "Phoenix", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/PhoenixMiner_4.2c_Windows.7z", "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?6UV1FQSZ" } },
             {  "SGminerAvemore", new List<string>{ "https://github.com/brian112358/avermore-miner/releases/download/v1.4.1/avermore-v1.4.1-windows.zip" } },
             {  "SGminerGM", new List<string>{ "https://github.com/nicehash/sgminer-gm/releases/download/5.5.5-8/sgminer-5.5.5-gm-nicehash-8-windows-amd64.zip" } },
-            {  "TeamRedMiner", new List<string>{ "https://github.com/todxx/teamredminer/releases/download/0.5.2/teamredminer-v0.5.2-win.zip" } },
+            {  "TeamRedMiner", new List<string>{ "https://github.com/todxx/teamredminer/releases/download/0.5.5/teamredminer-v0.5.5-win.zip" } },
             {  "TRex", new List<string>{ "https://github.com/trexminer/T-Rex/releases/download/0.12.1/t-rex-0.12.1-win-cuda10.0.zip" } },
             {  "TTMiner", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/TT-Miner-2.2.5.7z", "https://tradeproject.de/download/Miner/TT-Miner-2.2.5.zip" } },
             {  "XmrStak", new List<string>{ "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.5/xmr-stak_2.10.5_495625c.7z" } },
