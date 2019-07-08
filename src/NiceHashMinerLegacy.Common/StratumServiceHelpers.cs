@@ -141,7 +141,7 @@ namespace NiceHashMinerLegacy.Common
 #elif PRODUCTION_NEW
             return prefix
                    + name
-                   + "." + miningLocation
+                   + "-new." + miningLocation
                    + ".nicehash.com:"
                    + port;
 #else
