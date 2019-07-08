@@ -29,7 +29,7 @@ namespace Phoenix
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 3);
+        public Version Version => new Version(1, 4);
         public string Name => "Phoenix";
 
         public string Author => "domen.kirnkrefl@nicehash.com";
