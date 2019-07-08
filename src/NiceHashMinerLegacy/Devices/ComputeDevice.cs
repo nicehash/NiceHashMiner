@@ -243,6 +243,7 @@ namespace NiceHashMiner.Devices
             SetEnabled(config.Enabled);
             MinimumProfit = config.MinimumProfit;
 
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             if (config.PowerLevel != PowerLevel.Unsupported && config.PowerLevel != PowerLevel.Custom && DeviceMonitor is ISetPowerLevel setPowerLevel)
             {
                 //PowerLevel = config.PowerLevel;
@@ -253,8 +254,7 @@ namespace NiceHashMiner.Devices
                 //PowerTarget = config.PowerTarget;
                 setPowerTargetPercentage.SetPowerTarget(config.PowerTarget);
             }
-            
-
+#endif
 
             if (config.PluginAlgorithmSettings == null) return;
             PluginAlgorithmSettings = config.PluginAlgorithmSettings;

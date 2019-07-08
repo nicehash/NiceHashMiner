@@ -116,7 +116,8 @@ namespace NiceHashMiner
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW
                 DeviceMonitorManager.DisableDevicePowerModeSettings = ConfigManager.GeneralConfig.DisableDevicePowerModeSettings;
 #else
-                DeviceMonitorManager.DisableDevicePowerModeSettings = false;
+                DeviceMonitorManager.DisableDevicePowerModeSettings = true;
+                ConfigManager.GeneralConfig.DisableDevicePowerModeSettings = true;
 #endif
                 progress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));
                 var monitors = await DeviceMonitorManager.GetDeviceMonitors(AvailableDevices.Devices.Select(d => d.BaseDevice), detectionResult.IsDCHDriver);
