@@ -47,6 +47,8 @@ namespace TeamRedMiner
                         return "x16r";
                     case AlgorithmType.Lyra2Z:
                         return "lyra2z";
+                    case AlgorithmType.GrinCuckatoo31:
+                        return "cuckatoo31_grin";
                     default:
                         return "";
                 }
@@ -62,6 +64,7 @@ namespace TeamRedMiner
                     case AlgorithmType.CryptoNightR:
                     case AlgorithmType.X16R:
                     case AlgorithmType.Lyra2REv3:
+                    case AlgorithmType.GrinCuckatoo31:
                         return 2.5;
                     default:
                         return 3.0; 
@@ -186,7 +189,7 @@ namespace TeamRedMiner
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "teamredminer-v0.5.2-win");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "teamredminer-v0.5.5-win");
             var binPath = Path.Combine(pluginRootBins, "teamredminer.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);

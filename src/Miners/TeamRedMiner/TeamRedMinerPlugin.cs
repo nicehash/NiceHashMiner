@@ -76,8 +76,11 @@ namespace TeamRedMiner
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
                 new Algorithm(PluginUUID, AlgorithmType.X16R),
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31)
             };
-            return algorithms;
+
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         #region Internal Settings
