@@ -28,9 +28,6 @@ namespace MinerPluginToolkitV1.Configs
 
         #region Functions/Parsers
 
-        // TODO re-think if this ordering makes sense???
-        // TODO document 
-        private static IReadOnlyList<DeviceType> _deviceTypePriority = new List<DeviceType> { DeviceType.CPU, DeviceType.AMD, DeviceType.NVIDIA };
         // TODO document/add docs
         public static TimeSpan ParseMaxTimeout(TimeSpan defaultMaxTimeout, MinerApiMaxTimeoutSetting config, IEnumerable<MiningPair> miningPairs)
         {
@@ -39,12 +36,11 @@ namespace MinerPluginToolkitV1.Configs
                 // TimeoutPerDeviceType has #1 priority
                 var pairDeviceTypeTimeout = config.TimeoutPerDeviceType;
                 var deviceTypes = miningPairs.Select(mp => mp.Device.DeviceType);
-                foreach (var deviceType in _deviceTypePriority)
+                if (pairDeviceTypeTimeout != null)
                 {
-                    if (pairDeviceTypeTimeout != null && pairDeviceTypeTimeout.ContainsKey(deviceType) && deviceTypes.Contains(deviceType))
-                    {
-                        return pairDeviceTypeTimeout[deviceType];
-                    }
+                    var relevantTimeouts = pairDeviceTypeTimeout.Where(kvp => deviceTypes.Contains(kvp.Key))
+                        .OrderBy(kvp => kvp.Value);
+                    if (relevantTimeouts.Count() > 0) return relevantTimeouts.First().Value;
                 }
                 // TimeoutPerAlgorithm has #2 priority
                 var pairAlgorithmTimeout = config.TimeoutPerAlgorithm;
