@@ -536,7 +536,7 @@ namespace Phoenix
             if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-list");
-            var mappedDevs = DevicesListParser.ParsePhoenixOutput(output, devices.ToList());
+            var mappedDevs = DevicesListParser.ParsePhoenixOutput(output, devices);
 
             foreach (var kvp in mappedDevs)
             {
