@@ -41,31 +41,49 @@ namespace NanoMiner
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+            // map ids by bus ids
+            var gpus = devices
+                .Where(dev => dev is IGpuDevice)
+                .Cast<IGpuDevice>()
+                .OrderBy(gpu => gpu.PCIeBusID);
 
-            var amdGpus = devices.Where(dev => dev is AMDDevice gpu).Cast<AMDDevice>();
-            foreach (var gpu in amdGpus)
+            int pcieId = -1;
+            foreach (var gpu in gpus)
             {
-                var algorithms = GetAMDSupportedAlgorithms(gpu).ToList();
-                if (algorithms.Count > 0) supported.Add(gpu, algorithms);
+                _mappedIDs[gpu.UUID] = ++pcieId;
             }
 
-            var minDrivers = new Version(411, 31);
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers) return supported;
+            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(411, 31);
+            var supportedGpus = gpus.Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported));
 
-            var cudaGpus = devices.Where(dev => dev is CUDADevice gpu).Cast<CUDADevice>();
-
-            var pcieId = 0; 
-            foreach (var gpu in cudaGpus)
+            foreach (var gpu in supportedGpus)
             {
-                // naive method
-                _mappedIDs[gpu.UUID] = pcieId;
-                ++pcieId;
-                var algos = GetNvidiaSupportedAlgorithms(gpu).ToList();
-                if (algos.Count > 0) supported.Add(gpu, algos);
+                if (gpu is AMDDevice amd)
+                {
+                    var algorithms = GetAMDSupportedAlgorithms(amd).ToList();
+                    if (algorithms.Count > 0) supported.Add(amd, algorithms);
+                }
+                if (gpu is CUDADevice cuda)
+                {
+                    var algorithms = GetNvidiaSupportedAlgorithms(cuda).ToList();
+                    if (algorithms.Count > 0) supported.Add(cuda, algorithms);
+                }
             }
 
             return supported;
+        }
+
+        private static bool IsSupportedAMDDevice(IGpuDevice dev)
+        {
+            var isSupported = dev is AMDDevice;
+            return isSupported;
+        }
+
+        private static bool IsSupportedNVIDIADevice(IGpuDevice dev, bool isDriverSupported)
+        {
+            var isSupported = dev is CUDADevice;
+            return isSupported && isDriverSupported;
         }
 
         IReadOnlyList<Algorithm> GetAMDSupportedAlgorithms(AMDDevice gpu)

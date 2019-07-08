@@ -38,33 +38,41 @@ namespace Phoenix
 
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-
-            var supportedGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 3 || dev is AMDDevice)
+            // map ids by bus ids
+            var gpus = devices
+                .Where(dev => dev is IGpuDevice)
                 .Cast<IGpuDevice>()
-                .OrderBy(dev => dev.PCIeBusID)
-                .ToList();
+                .OrderBy(gpu => gpu.PCIeBusID);
 
-            // NVIDIA 377.xx
-            var minDrivers = new Version(377, 0);
-            if (CUDADevice.INSTALLED_NVIDIA_DRIVERS < minDrivers)
+            int claymoreIndex = -1;
+            foreach (var gpu in gpus)
             {
-                // filter out NVIDIAs
-                supportedGpus = supportedGpus.Where(dev => dev is AMDDevice).ToList();
+                _mappedIDs[gpu.UUID] = ++claymoreIndex;
             }
 
-            var pcieID = 0;
+            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(377, 0);
+            var supportedGpus = gpus.Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported));
+
             foreach (var gpu in supportedGpus)
             {
-                _mappedIDs[gpu.UUID] = pcieID;
-                ++pcieID;
-                var algos = GetSupportedAlgorithms(gpu).ToList();
-                if (algos.Count > 0 && gpu is CUDADevice cuda) supported.Add(cuda, algos);
-                if (algos.Count > 0 && gpu is AMDDevice amd) supported.Add(amd, algos);
+                var algorithms = GetSupportedAlgorithms(gpu).ToList();
+                if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
             }
 
             return supported;
+        }
+
+        private static bool IsSupportedAMDDevice(IGpuDevice dev)
+        {
+            var isSupported = dev is AMDDevice gpu;
+            return isSupported;
+        }
+
+        private static bool IsSupportedNVIDIADevice(IGpuDevice dev, bool isDriverSupported)
+        {
+            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 3;
+            return isSupported && isDriverSupported;
         }
 
         private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)

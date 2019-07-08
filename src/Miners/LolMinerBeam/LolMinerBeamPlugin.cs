@@ -25,41 +25,56 @@ namespace LolMinerBeam
 
         public string PluginUUID => "435f0820-7237-11e9-b20c-f9f12eb6d835";
 
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
+
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
-            var cudaGpus = devices.Where(dev => dev is CUDADevice cuda && cuda.SM_major >= 2).Cast<CUDADevice>();
-            var openCLGpus = devices.Where(dev => dev is AMDDevice).Cast<AMDDevice>();
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
-            foreach (var gpu in cudaGpus)
-            {
-                var algos = GetSupportedCUDAAlgorithms(gpu).ToList();
-                if (algos.Count > 0) supported.Add(gpu, algos);
-            }
+            //CUDA 9.0+: minimum drivers 384.xx
+            var minDrivers = new Version(384, 0);
+            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
 
-            foreach (var gpu in openCLGpus)
+            var gpus = devices
+                .Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported))
+                .Where(dev => dev is IGpuDevice)
+                .Cast<IGpuDevice>()
+                .OrderBy(gpu => gpu.PCIeBusID);
+
+            var pcieId = 0; // GMiner sortes devices by PCIe
+            foreach (var gpu in gpus)
             {
-                var algos = GetSupportedAMDAlgorithms(gpu).ToList();
-                if (algos.Count > 0) supported.Add(gpu, algos);
+                _mappedDeviceIds[gpu.UUID] = pcieId;
+                ++pcieId;
+                var algorithms = GetSupportedAlgorithms(gpu).ToList();
+                if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
             }
 
             return supported;
         }
 
-        private IEnumerable<Algorithm> GetSupportedCUDAAlgorithms(CUDADevice dev)
+        private static bool IsSupportedAMDDevice(BaseDevice dev)
         {
-            const ulong minBeamMem = 4UL << 30;
-
-            if (dev.GpuRam >= minBeamMem)
-                yield return new Algorithm(PluginUUID, AlgorithmType.Beam);
+            var isSupported = dev is AMDDevice;
+            return isSupported;
         }
 
-        private IEnumerable<Algorithm> GetSupportedAMDAlgorithms(AMDDevice dev)
+        private static bool IsSupportedNVIDIADevice(BaseDevice dev, bool isDriverSupported)
         {
-            const ulong minBeamMem = 4UL << 30;
+            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 2;
+            return isSupported && isDriverSupported;
+        }
 
-            if (dev.GpuRam >= minBeamMem)
-                yield return new Algorithm(PluginUUID, AlgorithmType.Beam);
+
+        private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
+        {
+            var algorithms = new List<Algorithm>
+            {
+                new Algorithm(PluginUUID, AlgorithmType.Beam),
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
+            };
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         public IMiner CreateMiner()
