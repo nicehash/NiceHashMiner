@@ -193,6 +193,10 @@ namespace NiceHashMiner.Stats
             {
                 formState = ". Rig is in settings form";
             }
+            if (ApplicationStateManager.IsInPluginsForm())
+            {
+                formState = ". Rig is in plugins form";
+            }
             // throw if pending
             if (rigStatusPending)
             {

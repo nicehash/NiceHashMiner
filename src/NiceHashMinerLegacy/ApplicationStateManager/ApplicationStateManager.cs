@@ -293,7 +293,7 @@ namespace NiceHashMiner
             {
                 return RigStatus.Pending;
             }
-            if (IsInBenchmarkForm() || IsInSettingsForm())
+            if (IsInBenchmarkForm() || IsInSettingsForm() || IsInPluginsForm())
             {
                 return RigStatus.Pending;
             }
@@ -339,6 +339,7 @@ namespace NiceHashMiner
             Main,
             Benchmark,
             Settings,
+            Plugins
         }
         private static CurrentFormState _currentForm = CurrentFormState.Main;
         public static CurrentFormState CurrentForm
@@ -355,6 +356,10 @@ namespace NiceHashMiner
         }
         public static bool IsInSettingsForm() {
             return CurrentForm == CurrentFormState.Settings;
+        }
+        public static bool IsInPluginsForm()
+        {
+            return CurrentForm == CurrentFormState.Plugins;
         }
     }
 }
