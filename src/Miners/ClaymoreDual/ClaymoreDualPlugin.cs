@@ -369,6 +369,32 @@ namespace ClaymoreDual
                     ID = "claymoreDual_power_limit",
                     ShortName = "-powlim",
                     Delimiter = ","
+                },
+                /// <summary>
+                /// set target GPU memory voltage, multiplied by 1000. For example, "-mvddc 1050" means 1.05V. 
+                /// You can also specify values for every card, for example "-mvddc 900,950,1000,970". 
+                /// Supports latest AMD 4xx cards only in Windows.	Note: for NVIDIA cards this option is not supported.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_memory_voltage",
+                    ShortName = "-mvddc",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// set target GPU core voltage, multiplied by 1000. For example, "-cvddc 1050" means 1.05V. 
+                /// You can also specify values for every card, for example "-cvddc 900,950,1000,970". 
+                /// Supports latest AMD 4xx cards only in Windows.	Note: for NVIDIA cards this option is not supported.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_core_voltage",
+                    ShortName = "-cvddc",
+                    DefaultValue = "0",
+                    Delimiter = ","
                 }
             }
         };
