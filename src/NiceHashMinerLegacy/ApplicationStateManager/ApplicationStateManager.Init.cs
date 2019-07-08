@@ -113,7 +113,11 @@ namespace NiceHashMiner
                 }
 
                 // STEP
+#if TESTNET || TESTNETDEV || PRODUCTION_NEW
                 DeviceMonitorManager.DisableDevicePowerModeSettings = ConfigManager.GeneralConfig.DisableDevicePowerModeSettings;
+#else
+                DeviceMonitorManager.DisableDevicePowerModeSettings = false;
+#endif
                 progress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));
                 var monitors = await DeviceMonitorManager.GetDeviceMonitors(AvailableDevices.Devices.Select(d => d.BaseDevice), detectionResult.IsDCHDriver);
                 foreach (var monitor in monitors)
@@ -123,7 +127,7 @@ namespace NiceHashMiner
                 }
                 // now init device settings
                 ConfigManager.InitDeviceSettings();
-                #endregion Device Detection
+#endregion Device Detection
 
                 // STEP
                 // load plugins

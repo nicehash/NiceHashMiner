@@ -86,7 +86,6 @@ namespace NHM.DeviceMonitoring
                 {
                     PowerLevel = PowerLevel.Disabled;
                 }
-                
             }
             catch (Exception e)
             {
