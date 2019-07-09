@@ -21,7 +21,7 @@ exit
 echo %DATE% %TIME% Lost GPU >> logs\GPU_Lost.txt
 ::NirCMD\nircmd.exe savescreenshot "logs\GPU_Lost_%date:/=-%-%time::=-%.jpg"
 ::timeout 2
-taskkill /IM NiceHashMinerLegacy.exe
+taskkill /IM NiceHashMiner.exe
 timeout 3
 NV_Inspector\nvidiaInspector.exe -restartDisplayDriver
 :: It is possible that this timeout should be increased when more GPUs are present
@@ -30,4 +30,4 @@ timeout 12
 "c:\Program Files (x86)\MSI Afterburner\MSIAfterburner.exe" -Profile2
 echo %DATE% %TIME% Profile 2 set >> logs\GPU_Lost.txt
 timeout 4
-start NiceHashMinerLegacy.exe
+start NiceHashMiner.exe
