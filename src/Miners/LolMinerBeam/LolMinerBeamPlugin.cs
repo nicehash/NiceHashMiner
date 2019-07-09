@@ -17,7 +17,7 @@ namespace LolMinerBeam
 {
     class LolMinerBeamPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
-        public Version Version => new Version(1, 5);
+        public Version Version => new Version(1, 6);
 
         public string Name => "LolMinerBeam";
 
@@ -83,7 +83,8 @@ namespace LolMinerBeam
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts
+                MinerReservedApiPorts = _minerReservedApiPorts,
+                MinerBenchmarkTimeSettings = _minerBenchmarkTimeSettings
             };
         }
 
@@ -108,6 +109,9 @@ namespace LolMinerBeam
 
             var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
             if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
+
+            var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, _minerBenchmarkTimeSettings);
+            if (fileMinerBenchmarkTimeSetting != null) _minerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
         }
 
         private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage {
@@ -212,6 +216,7 @@ namespace LolMinerBeam
         {
             GeneralTimeout =  _defaultTimeout,
         };
+        protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
         #endregion Internal Settings
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()

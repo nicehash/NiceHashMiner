@@ -39,7 +39,8 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts
+                MinerReservedApiPorts = _minerReservedApiPorts,
+                MinerBenchmarkTimeSettings = _minerBenchmarkTimeSettings
             };
         }
 
@@ -61,6 +62,9 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
             var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
             if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
+
+            var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, _minerBenchmarkTimeSettings);
+            if (fileMinerBenchmarkTimeSetting != null) _minerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
         }
 
         private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
@@ -127,6 +131,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         {
             GeneralTimeout =  _defaultTimeout,
         };
+        protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
         #endregion Internal Settings
 
         IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()

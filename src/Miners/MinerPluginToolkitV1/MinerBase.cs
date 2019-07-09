@@ -79,6 +79,8 @@ namespace MinerPluginToolkitV1
 
         public MinerReservedPorts MinerReservedApiPorts { get; set; }
 
+        public MinerBenchmarkTimeSettings MinerBenchmarkTimeSettings { get; set; }
+
         abstract public Task<ApiData> GetMinerStatsDataAsync();
 
         abstract protected void Init();

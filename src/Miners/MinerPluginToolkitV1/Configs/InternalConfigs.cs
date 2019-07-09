@@ -149,6 +149,12 @@ namespace MinerPluginToolkitV1.Configs
             return InitInternalSetting(pluginRoot, minerApiMaxTimeoutSetting, "MinerApiMaxTimeoutSetting.json");
         }
 
+        // TODO document
+        public static MinerBenchmarkTimeSettings InitMinerBenchmarkTimeSettings(string pluginRoot, MinerBenchmarkTimeSettings minerBenchmarkTimeSettings)
+        {
+            return InitInternalSetting(pluginRoot, minerBenchmarkTimeSettings, "MinerBenchmarkTimeSettings.json");
+        }
+
         public static T InitInternalSetting<T>(string pluginRoot, T setting, string settingName) where T : class, IInternalSetting
         {
             var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");

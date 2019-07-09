@@ -14,6 +14,7 @@ using System.IO;
 using NiceHashMinerLegacy.Common;
 using System.Net.Sockets;
 using System.Text;
+using MinerPluginToolkitV1.Configs;
 
 namespace EWBF
 {
@@ -125,19 +126,7 @@ namespace EWBF
         {
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 90; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 90;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             // use demo user and disable the watchdog
             var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC) + " --color 0 --boff";

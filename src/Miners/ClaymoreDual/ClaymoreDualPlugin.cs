@@ -29,7 +29,7 @@ namespace ClaymoreDual
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 5);
+        public Version Version => new Version(1, 6);
 
         public string Name => "ClaymoreDual";
 
@@ -98,7 +98,8 @@ namespace ClaymoreDual
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts
+                MinerReservedApiPorts = _minerReservedApiPorts,
+                MinerBenchmarkTimeSettings = _minerBenchmarkTimeSettings
             };
         }
 
@@ -123,6 +124,9 @@ namespace ClaymoreDual
 
             var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
             if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
+
+            var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, _minerBenchmarkTimeSettings);
+            if (fileMinerBenchmarkTimeSetting != null) _minerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
         }
 
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
@@ -509,6 +513,7 @@ namespace ClaymoreDual
         {
             GeneralTimeout =  _defaultTimeout,
         };
+        protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
         #endregion Internal Settings
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)

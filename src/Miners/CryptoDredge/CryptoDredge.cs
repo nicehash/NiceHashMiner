@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.IO;
 using NiceHashMinerLegacy.Common;
 using System.Collections.Generic;
+using MinerPluginToolkitV1.Configs;
 
 namespace CryptoDredge
 {
@@ -73,22 +74,7 @@ namespace CryptoDredge
 
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 20; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 20;
-                    maxCheck = 1 * numOfGpus;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    maxCheck = 2 * numOfGpus;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    maxCheck = 3 * numOfGpus;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);

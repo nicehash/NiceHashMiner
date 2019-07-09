@@ -15,7 +15,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
     {
         public override string PluginUUID => "CCMinerTpruvot";
 
-        public override Version Version => new Version(1,1);
+        public override Version Version => new Version(1,2);
 
         public override string Name => "CCMinerTpruvot";
 
