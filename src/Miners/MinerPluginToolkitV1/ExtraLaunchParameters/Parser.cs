@@ -55,6 +55,51 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             return true;
         }
 
+        public static bool CheckIfCanGroup(MiningPair a, MiningPair b, List<MinerOption> options) {
+            //if there is no options we can group
+            if (options == null || options.Count == 0) return true;
+
+            //filter all multi param options
+            var filteredOptions = options.Where(opt => opt.Type == MinerOptionType.OptionIsParameter || opt.Type == MinerOptionType.OptionWithSingleParameter);
+
+            var paramethersOfA = a.Algorithm.ExtraLaunchParameters
+                    .Replace("=", "= ")
+                    .Split(' ')
+                    .Where(s => !string.IsNullOrEmpty(s) && !string.IsNullOrWhiteSpace(s))
+                    .ToList();
+            var paramethersOfB = b.Algorithm.ExtraLaunchParameters
+                    .Replace("=", "= ")
+                    .Split(' ')
+                    .Where(s => !string.IsNullOrEmpty(s) && !string.IsNullOrWhiteSpace(s))
+                    .ToList();
+
+            // go through MiningPair A paramethers and check if they exist in MinerOptions; if they do check if their values are the same in MiningPair B
+            foreach(var paramA in paramethersOfA)
+            {
+                var keyParamether = filteredOptions.Where(opt => opt.ShortName == paramA || opt.LongName == paramA).FirstOrDefault(); ;
+                if (keyParamether == null) continue;
+                
+                if(keyParamether.Type == MinerOptionType.OptionIsParameter)
+                {
+                    if (!paramethersOfB.Contains(paramA)) return false;
+                }
+                if (keyParamether.Type == MinerOptionType.OptionWithSingleParameter)
+                {
+                    var indexOfDef = paramethersOfA.IndexOf(paramA);
+                    var valueOfA = paramethersOfA.ElementAt(indexOfDef + 1);
+
+                    var foundParamB = paramethersOfB.Where(opt => opt == paramA).FirstOrDefault();
+                    if (foundParamB == null) return false;
+
+                    var valueOfB = paramethersOfB.ElementAt(paramethersOfA.IndexOf(foundParamB) + 1);
+
+                    if (valueOfA != valueOfB) return false;
+                }               
+            }
+            return true;
+        }
+
+
         /// <summary>
         /// Main Parse function which gets List of Mining Pairs <see cref="MiningPair"/>, List of Miner Options <see cref="MinerOption"/> and UseIfDefaults (bool) as arguments
         /// UseIfDefaults argument is set to true if you would like to parse default values for extra launch parameters
