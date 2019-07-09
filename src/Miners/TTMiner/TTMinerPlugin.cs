@@ -27,7 +27,7 @@ namespace TTMiner
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 3);
+        public Version Version => new Version(1, 4);
         public string Name => "TTMiner";
         public string Author => "stanko@nicehash.com";
 
@@ -133,15 +133,6 @@ namespace TTMiner
                     Delimiter = ","
                 },
                 /// <summary>
-                /// Enable logging of screen output and additional information, the file is created in the folder 'Logs'.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "ttminer_log",
-                    ShortName = "-log",
-                },
-                /// <summary>
                 /// This option set the process priority for TT-Miner to a different level:
                 /// 1 low
                 /// 2 below normal
@@ -156,7 +147,85 @@ namespace TTMiner
                     ID = "ttminer_processPriority",
                     ShortName = "-PP",
                     DefaultValue = "3"
-                }
+                },
+                /// <summary>
+                /// Reports the current hashrate every 90 seconds to the pool
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "ttminer_rate",
+                    ShortName = "-rate",
+                },
+                /// <summary>
+                /// Performance-Report GPU-name
+                /// Prints the name/model in the performance report
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "ttminer_perfRepGpuName",
+                    ShortName = "-PRGN",
+                },
+                /// <summary>
+                /// Performance-Report Hash-Rate Interval
+                /// Performance-Report & information after INT multiple of one minute. Minimum value for INT to
+                /// 1 which creates a hashrate interval of a minute. Higher Intervals gives you a more stable
+                /// hashrate. If the interval is too high the displayed average of your hashrate will change
+                /// very slowly. The default of 2 will give you an average of 2 minutes.
+                /// Default: -PRHRI 2
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ttminer_perfRepHashRateInterval",
+                    ShortName = "-PRHRI",
+                    DefaultValue = "2"
+                },
+                /// <summary>
+                /// Performance-Report & information after INT multiple of 5 seconds
+                /// Set INT to 0 to disable output after a fixed timeframe
+                /// sample -RPT 24 shows the performance report after 24 * 5 sec = 2 minutes
+                /// Default: -PRT 3
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ttminer_perfRepInfoTime",
+                    ShortName = "-PRT",
+                    DefaultValue = "3"
+                },
+                /// <summary>
+                /// Performance-Report & information after a INT shares found
+                /// Set INT to 0 to disable output after a fixed number of shares
+                /// sample - RPS 10 shows the performance report after 10 shares were found
+                /// Default: -PRS 0
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "ttminer_perfRepInfoShares",
+                    ShortName = "-PRS",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// Enable logging of the pool communication. TT-Miner creates the pool-logfile in the folder 'Logs'.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "ttminer_logPool",
+                    ShortName = "-logpool",
+                },
+                /// <summary>
+                /// Enable logging of screen output and additional information, the file is created in the folder 'Logs'.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "ttminer_log",
+                    ShortName = "-log",
+                },
             }
         };
 
