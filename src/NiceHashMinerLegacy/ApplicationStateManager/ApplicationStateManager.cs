@@ -331,7 +331,17 @@ namespace NiceHashMiner
         public static string CalcRigStatusString()
         {
             var rigState = CalcRigStatus();
-            return rigState.ToString().ToUpper();
+            switch (rigState)
+            {
+                case RigStatus.Offline: return "OFFLINE";
+                case RigStatus.Stopped: return "STOPPED";
+                case RigStatus.Mining: return "MINING";
+                case RigStatus.Benchmarking: return "BENCHMARKING";
+                case RigStatus.Error: return "ERROR";
+                case RigStatus.Pending: return "PENDING";
+                case RigStatus.Disabled: return "DISABLED";
+            }
+            return "UNKNOWN";
         }
 
 
