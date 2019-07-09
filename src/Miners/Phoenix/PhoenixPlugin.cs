@@ -29,7 +29,7 @@ namespace Phoenix
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 4);
+        public Version Version => new Version(1, 5);
         public string Name => "Phoenix";
 
         public string Author => "domen.kirnkrefl@nicehash.com";
@@ -121,6 +121,15 @@ namespace Phoenix
         protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
         {
             GeneralOptions = new List<MinerOption> {
+                /// <summary>
+                /// Turn on AMD compute mode on the supported GPUs. This is equivalent of pressing 'y' in the miner console.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "phoenix_acm",
+                    ShortName = "-acm"
+                },
                 /// <summary>
                 /// Set the mining intensity (0 to 14; 12 is the default for new kernels). You may specify this option per-GPU.
                 /// </summary>
@@ -251,6 +260,15 @@ namespace Phoenix
                     Delimiter = ","
                 },
                 /// <summary>
+                /// Restart the miner if avg 5 min speed is below <n> MH/s
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_mingRigSpeed",
+                    ShortName = "-minRigSpeed"
+                },
+                /// <summary>
                 /// Allocate DAG buffers big enough for n epochs ahead (default: 2) to avoid allocating new buffers on each DAG epoch switch, which should improve DAG switch stability.
                 /// You may specify this option per-GPU.
                 /// </summary>
@@ -322,6 +340,15 @@ namespace Phoenix
                     ShortName = "-logfile",
                 },
                 /// <summary>
+                /// Set a path where the logfile(s) will be created
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "phoenix_logDir",
+                    ShortName = "-logdir",
+                },
+                /// <summary>
                 /// Maximum size of the logfiles in MB. The default is 200 MB (use 0 to turn off the limitation).
                 /// On startup, if the logfiles are larger than the specified limit, the oldest are deleted.
                 /// If you use a single logfile (by using -logfile), then it is truncated if it is bigger than the limit and a new one is created.
@@ -355,6 +382,24 @@ namespace Phoenix
                     ShortName = "-li",
                     DefaultValue = "0",
                     Delimiter = ","
+                },
+                /// <summary>
+                /// Reset the HW overclocking settings on startup
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "phoenix_resetOC",
+                    ShortName = "-resetoc"
+                },
+                /// <summary>
+                /// Do not reset overclocking settings when closing the miner
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "phoenix_leaveOC",
+                    ShortName = "-leaveoc"
                 }
             },
             TemperatureOptions = new List<MinerOption>

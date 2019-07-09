@@ -29,7 +29,7 @@ namespace BMiner
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 5);
+        public Version Version => new Version(1, 6);
         public string Name => "BMiner";
 
         public string Author => "domen.kirnkrefl@nicehash.com";
@@ -148,6 +148,24 @@ namespace BMiner
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "bminer_logfile",
                     ShortName = "-logfile="
+                },
+                /// <summary>
+                /// Disable runtime information collection for Bminer.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "bminer_noRuntimeInfo",
+                    ShortName = "-no-runtime-info"
+                },
+                /// <summary>
+                /// Remove timestamp in your logging messages.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "bminer_noTimestamps",
+                    ShortName = "-no-timestamps"
                 },
                 /// <summary>
                 /// Disable the devfee but it also disables some optimizations.

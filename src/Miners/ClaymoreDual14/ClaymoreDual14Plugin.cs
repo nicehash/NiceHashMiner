@@ -29,7 +29,7 @@ namespace ClaymoreDual14
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 4);
+        public Version Version => new Version(1, 5);
 
         public string Name => "ClaymoreDual14+";
 
@@ -142,6 +142,30 @@ namespace ClaymoreDual14
                     Delimiter = ","
                 },
                 /// <summary>
+                /// (AMD cards only) enables assembler GPU kernels. In this mode some tuning is required even in ETH-only mode, use "-dcri" option or or "+/-" keys in runtime to set best speed.
+                /// Specify "-asm 0" to disable this option. You can also specify values for every card, for example "-asm 0,1,0". Default value is "1".
+                /// If ASM mode is enabled, miner must show "GPU #x: algorithm ASM" at startup.
+                /// NEW: added alternative assembler kernels for Tahiti, Tonga, Ellesmere, Baffin cards for ETH-only mode.
+                /// Use them if you get best speed at "-dcri 1" (i.e. you cannot find speed peak), use "-asm 2" option to enable this mode.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_assembler_kernels",
+                    ShortName = "-asm",
+                    DefaultValue = "1",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// (AMD cards only) specify "-oldkernels 1" to use old-style GPU kernels from v10, they can be more stable for hard OC and custom BIOSes.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "claymoreDual_old_kernels",
+                    ShortName = "-oldkernels"
+                },
+                /// <summary>
                 /// Ethereum intensity. Default value is 8, you can decrease this value if you don't want Windows to freeze or if you have problems with stability. The most low GPU load is "-ethi 0".
 	            ///Also "-ethi" can set intensity for every card individually, for example "-ethi 1,8,6".
                 ///You can also specify negative values, for example, "-ethi -8192", it exactly means "global work size" parameter which is used in official miner.
@@ -153,6 +177,39 @@ namespace ClaymoreDual14
                     ShortName = "-ethi",
                     DefaultValue = "8",
                     Delimiter = ","
+                },
+                /// <summary>
+                /// this setting is related to Ethereum mining stability. Every next Ethereum epoch requires a bit more GPU memory, miner can crash during reallocating GPU buffer for new DAG. 
+                /// To avoid it, miner reserves a bit larger GPU buffer at startup, so it can process several epochs without buffer reallocation.
+                /// This setting defines how many epochs miner must foresee when it reserves GPU buffer, i.e. how many epochs will be processed without buffer reallocation.
+                /// Default value is 2.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_eres",
+                    ShortName = "-eres",
+                    DefaultValue = "2",
+                },
+                /// <summary>
+                /// send Ethereum hashrate to pool. Default value is "1", set "-erate 0" if you don't want to send hashrate.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_eth_rate",
+                    ShortName = "-erate",
+                    DefaultValue = "1"
+                },
+                /// <summary>
+                /// send Ethereum stale shares to pool, it can increase effective hashrate a bit. Default value is "1", set "-estale 0" if you don't want to send stale shares.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "claymoreDual_eth_stale",
+                    ShortName = "-estale",
+                    DefaultValue = "1"
                 },
                 /// <summary>
                 /// this setting can improve stability on multi-GPU systems if miner hangs during startup. It serializes GPUs initalization routines. Use "-gser 1" to serailize some of routines and "-gser 2" to serialize all routines. 
@@ -177,6 +234,71 @@ namespace ClaymoreDual14
                     ShortName = "-dcri",
                     DefaultValue = "30",
                     Delimiter = ","
+                },
+                /// <summary>
+                /// minimal speed for ETH, in MH/s. If miner cannot reach this speed for 5 minutes for any reason (you can change this timeout with "-minspeedtime" option), miner will be restarted (or "reboot.bat" will be executed if "-r 1" is set).
+                /// Default value is 0 (feature disabled).
+                /// You can also specify negative values if you don't want to restart miner due to pool connection issues; for example, "-minspeed -50" will restart miner only if it cannot reach 50Mh/s at good pool connection.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_min_speed",
+                    ShortName = "-minspeed",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// timeout for "-minspeed" option, in minutes. Default value is "5".
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_min_speed_timeout",
+                    ShortName = "-minspeedtime",
+                    DefaultValue = "5"
+                },
+                /// <summary>
+                /// debug log file name. After restart, miner will append new log data to the same file. If you want to clear old log data, file name must contain "noappend" string.
+                /// If missed, default file name will be used. You can also use this option to specify folder for log files, use slash at the end to do it, for example, "-logfile logs\".
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_log",
+                    ShortName = "-logfile",
+                },
+                /// <summary>
+                /// maximal size of debug log files, in MB. At every start the miner checks all files in its folder, selects all files that contain "_log.txt" string and removes oldest files if summary files size is larger than specified value. 
+                /// Specify "-logsmaxsize 0" to cancel old logs removal. Default value is 1000 (i.e. about 1GB of log files are allowed).
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_log_max",
+                    ShortName = "-logsmaxsize",
+                    DefaultValue = "1000"
+                },
+                /// <summary>
+                /// use "-showdiff 1" to show difficulty for every ETH share and to display maximal found share difficulty when you press "s" key.
+                /// Default value is "0".
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_show_diff",
+                    ShortName = "-showdiff",
+                    DefaultValue = "0"
+                },
+                /// <summary>
+                /// displays statistics about GPU power consumption when you press "s" key.
+                /// Default value is "1" (show statistics about power consumption), use "-showpower 0" to hide it.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_show_pow",
+                    ShortName = "-showpower",
+                    DefaultValue = "1"
                 },
                 /// <summary>
                 /// low intensity mode. Reduces mining intensity, useful if your cards are overheated. Note that mining speed is reduced too. 

@@ -28,7 +28,7 @@ namespace TeamRedMiner
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 4);
+        public Version Version => new Version(1, 5);
 
         public string Name => "TeamRedMiner";
 
@@ -149,6 +149,15 @@ namespace TeamRedMiner
                     ID = "teamRedMiner_logInterval",
                     ShortName = "-l",
                     LongName = "--log_interval="
+                },
+                /// <summary>
+                /// Enables logging of miner output into the file specified by FILENAME.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "teamRedMiner_logFile",
+                    ShortName = "--log_file="
                 },
                 /// <summary>
                 /// Manual cryptonight configuration for the miner.  CONFIG must be in the form
