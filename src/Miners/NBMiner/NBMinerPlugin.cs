@@ -28,7 +28,7 @@ namespace NBMiner
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 6);
+        public Version Version => new Version(1, 7);
         public string Name => "NBMiner";
 
         public string Author => "Dillon Newell";
@@ -165,6 +165,18 @@ namespace NBMiner
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "nbminer_longTimeFormat",
                     LongName = "--long-format"
+                }
+            },
+            TemperatureOptions = new List<MinerOption>
+            {
+                /// <summary>
+                /// Set temperature limit of GPU, if exceeds, stop GPU for 10 seconds and continue.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "nbminer_tempLimit",
+                    LongName = "--temperature-limit"
                 }
             }
         };

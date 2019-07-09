@@ -28,7 +28,7 @@ namespace GMinerPlugin
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 8);
+        public Version Version => new Version(1, 9);
 
         public string Name => "GMinerCuda9.0+";
 
@@ -181,7 +181,7 @@ namespace GMinerPlugin
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "gminer_pec",
-                    LongName = "--pec",
+                    LongName = "--pec=",
                     DefaultValue = "1"
                 },
                 /// <summary>
@@ -201,9 +201,16 @@ namespace GMinerPlugin
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "gminer_intensity",
                     LongName = "--intensity",
-                    // assume it is like the others
-                    DefaultValue = "-1",
                     Delimiter = " "
+                },
+                /// <summary>
+                /// log filename
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_intensity",
+                    LongName = "--logfile"
                 }
             },
             TemperatureOptions = new List<MinerOption>{
