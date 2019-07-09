@@ -98,7 +98,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithms\Algorithm.cs" />
-    <Compile Include="Algorithms\AlgorithmStatus.cs" />
     <Compile Include="Algorithms\PluginAlgorithm.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.DataVizualizers.cs" />
@@ -295,8 +294,8 @@
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats_shared.cs" />
-    <Compile Include="Stats\NiceHashStats_testnet.cs" />
-    <Compile Include="Stats\NiceHashStats_production.cs" />
+    <Compile Include="Stats\NiceHashStats_production_new.cs" />
+    <Compile Include="Stats\NiceHashStats_production_old.cs" />
     <Compile Include="Stats\SocketEventArgs.cs" />
     <Compile Include="Stats\StatusCodes.cs" />
     <Compile Include="Stats\TimeFactor.cs" />
