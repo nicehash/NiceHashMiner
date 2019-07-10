@@ -66,13 +66,13 @@ namespace ClaymoreDual14
 
         private static bool IsSupportedAMDDevice(IGpuDevice dev)
         {
-            var isSupported = dev is AMDDevice gpu && Checkers.IsGcn4(gpu);
+            var isSupported = dev is AMDDevice;
             return isSupported;
         }
 
         private static bool IsSupportedNVIDIADevice(IGpuDevice dev, bool isDriverSupported)
         {
-            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 6;
+            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 3;
             return isSupported && isDriverSupported;
         }
 
@@ -593,7 +593,18 @@ namespace ClaymoreDual14
                 }                
             }
         };
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
+        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
+        {
+            DefaultSystemEnvironmentVariables = new Dictionary<string, string>
+            {
+                {"GPU_MAX_ALLOC_PERCENT", "100"},
+                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+                {"GPU_MAX_HEAP_SIZE", "100"},
+                {"GPU_FORCE_64BIT_PTR", "0"},
+                {"GPU_USE_SYNC_OBJECTS", "1"}
+            }
+        };
+
         protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
         protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
         {

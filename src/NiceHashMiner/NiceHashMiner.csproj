@@ -249,7 +249,6 @@
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\ClaymoreDual14Integrated\ClaymoreDual14IntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\ClaymoreDualIntegrated\ClaymoreDualIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
@@ -507,10 +506,6 @@
     <ProjectReference Include="..\Miners\ClaymoreDual14\ClaymoreDual14.csproj">
       <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
       <Name>ClaymoreDual14</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Miners\ClaymoreDual\ClaymoreDual.csproj">
-      <Project>{be85e5ec-3f77-494b-8085-3d5e09b220e1}</Project>
-      <Name>ClaymoreDual</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\Ethlargement\Ethlargement.csproj">
       <Project>{5f994ad1-02a2-4a00-90ca-5cd5943fd24a}</Project>
