@@ -1,7 +1,7 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

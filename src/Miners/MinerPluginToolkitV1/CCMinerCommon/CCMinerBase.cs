@@ -4,11 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using MinerPlugin;
-using NiceHashMinerLegacy.Common.Enums;
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
+using NHM.Common.Enums;
+using static NHM.Common.StratumServiceHelpers;
 using System.Globalization;
 using System.IO;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Configs;
 

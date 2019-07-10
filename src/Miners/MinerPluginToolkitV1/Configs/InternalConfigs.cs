@@ -1,7 +1,7 @@
 ﻿using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

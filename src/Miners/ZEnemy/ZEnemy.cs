@@ -8,10 +8,10 @@ using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.CCMinerCommon;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
-using NiceHashMinerLegacy.Common.Enums;
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
+using NHM.Common.Enums;
+using static NHM.Common.StratumServiceHelpers;
 using System.IO;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using MinerPluginToolkitV1.Configs;
 
 namespace ZEnemy

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace MinerPluginLoader
 {

@@ -2,8 +2,8 @@
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ClaymoreCommon;
 using MinerPluginToolkitV1.Interfaces;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;

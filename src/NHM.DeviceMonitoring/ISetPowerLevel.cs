@@ -1,4 +1,4 @@
-﻿using NiceHashMinerLegacy.Common.Enums;
+﻿using NHM.Common.Enums;
 
 namespace NHM.DeviceMonitoring
 {

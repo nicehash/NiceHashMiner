@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using MinerPlugin;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace MinerPluginToolkitV1.ExtraLaunchParameters
 {

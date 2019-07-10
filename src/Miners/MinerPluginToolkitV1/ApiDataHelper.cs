@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace MinerPluginToolkitV1
 {

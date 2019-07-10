@@ -1,12 +1,12 @@
-﻿using NiceHashMinerLegacy.Common.Device;
+﻿using NHM.Common.Device;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Management;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Enums;
 
 namespace NHM.DeviceDetection.CPU
 {

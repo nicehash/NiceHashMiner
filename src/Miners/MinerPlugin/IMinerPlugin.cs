@@ -1,12 +1,12 @@
-﻿using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
+﻿using NHM.Common.Algorithm;
+using NHM.Common.Device;
 using System;
 using System.Collections.Generic;
 
 namespace MinerPlugin
 {
     /// <summary>
-    /// IMinerPlugin is the base interface for registering a plugin in NiceHashMinerLegacy.
+    /// IMinerPlugin is the base interface for registering a plugin in NiceHashMiner.
     /// This Interface should convey the name, version, grouping logic and most importantly should filter supported devices and algorithms.
     /// </summary>
     public interface IMinerPlugin
@@ -34,7 +34,7 @@ namespace MinerPlugin
         Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices);
 
         /// <summary>
-        /// Creates the plugin miner instance that is used for mining inside NiceHashMinerLegacy. 
+        /// Creates the plugin miner instance that is used for mining inside NiceHashMiner. 
         /// </summary>
         /// <returns>Returns the underlying IMiner instance.</returns>
         IMiner CreateMiner();

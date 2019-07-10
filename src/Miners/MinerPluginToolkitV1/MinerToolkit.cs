@@ -1,7 +1,7 @@
-﻿using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Common;
+﻿using NHM.Common.Algorithm;
+using NHM.Common.Device;
+using NHM.Common.Enums;
+using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

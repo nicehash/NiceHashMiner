@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 // ReSharper disable All
 #pragma warning disable
 

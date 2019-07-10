@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ATI.ADL;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace NHM.DeviceMonitoring
 {
