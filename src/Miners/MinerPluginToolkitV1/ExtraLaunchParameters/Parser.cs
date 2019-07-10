@@ -55,6 +55,23 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             return true;
         }
 
+        public static bool CheckIfCanGroup(MiningPair a, MiningPair b, List<MinerOption> options) {
+            if (options == null || options.Count == 0) return true;
+
+            var filteredOptionsSingle = options.Where(optionType => optionType.Type == MinerOptionType.OptionWithSingleParameter).ToList();
+            var filteredOptionsIsParam = options.Where(optionType => optionType.Type == MinerOptionType.OptionIsParameter).ToList();
+
+            var parsedASingle = Parse(new List<MiningPair> { a }, filteredOptionsSingle);
+            var parsedBSingle = Parse(new List<MiningPair> { b }, filteredOptionsSingle);
+
+            if (parsedASingle != parsedBSingle) return false;
+
+            var parsedAParam = Parse(new List<MiningPair> { a }, filteredOptionsIsParam);
+            var parsedBParam = Parse(new List<MiningPair> { b }, filteredOptionsIsParam);
+
+            return parsedAParam == parsedBParam;
+        }
+
         /// <summary>
         /// Main Parse function which gets List of Mining Pairs <see cref="MiningPair"/>, List of Miner Options <see cref="MinerOption"/> and UseIfDefaults (bool) as arguments
         /// UseIfDefaults argument is set to true if you would like to parse default values for extra launch parameters
