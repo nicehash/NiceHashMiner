@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using MinerPluginToolkitV1.Configs;
-using Newtonsoft.Json;
 using NiceHashMiner.Configs;
 using NHM.Common;
 using NHM.Common.Enums;

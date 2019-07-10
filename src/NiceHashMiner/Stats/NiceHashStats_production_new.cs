@@ -3,27 +3,16 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Miners;
-using NiceHashMiner.Switching;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Interfaces;
 using NiceHashMiner.Stats.Models;
 using NHM.Common.Enums;
-using NHM.Extensions;
 using WebSocketSharp;
-using NiceHashMiner.Configs;
 // static imports
 using static NiceHashMiner.Stats.StatusCodes;
-using NHM.DeviceMonitoring;
 
 namespace NiceHashMiner.Stats
 {
