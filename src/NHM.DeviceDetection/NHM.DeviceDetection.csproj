@@ -83,9 +83,9 @@
       <Project>{ee6160cc-8c19-4ad8-bb1e-c295347203ee}</Project>
       <Name>NHM.UUID</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
+    <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
-      <Name>NiceHashMinerLegacy.Common</Name>
+      <Name>NHM.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

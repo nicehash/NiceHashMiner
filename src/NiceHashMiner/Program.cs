@@ -11,8 +11,8 @@ using System.Threading;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
 using log4net.Core;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Enums;
 using System.Net;
 
 namespace NiceHashMiner

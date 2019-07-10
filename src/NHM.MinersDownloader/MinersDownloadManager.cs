@@ -10,7 +10,7 @@ using MyDownloader.Core;
 using MyDownloader.Core.Extensions;
 using MyDownloader.Core.UI;
 using MyDownloader.Extension.Protocols;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace NHM.MinersDownloader
 {

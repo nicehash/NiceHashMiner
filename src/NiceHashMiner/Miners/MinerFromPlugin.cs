@@ -1,20 +1,20 @@
 ﻿using MinerPlugin;
 using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using NiceHashMinerLegacy.Common.Device;
-using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
+using NHM.Common.Device;
+using CommonAlgorithm = NHM.Common.Algorithm;
 using NiceHashMiner.Plugin;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using MinerPluginToolkitV1.Interfaces;
 using System.Threading;
 

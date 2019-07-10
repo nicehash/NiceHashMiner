@@ -2,17 +2,17 @@
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
+using static NHM.Common.StratumServiceHelpers;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Globalization;
 using System.IO;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System.Collections.Generic;
 
 namespace BrokenMiner

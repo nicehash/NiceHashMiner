@@ -1,4 +1,4 @@
-﻿using NiceHashMinerLegacy.Common.Enums;
+﻿using NHM.Common.Enums;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Plugin;
 using System.Collections.Generic;

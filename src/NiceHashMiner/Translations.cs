@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;

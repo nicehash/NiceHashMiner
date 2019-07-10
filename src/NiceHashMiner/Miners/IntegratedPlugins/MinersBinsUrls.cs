@@ -1,6 +1,6 @@
 ﻿using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System.Collections.Generic;
 using System.Linq;
 

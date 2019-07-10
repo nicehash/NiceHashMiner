@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Plugin;
-using NiceHashMinerLegacy.Common.Enums;
-using AlgorithmCommon = NiceHashMinerLegacy.Common.Algorithm;
+using NHM.Common.Enums;
+using AlgorithmCommon = NHM.Common.Algorithm;
 
 namespace NiceHashMiner.Algorithms
 {

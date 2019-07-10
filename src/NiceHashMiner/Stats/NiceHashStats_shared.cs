@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using WebSocketSharp;
 using NiceHashMiner.Stats.Models;
 
@@ -60,7 +60,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", $"SetAlgorithmRates error: {e.Message}");
+                NHM.Common.Logger.Error("SOCKET", $"SetAlgorithmRates error: {e.Message}");
             }
         }
 
@@ -81,7 +81,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", $"SetBalance error: {e.Message}");
+                NHM.Common.Logger.Error("SOCKET", $"SetBalance error: {e.Message}");
             }
         }
 
@@ -108,7 +108,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", $"SetExchangeRates error: {e.Message}");
+                NHM.Common.Logger.Error("SOCKET", $"SetExchangeRates error: {e.Message}");
             }
         }
 
@@ -158,7 +158,7 @@ namespace NiceHashMiner.Stats
             }
             catch (Exception e)
             {
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", $"HandleMarkets error: {e.Message}");
+                NHM.Common.Logger.Error("SOCKET", $"HandleMarkets error: {e.Message}");
             }
         }
 

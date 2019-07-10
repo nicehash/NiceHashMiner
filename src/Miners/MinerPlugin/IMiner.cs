@@ -1,6 +1,6 @@
-﻿using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Algorithm;
+﻿using NHM.Common.Enums;
+using NHM.Common.Device;
+using NHM.Common.Algorithm;
 using System;
 using System.Collections.Generic;
 using System.Threading;

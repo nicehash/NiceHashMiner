@@ -1,7 +1,7 @@
 ﻿using MinerPlugin;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Algorithm;
+using NHM.Common.Enums;
+using NHM.Common.Device;
+using NHM.Common.Algorithm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System.Diagnostics;
 using System.ComponentModel;
 

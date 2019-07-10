@@ -1,9 +1,9 @@
 using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Extensions;
+using NHM.Extensions;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

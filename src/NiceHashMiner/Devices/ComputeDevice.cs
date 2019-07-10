@@ -7,8 +7,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Common.Device;
+using NHM.Common.Enums;
+using NHM.Common.Device;
 using NHM.UUID;
 using NHM.DeviceMonitoring;
 

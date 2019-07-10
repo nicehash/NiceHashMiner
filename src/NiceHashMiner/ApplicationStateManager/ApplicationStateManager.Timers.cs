@@ -2,7 +2,7 @@ using NHM.DeviceDetection;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

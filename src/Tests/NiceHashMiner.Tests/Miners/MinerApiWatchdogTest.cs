@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using NiceHashMiner.Miners;
 
-namespace NiceHashMinerLegacy.Tests.Miners
+namespace NiceHashMiner.Tests.Miners
 {
     [TestClass]
     public class MinerApiWatchdogTest

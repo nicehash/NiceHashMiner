@@ -15,16 +15,16 @@ using MinerPluginLoader;
 using Newtonsoft.Json;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Devices;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Configs;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Common.Device;
+using NHM.Common.Enums;
+using NHM.Common.Device;
 using NHM.MinersDownloader;
 using NiceHashMiner.Utils;
 
 // alias
-using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm;
+using CommonAlgorithm = NHM.Common.Algorithm;
 using System.Globalization;
 
 // TODO fix up the namespace

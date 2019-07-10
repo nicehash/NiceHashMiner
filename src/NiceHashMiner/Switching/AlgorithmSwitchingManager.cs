@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Timers;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Common;
+using NHM.Common.Enums;
+using NHM.Common;
 
 namespace NiceHashMiner.Switching
 {

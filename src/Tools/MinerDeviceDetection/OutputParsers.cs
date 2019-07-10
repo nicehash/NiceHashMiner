@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common.Device;
+using NHM.Common.Device;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -3,17 +3,17 @@ using MinerPluginToolkitV1.Interfaces;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.IntegratedPlugins;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Algorithm;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using CommonAlgorithm = NiceHashMinerLegacy.Common.Algorithm.Algorithm;
+using CommonAlgorithm = NHM.Common.Algorithm.Algorithm;
 
 namespace NiceHashMiner.Plugin
 {

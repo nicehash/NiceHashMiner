@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Stats;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using NiceHashMiner.Configs;
 
 namespace NiceHashMiner

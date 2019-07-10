@@ -19,8 +19,8 @@ namespace NiceHashMiner
     using NiceHashMiner.Forms.Components;
     using NiceHashMiner.Plugin;
     using NiceHashMiner.Utils;
-    using NiceHashMinerLegacy.Common;
-    using NiceHashMinerLegacy.Common.Enums;
+    using NHM.Common;
+    using NHM.Common.Enums;
 
     public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IMiningProfitabilityDisplayer, INoInternetConnectionDisplayer
     {

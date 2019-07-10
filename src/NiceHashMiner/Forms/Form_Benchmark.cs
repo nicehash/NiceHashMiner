@@ -12,11 +12,11 @@ using NiceHashMiner.Interfaces;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Miners.Grouping;
 using NiceHashMiner.Properties;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using Timer = System.Windows.Forms.Timer;
 
-using BenchmarkSelection = NiceHashMinerLegacy.Common.Enums.AlgorithmBenchmarkSettingsType;
-using NiceHashMinerLegacy.Common;
+using BenchmarkSelection = NHM.Common.Enums.AlgorithmBenchmarkSettingsType;
+using NHM.Common;
 
 namespace NiceHashMiner.Forms
 {

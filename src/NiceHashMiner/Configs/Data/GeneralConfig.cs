@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 
 namespace NiceHashMiner.Configs.Data
 {

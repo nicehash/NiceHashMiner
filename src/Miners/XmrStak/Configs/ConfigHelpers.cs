@@ -2,7 +2,7 @@
 using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;

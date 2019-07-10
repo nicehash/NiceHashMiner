@@ -11,9 +11,9 @@ using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Enums;
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
+using NHM.Common;
+using NHM.Common.Enums;
+using static NHM.Common.StratumServiceHelpers;
 using MinerPluginToolkitV1.Configs;
 
 namespace LolMinerBeam

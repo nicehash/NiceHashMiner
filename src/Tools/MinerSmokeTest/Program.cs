@@ -1,6 +1,6 @@
 ﻿using log4net.Core;
 using NiceHashMiner;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;

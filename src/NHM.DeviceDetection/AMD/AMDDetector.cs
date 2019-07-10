@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Device;
+using NHM.Common;
+using NHM.Common.Device;
 
 namespace NHM.DeviceDetection.AMD
 {
@@ -12,7 +12,7 @@ namespace NHM.DeviceDetection.AMD
     using NHM.DeviceDetection.OpenCL.Models;
     using NHM.DeviceDetection.WMI;
     using NHM.UUID;
-    using NiceHashMinerLegacy.Common.Enums;
+    using NHM.Common.Enums;
 
     internal static class AMDDetector
     {

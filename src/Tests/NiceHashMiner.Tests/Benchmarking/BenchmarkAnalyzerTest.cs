@@ -3,7 +3,7 @@ using NiceHashMiner.Benchmarking;
 using System;
 using System.Collections.Generic;
 
-namespace NiceHashMinerLegacy.Tests.Benchmarking
+namespace NiceHashMiner.Tests.Benchmarking
 {
     [TestClass]
     public class BenchmarkAnalyzerTest

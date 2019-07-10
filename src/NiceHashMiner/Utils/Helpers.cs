@@ -7,9 +7,9 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Management;
 using System.Security.Principal;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System.Linq;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using NiceHashMiner.Miners.IntegratedPlugins;
 
 namespace NiceHashMiner

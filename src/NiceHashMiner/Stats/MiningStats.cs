@@ -6,7 +6,7 @@ using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Plugin;
 using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 
 namespace NiceHashMiner.Stats
 {

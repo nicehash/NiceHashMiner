@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj" />
+    <ProjectReference Include="..\..\NHM.Common\NHM.Common.csproj" />
   </ItemGroup>
 
 </Project>

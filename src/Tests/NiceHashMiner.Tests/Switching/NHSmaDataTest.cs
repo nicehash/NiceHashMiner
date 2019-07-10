@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 
-namespace NiceHashMinerLegacy.Tests.Switching
+namespace NiceHashMiner.Tests.Switching
 {
     [TestClass]
     public class NHSmaDataTest

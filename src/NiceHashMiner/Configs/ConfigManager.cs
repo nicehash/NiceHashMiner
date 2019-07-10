@@ -8,8 +8,8 @@ using MinerPluginToolkitV1.Configs;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Utils;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Enums;
 
 namespace NiceHashMiner.Configs
 {

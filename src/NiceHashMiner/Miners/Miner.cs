@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MinerPlugin;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System.Threading;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;

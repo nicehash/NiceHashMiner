@@ -1,5 +1,5 @@
 ﻿using NiceHashMiner.Configs;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System;
 using System.Collections.Specialized;
 using System.Net;

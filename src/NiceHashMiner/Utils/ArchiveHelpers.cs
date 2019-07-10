@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.IO.Compression;
 using SharpCompress.Archives.SevenZip;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace NiceHashMiner.Utils
 {

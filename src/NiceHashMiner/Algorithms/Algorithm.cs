@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using NiceHashMiner.Configs;
 
 namespace NiceHashMiner.Algorithms

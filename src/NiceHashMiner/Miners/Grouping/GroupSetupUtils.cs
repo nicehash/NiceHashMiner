@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NiceHashMiner.Algorithms;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Common;
+using NHM.Common.Enums;
+using NHM.Common;
 
 namespace NiceHashMiner.Miners.Grouping
 {

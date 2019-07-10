@@ -1,5 +1,5 @@
 ﻿using NHM.DeviceDetection.OpenCL.Models;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System;
 using System.IO;
 using System.Threading.Tasks;

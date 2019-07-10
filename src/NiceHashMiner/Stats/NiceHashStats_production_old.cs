@@ -42,7 +42,7 @@ namespace NiceHashMiner.Stats
             {
                 if (e.IsText)
                 {
-                    NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "Received: " + e.Data);
+                    NHM.Common.Logger.Info("SOCKET", "Received: " + e.Data);
                     dynamic message = JsonConvert.DeserializeObject(e.Data);
                     switch (message.method.Value)
                     {
@@ -78,7 +78,7 @@ namespace NiceHashMiner.Stats
                 }
             } catch (Exception er)
             {
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", er.ToString());
+                NHM.Common.Logger.Error("SOCKET", er.ToString());
             }
         }
 
@@ -142,7 +142,7 @@ namespace NiceHashMiner.Stats
                     deviceList.Add(array);
                 }
                 catch (Exception e) {
-                    NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.ToString());
+                    NHM.Common.Logger.Error("SOCKET", e.ToString());
                 }
             }
             var data = new DeviceStatusMessage

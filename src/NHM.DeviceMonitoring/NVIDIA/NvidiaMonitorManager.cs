@@ -1,5 +1,5 @@
 ﻿using ManagedCuda.Nvml;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using NVIDIA.NVAPI;
 using System;
 using System.Collections.Generic;

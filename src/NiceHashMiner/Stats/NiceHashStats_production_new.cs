@@ -17,8 +17,8 @@ using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Stats.Models;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Extensions;
+using NHM.Common.Enums;
+using NHM.Extensions;
 using WebSocketSharp;
 using NiceHashMiner.Configs;
 // static imports
@@ -72,20 +72,20 @@ namespace NiceHashMiner.Stats
             }
             catch (RpcException rEr)
             {
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", rEr.Message);
+                NHM.Common.Logger.Error("SOCKET", rEr.Message);
                 if (!executed) return;
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", $"Sending executed response with code {rEr.Code}");
+                NHM.Common.Logger.Error("SOCKET", $"Sending executed response with code {rEr.Code}");
                 SendExecuted(info, id, rEr.Code, rEr.Message);
             }
             catch (Exception er)
             {
-                NiceHashMinerLegacy.Common.Logger.Error("SOCKET", er.Message);
+                NHM.Common.Logger.Error("SOCKET", er.Message);
             }
         }
 
         internal static ExecutedInfo ProcessData(string data, out bool executed, out int? id)
         {
-            NiceHashMinerLegacy.Common.Logger.Info("SOCKET", $"Received: {data}");
+            NHM.Common.Logger.Info("SOCKET", $"Received: {data}");
             dynamic message = JsonConvert.DeserializeObject(data);
             executed = false;
 
@@ -498,7 +498,7 @@ namespace NiceHashMiner.Stats
                     deviceList.Add(array);
                 }
                 catch (Exception e) {
-                    NiceHashMinerLegacy.Common.Logger.Error("SOCKET", e.Message);
+                    NHM.Common.Logger.Error("SOCKET", e.Message);
                 }
             }
 
@@ -517,7 +517,7 @@ namespace NiceHashMiner.Stats
 
         private static void MinerStatus_Tick(object state)
         {
-            NiceHashMinerLegacy.Common.Logger.Info("SOCKET", "SendMinerStatus Tick 'miner.status'");
+            NHM.Common.Logger.Info("SOCKET", "SendMinerStatus Tick 'miner.status'");
             SendMinerStatus(false);
         }
 

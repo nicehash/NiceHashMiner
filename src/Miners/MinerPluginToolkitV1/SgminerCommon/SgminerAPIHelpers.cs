@@ -1,16 +1,16 @@
 ﻿using MinerPlugin;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
+using NHM.Common.Algorithm;
+using NHM.Common.Device;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Sockets;
 using System.Linq;
 using System.Threading.Tasks;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System.Text;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace MinerPluginToolkitV1.SgminerCommon
 {

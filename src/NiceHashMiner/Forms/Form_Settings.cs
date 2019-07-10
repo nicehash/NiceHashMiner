@@ -10,13 +10,13 @@ using System.Globalization;
 using System.Security;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using NiceHashMiner.Interfaces.DataVisualizer;
 
 using static NiceHashMiner.Translations;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Plugin;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace NiceHashMiner.Forms
 {

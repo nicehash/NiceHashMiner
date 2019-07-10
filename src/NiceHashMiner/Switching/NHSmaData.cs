@@ -6,8 +6,8 @@ using System.Text;
 using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Enums;
 
 namespace NiceHashMiner.Switching
 {

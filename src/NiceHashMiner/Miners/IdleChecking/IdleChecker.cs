@@ -1,4 +1,4 @@
-﻿using NiceHashMinerLegacy.Common;
+﻿using NHM.Common;
 using System;
 
 namespace NiceHashMiner.Miners.IdleChecking

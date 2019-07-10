@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 
 namespace NiceHashMiner.Configs.Data
 {

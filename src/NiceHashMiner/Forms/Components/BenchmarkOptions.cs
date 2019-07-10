@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 
 
 namespace NiceHashMiner.Forms.Components

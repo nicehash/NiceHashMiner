@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using NiceHashMinerLegacy.Common.Device;
+using NHM.Common.Device;
 
 namespace MinerPluginToolkitV1.Interfaces
 {

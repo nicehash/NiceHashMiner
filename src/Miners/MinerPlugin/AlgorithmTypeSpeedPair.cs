@@ -1,4 +1,4 @@
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 
 namespace MinerPlugin
 {
@@ -8,7 +8,7 @@ namespace MinerPlugin
     public class AlgorithmTypeSpeedPair
     {
         /// <summary>
-        /// Constructor that takes <see cref="NiceHashMinerLegacy.Common.Enums.AlgorithmType"/> and speed as arguments and create AlgorithmTypeSpeedPair with it
+        /// Constructor that takes <see cref="NHM.Common.Enums.AlgorithmType"/> and speed as arguments and create AlgorithmTypeSpeedPair with it
         /// </summary>
         public AlgorithmTypeSpeedPair(AlgorithmType algorithmType, double speed)
         {

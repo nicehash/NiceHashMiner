@@ -1,9 +1,9 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
+using NHM.Common;
+using NHM.Common.Algorithm;
+using NHM.Common.Device;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

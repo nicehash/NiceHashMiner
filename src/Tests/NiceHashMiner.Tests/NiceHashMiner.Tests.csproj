@@ -7,8 +7,8 @@
     <ProjectGuid>{5A66D9F6-7817-4FEC-9814-2F89744DD7D9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NiceHashMinerLegacy.Tests</RootNamespace>
-    <AssemblyName>NiceHashMinerLegacy.Tests</AssemblyName>
+    <RootNamespace>NiceHashMiner.Tests</RootNamespace>
+    <AssemblyName>NiceHashMiner.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -65,9 +65,9 @@
       <Project>{92D51A33-7BF0-47FD-9ECE-D758FFE1691D}</Project>
       <Name>Nvml</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
+    <ProjectReference Include="..\..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
-      <Name>NiceHashMinerLegacy.Common</Name>
+      <Name>NHM.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\NiceHashMiner\NiceHashMiner.csproj">
       <Project>{a70b0aee-15c4-49e1-9dc9-b936a1ebc2b5}</Project>

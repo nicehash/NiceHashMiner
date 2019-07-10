@@ -59,9 +59,9 @@ All you have to do is download, extract and run the miner (no installation neede
 <i>**Note**: .NET Framework 2.0 or higher and Microsoft Visual C++ Redistributable 2013 is required. No additional installations should be needed if you use Windows 7 or later. However, if you encounter any issues when starting application (application would fail to start or errors/warnings about missing DLL files are displayed) you should download and install <a href="https://www.microsoft.com/en-us/download/details.aspx?id=30653" target="_blank">Microsoft **.NET Framework 2.0**</a> and <a href="https://www.microsoft.com/en-us/download/details.aspx?id=40784" target="_blank">Microsoft **Visual C++ Redistributable 2013 (vcredist_x64.exe)**</a> (after installation a reboot might be required).</i>
 
 Detailed instructions:
-- Download binaries from here: https://github.com/nicehash/NiceHashMinerLegacy/releases
+- Download binaries from here: https://github.com/nicehash/NiceHashMiner/releases
 - Extract zip archive
-- Run NiceHashMinerLegacy.exe
+- Run NiceHashMiner.exe
 - After first run, start benchmark test, otherwise Multi-Algorithm mining will not work properly; for AMD GPUs we suggest you to run **Precise benchmark**
 - Make sure you select your own personal Bitcoin wallet to receive payments, see **Bitcoin wallet guidelines and instructions** here: https://www.nicehash.com/help/how-to-create-the-bitcoin-addresswallet.
 - You will receive Bitcoin payments according to our payments schedule: https://www.nicehash.com/help/when-and-how-do-you-get-paid
@@ -73,7 +73,7 @@ Detailed instructions:
 As a back-end NiceHash Miner relies on the <a href="https://www.nicehash.com" target="_blank">NiceHash.com</a> service. By running NiceHash Miner you're essentially selling the hashing power of your CPUs & GPUs to hashing power buyers. Those are using the hashing power to mine various cryptocurrency coins and support decentralized blockchain networks - similar to cloud computing - only that by running NiceHash Miner you're actually being a provider for the cryptocurrency mining hashing power. You are being part of a global compute power network, **empowering decentralized digital currencies**.
 
 # <a name="highprofit"></a> How to run NiceHash Miner only when profitability is high enough?
-Profitability of mining can go up and down that may be unprofitable to mine especially places with high electricity cost. By using the "MinimumProfit" settings, NiceHashMinerLegacy will stop mining if the current profits are below the minimum amount (in USD). This will help you mine during "profitable" times only.
+Profitability of mining can go up and down that may be unprofitable to mine especially places with high electricity cost. By using the "MinimumProfit" settings, NiceHashMiner will stop mining if the current profits are below the minimum amount (in USD). This will help you mine during "profitable" times only.
 
 # <a name="options"></a> Additional options
 
@@ -82,15 +82,15 @@ Click 'Settings' button. NiceHash Miner will be relaunched with the ability to m
 ## General settings
 Parameter | Range | Description
 -----------------|----------|-------------------
-ConfigFileVersion | Version | This is to identify which version of NiceHashMinerLegacy did the config file is made from.
-Language | number | Language selection for NiceHashMinerLegacy GUI.
+ConfigFileVersion | Version | This is to identify which version of NiceHashMiner did the config file is made from.
+Language | number | Language selection for NiceHashMiner GUI.
 DisplayCurrency | valid 3 letter code | Converts to selected currency via http://fixer.io valid options are any supported via fixer.
 DebugConsole | true or false | When set to true, it displays debug console.
-BitcoinAddress | valid BTC address | The address that NiceHashMinerLegacy will mine to.
+BitcoinAddress | valid BTC address | The address that NiceHashMiner will mine to.
 WorkerName | text | To identify the computer on NiceHash web UI.
 ServiceLocation | number | Used to select the location of the mining server.
 HideMiningWindows | true or false | When set to true, sgminer, ccminer and cpuminer console windows will be hidden.
-MinimizeToTray | true or false | When set to true, NiceHashMinerLegacy will minimize to the system tray.
+MinimizeToTray | true or false | When set to true, NiceHashMiner will minimize to the system tray.
 ForceCPUExtension | 0, 1, 2, 3 or 4 | Force certain CPU extension miner. 0 is automatic, 1 for AVX2, 2 for AVX, 3 for AES and  4 for SSE2.
 SwitchMinSecondsFixed | number | Fixed part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic.
 SwitchMinSecondsDynamic | number | Random part of minimal time (in seconds) before miner switches algorithm. Total time is SwitchMinSecondsFixed + SwitchMinSecondsDynamic. Random part is used to prevent all world-wide NiceHash Miner users to have the exact same switching pattern.
@@ -108,19 +108,19 @@ DeviceDetection\DisableDetectionAMD | true or false | Set it to true if you woul
 AutoScaleBTCValues | true or false | Set it to true if you wish to see the BTC values autoscale to the appropriate scale.
 StartMiningWhenIdle | true or false | Automatically start mining when computer is idle and stop mining when computer is being used.
 MinIdleSeconds | number | When StartMiningWhenIdle is set to true, MinIdleSeconds tells how many seconds computer has to be idle before mining starts.
-LogToFile | true or false | Set it to true if you would like NiceHashMinerLegacy to log to a file.
+LogToFile | true or false | Set it to true if you would like NiceHashMiner to log to a file.
 LogMaxFileSize | number | The maximum size (in bytes) of the log file before roll over.
 ShowDriverVersionWarning | true or false | Set to true if you would like to get a warning if less than ideal driver for mining is detected.
 ShowInternetConnectionWarning | true or false | Set to true if you would like to get a warning if the internet connection is not available.
-DisableWindowsErrorReporting | true or false | Set it to true if you would like to disable windows error reporting. This will allow NiceHashMinerLegacy to restart the miner in the case of the miner crashes.
+DisableWindowsErrorReporting | true or false | Set it to true if you would like to disable windows error reporting. This will allow NiceHashMiner to restart the miner in the case of the miner crashes.
 UseNewSettingsPage | true or false | Set to true if you would like to use the new Settings form.
-NVIDIAP0State | true or false | When set to true, NiceHashMinerLegacy would change all supported NVidia GPUs to P0 state. This will increase some performance on certain algorithms.
+NVIDIAP0State | true or false | When set to true, NiceHashMiner would change all supported NVidia GPUs to P0 state. This will increase some performance on certain algorithms.
 ethminerDefaultBlockHeight | number | A fallback number that will be used if API call fails. This is only used for benchmarking.
 EthminerDagGenerationType | 0, 1, 2, 3 | Set ethminer DAG mode generation 0 - SingleKeep, 1 - Single, 2 - Sequential, 3 - Parallel.
 ApiBindPortPoolStart | number | Set the starting value (default is 5100) for miners API ports. When a new miner is created it will use an avaliable API port starting from the ApiBindPortPoolStart and higher.
-MinimumProfit | number | If set to any value more than 0 (USD), NiceHashMinerLegacy will stop mining if the calculated profit falls below the set amount.
+MinimumProfit | number | If set to any value more than 0 (USD), NiceHashMiner will stop mining if the calculated profit falls below the set amount.
 LastDevicesSettup | device settup list | This list is used for setting if a device is enabled or disabled.
-LastDevicesSettup\Enabled | true or false | Set to false if you would like to disable this device for benchmarking and mining by NiceHashMinerLegacy.
+LastDevicesSettup\Enabled | true or false | Set to false if you would like to disable this device for benchmarking and mining by NiceHashMiner.
 LastDevicesSettup\UUID | text | Used for unique identification purposes in the config file (**DO NOT EDIT**)
 LastDevicesSettup\Name | text | Used for identification purposes in the config file (**DO NOT EDIT**)
 
@@ -167,7 +167,7 @@ Google Chrome is blocking the download of the application
 > Google Chrome falsely flags NiceHash Miner as a potentially unwanted program and thus prevents you from saving the program archive on your computer. This is an issue with Google Chrome and not with NiceHash Miner. Use another browser such as Firefox or Edge to download the file instead. Also, read 'My anti-virus is blocking the application' below.
 
 My anti-virus is blocking the application
-> Some anti-virus software might block NiceHash Miner as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into NiceHash Miner has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/nicehash/NiceHashMinerLegacy/releases. However, make sure you **never download and run any files from other unknown sources**! If you downloaded the software package from our GitHub repository you can simply resolve the issues with false-positives by adding the files sgminer.exe, ccminer_sp.exe, ccminer_tpruvot.exe, cpuminer_x64_AVX.exe, cpuminer_x64_AVX2.exe and cpuminer_x64_SSE2.exe to anti-virus exception list.
+> Some anti-virus software might block NiceHash Miner as well as supporting back-end programs (cpuminer, ccminer, sgminer) due to false-positive matches. All software, included into NiceHash Miner has been verified and checked by our team and is absolutely virus/trojan free. Our service is well established and trusted among users, therefore you can fully trust software releases that are downloaded from our GitHub repository: https://github.com/nicehash/NiceHashMiner/releases. However, make sure you **never download and run any files from other unknown sources**! If you downloaded the software package from our GitHub repository you can simply resolve the issues with false-positives by adding the files sgminer.exe, ccminer_sp.exe, ccminer_tpruvot.exe, cpuminer_x64_AVX.exe, cpuminer_x64_AVX2.exe and cpuminer_x64_SSE2.exe to anti-virus exception list.
 
 I'm getting "Enqueueing kernel" errors on AMD GPUs
 > If you have very low amount of system memory (RAM), especially if lower than 4 GB, than you might encounter this kind of errors:
@@ -187,7 +187,7 @@ Benchmarks on particular algorithms keep getting terminated on AMD GPUs
 
 # <a name="bugs"></a> How to report bugs and issues?
 
-To report bugs and issues please use the GitHub issue reporting tool: https://github.com/nicehash/NiceHashMinerLegacy/issues. Any bugs and issues reports are very much appreciated since it helps us to improve NiceHash Miner. Thank you.
+To report bugs and issues please use the GitHub issue reporting tool: https://github.com/nicehash/NiceHashMiner/issues. Any bugs and issues reports are very much appreciated since it helps us to improve NiceHash Miner. Thank you.
 
 # <a name="references"></a> References
 

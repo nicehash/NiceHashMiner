@@ -21,10 +21,10 @@ namespace NiceHashMiner
 
         public static void ASSERT_COMPATIBLE_BUILDS()
         {
-            var tagsEqual = BuildTag == NiceHashMinerLegacy.Common.BUILD_TAG.BuildTag;
+            var tagsEqual = BuildTag == NHM.Common.BUILD_TAG.BuildTag;
             if (!tagsEqual)
             {
-                MessageBox.Show($"Build tags differ this build is broken. NiceHashMiner.BUILD_TAG.BuildTag('{BuildTag}') != NiceHashMinerLegacy.Common.BUILD_TAG.BuildTag('{NiceHashMinerLegacy.Common.BUILD_TAG.BuildTag}')",
+                MessageBox.Show($"Build tags differ this build is broken. NiceHashMiner.BUILD_TAG.BuildTag('{BuildTag}') != NHM.Common.BUILD_TAG.BuildTag('{NHM.Common.BUILD_TAG.BuildTag}')",
                         "BROKEN BULD!!!",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw new Exception($"Broken build TAGS don't match!!!");

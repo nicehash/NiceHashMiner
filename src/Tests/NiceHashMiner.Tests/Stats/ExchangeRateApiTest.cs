@@ -5,7 +5,7 @@ using NiceHashMiner.Stats;
 using System;
 using System.Collections.Generic;
 
-namespace NiceHashMinerLegacy.Tests.Stats
+namespace NiceHashMiner.Tests.Stats
 {
     [TestClass]
     public class ExchangeRateApiTest

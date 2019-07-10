@@ -2,7 +2,7 @@
 using NiceHashMiner.Devices;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Utils;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

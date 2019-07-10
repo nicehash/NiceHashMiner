@@ -1,5 +1,5 @@
 ﻿using MinerPlugin;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;

@@ -28,14 +28,14 @@
         public const string PluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
 #endif
         // add version
-        public const string VisitReleasesUrl = "https://github.com/NiceHash/NiceHashMinerLegacy/releases/";
-        public const string VisitNewVersionReleaseUrl = "https://github.com/NiceHash/NiceHashMinerLegacy/releases/tag/";
+        public const string VisitReleasesUrl = "https://github.com/NiceHash/NiceHashMiner/releases/";
+        public const string VisitNewVersionReleaseUrl = "https://github.com/NiceHash/NiceHashMiner/releases/tag/";
 
         // add btc adress as parameter
 
         // help and faq
-        public const string NhmHelp = "https://github.com/nicehash/NiceHashMinerLegacy/";
-        public const string NhmNoDevHelp = "https://github.com/nicehash/NiceHashMinerLegacy/wiki/Troubleshooting#nosupportdev";
+        public const string NhmHelp = "https://github.com/nicehash/NiceHashMiner/";
+        public const string NhmNoDevHelp = "https://github.com/nicehash/NiceHashMiner/wiki/Troubleshooting#nosupportdev";
 
         // faq
         public const string NhmPayingFaq = "https://www.nicehash.com/help/when-and-how-do-you-get-paid";

@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Threading;
 using Newtonsoft.Json;
 using NiceHashMiner.Configs;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace NiceHashMiner.Stats
 {
