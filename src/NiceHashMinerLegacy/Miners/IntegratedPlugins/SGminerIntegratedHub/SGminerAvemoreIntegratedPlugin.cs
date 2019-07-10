@@ -19,7 +19,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
         public override string PluginUUID => _pluginUUIDName;
 
-        public override Version Version => new Version(1, 0);
+        public override Version Version => new Version(1, 1);
 
         public override string Name => _pluginUUIDName;
 

@@ -13,6 +13,7 @@ using System.IO;
 using NiceHashMinerLegacy.Common;
 using System.Collections.Generic;
 using XmrStak.Configs;
+using MinerPluginToolkitV1.Configs;
 
 namespace XmrStak
 {
@@ -206,19 +207,8 @@ namespace XmrStak
             // settup times
             var openCLCodeGenerationWait = _miningDeviceTypes.Contains(DeviceType.AMD) ? 20 : 0;
             var benchWait = 5;
-            var benchmarkTime = 30; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 30;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+
 
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
