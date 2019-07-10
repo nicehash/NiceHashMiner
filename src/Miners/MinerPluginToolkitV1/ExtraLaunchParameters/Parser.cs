@@ -58,6 +58,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
         public static bool CheckIfCanGroup(MiningPair a, MiningPair b, List<MinerOption> options) {
             //if there is no options we can group
             if (options == null || options.Count == 0) return true;
+            if (a.Algorithm.ExtraLaunchParameters == "" && b.Algorithm.ExtraLaunchParameters == "") return true;
 
             //filter all multi param options
             var filteredOptions = options.Where(opt => opt.Type == MinerOptionType.OptionIsParameter || opt.Type == MinerOptionType.OptionWithSingleParameter);
@@ -73,8 +74,21 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                     .Where(s => !string.IsNullOrEmpty(s) && !string.IsNullOrWhiteSpace(s))
                     .ToList();
 
-            // go through MiningPair A paramethers and check if they exist in MinerOptions; if they do check if their values are the same in MiningPair B
-            foreach(var paramA in paramethersOfA)
+            // if A empty, check for type of B paramethers
+            if (paramethersOfA.Count == 0)
+            {
+                foreach(var paramB in paramethersOfB)
+                {
+                    var keyParamethers = filteredOptions.Where(opt => opt.ShortName == paramB || opt.LongName == paramB);
+                    if (keyParamethers.Count() == 0) continue;
+                    var keyParamether = keyParamethers.FirstOrDefault();
+
+                    if (keyParamether.Type == MinerOptionType.OptionIsParameter || keyParamether.Type == MinerOptionType.OptionWithSingleParameter) return false;
+                }
+                return true;
+            }
+            // go through MiningPair A paramethers and check if they exist in MinerOptions; if they do check if their values are the same in MiningPair 
+            foreach (var paramA in paramethersOfA)
             {
                 var keyParamethers = filteredOptions.Where(opt => opt.ShortName == paramA || opt.LongName == paramA);
                 if (keyParamethers.Count() == 0) continue;
@@ -99,7 +113,6 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             }
             return true;
         }
-
 
         /// <summary>
         /// Main Parse function which gets List of Mining Pairs <see cref="MiningPair"/>, List of Miner Options <see cref="MinerOption"/> and UseIfDefaults (bool) as arguments
