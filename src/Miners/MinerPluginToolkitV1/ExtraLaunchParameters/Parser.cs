@@ -56,62 +56,20 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
         }
 
         public static bool CheckIfCanGroup(MiningPair a, MiningPair b, List<MinerOption> options) {
-            //if there is no options we can group
             if (options == null || options.Count == 0) return true;
-            if (a.Algorithm.ExtraLaunchParameters == "" && b.Algorithm.ExtraLaunchParameters == "") return true;
 
-            //filter all multi param options
-            var filteredOptions = options.Where(opt => opt.Type == MinerOptionType.OptionIsParameter || opt.Type == MinerOptionType.OptionWithSingleParameter);
+            var filteredOptionsSingle = options.Where(optionType => optionType.Type == MinerOptionType.OptionWithSingleParameter).ToList();
+            var filteredOptionsIsParam = options.Where(optionType => optionType.Type == MinerOptionType.OptionIsParameter).ToList();
 
-            var paramethersOfA = a.Algorithm.ExtraLaunchParameters
-                    .Replace("=", "= ")
-                    .Split(' ')
-                    .Where(s => !string.IsNullOrEmpty(s) && !string.IsNullOrWhiteSpace(s))
-                    .ToList();
-            var paramethersOfB = b.Algorithm.ExtraLaunchParameters
-                    .Replace("=", "= ")
-                    .Split(' ')
-                    .Where(s => !string.IsNullOrEmpty(s) && !string.IsNullOrWhiteSpace(s))
-                    .ToList();
+            var parsedASingle = Parse(new List<MiningPair> { a }, filteredOptionsSingle);
+            var parsedBSingle = Parse(new List<MiningPair> { b }, filteredOptionsSingle);
 
-            // if A empty, check for type of B paramethers
-            if (paramethersOfA.Count == 0)
-            {
-                foreach(var paramB in paramethersOfB)
-                {
-                    var keyParamethers = filteredOptions.Where(opt => opt.ShortName == paramB || opt.LongName == paramB);
-                    if (keyParamethers.Count() == 0) continue;
-                    var keyParamether = keyParamethers.FirstOrDefault();
+            if (parsedASingle != parsedBSingle) return false;
 
-                    if (keyParamether.Type == MinerOptionType.OptionIsParameter || keyParamether.Type == MinerOptionType.OptionWithSingleParameter) return false;
-                }
-                return true;
-            }
-            // go through MiningPair A paramethers and check if they exist in MinerOptions; if they do check if their values are the same in MiningPair 
-            foreach (var paramA in paramethersOfA)
-            {
-                var keyParamethers = filteredOptions.Where(opt => opt.ShortName == paramA || opt.LongName == paramA);
-                if (keyParamethers.Count() == 0) continue;
-                var keyParamether = keyParamethers.FirstOrDefault();
+            var parsedAParam = Parse(new List<MiningPair> { a }, filteredOptionsIsParam);
+            var parsedBParam = Parse(new List<MiningPair> { b }, filteredOptionsIsParam);
 
-                if (keyParamether.Type == MinerOptionType.OptionIsParameter)
-                {
-                    if (!paramethersOfB.Contains(paramA)) return false;
-                }
-                if (keyParamether.Type == MinerOptionType.OptionWithSingleParameter)
-                {
-                    var indexOfDef = paramethersOfA.IndexOf(paramA);
-                    var valueOfA = paramethersOfA.ElementAt(indexOfDef + 1);
-
-                    var foundParamB = paramethersOfB.Where(opt => opt == paramA).FirstOrDefault();
-                    if (foundParamB == null || foundParamB == "") return false;
-
-                    var valueOfB = paramethersOfB.ElementAt(paramethersOfA.IndexOf(foundParamB) + 1);
-
-                    if (valueOfA != valueOfB) return false;
-                }               
-            }
-            return true;
+            return parsedAParam == parsedBParam;
         }
 
         /// <summary>
