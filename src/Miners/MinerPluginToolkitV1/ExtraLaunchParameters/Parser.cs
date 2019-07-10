@@ -76,10 +76,11 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             // go through MiningPair A paramethers and check if they exist in MinerOptions; if they do check if their values are the same in MiningPair B
             foreach(var paramA in paramethersOfA)
             {
-                var keyParamether = filteredOptions.Where(opt => opt.ShortName == paramA || opt.LongName == paramA).FirstOrDefault(); ;
-                if (keyParamether == null) continue;
-                
-                if(keyParamether.Type == MinerOptionType.OptionIsParameter)
+                var keyParamethers = filteredOptions.Where(opt => opt.ShortName == paramA || opt.LongName == paramA);
+                if (keyParamethers.Count() == 0) continue;
+                var keyParamether = keyParamethers.FirstOrDefault();
+
+                if (keyParamether.Type == MinerOptionType.OptionIsParameter)
                 {
                     if (!paramethersOfB.Contains(paramA)) return false;
                 }
@@ -89,7 +90,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
                     var valueOfA = paramethersOfA.ElementAt(indexOfDef + 1);
 
                     var foundParamB = paramethersOfB.Where(opt => opt == paramA).FirstOrDefault();
-                    if (foundParamB == null) return false;
+                    if (foundParamB == null || foundParamB == "") return false;
 
                     var valueOfB = paramethersOfB.ElementAt(paramethersOfA.IndexOf(foundParamB) + 1);
 
