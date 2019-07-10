@@ -13,6 +13,7 @@ using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NiceHashMinerLegacy.Common;
 using NiceHashMinerLegacy.Common.Enums;
+using MinerPluginToolkitV1.Configs;
 
 namespace NBMiner
 {
@@ -67,19 +68,7 @@ namespace NBMiner
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            int benchTime;
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchTime = 20;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchTime = 120;
-                    break;
-                default:
-                    benchTime = 60;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC);
             var binPathBinCwdPair = GetBinAndCwdPaths();
@@ -92,7 +81,7 @@ namespace NBMiner
             var benchHashes = 0d;
             var benchIters = 0;
             var benchHashResult = 0d;  // Not too sure what this is..
-            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchTime / 20d));
+            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
 
             bp.CheckData = (data) =>
             {
@@ -114,7 +103,7 @@ namespace NBMiner
                 };
             };
 
-            var timeout = TimeSpan.FromSeconds(benchTime + 5);
+            var timeout = TimeSpan.FromSeconds(benchmarkTime + 5);
             var benchWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, timeout, benchWait, stop);
             return await t;

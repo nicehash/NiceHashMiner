@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using MinerPluginToolkitV1.Configs;
 
 namespace WildRig
 {
@@ -98,17 +99,7 @@ namespace WildRig
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            var benchmarkTime = 60; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-                default: 
-                    benchmarkTime = 60;
-                    break;
-            }
-
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var commandLine = $"-a {AlgoName} --benchmark -d {_devices} --multiple-instance {_extraLaunchParameters}";
             var binPathBinCwdPair = GetBinAndCwdPaths();

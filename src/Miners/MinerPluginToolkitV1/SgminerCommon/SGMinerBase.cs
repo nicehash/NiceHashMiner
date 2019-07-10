@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
 using System.IO;
 using NiceHashMinerLegacy.Common;
+using MinerPluginToolkitV1.Configs;
 
 namespace MinerPluginToolkitV1.SgminerCommon
 {
@@ -110,19 +111,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
             // TODO avemore takes REALLY LONG TIME TO BUILD KERNELS!!!! ADD kernel build checks
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 90; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 90;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 180;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             // use demo user and disable colorts so we can read from stdout
             var stopAt = DateTime.Now.AddSeconds(benchmarkTime).ToString("HH:mm");

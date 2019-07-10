@@ -11,6 +11,7 @@ using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
 using System.IO;
 using NiceHashMinerLegacy.Common;
 using MinerPluginToolkitV1.SgminerCommon;
+using MinerPluginToolkitV1.Configs;
 
 namespace TeamRedMiner
 {
@@ -128,19 +129,7 @@ namespace TeamRedMiner
         {
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 90; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 90;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             // use demo user and disable colorts so we can read from stdout
             var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC) + " --disable_colors";

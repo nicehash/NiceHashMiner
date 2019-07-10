@@ -18,7 +18,7 @@ namespace CryptoDredge
     // TODO don't use this plugin as it doesn't have GetMinerStatsDataAsync() method miner doesn't support it.
     class CryptoDredgePlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
-        public Version Version => new Version(1, 5);
+        public Version Version => new Version(1, 6);
         public string Name => "CryptoDredge";
 
         public string Author => "domen.kirnkrefl@nicehash.com";
@@ -65,7 +65,8 @@ namespace CryptoDredge
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts
+                MinerReservedApiPorts = _minerReservedApiPorts,
+                MinerBenchmarkTimeSettings = _minerBenchmarkTimeSettings
             };
         }
 
@@ -90,6 +91,9 @@ namespace CryptoDredge
 
             var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
             if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
+
+            var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, _minerBenchmarkTimeSettings);
+            if (fileMinerBenchmarkTimeSetting != null) _minerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
         }
 
         private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
@@ -127,6 +131,7 @@ namespace CryptoDredge
         {
             GeneralTimeout =  _defaultTimeout,
         };
+        protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
         #endregion Internal Settings
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()

@@ -10,6 +10,7 @@ using System.Globalization;
 using System.IO;
 using NiceHashMinerLegacy.Common;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Configs;
 
 namespace MinerPluginToolkitV1.CCMinerCommon
 {
@@ -53,19 +54,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
         {
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 20; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 20;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var algo = AlgorithmName(_algorithmType);
             var timeLimit = _noTimeLimitOption ? "" : $"--time-limit {benchmarkTime}";

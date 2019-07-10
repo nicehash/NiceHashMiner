@@ -34,7 +34,8 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             {
                 MinerOptionsPackage = _minerOptionsPackage,
                 MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts
+                MinerReservedApiPorts = _minerReservedApiPorts,
+                MinerBenchmarkTimeSettings = _minerBenchmarkTimeSettings
             };
         }
 
@@ -63,6 +64,9 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 
             var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
             if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
+
+            var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, _minerBenchmarkTimeSettings);
+            if (fileMinerBenchmarkTimeSetting != null) _minerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
         }
 
         protected abstract MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables { get; set; }
@@ -106,6 +110,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         {
             GeneralTimeout =  _defaultTimeout,
         };
+        protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
 
         public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
         IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()

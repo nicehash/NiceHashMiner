@@ -14,6 +14,7 @@ using NiceHashMinerLegacy.Common.Device;
 using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
 using System.IO;
 using NiceHashMinerLegacy.Common;
+using MinerPluginToolkitV1.Configs;
 
 namespace GMinerPlugin
 {
@@ -123,21 +124,10 @@ namespace GMinerPlugin
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
-        {// determine benchmark time 
+        {
+            // determine benchmark time 
             // settup times
-            var benchmarkTime = 20; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 20;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             // use demo user and disable the watchdog
             var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC);

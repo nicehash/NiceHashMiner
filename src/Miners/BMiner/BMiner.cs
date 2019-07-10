@@ -14,6 +14,7 @@ using System.Globalization;
 using System.IO;
 using NiceHashMinerLegacy.Common;
 using System.Collections.Generic;
+using MinerPluginToolkitV1.Configs;
 
 namespace BMiner
 {
@@ -100,19 +101,7 @@ namespace BMiner
         {
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 30; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 30;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var split = urlWithPort.Split(':');
