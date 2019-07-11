@@ -17,7 +17,7 @@ namespace LolMinerBeam
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
         }
 
-        public override Version Version => new Version(1, 7);
+        public override Version Version => new Version(2, 0);
 
         public override string Name => "LolMinerBeam";
 

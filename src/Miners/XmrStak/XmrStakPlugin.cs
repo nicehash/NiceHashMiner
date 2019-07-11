@@ -27,7 +27,7 @@ namespace XmrStak
 
         public override string PluginUUID => "3d4e56b0-7238-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(1, 5);
+        public override Version Version => new Version(2, 0);
         public override string Name => "XmrStak";
 
         public override string Author => "stanko@nicehash.com";

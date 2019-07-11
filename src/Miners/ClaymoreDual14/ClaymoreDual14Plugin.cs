@@ -23,7 +23,7 @@ namespace ClaymoreDual14
 
         public override string PluginUUID => "78d0bd8b-4d8f-4b7e-b393-e8ac6a83ae76";
 
-        public override Version Version => new Version(1, 7);
+        public override Version Version => new Version(2, 0);
 
         public override string Name => "ClaymoreDual14+";
 

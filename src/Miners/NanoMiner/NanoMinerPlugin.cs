@@ -20,7 +20,7 @@ namespace NanoMiner
 
         public override string PluginUUID => "fa2f3530-67ff-11e9-b04e-b5d540d02534";
 
-        public override Version Version => new Version(1, 4);
+        public override Version Version => new Version(2, 0);
 
         public override string Name => "NanoMiner";
 

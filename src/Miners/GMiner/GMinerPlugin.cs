@@ -23,7 +23,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(1, 11);
+        public override Version Version => new Version(2, 0);
 
         public override string Name => "GMinerCuda9.0+";
 
