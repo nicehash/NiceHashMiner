@@ -56,7 +56,7 @@ This is the example of GMiner `MinerOptionsPackage.json` file:
       "default_value": null,
       "delimiter": null
     },
-    ...
+    //...//
   ],
   "temperature_options": [
     {
@@ -72,5 +72,15 @@ This is the example of GMiner `MinerOptionsPackage.json` file:
 ```
 
 If you want to add an option just append miner option to `general_options` or `temperature_options` section.<br>
-To enable changes inside this file, change `use_user_settings` to true.<br>
-The `group_mining_pairs_only_with_compatible_options` attribute should be set to true if you only want to group mining pairs with compatible options inside same miner instance.
+**Warning:** if value set inside NHM Extra Launch Parameter settings is same as `default_value`, the value will be ignored.
+
+To enable changes inside this file, set `use_user_settings` to true.
+
+The `group_mining_pairs_only_with_compatible_options` attribute is used in parser that checks if parsed options are compatible. It is set to **true** by default.<br>
+This filter is checking options of type `OptionIsParameter` or `OptionWithSingleParameter`. <br>
+For example:
+  - **device1** --pers 5
+  - **device2** --pers 4
+
+These two options are incompatible and would be started in two different
+instances.

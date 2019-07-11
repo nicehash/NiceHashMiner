@@ -17,4 +17,6 @@ Example file:
 - `algorithm_reserved_ports` holds list of reserved ports for specified algorithms
 
 You can set more than one port for each algorithm.<br>
+If none of the specified ports won't be available, fallback mechanism will be started, using the first free port in the default range.
+
 To enable changes inside this file, set `use_user_settings` to true.

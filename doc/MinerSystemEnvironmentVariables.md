@@ -18,7 +18,7 @@ Example file for Xmr-Stak:
   "custom_system_environment_variables": null
 }
 ```
-- `default_system_environment_variables` sections holds system variables set by the plugin and can be changed
+- `default_system_environment_variables` sections holds system variables set by the plugin and can be changed.
 - `custom_system_environment_variables` sections is not yet implemented.
 
 To enable changes inside this file, set `use_user_settings` to true.

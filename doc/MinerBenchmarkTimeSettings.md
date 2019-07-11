@@ -10,19 +10,19 @@ Example file:
 {
     "use_user_settings": true,
     "time_general_s":  {
-        "0": 20,
-        "1": 60,
-        "2": 120,
+        "Quick": 20,
+        "Standard": 60,
+        "Precise": 120,
     },
     "time_per_algorithm_s":  {
-        "0": {
+        "Quick": {
             "X16R": 40,
             "DaggerHashimoto": 60
         },
-        "1": {
+        "Standard": {
             "DaggerHashimoto": 120
         },
-        "2": {
+        "Precise": {
             "DaggerHashimoto": 180,
         },
     },
@@ -32,10 +32,7 @@ Example file:
 - `time_general_s` section holds general benchmark timeouts of all algorithms for each **Benchmark Performance Type**.<br>
 - `time_per_algorithm_s` section holds benchmark timeouts for specified algorithms. Each **Benchmark Performance Type** specifies benchmark time for stated algorithm. <br>
 
-*Benchmark Performance Types:*
-- 0 -> Quick
-- 1 -> Standard
-- 2 -> Precise
+Benchmark Performance Types are Quick, Standard and Precise.
 
 When checking for benchmark timeout, time from `time_per_algorithm_s` has priority over `time_general_s`.<br>
 

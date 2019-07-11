@@ -15,7 +15,7 @@ Example file:
     "CryptonightV8": "00:04:00"
   },
   "timeout_per_device_type": {
-    "0": "00:08:30",
+    "CPU": "00:08:30",
   }
 }
 ```
@@ -24,10 +24,7 @@ Example file:
 - `timeout_per_algorithm` section holds timeouts for specified algorithms.
 - `timeout_per_device_type` section holds timeouts for specified **device types**.
 
-*Device Types:*
-- 0 -> CPU
-- 1 -> NVIDIA
-- 2 -> AMD
+Device Types are CPU, NVIDIA and AMD
 
 When checking for api max timeout, time from `timeout_per_device_type` has priority over `timeout_per_algorithm`, which has priority over `general_timeout`.<br>
 

@@ -35,5 +35,6 @@ Each of them resides in its own *JSON* file.
 ```
 
 All of them are allowed to be modified by users for more personalized settings.
+The changes inside the file are used by miner, if `use_user_settings` field in each changed file is set to `true`.
 
 *Note:* Change of the settings won't do anything while the NHM is running. You have to stop the NHM, change the files and then start it, for settings to take effect.
