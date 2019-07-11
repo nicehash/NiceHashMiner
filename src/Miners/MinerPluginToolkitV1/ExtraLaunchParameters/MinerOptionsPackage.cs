@@ -18,6 +18,9 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
         [JsonProperty("group_mining_pairs_only_with_compatible_options")]
         public bool GroupMiningPairsOnlyWithCompatibleOptions { get; set; } = true;
 
+        [JsonProperty("ignore_default_value_options")]
+        public bool IgnoreDefaultValueOptions { get; set; } = true;
+
         [JsonProperty("general_options")]
         public List<MinerOption> GeneralOptions { get; set; }
 

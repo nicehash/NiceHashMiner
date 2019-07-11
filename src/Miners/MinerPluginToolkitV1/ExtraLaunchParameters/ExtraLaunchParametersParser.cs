@@ -55,29 +55,29 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             return true;
         }
 
-        public static bool CheckIfCanGroup(MiningPair a, MiningPair b, List<MinerOption> options) {
+        public static bool CheckIfCanGroup(MiningPair a, MiningPair b, List<MinerOption> options, bool ignoreDefaultValueOptions) {
             if (options == null || options.Count == 0) return true;
 
             var filteredOptionsSingle = options.Where(optionType => optionType.Type == MinerOptionType.OptionWithSingleParameter).ToList();
             var filteredOptionsIsParam = options.Where(optionType => optionType.Type == MinerOptionType.OptionIsParameter).ToList();
 
-            var parsedASingle = Parse(new List<MiningPair> { a }, filteredOptionsSingle);
-            var parsedBSingle = Parse(new List<MiningPair> { b }, filteredOptionsSingle);
+            var parsedASingle = Parse(new List<MiningPair> { a }, filteredOptionsSingle, ignoreDefaultValueOptions);
+            var parsedBSingle = Parse(new List<MiningPair> { b }, filteredOptionsSingle, ignoreDefaultValueOptions);
 
             if (parsedASingle != parsedBSingle) return false;
 
-            var parsedAParam = Parse(new List<MiningPair> { a }, filteredOptionsIsParam);
-            var parsedBParam = Parse(new List<MiningPair> { b }, filteredOptionsIsParam);
+            var parsedAParam = Parse(new List<MiningPair> { a }, filteredOptionsIsParam, ignoreDefaultValueOptions);
+            var parsedBParam = Parse(new List<MiningPair> { b }, filteredOptionsIsParam, ignoreDefaultValueOptions);
 
             return parsedAParam == parsedBParam;
         }
 
         /// <summary>
         /// Main Parse function which gets List of Mining Pairs <see cref="MiningPair"/>, List of Miner Options <see cref="MinerOption"/> and UseIfDefaults (bool) as arguments
-        /// UseIfDefaults argument is set to true if you would like to parse default values for extra launch parameters
+        /// IgnoreDefaultValueOptions argument is set to false if you would like to parse default values for extra launch parameters
         /// It returns parsed string ready for adding to miner command
         /// </summary>
-        public static string Parse(List<MiningPair> miningPairs, List<MinerOption> options, bool useIfDefaults = false)
+        public static string Parse(List<MiningPair> miningPairs, List<MinerOption> options, bool ignoreDefaultValueOptions = true)
         {
             if (options == null || options.Count == 0) return "";
             
@@ -171,7 +171,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
             var isAllDefault = mergedParsedMinerOptions.All(mpmopt => mpmopt.IsDefaults);
 
             // we don't parse if we have everything default and don't force defaults
-            if (isAllDefault && useIfDefaults == false) return "";
+            if (isAllDefault && ignoreDefaultValueOptions) return "";
 
             var retVal = "";
             foreach (var mergedParsedMinerOption in mergedParsedMinerOptions)
@@ -181,7 +181,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
 
                 var optionName = string.IsNullOrEmpty(option.ShortName) ? option.LongName : option.ShortName;
 
-                if (mergedParsedMinerOption.IsDefaults && !useIfDefaults) continue;
+                if (mergedParsedMinerOption.IsDefaults && ignoreDefaultValueOptions) continue;
                 // if options all default ignore
                 switch (option.Type)
                 {
