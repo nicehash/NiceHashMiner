@@ -1,31 +1,31 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
+﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
-using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace CryptoDredge
 {
+#error "Implement GetMinerStatsDataAsync"
     // TODO don't use this plugin as it doesn't have GetMinerStatsDataAsync() method miner doesn't support it.
-    class CryptoDredgePlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
+    class CryptoDredgePlugin : PluginBase
     {
-        public Version Version => new Version(1, 6);
-        public string Name => "CryptoDredge";
+        public CryptoDredgePlugin()
+        {
+            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+        }
 
-        public string Author => "domen.kirnkrefl@nicehash.com";
+        public override Version Version => new Version(2, 0);
+        public override string Name => "CryptoDredge";
 
-        public string PluginUUID => "d9c2e620-7236-11e9-b20c-f9f12eb6d835";
+        public override string Author => "domen.kirnkrefl@nicehash.com";
 
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
+        public override string PluginUUID => "d9c2e620-7236-11e9-b20c-f9f12eb6d835";
+
+        public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
@@ -43,6 +43,7 @@ namespace CryptoDredge
             return supported;
         }
 
+        // TODO add to filters
         private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
         {
             const ulong minMem = 2UL << 30;
@@ -59,82 +60,12 @@ namespace CryptoDredge
             }
         }
 
-        public IMiner CreateMiner()
+        protected override MinerBase CreateMinerBase()
         {
-            return new CryptoDredge(PluginUUID)
-            {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts,
-                MinerBenchmarkTimeSettings = _minerBenchmarkTimeSettings
-            };
+            return new CryptoDredge(PluginUUID);
         }
 
-        public bool CanGroup(MiningPair a, MiningPair b)
-        {
-            return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
-        }
-
-        #region Internal Settings
-        public void InitInternals()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-
-            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
-            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
-
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
-            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
-
-            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
-            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
-
-            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
-            if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
-
-            var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, _minerBenchmarkTimeSettings);
-            if (fileMinerBenchmarkTimeSetting != null) _minerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
-        }
-
-        private static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
-        {
-            GeneralOptions = new List<MinerOption>
-            {
-                /// <summary>
-                /// Mining intensity (0 - 6). (default: 6)
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "cryptodredge_intensity",
-                    ShortName = "-i",
-                    LongName = "--intensity",
-                    DefaultValue = "6",
-                    Delimiter = ","
-                },
-                /// <summary>
-                /// Set process priority in the range 0 (low) to 5 (high). (default: 3)
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID  = "cryptodredge_cpu_priority",
-                    ShortName = "--cpu-priority",
-                    DefaultValue = "3"
-                }
-            }
-        };
-
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
-        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
-        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
-        {
-            GeneralTimeout =  _defaultTimeout,
-        };
-        protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
-        #endregion Internal Settings
-
-        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
@@ -142,21 +73,10 @@ namespace CryptoDredge
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "CryptoDredge.exe" });
         }
 
-        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             //no new version available
             return false;
         }
-
-        #region IGetApiMaxTimeoutV2
-        public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
-
-
-        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 5, 0);
-        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
-        {
-            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
-        }
-        #endregion IGetApiMaxTimeoutV2
     }
 }

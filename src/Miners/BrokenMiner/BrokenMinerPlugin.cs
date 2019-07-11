@@ -15,7 +15,7 @@ using System.Text;
 
 namespace BrokenMiner
 {
-    public class BrokenMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class BrokenMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
     {
 
         Version IMinerPlugin.Version => GetValueOrErrorSettings.GetValueOrError("Version", new Version(1,0));
@@ -33,7 +33,8 @@ namespace BrokenMiner
 
         IMiner IMinerPlugin.CreateMiner() => GetValueOrErrorSettings.GetValueOrError("CreateMiner", new BrokenMiner());
 
-        TimeSpan IGetApiMaxTimeout.GetApiMaxTimeout() => GetValueOrErrorSettings.GetValueOrError("GetApiMaxTimeout", new TimeSpan(1, 10, 5));
+        TimeSpan IGetApiMaxTimeoutV2.GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs) => GetValueOrErrorSettings.GetValueOrError("GetApiMaxTimeout", new TimeSpan(1, 10, 5));
+        bool IGetApiMaxTimeoutV2.IsGetApiMaxTimeoutEnabled => GetValueOrErrorSettings.GetValueOrError("IsGetApiMaxTimeoutEnabled", true);
 
         Dictionary<BaseDevice, IReadOnlyList<Algorithm>> IMinerPlugin.GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {

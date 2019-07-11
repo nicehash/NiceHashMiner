@@ -157,8 +157,8 @@ namespace TTMiner
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(_orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(_orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var generalParams = ExtraLaunchParametersParser.Parse(_orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(_orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

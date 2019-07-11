@@ -197,8 +197,8 @@ namespace GMinerPlugin
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(minignPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(minignPairs, MinerOptionsPackage.TemperatureOptions);
+                var generalParams = ExtraLaunchParametersParser.Parse(minignPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(minignPairs, MinerOptionsPackage.TemperatureOptions);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

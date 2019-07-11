@@ -90,15 +90,15 @@ namespace MinerPluginToolkitV1.SgminerCommon
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
             else // TODO this one is temp???
             {
                 // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, DefaultMinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, DefaultMinerOptionsPackage.TemperatureOptions);
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, DefaultMinerOptionsPackage.GeneralOptions);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, DefaultMinerOptionsPackage.TemperatureOptions);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

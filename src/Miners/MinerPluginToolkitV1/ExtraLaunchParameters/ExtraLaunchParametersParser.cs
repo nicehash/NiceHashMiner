@@ -9,7 +9,7 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
     /// <summary>
     /// This class is used to Parse Extra Launch Parameters
     /// </summary>
-    public static class Parser
+    public static class ExtraLaunchParametersParser
     {
         /// <summary>
         /// ParsedMinerOption is used to set parsed value to MinerOption <see cref="MinerOption"/>
