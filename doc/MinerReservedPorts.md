@@ -3,7 +3,7 @@
 Located inside `miner_plugins/somePlugin/internals`, the **MinerReserverPorts.json** file allows user to reserve specific ports for each algorithm.
 
 The file consists of `use_user_settings` and `algorithm_reserved_ports` sections.
-The following section is a Dictionary with **algorithm name** (string) as a key and **sequence of ports** (List of ints) as value.
+The latest section is a Dictionary with **algorithm name** (string) as a key and **sequence of ports** (List of ints) as value.
 
 Example file: 
 ```JSON
@@ -16,5 +16,5 @@ Example file:
 }
 ```
 
-Within the example file we reserved port [4001] for Beam and [4005, 4010] ports for CuckooCycle algorithm. You can set more than one port for each algorithm.<br>
-To enable changes inside this file, change `use_user_settings` to true.
+Within the `algorithm_reserved_ports` we reserved port [4001] for Beam and [4005, 4010] ports for CuckooCycle algorithm. You can set more than one port for each algorithm.<br>
+To enable changes inside this file, set `use_user_settings` to true.

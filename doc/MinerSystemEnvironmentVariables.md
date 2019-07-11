@@ -24,4 +24,4 @@ Example file for Xmr-Stak:
 ```
 
 Within the `custom_system_environment_variables` you should set wanted custom variables.<br>
-To enable changes inside this file, change `use_user_settings` to true.
+To enable changes inside this file, set `use_user_settings` to true.
