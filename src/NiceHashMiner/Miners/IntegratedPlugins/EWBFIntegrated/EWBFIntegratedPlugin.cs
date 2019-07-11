@@ -4,8 +4,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 {
     class EWBFIntegratedPlugin : EWBF.EwbfPlugin, IntegratedPlugin
     {
-        public EWBFIntegratedPlugin() : base("Ewbf")
-        { }
+        public override string PluginUUID => "Ewbf";
 
         public bool Is3rdParty => true;
 

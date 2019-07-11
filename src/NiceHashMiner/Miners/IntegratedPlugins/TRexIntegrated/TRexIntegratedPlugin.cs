@@ -4,9 +4,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 {
     public class TRexIntegratedPlugin : TRex.TRexPlugin, IntegratedPlugin
     {
-
-        public TRexIntegratedPlugin() : base("TRex")
-        { }
+        public override string PluginUUID => "TRex";
 
         public bool Is3rdParty => true;
 

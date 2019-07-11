@@ -1,85 +1,39 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
+﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
-using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace WildRig
 {
-    public class WildRigPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IDevicesCrossReference, IReBenchmarkChecker, IGetApiMaxTimeoutV2
+    public class WildRigPlugin : PluginBase, IDevicesCrossReference
     {
         public WildRigPlugin()
         {
-            _pluginUUID = "2edd8080-9cb6-11e9-a6b8-09e27549d5bb";
-        }
-        public WildRigPlugin(string pluginUUID = "2edd8080-9cb6-11e9-a6b8-09e27549d5bb")
-        {
-            _pluginUUID = pluginUUID;
+            // set default internal settings
+            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
         }
 
-        private readonly string _pluginUUID;
+        public override string PluginUUID => "2edd8080-9cb6-11e9-a6b8-09e27549d5bb";
 
-        public string PluginUUID => _pluginUUID;
+        public override Version Version => new Version(1, 4);
 
-        public Version Version => new Version(1, 3);
+        public override string Name => "WildRig";
 
-        public string Name => "WildRig";
-
-        public string Author => "domen.kirnkrefl@nicehash.com";
+        public override string Author => "domen.kirnkrefl@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
-        public bool CanGroup(MiningPair a, MiningPair b)
+        protected override MinerBase CreateMinerBase()
         {
-            return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
+            return new WildRig(PluginUUID, _mappedIDs);
         }
 
-        public IEnumerable<string> CheckBinaryPackageMissingFiles()
-        {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "wildrig.exe" });
-        }
-
-        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
-        {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--print-devices");
-            var mappedDevs = DevicesListParser.ParseWildRigOutput(output, devices.ToList());
-
-            foreach (var kvp in mappedDevs)
-            {
-                var uuid = kvp.Key;
-                var indexID = kvp.Value;
-                _mappedIDs[uuid] = indexID;
-            }
-        }
-
-        public IMiner CreateMiner()
-        {
-            return new WildRig(PluginUUID, _mappedIDs)
-            {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts,
-                MinerBenchmarkTimeSettings = _minerBenchmarkTimeSettings
-            };
-        }
-
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
+        public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
@@ -111,148 +65,34 @@ namespace WildRig
             return filteredAlgorithms;
         }
 
-        #region Internal Settings
-        public void InitInternals()
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-
-            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
-            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
-
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
-            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
-
-            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
-            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
-
-            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
-            if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
-
-            var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, _minerBenchmarkTimeSettings);
-            if (fileMinerBenchmarkTimeSetting != null) _minerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "wildrig.exe" });
         }
 
-        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage {
-            GeneralOptions = new List<MinerOption>
-            {
-                /// <summary>
-                /// strategy of feeding videocards with job (default: 0)
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_strategy",
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    LongName = "--strategy=",
-                    DefaultValue = "0"
-                },
-                /// <summary>
-                /// list of launch config, intensity and worksize
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_launch",
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    LongName = "--opencl-launch=",
-                },
-                /// <summary>
-                /// affine GPU threads to a CPU
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_affinity",
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    LongName = "--opencl-affinity=",
-                },
-                /// <summary>
-                /// amount of threads per OpenCL device
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_threads",
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    LongName = "--opencl-threads=",
-                },
-                /// <summary>
-                /// log all output to a file
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_log",
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ShortName = "-l",
-                    LongName = "--log-file=",
-                },
-                /// <summary>
-                /// print hashrate report every N seconds
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_printTime",
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    LongName = "--print-time=",
-                },
-                /// <summary>
-                /// print hashrate for each videocard
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_printFull",
-                    Type = MinerOptionType.OptionIsParameter,
-                    LongName = "--print-full",
-                },
-                /// <summary>
-                /// print additional statistics
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_printStatistics",
-                    Type = MinerOptionType.OptionIsParameter,
-                    LongName = "--print-statistics",
-                },
-                /// <summary>
-                /// print debug information
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_printDebug",
-                    Type = MinerOptionType.OptionIsParameter,
-                    LongName = "--print-debug",
-                },
-                /// <summary>
-                /// donate level, default 2% (2 minutes in 100 minutes)
-                /// </summary>
-                new MinerOption
-                {
-                    ID = "wildrig_fee",
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    LongName = "--donate-level=",
-                    DefaultValue = "2",
-                },
-            }
-        };
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
-        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
-        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            GeneralTimeout = _defaultTimeout,
-        };
-        protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
-        #endregion Internal Settings
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--print-devices");
+            var mappedDevs = DevicesListParser.ParseWildRigOutput(output, devices.ToList());
 
-        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                _mappedIDs[uuid] = indexID;
+            }
+        }
+
+        public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             // nothing new
             return false;
         }
-
-        #region IGetApiMaxTimeoutV2
-        public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
-
-        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 5, 0);
-        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
-        {
-            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
-        }
-        #endregion IGetApiMaxTimeoutV2
     }
 }
