@@ -119,7 +119,7 @@
               Grid.ColumnSpan="3"
               Margin="10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="200" />
+                <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -129,8 +129,12 @@
 
             <GroupBox Header="Benchmark progress status:" Grid.RowSpan="2">
                 <StackPanel Orientation="Horizontal">
-                    <Label>Benchmark step (0/24)</Label>
-                    <ProgressBar Width="200"></ProgressBar>
+                    <TextBlock Margin="5,5,0,5">Benchmark step (</TextBlock>
+                    <TextBlock Margin="0,5">0</TextBlock>
+                    <TextBlock Margin="0,5">/</TextBlock>
+                    <TextBlock Margin="0,5">20</TextBlock>
+                    <TextBlock Margin="0,5,5,5">)</TextBlock>
+                    <ProgressBar Width="220" />
                 </StackPanel>
             </GroupBox>
 

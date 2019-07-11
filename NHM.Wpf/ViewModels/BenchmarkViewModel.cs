@@ -9,6 +9,7 @@ namespace NHM.Wpf.ViewModels
 {
     public class BenchmarkViewModel : BaseVM
     {
+        #region Fake stuff
         public class FakeDevice : INotifyPropertyChanged
         {
             private bool _enabled;
@@ -100,6 +101,25 @@ namespace NHM.Wpf.ViewModels
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
+        
+        public void RefreshData()
+        {
+            Devices.Add(new FakeDevice("CPU", new List<FakeAlgo>
+            {
+                new FakeAlgo("CPU algo 1"),
+                new FakeAlgo("Cpu algo 2")
+            }));
+            Devices.Add(new FakeDevice("GPU", new List<FakeAlgo>
+            {
+                new FakeAlgo("GPU algo 1"),
+                new FakeAlgo("GPu algo 2"),
+                new FakeAlgo("gpu algo 3") { IsDual = true }
+            }));
+        }
+
+        #endregion
+
+        #region ListView selection
 
         public ObservableCollection<FakeDevice> Devices { get; }
         public ObservableCollection<FakeAlgo> SelectedAlgos { get; }
@@ -179,26 +199,13 @@ namespace NHM.Wpf.ViewModels
                 OnPropertyChanged(nameof(AlgosEnabled));
         }
 
+        #endregion
+
         public BenchmarkViewModel()
         {
             Devices = new ObservableCollection<FakeDevice>();
             SelectedAlgos = new ObservableCollection<FakeAlgo>();
             RefreshData();
-        }
-
-        public void RefreshData()
-        {
-            Devices.Add(new FakeDevice("CPU", new List<FakeAlgo>
-            {
-                new FakeAlgo("CPU algo 1"),
-                new FakeAlgo("Cpu algo 2")
-            }));
-            Devices.Add(new FakeDevice("GPU", new List<FakeAlgo>
-            {
-                new FakeAlgo("GPU algo 1"),
-                new FakeAlgo("GPu algo 2"),
-                new FakeAlgo("gpu algo 3") { IsDual = true }
-            }));
         }
     }
 }
