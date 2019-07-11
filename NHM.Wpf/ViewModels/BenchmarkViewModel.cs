@@ -41,20 +41,63 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        public class FakeAlgo
+        public class FakeAlgo : INotifyPropertyChanged
         {
             private static readonly Random R = new Random();
 
             public string Name { get; }
-            public bool Enabled { get; set; }
-            public double Hashrate { get; set; } = R.NextDouble();
-            public double SecondaryHashrate { get; set; } = R.NextDouble();
+            private bool _enabled;
+
+            public bool Enabled
+            {
+                get => _enabled;
+                set
+                {
+                    _enabled = value;
+                    PropertyChanged1();
+                }
+            }
+            private double _hashrate = R.NextDouble();
+            private double _secondaryHashrate = R.NextDouble();
+
+            public double Hashrate
+            {
+                get => _hashrate;
+                set
+                {
+                    _hashrate = value;
+                    PropertyChanged1();
+                    PropertyChanged1(nameof(Profit));
+                }
+            }
+
+            public double SecondaryHashrate
+            {
+                get => _secondaryHashrate;
+                set
+                {
+                    _secondaryHashrate = value;
+                    PropertyChanged1();
+                }
+            }
+
             public double Paying { get; set; } = R.NextDouble();
-            public double Profit { get; set; } = R.NextDouble();
+            public double Profit => Paying * Hashrate;
+
+            public double Power { get; set; }
+            public bool IsDual { get; set; }
 
             public FakeAlgo(string name)
             {
                 Name = name;
+            }
+
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            [NotifyPropertyChangedInvocator]
+            protected virtual void PropertyChanged1([CallerMemberName] string propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 
@@ -65,6 +108,8 @@ namespace NHM.Wpf.ViewModels
         /// True iff a device is selected and enabled
         /// </summary>
         public bool AlgosEnabled => SelectedDev?.Enabled ?? false;
+
+        public bool SideBarEnabled => SelectedAlgo?.Enabled ?? false;
 
         private FakeDevice _selectedDev;
         public FakeDevice SelectedDev
@@ -81,6 +126,9 @@ namespace NHM.Wpf.ViewModels
                 _selectedDev = value;
                 SelectedAlgos.Clear();
 
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(AlgosEnabled));
+
                 if (_selectedDev == null) return;
 
                 // Add new handler
@@ -90,9 +138,6 @@ namespace NHM.Wpf.ViewModels
                 {
                     SelectedAlgos.Add(algo);
                 }
-
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(AlgosEnabled));
             }
         }
 
@@ -105,9 +150,26 @@ namespace NHM.Wpf.ViewModels
             {
                 if (value == _selectedAlgo) return;
 
+                // Remove old handler
+                if (_selectedAlgo != null)
+                    _selectedAlgo.PropertyChanged -= SelectedAlgoOnPropertyChanged;
+
                 _selectedAlgo = value;
+
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(SideBarEnabled));
+
+                if (_selectedAlgo == null) return;
+
+                // Add new handler
+                _selectedDev.PropertyChanged += SelectedAlgoOnPropertyChanged;
             }
+        }
+
+        private void SelectedAlgoOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(_selectedAlgo.Enabled))
+                OnPropertyChanged(nameof(SideBarEnabled));
         }
 
         private void SelectedDevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -135,7 +197,7 @@ namespace NHM.Wpf.ViewModels
             {
                 new FakeAlgo("GPU algo 1"),
                 new FakeAlgo("GPu algo 2"),
-                new FakeAlgo("gpu algo 3")
+                new FakeAlgo("gpu algo 3") { IsDual = true }
             }));
         }
     }

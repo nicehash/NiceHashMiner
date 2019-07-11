@@ -66,19 +66,20 @@
                   Grid.Row="0"
                   Grid.RowSpan="2"
                   ExpandDirection="Right">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" IsEnabled="{Binding SideBarEnabled}">
                 <StackPanel Width="210">
                     <control:SettingsContainer Title="Benchmark Speed (H/s):"
                                                Description="Fine tune algorithm ratios by manually settings benchmark speeds for each algorithm.">
-                        <TextBox />
+                        <TextBox Text="{Binding SelectedAlgo.Hashrate}" />
                     </control:SettingsContainer>
                     <control:SettingsContainer Title="Secondary Benchmark Speed (H/s):"
-                                               Description="Speed for the secondary algorithm when using dual mining.">
-                        <TextBox />
+                                               Description="Speed for the secondary algorithm when using dual mining."
+                                               IsEnabled="{Binding SelectedAlgo.IsDual}">
+                        <TextBox Text="{Binding SelectedAlgo.SecondaryHashrate}" />
                     </control:SettingsContainer>
                     <control:SettingsContainer Title="Power Usage (W):"
                                                Description="The power used by this algorithm in Watts\nAlgorithm profits will deduct power costs when this and electricity cost are above 0.">
-                        <TextBox />
+                        <TextBox Text="{Binding SelectedAlgo.Power}" />
                     </control:SettingsContainer>
                     <control:SettingsContainer Title="Extra Launch Parameters:"
                                                Description="Additional launch parameters when launching miner and this algorithm.">
