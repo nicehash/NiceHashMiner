@@ -31,5 +31,21 @@ namespace NHM.Wpf.Windows
             else if (e.NewValue is SettingsBaseVM svm)
                 _vm.SelectedPageVM = svm;
         }
+
+        private void CloseButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _vm.Revert();
+            Close();
+        }
+
+        private void SaveButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void DefaultsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _vm.SetDefaults();
+        }
     }
 }

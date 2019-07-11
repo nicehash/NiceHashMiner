@@ -32,5 +32,15 @@ namespace NHM.Wpf.ViewModels.Settings
 
             SelectedPageVM = PageVMs[0];
         }
+
+        public void SetDefaults()
+        {
+            // TODO
+        }
+
+        public void Revert()
+        {
+            // TODO
+        }
     }
 }
