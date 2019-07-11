@@ -36,28 +36,23 @@ namespace CryptoDredge
 
             foreach (var gpu in cudaGpus)
             {
-                var algos = GetSupportedAlgorithms(gpu).ToList();
+                var algos = GetSupportedAlgorithms(gpu);
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
 
             return supported;
         }
 
-        // TODO add to filters
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
+        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            const ulong minMem = 2UL << 30;
-            const ulong minMTPMem = 5UL << 30;
-
-            if (dev.GpuRam >= minMem)
+            var algorithms = new List<Algorithm>
             {
-                yield return new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3);
-                yield return new Algorithm(PluginUUID, AlgorithmType.X16R);
-            }
-            if(dev.GpuRam >= minMTPMem)
-            {
-                yield return new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false };
-            }
+                new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
+                new Algorithm(PluginUUID, AlgorithmType.X16R),
+                new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false }
+            };
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

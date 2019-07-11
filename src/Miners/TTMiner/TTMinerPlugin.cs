@@ -46,12 +46,15 @@ namespace TTMiner
             return supported;
         }
 
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
+        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            return new List<Algorithm>{
+            var algorithms = new List<Algorithm>
+            {
                 new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
             };
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

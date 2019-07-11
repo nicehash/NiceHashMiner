@@ -53,7 +53,6 @@ namespace EWBF
 
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            //return algorithms;
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.ZHash),

@@ -43,9 +43,14 @@ namespace ZEnemy
             return supported;
         }
 
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
+        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            yield return new Algorithm(PluginUUID, AlgorithmType.X16R);
+            var algorithms = new List<Algorithm>
+            {
+                new Algorithm(PluginUUID, AlgorithmType.X16R)
+            };
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

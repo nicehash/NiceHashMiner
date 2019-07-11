@@ -41,11 +41,16 @@ namespace TRex
             return supported;
         }
 
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(CUDADevice dev)
+        IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            yield return new Algorithm(PluginUUID, AlgorithmType.Lyra2Z);
-            yield return new Algorithm(PluginUUID, AlgorithmType.X16R);
-            yield return new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false };
+            var algorithms = new List<Algorithm>
+            {
+                new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
+                new Algorithm(PluginUUID, AlgorithmType.X16R),
+                new Algorithm(PluginUUID, AlgorithmType.MTP) { Enabled = false },
+            };
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
         protected override MinerBase CreateMinerBase()

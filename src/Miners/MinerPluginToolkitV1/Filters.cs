@@ -1,10 +1,7 @@
 ﻿using NHM.Common.Algorithm;
 using NHM.Common.Enums;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinerPluginToolkitV1
 {
@@ -13,6 +10,7 @@ namespace MinerPluginToolkitV1
     /// </summary>
     public static class Filters
     {
+        // WARNING THESE FILTERS ARE NOT THE SAME AS RUN-TIME RAM REQUIREMENTS
         //https://investoon.com/tools/dag_size
         public const ulong MinDaggerHashimotoMemory = 3UL << 30; // 3GB
         public const ulong MinZHashMemory = 1879047230; // 1.75GB
@@ -20,6 +18,10 @@ namespace MinerPluginToolkitV1
         public const ulong MinGrinCuckaroo29Memory = 6012951136; // 5.6GB
         public const ulong MinGrin31Mem = 8UL << 30; // 8GB
         public const ulong MinCuckooCycleMem = 6UL << 30; // 6GB
+        public const ulong MinLyra2REv3Mem = 2UL << 30; // 2GB
+        public const ulong MinX16RMem = 2UL << 30; // 2GB
+        public const ulong MinMTPMem = 5UL << 30; // 5GB
+
 
         public static readonly Dictionary<AlgorithmType, ulong> minMemoryPerAlgo = new Dictionary<AlgorithmType, ulong>
         {
@@ -29,6 +31,9 @@ namespace MinerPluginToolkitV1
             { AlgorithmType.GrinCuckaroo29, MinGrinCuckaroo29Memory },
             { AlgorithmType.GrinCuckatoo31, MinGrin31Mem },
             { AlgorithmType.CuckooCycle, MinCuckooCycleMem },
+            { AlgorithmType.Lyra2REv3, MinLyra2REv3Mem },
+            { AlgorithmType.X16R, MinX16RMem },
+            { AlgorithmType.MTP, MinMTPMem },
         };
 
         public static List<AlgorithmType> InsufficientDeviceMemoryAlgorithnms(ulong Ram, IEnumerable<AlgorithmType> algos)
