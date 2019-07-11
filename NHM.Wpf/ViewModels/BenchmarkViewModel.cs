@@ -61,20 +61,6 @@ namespace NHM.Wpf.ViewModels
         public ObservableCollection<FakeDevice> Devices { get; }
         public ObservableCollection<FakeAlgo> SelectedAlgos { get; }
 
-        private int _selectedIndex = -1;
-        public int SelectedIndex
-        {
-            get => _selectedIndex;
-            set
-            {
-                _selectedIndex = value;
-
-                SelectedDev = value >= 0 ? Devices[value] : null;
-
-                OnPropertyChanged();
-            }
-        }
-
         /// <summary>
         /// True iff a device is selected and enabled
         /// </summary>
@@ -107,6 +93,20 @@ namespace NHM.Wpf.ViewModels
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(AlgosEnabled));
+            }
+        }
+
+        private FakeAlgo _selectedAlgo;
+
+        public FakeAlgo SelectedAlgo
+        {
+            get => _selectedAlgo;
+            set
+            {
+                if (value == _selectedAlgo) return;
+
+                _selectedAlgo = value;
+                OnPropertyChanged();
             }
         }
 

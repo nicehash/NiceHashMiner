@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NHM.Wpf"
         xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
+        xmlns:control="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
         mc:Ignorable="d"
         Title="BenchmarkWindow" Height="450" Width="800">
     <Window.DataContext>
@@ -15,7 +16,14 @@
             <RowDefinition/>
             <RowDefinition Height="2*"/>
         </Grid.RowDefinitions>
-        <ListView Margin="10" ItemsSource="{Binding Devices}" SelectedIndex="{Binding SelectedIndex}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <ListView Margin="10" 
+                  ItemsSource="{Binding Devices}" 
+                  SelectedItem="{Binding SelectedDev}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Enabled">
@@ -29,7 +37,13 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ListView Margin="10,10,10,10.5" Grid.Row="1" ItemsSource="{Binding SelectedAlgos}" IsEnabled="{Binding AlgosEnabled, Mode=OneWay}">
+
+        <ListView Margin="10,10,10,10.5" 
+                  Grid.Row="1" 
+                  Grid.Column="0"
+                  ItemsSource="{Binding SelectedAlgos}" 
+                  SelectedItem="{Binding SelectedAlgo}" 
+                  IsEnabled="{Binding AlgosEnabled, Mode=OneWay}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Enabled">
@@ -48,5 +62,30 @@
             </ListView.View>
         </ListView>
 
+        <Expander Grid.Column="1"
+                  Grid.Row="0"
+                  Grid.RowSpan="2"
+                  ExpandDirection="Right">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Width="210">
+                    <control:SettingsContainer Title="Benchmark Speed (H/s):"
+                                               Description="Fine tune algorithm ratios by manually settings benchmark speeds for each algorithm.">
+                        <TextBox />
+                    </control:SettingsContainer>
+                    <control:SettingsContainer Title="Secondary Benchmark Speed (H/s):"
+                                               Description="Speed for the secondary algorithm when using dual mining.">
+                        <TextBox />
+                    </control:SettingsContainer>
+                    <control:SettingsContainer Title="Power Usage (W):"
+                                               Description="The power used by this algorithm in Watts\nAlgorithm profits will deduct power costs when this and electricity cost are above 0.">
+                        <TextBox />
+                    </control:SettingsContainer>
+                    <control:SettingsContainer Title="Extra Launch Parameters:"
+                                               Description="Additional launch parameters when launching miner and this algorithm.">
+                        <TextBox TextWrapping="Wrap" />
+                    </control:SettingsContainer>
+                </StackPanel>
+            </ScrollViewer>
+        </Expander>
     </Grid>
 </Window>
