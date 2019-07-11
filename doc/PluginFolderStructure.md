@@ -1,7 +1,7 @@
 # Plugin Folder Structure
 
-After first start of **NiceHash Miner (v1.9.1.5 and up)** there will be a **miner_plugins** folder created inside which there will be all supported plugins.<br>
-In each plugin folder there will be **bins** and **internals** folders.<br>
+After first start of **NiceHash Miner (v1.9.1.5 and up)** there will be a **miner_plugins** folder created inside which all supported plugins will be located.<br>
+In each plugin folder there will be **bins** and **internals** folder.<br>
 
 ```
 ├───miner_plugins
