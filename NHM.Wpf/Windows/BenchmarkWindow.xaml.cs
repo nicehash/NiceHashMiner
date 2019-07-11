@@ -12,5 +12,10 @@ namespace NHM.Wpf.Windows
         {
             InitializeComponent();
         }
+
+        private void CloseButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

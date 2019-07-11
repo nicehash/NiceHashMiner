@@ -116,19 +116,26 @@
 
         <Grid Grid.Row="3"
               Grid.Column="0"
-              Grid.ColumnSpan="3">
+              Grid.ColumnSpan="3"
+              Margin="10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MinWidth="200" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" Margin="10">
-                <Label>Benchmark step (0/24)</Label>
-                <ProgressBar Width="200"></ProgressBar>
-            </StackPanel>
+            <GroupBox Header="Benchmark progress status:" Grid.RowSpan="2">
+                <StackPanel Orientation="Horizontal">
+                    <Label>Benchmark step (0/24)</Label>
+                    <ProgressBar Width="200"></ProgressBar>
+                </StackPanel>
+            </GroupBox>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="10">
-                <Button Width="80" Margin="10,0">Close</Button>
+            <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0">
+                <Button Width="80" Margin="10,0" Click="CloseButton_OnClick">Close</Button>
                 <Button Width="80">Start</Button>
             </StackPanel>
         </Grid>
