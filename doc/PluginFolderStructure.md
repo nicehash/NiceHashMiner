@@ -1,0 +1,39 @@
+# Plugin Folder Structure
+
+After first start of **NiceHash Miner (v1.9.1.5 and up)** there will be a **miner_plugins** folder created inside which there will be all supported plugins.<br>
+In each plugin folder there will be **bins** and **internals** folders.<br>
+
+```
+├───miner_plugins
+│   ├───XmrStak
+│   │   ├───bins
+│   │   └───internals
+```
+
+- Bins folder contains downloaded miner files
+- Internals folder contains Internal settings
+
+## Internal settings
+
+Internal settings are configs implemented by **MinerPluginToolkitV1**.<br>
+Currently following settings are implemented:
+- [Miner System Environment Variables](MinerSystemEnvironmentVariables.md)
+- [Miner Options Package](ExtraLaunchParameters.md)
+- [Miner Reserved Ports](MinerReservedPorts.md)
+- [Miner Api Max Timeout Setting](MinerApiMaxTimeoutSettings.md)
+- [Miner Benchmark Time Settings](MinerBenchmarkTimeSettings.md)
+
+Each of them resides in its own *JSON* file.
+
+```
+├───internals
+|        MinerApiMaxTimeoutSetting.json
+|        MinerBenchmarkTimeSettings.json
+|        MinerOptionsPackage.json
+|        MinerReservedPorts.json
+|        MinerSystemEnvironmentVariables.json
+```
+
+All of them are allowed to be modified by users for more personalized settings.
+
+*Note:* Change of the settings won't do anything while the NHM is running. You have to stop the NHM, change the files and then start it, for settings to take effect.
