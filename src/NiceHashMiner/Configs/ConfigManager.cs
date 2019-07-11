@@ -77,7 +77,7 @@ namespace NiceHashMiner.Configs
             TryMigrate();
             // init defaults
             GeneralConfig.SetDefaults();
-            GeneralConfig.hwid = SystemSpecs.GetCpuID();
+            GeneralConfig.hwid = ApplicationStateManager.RigID;
             // load file if it exist
             var fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);
             if (fromFile != null)

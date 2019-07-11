@@ -104,24 +104,6 @@ namespace NiceHashMiner.Utils
             }
         }
 
-        public static string GetCpuID()
-        {
-            var serial = "N/A";
-            try
-            {
-                using (var searcher = new ManagementObjectSearcher("Select ProcessorID from Win32_processor"))
-                using (var query = searcher.Get())
-                {
-                    foreach (var item in query)
-                    {
-                        serial = item.GetPropertyValue("ProcessorID").ToString();
-                    }
-                }
-            }
-            catch { }
-            return serial;
-        }
-
         public static bool IsWmiEnabled()
         {
             try
