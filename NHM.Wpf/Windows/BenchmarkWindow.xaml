@@ -15,9 +15,12 @@
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="2*"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
 
@@ -38,9 +41,10 @@
             </ListView.View>
         </ListView>
 
-        <ListView Margin="10,10,10,10.5" 
+        <ListView Margin="10" 
                   Grid.Row="1" 
                   Grid.Column="0"
+                  Grid.ColumnSpan="2"
                   ItemsSource="{Binding SelectedAlgos}" 
                   SelectedItem="{Binding SelectedAlgo}" 
                   IsEnabled="{Binding AlgosEnabled, Mode=OneWay}">
@@ -62,10 +66,17 @@
             </ListView.View>
         </ListView>
 
-        <Expander Grid.Column="1"
+        <StackPanel Grid.Column="1" Grid.Row="0" Margin="10">
+            <RadioButton>Quick (can be inaccurate)</RadioButton>
+            <RadioButton IsChecked="True">Standard</RadioButton>
+            <RadioButton>Precise (will take longer)</RadioButton>
+        </StackPanel>
+
+        <Expander Grid.Column="2"
                   Grid.Row="0"
-                  Grid.RowSpan="2"
-                  ExpandDirection="Right">
+                  Grid.RowSpan="3"
+                  ExpandDirection="Right"
+                  Margin="0">
             <ScrollViewer VerticalScrollBarVisibility="Auto" IsEnabled="{Binding SideBarEnabled}">
                 <StackPanel Width="210">
                     <control:SettingsContainer Title="Benchmark Speed (H/s):"
@@ -88,5 +99,38 @@
                 </StackPanel>
             </ScrollViewer>
         </Expander>
+
+        <Grid Grid.Row="2"
+              Grid.Column="0"
+              Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <StackPanel Margin="10">
+                <RadioButton IsChecked="True">Benchmark Selected Unbenchmarked Algorithms</RadioButton>
+                <RadioButton>Benchmark All Selected Algorithms</RadioButton>
+            </StackPanel>
+            <CheckBox Grid.Column="1" Margin="0,10,0,0">Start mining after benchmark</CheckBox>
+        </Grid>
+
+        <Grid Grid.Row="3"
+              Grid.Column="0"
+              Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MinWidth="200" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <Label>Benchmark step (0/24)</Label>
+                <ProgressBar Width="200"></ProgressBar>
+            </StackPanel>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="10">
+                <Button Width="80" Margin="10,0">Close</Button>
+                <Button Width="80">Start</Button>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>
