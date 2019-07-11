@@ -162,7 +162,7 @@ namespace NHM.Wpf.ViewModels
                 if (_selectedAlgo == null) return;
 
                 // Add new handler
-                _selectedDev.PropertyChanged += SelectedAlgoOnPropertyChanged;
+                _selectedAlgo.PropertyChanged += SelectedAlgoOnPropertyChanged;
             }
         }
 
