@@ -1,10 +1,8 @@
 # Miner System Environment Variables
 
-Located inside `miner_plugins/somePlugin/internals`, the **MinerSystemEnvironmentVariables.json** file allows user to set **default** and **custom** system environment variables.
+Located inside `miner_plugins/somePlugin/internals`, the **MinerSystemEnvironmentVariables.json** file allows user to set system environment variables.
 
 The file consists of `use_user_settings`, `default_system_environment_variables` and `custom_system_environment_variables` sections.
-
-Both `system_environment_variables` sections use same notation: `"name": "value"`.
 
 Example file for Xmr-Stak: 
 ```JSON
@@ -17,11 +15,10 @@ Example file for Xmr-Stak:
     "GPU_MAX_HEAP_SIZE": "100",
     "GPU_FORCE_64BIT_PTR": "1"
   },
-  "custom_system_environment_variables": {
-    "CUSTOM_SETTING_NAME": "55",
-  }
+  "custom_system_environment_variables": null
 }
 ```
+- `default_system_environment_variables` sections holds system variables set by the plugin and can be changed
+- `custom_system_environment_variables` sections is not yet implemented.
 
-Within the `custom_system_environment_variables` you should set wanted custom variables.<br>
 To enable changes inside this file, set `use_user_settings` to true.
