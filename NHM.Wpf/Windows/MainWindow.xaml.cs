@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using NHM.Wpf.Windows.Plugins;
 
 namespace NHM.Wpf.Windows
 {
@@ -38,6 +39,12 @@ namespace NHM.Wpf.Windows
         {
             var settings = new SettingsWindow();
             settings.ShowDialog();
+        }
+
+        private void PluginButton_Click(object sender, RoutedEventArgs e)
+        {
+            var plugin = new PluginWindow();
+            plugin.ShowDialog();
         }
     }
 

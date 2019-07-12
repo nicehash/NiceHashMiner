@@ -59,6 +59,7 @@
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
     <Compile Include="ViewModels\Converters\NulBoolToVisibilityConverter.cs" />
+    <Compile Include="ViewModels\PluginVM.cs" />
     <Compile Include="ViewModels\Settings\AdvancedGeneral.cs" />
     <Compile Include="ViewModels\Settings\AdvancedMiningVM.cs" />
     <Compile Include="ViewModels\Settings\AdvancedSwitchingVM.cs" />
@@ -73,6 +74,12 @@
     </Compile>
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Plugins\PluginEntry.xaml.cs">
+      <DependentUpon>PluginEntry.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\Plugins\PluginWindow.xaml.cs">
+      <DependentUpon>PluginWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Settings\Controls\SettingContainer.xaml.cs">
       <DependentUpon>SettingContainer.xaml</DependentUpon>
@@ -110,6 +117,14 @@
     <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Plugins\PluginEntry.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\Plugins\PluginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Settings\Controls\SettingContainer.xaml">
       <SubType>Designer</SubType>

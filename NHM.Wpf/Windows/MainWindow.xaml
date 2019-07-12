@@ -37,7 +37,7 @@
         <Button Content="Settings" Margin="0,149,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="SettingsButton_Click"/>
         <Button Content="Start All" Margin="0,175,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
         <Button Content="Stop All" Margin="0,199,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
-        <Button Content="Plugins" Margin="0,223,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
+        <Button Content="Plugins" Margin="0,223,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" Click="PluginButton_Click"/>
         <Button Content="Help" Margin="0,247,10.333,0" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
         <StatusBar Height="21" VerticalAlignment="Bottom">
             <StatusBarItem>
