@@ -86,9 +86,10 @@ namespace TeamRedMiner
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithSingleParameter,
+                    Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "teamRedMiner_cnConfig",
                     ShortName = "--cn_config=",
+                    Delimiter = ","
                 },
                 /// <summary>
                 /// Disables cpu verification of found shares before they are submitted to the pool.
