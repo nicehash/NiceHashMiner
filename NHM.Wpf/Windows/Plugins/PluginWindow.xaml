@@ -18,7 +18,7 @@
                 <local:PluginList DetailsClick="PluginEntry_OnDetailsClick" />
             </DataTemplate>
             <DataTemplate DataType="{x:Type plugins:PluginDetailVM}">
-                <local:PluginDetail />
+                <local:PluginDetail BackClick="PluginDetail_OnBackClick" />
             </DataTemplate>
         </Grid.Resources>
 

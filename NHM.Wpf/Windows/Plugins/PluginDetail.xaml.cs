@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NHM.Wpf.ViewModels.Plugins;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace NHM.Wpf.Windows.Plugins
 {
@@ -20,9 +10,22 @@ namespace NHM.Wpf.Windows.Plugins
     /// </summary>
     public partial class PluginDetail : UserControl
     {
+        public event EventHandler<RoutedEventArgs> BackClick;
+
         public PluginDetail()
         {
             InitializeComponent();
+        }
+
+        private void BackButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            BackClick?.Invoke(this, e);
+        }
+
+        private async void InstallButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is PluginDetailVM vm)
+                await vm.InstallPlugin();
         }
     }
 }

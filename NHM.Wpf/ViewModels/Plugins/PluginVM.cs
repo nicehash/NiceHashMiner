@@ -33,5 +33,10 @@ namespace NHM.Wpf.ViewModels.Plugins
         {
             CurrentPage = new PluginDetailVM(plugin);
         }
+
+        public void SetToList()
+        {
+            CurrentPage = _listVM;
+        }
     }
 }

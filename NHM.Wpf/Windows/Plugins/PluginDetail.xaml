@@ -4,9 +4,50 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Windows.Plugins"
+             xmlns:plugins="clr-namespace:NHM.Wpf.ViewModels.Plugins"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=plugins:PluginDetailVM}">
     <Grid>
-            
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <Label Content="{Binding Plugin.PluginName}" />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Plugin Version: </TextBlock>
+                <TextBlock Text="{Binding Plugin.PluginVersion}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Plugin Author:</TextBlock>
+                <TextBlock Text="{Binding Plugin.PluginAuthor}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Plugin Description:</TextBlock>
+                <TextBlock Text="{Binding Plugin.PluginDescription}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Supported Devices:</TextBlock>
+                <TextBlock Text="{Binding SupportedDeviceString}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock>Supported Devices Algorithms:</TextBlock>
+                <TextBlock Text="{Binding SupportedAlgorithmString}" />
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Margin="10">
+            <Button Width="60" HorizontalAlignment="Left" Click="InstallButton_OnClick">Install</Button>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">
+            <Button Width="60" Click="BackButton_OnClick">Back</Button>
+        </StackPanel>
     </Grid>
 </UserControl>
