@@ -25,7 +25,7 @@ namespace NHM.Wpf.Windows.Plugins
 
         private void PluginEntry_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            _vm = e.NewValue as PluginEntryVM ?? throw new InvalidOperationException("DataContext must be of type `PluginEntryVM`");
+            _vm = e.NewValue as PluginEntryVM; // ?? throw new InvalidOperationException("DataContext must be of type `PluginEntryVM`");
         }
 
         private async void InstallButton_OnClick(object sender, RoutedEventArgs e)
