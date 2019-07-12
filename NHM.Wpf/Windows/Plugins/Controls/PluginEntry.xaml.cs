@@ -1,10 +1,10 @@
-﻿using NHM.Wpf.ViewModels.Models;
-using NHM.Wpf.ViewModels.Plugins;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using NHM.Wpf.ViewModels.Models;
+using NHM.Wpf.ViewModels.Plugins;
 
-namespace NHM.Wpf.Windows.Plugins
+namespace NHM.Wpf.Windows.Plugins.Controls
 {
     /// <summary>
     /// Interaction logic for PluginEntry.xaml

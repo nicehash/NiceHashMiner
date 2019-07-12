@@ -85,7 +85,7 @@
     <Compile Include="Windows\Plugins\PluginDetail.xaml.cs">
       <DependentUpon>PluginDetail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Windows\Plugins\PluginEntry.xaml.cs">
+    <Compile Include="Windows\Plugins\Controls\PluginEntry.xaml.cs">
       <DependentUpon>PluginEntry.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\Plugins\PluginList.xaml.cs">
@@ -135,7 +135,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\Plugins\PluginEntry.xaml">
+    <Page Include="Windows\Plugins\Controls\PluginEntry.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
