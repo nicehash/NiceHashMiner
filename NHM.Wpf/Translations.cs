@@ -111,6 +111,8 @@ namespace NHM.Wpf
 
         public static void SetLanguage(string langCode)
         {
+            if (langCode == _selectedLanguage) return;
+
             foreach(var lang in AvailableLanguages)
             {
                 if (lang.Code == langCode)

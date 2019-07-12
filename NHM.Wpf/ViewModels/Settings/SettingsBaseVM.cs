@@ -4,7 +4,16 @@ namespace NHM.Wpf.ViewModels.Settings
 {
     public class SettingsBaseVM : BaseVM
     {
-        public string Name { get; }
+        private string _name;
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
 
         public IReadOnlyList<SettingsBaseVM> Children { get; }
 
@@ -12,7 +21,7 @@ namespace NHM.Wpf.ViewModels.Settings
 
         protected SettingsBaseVM(object settingsObj, string name, params SettingsBaseVM[] children)
         {
-            Name = Translations.Tr(name);
+            Name = name;
             SettingsInstance = settingsObj;
             Children = new List<SettingsBaseVM>(children);
         }

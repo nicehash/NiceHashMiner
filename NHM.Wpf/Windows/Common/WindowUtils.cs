@@ -34,8 +34,7 @@ namespace NHM.Wpf.Windows.Common
         {
             foreach (var item in i.Items)
             {
-                if (item is UIElement u)
-                    Translate(u);
+                Translate(item);
             }
 
             if (i is DataGrid dg)
@@ -92,12 +91,25 @@ namespace NHM.Wpf.Windows.Common
             }
         }
 
+        public static void Translate(SettingsBaseVM sb)
+        {
+            sb.Name = Tr(sb.Name);
+
+            foreach (var child in sb.Children)
+            {
+                Translate(child);
+            }
+        }
+
         public static void Translate(object o)
         {
             switch (o)
             {
                 case UIElement u:
                     Translate(u);
+                    break;
+                case SettingsBaseVM sb:
+                    Translate(sb);
                     break;
             }
         }

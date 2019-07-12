@@ -24,6 +24,12 @@ namespace NHM.Wpf.Windows
                 DataContext = _vm;
             }
 
+            Translations.LanguageChanged += Translations_LanguageChanged;
+            Translations_LanguageChanged(null, null);
+        }
+
+        private void Translations_LanguageChanged(object sender, System.EventArgs e)
+        {
             WindowUtils.Translate(this);
         }
 
