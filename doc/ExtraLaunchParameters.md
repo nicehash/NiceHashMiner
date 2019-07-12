@@ -43,7 +43,7 @@ This parameter indicates how to group multiple devices:
 
 This is the example of GMiner `MinerOptionsPackage.json` file:
 
-```JSON
+```
 {
   "use_user_settings": false,
   "group_mining_pairs_only_with_compatible_options": true,
