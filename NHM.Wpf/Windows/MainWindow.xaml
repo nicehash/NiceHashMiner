@@ -3,8 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800"
+        StateChanged="MainWindow_OnStateChanged">
     <Grid>
         <Label Content="Service Location:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="25" Width="107"/>
         <ComboBox HorizontalAlignment="Left" Margin="122,13,0,0" VerticalAlignment="Top" Width="120" SelectedIndex="0">
@@ -78,5 +80,16 @@
         </StatusBar>
         <Image Height="63" Margin="0,10,10,0" VerticalAlignment="Top" Source="../Resources/NHM_logo_big_light.png" HorizontalAlignment="Right" Width="239"/>
 
+        <tb:TaskbarIcon ToolTipText="NiceHash Miner" 
+                        TrayMouseDoubleClick="TaskbarIcon_OnTrayMouseDoubleClick"
+                        IconSource="../Resources/logo.ico">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Start (Placeholder)" />
+                    <Separator />
+                    <MenuItem Header="Close" Click="CloseMenuItem_OnClick" />
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
     </Grid>
 </Window>

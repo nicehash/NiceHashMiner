@@ -56,6 +56,24 @@ namespace NHM.Wpf.Windows
             var plugin = new PluginWindow();
             plugin.ShowDialog();
         }
+
+        private void CloseMenuItem_OnClick(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void TaskbarIcon_OnTrayMouseDoubleClick(object sender, RoutedEventArgs e)
+        {
+            Show();
+            WindowState = WindowState.Normal;
+            Activate();
+        }
+
+        private void MainWindow_OnStateChanged(object sender, EventArgs e)
+        {
+            if (WindowState == WindowState.Minimized) // TODO && config min to tray
+                Hide();
+        }
     }
 
     public class DeviceInfo : INotifyPropertyChanged
