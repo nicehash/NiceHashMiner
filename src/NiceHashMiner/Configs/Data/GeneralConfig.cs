@@ -4,6 +4,7 @@ using System.Drawing;
 using NiceHashMiner.Miners;
 using NiceHashMiner.Switching;
 using NHM.Common.Enums;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Configs.Data
 {
@@ -189,6 +190,12 @@ namespace NiceHashMiner.Configs.Data
         public bool ShowDiagColumns { get; set; } = true;
 
         public Point MainFormSize = new Point(1000, 400);
+
+        public bool RunFirewallRulesOnStartup
+        {
+            get => FirewallRules.RunFirewallRulesOnStartup;
+            set => FirewallRules.RunFirewallRulesOnStartup = value;
+        }
 
         public bool UseEthlargement
         {

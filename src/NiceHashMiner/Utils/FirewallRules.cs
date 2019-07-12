@@ -10,6 +10,7 @@ namespace NiceHashMiner.Utils
 {
     public static class FirewallRules
     {
+        public static bool RunFirewallRulesOnStartup { get; set; } = false;
         static string _firewallRulesAddedFilePath => Path.Combine("internals", "firewall_rules_added.json");
         private static List<string> _pluginsUUIDsWithVersions = new List<string>();
 
