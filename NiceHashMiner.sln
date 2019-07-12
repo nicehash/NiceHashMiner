@@ -110,6 +110,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "runnhmasadmin", "src\Tools\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RigIDPrinter", "src\Tools\RigIDPrinter\RigIDPrinter.csproj", "{138E97ED-8C5B-4C31-90F8-4260714A56E7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHM.Wpf", "NHM.Wpf\NHM.Wpf.csproj", "{56653651-3BF1-4A89-A20C-3178C06A29A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -858,6 +860,22 @@ Global
 		{138E97ED-8C5B-4C31-90F8-4260714A56E7}.Release|Win32.Build.0 = Release|Any CPU
 		{138E97ED-8C5B-4C31-90F8-4260714A56E7}.Release|x64.ActiveCfg = Release|Any CPU
 		{138E97ED-8C5B-4C31-90F8-4260714A56E7}.Release|x64.Build.0 = Release|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|Win32.Build.0 = Debug|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Debug|x64.Build.0 = Debug|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|Win32.ActiveCfg = Release|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|Win32.Build.0 = Release|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|x64.ActiveCfg = Release|Any CPU
+		{56653651-3BF1-4A89-A20C-3178C06A29A3}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
