@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using NHM.Wpf.Windows.Common;
 
 namespace NHM.Wpf.Windows.Settings.Pages
 {
@@ -10,6 +11,8 @@ namespace NHM.Wpf.Windows.Settings.Pages
         public GeneralPage()
         {
             InitializeComponent();
+
+            WindowUtils.Translate(this);
         }
     }
 }

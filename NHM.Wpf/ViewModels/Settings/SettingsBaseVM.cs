@@ -12,7 +12,7 @@ namespace NHM.Wpf.ViewModels.Settings
 
         protected SettingsBaseVM(object settingsObj, string name, params SettingsBaseVM[] children)
         {
-            Name = name;
+            Name = Translations.Tr(name);
             SettingsInstance = settingsObj;
             Children = new List<SettingsBaseVM>(children);
         }

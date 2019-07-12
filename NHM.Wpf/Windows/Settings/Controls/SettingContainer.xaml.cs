@@ -55,13 +55,24 @@ namespace NHM.Wpf.Windows.Settings.Controls
         //    DependencyProperty.Register(nameof(Title), typeof(string), typeof(SettingsContainer));
 
        // [Bindable(true)]
-       public string Title { get; set; } = "Title";
+       private string _title = "Title";
+       public string Title
+       {
+           get => _title;
+           set => _title = Translations.Tr(value);
+       }
         //{
         //    get => (string) GetValue(TitleProperty);
         //    set => SetValue(TitleProperty, value);
         //}
 
-        public string Description { get; set; } = "Description";
+        private string _description = "Description";
+
+        public string Description
+        {
+            get => _description;
+            set => _description = Translations.Tr(value);
+        }
 
         public SettingsContainer()
         {

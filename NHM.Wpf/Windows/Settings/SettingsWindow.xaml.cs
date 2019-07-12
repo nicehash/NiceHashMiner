@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using NHM.Wpf.ViewModels.Settings;
 using System.Windows;
+using NHM.Wpf.Windows.Common;
 
 namespace NHM.Wpf.Windows
 {
@@ -22,6 +23,8 @@ namespace NHM.Wpf.Windows
                 _vm = new SettingsVM();
                 DataContext = _vm;
             }
+
+            WindowUtils.Translate(this);
         }
 
         private void TreeView_OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
