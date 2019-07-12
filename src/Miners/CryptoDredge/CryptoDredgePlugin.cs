@@ -1,4 +1,5 @@
 ﻿using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -9,9 +10,7 @@ using System.Linq;
 
 namespace CryptoDredge
 {
-#error "Implement GetMinerStatsDataAsync"
-    // TODO don't use this plugin as it doesn't have GetMinerStatsDataAsync() method miner doesn't support it.
-    class CryptoDredgePlugin : PluginBase
+    public class CryptoDredgePlugin : PluginBase
     {
         public CryptoDredgePlugin()
         {
@@ -73,5 +72,8 @@ namespace CryptoDredge
             //no new version available
             return false;
         }
+
+        // Since the API doesn't work for this one set the default value to false
+        public override bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(false, GetApiMaxTimeoutConfig);
     }
 }

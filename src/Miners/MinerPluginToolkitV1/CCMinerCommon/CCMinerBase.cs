@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using MinerPlugin;
 using NHM.Common.Enums;
 using static NHM.Common.StratumServiceHelpers;
-using System.Globalization;
 using System.IO;
 using NHM.Common;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
