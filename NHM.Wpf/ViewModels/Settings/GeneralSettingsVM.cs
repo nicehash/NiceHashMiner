@@ -10,11 +10,20 @@ namespace NHM.Wpf.ViewModels.Settings
     {
         // Placeholders
         public IReadOnlyList<string> CurrencyOptions { get; }
-        public IReadOnlyList<string> LanguageOptions { get; }
+        public IEnumerable<string> LanguageOptions => Translations.GetAvailableLanguagesNames();
 
         // More placeholders
         public string SelectedCurrency { get; set; } = "CAD";
-        public int SelectedLangIndex { get; set; } = 0;
+
+        public int SelectedLangIndex
+        {
+            get => Translations.GetCurrentIndex();
+            set
+            {
+                var code = Translations.GetLanguageCodeFromIndex(value);
+                Translations.SetLanguage(code);
+            }
+        }
         private bool _logToFile = false;
 
         public bool LogToFile
@@ -30,6 +39,8 @@ namespace NHM.Wpf.ViewModels.Settings
         public GeneralSettingsVM(object settingsObj)
             : base(settingsObj, "General")
         {
+            SelectedLangIndex = Translations.GetCurrentIndex();
+
             CurrencyOptions = new List<string>
             {
                 "AUD",
@@ -64,12 +75,6 @@ namespace NHM.Wpf.ViewModels.Settings
                 "TRY",
                 "USD",
                 "ZAR"
-            };
-
-            LanguageOptions = new List<string>
-            {
-                "English",
-                "Russian"
             };
         }
     }

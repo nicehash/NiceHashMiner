@@ -23,6 +23,8 @@ namespace NHM.Wpf
             public string Name { get; set; }
         }
 
+        public static event EventHandler LanguageChanged;
+
         static Translations()
         {
             // always have english
@@ -31,12 +33,12 @@ namespace NHM.Wpf
                 Code = "en",
                 Name = "English",
             };
-            _availableLanguages = new List<Language>();
+            AvailableLanguages = new List<Language>();
 
             // try init
             TryInitTranslations();
             bool flag = false;
-            foreach(var lang in _availableLanguages)
+            foreach(var lang in AvailableLanguages)
             {
                 if (lang.Code == "en")
                 {
@@ -45,16 +47,16 @@ namespace NHM.Wpf
             }
             if (!flag)
             {
-                _availableLanguages.Add(enMetaData);
+                AvailableLanguages.Add(enMetaData);
             }
         }
 
-        private static string _selectedLanguage = "es";
+        private static string _selectedLanguage = "en";
         private static Dictionary<string, Dictionary<string, string>> _entries = new Dictionary<string, Dictionary<string, string>>();
         
         // transform so it is possible to switch from any language
         private static Dictionary<string, Dictionary<string, string>> _transformedEntries = new Dictionary<string, Dictionary<string, string>>();
-        public static List<Language> _availableLanguages = new List<Language>();
+        public static List<Language> AvailableLanguages = new List<Language>();
 
         private static void TryInitTranslations()
         {
@@ -67,8 +69,8 @@ namespace NHM.Wpf
 
                 if (translations.Languages != null)
                 {
-                    _availableLanguages = translations.Languages.Select(pair => new Language { Code = pair.Key, Name = pair.Value }).ToList();
-                    foreach (var kvp in _availableLanguages)
+                    AvailableLanguages = translations.Languages.Select(pair => new Language { Code = pair.Key, Name = pair.Value }).ToList();
+                    foreach (var kvp in AvailableLanguages)
                     {
                         //Logger.Info("Translations", $"Found language: code: {kvp.Code}, name: {kvp.Name}");
                     }
@@ -77,7 +79,7 @@ namespace NHM.Wpf
                 {
                     _entries = translations.Translations;
                     // init transformed entries so we can switch back and forth
-                    foreach (var lang in _availableLanguages)
+                    foreach (var lang in AvailableLanguages)
                     {
                         if (lang.Code == "en") continue;
                         foreach (var enTrans in _entries)
@@ -109,11 +111,12 @@ namespace NHM.Wpf
 
         public static void SetLanguage(string langCode)
         {
-            foreach(var lang in _availableLanguages)
+            foreach(var lang in AvailableLanguages)
             {
                 if (lang.Code == langCode)
                 {
                     _selectedLanguage = lang.Code;
+                    LanguageChanged?.Invoke(null, EventArgs.Empty);
                     break;
                 }
             }
@@ -122,7 +125,7 @@ namespace NHM.Wpf
         public static List<string> GetAvailableLanguagesNames()
         {
             var langNames = new List<string>();
-            foreach (var kvp in _availableLanguages) 
+            foreach (var kvp in AvailableLanguages) 
             {
                 langNames.Add(kvp.Name);
             }
@@ -131,7 +134,7 @@ namespace NHM.Wpf
 
         public static string GetLanguageCodeFromName(string name)
         {
-            foreach (var kvp in _availableLanguages)
+            foreach (var kvp in AvailableLanguages)
             {
                 if (kvp.Name == name) return kvp.Code;
             }
@@ -140,21 +143,26 @@ namespace NHM.Wpf
 
         public static string GetLanguageCodeFromIndex(int index)
         {
-            if (index < _availableLanguages.Count)
+            if (index < AvailableLanguages.Count)
             {
-                return _availableLanguages[index].Code;
+                return AvailableLanguages[index].Code;
             }
             return "";
         }
 
         public static int GetLanguageIndexFromCode(string code)
         {
-            for (var i = 0; i < _availableLanguages.Count; i++)
+            for (var i = 0; i < AvailableLanguages.Count; i++)
             {
-                var kvp = _availableLanguages[i];
+                var kvp = AvailableLanguages[i];
                 if (kvp.Code == code) return i;
             }
             return 0;
+        }
+
+        public static int GetCurrentIndex()
+        {
+            return GetLanguageIndexFromCode(_selectedLanguage);
         }
 
         // Tr Short for translate

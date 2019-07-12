@@ -55,6 +55,17 @@ namespace NHM.Wpf.Windows.Common
                 }
             }
         }
+
+        public static void Translate(SettingsContainer sc)
+        {
+            foreach (var child in sc.Children)
+            {
+                Translate(child);
+            }
+
+            sc.Title = Tr(sc.Title);
+            sc.Description = Tr(sc.Description);
+        }
         
         public static void Translate(UIElement u)
         {
@@ -67,10 +78,7 @@ namespace NHM.Wpf.Windows.Common
                     Translate(d.Child);
                     break;
                 case SettingsContainer sc:
-                    foreach (var child in sc.Children)
-                    {
-                        Translate(child);
-                    }
+                    Translate(sc);
                     break;
                 case ContentControl c:
                     Translate(c);

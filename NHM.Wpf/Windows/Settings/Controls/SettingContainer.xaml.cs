@@ -37,6 +37,12 @@ namespace NHM.Wpf.Windows.Settings.Controls
             typeof(SettingsContainer),
             new FrameworkPropertyMetadata { BindsTwoWayByDefault = true });
 
+        public static readonly DependencyProperty TitleProperty =
+            DependencyProperty.Register(nameof(Title), typeof(string), typeof(SettingsContainer));
+
+        public static readonly DependencyProperty DescriptionProperty =
+            DependencyProperty.Register(nameof(Description), typeof(string), typeof(SettingsContainer));
+
         public UIElementCollection Children
         {
             get => (UIElementCollection) GetValue(ChildrenProperty.DependencyProperty);
@@ -51,27 +57,16 @@ namespace NHM.Wpf.Windows.Settings.Controls
 
         public bool DisplayEnabled => Enabled ?? true;
 
-        //public static readonly DependencyProperty TitleProperty =
-        //    DependencyProperty.Register(nameof(Title), typeof(string), typeof(SettingsContainer));
-
-       // [Bindable(true)]
-       private string _title = "Title";
-       public string Title
-       {
-           get => _title;
-           set => _title = Translations.Tr(value);
-       }
-       //{
-        //    get => (string) GetValue(TitleProperty);
-        //    set => SetValue(TitleProperty, value);
-        //}
-
-        private string _description = "Description";
+        public string Title
+        {
+            get => (string) GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
+        }
 
         public string Description
         {
-            get => _description;
-            set => _description = Translations.Tr(value);
+            get => (string) GetValue(DescriptionProperty);
+            set => SetValue(DescriptionProperty, value);
         }
 
         public SettingsContainer()

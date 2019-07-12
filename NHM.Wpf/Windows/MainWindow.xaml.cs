@@ -1,4 +1,5 @@
-﻿using NHM.Wpf.Annotations;
+﻿using System;
+using NHM.Wpf.Annotations;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -29,6 +30,12 @@ namespace NHM.Wpf.Windows
 
             DevGrid.ItemsSource = _devs;
 
+            Translations.LanguageChanged += TranslationsOnLanguageChanged;
+            TranslationsOnLanguageChanged(null, null);
+        }
+
+        private void TranslationsOnLanguageChanged(object sender, EventArgs e)
+        {
             WindowUtils.Translate(this);
         }
 
