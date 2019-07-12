@@ -9,13 +9,16 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <conv:NulBoolToVisibilityConverter x:Key="Converter" />
+        <ResourceDictionary Source="../../Common/Styles.xaml" />
     </UserControl.Resources>
 
     <StackPanel Margin="10"
                 DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsContainer}}}"
                 x:Name="LayoutRoot">
         <StackPanel Orientation="Horizontal">
+            <StackPanel.Resources>
+                <conv:NulBoolToVisibilityConverter x:Key="Converter" />
+            </StackPanel.Resources>
             <!-- When the Enabled property is bound, we show a checkbox with a title. Otherwise, just a title -->
             <!-- It would be easier to always use the TextBlock for title, but using CheckBox allows toggling by clicking the title -->
             <CheckBox Margin="0,0,10,0" 
@@ -24,31 +27,12 @@
                       IsEnabled="True" 
                       Content="{Binding Title}"/>
             <TextBlock Text="{Binding Title}"
-                       Visibility="{Binding Enabled, Converter={StaticResource Converter}, ConverterParameter=1}">
-                <TextBlock.Style>
-                    <!-- This extra boilerplate is needed for TextBlock to look disabled -->
-                    <Style TargetType="{x:Type TextBlock}">
-                        <Style.Triggers>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.5"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TextBlock.Style>
-            </TextBlock>
+                       Visibility="{Binding Enabled, Converter={StaticResource Converter}, ConverterParameter=1}" />
         </StackPanel>
-        <TextBlock Text="{Binding Description}" FontWeight="Light" FontSize="10" TextWrapping="Wrap" Margin="5">
-            <TextBlock.Style>
-                <!-- This extra boilerplate is needed for TextBlock to look disabled -->
-                <Style TargetType="{x:Type TextBlock}">
-                    <Style.Triggers>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Opacity" Value="0.5"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TextBlock.Style>
-        </TextBlock>
+        <TextBlock Text="{Binding Description}"
+                   TextWrapping="Wrap" 
+                   Margin="5"
+                   Style="{StaticResource DetailTextBlockStyle}" />
         <Grid IsEnabled="{Binding Enabled}" Margin="10,0">
             <!-- The data context sets all children's data contexts to the settings page, so binding can be done there -->
             <StackPanel x:Name="ChildrenStackPanel" 

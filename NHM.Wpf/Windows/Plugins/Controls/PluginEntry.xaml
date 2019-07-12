@@ -9,9 +9,13 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" 
              d:DataContext="{d:DesignInstance Type=vm:PluginEntryVM}">
-    <Border BorderBrush="Black" BorderThickness="1">
+    <UserControl.Resources>
+        <ResourceDictionary Source="../../Common/Styles.xaml" />
+    </UserControl.Resources>
+
+    <Border Style="{StaticResource BorderDefaultStyle}">
         <StackPanel Margin="10">
-            <TextBlock Text="{Binding Plugin.PluginName}" Margin="0,0,0,10" FontWeight="Bold" FontSize="14"/>
+            <TextBlock Text="{Binding Plugin.PluginName}" Margin="0,0,0,10" Style="{StaticResource TitleTextBlockStyle}" />
             <controls:InlineDataDisplay Margin="10,0,0,0" Header="Version:" Value="{Binding Plugin.PluginVersion}" />
             <controls:InlineDataDisplay Margin="10,0,0,0" Header="Author:" Value="{Binding Plugin.PluginAuthor}" />
             <Button Margin="5" 

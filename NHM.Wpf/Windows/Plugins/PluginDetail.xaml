@@ -9,6 +9,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=plugins:PluginDetailVM}">
+    <UserControl.Resources>
+        <ResourceDictionary Source="../Common/Styles.xaml" />
+    </UserControl.Resources>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -20,7 +24,7 @@
         </Grid.RowDefinitions>
 
         <StackPanel Margin="10">
-            <TextBlock Text="{Binding Plugin.PluginName}" FontSize="14" FontWeight="Bold" />
+            <TextBlock Text="{Binding Plugin.PluginName}" Style="{StaticResource TitleTextBlockStyle}" Margin="0,0,0,10" />
             <StackPanel Margin="10,0,0,0">
                 <controls:InlineDataDisplay Header="Plugin Version:" Value="{Binding Plugin.PluginVersion}" />
                 <controls:InlineDataDisplay Header="Plugin Author:" Value="{Binding Plugin.PluginAuthor}" />
