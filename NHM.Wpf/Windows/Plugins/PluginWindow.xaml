@@ -22,9 +22,7 @@
             </ItemsControl.Template>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:PluginEntry Title="{Binding Name}" 
-                                       Version="{Binding Version}" 
-                                       Author="{Binding Author}"
+                    <local:PluginEntry Plugin="{Binding .}"
                                        Margin="10" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

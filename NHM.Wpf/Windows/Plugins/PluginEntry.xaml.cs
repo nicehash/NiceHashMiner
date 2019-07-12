@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using NHM.Wpf.ViewModels;
 
 namespace NHM.Wpf.Windows.Plugins
 {
@@ -20,38 +21,16 @@ namespace NHM.Wpf.Windows.Plugins
     /// </summary>
     public partial class PluginEntry : UserControl
     {
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-            nameof(Title),
-            typeof(string),
-            typeof(PluginEntry),
-            new PropertyMetadata());
-        public static readonly DependencyProperty VersionProperty = DependencyProperty.Register(
-            nameof(Version),
-            typeof(Version),
-            typeof(PluginEntry),
-            new PropertyMetadata());
-        public static readonly DependencyProperty AuthorProperty = DependencyProperty.Register(
-            nameof(Author),
-            typeof(string),
+        public static readonly DependencyProperty PluginProperty = DependencyProperty.Register(
+            nameof(Plugin),
+            typeof(PluginVM.FakePlugin),
             typeof(PluginEntry),
             new PropertyMetadata());
 
-        public string Title
+        public PluginVM.FakePlugin Plugin
         {
-            get => (string) GetValue(TitleProperty);
-            set => SetValue(TitleProperty, value);
-        }
-
-        public Version Version
-        {
-            get => (Version) GetValue(VersionProperty);
-            set => SetValue(VersionProperty, value);
-        }
-
-        public string Author
-        {
-            get => (string) GetValue(AuthorProperty);
-            set => SetValue(AuthorProperty, value);
+            get => (PluginVM.FakePlugin) GetValue(PluginProperty);
+            set => SetValue(PluginProperty, value);
         }
 
         public PluginEntry()
