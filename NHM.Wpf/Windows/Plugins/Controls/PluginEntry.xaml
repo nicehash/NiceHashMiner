@@ -15,6 +15,10 @@
 
     <Border Style="{StaticResource BorderDefaultStyle}">
         <StackPanel Margin="10">
+            <StackPanel.Resources>
+                <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            </StackPanel.Resources>
+
             <TextBlock Text="{Binding Plugin.PluginName}" Margin="0,0,0,10" Style="{StaticResource TitleTextBlockStyle}" />
             <controls:InlineDataDisplay Margin="10,0,0,0" Header="Version:" Value="{Binding Plugin.PluginVersion}" />
             <controls:InlineDataDisplay Margin="10,0,0,0" Header="Author:" Value="{Binding Plugin.PluginAuthor}" />
@@ -26,8 +30,11 @@
                     Width="100" 
                     Click="InstallButton_OnClick"
                     HorizontalAlignment="Left"
-                    IsEnabled="{Binding IsSupported}"
+                    IsEnabled="{Binding InstallButtonEnabled}"
                     Content="{Binding InstallString}" />
+            <controls:PluginInstallProgress Progress="{Binding InstallProgress}"
+                                            Status="{Binding InstallStatus}"
+                                            Visibility="{Binding IsInstalling, Converter={StaticResource BoolToVis}}"/>
         </StackPanel>
     </Border>
 </UserControl>

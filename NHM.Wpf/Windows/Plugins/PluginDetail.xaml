@@ -38,11 +38,17 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Margin="10">
+            <StackPanel.Resources>
+                <BooleanToVisibilityConverter x:Key="BoolToVis" />
+            </StackPanel.Resources>
             <Button Width="100" 
                     HorizontalAlignment="Left" 
                     Click="InstallButton_OnClick" 
-                    IsEnabled="{Binding IsSupported}"
+                    IsEnabled="{Binding InstallButtonEnabled}"
                     Content="{Binding InstallString}" />
+            <controls:PluginInstallProgress Progress="{Binding InstallProgress}"
+                                            Status="{Binding InstallStatus}"
+                                            Visibility="{Binding IsInstalling, Converter={StaticResource BoolToVis}}" />
         </StackPanel>
         
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">
