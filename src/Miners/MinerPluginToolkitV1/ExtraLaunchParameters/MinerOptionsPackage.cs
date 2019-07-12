@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using MinerPluginToolkitV1.Interfaces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MinerPluginToolkitV1.ExtraLaunchParameters
 {
@@ -10,10 +10,16 @@ namespace MinerPluginToolkitV1.ExtraLaunchParameters
     /// With UseUserSettings property user can define if Miner options should be used from local MinerOptionsPackage.json file
     /// </summary>
     [Serializable]
-    public class MinerOptionsPackage
+    public class MinerOptionsPackage : IInternalSetting
     {
         [JsonProperty("use_user_settings")]
         public bool UseUserSettings { get; set; } = false;
+
+        [JsonProperty("group_mining_pairs_only_with_compatible_options")]
+        public bool GroupMiningPairsOnlyWithCompatibleOptions { get; set; } = true;
+
+        [JsonProperty("ignore_default_value_options")]
+        public bool IgnoreDefaultValueOptions { get; set; } = true;
 
         [JsonProperty("general_options")]
         public List<MinerOption> GeneralOptions { get; set; }

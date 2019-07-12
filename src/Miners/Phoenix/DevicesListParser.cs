@@ -1,4 +1,4 @@
-﻿using NiceHashMinerLegacy.Common.Device;
+﻿using NHM.Common.Device;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,39 +9,30 @@ namespace Phoenix
 {
     internal class DevicesListParser
     {
-        public static Dictionary<string, int> ParsePhoenixOutput(string output, List<BaseDevice> baseDevices)
+        public static Dictionary<string, int> ParsePhoenixOutput(string output, IEnumerable<BaseDevice> baseDevices)
         {
             var gpus = baseDevices.Where(dev => dev is IGpuDevice).Cast<IGpuDevice>();
+            var mappedDevices = new Dictionary<string, int>();
+            var lines = output.Split(new[] { "\r\n", "\n", Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            
+            int index = -1;
+            foreach (var line in lines)
+            {
+                if (!line.Contains("pcie")) continue;
+                index++;
 
-            Dictionary<string, int> mappedDevices = new Dictionary<string, int>();
-            //delete everything until first GPU
-            if (!output.Contains("GPU1"))
-            {
-                return mappedDevices;
-            }
-            var filteredOutput = output.Substring(output.IndexOf("GPU1"));
-            var lines = filteredOutput.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
-            if (lines.Count() != 0)
-            {
-                int index = 0;
-                foreach (var line in lines)
+                var tmpArray = line.Substring(line.IndexOf('('));
+                tmpArray = tmpArray.Remove(tmpArray.IndexOf(')'));
+                var fullPciId = tmpArray.Split(' ');
+                var pciId = fullPciId[1];
+                var comparePCIeBusID = Convert.ToInt32(pciId);
+                var gpuWithPCIeBusID = gpus.Where(gpu => gpu.PCIeBusID == comparePCIeBusID).FirstOrDefault();
+                if (gpuWithPCIeBusID != null)
                 {
-                    var tmpArray = line.Substring(line.IndexOf('('));
-                    tmpArray = tmpArray.Remove(tmpArray.IndexOf(')'));
-                    var fullPciId = tmpArray.Split(' ');
-                    var pciId = fullPciId[1];
-                    var comparePCIeBusID = Convert.ToInt32(pciId);
-                    foreach (var gpu in gpus)
-                    {
-                        if (gpu.PCIeBusID == comparePCIeBusID)
-                        {
-                            mappedDevices.Add(gpu.UUID, index);
-                            break;
-                        }
-                    }
-                    index++;
+                    mappedDevices.Add(gpuWithPCIeBusID.UUID, index);
                 }
             }
+            
             return mappedDevices;
         }
     }

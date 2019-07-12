@@ -1,5 +1,5 @@
 ﻿using MinerPluginToolkitV1.Configs;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

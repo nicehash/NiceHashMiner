@@ -2,17 +2,17 @@
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
-using NiceHashMinerLegacy.Common.Device;
+using static NHM.Common.StratumServiceHelpers;
+using NHM.Common.Device;
 using System.Collections.Generic;
 using System.Globalization;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System.IO;
 
 namespace CPUMinerBase

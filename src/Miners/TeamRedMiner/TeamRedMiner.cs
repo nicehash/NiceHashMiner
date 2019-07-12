@@ -1,20 +1,17 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
-using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
+using static NHM.Common.StratumServiceHelpers;
 using System.IO;
-using NiceHashMinerLegacy.Common;
-using System.Net.Sockets;
-using System.Text;
+using NHM.Common;
 using MinerPluginToolkitV1.SgminerCommon;
+using MinerPluginToolkitV1.Configs;
 
 namespace TeamRedMiner
 {
@@ -22,20 +19,19 @@ namespace TeamRedMiner
     {
         private int _apiPort;
         private string _extraLaunchParameters = "";
-        private readonly int _openClAmdPlatformNum;
 
         // can mine only one algorithm at a given time
         private AlgorithmType _algorithmType;
 
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
-
+        private int _openClAmdPlatformNum;
         // command line parts
         private string _devices;
 
-        public TeamRedMiner(string uuid, int openClAmdPlatformNum) : base(uuid)
+
+        public TeamRedMiner(string uuid) : base(uuid)
         {
-            _openClAmdPlatformNum = openClAmdPlatformNum;
         }
 
         private string AlgoName
@@ -52,6 +48,8 @@ namespace TeamRedMiner
                         return "x16r";
                     case AlgorithmType.Lyra2Z:
                         return "lyra2z";
+                    case AlgorithmType.GrinCuckatoo31:
+                        return "cuckatoo31_grin";
                     default:
                         return "";
                 }
@@ -67,6 +65,7 @@ namespace TeamRedMiner
                     case AlgorithmType.CryptoNightR:
                     case AlgorithmType.X16R:
                     case AlgorithmType.Lyra2REv3:
+                    case AlgorithmType.GrinCuckatoo31:
                         return 2.5;
                     default:
                         return 3.0; 
@@ -130,19 +129,7 @@ namespace TeamRedMiner
         {
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 90; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 90;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             // use demo user and disable colorts so we can read from stdout
             var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC) + " --disable_colors";
@@ -191,7 +178,7 @@ namespace TeamRedMiner
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "teamredminer-v0.5.2-win");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "teamredminer-v0.5.5-win");
             var binPath = Path.Combine(pluginRootBins, "teamredminer.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
@@ -213,17 +200,26 @@ namespace TeamRedMiner
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
-            
-            for(int i = 0; i < orderedMiningPairs.Count; i++)
+
+            var openClAmdPlatformResult = MinerToolkit.GetOpenCLPlatformID(_miningPairs);
+            _openClAmdPlatformNum = openClAmdPlatformResult.Item1;
+            bool openClAmdPlatformNumUnique = openClAmdPlatformResult.Item2;
+            if (!openClAmdPlatformNumUnique)
+            {
+                Logger.Error(_logGroup, "Initialization of miner failed. Multiple OpenCLPlatform IDs found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
+
+            for (int i = 0; i < orderedMiningPairs.Count; i++)
             {
                 _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].Device.UUID;
             }
 
             if (MinerOptionsPackage != null)
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

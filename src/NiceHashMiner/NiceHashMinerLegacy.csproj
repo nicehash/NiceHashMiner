@@ -1,0 +1,649 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NiceHashMiner</RootNamespace>
+    <AssemblyName>NiceHashMiner</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;PRODUCTION_NEW</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Release\</OutputPath>
+    <DefineConstants>TRACE;PRODUCTION_NEW</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'FillSMA|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;FILLSMA</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress, Version=0.23.0.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SharpCompress.0.23.0\lib\net45\SharpCompress.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Algorithms\Algorithm.cs" />
+    <Compile Include="Algorithms\PluginAlgorithm.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.DataVizualizers.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Devices.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Init.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Mining.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Program.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Refactoring.cs" />
+    <Compile Include="ApplicationStateManager\ApplicationStateManager.Timers.cs" />
+    <Compile Include="ApplicationStateManager\ControlBindingsCollectionExtensions.cs" />
+    <Compile Include="ApplicationStateManager\MiningState.cs" />
+    <Compile Include="ApplicationStateManager\RatesAndStatsStates.cs" />
+    <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
+    <Compile Include="Benchmarking\BenchmarkHandler.cs" />
+    <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
+    <Compile Include="Benchmarking\BenchmarkManager.cs" />
+    <Compile Include="Benchmarking\BenchmarkOption.cs" />
+    <Compile Include="Benchmarking\BenchmarkStartSettings.cs" />
+    <Compile Include="BUILD_TAG.cs" />
+    <Compile Include="Configs\CredentialsSettings.cs" />
+    <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
+    <Compile Include="Configs\IdleMiningSettings.cs" />
+    <Compile Include="Configs\MiningProfitSettings.cs" />
+    <Compile Include="Configs\RunAtStartup.cs" />
+    <Compile Include="Configs\ThirdPartyMinerSettings.cs" />
+    <Compile Include="Configs\TranslationsSettings.cs" />
+    <Compile Include="Devices\AvailableDevices.cs" />
+    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.Designer.cs">
+      <DependentUpon>DevicesListViewBenchmarkControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewEnableControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewEnableControl.Designer.cs">
+      <DependentUpon>DevicesListViewEnableControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewSpeedControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesListViewSpeedControl.Designer.cs">
+      <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesMainBoard.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesMainBoard.Designer.cs">
+      <DependentUpon>DevicesMainBoard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesMainBoardDevicesListViewSpeedControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\DevicesMainBoardDevicesListViewSpeedControl.Designer.cs">
+      <DependentUpon>DevicesMainBoardDevicesListViewSpeedControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoDetails.Designer.cs">
+      <DependentUpon>PluginInfoDetails.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoItem.Designer.cs">
+      <DependentUpon>PluginInfoItem.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoItemRow.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\PluginInfoItemRow.Designer.cs">
+      <DependentUpon>PluginInfoItemRow.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\StartupLoadingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\StartupLoadingControl.Designer.cs">
+      <DependentUpon>StartupLoadingControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EnterBTCDialogSwitch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EnterBTCDialogSwitch.Designer.cs">
+      <DependentUpon>EnterBTCDialogSwitch.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormEula.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormEula.Designer.cs">
+      <DependentUpon>FormEula.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormHelpers.cs" />
+    <Compile Include="Forms\Form_Benchmark.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_Benchmark.Designer.cs">
+      <DependentUpon>Form_Benchmark.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Form_Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_Main.Designer.cs">
+      <DependentUpon>Form_Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Form_MinerPlugins.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_MinerPlugins.Designer.cs">
+      <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Form_Settings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_Settings.Designer.cs">
+      <DependentUpon>Form_Settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\IconEx.cs" />
+    <Compile Include="Forms\LoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\LoginForm.Designer.cs">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="IFTTT.cs" />
+    <Compile Include="Interfaces\DataVisualizer\IBalanceBTCDisplayer.cs" />
+    <Compile Include="Interfaces\DataVisualizer\IBalanceFiatDisplayer.cs" />
+    <Compile Include="Interfaces\DataVisualizer\IDevicesStateDisplayer.cs" />
+    <Compile Include="Interfaces\DataVisualizer\IGlobalMiningRateDisplayer.cs" />
+    <Compile Include="Interfaces\DataVisualizer\IGroupDisplayer.cs" />
+    <Compile Include="Interfaces\DataVisualizer\IMiningProfitabilityDisplayer.cs" />
+    <Compile Include="Interfaces\DataVisualizer\INoInternetConnectionDisplayer.cs" />
+    <Compile Include="Interfaces\DataVisualizer\IStateDisplayer.cs" />
+    <Compile Include="Interfaces\DataVisualizer\IVersionDisplayer.cs" />
+    <Compile Include="Interfaces\IBenchmarkForm.cs" />
+    <Compile Include="Interfaces\IRatesComunication.cs" />
+    <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
+    <Compile Include="Interfaces\StateSetters\IStateSetter.cs" />
+    <Compile Include="Miners\IdleChecking\IdleChangedEventArgs.cs" />
+    <Compile Include="Miners\IdleChecking\IdleChecker.cs" />
+    <Compile Include="Miners\IdleChecking\IdleCheckManager.cs" />
+    <Compile Include="Miners\IdleChecking\InputTimeoutChecker.cs" />
+    <Compile Include="Miners\IdleChecking\SessionLockChecker.cs" />
+    <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\BrokenPluginIntegrated\BrokenPluginIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
+    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\ClaymoreDual14Integrated\ClaymoreDual14IntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\ClaymoreDualIntegrated\ClaymoreDualIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\MinersBinsUrls.cs" />
+    <Compile Include="Miners\IntegratedPlugins\NanoMinerIntegrated\NanoMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\PhoenixIntegrated\PhoenixIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerGMIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerIntegratedMiner.cs" />
+    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGMinerPluginBase.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TeamRedMinerIntegrated\TeamRedMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
+    <Compile Include="Miners\IntegratedPlugins\WildRigIntegrated\WildRigIntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
+    <Compile Include="Miners\MinerApiWatchdog.cs" />
+    <Compile Include="Miners\MiningManager.cs" />
+    <Compile Include="NHMProductInfo.cs" />
+    <Compile Include="Plugin\PluginContainer.cs" />
+    <Compile Include="Plugin\SupportedAlgorithmsFilter.cs" />
+    <Compile Include="Plugin\SupportedPluginsFilter.cs" />
+    <Compile Include="Stats\MiningStats.cs" />
+    <Compile Include="Plugin\MinerPluginsManager.cs" />
+    <Compile Include="Miners\MinerFromPlugin.cs" />
+    <Compile Include="Stats\ErrorCode.cs" />
+    <Compile Include="Stats\Models\ExchangeRateJson.cs" />
+    <Compile Include="Stats\Models\MarketsMessage.cs" />
+    <Compile Include="Stats\Models\MinerStatusMessage.cs" />
+    <Compile Include="Stats\Models\NicehashCredentials.cs" />
+    <Compile Include="Stats\Models\DeviceUpdateEventArgs.cs" />
+    <Compile Include="Stats\Models\EssentialsCall.cs" />
+    <Compile Include="Stats\Models\ExecutedCall.cs" />
+    <Compile Include="Stats\Models\ExecutedInfo.cs" />
+    <Compile Include="Stats\Models\LoginMessage.cs" />
+    <Compile Include="Stats\Models\DeviceStatusMessage.cs" />
+    <Compile Include="Stats\Models\RpcException.cs" />
+    <Compile Include="Plugin\PluginPackageInfo.cs" />
+    <Compile Include="Plugin\PluginPackageInfoCR.cs" />
+    <Compile Include="Stats\ExchangeRateAPI.cs" />
+    <Compile Include="Stats\NiceHashSocket.cs" />
+    <Compile Include="Stats\NiceHashStats_shared.cs" />
+    <Compile Include="Stats\NiceHashStats_production_new.cs" />
+    <Compile Include="Stats\NiceHashStats_production_old.cs" />
+    <Compile Include="Stats\SocketEventArgs.cs" />
+    <Compile Include="Stats\StatusCodes.cs" />
+    <Compile Include="Stats\TimeFactor.cs" />
+    <Compile Include="StratumService.cs" />
+    <Compile Include="Utils\ArchiveHelpers.cs" />
+    <Compile Include="Utils\FirewallRules.cs" />
+    <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
+    <Compile Include="Utils\RunAsAdmin.cs" />
+    <Compile Include="Utils\SystemSpecs.cs" />
+    <Compile Include="Switching\AlgorithmHistory.cs" />
+    <Compile Include="Switching\AlgorithmSwitchingManager.cs" />
+    <Compile Include="Switching\Interval.cs" />
+    <Compile Include="Translations.cs" />
+    <Compile Include="Configs\ConfigManager.cs" />
+    <Compile Include="Configs\Data\DeviceConfig.cs" />
+    <Compile Include="Configs\Data\GeneralConfig.cs" />
+    <Compile Include="Devices\ComputeDevice.cs" />
+    <Compile Include="Forms\Components\AlgorithmsListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\AlgorithmsListView.Designer.cs">
+      <DependentUpon>AlgorithmsListView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\AlgorithmSettingsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\AlgorithmSettingsControl.Designer.cs">
+      <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\BenchmarkOptions.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\BenchmarkOptions.Designer.cs">
+      <DependentUpon>BenchmarkOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Components\Field.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Forms\Components\Field.Designer.cs">
+      <DependentUpon>Field.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Form_ChooseLanguage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_ChooseLanguage.Designer.cs">
+      <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Form_3rdParty_TOS.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_3rdParty_TOS.Designer.cs">
+      <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
+    <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
+    <Compile Include="Utils\Links.cs" />
+    <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
+    <Compile Include="Miners\Grouping\MiningDevice.cs" />
+    <Compile Include="Miners\MinerFactory.cs" />
+    <Compile Include="Miners\Grouping\GroupingUtils.cs" />
+    <Compile Include="Utils\CredentialValidators.cs" />
+    <Compile Include="Utils\Helpers.cs" />
+    <Compile Include="Miners\Miner.cs" />
+    <Compile Include="Forms\MinerFileNotFoundDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MinerFileNotFoundDialog.Designer.cs">
+      <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PInvoke\PInvokeHelpers.cs" />
+    <Compile Include="Switching\NHSmaData.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Forms\TextBoxKeyPressEvents.cs" />
+    <EmbeddedResource Include="Forms\Components\AlgorithmsListView.resx">
+      <DependentUpon>AlgorithmsListView.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\AlgorithmSettingsControl.resx">
+      <DependentUpon>AlgorithmSettingsControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\BenchmarkOptions.resx">
+      <DependentUpon>BenchmarkOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\DevicesListViewSpeedControl.resx">
+      <DependentUpon>DevicesListViewSpeedControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\Field.resx">
+      <DependentUpon>Field.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\PluginInfoDetails.resx">
+      <DependentUpon>PluginInfoDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\PluginInfoItem.resx">
+      <DependentUpon>PluginInfoItem.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\PluginInfoItemRow.resx">
+      <DependentUpon>PluginInfoItemRow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Components\StartupLoadingControl.resx">
+      <DependentUpon>StartupLoadingControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EnterBTCDialogSwitch.resx">
+      <DependentUpon>EnterBTCDialogSwitch.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormEula.resx">
+      <DependentUpon>FormEula.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
+      <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_3rdParty_TOS.resx">
+      <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_Main.resx">
+      <DependentUpon>Form_Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_MinerPlugins.resx">
+      <DependentUpon>Form_MinerPlugins.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_Settings.resx">
+      <DependentUpon>Form_Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MinerFileNotFoundDialog.resx">
+      <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\LoginForm.resx">
+      <DependentUpon>LoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="app.config" />
+    <None Include="OnGPUsLost.bat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="Resources\Eula.rtf" />
+    <None Include="translations.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\info_black_18.png" />
+    <Content Include="Resources\info_black_36.png" />
+    <Content Include="Resources\logo.ico" />
+    <Content Include="Resources\NHM_logo_big_light.png" />
+    <Content Include="Resources\NHM_logo_med_light.png" />
+    <Content Include="Resources\NHM_logo_small_light.png" />
+    <Content Include="Resources\NHM_logo_xsmall_light.png" />
+    <Content Include="Resources\NHM_logo_xxsmall_light.png" />
+    <None Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
+    <Content Include="Resources\NHM_help_50px.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Core\MyDownloader.Core.csproj">
+      <Project>{e763345e-6696-4c53-8764-47e4abd67def}</Project>
+      <Name>MyDownloader.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\3rdparty\DownloadManager\MyDownloader.Extension\MyDownloader.Extension.csproj">
+      <Project>{fea18b6c-491f-401a-a06b-ae47888ff288}</Project>
+      <Name>MyDownloader.Extension</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\3rdparty\MessageBoxManager\MessageBoxManager.csproj">
+      <Project>{0e9d874e-5354-465e-9ec3-f7a35c268a8a}</Project>
+      <Name>MessageBoxManager</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\3rdparty\websocket-sharp\websocket-sharp.csproj">
+      <Project>{b357bac7-529e-4d81-a0d2-71041b19c8de}</Project>
+      <Name>websocket-sharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\BMiner\BMiner.csproj">
+      <Project>{da54e8c4-73d8-4f1a-be84-0d548b77a2c0}</Project>
+      <Name>BMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\BrokenMiner\BrokenMiner.csproj">
+      <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
+      <Name>BrokenMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\ClaymoreDual14\ClaymoreDual14.csproj">
+      <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
+      <Name>ClaymoreDual14</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\ClaymoreDual\ClaymoreDual.csproj">
+      <Project>{be85e5ec-3f77-494b-8085-3d5e09b220e1}</Project>
+      <Name>ClaymoreDual</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\Ethlargement\Ethlargement.csproj">
+      <Project>{5f994ad1-02a2-4a00-90ca-5cd5943fd24a}</Project>
+      <Name>Ethlargement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\EWBF\EWBF.csproj">
+      <Project>{8b382c65-fc83-43bd-ae16-f06c26a24786}</Project>
+      <Name>EWBF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\GMiner\GMiner.csproj">
+      <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
+      <Name>GMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\MinerPluginLoader\MinerPluginLoader.csproj">
+      <Project>{2c35f83c-aa75-49c0-98e8-082e329b6491}</Project>
+      <Name>MinerPluginLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">
+      <Project>{847398e0-2e35-4a85-8c70-0b40aa172aba}</Project>
+      <Name>MinerPluginToolkitV1</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\MinerPlugin\MinerPlugin.csproj">
+      <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
+      <Name>MinerPlugin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\NanoMiner\NanoMiner.csproj">
+      <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
+      <Name>NanoMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\NBMiner\NBMiner.csproj">
+      <Project>{a4b0cdcb-d1d7-4563-9888-d58e0b36d0f8}</Project>
+      <Name>NBMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\Phoenix\Phoenix.csproj">
+      <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
+      <Name>Phoenix</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj">
+      <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>
+      <Name>TeamRedMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\TRex\TRex.csproj">
+      <Project>{1b00711a-2ca2-49c0-a9fd-8bf9e478e3b0}</Project>
+      <Name>TRex</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\TTMiner\TTMiner.csproj">
+      <Project>{06e84bad-4317-41e0-ad59-31e70db4c12c}</Project>
+      <Name>TTMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\WildRig\WildRig.csproj">
+      <Project>{fa68227d-27a2-4058-8d36-005fadafecc0}</Project>
+      <Name>WildRig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj">
+      <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
+      <Name>XmrStak</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.DeviceDetection\NHM.DeviceDetection.csproj">
+      <Project>{9b4e5761-4c68-41f8-86bb-26f3382c6189}</Project>
+      <Name>NHM.DeviceDetection</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
+      <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
+      <Name>NHM.DeviceMonitoring</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.MinersDownloader\NHM.MinersDownloader.csproj">
+      <Project>{6bdc0b57-e7d9-43e1-8534-55ae8a1b12ed}</Project>
+      <Name>NHM.MinersDownloader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.UUID\NHM.UUID.csproj">
+      <Project>{ee6160cc-8c19-4ad8-bb1e-c295347203ee}</Project>
+      <Name>NHM.UUID</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
+      <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
+      <Name>NHM.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.Extensions\NHM.Extensions.csproj">
+      <Project>{12564275-9741-4341-868d-8762448884d0}</Project>
+      <Name>NHM.Extensions</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>REM copy translations. Always copy and replace file
+copy /Y "$(ProjectDir)\translations.json" "$(SolutionDir)$(Configuration)\translations.json"
+REM device detection test script
+copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_test.bat" "$(SolutionDir)$(Configuration)\device_detection_test.bat"
+
+REM copy device detection dll's. Copy only if files don't exist
+If NOT exist "$(SolutionDir)$(Configuration)\cpuid.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cpuid.dll" "$(SolutionDir)$(Configuration)\cpuid.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\cuda_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\cuda_device_detection.dll" "$(SolutionDir)$(Configuration)\cuda_device_detection.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcp120.dll" "$(SolutionDir)$(Configuration)\msvcp120.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\msvcr120.dll" "$(SolutionDir)$(Configuration)\msvcr120.dll"
+REM OpenCL.dll inside a separate folder
+If NOT exist "$(SolutionDir)$(Configuration)\OpenCL\" mkdir "$(SolutionDir)$(Configuration)\OpenCL\"
+if NOT exist "$(SolutionDir)$(Configuration)\OpenCL\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\OpenCL.dll" "$(SolutionDir)$(Configuration)\OpenCL\OpenCL.dll"
+if NOT exist "$(SolutionDir)$(Configuration)\OpenCL\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\OpenCL\README.md" "$(SolutionDir)$(Configuration)\OpenCL\README.md"
+If NOT exist "$(SolutionDir)$(Configuration)\opencl_device_detection.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\opencl_device_detection.dll" "$(SolutionDir)$(Configuration)\opencl_device_detection.dll"
+REM NVIDIA inside a separate folder
+If NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\" mkdir "$(SolutionDir)$(Configuration)\NVIDIA\"
+if NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\nvml.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\nvml.dll" "$(SolutionDir)$(Configuration)\NVIDIA\nvml.dll"
+if NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\README.md" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\README.md" "$(SolutionDir)$(Configuration)\NVIDIA\README.md"
+if NOT exist "$(SolutionDir)$(Configuration)\NVIDIA\license.txt" copy /Y "$(SolutionDir)\pre_compiled_libs\device_detection_x64\NVIDIA\license.txt" "$(SolutionDir)$(Configuration)\NVIDIA\license.txt"
+
+
+REM commons dll's for downloaded miners. Copy only if files don't exist. Remove this after plugin system fully replaces integrated miners
+REM create directory
+If NOT exist "$(SolutionDir)$(Configuration)\common\" mkdir "$(SolutionDir)$(Configuration)\common\"
+REM copy over dll's
+If NOT exist "$(SolutionDir)$(Configuration)\common\cudart32_80.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart32_80.dll" "$(SolutionDir)$(Configuration)\common\cudart32_80.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\common\cudart64_80.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart64_80.dll" "$(SolutionDir)$(Configuration)\common\cudart64_80.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\common\cudart64_91.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\cudart64_91.dll" "$(SolutionDir)$(Configuration)\common\cudart64_91.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\common\libcurl.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\libcurl.dll" "$(SolutionDir)$(Configuration)\common\libcurl.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\common\msvcp120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp120.dll" "$(SolutionDir)$(Configuration)\common\msvcp120.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\common\msvcp140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcp140.dll" "$(SolutionDir)$(Configuration)\common\msvcp140.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\common\msvcr110.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr110.dll" "$(SolutionDir)$(Configuration)\common\msvcr110.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\common\msvcr120.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\msvcr120.dll" "$(SolutionDir)$(Configuration)\common\msvcr120.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\common\OpenCL.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\OpenCL.dll" "$(SolutionDir)$(Configuration)\common\OpenCL.dll"
+If NOT exist "$(SolutionDir)$(Configuration)\common\vcruntime140.dll" copy /Y "$(SolutionDir)\pre_compiled_libs\common\vcruntime140.dll" "$(SolutionDir)$(Configuration)\common\vcruntime140.dll"
+</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

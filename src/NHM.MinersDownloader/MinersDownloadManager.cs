@@ -10,13 +10,14 @@ using MyDownloader.Core;
 using MyDownloader.Core.Extensions;
 using MyDownloader.Core.UI;
 using MyDownloader.Extension.Protocols;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace NHM.MinersDownloader
 {
     public static class MinersDownloadManager
     {
-        public static bool UseMyDownloader { get; set; } = true;
+        // don't use this it is faster but less stable
+        public static bool UseMyDownloader { get; set; } = false;
 
         static MinersDownloadManager()
         {

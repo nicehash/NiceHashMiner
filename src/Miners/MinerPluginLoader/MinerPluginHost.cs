@@ -4,7 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace MinerPluginLoader
 {
@@ -21,34 +21,35 @@ namespace MinerPluginLoader
             return _tempDirPrefixes.Where(prefix => dirPath.Contains(prefix)).Count() > 0;
         }
 
-        public static int LoadPlugins(string pluginsRootDirPath)
+        public static IEnumerable<string> LoadPlugins(string pluginsRootDirPath)
         {
             if (!Directory.Exists(pluginsRootDirPath))
             {
                 Logger.Info("MinerPluginHost", $"Plugins root directory doesn't exist: {pluginsRootDirPath}");
                 // TODO directory doesn't exist
-                return 0;
+                return Enumerable.Empty<string>();
             }
 
             // this can throw
             var pluginDirectories = Directory.GetDirectories(pluginsRootDirPath)
                 .Where(dir => HasTempPrefix(dir) == false);
 
-            var loadedPlugins = 0;
+            var loadedPlugins = new List<string>();
             foreach (var pluginDirectory in pluginDirectories)
             {
-                loadedPlugins += LoadPlugin(pluginDirectory);
+                var loaded = LoadPlugin(pluginDirectory);
+                if (loaded.Count() > 0) loadedPlugins.AddRange(loaded);
             }
 
             Logger.Info("MinerPluginHost", $"Plugins successfully loaded");
             return loadedPlugins;
         }
 
-        public static int LoadPlugin(string pluginDirPath)
+        public static IEnumerable<string> LoadPlugin(string pluginDirPath)
         {
             if (!Directory.Exists(pluginDirPath)) {
                 Logger.Info("MinerPluginHost", $"Plugins path doesn't exist: {pluginDirPath}");
-                return 0;
+                return Enumerable.Empty<string>();
             }
 
             // get all managed plugin dll's 
@@ -87,7 +88,7 @@ namespace MinerPluginLoader
                     }
                 });
 
-            var loadedPlugins = 0;
+            var loadedPlugins = new List<string>();
             foreach (var pluginType in pluginTypes)
             {
                 try
@@ -100,7 +101,7 @@ namespace MinerPluginLoader
                         Logger.Info("MinerPluginHost", $"Old name {existingPlugin.Name} and version {existingPlugin.Version}\r\n new name {plugin.Name} and version {plugin.Version}");
                     }
                     MinerPlugin[plugin.PluginUUID] = plugin;
-                    loadedPlugins++;
+                    loadedPlugins.Add(plugin.PluginUUID);
                 }
                 catch (Exception e)
                 {

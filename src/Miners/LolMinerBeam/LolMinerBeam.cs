@@ -11,9 +11,10 @@ using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Enums;
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
+using NHM.Common;
+using NHM.Common.Enums;
+using static NHM.Common.StratumServiceHelpers;
+using MinerPluginToolkitV1.Configs;
 
 namespace LolMinerBeam
 {
@@ -91,19 +92,7 @@ namespace LolMinerBeam
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            var benchmarkTime = 20; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 20;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var commandLine = $"--benchmark {AlgorithmName(_algorithmType)} --longstats {benchmarkTime} --devices {_devices} {_extraLaunchParameters}";
             var binPathBinCwdPair = GetBinAndCwdPaths();
@@ -146,7 +135,7 @@ namespace LolMinerBeam
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.1");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.3");
             var binPath = Path.Combine(pluginRootBins, "lolMiner.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
@@ -177,8 +166,8 @@ namespace LolMinerBeam
             if (MinerOptionsPackage != null)
             {
                 // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

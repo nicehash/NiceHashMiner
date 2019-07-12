@@ -3,9 +3,9 @@ using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ClaymoreCommon;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MinerPluginToolkitV1.Configs;
 
 namespace Phoenix
 {
@@ -54,23 +55,11 @@ namespace Phoenix
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            var benchmarkTime = 90; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 90;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 180;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             // local benchmark
             // TODO hardcoded epoch
-            var commandLine = $"-di {_devices} -platform {_platform} {_extraLaunchParameters} -benchmark 200 -wd 0";
+            var commandLine = $"-di {_devices} {_extraLaunchParameters} -benchmark 200 -wd 0";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;

@@ -10,6 +10,7 @@
     <AssemblyName>MinerDeviceDetection</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -55,13 +56,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
+    <ProjectReference Include="..\..\NHM.Common\NHM.Common.csproj">
       <Project>{279A5B29-3799-43FA-9734-E462E046BA81}</Project>
-      <Name>NiceHashMinerLegacy.Common</Name>
+      <Name>NHM.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NiceHashMinerLegacy\NiceHashMinerLegacy.csproj">
+    <ProjectReference Include="..\..\NiceHashMiner\NiceHashMiner.csproj">
       <Project>{A70B0AEE-15C4-49E1-9DC9-B936A1EBC2B5}</Project>
-      <Name>NiceHashMinerLegacy</Name>
+      <Name>NiceHashMiner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NHM.DeviceDetection.NVIDIA;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Device;
+using NHM.Common;
+using NHM.Common.Device;
 
 namespace NHM.DeviceDetection
 {

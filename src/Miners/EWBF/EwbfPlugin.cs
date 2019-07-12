@@ -1,55 +1,36 @@
-﻿using MinerPlugin;
-using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+﻿using NHM.Common.Algorithm;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using NiceHashMinerLegacy.Common;
-using System.IO;
 using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1;
 
 namespace EWBF
 {
-    public class EwbfPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class EwbfPlugin : PluginBase
     {
         public EwbfPlugin()
         {
-            _pluginUUID = "f7d5dfa0-7236-11e9-b20c-f9f12eb6d835";
+            // set default internal settings
+            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
         }
-        public EwbfPlugin(string pluginUUID = "f7d5dfa0-7236-11e9-b20c-f9f12eb6d835")
+
+        public override string PluginUUID => "f7d5dfa0-7236-11e9-b20c-f9f12eb6d835";
+
+        public override Version Version => new Version(2, 0);
+
+        public override string Name => "Ewbf";
+
+        public override string Author => "stanko@nicehash.com";
+
+        protected override MinerBase CreateMinerBase()
         {
-            _pluginUUID = pluginUUID;
-        }
-        private readonly string _pluginUUID;
-        public string PluginUUID => _pluginUUID;
-
-        public Version Version => new Version(1, 2);
-
-        public string Name => "Ewbf";
-
-        public string Author => "stanko@nicehash.com";
-
-        public bool CanGroup(MiningPair a, MiningPair b)
-        {
-            return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
+            return new EwbfMiner(PluginUUID);
         }
 
-        public IMiner CreateMiner()
-        {
-            return new EwbfMiner(PluginUUID)
-            {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts
-            };
-        }
-
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
+        public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             //CUDA 9.1+: minimum drivers 391.29
@@ -72,15 +53,6 @@ namespace EWBF
 
         IReadOnlyList<Algorithm> GetSupportedAlgorithms(CUDADevice gpu)
         {
-            //var algorithms = new List<Algorithm> { };
-            //// on btctalk ~1.63GB vram
-            //const ulong MinZHashMemory = 1879047230; // 1.75GB
-            //if (gpu.GpuRam > MinZHashMemory)
-            //{
-            //    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.ZHash));
-            //}
-
-            //return algorithms;
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.ZHash),
@@ -89,95 +61,7 @@ namespace EWBF
             return filteredAlgorithms;
         }
 
-        #region Internal Settings
-        public void InitInternals()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-
-            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
-            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
-
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
-            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
-
-            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
-            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
-        }
-
-        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
-        {
-            GeneralOptions = new List<MinerOption>
-            {
-                /// <summary>
-                /// Personalization for equihash, string 8 characters
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "ewbf_personalization_equihash",
-                    ShortName = "--pers"
-                },
-                /// <summary>
-                /// The developer fee in percent allowed decimals for example 0, 1, 2.5, 1.5 etc.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "ewbf_developer_fee",
-                    ShortName = "--fee"
-                },
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "ewbf_eexit",
-                    ShortName = "--eexit"
-                },
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "ewbf_solver",
-                    ShortName = "--solver",
-                    DefaultValue = "0",
-                    Delimiter = " "
-                },
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "ewbf_intensity",
-                    ShortName = "--intensity",
-                    DefaultValue = "64",
-                    Delimiter = " "
-                },
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "ewbf_powercalc",
-                    ShortName = "--pec"
-                }
-            },
-            TemperatureOptions = new List<MinerOption>{
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "ewbf_templimit",
-                    ShortName = "--templimit",
-                    DefaultValue = "90"
-                },
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "ewbf_tempunits",
-                    ShortName = "--tempunits",
-                    DefaultValue = "C"
-                }
-            }
-        };
-
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
-        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
-        #endregion Internal Settings
-
-        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
@@ -185,15 +69,10 @@ namespace EWBF
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe", "cudart32_91.dll", "cudart64_91.dll" });
         }
 
-        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             //no new version available
             return false;
-        }
-
-        public TimeSpan GetApiMaxTimeout()
-        {
-            return new TimeSpan(0, 5, 0);
         }
     }
 }

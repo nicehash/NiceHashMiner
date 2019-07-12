@@ -1,5 +1,5 @@
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Algorithm;
+using NHM.Common.Device;
+using NHM.Common.Algorithm;
 
 namespace MinerPlugin
 {
@@ -14,7 +14,7 @@ namespace MinerPlugin
         public BaseDevice Device { get; set; }
 
         /// <summary>
-        /// Algorithm represents active algorithm of type <see cref="NiceHashMinerLegacy.Common.Algorithm.Algorithm"/>
+        /// Algorithm represents active algorithm of type <see cref="NHM.Common.Algorithm.Algorithm"/>
         /// </summary>
         public Algorithm Algorithm { get; set; }
     }

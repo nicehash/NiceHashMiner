@@ -1,7 +1,7 @@
 ﻿using MinerPlugin;
-using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Algorithm;
+using NHM.Common.Enums;
+using NHM.Common.Device;
+using NHM.Common.Algorithm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System.Diagnostics;
 using System.ComponentModel;
 
@@ -78,6 +78,8 @@ namespace MinerPluginToolkitV1
         public MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables { get; set; }
 
         public MinerReservedPorts MinerReservedApiPorts { get; set; }
+
+        public MinerBenchmarkTimeSettings MinerBenchmarkTimeSettings { get; set; }
 
         abstract public Task<ApiData> GetMinerStatsDataAsync();
 
@@ -213,6 +215,8 @@ namespace MinerPluginToolkitV1
                                 ThrowIfIsStop(stopMiner.IsCancellationRequested);
 
                                 // Logging
+                                Logger.Info(_logGroup, $"Starting miner binPath='{binPath}'");
+                                Logger.Info(_logGroup, $"Starting miner binCwd='{binCwd}'");
                                 Logger.Info(_logGroup, $"Starting miner commandLine='{commandLine}'");
                                 // TODO this will not print content
                                 var environmentVariablesLog = environmentVariables == null ? "<null>" : string.Join(";", environmentVariables.Select(x => x.Key + "=" + x.Value));

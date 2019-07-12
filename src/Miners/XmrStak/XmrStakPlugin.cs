@@ -1,13 +1,12 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Algorithm;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -17,28 +16,26 @@ using XmrStak.Configs;
 
 namespace XmrStak
 {
-    public class XmrStakPlugin : IMinerPlugin, IInitInternals, IXmrStakConfigHandler, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class XmrStakPlugin : PluginBase, IXmrStakConfigHandler
     {
         public XmrStakPlugin()
         {
-            _pluginUUID = "3d4e56b0-7238-11e9-b20c-f9f12eb6d835";
+            // set default internal settings
+            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
         }
-        public XmrStakPlugin(string pluginUUID = "3d4e56b0-7238-11e9-b20c-f9f12eb6d835")
-        {
-            _pluginUUID = pluginUUID;
-        }
-        private readonly string _pluginUUID;
-        public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 2);
-        public string Name => "XmrStak";
+        public override string PluginUUID => "3d4e56b0-7238-11e9-b20c-f9f12eb6d835";
 
-        public string Author => "stanko@nicehash.com";
+        public override Version Version => new Version(2, 0);
+        public override string Name => "XmrStak";
+
+        public override string Author => "stanko@nicehash.com";
 
         protected Dictionary<string, DeviceType> _registeredDeviceUUIDTypes = new Dictionary<string, DeviceType>();
         protected HashSet<AlgorithmType> _registeredAlgorithmTypes = new HashSet<AlgorithmType>();
 
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
+        public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
@@ -87,19 +84,20 @@ namespace XmrStak
             return algos;
         }
 
-        public IMiner CreateMiner()
+        protected override MinerBase CreateMinerBase()
         {
-            return new XmrStak(PluginUUID, AMDDevice.GlobalOpenCLPlatformID, this)
-            {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts
-            };
+            return new XmrStak(PluginUUID, this);
         }
 
-        public bool CanGroup(MiningPair a, MiningPair b)
+        public override bool CanGroup(MiningPair a, MiningPair b)
         {
-            return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
+            var canGroup = base.CanGroup(a, b);
+            if (canGroup && a.Device is AMDDevice aDev && b.Device is AMDDevice bDev && aDev.OpenCLPlatformID != bDev.OpenCLPlatformID)
+            {
+                // OpenCLPlatorm IDs must match
+                return false;
+            }
+            return canGroup;
         }
 
         private string GetMinerConfigsRoot()
@@ -109,18 +107,9 @@ namespace XmrStak
 
         // these here are slightly different
         #region Internal settings
-        public void InitInternals()
+        public override void InitInternals()
         {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
-            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
-
-            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
-            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
-
-            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
-            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
-
+            base.InitInternals();
 
             var minerConfigPath = GetMinerConfigsRoot();
             if (!Directory.Exists(minerConfigPath)) return; // no settings
@@ -164,38 +153,6 @@ namespace XmrStak
                 }
             }
         }
-
-        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
-
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
-        {
-            DefaultSystemEnvironmentVariables = new Dictionary<string, string>
-            {
-                { "XMRSTAK_NOWAIT", "1" },
-                // https://github.com/fireice-uk/xmr-stak/blob/master/doc/tuning.md#increase-memory-pool
-                // for AMD backend
-                {"GPU_MAX_ALLOC_PERCENT", "100"},
-                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
-                {"GPU_MAX_HEAP_SIZE", "100"},
-                {"GPU_FORCE_64BIT_PTR", "1"}
-            }
-        };
-
-        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
-        {
-            GeneralOptions = new List<MinerOption>
-            {
-                /// <summary>
-                /// Directory to store AMD binary files
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "xmrstak_amdCacheDir",
-                    ShortName = "--amdCacheDir",
-                },
-            }
-        };
         #endregion Internal settings
 
 
@@ -338,7 +295,7 @@ namespace XmrStak
 
         #endregion Cached configs
 
-        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
@@ -349,7 +306,7 @@ namespace XmrStak
             });
         }
 
-        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             if (benchmarkedPluginVersion.Major == 1 && benchmarkedPluginVersion.Minor == 1)
             {
@@ -357,11 +314,6 @@ namespace XmrStak
             }
             //no new version available
             return false;
-        }
-
-        public TimeSpan GetApiMaxTimeout()
-        {
-            return new TimeSpan(0, 5, 0);
         }
     }
 }

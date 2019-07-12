@@ -1,7 +1,7 @@
 ﻿using NHM.DeviceDetection.NVIDIA.Models;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Text;

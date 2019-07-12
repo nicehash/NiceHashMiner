@@ -1,7 +1,7 @@
 ﻿using NHM.DeviceMonitoring.AMD;
 using NHM.DeviceMonitoring.NVIDIA;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common;
+using NHM.Common.Device;
+using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,8 @@ namespace NHM.DeviceMonitoring
 {
     public static class DeviceMonitorManager
     {
+        public static bool DisableDeviceStatusMonitoring { get; set; } = false;
+        public static bool DisableDevicePowerModeSettings { get; set; } = false;
         public static Task<List<DeviceMonitor>> GetDeviceMonitors(IEnumerable<BaseDevice> devices, bool isDCHDriver)
         {
             return Task.Run(() => {

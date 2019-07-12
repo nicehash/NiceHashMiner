@@ -61,7 +61,7 @@ namespace MinerPluginsPacker
             {
                 var dllDir = Path.GetDirectoryName(filePath);
                 var loaded = MinerPluginHost.LoadPlugin(dllDir);
-                if (loaded == 0)
+                if (loaded.Count() == 0)
                 {
                     // log what we couldn't load and continue
                     Console.WriteLine($"Skipping: {filePath}");

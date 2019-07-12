@@ -1,13 +1,13 @@
 using MinerPlugin;
-using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Algorithm;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using MinerPluginToolkitV1.Interfaces;
 using System.IO;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 

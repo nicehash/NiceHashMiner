@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using MinerPlugin;
-using NiceHashMinerLegacy.Common.Enums;
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
+using NHM.Common.Enums;
+using static NHM.Common.StratumServiceHelpers;
 using System.Globalization;
 using System.IO;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Configs;
 
 namespace MinerPluginToolkitV1.CCMinerCommon
 {
@@ -53,19 +54,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
         {
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 20; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 20;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var algo = AlgorithmName(_algorithmType);
             var timeLimit = _noTimeLimitOption ? "" : $"--time-limit {benchmarkTime}";
@@ -163,9 +152,9 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

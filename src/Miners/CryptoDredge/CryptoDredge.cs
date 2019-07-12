@@ -2,17 +2,18 @@
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
+using static NHM.Common.StratumServiceHelpers;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.IO;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System.Collections.Generic;
+using MinerPluginToolkitV1.Configs;
 
 namespace CryptoDredge
 {
@@ -52,6 +53,7 @@ namespace CryptoDredge
             }
         }
 
+#error "Implement GetMinerStatsDataAsync"
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             throw new NotImplementedException();
@@ -73,22 +75,7 @@ namespace CryptoDredge
 
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 20; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 20;
-                    maxCheck = 1 * numOfGpus;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    maxCheck = 2 * numOfGpus;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    maxCheck = 3 * numOfGpus;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
@@ -154,7 +141,7 @@ namespace CryptoDredge
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "CryptoDredge_0.20.1");
             var binPath = Path.Combine(pluginRootBins, "CryptoDredge.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
@@ -178,9 +165,9 @@ namespace CryptoDredge
             _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

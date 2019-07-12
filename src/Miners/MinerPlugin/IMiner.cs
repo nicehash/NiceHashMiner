@@ -1,6 +1,6 @@
-﻿using NiceHashMinerLegacy.Common.Enums;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Algorithm;
+﻿using NHM.Common.Enums;
+using NHM.Common.Device;
+using NHM.Common.Algorithm;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -12,7 +12,8 @@ namespace MinerPlugin
     // TODO when we update to C#7 use tuple values or System.ValueTuple for .NET version that don't support C#7
 
     /// <summary>
-    /// IMiner is the mandatory interface for all miners
+    /// IMiner is the mandatory interface for all miners containing bare minimum functionalities
+	/// It is used as miner process instance created by IMinerPlugin
     /// </summary>
     public interface IMiner
     {

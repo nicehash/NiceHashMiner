@@ -1,5 +1,8 @@
 ﻿using Microsoft.Win32;
+using NHM.Common;
 using System;
+using System.IO;
+using System.Management;
 
 namespace NHM.UUID
 {
@@ -20,20 +23,24 @@ namespace NHM.UUID
             return b64Web;
         }
 
-        public static string GetDeviceB64UUID()
+        public static string GetDeviceB64UUID(bool showInfoToHash = false)
         {
-            var guid = GetMachineGuid();
-            if (guid == null)
+            var cpuSerial = GetCpuID();
+            var macUUID = WindowsMacUtils.GetMAC_UUID();
+            var guid = GetMachineGuidOrFallback();
+            var extraRigSeed = GetExtraRigSeed();
+            var infoToHash = $"NHM/[{cpuSerial}]-[{macUUID}]-[{guid}]-[{extraRigSeed}]";
+            if (showInfoToHash)
             {
-                // fallback
-                return $"{0}-{System.Guid.NewGuid()}";
+                Console.WriteLine("NHM/[{cpuSerial}]-[{macUUID}]-[{guid}]-[{extraRigSeed}]");
+                Console.WriteLine(infoToHash);
             }
-
-            var hexUuid = GetHexUUID($"NHM/{guid}");
+            Logger.Info("NHM.UUID", $"infoToHash='{infoToHash}'");
+            var hexUuid = GetHexUUID(infoToHash);
             return $"{0}-{GetB64UUID(hexUuid)}";
         }
 
-        public static string GetMachineGuid()
+        public static string GetMachineGuidOrFallback()
         {
             const string hklm = "HKEY_LOCAL_MACHINE";
             const string keyPath = hklm + @"\SOFTWARE\Microsoft\Cryptography";
@@ -41,14 +48,50 @@ namespace NHM.UUID
 
             try
             {
-                return (string)Registry.GetValue(keyPath, value, new object());
+                var readValue = Registry.GetValue(keyPath, value, new object());
+                return (string)readValue;
             }
             catch (Exception e)
             {
-                //Logger.Error("REGISTRY", e.Message);
+                Logger.Error("NHM.UUID", $"GetMachineGuid: {e.Message}");
             }
+            // fallback
+            Logger.Warn("NHM.UUID", $"GetMachineGuid FALLBACK");
+            return System.Guid.NewGuid().ToString();
+        }
 
-            return null;
+        public static string GetCpuID()
+        {
+            var serial = "N/A";
+            try
+            {
+                using (var searcher = new ManagementObjectSearcher("Select ProcessorID from Win32_processor"))
+                using (var query = searcher.Get())
+                {
+                    foreach (var item in query)
+                    {
+                        serial = item.GetPropertyValue("ProcessorID").ToString();
+                    }
+                }
+            }
+            catch { }
+            return serial;
+        }
+
+        private static string GetExtraRigSeed()
+        {
+            string path = Paths.RootPath("extra_rig_seed.txt");
+            if (File.Exists(path))
+            {
+                try
+                {
+                    return File.ReadAllText(path);
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return "";
         }
     }
 }

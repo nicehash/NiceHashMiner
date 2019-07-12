@@ -70,9 +70,9 @@
       <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
       <Name>NanoMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
+    <ProjectReference Include="..\..\NHM.Common\NHM.Common.csproj">
       <Project>{279A5B29-3799-43FA-9734-E462E046BA81}</Project>
-      <Name>NiceHashMinerLegacy.Common</Name>
+      <Name>NHM.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

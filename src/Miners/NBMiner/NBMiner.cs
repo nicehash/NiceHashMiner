@@ -11,8 +11,9 @@ using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Enums;
+using MinerPluginToolkitV1.Configs;
 
 namespace NBMiner
 {
@@ -67,19 +68,7 @@ namespace NBMiner
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            int benchTime;
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchTime = 20;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchTime = 120;
-                    break;
-                default:
-                    benchTime = 60;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC);
             var binPathBinCwdPair = GetBinAndCwdPaths();
@@ -92,7 +81,7 @@ namespace NBMiner
             var benchHashes = 0d;
             var benchIters = 0;
             var benchHashResult = 0d;  // Not too sure what this is..
-            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchTime / 20d));
+            var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
 
             bp.CheckData = (data) =>
             {
@@ -114,7 +103,7 @@ namespace NBMiner
                 };
             };
 
-            var timeout = TimeSpan.FromSeconds(benchTime + 5);
+            var timeout = TimeSpan.FromSeconds(benchmarkTime + 5);
             var benchWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, timeout, benchWait, stop);
             return await t;
@@ -166,9 +155,10 @@ namespace NBMiner
                     if (apiDevice == null) continue;
 
                     totalSpeed += apiDevice.hashrate_raw;
-                    totalPowerUsage += (int)apiDevice.power;
+                    var kPower = (int)apiDevice.power * 1000;
+                    totalPowerUsage += kPower;
                     perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, apiDevice.hashrate_raw * (1 - DevFee * 0.01)) });
-                    perDevicePowerInfo.Add(deviceUUID, (int)apiDevice.power);
+                    perDevicePowerInfo.Add(deviceUUID, kPower);
                 }
 
                 api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
@@ -199,9 +189,9 @@ namespace NBMiner
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             if (MinerOptionsPackage != null)
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

@@ -1,18 +1,19 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
+using static NHM.Common.StratumServiceHelpers;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Linq;
 using System.IO;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using System.Collections.Generic;
 using XmrStak.Configs;
+using MinerPluginToolkitV1.Configs;
 
 namespace XmrStak
 {
@@ -30,16 +31,13 @@ namespace XmrStak
         protected IXmrStakConfigHandler _configHandler;
         protected CancellationTokenSource _stopSource = null;
 
-        private readonly int _openClAmdPlatformNum;
-
         // running configs
         protected CpuConfig _cpuConfig;
         protected AmdConfig _amdConfig;
         protected NvidiaConfig _nvidiaConfig;
 
-        public XmrStak(string uuid, int openClAmdPlatformNum, IXmrStakConfigHandler configHandler) : base(uuid)
+        public XmrStak(string uuid, IXmrStakConfigHandler configHandler) : base(uuid)
         {
-            _openClAmdPlatformNum = openClAmdPlatformNum;
             _configHandler = configHandler;
         }
 
@@ -209,19 +207,8 @@ namespace XmrStak
             // settup times
             var openCLCodeGenerationWait = _miningDeviceTypes.Contains(DeviceType.AMD) ? 20 : 0;
             var benchWait = 5;
-            var benchmarkTime = 30; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 30;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
+
 
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
@@ -313,8 +300,9 @@ namespace XmrStak
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID) - a.Device.DeviceType.CompareTo(b.Device.DeviceType));
             if (MinerOptionsPackage != null)
             {
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }
@@ -432,8 +420,16 @@ namespace XmrStak
                 }
                 if (_amdConfig == null && DeviceType.AMD == deviceType)
                 {
+                    var openClAmdPlatformResult = MinerToolkit.GetOpenCLPlatformID(_miningPairs);
+                    var openClAmdPlatformNum = openClAmdPlatformResult.Item1;
+                    bool openClAmdPlatformNumUnique = openClAmdPlatformResult.Item2;
+                    if (!openClAmdPlatformNumUnique)
+                    {
+                        Logger.Error(_logGroup, "Initialization of miner failed. Multiple OpenCLPlatform IDs found!");
+                        throw new InvalidOperationException("Invalid mining initialization");
+                    }
                     var amdTemplate = _configHandler.GetAmdConfig(_algorithmType);
-                    _amdConfig = new AmdConfig() { platform_index = _openClAmdPlatformNum };
+                    _amdConfig = new AmdConfig() { platform_index = openClAmdPlatformNum };
                     _amdConfig.gpu_threads_conf = amdTemplate.gpu_threads_conf.Where(t => deviceIDs.Contains(t.index)).ToList();
                     ConfigHelpers.WriteConfigFile(deviceConfigFilePath, _amdConfig);
                 }

@@ -3,14 +3,14 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Miners.Grouping;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 using MinerPlugin;
 using NiceHashMiner.Plugin;
 using NiceHashMiner.Utils;
@@ -43,7 +43,7 @@ namespace MinerSmokeTest
             return rowData;
         }
 
-        private static async Task InitNhmlDevsPlugins()
+        private static void InitNhmlDevsPlugins()
         {
             //await ComputeDeviceManager.QueryDevicesAsync(null, false);
             MinerPluginsManager.LoadMinerPlugins();
@@ -54,7 +54,7 @@ namespace MinerSmokeTest
             ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
             try
             {
-                await InitNhmlDevsPlugins();
+                InitNhmlDevsPlugins();
             }
             catch (Exception ex)
             {

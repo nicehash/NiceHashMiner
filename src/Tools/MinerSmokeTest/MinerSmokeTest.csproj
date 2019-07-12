@@ -12,6 +12,7 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
+    <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -93,13 +94,13 @@
       <Project>{9b4e5761-4c68-41f8-86bb-26f3382c6189}</Project>
       <Name>NHM.DeviceDetection</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
+    <ProjectReference Include="..\..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
-      <Name>NiceHashMinerLegacy.Common</Name>
+      <Name>NHM.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NiceHashMinerLegacy\NiceHashMinerLegacy.csproj">
+    <ProjectReference Include="..\..\NiceHashMiner\NiceHashMiner.csproj">
       <Project>{a70b0aee-15c4-49e1-9dc9-b936a1ebc2b5}</Project>
-      <Name>NiceHashMinerLegacy</Name>
+      <Name>NiceHashMiner</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

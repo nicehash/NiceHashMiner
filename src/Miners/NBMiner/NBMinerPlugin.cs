@@ -1,37 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Algorithm;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 
 namespace NBMiner
 {
-    public class NBMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class NBMinerPlugin : PluginBase, IDevicesCrossReference
     {
         public NBMinerPlugin()
         {
-            _pluginUUID = "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
+            // set default internal settings
+            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            DefaultTimeout = PluginInternalSettings.DefaultTimeout;
+            GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
         }
-        public NBMinerPlugin(string pluginUUID = "6c07f7a0-7237-11e9-b20c-f9f12eb6d835")
-        {
-            _pluginUUID = pluginUUID;
-        }
-        private readonly string _pluginUUID;
-        public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 4);
-        public string Name => "NBMiner";
+        public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public string Author => "Dillon Newell";
+        public override Version Version => new Version(2, 0);
+        public override string Name => "NBMiner";
+
+        public override string Author => "Dillon Newell";
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
@@ -52,7 +46,7 @@ namespace NBMiner
             return false;
         }
 
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
+        public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
@@ -90,85 +84,10 @@ namespace NBMiner
             return filteredAlgorithms;
         }
 
-        public IMiner CreateMiner()
+        protected override MinerBase CreateMinerBase()
         {
-            return new NBMiner(PluginUUID, _mappedIDs)
-            {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts
-            };
+            return new NBMiner(PluginUUID, _mappedIDs);
         }
-
-        public bool CanGroup(MiningPair a, MiningPair b)
-        {
-            return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
-        }
-
-        #region Internal Settings
-        public void InitInternals()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-
-            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
-            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
-
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
-            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
-
-            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
-            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
-        }
-
-        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
-        {
-            GeneralOptions = new List<MinerOption> { 
-                /// <summary>
-                /// Set intensity of cuckoo, cuckaroo, cuckatoo, [1, 12]. Smaller value means higher CPU usage to gain more hashrate. Set to 0 means autumatically adapt. Default: 0.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "nbminer_intensity",
-                    LongName = "--cuckoo-intensity",
-                    DefaultValue = "0"
-                },
-                /// <summary>
-                /// Set this option to reduce the range of power consumed by rig when minining with algo cuckatoo.
-                /// This feature can reduce the chance of power supply shutdown caused by overpowered.
-                /// Warning: Setting this option may cause drop on minining performance.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "nbminer_powerOptimize",
-                    LongName = "--cuckatoo-power-optimize",
-                    DefaultValue = "0"
-                },
-                /// <summary>
-                /// Generate log file named `log_<timestamp>.txt`.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "nbminer_log",
-                    LongName = "--log"
-                },
-                /// <summary>
-                /// Use 'yyyy-MM-dd HH:mm:ss,zzz' for log time format.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionIsParameter,
-                    ID = "nbminer_longTimeFormat",
-                    LongName = "--long-format"
-                }
-            }
-        };
-
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
-        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
-        #endregion Internal Settings
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
@@ -188,7 +107,7 @@ namespace NBMiner
             }
         }
 
-        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
@@ -196,28 +115,9 @@ namespace NBMiner
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nbminer.exe", "OhGodAnETHlargementPill-r2.exe" });
         }
 
-        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            var benchmarkedVersionIsSame = Version.Major == benchmarkedPluginVersion.Major && Version.Minor == benchmarkedPluginVersion.Minor;
-            var benchmarkedVersionIsOlder = Version.Major >= benchmarkedPluginVersion.Major && Version.Minor > benchmarkedPluginVersion.Minor;
-            if (benchmarkedVersionIsSame || !benchmarkedVersionIsOlder) return false;
-            if (ids.Count() == 0) return false;
-            // plugin version 1.2 bundles NBMiner v21.3
-            // plugin version 1.3 bundles NBMiner v23.2
-            // performance and compatibility optimizations Grin29 and Grin31,
-            // Added support for CuckoCycle
-            // there were 5 releases in between and many changes
-            if (device.DeviceType != DeviceType.NVIDIA) return false;
-            var singleAlgorithm = ids[0];
-            if (singleAlgorithm == AlgorithmType.GrinCuckaroo29) return true;
-            if (singleAlgorithm == AlgorithmType.GrinCuckatoo31) return true;
-
             return false;
-        }
-
-        public TimeSpan GetApiMaxTimeout()
-        {
-            return new TimeSpan(0, 1, 0);
         }
     }
 }

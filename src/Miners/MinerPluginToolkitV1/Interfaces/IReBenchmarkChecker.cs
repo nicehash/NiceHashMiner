@@ -1,5 +1,5 @@
-﻿using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+﻿using NHM.Common.Device;
+using NHM.Common.Enums;
 using System;
 
 namespace MinerPluginToolkitV1.Interfaces

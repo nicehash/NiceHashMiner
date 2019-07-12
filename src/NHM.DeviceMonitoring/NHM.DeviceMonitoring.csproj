@@ -74,9 +74,9 @@
       <Project>{92d51a33-7bf0-47fd-9ece-d758ffe1691d}</Project>
       <Name>Nvml</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NiceHashMinerLegacy.Common\NiceHashMinerLegacy.Common.csproj">
+    <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
-      <Name>NiceHashMinerLegacy.Common</Name>
+      <Name>NHM.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

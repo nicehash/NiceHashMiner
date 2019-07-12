@@ -1,54 +1,49 @@
 ﻿using MinerPlugin;
-using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Algorithm;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using MinerPluginToolkitV1.Interfaces;
-using System.IO;
-using NiceHashMinerLegacy.Common;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
-using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1;
 
 namespace TeamRedMiner
 {
-    public class TeamRedMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeout
+    public class TeamRedMinerPlugin : PluginBase
     {
         public TeamRedMinerPlugin()
         {
-            _pluginUUID = "abc3e2a0-7237-11e9-b20c-f9f12eb6d835";
-        }
-        public TeamRedMinerPlugin(string pluginUUID = "abc3e2a0-7237-11e9-b20c-f9f12eb6d835")
-        {
-            _pluginUUID = pluginUUID;
-        }
-        private readonly string _pluginUUID;
-        public string PluginUUID => _pluginUUID;
-
-        public Version Version => new Version(1, 2);
-
-        public string Name => "TeamRedMiner";
-
-        public string Author => "stanko@nicehash.com";
-
-        public bool CanGroup(MiningPair a, MiningPair b)
-        {
-            return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
+            // set default internal settings
+            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
         }
 
-        public IMiner CreateMiner()
+        public override string PluginUUID => "abc3e2a0-7237-11e9-b20c-f9f12eb6d835";
+
+        public override Version Version => new Version(2, 0);
+
+        public override string Name => "TeamRedMiner";
+
+        public override string Author => "stanko@nicehash.com";
+
+        public override bool CanGroup(MiningPair a, MiningPair b)
         {
-            return new TeamRedMiner(PluginUUID, AMDDevice.GlobalOpenCLPlatformID)
+            var canGroup = base.CanGroup(a, b);
+            if (a.Device is AMDDevice aDev && b.Device is AMDDevice bDev && aDev.OpenCLPlatformID != bDev.OpenCLPlatformID)
             {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts
-            };
+                // OpenCLPlatorm IDs must match
+                return false;
+            }
+            return canGroup;
         }
 
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
+        protected override MinerBase CreateMinerBase()
+        {
+            return new TeamRedMiner(PluginUUID);
+        }
+
+        public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             // Get AMD GCN4+
@@ -70,84 +65,14 @@ namespace TeamRedMiner
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
                 new Algorithm(PluginUUID, AlgorithmType.Lyra2Z),
                 new Algorithm(PluginUUID, AlgorithmType.X16R),
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31)
             };
-            return algorithms;
+
+            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            return filteredAlgorithms;
         }
 
-        #region Internal Settings
-        public void InitInternals()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
-            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
-
-            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
-            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
-
-            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
-            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
-        }
-
-        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
-
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
-        {
-            DefaultSystemEnvironmentVariables = new Dictionary<string, string>()
-            {
-                {"GPU_MAX_ALLOC_PERCENT", "100"},
-                {"GPU_USE_SYNC_OBJECTS", "1"},
-                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
-                {"GPU_MAX_HEAP_SIZE", "100"},
-            },
-        };
-
-        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage{
-            GeneralOptions = new List<MinerOption>
-            {
-                /// <summary>
-                ///  Specified the init style (1 is default):
-                ///  1: One gpu at the time, complete all before mining.
-                ///  2: Three gpus at the time, complete all before mining.
-                ///  3: All gpus in parallel, start mining immediately.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "teamRedMiner_initStyle",
-                    ShortName = "init_style=",
-                    DefaultValue = "1"
-                }
-            },
-            TemperatureOptions = new List<MinerOption>
-            {
-                /// <summary>
-                ///  Sets the temperature at which the miner will stop GPUs that are too hot.
-                ///  Default is 85C.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "teamRedMiner_tempLimit",
-                    ShortName = "temp_limit=",
-                    DefaultValue = "85"
-                },
-                /// <summary>
-                ///  Sets the temperature below which the miner will resume GPUs that were previously stopped due to temperature exceeding limit.
-                ///  Default is 60C.
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "teamRedMiner_tempResume",
-                    ShortName = "temp_resume=",
-                    DefaultValue = "60"
-                }
-            }
-        };
-        #endregion Internal Settings
-
-        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
@@ -155,15 +80,10 @@ namespace TeamRedMiner
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "teamredminer.exe" });
         }
 
-        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             //no improvements for algorithm speeds in the new version - just stability improvements
             return false;
-        }
-
-        public TimeSpan GetApiMaxTimeout()
-        {
-            return new TimeSpan(0, 5, 0);
         }
     }
 }

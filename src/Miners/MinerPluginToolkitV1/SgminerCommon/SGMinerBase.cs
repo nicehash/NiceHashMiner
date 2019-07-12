@@ -3,22 +3,22 @@ using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using static NiceHashMinerLegacy.Common.StratumServiceHelpers;
+using static NHM.Common.StratumServiceHelpers;
 using System.IO;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
+using MinerPluginToolkitV1.Configs;
 
 namespace MinerPluginToolkitV1.SgminerCommon
 {
     public class SGMinerBase : MinerBase
     {
         private int _apiPort;
-        private readonly int _openClAmdPlatformNum;
         
         // can mine only one algorithm at a given time
         protected AlgorithmType _algorithmType;
@@ -27,10 +27,8 @@ namespace MinerPluginToolkitV1.SgminerCommon
         private string _devicesOnPlatform;
         private string _extraLaunchParameters;
 
-        public SGMinerBase(string uuid, int openClAmdPlatformNum) : base(uuid)
-        {
-            _openClAmdPlatformNum = openClAmdPlatformNum;
-        }
+        public SGMinerBase(string uuid) : base(uuid)
+        {}
 
         // override for your sgminer case
         protected virtual string AlgoName
@@ -53,8 +51,6 @@ namespace MinerPluginToolkitV1.SgminerCommon
             }
         }
 
-        
-
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var apiDevsResult = await SgminerAPIHelpers.GetApiDevsRootAsync(_apiPort, _logGroup);
@@ -69,30 +65,40 @@ namespace MinerPluginToolkitV1.SgminerCommon
             bool ok = singleType.Item2;
             if (!ok)
             {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                Logger.Error(_logGroup, "Initialization of miner failed. Algorithm not found!");
                 throw new InvalidOperationException("Invalid mining initialization");
             }
+            // check platform id
+            var openClAmdPlatformResult = MinerToolkit.GetOpenCLPlatformID(_miningPairs);
+            var openClAmdPlatformNum = openClAmdPlatformResult.Item1;
+            bool openClAmdPlatformNumUnique = openClAmdPlatformResult.Item2;
+            if (!openClAmdPlatformNumUnique)
+            {
+                Logger.Error(_logGroup, "Initialization of miner failed. Multiple OpenCLPlatform IDs found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
+
             // all good continue on
 
             // Order pairs and parse ELP
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             var deviceIds = orderedMiningPairs.Select(pair => pair.Device.ID);
-            _devicesOnPlatform = $"--gpu-platform {_openClAmdPlatformNum} -d {string.Join(",", deviceIds)}";
+            _devicesOnPlatform = $"--gpu-platform {openClAmdPlatformNum} -d {string.Join(",", deviceIds)}";
 
 
             if (MinerOptionsPackage != null)
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
             else // TODO this one is temp???
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, DefaultMinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, DefaultMinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = DefaultMinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, DefaultMinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, DefaultMinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }
@@ -105,19 +111,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
             // TODO avemore takes REALLY LONG TIME TO BUILD KERNELS!!!! ADD kernel build checks
             // determine benchmark time 
             // settup times
-            var benchmarkTime = 90; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 90;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 180;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             // use demo user and disable colorts so we can read from stdout
             var stopAt = DateTime.Now.AddSeconds(benchmarkTime).ToString("HH:mm");
@@ -162,7 +156,7 @@ namespace MinerPluginToolkitV1.SgminerCommon
             return Tuple.Create(binPath, binCwd);
         }
 
-        private string CreateCommandLine(string username)
+        protected string CreateCommandLine(string username)
         {
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var cmd = $"-k {AlgoName} -o {url} -u {username} -p x {_extraLaunchParameters} {_devicesOnPlatform}";

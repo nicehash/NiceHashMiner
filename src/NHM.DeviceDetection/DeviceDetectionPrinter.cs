@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common;
+using NHM.Common;
 
 namespace NHM.DeviceDetection
 {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MinerPlugin;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
-using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common.Algorithm;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,7 +64,7 @@ namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
             };
             var miningPairs = new List<MiningPair>() { pair1 };
 
-            var ret = Parser.Parse(miningPairs, options);
+            var ret = ExtraLaunchParametersParser.Parse(miningPairs, options);
             var exp = " -nofee";
             Assert.AreEqual(ret, exp);
 
@@ -76,7 +76,7 @@ namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
                 Algorithm = algorithm1
             };
             miningPairs = new List<MiningPair>() { pair1 };
-            ret = Parser.Parse(miningPairs, options);
+            ret = ExtraLaunchParametersParser.Parse(miningPairs, options);
             exp = " -intensity 10";
             Assert.AreEqual(ret, exp);
 
@@ -87,7 +87,7 @@ namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
                 Algorithm = algorithm1
             };
             miningPairs = new List<MiningPair>() { pair1 };
-            ret = Parser.Parse(miningPairs, options);
+            ret = ExtraLaunchParametersParser.Parse(miningPairs, options);
             exp = " -intensity 10";
             Assert.AreEqual(ret, exp);
 
@@ -99,7 +99,7 @@ namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
                 Algorithm = algorithm1
             };
             miningPairs = new List<MiningPair>() { pair1 };
-            ret = Parser.Parse(miningPairs, options);
+            ret = ExtraLaunchParametersParser.Parse(miningPairs, options);
             exp = " --multi-intensity 10,11";
             Assert.AreEqual(ret, exp);
 
@@ -111,7 +111,7 @@ namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
                 Algorithm = algorithm1
             };
             miningPairs = new List<MiningPair>() { pair1 };
-            ret = Parser.Parse(miningPairs, options);
+            ret = ExtraLaunchParametersParser.Parse(miningPairs, options);
             exp = " --multi-power=10,11";
             Assert.AreEqual(ret, exp);
 
@@ -123,7 +123,7 @@ namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
                 Algorithm = algorithm1
             };
             miningPairs = new List<MiningPair>() { pair1 };
-            ret = Parser.Parse(miningPairs, options);
+            ret = ExtraLaunchParametersParser.Parse(miningPairs, options);
             exp = " --multi-intensity 15";
             Assert.AreEqual(ret, exp);
 
@@ -135,7 +135,7 @@ namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
                 Algorithm = algorithm1
             };
             miningPairs = new List<MiningPair>() { pair1 };
-            ret = Parser.Parse(miningPairs, options);
+            ret = ExtraLaunchParametersParser.Parse(miningPairs, options);
             exp = " --multi-intensity 15";
             Assert.AreEqual(ret, exp);
 
@@ -147,7 +147,7 @@ namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
                 Algorithm = algorithm1
             };
             miningPairs = new List<MiningPair>() { pair1 };
-            ret = Parser.Parse(miningPairs, options);
+            ret = ExtraLaunchParametersParser.Parse(miningPairs, options);
             exp = "";
             Assert.AreEqual(ret, exp);
 
@@ -164,7 +164,7 @@ namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
                 Algorithm = algorithm2
             };
             miningPairs = new List<MiningPair>() { pair1, pair2 };
-            ret = Parser.Parse(miningPairs, options);
+            ret = ExtraLaunchParametersParser.Parse(miningPairs, options);
             exp = " --multi-intensity 15,-1";
             Assert.AreEqual(ret, exp);
 
@@ -176,7 +176,7 @@ namespace Miners.MinerPluginToolkitV1.ExtraLaunchParameters.Test
                 Algorithm = algorithm1
             };
             miningPairs = new List<MiningPair>() { pair1 };
-            ret = Parser.Parse(miningPairs, options, true);
+            ret = ExtraLaunchParametersParser.Parse(miningPairs, options, true);
             exp = " -nofee -intensity 6 --multi-intensity -1 --multi-power=-1";
             Assert.AreEqual(ret, exp);
         }

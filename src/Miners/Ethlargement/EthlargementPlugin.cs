@@ -1,23 +1,20 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Algorithm;
-using NiceHashMinerLegacy.Common.Device;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Algorithm;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ethlargement
 {
-    // TODO replace with integrated
     public class Ethlargement : IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker
     {
         public Ethlargement()
@@ -31,7 +28,7 @@ namespace Ethlargement
         private readonly string _pluginUUID;
         public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
         public string Name => "Ethlargement";
 
         public string Author => "stanko@nicehash.com";

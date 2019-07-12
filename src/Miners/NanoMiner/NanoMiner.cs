@@ -2,8 +2,9 @@
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
-using NiceHashMinerLegacy.Common;
-using NiceHashMinerLegacy.Common.Enums;
+using NHM.Common;
+using NHM.Common.Device;
+using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +13,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MinerPluginToolkitV1.Configs;
 
 namespace NanoMiner
 {
@@ -25,10 +27,12 @@ namespace NanoMiner
 
         private AlgorithmType _algorithmType;
 
-        private string _devices;
+        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
-        public NanoMiner(string uuid) : base(uuid)
-        {}
+        public NanoMiner(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        {
+            _mappedIDs = mappedIDs;
+        }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -60,7 +64,7 @@ namespace NanoMiner
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "nanominer-windows-1.4.0");
             var binPath = Path.Combine(pluginRootBins, "nanominer.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
@@ -75,13 +79,12 @@ namespace NanoMiner
 
             var orderedMiningPairs = _miningPairs.ToList();
             orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             //TODO this must be implemented
             if (MinerOptionsPackage != null)
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }
@@ -93,47 +96,33 @@ namespace NanoMiner
             {
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/stats");
                 var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
-                var gpus = _miningPairs.Select(pair => pair.Device);
+                var gpuDevices = _miningPairs.Select(pair => pair.Device);
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
-           
-                foreach (var apiDeviceData in summary.Devices)
-                {
-                    foreach (var kvp in apiDeviceData)
-                    {
-                        var devId = int.Parse(kvp.Key.Remove(0, 3), System.Globalization.NumberStyles.HexNumber); //remove GPU from GPU XX string to get ID
-                        var gpu = gpus.Where(dev => dev.ID == devId).FirstOrDefault();
-                        var devData = kvp.Value;
-                        var currentPower = Convert.ToInt32(devData.Power);
-                        totalPowerUsage += currentPower;
-                        perDevicePowerInfo.Add(gpu.UUID, currentPower);
-                    }
-                }
 
-                foreach (var apiAlgoData in summary.Algorithms)
+                var apiDevs = summary.Devices;
+                var apiAlgos = summary.Algorithms;
+
+                foreach (var miningPair in _miningPairs)
                 {
-                    foreach (var kvp in apiAlgoData)
-                    {
-                        var algo = kvp.Key;
-                        var algoData = kvp.Value;
-                        foreach (var data in algoData)
-                        {
-                            if (data.Key.Contains("GPU"))
-                            {
-                                var devId = int.Parse(data.Key.Remove(0, 3), System.Globalization.NumberStyles.HexNumber); //remove GPU from GPU XX string to get ID
-                                var gpu = gpus.Where(dev => dev.ID == devId).FirstOrDefault();
-                                var speed = data.Value.ToString();
-                                perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, JsonApiHelpers.HashrateFromApiData(speed) * (1 - DevFee * 0.01)) });
-                            }
-                            else if (data.Key == "Total")
-                            {
-                                var speed = data.Value.ToString();
-                                totalSpeed = JsonApiHelpers.HashrateFromApiData(speed);
-                            }
-                        }
-                    }
+                    var deviceUUID = miningPair.Device.UUID;
+                    var minerID = _mappedIDs[deviceUUID];
+
+                    var deviceData = apiDevs.FirstOrDefault().ToDictionary(x => x.Key, y => y.Value);
+                    deviceData.TryGetValue($"GPU {minerID}", out var gpuData);
+                    var currentPower = Convert.ToInt32(gpuData.Power);
+                    totalPowerUsage += currentPower;
+                    perDevicePowerInfo.Add(deviceUUID, currentPower);
+
+                    var algosData = apiAlgos.FirstOrDefault().ToDictionary(x => x.Key, y => y.Value).Values;
+                    algosData.FirstOrDefault().TryGetValue($"GPU {minerID}", out var algoData);
+                    var speed = algoData.ToString();
+                    perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, JsonApiHelpers.HashrateFromApiData(speed, _logGroup) * (1 - DevFee * 0.01)) });
+
+                    algosData.FirstOrDefault().TryGetValue("Total", out var totalData);
+                    totalSpeed = JsonApiHelpers.HashrateFromApiData(totalData.ToString(), _logGroup);
                 }
 
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
@@ -151,21 +140,9 @@ namespace NanoMiner
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            int benchmarkTime;
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 20;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-                default:
-                    benchmarkTime = 60;
-                    break;
-            }
+            var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 120, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC, _devices);
+            var commandLine = CreateCommandLine(MinerToolkit.DemoUserBTC);
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
@@ -174,7 +151,7 @@ namespace NanoMiner
 
             var benchHashes = 0d;
             var benchIters = 0;
-            var benchHashResult = 0d;  // Not too sure what this is..
+            var benchHashResult = 0d;
             var targetBenchIters = Math.Max(1, (int)Math.Floor(benchmarkTime / 20d));
 
             bp.CheckData = (string data) =>
@@ -206,10 +183,10 @@ namespace NanoMiner
 
         protected override string MiningCreateCommandLine()
         {
-            return CreateCommandLine(_username, _devices);
+            return CreateCommandLine(_username);
         }
 
-        private string CreateCommandLine(string username, string deviceId)
+        private string CreateCommandLine(string username)
         {
             _apiPort = GetAvaliablePort();
 
@@ -228,9 +205,18 @@ namespace NanoMiner
                 }
             }
 
-            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\ndevices={_devices}\r\npool1={url}";
-            File.WriteAllText(Path.Combine(paths.Item2,$"config_nh_{deviceId}.ini"), configString);
-            return $"config_nh_{deviceId}.ini";
+            var devs = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
+
+            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\ndevices={devs}\r\npool1={url}";
+            try
+            {
+                File.WriteAllText(Path.Combine(paths.Item2, $"config_nh_{devs}.ini"), configString);
+            }
+            catch(Exception e)
+            {
+                Logger.Error(_logGroup, $"Unable to create config file: {e.Message}");
+            }
+            return $"config_nh_{devs}.ini";
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using NiceHashMinerLegacy.Common.Device;
+﻿using NHM.Common.Device;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +17,19 @@ namespace MinerPluginToolkitV1
             if (dev.Name.Contains("Vega"))
                 return true;
             if (dev.InfSection.ToLower().Contains("polaris"))
+                return true;
+
+            return false;
+        }
+
+        /// <summary>
+        /// Get whether AMD device is GCN 2th gen or higher (300/400/500/Vega)
+        /// </summary>
+        public static bool IsGcn2(AMDDevice dev)
+        {
+            if (dev.Name.Contains("Vega"))
+                return true;
+            if (!dev.InfSection.ToLower().Contains("pitcairn ") && !dev.InfSection.ToLower().Contains("tahiti") && !dev.InfSection.ToLower().Contains("oland") && !dev.InfSection.ToLower().Contains("cape verde"))
                 return true;
 
             return false;
