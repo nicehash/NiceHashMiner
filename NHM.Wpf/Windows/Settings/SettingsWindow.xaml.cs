@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using NHM.Wpf.ViewModels.Settings;
 using System.Windows;
 using NHM.Wpf.Windows.Common;
@@ -8,7 +9,7 @@ namespace NHM.Wpf.Windows
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml
     /// </summary>
-    public partial class SettingsWindow : Window
+    public partial class SettingsWindow : Window, IDisposable
     {
         private readonly SettingsVM _vm;
 
@@ -28,7 +29,7 @@ namespace NHM.Wpf.Windows
             Translations_LanguageChanged(null, null);
         }
 
-        private void Translations_LanguageChanged(object sender, System.EventArgs e)
+        private void Translations_LanguageChanged(object sender, EventArgs e)
         {
             WindowUtils.Translate(this);
         }
@@ -55,6 +56,11 @@ namespace NHM.Wpf.Windows
         private void DefaultsButton_OnClick(object sender, RoutedEventArgs e)
         {
             _vm.SetDefaults();
+        }
+
+        public void Dispose()
+        {
+            Translations.LanguageChanged -= Translations_LanguageChanged;
         }
     }
 }

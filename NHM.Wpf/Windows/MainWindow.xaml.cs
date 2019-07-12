@@ -47,8 +47,10 @@ namespace NHM.Wpf.Windows
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            var settings = new SettingsWindow();
-            settings.ShowDialog();
+            using (var settings = new SettingsWindow())
+            {
+                settings.ShowDialog();
+            }
         }
 
         private void PluginButton_Click(object sender, RoutedEventArgs e)
