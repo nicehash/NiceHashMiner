@@ -15,12 +15,18 @@
             <TextBlock Text="{Binding Plugin.PluginVersion}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <TextBlock>Author: </TextBlock>
+            <TextBlock>Author:</TextBlock>
             <TextBlock Text="{Binding Plugin.PluginAuthor}" />
         </StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <Button Margin="5" Width="50" Click="InstallButton_OnClick">Install</Button>
-            <Button Margin="5" Width="50" Click="DetailsButton_OnClick">Details</Button>
-        </StackPanel>
+        <Button Margin="5" 
+                Width="100" 
+                Click="DetailsButton_OnClick"
+                HorizontalAlignment="Left">Details</Button>
+        <Button Margin="5" 
+                Width="100" 
+                Click="InstallButton_OnClick"
+                HorizontalAlignment="Left"
+                IsEnabled="{Binding IsSupported}"
+                Content="{Binding InstallString}" />
     </StackPanel>
 </UserControl>

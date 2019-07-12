@@ -11,6 +11,9 @@ namespace NHM.Wpf.ViewModels.Plugins
     {
         public PluginPackageInfoCR Plugin { get; }
 
+        public bool IsSupported => Plugin.SupportedDevicesAlgorithms.Keys.Contains("NVIDIA");
+        public string InstallString => IsSupported ? "Install" : "Not Supported";
+
         public PluginEntryVM(PluginPackageInfoCR plugin)
         {
             Plugin = plugin;

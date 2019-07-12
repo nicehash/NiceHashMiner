@@ -41,7 +41,11 @@
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Margin="10">
-            <Button Width="60" HorizontalAlignment="Left" Click="InstallButton_OnClick">Install</Button>
+            <Button Width="100" 
+                    HorizontalAlignment="Left" 
+                    Click="InstallButton_OnClick" 
+                    IsEnabled="{Binding IsSupported}"
+                    Content="{Binding InstallString}" />
         </StackPanel>
         
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">
