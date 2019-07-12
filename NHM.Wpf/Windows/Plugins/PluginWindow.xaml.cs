@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using NHM.Wpf.ViewModels;
 using NHM.Wpf.ViewModels.Models;
 
 namespace NHM.Wpf.Windows.Plugins
@@ -20,14 +21,24 @@ namespace NHM.Wpf.Windows.Plugins
     /// </summary>
     public partial class PluginWindow : Window
     {
+        private readonly PluginVM _vm;
+
         public PluginWindow()
         {
             InitializeComponent();
+
+            if (DataContext is PluginVM vm)
+                _vm = vm;
+            else
+            {
+                _vm = new PluginVM();
+                DataContext = _vm;
+            }
         }
 
-        private void PluginEntry_OnInstallClick(object sender, PluginEventArgs e)
+        private async void PluginEntry_OnInstallClick(object sender, PluginEventArgs e)
         {
-            
+            await _vm.InstallPluginAsync(e.Plugin);
         }
 
         private void PluginEntry_OnDetailsClick(object sender, PluginEventArgs e)

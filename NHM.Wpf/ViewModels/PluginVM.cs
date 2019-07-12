@@ -4,28 +4,35 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NHM.Wpf.ViewModels.Models.Placeholders;
 
 namespace NHM.Wpf.ViewModels
 {
     public class PluginVM : BaseVM
     {
-        public class FakePlugin
-        {
-            public string Name { get; set; }
-            public Version Version { get; set; }
-            public string Author { get; set; }
-        }
-
-        public ObservableCollection<FakePlugin> Plugins { get; }
+        public ObservableCollection<PluginPackageInfoCR> Plugins { get; }
 
         public PluginVM()
         {
-            Plugins = new ObservableCollection<FakePlugin>
+            var plugins = new List<PluginPackageInfo>
             {
-                new FakePlugin { Name = "CryptoDredge", Version = new Version("1.5"), Author = "info@nicehash.com" },
-                new FakePlugin { Name = "ZEnemy", Version = new Version("1.4"), Author = "info@nicehash.com" },
-                new FakePlugin { Name = "WildRig", Version = new Version("1.2"), Author = "info@nicehash.com" }
+                new PluginPackageInfo { PluginName = "CryptoDredge", PluginVersion = new Version("1.5"), PluginAuthor = "info@nicehash.com" },
+                new PluginPackageInfo { PluginName = "ZEnemy", PluginVersion = new Version("1.4"), PluginAuthor = "info@nicehash.com" },
+                new PluginPackageInfo { PluginName = "WildRig", PluginVersion = new Version("1.2"), PluginAuthor = "info@nicehash.com" }
             };
+
+            Plugins = new ObservableCollection<PluginPackageInfoCR>(
+                plugins.Select(p => new PluginPackageInfoCR { LocalInfo = p }));
+        }
+
+        public async Task InstallPluginAsync(PluginPackageInfoCR plugin)
+        {
+            // TODO
+        }
+
+        public void SetDetails(PluginPackageInfoCR plugin)
+        {
+
         }
     }
 }

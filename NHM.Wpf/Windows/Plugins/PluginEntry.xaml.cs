@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using NHM.Wpf.ViewModels.Models;
+using NHM.Wpf.ViewModels.Models.Placeholders;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using NHM.Wpf.ViewModels;
-using NHM.Wpf.ViewModels.Models;
 
 namespace NHM.Wpf.Windows.Plugins
 {
@@ -27,13 +16,13 @@ namespace NHM.Wpf.Windows.Plugins
 
         public static readonly DependencyProperty PluginProperty = DependencyProperty.Register(
             nameof(Plugin),
-            typeof(PluginVM.FakePlugin),
+            typeof(PluginPackageInfoCR),
             typeof(PluginEntry),
             new PropertyMetadata());
 
-        public PluginVM.FakePlugin Plugin
+        public PluginPackageInfoCR Plugin
         {
-            get => (PluginVM.FakePlugin) GetValue(PluginProperty);
+            get => (PluginPackageInfoCR) GetValue(PluginProperty);
             set => SetValue(PluginProperty, value);
         }
 
