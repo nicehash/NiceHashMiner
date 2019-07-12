@@ -82,6 +82,9 @@
     <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\Plugins\Controls\InlineDataDisplay.xaml.cs">
+      <DependentUpon>InlineDataDisplay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Plugins\PluginDetail.xaml.cs">
       <DependentUpon>PluginDetail.xaml</DependentUpon>
     </Compile>
@@ -130,6 +133,10 @@
     <Page Include="Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\Plugins\Controls\InlineDataDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Plugins\PluginDetail.xaml">
       <SubType>Designer</SubType>

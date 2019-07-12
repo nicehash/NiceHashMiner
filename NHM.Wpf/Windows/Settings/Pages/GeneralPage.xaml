@@ -7,7 +7,8 @@
              xmlns:controls="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
              xmlns:vm="clr-namespace:NHM.Wpf.ViewModels.Settings"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=vm:GeneralSettingsVM}">
     <StackPanel>
         <controls:SettingsContainer 
             Title="Language:"
