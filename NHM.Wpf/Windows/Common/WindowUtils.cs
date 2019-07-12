@@ -5,7 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using NHM.Wpf.ViewModels.Settings;
+using NHM.Wpf.Windows.Settings.Controls;
 using static NHM.Wpf.Translations;
 
 namespace NHM.Wpf.Windows.Common
@@ -28,17 +30,29 @@ namespace NHM.Wpf.Windows.Common
                 Translate(u);
         }
 
-        public static void Translate(Decorator d)
-        {
-            Translate(d.Child);
-        }
-
         public static void Translate(ItemsControl i)
         {
             foreach (var item in i.Items)
             {
                 if (item is UIElement u)
                     Translate(u);
+            }
+
+            if (i is DataGrid dg)
+            {
+                foreach (var col in dg.Columns)
+                {
+                    if (col.Header is string s)
+                        col.Header = Tr(s);
+                }
+            }
+            else if (i is ListView lv && lv.View is GridView gv)
+            {
+                foreach (var col in gv.Columns)
+                {
+                    if (col.Header is string s)
+                        col.Header = Tr(s);
+                }
             }
         }
         
@@ -50,13 +64,22 @@ namespace NHM.Wpf.Windows.Common
                     Translate(p);
                     break;
                 case Decorator d:
-                    Translate(d);
+                    Translate(d.Child);
+                    break;
+                case SettingsContainer sc:
+                    foreach (var child in sc.Children)
+                    {
+                        Translate(child);
+                    }
                     break;
                 case ContentControl c:
                     Translate(c);
                     break;
                 case ItemsControl i:
                     Translate(i);
+                    break;
+                case TextBlock tb:
+                    tb.Text = Tr(tb.Text);
                     break;
             }
         }

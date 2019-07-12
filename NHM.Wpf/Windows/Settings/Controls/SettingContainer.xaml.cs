@@ -61,7 +61,7 @@ namespace NHM.Wpf.Windows.Settings.Controls
            get => _title;
            set => _title = Translations.Tr(value);
        }
-        //{
+       //{
         //    get => (string) GetValue(TitleProperty);
         //    set => SetValue(TitleProperty, value);
         //}

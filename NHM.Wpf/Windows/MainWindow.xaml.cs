@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using NHM.Wpf.Windows.Common;
 using NHM.Wpf.Windows.Plugins;
 
 namespace NHM.Wpf.Windows
@@ -27,6 +28,8 @@ namespace NHM.Wpf.Windows
             };
 
             DevGrid.ItemsSource = _devs;
+
+            WindowUtils.Translate(this);
         }
 
         private void BenchButton_Click(object sender, RoutedEventArgs e)

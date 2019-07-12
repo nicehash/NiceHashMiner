@@ -67,9 +67,9 @@
         </ListView>
 
         <StackPanel Grid.Column="1" Grid.Row="0" Margin="10">
-            <RadioButton>Quick (can be inaccurate)</RadioButton>
-            <RadioButton IsChecked="True">Standard</RadioButton>
-            <RadioButton>Precise (will take longer)</RadioButton>
+            <RadioButton>_Quick (can be inaccurate)</RadioButton>
+            <RadioButton IsChecked="True">_Standard</RadioButton>
+            <RadioButton>_Precise (will take longer)</RadioButton>
         </StackPanel>
 
         <Expander Grid.Column="2"
@@ -139,7 +139,7 @@
             </GroupBox>
 
             <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0">
-                <Button Width="80" Margin="10,0" Click="CloseButton_OnClick">Close</Button>
+                <Button Width="80" Margin="10,0" Click="CloseButton_OnClick">_Close</Button>
                 <Button Width="80">Start</Button>
             </StackPanel>
         </Grid>
