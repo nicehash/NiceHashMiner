@@ -17,6 +17,9 @@
             <DataTemplate DataType="{x:Type plugins:PluginListVM}">
                 <local:PluginList DetailsClick="PluginEntry_OnDetailsClick" />
             </DataTemplate>
+            <DataTemplate DataType="{x:Type plugins:PluginDetailVM}">
+                <local:PluginDetail />
+            </DataTemplate>
         </Grid.Resources>
 
         <ContentControl Content="{Binding CurrentPage}" />

@@ -31,7 +31,7 @@ namespace NHM.Wpf.ViewModels.Plugins
 
         public void SetDetails(PluginPackageInfoCR plugin)
         {
-            // TODO
+            CurrentPage = new PluginDetailVM(plugin);
         }
     }
 }
