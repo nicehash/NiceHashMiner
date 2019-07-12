@@ -14,9 +14,24 @@ namespace NHM.Wpf.ViewModels.Plugins
 
         public PluginListVM()
         {
+            var cdalgos = new Dictionary<string, List<string>>
+            {
+                {
+                    "NVIDIA", new List<string>
+                    {
+                        "CryptoNightHeavy",
+                        "CryptoNightV8",
+                        "Lyra2REv3",
+                        "NeoScrypt",
+                        "X16R",
+                        "MTP"
+                    }
+                }
+            };
+
             var plugins = new List<PluginPackageInfo>
             {
-                new PluginPackageInfo { PluginName = "CryptoDredge", PluginVersion = new Version("1.5"), PluginAuthor = "info@nicehash.com" },
+                new PluginPackageInfo { PluginName = "CryptoDredge", PluginVersion = new Version("1.5"), PluginAuthor = "info@nicehash.com", SupportedDevicesAlgorithms = cdalgos},
                 new PluginPackageInfo { PluginName = "ZEnemy", PluginVersion = new Version("1.4"), PluginAuthor = "info@nicehash.com" },
                 new PluginPackageInfo { PluginName = "WildRig", PluginVersion = new Version("1.2"), PluginAuthor = "info@nicehash.com" }
             };

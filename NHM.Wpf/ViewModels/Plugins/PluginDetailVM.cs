@@ -9,7 +9,7 @@ namespace NHM.Wpf.ViewModels.Plugins
         {
             get
             {
-                return string.Join(",", Plugin.SupportedDevicesAlgorithms.Keys);
+                return string.Join(", ", Plugin.SupportedDevicesAlgorithms.Keys);
             }
         }
 
@@ -20,7 +20,7 @@ namespace NHM.Wpf.ViewModels.Plugins
                 return string.Join("\n", Plugin.SupportedDevicesAlgorithms
                     .Select(kvp =>
                     {
-                        var algosString = string.Join("\n", kvp.Value.Select(a => $"- {a}"));
+                        var algosString = string.Join("\n", kvp.Value.Select(a => $"    - {a}"));
                         return $"{kvp.Key}:\n{algosString}";
                     }));
             }

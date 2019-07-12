@@ -18,28 +18,26 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <StackPanel>
-            <Label Content="{Binding Plugin.PluginName}" />
+        <StackPanel Margin="10">
+            <TextBlock Text="{Binding Plugin.PluginName}" />
             <StackPanel Orientation="Horizontal">
-                <TextBlock>Plugin Version: </TextBlock>
+                <TextBlock Margin="10,0">Plugin Version: </TextBlock>
                 <TextBlock Text="{Binding Plugin.PluginVersion}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock>Plugin Author:</TextBlock>
+                <TextBlock Margin="10,0">Plugin Author:</TextBlock>
                 <TextBlock Text="{Binding Plugin.PluginAuthor}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock>Plugin Description:</TextBlock>
+                <TextBlock Margin="10,0">Plugin Description:</TextBlock>
                 <TextBlock Text="{Binding Plugin.PluginDescription}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock>Supported Devices:</TextBlock>
+                <TextBlock Margin="10,0">Supported Devices:</TextBlock>
                 <TextBlock Text="{Binding SupportedDeviceString}" />
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock>Supported Devices Algorithms:</TextBlock>
-                <TextBlock Text="{Binding SupportedAlgorithmString}" />
-            </StackPanel>
+            <TextBlock Margin="10,0">Supported Devices Algorithms:</TextBlock>
+            <TextBlock Margin="20,0,0,0" Text="{Binding SupportedAlgorithmString}" />
         </StackPanel>
 
         <StackPanel Grid.Row="1" Grid.Column="0" Margin="10">
