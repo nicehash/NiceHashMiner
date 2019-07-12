@@ -5,10 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NHM.Wpf.Windows.Plugins"
         xmlns:vm="clr-namespace:NHM.Wpf.ViewModels"
+        xmlns:plugins="clr-namespace:NHM.Wpf.ViewModels.Plugins"
         mc:Ignorable="d"
         Title="PluginWindow" Height="450" Width="800">
     <Window.DataContext>
-        <vm:PluginVM />
+        <plugins:PluginVM />
     </Window.DataContext>
 
     <Grid>
@@ -22,7 +23,7 @@
             </ItemsControl.Template>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <local:PluginEntry Plugin="{Binding .}"
+                    <local:PluginEntry DataContext="{Binding .}"
                                        InstallClick="PluginEntry_OnInstallClick"
                                        DetailsClick="PluginEntry_OnDetailsClick"
                                        Margin="10" />

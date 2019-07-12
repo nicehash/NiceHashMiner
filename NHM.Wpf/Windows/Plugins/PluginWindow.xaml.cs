@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using NHM.Wpf.ViewModels;
 using NHM.Wpf.ViewModels.Models;
+using NHM.Wpf.ViewModels.Plugins;
 
 namespace NHM.Wpf.Windows.Plugins
 {

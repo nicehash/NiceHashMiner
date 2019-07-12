@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using NHM.Wpf.ViewModels.Models.Placeholders;
 
-namespace NHM.Wpf.ViewModels
+namespace NHM.Wpf.ViewModels.Plugins
 {
     public class PluginVM : BaseVM
     {
-        public ObservableCollection<PluginPackageInfoCR> Plugins { get; }
+        public ObservableCollection<PluginEntryVM> Plugins { get; }
 
         public PluginVM()
         {
@@ -21,8 +20,8 @@ namespace NHM.Wpf.ViewModels
                 new PluginPackageInfo { PluginName = "WildRig", PluginVersion = new Version("1.2"), PluginAuthor = "info@nicehash.com" }
             };
 
-            Plugins = new ObservableCollection<PluginPackageInfoCR>(
-                plugins.Select(p => new PluginPackageInfoCR { LocalInfo = p }));
+            Plugins = new ObservableCollection<PluginEntryVM>(
+                plugins.Select(p => new PluginEntryVM(new PluginPackageInfoCR { LocalInfo = p })));
         }
 
         public async Task InstallPluginAsync(PluginPackageInfoCR plugin)
