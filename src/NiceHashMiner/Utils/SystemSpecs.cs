@@ -1,10 +1,7 @@
 ﻿using NHM.Common;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Utils
 {
@@ -105,24 +102,6 @@ namespace NiceHashMiner.Utils
                 Logger.Info(Tag, "virtual memory size GOOD");
                 return true;
             }
-        }
-
-        public static string GetCpuID()
-        {
-            var serial = "N/A";
-            try
-            {
-                using (var searcher = new ManagementObjectSearcher("Select ProcessorID from Win32_processor"))
-                using (var query = searcher.Get())
-                {
-                    foreach (var item in query)
-                    {
-                        serial = item.GetPropertyValue("ProcessorID").ToString();
-                    }
-                }
-            }
-            catch { }
-            return serial;
         }
 
         public static bool IsWmiEnabled()

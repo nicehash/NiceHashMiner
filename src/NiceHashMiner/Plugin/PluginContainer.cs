@@ -10,7 +10,6 @@ using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using CommonAlgorithm = NHM.Common.Algorithm.Algorithm;
@@ -337,11 +336,6 @@ namespace NiceHashMiner.Plugin
                     return new TimeSpan(3650, 0, 30, 0);
                 }
                 return CheckExec(nameof(impl.GetApiMaxTimeout) + "V2", () => impl.GetApiMaxTimeout(miningPairs), new TimeSpan(0, 30, 0));
-            }
-
-            if (_plugin is IGetApiMaxTimeout implOld)
-            {
-                return CheckExec(nameof(impl.GetApiMaxTimeout), () => implOld.GetApiMaxTimeout(), new TimeSpan(0, 30, 0));
             }
             // make default 30minutes
             return new TimeSpan(0, 30, 0);            

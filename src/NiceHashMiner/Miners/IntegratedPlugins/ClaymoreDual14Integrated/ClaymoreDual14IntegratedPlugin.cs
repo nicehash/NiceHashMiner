@@ -8,8 +8,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 {
     class ClaymoreDual14IntegratedPlugin : ClaymoreDual14.ClaymoreDual14Plugin, IntegratedPlugin
     {
-        public ClaymoreDual14IntegratedPlugin() : base("ClaymoreDual14+")
-        { }
+        public override string PluginUUID => "ClaymoreDual14+";
 
         public bool Is3rdParty => true;
 

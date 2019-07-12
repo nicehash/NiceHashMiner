@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using MinerPluginToolkitV1.Configs;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Utils
 {

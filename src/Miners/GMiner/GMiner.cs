@@ -196,9 +196,9 @@ namespace GMinerPlugin
             _devices = string.Join(" ", minignPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
             if (MinerOptionsPackage != null)
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(minignPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(minignPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(minignPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(minignPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

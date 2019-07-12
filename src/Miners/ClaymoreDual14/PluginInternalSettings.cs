@@ -1,135 +1,24 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
+﻿using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
-using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.ClaymoreCommon;
-using NHM.Common;
-using NHM.Common.Algorithm;
-using NHM.Common.Device;
-using NHM.Common.Enums;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ClaymoreDual
+namespace ClaymoreDual14
 {
-    public class ClaymoreDualPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
+    internal static class PluginInternalSettings
     {
-        public ClaymoreDualPlugin()
+        internal static MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
         {
-            _pluginUUID = "70984aa0-7236-11e9-b20c-f9f12eb6d835";
-        }
-        public ClaymoreDualPlugin(string pluginUUID = "70984aa0-7236-11e9-b20c-f9f12eb6d835")
-        {
-            _pluginUUID = pluginUUID;
-        }
-        private readonly string _pluginUUID;
-        public string PluginUUID => _pluginUUID;
-
-        public Version Version => new Version(1, 6);
-
-        public string Name => "ClaymoreDual";
-
-        public string Author => "domen.kirnkrefl@nicehash.com";
-
-        protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
-
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
-        {
-            // map ids by bus ids
-            var gpus = devices
-                .Where(dev => dev is IGpuDevice)
-                .Cast<IGpuDevice>()
-                .OrderBy(gpu => gpu.PCIeBusID);
-
-            int claymoreIndex = -1;
-            foreach (var gpu in gpus)
+            DefaultSystemEnvironmentVariables = new Dictionary<string, string>
             {
-                _mappedIDs[gpu.UUID] = ++claymoreIndex;
+                {"GPU_MAX_ALLOC_PERCENT", "100"},
+                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+                {"GPU_MAX_HEAP_SIZE", "100"},
+                {"GPU_FORCE_64BIT_PTR", "0"},
+                {"GPU_USE_SYNC_OBJECTS", "1"}
             }
+        };
 
-            var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= new Version(398, 26);
-            var supportedGpus = gpus.Where(dev => IsSupportedAMDDevice(dev) || IsSupportedNVIDIADevice(dev, isDriverSupported));
-
-            foreach (var gpu in supportedGpus)
-            {
-                var algorithms = GetSupportedAlgorithms(gpu).ToList();
-                if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
-            }
-
-            return supported;
-        }
-
-        private static bool IsSupportedAMDDevice(IGpuDevice dev)
-        {
-            var isSupported = dev is AMDDevice gpu && !Checkers.IsGcn4(gpu);
-            return isSupported;
-        }
-
-        private static bool IsSupportedNVIDIADevice(IGpuDevice dev, bool isDriverSupported)
-        {
-            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 3 && gpu.SM_major < 6;
-            return isSupported && isDriverSupported;
-        }
-
-        private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
-        {
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto),
-            // duals disabled by default
-#pragma warning disable 0618
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Decred) {Enabled = false },
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Blake2s) {Enabled = false },
-                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto, AlgorithmType.Keccak) {Enabled = false },
-#pragma warning restore 0618
-            };
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
-        }
-
-        public IMiner CreateMiner()
-        {
-            return new ClaymoreDual(PluginUUID, _mappedIDs)
-            {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts,
-                MinerBenchmarkTimeSettings = _minerBenchmarkTimeSettings
-            };
-        }
-
-        public bool CanGroup(MiningPair a, MiningPair b)
-        {
-            return MinerToolkit.IsSameAlgorithmType(a.Algorithm, b.Algorithm);
-        }
-
-        #region Internal Settings
-        public void InitInternals()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-
-            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
-            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
-
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
-            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
-
-            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
-            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
-
-            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
-            if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
-
-            var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, _minerBenchmarkTimeSettings);
-            if (fileMinerBenchmarkTimeSetting != null) _minerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
-        }
-
-        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
+        internal static MinerOptionsPackage MinerOptionsPackage = new MinerOptionsPackage
         {
             GeneralOptions = new List<MinerOption>
             {
@@ -240,7 +129,7 @@ namespace ClaymoreDual
                     Delimiter = ","
                 },
                 /// <summary>
-                /// minimal speed for ETH, in MH/s. If miner cannot reach this speed for 5 minutes for any reason, miner will be restarted (or "reboot.bat" will be executed if "-r 1" is set).
+                /// minimal speed for ETH, in MH/s. If miner cannot reach this speed for 5 minutes for any reason (you can change this timeout with "-minspeedtime" option), miner will be restarted (or "reboot.bat" will be executed if "-r 1" is set).
                 /// Default value is 0 (feature disabled).
                 /// You can also specify negative values if you don't want to restart miner due to pool connection issues; for example, "-minspeed -50" will restart miner only if it cannot reach 50Mh/s at good pool connection.
                 /// </summary>
@@ -250,6 +139,16 @@ namespace ClaymoreDual
                     ID = "claymoreDual_min_speed",
                     ShortName = "-minspeed",
                     DefaultValue = "0"
+                },
+                /// <summary>
+                /// timeout for "-minspeed" option, in minutes. Default value is "5".
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_min_speed_timeout",
+                    ShortName = "-minspeedtime",
+                    DefaultValue = "5"
                 },
                 /// <summary>
                 /// debug log file name. After restart, miner will append new log data to the same file. If you want to clear old log data, file name must contain "noappend" string.
@@ -282,6 +181,17 @@ namespace ClaymoreDual
                     ID = "claymoreDual_show_diff",
                     ShortName = "-showdiff",
                     DefaultValue = "0"
+                },
+                /// <summary>
+                /// displays statistics about GPU power consumption when you press "s" key.
+                /// Default value is "1" (show statistics about power consumption), use "-showpower 0" to hide it.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_show_pow",
+                    ShortName = "-showpower",
+                    DefaultValue = "1"
                 },
                 /// <summary>
                 /// low intensity mode. Reduces mining intensity, useful if your cards are overheated. Note that mining speed is reduced too. 
@@ -329,6 +239,72 @@ namespace ClaymoreDual
                     ID = "claymoreDual_computeMode",
                     ShortName = "-y",
                     DefaultValue = "1",
+                },
+                /// <summary>
+                /// enables additional boost for AMD Polaris cards and old AMD cards (Hawaii, Tonga, Tahiti, Pitcairn). This option is available for Windows only. It mproves hashrate up to 5% by applying some additional memory settings. 
+                /// To enable it, use "-rxboost 1", you can use your own straps or use "-strap" option, you will get boost anyway. If your card is unstable, you can specify custome boost value (2..100), for example, "-rxboost 5".
+                /// You can also specify values for every card, for example "-rxboost 1,0,10,30".
+                /// Default value is "0" which means no boost at all.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_rxboost",
+                    ShortName = "-rxboost",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// applies specified memory timings (strap). This option is available for Windows only and requires AMD blockchain drivers or drivers 18.x or newer (most tests were performed on 19.4.3) for AMD cards, any recent Nvidia drivers for Nvidia cards. 
+                /// Miner has built-in straps database, all straps are separated by memory (4GB or 8GB) and memory type (Samsung, Elpida, Hynix, Micron).
+                /// Straps are sorted by intensity, i.e. "-strap 1" supports higher memory clock than "-strap 2", etc. For the best hashrate you must also set high memory clock, so "-strap 1" is a good start point for tests.
+                /// You can specify just strap index, for example "-strap 1" will apply first strap from database for all Polaris GPUs based on GPU memory size and memory type, miner will show full strap name detected.
+                /// Or you can specify strap directly in format "POL8S1": "POL" means Polaris, "8" means 8GB, "S" means Samsung memory, "1" means index.
+                /// Zero index means default strap from VBIOS, i.e. no strap is applied.
+                /// You can also use "@" character after strap to specify memory clock, it works like "-mclock" but overrides it, for example, "-strap POL4E2@1900". For Nvidia you can also specify delta, for example, "-strap 2@+700".
+                /// You can also specify values for every card, for example "-strap 1@2100,POL4H3,0".
+                /// If strap is applied, miner will return old strap and memory clock when miner is closed.
+                /// The best approach to find best strap is to set "-strap 1,0" (it sets strap #1 for first card and no straps for the rest of GPUs) and then raise memory clock to see what clocks and hashrate you can reach.
+                /// Then so the same for strap #2 etc.
+                /// You can also specify raw strap string (96 characters). Note that single option value means that this strap is applied for all GPUs, use "0" to apply strap on single GPU,
+                /// for example "-strap 0,1@2200,0" applies strap #1 and memory clock 2200MHz for second GPU only.
+                /// NOTE: if specified strap fails, Windows is crashed. After reboot default timings are restored and you can try some different settings.
+                /// NOTE: Polaris cards have different number of straps (depends on memory type and size).
+                /// Vega cards have "-strap 1" ... "-strap 5" values.
+                /// Nvidia cards have "-strap 1" ... "-strap 6" values (1...3 are normal straps and 4...6 are low-intensity straps).
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_strap",
+                    ShortName = "-strap",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// strap intensity for Nvidia cards, in %. Use this option to adjust strap intensity for Nvidia cards if even straps with lowest intensity ("-strap 1" and "-strap 4") are unstable on your cards. 
+                /// To find best value, use "-strap 4 -sintensity 1" and see if it is stable. Then increase "-sintensity" value (maximum value is 100) to find best stable hashrate. Then try other "-strap" values.
+                /// You can also specify values for every card, for example "-sintensity 10,0,100,30".
+                /// Default value is "0" which means no changes in default strap settings.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "claymoreDual_strapIntensity",
+                    ShortName = "-sintensity",
+                    DefaultValue = "0",
+                    Delimiter = ","
+                },
+                /// <summary>
+                /// installs or uninstalls the driver which is required to apply memory timings (straps), enables or disables Windows Test Mode and closes miner after it. This option is available for Windows only and requires admin rights to execute, 
+                /// also you need to disable "Secure Boot" in UEFI BIOS if you use it.
+                /// Use "-driver install" to install the driver and enable Windows Test Mode, "-driver uninstall" to uninstall the driver and disable Windows Test Mode. Since the driver is not signed, miner enables "Test mode" in Windows, you need to reboot to apply it.
+                /// This option is necessary only if you want to install or uninstall the driver separately, miner anyway will install the driver automatically if "-strap" option is used.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "claymoreDual_driver",
+                    ShortName = "-driver"
                 }
             },
             TemperatureOptions = new List<MinerOption>
@@ -506,63 +482,5 @@ namespace ClaymoreDual
                 }
             }
         };
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
-        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
-
-        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
-        {
-            GeneralTimeout =  _defaultTimeout,
-        };
-        protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
-        #endregion Internal Settings
-
-        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
-        {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-            var minerCwd = miner.GetBinAndCwdPaths().Item2;
-            // no device list so 'start mining'
-            var logFile = "noappend_cross_ref_devs.txt";
-            var logFilePath = Path.Combine(minerCwd, logFile);
-            var args = $"-mport 0 -benchmark 1 -wd 0 -colors 0 -dbg 1 -logfile {logFile}";
-            var output = await MinerPluginToolkitV1.ClaymoreCommon.DevicesCrossReferenceHelpers.ReadLinesUntil(minerBinPath, minerCwd, args, logFilePath, new List<string> { "Total cards", "Stratum - connecting to" });
-            var mappedDevs = DevicesListParser.ParseClaymoreDualOutput(output, devices.ToList());
-
-            foreach (var kvp in mappedDevs)
-            {
-                var uuid = kvp.Key;
-                var indexID = kvp.Value;
-                _mappedIDs[uuid] = indexID;
-            }
-        }
-
-        public IEnumerable<string> CheckBinaryPackageMissingFiles()
-        {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "EthDcrMiner64.exe", "libcurl.dll", "msvcr110.dll",
-                @"cuda10.0\cudart64_100.dll", @"cuda10.0\EthDcrMiner64.exe", @"cuda6.5\cudart64_65.dll", @"cuda6.5\EthDcrMiner64.exe", @"cuda7.5\cudart64_75.dll", @"cuda7.5\EthDcrMiner64.exe",
-                @"Remote manager\EthMan.exe", @"Remote manager\libeay32.dll", @"Remote manager\ssleay32.dll"
-            });
-        }
-
-        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
-        {
-            // error/bug in v1.0
-            // because the previous miner plugin mapped wrong GPU indexes rebench everything
-            return false;
-        }
-
-        #region IGetApiMaxTimeoutV2
-        public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
-
-        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 5, 0);
-        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
-        {
-            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
-        }
-        #endregion IGetApiMaxTimeoutV2
     }
 }

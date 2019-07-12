@@ -8,8 +8,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 {
     public class WildRigIntegratedPlugin : WildRig.WildRigPlugin, IntegratedPlugin
     {
-        public WildRigIntegratedPlugin() : base("WildRig")
-        { }
+        public override string PluginUUID => "WildRig";
 
         public bool Is3rdParty => true;
 

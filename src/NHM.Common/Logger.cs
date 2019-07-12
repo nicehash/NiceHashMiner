@@ -29,7 +29,6 @@ namespace NHM.Common
 
         private static void LogGroupTextType(string grp, string text, LogType type)
         {
-            if (!_isInitSucceess) return;
             // Console.WriteLine does nothing on x64 while debugging with VS, so use Debug. Console.WriteLine works when run from .exe
             var fallbackLogLine = $"[{DateTime.Now.ToLongTimeString()}] [{grp}] {text}";
 #if DEBUG
@@ -39,7 +38,7 @@ namespace NHM.Common
             Console.WriteLine(fallbackLogLine);
 #endif
 
-
+            if (!_isInitSucceess) return;
             if (!Enabled) return;
             // try will prevent an error if something tries to print an invalid character
             try

@@ -4,8 +4,7 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
 {
     public class TTMinerIntegratedPlugin : TTMiner.TTMinerPlugin, IntegratedPlugin
     {
-        public TTMinerIntegratedPlugin() : base("TTMiner")
-        { }
+        public override string PluginUUID => "TTMiner";
 
         public bool Is3rdParty => true;
 
