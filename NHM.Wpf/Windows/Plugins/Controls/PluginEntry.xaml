@@ -32,9 +32,9 @@
                     HorizontalAlignment="Left"
                     IsEnabled="{Binding InstallButtonEnabled}"
                     Content="{Binding InstallString}" />
-            <controls:PluginInstallProgress Progress="{Binding InstallProgress}"
-                                            Status="{Binding InstallStatus}"
-                                            Visibility="{Binding IsInstalling, Converter={StaticResource BoolToVis}}"/>
+            <controls:PluginInstallProgress Progress="{Binding Install.Progress}"
+                                            Status="{Binding Install.Status}"
+                                            Visibility="{Binding Install.IsInstalling, Converter={StaticResource BoolToVis}}"/>
         </StackPanel>
     </Border>
 </UserControl>

@@ -29,9 +29,9 @@ namespace NHM.Wpf.ViewModels.Plugins
             CurrentPage = _listVM;
         }
 
-        public void SetDetails(PluginPackageInfoCR plugin)
+        public void SetDetails(PluginEntryVM vm)
         {
-            CurrentPage = new PluginDetailVM(plugin);
+            CurrentPage = new PluginDetailVM(vm);
         }
 
         public void SetToList()

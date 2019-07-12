@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Models.Placeholders;
 
 namespace NHM.Wpf.ViewModels.Plugins
@@ -26,8 +27,12 @@ namespace NHM.Wpf.ViewModels.Plugins
             }
         }
 
-        public PluginDetailVM(PluginPackageInfoCR plugin) 
-            : base(plugin)
+        public PluginDetailVM(PluginPackageInfoCR plugin, InstallProgress instProg)
+            : base(plugin, instProg)
+        { }
+
+        public PluginDetailVM(PluginEntryVM vm)
+            : this(vm.Plugin, vm.Install)
         { }
     }
 }

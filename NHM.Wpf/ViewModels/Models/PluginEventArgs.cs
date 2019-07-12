@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NHM.Wpf.ViewModels.Models.Placeholders;
+using NHM.Wpf.ViewModels.Plugins;
 
 namespace NHM.Wpf.ViewModels.Models
 {
     public class PluginEventArgs : EventArgs
     {
-        public PluginPackageInfoCR Plugin { get; }
+        public PluginEntryVM ViewModel { get; }
 
-        public PluginEventArgs(PluginPackageInfoCR plugin)
+        public PluginEventArgs(PluginEntryVM vm)
         {
-            Plugin = plugin;
+            ViewModel = vm;
         }
     }
 }

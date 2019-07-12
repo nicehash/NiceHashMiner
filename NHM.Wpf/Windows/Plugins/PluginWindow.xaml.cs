@@ -26,7 +26,7 @@ namespace NHM.Wpf.Windows.Plugins
 
         private void PluginEntry_OnDetailsClick(object sender, PluginEventArgs e)
         {
-            _vm.SetDetails(e.Plugin);
+            _vm.SetDetails(e.ViewModel);
         }
 
         private void PluginDetail_OnBackClick(object sender, RoutedEventArgs e)
