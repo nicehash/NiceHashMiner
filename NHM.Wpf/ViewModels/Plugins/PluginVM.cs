@@ -9,29 +9,29 @@ namespace NHM.Wpf.ViewModels.Plugins
 {
     public class PluginVM : BaseVM
     {
-        public ObservableCollection<PluginEntryVM> Plugins { get; }
+        private readonly PluginListVM _listVM;
+
+        private IPluginPageVM _currentPage;
+        public IPluginPageVM CurrentPage
+        {
+            get => _currentPage;
+            set
+            {
+                _currentPage = value;
+                OnPropertyChanged();
+            }
+        }
 
         public PluginVM()
         {
-            var plugins = new List<PluginPackageInfo>
-            {
-                new PluginPackageInfo { PluginName = "CryptoDredge", PluginVersion = new Version("1.5"), PluginAuthor = "info@nicehash.com" },
-                new PluginPackageInfo { PluginName = "ZEnemy", PluginVersion = new Version("1.4"), PluginAuthor = "info@nicehash.com" },
-                new PluginPackageInfo { PluginName = "WildRig", PluginVersion = new Version("1.2"), PluginAuthor = "info@nicehash.com" }
-            };
+            _listVM = new PluginListVM();
 
-            Plugins = new ObservableCollection<PluginEntryVM>(
-                plugins.Select(p => new PluginEntryVM(new PluginPackageInfoCR { LocalInfo = p })));
-        }
-
-        public async Task InstallPluginAsync(PluginPackageInfoCR plugin)
-        {
-            // TODO
+            CurrentPage = _listVM;
         }
 
         public void SetDetails(PluginPackageInfoCR plugin)
         {
-
+            // TODO
         }
     }
 }

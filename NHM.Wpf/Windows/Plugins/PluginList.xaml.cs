@@ -10,36 +10,27 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using NHM.Wpf.ViewModels;
 using NHM.Wpf.ViewModels.Models;
-using NHM.Wpf.ViewModels.Plugins;
 
 namespace NHM.Wpf.Windows.Plugins
 {
     /// <summary>
-    /// Interaction logic for PluginWindow.xaml
+    /// Interaction logic for PluginList.xaml
     /// </summary>
-    public partial class PluginWindow : Window
+    public partial class PluginList : UserControl
     {
-        private readonly PluginVM _vm;
+        public event EventHandler<PluginEventArgs> DetailsClick;
 
-        public PluginWindow()
+        public PluginList()
         {
             InitializeComponent();
-
-            if (DataContext is PluginVM vm)
-                _vm = vm;
-            else
-            {
-                _vm = new PluginVM();
-                DataContext = _vm;
-            }
         }
 
         private void PluginEntry_OnDetailsClick(object sender, PluginEventArgs e)
         {
-            _vm.SetDetails(e.Plugin);
+            DetailsClick?.Invoke(sender, e);
         }
     }
 }

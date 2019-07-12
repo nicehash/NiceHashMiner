@@ -13,22 +13,12 @@
     </Window.DataContext>
 
     <Grid>
-        <ItemsControl Margin="10" ItemsSource="{Binding Plugins}">
-            <ItemsControl.Template>
-                <ControlTemplate>
-                    <WrapPanel  Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" 
-                                FlowDirection="LeftToRight" IsItemsHost="true">
-                    </WrapPanel>
-                </ControlTemplate>
-            </ItemsControl.Template>
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <local:PluginEntry DataContext="{Binding .}"
-                                       InstallClick="PluginEntry_OnInstallClick"
-                                       DetailsClick="PluginEntry_OnDetailsClick"
-                                       Margin="10" />
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
+        <Grid.Resources>
+            <DataTemplate DataType="{x:Type plugins:PluginListVM}">
+                <local:PluginList DetailsClick="PluginEntry_OnDetailsClick" />
+            </DataTemplate>
+        </Grid.Resources>
+
+        <ContentControl Content="{Binding CurrentPage}" />
     </Grid>
 </Window>
