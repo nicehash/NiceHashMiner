@@ -17,8 +17,8 @@
             <TextBlock Text="{Binding Plugin.Author}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal">
-            <Button Margin="5" Width="50">Install</Button>
-            <Button Margin="5" Width="50">Details</Button>
+            <Button Margin="5" Width="50" Click="InstallButton_OnClick">Install</Button>
+            <Button Margin="5" Width="50" Click="DetailsButton_OnClick">Details</Button>
         </StackPanel>
     </StackPanel>
 </UserControl>

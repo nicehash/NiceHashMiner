@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using NHM.Wpf.ViewModels;
+using NHM.Wpf.ViewModels.Models;
 
 namespace NHM.Wpf.Windows.Plugins
 {
@@ -21,6 +22,9 @@ namespace NHM.Wpf.Windows.Plugins
     /// </summary>
     public partial class PluginEntry : UserControl
     {
+        public event EventHandler<PluginEventArgs> InstallClick;
+        public event EventHandler<PluginEventArgs> DetailsClick;
+
         public static readonly DependencyProperty PluginProperty = DependencyProperty.Register(
             nameof(Plugin),
             typeof(PluginVM.FakePlugin),
@@ -36,6 +40,16 @@ namespace NHM.Wpf.Windows.Plugins
         public PluginEntry()
         {
             InitializeComponent();
+        }
+
+        private void InstallButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            InstallClick?.Invoke(this, new PluginEventArgs(Plugin));
+        }
+
+        private void DetailsButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            DetailsClick?.Invoke(this, new PluginEventArgs(Plugin));
         }
     }
 }

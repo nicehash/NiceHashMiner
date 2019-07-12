@@ -23,6 +23,8 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <local:PluginEntry Plugin="{Binding .}"
+                                       InstallClick="PluginEntry_OnInstallClick"
+                                       DetailsClick="PluginEntry_OnDetailsClick"
                                        Margin="10" />
                 </DataTemplate>
             </ItemsControl.ItemTemplate>

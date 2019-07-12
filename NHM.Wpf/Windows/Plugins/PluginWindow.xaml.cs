@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using NHM.Wpf.ViewModels.Models;
 
 namespace NHM.Wpf.Windows.Plugins
 {
@@ -22,6 +23,16 @@ namespace NHM.Wpf.Windows.Plugins
         public PluginWindow()
         {
             InitializeComponent();
+        }
+
+        private void PluginEntry_OnInstallClick(object sender, PluginEventArgs e)
+        {
+            
+        }
+
+        private void PluginEntry_OnDetailsClick(object sender, PluginEventArgs e)
+        {
+            
         }
     }
 }
