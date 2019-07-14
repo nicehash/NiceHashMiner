@@ -38,6 +38,26 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
         public ClaymoreBase(string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
         {
             _mappedIDs = mappedIDs;
+            //ClaymoreDual at first selects AMD platform, then NVidia
+            //Have to remap cards to proper select with -di key
+            int CurrentCard = 0;
+            var mappedIDsList= _mappedIDs.ToList();
+            foreach (var mappedID in mappedIDsList)
+            {
+                if (mappedID.Key.Contains("AMD"))
+                {
+                    _mappedIDs[mappedID.Key] = CurrentCard;
+                    CurrentCard++;
+                }
+            }
+            foreach (var mappedID in mappedIDsList)
+            {
+                if (!mappedID.Key.Contains("AMD"))
+                {
+                    _mappedIDs[mappedID.Key] = CurrentCard;
+                    CurrentCard++;
+                }
+            }
         }
 
         protected virtual string SingleAlgoName
