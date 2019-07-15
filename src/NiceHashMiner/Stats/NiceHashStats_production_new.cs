@@ -14,6 +14,7 @@ using WebSocketSharp;
 // static imports
 using static NiceHashMiner.Stats.StatusCodes;
 using NiceHashMiner.Utils;
+using NiceHashMiner.Miners;
 
 namespace NiceHashMiner.Stats
 {

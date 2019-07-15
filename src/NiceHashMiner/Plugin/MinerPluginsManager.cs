@@ -53,8 +53,10 @@ namespace NiceHashMiner.Plugin
                 new TeamRedMinerIntegratedPlugin(),
                 new TRexIntegratedPlugin(),
                 new TTMinerIntegratedPlugin(),
-                //new NanoMinerIntegratedPlugin(),
                 new ClaymoreDual14IntegratedPlugin(),
+
+                // can be integrated but are not included
+                // new NanoMinerIntegratedPlugin(),
                 // new WildRigIntegratedPlugin(),
                 // new CryptoDredgeIntegratedPlugin(),
 
