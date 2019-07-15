@@ -357,7 +357,7 @@ namespace NiceHashMiner.Plugin
         {
             if (_plugin is IntegratedPlugin impl)
             {
-                return CheckExec(nameof(impl.GetMinerBinsUrls), () => impl.GetMinerBinsUrls(), Enumerable.Empty<string>());
+                return CheckExec(nameof(MinersBinsUrls.GetMinerBinsUrlsForPlugin), () => impl.GetMinerBinsUrlsForPlugin(), Enumerable.Empty<string>());
             }
             return Enumerable.Empty<string>();
         }

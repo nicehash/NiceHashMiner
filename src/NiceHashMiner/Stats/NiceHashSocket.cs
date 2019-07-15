@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 using NiceHashMiner.Stats.Models;
 using NiceHashMiner.Switching;
+using NiceHashMiner.Utils;
 using System;
 using System.Threading;
 using System.Windows.Forms;

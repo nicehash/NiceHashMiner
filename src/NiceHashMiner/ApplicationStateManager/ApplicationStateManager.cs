@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner
 {
@@ -267,7 +268,7 @@ namespace NiceHashMiner
         {
             MiningManager.StopAllMiners();
 
-            PInvoke.PInvokeHelpers.AllowMonitorPowerdownAndSleep();
+            PInvokeHelpers.AllowMonitorPowerdownAndSleep();
             StopMinerStatsCheckTimer();
             StopComputeDevicesCheckTimer();
             StopPreventSleepTimer();

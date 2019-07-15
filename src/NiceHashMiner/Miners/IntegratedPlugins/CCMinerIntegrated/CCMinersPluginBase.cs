@@ -134,10 +134,10 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
         #endregion Internal Settings
 
-        IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
-        {
-            return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
-        }
+        //IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
+        //{
+        //    return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
+        //}
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
         {

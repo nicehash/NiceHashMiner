@@ -56,8 +56,24 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
             }
         }
 
-        public static IEnumerable<string> GetMinerBinsUrlsForPlugin(string pluginUUID)
+        internal static IEnumerable<string> GetMinerBinsUrlsForPlugin(string pluginUUID)
         {
+            if (_pluginsUrls.ContainsKey(pluginUUID) && _pluginsUrls[pluginUUID] != null && _pluginsUrls[pluginUUID].Count > 0)
+            {
+                return _pluginsUrls[pluginUUID];
+            }
+
+            return Enumerable.Empty<string>();
+        }
+
+        // IMinerBinsSource
+        /// <summary>
+        /// Return ordered urls where we can download miner binary files
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<string> GetMinerBinsUrlsForPlugin(this IntegratedPlugin plugin)
+        {
+            string pluginUUID = plugin.PluginUUID;
             if (_pluginsUrls.ContainsKey(pluginUUID) && _pluginsUrls[pluginUUID] != null && _pluginsUrls[pluginUUID].Count > 0)
             {
                 return _pluginsUrls[pluginUUID];

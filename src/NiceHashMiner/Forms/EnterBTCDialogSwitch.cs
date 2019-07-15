@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Forms
 {

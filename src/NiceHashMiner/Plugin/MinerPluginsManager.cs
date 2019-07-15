@@ -18,9 +18,6 @@ using NiceHashMiner.Configs;
 using NHM.Common.Enums;
 using NHM.MinersDownloader;
 using NiceHashMiner.Utils;
-
-// alias
-using CommonAlgorithm = NHM.Common.Algorithm;
 using System.Globalization;
 
 // TODO fix up the namespace

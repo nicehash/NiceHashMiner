@@ -1,4 +1,5 @@
 ﻿using NiceHashMiner.Configs;
+using NiceHashMiner.Utils;
 using System.Timers;
 
 namespace NiceHashMiner.Miners.IdleChecking

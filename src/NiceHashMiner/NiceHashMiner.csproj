@@ -242,32 +242,18 @@
     <Compile Include="Miners\IdleChecking\IdleCheckManager.cs" />
     <Compile Include="Miners\IdleChecking\InputTimeoutChecker.cs" />
     <Compile Include="Miners\IdleChecking\SessionLockChecker.cs" />
-    <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\BrokenPluginIntegrated\BrokenPluginIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
     <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\ClaymoreDual14Integrated\ClaymoreDual14IntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CryptoDredgeIntegrated\CryptoDredgeIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
+    <Compile Include="Miners\IntegratedPlugins\IntegratedPluginClasses.cs" />
     <Compile Include="Miners\IntegratedPlugins\MinersBinsUrls.cs" />
-    <Compile Include="Miners\IntegratedPlugins\NanoMinerIntegrated\NanoMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\PhoenixIntegrated\PhoenixIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerGMIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerIntegratedMiner.cs" />
     <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGMinerPluginBase.cs" />
-    <Compile Include="Miners\IntegratedPlugins\TeamRedMinerIntegrated\TeamRedMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
     <Compile Include="Miners\IntegratedPlugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
-    <Compile Include="Miners\IntegratedPlugins\WildRigIntegrated\WildRigIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
     <Compile Include="Miners\MinerApiWatchdog.cs" />
     <Compile Include="Miners\MiningManager.cs" />
     <Compile Include="NHMProductInfo.cs" />
@@ -303,6 +289,7 @@
     <Compile Include="Utils\ArchiveHelpers.cs" />
     <Compile Include="Utils\FirewallRules.cs" />
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
+    <Compile Include="Utils\PInvokeHelpers.cs" />
     <Compile Include="Utils\RunAsAdmin.cs" />
     <Compile Include="Utils\SystemSpecs.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
@@ -365,7 +352,6 @@
     <Compile Include="Forms\MinerFileNotFoundDialog.Designer.cs">
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="PInvoke\PInvokeHelpers.cs" />
     <Compile Include="Switching\NHSmaData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

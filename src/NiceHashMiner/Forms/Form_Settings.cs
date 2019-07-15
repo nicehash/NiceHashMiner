@@ -17,6 +17,7 @@ using static NiceHashMiner.Translations;
 using NiceHashMiner.Miners.IntegratedPlugins;
 using NiceHashMiner.Plugin;
 using NHM.Common;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Forms
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace NiceHashMiner.PInvoke
+namespace NiceHashMiner.Utils
 {
     internal class PInvokeHelpers
     {

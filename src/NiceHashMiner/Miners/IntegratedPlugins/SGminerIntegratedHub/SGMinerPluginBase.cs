@@ -1,5 +1,4 @@
 ﻿using MinerPlugin;
-using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
@@ -10,9 +9,6 @@ using NHM.Common.Device;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NiceHashMiner.Miners.IntegratedPlugins
 {
@@ -113,10 +109,10 @@ namespace NiceHashMiner.Miners.IntegratedPlugins
         protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
 
         public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
-        IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
-        {
-            return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
-        }
+        //IEnumerable<string> IntegratedPlugin.GetMinerBinsUrls()
+        //{
+        //    return MinersBinsUrls.GetMinerBinsUrlsForPlugin(PluginUUID);
+        //}
 
         #region IGetApiMaxTimeoutV2
         public bool IsGetApiMaxTimeoutEnabled

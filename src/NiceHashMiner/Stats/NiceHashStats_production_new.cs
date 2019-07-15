@@ -13,6 +13,7 @@ using NHM.Common.Enums;
 using WebSocketSharp;
 // static imports
 using static NiceHashMiner.Stats.StatusCodes;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Stats
 {
