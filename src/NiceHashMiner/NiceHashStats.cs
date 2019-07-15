@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Enums;
-using NiceHashMiner.Miners;
+using NiceHashMiner.Mining;
 using System;
 using System.Collections.Generic;
 using System.Globalization;

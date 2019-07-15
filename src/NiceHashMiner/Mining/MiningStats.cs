@@ -5,7 +5,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Switching;
 using NHM.Common.Enums;
 
-namespace NiceHashMiner.Miners
+namespace NiceHashMiner.Mining
 {
     // TODO this should ba a namespace with separate files
     // MiningStats are the new APIData rates groups...

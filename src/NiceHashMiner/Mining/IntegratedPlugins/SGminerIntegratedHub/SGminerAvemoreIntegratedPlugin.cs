@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NiceHashMiner.Miners.IntegratedPlugins
+namespace NiceHashMiner.Mining.IntegratedPlugins
 {
     class SGminerAvemoreIntegratedPlugin : SGMinerPluginBase
     {

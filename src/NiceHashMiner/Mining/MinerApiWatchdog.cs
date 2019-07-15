@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NiceHashMiner.Miners
+namespace NiceHashMiner.Mining
 {
     static class MinerApiWatchdog
     {

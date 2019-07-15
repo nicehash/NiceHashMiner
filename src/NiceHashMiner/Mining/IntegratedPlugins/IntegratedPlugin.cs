@@ -1,6 +1,6 @@
 ﻿using MinerPlugin;
 
-namespace NiceHashMiner.Miners.IntegratedPlugins
+namespace NiceHashMiner.Mining.IntegratedPlugins
 {
     public interface IntegratedPlugin : IMinerPlugin
     {

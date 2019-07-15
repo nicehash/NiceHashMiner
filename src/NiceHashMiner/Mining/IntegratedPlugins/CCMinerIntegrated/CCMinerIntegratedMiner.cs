@@ -9,7 +9,7 @@ using MinerPlugin;
 using NHM.Common;
 using NHM.Common.Enums;
 
-namespace NiceHashMiner.Miners.IntegratedPlugins
+namespace NiceHashMiner.Mining.IntegratedPlugins
 {
     class CCMinerIntegratedMiner : MinerPluginToolkitV1.CCMinerCommon.CCMinerBase
     {

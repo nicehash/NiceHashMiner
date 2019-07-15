@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Plugin;
-using NiceHashMiner.Miners.IntegratedPlugins;
+using NiceHashMiner.Mining.IntegratedPlugins;
 
 namespace NiceHashMiner.Forms.Components
 {

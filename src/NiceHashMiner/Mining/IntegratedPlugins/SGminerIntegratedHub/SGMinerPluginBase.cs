@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace NiceHashMiner.Miners.IntegratedPlugins
+namespace NiceHashMiner.Mining.IntegratedPlugins
 {
     abstract class SGMinerPluginBase : IMinerPlugin, IInitInternals, IntegratedPlugin, IBinaryPackageMissingFilesChecker, IGetApiMaxTimeoutV2
     {

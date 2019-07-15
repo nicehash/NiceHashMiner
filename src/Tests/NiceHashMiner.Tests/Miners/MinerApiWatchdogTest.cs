@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using NiceHashMiner.Miners;
+using NiceHashMiner.Mining;
 
 namespace NiceHashMiner.Tests.Miners
 {

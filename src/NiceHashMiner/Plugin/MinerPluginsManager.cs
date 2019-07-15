@@ -13,7 +13,7 @@ using MinerPluginLoader;
 using Newtonsoft.Json;
 using NiceHashMiner.Devices;
 using NHM.Common;
-using NiceHashMiner.Miners.IntegratedPlugins;
+using NiceHashMiner.Mining.IntegratedPlugins;
 using NiceHashMiner.Configs;
 using NHM.Common.Enums;
 using NHM.MinersDownloader;

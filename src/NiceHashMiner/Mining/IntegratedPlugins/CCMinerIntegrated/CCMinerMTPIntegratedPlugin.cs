@@ -11,7 +11,7 @@ using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 
-namespace NiceHashMiner.Miners.IntegratedPlugins
+namespace NiceHashMiner.Mining.IntegratedPlugins
 {
     class CCMinerMTPIntegratedPlugin : CCMinersPluginBase
     {

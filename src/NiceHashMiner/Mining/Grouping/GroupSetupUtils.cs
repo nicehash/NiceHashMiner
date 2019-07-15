@@ -7,7 +7,7 @@ using NiceHashMiner.Algorithms;
 using NHM.Common.Enums;
 using NHM.Common;
 
-namespace NiceHashMiner.Miners.Grouping
+namespace NiceHashMiner.Mining.Grouping
 {
     public static class GroupSetupUtils
     {

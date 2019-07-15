@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NiceHashMiner.Plugin;
-using NiceHashMiner.Miners.IntegratedPlugins;
+using NiceHashMiner.Mining.IntegratedPlugins;
 using NiceHashMiner.Stats;
 using NHM.Common;
 using System.Threading;
 
-namespace NiceHashMiner.Miners
+namespace NiceHashMiner.Mining
 {
     // pretty much just implement what we need and ignore everything else
     public class MinerFromPlugin : Miner

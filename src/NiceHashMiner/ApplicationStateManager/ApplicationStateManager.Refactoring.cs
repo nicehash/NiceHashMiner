@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Interfaces.DataVisualizer;
-using NiceHashMiner.Miners;
+using NiceHashMiner.Mining;
 
 namespace NiceHashMiner
 {

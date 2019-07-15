@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
 
-namespace NiceHashMiner.Miners.IdleChecking
+namespace NiceHashMiner.Mining.IdleChecking
 {
     internal class SessionLockChecker : IdleChecker
     {

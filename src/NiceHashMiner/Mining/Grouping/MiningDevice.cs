@@ -6,7 +6,7 @@ using NiceHashMiner.Switching;
 using NHM.Common.Enums;
 using MinerPlugin;
 
-namespace NiceHashMiner.Miners.Grouping
+namespace NiceHashMiner.Mining.Grouping
 {
     public class MiningDevice
     {

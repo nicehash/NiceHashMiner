@@ -4,7 +4,7 @@ using NiceHashMiner.Plugin;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NiceHashMiner.Miners
+namespace NiceHashMiner.Mining
 {
     public static class MinerFactory
     {

@@ -2,7 +2,7 @@
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Forms.Components;
-using NiceHashMiner.Miners.IntegratedPlugins;
+using NiceHashMiner.Mining.IntegratedPlugins;
 using NiceHashMiner.Plugin;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Utils;

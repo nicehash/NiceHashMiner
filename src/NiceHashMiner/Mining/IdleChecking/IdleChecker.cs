@@ -1,7 +1,7 @@
 ﻿using NHM.Common;
 using System;
 
-namespace NiceHashMiner.Miners.IdleChecking
+namespace NiceHashMiner.Mining.IdleChecking
 {
     internal abstract class IdleChecker : IDisposable
     {

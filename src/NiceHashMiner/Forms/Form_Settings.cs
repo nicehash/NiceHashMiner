@@ -1,8 +1,8 @@
 ﻿using Microsoft.Win32;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Miners;
-using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Mining;
+using NiceHashMiner.Mining.Grouping;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using NHM.Common.Enums;
 using NiceHashMiner.Interfaces.DataVisualizer;
 
 using static NiceHashMiner.Translations;
-using NiceHashMiner.Miners.IntegratedPlugins;
+using NiceHashMiner.Mining.IntegratedPlugins;
 using NiceHashMiner.Plugin;
 using NHM.Common;
 using NiceHashMiner.Utils;

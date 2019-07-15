@@ -1,6 +1,6 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Mining.Grouping;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +11,11 @@ using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NHM.Common.Enums;
 using NHM.Common;
-using NiceHashMiner.Miners.IntegratedPlugins;
+using NiceHashMiner.Mining.IntegratedPlugins;
 using MinerPlugin;
 using System.Threading;
 
-namespace NiceHashMiner.Miners
+namespace NiceHashMiner.Mining
 {
     public static class MiningManager
     {

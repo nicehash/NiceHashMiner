@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NiceHashMiner.Miners.IdleChecking
+namespace NiceHashMiner.Mining.IdleChecking
 {
     internal class IdleChangedEventArgs : EventArgs
     {

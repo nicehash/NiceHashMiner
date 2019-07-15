@@ -1,7 +1,7 @@
 ﻿using NHM.Common.Enums;
 using System;
 
-namespace NiceHashMiner.Miners.IdleChecking
+namespace NiceHashMiner.Mining.IdleChecking
 {
     internal static class IdleCheckManager
     {

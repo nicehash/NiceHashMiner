@@ -2,7 +2,7 @@
 using NiceHashMiner.Utils;
 using System.Timers;
 
-namespace NiceHashMiner.Miners.IdleChecking
+namespace NiceHashMiner.Mining.IdleChecking
 {
     internal class InputTimeoutChecker : IdleChecker
     {

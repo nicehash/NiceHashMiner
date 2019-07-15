@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using NiceHashMiner.Utils;
-using NiceHashMiner.Miners;
+using NiceHashMiner.Mining;
 
 namespace NiceHashMiner.Forms.Components
 {
