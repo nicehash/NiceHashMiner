@@ -7,13 +7,10 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Benchmarking.BenchHelpers;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Miners;
-using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Mining;
 using NHM.Common;
 using NHM.Common.Enums;
-using NiceHashMiner.Plugin;
-using NiceHashMiner.Interfaces;
-using NiceHashMiner.Miners.IntegratedPlugins;
+using NiceHashMiner.Mining.Plugins;
 
 namespace NiceHashMiner.Benchmarking
 {

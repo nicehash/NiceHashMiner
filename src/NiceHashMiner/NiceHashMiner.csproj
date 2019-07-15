@@ -237,46 +237,23 @@
     <Compile Include="Interfaces\IRatesComunication.cs" />
     <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
     <Compile Include="Interfaces\StateSetters\IStateSetter.cs" />
-    <Compile Include="Miners\IdleChecking\IdleChangedEventArgs.cs" />
-    <Compile Include="Miners\IdleChecking\IdleChecker.cs" />
-    <Compile Include="Miners\IdleChecking\IdleCheckManager.cs" />
-    <Compile Include="Miners\IdleChecking\InputTimeoutChecker.cs" />
-    <Compile Include="Miners\IdleChecking\SessionLockChecker.cs" />
-    <Compile Include="Miners\IntegratedPlugins\BMinerIntegrated\BMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\BrokenPluginIntegrated\BrokenPluginIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerIntegratedMiner.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\ClaymoreDual14Integrated\ClaymoreDual14IntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\CryptoDredgeIntegrated\CryptoDredgeIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\EthlargementIntegrated\EthlargementIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\EWBFIntegrated\EWBFIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\GMinerIntegrated\GMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\IntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\MinersBinsUrls.cs" />
-    <Compile Include="Miners\IntegratedPlugins\NanoMinerIntegrated\NanoMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\NBMinerIntegrated\NBMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\PhoenixIntegrated\PhoenixIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerGMIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGminerIntegratedMiner.cs" />
-    <Compile Include="Miners\IntegratedPlugins\SGminerIntegratedHub\SGMinerPluginBase.cs" />
-    <Compile Include="Miners\IntegratedPlugins\TeamRedMinerIntegrated\TeamRedMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\TRexIntegrated\TRexIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\TTMinerIntegrated\TTMinerIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
-    <Compile Include="Miners\IntegratedPlugins\WildRigIntegrated\WildRigIntegratedPlugin.cs" />
-    <Compile Include="Miners\IntegratedPlugins\XmrStakIntegrated\XmrStakIntegratedPlugin.cs" />
-    <Compile Include="Miners\MinerApiWatchdog.cs" />
-    <Compile Include="Miners\MiningManager.cs" />
+    <Compile Include="Mining\IdleChecking\IdleChangedEventArgs.cs" />
+    <Compile Include="Mining\IdleChecking\IdleChecker.cs" />
+    <Compile Include="Mining\IdleChecking\IdleCheckManager.cs" />
+    <Compile Include="Mining\IdleChecking\InputTimeoutChecker.cs" />
+    <Compile Include="Mining\IdleChecking\SessionLockChecker.cs" />
+    <Compile Include="Mining\Plugins\IntegratedPlugins.cs" />
+    <Compile Include="Mining\Plugins\MinersBinsUrls.cs" />
+    <Compile Include="Mining\Plugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
+    <Compile Include="Mining\MinerApiWatchdog.cs" />
+    <Compile Include="Mining\MiningManager.cs" />
+    <Compile Include="Mining\MiningStats.cs" />
     <Compile Include="NHMProductInfo.cs" />
-    <Compile Include="Plugin\PluginContainer.cs" />
-    <Compile Include="Plugin\SupportedAlgorithmsFilter.cs" />
-    <Compile Include="Plugin\SupportedPluginsFilter.cs" />
-    <Compile Include="Stats\MiningStats.cs" />
-    <Compile Include="Plugin\MinerPluginsManager.cs" />
-    <Compile Include="Miners\MinerFromPlugin.cs" />
+    <Compile Include="Mining\Plugins\PluginContainer.cs" />
+    <Compile Include="Mining\Plugins\SupportedAlgorithmsFilter.cs" />
+    <Compile Include="Mining\Plugins\SupportedPluginsFilter.cs" />
+    <Compile Include="Mining\Plugins\MinerPluginsManager.cs" />
+    <Compile Include="Mining\MinerFromPlugin.cs" />
     <Compile Include="Stats\ErrorCode.cs" />
     <Compile Include="Stats\Models\ExchangeRateJson.cs" />
     <Compile Include="Stats\Models\MarketsMessage.cs" />
@@ -289,8 +266,8 @@
     <Compile Include="Stats\Models\LoginMessage.cs" />
     <Compile Include="Stats\Models\DeviceStatusMessage.cs" />
     <Compile Include="Stats\Models\RpcException.cs" />
-    <Compile Include="Plugin\PluginPackageInfo.cs" />
-    <Compile Include="Plugin\PluginPackageInfoCR.cs" />
+    <Compile Include="Mining\Plugins\PluginPackageInfo.cs" />
+    <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
     <Compile Include="Stats\NiceHashStats_shared.cs" />
@@ -303,6 +280,7 @@
     <Compile Include="Utils\ArchiveHelpers.cs" />
     <Compile Include="Utils\FirewallRules.cs" />
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
+    <Compile Include="Utils\PInvokeHelpers.cs" />
     <Compile Include="Utils\RunAsAdmin.cs" />
     <Compile Include="Utils\SystemSpecs.cs" />
     <Compile Include="Switching\AlgorithmHistory.cs" />
@@ -352,20 +330,19 @@
     <Compile Include="Interfaces\IBenchmarkCalculation.cs" />
     <Compile Include="Interfaces\IListItemCheckColorSetter.cs" />
     <Compile Include="Utils\Links.cs" />
-    <Compile Include="Miners\Grouping\GroupSetupUtils.cs" />
-    <Compile Include="Miners\Grouping\MiningDevice.cs" />
-    <Compile Include="Miners\MinerFactory.cs" />
-    <Compile Include="Miners\Grouping\GroupingUtils.cs" />
+    <Compile Include="Mining\Grouping\GroupSetupUtils.cs" />
+    <Compile Include="Mining\Grouping\MiningDevice.cs" />
+    <Compile Include="Mining\MinerFactory.cs" />
+    <Compile Include="Mining\Grouping\GroupingUtils.cs" />
     <Compile Include="Utils\CredentialValidators.cs" />
     <Compile Include="Utils\Helpers.cs" />
-    <Compile Include="Miners\Miner.cs" />
+    <Compile Include="Mining\Miner.cs" />
     <Compile Include="Forms\MinerFileNotFoundDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\MinerFileNotFoundDialog.Designer.cs">
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="PInvoke\PInvokeHelpers.cs" />
     <Compile Include="Switching\NHSmaData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -504,6 +481,14 @@
       <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
       <Name>BrokenMiner</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\CCMinerMTP\CCMinerMTP.csproj">
+      <Project>{c6e4069b-2305-4cda-9f4e-0b79a8599935}</Project>
+      <Name>CCMinerMTP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\CCMinerTpruvot\CCMinerTpruvot.csproj">
+      <Project>{3651e4f1-76b9-4634-a8d2-2a05e60c16cb}</Project>
+      <Name>CCMinerTpruvot</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\ClaymoreDual14\ClaymoreDual14.csproj">
       <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
       <Name>ClaymoreDual14</Name>
@@ -547,6 +532,14 @@
     <ProjectReference Include="..\Miners\Phoenix\Phoenix.csproj">
       <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
       <Name>Phoenix</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\SgminerAvemore\SgminerAvemore.csproj">
+      <Project>{f8fc33dc-2f03-4ba3-bdf7-d72ca673e624}</Project>
+      <Name>SgminerAvemore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\SgminerGM\SgminerGM.csproj">
+      <Project>{df3e6cda-c809-4c2d-bf95-68e4293e6ec1}</Project>
+      <Name>SgminerGM</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj">
       <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>

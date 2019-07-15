@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NiceHashMiner.Miners.IntegratedPlugins;
-using NiceHashMiner.Plugin;
+using NiceHashMiner.Mining.Plugins;
 using NHM.Common.Enums;
 using AlgorithmCommon = NHM.Common.Algorithm;
 

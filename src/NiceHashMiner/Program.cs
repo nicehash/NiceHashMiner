@@ -1,6 +1,6 @@
 ﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
-using NiceHashMiner.PInvoke;
+using NiceHashMiner.Utils;
 using System;
 using System.Diagnostics;
 using System.Globalization;

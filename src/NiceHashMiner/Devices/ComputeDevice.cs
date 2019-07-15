@@ -1,11 +1,7 @@
-﻿using System;
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
-using NiceHashMiner.Miners.Grouping;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using NiceHashMiner.Algorithms;
 using NHM.Common.Enums;
 using NHM.Common.Device;
