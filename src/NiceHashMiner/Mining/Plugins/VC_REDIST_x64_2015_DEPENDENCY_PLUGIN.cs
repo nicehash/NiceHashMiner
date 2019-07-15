@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
-namespace NiceHashMiner.Mining.IntegratedPlugins
+namespace NiceHashMiner.Mining.Plugins
 {
     // ALL CAPS
     // This isn't really a plugin it just a hack to piggyback on the miner plugins downloader and file checker

@@ -11,9 +11,9 @@ using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NHM.Common.Enums;
 using NHM.Common;
-using NiceHashMiner.Mining.IntegratedPlugins;
 using MinerPlugin;
 using System.Threading;
+using NiceHashMiner.Mining.Plugins;
 
 namespace NiceHashMiner.Mining
 {

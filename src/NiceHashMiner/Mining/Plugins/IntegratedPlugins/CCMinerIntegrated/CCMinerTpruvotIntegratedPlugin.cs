@@ -9,7 +9,7 @@ using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 
-namespace NiceHashMiner.Mining.IntegratedPlugins
+namespace NiceHashMiner.Mining.Plugins
 {
     class CCMinerTpruvotIntegratedPlugin : CCMinersPluginBase, IReBenchmarkChecker
     {

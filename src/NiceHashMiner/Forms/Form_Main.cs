@@ -17,7 +17,7 @@ using static NiceHashMiner.Translations; // consider using static
 namespace NiceHashMiner
 {
     using NiceHashMiner.Forms.Components;
-    using NiceHashMiner.Plugin;
+    using NiceHashMiner.Mining.Plugins;
     using NiceHashMiner.Utils;
     using NHM.Common;
     using NHM.Common.Enums;

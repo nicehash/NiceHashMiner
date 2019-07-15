@@ -2,7 +2,6 @@
 using MinerPluginToolkitV1.Interfaces;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Mining.IntegratedPlugins;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -14,7 +13,7 @@ using System.Threading.Tasks;
 
 using CommonAlgorithm = NHM.Common.Algorithm.Algorithm;
 
-namespace NiceHashMiner.Plugin
+namespace NiceHashMiner.Mining.Plugins
 {
     // interfaces were used only to implement the container methods
     public class PluginContainer /*: IMinerPlugin , IGetApiMaxTimeout, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IInitInternals*/

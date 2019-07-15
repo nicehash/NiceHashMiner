@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NiceHashMiner.Plugin;
-using NiceHashMiner.Mining.IntegratedPlugins;
-using NiceHashMiner.Stats;
+using NiceHashMiner.Mining.Plugins;
 using NHM.Common;
 using System.Threading;
 

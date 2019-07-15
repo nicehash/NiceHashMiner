@@ -8,11 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NiceHashMiner.Mining.IntegratedPlugins
+namespace NiceHashMiner.Mining.Plugins
 {
-    class SGminerAvemoreIntegratedPlugin : SGMinerPluginBase
+    class SGminerGMIntegratedPlugin : SGMinerPluginBase
     {
-        const string _pluginUUIDName = "SGminerAvemore";
+        const string _pluginUUIDName = "SGminerGM";
 
         public override string PluginUUID => _pluginUUIDName;
 
@@ -22,17 +22,18 @@ namespace NiceHashMiner.Mining.IntegratedPlugins
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
+            const ulong MinDaggerHashimotoMemory = 3UL << 30; // 3GB
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             var amdGpus = devices
-                .Where(dev => dev is AMDDevice)
+                .Where(dev => dev is AMDDevice amdGpu && amdGpu.GpuRam > MinDaggerHashimotoMemory)
                 .Cast<AMDDevice>();
 
             foreach (var gpu in amdGpus)
             {
                 var algorithms = new List<Algorithm> {
-                    new Algorithm(PluginUUID, AlgorithmType.X16R)
+                    new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto)
                     {
-                        ExtraLaunchParameters = "-X 256"
+                        ExtraLaunchParameters = " --remove-disabled --xintensity 512 -w 192 -g 1"
                     },
                 };
                 supported.Add(gpu, algorithms);
@@ -41,17 +42,14 @@ namespace NiceHashMiner.Mining.IntegratedPlugins
             return supported;
         }
 
-        protected override MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables { get; set; } = GetMinerSystemEnvironmentVariables(true);
+        protected override MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables { get; set; } = GetMinerSystemEnvironmentVariables(false);
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
             var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "libcurl.dll", "libeay32.dll", "libidn-11.dll", "librtmp.dll",
-                "libssh2.dll", "pdcurses.dll", "pthreadGC2.dll", "ssleay32.dll", "zlib1.dll", "sgminer.exe"
-            });
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "sgminer.exe" });
         }
     }
 }
-

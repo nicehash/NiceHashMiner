@@ -1,9 +1,8 @@
 ﻿using MinerPluginToolkitV1.Configs;
-using NiceHashMiner.Mining.IntegratedPlugins;
 using NHM.Common;
 using System.Collections.Generic;
 
-namespace NiceHashMiner.Plugin
+namespace NiceHashMiner.Mining.Plugins
 {
     internal static class SupportedPluginsFilter
     {

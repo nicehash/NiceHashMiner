@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace NiceHashMiner.Plugin
+namespace NiceHashMiner.Mining.Plugins
 {
     // cross referenced local and online
     public class PluginPackageInfoCR

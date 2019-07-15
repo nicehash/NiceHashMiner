@@ -1,6 +1,20 @@
-﻿
-namespace NiceHashMiner.Mining.IntegratedPlugins
+﻿using MinerPlugin;
+
+// This is just a list of miners that are intergated in the nhm client
+namespace NiceHashMiner.Mining.Plugins
 {
+    public interface IntegratedPlugin : IMinerPlugin
+    {
+        bool Is3rdParty { get; }
+    }
+
+    #region TESTING
+    class BrokenPluginIntegratedPlugin : BrokenMiner.BrokenMinerPlugin, IntegratedPlugin
+    {
+        public bool Is3rdParty => false;
+    }
+    #endregion TESTING
+
     class ClaymoreDual14IntegratedPlugin : ClaymoreDual14.ClaymoreDual14Plugin, IntegratedPlugin
     {
         public override string PluginUUID => "ClaymoreDual14+";
@@ -91,11 +105,6 @@ namespace NiceHashMiner.Mining.IntegratedPlugins
         public override string PluginUUID => "CryptoDredge";
 
         public bool Is3rdParty => true;
-    }
-
-    class BrokenPluginIntegratedPlugin : BrokenMiner.BrokenMinerPlugin, IntegratedPlugin
-    {
-        public bool Is3rdParty => false;
     }
 
     class EthlargementIntegratedPlugin : Ethlargement.Ethlargement, IntegratedPlugin

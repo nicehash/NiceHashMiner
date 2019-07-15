@@ -3,7 +3,7 @@ using NHM.Common.Enums;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NiceHashMiner.Plugin
+namespace NiceHashMiner.Mining.Plugins
 {
     internal static class SupportedAlgorithmsFilter
     {

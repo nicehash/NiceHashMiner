@@ -1,22 +1,14 @@
-﻿using MinerPlugin;
-using NiceHashMiner.Forms.Components;
-using NiceHashMiner.Plugin;
+﻿using NiceHashMiner.Forms.Components;
+using NiceHashMiner.Mining.Plugins;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static NiceHashMiner.Translations;
-using NiceHashMiner.Forms;
-using System.Net;
 using System.Threading;
-using static NiceHashMiner.Plugin.MinerPluginsManager;
 using NiceHashMiner.Configs;
+using static NiceHashMiner.Translations;
+using static NiceHashMiner.Mining.Plugins.MinerPluginsManager;
 
 namespace NiceHashMiner.Forms
 {

@@ -13,7 +13,6 @@ using MinerPluginLoader;
 using Newtonsoft.Json;
 using NiceHashMiner.Devices;
 using NHM.Common;
-using NiceHashMiner.Mining.IntegratedPlugins;
 using NiceHashMiner.Configs;
 using NHM.Common.Enums;
 using NHM.MinersDownloader;
@@ -21,7 +20,7 @@ using NiceHashMiner.Utils;
 using System.Globalization;
 
 // TODO fix up the namespace
-namespace NiceHashMiner.Plugin
+namespace NiceHashMiner.Mining.Plugins
 {
     public static class MinerPluginsManager
     {

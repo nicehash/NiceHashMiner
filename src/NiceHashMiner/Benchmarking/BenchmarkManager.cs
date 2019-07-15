@@ -2,13 +2,12 @@ using NiceHashMiner.Algorithms;
 using NHM.Extensions;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
-using NiceHashMiner.Mining;
+using NiceHashMiner.Mining.Plugins;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using NiceHashMiner.Stats;
-using NiceHashMiner.Mining.IntegratedPlugins;
 
 namespace NiceHashMiner.Benchmarking
 {

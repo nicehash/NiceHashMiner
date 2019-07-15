@@ -1,6 +1,6 @@
 ﻿using MinerPlugin;
 using NiceHashMiner.Algorithms;
-using NiceHashMiner.Plugin;
+using NiceHashMiner.Mining.Plugins;
 using System.Collections.Generic;
 using System.Linq;
 

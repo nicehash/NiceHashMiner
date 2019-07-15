@@ -8,12 +8,9 @@ using NiceHashMiner.Benchmarking.BenchHelpers;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Mining;
-using NiceHashMiner.Mining.Grouping;
 using NHM.Common;
 using NHM.Common.Enums;
-using NiceHashMiner.Plugin;
-using NiceHashMiner.Interfaces;
-using NiceHashMiner.Mining.IntegratedPlugins;
+using NiceHashMiner.Mining.Plugins;
 
 namespace NiceHashMiner.Benchmarking
 {

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NHM.Common;
 using MinerPlugin;
-using NiceHashMiner.Plugin;
+using NiceHashMiner.Mining.Plugins;
 using NiceHashMiner.Utils;
 
 namespace MinerSmokeTest

@@ -4,7 +4,7 @@ using NHM.Common;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NiceHashMiner.Mining.IntegratedPlugins
+namespace NiceHashMiner.Mining.Plugins
 {
     internal static class MinersBinsUrls
     {
