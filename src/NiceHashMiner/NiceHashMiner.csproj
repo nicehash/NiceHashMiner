@@ -244,10 +244,6 @@
     <Compile Include="Mining\IdleChecking\SessionLockChecker.cs" />
     <Compile Include="Mining\Plugins\IntegratedPlugins.cs" />
     <Compile Include="Mining\Plugins\MinersBinsUrls.cs" />
-    <Compile Include="Mining\Plugins\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedPlugin.cs" />
-    <Compile Include="Mining\Plugins\IntegratedPlugins\SGminerIntegratedHub\SGminerGMIntegratedPlugin.cs" />
-    <Compile Include="Mining\Plugins\IntegratedPlugins\SGminerIntegratedHub\SGminerIntegratedMiner.cs" />
-    <Compile Include="Mining\Plugins\IntegratedPlugins\SGminerIntegratedHub\SGMinerPluginBase.cs" />
     <Compile Include="Mining\Plugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
     <Compile Include="Mining\MinerApiWatchdog.cs" />
     <Compile Include="Mining\MiningManager.cs" />
@@ -536,6 +532,14 @@
     <ProjectReference Include="..\Miners\Phoenix\Phoenix.csproj">
       <Project>{ce5dc45c-1e1c-498b-bab7-5540e346ac21}</Project>
       <Name>Phoenix</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\SgminerAvemore\SgminerAvemore.csproj">
+      <Project>{f8fc33dc-2f03-4ba3-bdf7-d72ca673e624}</Project>
+      <Name>SgminerAvemore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\SgminerGM\SgminerGM.csproj">
+      <Project>{df3e6cda-c809-4c2d-bf95-68e4293e6ec1}</Project>
+      <Name>SgminerGM</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\TeamRedMiner\TeamRedMiner.csproj">
       <Project>{6ec1bce3-087e-4dc7-bf93-24445f853f69}</Project>

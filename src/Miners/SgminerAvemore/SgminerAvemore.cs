@@ -1,31 +1,21 @@
-﻿using MinerPlugin;
-using MinerPluginToolkitV1;
+﻿using NHM.Common.Enums;
 using MinerPluginToolkitV1.SgminerCommon;
-using NHM.Common;
-using NHM.Common.Enums;
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading;
+using NHM.Common;
 using System.Threading.Tasks;
+using MinerPlugin;
+using System.Threading;
+using MinerPluginToolkitV1;
+using System.Collections.Generic;
 
-namespace NiceHashMiner.Mining.Plugins
+namespace SgminerAvemore
 {
-    class SGminerIntegratedMiner : SGMinerBase
+    public class SgminerAvemore : SGMinerBase
     {
-        public SGminerIntegratedMiner(string uuid) : base(uuid)
-        {
-        }
-
-        protected override Dictionary<string, string> GetEnvironmentVariables()
-        {
-            if (MinerSystemEnvironmentVariables != null)
-            {
-                return MinerSystemEnvironmentVariables.DefaultSystemEnvironmentVariables;
-            }
-            return null;
-        }
+        public SgminerAvemore(string uuid) : base(uuid)
+        { }
 
         protected override string AlgoName
         {
@@ -36,9 +26,6 @@ namespace NiceHashMiner.Mining.Plugins
                     // avemore
                     case AlgorithmType.X16R:
                         return "x16r";
-                    // gm 
-                    case AlgorithmType.DaggerHashimoto:
-                        return "ethash";
                     default:
                         return "";
                 }
@@ -84,19 +71,16 @@ namespace NiceHashMiner.Mining.Plugins
             return true;
         }
 
-
-        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard) {
-            if (_uuid == "SGminerAvemore")
+        public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        {
+            await _semaphore.WaitAsync();
+            try
             {
-                await _semaphore.WaitAsync();
-                try
-                {
-                    await BuildOpenCLKernels(stop);
-                }
-                finally
-                {
-                    _semaphore.Release();
-                }
+                await BuildOpenCLKernels(stop);
+            }
+            finally
+            {
+                _semaphore.Release();
             }
 
             return await base.StartBenchmark(stop, benchmarkType);
@@ -105,10 +89,6 @@ namespace NiceHashMiner.Mining.Plugins
 
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
-            if (_uuid != "SGminerAvemore")
-            {
-                return base.GetBinAndCwdPaths();
-            }
             // avemore is differently packed
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins", "avermore-windows");

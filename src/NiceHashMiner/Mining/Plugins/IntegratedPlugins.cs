@@ -31,6 +31,20 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => false;
     }
 
+    class SGminerAvemoreIntegratedPlugin : SgminerAvemore.SgminerAvemorePlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "SGminerAvemore";
+
+        public bool Is3rdParty => false;
+    }
+
+    class SGminerGMIntegratedPlugin : SgminerGM.SgminerGMPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "SGminerGM";
+
+        public bool Is3rdParty => false;
+    }
+
     class XmrStakIntegratedPlugin : XmrStak.XmrStakPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "XmrStak";
