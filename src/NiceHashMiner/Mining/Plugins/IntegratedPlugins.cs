@@ -15,6 +15,32 @@ namespace NiceHashMiner.Mining.Plugins
     }
     #endregion TESTING
 
+    #region Open Source
+
+    class CCMinerMTPIntegratedPlugin : CCMinerMTP.CCMinerMTPPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "CCMinerMTP";
+
+        public bool Is3rdParty => false;
+    }
+
+    class CCMinerTpruvotIntegratedPlugin : CCMinerTpruvot.CCMinerTpruvotPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "CCMinerTpruvot";
+
+        public bool Is3rdParty => false;
+    }
+
+    class XmrStakIntegratedPlugin : XmrStak.XmrStakPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "XmrStak";
+
+        public bool Is3rdParty => false;
+    }
+    #endregion Open Source
+
+    #region Closed source / 3rd party
+
     class ClaymoreDual14IntegratedPlugin : ClaymoreDual14.ClaymoreDual14Plugin, IntegratedPlugin
     {
         public override string PluginUUID => "ClaymoreDual14+";
@@ -27,13 +53,6 @@ namespace NiceHashMiner.Mining.Plugins
         public override string PluginUUID => "BMiner";
 
         public bool Is3rdParty => true;
-    }
-
-    class XmrStakIntegratedPlugin : XmrStak.XmrStakPlugin, IntegratedPlugin
-    {
-        public override string PluginUUID => "XmrStak";
-
-        public bool Is3rdParty => false;
     }
 
 
@@ -115,4 +134,6 @@ namespace NiceHashMiner.Mining.Plugins
 
         public bool Is3rdParty => true;
     }
+
+    #endregion Closed source / 3rd party
 }

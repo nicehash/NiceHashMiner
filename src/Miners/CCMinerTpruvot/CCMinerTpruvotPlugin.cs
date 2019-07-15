@@ -1,25 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MinerPluginToolkitV1;
+﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace NiceHashMiner.Mining.Plugins
+namespace CCMinerTpruvot
 {
-    class CCMinerTpruvotIntegratedPlugin : CCMinersPluginBase, IReBenchmarkChecker
+    public abstract class CCMinerTpruvotPlugin : PluginBase
     {
-        public override string PluginUUID => "CCMinerTpruvot";
+        public CCMinerTpruvotPlugin()
+        {
+            // set default internal settings
+            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+        }
 
-        public override Version Version => new Version(1,2);
+        //public override string PluginUUID => "MISSING";
 
+        public override Version Version => new Version(2, 0);
         public override string Name => "CCMinerTpruvot";
 
-        protected override string DirPath => "ccminer_tpruvot";
+        public override string Author => "stanko@nicehash.com";
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -38,13 +41,27 @@ namespace NiceHashMiner.Mining.Plugins
                     new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3),
                     new Algorithm(PluginUUID, AlgorithmType.X16R), // TODO check performance
                 };
-                supported.Add(gpu, algorithms);
+                var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+                if (filteredAlgorithms.Count > 0) supported.Add(gpu, filteredAlgorithms);
             }
 
             return supported;
         }
 
-        bool IReBenchmarkChecker.ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        protected override MinerBase CreateMinerBase()
+        {
+            return new CCMinerTpruvot(PluginUUID);
+        }
+
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "ccminer-x64.exe" });
+        }
+
+        public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             try
             {

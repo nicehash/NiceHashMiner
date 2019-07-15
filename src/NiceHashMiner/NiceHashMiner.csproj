@@ -242,10 +242,6 @@
     <Compile Include="Mining\IdleChecking\IdleCheckManager.cs" />
     <Compile Include="Mining\IdleChecking\InputTimeoutChecker.cs" />
     <Compile Include="Mining\IdleChecking\SessionLockChecker.cs" />
-    <Compile Include="Mining\Plugins\IntegratedPlugins\CCMinerIntegrated\CCMinerIntegratedMiner.cs" />
-    <Compile Include="Mining\Plugins\IntegratedPlugins\CCMinerIntegrated\CCMinerMTPIntegratedPlugin.cs" />
-    <Compile Include="Mining\Plugins\IntegratedPlugins\CCMinerIntegrated\CCMinersPluginBase.cs" />
-    <Compile Include="Mining\Plugins\IntegratedPlugins\CCMinerIntegrated\CCMinerTpruvotIntegratedPlugin.cs" />
     <Compile Include="Mining\Plugins\IntegratedPlugins.cs" />
     <Compile Include="Mining\Plugins\MinersBinsUrls.cs" />
     <Compile Include="Mining\Plugins\IntegratedPlugins\SGminerIntegratedHub\SGminerAvemoreIntegratedPlugin.cs" />
@@ -488,6 +484,14 @@
     <ProjectReference Include="..\Miners\BrokenMiner\BrokenMiner.csproj">
       <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
       <Name>BrokenMiner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\CCMinerMTP\CCMinerMTP.csproj">
+      <Project>{c6e4069b-2305-4cda-9f4e-0b79a8599935}</Project>
+      <Name>CCMinerMTP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\CCMinerTpruvot\CCMinerTpruvot.csproj">
+      <Project>{3651e4f1-76b9-4634-a8d2-2a05e60c16cb}</Project>
+      <Name>CCMinerTpruvot</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\ClaymoreDual14\ClaymoreDual14.csproj">
       <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
