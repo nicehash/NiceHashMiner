@@ -4,6 +4,8 @@ using NHM.Common;
 using System.Collections.Generic;
 using System.Linq;
 
+
+// TODO make an interface for miner plugins 
 namespace NiceHashMiner.Mining.Plugins
 {
     internal static class MinersBinsUrls

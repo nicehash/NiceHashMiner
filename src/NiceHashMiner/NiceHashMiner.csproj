@@ -332,7 +332,6 @@
     <Compile Include="Utils\Links.cs" />
     <Compile Include="Mining\Grouping\GroupSetupUtils.cs" />
     <Compile Include="Mining\Grouping\MiningDevice.cs" />
-    <Compile Include="Mining\MinerFactory.cs" />
     <Compile Include="Mining\Grouping\GroupingUtils.cs" />
     <Compile Include="Utils\CredentialValidators.cs" />
     <Compile Include="Utils\Helpers.cs" />

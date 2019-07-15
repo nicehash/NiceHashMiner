@@ -7,7 +7,6 @@ using NiceHashMiner.Algorithms;
 using NiceHashMiner.Benchmarking.BenchHelpers;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Mining;
 using NHM.Common;
 using NHM.Common.Enums;
 using NiceHashMiner.Mining.Plugins;
@@ -78,9 +77,6 @@ namespace NiceHashMiner.Benchmarking
 
         private async Task BenchmarkAlgorithm(Algorithm algo)
         {
-            var currentMiner = MinerFactory.CreateMinerForBenchmark(algo);
-            if (currentMiner == null) return;
-
             BenchmarkManager.AddToStatusCheck(Device, algo);
             if (algo is PluginAlgorithm pAlgo)
             {

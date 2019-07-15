@@ -47,7 +47,7 @@ namespace NiceHashMiner.Mining
             _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
         }
 
-        // For PRODUCTION
+        // For OLD PRODUCTION
         public static List<int> GetActiveMinersIndexes()
         {
             var minerIDs = new List<int>();
@@ -387,7 +387,7 @@ namespace NiceHashMiner.Mining
                 foreach (var startKey in toStartMinerGroupKeys)
                 {
                     var miningPairs = newGroupedMiningPairs[startKey];
-                    var toStart = MinerFactory.CreateMinerForMining(miningPairs, startKey);
+                    var toStart = Miner.CreateMinerForMining(miningPairs, startKey);
                     if (toStart == null)
                     {
                         Logger.Error(Tag, $"CreateMinerForMining for key='{startKey}' returned <null>");

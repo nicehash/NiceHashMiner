@@ -9,7 +9,7 @@ using System.Threading;
 
 namespace NiceHashMiner.Mining
 {
-    // pretty much just implement what we need and ignore everything else
+    // TODO now every single miner is based from the Plugins so merge MinerFromPlugin and Miner
     public class MinerFromPlugin : Miner
     {
         private readonly PluginContainer _plugin;
@@ -17,9 +17,15 @@ namespace NiceHashMiner.Mining
 
         private readonly SemaphoreSlim _apiSemaphore = new SemaphoreSlim(1, 1);
 
-        public MinerFromPlugin(string pluginUUID, List<MiningPair> miningPairs, string groupKey) : base(pluginUUID, miningPairs, groupKey)
+        //public MinerFromPlugin(string pluginUUID, List<MiningPair> miningPairs, string groupKey) : base(pluginUUID, miningPairs, groupKey)
+        //{
+        //    _plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
+        //    _miner = _plugin.CreateMiner();
+        //}
+
+        public MinerFromPlugin(PluginContainer plugin, List<MiningPair> miningPairs, string groupKey) : base(plugin.PluginUUID, miningPairs, groupKey)
         {
-            _plugin = MinerPluginsManager.GetPluginWithUuid(pluginUUID);
+            _plugin = plugin;
             _miner = _plugin.CreateMiner();
         }
 

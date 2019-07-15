@@ -19,7 +19,6 @@ using NHM.MinersDownloader;
 using NiceHashMiner.Utils;
 using System.Globalization;
 
-// TODO fix up the namespace
 namespace NiceHashMiner.Mining.Plugins
 {
     public static class MinerPluginsManager

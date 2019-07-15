@@ -182,7 +182,7 @@ namespace MinerSmokeTest
                     {
                         var pAlgo = algorithm as PluginAlgorithm;
                         var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = pAlgo.BaseAlgo } };
-                        var miner = NiceHashMiner.Mining.MinerFactory.CreateMinerForMining(pair, "");
+                        var miner = NiceHashMiner.Mining.Miner.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);
 
@@ -249,7 +249,7 @@ namespace MinerSmokeTest
                     {
                         var pAlgo = algorithm as PluginAlgorithm;
                         var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = pAlgo.BaseAlgo } };
-                        var miner = NiceHashMiner.Mining.MinerFactory.CreateMinerForMining(pair, "");
+                        var miner = NiceHashMiner.Mining.Miner.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);
 

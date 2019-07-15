@@ -7,11 +7,25 @@ using NHM.Common;
 using System.Threading;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
+using NiceHashMiner.Mining.Plugins;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Mining
 {
     public abstract class Miner
     {
+        public static Miner CreateMinerForMining(List<MiningPair> miningPairs, string groupKey)
+        {
+            var pair = miningPairs.FirstOrDefault();
+            if (pair == null || pair.Algorithm == null) return null;
+            var algorithm = pair.Algorithm;
+            var plugin = MinerPluginsManager.GetPluginWithUuid(algorithm.MinerID);
+            if (plugin != null)
+            {
+                return new MinerFromPlugin(plugin, miningPairs, groupKey);
+            }
+            return null;
+        }
+
         // used to identify miner instance
         protected readonly long MinerID;
 
