@@ -1,7 +1,5 @@
 ﻿using MinerPlugin;
 using NHM.Common.Enums;
-using NHM.Common.Device;
-using NHM.Common.Algorithm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +10,6 @@ using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using System.Diagnostics;
-using System.ComponentModel;
 
 namespace MinerPluginToolkitV1
 {
@@ -116,8 +113,20 @@ namespace MinerPluginToolkitV1
         abstract public Tuple<string, string> GetBinAndCwdPaths();
         abstract protected string MiningCreateCommandLine();
 
-        // most don't require extra enviorment vars
-        protected virtual Dictionary<string, string> GetEnvironmentVariables() => null;
+        protected virtual Dictionary<string, string> GetEnvironmentVariables()
+        {
+            if (MinerSystemEnvironmentVariables != null)
+            {
+                var customSettingKey = MinerToolkit.GetAlgorithmCustomSettingKey(_miningPairs);
+                if (MinerSystemEnvironmentVariables.CustomSystemEnvironmentVariables != null && MinerSystemEnvironmentVariables.CustomSystemEnvironmentVariables.ContainsKey(customSettingKey))
+                {
+                    return MinerSystemEnvironmentVariables.CustomSystemEnvironmentVariables[customSettingKey];
+                }
+
+                return MinerSystemEnvironmentVariables.DefaultSystemEnvironmentVariables;
+            }
+            return null;
+        }
 
         /// <summary>
         /// Provides available port for miner API binding

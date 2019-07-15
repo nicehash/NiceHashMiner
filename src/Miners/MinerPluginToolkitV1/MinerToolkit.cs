@@ -57,6 +57,15 @@ namespace MinerPluginToolkitV1
         }
 
         /// <summary>
+        /// GetAlgorithmCustomSettingKey returns first Algorithm name from MiningPairs
+        /// </summary>
+        public static string GetAlgorithmCustomSettingKey(this IEnumerable<MiningPair> mps)
+        {
+            if (mps.Count() == 0) return "";
+            return mps.First().Algorithm.AlgorithmName;
+        }
+
+        /// <summary>
         /// GetAlgorithmPortsKey returns first Algorithm name from MiningPairs
         /// </summary>
         public static string GetAlgorithmPortsKey(this IEnumerable<MiningPair> mps)
