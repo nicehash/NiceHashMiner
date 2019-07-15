@@ -256,11 +256,11 @@
     <Compile Include="Miners\IntegratedPlugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
     <Compile Include="Miners\MinerApiWatchdog.cs" />
     <Compile Include="Miners\MiningManager.cs" />
+    <Compile Include="Miners\MiningStats.cs" />
     <Compile Include="NHMProductInfo.cs" />
     <Compile Include="Plugin\PluginContainer.cs" />
     <Compile Include="Plugin\SupportedAlgorithmsFilter.cs" />
     <Compile Include="Plugin\SupportedPluginsFilter.cs" />
-    <Compile Include="Stats\MiningStats.cs" />
     <Compile Include="Plugin\MinerPluginsManager.cs" />
     <Compile Include="Miners\MinerFromPlugin.cs" />
     <Compile Include="Stats\ErrorCode.cs" />

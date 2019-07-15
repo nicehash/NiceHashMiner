@@ -5,7 +5,7 @@ using NiceHashMiner.Devices;
 using NiceHashMiner.Switching;
 using NHM.Common.Enums;
 
-namespace NiceHashMiner.Stats
+namespace NiceHashMiner.Miners
 {
     // TODO this should ba a namespace with separate files
     // MiningStats are the new APIData rates groups...
@@ -59,7 +59,7 @@ namespace NiceHashMiner.Stats
             public double PowerCost(double kwhPriceInBtc)
             {
                 var powerUsage = GetPowerUsage();
-                return kwhPriceInBtc * powerUsage *24 / 1000;
+                return kwhPriceInBtc * powerUsage * 24 / 1000;
             }
 
             public void CopyFrom(BaseStats setFrom)
@@ -168,10 +168,10 @@ namespace NiceHashMiner.Stats
 
             var sortedDeviceUUIDs = apiData.AlgorithmSpeedsPerDevice.Select(speedInfo => speedInfo.Key).OrderBy(uuid => uuid).ToList();
             var uuidsKeys = string.Join(",", sortedDeviceUUIDs);
-            
+
 
             var groupKey = $"{minerUUID}-{uuidsKeys}";
-            
+
             // update groups
             lock (_lock)
             {
@@ -242,7 +242,7 @@ namespace NiceHashMiner.Stats
             if (_devicesMiningStats.TryGetValue(deviceUuid, out stat) == false)
             {
                 // create if it doesn't exist
-                stat = new DeviceMiningStats{ DeviceUUID = deviceUuid };
+                stat = new DeviceMiningStats { DeviceUUID = deviceUuid };
                 _devicesMiningStats[deviceUuid] = stat;
             }
             stat.Clear();
@@ -315,7 +315,7 @@ namespace NiceHashMiner.Stats
             var ret = new List<(AlgorithmType type, double speed)>();
             lock (_lock)
             {
-                if(_devicesMiningStats.TryGetValue(deviceUuid, out var stat))
+                if (_devicesMiningStats.TryGetValue(deviceUuid, out var stat))
                 {
                     foreach (var speedInfo in stat.Speeds)
                     {
