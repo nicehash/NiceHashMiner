@@ -34,10 +34,9 @@ namespace NBMiner
                 /// </summary>
                 new MinerOption
                 {
-                    Type = MinerOptionType.OptionWithSingleParameter,
+                    Type = MinerOptionType.OptionIsParameter,
                     ID = "nbminer_powerOptimize",
                     LongName = "--cuckatoo-power-optimize",
-                    DefaultValue = "0"
                 },
                 /// <summary>
                 /// Generate log file named `log_<timestamp>.txt`.
@@ -49,6 +48,15 @@ namespace NBMiner
                     LongName = "--log"
                 },
                 /// <summary>
+                /// Generate custom log file. Note: This option will override `--log`.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "nbminer_logFile",
+                    LongName = "--log-file"
+                },
+                /// <summary>
                 /// Use 'yyyy-MM-dd HH:mm:ss,zzz' for log time format.
                 /// </summary>
                 new MinerOption
@@ -56,7 +64,48 @@ namespace NBMiner
                     Type = MinerOptionType.OptionIsParameter,
                     ID = "nbminer_longTimeFormat",
                     LongName = "--long-format"
+                },
+                /// <summary>
+                /// Do not query cuda device health status.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "nbminer_noNvml",
+                    LongName = "--no-nvml"
+                },
+                /// <summary>
+                /// Set timeframe for the calculation of fidelity, unit in hour. Default: 24.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "nbminer_fidelityTimeframe",
+                    LongName = "--fidelity-timeframe",
+                    DefaultValue = "24"
+                },
+                ///// <summary>
+                ///// Check validity of certificate when use SSL connection.
+                ///// </summary>
+                //new MinerOption
+                //{
+                //    Type = MinerOptionType.OptionIsParameter,
+                //    ID = "nbminer_strictSsl",
+                //    LongName = "--strict-ssl",
+                //},
+                /// <summary>
+                /// Comma-separated list of intensities (1 -100).
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "nbminer_Intensity",
+                    LongName = "--intensity",
+                    ShortName = "-i",
+                    DefaultValue = "-1",
+                    Delimiter = ","
                 }
+
             },
             TemperatureOptions = new List<MinerOption>
             {
@@ -67,7 +116,8 @@ namespace NBMiner
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "nbminer_tempLimit",
-                    LongName = "--temperature-limit"
+                    LongName = "--temperature-limit",
+                    DefaultValue = "90",
                 }
             }
         };
