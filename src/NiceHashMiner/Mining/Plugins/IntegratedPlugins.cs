@@ -143,8 +143,8 @@ namespace NiceHashMiner.Mining.Plugins
     class EthlargementIntegratedPlugin : Ethlargement.Ethlargement, IntegratedPlugin
     {
         public static EthlargementIntegratedPlugin Instance { get; } = new EthlargementIntegratedPlugin();
-        EthlargementIntegratedPlugin() : base("Ethlargement")
-        { }
+
+        public override string PluginUUID => "Ethlargement";
 
         public bool Is3rdParty => true;
     }
