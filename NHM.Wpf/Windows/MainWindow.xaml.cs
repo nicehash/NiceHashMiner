@@ -1,8 +1,9 @@
 ﻿using NHM.Wpf.Windows.Common;
 using NHM.Wpf.Windows.Plugins;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Navigation;
+using NHM.Wpf.ViewModels;
 
 namespace NHM.Wpf.Windows
 {
@@ -71,6 +72,47 @@ namespace NHM.Wpf.Windows
 
         private void StatsHyperlink_OnClick(object sender, RoutedEventArgs e)
         {
+        }
+
+        private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            IsEnabled = false;
+            var startup = new StartupLoadingWindow();
+            startup.Owner = this;
+            startup.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            startup.CanClose = false;
+            startup.Show();
+
+            if (startup.DataContext is StartupLoadingVM slvm)
+                await FakeLoad(slvm.PrimaryProgress, slvm.SecondaryProgress, slvm);
+
+            startup.CanClose = true;
+
+            startup.Close();
+            IsEnabled = true;
+        }
+
+        private static async Task FakeLoad(IProgress<(string message, double perc)> primaryProg,
+            IProgress<(string message, double perc)> secProg, StartupLoadingVM vm)
+        {
+            for (var i = 0; i <= 100; i++)
+            {
+                primaryProg.Report(("Load", i));
+                await Task.Delay(10);
+                if (i == 60)
+                {
+                    vm.SecondaryVisible = true;
+                    for (var j = 0; j <= 100; j++)
+                    {
+                        secProg.Report(("Sec load", j));
+                        await Task.Delay(10);
+                    }
+                }
+                else
+                {
+                    vm.SecondaryVisible = false;
+                }
+            }
         }
     }
 }

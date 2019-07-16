@@ -1,6 +1,8 @@
-﻿namespace NHM.Wpf.ViewModels.Models
+﻿using System;
+
+namespace NHM.Wpf.ViewModels.Models
 {
-    public class InstallProgress : BaseVM
+    public class LoadProgress : BaseVM, IProgress<(string mess, double perc)>
     {
         private bool _isInstalling;
 
@@ -36,6 +38,12 @@
                 _installStatus = value;
                 OnPropertyChanged();
             }
+        }
+
+        public void Report((string mess, double perc) value)
+        {
+            Progress = value.perc;
+            Status = value.mess;
         }
     }
 }

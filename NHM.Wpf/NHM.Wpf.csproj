@@ -71,7 +71,7 @@
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
     <Compile Include="ViewModels\Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
-    <Compile Include="ViewModels\Models\InstallProgress.cs" />
+    <Compile Include="ViewModels\Models\LoadProgress.cs" />
     <Compile Include="ViewModels\Models\Placeholders\PluginPackageInfo.cs" />
     <Compile Include="ViewModels\Models\Placeholders\PluginPackageInfoCR.cs" />
     <Compile Include="ViewModels\Models\PluginEventArgs.cs" />
@@ -89,6 +89,7 @@
     <Compile Include="ViewModels\Settings\SettingsBaseVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsContainerVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsVM.cs" />
+    <Compile Include="ViewModels\StartupLoadingVM.cs" />
     <Compile Include="Windows\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
     </Compile>
@@ -145,6 +146,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Windows\StartupLoadingWindow.xaml.cs">
+      <DependentUpon>StartupLoadingWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Windows\BenchmarkWindow.xaml">
       <SubType>Designer</SubType>
@@ -215,6 +219,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\Settings\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\StartupLoadingWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -27,12 +27,12 @@ namespace NHM.Wpf.ViewModels.Plugins
             }
         }
 
-        public PluginDetailVM(PluginPackageInfoCR plugin, InstallProgress instProg)
+        public PluginDetailVM(PluginPackageInfoCR plugin, LoadProgress instProg)
             : base(plugin, instProg)
         { }
 
         public PluginDetailVM(PluginEntryVM vm)
-            : this(vm.Plugin, vm.Install)
+            : this(vm.Plugin, vm.Load)
         { }
     }
 }

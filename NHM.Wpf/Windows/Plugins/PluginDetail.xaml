@@ -46,9 +46,9 @@
                     Click="InstallButton_OnClick" 
                     IsEnabled="{Binding InstallButtonEnabled}"
                     Content="{Binding InstallString}" />
-            <controls:PluginInstallProgress Progress="{Binding Install.Progress}"
-                                            Status="{Binding Install.Status}"
-                                            Visibility="{Binding Install.IsInstalling, Converter={StaticResource BoolToVis}}" />
+            <controls:PluginInstallProgress Progress="{Binding Load.Progress}"
+                                            Status="{Binding Load.Status}"
+                                            Visibility="{Binding Load.IsInstalling, Converter={StaticResource BoolToVis}}" />
         </StackPanel>
         
         <StackPanel Grid.Row="0" Grid.Column="1" Margin="10">

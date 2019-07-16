@@ -16,25 +16,25 @@ namespace NHM.Wpf.ViewModels.Plugins
         public bool IsSupported => Plugin.SupportedDevicesAlgorithms.Keys.Contains("NVIDIA");
         public string InstallString => IsSupported ? "Install" : "Not Supported";
 
-        public bool InstallButtonEnabled => IsSupported && !Install.IsInstalling;
+        public bool InstallButtonEnabled => IsSupported && !Load.IsInstalling;
 
-        public InstallProgress Install { get; }
+        public LoadProgress Load { get; }
 
         public PluginEntryVM(PluginPackageInfoCR plugin)
-            : this(plugin, new InstallProgress())
+            : this(plugin, new LoadProgress())
         { }
 
-        public PluginEntryVM(PluginPackageInfoCR plugin, InstallProgress install)
+        public PluginEntryVM(PluginPackageInfoCR plugin, LoadProgress load)
         {
             Plugin = plugin;
 
-            Install = install;
-            Install.PropertyChanged += Install_PropertyChanged;
+            Load = load;
+            Load.PropertyChanged += Install_PropertyChanged;
         }
 
         private void Install_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Install.IsInstalling))
+            if (e.PropertyName == nameof(Load.IsInstalling))
                 OnPropertyChanged(nameof(InstallButtonEnabled));
         }
 
@@ -42,18 +42,18 @@ namespace NHM.Wpf.ViewModels.Plugins
         {
             // TODO Placeholder
 
-            if (Install.IsInstalling) return;
+            if (Load.IsInstalling) return;
 
-            Install.IsInstalling = true;
+            Load.IsInstalling = true;
 
             for (var i = 0d; i <= 100; i += 1)
             {
-                Install.Progress = i;
-                Install.Status = $"Installing: {i}%";
+                Load.Progress = i;
+                Load.Status = $"Installing: {i}%";
                 await Task.Delay(100);
             }
 
-            Install.IsInstalling = false;
+            Load.IsInstalling = false;
         }
     }
 }
