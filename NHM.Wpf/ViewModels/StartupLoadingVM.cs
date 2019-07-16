@@ -1,11 +1,16 @@
-﻿using NHM.Wpf.ViewModels.Models;
+﻿using System;
+using NHM.Wpf.ViewModels.Models;
+using NHM.Wpf.ViewModels.Models.Placeholders;
 
 namespace NHM.Wpf.ViewModels
 {
-    public class StartupLoadingVM : BaseVM
+    public class StartupLoadingVM : BaseVM, IStartupLoader
     {
         public LoadProgress PrimaryProgress { get; } = new LoadProgress();
         public LoadProgress SecondaryProgress { get; } = new LoadProgress();
+
+        IProgress<(string, double)> IStartupLoader.PrimaryProgress => PrimaryProgress;
+        IProgress<(string, double)> IStartupLoader.SecondaryProgress => SecondaryProgress;
 
         private static readonly string PlaceholderTitle = Translations.Tr("Loading, please wait...");
 

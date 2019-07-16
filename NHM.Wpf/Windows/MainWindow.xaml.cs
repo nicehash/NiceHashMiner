@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using NHM.Wpf.ViewModels;
+using NHM.Wpf.ViewModels.Models.Placeholders;
 
 namespace NHM.Wpf.Windows
 {
@@ -83,8 +84,8 @@ namespace NHM.Wpf.Windows
             startup.CanClose = false;
             startup.Show();
 
-            if (startup.DataContext is StartupLoadingVM slvm)
-                await FakeLoad(slvm.PrimaryProgress, slvm.SecondaryProgress, slvm);
+            if (startup.DataContext is IStartupLoader slvm)
+                await FakeLoad(slvm);
 
             startup.CanClose = true;
 
@@ -92,25 +93,25 @@ namespace NHM.Wpf.Windows
             IsEnabled = true;
         }
 
-        private static async Task FakeLoad(IProgress<(string message, double perc)> primaryProg,
-            IProgress<(string message, double perc)> secProg, StartupLoadingVM vm)
+        private static async Task FakeLoad(IStartupLoader loader)
         {
             for (var i = 0; i <= 100; i++)
             {
-                primaryProg.Report(("Load", i));
+                loader.PrimaryProgress.Report(("Load", i));
                 await Task.Delay(10);
                 if (i == 60)
                 {
-                    vm.SecondaryVisible = true;
+                    loader.SecondaryVisible = true;
+                    loader.SecondaryTitle = "Downloading miners...";
                     for (var j = 0; j <= 100; j++)
                     {
-                        secProg.Report(("Sec load", j));
+                        loader.SecondaryProgress.Report(("Sec load", j));
                         await Task.Delay(10);
                     }
                 }
                 else
                 {
-                    vm.SecondaryVisible = false;
+                    loader.SecondaryVisible = false;
                 }
             }
         }
