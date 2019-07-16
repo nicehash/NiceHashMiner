@@ -2,7 +2,7 @@
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Miners.Grouping;
+using NiceHashMiner.Mining.Grouping;
 using NHM.Common.Enums;
 using System;
 using System.Linq;
@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NHM.Common;
 using MinerPlugin;
-using NiceHashMiner.Plugin;
+using NiceHashMiner.Mining.Plugins;
 using NiceHashMiner.Utils;
 
 namespace MinerSmokeTest
@@ -182,7 +182,7 @@ namespace MinerSmokeTest
                     {
                         var pAlgo = algorithm as PluginAlgorithm;
                         var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = pAlgo.BaseAlgo } };
-                        var miner = NiceHashMiner.Miners.MinerFactory.CreateMinerForMining(pair, "");
+                        var miner = NiceHashMiner.Mining.Miner.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);
 
@@ -249,7 +249,7 @@ namespace MinerSmokeTest
                     {
                         var pAlgo = algorithm as PluginAlgorithm;
                         var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = pAlgo.BaseAlgo } };
-                        var miner = NiceHashMiner.Miners.MinerFactory.CreateMinerForMining(pair, "");
+                        var miner = NiceHashMiner.Mining.Miner.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);
 

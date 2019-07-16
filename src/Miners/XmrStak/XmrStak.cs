@@ -52,15 +52,6 @@ namespace XmrStak
             }
         }
 
-        protected override Dictionary<string, string> GetEnvironmentVariables()
-        {
-            if (MinerSystemEnvironmentVariables != null)
-            {
-                return MinerSystemEnvironmentVariables.DefaultSystemEnvironmentVariables;
-            }
-            return null;
-        }
-
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
             switch (algorithmType)

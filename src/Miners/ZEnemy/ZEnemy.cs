@@ -58,12 +58,9 @@ namespace ZEnemy
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 40, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var split = urlWithPort.Split(':');
-            var url = split[1].Substring(2, split[1].Length - 2);
-            var port = split[2];
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url={url}:{port} --user {MinerToolkit.DemoUserBTC} --devices {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--algo {algo} --url={urlWithPort} --user {MinerToolkit.DemoUserBTC} --devices {_devices} {_extraLaunchParameters}";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
@@ -144,13 +141,10 @@ namespace ZEnemy
             _apiPort = GetAvaliablePort();
             // instant non blocking
             var urlWithPort = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var split = urlWithPort.Split(':');
-            var url = split[1].Substring(2, split[1].Length - 2);
-            var port = split[2];
 
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url={url}:{port} --user {_username} --api-bind={_apiPort} --devices {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--algo {algo} --url={urlWithPort} --user {_username} --api-bind={_apiPort} --devices {_devices} {_extraLaunchParameters}";
             return commandLine;
         }
     }

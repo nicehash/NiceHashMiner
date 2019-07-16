@@ -1,12 +1,8 @@
-﻿using NiceHashMiner.Miners.IntegratedPlugins;
-using NiceHashMiner.Utils;
+﻿using NiceHashMiner.Utils;
 using NHM.Common.Enums;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NiceHashMiner.Mining.Plugins;
 
 namespace NiceHashMiner.Configs
 {

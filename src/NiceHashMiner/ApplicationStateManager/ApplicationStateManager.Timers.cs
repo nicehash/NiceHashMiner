@@ -1,17 +1,13 @@
 using NHM.DeviceDetection;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Miners;
+using NiceHashMiner.Mining;
 using NHM.Common;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using SystemTimer = System.Timers.Timer;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner
 {
@@ -138,7 +134,7 @@ namespace NiceHashMiner
             if (_preventSleepTimer?.IsActive ?? false) return;
             // sleep time setting is minimal 1 minute
             _preventSleepTimer = new AppTimer((s, e) => {
-                PInvoke.PInvokeHelpers.PreventSleep();
+                PInvokeHelpers.PreventSleep();
             },
             20 * 1000);// leave this interval, it works
             _preventSleepTimer.Start();
@@ -172,6 +168,8 @@ namespace NiceHashMiner
 
         #region InternetCheck timer
         private static AppTimer _internetCheckTimer;
+
+        public static object PInvoke { get; private set; }
 
         public static event EventHandler<bool> OnInternetCheck;
 

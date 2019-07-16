@@ -1,4 +1,4 @@
-﻿namespace NiceHashMiner
+﻿namespace NiceHashMiner.Utils
 {
     public static class Links
     {

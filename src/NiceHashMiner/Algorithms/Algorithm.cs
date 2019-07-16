@@ -4,6 +4,7 @@ using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NHM.Common.Enums;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Algorithms
 {

@@ -1,4 +1,3 @@
-using NiceHashMiner.Miners;
 
 namespace NiceHashMiner.Interfaces
 {
@@ -7,6 +6,5 @@ namespace NiceHashMiner.Interfaces
         void ClearRatesAll();
 
         void RefreshRates();
-        //void AddRateInfo(ApiData iApiData, double paying, bool isApiGetException);
     }
 }

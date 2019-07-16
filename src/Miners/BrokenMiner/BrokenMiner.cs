@@ -1,18 +1,7 @@
 ﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.Common.Enums;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static NHM.Common.StratumServiceHelpers;
-using System.Net.Http;
-using Newtonsoft.Json;
-using System.Linq;
-using System.Globalization;
-using System.IO;
-using NHM.Common;
 using System.Collections.Generic;
 
 namespace BrokenMiner
@@ -21,6 +10,7 @@ namespace BrokenMiner
     {
         async Task<ApiData> IMiner.GetMinerStatsDataAsync()
         {
+            await Task.Delay(100);
             var api = new ApiData();
             api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(AlgorithmType.ZHash, 1) };
             api.PowerUsageTotal = 1;
@@ -40,6 +30,7 @@ namespace BrokenMiner
 
         async Task<BenchmarkResult> IMiner.StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType)
         {
+            await Task.Delay(100);
             var bp = new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(AlgorithmType.ZHash, 12) }, Success = true };
             return GetValueOrErrorSettings.GetValueOrError("StartBenchmark", bp);
         }
