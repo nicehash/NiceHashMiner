@@ -4,9 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         StateChanged="MainWindow_OnStateChanged">
+    <Window.DataContext>
+        <viewModels:MainVM />
+    </Window.DataContext>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -44,7 +49,10 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
 
-            <DataGrid x:Name="DevGrid" AutoGenerateColumns="False" CanUserResizeRows="False" SelectionMode="Single">
+            <DataGrid ItemsSource="{Binding Devices}" 
+                      AutoGenerateColumns="False" 
+                      CanUserResizeRows="False" 
+                      SelectionMode="Single">
                 <DataGrid.Columns>
                     <DataGridCheckBoxColumn Binding="{Binding Enabled}" Header="Enabled"/>
                     <DataGridTextColumn Binding="{Binding Device}" Header="Device"/>
