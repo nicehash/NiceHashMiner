@@ -340,10 +340,9 @@ namespace NiceHashMiner
             toolStripStatusLabelBTCDayText.Text = scaleBTC ? $"mBTC/{displayTimeUnit}" : $"BTC/{displayTimeUnit}";
             toolStripStatusLabelGlobalRateValue.Text = totalDisplayRate.ToString(scaleBTC ? "F5" : "F6", CultureInfo.InvariantCulture);
 
-
-            toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
-                .ConvertToActiveCurrency((totalRate * factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
-                .ToString("F2", CultureInfo.InvariantCulture);
+            var timeFactorRate = ExchangeRateApi
+                .ConvertToActiveCurrency((totalRate * factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()));
+            toolStripStatusLabelBTCDayValue.Text = timeFactorRate.ToString("F2", CultureInfo.InvariantCulture);
             toolStripStatusLabelBalanceText.Text = RatesAndStatsStates.Instance.LabelBalanceText;
         }
 

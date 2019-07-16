@@ -1,19 +1,19 @@
-﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Mining.Grouping;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Devices;
+using NiceHashMiner.Mining.Grouping;
+using NiceHashMiner.Mining.Plugins;
 using NiceHashMiner.Algorithms;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
-using NHM.Common.Enums;
 using NHM.Common;
+using NHM.Common.Enums;
 using MinerPlugin;
-using System.Threading;
-using NiceHashMiner.Mining.Plugins;
 
 namespace NiceHashMiner.Mining
 {
