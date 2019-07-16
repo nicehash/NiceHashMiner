@@ -21,7 +21,7 @@ namespace NHM.Wpf.ViewModels.Settings
             set
             {
                 var code = Translations.GetLanguageCodeFromIndex(value);
-                Translations.SetLanguage(code);
+                Translations.SelectedLanguage = code;
             }
         }
         private bool _logToFile = false;

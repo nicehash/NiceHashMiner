@@ -25,20 +25,46 @@ namespace NHM.Wpf
 
         public static event EventHandler LanguageChanged;
 
+        private static Dictionary<string, Dictionary<string, string>> _entries;
+
+        // transform so it is possible to switch from any language
+        private static readonly Dictionary<string, Dictionary<string, string>> TransformedEntries;
+        private static List<Language> _availableLanguages;
+
+
+        private static string _selectedLanguage = "en";
+        public static string SelectedLanguage
+        {
+            get => _selectedLanguage;
+            set
+            {
+                if (value == _selectedLanguage) return;
+
+                if (_availableLanguages.All(l => l.Code != value)) return;
+
+                _selectedLanguage = value;
+                LanguageChanged?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
         static Translations()
         {
+            TransformedEntries = new Dictionary<string, Dictionary<string, string>>();
+            _availableLanguages = new List<Language>();
+            _entries = new Dictionary<string, Dictionary<string, string>>();
+
             // always have english
             var enMetaData = new Language
             {
                 Code = "en",
                 Name = "English",
             };
-            AvailableLanguages = new List<Language>();
 
             // try init
             TryInitTranslations();
-            bool flag = false;
-            foreach(var lang in AvailableLanguages)
+
+            var flag = false;
+            foreach(var lang in _availableLanguages)
             {
                 if (lang.Code == "en")
                 {
@@ -47,16 +73,9 @@ namespace NHM.Wpf
             }
             if (!flag)
             {
-                AvailableLanguages.Add(enMetaData);
+                _availableLanguages.Add(enMetaData);
             }
         }
-
-        private static string _selectedLanguage = "en";
-        private static Dictionary<string, Dictionary<string, string>> _entries = new Dictionary<string, Dictionary<string, string>>();
-        
-        // transform so it is possible to switch from any language
-        private static Dictionary<string, Dictionary<string, string>> _transformedEntries = new Dictionary<string, Dictionary<string, string>>();
-        public static List<Language> AvailableLanguages = new List<Language>();
 
         private static void TryInitTranslations()
         {
@@ -69,8 +88,8 @@ namespace NHM.Wpf
 
                 if (translations.Languages != null)
                 {
-                    AvailableLanguages = translations.Languages.Select(pair => new Language { Code = pair.Key, Name = pair.Value }).ToList();
-                    foreach (var kvp in AvailableLanguages)
+                    _availableLanguages = translations.Languages.Select(pair => new Language { Code = pair.Key, Name = pair.Value }).ToList();
+                    foreach (var kvp in _availableLanguages)
                     {
                         //Logger.Info("Translations", $"Found language: code: {kvp.Code}, name: {kvp.Name}");
                     }
@@ -79,7 +98,7 @@ namespace NHM.Wpf
                 {
                     _entries = translations.Translations;
                     // init transformed entries so we can switch back and forth
-                    foreach (var lang in AvailableLanguages)
+                    foreach (var lang in _availableLanguages)
                     {
                         if (lang.Code == "en") continue;
                         foreach (var enTrans in _entries)
@@ -98,7 +117,7 @@ namespace NHM.Wpf
                                 var translatedText = kvp.Value;
                                 trToOther[langCode] = translatedText;
                             }
-                            _transformedEntries[trKey] = trToOther;
+                            TransformedEntries[trKey] = trToOther;
                         }
                     }
                 }
@@ -109,25 +128,10 @@ namespace NHM.Wpf
             }
         }
 
-        public static void SetLanguage(string langCode)
-        {
-            if (langCode == _selectedLanguage) return;
-
-            foreach(var lang in AvailableLanguages)
-            {
-                if (lang.Code == langCode)
-                {
-                    _selectedLanguage = lang.Code;
-                    LanguageChanged?.Invoke(null, EventArgs.Empty);
-                    break;
-                }
-            }
-        }
-
         public static List<string> GetAvailableLanguagesNames()
         {
             var langNames = new List<string>();
-            foreach (var kvp in AvailableLanguages) 
+            foreach (var kvp in _availableLanguages) 
             {
                 langNames.Add(kvp.Name);
             }
@@ -136,7 +140,7 @@ namespace NHM.Wpf
 
         public static string GetLanguageCodeFromName(string name)
         {
-            foreach (var kvp in AvailableLanguages)
+            foreach (var kvp in _availableLanguages)
             {
                 if (kvp.Name == name) return kvp.Code;
             }
@@ -145,18 +149,18 @@ namespace NHM.Wpf
 
         public static string GetLanguageCodeFromIndex(int index)
         {
-            if (index < AvailableLanguages.Count)
+            if (index < _availableLanguages.Count)
             {
-                return AvailableLanguages[index].Code;
+                return _availableLanguages[index].Code;
             }
             return "";
         }
 
         public static int GetLanguageIndexFromCode(string code)
         {
-            for (var i = 0; i < AvailableLanguages.Count; i++)
+            for (var i = 0; i < _availableLanguages.Count; i++)
             {
-                var kvp = AvailableLanguages[i];
+                var kvp = _availableLanguages[i];
                 if (kvp.Code == code) return i;
             }
             return 0;
@@ -177,16 +181,16 @@ namespace NHM.Wpf
             {
                 return _entries[text][_selectedLanguage];
             }
-            var containsTransformed = _transformedEntries.ContainsKey(text);
+            var containsTransformed = TransformedEntries.ContainsKey(text);
             // check transformed entry
-            if (containsTransformed && _transformedEntries[text].ContainsKey(_selectedLanguage))
+            if (containsTransformed && TransformedEntries[text].ContainsKey(_selectedLanguage))
             {
-                return _transformedEntries[text][_selectedLanguage];
+                return TransformedEntries[text][_selectedLanguage];
             }
             // check transformed entry en
-            if (containsTransformed && _transformedEntries[text].ContainsKey("en"))
+            if (containsTransformed && TransformedEntries[text].ContainsKey("en"))
             {
-                return _transformedEntries[text]["en"];
+                return TransformedEntries[text]["en"];
             }
             // didn't find text with language key so just return the text 
             return text;
