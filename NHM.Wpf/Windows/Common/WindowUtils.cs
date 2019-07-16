@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
 using NHM.Wpf.ViewModels.Settings;
 using NHM.Wpf.Windows.Settings.Controls;
 using static NHM.Wpf.Translations;
@@ -65,7 +66,31 @@ namespace NHM.Wpf.Windows.Common
             sc.Title = Tr(sc.Title);
             sc.Description = Tr(sc.Description);
         }
-        
+
+        public static void Translate(TextBlock tb)
+        {
+            if (!string.IsNullOrWhiteSpace(tb.Text))
+                tb.Text = Tr(tb.Text);
+
+            foreach (var inline in tb.Inlines)
+            {
+                Translate(inline);
+            }
+        }
+
+        public static void Translate(Inline il)
+        {
+            if (il is Run run)
+                run.Text = Tr(run.Text);
+            else if (il is Span sp)
+            {
+                foreach (var inline in sp.Inlines)
+                {
+                    Translate(inline);
+                }
+            }
+        }
+
         public static void Translate(UIElement u)
         {
             switch (u)
@@ -86,7 +111,7 @@ namespace NHM.Wpf.Windows.Common
                     Translate(i);
                     break;
                 case TextBlock tb:
-                    tb.Text = Tr(tb.Text);
+                    Translate(tb);
                     break;
             }
         }

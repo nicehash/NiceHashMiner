@@ -39,7 +39,11 @@
                 <TextBlock Text="Worker Name:" Margin="0,0,10,0" />
                 <TextBox Text="worker1" Width="75" />
             </StackPanel>
-            <Button Content="Check my stats online!" FontSize="10" Width="120" HorizontalAlignment="Left" Margin="5,0" />
+            <TextBlock Margin="5,0">
+                <Hyperlink Click="StatsHyperlink_OnClick">
+                    Check my stats online!
+                </Hyperlink>
+            </TextBlock>
         </StackPanel>
 
         <!-- Grid to contain device and mining views -->

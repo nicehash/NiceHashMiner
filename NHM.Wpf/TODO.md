@@ -8,8 +8,12 @@
 
 ### Complications
 
-* WPF does not have a LinkLabel so "Show my stats online!" is implemented as a button
-* Will need a 3rd-party library for minimize to tray
+* ~~WPF does not have a LinkLabel so "Show my stats online!" is implemented as a button~~
+  * Solution: Nested `Hyperlink` inside `TextBlock`
+* ~~Will need a 3rd-party library for minimize to tray~~
+  * Solution: Hardcodet.Wpf.TaskbarNotification NuGet package
+* ~~WPF does not have the same level of RTF display support for EULA~~
+  * Solution: `RichTextBox` from WinForms hosted in `EulaWindow`
 
 ### ~~Re-implement form surfaces~~
 

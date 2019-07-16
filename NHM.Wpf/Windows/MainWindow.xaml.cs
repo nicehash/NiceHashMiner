@@ -2,6 +2,7 @@
 using NHM.Wpf.Windows.Plugins;
 using System;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace NHM.Wpf.Windows
 {
@@ -67,5 +68,9 @@ namespace NHM.Wpf.Windows
         }
 
         #endregion
+
+        private void StatsHyperlink_OnClick(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }
