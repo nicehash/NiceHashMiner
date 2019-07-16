@@ -100,7 +100,7 @@ namespace NHM.Common.Enums
         //[Obsolete("UNUSED Algorithm")]
         CuckooCycle = 43,
         //[Obsolete("UNUSED Algorithm")]
-        GrinCuckarooD29 = 44,
+        GrinCuckarood29 = 44,
         #endregion // NiceHashAPI
     }
 }
