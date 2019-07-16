@@ -99,6 +99,8 @@ namespace NHM.Common.Enums
         CryptoNightR = 42,
         //[Obsolete("UNUSED Algorithm")]
         CuckooCycle = 43,
+        //[Obsolete("UNUSED Algorithm")]
+        GrinCuckarooD29 = 44,
         #endregion // NiceHashAPI
     }
 }
