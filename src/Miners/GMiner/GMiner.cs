@@ -188,17 +188,16 @@ namespace GMinerPlugin
             }
             // all good continue on
 
-            // TODO sort by GMiner indexes
             // init command line params parts
-            //var orderedMiningPairs = _miningPairs.ToList();
-            //orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            var orderedMiningPairs = _miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
             var minignPairs = _miningPairs.ToList();
-            _devices = string.Join(" ", minignPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
+            _devices = string.Join(" ", orderedMiningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
             if (MinerOptionsPackage != null)
             {
                 var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(minignPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(minignPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }
