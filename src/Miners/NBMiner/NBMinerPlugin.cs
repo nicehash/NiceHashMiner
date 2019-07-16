@@ -22,7 +22,7 @@ namespace NBMiner
 
         public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(2, 1);
         public override string Name => "NBMiner";
 
         public override string Author => "Dillon Newell";
@@ -79,6 +79,7 @@ namespace NBMiner
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle),
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;

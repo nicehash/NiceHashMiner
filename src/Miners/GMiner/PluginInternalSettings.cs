@@ -38,6 +38,16 @@ namespace GMinerPlugin
                     DefaultValue = "1"
                 },
                 /// <summary>
+                /// enable/disable NVML
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithSingleParameter,
+                    ID = "gminer_nvml",
+                    LongName = "--nvml=",
+                    DefaultValue = "1"
+                },
+                /// <summary>
                 /// pass cost of electricity in USD per kWh, miner will report $ spent to mining
                 /// </summary>
                 new MinerOption
