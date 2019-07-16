@@ -2,18 +2,14 @@
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Forms.Components;
-using NiceHashMiner.Miners;
-using NiceHashMiner.Miners.IntegratedPlugins;
-using NiceHashMiner.Plugin;
+using NiceHashMiner.Mining.Plugins;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Utils;
 using NHM.Common;
 using NHM.Common.Enums;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NHM.DeviceDetection;
@@ -194,12 +190,19 @@ namespace NiceHashMiner
                 VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
 
                 // STEP
-                progress?.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
-                if (FirewallRules.IsFirewallRulesOutdated())
+                if (FirewallRules.RunFirewallRulesOnStartup)
                 {
-                    // requires UAC
-                    // TODO show message box
-                    FirewallRules.UpdateFirewallRules();
+                    progress?.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
+                    if (FirewallRules.IsFirewallRulesOutdated())
+                    {
+                        // requires UAC
+                        // TODO show message box
+                        FirewallRules.UpdateFirewallRules();
+                    }
+                }
+                else
+                {
+                    progress?.Report((Tr("Skipping Firewall Rules..."), nextProgPerc()));
                 }
 
                 // STEP

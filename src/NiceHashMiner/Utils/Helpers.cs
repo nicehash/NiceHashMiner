@@ -1,5 +1,4 @@
 ﻿using Microsoft.Win32;
-using NiceHashMiner.PInvoke;
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -8,7 +7,7 @@ using NHM.Common.Enums;
 using System.Linq;
 using NHM.Common;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Utils
 {
     internal class Helpers : PInvokeHelpers
     {

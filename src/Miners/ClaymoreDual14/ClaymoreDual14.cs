@@ -26,15 +26,6 @@ namespace ClaymoreDual14
         // TODO figure out how to fix API workaround without this started time
         private DateTime _started;
 
-        protected override Dictionary<string, string> GetEnvironmentVariables()
-        {
-            if (MinerSystemEnvironmentVariables != null)
-            {
-                return MinerSystemEnvironmentVariables.DefaultSystemEnvironmentVariables;
-            }
-            return null;
-        }
-
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);

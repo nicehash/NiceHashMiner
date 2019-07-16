@@ -2,7 +2,7 @@
 using NiceHashMiner.Devices;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Interfaces.DataVisualizer;
-using NiceHashMiner.Miners.IdleChecking;
+using NiceHashMiner.Mining.IdleChecking;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using System;
@@ -17,7 +17,7 @@ using static NiceHashMiner.Translations; // consider using static
 namespace NiceHashMiner
 {
     using NiceHashMiner.Forms.Components;
-    using NiceHashMiner.Plugin;
+    using NiceHashMiner.Mining.Plugins;
     using NiceHashMiner.Utils;
     using NHM.Common;
     using NHM.Common.Enums;
@@ -340,10 +340,9 @@ namespace NiceHashMiner
             toolStripStatusLabelBTCDayText.Text = scaleBTC ? $"mBTC/{displayTimeUnit}" : $"BTC/{displayTimeUnit}";
             toolStripStatusLabelGlobalRateValue.Text = totalDisplayRate.ToString(scaleBTC ? "F5" : "F6", CultureInfo.InvariantCulture);
 
-
-            toolStripStatusLabelBTCDayValue.Text = ExchangeRateApi
-                .ConvertToActiveCurrency((totalRate * factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()))
-                .ToString("F2", CultureInfo.InvariantCulture);
+            var timeFactorRate = ExchangeRateApi
+                .ConvertToActiveCurrency((totalRate * factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()));
+            toolStripStatusLabelBTCDayValue.Text = timeFactorRate.ToString("F2", CultureInfo.InvariantCulture);
             toolStripStatusLabelBalanceText.Text = RatesAndStatsStates.Instance.LabelBalanceText;
         }
 

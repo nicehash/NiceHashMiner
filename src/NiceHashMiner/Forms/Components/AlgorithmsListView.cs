@@ -1,12 +1,9 @@
 ﻿using NiceHashMiner.Devices;
 using NiceHashMiner.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using NiceHashMiner.Algorithms;
-using NiceHashMiner.Plugin;
-using NiceHashMiner.Miners.IntegratedPlugins;
 
 namespace NiceHashMiner.Forms.Components
 {

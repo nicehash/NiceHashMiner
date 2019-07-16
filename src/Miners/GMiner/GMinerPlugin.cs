@@ -1,4 +1,3 @@
-using MinerPlugin;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -7,49 +6,34 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NHM.Common;
-using System.IO;
 using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1;
 
 namespace GMinerPlugin
 {
-    public class GMinerPlugin : IMinerPlugin, IInitInternals, IDevicesCrossReference, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
+    public class GMinerPlugin : PluginBase, IDevicesCrossReference
     {
         public GMinerPlugin()
         {
-            _pluginUUID = "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
+            // set default internal settings
+            MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            DefaultTimeout = PluginInternalSettings.DefaultTimeout;
         }
-        public GMinerPlugin(string pluginUUID = "1b7019d0-7237-11e9-b20c-f9f12eb6d835")
-        {
-            _pluginUUID = pluginUUID;
-        }
-        private readonly string _pluginUUID;
-        public string PluginUUID => _pluginUUID;
 
-        public Version Version => new Version(1, 10);
+        public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public string Name => "GMinerCuda9.0+";
+        public override Version Version => new Version(2, 1);
 
-        public string Author => "stanko@nicehash.com";
+        public override string Name => "GMinerCuda9.0+";
+
+        public override string Author => "stanko@nicehash.com";
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
-        public bool CanGroup(MiningPair a, MiningPair b)
+        protected override MinerBase CreateMinerBase()
         {
-            return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
-        }
-
-        public IMiner CreateMiner()
-        {
-            return new GMiner(PluginUUID, _mappedDeviceIds)
-            {
-                MinerOptionsPackage = _minerOptionsPackage,
-                MinerSystemEnvironmentVariables = _minerSystemEnvironmentVariables,
-                MinerReservedApiPorts = _minerReservedApiPorts,
-                MinerBenchmarkTimeSettings = _minerBenchmarkTimeSettings
-            };
+            return new GMiner(PluginUUID, _mappedDeviceIds);
         }
 
 
@@ -74,7 +58,7 @@ namespace GMinerPlugin
         //   - Equihash 210,9 ~1GB VRAM
         //   - CUDA 9.0+ 
 
-        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
+        public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
@@ -111,7 +95,8 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
-                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
+                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
@@ -144,104 +129,6 @@ namespace GMinerPlugin
             return isSupported && isDriverSupported;
         }
 
-        #region Internal Settings
-        public void InitInternals()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-
-            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, _minerSystemEnvironmentVariables);
-            if (readFromFileEnvSysVars != null) _minerSystemEnvironmentVariables = readFromFileEnvSysVars;
-
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, _minerOptionsPackage);
-            if (fileMinerOptionsPackage != null) _minerOptionsPackage = fileMinerOptionsPackage;
-
-            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, _minerReservedApiPorts);
-            if (fileMinerReservedPorts != null) _minerReservedApiPorts = fileMinerReservedPorts;
-
-            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, _getApiMaxTimeoutConfig);
-            if (fileMinerApiMaxTimeoutSetting != null) _getApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
-
-            var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, _minerBenchmarkTimeSettings);
-            if (fileMinerBenchmarkTimeSetting != null) _minerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
-        }
-
-        protected static MinerOptionsPackage _minerOptionsPackage = new MinerOptionsPackage
-        {
-            GeneralOptions = new List<MinerOption>
-            {
-                /// <summary>
-                /// personalization string for equihash algorithm (for example: 'BgoldPoW', 'BitcoinZ', 'Safecoin')
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_pers",
-                    LongName = "--pers",
-                },
-                /// <summary>
-                /// enable/disable power efficiency calculator. Power efficiency calculator display of energy efficiency statistics of GPU in S/w, higher CPU load. Default value is '1' ('0' - off or '1' - on)
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_pec",
-                    LongName = "--pec=",
-                    DefaultValue = "1"
-                },
-                /// <summary>
-                /// pass cost of electricity in USD per kWh, miner will report $ spent to mining
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_electricity",
-                    LongName = "--electricity_cost"
-                },
-                /// <summary>
-                /// option to control GPU intensity (--intensity, 1-100)
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "gminer_intensity",
-                    LongName = "--intensity",
-                    Delimiter = " "
-                },
-                /// <summary>
-                /// log filename
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_intensity",
-                    LongName = "--logfile"
-                }
-            },
-            TemperatureOptions = new List<MinerOption>{
-                /// <summary>
-                /// space-separated list of temperature limits, upon reaching the limit, the GPU stops mining until it cools down, can be empty (for example: '85 80 75')
-                /// </summary>
-                new MinerOption
-                {
-                    Type = MinerOptionType.OptionWithMultipleParameters,
-                    ID = "gminer_templimit",
-                    ShortName = "-t",
-                    LongName = "--templimit",
-                    DefaultValue = "90",
-                    Delimiter = " "
-                }
-            }
-        };
-
-        protected static MinerSystemEnvironmentVariables _minerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables { };
-        protected static MinerReservedPorts _minerReservedApiPorts = new MinerReservedPorts { };
-        protected static MinerApiMaxTimeoutSetting _getApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
-        {
-            GeneralTimeout =  _defaultTimeout,
-        };
-        protected static MinerBenchmarkTimeSettings _minerBenchmarkTimeSettings = new MinerBenchmarkTimeSettings { };
-        #endregion Internal Settings
-
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedDeviceIds.Count == 0) return;
@@ -260,7 +147,7 @@ namespace GMinerPlugin
             }
         }
 
-        public IEnumerable<string> CheckBinaryPackageMissingFiles()
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return Enumerable.Empty<string>();
@@ -268,7 +155,7 @@ namespace GMinerPlugin
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe" });
         }
 
-        public bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
             try
             {
@@ -284,16 +171,5 @@ namespace GMinerPlugin
             }
             return false;
         }
-
-        #region IGetApiMaxTimeoutV2
-        public bool IsGetApiMaxTimeoutEnabled => MinerApiMaxTimeoutSetting.ParseIsEnabled(true, _getApiMaxTimeoutConfig);
-
-
-        protected static TimeSpan _defaultTimeout = new TimeSpan(0, 2, 0);
-        public TimeSpan GetApiMaxTimeout(IEnumerable<MiningPair> miningPairs)
-        {
-            return MinerApiMaxTimeoutSetting.ParseMaxTimeout(_defaultTimeout, _getApiMaxTimeoutConfig, miningPairs);
-        }
-        #endregion IGetApiMaxTimeoutV2
     }
 }

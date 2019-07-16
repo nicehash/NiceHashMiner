@@ -1,24 +1,19 @@
 using NHM.UUID;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Interfaces.DataVisualizer;
-using NiceHashMiner.Miners;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Stats;
-using NHM.Common;
 using NHM.Common.Enums;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner
 {
     static partial class ApplicationStateManager
     {
-        public static string RigID => UUID.GetDeviceB64UUID();
+        public static string RigID { get; } = UUID.GetDeviceB64UUID();
 
         // change this if TOS changes
         public static int CurrentTosVer => 4;
@@ -267,7 +262,7 @@ namespace NiceHashMiner
         {
             MiningManager.StopAllMiners();
 
-            PInvoke.PInvokeHelpers.AllowMonitorPowerdownAndSleep();
+            PInvokeHelpers.AllowMonitorPowerdownAndSleep();
             StopMinerStatsCheckTimer();
             StopComputeDevicesCheckTimer();
             StopPreventSleepTimer();

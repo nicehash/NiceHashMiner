@@ -1,6 +1,5 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.Common.Enums;
 using System;
@@ -14,6 +13,7 @@ using System.IO;
 using NHM.Common;
 using System.Collections.Generic;
 using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.CCMinerCommon;
 
 namespace CryptoDredge
 {
@@ -53,9 +53,11 @@ namespace CryptoDredge
             }
         }
 
+        // This just doesn't work
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            throw new NotImplementedException();
+            var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup, DevFee);
+            return ret;
         }
 
         private struct HashFound
@@ -79,7 +81,7 @@ namespace CryptoDredge
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind 127.0.0.1:{_apiPort} --no-watchdog --device {_devices} {_extraLaunchParameters}";
+            var commandLine = $"--algo {algo} --url {url} --user {MinerToolkit.DemoUserBTC} --api-bind 0 --no-watchdog --device {_devices} {_extraLaunchParameters}";
 
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
@@ -140,7 +142,7 @@ namespace CryptoDredge
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "CryptoDredge_0.20.1");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "CryptoDredge_0.20.2");
             var binPath = Path.Combine(pluginRootBins, "CryptoDredge.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
@@ -164,9 +166,9 @@ namespace CryptoDredge
             _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }
@@ -179,7 +181,7 @@ namespace CryptoDredge
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo {algo} --url {url} --user {_username} --api-bind 127.0.0.1:{_apiPort} --device {_devices} --no-watchdog {_extraLaunchParameters}";
+            var commandLine = $"--algo {algo} --url {url} --user {_username} -b 127.0.0.1:{_apiPort} --device {_devices} --no-watchdog {_extraLaunchParameters}";
             return commandLine;
         }
     }

@@ -2,7 +2,7 @@
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
-namespace NiceHashMiner
+namespace NiceHashMiner.Utils
 {
     public static class CredentialValidators
     {

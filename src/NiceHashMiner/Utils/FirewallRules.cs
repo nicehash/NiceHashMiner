@@ -5,11 +5,13 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using MinerPluginToolkitV1.Configs;
+using NiceHashMiner.Mining.Plugins;
 
 namespace NiceHashMiner.Utils
 {
     public static class FirewallRules
     {
+        public static bool RunFirewallRulesOnStartup { get; set; } = false;
         static string _firewallRulesAddedFilePath => Path.Combine("internals", "firewall_rules_added.json");
         private static List<string> _pluginsUUIDsWithVersions = new List<string>();
 
@@ -21,7 +23,7 @@ namespace NiceHashMiner.Utils
 
         public static bool IsFirewallRulesOutdated()
         {
-            var installedPlugins = Plugin.MinerPluginsManager.GetPluginUUIDsAndVersionsList();
+            var installedPlugins = MinerPluginsManager.GetPluginUUIDsAndVersionsList();
             return installedPlugins.Except(_pluginsUUIDsWithVersions).Count() > 0;
         }
 
@@ -49,7 +51,7 @@ namespace NiceHashMiner.Utils
                     else
                     {
                         Logger.Info("NICEHASH", "setFirewallRulesProcess all OK");
-                        var installedPlugins = Plugin.MinerPluginsManager.GetPluginUUIDsAndVersionsList();
+                        var installedPlugins = MinerPluginsManager.GetPluginUUIDsAndVersionsList();
                         _pluginsUUIDsWithVersions = installedPlugins;
                         InternalConfigs.WriteFileSettings(_firewallRulesAddedFilePath, _pluginsUUIDsWithVersions);
                     }

@@ -1,22 +1,14 @@
-﻿using Microsoft.Win32;
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Miners;
-using NiceHashMiner.Miners.Grouping;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Globalization;
-using System.Security;
 using System.Windows.Forms;
-using NiceHashMiner.Stats;
 using NHM.Common.Enums;
 using NiceHashMiner.Interfaces.DataVisualizer;
-
+using NiceHashMiner.Mining.Plugins;
+using NiceHashMiner.Utils;
 using static NiceHashMiner.Translations;
-using NiceHashMiner.Miners.IntegratedPlugins;
-using NiceHashMiner.Plugin;
-using NHM.Common;
 
 namespace NiceHashMiner.Forms
 {

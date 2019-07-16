@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using MinerPlugin;
 using NHM.Common.Enums;
 using static NHM.Common.StratumServiceHelpers;
-using System.Globalization;
 using System.IO;
 using NHM.Common;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
@@ -68,7 +67,6 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 
 
             var errorList = new List<string> { "Unknown algo parameter", "Cuda error", "Non-existant CUDA device" };
-            var errorFound = false;
             var errorMsg = "";
 
             var benchHashes = 0d;
@@ -84,7 +82,6 @@ namespace MinerPluginToolkitV1.CCMinerCommon
                     if (data.Contains(err))
                     {
                         bp.TryExit();
-                        errorFound = true;
                         errorMsg = data;
                         return new BenchmarkResult { Success = false, ErrorMessage = errorMsg };
                     }
@@ -152,9 +149,9 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
             if (MinerOptionsPackage != null)
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

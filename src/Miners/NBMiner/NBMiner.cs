@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NHM.Common;
@@ -21,6 +19,7 @@ namespace NBMiner
     {
         private int _apiPort;
         private string _extraLaunchParameters = "";
+        private string _devices = "";
         private AlgorithmType _algorithmType;
         private readonly HttpClient _http = new HttpClient();
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
@@ -32,13 +31,15 @@ namespace NBMiner
                 switch (_algorithmType)
                 {
                     case AlgorithmType.GrinCuckaroo29:
-                        return "cuckaroo";
+                        return "cuckaroo -grin29-fork-height 9262080"; // FORCE height bigger than 262080
                     case AlgorithmType.GrinCuckatoo31:
                         return "cuckatoo";
                     case AlgorithmType.DaggerHashimoto:
                         return "ethash";
                     case AlgorithmType.CuckooCycle:
                         return "cuckoo_ae";
+                    case AlgorithmType.GrinCuckarood29:
+                        return "cuckarood";
                     default:
                         return "";
                 }
@@ -54,6 +55,7 @@ namespace NBMiner
                     case AlgorithmType.GrinCuckaroo29:
                     case AlgorithmType.GrinCuckatoo31:
                     case AlgorithmType.CuckooCycle:
+                    case AlgorithmType.GrinCuckarood29:
                         return 2.0;
                     default:
                         return 0;
@@ -127,9 +129,7 @@ namespace NBMiner
         {
             _apiPort = GetAvaliablePort();
             var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            
-            var devs = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
-            return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} -d {devs} -RUN {_extraLaunchParameters}";
+            return $"-a {AlgoName} -o {url} -u {username} --api 127.0.0.1:{_apiPort} {_devices} -RUN {_extraLaunchParameters}";
         }
         
         public override async Task<ApiData> GetMinerStatsDataAsync()
@@ -186,12 +186,14 @@ namespace NBMiner
             }
 
             var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
+            orderedMiningPairs.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            var devs = string.Join(",", orderedMiningPairs.Select(p => _mappedIDs[p.Device.UUID]));
+            _devices = $"-d {devs}";
             if (MinerOptionsPackage != null)
             {
-                // TODO add ignore temperature checks
-                var generalParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }
