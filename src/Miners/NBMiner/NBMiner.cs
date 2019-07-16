@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NHM.Common;
@@ -39,6 +37,8 @@ namespace NBMiner
                         return "ethash";
                     case AlgorithmType.CuckooCycle:
                         return "cuckoo_ae";
+                    case AlgorithmType.GrinCuckarooD29:
+                        return "cuckarood";
                     default:
                         return "";
                 }
@@ -54,6 +54,7 @@ namespace NBMiner
                     case AlgorithmType.GrinCuckaroo29:
                     case AlgorithmType.GrinCuckatoo31:
                     case AlgorithmType.CuckooCycle:
+                    case AlgorithmType.GrinCuckarooD29:
                         return 2.0;
                     default:
                         return 0;
