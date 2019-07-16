@@ -13,27 +13,28 @@
     </UserControl.Resources>
 
     <StackPanel Margin="10"
-                DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsContainer}}}"
-                x:Name="LayoutRoot">
+                DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsContainer}}}">
+        <StackPanel.Resources>
+            <conv:NulBoolToVisibilityConverter x:Key="BoolToVis" />
+            <conv:NulBoolToBoolConverter x:Key="NulBoolToBool" />
+        </StackPanel.Resources>
+
         <StackPanel Orientation="Horizontal">
-            <StackPanel.Resources>
-                <conv:NulBoolToVisibilityConverter x:Key="Converter" />
-            </StackPanel.Resources>
             <!-- When the Enabled property is bound, we show a checkbox with a title. Otherwise, just a title -->
             <!-- It would be easier to always use the TextBlock for title, but using CheckBox allows toggling by clicking the title -->
             <CheckBox Margin="0,0,10,0" 
                       IsChecked="{Binding Enabled}" 
-                      Visibility="{Binding Enabled, Converter={StaticResource Converter}}"
+                      Visibility="{Binding Enabled, Converter={StaticResource BoolToVis}}"
                       IsEnabled="True" 
                       Content="{Binding Title}"/>
             <TextBlock Text="{Binding Title}"
-                       Visibility="{Binding Enabled, Converter={StaticResource Converter}, ConverterParameter=1}" />
+                       Visibility="{Binding Enabled, Converter={StaticResource BoolToVis}, ConverterParameter=1}" />
         </StackPanel>
         <TextBlock Text="{Binding Description}"
                    TextWrapping="Wrap" 
                    Margin="5"
                    Style="{StaticResource DetailTextBlockStyle}" />
-        <Grid IsEnabled="{Binding Enabled}" Margin="10,0">
+        <Grid IsEnabled="{Binding Enabled, Converter={StaticResource NulBoolToBool}}" Margin="10,0">
             <!-- The data context sets all children's data contexts to the settings page, so binding can be done there -->
             <StackPanel x:Name="ChildrenStackPanel" 
                         DataContext="{Binding DataContext, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Pages:ISettingsPage}}}" />
