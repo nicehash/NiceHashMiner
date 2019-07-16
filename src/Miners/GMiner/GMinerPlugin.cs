@@ -23,7 +23,7 @@ namespace GMinerPlugin
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(2, 1);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -95,7 +95,8 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
-                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
+                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;

@@ -1,20 +1,18 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
+using NHM.Common;
 using NHM.Common.Enums;
 using System;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using NHM.Common.Device;
 using static NHM.Common.StratumServiceHelpers;
-using System.IO;
-using NHM.Common;
-using MinerPluginToolkitV1.Configs;
 
 namespace GMinerPlugin
 {
@@ -52,11 +50,13 @@ namespace GMinerPlugin
                 case AlgorithmType.Beam:
                     return "150_5";
                 case AlgorithmType.GrinCuckaroo29:
-                    return "grin29";
+                    return "cuckaroo29";
                 case AlgorithmType.GrinCuckatoo31:
                     return "grin31";
                 case AlgorithmType.CuckooCycle:
-                    return "aeternity";
+                    return "cuckoo29";
+                case AlgorithmType.GrinCuckarood29:
+                    return "cuckarood29";
                 default:
                     return "";
             }
