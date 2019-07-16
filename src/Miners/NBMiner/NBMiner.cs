@@ -31,7 +31,7 @@ namespace NBMiner
                 switch (_algorithmType)
                 {
                     case AlgorithmType.GrinCuckaroo29:
-                        return "cuckaroo";
+                        return "cuckaroo -grin29-fork-height 9262080"; // FORCE height bigger than 262080
                     case AlgorithmType.GrinCuckatoo31:
                         return "cuckatoo";
                     case AlgorithmType.DaggerHashimoto:
