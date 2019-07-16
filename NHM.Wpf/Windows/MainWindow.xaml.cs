@@ -16,6 +16,9 @@ namespace NHM.Wpf.Windows
 
             Translations.LanguageChanged += TranslationsOnLanguageChanged;
             TranslationsOnLanguageChanged(null, null);
+
+            var eula = new EulaWindow();
+            eula.ShowDialog();
         }
 
         private void TranslationsOnLanguageChanged(object sender, EventArgs e)
