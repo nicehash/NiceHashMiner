@@ -76,7 +76,7 @@ namespace NBMiner
         {
             var algorithms = new List<Algorithm>
             {
-                new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
+                //new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),

@@ -452,6 +452,7 @@ namespace ClaymoreDual14
                     Type = MinerOptionType.OptionWithMultipleParameters,
                     ID = "claymoreDual_power_limit",
                     ShortName = "-powlim",
+                    DefaultValue = "0",
                     Delimiter = ","
                 },
                 /// <summary>

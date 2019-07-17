@@ -1,16 +1,13 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ClaymoreCommon;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
-using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
@@ -32,8 +29,8 @@ namespace Phoenix
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
-            var algorithmTypes = new AlgorithmType[] { _algorithmFirstType };
+            var miningDevices = _miningPairs.Select(pair => pair.Device).ToList();
+            var algorithmTypes = new AlgorithmType[] { _algorithmType };
             // multiply dagger API data 
             var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
             var totalCount = ad.AlgorithmSpeedsTotal?.Count ?? 0;
@@ -88,7 +85,7 @@ namespace Phoenix
                 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmFirstType, benchHashResult) }
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }
                 };
             };
 

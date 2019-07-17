@@ -1,16 +1,9 @@
 ﻿using MinerPlugin;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
-using Newtonsoft.Json;
 using NHM.Common;
-using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,14 +16,10 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
         public abstract override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
 
 
-        protected List<MiningPair> _orderedMiningPairs = new List<MiningPair>();
         protected int _apiPort;
-        
-        public AlgorithmType _algorithmFirstType = AlgorithmType.NONE;
         public AlgorithmType _algorithmSecondType = AlgorithmType.NONE;
 
         public string _devices;
-        public string _extraLaunchParameters = "";
 
         // command line parts
         protected Dictionary<string, int> _mappedIDs;
@@ -44,7 +33,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
         {
             get
             {
-                switch (_algorithmFirstType)
+                switch (_algorithmType)
                 {
                     case AlgorithmType.DaggerHashimoto:
                         return "eth";
@@ -95,39 +84,30 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             return (_algorithmSecondType != AlgorithmType.NONE);
         }
 
+        protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // sort by mapped ids
+            pairsList.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            return pairsList;
+        }
+
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmFirstType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-
             var dualType = MinerToolkit.GetAlgorithmDualType(_miningPairs);
             _algorithmSecondType = dualType.Item1;
-            ok = dualType.Item2;
+            var ok = dualType.Item2;
             if (!ok) _algorithmSecondType = AlgorithmType.NONE;
             // all good continue on
-            
-            _orderedMiningPairs = _miningPairs.ToList();
-            _orderedMiningPairs.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
-            _devices = string.Join("", _orderedMiningPairs.Select(p => ClaymoreHelpers.GetClaymoreDeviceID(_mappedIDs[p.Device.UUID])));
 
-            if (MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(_orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(_orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
+            // mining pairs are ordered in InitMiningPairs
+            var mappedDeviceIDs = _miningPairs.Select(p => ClaymoreHelpers.GetClaymoreDeviceID(_mappedIDs[p.Device.UUID]));
+            _devices = string.Join("", mappedDeviceIDs);
         }
 
         public string CreateCommandLine(string username)
         {
-            var urlFirst = StratumServiceHelpers.GetLocationUrl(_algorithmFirstType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var urlFirst = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var cmd = "";
             if (_algorithmSecondType == AlgorithmType.NONE) //noDual
             {

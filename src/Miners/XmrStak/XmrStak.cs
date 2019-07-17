@@ -1,6 +1,5 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.Common.Enums;
 using System;
 using System.Threading;
@@ -24,9 +23,7 @@ namespace XmrStak
         //protected _cpuDevices = new 
         protected HashSet<DeviceType> _miningDeviceTypes = null;
         protected Dictionary<int, string> _threadsForDeviceUUIDs = null;
-        protected string _extraLaunchParameters = "";
         protected int _apiPort;
-        protected AlgorithmType _algorithmType;
         protected readonly HttpClient _http = new HttpClient();
         protected IXmrStakConfigHandler _configHandler;
         protected CancellationTokenSource _stopSource = null;
@@ -272,30 +269,7 @@ namespace XmrStak
 
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-            // all good continue on
-
             _miningDeviceTypes = new HashSet<DeviceType>(_miningPairs.Select(pair => pair.Device.DeviceType));
-
-            // init command line params parts
-            var orderedMiningPairs = _miningPairs.ToList();
-
-            // here extra launch parameters 
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID) - a.Device.DeviceType.CompareTo(b.Device.DeviceType));
-            if (MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
         }
 
         protected override string MiningCreateCommandLine()

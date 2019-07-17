@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -8,8 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
@@ -21,10 +18,7 @@ namespace LolMinerBeam
     public class LolMinerBeam : MinerBase
     {
         private string _devices;
-        private string _extraLaunchParameters = "";
         private int _apiPort;
-
-        private AlgorithmType _algorithmType;
 
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
@@ -141,34 +135,23 @@ namespace LolMinerBeam
             return Tuple.Create(binPath, binCwd);
         }
 
+        protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // TODO sort by mapped device ids
+#error IMPLEMENT device mappings and order by device mappings
+            return pairsList;
+        }
+
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-            // all good continue on
+            _devices = string.Join(",", _miningPairs.Select(p => p.Device.ID));
 
-            // init command line params parts
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
-
-            for (int i = 0; i < orderedMiningPairs.Count; i++)
+            // ???????? TODO GetSortedMiningPairs is now sorted so this thing probably makes no sense anymore
+            var miningPairs = _miningPairs.ToList();
+            for (int i = 0; i < miningPairs.Count; i++)
             {
-                _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].Device.UUID;
-            }
-
-            if (MinerOptionsPackage != null)
-            {
-                // TODO add ignore temperature checks
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+                _initOrderMirrorApiOrderUUIDs[i] = miningPairs[i].Device.UUID;
             }
         }
 

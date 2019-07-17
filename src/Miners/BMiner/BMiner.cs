@@ -1,7 +1,5 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.Common.Enums;
 using System;
 using System.Threading;
@@ -10,7 +8,6 @@ using static NHM.Common.StratumServiceHelpers;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Linq;
-using System.Globalization;
 using System.IO;
 using NHM.Common;
 using System.Collections.Generic;
@@ -21,9 +18,7 @@ namespace BMiner
     public class BMiner : MinerBase
     {
         private string _devices;
-        private string _extraLaunchParameters = "";
         private int _apiPort;
-        private AlgorithmType _algorithmType;
         private readonly HttpClient _http = new HttpClient();
 
         public BMiner(string uuid) : base(uuid)
@@ -157,19 +152,6 @@ namespace BMiner
 
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-            // all good continue on
-
-            // init command line params parts
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             var deviceIDs = _miningPairs.Select(p =>
             {
                 var device = p.Device;
@@ -177,14 +159,6 @@ namespace BMiner
                 return prefix + device.ID;
             }).OrderBy(id => id);
             _devices = $"-devices {string.Join(",", deviceIDs)}";
-
-            if(MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
         }
 
         protected override string MiningCreateCommandLine()

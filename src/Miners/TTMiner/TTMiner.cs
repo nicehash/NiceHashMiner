@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
-using Newtonsoft.Json;
 using NHM.Common;
-using NHM.Common.Device;
 using NHM.Common.Enums;
 using MinerPluginToolkitV1.ClaymoreCommon;
 using MinerPluginToolkitV1.Configs;
@@ -22,14 +15,12 @@ using MinerPluginToolkitV1.Configs;
 namespace TTMiner
 {
     // TODO get ordered API data
-    public class TTMiner : MinerBase, IDisposable, IAfterStartMining
+    public class TTMiner : MinerBase, IAfterStartMining
     {
         private int _apiPort;
-        private AlgorithmType _algorithmType;
         protected List<MiningPair> _orderedMiningPairs = new List<MiningPair>();
 
         private string _devices;
-        private string _extraLaunchParameters = "";
 
         // TODO figure out how to fix API workaround without this started time
         private DateTime _started;
@@ -141,35 +132,12 @@ namespace TTMiner
 
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-
-            // Order pairs and parse ELP
-            _orderedMiningPairs = _miningPairs.ToList();
-            _orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(" ", _orderedMiningPairs.Select(p => p.Device.ID));
-            if (MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(_orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(_orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
+            _devices = string.Join(" ", _miningPairs.Select(p => p.Device.ID));
         }
 
         public void AfterStartMining()
         {
             _started = DateTime.Now;
-        }
-
-        public void Dispose()
-        {
         }
     }
 }

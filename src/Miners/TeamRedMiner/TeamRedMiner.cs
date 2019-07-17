@@ -1,6 +1,5 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.Common.Enums;
 using System;
 using System.Linq;
@@ -18,10 +17,6 @@ namespace TeamRedMiner
     public class TeamRedMiner : MinerBase
     {
         private int _apiPort;
-        private string _extraLaunchParameters = "";
-
-        // can mine only one algorithm at a given time
-        private AlgorithmType _algorithmType;
 
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
@@ -186,20 +181,9 @@ namespace TeamRedMiner
 
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-            // all good continue on
-
             // Order pairs and parse ELP
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
+            var miningPairsList = _miningPairs.ToList();
+            _devices = string.Join(",", miningPairsList.Select(p => p.Device.ID));
 
             var openClAmdPlatformResult = MinerToolkit.GetOpenCLPlatformID(_miningPairs);
             _openClAmdPlatformNum = openClAmdPlatformResult.Item1;
@@ -210,17 +194,10 @@ namespace TeamRedMiner
                 throw new InvalidOperationException("Invalid mining initialization");
             }
 
-            for (int i = 0; i < orderedMiningPairs.Count; i++)
+            // TODO probably not needed anymore
+            for (int i = 0; i < miningPairsList.Count; i++)
             {
-                _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].Device.UUID;
-            }
-
-            if (MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+                _initOrderMirrorApiOrderUUIDs[i] = miningPairsList[i].Device.UUID;
             }
         }
 

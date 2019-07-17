@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
@@ -96,7 +95,7 @@ namespace ClaymoreDual14
                 var benchHashResultFirst = benchItersFirst == 0 ? 0d : benchHashesFirstSum / benchItersFirst;
                 var benchHashResultSecond = benchItersSecond == 0 ? 0d : benchHashesSecondSum / benchItersSecond;
                 var success = benchHashResultFirst > 0d;
-                var speeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmFirstType, benchHashResultFirst * (1 - DevFee * 0.01)) };
+                var speeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResultFirst * (1 - DevFee * 0.01)) };
                 if (IsDual())
                 {
                     speeds.Add(new AlgorithmTypeSpeedPair(_algorithmSecondType, benchHashResultSecond * (1 - DualDevFee * 0.01)));
@@ -129,8 +128,8 @@ namespace ClaymoreDual14
                 return api;
             }
 
-            var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
-            var algorithmTypes = IsDual() ? new AlgorithmType[] { _algorithmFirstType, _algorithmSecondType } : new AlgorithmType[] { _algorithmFirstType };
+            var miningDevices = _miningPairs.Select(pair => pair.Device).ToList();
+            var algorithmTypes = IsDual() ? new AlgorithmType[] { _algorithmType, _algorithmSecondType } : new AlgorithmType[] { _algorithmType };
             // multiply dagger API data 
             var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, DualDevFee, algorithmTypes);
             var totalCount = ad.AlgorithmSpeedsTotal?.Count ?? 0;
