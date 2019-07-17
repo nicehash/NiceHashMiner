@@ -1,16 +1,13 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NHM.Common;
-using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
@@ -21,11 +18,7 @@ namespace NanoMiner
     {
 
         private readonly HttpClient _http = new HttpClient();
-        private string _extraLaunchParameters = "";
-
         private int _apiPort;
-
-        private AlgorithmType _algorithmType;
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
@@ -70,23 +63,17 @@ namespace NanoMiner
             return Tuple.Create(binPath, binCwd);
         }
 
+        protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // sort by mapped ids
+            pairsList.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            return pairsList;
+        }
+
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
-
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            //TODO this must be implemented
-            if (MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
+            // ?????
         }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()

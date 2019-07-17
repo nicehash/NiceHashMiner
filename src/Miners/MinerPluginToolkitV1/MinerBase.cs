@@ -46,6 +46,10 @@ namespace MinerPluginToolkitV1
         protected string _username;
         protected string _password;
 
+        // most miners mine on a single algo and most have extra launch params
+        protected AlgorithmType _algorithmType;
+        protected string _extraLaunchParameters = "";
+
         public MinerBase(string uuid)
         {
             _MINER_COUNT_ID++;
@@ -82,9 +86,19 @@ namespace MinerPluginToolkitV1
 
         abstract protected void Init();
 
+        // override this on plugins with mapped ids or special mining pairs sorting
+        protected virtual IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // by default sort by base id (Cuda and OpenCL ids) and type
+            pairsList.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID) - a.Device.DeviceType.CompareTo(b.Device.DeviceType));
+            return pairsList;
+        }
+
         public virtual void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
         {
-            _miningPairs = miningPairs;
+            // now should be ordered
+            _miningPairs = GetSortedMiningPairs(miningPairs);
             // update log group
             try
             {
@@ -98,6 +112,27 @@ namespace MinerPluginToolkitV1
             {
                 Logger.Error(_logGroup, $"Error while setting _logGroup: {e.Message}");
             }
+
+            // init algo, ELP and finally miner specific init
+            // init algo
+            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
+            _algorithmType = singleType.Item1;
+            bool ok = singleType.Item2;
+            if (!ok)
+            {
+                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
+                throw new InvalidOperationException("Invalid mining initialization");
+            }
+            // init ELP, _miningPairs are ordered and ELP parsing keeps ordering
+            if (MinerOptionsPackage != null)
+            {
+                var miningPairsList = _miningPairs.ToList();
+                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
+                var generalParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
+                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+            }
+            // miner specific init
             Init();
         }
 
