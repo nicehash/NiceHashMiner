@@ -39,10 +39,18 @@ namespace ClaymoreDual14
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID);
 
+            var amds = gpus.Where(gpu => gpu is AMDDevice).OrderBy(gpu => gpu.PCIeBusID);
+            var nvidias = gpus.Where(gpu => gpu is CUDADevice).OrderBy(gpu => gpu.PCIeBusID);
+
+            // claymore orders AMDs first
             int claymoreIndex = -1;
-            foreach (var gpu in gpus)
+            foreach (var amd in amds)
             {
-                _mappedIDs[gpu.UUID] = ++claymoreIndex;
+                _mappedIDs[amd.UUID] = ++claymoreIndex;
+            }
+            foreach (var nvidia in nvidias)
+            {
+                _mappedIDs[nvidia.UUID] = ++claymoreIndex;
             }
 
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
