@@ -1,16 +1,10 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
-using Newtonsoft.Json;
 using NHM.Common;
-using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +17,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
         public abstract override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard);
 
 
-        protected List<MiningPair> _orderedMiningPairs = new List<MiningPair>();
+        //protected List<MiningPair> _orderedMiningPairs = new List<MiningPair>();
         protected int _apiPort;
         
         public AlgorithmType _algorithmFirstType = AlgorithmType.NONE;
@@ -95,6 +89,29 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             return (_algorithmSecondType != AlgorithmType.NONE);
         }
 
+        // override this because of the device ordering in the logs '_logGroup'
+        public override void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            // sort _miningPairs by _mappedIDs
+            var orderedMiningPairs = miningPairs.ToList();
+            orderedMiningPairs.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            _miningPairs = orderedMiningPairs;
+            // update log group
+            try
+            {
+                var devs = _miningPairs.Select(pair => $"{pair.Device.DeviceType}:{pair.Device.ID}");
+                var devsTag = $"devs({string.Join(",", devs)})";
+                var algo = _miningPairs.First().Algorithm.AlgorithmName;
+                var algoTag = $"algo({algo})";
+                _logGroup = $"{_baseTag}-{algoTag}-{devsTag}";
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logGroup, $"Error while setting _logGroup: {e.Message}");
+            }
+            Init();
+        }
+
         protected override void Init()
         {
             var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
@@ -111,16 +128,15 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             ok = dualType.Item2;
             if (!ok) _algorithmSecondType = AlgorithmType.NONE;
             // all good continue on
-            
-            _orderedMiningPairs = _miningPairs.ToList();
-            _orderedMiningPairs.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
-            _devices = string.Join("", _orderedMiningPairs.Select(p => ClaymoreHelpers.GetClaymoreDeviceID(_mappedIDs[p.Device.UUID])));
+
+            // mining pairs are ordered in InitMiningPairs
+            _devices = string.Join("", _miningPairs.Select(p => ClaymoreHelpers.GetClaymoreDeviceID(_mappedIDs[p.Device.UUID])));
 
             if (MinerOptionsPackage != null)
             {
                 var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(_orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(_orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
+                var generalParams = ExtraLaunchParametersParser.Parse(_miningPairs.ToList(), MinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(_miningPairs.ToList(), MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

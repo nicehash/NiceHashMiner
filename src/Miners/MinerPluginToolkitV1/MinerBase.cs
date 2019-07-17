@@ -25,11 +25,11 @@ namespace MinerPluginToolkitV1
         /// <summary>
         /// This is tag used for logging, specific for each <see cref="MinerBase"/> object
         /// </summary>
-        private string _baseTag { get; set; }
+        protected string _baseTag { get; private set; }
         /// <summary>
         /// LogGroup is used to deferentiate between different miners in logs
         /// </summary>
-        protected string _logGroup { get; private set; }
+        protected string _logGroup { get; set; }
         /// <summary>
         /// UUID is universal unique identifier for each <see cref="MinerBase"/> object
         /// </summary>
@@ -82,7 +82,7 @@ namespace MinerPluginToolkitV1
 
         abstract protected void Init();
 
-        public void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
+        public virtual void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
         {
             _miningPairs = miningPairs;
             // update log group
