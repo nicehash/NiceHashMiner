@@ -8,18 +8,14 @@ using NHM.Common.Enums;
 using static NHM.Common.StratumServiceHelpers;
 using System.IO;
 using NHM.Common;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Configs;
 
 namespace MinerPluginToolkitV1.CCMinerCommon
 {
     public abstract class CCMinerBase : MinerBase
     {
-        // ccminer can mine only one algorithm at a given time
-        protected AlgorithmType _algorithmType;
         // command line parts
         protected string _devices;
-        protected string _extraLaunchParameters = "";
         protected int _apiPort;
 
         protected bool _noTimeLimitOption = false;
@@ -27,19 +23,11 @@ namespace MinerPluginToolkitV1.CCMinerCommon
         public CCMinerBase(string uuid) : base(uuid)
         {}
 
-        private double DevFee
-        {
-            get
-            {
-                return 0.0;
-            }
-        }
-
         protected abstract string AlgorithmName(AlgorithmType algorithmType);
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup, DevFee);
+            var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup, 0.0);
             return ret;
         }
 
@@ -134,26 +122,7 @@ namespace MinerPluginToolkitV1.CCMinerCommon
 
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }            
-            // all good continue on
-
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
-            if (MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
+            _devices = string.Join(",", _miningPairs.Select(p => p.Device.ID));
         }
 
         protected override string MiningCreateCommandLine()

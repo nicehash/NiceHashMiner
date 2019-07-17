@@ -9,7 +9,7 @@ using NHM.Common.Enums;
 
 namespace LolMinerBeam
 {
-    class LolMinerBeamPlugin : PluginBase
+    class LolMinerBeamPlugin : PluginBase, IDevicesCrossReference
     {
         public LolMinerBeamPlugin()
         {
@@ -41,7 +41,7 @@ namespace LolMinerBeam
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID);
 
-            var pcieId = 0; // GMiner sortes devices by PCIe
+            var pcieId = 0;
             foreach (var gpu in gpus)
             {
                 _mappedDeviceIds[gpu.UUID] = pcieId;
