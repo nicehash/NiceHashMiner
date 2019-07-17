@@ -214,7 +214,7 @@ namespace NiceHashMiner.Configs.Data
         public bool GUIWindowsAlwaysOnTop { get; set; } = false;
 
         public bool DisableDeviceStatusMonitoring { get; set; } = false;
-        public bool DisableDevicePowerModeSettings { get; set; } = false;
+        public bool DisableDevicePowerModeSettings { get; set; } = true;
 
         public bool ShowGPUPCIeBusIDs { get; set; } = false;
 
