@@ -264,7 +264,7 @@ namespace NiceHashMiner.Configs.Data
             RunAtStartup = false;
             GUIWindowsAlwaysOnTop = false;
             DisableDeviceStatusMonitoring = false;
-            DisableDevicePowerModeSettings = false;
+            DisableDevicePowerModeSettings = true;
             MineRegardlessOfProfit = true;
         }
 
