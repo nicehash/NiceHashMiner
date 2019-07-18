@@ -34,7 +34,7 @@ namespace CCMinerMTP
             if (!isCompatible) return supported; // return emtpy
 
             var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 5)
+                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 6)
                 .Cast<CUDADevice>();
 
             foreach (var gpu in cudaGpus)
