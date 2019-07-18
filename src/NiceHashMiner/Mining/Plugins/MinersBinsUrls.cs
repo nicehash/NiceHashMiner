@@ -5,33 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 
 
+// TODO completely remove MinersBinsUrls 
 // TODO make an interface for miner plugins 
 namespace NiceHashMiner.Mining.Plugins
 {
     internal static class MinersBinsUrls
     {
-
         private static Dictionary<string, List<string>> _pluginsUrls = new Dictionary<string, List<string>>
         {
-            {  "BrokenMinerPluginUUID", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/BrokenMinerPlugin.zip" } },
-            {  "BMiner", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/bminer-lite-v15.5.3-747d98e.7z" } },
-            {  "CCMinerMTP", new List<string>{ "https://github.com/nicehash/ccminer/releases/download/1.1.14/ccminer_mtp.7z" } },
-            {  "CCMinerTpruvot", new List<string>{ "https://github.com/tpruvot/ccminer/releases/download/2.3.1-tpruvot/ccminer-2.3.1-cuda10.7z" } },
-            {  "ClaymoreDual14+", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/Claymore.s.Dual.Ethereum.AMD+NVIDIA.GPU.Miner.v14.7.7z", "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?ngYyTARY" } },
-            {  "Ethlargement", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/Ethlargement.7z" } }, // TODO change to original link
-            {  "Ewbf", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/EWBF.Equihash.miner.v0.6.7z", "https://mega.nz/#F!fsAlmZQS!CwVgFfBDduQI-CbwVkUEpQ?Tlp22YKT" } },
-            {  "GMiner", new List<string>{ "https://github.com/develsoftware/GMinerRelease/releases/download/1.51/gminer_1_51_windows64.zip" } },
-            {  "NBMiner", new List<string>{ "https://github.com/NebuTech/NBMiner/releases/download/v24.1/NBMiner_24.1_Win.zip" } },
-            {  "Phoenix", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/PhoenixMiner_4.2c_Windows.7z", "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?6UV1FQSZ" } },
-            {  "SGminerAvemore", new List<string>{ "https://github.com/brian112358/avermore-miner/releases/download/v1.4.1/avermore-v1.4.1-windows.zip" } },
-            {  "SGminerGM", new List<string>{ "https://github.com/nicehash/sgminer-gm/releases/download/5.5.5-8/sgminer-5.5.5-gm-nicehash-8-windows-amd64.zip" } },
-            {  "TeamRedMiner", new List<string>{ "https://github.com/todxx/teamredminer/releases/download/0.5.5/teamredminer-v0.5.5-win.zip" } },
-            {  "TRex", new List<string>{ "https://github.com/trexminer/T-Rex/releases/download/0.12.1/t-rex-0.12.1-win-cuda10.0.zip" } },
-            {  "TTMiner", new List<string>{ "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/TT-Miner-2.2.5.7z", "https://tradeproject.de/download/Miner/TT-Miner-2.2.5.zip" } },
-            {  "XmrStak", new List<string>{ "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.5/xmr-stak_2.10.5_495625c.7z" } },
-            {  "VC_REDIST_x64_2015", new List<string>{ "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/vc_redist.x64.exe.7z" } },
-            {  "NanoMiner", new List<string>{ "https://github.com/nanopool/nanominer/releases/download/v1.4.0/nanominer-windows-1.4.0.zip" } },
-            {  "WildRig", new List<string>{ "https://github.com/andru-kun/wildrig-multi/releases/download/0.17.9/wildrig-multi-windows-0.17.9-beta.7z" }}
             //{  "PLUGIN_UUID", new List<string>{ urls... } },
         };
 

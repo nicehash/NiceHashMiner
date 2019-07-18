@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Ethlargement
 {
-    public class Ethlargement : IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker
+    public class Ethlargement : IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource
     {
         public virtual string PluginUUID => "efd40691-618c-491a-b328-e7e020bda7a3";
 
@@ -234,6 +234,9 @@ namespace Ethlargement
 
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
 
+            var fileMinersBinsUrlsSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinersBinsUrlsSettings, "MinersBinsUrlsSettings.json");
+            if (fileMinersBinsUrlsSettings != null) MinersBinsUrlsSettings = fileMinersBinsUrlsSettings;
+
             var readFromFileEnvSysVars = InternalConfigs.InitInternalSetting(pluginRoot, _ethlargementSettings, "EthlargementSettings.json");
             if (readFromFileEnvSysVars != null && readFromFileEnvSysVars.UseUserSettings) _ethlargementSettings = readFromFileEnvSysVars;
 
@@ -257,11 +260,23 @@ namespace Ethlargement
             SupportedDeviceNames = new List<string> { "1080", "1080 Ti", "Titan Xp" },
             SupportedAlgorithms = _supportedAlgorithms
         };
+
+        protected MinersBinsUrlsSettings MinersBinsUrlsSettings { get; set; } = new MinersBinsUrlsSettings {
+            Urls = new List<string> { "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/Ethlargement.7z" } // link not original
+        };
         #endregion Internal settings
 
         public IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles("", new List<string> { EthlargementBinPath() });
         }
+
+        #region IMinerBinsSource
+        public IEnumerable<string> GetMinerBinsUrlsForPlugin()
+        {
+            if (MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.Urls == null) return Enumerable.Empty<string>();
+            return MinersBinsUrlsSettings.Urls;
+        }
+        #endregion IMinerBinsSource
     }
 }

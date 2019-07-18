@@ -6,6 +6,7 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 
 namespace TTMiner
 {
@@ -17,6 +18,15 @@ namespace TTMiner
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            // https://bitcointalk.org/index.php?topic=5025783.0 current 2.2.5 // TODO NEWER VERSION
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/TT-Miner-2.2.5.7z",
+                    "https://tradeproject.de/download/Miner/TT-Miner-2.2.5.zip" // original
+                }
+            };
         }
 
         public override string PluginUUID => "f1945a30-7237-11e9-b20c-f9f12eb6d835";

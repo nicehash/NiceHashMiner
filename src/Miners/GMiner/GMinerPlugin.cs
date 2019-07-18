@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NHM.Common;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 
 namespace GMinerPlugin
 {
@@ -19,6 +20,14 @@ namespace GMinerPlugin
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
+            // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases current v1.51
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.51/gminer_1_51_windows64.zip", // original
+                }
+            };
         }
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";

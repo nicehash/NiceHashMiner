@@ -1,4 +1,5 @@
 ﻿using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -16,6 +17,15 @@ namespace BMiner
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            // https://www.bminer.me/releases/ current v 15.5.3 // TODO new VERSION
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/bminer-lite-v15.5.3-747d98e.7z",
+                    "https://www.bminercontent.com/releases/bminer-lite-v15.5.3-747d98e-amd64.zip" // original
+                }
+            };
         }
 
         public override string PluginUUID => "e5fbd330-7235-11e9-b20c-f9f12eb6d835";

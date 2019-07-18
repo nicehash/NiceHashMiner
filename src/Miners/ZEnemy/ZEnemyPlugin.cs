@@ -1,4 +1,5 @@
 ﻿using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -17,6 +18,15 @@ namespace ZEnemy
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            // https://bitcointalk.org/index.php?topic=3378390.0 current 1-28-cuda10.0 // TODO update
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/nicehash/NiceHashMinerLegacyTest/releases/download/1.9.1.4/z-enemy.1-28-cuda10.0.zip",
+                    //"" // TODO set original source
+                }
+            };
         }
 
         public override Version Version => new Version(2, 0);

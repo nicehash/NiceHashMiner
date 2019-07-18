@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -18,6 +19,14 @@ namespace NBMiner
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            // https://github.com/NebuTech/NBMiner/releases/ current 24.1 // TODO new version
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/NebuTech/NBMiner/releases/download/v24.1/NBMiner_24.1_Win.zip", // original
+                }
+            };
         }
 
         public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
