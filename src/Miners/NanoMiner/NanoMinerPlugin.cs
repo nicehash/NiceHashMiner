@@ -1,4 +1,5 @@
 ﻿using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -16,6 +17,14 @@ namespace NanoMiner
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases current v1.4.0 // TODO update 
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/nanopool/nanominer/releases/download/v1.4.0/nanominer-windows-1.4.0.zip", // original
+                }
+            };
         }
 
         public override string PluginUUID => "fa2f3530-67ff-11e9-b04e-b5d540d02534";

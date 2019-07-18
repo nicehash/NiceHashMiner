@@ -13,7 +13,7 @@ namespace NiceHashMiner.Mining.Plugins
 {
     // ALL CAPS
     // This isn't really a plugin it just a hack to piggyback on the miner plugins downloader and file checker
-    class VC_REDIST_x64_2015_DEPENDENCY_PLUGIN : IMinerPlugin, IntegratedPlugin, IPluginDependency, IBinaryPackageMissingFilesChecker
+    class VC_REDIST_x64_2015_DEPENDENCY_PLUGIN : IMinerPlugin, IntegratedPlugin, IPluginDependency, IBinaryPackageMissingFilesChecker, IMinerBinsSource
     {
         public static VC_REDIST_x64_2015_DEPENDENCY_PLUGIN Instance { get; } = new VC_REDIST_x64_2015_DEPENDENCY_PLUGIN();
         VC_REDIST_x64_2015_DEPENDENCY_PLUGIN() { }
@@ -81,6 +81,11 @@ namespace NiceHashMiner.Mining.Plugins
             {
                 Logger.Error("VC_REDIST_x64_2015_DEPENDENCY_PLUGIN", $"InstallVcRedist error: {e.Message}");
             }
+        }
+
+        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrlsForPlugin()
+        {
+            yield return "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/vc_redist.x64.exe.7z";
         }
     }
 }
