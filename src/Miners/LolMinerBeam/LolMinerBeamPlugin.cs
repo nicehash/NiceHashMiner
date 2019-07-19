@@ -10,6 +10,7 @@ using NHM.Common.Enums;
 
 namespace LolMinerBeam
 {
+#error miner device mappings unreliable because we have no way of knowing if NVIDIA OpenCL backend is enabled.
     class LolMinerBeamPlugin : PluginBase /*, IDevicesCrossReference*/
     {
         public LolMinerBeamPlugin()
@@ -87,10 +88,9 @@ namespace LolMinerBeam
             return filteredAlgorithms;
         }
 
-#error miner device mappings is not set
         protected override MinerBase CreateMinerBase()
         {
-            return new LolMinerBeam(PluginUUID);
+            return new LolMinerBeam(PluginUUID, _mappedDeviceIds);
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
