@@ -10,12 +10,13 @@ using NHM.Common.Enums;
 
 namespace LolMinerBeam
 {
-    class LolMinerBeamPlugin : PluginBase, IDevicesCrossReference
+    class LolMinerBeamPlugin : PluginBase /*, IDevicesCrossReference*/
     {
         public LolMinerBeamPlugin()
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
             // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 current 0.8.3 // TODO update version
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
