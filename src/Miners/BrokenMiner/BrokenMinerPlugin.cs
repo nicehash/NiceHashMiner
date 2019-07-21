@@ -1,21 +1,14 @@
 ﻿using MinerPlugin;
-using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
-using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace BrokenMiner
 {
-    public class BrokenMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
+    public class BrokenMinerPlugin : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource
     {
 
         Version IMinerPlugin.Version => GetValueOrErrorSettings.GetValueOrError("Version", new Version(1,0));
@@ -56,5 +49,10 @@ namespace BrokenMiner
 
         bool IReBenchmarkChecker.ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids) => 
             GetValueOrErrorSettings.GetValueOrError("ShouldReBenchmarkAlgorithmOnDevice", false);
+
+        IEnumerable<string> IMinerBinsSource.GetMinerBinsUrlsForPlugin()
+        {
+            return GetValueOrErrorSettings.GetValueOrError("GetMinerBinsUrlsForPlugin", new List<string> { "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/BrokenMinerPlugin.zip" });
+        }
     }
 }

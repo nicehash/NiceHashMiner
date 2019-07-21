@@ -1,4 +1,5 @@
 ﻿using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -17,6 +18,14 @@ namespace CCMinerMTP
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            // https://github.com/nicehash/ccminer/releases current 1.1.14
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/nicehash/ccminer/releases/download/1.1.14/ccminer_mtp.7z", // original (nh fork)
+                }
+            };
         }
 
         //public override string PluginUUID => "MISSING";
@@ -34,7 +43,7 @@ namespace CCMinerMTP
             if (!isCompatible) return supported; // return emtpy
 
             var cudaGpus = devices
-                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 5)
+                .Where(dev => dev is CUDADevice gpu && gpu.SM_major >= 6)
                 .Cast<CUDADevice>();
 
             foreach (var gpu in cudaGpus)

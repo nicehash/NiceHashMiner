@@ -7,6 +7,7 @@ using System.Linq;
 using System.Collections.Generic;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 
 namespace TeamRedMiner
 {
@@ -17,6 +18,14 @@ namespace TeamRedMiner
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
+            // https://github.com/todxx/teamredminer/releases current v0.5.5
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/todxx/teamredminer/releases/download/0.5.5/teamredminer-v0.5.5-win.zip", // original
+                }
+            };
         }
 
         public override string PluginUUID => "abc3e2a0-7237-11e9-b20c-f9f12eb6d835";

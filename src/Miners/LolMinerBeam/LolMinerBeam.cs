@@ -22,11 +22,14 @@ namespace LolMinerBeam
 
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
+        protected Dictionary<string, int> _mappedIDs;
 
         private readonly HttpClient _http = new HttpClient();
 
-        public LolMinerBeam (string uuid) : base(uuid)
-        {}
+        public LolMinerBeam (string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        {
+            _mappedIDs = mappedIDs;
+        }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
@@ -138,14 +141,14 @@ namespace LolMinerBeam
         protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
         {
             var pairsList = miningPairs.ToList();
-            // TODO sort by mapped device ids
-#error IMPLEMENT device mappings and order by device mappings
+            // sort by mapped ids
+            pairsList.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
             return pairsList;
         }
 
         protected override void Init()
         {
-            _devices = string.Join(",", _miningPairs.Select(p => p.Device.ID));
+            _devices = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
 
             // ???????? TODO GetSortedMiningPairs is now sorted so this thing probably makes no sense anymore
             var miningPairs = _miningPairs.ToList();

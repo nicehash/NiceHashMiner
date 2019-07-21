@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using MinerPlugin;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
@@ -13,7 +14,7 @@ using NHM.Common.Enums;
 namespace MinerPluginToolkitV1
 {
     // TODO add documentation
-    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2
+    public abstract class PluginBase : IMinerPlugin, IInitInternals, IBinaryPackageMissingFilesChecker, IReBenchmarkChecker, IGetApiMaxTimeoutV2, IMinerBinsSource
     {
         protected abstract MinerBase CreateMinerBase();
 
@@ -74,6 +75,9 @@ namespace MinerPluginToolkitV1
 
             var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, MinerBenchmarkTimeSettings);
             if (fileMinerBenchmarkTimeSetting != null) MinerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
+
+            var fileMinersBinsUrlsSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinersBinsUrlsSettings, "MinersBinsUrlsSettings.json");
+            if (fileMinersBinsUrlsSettings != null) MinersBinsUrlsSettings = fileMinersBinsUrlsSettings;
         }
 
         // internal settings
@@ -82,6 +86,8 @@ namespace MinerPluginToolkitV1
         protected MinerReservedPorts MinerReservedApiPorts { get; set; } = new MinerReservedPorts {};
         protected MinerApiMaxTimeoutSetting GetApiMaxTimeoutConfig { get; set; } = new MinerApiMaxTimeoutSetting { GeneralTimeout = new TimeSpan(0, 5, 0) };
         protected MinerBenchmarkTimeSettings MinerBenchmarkTimeSettings { get; set; } = new MinerBenchmarkTimeSettings { };
+
+        protected MinersBinsUrlsSettings MinersBinsUrlsSettings { get; set; } = new MinersBinsUrlsSettings { };
 
         #endregion IInitInternals
 
@@ -103,5 +109,13 @@ namespace MinerPluginToolkitV1
         #region IBinaryPackageMissingFilesChecker
         public abstract IEnumerable<string> CheckBinaryPackageMissingFiles();
         #endregion IBinaryPackageMissingFilesChecker
+
+        #region IMinerBinsSource
+        public IEnumerable<string> GetMinerBinsUrlsForPlugin()
+        {
+            if (MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.Urls == null) return Enumerable.Empty<string>();
+            return MinersBinsUrlsSettings.Urls;
+        }
+        #endregion IMinerBinsSource
     }
 }
