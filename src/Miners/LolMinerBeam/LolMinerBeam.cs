@@ -132,7 +132,7 @@ namespace LolMinerBeam
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.3");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.5");
             var binPath = Path.Combine(pluginRootBins, "lolMiner.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
