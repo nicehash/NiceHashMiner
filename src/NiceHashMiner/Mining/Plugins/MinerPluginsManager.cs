@@ -155,10 +155,9 @@ namespace NiceHashMiner.Mining.Plugins
             }
         }
 
-        public static async Task DownloadMissingIntegratedMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
+        public static async Task DownloadMissingMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
             var checkPlugins = PluginContainer.PluginContainers
-                .Where(p => p.IsIntegrated)
                 .Where(p => p.IsCompatible)
                 .Where(p => p.Enabled)
                 .ToArray();
