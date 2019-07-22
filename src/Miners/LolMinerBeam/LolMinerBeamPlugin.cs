@@ -10,7 +10,7 @@ using NHM.Common.Enums;
 
 namespace LolMinerBeam
 {
-#error miner device mappings unreliable because we have no way of knowing if NVIDIA OpenCL backend is enabled.
+    // TODO implement reliably device mappings => IDevicesCrossReference
     class LolMinerBeamPlugin : PluginBase /*, IDevicesCrossReference*/
     {
         public LolMinerBeamPlugin()
@@ -42,6 +42,7 @@ namespace LolMinerBeam
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
+            // NVIDIA backend is NOT CUDA but OpenCL!!!!
             //CUDA 9.0+: minimum drivers 384.xx
             var minDrivers = new Version(384, 0);
             var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
@@ -72,7 +73,7 @@ namespace LolMinerBeam
 
         private static bool IsSupportedNVIDIADevice(BaseDevice dev, bool isDriverSupported)
         {
-            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 2;
+            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 2 && gpu.IsOpenCLBackendEnabled;
             return isSupported && isDriverSupported;
         }
 
