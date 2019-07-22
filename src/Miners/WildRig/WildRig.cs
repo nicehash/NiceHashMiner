@@ -98,7 +98,7 @@ namespace WildRig
         {
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var commandLine = $"-a {AlgoName} --benchmark -d {_devices} --multiple-instance {_extraLaunchParameters}";
+            var commandLine = $"-a {AlgoName} --benchmark -d {_devices} --benchmark-timeout {benchmarkTime} --multiple-instance {_extraLaunchParameters}";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
