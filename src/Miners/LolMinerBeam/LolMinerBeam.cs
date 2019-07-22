@@ -36,6 +36,8 @@ namespace LolMinerBeam
             switch (algorithmType)
             {
                 case AlgorithmType.Beam: return "BEAM";
+                case AlgorithmType.GrinCuckarood29: return "GRIN-AD29";
+                case AlgorithmType.GrinCuckatoo31: return "GRIN-AT31";
                 default: return "";
             }
         }
@@ -105,9 +107,10 @@ namespace LolMinerBeam
 
             bp.CheckData = (string data) =>
             {
-                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total");
+                // data => Average speed (60s): 0.40 g/s
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "s):");
                 var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
+                var found = hashrateFoundPair.Item2 && data.Contains("Average speed");
 
                 if (!found) return new BenchmarkResult { Success = false };
 
