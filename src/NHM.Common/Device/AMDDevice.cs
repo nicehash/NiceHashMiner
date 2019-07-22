@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace NHM.Common.Device
+﻿namespace NHM.Common.Device
 {
     public class AMDDevice : BaseDevice, IGpuDevice
     {
@@ -24,5 +20,8 @@ namespace NHM.Common.Device
 
         public string Codename { get; }
         public string InfSection { get; }
+
+        // AMD always true
+        public bool IsOpenCLBackendEnabled => true;
     }
 }
