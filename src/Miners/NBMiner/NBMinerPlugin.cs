@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -19,19 +20,19 @@ namespace NBMiner
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
-            // https://github.com/NebuTech/NBMiner/releases/ current 24.1 // TODO new version
+            // https://github.com/NebuTech/NBMiner/releases/ current 24.2
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v24.1/NBMiner_24.1_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v24.2/NBMiner_24.2_Win.zip", // original
                 }
             };
         }
 
         public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 1);
+        public override Version Version => new Version(2, 2);
         public override string Name => "NBMiner";
 
         public override string Author => "Dillon Newell";
@@ -85,7 +86,7 @@ namespace NBMiner
         {
             var algorithms = new List<Algorithm>
             {
-                //new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
@@ -127,6 +128,22 @@ namespace NBMiner
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            try
+            {
+                if (ids.Count() == 0) return false;
+                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 2)
+                {
+                    // v24.2 https://github.com/NebuTech/NBMiner/releases/tag/v24.2
+                    // Slightliy improve RTX2060 Grin29 performance under win10
+                    var isRTX2060 = device.Name.Contains("RTX") && device.Name.Contains("2060");
+                    var isGrin29 = ids.FirstOrDefault() == AlgorithmType.GrinCuckaroo29 || ids.FirstOrDefault() == AlgorithmType.GrinCuckarood29;
+                    return isRTX2060 && isGrin29;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            }
             return false;
         }
     }
