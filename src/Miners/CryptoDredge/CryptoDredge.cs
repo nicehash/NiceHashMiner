@@ -48,7 +48,7 @@ namespace CryptoDredge
             }
         }
 
-        // This just doesn't work
+#warning get API data doens't work
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup, DevFee);
