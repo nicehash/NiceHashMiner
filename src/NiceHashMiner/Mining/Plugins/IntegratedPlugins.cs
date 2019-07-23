@@ -73,13 +73,14 @@ namespace NiceHashMiner.Mining.Plugins
     }
 #endif
 
-
+#if INTEGRATE_WildRig_PLUGIN
     class WildRigIntegratedPlugin : WildRig.WildRigPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "WildRig";
 
         public bool Is3rdParty => true;
     }
+#endif
 
     class TTMinerIntegratedPlugin : TTMiner.TTMinerPlugin, IntegratedPlugin
     {
@@ -116,12 +117,14 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => true;
     }
 
+#if INTEGRATE_NanoMiner_PLUGIN
     class NanoMinerIntegratedPlugin : NanoMiner.NanoMinerPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "NanoMiner";
 
         public bool Is3rdParty => true;
     }
+#endif
 
     class GMinerIntegratedPlugin : GMinerPlugin.GMinerPlugin, IntegratedPlugin
     {
@@ -137,12 +140,14 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => true;
     }
 
+#if INTEGRATE_CryptoDredge_PLUGIN
     class CryptoDredgeIntegratedPlugin : CryptoDredge.CryptoDredgePlugin, IntegratedPlugin
     {
         public override string PluginUUID => "CryptoDredge";
 
         public bool Is3rdParty => true;
     }
+#endif
 
     class EthlargementIntegratedPlugin : Ethlargement.Ethlargement, IntegratedPlugin
     {

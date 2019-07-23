@@ -56,9 +56,15 @@ namespace NiceHashMiner.Mining.Plugins
                 new ClaymoreDual14IntegratedPlugin(),
 
                 // can be integrated but are not included
-                // new NanoMinerIntegratedPlugin(),
-                // new WildRigIntegratedPlugin(),
-                // new CryptoDredgeIntegratedPlugin(),
+                #if INTEGRATE_NanoMiner_PLUGIN
+                new NanoMinerIntegratedPlugin(),
+                #endif
+                #if INTEGRATE_WildRig_PLUGIN
+                new WildRigIntegratedPlugin(),
+                #endif
+                #if INTEGRATE_CryptoDredge_PLUGIN
+                new CryptoDredgeIntegratedPlugin(),
+                #endif
                 #if INTEGRATE_BMiner_PLUGIN
                 new BMinerIntegratedPlugin(),
                 #endif 
