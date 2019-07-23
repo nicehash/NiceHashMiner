@@ -9,10 +9,12 @@ namespace NiceHashMiner.Mining.Plugins
     }
 
     #region TESTING
+#if INTEGRATE_BrokenMiner_PLUGIN
     class BrokenPluginIntegratedPlugin : BrokenMiner.BrokenMinerPlugin, IntegratedPlugin
     {
         public bool Is3rdParty => false;
     }
+#endif
     #endregion TESTING
 
     #region Open Source
@@ -51,9 +53,9 @@ namespace NiceHashMiner.Mining.Plugins
 
         public bool Is3rdParty => false;
     }
-    #endregion Open Source
+#endregion Open Source
 
-    #region Closed source / 3rd party
+#region Closed source / 3rd party
 
     class ClaymoreDual14IntegratedPlugin : ClaymoreDual14.ClaymoreDual14Plugin, IntegratedPlugin
     {
@@ -62,12 +64,14 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => true;
     }
 
+#if INTEGRATE_BMiner_PLUGIN
     class BMinerIntegratedPlugin : BMiner.BMinerPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "BMiner";
 
         public bool Is3rdParty => true;
     }
+#endif
 
 
     class WildRigIntegratedPlugin : WildRig.WildRigPlugin, IntegratedPlugin
@@ -149,5 +153,5 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => true;
     }
 
-    #endregion Closed source / 3rd party
+#endregion Closed source / 3rd party
 }

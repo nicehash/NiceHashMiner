@@ -33,8 +33,11 @@ namespace NiceHashMiner.Mining.Plugins
         {
             var integratedPlugins = new List<IntegratedPlugin>
             {
-                ////// testing 
-                //new BrokenPluginIntegratedPlugin(),
+                // testing 
+                #if INTEGRATE_BrokenMiner_PLUGIN
+                new BrokenPluginIntegratedPlugin(),
+                #endif
+
                 // open source
                 new CCMinerMTPIntegratedPlugin(),
                 new CCMinerTpruvotIntegratedPlugin(),
@@ -43,7 +46,6 @@ namespace NiceHashMiner.Mining.Plugins
                 new XmrStakIntegratedPlugin(),
 
                 // 3rd party
-                new BMinerIntegratedPlugin(),
                 new EWBFIntegratedPlugin(),
                 new GMinerIntegratedPlugin(),
                 new NBMinerIntegratedPlugin(),
@@ -57,6 +59,9 @@ namespace NiceHashMiner.Mining.Plugins
                 // new NanoMinerIntegratedPlugin(),
                 // new WildRigIntegratedPlugin(),
                 // new CryptoDredgeIntegratedPlugin(),
+                #if INTEGRATE_BMiner_PLUGIN
+                new BMinerIntegratedPlugin(),
+                #endif 
 
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,
