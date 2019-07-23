@@ -37,6 +37,9 @@ namespace NiceHashMiner.Mining.Plugins
                 #if INTEGRATE_BrokenMiner_PLUGIN
                 new BrokenPluginIntegratedPlugin(),
                 #endif
+                #if INTEGRATE_ExamplePlugin_PLUGIN
+                new ExamplePluginIntegratedPlugin(),
+                #endif
 
                 // open source
                 new CCMinerMTPIntegratedPlugin(),

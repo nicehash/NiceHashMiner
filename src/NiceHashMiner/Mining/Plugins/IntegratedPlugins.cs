@@ -15,6 +15,12 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => false;
     }
 #endif
+#if INTEGRATE_ExamplePlugin_PLUGIN
+    class ExamplePluginIntegratedPlugin : Example.ExamplePlugin, IntegratedPlugin
+    {
+        public bool Is3rdParty => false;
+    }
+#endif
     #endregion TESTING
 
     #region Open Source
