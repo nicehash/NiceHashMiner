@@ -33,6 +33,7 @@ namespace BMiner
                 case AlgorithmType.Beam: return "beam";
                 case AlgorithmType.GrinCuckaroo29: return "cuckaroo29";
                 case AlgorithmType.GrinCuckatoo31: return "cuckatoo31";
+                case AlgorithmType.GrinCuckarood29: return "cuckaroo29d";
                 default: return "";
             }
         }
@@ -41,14 +42,8 @@ namespace BMiner
         {
             get
             {
-                switch (_algorithmType)
-                {
-                    case AlgorithmType.ZHash:
-                    case AlgorithmType.Beam:
-                    case AlgorithmType.GrinCuckaroo29:
-                    case AlgorithmType.GrinCuckatoo31:
-                    default: return 2.0;
-                }
+                if (AlgorithmType.DaggerHashimoto == _algorithmType) return 0.65;
+                return 2.0;
             }
         }
 
@@ -145,7 +140,7 @@ namespace BMiner
 
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
-            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins", "bminer-lite-v15.5.3-747d98e");
+            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins", "bminer-lite-v15.7.3-79a487c");
             var binPath = Path.Combine(pluginRootBins, "bminer.exe");
             return Tuple.Create(binPath, pluginRootBins);
         }

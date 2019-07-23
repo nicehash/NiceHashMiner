@@ -22,15 +22,15 @@ namespace BMiner
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/bminer-lite-v15.5.3-747d98e.7z",
-                    "https://www.bminercontent.com/releases/bminer-lite-v15.5.3-747d98e-amd64.zip" // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.10/bminer-lite-v15.7.3-79a487c-amd64.zip",
+                    "https://www.bminercontent.com/releases/bminer-lite-v15.7.3-79a487c-amd64.zip" // original
                 }
             };
         }
 
         public override string PluginUUID => "e5fbd330-7235-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(2, 1);
         public override string Name => "BMiner";
 
         public override string Author => "domen.kirnkrefl@nicehash.com";
@@ -69,6 +69,7 @@ namespace BMiner
                 new Algorithm(PluginUUID, AlgorithmType.Beam) {Enabled = false },
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
