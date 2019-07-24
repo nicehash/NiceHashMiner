@@ -78,7 +78,7 @@ namespace NiceHashMiner.Configs.Data
         public int MinerAPIQueryInterval { get; set; } = 5;
 
 
-        private int _minerRestartDelayMS = 500;
+        private int _minerRestartDelayMS = 1000;
         public int MinerRestartDelayMS
         {
             get => _minerRestartDelayMS;
