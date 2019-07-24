@@ -165,7 +165,7 @@ namespace NiceHashMiner
                     loadingControl.ShowSecondProgressBar = true;
 
                     progress?.Report((Tr("Downloading Miner Binaries..."), nextProgPerc()));
-                    await MinerPluginsManager.DownloadMissingIntegratedMinersBins(progressDownload, ExitApplication.Token);
+                    await MinerPluginsManager.DownloadMissingMinersBins(progressDownload, ExitApplication.Token);
                     //await MinersDownloader.MinersDownloadManager.DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(progressDownload, ExitApplication.Token);
                     loadingControl.ShowSecondProgressBar = false;
                     if (ExitApplication.IsCancellationRequested) return;

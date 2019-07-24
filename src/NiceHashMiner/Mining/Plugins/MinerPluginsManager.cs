@@ -33,8 +33,14 @@ namespace NiceHashMiner.Mining.Plugins
         {
             var integratedPlugins = new List<IntegratedPlugin>
             {
-                ////// testing 
-                //new BrokenPluginIntegratedPlugin(),
+                // testing 
+                #if INTEGRATE_BrokenMiner_PLUGIN
+                new BrokenPluginIntegratedPlugin(),
+                #endif
+                #if INTEGRATE_ExamplePlugin_PLUGIN
+                new ExamplePluginIntegratedPlugin(),
+                #endif
+
                 // open source
                 new CCMinerMTPIntegratedPlugin(),
                 new CCMinerTpruvotIntegratedPlugin(),
@@ -43,7 +49,6 @@ namespace NiceHashMiner.Mining.Plugins
                 new XmrStakIntegratedPlugin(),
 
                 // 3rd party
-                new BMinerIntegratedPlugin(),
                 new EWBFIntegratedPlugin(),
                 new GMinerIntegratedPlugin(),
                 new NBMinerIntegratedPlugin(),
@@ -54,9 +59,24 @@ namespace NiceHashMiner.Mining.Plugins
                 new ClaymoreDual14IntegratedPlugin(),
 
                 // can be integrated but are not included
-                // new NanoMinerIntegratedPlugin(),
-                // new WildRigIntegratedPlugin(),
-                // new CryptoDredgeIntegratedPlugin(),
+                #if INTEGRATE_NanoMiner_PLUGIN
+                new NanoMinerIntegratedPlugin(),
+                #endif
+                #if INTEGRATE_WildRig_PLUGIN
+                new WildRigIntegratedPlugin(),
+                #endif
+                #if INTEGRATE_CryptoDredge_PLUGIN
+                new CryptoDredgeIntegratedPlugin(),
+                #endif
+                #if INTEGRATE_BMiner_PLUGIN
+                new BMinerIntegratedPlugin(),
+                #endif
+                #if INTEGRATE_ZEnemy_PLUGIN
+                new ZEnemyIntegratedPlugin(),
+                #endif
+                #if INTEGRATE_LolMinerBeam_PLUGIN
+                new LolMinerIntegratedPlugin(),
+                #endif
 
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,
@@ -155,10 +175,9 @@ namespace NiceHashMiner.Mining.Plugins
             }
         }
 
-        public static async Task DownloadMissingIntegratedMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
+        public static async Task DownloadMissingMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
         {
             var checkPlugins = PluginContainer.PluginContainers
-                .Where(p => p.IsIntegrated)
                 .Where(p => p.IsCompatible)
                 .Where(p => p.Enabled)
                 .ToArray();

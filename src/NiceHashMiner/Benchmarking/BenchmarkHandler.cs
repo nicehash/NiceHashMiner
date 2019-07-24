@@ -57,6 +57,7 @@ namespace NiceHashMiner.Benchmarking
                     currentAlgorithm = _benchmarkAlgorithmQueue.Dequeue();
                     BenchmarkManager.AddToStatusCheck(Device, currentAlgorithm);
                     await BenchmarkAlgorithm(currentAlgorithm);
+                    await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS);
                     if (_stopBenchmark.IsCancellationRequested) break;
                     currentAlgorithm.IsReBenchmark = false;
                     BenchmarkManager.StepUpBenchmarkStepProgress();

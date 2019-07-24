@@ -31,8 +31,12 @@ namespace NanoMiner
         {
             switch (algorithmType)
             {
+                case AlgorithmType.DaggerHashimoto:
+                    return "Ethash";
                 case AlgorithmType.GrinCuckaroo29:
                     return "Cuckaroo29";
+                case AlgorithmType.GrinCuckarood29:
+                    return "Cuckarood29";
                 case AlgorithmType.CryptoNightR:
                     return "CryptoNightR";
                 default:
@@ -57,7 +61,7 @@ namespace NanoMiner
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "nanominer-windows-1.4.0");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "nanominer-windows-1.5.2");
             var binPath = Path.Combine(pluginRootBins, "nanominer.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
@@ -82,38 +86,36 @@ namespace NanoMiner
             try
             {
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/stats");
-                var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
-                var gpuDevices = _miningPairs.Select(pair => pair.Device);
+                var apiResponse = JsonConvert.DeserializeObject<JsonApiResponse>(result);
+                var parsedApiResponse = JsonApiHelpers.ParseJsonApiResponse(apiResponse, _mappedIDs);
+
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
 
-                var apiDevs = summary.Devices;
-                var apiAlgos = summary.Algorithms;
-
                 foreach (var miningPair in _miningPairs)
                 {
                     var deviceUUID = miningPair.Device.UUID;
-                    var minerID = _mappedIDs[deviceUUID];
-
-                    var deviceData = apiDevs.FirstOrDefault().ToDictionary(x => x.Key, y => y.Value);
-                    deviceData.TryGetValue($"GPU {minerID}", out var gpuData);
-                    var currentPower = Convert.ToInt32(gpuData.Power);
-                    totalPowerUsage += currentPower;
-                    perDevicePowerInfo.Add(deviceUUID, currentPower);
-
-                    var algosData = apiAlgos.FirstOrDefault().ToDictionary(x => x.Key, y => y.Value).Values;
-                    algosData.FirstOrDefault().TryGetValue($"GPU {minerID}", out var algoData);
-                    var speed = algoData.ToString();
-                    perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, JsonApiHelpers.HashrateFromApiData(speed, _logGroup) * (1 - DevFee * 0.01)) });
-
-                    algosData.FirstOrDefault().TryGetValue("Total", out var totalData);
-                    totalSpeed = JsonApiHelpers.HashrateFromApiData(totalData.ToString(), _logGroup);
+                    if (parsedApiResponse.ContainsKey(deviceUUID))
+                    {
+                        var stat = parsedApiResponse[deviceUUID];
+                        var currentPower = (int)stat.Power;
+                        totalPowerUsage += currentPower;
+                        var hashrate = stat.Hashrate * (1 - DevFee * 0.01);
+                        totalSpeed += hashrate;
+                        perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, hashrate) });
+                        perDevicePowerInfo.Add(deviceUUID, currentPower);
+                    }
+                    else
+                    {
+                        perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, 0) });
+                        perDevicePowerInfo.Add(deviceUUID, 0);
+                    }
                 }
 
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 api.PowerUsagePerDevice = perDevicePowerInfo;
                 api.PowerUsageTotal = totalPowerUsage;
             }

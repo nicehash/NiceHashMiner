@@ -168,6 +168,19 @@ namespace NHM.DeviceDetection
             await DetectCUDADevices();
             progress?.Report(DeviceDetectionStep.AMD_OpenCL);
             await DetectAMDDevices();
+            // after we detect AMD we will have platforms and now we can check if NVIDIA OpenCL backend works
+            if (DetectionResult.CUDADevices?.Count > 0 && AMD.AMDDetector.Platforms?.Count > 0)
+            {
+                var nvidiaOpenCL = AMD.AMDDetector.Platforms
+                    .Where(p => p.PlatformName.Contains("NVIDIA") || p.PlatformVendor.Contains("NVIDIA"))
+                    .SelectMany(p => p.Devices);
+                // now check devices
+                foreach (var cudaDev in DetectionResult.CUDADevices)
+                {
+                    var hasOpenCLBackend = nvidiaOpenCL.Any(dev => dev.BUS_ID == cudaDev.PCIeBusID);
+                    cudaDev.SetIsOpenCLBackendEnabled(hasOpenCLBackend);
+                }
+            }
         }
 
         public static IEnumerable<BaseDevice> GetDetectedDevices()

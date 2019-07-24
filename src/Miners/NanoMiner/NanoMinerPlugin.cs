@@ -17,19 +17,19 @@ namespace NanoMiner
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases current v1.4.0 // TODO update 
+            // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases current v1.5.2
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v1.4.0/nanominer-windows-1.4.0.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v1.5.2/nanominer-windows-1.5.2.zip", // original
                 }
             };
         }
 
-        public override string PluginUUID => "fa2f3530-67ff-11e9-b04e-b5d540d02534";
+        public override string PluginUUID => "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(2, 1);
 
         public override string Name => "NanoMiner";
 
@@ -57,16 +57,8 @@ namespace NanoMiner
 
             foreach (var gpu in supportedGpus)
             {
-                if (gpu is AMDDevice amd)
-                {
-                    var algorithms = GetAMDSupportedAlgorithms(amd).ToList();
-                    if (algorithms.Count > 0) supported.Add(amd, algorithms);
-                }
-                if (gpu is CUDADevice cuda)
-                {
-                    var algorithms = GetNvidiaSupportedAlgorithms(cuda).ToList();
-                    if (algorithms.Count > 0) supported.Add(cuda, algorithms);
-                }
+                var algorithms = GetSupportedAlgorithms(gpu);
+                if (algorithms.Count > 0) supported.Add(gpu as BaseDevice, algorithms);
             }
 
             return supported;
@@ -84,21 +76,13 @@ namespace NanoMiner
             return isSupported && isDriverSupported;
         }
 
-        IReadOnlyList<Algorithm> GetAMDSupportedAlgorithms(AMDDevice gpu)
+        List<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
             var algorithms = new List<Algorithm>
             {
+                new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
-                new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
-            };
-            var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
-            return filteredAlgorithms;
-        }
-
-        private IEnumerable<Algorithm> GetNvidiaSupportedAlgorithms(CUDADevice gpu)
-        {
-            var algorithms = new List<Algorithm>
-            {
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
                 new Algorithm(PluginUUID, AlgorithmType.CryptoNightR),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
@@ -110,9 +94,12 @@ namespace NanoMiner
             return new NanoMiner(PluginUUID, _mappedIDs);
         }
 
+#warning "nanominer -d command is broken."
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (_mappedIDs.Count == 0) return;
+            // v1.5.2 the mappings get screwed on mixed rigs
+            const bool skipDCommandIsBroken = true;
+            if (_mappedIDs.Count == 0 || skipDCommandIsBroken) return;
             // TODO will break
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
