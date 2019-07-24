@@ -9,10 +9,18 @@ namespace NiceHashMiner.Mining.Plugins
     }
 
     #region TESTING
+#if INTEGRATE_BrokenMiner_PLUGIN
     class BrokenPluginIntegratedPlugin : BrokenMiner.BrokenMinerPlugin, IntegratedPlugin
     {
         public bool Is3rdParty => false;
     }
+#endif
+#if INTEGRATE_ExamplePlugin_PLUGIN
+    class ExamplePluginIntegratedPlugin : Example.ExamplePlugin, IntegratedPlugin
+    {
+        public bool Is3rdParty => false;
+    }
+#endif
     #endregion TESTING
 
     #region Open Source
@@ -51,9 +59,9 @@ namespace NiceHashMiner.Mining.Plugins
 
         public bool Is3rdParty => false;
     }
-    #endregion Open Source
+#endregion Open Source
 
-    #region Closed source / 3rd party
+#region Closed source / 3rd party
 
     class ClaymoreDual14IntegratedPlugin : ClaymoreDual14.ClaymoreDual14Plugin, IntegratedPlugin
     {
@@ -62,20 +70,23 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => true;
     }
 
+#if INTEGRATE_BMiner_PLUGIN
     class BMinerIntegratedPlugin : BMiner.BMinerPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "BMiner";
 
         public bool Is3rdParty => true;
     }
+#endif
 
-
+#if INTEGRATE_WildRig_PLUGIN
     class WildRigIntegratedPlugin : WildRig.WildRigPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "WildRig";
 
         public bool Is3rdParty => true;
     }
+#endif
 
     class TTMinerIntegratedPlugin : TTMiner.TTMinerPlugin, IntegratedPlugin
     {
@@ -112,12 +123,14 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => true;
     }
 
+#if INTEGRATE_NanoMiner_PLUGIN
     class NanoMinerIntegratedPlugin : NanoMiner.NanoMinerPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "NanoMiner";
 
         public bool Is3rdParty => true;
     }
+#endif
 
     class GMinerIntegratedPlugin : GMinerPlugin.GMinerPlugin, IntegratedPlugin
     {
@@ -133,12 +146,32 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => true;
     }
 
+#if INTEGRATE_CryptoDredge_PLUGIN
     class CryptoDredgeIntegratedPlugin : CryptoDredge.CryptoDredgePlugin, IntegratedPlugin
     {
         public override string PluginUUID => "CryptoDredge";
 
         public bool Is3rdParty => true;
     }
+#endif
+
+#if INTEGRATE_ZEnemy_PLUGIN
+    class ZEnemyIntegratedPlugin : ZEnemy.ZEnemyPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "ZEnemy";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
+#if INTEGRATE_LolMinerBeam_PLUGIN
+    class LolMinerIntegratedPlugin : LolMinerBeam.LolMinerBeamPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "LolMinerBeam";
+
+        public bool Is3rdParty => true;
+    }
+#endif
 
     class EthlargementIntegratedPlugin : Ethlargement.Ethlargement, IntegratedPlugin
     {
@@ -149,5 +182,5 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => true;
     }
 
-    #endregion Closed source / 3rd party
+#endregion Closed source / 3rd party
 }

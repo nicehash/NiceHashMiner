@@ -1,9 +1,13 @@
 ﻿using MinerPlugin;
 using NHM.Common.Enums;
+using System.Linq;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
+using System;
+using System.Text;
+using System.IO;
 
 namespace Example
 {
@@ -12,29 +16,60 @@ namespace Example
     /// </summary>
     public class ExampleMiner : IMiner
     {
+        #region members for simulation purposes
+        List<MiningPair> _miningPairs;
+        string _miningLocation;
+        string _username;
+        AlgorithmType _algorithmType;
+
+        Process _miningProcess;
+        Random _rand { get; } = new Random();
+
+        private enum MinerState
+        {
+            STOPPED,
+            MINING
+        }
+
+        MinerState _state = MinerState.STOPPED;
+
+        #endregion members for simulation purposes
+
         /// <summary>
         /// GetMinerStatsDataAsync function is used to retrieve data from miner API
         /// Through the course of function data is being filled to be returned at the end
         /// </summary>
         public async Task<ApiData> GetMinerStatsDataAsync()
         {
-            var apiData = new ApiData();
-            var speedsPerDevice = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
-            var powerPerDevice = new Dictionary<string, int>();
+            // simulate API delay
+            await Task.Delay(150);
 
-            apiData.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(AlgorithmType.DaggerHashimoto, 107.5) };
-            apiData.PowerUsageTotal = 228;
+            var api = new ApiData();
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var perDevicePowerInfo = new Dictionary<string, int>();
+            var totalSpeed = 0d;
+            var totalPowerUsage = 0;
 
-            speedsPerDevice.Add("gpuUUID1", new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(AlgorithmType.DaggerHashimoto, 65.1 ) });
-            powerPerDevice.Add("gpuUUID1", 120);
+            foreach(var mp in _miningPairs)
+            {
+                var speedVariation = _rand.Next(-100, 100);
+                var speed = 1000 + speedVariation;
+                var powerVariation = _rand.Next(-10, 10);
+                var power = 100 + powerVariation;
+                totalSpeed += speed;
+                totalPowerUsage += power;
 
-            speedsPerDevice.Add("gpuUUID2", new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(AlgorithmType.DaggerHashimoto, 42.4 ) });
-            powerPerDevice.Add("gpuUUID2", 108);
+                var deviceUUID = mp.Device.UUID;
+                perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, speed) });
+                perDevicePowerInfo.Add(deviceUUID, 108);
+            }
 
-            apiData.AlgorithmSpeedsPerDevice = speedsPerDevice;
-            apiData.PowerUsagePerDevice = powerPerDevice;
+            api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+            api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+            api.PowerUsagePerDevice = perDevicePowerInfo;
+            api.PowerUsageTotal = totalPowerUsage;
 
-            return apiData;
+            return api;
         }
 
         /// <summary>
@@ -50,49 +85,57 @@ namespace Example
         /// </summary>
         public void InitMiningPairs(IEnumerable<MiningPair> miningPairs)
         {
-           // Initialization of mining pairs is made here
+            // Initialization of mining pairs is made here
+            _miningPairs = miningPairs.ToList();
+            _algorithmType = _miningPairs.First().Algorithm.IDs.First();
         }
 
         /// <summary>
         /// StartBenchmark starts benchmark process and awaits its results which are then used for accurate switching
         /// </summary>
-        public Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
+        public async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             // set the process and get the benchmark data
             // then return that data as BenchmarkResult
-            var result = new Task<BenchmarkResult>(
-                () => {
-                    return new BenchmarkResult
-                    {
-                        AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(AlgorithmType.DaggerHashimoto, 62.5) },
-                        Success = true,
-                        ErrorMessage = ""
-                    };
-                });
-            
-            return result;
-        }
 
-        string miningState = "STOP";
+
+            // here we simulate benchmark work
+            await Task.Delay(15000);
+            double speed = 1000; // everything is same speed
+
+            // and return our result
+            return new BenchmarkResult
+            {
+                AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, speed) },
+                Success = true,
+                ErrorMessage = ""
+            };
+        }
 
         /// <summary>
         /// Start mining process when StartMining is called
         /// </summary>
         public void StartMining()
         {
-            if (miningState == "START") return;
-            var proc = new Process
+            if (_state == MinerState.MINING) return;
+            // prepare a bat script as this will simulate our miner
+            var batFileContents = new StringBuilder();
+            batFileContents.AppendLine($"echo \"{"I am a fake ExampleMiner from ExamplePlugin"}\"");
+            batFileContents.AppendLine($"echo \"{$"Currently mining algorithm {_algorithmType.ToString()}"}\"");
+            batFileContents.AppendLine($"echo \"{$"On mining location {_miningLocation}"}\"");
+            batFileContents.AppendLine($"echo \"{$"With username {_username}"}\"");
+            batFileContents.AppendLine($"echo \"{$"With devices:"}\"");
+            foreach(var mp in _miningPairs)
             {
-                StartInfo =
-                {
-                    FileName = "miner.exe",
-                    Arguments = "--algo dagger --url nicehashAlgoUrl --user userBTC",
-                    WorkingDirectory = "WorkingDir"
-                },
-                EnableRaisingEvents = true
-            };
-            proc.Start();
-            miningState = "START";
+                batFileContents.AppendLine($"echo \"    {$"{mp.Device.Name}:{mp.Device.ID}:{mp.Device.UUID}"}\"");
+            }
+            batFileContents.AppendLine($"echo \"{"Mining..."}\"");
+            batFileContents.AppendLine("pause");
+
+            var tempMiner = Path.GetTempFileName().Replace(".tmp", ".bat");
+            File.WriteAllText(tempMiner, batFileContents.ToString());
+            _miningProcess = Process.Start(new ProcessStartInfo("cmd.exe", "/c " + tempMiner));
+            _state = MinerState.MINING;
         }
 
         /// <summary>
@@ -100,12 +143,16 @@ namespace Example
         /// </summary>
         public void StopMining()
         {
-            if (miningState == "STOP") return;
-            foreach (var process in Process.GetProcessesByName("miner"))
+            if (_state == MinerState.STOPPED) return;
+            try
             {
-                process.Kill();
+                _miningProcess.Kill();
+                _miningProcess.Dispose();
             }
-            miningState = "STOP";
+            catch (Exception)
+            {
+            }
+            _state = MinerState.STOPPED;
         }
     }
 }

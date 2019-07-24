@@ -74,6 +74,15 @@ namespace BMiner
                     ID = "bminer_pers",
                     ShortName = "-pers",
                     DefaultValue = "BgoldPoW"
+                },
+                /// <summary>
+                /// Enable agressive optimizations. Bminer is more performant under this setting but it might be unstable on some OS/drivers.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "bminer_fast",
+                    ShortName = "-fast",
                 }
             },
             TemperatureOptions = new List<MinerOption>{

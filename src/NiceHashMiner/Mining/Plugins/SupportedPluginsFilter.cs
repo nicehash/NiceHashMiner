@@ -6,9 +6,7 @@ namespace NiceHashMiner.Mining.Plugins
 {
     internal static class SupportedPluginsFilter
     {
-        static List<string> _filteredPlugins = new List<string> {
-            (new BMinerIntegratedPlugin()).PluginUUID,
-        };
+        static List<string> _filteredPlugins = new List<string> {};
 
         static SupportedPluginsFilter()
         {

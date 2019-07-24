@@ -18,8 +18,6 @@ namespace TTMiner
     public class TTMiner : MinerBase, IAfterStartMining
     {
         private int _apiPort;
-        protected List<MiningPair> _orderedMiningPairs = new List<MiningPair>();
-
         private string _devices;
 
         // TODO figure out how to fix API workaround without this started time
@@ -125,7 +123,7 @@ namespace TTMiner
                 return api;
             }
 
-            var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
+            var miningDevices = _miningPairs.Select(pair => pair.Device).ToList();
             var algorithmTypes = new AlgorithmType[] { _algorithmType };
             return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
         }
