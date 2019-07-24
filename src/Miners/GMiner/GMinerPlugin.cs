@@ -20,19 +20,19 @@ namespace GMinerPlugin
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
-            // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases current v1.52
+            // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases current v1.53
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.52/gminer_1_52_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.53/gminer_1_53_windows64.zip", // original
                 }
             };
         }
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(2, 3);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -169,9 +169,9 @@ namespace GMinerPlugin
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 2)
+                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 3)
                 {
-                    // v1.52 https://github.com/develsoftware/GMinerRelease/releases/tag/1.52
+                    // v1.53 https://github.com/develsoftware/GMinerRelease/releases/tag/1.53
                     // improved performance for Equihash 144,5 and Equihash 192,7 on RTX cards
                     if (device.Name.Contains("RTX") && ids.FirstOrDefault() == AlgorithmType.ZHash) return true;
                 }
