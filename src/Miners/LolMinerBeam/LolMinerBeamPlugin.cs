@@ -11,7 +11,7 @@ using NHM.Common.Enums;
 
 namespace LolMinerBeam
 {
-    class LolMinerBeamPlugin : PluginBase, IDevicesCrossReference
+    public class LolMinerBeamPlugin : PluginBase, IDevicesCrossReference
     {
         public LolMinerBeamPlugin()
         {

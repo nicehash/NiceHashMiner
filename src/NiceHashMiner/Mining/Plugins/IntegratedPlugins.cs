@@ -155,6 +155,24 @@ namespace NiceHashMiner.Mining.Plugins
     }
 #endif
 
+#if INTEGRATE_ZEnemy_PLUGIN
+    class ZEnemyIntegratedPlugin : ZEnemy.ZEnemyPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "ZEnemy";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
+#if INTEGRATE_LolMinerBeam_PLUGIN
+    class LolMinerIntegratedPlugin : LolMinerBeam.LolMinerBeamPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "LolMinerBeam";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
     class EthlargementIntegratedPlugin : Ethlargement.Ethlargement, IntegratedPlugin
     {
         public static EthlargementIntegratedPlugin Instance { get; } = new EthlargementIntegratedPlugin();

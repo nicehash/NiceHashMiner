@@ -70,7 +70,13 @@ namespace NiceHashMiner.Mining.Plugins
                 #endif
                 #if INTEGRATE_BMiner_PLUGIN
                 new BMinerIntegratedPlugin(),
-                #endif 
+                #endif
+                #if INTEGRATE_ZEnemy_PLUGIN
+                new ZEnemyIntegratedPlugin(),
+                #endif
+                #if INTEGRATE_LolMinerBeam_PLUGIN
+                new LolMinerIntegratedPlugin(),
+                #endif
 
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,

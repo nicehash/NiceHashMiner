@@ -59,6 +59,24 @@ namespace ZEnemy
                     Type = MinerOptionType.OptionWithSingleParameter,
                     ID = "zenemy_affinity",
                     ShortName = "--cpu-affinity",
+                },
+                /// <summary>
+                /// disable colored output
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "zenemy_no_color",
+                    ShortName = "--no-color",
+                },
+                /// <summary>
+                /// disable NVML hardware sampling
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionIsParameter,
+                    ID = "zenemy_no_nvml",
+                    ShortName = "--no-nvml",
                 }
             },
             TemperatureOptions = new List<MinerOption>

@@ -503,7 +503,7 @@
       <Project>{8b382c65-fc83-43bd-ae16-f06c26a24786}</Project>
       <Name>EWBF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\ExamplePlugin\ExamplePlugin.csproj">
+    <ProjectReference Include="..\Miners\ExamplePlugin\ExamplePlugin.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ExamplePlugin_PLUGIN'))">
       <Project>{dfc88036-796a-4046-b3b6-de9fa56edf28}</Project>
       <Name>ExamplePlugin</Name>
     </ProjectReference>
@@ -511,7 +511,7 @@
       <Project>{a95ee45c-d188-46e8-91f6-2cf858420bb5}</Project>
       <Name>GMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\LolMinerBeam\LolMinerBeam.csproj">
+    <ProjectReference Include="..\Miners\LolMinerBeam\LolMinerBeam.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_LolMinerBeam_PLUGIN'))">
       <Project>{db7ac204-7b8c-4fa4-8d8c-dc133e534d8a}</Project>
       <Name>LolMinerBeam</Name>
     </ProjectReference>
@@ -567,7 +567,7 @@
       <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
       <Name>XmrStak</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\ZEnemy\ZEnemy.csproj">
+    <ProjectReference Include="..\Miners\ZEnemy\ZEnemy.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_ZEnemy_PLUGIN'))">
       <Project>{059e2ca2-85c5-453e-a48c-ada45a3c5879}</Project>
       <Name>ZEnemy</Name>
     </ProjectReference>
