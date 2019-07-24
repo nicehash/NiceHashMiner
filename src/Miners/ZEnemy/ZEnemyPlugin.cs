@@ -18,7 +18,7 @@ namespace ZEnemy
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
-            // https://bitcointalk.org/index.php?topic=3378390.0 current 2-00-cuda10.0 // TODO update
+            // https://bitcointalk.org/index.php?topic=3378390.0 current 2-00-cuda10.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
