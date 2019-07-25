@@ -1,6 +1,4 @@
-﻿using NHM.Common.Enums;
-using NiceHashMiner.Algorithms;
-using NiceHashMiner.Mining.Plugins;
+﻿using NiceHashMiner.Mining.Plugins;
 using System.Collections.Generic;
 using System.Linq;
 using MinerPlugin;

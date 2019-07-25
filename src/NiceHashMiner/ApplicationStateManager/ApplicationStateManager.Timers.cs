@@ -169,8 +169,6 @@ namespace NiceHashMiner
         #region InternetCheck timer
         private static AppTimer _internetCheckTimer;
 
-        public static object PInvoke { get; private set; }
-
         public static event EventHandler<bool> OnInternetCheck;
 
         public static void StartInternetCheckTimer()

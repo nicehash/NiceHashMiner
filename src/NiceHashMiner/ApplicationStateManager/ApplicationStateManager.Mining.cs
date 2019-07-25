@@ -1,16 +1,12 @@
 using NiceHashMiner.Devices;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NHM.Common.Enums;
 using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Mining;
 using NiceHashMiner.Stats;
 using NHM.Common;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Utils;
 
 namespace NiceHashMiner
 {

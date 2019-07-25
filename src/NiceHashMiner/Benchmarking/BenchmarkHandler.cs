@@ -19,7 +19,7 @@ namespace NiceHashMiner.Benchmarking
 
         private bool _startMiningAfterBenchmark;
         private readonly Queue<Algorithm> _benchmarkAlgorithmQueue;
-        private readonly int _benchmarkAlgorithmsCount;
+        private readonly int _benchmarkAlgorithmsCount; 
         private readonly List<string> _benchmarkFailedAlgo = new List<string>();
         private readonly BenchmarkPerformanceType _performanceType;
 

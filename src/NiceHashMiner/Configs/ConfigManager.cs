@@ -3,11 +3,9 @@ using System.IO;
 using System.Linq;
 using System.IO.Compression;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
 using MinerPluginToolkitV1.Configs;
 using NiceHashMiner.Configs.Data;
 using NiceHashMiner.Devices;
-using NiceHashMiner.Utils;
 using NHM.Common;
 using NHM.Common.Enums;
 
