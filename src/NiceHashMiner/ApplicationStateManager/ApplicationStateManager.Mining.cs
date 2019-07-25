@@ -7,6 +7,7 @@ using NiceHashMiner.Mining;
 using NiceHashMiner.Stats;
 using NHM.Common;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner
 {

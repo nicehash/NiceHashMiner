@@ -272,7 +272,6 @@
     <Compile Include="Stats\NiceHashStats_shared.cs" />
     <Compile Include="Stats\NiceHashStats_production_new.cs" />
     <Compile Include="Stats\NiceHashStats_production_old.cs" />
-    <Compile Include="Stats\SocketEventArgs.cs" />
     <Compile Include="Stats\StatusCodes.cs" />
     <Compile Include="Stats\TimeFactor.cs" />
     <Compile Include="StratumService.cs" />

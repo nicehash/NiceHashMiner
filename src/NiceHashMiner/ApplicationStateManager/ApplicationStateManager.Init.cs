@@ -13,9 +13,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NHM.DeviceDetection;
+using NHM.DeviceMonitoring;
 
 using static NiceHashMiner.Translations;
-using NHM.DeviceMonitoring;
 
 namespace NiceHashMiner
 {
