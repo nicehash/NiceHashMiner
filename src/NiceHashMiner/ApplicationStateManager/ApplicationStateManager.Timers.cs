@@ -11,7 +11,7 @@ using NiceHashMiner.Utils;
 
 namespace NiceHashMiner
 {
-    static partial class ApplicationStateManager
+    public static partial class ApplicationStateManager
     {
         internal class AppTimer
         {

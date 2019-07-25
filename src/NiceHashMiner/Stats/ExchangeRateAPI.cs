@@ -7,7 +7,7 @@ using NHM.Common;
 
 namespace NiceHashMiner.Stats
 {
-    internal static class ExchangeRateApi
+    public static class ExchangeRateApi
     {
         private static readonly ConcurrentDictionary<string, double> ExchangesFiat = new ConcurrentDictionary<string, double>();
         private static double _usdBtcRate = -1;
