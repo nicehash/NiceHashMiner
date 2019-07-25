@@ -95,6 +95,9 @@
     <Compile Include="ViewModels\Settings\SettingsContainerVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsVM.cs" />
     <Compile Include="ViewModels\StartupLoadingVM.cs" />
+    <Compile Include="Windows\3rdPartyTosWindow.xaml.cs">
+      <DependentUpon>3rdPartyTosWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
     </Compile>
@@ -158,6 +161,10 @@
     <Compile Include="Windows\StartupLoadingWindow.xaml.cs">
       <DependentUpon>StartupLoadingWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Windows\3rdPartyTosWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\BenchmarkWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

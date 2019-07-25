@@ -138,7 +138,24 @@ namespace NHM.Wpf
             // Check 3rd party miners
             if (ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.NOT_SET)
             {
-                // TODO 3rd party window
+                var thirdPty = new _3rdPartyTosWindow
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
+
+                var result = thirdPty.ShowDialog();
+
+                // Note result is a Nullable<bool>, hence the verbose if-else
+                if (result == true)
+                {
+                    ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.YES;
+                }
+                else if (result == false)
+                {
+                    ConfigManager.GeneralConfig.Use3rdPartyMiners = Use3rdPartyMiners.NO;
+                }
+
+                ConfigManager.GeneralConfigFileCommit();
             }
 
             var main = new MainWindow();
