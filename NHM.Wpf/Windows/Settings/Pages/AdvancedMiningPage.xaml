@@ -11,6 +11,7 @@
              d:DataContext="{d:DesignInstance settings:AdvancedMiningVM}">
     <StackPanel>
         <control:SettingsContainer Title="Run Ethlargement"
+                                   IsEnabled="{Binding EthlargementAvailable}"
                                    Enabled="{Binding Config.UseEthlargement}"
                                    Description="Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners." />
         <control:SettingsContainer Title="API Bind port pool start:"

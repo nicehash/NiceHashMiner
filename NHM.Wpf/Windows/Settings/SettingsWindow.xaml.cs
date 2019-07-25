@@ -76,6 +76,7 @@ namespace NHM.Wpf.Windows
         public void Dispose()
         {
             Translations.LanguageChanged -= Translations_LanguageChanged;
+            _vm.Dispose();
         }
     }
 }

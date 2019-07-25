@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace NiceHashMiner.Utils
 {
-    internal class PInvokeHelpers
+    public class PInvokeHelpers
     {
         [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -21,7 +21,7 @@ namespace NiceHashMiner.Utils
 
         #region Check If Idle
 
-        internal struct LASTINPUTINFO
+        public struct LASTINPUTINFO
         {
             public uint cbSize;
             public uint dwTime;

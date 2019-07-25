@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using NiceHashMiner.Mining;
 using NiceHashMiner.Switching;
 using NHM.Common.Enums;
@@ -9,7 +11,7 @@ using NiceHashMiner.Utils;
 namespace NiceHashMiner.Configs.Data
 {
     [Serializable]
-    public class GeneralConfig
+    public class GeneralConfig : INotifyPropertyChanged
     {
         public Version ConfigFileVersion;
 
@@ -157,7 +159,11 @@ namespace NiceHashMiner.Configs.Data
         public Use3rdPartyMiners Use3rdPartyMiners
         {
             get => NiceHashMiner.Configs.ThirdPartyMinerSettings.Instance.Use3rdPartyMiners;
-            set => NiceHashMiner.Configs.ThirdPartyMinerSettings.Instance.Use3rdPartyMiners = value;
+            set
+            {
+                NiceHashMiner.Configs.ThirdPartyMinerSettings.Instance.Use3rdPartyMiners = value;
+                OnPropertyChanged();
+            }
         }
 
         // 
@@ -346,6 +352,13 @@ namespace NiceHashMiner.Configs.Data
         public (string btc, string worker, string group) GetCredentials()
         {
             return (BitcoinAddress.Trim(), WorkerName.Trim(), RigGroup.Trim());
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

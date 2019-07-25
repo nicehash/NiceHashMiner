@@ -9,7 +9,7 @@ using NHM.Common;
 
 namespace NiceHashMiner.Utils
 {
-    internal class Helpers : PInvokeHelpers
+    public class Helpers : PInvokeHelpers
     {
         private static readonly bool Is64BitProcess = (IntPtr.Size == 8);
         public static bool Is64BitOperatingSystem = Is64BitProcess || InternalCheckIsWow64();

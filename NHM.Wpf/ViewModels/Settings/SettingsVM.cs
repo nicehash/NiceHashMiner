@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using NiceHashMiner;
@@ -6,7 +7,7 @@ using NiceHashMiner.Configs;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
-    public class SettingsVM : BaseVM
+    public class SettingsVM : BaseVM, IDisposable
     {
         private SettingsBaseVM _selectedPageVM;
         public SettingsBaseVM SelectedPageVM
@@ -77,6 +78,14 @@ namespace NHM.Wpf.ViewModels.Settings
         public void Revert()
         {
             // TODO
+        }
+
+        public void Dispose()
+        {
+            foreach (var vm in AllPageVMs())
+            {
+                vm?.Dispose();
+            }
         }
     }
 }
