@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NHM.Common;
 
 namespace NHM.Wpf
 {
@@ -91,7 +92,7 @@ namespace NHM.Wpf
                     _availableLanguages = translations.Languages.Select(pair => new Language { Code = pair.Key, Name = pair.Value }).ToList();
                     foreach (var kvp in _availableLanguages)
                     {
-                        //Logger.Info("Translations", $"Found language: code: {kvp.Code}, name: {kvp.Name}");
+                        Logger.Info("Translations", $"Found language: code: {kvp.Code}, name: {kvp.Name}");
                     }
                 } 
                 if (translations.Translations != null)
@@ -124,7 +125,7 @@ namespace NHM.Wpf
             }
             catch (Exception e)
             {
-                //Logger.Error("NICEHASH", $"Lang error: {e.Message}");
+                Logger.Error("NICEHASH", $"Lang error: {e.Message}");
             }
         }
 
