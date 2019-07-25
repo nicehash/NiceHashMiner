@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NiceHashMiner.Configs;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
@@ -19,8 +20,7 @@ namespace NHM.Wpf.ViewModels.Settings
 
         public SettingsVM()
         {
-            // placeholder
-            object settingsObj = null;
+            var settingsObj = ConfigManager.GeneralConfig;
 
             PageVMs = new List<SettingsBaseVM>
             {

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NiceHashMiner.Configs.Data;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
     public class SettingsContainerVM : SettingsBaseVM
     {
-        private SettingsContainerVM(object settingsObj, string name, params SettingsBaseVM[] children) 
+        private SettingsContainerVM(GeneralConfig settingsObj, string name, params SettingsBaseVM[] children) 
             : base(settingsObj, name, children)
         { }
 
@@ -19,7 +20,7 @@ namespace NHM.Wpf.ViewModels.Settings
         //        new MiningGeneralVM(settingsObj));
         //}
 
-        public static SettingsContainerVM AdvancedContainer(object settingsObj)
+        public static SettingsContainerVM AdvancedContainer(GeneralConfig settingsObj)
         {
             return new SettingsContainerVM(settingsObj,
                 "Advanced",

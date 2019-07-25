@@ -18,24 +18,23 @@
         <controls:SettingsContainer 
             Title="Display Currency:"
             Description="Choose what Currency to Display mining profit.">
-            <ComboBox ItemsSource="{Binding CurrencyOptions}" SelectedItem="{Binding SelectedCurrency}" />
+            <ComboBox ItemsSource="{Binding CurrencyOptions}" SelectedItem="{Binding SettingsInstance.DisplayCurrency}" />
         </controls:SettingsContainer>
         <controls:SettingsContainer 
             Title="Log to File" 
-            Enabled="{Binding LogToFile}"
+            Enabled="{Binding SettingsInstance.LogToFile}"
             Description="Check it, to log console output to file.">
             <controls:SettingsContainer 
                 Title="Log Max File Size [bytes]"
-                Description="Sets the maximum size for the log file."
-                Enabled="True">
-                <TextBox Text="1048576" />
+                Description="Sets the maximum size for the log file.">
+                <TextBox Text="{Binding SettingsInstance.LogMaxFileSize}" />
             </controls:SettingsContainer>
         </controls:SettingsContainer>
         <controls:SettingsContainer Title="Run With Windows" 
-                                    Enabled="False"
+                                    Enabled="{Binding SettingsInstance.RunAtStartup}"
                                     Description="When checked, NiceHash Miner Legacy will run on login." />
         <controls:SettingsContainer Title="Autostart Mining"
-                                    Enabled="False"
+                                    Enabled="{Binding SettingsInstance.AutoStartMining}"
                                     Description="When checked, NiceHash Miner Legacy will automatically start mining when launched." />
     </StackPanel>
 </UserControl>

@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NiceHashMiner.Configs.Data;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
     public class GeneralSettingsVM : SettingsBaseVM
     {
-        // Placeholders
+        // Combo box lists
         public IReadOnlyList<string> CurrencyOptions { get; }
         public IEnumerable<string> LanguageOptions => Translations.GetAvailableLanguagesNames();
 
-        // More placeholders
-        public string SelectedCurrency { get; set; } = "CAD";
-
+        // TODO lang binding to config requires some arch changes
         public int SelectedLangIndex
         {
             get => Translations.GetCurrentIndex();
@@ -24,23 +23,10 @@ namespace NHM.Wpf.ViewModels.Settings
                 Translations.SelectedLanguage = code;
             }
         }
-        private bool _logToFile = false;
 
-        public bool LogToFile
-        {
-            get => _logToFile;
-            set
-            {
-                _logToFile = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public GeneralSettingsVM(object settingsObj)
+        public GeneralSettingsVM(GeneralConfig settingsObj)
             : base(settingsObj, "General")
         {
-            SelectedLangIndex = Translations.GetCurrentIndex();
-
             CurrencyOptions = new List<string>
             {
                 "AUD",

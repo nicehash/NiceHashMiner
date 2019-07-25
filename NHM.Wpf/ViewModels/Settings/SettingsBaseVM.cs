@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NiceHashMiner.Configs.Data;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
@@ -17,9 +18,9 @@ namespace NHM.Wpf.ViewModels.Settings
 
         public IReadOnlyList<SettingsBaseVM> Children { get; }
 
-        protected dynamic SettingsInstance;
+        public GeneralConfig SettingsInstance { get; }
 
-        protected SettingsBaseVM(object settingsObj, string name, params SettingsBaseVM[] children)
+        protected SettingsBaseVM(GeneralConfig settingsObj, string name, params SettingsBaseVM[] children)
         {
             Name = name;
             SettingsInstance = settingsObj;
