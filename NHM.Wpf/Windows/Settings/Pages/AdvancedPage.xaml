@@ -5,23 +5,25 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Windows.Settings.Pages"
              xmlns:control="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
+             xmlns:settings="clr-namespace:NHM.Wpf.ViewModels.Settings"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance settings:AdvancedGeneralVM}">
     <StackPanel>
         <control:SettingsContainer Title="Autoscale BTC Values"
-                                   Enabled="True"
+                                   Enabled="{Binding Config.AutoScaleBTCValues}"
                                    Description="Check it, if you would like to see the BTC values autoscale to the appropriate scale." />
         <control:SettingsContainer Title="Disable Windows Error Reporting"
-                                   Enabled="True"
+                                   Enabled="{Binding Config.DisableWindowsErrorReporting}"
                                    Description="When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable." />
         <control:SettingsContainer Title="NVIDIA P0 State"
-                                   Enabled="False"
+                                   Enabled="{Binding Config.NVIDIAP0State}"
                                    Description="When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated." />
         <control:SettingsContainer Title="Allow Multiple Instances"
-                                   Enabled="True"
+                                   Enabled="{Binding Config.AllowMultipleInstances}"
                                    Description="When unchecked NiceHash Miner Legacy will allow only one instance running (it will close a new started instance if there is an opened instance running)." />
         <control:SettingsContainer Title="Run script when CUDA GPU is lost"
-                                   Enabled="False"
+                                   Enabled="{Binding Config.RunScriptOnCUDA_GPU_Lost}"
                                    Description="When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system." />
     </StackPanel>
 </UserControl>

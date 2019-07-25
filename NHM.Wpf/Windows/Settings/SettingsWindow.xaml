@@ -58,7 +58,7 @@
                         <DataTemplate DataType="{x:Type vm:ProfitabilitySettingsVM}">
                             <local:ProfitabilityPage />
                         </DataTemplate>
-                        <DataTemplate DataType="{x:Type vm:AdvancedGeneral}">
+                        <DataTemplate DataType="{x:Type vm:AdvancedGeneralVM}">
                             <local:AdvancedPage />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:AdvancedSwitchingVM}">

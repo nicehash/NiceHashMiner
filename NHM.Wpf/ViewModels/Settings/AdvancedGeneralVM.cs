@@ -7,9 +7,9 @@ using NiceHashMiner.Configs.Data;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
-    public class AdvancedGeneral : SettingsBaseVM
+    public class AdvancedGeneralVM : SettingsBaseVM
     {
-        public AdvancedGeneral(GeneralConfig confObj) 
+        public AdvancedGeneralVM(GeneralConfig confObj) 
             : base(confObj, "General")
         { }
     }
