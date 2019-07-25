@@ -32,6 +32,7 @@ namespace NHM.Wpf.Windows
         private void AcceptButton_OnClick(object sender, RoutedEventArgs e)
         {
             _acceptedTos = true;
+            DialogResult = true;
             Close();
         }
     }

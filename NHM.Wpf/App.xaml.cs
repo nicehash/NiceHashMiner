@@ -1,7 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+﻿using log4net.Core;
+using NHM.Common;
+using NHM.Common.Enums;
+using NHM.Wpf.Windows;
+using NiceHashMiner;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Stats;
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -9,15 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using log4net.Core;
-using NHM.Common;
-using NHM.Common.Enums;
-using NHM.Wpf.Windows;
-using NiceHashMiner;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Stats;
 
 namespace NHM.Wpf
 {
@@ -82,6 +78,9 @@ namespace NHM.Wpf
                 Logger.Warn(Tag, "Path not set to executable");
             }
 
+            // Set to explicit shutdown or else these intro windows will cause shutdown
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
             // Init ExchangeRateApi
             ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
@@ -92,9 +91,13 @@ namespace NHM.Wpf
                 Logger.Info(Tag, $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}");
 
                 var eula = new EulaWindow();
-                eula.ShowDialog();
+                var accepted = eula.ShowDialog();
 
-                if (ConfigManager.GeneralConfig.agreedWithTOS != ApplicationStateManager.CurrentTosVer)
+                if (accepted ?? false)
+                {
+                    ConfigManager.GeneralConfig.agreedWithTOS = ApplicationStateManager.CurrentTosVer;
+                }
+                else
                 {
                     Logger.Error(Tag, "TOS differs AFTER TOS confirmation window");
                     Shutdown();
@@ -129,6 +132,9 @@ namespace NHM.Wpf
 
             var main = new MainWindow();
             main.Show();
+
+            // Set shutdown mode back to default
+            ShutdownMode = ShutdownMode.OnLastWindowClose;
         }
     }
 }
