@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
+using NiceHashMiner;
 using NiceHashMiner.Configs;
 
 namespace NHM.Wpf.ViewModels.Settings
@@ -18,8 +21,13 @@ namespace NHM.Wpf.ViewModels.Settings
 
         public IReadOnlyList<SettingsBaseVM> PageVMs { get; }
 
+        public bool DefaultsSet { get; private set; }
+        public bool RestartRequired => DefaultsSet || ConfigManager.IsRestartNeeded();
+
         public SettingsVM()
         {
+            ConfigManager.CreateBackup();
+
             var settingsObj = ConfigManager.GeneralConfig;
 
             PageVMs = new List<SettingsBaseVM>
@@ -33,9 +41,37 @@ namespace NHM.Wpf.ViewModels.Settings
             SelectedPageVM = PageVMs[0];
         }
 
-        public void SetDefaults()
+        private IEnumerable<SettingsBaseVM> AllPageVMs()
         {
-            // TODO
+            return PageVMs.SelectMany(AllChildVMs);
+        }
+
+        private static IEnumerable<SettingsBaseVM> AllChildVMs(SettingsBaseVM vm)
+        {
+            var en = Enumerable.Empty<SettingsBaseVM>();
+            en = en.Append(vm);
+            return vm.Children.Aggregate(en, (current, child) => current.Concat(AllChildVMs(child)));
+        }
+
+        public bool SetDefaults()
+        {
+            var result = MessageBox.Show(
+                Translations.Tr(
+                    "Are you sure you would like to set everything back to defaults? This will restart {0} automatically.",
+                    NHMProductInfo.Name),
+                Translations.Tr("Set default settings?"),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes) return false;
+
+            ConfigManager.GeneralConfig.SetDefaults();
+            DefaultsSet = true;
+            return true;
+        }
+
+        public void Save()
+        {
+            ConfigManager.GeneralConfigFileCommit();
         }
 
         public void Revert()

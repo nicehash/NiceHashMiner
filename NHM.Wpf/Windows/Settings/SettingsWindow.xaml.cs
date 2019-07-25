@@ -1,8 +1,12 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using NHM.Wpf.ViewModels.Settings;
 using System.Windows;
 using NHM.Wpf.Windows.Common;
+using NiceHashMiner;
+using NiceHashMiner.Configs;
 
 namespace NHM.Wpf.Windows
 {
@@ -11,6 +15,9 @@ namespace NHM.Wpf.Windows
     /// </summary>
     public partial class SettingsWindow : Window, IDisposable
     {
+        public bool RestartRequired => _vm.RestartRequired;
+        public bool DefaultsSet => _vm.DefaultsSet;
+
         private readonly SettingsVM _vm;
 
         public SettingsWindow()
@@ -55,7 +62,15 @@ namespace NHM.Wpf.Windows
 
         private void DefaultsButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _vm.SetDefaults();
+            var confirm = _vm.SetDefaults();
+            if (confirm) Close();
+        }
+
+        private void SettingsWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            if (ApplicationStateManager.BurnCalled) return;
+
+            _vm.Save();
         }
 
         public void Dispose()

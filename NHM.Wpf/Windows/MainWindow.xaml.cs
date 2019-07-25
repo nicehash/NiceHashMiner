@@ -3,8 +3,11 @@ using NHM.Wpf.Windows.Plugins;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using NHM.Wpf.ViewModels;
 using NHM.Wpf.ViewModels.Models.Placeholders;
+using NiceHashMiner;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace NHM.Wpf.Windows
 {
@@ -37,6 +40,20 @@ namespace NHM.Wpf.Windows
             using (var settings = new SettingsWindow())
             {
                 settings.ShowDialog();
+
+                if (settings.RestartRequired)
+                {
+                    if (!settings.DefaultsSet)
+                    {
+                        MessageBox.Show(
+                            Translations.Tr("Settings change requires {0} to restart.", NHMProductInfo.Name),
+                            Translations.Tr("Restart Notice"),
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                    ApplicationStateManager.RestartProgram();
+                    Close();
+                }
             }
         }
 

@@ -5,6 +5,8 @@ namespace NHM.Wpf.ViewModels.Settings
 {
     public class SettingsBaseVM : BaseVM
     {
+        public bool RestartRequired { get; protected set; }
+
         private string _name;
         public string Name
         {

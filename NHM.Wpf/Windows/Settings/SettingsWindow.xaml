@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:NHM.Wpf.Windows.Settings.Pages"
         xmlns:vm="clr-namespace:NHM.Wpf.ViewModels.Settings"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="450" Width="800">
+        Title="SettingsWindow" Height="450" Width="800"
+        Closing="SettingsWindow_OnClosing">
     <Window.DataContext>
         <vm:SettingsVM />
     </Window.DataContext>

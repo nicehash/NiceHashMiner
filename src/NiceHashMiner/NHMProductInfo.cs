@@ -2,7 +2,7 @@
 namespace NiceHashMiner
 {
     // during the transition 
-    internal static class NHMProductInfo
+    public static class NHMProductInfo
     {
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW // NEW PRODUCTION
         public static string Name => "NiceHash Miner";
