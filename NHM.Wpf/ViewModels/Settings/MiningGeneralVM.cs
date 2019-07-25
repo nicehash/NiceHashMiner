@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
 using NiceHashMiner.Configs.Data;
+using System;
+using System.Collections.Generic;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
@@ -19,12 +16,6 @@ namespace NHM.Wpf.ViewModels.Settings
             {
                 Config.Use3rdPartyMiners = value ? Use3rdPartyMiners.YES : Use3rdPartyMiners.NO;
             }
-        }
-
-        public int SelectedIdleType
-        {
-            get => (int) Config.IdleCheckType;
-            set { Config.IdleCheckType = (IdleCheckType) value; }
         }
 
         public MiningGeneralVM(GeneralConfig confObj)
