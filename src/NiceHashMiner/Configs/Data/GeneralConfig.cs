@@ -172,7 +172,7 @@ namespace NiceHashMiner.Configs.Data
             set => MinerApiWatchdog.Enabled = value;
         }
 
-        public Interval SwitchSmaTimeChangeSeconds = new Interval(34, 55);
+        public Interval SwitchSmaTimeChangeSeconds { get; set; } = new Interval(34, 55);
         public Interval SwitchSmaTicksStable = new Interval(2, 3);
         public Interval SwitchSmaTicksUnstable = new Interval(5, 13);
 

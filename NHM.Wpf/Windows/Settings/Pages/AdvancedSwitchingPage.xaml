@@ -5,24 +5,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:NHM.Wpf.Windows.Settings.Pages"
              xmlns:control="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
+             xmlns:settings="clr-namespace:NHM.Wpf.ViewModels.Settings"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance settings:AdvancedSwitchingVM}">
     <StackPanel>
         <control:SettingsContainer Title="Switch Check Range"
                                    Description="Choose the range from which a random switch check time will be chosen. Do not set the range too large or too far from default.">
             <StackPanel Orientation="Horizontal">
-                <TextBox Text="33" />
+                <TextBox Text="{Binding Config.SwitchSmaTimeChangeSeconds.Lower}" />
                 <TextBlock Margin="10,0"> - </TextBlock>
-                <TextBox Text="55" />
+                <TextBox Text="{Binding Config.SwitchSmaTimeChangeSeconds.Upper}" />
             </StackPanel>
         </control:SettingsContainer>
         <control:SettingsContainer Title="Switch Profitability Threshold"
                                    Description="Miner will not switch if the profitability is below SwitchProfitabilityThreshold. Value is in percentage [0 - 1]">
-            <TextBox Text="0.02" />
+            <TextBox Text="{Binding Config.SwitchProfitabilityThreshold, StringFormat=F2}" />
         </control:SettingsContainer>
         <control:SettingsContainer Title="Miner Restart Delay [ms]"
                                    Description="Amount of time (in milliseconds) that NiceHash Miner Legacy will wait before restarting the miner.">
-            <TextBox Text="500" />
+            <TextBox Text="{Binding Config.MinerRestartDelayMS}" />
         </control:SettingsContainer>
     </StackPanel>
 </UserControl>
