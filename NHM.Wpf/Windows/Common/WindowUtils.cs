@@ -69,12 +69,14 @@ namespace NHM.Wpf.Windows.Common
 
         public static void Translate(TextBlock tb)
         {
-            if (!string.IsNullOrWhiteSpace(tb.Text))
+            if (!string.IsNullOrWhiteSpace(tb.Text) && tb.Inlines.Count <= 1)
                 tb.Text = Tr(tb.Text);
-
-            foreach (var inline in tb.Inlines)
+            else
             {
-                Translate(inline);
+                foreach (var inline in tb.Inlines)
+                {
+                    Translate(inline);
+                }
             }
         }
 

@@ -98,6 +98,9 @@
     <Compile Include="Windows\BenchmarkWindow.xaml.cs">
       <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Windows\ChooseLanguageWindow.xaml.cs">
+      <DependentUpon>ChooseLanguageWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Windows\Common\WindowUtils.cs" />
     <Compile Include="Windows\EulaWindow.xaml.cs">
       <DependentUpon>EulaWindow.xaml</DependentUpon>
@@ -156,6 +159,10 @@
       <DependentUpon>StartupLoadingWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Windows\BenchmarkWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\ChooseLanguageWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

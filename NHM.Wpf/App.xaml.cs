@@ -90,7 +90,11 @@ namespace NHM.Wpf
             {
                 Logger.Info(Tag, $"TOS differs! agreed: {ConfigManager.GeneralConfig.agreedWithTOS} != Current {ApplicationStateManager.CurrentTosVer}");
 
-                var eula = new EulaWindow();
+                var eula = new EulaWindow
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
+
                 var accepted = eula.ShowDialog();
 
                 if (accepted ?? false)
@@ -107,15 +111,22 @@ namespace NHM.Wpf
             // Chose lang
             if (string.IsNullOrEmpty(ConfigManager.GeneralConfig.Language))
             {
+                var langToSet = "en";
                 if (Translations.GetAvailableLanguagesNames().Count > 1)
                 {
-                    // TODO lang window
+                    var lang = new ChooseLanguageWindow
+                    {
+                        LangNames = Translations.GetAvailableLanguagesNames(),
+                        WindowStartupLocation = WindowStartupLocation.CenterScreen
+                    };
+
+                    lang.ShowDialog();
+
+                    langToSet = Translations.GetLanguageCodeFromIndex(lang.SelectedLangIndex);
                 }
-                else
-                {
-                    ConfigManager.GeneralConfig.Language = "en";
-                    ConfigManager.GeneralConfigFileCommit();
-                }
+
+                ConfigManager.GeneralConfig.Language = langToSet;
+                ConfigManager.GeneralConfigFileCommit();
             }
 
             Translations.SelectedLanguage = ConfigManager.GeneralConfig.Language;
