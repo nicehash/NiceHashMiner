@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -69,14 +70,9 @@ namespace NHM.Wpf.Windows.Common
 
         public static void Translate(TextBlock tb)
         {
-            if (!string.IsNullOrWhiteSpace(tb.Text) && tb.Inlines.Count <= 1)
-                tb.Text = Tr(tb.Text);
-            else
+            foreach (var inline in EnumInlines(tb.Inlines))
             {
-                foreach (var inline in tb.Inlines)
-                {
-                    Translate(inline);
-                }
+                Translate(inline);
             }
         }
 
@@ -86,10 +82,25 @@ namespace NHM.Wpf.Windows.Common
                 run.Text = Tr(run.Text);
             else if (il is Span sp)
             {
-                foreach (var inline in sp.Inlines)
+                foreach (var inline in EnumInlines(sp.Inlines))
                 {
                     Translate(inline);
                 }
+            }
+        }
+
+        private static IEnumerable<Inline> EnumInlines(InlineCollection inlineCollection)
+        {
+            // InlineCollection has the unfortunate trait that it will throw InvalidOperationException if
+            // a child's text property is changed during a foreach. So this helper func iterates using
+            // linked list properties of InlineCollection
+
+            var il = inlineCollection.FirstInline;
+
+            while (il != null)
+            {
+                yield return il;
+                il = il.NextInline;
             }
         }
 
