@@ -9,15 +9,15 @@ namespace NHM.Wpf.ViewModels.Settings
 {
     public class SettingsContainerVM : SettingsBaseVM
     {
-        private SettingsContainerVM(GeneralConfig settingsObj, string name, params SettingsBaseVM[] children) 
-            : base(settingsObj, name, children)
+        private SettingsContainerVM(GeneralConfig confObj, string name, params SettingsBaseVM[] children) 
+            : base(confObj, name, children)
         { }
 
-        //public static SettingsContainerVM MiningContainer(object settingsObj)
+        //public static SettingsContainerVM MiningContainer(object confObj)
         //{
-        //    return new SettingsContainerVM(settingsObj,
+        //    return new SettingsContainerVM(confObj,
         //        "Mining",
-        //        new MiningGeneralVM(settingsObj));
+        //        new MiningGeneralVM(confObj));
         //}
 
         public static SettingsContainerVM AdvancedContainer(GeneralConfig settingsObj)

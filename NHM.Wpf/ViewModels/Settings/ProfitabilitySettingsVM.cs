@@ -9,8 +9,8 @@ namespace NHM.Wpf.ViewModels.Settings
 {
     public class ProfitabilitySettingsVM : SettingsBaseVM
     {
-        public ProfitabilitySettingsVM(GeneralConfig settingsObj) 
-            : base(settingsObj, "Profitability")
+        public ProfitabilitySettingsVM(GeneralConfig confObj) 
+            : base(confObj, "Profitability")
         { }
     }
 }

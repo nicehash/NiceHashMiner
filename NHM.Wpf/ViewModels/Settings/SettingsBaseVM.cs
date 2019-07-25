@@ -18,12 +18,12 @@ namespace NHM.Wpf.ViewModels.Settings
 
         public IReadOnlyList<SettingsBaseVM> Children { get; }
 
-        public GeneralConfig SettingsInstance { get; }
+        public GeneralConfig Config { get; }
 
-        protected SettingsBaseVM(GeneralConfig settingsObj, string name, params SettingsBaseVM[] children)
+        protected SettingsBaseVM(GeneralConfig confObj, string name, params SettingsBaseVM[] children)
         {
             Name = name;
-            SettingsInstance = settingsObj;
+            Config = confObj;
             Children = new List<SettingsBaseVM>(children);
         }
     }

@@ -24,8 +24,8 @@ namespace NHM.Wpf.ViewModels.Settings
             }
         }
 
-        public GeneralSettingsVM(GeneralConfig settingsObj)
-            : base(settingsObj, "General")
+        public GeneralSettingsVM(GeneralConfig confObj)
+            : base(confObj, "General")
         {
             CurrencyOptions = new List<string>
             {

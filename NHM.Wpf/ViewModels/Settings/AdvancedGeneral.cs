@@ -9,8 +9,8 @@ namespace NHM.Wpf.ViewModels.Settings
 {
     public class AdvancedGeneral : SettingsBaseVM
     {
-        public AdvancedGeneral(GeneralConfig settingsObj) 
-            : base(settingsObj, "General")
+        public AdvancedGeneral(GeneralConfig confObj) 
+            : base(confObj, "General")
         { }
     }
 }

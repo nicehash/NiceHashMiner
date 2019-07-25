@@ -9,8 +9,8 @@ namespace NHM.Wpf.ViewModels.Settings
 {
     public class AdvancedSwitchingVM : SettingsBaseVM
     {
-        public AdvancedSwitchingVM(GeneralConfig settingsObj) 
-            : base(settingsObj, "Switching")
+        public AdvancedSwitchingVM(GeneralConfig confObj) 
+            : base(confObj, "Switching")
         { }
     }
 }
