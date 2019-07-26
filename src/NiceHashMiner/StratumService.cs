@@ -128,7 +128,8 @@ namespace NiceHashMiner
         public static IReadOnlyList<string> MiningLocations { get; } =
             new[] { "eu", "usa", "hk", "jp", "in", "br" };
 
-        public static readonly object[] MiningLocationNames = new object[] {
+        public static IReadOnlyList<string> MiningLocationNames { get; } = new List<string>
+        {
             "Europe - Amsterdam",
             "USA - San Jose",
             "China - Hong Kong",

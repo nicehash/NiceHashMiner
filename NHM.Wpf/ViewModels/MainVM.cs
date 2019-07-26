@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using NiceHashMiner;
+using NiceHashMiner.Configs;
 
 namespace NHM.Wpf.ViewModels
 {
@@ -52,6 +54,26 @@ namespace NHM.Wpf.ViewModels
         #endregion
 
         public IReadOnlyList<DeviceInfo> Devices { get; }
+
+        public IReadOnlyList<string> ServiceLocations => StratumService.MiningLocationNames;
+
+        public int ServiceLocationIndex
+        {
+            get => ConfigManager.GeneralConfig.ServiceLocation;
+            set => ConfigManager.GeneralConfig.ServiceLocation = value;
+        }
+
+        public string BtcAddress
+        {
+            get => ConfigManager.GeneralConfig.BitcoinAddress;
+            set => ConfigManager.GeneralConfig.BitcoinAddress = value;
+        }
+
+        public string WorkerName
+        {
+            get => ConfigManager.GeneralConfig.WorkerName;
+            set => ConfigManager.GeneralConfig.WorkerName = value;
+        }
 
         public MainVM()
         {

@@ -28,17 +28,15 @@
         <StackPanel Margin="10">
             <StackPanel Orientation="Horizontal" Margin="5">
                 <TextBlock Text="Service Location:" Margin="0,0,10,0" />
-                <ComboBox Width="120" SelectedIndex="0">
-                    <ComboBoxItem Content="USA - San Jose"/>
-                </ComboBox>
+                <ComboBox Width="120" ItemsSource="{Binding ServiceLocations}" SelectedIndex="{Binding ServiceLocationIndex}" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
                 <TextBlock Text="Bitcoin Address:" Margin="0,0,10,0" />
-                <TextBox Text="3KpWmp49Cdbswr23KhjagNbwqiwcFh8Br2" Width="250" />
+                <TextBox Text="{Binding BtcAddress}" Width="250" />
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="5">
                 <TextBlock Text="Worker Name:" Margin="0,0,10,0" />
-                <TextBox Text="worker1" Width="75" />
+                <TextBox Text="{Binding WorkerName}" Width="75" />
             </StackPanel>
             <TextBlock Margin="5,0">
                 <Hyperlink Click="StatsHyperlink_OnClick">
