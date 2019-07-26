@@ -22,7 +22,10 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="180" />
+            <!-- Auto-sizing is finicky here since the NH logo spans the last two columns.
+                 Best results are setting last column to width of button stack panel (75 + 20 for margins)
+                 and second column to image width (250 + 20 for magins) minus last column width. -->
+            <ColumnDefinition Width="175" />
             <ColumnDefinition Width="95" />
         </Grid.ColumnDefinitions>
 

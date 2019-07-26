@@ -7,7 +7,7 @@ namespace NHM.Wpf.ViewModels.Settings
 {
     public class MiningGeneralVM : SettingsBaseVM
     {
-        public IEnumerable<IdleCheckType> IdleTypes { get; }
+        public IEnumerable<IdleCheckType> IdleTypes { get; } = GetEnumValues<IdleCheckType>();
 
         public bool Enable3rdPartyCheck
         {
@@ -20,15 +20,6 @@ namespace NHM.Wpf.ViewModels.Settings
 
         public MiningGeneralVM(GeneralConfig confObj)
             : base(confObj, "Mining")
-        {
-            var idleTypes = new List<IdleCheckType>();
-
-            foreach (var checkType in Enum.GetValues(typeof(IdleCheckType)))
-            {
-                idleTypes.Add((IdleCheckType) checkType);
-            }
-
-            IdleTypes = idleTypes;
-        }
+        { }
     }
 }
