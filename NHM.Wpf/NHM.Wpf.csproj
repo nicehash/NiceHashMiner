@@ -95,6 +95,8 @@
     <Compile Include="ViewModels\Settings\SettingsContainerVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsVM.cs" />
     <Compile Include="ViewModels\StartupLoadingVM.cs" />
+    <Compile Include="ViewModels\Validators\BtcWorkerValidator.cs" />
+    <Compile Include="ViewModels\Validators\ValidatorBase.cs" />
     <Compile Include="Windows\3rdPartyTosWindow.xaml.cs">
       <DependentUpon>3rdPartyTosWindow.xaml</DependentUpon>
     </Compile>

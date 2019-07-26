@@ -28,4 +28,13 @@
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="FontSize" Value="14" />
     </Style>
+
+    <Style TargetType="TextBox" x:Key="InvalidTextBox">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)/ErrorContent}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

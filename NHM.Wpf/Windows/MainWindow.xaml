@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
+        xmlns:validators="clr-namespace:NHM.Wpf.ViewModels.Validators"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         StateChanged="MainWindow_OnStateChanged"
@@ -26,18 +27,41 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Margin="10">
+            <StackPanel.Resources>
+                <ResourceDictionary Source="Common/Styles.xaml" />
+            </StackPanel.Resources>
+
             <StackPanel Orientation="Horizontal" Margin="5">
                 <TextBlock Text="Service Location:" Margin="0,0,10,0" />
-                <ComboBox Width="120" ItemsSource="{Binding ServiceLocations}" SelectedIndex="{Binding ServiceLocationIndex}" />
+                <ComboBox Width="160" ItemsSource="{Binding ServiceLocations}" SelectedIndex="{Binding ServiceLocationIndex}" />
             </StackPanel>
+
             <StackPanel Orientation="Horizontal" Margin="5">
                 <TextBlock Text="Bitcoin Address:" Margin="0,0,10,0" />
-                <TextBox Text="{Binding BtcAddress}" Width="250" />
+                <TextBox Width="250" Style="{StaticResource InvalidTextBox}">
+                    <TextBox.Text>
+                        <Binding Path="BtcAddress">
+                            <Binding.ValidationRules>
+                                <validators:BtcAddressValidator />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </StackPanel>
+
             <StackPanel Orientation="Horizontal" Margin="5">
                 <TextBlock Text="Worker Name:" Margin="0,0,10,0" />
-                <TextBox Text="{Binding WorkerName}" Width="75" />
+                <TextBox Width="75" Style="{StaticResource InvalidTextBox}">
+                    <TextBox.Text>
+                        <Binding Path="WorkerName">
+                            <Binding.ValidationRules>
+                                <validators:WorkerValidator />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
             </StackPanel>
+
             <TextBlock Margin="5,0">
                 <Hyperlink Click="StatsHyperlink_OnClick">
                     Check my stats online!
