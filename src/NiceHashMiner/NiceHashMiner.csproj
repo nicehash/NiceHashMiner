@@ -499,6 +499,10 @@
       <Project>{5f994ad1-02a2-4a00-90ca-5cd5943fd24a}</Project>
       <Name>Ethlargement</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\Ethminer\Ethminer.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_Ethminer_PLUGIN'))">
+      <Project>{842790e0-4d0d-4dba-acb3-56a863974342}</Project>
+      <Name>Ethminer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\EWBF\EWBF.csproj">
       <Project>{8b382c65-fc83-43bd-ae16-f06c26a24786}</Project>
       <Name>EWBF</Name>

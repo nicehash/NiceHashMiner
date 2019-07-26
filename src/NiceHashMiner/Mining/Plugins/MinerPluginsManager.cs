@@ -47,6 +47,9 @@ namespace NiceHashMiner.Mining.Plugins
                 new SGminerAvemoreIntegratedPlugin(),
                 new SGminerGMIntegratedPlugin(),
                 new XmrStakIntegratedPlugin(),
+                #if INTEGRATE_Ethminer_PLUGIN
+                new EthminerIntegratedPlugin(),
+                #endif
 
                 // 3rd party
                 new EWBFIntegratedPlugin(),
