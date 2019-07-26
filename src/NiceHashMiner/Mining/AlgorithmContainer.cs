@@ -8,7 +8,6 @@ using NHM.Common.Enums;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Mining.Plugins;
-using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Mining
 {

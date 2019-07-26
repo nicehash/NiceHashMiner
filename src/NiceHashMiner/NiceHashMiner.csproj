@@ -122,7 +122,6 @@
     <Compile Include="Configs\RunAtStartup.cs" />
     <Compile Include="Configs\ThirdPartyMinerSettings.cs" />
     <Compile Include="Configs\TranslationsSettings.cs" />
-    <Compile Include="Devices\AvailableDevices.cs" />
     <Compile Include="Forms\Components\DevicesListViewBenchmarkControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -235,6 +234,8 @@
     <Compile Include="Interfaces\IRatesComunication.cs" />
     <Compile Include="Interfaces\StateSetters\IEnabledDeviceStateSetter.cs" />
     <Compile Include="Interfaces\StateSetters\IStateSetter.cs" />
+    <Compile Include="Mining\AvailableDevices.cs" />
+    <Compile Include="Mining\ComputeDevice.cs" />
     <Compile Include="Mining\IdleChecking\IdleChangedEventArgs.cs" />
     <Compile Include="Mining\IdleChecking\IdleChecker.cs" />
     <Compile Include="Mining\IdleChecking\IdleCheckManager.cs" />
@@ -288,7 +289,6 @@
     <Compile Include="Configs\ConfigManager.cs" />
     <Compile Include="Configs\Data\DeviceConfig.cs" />
     <Compile Include="Configs\Data\GeneralConfig.cs" />
-    <Compile Include="Devices\ComputeDevice.cs" />
     <Compile Include="Forms\Components\AlgorithmsListView.cs">
       <SubType>UserControl</SubType>
     </Compile>

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Mining.Grouping;
 using NiceHashMiner.Mining.Plugins;
 using NiceHashMiner.Stats;

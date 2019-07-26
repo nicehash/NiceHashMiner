@@ -1,7 +1,7 @@
 // SHARED
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Forms.Components;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Mining.Plugins;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Utils;

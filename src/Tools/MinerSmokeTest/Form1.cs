@@ -1,7 +1,6 @@
 ﻿using NiceHashMiner;
 using NiceHashMiner.Mining;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Mining.Grouping;
 using NHM.Common.Enums;
 using System;

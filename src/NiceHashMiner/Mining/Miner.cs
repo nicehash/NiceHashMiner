@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using MinerPlugin;
 using NHM.Common;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Mining.Plugins;
 
 namespace NiceHashMiner.Mining

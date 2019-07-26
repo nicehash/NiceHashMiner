@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Interfaces;
 using NiceHashMiner.Properties;
 using NHM.Common.Enums;

@@ -1,5 +1,4 @@
-﻿using NiceHashMiner.Devices;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using NHM.Common.Enums;
 using MinerPlugin;
 

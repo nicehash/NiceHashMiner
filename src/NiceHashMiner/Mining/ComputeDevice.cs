@@ -6,9 +6,8 @@ using NHM.Common.Enums;
 using NHM.Common.Device;
 using NHM.UUID;
 using NHM.DeviceMonitoring;
-using NiceHashMiner.Mining;
 
-namespace NiceHashMiner.Devices
+namespace NiceHashMiner.Mining
 {
     public class ComputeDevice
     {
@@ -207,13 +206,13 @@ namespace NiceHashMiner.Devices
 
         public void AddPluginAlgorithms(IEnumerable<AlgorithmContainer> algos)
         {
-            if(algos.Count() > 0) AlgorithmSettings.AddRange(algos);
+            if (algos.Count() > 0) AlgorithmSettings.AddRange(algos);
         }
 
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)
         {
             foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings)
-            { 
+            {
                 var setAlgo = AlgorithmSettings.Where(a => a.AlgorithmStringID == copyFromAlgo.AlgorithmStringID).FirstOrDefault();
                 if (setAlgo != null)
                 {
@@ -230,7 +229,7 @@ namespace NiceHashMiner.Devices
         }
 
         #region Config Setters/Getters
-        
+
         public void SetDeviceConfig(DeviceConfig config)
         {
             if (config == null || config.DeviceUUID != Uuid) return;
@@ -321,7 +320,7 @@ namespace NiceHashMiner.Devices
 
         public bool AnyAlgorithmEnabled()
         {
-            var anyEnabled= AlgorithmSettings.Any(a => a.Enabled);
+            var anyEnabled = AlgorithmSettings.Any(a => a.Enabled);
             return anyEnabled;
         }
 

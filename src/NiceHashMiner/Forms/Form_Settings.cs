@@ -1,11 +1,11 @@
-﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using NHM.Common.Enums;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Interfaces.DataVisualizer;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Mining.Plugins;
 using NiceHashMiner.Utils;
 using static NiceHashMiner.Translations;

@@ -1,7 +1,7 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1.Interfaces;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;

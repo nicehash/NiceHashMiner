@@ -5,11 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using NiceHashMiner.Benchmarking.BenchHelpers;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
-using NHM.Common;
-using NHM.Common.Enums;
 using NiceHashMiner.Mining;
 using NiceHashMiner.Mining.Plugins;
+using NHM.Common;
+using NHM.Common.Enums;
 
 namespace NiceHashMiner.Benchmarking
 {

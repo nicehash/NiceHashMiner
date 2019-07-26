@@ -1,9 +1,7 @@
 ﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Interfaces;
+using NiceHashMiner.Mining;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Stats.Models;
