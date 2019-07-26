@@ -2,11 +2,11 @@
 using NiceHashMiner.Configs.Data;
 using System.Collections.Generic;
 using System.Linq;
-using NiceHashMiner.Algorithms;
 using NHM.Common.Enums;
 using NHM.Common.Device;
 using NHM.UUID;
 using NHM.DeviceMonitoring;
+using NiceHashMiner.Mining;
 
 namespace NiceHashMiner.Devices
 {
@@ -68,7 +68,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public List<Algorithm> AlgorithmSettings { get; protected set; } = new List<Algorithm>();
+        public List<PluginAlgorithm> AlgorithmSettings { get; protected set; } = new List<PluginAlgorithm>();
 
         public List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; protected set; } = new List<PluginAlgorithmConfig>();
 
@@ -191,13 +191,13 @@ namespace NiceHashMiner.Devices
         public void RemovePluginAlgorithms(string pluginUUID)
         {
             // TODO save removed algorithm configs
-            var toRemove = AlgorithmSettings.Where(algo => algo is PluginAlgorithm pAlgo && pAlgo.BaseAlgo.MinerID == pluginUUID);
+            var toRemove = AlgorithmSettings.Where(algo => algo.Algorithm.MinerID == pluginUUID);
             if (toRemove.Count() == 0) return;
             var newList = AlgorithmSettings.Where(algo => toRemove.Contains(algo) == false).ToList();
             AlgorithmSettings = newList;
         }
 
-        public void RemovePluginAlgorithms(IEnumerable<Algorithm> algos)
+        public void RemovePluginAlgorithms(IEnumerable<PluginAlgorithm> algos)
         {
             foreach (var algo in algos)
             {
@@ -205,7 +205,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public void AddPluginAlgorithms(IEnumerable<Algorithm> algos)
+        public void AddPluginAlgorithms(IEnumerable<PluginAlgorithm> algos)
         {
             if(algos.Count() > 0) AlgorithmSettings.AddRange(algos);
         }
@@ -224,7 +224,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public Algorithm GetAlgorithm(string minerUUID, params AlgorithmType[] ids)
+        public PluginAlgorithm GetAlgorithm(string minerUUID, params AlgorithmType[] ids)
         {
             return AlgorithmSettings.Where(a => a.MinerUUID == minerUUID && a.IDs.Except(ids).Count() == 0).FirstOrDefault();
         }
@@ -255,12 +255,11 @@ namespace NiceHashMiner.Devices
             if (config.PluginAlgorithmSettings == null) return;
             PluginAlgorithmSettings = config.PluginAlgorithmSettings;
             // plugin algorithms
-            var pluginAlgos = AlgorithmSettings.Where(algo => algo is PluginAlgorithm).Cast<PluginAlgorithm>();
             foreach (var pluginConf in config.PluginAlgorithmSettings)
             {
                 var pluginConfAlgorithmIDs = pluginConf.GetAlgorithmIDs();
-                var pluginAlgo = pluginAlgos
-                    .Where(pAlgo => pluginConf.PluginUUID == pAlgo.BaseAlgo.MinerID && pluginConfAlgorithmIDs.Except(pAlgo.BaseAlgo.IDs).Count() == 0)
+                var pluginAlgo = AlgorithmSettings
+                    .Where(pAlgo => pluginConf.PluginUUID == pAlgo.Algorithm.MinerID && pluginConfAlgorithmIDs.Except(pAlgo.Algorithm.IDs).Count() == 0)
                     .FirstOrDefault();
                 if (pluginAlgo == null) continue;
                 // set plugin algo
@@ -286,21 +285,18 @@ namespace NiceHashMiner.Devices
             // init algo settings
             foreach (var algo in AlgorithmSettings)
             {
-                if (algo is PluginAlgorithm pluginAlgo)
+                var pluginConf = new PluginAlgorithmConfig
                 {
-                    var pluginConf = new PluginAlgorithmConfig
-                    {
-                        Name = pluginAlgo.PluginName,
-                        PluginUUID = pluginAlgo.BaseAlgo.MinerID,
-                        AlgorithmIDs = string.Join("-", pluginAlgo.BaseAlgo.IDs.Select(id => id.ToString())),
-                        Enabled = pluginAlgo.Enabled,
-                        ExtraLaunchParameters = pluginAlgo.ExtraLaunchParameters,
-                        PluginVersion = $"{pluginAlgo.PluginVersion.Major}.{pluginAlgo.PluginVersion.Minor}",
-                        PowerUsage = pluginAlgo.PowerUsage,
-                        Speeds = pluginAlgo.Speeds
-                    };
-                    ret.PluginAlgorithmSettings.Add(pluginConf);
-                }
+                    Name = algo.PluginName,
+                    PluginUUID = algo.Algorithm.MinerID,
+                    AlgorithmIDs = string.Join("-", algo.Algorithm.IDs.Select(id => id.ToString())),
+                    Enabled = algo.Enabled,
+                    ExtraLaunchParameters = algo.ExtraLaunchParameters,
+                    PluginVersion = $"{algo.PluginVersion.Major}.{algo.PluginVersion.Minor}",
+                    PowerUsage = algo.PowerUsage,
+                    Speeds = algo.Speeds
+                };
+                ret.PluginAlgorithmSettings.Add(pluginConf);
             }
             // add old algo configs
 

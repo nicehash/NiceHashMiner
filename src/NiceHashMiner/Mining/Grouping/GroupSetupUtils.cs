@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NiceHashMiner.Algorithms;
 using NHM.Common.Enums;
 using NHM.Common;
 
@@ -13,7 +12,7 @@ namespace NiceHashMiner.Mining.Grouping
     {
         private const string Tag = "GroupSetupUtils";
 
-        public static bool IsAlgoMiningCapable(Algorithm algo)
+        public static bool IsAlgoMiningCapable(PluginAlgorithm algo)
         {
             return algo != null && algo.Enabled && algo.BenchmarkSpeed > 0;
         }
@@ -32,9 +31,7 @@ namespace NiceHashMiner.Mining.Grouping
             }
             else
             {
-                var hasEnabledAlgo = device.AlgorithmSettings.Aggregate(false,
-                    (current, algo) =>
-                        current | (IsAlgoMiningCapable(algo) || algo is PluginAlgorithm));
+                var hasEnabledAlgo = device.AlgorithmSettings.Any((algo) => IsAlgoMiningCapable(algo));
                 if (hasEnabledAlgo == false)
                 {
                     status = DeviceMiningStatus.NoEnabledAlgorithms;
@@ -238,7 +235,7 @@ namespace NiceHashMiner.Mining.Grouping
             return ret;
         }
 
-        public void AddAlgorithms(List<Algorithm> algos)
+        public void AddAlgorithms(List<PluginAlgorithm> algos)
         {
             foreach (var algo in algos)
             {

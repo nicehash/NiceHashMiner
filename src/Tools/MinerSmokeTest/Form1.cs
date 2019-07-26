@@ -1,5 +1,5 @@
 ﻿using NiceHashMiner;
-using NiceHashMiner.Algorithms;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using NiceHashMiner.Mining.Grouping;
@@ -37,7 +37,7 @@ namespace MinerSmokeTest
             return rowData;
         }
 
-        public static object[] GetAlgorithmRowData(Algorithm a)
+        public static object[] GetAlgorithmRowData(PluginAlgorithm a)
         {
             object[] rowData = { a.Enabled, a.AlgorithmName, a.MinerBaseTypeName };
             return rowData;
@@ -120,8 +120,8 @@ namespace MinerSmokeTest
             var senderGrid = (DataGridView)sender;
             var row = senderGrid.Rows[e.RowIndex];
 
-            Algorithm algo;
-            if (row.Tag is Algorithm a)
+            PluginAlgorithm algo;
+            if (row.Tag is PluginAlgorithm a)
             {
                 algo = a;
             }
@@ -180,8 +180,7 @@ namespace MinerSmokeTest
                     step++;
                     try
                     {
-                        var pAlgo = algorithm as PluginAlgorithm;
-                        var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = pAlgo.BaseAlgo } };
+                        var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = algorithm.Algorithm } };
                         var miner = NiceHashMiner.Mining.Miner.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);
@@ -247,8 +246,7 @@ namespace MinerSmokeTest
                     step++;
                     try
                     {
-                        var pAlgo = algorithm as PluginAlgorithm;
-                        var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = pAlgo.BaseAlgo } };
+                        var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = algorithm.Algorithm } };
                         var miner = NiceHashMiner.Mining.Miner.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);

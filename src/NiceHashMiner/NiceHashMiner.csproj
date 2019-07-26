@@ -97,8 +97,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\Algorithm.cs" />
-    <Compile Include="Algorithms\PluginAlgorithm.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.DataVizualizers.cs" />
     <Compile Include="ApplicationStateManager\ApplicationStateManager.Devices.cs" />
@@ -242,6 +240,7 @@
     <Compile Include="Mining\IdleChecking\IdleCheckManager.cs" />
     <Compile Include="Mining\IdleChecking\InputTimeoutChecker.cs" />
     <Compile Include="Mining\IdleChecking\SessionLockChecker.cs" />
+    <Compile Include="Mining\PluginAlgorithm.cs" />
     <Compile Include="Mining\Plugins\IntegratedPlugins.cs" />
     <Compile Include="Mining\Plugins\VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.cs" />
     <Compile Include="Mining\MinerApiWatchdog.cs" />

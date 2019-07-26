@@ -11,8 +11,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-using CommonAlgorithm = NHM.Common.Algorithm.Algorithm;
-
 namespace NiceHashMiner.Mining.Plugins
 {
     // interfaces were used only to implement the container methods
@@ -141,9 +139,9 @@ namespace NiceHashMiner.Mining.Plugins
         public bool IsCompatible { get; private set; } = false;
         public bool IsInitialized { get; private set; } = false;
         // algos from and for the plugin
-        public Dictionary<BaseDevice, IReadOnlyList<CommonAlgorithm>> _cachedAlgorithms { get; } = new Dictionary<BaseDevice, IReadOnlyList<CommonAlgorithm>>();
+        public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> _cachedAlgorithms { get; } = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
         // algos for NiceHashMiner Client
-        public Dictionary<string, List<Algorithms.Algorithm>> _cachedNiceHashMinerAlgorithms { get; } = new Dictionary<string, List<Algorithms.Algorithm>>();
+        public Dictionary<string, List<PluginAlgorithm>> _cachedNiceHashMinerAlgorithms { get; } = new Dictionary<string, List<PluginAlgorithm>>();
 
         public bool InitPluginContainer()
         {
@@ -200,8 +198,7 @@ namespace NiceHashMiner.Mining.Plugins
                     var deviceUUID = deviceAlgosPair.Key.UUID;
                     var algos = deviceAlgosPair.Value
                         .Where(a => SupportedAlgorithmsFilter.IsSupported(a.IDs))
-                        .Select(a => new Algorithms.PluginAlgorithm(Name, a, Version))
-                        .Cast<Algorithms.Algorithm>()
+                        .Select(a => new PluginAlgorithm(Name, a, Version))
                         .ToList();
                     _cachedNiceHashMinerAlgorithms[deviceUUID] = algos;
                 }
@@ -232,7 +229,6 @@ namespace NiceHashMiner.Mining.Plugins
                     var algos = _cachedNiceHashMinerAlgorithms[dev.Uuid];
                     foreach (var algo in algos)
                     {
-                        if (algo is Algorithms.PluginAlgorithm == false) continue;
                         var pluginConf = configs.PluginAlgorithmSettings.Where(c => c.GetAlgorithmStringID() == algo.AlgorithmStringID).FirstOrDefault();
                         if (pluginConf == null)
                         {
@@ -240,19 +236,18 @@ namespace NiceHashMiner.Mining.Plugins
                         }
                         if (pluginConf == null) continue;
                         // set plugin algo
-                        var pluginAlgo = algo as Algorithms.PluginAlgorithm;
-                        pluginAlgo.Speeds = pluginConf.Speeds;
-                        pluginAlgo.Enabled = pluginConf.Enabled;
-                        pluginAlgo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
-                        pluginAlgo.PowerUsage = pluginConf.PowerUsage;
-                        pluginAlgo.ConfigVersion = pluginConf.GetVersion();
+                        algo.Speeds = pluginConf.Speeds;
+                        algo.Enabled = pluginConf.Enabled;
+                        algo.ExtraLaunchParameters = pluginConf.ExtraLaunchParameters;
+                        algo.PowerUsage = pluginConf.PowerUsage;
+                        algo.ConfigVersion = pluginConf.GetVersion();
                         // check if re-bench is needed
-                        var isReBenchmark = ShouldReBenchmarkAlgorithmOnDevice(dev.BaseDevice, pluginAlgo.ConfigVersion, pluginAlgo.IDs);
+                        var isReBenchmark = ShouldReBenchmarkAlgorithmOnDevice(dev.BaseDevice, algo.ConfigVersion, algo.IDs);
                         if (isReBenchmark)
                         {
-                            Logger.Info(LogTag, $"Algorithms {pluginAlgo.AlgorithmStringID} SET TO RE-BENCHMARK");
+                            Logger.Info(LogTag, $"Algorithms {algo.AlgorithmStringID} SET TO RE-BENCHMARK");
                         }
-                        pluginAlgo.IsReBenchmark = isReBenchmark;
+                        algo.IsReBenchmark = isReBenchmark;
                     }
                     // finally update algorithms
                     // remove old
