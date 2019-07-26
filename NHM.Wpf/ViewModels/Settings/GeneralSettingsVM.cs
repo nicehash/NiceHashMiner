@@ -13,7 +13,6 @@ namespace NHM.Wpf.ViewModels.Settings
         public IReadOnlyList<string> CurrencyOptions { get; }
         public IEnumerable<string> LanguageOptions => Translations.GetAvailableLanguagesNames();
 
-        // TODO lang binding to config requires some arch changes
         public int SelectedLangIndex
         {
             get => Translations.GetCurrentIndex();
@@ -21,6 +20,7 @@ namespace NHM.Wpf.ViewModels.Settings
             {
                 var code = Translations.GetLanguageCodeFromIndex(value);
                 Translations.SelectedLanguage = code;
+                Config.Language = code;
             }
         }
 

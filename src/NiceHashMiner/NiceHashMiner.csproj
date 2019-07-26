@@ -38,7 +38,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;PRODUCTION_NEW</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;PRODUCTION_NEW;WPF</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>

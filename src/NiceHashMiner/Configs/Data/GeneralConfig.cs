@@ -17,8 +17,13 @@ namespace NiceHashMiner.Configs.Data
 
         public string Language
         {
+#if WPF
+            get;
+            set;
+#else
             get => TranslationsSettings.Instance.Language;
             set => TranslationsSettings.Instance.Language = value;
+#endif
         }
 
 
