@@ -12,8 +12,6 @@ using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Mining
 {
-    // TODO find a better name... this depends on the way we will use this. DeviceAlgorithm/MiningAlgorithm, PluginAlgorithmForDevice????
-    // AlgorithmContainer??? hold ComputeDevice? PluginContainer?
     public class AlgorithmContainer
     {
         public Algorithm Algorithm { get; private set; }
@@ -52,11 +50,9 @@ namespace NiceHashMiner.Mining
         {
             get
             {
-                if (Algorithm == null) return "";
-                var plugin = MinerPluginsManager.GetPluginWithUuid(Algorithm.MinerID);
-                if (plugin == null) return "";
-                var isIntegrated = plugin.IsIntegrated;
-                var minerName = plugin.Name + (isIntegrated ? "" : "(PLUGIN)");
+                if (PluginContainer == null) return "";
+                var isIntegrated = PluginContainer.IsIntegrated;
+                var minerName = PluginContainer.Name + (isIntegrated ? "" : "(PLUGIN)");
                 return minerName;
             }
         }

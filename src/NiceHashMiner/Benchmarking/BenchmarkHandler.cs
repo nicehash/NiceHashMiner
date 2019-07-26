@@ -79,7 +79,7 @@ namespace NiceHashMiner.Benchmarking
         private async Task BenchmarkAlgorithm(AlgorithmContainer algo)
         {
             BenchmarkManager.AddToStatusCheck(Device, algo);
-            var plugin = MinerPluginsManager.GetPluginWithUuid(algo.Algorithm.MinerID);
+            var plugin = algo.PluginContainer;
             var miner = plugin.CreateMiner();
             var miningPair = new MinerPlugin.MiningPair
             {
