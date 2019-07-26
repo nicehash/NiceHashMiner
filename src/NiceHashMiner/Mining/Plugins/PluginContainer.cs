@@ -141,7 +141,7 @@ namespace NiceHashMiner.Mining.Plugins
         // algos from and for the plugin
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> _cachedAlgorithms { get; } = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
         // algos for NiceHashMiner Client
-        public Dictionary<string, List<PluginAlgorithm>> _cachedNiceHashMinerAlgorithms { get; } = new Dictionary<string, List<PluginAlgorithm>>();
+        public Dictionary<string, List<AlgorithmContainer>> _cachedNiceHashMinerAlgorithms { get; } = new Dictionary<string, List<AlgorithmContainer>>();
 
         public bool InitPluginContainer()
         {
@@ -198,7 +198,7 @@ namespace NiceHashMiner.Mining.Plugins
                     var deviceUUID = deviceAlgosPair.Key.UUID;
                     var algos = deviceAlgosPair.Value
                         .Where(a => SupportedAlgorithmsFilter.IsSupported(a.IDs))
-                        .Select(a => new PluginAlgorithm(Name, a, Version))
+                        .Select(a => new AlgorithmContainer(a, this, AvailableDevices.GetDeviceWithUuid(deviceUUID)))
                         .ToList();
                     _cachedNiceHashMinerAlgorithms[deviceUUID] = algos;
                 }

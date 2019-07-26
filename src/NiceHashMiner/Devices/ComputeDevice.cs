@@ -68,7 +68,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public List<PluginAlgorithm> AlgorithmSettings { get; protected set; } = new List<PluginAlgorithm>();
+        public List<AlgorithmContainer> AlgorithmSettings { get; protected set; } = new List<AlgorithmContainer>();
 
         public List<PluginAlgorithmConfig> PluginAlgorithmSettings { get; protected set; } = new List<PluginAlgorithmConfig>();
 
@@ -197,7 +197,7 @@ namespace NiceHashMiner.Devices
             AlgorithmSettings = newList;
         }
 
-        public void RemovePluginAlgorithms(IEnumerable<PluginAlgorithm> algos)
+        public void RemovePluginAlgorithms(IEnumerable<AlgorithmContainer> algos)
         {
             foreach (var algo in algos)
             {
@@ -205,7 +205,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public void AddPluginAlgorithms(IEnumerable<PluginAlgorithm> algos)
+        public void AddPluginAlgorithms(IEnumerable<AlgorithmContainer> algos)
         {
             if(algos.Count() > 0) AlgorithmSettings.AddRange(algos);
         }
@@ -224,7 +224,7 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public PluginAlgorithm GetAlgorithm(string minerUUID, params AlgorithmType[] ids)
+        public AlgorithmContainer GetAlgorithm(string minerUUID, params AlgorithmType[] ids)
         {
             return AlgorithmSettings.Where(a => a.MinerUUID == minerUUID && a.IDs.Except(ids).Count() == 0).FirstOrDefault();
         }

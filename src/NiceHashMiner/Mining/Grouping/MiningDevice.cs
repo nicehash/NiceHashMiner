@@ -21,7 +21,7 @@ namespace NiceHashMiner.Mining.Grouping
         }
 
         public ComputeDevice Device { get; }
-        public List<PluginAlgorithm> Algorithms = new List<PluginAlgorithm>();
+        public List<AlgorithmContainer> Algorithms = new List<AlgorithmContainer>();
 
         public string GetMostProfitableString()
         {

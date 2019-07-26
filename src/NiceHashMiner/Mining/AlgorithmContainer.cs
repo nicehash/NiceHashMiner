@@ -8,25 +8,30 @@ using NHM.Common.Enums;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Mining.Plugins;
+using NiceHashMiner.Devices;
 
 namespace NiceHashMiner.Mining
 {
     // TODO find a better name... this depends on the way we will use this. DeviceAlgorithm/MiningAlgorithm, PluginAlgorithmForDevice????
     // AlgorithmContainer??? hold ComputeDevice? PluginContainer?
-    public class PluginAlgorithm
+    public class AlgorithmContainer
     {
         public Algorithm Algorithm { get; private set; }
+        
+        public PluginContainer PluginContainer { get; private set; }
 
-        public string PluginName { get; private set; }
+        public ComputeDevice ComputeDevice { get; private set; }
+
+        public string PluginName => PluginContainer?.Name ?? "N/A";
 
         public Version ConfigVersion { get; set; } = new Version(1, 0);
-        public Version PluginVersion { get; private set; } = new Version(1, 0);
+        public Version PluginVersion => PluginContainer?.Version;
 
-        public PluginAlgorithm(string pluginName, Algorithm algorithm, Version pluginVersion)
+        public AlgorithmContainer(Algorithm algorithm, PluginContainer pluginContainer, ComputeDevice computeDevice)
         {
-            PluginName = pluginName;
+            PluginContainer = pluginContainer;
             Algorithm = algorithm;
-            PluginVersion = pluginVersion;
+            ComputeDevice = computeDevice;
         }
 
         /// <summary>

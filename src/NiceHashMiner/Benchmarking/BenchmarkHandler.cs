@@ -18,7 +18,7 @@ namespace NiceHashMiner.Benchmarking
         CancellationTokenSource _stopBenchmark;
 
         private bool _startMiningAfterBenchmark;
-        private readonly Queue<PluginAlgorithm> _benchmarkAlgorithmQueue;
+        private readonly Queue<AlgorithmContainer> _benchmarkAlgorithmQueue;
         private readonly int _benchmarkAlgorithmsCount; 
         private readonly List<string> _benchmarkFailedAlgo = new List<string>();
         private readonly BenchmarkPerformanceType _performanceType;
@@ -27,7 +27,7 @@ namespace NiceHashMiner.Benchmarking
 
         public ComputeDevice Device { get; }
 
-        public BenchmarkHandler(ComputeDevice device, Queue<PluginAlgorithm> algorithms, BenchmarkPerformanceType performance, bool startMiningAfterBenchmark = false)
+        public BenchmarkHandler(ComputeDevice device, Queue<AlgorithmContainer> algorithms, BenchmarkPerformanceType performance, bool startMiningAfterBenchmark = false)
         {
             _stopBenchmark = new CancellationTokenSource();
             _startMiningAfterBenchmark = startMiningAfterBenchmark;
@@ -48,7 +48,7 @@ namespace NiceHashMiner.Benchmarking
 
         private async Task Benchmark()
         {
-            PluginAlgorithm currentAlgorithm = null;
+            AlgorithmContainer currentAlgorithm = null;
             while (_benchmarkAlgorithmQueue.Count > 0)
             {
                 try
@@ -76,7 +76,7 @@ namespace NiceHashMiner.Benchmarking
             BenchmarkManager.EndBenchmarkForDevice(Device, showFailed, startMining);
         }
 
-        private async Task BenchmarkAlgorithm(PluginAlgorithm algo)
+        private async Task BenchmarkAlgorithm(AlgorithmContainer algo)
         {
             BenchmarkManager.AddToStatusCheck(Device, algo);
             var plugin = MinerPluginsManager.GetPluginWithUuid(algo.Algorithm.MinerID);

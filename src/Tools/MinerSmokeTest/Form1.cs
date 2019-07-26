@@ -37,7 +37,7 @@ namespace MinerSmokeTest
             return rowData;
         }
 
-        public static object[] GetAlgorithmRowData(PluginAlgorithm a)
+        public static object[] GetAlgorithmRowData(AlgorithmContainer a)
         {
             object[] rowData = { a.Enabled, a.AlgorithmName, a.MinerBaseTypeName };
             return rowData;
@@ -120,8 +120,8 @@ namespace MinerSmokeTest
             var senderGrid = (DataGridView)sender;
             var row = senderGrid.Rows[e.RowIndex];
 
-            PluginAlgorithm algo;
-            if (row.Tag is PluginAlgorithm a)
+            AlgorithmContainer algo;
+            if (row.Tag is AlgorithmContainer a)
             {
                 algo = a;
             }

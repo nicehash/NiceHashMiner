@@ -12,7 +12,7 @@ namespace NiceHashMiner.Mining.Grouping
     {
         private const string Tag = "GroupSetupUtils";
 
-        public static bool IsAlgoMiningCapable(PluginAlgorithm algo)
+        public static bool IsAlgoMiningCapable(AlgorithmContainer algo)
         {
             return algo != null && algo.Enabled && algo.BenchmarkSpeed > 0;
         }
@@ -235,7 +235,7 @@ namespace NiceHashMiner.Mining.Grouping
             return ret;
         }
 
-        public void AddAlgorithms(List<PluginAlgorithm> algos)
+        public void AddAlgorithms(List<AlgorithmContainer> algos)
         {
             foreach (var algo in algos)
             {
