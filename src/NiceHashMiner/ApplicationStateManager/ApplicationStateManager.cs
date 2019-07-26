@@ -8,6 +8,7 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using NiceHashMiner.Utils;
+using System.Threading;
 
 namespace NiceHashMiner
 {
@@ -117,9 +118,14 @@ namespace NiceHashMiner
             return ret;
         }
 
-        // TODO this function is probably not at the right place now
-        // We call this when we change BTC and Workername and this is most likely wrong
-        public static void ResetNiceHashStatsCredentials()
+        // execute after 5seconds. Finish execution on last event after 5seconds
+        private static DelayedSingleExecActionTask _resetNiceHashStatsCredentialsDelayed = new DelayedSingleExecActionTask
+            (
+            ResetNiceHashStatsCredentials,
+            new TimeSpan(0,0,5)
+            );
+
+        static void ResetNiceHashStatsCredentials()
         {
             // check if we have valid credentials
             var state = GetCredentialsValidState();
@@ -159,7 +165,7 @@ namespace NiceHashMiner
             SetBTC(btc);
             if (!skipCredentialsSet)
             {
-                ResetNiceHashStatsCredentials();
+                _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
             }
             return SetResult.CHANGED;
         }
@@ -190,7 +196,7 @@ namespace NiceHashMiner
             SetWorker(workerName);
             if (!skipCredentialsSet)
             {
-                ResetNiceHashStatsCredentials();
+                _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
             }
             
             return SetResult.CHANGED;
@@ -224,7 +230,7 @@ namespace NiceHashMiner
             SetGroup(groupName);
             if (!skipCredentialsSet)
             {
-                ResetNiceHashStatsCredentials();
+                _resetNiceHashStatsCredentialsDelayed.ExecuteDelayed(CancellationToken.None);
             }
 
             return SetResult.CHANGED;

@@ -276,6 +276,7 @@
     <Compile Include="Stats\TimeFactor.cs" />
     <Compile Include="StratumService.cs" />
     <Compile Include="Utils\ArchiveHelpers.cs" />
+    <Compile Include="Utils\DelayedSingleExecActionTask.cs" />
     <Compile Include="Utils\FirewallRules.cs" />
     <Compile Include="Utils\NotifyPropertyChangedHelpers.cs" />
     <Compile Include="Utils\PInvokeHelpers.cs" />
