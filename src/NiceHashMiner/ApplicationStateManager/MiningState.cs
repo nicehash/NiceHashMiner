@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace NiceHashMiner
 {
-    class MiningState : INotifyPropertyChanged
+    public class MiningState : INotifyPropertyChanged
     {
         public static MiningState Instance { get; } = new MiningState();
 

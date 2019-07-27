@@ -35,35 +35,37 @@
                 <ResourceDictionary Source="Common/Styles.xaml" />
             </StackPanel.Resources>
 
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock Text="Service Location:" Margin="0,0,10,0" />
-                <ComboBox Width="160" ItemsSource="{Binding ServiceLocations}" SelectedIndex="{Binding ServiceLocationIndex}" />
-            </StackPanel>
+            <StackPanel IsEnabled="{Binding State.IsNotBenchmarkingOrMining}">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Service Location:" Margin="0,0,10,0" />
+                    <ComboBox Width="160" ItemsSource="{Binding ServiceLocations}" SelectedIndex="{Binding ServiceLocationIndex}" />
+                </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock Text="Bitcoin Address:" Margin="0,0,10,0" />
-                <TextBox Width="250" Style="{StaticResource InvalidTextBox}">
-                    <TextBox.Text>
-                        <Binding Path="BtcAddress">
-                            <Binding.ValidationRules>
-                                <validators:BtcAddressValidator />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
-            </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Bitcoin Address:" Margin="0,0,10,0" />
+                    <TextBox Width="250" Style="{StaticResource InvalidTextBox}">
+                        <TextBox.Text>
+                            <Binding Path="BtcAddress">
+                                <Binding.ValidationRules>
+                                    <validators:BtcAddressValidator />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="5">
-                <TextBlock Text="Worker Name:" Margin="0,0,10,0" />
-                <TextBox Width="75" Style="{StaticResource InvalidTextBox}">
-                    <TextBox.Text>
-                        <Binding Path="WorkerName">
-                            <Binding.ValidationRules>
-                                <validators:WorkerValidator />
-                            </Binding.ValidationRules>
-                        </Binding>
-                    </TextBox.Text>
-                </TextBox>
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Worker Name:" Margin="0,0,10,0" />
+                    <TextBox Width="75" Style="{StaticResource InvalidTextBox}">
+                        <TextBox.Text>
+                            <Binding Path="WorkerName">
+                                <Binding.ValidationRules>
+                                    <validators:WorkerValidator />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
             </StackPanel>
 
             <TextBlock Margin="5,0">
@@ -152,11 +154,11 @@
         </Grid>
 
         <StackPanel Grid.Row="1" Grid.Column="2" Width="75" Margin="10">
-            <Button Content="Benchmark" Click="BenchButton_Click" Margin="0,0,0,2" />
-            <Button Content="Settings" Click="SettingsButton_Click" Margin="0,2" />
-            <Button Content="Start All" Click="StartButton_OnClick" Margin="0,2" />
-            <Button Content="Stop All" Click="StopButton_OnClick" Margin="0,2" />
-            <Button Content="Plugins" Click="PluginButton_Click" Margin="0,2" />
+            <Button Content="Benchmark" IsEnabled="{Binding State.IsNotBenchmarkingOrMining}" Click="BenchButton_Click" Margin="0,0,0,2" />
+            <Button Content="Settings" IsEnabled="{Binding State.IsNotBenchmarkingOrMining}" Click="SettingsButton_Click" Margin="0,2" />
+            <Button Content="Start All" IsEnabled="{Binding State.AnyDeviceStopped}" Click="StartButton_OnClick" Margin="0,2" />
+            <Button Content="Stop All" IsEnabled="{Binding State.AnyDeviceRunning}" Click="StopButton_OnClick" Margin="0,2" />
+            <Button Content="Plugins" IsEnabled="{Binding State.IsNotBenchmarkingOrMining}" Click="PluginButton_Click" Margin="0,2" />
             <Button Content="Help" Margin="0,2" />
         </StackPanel>
 

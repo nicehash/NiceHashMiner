@@ -164,6 +164,8 @@ namespace NHM.Wpf.ViewModels
             set => ConfigManager.GeneralConfig.WorkerName = value;
         }
 
+        public MiningState State => MiningState.Instance;
+
         public MainVM()
         {
             //Devices = new ObservableCollection<DeviceInfo>
