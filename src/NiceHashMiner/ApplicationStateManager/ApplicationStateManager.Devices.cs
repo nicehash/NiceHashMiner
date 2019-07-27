@@ -1,6 +1,7 @@
 using NiceHashMiner.Devices;
 using NiceHashMiner.Stats;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace NiceHashMiner
@@ -53,6 +54,12 @@ namespace NiceHashMiner
             // finally refresh state
             RefreshDeviceListView?.Invoke(null, null);
             NiceHashStats.StateChanged();
+        }
+
+        private static void DeviceOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (sender is ComputeDevice dev && e.PropertyName == nameof(ComputeDevice.Enabled))
+                SetDeviceEnabledState(sender, (dev.B64Uuid, dev.Enabled));
         }
     }
 }

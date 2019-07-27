@@ -1,16 +1,17 @@
-﻿using NiceHashMiner.Configs;
+﻿using NHM.Common;
+using NHM.Common.Device;
+using NHM.Common.Enums;
+using NHM.DeviceMonitoring;
+using NHM.UUID;
+using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
 using System.Collections.Generic;
 using System.Linq;
-using NiceHashMiner.Algorithms;
-using NHM.Common.Enums;
-using NHM.Common.Device;
-using NHM.UUID;
-using NHM.DeviceMonitoring;
 
 namespace NiceHashMiner.Devices
 {
-    public class ComputeDevice
+    public class ComputeDevice : NotifyChangedBase
     {
         // migrate ComputeDevice to BaseDevice
         public BaseDevice BaseDevice { get; private set; }
@@ -23,11 +24,24 @@ namespace NiceHashMiner.Devices
         // to identify equality;
         public string Name => BaseDevice?.Name ?? "-1";
 
+        public string FullName => GetFullName();
+
         public int Index { get; private set; } // For socket control, unique
 
         // name count is the short name for displaying in moning groups
         public string NameCount { get; private set; }
-        public bool Enabled { get; protected set; }
+
+        private bool _enabled = true;
+        public bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                if (value == _enabled) return;
+                _enabled = value;
+                OnPropertyChanged();
+            }
+        }
 
         // disabled state check
         public bool IsDisabled => (!Enabled || State == DeviceState.Disabled);

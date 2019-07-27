@@ -172,6 +172,11 @@ namespace NHM.Wpf
             return GetLanguageIndexFromCode(_selectedLanguage);
         }
 
+        public static string Tr(object obj)
+        {
+            return Tr(obj.ToString());
+        }
+
         // Tr Short for translate
         public static string Tr(string text)
         {

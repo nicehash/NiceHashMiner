@@ -78,6 +78,7 @@
     <Compile Include="ViewModels\Converters\NulBoolToBoolConverter.cs" />
     <Compile Include="ViewModels\Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
+    <Compile Include="ViewModels\Models\BaseCommand.cs" />
     <Compile Include="ViewModels\Models\LoadProgress.cs" />
     <Compile Include="ViewModels\Models\Placeholders\PluginPackageInfo.cs" />
     <Compile Include="ViewModels\Models\Placeholders\PluginPackageInfoCR.cs" />
