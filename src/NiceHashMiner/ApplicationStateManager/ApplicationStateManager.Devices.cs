@@ -3,6 +3,7 @@ using NiceHashMiner.Stats;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using NiceHashMiner.Configs;
 
 namespace NiceHashMiner
 {
@@ -47,7 +48,8 @@ namespace NiceHashMiner
                 {
                     StopDevice(dev);
                 }
-                dev.SetEnabled(enabled);
+
+                dev.Enabled = enabled;
             }
             Configs.ConfigManager.GeneralConfigFileCommit();
 
@@ -59,7 +61,11 @@ namespace NiceHashMiner
         private static void DeviceOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (sender is ComputeDevice dev && e.PropertyName == nameof(ComputeDevice.Enabled))
-                SetDeviceEnabledState(sender, (dev.B64Uuid, dev.Enabled));
+            {
+                StopDevice(dev);
+                ConfigManager.GeneralConfigFileCommit();
+                NiceHashStats.StateChanged();
+            }
         }
     }
 }

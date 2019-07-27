@@ -120,7 +120,7 @@ namespace NiceHashMiner.Forms.Components
         {
             if (e.Item.Tag is ComputeDevice cDevice)
             {
-                cDevice.SetEnabled(e.Item.Checked);
+                cDevice.Enabled = e.Item.Checked;
 
                 if (SaveToGeneralConfig)
                 {

@@ -112,7 +112,9 @@ namespace NiceHashMiner
                         cudaCount++;
                         nameCount = $"GPU#{cudaCount}";
                     }
-                    AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
+                    var cd = new ComputeDevice(cDev, index++, nameCount);
+                    cd.PropertyChanged += DeviceOnPropertyChanged;
+                    AvailableDevices.AddDevice(cd);
                 }
                 AvailableDevices.UncheckCpuIfGpu();
                 FailedRamCheck = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);

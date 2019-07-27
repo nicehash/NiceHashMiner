@@ -39,6 +39,7 @@ namespace NiceHashMiner.Devices
             {
                 if (value == _enabled) return;
                 _enabled = value;
+                State = value ? DeviceState.Stopped : DeviceState.Disabled;
                 OnPropertyChanged();
             }
         }
@@ -184,13 +185,7 @@ namespace NiceHashMiner.Devices
             BaseDevice = baseDevice;
             Index = index;
             NameCount = nameCount;
-            SetEnabled(true);
-        }
-
-        public void SetEnabled(bool isEnabled)
-        {
-            Enabled = isEnabled;
-            State = isEnabled ? DeviceState.Stopped : DeviceState.Disabled;
+            Enabled = true;
         }
 
         // combines long and short name
@@ -207,7 +202,7 @@ namespace NiceHashMiner.Devices
         {
             // TODO save removed algorithm configs
             var toRemove = AlgorithmSettings.Where(algo => algo is PluginAlgorithm pAlgo && pAlgo.BaseAlgo.MinerID == pluginUUID);
-            if (toRemove.Count() == 0) return;
+            if (!toRemove.Any()) return;
             var newList = AlgorithmSettings.Where(algo => toRemove.Contains(algo) == false).ToList();
             AlgorithmSettings = newList;
         }
@@ -222,14 +217,14 @@ namespace NiceHashMiner.Devices
 
         public void AddPluginAlgorithms(IEnumerable<Algorithm> algos)
         {
-            if(algos.Count() > 0) AlgorithmSettings.AddRange(algos);
+            AlgorithmSettings.AddRange(algos);
         }
 
         public void CopyBenchmarkSettingsFrom(ComputeDevice copyBenchCDev)
         {
             foreach (var copyFromAlgo in copyBenchCDev.AlgorithmSettings)
             { 
-                var setAlgo = AlgorithmSettings.Where(a => a.AlgorithmStringID == copyFromAlgo.AlgorithmStringID).FirstOrDefault();
+                var setAlgo = AlgorithmSettings.FirstOrDefault(a => a.AlgorithmStringID == copyFromAlgo.AlgorithmStringID);
                 if (setAlgo != null)
                 {
                     setAlgo.BenchmarkSpeed = copyFromAlgo.BenchmarkSpeed;
@@ -241,7 +236,7 @@ namespace NiceHashMiner.Devices
 
         public Algorithm GetAlgorithm(string minerUUID, params AlgorithmType[] ids)
         {
-            return AlgorithmSettings.Where(a => a.MinerUUID == minerUUID && a.IDs.Except(ids).Count() == 0).FirstOrDefault();
+            return AlgorithmSettings.FirstOrDefault(a => a.MinerUUID == minerUUID && !a.IDs.Except(ids).Any());
         }
 
         #region Config Setters/Getters
@@ -251,7 +246,7 @@ namespace NiceHashMiner.Devices
             if (config == null || config.DeviceUUID != Uuid) return;
             // set device settings
             //Enabled = config.Enabled;
-            SetEnabled(config.Enabled);
+            Enabled = config.Enabled;
             MinimumProfit = config.MinimumProfit;
 
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW
@@ -275,8 +270,7 @@ namespace NiceHashMiner.Devices
             {
                 var pluginConfAlgorithmIDs = pluginConf.GetAlgorithmIDs();
                 var pluginAlgo = pluginAlgos
-                    .Where(pAlgo => pluginConf.PluginUUID == pAlgo.BaseAlgo.MinerID && pluginConfAlgorithmIDs.Except(pAlgo.BaseAlgo.IDs).Count() == 0)
-                    .FirstOrDefault();
+                    .FirstOrDefault(pAlgo => pluginConf.PluginUUID == pAlgo.BaseAlgo.MinerID && !pluginConfAlgorithmIDs.Except(pAlgo.BaseAlgo.IDs).Any());
                 if (pluginAlgo == null) continue;
                 // set plugin algo
                 pluginAlgo.Speeds = pluginConf.Speeds;
@@ -335,7 +329,7 @@ namespace NiceHashMiner.Devices
         public bool HasEnabledAlgorithmsWithReBenchmark()
         {
             var reBenchmarks = AlgorithmSettings.Where(algo => algo.Enabled && algo.IsReBenchmark && !algo.BenchmarkNeeded);
-            return reBenchmarks.Count() > 0;
+            return reBenchmarks.Any();
         }
 
         public bool AnyAlgorithmEnabled()

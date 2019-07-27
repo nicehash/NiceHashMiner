@@ -54,8 +54,8 @@ namespace NiceHashMiner.Devices
             }
         }
 
-        public static int NumDetectedNvDevs => _devices.Where(d => d.DeviceType == DeviceType.NVIDIA).Count();
-        public static int NumDetectedAmdDevs => _devices.Where(d => d.DeviceType == DeviceType.AMD).Count();
+        public static int NumDetectedNvDevs => _devices.Count(d => d.DeviceType == DeviceType.NVIDIA);
+        public static int NumDetectedAmdDevs => _devices.Count(d => d.DeviceType == DeviceType.AMD);
 
         internal static void AddDevice(ComputeDevice dev)
         {
@@ -101,7 +101,7 @@ namespace NiceHashMiner.Devices
 
             foreach (var dev in Devices.Where(d => d.DeviceType == DeviceType.CPU))
             {
-                dev.SetEnabled(false);
+                dev.Enabled = false;
             }
         }
     }
