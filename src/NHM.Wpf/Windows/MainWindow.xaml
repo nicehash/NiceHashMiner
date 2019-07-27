@@ -82,6 +82,7 @@
 
             <Grid.Resources>
                 <converters:DoubleToStringConverter x:Key="DToStr" />
+                <converters:TranslatingConverter x:Key="TrConv" />
                 <CollectionViewSource x:Key="GrpSrc" Source="{Binding Devices}" IsLiveGroupingRequested="True">
                     <CollectionViewSource.GroupDescriptions>
                         <PropertyGroupDescription PropertyName="Dev.State" />
@@ -103,7 +104,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Binding="{Binding Dev.FullName}" Header="Device"/>
-                    <DataGridTextColumn Binding="{Binding Dev.State}" Header="Status"/>
+                    <DataGridTextColumn Binding="{Binding Dev.State, Converter={StaticResource TrConv}}" Header="Status"/>
                     <DataGridTextColumn Binding="{Binding Dev.Temp, Converter={StaticResource DToStr}}" Header="Temp (C)"/>
                     <DataGridTextColumn Binding="{Binding Dev.Load, Converter={StaticResource DToStr}}" Header="Load (%)"/>
                     <DataGridTextColumn Binding="{Binding Dev.FanSpeed, Converter={StaticResource DToStr}}" Header="RPM"/>
@@ -129,7 +130,7 @@
                                         <ControlTemplate TargetType="GroupItem">
                                             <Expander IsExpanded="True">
                                                 <Expander.Header>
-                                                    <TextBlock Text="{Binding Name}" />
+                                                    <TextBlock Text="{Binding Name, Converter={StaticResource TrConv}}" />
                                                 </Expander.Header>
                                                 <Expander.Content>
                                                     <ItemsPresenter />

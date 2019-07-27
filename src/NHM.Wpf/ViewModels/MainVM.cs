@@ -78,8 +78,6 @@ namespace NHM.Wpf.ViewModels
                 }
             }
 
-            public string StateString => Translations.Tr(Dev.State);
-
             public string ButtonLabel
             {
                 get
@@ -98,8 +96,6 @@ namespace NHM.Wpf.ViewModels
                 }
             }
 
-            public DeviceState State => Dev.State;
-
             public ICommand StartStopCommand { get; }
 
             public DeviceData(ComputeDevice dev)
@@ -115,9 +111,7 @@ namespace NHM.Wpf.ViewModels
             {
                 if (e.PropertyName == nameof(Dev.State))
                 {
-                    OnPropertyChanged(nameof(StateString));
                     OnPropertyChanged(nameof(ButtonLabel));
-                    OnPropertyChanged(nameof(State));
                 }
             }
 
@@ -128,7 +122,7 @@ namespace NHM.Wpf.ViewModels
                 Dev.OnPropertyChanged(nameof(Dev.FanSpeed));
             }
 
-            private void StartStopClick(object obj)
+            private void StartStopClick(object param)
             {
                 // TODO
             }

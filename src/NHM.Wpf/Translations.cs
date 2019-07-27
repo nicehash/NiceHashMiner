@@ -174,7 +174,7 @@ namespace NHM.Wpf
 
         public static string Tr(object obj)
         {
-            return Tr(obj.ToString());
+            return obj == null ? "" : Tr(obj.ToString());
         }
 
         // Tr Short for translate
