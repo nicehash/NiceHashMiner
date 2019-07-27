@@ -77,7 +77,7 @@ namespace LolMinerBeam
             return filteredAlgorithms;
         }
 
-#error miner device mappings is not set
+#warning miner device mappings is not set
         protected override MinerBase CreateMinerBase()
         {
             return new LolMinerBeam(PluginUUID);

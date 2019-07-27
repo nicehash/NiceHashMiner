@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using NHM.Common;
+using NHM.Wpf.ViewModels.Models.Placeholders;
 using NiceHashMiner;
 using NiceHashMiner.Configs;
 
@@ -84,6 +87,11 @@ namespace NHM.Wpf.ViewModels
                 new DeviceInfo(true, "GPU#2 EVGA GeForce GTX 1080 Ti", 54, 0, 1150, "36 / 27 / 3"),
 
             };
+        }
+
+        public async Task InitializeNhm(IStartupLoader sl)
+        {
+
         }
     }
 }

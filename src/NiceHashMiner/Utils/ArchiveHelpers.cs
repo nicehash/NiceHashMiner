@@ -13,7 +13,7 @@ namespace NiceHashMiner.Utils
 
         #region Extract
 
-        public static Task<bool> ExtractFileAsync(string zipLocation, string unzipLocation, IProgress<int> progress, CancellationToken stop)
+        public static Task<bool> ExtractFileAsync(string zipLocation, string unzipLocation, IProgress<double> progress, CancellationToken stop)
         {
             if (zipLocation.EndsWith(".7z"))
             {
@@ -24,7 +24,7 @@ namespace NiceHashMiner.Utils
         }
 
 
-        public static async Task<bool> UnzipFileAsync(string zipLocation, string unzipLocation, IProgress<int> progress, CancellationToken stop)
+        public static async Task<bool> UnzipFileAsync(string zipLocation, string unzipLocation, IProgress<double> progress, CancellationToken stop)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace NiceHashMiner.Utils
                         if (isDirectory) continue;
 
                         var prog = ((extractedEntries / entriesCount) * 100.0f);
-                        progress?.Report((int)prog);
+                        progress?.Report(prog);
 
                         var extractPath = Path.Combine(unzipLocation, entry.FullName);
                         var dirPath = Path.GetDirectoryName(extractPath);
@@ -67,7 +67,7 @@ namespace NiceHashMiner.Utils
             }
         }
 
-        public static async Task<bool> Un7zipFileAsync(string fileLocation, string extractLocation, IProgress<int> progress, CancellationToken stop)
+        public static async Task<bool> Un7zipFileAsync(string fileLocation, string extractLocation, IProgress<double> progress, CancellationToken stop)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace NiceHashMiner.Utils
                             }
                         }
                         var prog = ((extractedEntries / entriesCount) * 100.0f);
-                        progress?.Report((int)prog);
+                        progress?.Report(prog);
                     }
                 }
                 return true;

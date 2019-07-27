@@ -155,7 +155,7 @@ namespace NiceHashMiner.Mining.Plugins
             }
         }
 
-        public static async Task DownloadMissingIntegratedMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
+        public static async Task DownloadMissingIntegratedMinersBins(IProgress<(string loadMessageText, double prog)> progress, CancellationToken stop)
         {
             var checkPlugins = PluginContainer.PluginContainers
                 .Where(p => p.IsIntegrated)
@@ -165,15 +165,15 @@ namespace NiceHashMiner.Mining.Plugins
 
             foreach (var plugin in checkPlugins)
             {
-                var urls = plugin.GetMinerBinsUrls();
+                var urls = plugin.GetMinerBinsUrls().ToList();
                 var missingFiles = plugin.CheckBinaryPackageMissingFiles();
-                var hasMissingFiles = missingFiles.Count() > 0;
-                var hasUrls = urls.Count() > 0;
+                var hasMissingFiles = missingFiles.Any();
+                var hasUrls = urls.Any();
                 if (hasMissingFiles && hasUrls && !plugin.IsBroken)
                 {
-                    var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
-                    var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
-                    await DownloadInternalBins(plugin.PluginUUID, urls.ToList(), downloadProgress, unzipProgress, stop);
+                    var downloadProgress = new Progress<double>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
+                    var unzipProgress = new Progress<double>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
+                    await DownloadInternalBins(plugin.PluginUUID, urls, downloadProgress, unzipProgress, stop);
                 }
             }
         }
@@ -345,7 +345,7 @@ namespace NiceHashMiner.Mining.Plugins
 
         public static PluginContainer GetPluginWithUuid(string pluginUuid)
         {
-            var ret = PluginContainer.PluginContainers.Where(p => p.PluginUUID == pluginUuid).FirstOrDefault();
+            var ret = PluginContainer.PluginContainers.FirstOrDefault(p => p.PluginUUID == pluginUuid);
             return ret;
         }
 
@@ -362,7 +362,7 @@ namespace NiceHashMiner.Mining.Plugins
             // TODO loading
         }
 
-        public static async Task DownloadInternalBins(string pluginUUID, List<string> urls, IProgress<int> downloadProgress, IProgress<int> unzipProgress, CancellationToken stop)
+        public static async Task DownloadInternalBins(string pluginUUID, List<string> urls, IProgress<double> downloadProgress, IProgress<double> unzipProgress, CancellationToken stop)
         {
             var installingPluginBinsPath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins");
             try
@@ -400,12 +400,12 @@ namespace NiceHashMiner.Mining.Plugins
             }
         }
 
-        public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, IProgress<Tuple<ProgressState, int>> progress, CancellationToken stop)
+        public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, IProgress<Tuple<ProgressState, double>> progress, CancellationToken stop)
         {
-            var downloadPluginProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.DownloadingPlugin, perc)));
-            var zipProgressPluginChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.ExtractingPlugin, perc)));
-            var downloadMinerProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.DownloadingMiner, perc)));
-            var zipProgressMinerChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.ExtractingMiner, perc)));
+            var downloadPluginProgressChangedEventHandler = new Progress<double>(perc => progress?.Report(Tuple.Create(ProgressState.DownloadingPlugin, perc)));
+            var zipProgressPluginChangedEventHandler = new Progress<double>(perc => progress?.Report(Tuple.Create(ProgressState.ExtractingPlugin, perc)));
+            var downloadMinerProgressChangedEventHandler = new Progress<double>(perc => progress?.Report(Tuple.Create(ProgressState.DownloadingMiner, perc)));
+            var zipProgressMinerChangedEventHandler = new Progress<double>(perc => progress?.Report(Tuple.Create(ProgressState.ExtractingMiner, perc)));
 
             const string installingPrefix = "installing_";
             var installingPluginPath = Path.Combine(Paths.MinerPluginsPath(), $"{installingPrefix}{plugin.PluginUUID}");

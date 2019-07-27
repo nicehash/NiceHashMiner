@@ -1,21 +1,28 @@
-﻿using System;
-using System.Collections;
+﻿using NHM.Wpf.ViewModels.Settings;
+using NHM.Wpf.Windows.Settings.Controls;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Documents;
-using NHM.Wpf.ViewModels.Settings;
-using NHM.Wpf.Windows.Settings.Controls;
 using static NHM.Wpf.Translations;
 
 namespace NHM.Wpf.Windows.Common
 {
     public static class WindowUtils
     {
+        public static T AssertViewModel<T>(FrameworkElement fe) where T : class, new()
+        {
+            if (!(fe.DataContext is T vm))
+            {
+                vm = new T();
+                fe.DataContext = vm;
+            }
+
+            return vm;
+        }
+
+        #region Translations
+
         public static void Translate(Panel p)
         {
             foreach (UIElement child in p.Children)
@@ -151,5 +158,7 @@ namespace NHM.Wpf.Windows.Common
                     break;
             }
         }
+
+        #endregion
     }
 }

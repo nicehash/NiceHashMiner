@@ -1,4 +1,5 @@
 ﻿using System;
+using NHM.Common;
 using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Models.Placeholders;
 

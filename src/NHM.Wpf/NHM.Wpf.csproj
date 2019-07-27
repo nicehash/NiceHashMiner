@@ -47,6 +47,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -75,7 +78,6 @@
     <Compile Include="ViewModels\Converters\NulBoolToBoolConverter.cs" />
     <Compile Include="ViewModels\Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
-    <Compile Include="ViewModels\Models\Placeholders\IStartupLoader.cs" />
     <Compile Include="ViewModels\Models\LoadProgress.cs" />
     <Compile Include="ViewModels\Models\Placeholders\PluginPackageInfo.cs" />
     <Compile Include="ViewModels\Models\Placeholders\PluginPackageInfoCR.cs" />

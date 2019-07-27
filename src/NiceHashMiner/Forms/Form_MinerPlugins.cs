@@ -324,7 +324,7 @@ namespace NiceHashMiner.Forms
                 pluginInfoDetails.StatusText = "Pending Install";
 
 
-                var downloadAndInstallUpdate = new Progress<Tuple<ProgressState, int>>(statePerc  =>
+                var downloadAndInstallUpdate = new Progress<Tuple<ProgressState, double>>(statePerc  =>
                 {
                     var state = statePerc.Item1;
                     var progress = statePerc.Item2;
@@ -351,11 +351,11 @@ namespace NiceHashMiner.Forms
                     // SafeInvoke is not needed inside a Progress 
                     //FormHelpers.SafeInvoke(pluginInfoItem, () => {
                         pluginInfoItem.StatusText = statusText;
-                        pluginInfoItem.ProgressBarValue = progress;
+                        pluginInfoItem.ProgressBarValue = (int) progress;
                     //});
                     //FormHelpers.SafeInvoke(pluginInfoDetails, () => {
                         pluginInfoDetails.StatusText = statusText;
-                        pluginInfoDetails.ProgressBarValue = progress;
+                        pluginInfoDetails.ProgressBarValue = (int) progress;
                     //});
                 });
                 await MinerPluginsManager.DownloadAndInstall(pluginPackageInfo, downloadAndInstallUpdate, cancelInstall.Token);

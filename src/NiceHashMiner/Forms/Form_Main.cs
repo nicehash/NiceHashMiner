@@ -293,15 +293,15 @@ namespace NiceHashMiner
                 loadingControl.Location = location;
                 loadingControl.BringToFront();
 
-                var progress = new Progress<(string loadMessageText, int perc)>(p =>
+                var progress = new Progress<(string loadMessageText, double perc)>(p =>
                 {
-                    loadingControl.Progress = p.perc;
+                    loadingControl.Progress = (int) p.perc;
                     loadingControl.LoadMessageText = p.loadMessageText;
                 });
 
-                var progressDownload = new Progress<(string loadMessageText, int perc)>(p =>
+                var progressDownload = new Progress<(string loadMessageText, double perc)>(p =>
                 {
-                    loadingControl.ProgressSecond = p.perc;
+                    loadingControl.ProgressSecond = (int) p.perc;
                     loadingControl.LoadMessageTextSecond = p.loadMessageText;
                 });
                 await ApplicationStateManager.InitializeManagersAndMiners(loadingControl, progress, progressDownload);

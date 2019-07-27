@@ -4,6 +4,7 @@ using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using NHM.Common;
 using NHM.Wpf.ViewModels;
 using NHM.Wpf.ViewModels.Models.Placeholders;
 using NiceHashMiner;
@@ -16,9 +17,13 @@ namespace NHM.Wpf.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
+        private readonly MainVM _vm;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            _vm = WindowUtils.AssertViewModel<MainVM>(this);
 
             Translations.LanguageChanged += TranslationsOnLanguageChanged;
             TranslationsOnLanguageChanged(null, null);
@@ -98,8 +103,7 @@ namespace NHM.Wpf.Windows
             startup.CanClose = false;
             startup.Show();
 
-            if (startup.DataContext is IStartupLoader slvm)
-                await FakeLoad(slvm);
+            await _vm.InitializeNhm(startup.StartupLoader);
 
             startup.CanClose = true;
 

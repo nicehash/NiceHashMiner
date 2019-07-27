@@ -25,7 +25,29 @@ namespace NiceHashMiner
 
         public static bool FailedRamCheck { get; internal set; }
 
-        public static async Task InitializeManagersAndMiners(StartupLoadingControl loadingControl, IProgress<(string loadMessageText, int prog)> progress, IProgress<(string loadMessageText, int prog)> progressDownload)
+        private class LoaderConverter : IStartupLoader
+        {
+            public IProgress<(string, double)> PrimaryProgress { get; }
+            public IProgress<(string, double)> SecondaryProgress { get; }
+            public string PrimaryTitle { get; set; }
+            public string SecondaryTitle { get; set; }
+            public bool SecondaryVisible { get; set; }
+
+            public LoaderConverter(IProgress<(string, double)> prog, IProgress<(string, double)> prog2)
+            {
+                PrimaryProgress = prog;
+                SecondaryProgress = prog2;
+            }
+        }
+
+        public static Task InitializeManagersAndMiners(StartupLoadingControl loadingControl,
+            IProgress<(string loadMessageText, double prog)> progress,
+            IProgress<(string loadMessageText, double prog)> progressDownload)
+        {
+            return InitializeManagersAndMiners(new LoaderConverter(progress, progressDownload));
+        }
+
+        public static async Task InitializeManagersAndMiners(IStartupLoader loader)
         {
             try
             {
@@ -40,8 +62,8 @@ namespace NiceHashMiner
                 });
                 // STEP
                 // Checking System Memory
-                progress?.Report((Tr("Checking System Specs"), nextProgPerc()));
-                await Task.Run(() => SystemSpecs.QueryWin32_OperatingSystemDataAndLog());
+                loader.PrimaryProgress.Report((Tr("Checking System Specs"), nextProgPerc()));
+                await Task.Run(SystemSpecs.QueryWin32_OperatingSystemDataAndLog);
 
                 // TODO extract in function
                 #region Device Detection
@@ -63,7 +85,7 @@ namespace NiceHashMiner
                 };
                 var devDetectionProgress = new Progress<DeviceDetectionStep>(step => {
                     var msg = detectionStepMessage(step);
-                    progress?.Report((msg, nextProgPerc()));
+                    loader.PrimaryProgress.Report((msg, nextProgPerc()));
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
                 // add devices
@@ -115,7 +137,7 @@ namespace NiceHashMiner
                 DeviceMonitorManager.DisableDevicePowerModeSettings = true;
                 ConfigManager.GeneralConfig.DisableDevicePowerModeSettings = true;
 #endif
-                progress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));
+                loader.PrimaryProgress.Report((Tr("Initializing device monitoring"), nextProgPerc()));
                 var monitors = await DeviceMonitorManager.GetDeviceMonitors(AvailableDevices.Devices.Select(d => d.BaseDevice), detectionResult.IsDCHDriver);
                 foreach (var monitor in monitors)
                 {
@@ -124,11 +146,11 @@ namespace NiceHashMiner
                 }
                 // now init device settings
                 ConfigManager.InitDeviceSettings();
-#endregion Device Detection
+                #endregion Device Detection
 
                 // STEP
                 // load plugins
-                progress?.Report((Tr("Loading miner plugins..."), nextProgPerc()));
+                loader.PrimaryProgress.Report((Tr("Loading miner plugins..."), nextProgPerc()));
                 // Plugin Loading
                 MinerPluginsManager.LoadMinerPlugins();
                 // commit again benchmarks after loading plugins
@@ -139,18 +161,18 @@ namespace NiceHashMiner
 
                 // STEP
                 // connect to nhmws
-                progress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
+                loader.PrimaryProgress.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
                 // Init ws connection
                 NiceHashStats.StartConnection(Nhmws.NhmSocketAddress);
 
                 // STEP
                 // disable windows error reporting
-                progress?.Report((Tr("Setting Windows error reporting..."), nextProgPerc()));
+                loader.PrimaryProgress.Report((Tr("Setting Windows error reporting..."), nextProgPerc()));
                 Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
 
                 // STEP
                 // Nvidia p0
-                progress?.Report((Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
+                loader.PrimaryProgress.Report((Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
                 if (ConfigManager.GeneralConfig.NVIDIAP0State && AvailableDevices.HasNvidia)
                 {
                     Helpers.SetNvidiaP0State();
@@ -161,13 +183,13 @@ namespace NiceHashMiner
                 var hasMissingMinerBins = MinerPluginsManager.GetMissingMiners().Count > 0;
                 if (hasMissingMinerBins)
                 {
-                    loadingControl.LoadTitleTextSecond = Tr("Downloading Miner Binaries");
-                    loadingControl.ShowSecondProgressBar = true;
+                    loader.SecondaryTitle = Tr("Downloading Miner Binaries");
+                    loader.SecondaryVisible = true;
 
-                    progress?.Report((Tr("Downloading Miner Binaries..."), nextProgPerc()));
-                    await MinerPluginsManager.DownloadMissingIntegratedMinersBins(progressDownload, ExitApplication.Token);
+                    loader.PrimaryProgress.Report((Tr("Downloading Miner Binaries..."), nextProgPerc()));
+                    await MinerPluginsManager.DownloadMissingIntegratedMinersBins(loader.SecondaryProgress, ExitApplication.Token);
                     //await MinersDownloader.MinersDownloadManager.DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(progressDownload, ExitApplication.Token);
-                    loadingControl.ShowSecondProgressBar = false;
+                    loader.SecondaryVisible = false;
                     if (ExitApplication.IsCancellationRequested) return;
                 }
                 // re-check after download we should have all miner files
@@ -186,13 +208,13 @@ namespace NiceHashMiner
 
                 // STEP
                 // VC_REDIST check
-                progress?.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
+                loader.PrimaryProgress.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
                 VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
 
                 // STEP
                 if (FirewallRules.RunFirewallRulesOnStartup)
                 {
-                    progress?.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
+                    loader.PrimaryProgress.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
                     if (FirewallRules.IsFirewallRulesOutdated())
                     {
                         // requires UAC
@@ -202,12 +224,12 @@ namespace NiceHashMiner
                 }
                 else
                 {
-                    progress?.Report((Tr("Skipping Firewall Rules..."), nextProgPerc()));
+                    loader.PrimaryProgress.Report((Tr("Skipping Firewall Rules..."), nextProgPerc()));
                 }
 
                 // STEP
                 // Cross reference plugin indexes
-                progress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
+                loader.PrimaryProgress.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
             }

@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NHM.Wpf.ViewModels;
+using NHM.Wpf.ViewModels.Models.Placeholders;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using NHM.Common;
 
 namespace NHM.Wpf.Windows
 {
@@ -21,10 +12,22 @@ namespace NHM.Wpf.Windows
     public partial class StartupLoadingWindow : Window
     {
         public bool CanClose { get; set; } = true;
+        public IStartupLoader StartupLoader { get; }
 
         public StartupLoadingWindow()
         {
             InitializeComponent();
+
+            if (DataContext is StartupLoadingVM vm)
+            {
+                StartupLoader = vm;
+            }
+            else
+            {
+                vm = new StartupLoadingVM();
+                DataContext = vm;
+                StartupLoader = vm;
+            }
         }
 
         private void StartupLoadingWindow_OnClosing(object sender, CancelEventArgs e)

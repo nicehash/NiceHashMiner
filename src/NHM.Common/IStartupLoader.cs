@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NHM.Wpf.ViewModels.Models.Placeholders
+namespace NHM.Common
 {
     public interface IStartupLoader
     {
