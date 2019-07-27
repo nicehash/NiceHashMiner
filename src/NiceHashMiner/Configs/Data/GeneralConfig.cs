@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Runtime.CompilerServices;
+﻿using NHM.Common;
+using NHM.Common.Enums;
 using NiceHashMiner.Mining;
 using NiceHashMiner.Switching;
-using NHM.Common.Enums;
 using NiceHashMiner.Utils;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace NiceHashMiner.Configs.Data
 {
     [Serializable]
-    public class GeneralConfig : INotifyPropertyChanged
+    public class GeneralConfig : NotifyChangedBase
     {
         public Version ConfigFileVersion;
 
@@ -357,13 +356,6 @@ namespace NiceHashMiner.Configs.Data
         public (string btc, string worker, string group) GetCredentials()
         {
             return (BitcoinAddress.Trim(), WorkerName.Trim(), RigGroup.Trim());
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
