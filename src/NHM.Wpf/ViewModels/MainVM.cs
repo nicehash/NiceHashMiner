@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Input;
 using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
@@ -60,7 +61,9 @@ namespace NHM.Wpf.ViewModels
 
         #endregion
 
-        public class DeviceData
+        private readonly Timer _updateTimer;
+
+        public class DeviceData : NotifyChangedBase
         {
             public ComputeDevice Dev { get; }
 
@@ -101,6 +104,13 @@ namespace NHM.Wpf.ViewModels
                 Dev = dev;
 
                 StartStopCommand = new BaseCommand(StartStopClick);
+            }
+
+            public void RefreshDiag()
+            {
+                Dev.OnPropertyChanged(nameof(Dev.Load));
+                Dev.OnPropertyChanged(nameof(Dev.Temp));
+                Dev.OnPropertyChanged(nameof(Dev.FanSpeed));
             }
 
             private void StartStopClick(object obj)
@@ -154,6 +164,19 @@ namespace NHM.Wpf.ViewModels
             //    new DeviceInfo(true, "GPU#2 EVGA GeForce GTX 1080 Ti", 54, 0, 1150, "36 / 27 / 3"),
 
             //};
+
+            _updateTimer = new Timer(1000);
+            _updateTimer.Elapsed += UpdateTimerOnElapsed;
+        }
+
+        // TODO I don't like this way, a global refresh and notify would be better
+        private void UpdateTimerOnElapsed(object sender, ElapsedEventArgs e)
+        {
+            if (Devices == null) return;
+            foreach (var dev in Devices)
+            {
+                dev.RefreshDiag();
+            }
         }
 
         public async Task InitializeNhm(IStartupLoader sl)
@@ -161,6 +184,8 @@ namespace NHM.Wpf.ViewModels
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
             Devices = AvailableDevices.Devices.Select(d => (DeviceData) d);
+
+            _updateTimer.Start();
 
             // TODO auto-start mining
         }

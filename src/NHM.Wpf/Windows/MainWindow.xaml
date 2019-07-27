@@ -94,7 +94,7 @@
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Binding="{Binding Dev.FullName}" Header="Device"/>
                     <DataGridTextColumn Binding="{Binding StateString}" Header="Status"/>
-                    <DataGridTextColumn Binding="{Binding Dev.Temp}" Header="Temp (C)"/>
+                    <DataGridTextColumn Binding="{Binding Dev.Temp, StringFormat=F0}" Header="Temp (C)"/>
                     <DataGridTextColumn Binding="{Binding Dev.Load}" Header="Load (%)"/>
                     <DataGridTextColumn Binding="{Binding Dev.FanSpeed}" Header="RPM"/>
                     <DataGridTemplateColumn Header="Start/Stop">
