@@ -54,6 +54,7 @@ namespace NiceHashMiner.Devices
             {
                 _state = value;
                 MiningState.Instance.CalculateDevicesStateChange();
+                OnPropertyChanged();
             }
         }
 

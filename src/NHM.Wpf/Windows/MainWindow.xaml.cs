@@ -133,5 +133,15 @@ namespace NHM.Wpf.Windows
                 }
             }
         }
+
+        private async void StartButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            await _vm.StartMining();
+        }
+
+        private void StopButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            _vm.StopMining();
+        }
     }
 }

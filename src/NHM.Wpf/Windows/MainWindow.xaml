@@ -117,8 +117,8 @@
         <StackPanel Grid.Row="1" Grid.Column="2" Width="75" Margin="10">
             <Button Content="Benchmark" Click="BenchButton_Click" Margin="0,0,0,2" />
             <Button Content="Settings" Click="SettingsButton_Click" Margin="0,2" />
-            <Button Content="Start All" Margin="0,2" />
-            <Button Content="Stop All" Margin="0,2" />
+            <Button Content="Start All" Click="StartButton_OnClick" Margin="0,2" />
+            <Button Content="Stop All" Click="StopButton_OnClick" Margin="0,2" />
             <Button Content="Plugins" Click="PluginButton_Click" Margin="0,2" />
             <Button Content="Help" Margin="0,2" />
         </StackPanel>

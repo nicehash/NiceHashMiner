@@ -13,6 +13,7 @@ using System.Timers;
 using System.Windows.Input;
 using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
+using NiceHashMiner.Switching;
 
 namespace NHM.Wpf.ViewModels
 {
@@ -104,6 +105,17 @@ namespace NHM.Wpf.ViewModels
                 Dev = dev;
 
                 StartStopCommand = new BaseCommand(StartStopClick);
+
+                Dev.PropertyChanged += DevOnPropertyChanged;
+            }
+
+            private void DevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == nameof(Dev.State))
+                {
+                    OnPropertyChanged(nameof(StateString));
+                    OnPropertyChanged(nameof(ButtonLabel));
+                }
             }
 
             public void RefreshDiag()
@@ -188,6 +200,29 @@ namespace NHM.Wpf.ViewModels
             _updateTimer.Start();
 
             // TODO auto-start mining
+        }
+
+        public async Task StartMining()
+        {
+            var hasData = NHSmaData.HasData;
+
+            // TODO there is a better way..
+            for (var i = 0; i < 10; i++)
+            {
+                if (hasData) break;
+                await Task.Delay(1000);
+                hasData = NHSmaData.HasData;
+                Logger.Info("NICEHASH", $"After {i}s has data: {hasData}");
+            }
+
+            if (!hasData) return;
+
+            ApplicationStateManager.StartAllAvailableDevices();
+        }
+
+        public void StopMining()
+        {
+            ApplicationStateManager.StopAllDevice();
         }
     }
 }
