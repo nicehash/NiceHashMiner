@@ -214,12 +214,15 @@ namespace NHM.Wpf.ViewModels
 
             if (!hasData) return;
 
-            ApplicationStateManager.StartAllAvailableDevices();
+            // TODO there is a mess of blocking and not-awaited async code down the line, 
+            // Just wrapping with Task.Run here for now
+
+            await Task.Run(() => { ApplicationStateManager.StartAllAvailableDevices(); });
         }
 
-        public void StopMining()
+        public async Task StopMining()
         {
-            ApplicationStateManager.StopAllDevice();
+            await Task.Run(() => { ApplicationStateManager.StopAllDevice(); });
         }
     }
 }
