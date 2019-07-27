@@ -98,6 +98,8 @@ namespace NHM.Wpf.ViewModels
                 }
             }
 
+            public DeviceState State => Dev.State;
+
             public ICommand StartStopCommand { get; }
 
             public DeviceData(ComputeDevice dev)
@@ -115,6 +117,7 @@ namespace NHM.Wpf.ViewModels
                 {
                     OnPropertyChanged(nameof(StateString));
                     OnPropertyChanged(nameof(ButtonLabel));
+                    OnPropertyChanged(nameof(State));
                 }
             }
 
@@ -195,7 +198,7 @@ namespace NHM.Wpf.ViewModels
         {
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
-            Devices = AvailableDevices.Devices.Select(d => (DeviceData) d);
+            Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData) d));
 
             _updateTimer.Start();
 

@@ -82,6 +82,11 @@
 
             <Grid.Resources>
                 <converters:DoubleToStringConverter x:Key="DToStr" />
+                <CollectionViewSource x:Key="GrpSrc" Source="{Binding Devices}" IsLiveGroupingRequested="True">
+                    <CollectionViewSource.GroupDescriptions>
+                        <PropertyGroupDescription PropertyName="Dev.State" />
+                    </CollectionViewSource.GroupDescriptions>
+                </CollectionViewSource>
             </Grid.Resources>
 
             <DataGrid ItemsSource="{Binding Devices}" 
@@ -98,7 +103,7 @@
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                     <DataGridTextColumn Binding="{Binding Dev.FullName}" Header="Device"/>
-                    <DataGridTextColumn Binding="{Binding StateString}" Header="Status"/>
+                    <DataGridTextColumn Binding="{Binding Dev.State}" Header="Status"/>
                     <DataGridTextColumn Binding="{Binding Dev.Temp, Converter={StaticResource DToStr}}" Header="Temp (C)"/>
                     <DataGridTextColumn Binding="{Binding Dev.Load, Converter={StaticResource DToStr}}" Header="Load (%)"/>
                     <DataGridTextColumn Binding="{Binding Dev.FanSpeed, Converter={StaticResource DToStr}}" Header="RPM"/>
@@ -112,6 +117,37 @@
                     <DataGridTextColumn Binding="{Binding AlgoOptions}" Header="Algorithms/Enabled/Benchmarked"/>
                 </DataGrid.Columns>
             </DataGrid>
+
+            <ListView Grid.Row="1"
+                      ItemsSource="{Binding Source={StaticResource GrpSrc}}">
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="GroupItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="GroupItem">
+                                            <Expander IsExpanded="True">
+                                                <Expander.Header>
+                                                    <TextBlock Text="{Binding Name}" />
+                                                </Expander.Header>
+                                                <Expander.Content>
+                                                    <ItemsPresenter />
+                                                </Expander.Content>
+                                            </Expander>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Device" DisplayMemberBinding="{Binding Dev.FullName}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
         </Grid>
 
         <StackPanel Grid.Row="1" Grid.Column="2" Width="75" Margin="10">
