@@ -91,7 +91,9 @@ namespace NHM.Wpf.ViewModels
 
         public async Task InitializeNhm(IStartupLoader sl)
         {
+            await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
+            // TODO auto-start mining
         }
     }
 }
