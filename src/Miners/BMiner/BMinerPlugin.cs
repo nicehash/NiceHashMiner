@@ -17,7 +17,7 @@ namespace BMiner
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://www.bminer.me/releases/ current v 15.7.4
+            // https://www.bminer.me/releases/ current v 15.7.4 // TODO new version
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>

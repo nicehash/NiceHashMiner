@@ -24,7 +24,7 @@ namespace TTMiner
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.10/TT-Miner-2.2.6.7z",
-                    "https://tradeproject.de/download/Miner/TT-Miner-2.2.5.zip" // original
+                    "https://tradeproject.de/download/Miner/TT-Miner-2.2.6.zip" // original
                 }
             };
         }
