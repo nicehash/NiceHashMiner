@@ -2,7 +2,6 @@
 #if !(TESTNET || TESTNETDEV || PRODUCTION_NEW)
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Mining;
 using System;
 using System.Collections.Generic;

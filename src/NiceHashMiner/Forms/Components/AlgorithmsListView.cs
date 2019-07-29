@@ -1,9 +1,8 @@
-﻿using NiceHashMiner.Devices;
-using NiceHashMiner.Interfaces;
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using NiceHashMiner.Algorithms;
+using NiceHashMiner.Mining;
+using NiceHashMiner.Interfaces;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -40,7 +39,7 @@ namespace NiceHashMiner.Forms.Components
 
             public void LviSetColor(ListViewItem lvi)
             {
-                if (lvi.Tag is Algorithm algorithm)
+                if (lvi.Tag is AlgorithmContainer algorithm)
                 {
                     if (!algorithm.Enabled && !algorithm.IsBenchmarkPending)
                     {
@@ -126,7 +125,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 foreach (ListViewItem lvi in listViewAlgorithms.Items)
                 {
-                    var algo = lvi.Tag as Algorithm;
+                    var algo = lvi.Tag as AlgorithmContainer;
                     lvi.SubItems[(int)Column.SPEEDS].Text = algo?.BenchmarkSpeedString();
                     _listItemCheckColorSetter.LviSetColor(lvi);
                 }
@@ -150,7 +149,7 @@ namespace NiceHashMiner.Forms.Components
                 return;
             }
 
-            if (e.Item.Tag is Algorithm algo)
+            if (e.Item.Tag is AlgorithmContainer algo)
             {
                 algo.Enabled = e.Item.Checked;
             }
@@ -173,7 +172,7 @@ namespace NiceHashMiner.Forms.Components
         }
 
         // benchmark settings
-        public void SetSpeedStatus(ComputeDevice computeDevice, Algorithm algorithm, string status)
+        public void SetSpeedStatus(ComputeDevice computeDevice, AlgorithmContainer algorithm, string status)
         {
             if (algorithm != null)
             {
@@ -183,7 +182,7 @@ namespace NiceHashMiner.Forms.Components
                 {
                     foreach (ListViewItem lvi in listViewAlgorithms.Items)
                     {
-                        if (lvi.Tag is Algorithm algo && algo.AlgorithmStringID == algorithm.AlgorithmStringID)
+                        if (lvi.Tag is AlgorithmContainer algo && algo.AlgorithmStringID == algorithm.AlgorithmStringID)
                         {
                             // TODO handle numbers
                             lvi.SubItems[(int)Column.SPEEDS].Text = algorithm.BenchmarkSpeedString();
@@ -276,7 +275,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 foreach (ListViewItem lvi in listViewAlgorithms.SelectedItems)
                 {
-                    if (lvi.Tag is Algorithm algorithm)
+                    if (lvi.Tag is AlgorithmContainer algorithm)
                     {
                         algorithm.ClearSpeeds();
                         RepaintStatus(_computeDevice.Enabled, _computeDevice.Uuid);
@@ -295,7 +294,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 foreach (ListViewItem lvi in listViewAlgorithms.Items)
                 {
-                    if (lvi.Tag is Algorithm algorithm)
+                    if (lvi.Tag is AlgorithmContainer algorithm)
                     {
                         lvi.Checked = lvi.Selected;
                         if (lvi.Selected && algorithm.BenchmarkSpeed <= 0)
@@ -316,7 +315,7 @@ namespace NiceHashMiner.Forms.Components
         {
             foreach (ListViewItem lvi in listViewAlgorithms.Items)
             {
-                if (lvi.Tag is Algorithm algorithm && algorithm.BenchmarkSpeed > 0)
+                if (lvi.Tag is AlgorithmContainer algorithm && algorithm.BenchmarkSpeed > 0)
                 {
                     lvi.Checked = true;
                 }

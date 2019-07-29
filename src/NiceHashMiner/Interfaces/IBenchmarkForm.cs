@@ -1,6 +1,4 @@
-﻿using NiceHashMiner.Algorithms;
-using NiceHashMiner.Devices;
-
+﻿
 namespace NiceHashMiner.Interfaces
 {
     public interface IBenchmarkForm

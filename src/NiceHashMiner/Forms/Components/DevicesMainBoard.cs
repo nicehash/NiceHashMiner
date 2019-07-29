@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NiceHashMiner.Interfaces.DataVisualizer;
 using NiceHashMiner.Interfaces.StateSetters;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
 using NHM.Common.Enums;
 
 using static NiceHashMiner.Translations;

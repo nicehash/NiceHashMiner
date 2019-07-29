@@ -59,9 +59,18 @@ namespace NiceHashMiner.Mining.Plugins
 
         public bool Is3rdParty => false;
     }
-#endregion Open Source
 
-#region Closed source / 3rd party
+#if INTEGRATE_Ethminer_PLUGIN
+    class EthminerIntegratedPlugin : Ethminer.EthminerPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => Name;
+
+        public bool Is3rdParty => false;
+    }
+#endif
+    #endregion Open Source
+
+    #region Closed source / 3rd party
 
     class ClaymoreDual14IntegratedPlugin : ClaymoreDual14.ClaymoreDual14Plugin, IntegratedPlugin
     {

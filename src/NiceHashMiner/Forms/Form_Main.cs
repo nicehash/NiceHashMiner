@@ -1,7 +1,7 @@
 ﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Interfaces.DataVisualizer;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Mining.IdleChecking;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;

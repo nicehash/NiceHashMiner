@@ -3,13 +3,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
 using NiceHashMiner.Benchmarking.BenchHelpers;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
+using NiceHashMiner.Mining.Plugins;
 using NHM.Common;
 using NHM.Common.Enums;
-using NiceHashMiner.Mining.Plugins;
 
 namespace NiceHashMiner.Benchmarking
 {
@@ -18,8 +17,8 @@ namespace NiceHashMiner.Benchmarking
         CancellationTokenSource _stopBenchmark;
 
         private bool _startMiningAfterBenchmark;
-        private readonly Queue<Algorithm> _benchmarkAlgorithmQueue;
-        private readonly int _benchmarkAlgorithmsCount;
+        private readonly Queue<AlgorithmContainer> _benchmarkAlgorithmQueue;
+        private readonly int _benchmarkAlgorithmsCount; 
         private readonly List<string> _benchmarkFailedAlgo = new List<string>();
         private readonly BenchmarkPerformanceType _performanceType;
 
@@ -27,7 +26,7 @@ namespace NiceHashMiner.Benchmarking
 
         public ComputeDevice Device { get; }
 
-        public BenchmarkHandler(ComputeDevice device, Queue<Algorithm> algorithms, BenchmarkPerformanceType performance, bool startMiningAfterBenchmark = false)
+        public BenchmarkHandler(ComputeDevice device, Queue<AlgorithmContainer> algorithms, BenchmarkPerformanceType performance, bool startMiningAfterBenchmark = false)
         {
             _stopBenchmark = new CancellationTokenSource();
             _startMiningAfterBenchmark = startMiningAfterBenchmark;
@@ -48,7 +47,7 @@ namespace NiceHashMiner.Benchmarking
 
         private async Task Benchmark()
         {
-            Algorithm currentAlgorithm = null;
+            AlgorithmContainer currentAlgorithm = null;
             while (_benchmarkAlgorithmQueue.Count > 0)
             {
                 try
@@ -76,23 +75,15 @@ namespace NiceHashMiner.Benchmarking
             BenchmarkManager.EndBenchmarkForDevice(Device, showFailed, startMining);
         }
 
-        private async Task BenchmarkAlgorithm(Algorithm algo)
+        private async Task BenchmarkAlgorithm(AlgorithmContainer algo)
         {
             BenchmarkManager.AddToStatusCheck(Device, algo);
-            if (algo is PluginAlgorithm pAlgo)
-            {
-                await BenchmarkPluginAlgorithm(pAlgo);
-            }
-        }
-
-        private async Task BenchmarkPluginAlgorithm(PluginAlgorithm algo)
-        {
-            var plugin = MinerPluginsManager.GetPluginWithUuid(algo.BaseAlgo.MinerID);
+            var plugin = algo.PluginContainer;
             var miner = plugin.CreateMiner();
             var miningPair = new MinerPlugin.MiningPair
             {
                 Device = Device.BaseDevice,
-                Algorithm = algo.BaseAlgo
+                Algorithm = algo.Algorithm
             };
             // check ethlargement
             var miningPairs = new List<MinerPlugin.MiningPair> { miningPair };

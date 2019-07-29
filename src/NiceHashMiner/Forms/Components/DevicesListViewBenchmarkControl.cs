@@ -1,4 +1,4 @@
-﻿using NiceHashMiner.Devices;
+﻿using NiceHashMiner.Mining;
 using NiceHashMiner.Interfaces;
 using System;
 using System.Drawing;

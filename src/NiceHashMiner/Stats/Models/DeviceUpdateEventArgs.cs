@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
 
 namespace NiceHashMiner.Stats.Models
 {

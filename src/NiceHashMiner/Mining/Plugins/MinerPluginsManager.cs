@@ -11,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginLoader;
 using Newtonsoft.Json;
-using NiceHashMiner.Devices;
 using NHM.Common;
 using NiceHashMiner.Configs;
 using NHM.Common.Enums;
@@ -47,6 +46,9 @@ namespace NiceHashMiner.Mining.Plugins
                 new SGminerAvemoreIntegratedPlugin(),
                 new SGminerGMIntegratedPlugin(),
                 new XmrStakIntegratedPlugin(),
+                #if INTEGRATE_Ethminer_PLUGIN
+                new EthminerIntegratedPlugin(),
+                #endif
 
                 // 3rd party
                 new EWBFIntegratedPlugin(),
