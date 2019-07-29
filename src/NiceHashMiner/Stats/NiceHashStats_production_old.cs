@@ -91,16 +91,6 @@ namespace NiceHashMiner.Stats
 
         #endregion
 
-        #region Incoming socket calls
-
-        private static void SetVersion(string version)
-        {
-            Version = version;
-            ApplicationStateManager.OnVersionUpdate(version);
-        }
-
-        #endregion
-
         #region Outgoing socket calls
 
         public static void SetCredentials(string btc, string worker, string group = "UNUSED STUB ONLY TO BE SAME AS TESTNET")

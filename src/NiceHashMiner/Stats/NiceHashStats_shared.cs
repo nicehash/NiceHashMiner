@@ -40,6 +40,12 @@ namespace NiceHashMiner.Stats
 
         #region Incoming socket calls
 
+        private static void SetVersion(string version)
+        {
+            Version = version;
+            ApplicationStateManager.OnVersionUpdate(version);
+        }
+
         private static void SetAlgorithmRates(JArray data)
         {
             try
