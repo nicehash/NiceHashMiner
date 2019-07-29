@@ -63,7 +63,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
         }
 #pragma warning restore 0618
 
-        public double DevFee
+        public virtual double DevFee
         {
             get
             {
@@ -71,7 +71,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             }
         }
 
-        public double DualDevFee
+        public virtual double DualDevFee
         {
             get
             {
@@ -105,7 +105,7 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             _devices = string.Join("", mappedDeviceIDs);
         }
 
-        public string CreateCommandLine(string username)
+        public virtual string CreateCommandLine(string username)
         {
             var urlFirst = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var cmd = "";
