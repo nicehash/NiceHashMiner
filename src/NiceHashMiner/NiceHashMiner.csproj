@@ -252,7 +252,6 @@
     <Compile Include="Mining\Plugins\SupportedAlgorithmsFilter.cs" />
     <Compile Include="Mining\Plugins\SupportedPluginsFilter.cs" />
     <Compile Include="Mining\Plugins\MinerPluginsManager.cs" />
-    <Compile Include="Mining\MinerFromPlugin.cs" />
     <Compile Include="Stats\ErrorCode.cs" />
     <Compile Include="Stats\Models\ExchangeRateJson.cs" />
     <Compile Include="Stats\Models\MarketsMessage.cs" />
