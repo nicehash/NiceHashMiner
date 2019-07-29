@@ -1,7 +1,6 @@
-﻿using NiceHashMiner.Devices;
-using System;
+﻿using System;
 using System.Windows.Forms;
-using NiceHashMiner.Algorithms;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Forms.Components
@@ -9,7 +8,7 @@ namespace NiceHashMiner.Forms.Components
     public partial class AlgorithmSettingsControl : UserControl, AlgorithmsListView.IAlgorithmsListView
     {
         private ComputeDevice _computeDevice;
-        private Algorithm _currentlySelectedAlgorithm;
+        private AlgorithmContainer _currentlySelectedAlgorithm;
         private ListViewItem _currentlySelectedLvi;
 
         // winform crappy event workarond
@@ -73,7 +72,7 @@ namespace NiceHashMiner.Forms.Components
             if (lvi == null) return;
 
             _computeDevice = computeDevice;
-            if (lvi.Tag is Algorithm algorithm)
+            if (lvi.Tag is AlgorithmContainer algorithm)
             {
                 _selected = true;
                 _currentlySelectedAlgorithm = algorithm;
@@ -121,7 +120,7 @@ namespace NiceHashMiner.Forms.Components
         {
             if (ReferenceEquals(_currentlySelectedLvi, lvi))
             {
-                if (lvi.Tag is Algorithm algorithm)
+                if (lvi.Tag is AlgorithmContainer algorithm)
                 {
                     fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                     field_PowerUsage.EntryText = ParseDoubleDefault(algorithm.PowerUsage);

@@ -1,14 +1,13 @@
-using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Interfaces;
-using NiceHashMiner.Stats;
-using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using NiceHashMiner.Utils;
+using NHM.Common.Enums;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Mining;
+using NiceHashMiner.Interfaces;
+using NiceHashMiner.Stats;
+using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Forms.Components
 {

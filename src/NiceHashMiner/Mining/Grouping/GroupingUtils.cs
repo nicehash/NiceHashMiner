@@ -16,6 +16,7 @@ namespace NiceHashMiner.Mining.Grouping
         public static bool ShouldGroup(MiningPair a, MiningPair b)
         {
             if (a.Algorithm.MinerID != b.Algorithm.MinerID) return false;
+            if (a.Device.UUID == b.Device.UUID) return false;
             var plugin = MinerPluginsManager.GetPluginWithUuid(a.Algorithm.MinerID);
             if (plugin == null) return false;
             var canGroup = plugin.CanGroup(a, b);

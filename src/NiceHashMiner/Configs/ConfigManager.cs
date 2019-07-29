@@ -5,7 +5,7 @@ using System.IO.Compression;
 using System.Collections.Generic;
 using MinerPluginToolkitV1.Configs;
 using NiceHashMiner.Configs.Data;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
 using NHM.Common;
 using NHM.Common.Enums;
 

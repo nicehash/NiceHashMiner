@@ -1,6 +1,5 @@
 using NHM.DeviceDetection;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Mining;
 using NHM.Common;
 using System;

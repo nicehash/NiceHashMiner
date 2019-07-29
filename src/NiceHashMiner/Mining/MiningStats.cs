@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using MinerPlugin;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Switching;
 using NHM.Common.Enums;
 
