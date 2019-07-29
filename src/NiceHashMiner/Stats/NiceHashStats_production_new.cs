@@ -99,7 +99,7 @@ namespace NiceHashMiner.Stats
 
                 case "markets":
                     HandleMarkets(data);
-                    break;
+                    return null;
                 case "balance":
                     SetBalance(message.value.Value);
                     return null;
