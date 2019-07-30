@@ -2,11 +2,11 @@
 using NHM.DeviceMonitoring.NVIDIA;
 using NHM.Common.Device;
 using NHM.Common;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System;
 
 namespace NHM.DeviceMonitoring
 {
@@ -38,16 +38,58 @@ namespace NHM.DeviceMonitoring
                 }
                 if (nvidias.Count > 0)
                 {
+                    _isDCHDriver = isDCHDriver;
                     var nvidiaUUIDAndBusIds = nvidias.ToDictionary(nvidia => nvidia.UUID, nvidia => nvidia.PCIeBusID);
+                    _nvidiaUUIDAndBusIds = nvidiaUUIDAndBusIds;
                     var nvidiaInfos = NvidiaMonitorManager.Init(nvidiaUUIDAndBusIds, isDCHDriver && UseNvmlFallback.Enabled);
                     foreach(var nvidiaInfo in nvidiaInfos)
                     {
-                        ret.Add(new DeviceMonitorNVIDIA(nvidiaInfo));
+                        var deviceMonitorNVIDIA = new DeviceMonitorNVIDIA(nvidiaInfo);
+                        _deviceMonitorNVIDIAs.Add(deviceMonitorNVIDIA);
+                        ret.Add(deviceMonitorNVIDIA);
                     }
                 }
 
                 return ret;
             });
         }
+
+        #region NVIDIA
+        private static object _RestartDeviceMonitorNVIDIALock = new object();
+        private static bool _isDCHDriver;
+        private static Dictionary<string, int> _nvidiaUUIDAndBusIds = new Dictionary<string, int>();
+        private static List<DeviceMonitorNVIDIA> _deviceMonitorNVIDIAs = new List<DeviceMonitorNVIDIA>();
+        private static void RestartNVIDIAMonitoring()
+        {
+            lock (DeviceMonitorNVIDIA._lock)
+            {
+                NvidiaMonitorManager.ShutdownNvml();
+                var nvidiaInfos = NvidiaMonitorManager.Init(_nvidiaUUIDAndBusIds, _isDCHDriver && UseNvmlFallback.Enabled);
+                foreach (var nvidiaInfo in nvidiaInfos)
+                {
+                    var deviceMonitorNVIDIA = _deviceMonitorNVIDIAs.Where(devMon => devMon.UUID == nvidiaInfo.UUID).FirstOrDefault();
+                    if (deviceMonitorNVIDIA == null) continue;
+                    deviceMonitorNVIDIA.ResetHandles(nvidiaInfo);
+                }
+            }
+        }
+
+        internal static void TryRestartNVIDIAMonitoring()
+        {
+            using (var tryLock = new TryLock(_RestartDeviceMonitorNVIDIALock))
+            {
+                if (tryLock.HasLock)
+                {
+                    Logger.Info("NHM.DeviceMonitoring.DeviceMonitorManager", "RestartNVIDIAMonitoring START");
+                    int delay = Math.Min(500 * _deviceMonitorNVIDIAs.Count, 5000);
+                    Logger.Info("NHM.DeviceMonitoring.DeviceMonitorManager", $"Waiting {delay}ms before NVIDIA device monitor re-init");
+                    Thread.Sleep(delay);
+                    RestartNVIDIAMonitoring();
+                    Logger.Info("NHM.DeviceMonitoring.DeviceMonitorManager", "RestartNVIDIAMonitoring END");
+                }
+            }
+        }
+
+        #endregion NVIDIA
     }
 }

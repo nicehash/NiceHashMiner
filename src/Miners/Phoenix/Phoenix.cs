@@ -27,6 +27,14 @@ namespace Phoenix
             }
         }
 
+        public override string CreateCommandLine(string username)
+        {
+            var cmd = base.CreateCommandLine(username);
+            var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? " -amd" : " -nvidia";
+         
+            return cmd + deviceType;
+        }
+
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
             var miningDevices = _miningPairs.Select(pair => pair.Device).ToList();
@@ -54,9 +62,11 @@ namespace Phoenix
         {
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
+            var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? "-amd" : "-nvidia";
+
             // local benchmark
             // TODO hardcoded epoch
-            var commandLine = $"-di {_devices} {_extraLaunchParameters} -benchmark 200 -wd 0";
+            var commandLine = $"-di {_devices} {_extraLaunchParameters} -benchmark 200 -wd 0 {deviceType}";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;

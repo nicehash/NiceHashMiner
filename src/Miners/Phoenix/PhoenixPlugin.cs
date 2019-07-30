@@ -1,4 +1,5 @@
-﻿using MinerPluginToolkitV1;
+﻿using MinerPlugin;
+using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
@@ -31,7 +32,7 @@ namespace Phoenix
 
         public override string PluginUUID => "ac9c763f-c901-41ef-9df1-c80099c9f942";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(2, 1);
         public override string Name => "Phoenix";
 
         public override string Author => "domen.kirnkrefl@nicehash.com";
@@ -46,10 +47,16 @@ namespace Phoenix
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID);
 
-            int claymoreIndex = -1;
-            foreach (var gpu in gpus)
+            int indexAMD = -1;
+            foreach (var gpu in gpus.Where(gpu => gpu is AMDDevice))
             {
-                _mappedIDs[gpu.UUID] = ++claymoreIndex;
+                _mappedIDs[gpu.UUID] = ++indexAMD;
+            }
+
+            int indexNVIDIA = -1;
+            foreach (var gpu in gpus.Where(gpu => gpu is CUDADevice))
+            {
+                _mappedIDs[gpu.UUID] = ++indexNVIDIA;
             }
 
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
@@ -86,6 +93,12 @@ namespace Phoenix
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
+        public override bool CanGroup(MiningPair a, MiningPair b)
+        {
+            var isSameDeviceType = a.Device.DeviceType == b.Device.DeviceType;
+            if (!isSameDeviceType) return false;
+            return base.CanGroup(a, b);
+        }
 
         protected override MinerBase CreateMinerBase()
         {
@@ -96,10 +109,28 @@ namespace Phoenix
         {
             if (_mappedIDs.Count == 0) return;
             // TODO will block
+
+            var containsAMD = devices.Any(dev => dev.DeviceType == DeviceType.AMD);
+            var containsNVIDIA = devices.Any(dev => dev.DeviceType == DeviceType.NVIDIA);
+
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-list");
+
+            if (containsAMD)
+            {
+                await MapDeviceCrossRefference(devices, minerBinPath, "-list -amd");
+            }
+            if (containsNVIDIA)
+            {
+                await MapDeviceCrossRefference(devices, minerBinPath, "-list -nvidia");
+            }
+
+        }
+
+        private async Task MapDeviceCrossRefference(IEnumerable<BaseDevice> devices, string minerBinPath, string parameters)
+        {
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, parameters);
             var mappedDevs = DevicesListParser.ParsePhoenixOutput(output, devices);
 
             foreach (var kvp in mappedDevs)

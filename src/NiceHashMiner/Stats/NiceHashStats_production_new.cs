@@ -21,8 +21,6 @@ namespace NiceHashMiner.Stats
     {
         private const int DeviceUpdateInterval = 45 * 1000;
 
-        public static string VersionLink { get; private set; }
-
         // Event handlers for socket
         public static event EventHandler<DeviceUpdateEventArgs> OnDeviceUpdate;
         
@@ -101,9 +99,12 @@ namespace NiceHashMiner.Stats
 
                 case "markets":
                     HandleMarkets(data);
-                    break;
+                    return null;
                 case "balance":
                     SetBalance(message.value.Value);
+                    return null;
+                case "versions":
+                    SetVersion(message.v3.Value);
                     return null;
                 case "burn":
                     ApplicationStateManager.Burn(message.message.Value);
@@ -111,10 +112,10 @@ namespace NiceHashMiner.Stats
                 case "exchange_rates":
                     SetExchangeRates(message.data.Value);
                     return null;
-                case "essentials":
-                    var ess = JsonConvert.DeserializeObject<EssentialsCall>(data);
-                    ProcessEssentials(ess);
-                    return null;
+                //case "essentials":
+                //    var ess = JsonConvert.DeserializeObject<EssentialsCall>(data);
+                //    ProcessEssentials(ess);
+                //    return null;
                 case "mining.set.username":
                     executed = true;
                     throwIfWeCannotHanldeRPC();
@@ -204,21 +205,6 @@ namespace NiceHashMiner.Stats
 #endregion
 
 #region Incoming socket calls
-
-        private static void ProcessEssentials(EssentialsCall ess)
-        {
-            if (ess?.Versions?.Count > 1 && ess.Versions[1].Count == 2)
-            {
-                SetVersion(ess.Versions[1][0], ess.Versions[1][1]);
-            }
-        }
-
-        private static void SetVersion(string version, string link)
-        {
-            Version = version;
-            VersionLink = link;
-            ApplicationStateManager.OnVersionUpdate(version);
-        }
 
 #region Credentials setters (btc/username, worker, group)
         private static ExecutedInfo miningSetUsername(string btc)
