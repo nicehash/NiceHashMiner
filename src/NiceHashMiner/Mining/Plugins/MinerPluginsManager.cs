@@ -80,6 +80,9 @@ namespace NiceHashMiner.Mining.Plugins
                 #if INTEGRATE_LolMinerBeam_PLUGIN
                 new LolMinerIntegratedPlugin(),
                 #endif
+                #if INTEGRATE_MiniZ_PLUGIN
+                new MiniZIntegratedPlugin(),
+                #endif
 
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,

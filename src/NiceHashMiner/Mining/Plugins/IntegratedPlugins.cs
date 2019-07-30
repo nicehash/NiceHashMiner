@@ -182,6 +182,15 @@ namespace NiceHashMiner.Mining.Plugins
     }
 #endif
 
+#if INTEGRATE_MiniZ_PLUGIN
+    class MiniZIntegratedPlugin : MiniZ.MiniZPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "MiniZ";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
     class EthlargementIntegratedPlugin : Ethlargement.Ethlargement, IntegratedPlugin
     {
         public static EthlargementIntegratedPlugin Instance { get; } = new EthlargementIntegratedPlugin();

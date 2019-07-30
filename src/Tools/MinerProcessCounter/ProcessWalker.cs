@@ -61,7 +61,8 @@ namespace MinerProcessCounter
             "nbminer",
             "teamredminer",
             "nanominer",
-            "wildrig"
+            "wildrig",
+            "miniZ"
         };
 
         private static bool isFilterIncluded(string psName) {
