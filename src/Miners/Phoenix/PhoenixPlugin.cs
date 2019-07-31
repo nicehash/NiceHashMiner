@@ -19,7 +19,7 @@ namespace Phoenix
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
-            // https://bitcointalk.org/index.php?topic=2647654.0 current 4.2c
+            // https://bitcointalk.org/index.php?topic=2647654.0 current 4.2c // TODO update
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
