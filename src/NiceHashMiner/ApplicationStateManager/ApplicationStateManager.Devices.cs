@@ -62,7 +62,9 @@ namespace NiceHashMiner
         {
             if (sender is ComputeDevice dev && e.PropertyName == nameof(ComputeDevice.Enabled))
             {
-                StopDevice(dev);
+                if (!dev.Enabled)
+                    StopDevice(dev);
+
                 ConfigManager.GeneralConfigFileCommit();
                 NiceHashStats.StateChanged();
             }
