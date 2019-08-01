@@ -18,6 +18,9 @@ namespace NiceHashMiner
 
         public static void ClearRatesAll()
         {
+            // Quickfix
+            MiningStats.ClearApiDataGroups();
+
             _ratesComunication?.ClearRatesAll();
         }
 
