@@ -13,7 +13,9 @@ using System.Timers;
 using System.Windows.Input;
 using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Switching;
+using NiceHashMiner.Utils;
 
 namespace NHM.Wpf.ViewModels
 {
@@ -133,6 +135,48 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
+        public class MiningData : NotifyChangedBase
+        {
+            public ComputeDevice Dev { get; }
+
+            private MiningStats.DeviceMiningStats _stats;
+            public MiningStats.DeviceMiningStats Stats
+            {
+                get => _stats;
+                set
+                {
+                    _stats = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged(nameof(Hashrate));
+                    OnPropertyChanged(nameof(Payrate));
+                    OnPropertyChanged(nameof(Name));
+                }
+            }
+
+            public double Hashrate => Stats?.Speeds?.Count > 0 ? Stats.Speeds[0].speed : 0;
+
+            public double Payrate => Stats?.TotalPayingRate() ?? 0;
+
+            public string Name
+            {
+                get
+                {
+                    if (Stats == null) return null;
+
+                    var firstAlgo = Stats.Speeds.Count > 0 ? Stats.Speeds[0].type : AlgorithmType.NONE;
+                    var secAlgo = Stats.Speeds.Count > 1 ? Stats.Speeds[1].type : AlgorithmType.NONE;
+                    var algoName = Helpers.GetNameFromAlgorithmTypes(firstAlgo, secAlgo);
+
+                    return $"{algoName} ({Stats.MinerName})";
+                }
+            }
+
+            public MiningData(ComputeDevice dev)
+            {
+                Dev = dev;
+            }
+        }
+
         private IEnumerable<DeviceData> _devices;
         public IEnumerable<DeviceData> Devices
         {
@@ -140,6 +184,17 @@ namespace NHM.Wpf.ViewModels
             set
             {
                 _devices = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private IEnumerable<MiningData> _miningDevs;
+        public IEnumerable<MiningData> MiningDevs
+        {
+            get => _miningDevs;
+            set
+            {
+                _miningDevs = value;
                 OnPropertyChanged();
             }
         }
@@ -188,6 +243,16 @@ namespace NHM.Wpf.ViewModels
             {
                 dev.RefreshDiag();
             }
+
+            var devs = MiningStats.GetDevicesMiningStats();
+
+            foreach (var dev in devs)
+            {
+                var miningDev = MiningDevs.FirstOrDefault(d => d.Dev.Uuid == dev.DeviceUUID);
+                if (miningDev == null) continue;
+
+                miningDev.Stats = dev;
+            }
         }
 
         public async Task InitializeNhm(IStartupLoader sl)
@@ -195,6 +260,7 @@ namespace NHM.Wpf.ViewModels
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData) d));
+            MiningDevs = new ObservableCollection<MiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
 
             _updateTimer.Start();
 

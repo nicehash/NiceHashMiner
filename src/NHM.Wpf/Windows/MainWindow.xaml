@@ -85,9 +85,10 @@
             <Grid.Resources>
                 <converters:DoubleToStringConverter x:Key="DToStr" />
                 <converters:TranslatingConverter x:Key="TrConv" />
-                <CollectionViewSource x:Key="GrpSrc" Source="{Binding Devices}" IsLiveGroupingRequested="True">
+                <CollectionViewSource x:Key="GrpSrc" Source="{Binding MiningDevs}" IsLiveGroupingRequested="True">
                     <CollectionViewSource.GroupDescriptions>
                         <PropertyGroupDescription PropertyName="Dev.State" />
+                        <PropertyGroupDescription PropertyName="Name" />
                     </CollectionViewSource.GroupDescriptions>
                 </CollectionViewSource>
             </Grid.Resources>
@@ -148,6 +149,8 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Device" DisplayMemberBinding="{Binding Dev.FullName}" />
+                        <GridViewColumn Header="Hashrate" DisplayMemberBinding="{Binding Hashrate}" />
+                        <GridViewColumn Header="Payrate" DisplayMemberBinding="{Binding Payrate}" />
                     </GridView>
                 </ListView.View>
             </ListView>
