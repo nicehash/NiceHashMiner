@@ -103,7 +103,7 @@ namespace NHM.DeviceMonitoring.AMD
 
             try
             {
-                var adl2Ret = ADL.ADL2_Main_Control_Create?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref context);
+                var adl2Ret = ADL.ADL2_Main_Control_Create.Delegate?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref context);
                 AdlThrowIfException(adl2Ret, nameof(ADL.ADL2_Main_Control_Create));
 
                 var adl2Info = new ADLAdapterInfoArray();
@@ -111,7 +111,7 @@ namespace NHM.DeviceMonitoring.AMD
                 buffer = Marshal.AllocCoTaskMem(size2);
 
                 Marshal.StructureToPtr(adl2Info, buffer, false);
-                adl2Ret = ADL.ADL2_Adapter_AdapterInfo_Get?.Invoke(context, buffer, Marshal.SizeOf(adl2Info));
+                adl2Ret = ADL.ADL2_Adapter_AdapterInfo_Get.Delegate?.Invoke(context, buffer, Marshal.SizeOf(adl2Info));
                 AdlThrowIfException(adl2Ret, nameof(ADL.ADL2_Adapter_AdapterInfo_Get));
 
                 adl2Info = (ADLAdapterInfoArray)Marshal.PtrToStructure(buffer, adl2Info.GetType());
@@ -126,7 +126,7 @@ namespace NHM.DeviceMonitoring.AMD
             {
                 if (context != IntPtr.Zero)
                 {
-                    ADL.ADL2_Main_Control_Destroy?.Invoke(context);
+                    ADL.ADL2_Main_Control_Destroy.Delegate?.Invoke(context);
                 }
 
                 if (buffer != IntPtr.Zero)

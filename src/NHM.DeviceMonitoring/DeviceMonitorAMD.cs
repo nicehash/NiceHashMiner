@@ -25,7 +25,7 @@ namespace NHM.DeviceMonitoring
             _adapterIndex = info.Adl1Index;
             _adapterIndex2 = info.Adl2Index;
             BusID = info.BusID;
-            ADL.ADL2_Main_Control_Create?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);
+            ADL.ADL2_Main_Control_Create.Delegate?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);
         }
 
         public int FanSpeed
@@ -36,7 +36,7 @@ namespace NHM.DeviceMonitoring
                 {
                     SpeedType = ADL.ADL_DL_FANCTRL_SPEED_TYPE_RPM
                 };
-                var result = ADL.ADL_Overdrive5_FanSpeed_Get(_adapterIndex, 0, ref adlf);
+                var result = ADL.ADL_Overdrive5_FanSpeed_Get.Delegate(_adapterIndex, 0, ref adlf);
                 if (result != ADL.ADL_SUCCESS)
                 {
                     Logger.InfoDelayed("ADL", $"ADL fan getting failed with error code {result}", _delayedLogging);
@@ -51,7 +51,7 @@ namespace NHM.DeviceMonitoring
             get
             {
                 var adlt = new ADLTemperature();
-                var result = ADL.ADL_Overdrive5_Temperature_Get(_adapterIndex, 0, ref adlt);
+                var result = ADL.ADL_Overdrive5_Temperature_Get.Delegate(_adapterIndex, 0, ref adlt);
                 if (result != ADL.ADL_SUCCESS)
                 {
                     Logger.InfoDelayed("ADL", $"ADL temp getting failed with error code {result}", _delayedLogging);
@@ -66,7 +66,7 @@ namespace NHM.DeviceMonitoring
             get
             {
                 var adlp = new ADLPMActivity();
-                var result = ADL.ADL_Overdrive5_CurrentActivity_Get(_adapterIndex, ref adlp);
+                var result = ADL.ADL_Overdrive5_CurrentActivity_Get.Delegate(_adapterIndex, ref adlp);
                 if (result != ADL.ADL_SUCCESS)
                 {
                     Logger.InfoDelayed("ADL", $"ADL load getting failed with error code {result}", _delayedLogging);
@@ -81,9 +81,9 @@ namespace NHM.DeviceMonitoring
             get
             {
                 var power = -1;
-                if (!_powerHasFailed && _adlContext != IntPtr.Zero && ADL.ADL2_Overdrive6_CurrentPower_Get != null)
+                if (!_powerHasFailed && _adlContext != IntPtr.Zero && ADL.ADL2_Overdrive6_CurrentPower_Get.Delegate != null)
                 {
-                    var result = ADL.ADL2_Overdrive6_CurrentPower_Get(_adlContext, _adapterIndex2, 1, ref power);
+                    var result = ADL.ADL2_Overdrive6_CurrentPower_Get.Delegate(_adlContext, _adapterIndex2, 1, ref power);
                     if (result == ADL.ADL_SUCCESS)
                     {
                         return (double)power / (1 << 8);

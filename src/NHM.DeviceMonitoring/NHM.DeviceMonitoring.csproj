@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="3rdParty\ADL.cs" />
+    <Compile Include="3rdParty\AMD\ADL.cs" />
+    <Compile Include="3rdParty\AMD\ADL2.cs" />
+    <Compile Include="3rdParty\AMD\AMDDelegateContainer.cs" />
     <Compile Include="3rdParty\NVAPI.cs" />
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="AMD\AmdBusIDInfo.cs" />
