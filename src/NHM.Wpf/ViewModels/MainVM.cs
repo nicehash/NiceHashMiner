@@ -149,7 +149,7 @@ namespace NHM.Wpf.ViewModels
                     OnPropertyChanged();
                     OnPropertyChanged(nameof(Hashrate));
                     OnPropertyChanged(nameof(Payrate));
-                    OnPropertyChanged(nameof(Name));
+                    OnPropertyChanged(nameof(StateName));
                 }
             }
 
@@ -157,11 +157,11 @@ namespace NHM.Wpf.ViewModels
 
             public double Payrate => Stats?.TotalPayingRate() ?? 0;
 
-            public string Name
+            public string StateName
             {
                 get
                 {
-                    if (Stats == null) return null;
+                    if (Stats == null) return Dev.State.ToString();
 
                     var firstAlgo = Stats.Speeds.Count > 0 ? Stats.Speeds[0].type : AlgorithmType.NONE;
                     var secAlgo = Stats.Speeds.Count > 1 ? Stats.Speeds[1].type : AlgorithmType.NONE;
@@ -174,6 +174,14 @@ namespace NHM.Wpf.ViewModels
             public MiningData(ComputeDevice dev)
             {
                 Dev = dev;
+
+                Dev.PropertyChanged += DevOnPropertyChanged;
+            }
+
+            private void DevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+            {
+                if (e.PropertyName == nameof(Dev.State))
+                    OnPropertyChanged(nameof(StateName));
             }
         }
 

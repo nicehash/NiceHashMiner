@@ -87,8 +87,7 @@
                 <converters:TranslatingConverter x:Key="TrConv" />
                 <CollectionViewSource x:Key="GrpSrc" Source="{Binding MiningDevs}" IsLiveGroupingRequested="True">
                     <CollectionViewSource.GroupDescriptions>
-                        <PropertyGroupDescription PropertyName="Dev.State" />
-                        <PropertyGroupDescription PropertyName="Name" />
+                        <PropertyGroupDescription PropertyName="StateName" />
                     </CollectionViewSource.GroupDescriptions>
                 </CollectionViewSource>
             </Grid.Resources>
