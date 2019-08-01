@@ -254,12 +254,9 @@ namespace NHM.Wpf.ViewModels
 
             var devs = MiningStats.GetDevicesMiningStats();
 
-            foreach (var dev in devs)
+            foreach (var miningDev in MiningDevs)
             {
-                var miningDev = MiningDevs.FirstOrDefault(d => d.Dev.Uuid == dev.DeviceUUID);
-                if (miningDev == null) continue;
-
-                miningDev.Stats = dev;
+                miningDev.Stats = devs.FirstOrDefault(d => d.DeviceUUID == miningDev.Dev.Uuid);
             }
         }
 
