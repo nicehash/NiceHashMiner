@@ -17,6 +17,9 @@ namespace NHM.DeviceMonitoring
         private readonly IntPtr _adlContext;
         private bool _powerHasFailed;
 
+        //private RangeCalculator TDPRangeCalculator;
+        private ADLODNCapabilitiesX2 _ADLODNCapabilitiesX2;
+
         private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(5);
 
         internal DeviceMonitorAMD(AmdBusIDInfo info)
@@ -26,6 +29,34 @@ namespace NHM.DeviceMonitoring
             _adapterIndex2 = info.Adl2Index;
             BusID = info.BusID;
             ADL.ADL2_Main_Control_Create.Delegate?.Invoke(ADL.ADL_Main_Memory_Alloc, 0, ref _adlContext);
+
+            string TEST_TAG = $"ADL_TESTING {BusID}";
+            try
+            {
+                var dADL2_OverdriveN_CapabilitiesX2_Get = ADL.ADL2_OverdriveN_CapabilitiesX2_Get.Delegate;
+                if (dADL2_OverdriveN_CapabilitiesX2_Get != null)
+                {
+                    _ADLODNCapabilitiesX2 = new ADLODNCapabilitiesX2();
+                    var ret = dADL2_OverdriveN_CapabilitiesX2_Get(_adlContext, _adapterIndex, ref _ADLODNCapabilitiesX2);
+                    if (ret == ADL.ADL_SUCCESS)
+                    {
+                        Logger.Info(TEST_TAG, _ADLODNCapabilitiesX2.ToString());
+                    }
+                    else
+                    {
+                        Logger.Info(TEST_TAG, $"returned {ret}");
+                    }
+                }
+                else
+                {
+                    // TODO unable to get capabilities
+                    Logger.Info(TEST_TAG, $"unable to get capabilities");
+                }
+            }
+            catch (Exception)
+            {
+                // TODO log
+            }
         }
 
         public int FanSpeed

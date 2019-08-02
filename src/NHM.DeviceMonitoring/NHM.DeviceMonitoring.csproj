@@ -67,6 +67,7 @@
     <Compile Include="NVIDIA\NvapiNvmlInfo.cs" />
     <Compile Include="NVIDIA\NvidiaMonitorManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RangeCalculator.cs" />
     <Compile Include="TryLock.cs" />
   </ItemGroup>
   <ItemGroup>

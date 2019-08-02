@@ -27,6 +27,11 @@ namespace ATI.ADL
     internal delegate int ADL2_Overdrive_Caps(IntPtr context, int iAdapterIndex, ref int iSupported, ref int iEnabled, ref int iVersion);
 
     internal delegate int ADL2_OverdriveN_CapabilitiesX2_Get(IntPtr context, int iAdapterIndex, ref ADLODNCapabilitiesX2 lpODCapabilities);
+
+    internal delegate int ADL2_OverdriveN_PowerLimit_Get(IntPtr context, int iAdapterIndex, ref ADLODNPowerLimitSetting lpODPowerLimit);
+
+    internal delegate int ADL2_OverdriveN_PowerLimit_Set(IntPtr context, int iAdapterIndex, ref ADLODNPowerLimitSetting lpODPowerLimit);
+
     #endregion Export Delegates
 
     #region Export Struct
@@ -79,15 +84,15 @@ namespace ATI.ADL
     internal struct ADLODNParameterRange
     {
         /// The starting value of the clock range
-        int iMode;
+        public int iMode;
         /// The starting value of the clock range
-        int iMin;
+        public int iMin;
         /// The ending value of the clock range
-        int iMax;
+        public int iMax;
         /// The minimum increment between clock values
-        int iStep;
+        public int iStep;
         /// The default clock values
-        int iDefault;
+        public int iDefault;
     }
 
 
@@ -103,32 +108,48 @@ namespace ATI.ADL
         /// Number of levels which describe the minimum to maximum clock ranges.
         /// The 1st level indicates the minimum clocks, and the 2nd level
         /// indicates the maximum clocks.
-        int iMaximumNumberOfPerformanceLevels;
+        public int iMaximumNumberOfPerformanceLevels;
         /// Contains the hard limits of the sclk range.  Overdrive
         /// clocks cannot be set outside this range.
-        ADLODNParameterRange sEngineClockRange;
+        public ADLODNParameterRange sEngineClockRange;
         /// Contains the hard limits of the mclk range.  Overdrive
         /// clocks cannot be set outside this range.
-        ADLODNParameterRange sMemoryClockRange;
+        public ADLODNParameterRange sMemoryClockRange;
         /// Contains the hard limits of the vddc range.  Overdrive
         /// clocks cannot be set outside this range.
-        ADLODNParameterRange svddcRange;
+        public ADLODNParameterRange svddcRange;
         /// Contains the hard limits of the power range.  Overdrive
         /// clocks cannot be set outside this range.
-        ADLODNParameterRange power;
+        public ADLODNParameterRange power;
         /// Contains the hard limits of the power range.  Overdrive
         /// clocks cannot be set outside this range.
-        ADLODNParameterRange powerTuneTemperature;
+        public ADLODNParameterRange powerTuneTemperature;
         /// Contains the hard limits of the Temperature range.  Overdrive
         /// clocks cannot be set outside this range.
-        ADLODNParameterRange fanTemperature;
+        public ADLODNParameterRange fanTemperature;
         /// Contains the hard limits of the Fan range.  Overdrive
         /// clocks cannot be set outside this range.
-        ADLODNParameterRange fanSpeed;
+        public ADLODNParameterRange fanSpeed;
         /// Contains the hard limits of the Fan range.  Overdrive
         /// clocks cannot be set outside this range.
-        ADLODNParameterRange minimumPerformanceClock;
+        public ADLODNParameterRange minimumPerformanceClock;
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////
+    ///\brief Structure containing information about Overdrive N power limit.
+    ///
+    /// This structure is used to store information about Overdrive power limit.
+    /// This structure is used by the ADL_OverdriveN_ODPerformanceLevels_Get() and ADL_OverdriveN_ODPerformanceLevels_Set() functions.
+    /// \nosubgrouping
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ADLODNPowerLimitSetting
+    {
+        public int iMode;
+        public int iTDPLimit;
+        public int iMaxOperatingTemperature;
+    }
+
     #endregion Overdrive
 
     #endregion Export Struct
@@ -175,6 +196,12 @@ namespace ATI.ADL
             // OverdriveN
             [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
             internal static extern int ADL2_OverdriveN_CapabilitiesX2_Get(IntPtr context, int iAdapterIndex, ref ADLODNCapabilitiesX2 lpODCapabilities);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL2_OverdriveN_PowerLimit_Get(IntPtr context, int iAdapterIndex, ref ADLODNPowerLimitSetting lpODPowerLimit);
+
+            [DllImport(Atiadlxx_FileName, CallingConvention = CallingConvention.Cdecl)]
+            internal static extern int ADL2_OverdriveN_PowerLimit_Set(IntPtr context, int iAdapterIndex, ref ADLODNPowerLimitSetting lpODPowerLimit);
         }
 
         internal static AMDDelegateContainer<ADL2_Main_Control_Create> ADL2_Main_Control_Create { get; } = new AMDDelegateContainer<ADL2_Main_Control_Create>(
@@ -213,5 +240,13 @@ namespace ATI.ADL
         internal static AMDDelegateContainer<ADL2_OverdriveN_CapabilitiesX2_Get> ADL2_OverdriveN_CapabilitiesX2_Get { get; } = new AMDDelegateContainer<ADL2_OverdriveN_CapabilitiesX2_Get>(
             "ADL2_OverdriveN_CapabilitiesX2_Get",
             ADLImport.ADL2_OverdriveN_CapabilitiesX2_Get);
+
+        internal static AMDDelegateContainer<ADL2_OverdriveN_PowerLimit_Get> ADL2_OverdriveN_PowerLimit_Get { get; } = new AMDDelegateContainer<ADL2_OverdriveN_PowerLimit_Get>(
+            "ADL2_OverdriveN_PowerLimit_Get",
+            ADLImport.ADL2_OverdriveN_PowerLimit_Get);
+
+        internal static AMDDelegateContainer<ADL2_OverdriveN_PowerLimit_Set> ADL2_OverdriveN_PowerLimit_Set { get; } = new AMDDelegateContainer<ADL2_OverdriveN_PowerLimit_Set>(
+            "ADL2_OverdriveN_PowerLimit_Set",
+            ADLImport.ADL2_OverdriveN_PowerLimit_Set);
     }
 }
