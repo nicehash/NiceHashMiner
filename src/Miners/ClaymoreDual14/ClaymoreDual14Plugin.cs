@@ -109,11 +109,11 @@ namespace ClaymoreDual14
             return new ClaymoreDual14(PluginUUID, _mappedIDs);
         }
 
-        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        public async Task<bool> DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (_mappedIDs.Count == 0) return;
+            if (_mappedIDs.Count == 0) return false;
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
+            if (miner == null) return false;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
             var minerCwd = miner.GetBinAndCwdPaths().Item2;
             // no device list so 'start mining'
@@ -129,6 +129,7 @@ namespace ClaymoreDual14
                 var indexID = kvp.Value;
                 _mappedIDs[uuid] = indexID;
             }
+            return mappedDevs.Count != 0;
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

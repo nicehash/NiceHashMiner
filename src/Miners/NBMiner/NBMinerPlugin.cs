@@ -100,12 +100,12 @@ namespace NBMiner
             return new NBMiner(PluginUUID, _mappedIDs);
         }
 
-        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        public async Task<bool> DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (_mappedIDs.Count == 0) return;
+            if (_mappedIDs.Count == 0) return false;
             // TODO will break
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
+            if (miner == null) return false ;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json -RUN");
             var mappedDevs = DevicesListParser.ParseNBMinerOutput(output, devices.ToList());
@@ -116,6 +116,7 @@ namespace NBMiner
                 var indexID = kvp.Value;
                 _mappedIDs[uuid] = indexID;
             }
+            return mappedDevs.Count != 0;
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

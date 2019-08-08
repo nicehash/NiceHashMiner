@@ -95,14 +95,14 @@ namespace NanoMiner
         }
 
 #warning "nanominer -d command is broken."
-        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        public async Task<bool> DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             // v1.5.2 the mappings get screwed on mixed rigs
             const bool skipDCommandIsBroken = true;
-            if (_mappedIDs.Count == 0 || skipDCommandIsBroken) return;
+            if (_mappedIDs.Count == 0 || skipDCommandIsBroken) return false;
             // TODO will break
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
+            if (miner == null) return false;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
 
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-d");
@@ -114,6 +114,7 @@ namespace NanoMiner
                 var indexID = kvp.Value;
                 _mappedIDs[uuid] = indexID;
             }
+            return mappedDevs.Count != 0;
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
