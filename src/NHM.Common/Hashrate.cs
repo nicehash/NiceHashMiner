@@ -27,6 +27,11 @@ namespace NHM.Common
             return new Hashrate(d, AlgorithmType.NONE);
         }
 
+        public static implicit operator Hashrate((AlgorithmType, double) tuple)
+        {
+            return new Hashrate(tuple.Item2, tuple.Item1);
+        }
+
         public override string ToString()
         {
             return ToString(" ");

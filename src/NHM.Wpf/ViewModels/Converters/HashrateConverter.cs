@@ -5,9 +5,9 @@ using NiceHashMiner.Utils;
 
 namespace NHM.Wpf.ViewModels.Converters
 {
-    public class HashrateConverter : ConverterBase<IReadOnlyList<Hashrate>, string>
+    public class HashrateConverter : ConverterBase<IEnumerable<Hashrate>, string>
     {
-        public override string Convert(IReadOnlyList<Hashrate> value, string parameter)
+        public override string Convert(IEnumerable<Hashrate> value, string parameter)
         {
             return string.Join(" + ", value);
         }

@@ -165,14 +165,21 @@ namespace NHM.Wpf.ViewModels
                     OnPropertyChanged(nameof(Hashrate));
                     OnPropertyChanged(nameof(Payrate));
                     OnPropertyChanged(nameof(StateName));
+                    OnPropertyChanged(nameof(Speeds));
+                    OnPropertyChanged(nameof(FiatPayrate));
+                    OnPropertyChanged(nameof(PowerUsage));
+                    OnPropertyChanged(nameof(PowerCost));
+                    OnPropertyChanged(nameof(Profit));
                 }
             }
 
             public double Hashrate => Stats?.Speeds?.Count > 0 ? Stats.Speeds[0].speed : 0;
 
-            public double Payrate => Stats?.TotalPayingRate() ?? 0;
+            public IEnumerable<Hashrate> Speeds => Stats?.Speeds?.Select(s => (Hashrate) s);
 
-            public double FiatPayrate => ExchangeRateApi.ConvertFromBtc(Payrate);
+            public double Payrate => (Stats?.TotalPayingRate() ?? 0) * 1000;
+
+            public double FiatPayrate => ExchangeRateApi.ConvertFromBtc(Payrate / 1000);
 
             public double PowerUsage => Stats?.GetPowerUsage() ?? 0;
 

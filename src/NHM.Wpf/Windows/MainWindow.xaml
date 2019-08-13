@@ -85,6 +85,7 @@
             <Grid.Resources>
                 <converters:DoubleToStringConverter x:Key="DToStr" />
                 <converters:TranslatingConverter x:Key="TrConv" />
+                <converters:HashrateConverter x:Key="HashConv" />
                 <CollectionViewSource x:Key="GrpSrc" Source="{Binding MiningDevs}" IsLiveGroupingRequested="True">
                     <CollectionViewSource.GroupDescriptions>
                         <PropertyGroupDescription PropertyName="StateName" />
@@ -148,12 +149,12 @@
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Device" DisplayMemberBinding="{Binding Dev.FullName}" />
-                        <GridViewColumn Header="Speeds" DisplayMemberBinding="{Binding Hashrate}" />
-                        <GridViewColumn Header="mBTC/Day" DisplayMemberBinding="{Binding Payrate}" />
-                        <GridViewColumn Header="{Binding CurrencyPerTime}" DisplayMemberBinding="{Binding FiatPayrate}" />
-                        <GridViewColumn Header="Power Usage (W)" DisplayMemberBinding="{Binding PowerUsage}" />
-                        <GridViewColumn Header="Power Cost" DisplayMemberBinding="{Binding PowerCost}" />
-                        <GridViewColumn Header="{Binding ProfitPerTime}" DisplayMemberBinding="{Binding Profit}" />
+                        <GridViewColumn Header="Speeds" DisplayMemberBinding="{Binding Speeds, Converter={StaticResource HashConv}}" />
+                        <GridViewColumn Header="mBTC/Day" DisplayMemberBinding="{Binding Payrate, StringFormat=F3}" />
+                        <GridViewColumn Header="{Binding CurrencyPerTime}" DisplayMemberBinding="{Binding FiatPayrate, StringFormat=F2}" />
+                        <GridViewColumn Header="Power Usage (W)" DisplayMemberBinding="{Binding PowerUsage, StringFormat=F2}" />
+                        <GridViewColumn Header="Power Cost" DisplayMemberBinding="{Binding PowerCost, StringFormat=F2}" />
+                        <GridViewColumn Header="{Binding ProfitPerTime}" DisplayMemberBinding="{Binding Profit, StringFormat=F2}" />
                     </GridView>
                 </ListView.View>
             </ListView>
