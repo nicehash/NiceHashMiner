@@ -1,13 +1,15 @@
-﻿using NHM.Common.Enums;
+﻿using System.Collections.Generic;
+using NHM.Common;
+using NHM.Common.Enums;
 using NiceHashMiner.Utils;
 
 namespace NHM.Wpf.ViewModels.Converters
 {
-    public class HashrateConverter : ConverterBase<double, string>
+    public class HashrateConverter : ConverterBase<IReadOnlyList<Hashrate>, string>
     {
-        public override string Convert(double value, string parameter)
+        public override string Convert(IReadOnlyList<Hashrate> value, string parameter)
         {
-            return Helpers.FormatSpeedOutput(value, AlgorithmType.NONE);
+            return string.Join(" + ", value);
         }
     }
 }

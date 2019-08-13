@@ -50,6 +50,22 @@ namespace NiceHashMiner.Algorithms
 
         public abstract List<double> Speeds { get; set; }
 
+        public IReadOnlyList<Hashrate> AnnotatedSpeeds
+        {
+            get
+            {
+                var list = new List<Hashrate>();
+                for (var i = 0; i < IDs.Length; i++)
+                {
+                    var speed = 0d;
+                    if (Speeds.Count > i) speed = Speeds[i];
+                    list.Add(new Hashrate(speed, IDs[i]));
+                }
+
+                return list;
+            }
+        }
+
         /// <summary>
         /// Gets the averaged speed for this algorithm in H/s
         /// <para>When multiple devices of the same model are used, this will be set to their averaged hashrate</para>

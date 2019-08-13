@@ -48,13 +48,6 @@ namespace NHM.Common
             return speed + GetUnitForAlgorithmType(Algo);
         }
 
-        public string ToString(IEnumerable<Hashrate> secondaries)
-        {
-            // In net472 or netstandard1.6 secondaries.Prenend(this) is better
-            var all = new[] { this }.Concat(secondaries);
-            return string.Join(" + ", all);
-        }
-
         // Quickfix copy here since Helpers not accessible in Common
         private static string GetUnitForAlgorithmType(AlgorithmType algorithmType)
         {

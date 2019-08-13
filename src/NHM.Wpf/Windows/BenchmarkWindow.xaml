@@ -64,7 +64,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding AlgorithmStringID}" />
-                    <GridViewColumn Header="Speed (H/s)" DisplayMemberBinding="{Binding BenchmarkSpeed, Converter={StaticResource HashConv}, ConverterParameter={Binding FirstType}}" />
+                    <GridViewColumn Header="Speed (H/s)" DisplayMemberBinding="{Binding AnnotatedSpeeds, Converter={StaticResource HashConv}}" />
                     <GridViewColumn Header="Secondary Speed (H/s)" DisplayMemberBinding="{Binding SecondaryBenchmarkSpeed}" />
                     <GridViewColumn Header="Paying (BTC/GH/Day)" DisplayMemberBinding="{Binding CurNhmSmaDataVal}" />
                     <GridViewColumn Header="Profit (BTC/Day)" DisplayMemberBinding="{Binding CurrentProfit}" />
