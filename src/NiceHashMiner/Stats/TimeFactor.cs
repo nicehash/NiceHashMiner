@@ -6,25 +6,32 @@ namespace NiceHashMiner.Stats
     {
         public static double TimeUnit { get; private set; }
 
-        public static void UpdateTimeUnit(TimeUnitType unit)
+        private static TimeUnitType _unitType;
+
+        public static TimeUnitType UnitType
         {
-            switch (unit)
+            get => _unitType;
+            set
             {
-                case TimeUnitType.Hour:
-                    TimeUnit = 1.0 / 24.0;
-                    break;
-                case TimeUnitType.Day:
-                    TimeUnit = 1;
-                    break;
-                case TimeUnitType.Week:
-                    TimeUnit = 7;
-                    break;
-                case TimeUnitType.Month:
-                    TimeUnit = 30;
-                    break;
-                case TimeUnitType.Year:
-                    TimeUnit = 365;
-                    break;
+                _unitType = value;
+                switch (value)
+                {
+                    case TimeUnitType.Hour:
+                        TimeUnit = 1.0 / 24.0;
+                        break;
+                    case TimeUnitType.Day:
+                        TimeUnit = 1;
+                        break;
+                    case TimeUnitType.Week:
+                        TimeUnit = 7;
+                        break;
+                    case TimeUnitType.Month:
+                        TimeUnit = 30;
+                        break;
+                    case TimeUnitType.Year:
+                        TimeUnit = 365;
+                        break;
+                }
             }
         }
     }

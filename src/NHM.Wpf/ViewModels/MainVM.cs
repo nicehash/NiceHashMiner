@@ -14,6 +14,7 @@ using System.Windows.Input;
 using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
 using NiceHashMiner.Mining;
+using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NiceHashMiner.Utils;
 
@@ -157,6 +158,14 @@ namespace NHM.Wpf.ViewModels
 
             public double Payrate => Stats?.TotalPayingRate() ?? 0;
 
+            public double FiatPayrate => ExchangeRateApi.ConvertFromBtc(Payrate);
+
+            public double PowerUsage => Stats?.GetPowerUsage() ?? 0;
+
+            public double PowerCost => ExchangeRateApi.ConvertFromBtc(Stats?.PowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0);
+
+            public double Profit => ExchangeRateApi.ConvertFromBtc(Stats?.TotalPayingRateDeductPowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0);
+
             public string StateName
             {
                 get
@@ -229,6 +238,10 @@ namespace NHM.Wpf.ViewModels
 
         public MiningState State => MiningState.Instance;
 
+        public string CurrencyPerTime => $"{ExchangeRateApi.ActiveDisplayCurrency}/{TimeFactor.UnitType}";
+
+        public string ProfitPerTime => $"Profit ({CurrencyPerTime})";
+
         public MainVM()
         {
             //Devices = new ObservableCollection<DeviceInfo>
@@ -241,6 +254,12 @@ namespace NHM.Wpf.ViewModels
 
             _updateTimer = new Timer(1000);
             _updateTimer.Elapsed += UpdateTimerOnElapsed;
+
+            ExchangeRateApi.CurrencyChanged += (_, s) =>
+            {
+                OnPropertyChanged(nameof(CurrencyPerTime));
+                OnPropertyChanged(nameof(ProfitPerTime));
+            };
         }
 
         // TODO I don't like this way, a global refresh and notify would be better

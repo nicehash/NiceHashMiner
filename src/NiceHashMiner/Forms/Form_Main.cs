@@ -234,7 +234,7 @@ namespace NiceHashMiner
             ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
             // init factor for Time Unit
-            TimeFactor.UpdateTimeUnit(ConfigManager.GeneralConfig.TimeUnit);
+            TimeFactor.UnitType = ConfigManager.GeneralConfig.TimeUnit;
 
             toolStripStatusLabelBalanceDollarValue.Text = "(" + ExchangeRateApi.ActiveDisplayCurrency + ")";
             toolStripStatusLabelBalanceText.Text = RatesAndStatsStates.Instance.LabelBalanceText;

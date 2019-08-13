@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
@@ -11,6 +12,8 @@ namespace NiceHashMiner.Stats
     {
         private static readonly ConcurrentDictionary<string, double> ExchangesFiat = new ConcurrentDictionary<string, double>();
         private static double _usdBtcRate = -1;
+
+        public static event EventHandler<string> CurrencyChanged;
 
         public static double UsdBtcRate
         {
@@ -25,7 +28,17 @@ namespace NiceHashMiner.Stats
                 }
             }
         }
-        public static string ActiveDisplayCurrency = "USD";
+
+        private static string _activeDisplayCurrency = "USD";
+        public static string ActiveDisplayCurrency
+        {
+            get => _activeDisplayCurrency;
+            set
+            {
+                _activeDisplayCurrency = value;
+                CurrencyChanged?.Invoke(null, value);
+            }
+        }
 
         private static bool ConverterActive => ConfigManager.GeneralConfig.DisplayCurrency != "USD";
 
