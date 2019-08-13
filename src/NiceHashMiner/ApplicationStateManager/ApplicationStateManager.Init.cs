@@ -113,7 +113,6 @@ namespace NiceHashMiner
                         nameCount = $"GPU#{cudaCount}";
                     }
                     var cd = new ComputeDevice(cDev, index++, nameCount);
-                    cd.PropertyChanged += DeviceOnPropertyChanged;
                     AvailableDevices.AddDevice(cd);
                 }
                 AvailableDevices.UncheckCpuIfGpu();

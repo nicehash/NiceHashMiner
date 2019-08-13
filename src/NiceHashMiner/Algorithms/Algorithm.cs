@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Collections.Generic;
+using NHM.Common;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NHM.Common.Enums;
@@ -8,7 +9,7 @@ using NiceHashMiner.Utils;
 
 namespace NiceHashMiner.Algorithms
 {
-    public abstract class Algorithm
+    public abstract class Algorithm : NotifyChangedBase
     {
         /// <summary>
         /// Used for converting SMA values to BTC/H/Day
@@ -62,10 +63,20 @@ namespace NiceHashMiner.Algorithms
         /// </summary>
         public virtual string ExtraLaunchParameters { get; set; }
 
+        private bool _enabled;
+
         /// <summary>
         /// Get or set whether this algorithm is enabled for mining
         /// </summary>
-        public virtual bool Enabled { get; set; }
+        public virtual bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                _enabled = value;
+                OnPropertyChanged();
+            }
+        }
         
         /// <summary>
         /// Indicates whether this algorithm requires a benchmark

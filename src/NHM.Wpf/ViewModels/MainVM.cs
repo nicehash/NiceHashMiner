@@ -71,6 +71,16 @@ namespace NHM.Wpf.ViewModels
         {
             public ComputeDevice Dev { get; }
 
+            public bool Enabled
+            {
+                get => Dev.Enabled;
+                set
+                {
+                    ApplicationStateManager.SetDeviceEnabledState(this, (Dev.B64Uuid, value));
+                    OnPropertyChanged();
+                }
+            }
+
             public string AlgoOptions
             {
                 get
@@ -115,6 +125,10 @@ namespace NHM.Wpf.ViewModels
                 if (e.PropertyName == nameof(Dev.State))
                 {
                     OnPropertyChanged(nameof(ButtonLabel));
+                }
+                else if (e.PropertyName == nameof(Dev.Enabled))
+                {
+                    OnPropertyChanged(nameof(Enabled));
                 }
             }
 

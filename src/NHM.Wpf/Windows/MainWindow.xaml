@@ -101,7 +101,7 @@
                     <DataGridTemplateColumn Header="Enabled">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox HorizontalAlignment="Center" IsChecked="{Binding Dev.Enabled, UpdateSourceTrigger=PropertyChanged}" />
+                                <CheckBox HorizontalAlignment="Center" IsChecked="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>

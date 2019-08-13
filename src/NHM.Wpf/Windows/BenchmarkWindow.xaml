@@ -36,7 +36,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding FullName}" />
                 </GridView>
             </ListView.View>
         </ListView>
@@ -57,11 +57,11 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" />
-                    <GridViewColumn Header="Speed (H/s)" DisplayMemberBinding="{Binding Hashrate}" />
-                    <GridViewColumn Header="Secondary Speed (H/s)" DisplayMemberBinding="{Binding SecondaryHashrate}" />
-                    <GridViewColumn Header="Paying (BTC/GH/Day)" DisplayMemberBinding="{Binding Paying}" />
-                    <GridViewColumn Header="Profit (BTC/Day)" DisplayMemberBinding="{Binding Profit}" />
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding AlgorithmStringID}" />
+                    <GridViewColumn Header="Speed (H/s)" DisplayMemberBinding="{Binding BenchmarkSpeed}" />
+                    <GridViewColumn Header="Secondary Speed (H/s)" DisplayMemberBinding="{Binding SecondaryBenchmarkSpeed}" />
+                    <GridViewColumn Header="Paying (BTC/GH/Day)" DisplayMemberBinding="{Binding CurNhmSmaDataVal}" />
+                    <GridViewColumn Header="Profit (BTC/Day)" DisplayMemberBinding="{Binding CurrentProfit}" />
                 </GridView>
             </ListView.View>
         </ListView>
@@ -81,16 +81,16 @@
                 <StackPanel Width="210">
                     <control:SettingsContainer Title="Benchmark Speed (H/s):"
                                                Description="Fine tune algorithm ratios by manually settings benchmark speeds for each algorithm.">
-                        <TextBox Text="{Binding SelectedAlgo.Hashrate}" />
+                        <TextBox Text="{Binding SelectedAlgo.BenchmarkSpeed}" />
                     </control:SettingsContainer>
                     <control:SettingsContainer Title="Secondary Benchmark Speed (H/s):"
                                                Description="Speed for the secondary algorithm when using dual mining."
                                                IsEnabled="{Binding SelectedAlgo.IsDual}">
-                        <TextBox Text="{Binding SelectedAlgo.SecondaryHashrate}" />
+                        <TextBox Text="{Binding SelectedAlgo.SecondaryBenchmarkSpeed}" />
                     </control:SettingsContainer>
                     <control:SettingsContainer Title="Power Usage (W):"
                                                Description="The power used by this algorithm in Watts\nAlgorithm profits will deduct power costs when this and electricity cost are above 0.">
-                        <TextBox Text="{Binding SelectedAlgo.Power}" />
+                        <TextBox Text="{Binding SelectedAlgo.PowerUsage}" />
                     </control:SettingsContainer>
                     <control:SettingsContainer Title="Extra Launch Parameters:"
                                                Description="Additional launch parameters when launching miner and this algorithm.">

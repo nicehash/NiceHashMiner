@@ -57,17 +57,5 @@ namespace NiceHashMiner
             RefreshDeviceListView?.Invoke(null, null);
             NiceHashStats.StateChanged();
         }
-
-        private static void DeviceOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (sender is ComputeDevice dev && e.PropertyName == nameof(ComputeDevice.Enabled))
-            {
-                if (!dev.Enabled)
-                    StopDevice(dev);
-
-                ConfigManager.GeneralConfigFileCommit();
-                NiceHashStats.StateChanged();
-            }
-        }
     }
 }

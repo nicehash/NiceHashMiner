@@ -59,6 +59,7 @@ namespace NiceHashMiner.Algorithms
             set
             {
                 if (BaseAlgo != null) BaseAlgo.Enabled = value;
+                OnPropertyChanged();
             }
         }
 

@@ -8,6 +8,7 @@ using NHM.Common;
 using NHM.Wpf.ViewModels;
 using NHM.Wpf.ViewModels.Models.Placeholders;
 using NiceHashMiner;
+using NiceHashMiner.Devices;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace NHM.Wpf.Windows
@@ -36,7 +37,7 @@ namespace NHM.Wpf.Windows
 
         private void BenchButton_Click(object sender, RoutedEventArgs e)
         {
-            var bench = new BenchmarkWindow();
+            var bench = new BenchmarkWindow(AvailableDevices.Devices);
             bench.ShowDialog();
         }
 
