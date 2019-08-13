@@ -6,12 +6,18 @@
         xmlns:local="clr-namespace:NHM.Wpf"
         xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
         xmlns:control="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
+        xmlns:converters="clr-namespace:NHM.Wpf.ViewModels.Converters"
         mc:Ignorable="d"
         Title="BenchmarkWindow" Height="450" Width="800">
     <Window.DataContext>
         <viewModels:BenchmarkViewModel />
     </Window.DataContext>
+
     <Grid>
+        <Grid.Resources>
+            <converters:HashrateConverter x:Key="HashConv" />
+        </Grid.Resources>
+
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="2*"/>
@@ -58,7 +64,7 @@
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding AlgorithmStringID}" />
-                    <GridViewColumn Header="Speed (H/s)" DisplayMemberBinding="{Binding BenchmarkSpeed}" />
+                    <GridViewColumn Header="Speed (H/s)" DisplayMemberBinding="{Binding BenchmarkSpeed, Converter={StaticResource HashConv}, ConverterParameter={Binding FirstType}}" />
                     <GridViewColumn Header="Secondary Speed (H/s)" DisplayMemberBinding="{Binding SecondaryBenchmarkSpeed}" />
                     <GridViewColumn Header="Paying (BTC/GH/Day)" DisplayMemberBinding="{Binding CurNhmSmaDataVal}" />
                     <GridViewColumn Header="Profit (BTC/Day)" DisplayMemberBinding="{Binding CurrentProfit}" />

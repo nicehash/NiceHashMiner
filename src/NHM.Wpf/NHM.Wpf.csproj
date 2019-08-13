@@ -75,7 +75,9 @@
     <Compile Include="Translations.cs" />
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
+    <Compile Include="ViewModels\Converters\ConverterBase.cs" />
     <Compile Include="ViewModels\Converters\DoubleToStringConverter.cs" />
+    <Compile Include="ViewModels\Converters\HashrateConverter.cs" />
     <Compile Include="ViewModels\Converters\NulBoolToBoolConverter.cs" />
     <Compile Include="ViewModels\Converters\NulBoolToVisibilityConverter.cs" />
     <Compile Include="ViewModels\Converters\TranslatingConverter.cs" />
