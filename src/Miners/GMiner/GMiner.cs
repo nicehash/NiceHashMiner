@@ -42,7 +42,7 @@ namespace GMinerPlugin
                 case AlgorithmType.ZHash:
                     return "144_5";
                 case AlgorithmType.Beam:
-                    return "150_5";
+                    return "beamhashI";
                 case AlgorithmType.GrinCuckaroo29:
                     return "cuckaroo29";
                 case AlgorithmType.GrinCuckatoo31:
@@ -51,6 +51,8 @@ namespace GMinerPlugin
                     return "cuckoo29";
                 case AlgorithmType.GrinCuckarood29:
                     return "cuckarood29";
+                case AlgorithmType.Beam2:
+                    return "beamhashII";
                 default:
                     return "";
             }
