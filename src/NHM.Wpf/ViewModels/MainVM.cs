@@ -176,9 +176,23 @@ namespace NHM.Wpf.ViewModels
 
             public double PowerUsage => Stats?.GetPowerUsage() ?? 0;
 
-            public double PowerCost => ExchangeRateApi.ConvertFromBtc(Stats?.PowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0);
+            public double PowerCost
+            {
+                get
+                {
+                    var cost = Stats?.PowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0;
+                    return ExchangeRateApi.ConvertFromBtc(cost);
+                }
+            }
 
-            public double Profit => ExchangeRateApi.ConvertFromBtc(Stats?.TotalPayingRateDeductPowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0);
+            public double Profit
+            {
+                get
+                {
+                    var cost = Stats?.TotalPayingRateDeductPowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0;
+                    return ExchangeRateApi.ConvertFromBtc(cost);
+                }
+            }
 
             public string StateName
             {
