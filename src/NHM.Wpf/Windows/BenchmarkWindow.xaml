@@ -8,7 +8,7 @@
         xmlns:control="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
         xmlns:converters="clr-namespace:NHM.Wpf.ViewModels.Converters"
         mc:Ignorable="d"
-        Title="BenchmarkWindow" Height="450" Width="800">
+        Title="BenchmarkWindow" Height="600" Width="900">
     <Window.DataContext>
         <viewModels:BenchmarkViewModel />
     </Window.DataContext>
