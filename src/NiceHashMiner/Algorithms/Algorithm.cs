@@ -99,6 +99,16 @@ namespace NiceHashMiner.Algorithms
         /// </summary>
         public virtual bool BenchmarkNeeded => BenchmarkSpeed <= 0;
 
+        protected void NotifySpeedChanged()
+        {
+            OnPropertyChanged(nameof(BenchmarkSpeed));
+            OnPropertyChanged(nameof(SecondaryBenchmarkSpeed));
+            OnPropertyChanged(nameof(Speeds));
+            OnPropertyChanged(nameof(AnnotatedSpeeds));
+            OnPropertyChanged(nameof(BenchmarkNeeded));
+            OnPropertyChanged(nameof(CurPayingRateStr));
+        }
+
         #endregion
 
         #region Profitability

@@ -83,6 +83,7 @@ namespace NiceHashMiner.Algorithms
             set
             {
                 BaseAlgo.Speeds[0] = value;
+                NotifySpeedChanged();
             }
         }
         public override double SecondaryBenchmarkSpeed
@@ -95,6 +96,7 @@ namespace NiceHashMiner.Algorithms
             set
             {
                 if (IsDual) BaseAlgo.Speeds[1] = value;
+                NotifySpeedChanged();
             }
         }
         public override List<double> Speeds
@@ -109,6 +111,8 @@ namespace NiceHashMiner.Algorithms
                 {
                     BaseAlgo.Speeds[i] = value[i];
                 }
+
+                NotifySpeedChanged();
             }
         }
     }
