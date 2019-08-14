@@ -141,18 +141,7 @@ namespace NHM.Wpf.ViewModels
 
         public async Task StartMining()
         {
-            var hasData = NHSmaData.HasData;
-
-            // TODO there is a better way..
-            for (var i = 0; i < 10; i++)
-            {
-                if (hasData) break;
-                await Task.Delay(1000);
-                hasData = NHSmaData.HasData;
-                Logger.Info("NICEHASH", $"After {i}s has data: {hasData}");
-            }
-
-            if (!hasData) return;
+            if (!await NHSmaData.WaitOnDataAsync(10)) return;
 
             // TODO there is a mess of blocking and not-awaited async code down the line, 
             // Just wrapping with Task.Run here for now

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
 using NiceHashMiner.Configs;
 using NHM.Common;
@@ -226,6 +227,21 @@ namespace NiceHashMiner.Switching
             }
 
             return dict;
+        }
+
+        public static async Task<bool> WaitOnDataAsync(int seconds)
+        {
+            var hasData = HasData;
+
+            for (var i = 0; i < seconds; i++)
+            {
+                if (hasData) return true;
+                await Task.Delay(1000);
+                hasData = HasData;
+                Logger.Info("NICEHASH", $"After {i}s has data: {hasData}");
+            }
+
+            return hasData;
         }
 
         #endregion
