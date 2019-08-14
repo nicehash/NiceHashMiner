@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using NiceHashMiner.Mining.Plugins;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NHM.Wpf.ViewModels.Models.Placeholders;
 
 namespace NHM.Wpf.ViewModels.Plugins
 {
@@ -14,30 +9,15 @@ namespace NHM.Wpf.ViewModels.Plugins
 
         public PluginListVM()
         {
-            var cdalgos = new Dictionary<string, List<string>>
-            {
-                {
-                    "NVIDIA", new List<string>
-                    {
-                        "CryptoNightHeavy",
-                        "CryptoNightV8",
-                        "Lyra2REv3",
-                        "NeoScrypt",
-                        "X16R",
-                        "MTP"
-                    }
-                }
-            };
+            Plugins = new ObservableCollection<PluginEntryVM>();
+        }
 
-            var plugins = new List<PluginPackageInfo>
+        public void PopulatePlugins()
+        {
+            foreach (var plugin in MinerPluginsManager.RankedPlugins)
             {
-                new PluginPackageInfo { PluginName = "CryptoDredge", PluginVersion = new Version("1.5"), PluginAuthor = "info@nicehash.com", SupportedDevicesAlgorithms = cdalgos},
-                new PluginPackageInfo { PluginName = "ZEnemy", PluginVersion = new Version("1.4"), PluginAuthor = "info@nicehash.com" },
-                new PluginPackageInfo { PluginName = "WildRig", PluginVersion = new Version("1.2"), PluginAuthor = "info@nicehash.com" }
-            };
-
-            Plugins = new ObservableCollection<PluginEntryVM>(
-                plugins.Select(p => new PluginEntryVM(new PluginPackageInfoCR { LocalInfo = p })));
+                Plugins.Add(new PluginEntryVM(plugin));
+            }
         }
     }
 }

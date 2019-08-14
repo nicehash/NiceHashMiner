@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using NHM.Wpf.ViewModels.Models;
-using NHM.Wpf.ViewModels.Models.Placeholders;
+﻿using NHM.Wpf.ViewModels.Models;
+using NiceHashMiner.Mining.Plugins;
+using System.Linq;
 
 namespace NHM.Wpf.ViewModels.Plugins
 {

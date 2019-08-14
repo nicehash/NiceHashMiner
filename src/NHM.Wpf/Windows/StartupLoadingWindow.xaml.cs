@@ -1,8 +1,7 @@
-﻿using NHM.Wpf.ViewModels;
-using NHM.Wpf.ViewModels.Models.Placeholders;
+﻿using NHM.Common;
+using NHM.Wpf.ViewModels;
 using System.ComponentModel;
 using System.Windows;
-using NHM.Common;
 
 namespace NHM.Wpf.Windows
 {

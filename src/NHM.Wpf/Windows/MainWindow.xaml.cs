@@ -1,14 +1,13 @@
-﻿using NHM.Wpf.Windows.Common;
+﻿using NHM.Common;
+using NHM.Wpf.ViewModels;
+using NHM.Wpf.Windows.Common;
 using NHM.Wpf.Windows.Plugins;
+using NiceHashMiner;
+using NiceHashMiner.Devices;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using NHM.Common;
-using NHM.Wpf.ViewModels;
-using NHM.Wpf.ViewModels.Models.Placeholders;
-using NiceHashMiner;
-using NiceHashMiner.Devices;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace NHM.Wpf.Windows

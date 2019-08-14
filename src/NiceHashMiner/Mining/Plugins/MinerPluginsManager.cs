@@ -101,16 +101,15 @@ namespace NiceHashMiner.Mining.Plugins
 
         //private static Dictionary<string, IMinerPlugin> MinerPlugins { get => MinerPluginHost.MinerPlugin; }
 
-        public static List<PluginPackageInfoCR> RankedPlugins
+        public static IEnumerable<PluginPackageInfoCR> RankedPlugins
         {
             get
             {
-                var orderedByDeviceSupportCountAndName = Plugins
+                return Plugins
                     .Select(kvp => kvp.Value)
                     .OrderByDescending(info => info.HasNewerVersion)
-                    .OrderByDescending(info => info.OnlineSupportedDeviceCount)
+                    .ThenByDescending(info => info.OnlineSupportedDeviceCount)
                     .ThenBy(info => info.PluginName);
-                return orderedByDeviceSupportCountAndName.ToList();
             }
         }
 

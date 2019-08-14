@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using NHM.Wpf.ViewModels.Models.Placeholders;
-
-namespace NHM.Wpf.ViewModels.Plugins
+﻿namespace NHM.Wpf.ViewModels.Plugins
 {
     public class PluginVM : BaseVM
     {
@@ -25,6 +18,8 @@ namespace NHM.Wpf.ViewModels.Plugins
         public PluginVM()
         {
             _listVM = new PluginListVM();
+
+            _listVM.PopulatePlugins();
 
             CurrentPage = _listVM;
         }
