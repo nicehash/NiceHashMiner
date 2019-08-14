@@ -38,7 +38,7 @@ namespace LolMinerBeam
                 case AlgorithmType.Beam: return "BEAM-I";
                 case AlgorithmType.GrinCuckarood29: return "GRIN-AD29";
                 case AlgorithmType.GrinCuckatoo31: return "GRIN-AT31";
-                case AlgorithmType.Beam2: return "BEAM-II";
+                case AlgorithmType.BeamV2: return "BEAM-II";
                 default: return "";
             }
         }

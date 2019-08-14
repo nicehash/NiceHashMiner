@@ -102,7 +102,7 @@ namespace NHM.Common.Enums
         //[Obsolete("UNUSED Algorithm")]
         GrinCuckarood29 = 44,
         //[Obsolete("UNUSED Algorithm")]
-        Beam2 = 45,
+        BeamV2 = 45,
         #endregion // NiceHashAPI
     }
 }

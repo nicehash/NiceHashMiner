@@ -88,7 +88,7 @@ namespace LolMinerBeam
                     new Algorithm(PluginUUID, AlgorithmType.Beam),
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
-                    new Algorithm(PluginUUID, AlgorithmType.Beam2),
+                    new Algorithm(PluginUUID, AlgorithmType.BeamV2),
                 };
             }
             else
@@ -99,7 +99,7 @@ namespace LolMinerBeam
                     new Algorithm(PluginUUID, AlgorithmType.Beam) { Enabled = false },
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31) { Enabled = false },
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29) { Enabled = false },
-                    new Algorithm(PluginUUID, AlgorithmType.Beam2) { Enabled = false },
+                    new Algorithm(PluginUUID, AlgorithmType.BeamV2) { Enabled = false },
                 };
             }
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);

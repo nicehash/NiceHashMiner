@@ -107,7 +107,7 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
-                new Algorithm(PluginUUID, AlgorithmType.Beam2),
+                new Algorithm(PluginUUID, AlgorithmType.BeamV2),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
@@ -120,7 +120,7 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
-                new Algorithm(PluginUUID, AlgorithmType.Beam2),
+                new Algorithm(PluginUUID, AlgorithmType.BeamV2),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;

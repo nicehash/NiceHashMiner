@@ -51,7 +51,7 @@ namespace GMinerPlugin
                     return "cuckoo29";
                 case AlgorithmType.GrinCuckarood29:
                     return "cuckarood29";
-                case AlgorithmType.Beam2:
+                case AlgorithmType.BeamV2:
                     return "beamhashII";
                 default:
                     return "";
