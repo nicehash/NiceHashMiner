@@ -66,7 +66,7 @@ namespace MiniZ
                 using (var client = new TcpClient("127.0.0.1", _apiPort))
                 using (var nwStream = client.GetStream())
                 {
-                    var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":\"0\",\"method\":\"getstat\"}");
+                    var bytesToSend = Encoding.ASCII.GetBytes("{\"id\":\"0\", \"method\":\"getstat\"}\\n");
                     await nwStream.WriteAsync(bytesToSend, 0, bytesToSend.Length);
                     var bytesToRead = new byte[client.ReceiveBufferSize];
                     var bytesRead = await nwStream.ReadAsync(bytesToRead, 0, client.ReceiveBufferSize);
