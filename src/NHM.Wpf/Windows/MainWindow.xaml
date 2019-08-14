@@ -86,6 +86,7 @@
                 <converters:DoubleToStringConverter x:Key="DToStr" />
                 <converters:TranslatingConverter x:Key="TrConv" />
                 <converters:HashrateConverter x:Key="HashConv" />
+                <BooleanToVisibilityConverter x:Key="BoolToVis" />
                 <CollectionViewSource x:Key="GrpSrc" Source="{Binding MiningDevs}" IsLiveGroupingRequested="True">
                     <CollectionViewSource.GroupDescriptions>
                         <PropertyGroupDescription PropertyName="StateName" />
@@ -123,7 +124,8 @@
             </DataGrid>
 
             <ListView Grid.Row="1"
-                      ItemsSource="{Binding Source={StaticResource GrpSrc}}">
+                      ItemsSource="{Binding Source={StaticResource GrpSrc}}"
+                      Visibility="{Binding State.AnyDeviceRunning, Converter={StaticResource BoolToVis}}">
                 <ListView.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
