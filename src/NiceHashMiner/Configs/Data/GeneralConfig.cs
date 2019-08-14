@@ -93,7 +93,7 @@ namespace NiceHashMiner.Configs.Data
         public int MinerAPIQueryInterval { get; set; } = 5;
 
 
-        private int _minerRestartDelayMS = 500;
+        private int _minerRestartDelayMS = 1000;
         public int MinerRestartDelayMS
         {
             get => _minerRestartDelayMS;
@@ -233,7 +233,7 @@ namespace NiceHashMiner.Configs.Data
         public bool GUIWindowsAlwaysOnTop { get; set; } = false;
 
         public bool DisableDeviceStatusMonitoring { get; set; } = false;
-        public bool DisableDevicePowerModeSettings { get; set; } = false;
+        public bool DisableDevicePowerModeSettings { get; set; } = true;
 
         public bool ShowGPUPCIeBusIDs { get; set; } = false;
 
@@ -283,7 +283,7 @@ namespace NiceHashMiner.Configs.Data
             RunAtStartup = false;
             GUIWindowsAlwaysOnTop = false;
             DisableDeviceStatusMonitoring = false;
-            DisableDevicePowerModeSettings = false;
+            DisableDevicePowerModeSettings = true;
             MineRegardlessOfProfit = true;
         }
 

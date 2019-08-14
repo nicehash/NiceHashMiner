@@ -1,4 +1,5 @@
 ﻿using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace ZEnemy
 {
-    class ZEnemyPlugin : PluginBase
+    public class ZEnemyPlugin : PluginBase
     {
         public ZEnemyPlugin()
         {
@@ -17,9 +18,18 @@ namespace ZEnemy
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
+            // https://bitcointalk.org/index.php?topic=3378390.0 current 2-00-cuda10.0 // TODO update
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.10/z-enemy.2-00-cuda10.0.zip",
+                    "https://mega.nz/#!8HZQHQwS!EPOBklGAYsHV6zOHMe3t_F8SkLE8kX7iZV4OcTwxxL4" // original source
+                }
+            };
         }
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(2, 1);
 
         public override string Name => "ZEnemy";
 

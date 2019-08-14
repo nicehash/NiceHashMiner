@@ -27,7 +27,7 @@ namespace Example
         /// <summary>
         /// With version we set the version of the plugin for further updating capabilities.
         /// </summary>
-        public Version Version => new Version(1, 0);
+        public Version Version => new Version(1, 1);
 
         /// <summary>
         /// CanGroup checks if miner can run multiple devices with same algorithm in one miner instance
@@ -36,7 +36,9 @@ namespace Example
         /// </summary>
         public bool CanGroup(MiningPair a, MiningPair b)
         {
-            if (a.Algorithm.FirstAlgorithmType == AlgorithmType.DaggerHashimoto) return false;
+            // we can't combine Lyra2Z for some arbitrary reason on this miner
+            if (a.Algorithm.FirstAlgorithmType == AlgorithmType.Lyra2Z) return false;
+            // other algorithms can be combined
             return a.Algorithm.FirstAlgorithmType == b.Algorithm.FirstAlgorithmType;
         }
 
@@ -59,21 +61,26 @@ namespace Example
             // we loop through devices and add supported algorithms for that device to dictionary
             foreach (var device in devices)
             {
-                if (device.DeviceType == DeviceType.CPU)
+                // all support CryptoNightR and Lyra2Z
+                var algorithms = new List<Algorithm> { new Algorithm(PluginUUID, AlgorithmType.CryptoNightR), new Algorithm(PluginUUID, AlgorithmType.Lyra2Z) };
+
+                // GPUs support DaggerHashimoto
+                if (device is IGpuDevice)
                 {
-                    supported.Add(device, new List<Algorithm> { new Algorithm(PluginUUID, AlgorithmType.CryptoNightR) });
+                    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto));
                 }
-                else if(device.DeviceType == DeviceType.AMD)
+                // only NVIDIA supports Lyra2REv3
+                if (device.DeviceType == DeviceType.NVIDIA)
                 {
-                    supported.Add(device, new List<Algorithm> { new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto) });
+                    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.Lyra2REv3));
                 }
-                else // NVIDIA
+                // only AMD supports 
+                if (device.DeviceType == DeviceType.AMD)
                 {
-                    supported.Add(device, new List<Algorithm> {
-                        new Algorithm(PluginUUID, AlgorithmType.DaggerHashimoto),
-                        new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29)
-                    });
+                    algorithms.Add(new Algorithm(PluginUUID, AlgorithmType.MTP));
                 }
+
+                supported.Add(device, algorithms);
             }
 
             return supported;

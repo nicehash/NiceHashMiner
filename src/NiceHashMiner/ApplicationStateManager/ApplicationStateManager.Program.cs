@@ -1,18 +1,12 @@
 // SHARED
-using NiceHashMiner.Benchmarking;
+using NiceHashMiner.Configs;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Stats;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using static NiceHashMiner.Translations;
-using NiceHashMiner.Configs;
 
 namespace NiceHashMiner
 {

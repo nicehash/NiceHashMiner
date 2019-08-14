@@ -20,8 +20,16 @@ namespace NHM.Common.Device
         public int PCIeBusID { get; }
         public ulong GpuRam { get; }
 
+        // we assume disabled and we check it after OpenCL detection.
+        public bool IsOpenCLBackendEnabled { get; private set; } = false;
+
         // these should be more than enough for filtering 
         public int SM_major { get; }
         public int SM_minor { get; }
+
+        public void SetIsOpenCLBackendEnabled(bool enabled)
+        {
+            IsOpenCLBackendEnabled = enabled;
+        }
     }
 }

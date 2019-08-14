@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -9,15 +11,24 @@ using NHM.Common.Enums;
 
 namespace LolMinerBeam
 {
-    class LolMinerBeamPlugin : PluginBase
+    public class LolMinerBeamPlugin : PluginBase, IDevicesCrossReference
     {
         public LolMinerBeamPlugin()
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
+            // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 current 0.8.5
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/0.8.5/lolMiner_v085_Win64.zip", // original source
+                }
+            };
         }
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(2, 1);
 
         public override string Name => "LolMinerBeam";
 
@@ -31,6 +42,7 @@ namespace LolMinerBeam
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
 
+            // NVIDIA backend is NOT CUDA but OpenCL!!!!
             //CUDA 9.0+: minimum drivers 384.xx
             var minDrivers = new Version(384, 0);
             var isDriverSupported = CUDADevice.INSTALLED_NVIDIA_DRIVERS >= minDrivers;
@@ -41,7 +53,7 @@ namespace LolMinerBeam
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID);
 
-            var pcieId = 0; // GMiner sortes devices by PCIe
+            var pcieId = 0;
             foreach (var gpu in gpus)
             {
                 _mappedDeviceIds[gpu.UUID] = pcieId;
@@ -61,26 +73,57 @@ namespace LolMinerBeam
 
         private static bool IsSupportedNVIDIADevice(BaseDevice dev, bool isDriverSupported)
         {
-            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 2;
+            var isSupported = dev is CUDADevice gpu && gpu.SM_major >= 2 && gpu.IsOpenCLBackendEnabled;
             return isSupported && isDriverSupported;
         }
 
-
         private IEnumerable<Algorithm> GetSupportedAlgorithms(IGpuDevice gpu)
         {
-            var algorithms = new List<Algorithm>
+            var isAMD = gpu is AMDDevice;
+            List<Algorithm> algorithms;
+            if (isAMD)
             {
-                new Algorithm(PluginUUID, AlgorithmType.Beam),
-                new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
-            };
+                algorithms = new List<Algorithm>
+                {
+                    new Algorithm(PluginUUID, AlgorithmType.Beam),
+                    new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
+                    new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
+                };
+            }
+            else
+            {
+                // NVIDIA OpenCL backend stability is questionable
+                algorithms = new List<Algorithm>
+                {
+                    new Algorithm(PluginUUID, AlgorithmType.Beam) { Enabled = false },
+                    new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31) { Enabled = false },
+                };
+            }
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
         }
 
-#warning miner device mappings is not set
         protected override MinerBase CreateMinerBase()
         {
-            return new LolMinerBeam(PluginUUID);
+            return new LolMinerBeam(PluginUUID, _mappedDeviceIds);
+        }
+
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        {
+            if (_mappedDeviceIds.Count == 0) return;
+            // TODO will block
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--benchmark BEAM --longstats 60 --devices -1", new List<string> { "Start Benchmark..." });
+            var mappedDevs = DevicesListParser.ParseLolMinerOutput(output, devices.ToList());
+
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                _mappedDeviceIds[uuid] = indexID;
+            }
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

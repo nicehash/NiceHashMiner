@@ -15,20 +15,11 @@ using System.Threading.Tasks;
 
 namespace Ethlargement
 {
-    public class Ethlargement : IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker
+    public class Ethlargement : IMinerPlugin, IInitInternals, IBackroundService, IBinaryPackageMissingFilesChecker, IMinerBinsSource
     {
-        public Ethlargement()
-        {
-            _pluginUUID = "efd40691-618c-491a-b328-e7e020bda7a3";
-        }
-        public Ethlargement(string pluginUUID = "efd40691-618c-491a-b328-e7e020bda7a3")
-        {
-            _pluginUUID = pluginUUID;
-        }
-        private readonly string _pluginUUID;
-        public string PluginUUID => _pluginUUID;
+        public virtual string PluginUUID => "efd40691-618c-491a-b328-e7e020bda7a3";
 
-        public Version Version => new Version(1, 1);
+        public Version Version => new Version(1, 2);
         public string Name => "Ethlargement";
 
         public string Author => "stanko@nicehash.com";
@@ -47,6 +38,8 @@ namespace Ethlargement
 
         // register in GetSupportedAlgorithms and filter in InitInternals
         private static Dictionary<string, string> _registeredSupportedDevices = new Dictionary<string, string>();
+
+        private static List<AlgorithmType> _supportedAlgorithms = new List<AlgorithmType> { AlgorithmType.DaggerHashimoto, AlgorithmType.MTP };
 
         private bool IsServiceDisabled => !ServiceEnabled && _registeredSupportedDevices.Count > 0;
 
@@ -71,7 +64,7 @@ namespace Ethlargement
                     var algorithmType = pair.Algorithm.FirstAlgorithmType;
                     _devicesUUIDActiveAlgorithm[uuid] = algorithmType;
                 }
-                var shouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => kvp.Value == AlgorithmType.DaggerHashimoto);
+                var shouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => _supportedAlgorithms.Contains(kvp.Value));
                 if (shouldRun)
                 {
                     StartEthlargementProcess();
@@ -111,7 +104,7 @@ namespace Ethlargement
                     {
                         _devicesUUIDActiveAlgorithm[uuid] = AlgorithmType.NONE;
                     }
-                    var shouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => kvp.Value == AlgorithmType.DaggerHashimoto);
+                    var shouldRun = _devicesUUIDActiveAlgorithm.Any(kvp => _supportedAlgorithms.Contains(kvp.Value));
                     if (!shouldRun)
                     {
                         StopEthlargementProcess();
@@ -240,33 +233,36 @@ namespace Ethlargement
             _ethlargementBinPath = EthlargementBinPath();
 
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
-            var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
-            var supportedDevicesSettingsPath = Path.Combine(pluginRootIntenrals, "SupportedDevicesSettings.json");
-            var fileMinerOptionsPackage = InternalConfigs.ReadFileSettings<SupportedDevicesSettings>(supportedDevicesSettingsPath);
-            if (fileMinerOptionsPackage != null && fileMinerOptionsPackage.UseUserSettings)
-            {
-                _supportedDevicesSettings = fileMinerOptionsPackage;
-            }
-            else
-            {
-                InternalConfigs.WriteFileSettings(supportedDevicesSettingsPath, _supportedDevicesSettings);
-            }
+
+            var fileMinersBinsUrlsSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinersBinsUrlsSettings, "MinersBinsUrlsSettings.json");
+            if (fileMinersBinsUrlsSettings != null) MinersBinsUrlsSettings = fileMinersBinsUrlsSettings;
+
+            var readFromFileEnvSysVars = InternalConfigs.InitInternalSetting(pluginRoot, _ethlargementSettings, "EthlargementSettings.json");
+            if (readFromFileEnvSysVars != null && readFromFileEnvSysVars.UseUserSettings) _ethlargementSettings = readFromFileEnvSysVars;
 
             // Filter out supported ones
-            var supportedDevicesNames = _supportedDevicesSettings.SupportedDeviceNames;
-            if (supportedDevicesNames == null) return;
-            Func<string, bool> isSupportedName = (string name) => supportedDevicesNames.Any(supportedPart => name.Contains(supportedPart));
-
-            var unsupportedDevicesUUIDs = _registeredSupportedDevices.Where(kvp => !isSupportedName(kvp.Value)).Select(kvp => kvp.Key).ToArray();
-            foreach (var removeKey in unsupportedDevicesUUIDs)
+            var supportedDevicesNames = _ethlargementSettings.SupportedDeviceNames;
+            if (supportedDevicesNames != null)
             {
-                _registeredSupportedDevices.Remove(removeKey);
+                Func<string, bool> isSupportedName = (string name) => supportedDevicesNames.Any(supportedPart => name.Contains(supportedPart));
+
+                var unsupportedDevicesUUIDs = _registeredSupportedDevices.Where(kvp => !isSupportedName(kvp.Value)).Select(kvp => kvp.Key).ToArray();
+                foreach (var removeKey in unsupportedDevicesUUIDs)
+                {
+                    _registeredSupportedDevices.Remove(removeKey);
+                }
             }
+            if (_ethlargementSettings.SupportedAlgorithms != null) _supportedAlgorithms = _ethlargementSettings.SupportedAlgorithms;
         }
 
-        protected SupportedDevicesSettings _supportedDevicesSettings = new SupportedDevicesSettings
+        protected SupportedDevicesSettings _ethlargementSettings = new SupportedDevicesSettings
         {
-            SupportedDeviceNames = new List<string> { "1080", "1080 Ti", "Titan Xp" }
+            SupportedDeviceNames = new List<string> { "1080", "1080 Ti", "Titan Xp" },
+            SupportedAlgorithms = _supportedAlgorithms
+        };
+
+        protected MinersBinsUrlsSettings MinersBinsUrlsSettings { get; set; } = new MinersBinsUrlsSettings {
+            Urls = new List<string> { "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/Ethlargement.7z" } // link not original
         };
         #endregion Internal settings
 
@@ -274,5 +270,13 @@ namespace Ethlargement
         {
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles("", new List<string> { EthlargementBinPath() });
         }
+
+        #region IMinerBinsSource
+        public IEnumerable<string> GetMinerBinsUrlsForPlugin()
+        {
+            if (MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.Urls == null) return Enumerable.Empty<string>();
+            return MinersBinsUrlsSettings.Urls;
+        }
+        #endregion IMinerBinsSource
     }
 }

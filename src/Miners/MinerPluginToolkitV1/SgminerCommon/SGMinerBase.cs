@@ -16,13 +16,8 @@ namespace MinerPluginToolkitV1.SgminerCommon
     public class SGMinerBase : MinerBase
     {
         private int _apiPort;
-        
-        // can mine only one algorithm at a given time
-        protected AlgorithmType _algorithmType;
-
         // command line parts
         private string _devicesOnPlatform;
-        private string _extraLaunchParameters;
 
         public SGMinerBase(string uuid) : base(uuid)
         {}
@@ -57,14 +52,6 @@ namespace MinerPluginToolkitV1.SgminerCommon
 
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Error(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
             // check platform id
             var openClAmdPlatformResult = MinerToolkit.GetOpenCLPlatformID(_miningPairs);
             var openClAmdPlatformNum = openClAmdPlatformResult.Item1;
@@ -74,28 +61,20 @@ namespace MinerPluginToolkitV1.SgminerCommon
                 Logger.Error(_logGroup, "Initialization of miner failed. Multiple OpenCLPlatform IDs found!");
                 throw new InvalidOperationException("Invalid mining initialization");
             }
-
             // all good continue on
 
             // Order pairs and parse ELP
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            var deviceIds = orderedMiningPairs.Select(pair => pair.Device.ID);
+            var miningPairsList = _miningPairs.ToList();
+            var deviceIds = miningPairsList.Select(pair => pair.Device.ID);
             _devicesOnPlatform = $"--gpu-platform {openClAmdPlatformNum} -d {string.Join(",", deviceIds)}";
 
 
-            if (MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
-            else // TODO this one is temp???
+            // if no MinerOptionsPackage fallback to defaults
+            if (MinerOptionsPackage == null)
             {
                 var ignoreDefaults = SgminerOptionsPackage.DefaultMinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, SgminerOptionsPackage.DefaultMinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, SgminerOptionsPackage.DefaultMinerOptionsPackage.TemperatureOptions, ignoreDefaults);
+                var generalParams = ExtraLaunchParametersParser.Parse(miningPairsList, SgminerOptionsPackage.DefaultMinerOptionsPackage.GeneralOptions, ignoreDefaults);
+                var temperatureParams = ExtraLaunchParametersParser.Parse(miningPairsList, SgminerOptionsPackage.DefaultMinerOptionsPackage.TemperatureOptions, ignoreDefaults);
                 _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }

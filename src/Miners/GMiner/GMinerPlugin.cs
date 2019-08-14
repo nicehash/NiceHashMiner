@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using NHM.Common;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 
 namespace GMinerPlugin
 {
@@ -19,11 +20,19 @@ namespace GMinerPlugin
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
+            // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases current v1.53
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.53/gminer_1_53_windows64.zip", // original
+                }
+            };
         }
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(2, 4);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -78,6 +87,7 @@ namespace GMinerPlugin
                     var algorithms = GetAMDSupportedAlgorithms(amd).ToList();
                     if (algorithms.Count > 0) supported.Add(amd, algorithms);
                 }
+                // TODO we don't check GMiner minimum driver version
                 if (gpu is CUDADevice cuda)
                 {
                     var algorithms = GetCUDASupportedAlgorithms(cuda);
@@ -95,7 +105,8 @@ namespace GMinerPlugin
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
-                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
+                new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
+                new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;
@@ -159,9 +170,11 @@ namespace GMinerPlugin
             try
             {
                 if (ids.Count() == 0) return false;
-                if (benchmarkedPluginVersion.Major == 1 && benchmarkedPluginVersion.Minor < 8)
+                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 3)
                 {
-                    if (device.Name.Contains("1060 3GB") && ids.FirstOrDefault() == AlgorithmType.MTP) return true;
+                    // v1.53 https://github.com/develsoftware/GMinerRelease/releases/tag/1.53
+                    // improved performance for Equihash 144,5 and Equihash 192,7 on RTX cards
+                    if (device.Name.Contains("RTX") && ids.FirstOrDefault() == AlgorithmType.ZHash) return true;
                 }
             }
             catch (Exception e)

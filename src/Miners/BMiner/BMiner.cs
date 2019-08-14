@@ -1,7 +1,5 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.Common.Enums;
 using System;
 using System.Threading;
@@ -10,7 +8,6 @@ using static NHM.Common.StratumServiceHelpers;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Linq;
-using System.Globalization;
 using System.IO;
 using NHM.Common;
 using System.Collections.Generic;
@@ -21,9 +18,7 @@ namespace BMiner
     public class BMiner : MinerBase
     {
         private string _devices;
-        private string _extraLaunchParameters = "";
         private int _apiPort;
-        private AlgorithmType _algorithmType;
         private readonly HttpClient _http = new HttpClient();
 
         public BMiner(string uuid) : base(uuid)
@@ -38,6 +33,7 @@ namespace BMiner
                 case AlgorithmType.Beam: return "beam";
                 case AlgorithmType.GrinCuckaroo29: return "cuckaroo29";
                 case AlgorithmType.GrinCuckatoo31: return "cuckatoo31";
+                case AlgorithmType.GrinCuckarood29: return "cuckaroo29d";
                 default: return "";
             }
         }
@@ -46,14 +42,8 @@ namespace BMiner
         {
             get
             {
-                switch (_algorithmType)
-                {
-                    case AlgorithmType.ZHash:
-                    case AlgorithmType.Beam:
-                    case AlgorithmType.GrinCuckaroo29:
-                    case AlgorithmType.GrinCuckatoo31:
-                    default: return 2.0;
-                }
+                if (AlgorithmType.DaggerHashimoto == _algorithmType) return 0.65;
+                return 2.0;
             }
         }
 
@@ -150,26 +140,13 @@ namespace BMiner
 
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
-            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins", "bminer-lite-v15.5.3-747d98e");
+            var pluginRootBins = Paths.MinerPluginsPath(_uuid, "bins", "bminer-lite-v15.7.4-564ee38");
             var binPath = Path.Combine(pluginRootBins, "bminer.exe");
             return Tuple.Create(binPath, pluginRootBins);
         }
 
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-            // all good continue on
-
-            // init command line params parts
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
             var deviceIDs = _miningPairs.Select(p =>
             {
                 var device = p.Device;
@@ -177,14 +154,6 @@ namespace BMiner
                 return prefix + device.ID;
             }).OrderBy(id => id);
             _devices = $"-devices {string.Join(",", deviceIDs)}";
-
-            if(MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
         }
 
         protected override string MiningCreateCommandLine()

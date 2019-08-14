@@ -18,6 +18,9 @@ namespace NHM.DeviceDetection.AMD
     {
         private const string Tag = "AMDDetector";
 
+        // Ok so this is kinda stupid and probably should be split into OpenCL class but since we currently QueryOpenCLDevices inside AMD we will check for NVIDIA OpenCL backend only after AMD Query is finished
+        public static List<OpenCLPlatform> Platforms { get; private set; } = null;
+
         public static async Task<List<AMDDevice>> TryQueryAMDDevicesAsync(List<VideoControllerData> availableVideoControllers)
         {
             var amdDevices = new List<AMDDevice>();
@@ -54,6 +57,7 @@ namespace NHM.DeviceDetection.AMD
 
             if (result?.Platforms?.Count > 0)
             {
+                Platforms = result.Platforms;
                 var amdPlatforms = result.Platforms.Where(platform => IsAMDPlatform(platform)).ToList();
                 foreach (var platform in amdPlatforms)
                 {
@@ -66,7 +70,7 @@ namespace NHM.DeviceDetection.AMD
                         var gpuRAM = oclDev._CL_DEVICE_GLOBAL_MEM_SIZE;
                         var infoToHashed = $"{oclDev.DeviceID}--{DeviceType.AMD}--{gpuRAM}--{codename}--{name}";
                         // cross ref info from vid controllers with bus id
-                        var vidCtrl = availableVideoControllers?.Where(vid => vid.PCI_BUS_ID == oclDev.AMD_BUS_ID).FirstOrDefault() ?? null;
+                        var vidCtrl = availableVideoControllers?.Where(vid => vid.PCI_BUS_ID == oclDev.BUS_ID).FirstOrDefault() ?? null;
                         if (vidCtrl != null)
                         {
                             infSection = vidCtrl.InfSection;
@@ -74,13 +78,13 @@ namespace NHM.DeviceDetection.AMD
                         }
                         else
                         {
-                            Logger.Info(Tag, $"TryQueryAMDDevicesAsync cannot find VideoControllerData with bus ID {oclDev.AMD_BUS_ID}");
+                            Logger.Info(Tag, $"TryQueryAMDDevicesAsync cannot find VideoControllerData with bus ID {oclDev.BUS_ID}");
                         }
                         var uuidHEX = UUID.GetHexUUID(infoToHashed);
                         var uuid = $"AMD-{uuidHEX}";
                         
                         var bd = new BaseDevice(DeviceType.AMD, uuid, name, (int)oclDev.DeviceID);
-                        var amdDevice = new AMDDevice(bd, oclDev.AMD_BUS_ID, gpuRAM, codename, infSection, platformNum);
+                        var amdDevice = new AMDDevice(bd, oclDev.BUS_ID, gpuRAM, codename, infSection, platformNum);
                         amdDevices.Add(amdDevice);
                     }
                 }
@@ -108,7 +112,7 @@ namespace NHM.DeviceDetection.AMD
                 {
                     foreach (var oclDev in platform.Devices)
                     {
-                        var id = oclDev.AMD_BUS_ID;
+                        var id = oclDev.BUS_ID;
                         if (devicesWithBusID.Contains(id))
                         {
                             return true;
@@ -148,9 +152,9 @@ namespace NHM.DeviceDetection.AMD
                         var curPlatform = platformDevices[platform.PlatformNum];
                         foreach (var oclDev in platform.Devices)
                         {
-                            if (!addedDevicesWithBusID.Contains(oclDev.AMD_BUS_ID))
+                            if (!addedDevicesWithBusID.Contains(oclDev.BUS_ID))
                             {
-                                addedDevicesWithBusID.Add(oclDev.AMD_BUS_ID);
+                                addedDevicesWithBusID.Add(oclDev.BUS_ID);
                                 curPlatform.Devices.Add(oclDev);
                             }
                         }

@@ -1,9 +1,6 @@
 ﻿using NHM.Common.Device;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinerPluginToolkitV1
 {
@@ -14,7 +11,7 @@ namespace MinerPluginToolkitV1
         /// </summary>
         public static bool IsGcn4(AMDDevice dev)
         {
-            if (dev.Name.Contains("Vega"))
+            if (dev.Name.Contains("Vega")  || dev.InfSection.ToLower().Contains("r7500") || dev.InfSection.ToLower().Contains("vega"))
                 return true;
             if (dev.InfSection.ToLower().Contains("polaris"))
                 return true;
@@ -27,7 +24,7 @@ namespace MinerPluginToolkitV1
         /// </summary>
         public static bool IsGcn2(AMDDevice dev)
         {
-            if (dev.Name.Contains("Vega"))
+            if (dev.Name.Contains("Vega") || dev.InfSection.ToLower().Contains("r7500") || dev.InfSection.ToLower().Contains("vega"))
                 return true;
             if (!dev.InfSection.ToLower().Contains("pitcairn ") && !dev.InfSection.ToLower().Contains("tahiti") && !dev.InfSection.ToLower().Contains("oland") && !dev.InfSection.ToLower().Contains("cape verde"))
                 return true;

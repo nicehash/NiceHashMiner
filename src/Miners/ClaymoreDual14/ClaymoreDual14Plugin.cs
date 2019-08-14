@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using MinerPluginToolkitV1.Configs;
 
 namespace ClaymoreDual14
 {
@@ -19,6 +20,15 @@ namespace ClaymoreDual14
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
+            // https://bitcointalk.org/index.php?topic=1433925.0 current v14.7
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/Claymore.s.Dual.Ethereum.AMD+NVIDIA.GPU.Miner.v14.7.7z",
+                    "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?ngYyTARY" // original
+                }
+            };
         }
 
         public override string PluginUUID => "78d0bd8b-4d8f-4b7e-b393-e8ac6a83ae76";
@@ -39,10 +49,18 @@ namespace ClaymoreDual14
                 .Cast<IGpuDevice>()
                 .OrderBy(gpu => gpu.PCIeBusID);
 
+            var amds = gpus.Where(gpu => gpu is AMDDevice).OrderBy(gpu => gpu.PCIeBusID);
+            var nvidias = gpus.Where(gpu => gpu is CUDADevice).OrderBy(gpu => gpu.PCIeBusID);
+
+            // claymore orders AMDs first
             int claymoreIndex = -1;
-            foreach (var gpu in gpus)
+            foreach (var amd in amds)
             {
-                _mappedIDs[gpu.UUID] = ++claymoreIndex;
+                _mappedIDs[amd.UUID] = ++claymoreIndex;
+            }
+            foreach (var nvidia in nvidias)
+            {
+                _mappedIDs[nvidia.UUID] = ++claymoreIndex;
             }
 
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();

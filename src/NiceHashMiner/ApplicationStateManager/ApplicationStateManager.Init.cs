@@ -1,7 +1,7 @@
 // SHARED
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Forms.Components;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Mining.Plugins;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Utils;
@@ -13,9 +13,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NHM.DeviceDetection;
+using NHM.DeviceMonitoring;
 
 using static NiceHashMiner.Translations;
-using NHM.DeviceMonitoring;
 
 namespace NiceHashMiner
 {
@@ -188,7 +188,7 @@ namespace NiceHashMiner
                     loader.SecondaryVisible = true;
 
                     loader.PrimaryProgress.Report((Tr("Downloading Miner Binaries..."), nextProgPerc()));
-                    await MinerPluginsManager.DownloadMissingIntegratedMinersBins(loader.SecondaryProgress, ExitApplication.Token);
+                    await MinerPluginsManager.DownloadMissingMinersBins(loader.SecondaryProgress, ExitApplication.Token);
                     //await MinersDownloader.MinersDownloadManager.DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(progressDownload, ExitApplication.Token);
                     loader.SecondaryVisible = false;
                     if (ExitApplication.IsCancellationRequested) return;

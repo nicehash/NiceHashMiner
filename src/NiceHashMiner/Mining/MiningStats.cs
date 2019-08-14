@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using MinerPlugin;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Switching;
 using NHM.Common.Enums;
 

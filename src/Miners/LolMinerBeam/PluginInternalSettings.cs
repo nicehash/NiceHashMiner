@@ -1,10 +1,23 @@
-﻿using MinerPluginToolkitV1.ExtraLaunchParameters;
+﻿using MinerPluginToolkitV1.Configs;
+using MinerPluginToolkitV1.ExtraLaunchParameters;
 using System.Collections.Generic;
 
 namespace LolMinerBeam
 {
     internal static class PluginInternalSettings
     {
+        internal static MinerSystemEnvironmentVariables MinerSystemEnvironmentVariables = new MinerSystemEnvironmentVariables
+        {
+            DefaultSystemEnvironmentVariables = new Dictionary<string, string>
+            {
+                {"GPU_MAX_ALLOC_PERCENT", "100"},
+                {"GPU_SINGLE_ALLOC_PERCENT", "100"},
+                {"GPU_MAX_HEAP_SIZE", "100"},
+                {"GPU_FORCE_64BIT_PTR", "1"},
+                {"GPU_USE_SYNC_OBJECTS", "1"}
+            }
+        };
+
         internal static MinerOptionsPackage MinerOptionsPackage = new MinerOptionsPackage
         {
             GeneralOptions = new List<MinerOption>

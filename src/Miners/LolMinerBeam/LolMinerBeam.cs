@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -8,8 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NHM.Common;
 using NHM.Common.Enums;
@@ -21,24 +18,26 @@ namespace LolMinerBeam
     public class LolMinerBeam : MinerBase
     {
         private string _devices;
-        private string _extraLaunchParameters = "";
         private int _apiPort;
-
-        private AlgorithmType _algorithmType;
 
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
+        protected Dictionary<string, int> _mappedIDs;
 
         private readonly HttpClient _http = new HttpClient();
 
-        public LolMinerBeam (string uuid) : base(uuid)
-        {}
+        public LolMinerBeam (string uuid, Dictionary<string, int> mappedIDs) : base(uuid)
+        {
+            _mappedIDs = mappedIDs;
+        }
 
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
             switch (algorithmType)
             {
                 case AlgorithmType.Beam: return "BEAM";
+                case AlgorithmType.GrinCuckarood29: return "GRIN-AD29";
+                case AlgorithmType.GrinCuckatoo31: return "GRIN-AT31";
                 default: return "";
             }
         }
@@ -108,9 +107,10 @@ namespace LolMinerBeam
 
             bp.CheckData = (string data) =>
             {
-                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Total");
+                // data => Average speed (60s): 0.40 g/s
+                var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "s):");
                 var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
+                var found = hashrateFoundPair.Item2 && data.Contains("Average speed");
 
                 if (!found) return new BenchmarkResult { Success = false };
 
@@ -135,40 +135,29 @@ namespace LolMinerBeam
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.3");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.5");
             var binPath = Path.Combine(pluginRootBins, "lolMiner.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
         }
 
+        protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // sort by mapped ids
+            pairsList.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            return pairsList;
+        }
+
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-            // all good continue on
+            _devices = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
 
-            // init command line params parts
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(",", orderedMiningPairs.Select(p => p.Device.ID));
-
-            for (int i = 0; i < orderedMiningPairs.Count; i++)
+            // ???????? TODO GetSortedMiningPairs is now sorted so this thing probably makes no sense anymore
+            var miningPairs = _miningPairs.ToList();
+            for (int i = 0; i < miningPairs.Count; i++)
             {
-                _initOrderMirrorApiOrderUUIDs[i] = orderedMiningPairs[i].Device.UUID;
-            }
-
-            if (MinerOptionsPackage != null)
-            {
-                // TODO add ignore temperature checks
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
+                _initOrderMirrorApiOrderUUIDs[i] = miningPairs[i].Device.UUID;
             }
         }
 

@@ -1,16 +1,13 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NHM.Common;
-using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
@@ -21,11 +18,7 @@ namespace NanoMiner
     {
 
         private readonly HttpClient _http = new HttpClient();
-        private string _extraLaunchParameters = "";
-
         private int _apiPort;
-
-        private AlgorithmType _algorithmType;
 
         protected readonly Dictionary<string, int> _mappedIDs = new Dictionary<string, int>();
 
@@ -38,8 +31,12 @@ namespace NanoMiner
         {
             switch (algorithmType)
             {
+                case AlgorithmType.DaggerHashimoto:
+                    return "Ethash";
                 case AlgorithmType.GrinCuckaroo29:
                     return "Cuckaroo29";
+                case AlgorithmType.GrinCuckarood29:
+                    return "Cuckarood29";
                 case AlgorithmType.CryptoNightR:
                     return "CryptoNightR";
                 default:
@@ -64,29 +61,23 @@ namespace NanoMiner
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "nanominer-windows-1.4.0");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "nanominer-windows-1.5.2");
             var binPath = Path.Combine(pluginRootBins, "nanominer.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
         }
 
+        protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // sort by mapped ids
+            pairsList.Sort((a, b) => _mappedIDs[a.Device.UUID].CompareTo(_mappedIDs[b.Device.UUID]));
+            return pairsList;
+        }
+
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok) throw new InvalidOperationException("Invalid mining initialization");
-
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            //TODO this must be implemented
-            if (MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
+            // ?????
         }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
@@ -95,38 +86,36 @@ namespace NanoMiner
             try
             {
                 var result = await _http.GetStringAsync($"http://127.0.0.1:{_apiPort}/stats");
-                var summary = JsonConvert.DeserializeObject<JsonApiResponse>(result);
-                var gpuDevices = _miningPairs.Select(pair => pair.Device);
+                var apiResponse = JsonConvert.DeserializeObject<JsonApiResponse>(result);
+                var parsedApiResponse = JsonApiHelpers.ParseJsonApiResponse(apiResponse, _mappedIDs);
+
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
 
-                var apiDevs = summary.Devices;
-                var apiAlgos = summary.Algorithms;
-
                 foreach (var miningPair in _miningPairs)
                 {
                     var deviceUUID = miningPair.Device.UUID;
-                    var minerID = _mappedIDs[deviceUUID];
-
-                    var deviceData = apiDevs.FirstOrDefault().ToDictionary(x => x.Key, y => y.Value);
-                    deviceData.TryGetValue($"GPU {minerID}", out var gpuData);
-                    var currentPower = Convert.ToInt32(gpuData.Power);
-                    totalPowerUsage += currentPower;
-                    perDevicePowerInfo.Add(deviceUUID, currentPower);
-
-                    var algosData = apiAlgos.FirstOrDefault().ToDictionary(x => x.Key, y => y.Value).Values;
-                    algosData.FirstOrDefault().TryGetValue($"GPU {minerID}", out var algoData);
-                    var speed = algoData.ToString();
-                    perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, JsonApiHelpers.HashrateFromApiData(speed, _logGroup) * (1 - DevFee * 0.01)) });
-
-                    algosData.FirstOrDefault().TryGetValue("Total", out var totalData);
-                    totalSpeed = JsonApiHelpers.HashrateFromApiData(totalData.ToString(), _logGroup);
+                    if (parsedApiResponse.ContainsKey(deviceUUID))
+                    {
+                        var stat = parsedApiResponse[deviceUUID];
+                        var currentPower = (int)stat.Power;
+                        totalPowerUsage += currentPower;
+                        var hashrate = stat.Hashrate * (1 - DevFee * 0.01);
+                        totalSpeed += hashrate;
+                        perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, hashrate) });
+                        perDevicePowerInfo.Add(deviceUUID, currentPower);
+                    }
+                    else
+                    {
+                        perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, 0) });
+                        perDevicePowerInfo.Add(deviceUUID, 0);
+                    }
                 }
 
                 api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
                 api.PowerUsagePerDevice = perDevicePowerInfo;
                 api.PowerUsageTotal = totalPowerUsage;
             }
@@ -186,6 +175,14 @@ namespace NanoMiner
             return CreateCommandLine(_username);
         }
 
+        // TODO this is only temp until miner or backend gets fixed
+        private static string StripUsername(string username)
+        {
+            var btc = username.Split('$').FirstOrDefault();
+                if (btc != null) return btc;
+            return username;
+        }
+
         private string CreateCommandLine(string username)
         {
             _apiPort = GetAvaliablePort();
@@ -207,7 +204,7 @@ namespace NanoMiner
 
             var devs = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
 
-            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\ndevices={devs}\r\npool1={url}";
+            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={StripUsername(username)}\r\ndevices={devs}\r\npool1={url}";
             try
             {
                 File.WriteAllText(Path.Combine(paths.Item2, $"config_nh_{devs}.ini"), configString);

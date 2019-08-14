@@ -1,20 +1,17 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
+using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
+using NHM.Common;
 using NHM.Common.Enums;
 using System;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using NHM.Common.Device;
 using static NHM.Common.StratumServiceHelpers;
-using System.IO;
-using NHM.Common;
-using MinerPluginToolkitV1.Configs;
 
 namespace GMinerPlugin
 {
@@ -27,12 +24,7 @@ namespace GMinerPlugin
         private const double DevFee = 2.0;
         private HttpClient _httpClient;
         private int _apiPort;
-
-        // GMiner can mine only one algorithm at a given time
-        private AlgorithmType _algorithmType;
-
         // command line parts
-        private string _extraLaunchParameters = "";
         private string _devices;
 
         protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
@@ -52,11 +44,13 @@ namespace GMinerPlugin
                 case AlgorithmType.Beam:
                     return "150_5";
                 case AlgorithmType.GrinCuckaroo29:
-                    return "grin29";
+                    return "cuckaroo29";
                 case AlgorithmType.GrinCuckatoo31:
                     return "grin31";
                 case AlgorithmType.CuckooCycle:
-                    return "aeternity";
+                    return "cuckoo29";
+                case AlgorithmType.GrinCuckarood29:
+                    return "cuckarood29";
                 default:
                     return "";
             }
@@ -176,31 +170,18 @@ namespace GMinerPlugin
             return Tuple.Create(binPath, binCwd);
         }
 
+        protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // sort by _mappedDeviceIds
+            pairsList.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
+            return pairsList;
+        }
+
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-            // all good continue on
-
-            // TODO sort by GMiner indexes
-            // init command line params parts
-            //var orderedMiningPairs = _miningPairs.ToList();
-            //orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            var minignPairs = _miningPairs.ToList();
-            _devices = string.Join(" ", minignPairs.Select(p => _mappedDeviceIds[p.Device.UUID]));
-            if (MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(minignPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(minignPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
+            var mappedDevIDs = _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]);
+            _devices = string.Join(" ", mappedDevIDs);
         }
 
         protected override string MiningCreateCommandLine()

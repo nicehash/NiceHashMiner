@@ -13,9 +13,12 @@ namespace NiceHashMiner.Mining.Plugins
 
         static SupportedAlgorithmsFilter()
         {
-            // TESTNET
+            // new platform
 #if (TESTNET || TESTNETDEV || PRODUCTION_NEW)
             _filteredAlgorithms.Add(new List<AlgorithmType> { AlgorithmType.MTP });
+#else
+            // old platform
+            _filteredAlgorithms.Add(new List<AlgorithmType> { AlgorithmType.GrinCuckarood29 });
 #endif
             var internalSettings = InternalConfigs.ReadFileSettings<List<List<AlgorithmType>>>(_internalSettingFilePath);
             if (internalSettings != null)

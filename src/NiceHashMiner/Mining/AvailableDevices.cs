@@ -3,7 +3,7 @@ using NHM.Common.Enums;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NiceHashMiner.Devices
+namespace NiceHashMiner.Mining
 {
     public static class AvailableDevices
     {
@@ -66,7 +66,7 @@ namespace NiceHashMiner.Devices
         {
             _devices.AddRange(devs);
         }
-        
+
         public static ComputeDevice GetDeviceWithUuid(string uuid)
         {
             return Devices.FirstOrDefault(dev => uuid == dev.Uuid);

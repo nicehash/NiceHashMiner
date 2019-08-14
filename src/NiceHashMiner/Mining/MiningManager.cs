@@ -1,19 +1,17 @@
-﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Mining.Grouping;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using NiceHashMiner.Algorithms;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Mining.Grouping;
+using NiceHashMiner.Mining.Plugins;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
-using NHM.Common.Enums;
 using NHM.Common;
+using NHM.Common.Enums;
 using MinerPlugin;
-using System.Threading;
-using NiceHashMiner.Mining.Plugins;
 
 namespace NiceHashMiner.Mining
 {
@@ -312,11 +310,11 @@ namespace NiceHashMiner.Mining
                             $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
                             $"\t[{algo.AlgorithmStringID}]"
                         );
-                        if (algo is PluginAlgorithm dualAlg && dualAlg.IsDual)
+                        if (algo.IsDual)
                         {
                             stringBuilderDevice.AppendLine(
-                                $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
-                                $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
+                                $"\t\t\t\t\t  Secondary:\t\t {algo.SecondaryAveragedSpeed:e5}" +
+                                $"\t\t\t\t  {algo.SecondaryCurNhmSmaDataVal:e5}"
                             );
                         }
                     }

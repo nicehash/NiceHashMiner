@@ -6,6 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 
 namespace EWBF
 {
@@ -15,6 +16,15 @@ namespace EWBF
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
+            // https://bitcointalk.org/index.php?topic=4466962.0 current v0.6
+            MinersBinsUrlsSettings = new MinersBinsUrlsSettings
+            {
+                Urls = new List<string>
+                {
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/EWBF.Equihash.miner.v0.6.7z",
+                    "https://mega.nz/#F!fsAlmZQS!CwVgFfBDduQI-CbwVkUEpQ?Tlp22YKT" // original
+                }
+            };
         }
 
         public override string PluginUUID => "f7d5dfa0-7236-11e9-b20c-f9f12eb6d835";

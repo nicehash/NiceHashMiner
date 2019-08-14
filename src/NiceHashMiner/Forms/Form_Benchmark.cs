@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
-using NiceHashMiner.Algorithms;
 using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
-using NiceHashMiner.Interfaces;
 using NiceHashMiner.Mining;
-using NiceHashMiner.Mining.Grouping;
+using NiceHashMiner.Interfaces;
 using NiceHashMiner.Properties;
 using NHM.Common.Enums;
 using Timer = System.Windows.Forms.Timer;

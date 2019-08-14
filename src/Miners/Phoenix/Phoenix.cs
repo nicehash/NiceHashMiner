@@ -1,16 +1,13 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.ClaymoreCommon;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
-using NHM.Common.Device;
 using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
@@ -30,10 +27,18 @@ namespace Phoenix
             }
         }
 
+        public override string CreateCommandLine(string username)
+        {
+            var cmd = base.CreateCommandLine(username);
+            var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? " -amd" : " -nvidia";
+         
+            return cmd + deviceType;
+        }
+
         public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            var miningDevices = _orderedMiningPairs.Select(pair => pair.Device).ToList();
-            var algorithmTypes = new AlgorithmType[] { _algorithmFirstType };
+            var miningDevices = _miningPairs.Select(pair => pair.Device).ToList();
+            var algorithmTypes = new AlgorithmType[] { _algorithmType };
             // multiply dagger API data 
             var ad = await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
             var totalCount = ad.AlgorithmSpeedsTotal?.Count ?? 0;
@@ -57,9 +62,11 @@ namespace Phoenix
         {
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
+            var deviceType = _miningPairs.FirstOrDefault().Device.DeviceType == DeviceType.AMD ? "-amd" : "-nvidia";
+
             // local benchmark
             // TODO hardcoded epoch
-            var commandLine = $"-di {_devices} {_extraLaunchParameters} -benchmark 200 -wd 0";
+            var commandLine = $"-di {_devices} {_extraLaunchParameters} -benchmark 200 -wd 0 {deviceType}";
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
             var binCwd = binPathBinCwdPair.Item2;
@@ -88,7 +95,7 @@ namespace Phoenix
                 
                 return new BenchmarkResult
                 {
-                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmFirstType, benchHashResult) }
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }
                 };
             };
 
@@ -101,7 +108,7 @@ namespace Phoenix
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "PhoenixMiner_4.2c_Windows");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "PhoenixMiner_4.5c_Windows");
             var binPath = Path.Combine(pluginRootBins, "PhoenixMiner.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);

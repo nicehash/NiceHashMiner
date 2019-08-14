@@ -1,4 +1,4 @@
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Stats;
 using System.Collections.Generic;
 using System.ComponentModel;

@@ -1,7 +1,5 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using Newtonsoft.Json;
 using NHM.Common.Enums;
 using System;
@@ -24,12 +22,8 @@ namespace EWBF
         private double DevFee = 2.0;
         private int _apiPort;
 
-        // can mine only one algorithm at a given time
-        private AlgorithmType _algorithmType;
-
         // command line parts
         private string _devices;
-        private string _extraLaunchParameters = "";
 
         public EwbfMiner(string uuid) : base(uuid)
         {}
@@ -182,27 +176,7 @@ namespace EWBF
 
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-            // all good continue on
-
-            // init command line params parts
-            var orderedMiningPairs = _miningPairs.ToList();
-            orderedMiningPairs.Sort((a, b) => a.Device.ID.CompareTo(b.Device.ID));
-            _devices = string.Join(" ", orderedMiningPairs.Select(p => p.Device.ID));
-            if (MinerOptionsPackage != null)
-            {
-                var ignoreDefaults = MinerOptionsPackage.IgnoreDefaultValueOptions;
-                var generalParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.GeneralOptions, ignoreDefaults);
-                var temperatureParams = ExtraLaunchParametersParser.Parse(orderedMiningPairs, MinerOptionsPackage.TemperatureOptions, ignoreDefaults);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
-            }
+            _devices = string.Join(" ", _miningPairs.Select(p => p.Device.ID));
         }
 
         protected override string MiningCreateCommandLine()

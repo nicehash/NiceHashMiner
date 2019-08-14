@@ -1,8 +1,4 @@
-﻿using NiceHashMiner.Devices;
-using System;
-using System.Collections.Generic;
-using NiceHashMiner.Algorithms;
-using NiceHashMiner.Switching;
+﻿using System.Collections.Generic;
 using NHM.Common.Enums;
 using MinerPlugin;
 
@@ -16,7 +12,7 @@ namespace NiceHashMiner.Mining.Grouping
             foreach (var algo in Device.AlgorithmSettings)
             {
                 var isAlgoMiningCapable = GroupSetupUtils.IsAlgoMiningCapable(algo);
-                if (isAlgoMiningCapable && algo is PluginAlgorithm)
+                if (isAlgoMiningCapable)
                 {
                     Algorithms.Add(algo);
                 }
@@ -24,7 +20,7 @@ namespace NiceHashMiner.Mining.Grouping
         }
 
         public ComputeDevice Device { get; }
-        public List<Algorithm> Algorithms = new List<Algorithm>();
+        public List<AlgorithmContainer> Algorithms = new List<AlgorithmContainer>();
 
         public string GetMostProfitableString()
         {
@@ -75,11 +71,11 @@ namespace NiceHashMiner.Mining.Grouping
 
         public MiningPair GetMostProfitablePair()
         {
-            var pAlgo = Algorithms[GetMostProfitableIndex()] as PluginAlgorithm;
+            var pAlgo = Algorithms[GetMostProfitableIndex()];
             return new MiningPair
             {
                 Device = Device.BaseDevice,
-                Algorithm = pAlgo.BaseAlgo
+                Algorithm = pAlgo.Algorithm
             };
         }
 
