@@ -85,7 +85,16 @@ namespace NHM.Wpf.ViewModels.Models
 
         private void StartStopClick(object param)
         {
-            // TODO
+            switch (Dev.State)
+            {
+                case DeviceState.Stopped:
+                    ApplicationStateManager.StartDevice(Dev);
+                    break;
+                case DeviceState.Mining:
+                case DeviceState.Benchmarking:
+                    ApplicationStateManager.StopDevice(Dev);
+                    break;
+            }
         }
 
         public static implicit operator DeviceData(ComputeDevice dev)
