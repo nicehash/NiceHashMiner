@@ -5,10 +5,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Mining.Grouping;
 using NiceHashMiner.Mining.Plugins;
-using NiceHashMiner.Algorithms;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
 using NHM.Common;
@@ -312,11 +310,11 @@ namespace NiceHashMiner.Mining
                             $"\t\t| NHSMA = {algo.CurNhmSmaDataVal:e5})" +
                             $"\t[{algo.AlgorithmStringID}]"
                         );
-                        if (algo is PluginAlgorithm dualAlg && dualAlg.IsDual)
+                        if (algo.IsDual)
                         {
                             stringBuilderDevice.AppendLine(
-                                $"\t\t\t\t\t  Secondary:\t\t {dualAlg.SecondaryAveragedSpeed:e5}" +
-                                $"\t\t\t\t  {dualAlg.SecondaryCurNhmSmaDataVal:e5}"
+                                $"\t\t\t\t\t  Secondary:\t\t {algo.SecondaryAveragedSpeed:e5}" +
+                                $"\t\t\t\t  {algo.SecondaryCurNhmSmaDataVal:e5}"
                             );
                         }
                     }

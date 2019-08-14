@@ -2,7 +2,6 @@
 #if !(TESTNET || TESTNETDEV || PRODUCTION_NEW)
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Mining;
 using System;
 using System.Collections.Generic;
@@ -88,16 +87,6 @@ namespace NiceHashMiner.Stats
             DeviceStatus_Tick(null); // Send device to populate rig stats
 
             OnConnectionEstablished?.Invoke(null, EventArgs.Empty);
-        }
-
-        #endregion
-
-        #region Incoming socket calls
-
-        private static void SetVersion(string version)
-        {
-            Version = version;
-            ApplicationStateManager.OnVersionUpdate(version);
         }
 
         #endregion

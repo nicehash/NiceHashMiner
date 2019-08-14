@@ -11,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginLoader;
 using Newtonsoft.Json;
-using NiceHashMiner.Devices;
 using NHM.Common;
 using NiceHashMiner.Configs;
 using NHM.Common.Enums;

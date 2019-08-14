@@ -1,15 +1,36 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
+using NHM.Common.Algorithm;
 using NHM.Common.Enums;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Utils;
+using NiceHashMiner.Mining.Plugins;
 
-namespace NiceHashMiner.Algorithms
+namespace NiceHashMiner.Mining
 {
-    public abstract class Algorithm
+    public class AlgorithmContainer
     {
+        public Algorithm Algorithm { get; private set; }
+        
+        public PluginContainer PluginContainer { get; private set; }
+
+        public ComputeDevice ComputeDevice { get; private set; }
+
+        public string PluginName => PluginContainer?.Name ?? "N/A";
+
+        public Version ConfigVersion { get; set; } = new Version(1, 0);
+        public Version PluginVersion => PluginContainer?.Version;
+
+        public AlgorithmContainer(Algorithm algorithm, PluginContainer pluginContainer, ComputeDevice computeDevice)
+        {
+            PluginContainer = pluginContainer;
+            Algorithm = algorithm;
+            ComputeDevice = computeDevice;
+        }
+
         /// <summary>
         /// Used for converting SMA values to BTC/H/Day
         /// </summary>
@@ -20,22 +41,31 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// Friendly display name for this algorithm
         /// </summary>
-        public abstract string AlgorithmName { get; }
+        public string AlgorithmName => Algorithm?.AlgorithmName ?? "";
         /// <summary>
         /// Friendly name for miner type
         /// </summary>
-        public abstract string MinerBaseTypeName { get; }
+        public string MinerBaseTypeName
+        {
+            get
+            {
+                if (PluginContainer == null) return "";
+                var isIntegrated = PluginContainer.IsIntegrated;
+                var minerName = PluginContainer.Name + (isIntegrated ? "" : "(PLUGIN)");
+                return minerName;
+            }
+        }
         /// <summary>
         /// Friendly name for this algorithm/miner combo
         /// </summary>
-        public abstract string AlgorithmStringID { get; }
+        public string AlgorithmStringID => Algorithm?.AlgorithmStringID ?? "";
         /// <summary>
         /// AlgorithmType used by this Algorithm
         /// </summary>
-        public abstract AlgorithmType[] IDs { get; }
+        public AlgorithmType[] IDs => Algorithm.IDs.ToArray();
 
-        public abstract string MinerUUID { get; }
-        public abstract bool IsDual { get; }
+        public string MinerUUID => Algorithm?.MinerID;
+        public bool IsDual => Algorithm.IDs.Count > 1;
         #endregion
 
 
@@ -44,10 +74,45 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// Hashrate in H/s set by benchmark or user
         /// </summary>
-        public abstract double BenchmarkSpeed { get; set; }
-        public abstract double SecondaryBenchmarkSpeed { get; set; }
+        public double BenchmarkSpeed
+        {
+            get
+            {
+                return Algorithm.Speeds[0];
+            }
+            set
+            {
+                Algorithm.Speeds[0] = value;
+            }
+        }
 
-        public abstract List<double> Speeds { get; set; }
+        public double SecondaryBenchmarkSpeed
+        {
+            get
+            {
+                if (IsDual) return Algorithm.Speeds[1];
+                return 0d;
+            }
+            set
+            {
+                if (IsDual) Algorithm.Speeds[1] = value;
+            }
+        }
+
+        public List<double> Speeds
+        {
+            get
+            {
+                return Algorithm.Speeds.ToList();
+            }
+            set
+            {
+                for (var i = 0; i < Algorithm.Speeds.Count && i < value.Count; i++)
+                {
+                    Algorithm.Speeds[i] = value[i];
+                }
+            }
+        }
 
         /// <summary>
         /// Gets the averaged speed for this algorithm in H/s
@@ -60,13 +125,35 @@ namespace NiceHashMiner.Algorithms
         /// <summary>
         /// String containing raw extralaunchparams entered by user
         /// </summary>
-        public virtual string ExtraLaunchParameters { get; set; }
+        public string ExtraLaunchParameters
+        {
+            get
+            {
+                if (Algorithm == null) return "";
+                return Algorithm.ExtraLaunchParameters;
+            }
+            set
+            {
+                if (Algorithm != null) Algorithm.ExtraLaunchParameters = value;
+            }
+        }
 
         /// <summary>
         /// Get or set whether this algorithm is enabled for mining
         /// </summary>
-        public virtual bool Enabled { get; set; }
-        
+        public virtual bool Enabled
+        {
+            get
+            {
+                if (Algorithm == null) return false;
+                return Algorithm.Enabled;
+            }
+            set
+            {
+                if (Algorithm != null) Algorithm.Enabled = value;
+            }
+        }
+
         /// <summary>
         /// Indicates whether this algorithm requires a benchmark
         /// </summary>
@@ -233,7 +320,7 @@ namespace NiceHashMiner.Algorithms
                     CurNhmSmaDataVal = paying;
                     newProfit += CurNhmSmaDataVal * AvaragedSpeed * Mult;
                 }
-                else if(i == 1)
+                else if (i == 1)
                 {
                     SecondaryCurNhmSmaDataVal = paying;
                     newProfit += SecondaryCurNhmSmaDataVal * SecondaryAveragedSpeed * Mult;

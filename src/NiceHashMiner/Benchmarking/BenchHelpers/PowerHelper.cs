@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Timers;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
 
 namespace NiceHashMiner.Benchmarking.BenchHelpers
 {
