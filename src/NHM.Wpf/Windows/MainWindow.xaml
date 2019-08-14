@@ -157,7 +157,7 @@
                     <GridView>
                         <GridViewColumn Header="Device" DisplayMemberBinding="{Binding Dev.FullName}" />
                         <GridViewColumn Header="Speeds" DisplayMemberBinding="{Binding Speeds, Converter={StaticResource HashConv}}" />
-                        <GridViewColumn Header="mBTC/Day" DisplayMemberBinding="{Binding Payrate, StringFormat=F3}" />
+                        <GridViewColumn Header="{Binding MBtcPerTime}" DisplayMemberBinding="{Binding Payrate, StringFormat=F3}" />
                         <GridViewColumn Header="{Binding CurrencyPerTime}" DisplayMemberBinding="{Binding FiatPayrate, StringFormat=F2}" />
                         <GridViewColumn Header="Power Usage (W)" DisplayMemberBinding="{Binding PowerUsage, StringFormat=F2}" />
                         <GridViewColumn Header="Power Cost" DisplayMemberBinding="{Binding PowerCost, StringFormat=F2}" />
@@ -193,9 +193,9 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Global rate:" Style="{StaticResource StatusBarLabel}" />
                     <TextBlock Text="{Binding GlobalRate, StringFormat=F8}" Style="{StaticResource StatusBarDataLabel}" />
-                    <TextBlock Text="BTC/Day" Style="{StaticResource StatusBarLabel}" />
+                    <TextBlock Text="{Binding BtcPerTime}" Style="{StaticResource StatusBarLabel}" />
                     <TextBlock Text="{Binding GlobalRateFiat, StringFormat=F2}" Style="{StaticResource StatusBarDataLabel}" />
-                    <TextBlock Text="$/Day" Style="{StaticResource StatusBarLabel}" />
+                    <TextBlock Text="{Binding CurrencyPerTime}" Style="{StaticResource StatusBarLabel}" />
                 </StackPanel>
             </StatusBarItem>
             <Separator/>

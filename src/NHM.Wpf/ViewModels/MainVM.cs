@@ -1,234 +1,23 @@
 ﻿using NHM.Common;
-using NHM.Wpf.Annotations;
+using NHM.Wpf.ViewModels.Models;
 using NiceHashMiner;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Windows.Input;
-using NHM.Common.Enums;
-using NHM.Wpf.ViewModels.Models;
 using NiceHashMiner.Mining;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;
-using NiceHashMiner.Utils;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace NHM.Wpf.ViewModels
 {
     public class MainVM : BaseVM
     {
-        #region Fake placeholder
-
-        public class DeviceInfo : INotifyPropertyChanged
-        {
-            public bool Enabled { get; set; }
-            public string Device { get; }
-            public string Status => Enabled ? "Stopped" : "Disabled";
-            private int? _temp;
-            public int? Temp
-            {
-                get => _temp;
-                set
-                {
-                    _temp = value;
-                    SetPropertyChanged();
-                }
-            }
-            public int Load { get; }
-            public int? RPM { get; }
-            public string AlgoDetail { get; }
-            public string ButtonText => Enabled ? "Start" : "N/A";
-
-            public DeviceInfo(bool enabled, string dev, int? temp, int load, int? rpm, string detail)
-            {
-                Enabled = enabled;
-                Device = dev;
-                Temp = temp;
-                Load = load;
-                RPM = rpm;
-                AlgoDetail = detail;
-            }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            [NotifyPropertyChangedInvocator]
-            protected virtual void SetPropertyChanged([CallerMemberName] string propertyName = null)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
-        #endregion
-
         private readonly Timer _updateTimer;
-
-        public class DeviceData : NotifyChangedBase
-        {
-            public ComputeDevice Dev { get; }
-
-            public bool Enabled
-            {
-                get => Dev.Enabled;
-                set
-                {
-                    ApplicationStateManager.SetDeviceEnabledState(this, (Dev.B64Uuid, value));
-                    OnPropertyChanged();
-                }
-            }
-
-            public string AlgoOptions
-            {
-                get
-                {
-                    var enabledAlgos = Dev.AlgorithmSettings.Count(a => a.Enabled);
-                    var benchedAlgos = Dev.AlgorithmSettings.Count(a => !a.BenchmarkNeeded);
-                    return $"{Dev.AlgorithmSettings.Count} / {enabledAlgos} / {benchedAlgos}";
-                }
-            }
-
-            public string ButtonLabel
-            {
-                get
-                {
-                    // assume disabled
-                    var buttonLabel = "N/A";
-                    if (Dev.State == DeviceState.Stopped)
-                    {
-                        buttonLabel = "Start";
-                    }
-                    else if (Dev.State == DeviceState.Mining || Dev.State == DeviceState.Benchmarking)
-                    {
-                        buttonLabel = "Stop";
-                    }
-                    return Translations.Tr(buttonLabel);
-                }
-            }
-
-            public ICommand StartStopCommand { get; }
-
-            public DeviceData(ComputeDevice dev)
-            {
-                Dev = dev;
-
-                StartStopCommand = new BaseCommand(StartStopClick);
-
-                Dev.PropertyChanged += DevOnPropertyChanged;
-            }
-
-            private void DevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-            {
-                if (e.PropertyName == nameof(Dev.State))
-                {
-                    OnPropertyChanged(nameof(ButtonLabel));
-                }
-                else if (e.PropertyName == nameof(Dev.Enabled))
-                {
-                    OnPropertyChanged(nameof(Enabled));
-                }
-            }
-
-            public void RefreshDiag()
-            {
-                Dev.OnPropertyChanged(nameof(Dev.Load));
-                Dev.OnPropertyChanged(nameof(Dev.Temp));
-                Dev.OnPropertyChanged(nameof(Dev.FanSpeed));
-            }
-
-            private void StartStopClick(object param)
-            {
-                // TODO
-            }
-
-            public static implicit operator DeviceData(ComputeDevice dev)
-            {
-                return new DeviceData(dev);
-            }
-        }
-
-        public class MiningData : NotifyChangedBase
-        {
-            public ComputeDevice Dev { get; }
-
-            private MiningStats.DeviceMiningStats _stats;
-            public MiningStats.DeviceMiningStats Stats
-            {
-                get => _stats;
-                set
-                {
-                    _stats = value;
-                    OnPropertyChanged();
-                    OnPropertyChanged(nameof(Hashrate));
-                    OnPropertyChanged(nameof(Payrate));
-                    OnPropertyChanged(nameof(StateName));
-                    OnPropertyChanged(nameof(Speeds));
-                    OnPropertyChanged(nameof(FiatPayrate));
-                    OnPropertyChanged(nameof(PowerUsage));
-                    OnPropertyChanged(nameof(PowerCost));
-                    OnPropertyChanged(nameof(Profit));
-                }
-            }
-
-            public double Hashrate => Stats?.Speeds?.Count > 0 ? Stats.Speeds[0].speed : 0;
-
-            public IEnumerable<Hashrate> Speeds => Stats?.Speeds?.Select(s => (Hashrate) s);
-
-            public double Payrate => (Stats?.TotalPayingRate() ?? 0) * 1000;
-
-            public double FiatPayrate => ExchangeRateApi.ConvertFromBtc(Payrate / 1000);
-
-            public double PowerUsage => Stats?.GetPowerUsage() ?? 0;
-
-            public double PowerCost
-            {
-                get
-                {
-                    var cost = Stats?.PowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0;
-                    return ExchangeRateApi.ConvertFromBtc(cost);
-                }
-            }
-
-            public double Profit
-            {
-                get
-                {
-                    var cost = Stats?.TotalPayingRateDeductPowerCost(ExchangeRateApi.GetKwhPriceInBtc()) ?? 0;
-                    return ExchangeRateApi.ConvertFromBtc(cost);
-                }
-            }
-
-            public string StateName
-            {
-                get
-                {
-                    if (Stats == null) return Dev.State.ToString();
-
-                    var firstAlgo = Stats.Speeds.Count > 0 ? Stats.Speeds[0].type : AlgorithmType.NONE;
-                    var secAlgo = Stats.Speeds.Count > 1 ? Stats.Speeds[1].type : AlgorithmType.NONE;
-                    var algoName = Helpers.GetNameFromAlgorithmTypes(firstAlgo, secAlgo);
-
-                    return $"{algoName} ({Stats.MinerName})";
-                }
-            }
-
-            public MiningData(ComputeDevice dev)
-            {
-                Dev = dev;
-
-                Dev.PropertyChanged += DevOnPropertyChanged;
-            }
-
-            private void DevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-            {
-                if (e.PropertyName == nameof(Dev.State))
-                    OnPropertyChanged(nameof(StateName));
-            }
-        }
 
         private IEnumerable<DeviceData> _devices;
         public IEnumerable<DeviceData> Devices
@@ -274,7 +63,13 @@ namespace NHM.Wpf.ViewModels
 
         public MiningState State => MiningState.Instance;
 
-        public string CurrencyPerTime => $"{ExchangeRateApi.ActiveDisplayCurrency}/{TimeFactor.UnitType}";
+        private string PerTime => $"/{TimeFactor.UnitType}";
+
+        public string CurrencyPerTime => $"{ExchangeRateApi.ActiveDisplayCurrency}{PerTime}";
+
+        public string BtcPerTime => $"BTC{PerTime}";
+
+        public string MBtcPerTime => $"m{BtcPerTime}";
 
         public string ProfitPerTime => $"Profit ({CurrencyPerTime})";
 
@@ -284,14 +79,6 @@ namespace NHM.Wpf.ViewModels
 
         public MainVM()
         {
-            //Devices = new ObservableCollection<DeviceInfo>
-            //{
-            //    new DeviceInfo(false, "CPU#1 Intel(R) Core(TM) i7-8700k CPU @ 3.70GHz", null, 10, null, "3 / 3 / 0"),
-            //    new DeviceInfo(true, "GPU#1 EVGA GeForce GTX 1080 Ti", 64, 0, 1550, "36 / 27 / 5"),
-            //    new DeviceInfo(true, "GPU#2 EVGA GeForce GTX 1080 Ti", 54, 0, 1150, "36 / 27 / 3"),
-
-            //};
-
             _updateTimer = new Timer(1000);
             _updateTimer.Elapsed += UpdateTimerOnElapsed;
 
