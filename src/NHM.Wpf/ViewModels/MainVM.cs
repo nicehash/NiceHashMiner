@@ -1,9 +1,7 @@
-﻿using System;
-using NHM.Common;
+﻿using NHM.Common;
 using NHM.Wpf.ViewModels.Models;
 using NiceHashMiner;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Mining;
 using NiceHashMiner.Stats;
 using NiceHashMiner.Switching;

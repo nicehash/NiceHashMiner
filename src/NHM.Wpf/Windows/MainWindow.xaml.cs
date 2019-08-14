@@ -3,7 +3,7 @@ using NHM.Wpf.ViewModels;
 using NHM.Wpf.Windows.Common;
 using NHM.Wpf.Windows.Plugins;
 using NiceHashMiner;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
 using System;
 using System.Threading.Tasks;
 using System.Windows;

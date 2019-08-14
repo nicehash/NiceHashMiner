@@ -1,12 +1,9 @@
-﻿using System;
+﻿using NHM.Common.Algorithm;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Mining;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using NHM.Wpf.Annotations;
-using NiceHashMiner.Algorithms;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Devices;
 
 namespace NHM.Wpf.ViewModels
 {
@@ -28,7 +25,7 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        public ObservableCollection<Algorithm> SelectedAlgos { get; }
+        public ObservableCollection<AlgorithmContainer> SelectedAlgos { get; }
 
         /// <summary>
         /// True iff a device is selected and enabled
@@ -67,9 +64,9 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        private Algorithm _selectedAlgo;
+        private AlgorithmContainer _selectedAlgo;
 
-        public Algorithm SelectedAlgo
+        public AlgorithmContainer SelectedAlgo
         {
             get => _selectedAlgo;
             set
@@ -109,7 +106,7 @@ namespace NHM.Wpf.ViewModels
 
         public BenchmarkViewModel()
         {
-            SelectedAlgos = new ObservableCollection<Algorithm>();
+            SelectedAlgos = new ObservableCollection<AlgorithmContainer>();
         }
 
         public void CommitBenchmarks()

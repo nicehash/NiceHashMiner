@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using NHM.Wpf.ViewModels;
+﻿using NHM.Wpf.ViewModels;
 using NHM.Wpf.Windows.Common;
 using NHM.Wpf.Windows.Settings.Pages;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace NHM.Wpf.Windows
 {

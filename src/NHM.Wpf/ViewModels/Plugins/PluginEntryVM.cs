@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using NHM.Wpf.ViewModels.Models;
-using NiceHashMiner.Devices;
+﻿using NHM.Wpf.ViewModels.Models;
 using NiceHashMiner.Mining.Plugins;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace NHM.Wpf.ViewModels.Plugins

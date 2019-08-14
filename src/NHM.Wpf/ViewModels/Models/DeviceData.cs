@@ -1,7 +1,7 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
 using NiceHashMiner;
-using NiceHashMiner.Devices;
+using NiceHashMiner.Mining;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;

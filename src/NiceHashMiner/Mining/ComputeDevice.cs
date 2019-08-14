@@ -3,15 +3,10 @@ using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
 using NHM.UUID;
-using NiceHashMiner.Algorithms;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
 using System.Collections.Generic;
 using System.Linq;
-using NHM.Common.Enums;
-using NHM.Common.Device;
-using NHM.UUID;
-using NHM.DeviceMonitoring;
 
 namespace NiceHashMiner.Mining
 {

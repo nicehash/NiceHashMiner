@@ -84,6 +84,7 @@ namespace NiceHashMiner.Mining
             set
             {
                 Algorithm.Speeds[0] = value;
+                NotifySpeedChanged();
             }
         }
 
@@ -97,6 +98,7 @@ namespace NiceHashMiner.Mining
             set
             {
                 if (IsDual) Algorithm.Speeds[1] = value;
+                NotifySpeedChanged();
             }
         }
 
@@ -112,6 +114,8 @@ namespace NiceHashMiner.Mining
                 {
                     Algorithm.Speeds[i] = value[i];
                 }
+
+                NotifySpeedChanged();
             }
         }
 
@@ -154,8 +158,6 @@ namespace NiceHashMiner.Mining
                 if (Algorithm != null) Algorithm.ExtraLaunchParameters = value;
             }
         }
-
-        private bool _enabled;
 
         /// <summary>
         /// Get or set whether this algorithm is enabled for mining
