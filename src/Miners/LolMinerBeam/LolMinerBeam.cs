@@ -65,6 +65,9 @@ namespace LolMinerBeam
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
                 var totalSpeed = summary.Session.Performance_Summary;
 
+                var totalPowerUsage = 0;
+                var perDevicePowerInfo = new Dictionary<string, int>();
+
                 var apiDevices = summary.GPUs;
 
 
@@ -81,6 +84,8 @@ namespace LolMinerBeam
 
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                ad.PowerUsageTotal = totalPowerUsage;
+                ad.PowerUsagePerDevice = perDevicePowerInfo;
             }
             catch (Exception e)
             {

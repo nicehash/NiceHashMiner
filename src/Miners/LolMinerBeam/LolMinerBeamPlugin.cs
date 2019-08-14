@@ -28,7 +28,7 @@ namespace LolMinerBeam
             };
         }
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(2, 3);
 
         public override string Name => "LolMinerBeam";
 
