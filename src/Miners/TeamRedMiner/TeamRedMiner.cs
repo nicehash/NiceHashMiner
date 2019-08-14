@@ -61,15 +61,10 @@ namespace TeamRedMiner
             {
                 switch (_algorithmType)
                 {
-                    case AlgorithmType.CryptoNightR:
-                    case AlgorithmType.X16R:
-                    case AlgorithmType.Lyra2REv3:
-                    case AlgorithmType.GrinCuckatoo31:
-                    case AlgorithmType.MTP:
-                    case AlgorithmType.GrinCuckarood29:
-                        return 2.5;
+                    case AlgorithmType.Lyra2Z:
+                        return 3.0;
                     default:
-                        return 3.0; 
+                        return 2.5; 
                 }
             }
         }

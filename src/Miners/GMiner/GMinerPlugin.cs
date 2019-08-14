@@ -171,8 +171,11 @@ namespace GMinerPlugin
         {
             try
             {
-                //if (ids.Count() == 0) return false;
-                // no improvements just new algo
+                if (ids.Count() == 0) return false;
+                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 3) {
+                    // improved performance for Equihash 144,5 and Equihash 192,7 on RTX cards
+                    if (device.Name.Contains("RTX") && ids.FirstOrDefault() == AlgorithmType.ZHash) return true;
+                }
                 return false;
             }
             catch (Exception e)
