@@ -1,4 +1,7 @@
-﻿using NHM.Wpf.ViewModels.Models;
+﻿using System.Collections;
+using System.Collections.Generic;
+using NHM.Wpf.ViewModels.Models;
+using NiceHashMiner.Devices;
 using NiceHashMiner.Mining.Plugins;
 using System.ComponentModel;
 using System.Linq;
@@ -10,20 +13,38 @@ namespace NHM.Wpf.ViewModels.Plugins
     {
         public PluginPackageInfoCR Plugin { get; }
 
-        public bool IsSupported => Plugin.SupportedDevicesAlgorithms.Keys.Contains("NVIDIA");
-        public string InstallString => IsSupported ? "Install" : "Not Supported";
+        public string InstallString
+        {
+            get
+            {
+                if (Plugin.Installed) return Translations.Tr("Remove");
+                if (Load.IsInstalling) return Translations.Tr("Installing");
+                if (Plugin.Supported) return Translations.Tr("Install");
+                return Translations.Tr("Not Supported");
+            }
+        }
 
-        public bool InstallButtonEnabled => IsSupported && !Load.IsInstalling;
+        public bool InstallButtonEnabled => (Plugin.Installed || Plugin.Supported) && !Load.IsInstalling;
 
         public LoadProgress Load { get; }
+
+        protected readonly Dictionary<string, List<string>> FilteredSupportedAlgorithms;
 
         public PluginEntryVM(PluginPackageInfoCR plugin)
             : this(plugin, new LoadProgress())
         { }
 
-        public PluginEntryVM(PluginPackageInfoCR plugin, LoadProgress load)
+        protected PluginEntryVM(PluginPackageInfoCR plugin, LoadProgress load)
         {
             Plugin = plugin;
+
+            // Filter the dict to remove empty entries
+            FilteredSupportedAlgorithms = new Dictionary<string, List<string>>();
+            foreach (var kvp in Plugin.SupportedDevicesAlgorithms)
+            {
+                if (kvp.Value == null || kvp.Value.Count <= 0) continue;
+                FilteredSupportedAlgorithms[kvp.Key] = kvp.Value;
+            }
 
             Load = load;
             Load.PropertyChanged += Install_PropertyChanged;

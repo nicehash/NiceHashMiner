@@ -1,6 +1,4 @@
-﻿using NHM.Wpf.ViewModels.Models;
-using NiceHashMiner.Mining.Plugins;
-using System.Linq;
+﻿using System.Linq;
 
 namespace NHM.Wpf.ViewModels.Plugins
 {
@@ -10,7 +8,7 @@ namespace NHM.Wpf.ViewModels.Plugins
         {
             get
             {
-                return string.Join(", ", Plugin.SupportedDevicesAlgorithms.Keys);
+                return string.Join(", ", FilteredSupportedAlgorithms.Keys);
             }
         }
 
@@ -18,7 +16,7 @@ namespace NHM.Wpf.ViewModels.Plugins
         {
             get
             {
-                return string.Join("\n", Plugin.SupportedDevicesAlgorithms
+                return string.Join("\n", FilteredSupportedAlgorithms
                     .Select(kvp =>
                     {
                         var algosString = string.Join("\n", kvp.Value.Select(a => $"    - {a}"));
@@ -27,12 +25,8 @@ namespace NHM.Wpf.ViewModels.Plugins
             }
         }
 
-        public PluginDetailVM(PluginPackageInfoCR plugin, LoadProgress instProg)
-            : base(plugin, instProg)
-        { }
-
         public PluginDetailVM(PluginEntryVM vm)
-            : this(vm.Plugin, vm.Load)
+            : base(vm.Plugin, vm.Load)
         { }
     }
 }

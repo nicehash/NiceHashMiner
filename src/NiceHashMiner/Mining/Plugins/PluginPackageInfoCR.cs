@@ -30,6 +30,8 @@ namespace NiceHashMiner.Mining.Plugins
 
         public int OnlineSupportedDeviceCount { get; set; } = 0;
 
+        public bool Supported => OnlineSupportedDeviceCount > 0;
+
         // PluginPackageInfo region
         public string PluginUUID
         {
