@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using MinerPlugin;
 using NiceHashMiner.Devices;
@@ -145,6 +147,19 @@ namespace NiceHashMiner.Mining
         // key is device UUID 
         private static Dictionary<string, DeviceMiningStats> _devicesMiningStats = new Dictionary<string, DeviceMiningStats>();
 
+        private static readonly ObservableCollection<DeviceMiningStats> _devMiningStats = new ObservableCollection<DeviceMiningStats>();
+
+        public static INotifyCollectionChanged DevicesMiningStats
+        {
+            get
+            {
+                lock (_devMiningStats)
+                {
+                    return _devMiningStats;
+                }
+            }
+        }
+
         public static void RemoveGroup(IEnumerable<string> deviceUUIDs, string minerUUID)
         {
             var sortedDeviceUUIDs = deviceUUIDs.OrderBy(uuid => uuid).ToList();
@@ -283,6 +298,13 @@ namespace NiceHashMiner.Mining
                 stat.PowerUsageAlgorithmSetting = algo == null ? 0d : algo.PowerUsage;
             }
 
+            lock (_devMiningStats)
+            {
+                var index = _devMiningStats.IndexOf(stat);
+                if (index < 0) _devMiningStats.Add(stat);
+                else _devMiningStats[index] = stat;
+            }
+
             //// TODO enable StabilityAnalyzer
             //// TODO not the best place but here is where we get our per device speeds
             //var algorithmName = string.Join("+", stat.Speeds.Select(speedPair => Enum.GetName(typeof(AlgorithmType), speedPair.type)));
@@ -307,6 +329,11 @@ namespace NiceHashMiner.Mining
                 _minersMiningStats.Clear();
                 _devicesMiningStats.Clear();
                 // TODO notify change
+            }
+
+            lock (_devMiningStats)
+            {
+                _devMiningStats.Clear();
             }
         }
 

@@ -5,6 +5,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Devices;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -305,13 +306,6 @@ namespace NHM.Wpf.ViewModels
             {
                 dev.RefreshDiag();
             }
-
-            var devs = MiningStats.GetDevicesMiningStats();
-
-            foreach (var miningDev in MiningDevs)
-            {
-                miningDev.Stats = devs.FirstOrDefault(d => d.DeviceUUID == miningDev.Dev.Uuid);
-            }
         }
 
         public async Task InitializeNhm(IStartupLoader sl)
@@ -321,9 +315,34 @@ namespace NHM.Wpf.ViewModels
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData) d));
             MiningDevs = new ObservableCollection<MiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
 
+            MiningStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
+
             _updateTimer.Start();
 
             // TODO auto-start mining
+        }
+
+        private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                case NotifyCollectionChangedAction.Replace:
+                    foreach (var stat in e.NewItems.OfType<MiningStats.DeviceMiningStats>())
+                    {
+                        var miningDev = MiningDevs.FirstOrDefault(d => d.Dev.Uuid == stat.DeviceUUID);
+                        if (miningDev != null) miningDev.Stats = stat;
+                    }
+
+                    break;
+                case NotifyCollectionChangedAction.Reset:
+                    foreach (var miningDev in MiningDevs)
+                    {
+                        miningDev.Stats = null;
+                    }
+
+                    break;
+            }
         }
 
         public async Task StartMining()
