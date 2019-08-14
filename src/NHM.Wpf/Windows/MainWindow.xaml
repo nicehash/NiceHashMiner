@@ -30,6 +30,7 @@
             <ColumnDefinition Width="95" />
         </Grid.ColumnDefinitions>
 
+        <!-- Top settings stack panel -->
         <StackPanel Margin="10">
             <StackPanel.Resources>
                 <ResourceDictionary Source="Common/Styles.xaml" />
@@ -94,6 +95,7 @@
                 </CollectionViewSource>
             </Grid.Resources>
 
+            <!-- Device status DataGrid -->
             <DataGrid ItemsSource="{Binding Devices}" 
                       AutoGenerateColumns="False" 
                       CanUserResizeRows="False"
@@ -123,9 +125,11 @@
                 </DataGrid.Columns>
             </DataGrid>
 
+            <!-- Mining stats ListView -->
             <ListView Grid.Row="1"
                       ItemsSource="{Binding Source={StaticResource GrpSrc}}"
                       Visibility="{Binding State.AnyDeviceRunning, Converter={StaticResource BoolToVis}}">
+                <!-- This ridiculously nested block defines how the group headers will look -->
                 <ListView.GroupStyle>
                     <GroupStyle>
                         <GroupStyle.ContainerStyle>
@@ -148,6 +152,7 @@
                         </GroupStyle.ContainerStyle>
                     </GroupStyle>
                 </ListView.GroupStyle>
+
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Device" DisplayMemberBinding="{Binding Dev.FullName}" />
@@ -162,6 +167,7 @@
             </ListView>
         </Grid>
 
+        <!-- Right button StackPanel -->
         <StackPanel Grid.Row="1" Grid.Column="2" Width="75" Margin="10">
             <Button Content="Benchmark" IsEnabled="{Binding State.IsNotBenchmarkingOrMining}" Click="BenchButton_Click" Margin="0,0,0,2" />
             <Button Content="Settings" IsEnabled="{Binding State.IsNotBenchmarkingOrMining}" Click="SettingsButton_Click" Margin="0,2" />
@@ -171,6 +177,7 @@
             <Button Content="Help" Margin="0,2" />
         </StackPanel>
 
+        <!-- Bottom StatusBar -->
         <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Height="21" VerticalAlignment="Bottom">
             <StatusBar.Resources>
                 <Style TargetType="TextBlock" x:Key="StatusBarLabel">
@@ -185,9 +192,9 @@
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Global rate:" Style="{StaticResource StatusBarLabel}" />
-                    <TextBlock Text="0.00000000" Style="{StaticResource StatusBarDataLabel}" />
+                    <TextBlock Text="{Binding GlobalRate, StringFormat=F8}" Style="{StaticResource StatusBarDataLabel}" />
                     <TextBlock Text="BTC/Day" Style="{StaticResource StatusBarLabel}" />
-                    <TextBlock Text="0.00" Style="{StaticResource StatusBarDataLabel}" />
+                    <TextBlock Text="{Binding GlobalRateFiat, StringFormat=F2}" Style="{StaticResource StatusBarDataLabel}" />
                     <TextBlock Text="$/Day" Style="{StaticResource StatusBarLabel}" />
                 </StackPanel>
             </StatusBarItem>
@@ -207,6 +214,7 @@
             </StatusBarItem>
         </StatusBar>
 
+        <!-- NiceHash logo -->
         <Image Grid.Row="0"
                Grid.Column="1"
                Grid.ColumnSpan="2"

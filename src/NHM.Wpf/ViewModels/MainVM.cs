@@ -278,6 +278,10 @@ namespace NHM.Wpf.ViewModels
 
         public string ProfitPerTime => $"Profit ({CurrencyPerTime})";
 
+        public double GlobalRate => MiningDevs?.Sum(d => d.Payrate) ?? 0;
+
+        public double GlobalRateFiat => MiningDevs?.Sum(d => d.FiatPayrate) ?? 0;
+
         public MainVM()
         {
             //Devices = new ObservableCollection<DeviceInfo>
@@ -343,6 +347,9 @@ namespace NHM.Wpf.ViewModels
 
                     break;
             }
+
+            OnPropertyChanged(nameof(GlobalRate));
+            OnPropertyChanged(nameof(GlobalRateFiat));
         }
 
         public async Task StartMining()
