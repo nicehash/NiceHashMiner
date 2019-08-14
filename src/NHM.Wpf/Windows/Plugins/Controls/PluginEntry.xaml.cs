@@ -31,7 +31,7 @@ namespace NHM.Wpf.Windows.Plugins.Controls
         private async void InstallButton_OnClick(object sender, RoutedEventArgs e)
         {
             InstallClick?.Invoke(this, new PluginEventArgs(_vm));
-            await _vm.InstallPlugin();
+            await _vm.InstallRemovePlugin();
         }
 
         private void DetailsButton_OnClick(object sender, RoutedEventArgs e)

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using NHM.Wpf.ViewModels.Models;
 using NiceHashMiner.Devices;
@@ -56,20 +57,60 @@ namespace NHM.Wpf.ViewModels.Plugins
                 OnPropertyChanged(nameof(InstallButtonEnabled));
         }
 
-        public async Task InstallPlugin()
+        public async Task InstallRemovePlugin()
         {
             // TODO Placeholder
 
             if (Load.IsInstalling) return;
 
+            if (Plugin.Installed)
+            {
+                MinerPluginsManager.Remove(Plugin.PluginUUID);
+            }
+            else
+            {
+                await InstallOrUpdateAsync();
+            }
+
+            OnPropertyChanged(nameof(InstallString));
+        }
+
+        private async Task InstallOrUpdateAsync()
+        {
+            var progressConverter = new Progress<Tuple<MinerPluginsManager.ProgressState, double>>(status =>
+            {
+                var (state, progress) = status;
+
+                string statusText;
+
+                switch (state)
+                {
+                    case MinerPluginsManager.ProgressState.DownloadingMiner:
+                        statusText = $"Downloading Miner: {progress:F2} %";
+                        break;
+
+                    case MinerPluginsManager.ProgressState.DownloadingPlugin:
+                        statusText = $"Downloading Plugin: {progress:F2} %";
+                        break;
+
+                    case MinerPluginsManager.ProgressState.ExtractingMiner:
+                        statusText = $"Extracting Miner: {progress:F2} %";
+                        break;
+
+                    case MinerPluginsManager.ProgressState.ExtractingPlugin:
+                        statusText = $"Extracting Plugin: {progress:F2} %";
+                        break;
+                    default:
+                        statusText = "";
+                        break;
+                }
+
+                Load.Report((statusText, progress));
+            });
+
             Load.IsInstalling = true;
 
-            for (var i = 0d; i <= 100; i += 1)
-            {
-                Load.Progress = i;
-                Load.Status = $"Installing: {i}%";
-                await Task.Delay(100);
-            }
+            await MinerPluginsManager.DownloadAndInstall(Plugin, progressConverter, default);
 
             Load.IsInstalling = false;
         }

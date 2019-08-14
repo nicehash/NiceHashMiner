@@ -105,7 +105,7 @@ namespace MinerPluginLoader
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("MinerPluginHost", $"Error occured while loading plugin: {e.Message}");
+                    Logger.Error("MinerPluginHost", $"Error occured while loading plugin: {e}");
                 }
             }
             return loadedPlugins;

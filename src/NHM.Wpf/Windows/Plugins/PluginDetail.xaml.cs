@@ -25,7 +25,7 @@ namespace NHM.Wpf.Windows.Plugins
         private async void InstallButton_OnClick(object sender, RoutedEventArgs e)
         {
             if (DataContext is PluginDetailVM vm)
-                await vm.InstallPlugin();
+                await vm.InstallRemovePlugin();
         }
     }
 }
