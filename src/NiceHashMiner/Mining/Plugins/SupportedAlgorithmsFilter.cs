@@ -18,7 +18,8 @@ namespace NiceHashMiner.Mining.Plugins
             _filteredAlgorithms.Add(new List<AlgorithmType> { AlgorithmType.MTP });
 #else
             // old platform
-            _filteredAlgorithms.Add(new List<AlgorithmType> { AlgorithmType.GrinCuckarood29, AlgorithmType.BeamV2 });
+            _filteredAlgorithms.Add(new List<AlgorithmType> { AlgorithmType.GrinCuckarood29 } );
+            _filteredAlgorithms.Add(new List<AlgorithmType> { AlgorithmType.BeamV2 } );
 #endif
             var internalSettings = InternalConfigs.ReadFileSettings<List<List<AlgorithmType>>>(_internalSettingFilePath);
             if (internalSettings != null)
