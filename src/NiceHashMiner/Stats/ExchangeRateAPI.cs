@@ -42,6 +42,15 @@ namespace NiceHashMiner.Stats
 
         private static bool ConverterActive => ConfigManager.GeneralConfig.DisplayCurrency != "USD";
 
+        static ExchangeRateApi()
+        {
+            ConfigManager.GeneralConfig.PropertyChanged += (_, args) =>
+            {
+                if (args.PropertyName == nameof(ConfigManager.GeneralConfig.DisplayCurrency))
+                    ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
+            };
+        }
+
         public static void UpdateExchangesFiat(Dictionary<string, double> newExchanges)
         {
             if (newExchanges == null) return;

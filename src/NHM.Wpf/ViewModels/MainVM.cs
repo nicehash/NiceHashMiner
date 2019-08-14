@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿using System;
+using NHM.Common;
 using NHM.Wpf.ViewModels.Models;
 using NiceHashMiner;
 using NiceHashMiner.Configs;
@@ -65,7 +66,21 @@ namespace NHM.Wpf.ViewModels
 
         private string PerTime => $"/{TimeFactor.UnitType}";
 
-        public string CurrencyPerTime => $"{ExchangeRateApi.ActiveDisplayCurrency}{PerTime}";
+        private string _currency = ExchangeRateApi.ActiveDisplayCurrency;
+
+        public string Currency
+        {
+            get => _currency;
+            set
+            {
+                _currency = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(CurrencyPerTime));
+                OnPropertyChanged(nameof(ProfitPerTime));
+            }
+        }
+
+        public string CurrencyPerTime => $"{Currency}{PerTime}";
 
         public string BtcPerTime => $"BTC{PerTime}";
 
@@ -77,16 +92,32 @@ namespace NHM.Wpf.ViewModels
 
         public double GlobalRateFiat => MiningDevs?.Sum(d => d.FiatPayrate) ?? 0;
 
+        private double _btcBalance;
+        public double BtcBalance
+        {
+            get => _btcBalance;
+            set
+            {
+                _btcBalance = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FiatBalance));
+            }
+        }
+
+        public double FiatBalance => ExchangeRateApi.ConvertFromBtc(BtcBalance);
+
         public MainVM()
         {
             _updateTimer = new Timer(1000);
             _updateTimer.Elapsed += UpdateTimerOnElapsed;
 
-            ExchangeRateApi.CurrencyChanged += (_, s) =>
+            ExchangeRateApi.CurrencyChanged += (_, curr) =>
             {
-                OnPropertyChanged(nameof(CurrencyPerTime));
-                OnPropertyChanged(nameof(ProfitPerTime));
+                Currency = curr;
+                OnPropertyChanged(nameof(FiatBalance));
             };
+
+            ApplicationStateManager.DisplayBTCBalance += UpdateBalance;
         }
 
         // TODO I don't like this way, a global refresh and notify would be better
@@ -137,6 +168,11 @@ namespace NHM.Wpf.ViewModels
 
             OnPropertyChanged(nameof(GlobalRate));
             OnPropertyChanged(nameof(GlobalRateFiat));
+        }
+
+        private void UpdateBalance(object sender, double btcBalance)
+        {
+            BtcBalance = btcBalance;
         }
 
         public async Task StartMining()

@@ -202,10 +202,10 @@
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Balance:" Style="{StaticResource StatusBarLabel}" />
-                    <TextBlock Text="0.00000000" Style="{StaticResource StatusBarDataLabel}" />
+                    <TextBlock Text="{Binding BtcBalance, StringFormat=F8}" Style="{StaticResource StatusBarDataLabel}" />
                     <TextBlock Text="BTC" Style="{StaticResource StatusBarLabel}" />
-                    <TextBlock Text="0.00" Style="{StaticResource StatusBarDataLabel}" />
-                    <TextBlock Text="$" Style="{StaticResource StatusBarLabel}" />
+                    <TextBlock Text="{Binding FiatBalance, StringFormat=F2}" Style="{StaticResource StatusBarDataLabel}" />
+                    <TextBlock Text="{Binding Currency}" Style="{StaticResource StatusBarLabel}" />
                 </StackPanel>
             </StatusBarItem>
             <Separator/>

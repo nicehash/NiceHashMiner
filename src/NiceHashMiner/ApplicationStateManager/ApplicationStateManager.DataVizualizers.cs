@@ -10,7 +10,7 @@ namespace NiceHashMiner
         static object objectLock = new object();
 
 #region IBalanceBTCDisplayer DisplayBTCBalance double
-        static event EventHandler<double> DisplayBTCBalance;
+        public static event EventHandler<double> DisplayBTCBalance;
         private static void subscribeIBalanceBTCDisplayer(IDataVisualizer s)
         {
             if (!(s is IBalanceBTCDisplayer sIBalanceBTCDisplayer)) return;

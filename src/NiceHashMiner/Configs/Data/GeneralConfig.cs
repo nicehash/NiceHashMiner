@@ -25,8 +25,17 @@ namespace NiceHashMiner.Configs.Data
 #endif
         }
 
+        private string _displayCurrency = "USD";
 
-        public string DisplayCurrency { get; set; } = "USD";
+        public string DisplayCurrency
+        {
+            get => _displayCurrency;
+            set
+            {
+                _displayCurrency = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool DebugConsole { get; set; } = false;
 
