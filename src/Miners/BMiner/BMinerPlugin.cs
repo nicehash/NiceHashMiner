@@ -1,6 +1,7 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -17,20 +18,20 @@ namespace BMiner
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://www.bminer.me/releases/ current v 15.7.4 // TODO new version
+            // https://www.bminer.me/releases/ current v 15.7.6
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.10/bminer-lite-v15.7.4-564ee38-amd64.zip",
-                    "https://www.bminercontent.com/releases/bminer-lite-v15.7.4-564ee38-amd64.zip" // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12/bminer-lite-v15.7.6-f585663.zip",
+                    "https://www.bminercontent.com/releases/bminer-lite-v15.7.6-f585663-amd64.zip" // original
                 }
             };
         }
 
         public override string PluginUUID => "e5fbd330-7235-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(2, 3);
         public override string Name => "BMiner";
 
         public override string Author => "domen.kirnkrefl@nicehash.com";
@@ -100,7 +101,20 @@ namespace BMiner
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            //no new version available
+            try
+            {
+                if (ids.Count() == 0) return false;
+                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 3)
+                {
+                    // v15.7.6 https://www.bminercontent.com/releases/bminer-lite-v15.7.6-f585663-amd64.zip
+                    if (ids.FirstOrDefault() == AlgorithmType.GrinCuckatoo31) return true;
+                    if (device.Name.Contains("RTX") && ids.FirstOrDefault() == AlgorithmType.GrinCuckarood29) return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            }
             return false;
         }
     }

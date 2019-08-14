@@ -18,17 +18,17 @@ namespace LolMinerBeam
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
-            // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 current 0.8.5
+            // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 current 0.8.6
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/0.8.5/lolMiner_v085_Win64.zip", // original source
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/0.8.6/lolMiner_v086_Win64.zip", // original source
                 }
             };
         }
 
-        public override Version Version => new Version(2, 1);
+        public override Version Version => new Version(2, 3);
 
         public override string Name => "LolMinerBeam";
 
@@ -88,6 +88,7 @@ namespace LolMinerBeam
                     new Algorithm(PluginUUID, AlgorithmType.Beam),
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
+                    new Algorithm(PluginUUID, AlgorithmType.BeamV2),
                 };
             }
             else
@@ -97,6 +98,8 @@ namespace LolMinerBeam
                 {
                     new Algorithm(PluginUUID, AlgorithmType.Beam) { Enabled = false },
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31) { Enabled = false },
+                    new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29) { Enabled = false },
+                    new Algorithm(PluginUUID, AlgorithmType.BeamV2) { Enabled = false },
                 };
             }
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);

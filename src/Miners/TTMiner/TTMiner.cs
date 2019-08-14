@@ -73,7 +73,7 @@ namespace TTMiner
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
-                if (data.Contains("LastShare") && data.Contains("GPU[") && found && hashrate > 0)
+                if (data.Contains("l-shr") && data.Contains("GPU[") && found && hashrate > 0)
                 {
                     benchHashes += hashrate;
                     benchIters++;
