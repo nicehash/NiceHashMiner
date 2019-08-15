@@ -2664,7 +2664,7 @@
       "ru": "Конечное значение dcri для тюнинга"
     },
     "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
-      "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину\nзатрат на электроэнергию,если стоимость электроэнергии и потребление мощности больше 0."
+      "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину\nзатрат на электроэнергию, если стоимость электроэнергии и потребление мощности больше 0."
     },
     "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. {0} might not work properly without missing files. Click Yes to reinitialize {0} to try to fix this issue.": {
       "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. {0} няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно {0} и да опитате да поправите този проблем.",
