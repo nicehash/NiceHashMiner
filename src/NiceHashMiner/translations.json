@@ -389,7 +389,7 @@
       "pl": "Czas (w milisekundach) przez który {0} czeka przed przełączeniem górnika.",
       "pt": "Quantidade de tempo (em milissegundos) que {0} aguardará antes de reiniciar o minerador.",
       "ro": "Timp (în milisecunde) în care {0} așteaptă înainte de repornirea minerului.",
-      "ru": "Количество времени в миллисекундах, которое {0} будет ждать перед перезапуском майнера.",
+      "ru": "Время в миллисекундах, которое {0} будет ждать перед перезапуском майнера.",
       "zh_cn": "切换算法时，{0}自中止到重启挖矿程序之间等待的延迟（毫秒）。"
     },
     "Amount of time (in seconds) for {0} benchmarking the {1}": {
@@ -399,7 +399,7 @@
       "pl": "Czas (w sekundach) na {0} pomiar {1}",
       "pt": "Quantidade de tempo (em segundos) para {0} benchmarking o {1}",
       "ro": "Timp (în secunde) pentru {0} a rula benchmark {1}",
-      "ru": "Количество времени в секундах для {0} бенчмарка {1}",
+      "ru": "Время в секундах для {0} бенчмарка {1}",
       "zh_cn": "设备 {0} 执行算法 {1} 基准测试的时间（秒）"
     },
     "Are you sure you want to copy settings from {0} to {1}?": {
@@ -2181,7 +2181,7 @@
       "zh_cn": "正在重启 {0}"
     },
     "Run Ethlargement": {
-      "ru": "Запуск Ethlargement"
+      "ru": "Старт Ethlargement"
     },
     "Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners.": {
       "ru": "Запускать Ethlargement для алгоритмов Dagger, когда присутствуют поддерживаемые видеокарты.\nТребует запуска от имени администратора и включения сторонних майнеров."
@@ -2664,7 +2664,7 @@
       "ru": "Конечное значение dcri для тюнинга"
     },
     "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
-      "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину затрат на электроэнергию,\nесли стоимость электроэнергии и потребление мощности больше 0."
+      "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину\nзатрат на электроэнергию,если стоимость электроэнергии и потребление мощности больше 0."
     },
     "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. {0} might not work properly without missing files. Click Yes to reinitialize {0} to try to fix this issue.": {
       "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. {0} няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно {0} и да опитате да поправите този проблем.",
@@ -2734,7 +2734,7 @@
       "zh_cn": "用于识别该计算机。"
     },
     "Total": {
-      "ru": "Итого"
+      "ru": "Всего"
     },
     "Tuning Enabled": {
       "ru": "Тюнинг включён"
@@ -2785,7 +2785,7 @@
       "zh_cn": "建议更新AMD驱动程序"
     },
     "Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high.": {
-      "ru": "Верхняя граница случайно выбранного интервала проверки прибыли.\nПрибыль может быть проверена несколько раз, прежде чем переключение будет разрешено, поэтому не указывайте слишком высокое значение."
+      "ru": "Верхняя граница случайно выбранного интервала проверки прибыли.\nПрибыль может быть проверена несколько раз, прежде чем переключение\nбудет разрешено, поэтому не указывайте слишком высокое значение."
     },
     "Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility.": {
       "bg": "Използване на софтуер със затворен код, разработен от трети лица, с цел по-висока доходност. Използвайте на собствена отговорност.",
@@ -3001,7 +3001,7 @@
       "zh_cn": "选中此复选框将禁用所有默认优化配置。这将使得挖矿更为稳定但速度更慢（尤其对于AMD设备）。"
     },
     "When checked, {0} Form Windows will be set as Top Most and will be covered only by other Top Most Windows.": {
-      "ru": "Если отмечено, окна {0} будут рисоваться поверх всех остальных и могут быть перекрыты только другими подобными окнами."
+      "ru": "Если отмечено, окна {0} будут рисоваться поверх всех остальных\nи могут быть перекрыты только другими подобными окнами."
     },
     "When checked, {0} will automatically start mining when launched.": {
       "bg": "Когато тази опция е маркирана, {0} автоматично ще започне изчисления с пускането на програмата.",
@@ -3010,7 +3010,7 @@
       "pl": "Spowoduje automatyczny start kopania po uruchomieniu programu {0}.",
       "pt": "Quando marcado, o {0} iniciará automaticamente a mineração quando iniciado.",
       "ro": "Când bifați, {0} o să mineze automat la pornire.",
-      "ru": "Если отмечено, {0} будет автоматически \nначинать майнинг при запуске программы.",
+      "ru": "Если отмечено, {0} будет автоматически\nначинать майнинг при запуске программы.",
       "zh_cn": "选择此处以在程序开启后自动开始挖矿。"
     },
     "When checked, {0} will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.": {
