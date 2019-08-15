@@ -76,11 +76,11 @@ namespace NHM.DeviceMonitoring
         private void trySetPowerInfo()
         {
 
-            var powerInfo = new NvGPUPowerInfo
-            {
-                Version = NVAPI.GPU_POWER_INFO_VER,
-                Entries = new NvGPUPowerInfoEntry[4]
-            };
+            //var powerInfo = new NvGPUPowerInfo
+            //{
+            //    Version = NVAPI.GPU_POWER_INFO_VER,
+            //    Entries = new NvGPUPowerInfoEntry[4]
+            //};
 
             //var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesGetInfo(_nvHandle, ref powerInfo);
             var _min = 0u;
