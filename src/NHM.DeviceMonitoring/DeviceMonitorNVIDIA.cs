@@ -81,15 +81,15 @@ namespace NHM.DeviceMonitoring
             //    Version = NVAPI.GPU_POWER_INFO_VER,
             //    Entries = new NvGPUPowerInfoEntry[4]
             //};
-
+            /* Original ret value */
             //var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesGetInfo(_nvHandle, ref powerInfo);
             var _min = 0u;
             var _max = 0u;
             var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(_nvmlDevice, ref _min, ref _max);
             if (ret != nvmlReturn.Success)
                 throw new Exception(ret.ToString());
-            var _default = 0u;
-            ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(_nvmlDevice, ref _default);
+            var _defaultPwr = 0u;
+            ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(_nvmlDevice, ref _defaultPwr);
             if (ret != nvmlReturn.Success)
                 throw new Exception(ret.ToString());
 
@@ -106,7 +106,7 @@ namespace NHM.DeviceMonitoring
 
             _minPowerLimit = _min;
             _maxPowerLimit = _max;
-            _defaultPowerLimit = _default;
+            _defaultPowerLimit = _defaultPwr;
 
         }
         public void ResetHandles(NvapiNvmlInfo info)
@@ -121,7 +121,7 @@ namespace NHM.DeviceMonitoring
                 }
                 catch (Exception e)
                 {
-                    Logger.Error("NVAPI", $"Getting power info failed with message \"{e.Message}\", disabling power setting");
+                    Logger.Error("NVML", $"Getting power info failed with message \"{e.Message}\", disabling power setting");
                     PowerLimitsEnabled = false;
                 }
             }

@@ -26,7 +26,8 @@ namespace NHM.DeviceMonitoring.NVIDIA
                 Logger.Info(Tag, "tryAddNvmlToEnvPathFallback");
                 tryAddNvmlToEnvPathFallback();
             }
-            var nvmlInit = InitNvml();
+            var nvmlInit = InitNvml(); // This is that one user (Wetik2) program crashes, does not init NVML !!! :( Could be antivirus blocking it :/ Do not actually know.
+            
             var ret = new List<NvapiNvmlInfo>();
             foreach (var pair in nvidiaUUIDAndBusIds)
             {
