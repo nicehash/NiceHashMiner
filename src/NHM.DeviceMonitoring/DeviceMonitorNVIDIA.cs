@@ -93,12 +93,12 @@ namespace NHM.DeviceMonitoring
             if (ret != nvmlReturn.Success)
                 throw new Exception(ret.ToString());
 
-            Debug.Assert(powerInfo.Entries.Length == 4);
+            //Debug.Assert(powerInfo.Entries.Length == 4);
 
-            if (powerInfo.Entries[0].MinPower == 0 || powerInfo.Entries[0].MaxPower == 0)
-            {
-                throw new Exception("Power control not available!");
-            }
+            //if (powerInfo.Entries[0].MinPower == 0 || powerInfo.Entries[0].MaxPower == 0)
+            //{
+            //    throw new Exception("Power control not available!");
+            //}
 
             //_minPowerLimit = powerInfo.Entries[0].MinPower;
             //_maxPowerLimit = powerInfo.Entries[0].MaxPower;
