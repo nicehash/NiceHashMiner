@@ -58,7 +58,7 @@ namespace NHM.DeviceMonitoring
                     var success = SetPowerTarget(defaultLevel);
                     if (!success)
                     {
-                        Logger.Info("NVAPI", $"Cannot set power target ({defaultLevel.ToString()}) for device with BusID={BusID}");
+                        Logger.Info("NVML", $"Cannot set power target ({defaultLevel.ToString()}) for device with BusID={BusID}");
                     }
                 }
                 else
@@ -68,7 +68,7 @@ namespace NHM.DeviceMonitoring
             }
             catch (Exception e)
             {
-                Logger.Error("NVAPI", $"Getting power info failed with message \"{e.Message}\", disabling power setting");
+                Logger.Error("NVML", $"Getting power info failed with message \"{e.Message}\", disabling power setting");
                 PowerLimitsEnabled = false;
                 PowerLevel = PowerLevel.Disabled;
             }
@@ -82,8 +82,15 @@ namespace NHM.DeviceMonitoring
                 Entries = new NvGPUPowerInfoEntry[4]
             };
 
-            var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesGetInfo(_nvHandle, ref powerInfo);
-            if (ret != NvStatus.OK)
+            //var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesGetInfo(_nvHandle, ref powerInfo);
+            var _min = 0u;
+            var _max = 0u;
+            var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(_nvmlDevice, ref _min, ref _max);
+            if (ret != nvmlReturn.Success)
+                throw new Exception(ret.ToString());
+            var _default = 0u;
+            ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(_nvmlDevice, ref _default);
+            if (ret != nvmlReturn.Success)
                 throw new Exception(ret.ToString());
 
             Debug.Assert(powerInfo.Entries.Length == 4);
@@ -93,10 +100,14 @@ namespace NHM.DeviceMonitoring
                 throw new Exception("Power control not available!");
             }
 
-            _minPowerLimit = powerInfo.Entries[0].MinPower;
-            _maxPowerLimit = powerInfo.Entries[0].MaxPower;
-            _defaultPowerLimit = powerInfo.Entries[0].DefPower;
-            
+            //_minPowerLimit = powerInfo.Entries[0].MinPower;
+            //_maxPowerLimit = powerInfo.Entries[0].MaxPower;
+            //_defaultPowerLimit = powerInfo.Entries[0].DefPower;
+
+            _minPowerLimit = _min;
+            _maxPowerLimit = _max;
+            _defaultPowerLimit = _default;
+
         }
         public void ResetHandles(NvapiNvmlInfo info)
         {
