@@ -123,7 +123,7 @@
       "zh_cn": "否 (&N)"
     },
     "&OK": {
-	  "ru": "&ОК",
+      "ru": "&ОК",
       "zh_cn": "确认 (&O)"
     },
     "&Precise (will take longer)": {
@@ -588,8 +588,12 @@
       "ru": "Бразилия - Сан-Паулу",
       "zh_cn": "巴西 - 圣保罗"
     },
-    "CDev#{0}": {},
-    "CPU#{0}": {},
+    "CDev#{0}": {
+      "ru": "CDev#{0}"
+	},
+    "CPU#{0}": {
+      "ru": "CPU#{0}"
+	},
     "CURRENTLY MINING NOT PROFITABLE.": {
       "bg": "В МОМЕНТА РАБОТАТА НЕ НОСИ ВЪЗВРЪЩАЕМОСТ.",
       "es": "EL MINADO NO ES RENTABLE ACTUALMENTE.",
@@ -814,7 +818,7 @@
       "pl": "Kopiowanie ustawień dla benchmarków, algorytmów itd. ...",
       "pt": "Copiar configurações de (Benchmarks, parametros de algoritimo, ...)",
       "ro": "Copiază Setări De La (Benchmark, parametrii algoritm, ...)",
-      "ru": "Скопировать настройки из (Бенчмарк, параметры алгоритмов, …)",
+      "ru": "Скопировать настройки из (бенчмарков, параметров алгоритмов, …)",
       "zh_cn": "从（基准测试，算法参数）复制配置"
     },
     "Copy tuning settings only": {
@@ -881,7 +885,7 @@
     },
     "Device Monitoring:": {
       "ru": "Мониторинг устройств:"
-	},
+    },
     "Devices/Algorithms": {
       "bg": "Устройства/Алгоритми",
       "es": "Dispositivos/Algoritmos",
@@ -944,10 +948,10 @@
     },
     "Disable Device Status Monitoring": {
       "ru": "Откл. мониторинг статуса устройств"
-	},
+    },
     "Disable Device Power Mode Settings": {
       "ru": "Откл. настройки питания устройств"
-	},
+    },
     "Disable Windows Error Reporting": {
       "bg": "Изкл. журнала за грешки на Windows",
       "es": "Desactivar reportes de errores de Windows",
@@ -993,7 +997,7 @@
     },
     "Double-click to restore...": {
       "ru": "Двойной щелчок для восстановления…"
-	},
+    },
     "Downloading miners": {
       "bg": "Сваляне на изчислителни програми",
       "es": "Descargando mineros",
@@ -1011,7 +1015,7 @@
       "pl": "Zaawansowane ustawienia są dla zaawansowanych ludzi.\r\n\r\nJeśli {0} zawiesza się przez zły konfig możesz to naprawić kasując plik 'config.json'.\r\n\r\nKontynuować edycję ustawień?",
       "pt": "Editar configurações adicionais é para usuários avançados.\r\n\r\nSe {0} crashar devido a uma configuração errada, você pode restaurar a original excluindo o arquivo 'config.json'.\r\n\r\nContinuar editando as configurações?",
       "ro": "Editarea setărilor adiționale este pentru utilizatori avansați.\r\n\r\nDacă {0} se blochează din cauza unei valori eronate de configurare puteți să reveniți prin ștergerea fișierului 'config.json'.\r\n\r\nContinuați cu editarea setărilor?",
-      "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается, в связи с плохой конфигурацией, вы можете сбросить её удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
+      "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается в связи с плохой конфигурацией, вы можете сбросить её удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
       "zh_cn": "编辑进阶设置适用于资深用户。\r\n\r如遇 {0} 因配置不当而奔溃，您可以通过删除“config.json”文件来恢复正确的配置。是否继续编辑进阶设置？"
     },
     "Electricity Cost (/KWh):": {
@@ -1257,10 +1261,10 @@
     },
     "Form Windows Always On Top": {
       "ru": "Отображать поверх всех окон"
-	},
+    },
     "GPU#{0}": {
       "ru": "GPU#{0}"
-	},
+    },
     "General": {
       "bg": "Общи",
       "it": "Generali",
@@ -1405,7 +1409,7 @@
     "Idle Check Method:": {
       "ru": "Метод проверки простоя:"
     },
-	"Idle Mining:": {
+    "Idle Mining:": {
       "ru": "Майнинг при простое:"
     },
     "Idle When No Internet Access": {
@@ -1441,7 +1445,7 @@
     },
     "If 'MineRegardlessOfProfit' is unchecked, {0} will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.": {
       "ru": "Если 'Майнить несмотря на прибыль' выключено, {0} остановит майнинг, когда ожидаемая прибыль\nупадёт ниже указанного значения (в выбранной валюте). Допускаются отрицательные значения."
-	},
+    },
     "India - Chennai": {
       "ru": "Индия - Ченнаи",
       "zh_cn": "印度 - 金奈"
@@ -1694,9 +1698,9 @@
       "ru": "Майнеры:",
       "zh_cn": "挖矿程序:"
     },
-	"Mine Regardless Of Profit": {
+    "Mine Regardless Of Profit": {
       "ru": "Майнить несмотря на прибыль"
-	},
+    },
     "Minimize Mining Windows": {
       "bg": "Минимизиране на изчисл. програма",
       "es": "Minimizar las ventanas de minería",
@@ -2861,7 +2865,7 @@
     },
     "V_ID_{0}": {
       "ru": "V_ID_{0}"
-	},
+    },
     "Visit us @ www.nicehash.com": {
       "bg": "Посетете ни на www.nicehash.com",
       "es": "Visítanos @ www.nicehash.com",
@@ -2869,7 +2873,7 @@
       "pl": "Odwiedź nas na www.nicehash.com",
       "pt": "Visite o site @ www.nicehash.com",
       "ro": "Vizitează-ne @ www.nicehash.com",
-      "ru": "Посетите нас @ www.nicehash.com",
+      "ru": "Посетите нас на www.nicehash.com",
       "zh_cn": "访问我们的网站 @ www.nicehash.com"
     },
     "Waiting benchmark": {
@@ -2908,7 +2912,7 @@
       "it": "Attenzione! L'algoritmo {0} sta riportando 0 parti accettate. Disabilita questo algoritmo in Impostazioni/Benchmark e segnala questo problema a https://github.com/nicehash/NiceHashMiner/issues!",
       "pl": "Uwaga! Algorytm {0} raportuje 0 shares accepted. Wyłącz ten algorytm w ustawieniach lub benchmarkach i napisz raport na https://github.com/nicehash/NiceHashMiner/issues (prosimy)",
       "ro": "Avertizare! Algoritmul {0} raportează 0 share acceptate. Vă rugăm să dezactivați acest algoritm în Benchmark/Setări și să raportați această problemă la https://github.com/nicehash/NiceHashMiner/issues!",
-      "ru": "Предупреждение! Алгоритм {0} сообщает 0 принятых шар. Отключите, пожалуйста, этот алгоритм в Бенчмарке/Настройках и напишите о данной проблеме в https://github.com/nicehash/NiceHashMiner/issues!",
+      "ru": "Предупреждение! Алгоритм {0} сообщает 0 принятых шар. Отключите, пожалуйста, этот алгоритм в Бенчмарке/Настройках и напишите об этой проблеме в https://github.com/nicehash/NiceHashMiner/issues!",
       "zh_cn": "警告！算法{0}报告其计算所得并没有被矿池服务器接受。请在基准测试/设置中禁用此算法并前往问题反馈页面汇报此问题 https://github.com/nicehash/NiceHashMiner/issues！"
     },
     "Warning! Video Controller not operating correctly": {
@@ -2989,7 +2993,7 @@
     },
     "When checked, {0} Form Windows will be set as Top Most and will be covered only by other Top Most Windows.": {
       "ru": "Если отмечено, окна {0} будут рисоваться поверх всех остальных и могут быть перекрыты только другими подобными окнами."
-	},
+    },
     "When checked, {0} will automatically start mining when launched.": {
       "bg": "Когато тази опция е маркирана, {0} автоматично ще започне изчисления с пускането на програмата.",
       "es": "Si está marcada, {0} empezará a minar al abrirse.",
@@ -3024,10 +3028,10 @@
     },
     "When checked, {0} will not attempt to set device power mode settings (currently NVIDIA only).": {
       "ru": "Если отмечено, {0} не будет пытаться управлять настройками питания устройства (пока только для NVIDIA)."
-	},
+    },
     "When checked, {0} will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {
       "ru": "Если отмечено, {0} не будет запрашивать статус устройств CPU, AMD и NVIDIA (температуру, нагрузку, скорость кулера и потребление мощности)."
-	},
+    },
     "When checked, {0} will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
       "bg": "Когато тази опция е активна, {0} ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
       "it": "Quando spuntato, {0} eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
@@ -3184,7 +3188,7 @@
       "pl": "{0} wyłaczy się. To nowe okno ustawień jest w fazie beta i {0} potrzebuje restartu aby działać.",
       "pt": "{0} will exit now. This new settings dialog is still in beta and {0} needs to restart to take effect.",
       "ro": "{0} se va închide acum. Acest nou dialog de setări este încă în beta și {0} trebuie repornit pentru a avea efect.",
-      "ru": "Работа {0} завершится. Этот новое диалоговое окно ещё тестируется и {0} нужен перезапуск для результата.",
+      "ru": "Работа {0} завершится. Этот новое диалоговое окно ещё тестируется и {0} требует перезапуска для результата.",
       "zh_cn": "{0} 现在将退出。此新版设置对话还处于测试阶段，{0} 需重启方可生效。"
     },
     "{0} {1}": {},
@@ -3210,16 +3214,16 @@
     },
     "Click yes if you with to run {0} as Administrator.": {
       "ru": "Нажмите Да, если вы запустили {0} с правами администратора."
-	},
+    },
     "Show GPU PCIe Bus IDs": {
       "ru": "Показывать PCIe Bus ID для GPU"
-	},
+    },
     "When checked, GPUs PCIe bus IDs will be visible in the device name dashboard.": {
       "ru": "Если отмечено, PCIe Bus ID для GPU будет отображаться на панели названий устройств."
-	},
+    },
     "Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {
       "ru": "Неверный адрес Биткоин! {0} начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя свой компьютер. Продолжить в режиме ДЕМО?\n\nВНИМАНИЕ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!"
-	}
+    }
   }
 }
 
