@@ -111,12 +111,12 @@ namespace LolMinerBeam
             return new LolMinerBeam(PluginUUID, _mappedDeviceIds);
         }
 
-        public async Task<bool> DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (_mappedDeviceIds.Count == 0) return false;
+            if (_mappedDeviceIds.Count == 0) return;
             // TODO will block
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return false;
+            if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--benchmark BEAM --longstats 60 --devices -1", new List<string> { "Start Benchmark..." });
             var mappedDevs = DevicesListParser.ParseLolMinerOutput(output, devices.ToList());
@@ -127,7 +127,6 @@ namespace LolMinerBeam
                 var indexID = kvp.Value;
                 _mappedDeviceIds[uuid] = indexID;
             }
-            return mappedDevs.Count != 0;
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

@@ -82,10 +82,10 @@ namespace WildRig
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "wildrig.exe" });
         }
 
-        public async Task<bool> DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return false;
+            if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--print-devices");
             var mappedDevs = DevicesListParser.ParseWildRigOutput(output, devices.ToList());
@@ -96,7 +96,6 @@ namespace WildRig
                 var indexID = kvp.Value;
                 _mappedIDs[uuid] = indexID;
             }
-            return mappedDevs.Count != 0;
         }
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)

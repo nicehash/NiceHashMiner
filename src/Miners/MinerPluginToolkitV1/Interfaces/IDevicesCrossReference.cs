@@ -11,6 +11,6 @@ namespace MinerPluginToolkitV1.Interfaces
     /// </summary>
     public interface IDevicesCrossReference
     {
-        Task<bool> DevicesCrossReference(IEnumerable<BaseDevice> devices);
+        Task DevicesCrossReference(IEnumerable<BaseDevice> devices);
     }
 }

@@ -106,30 +106,30 @@ namespace Phoenix
             return new Phoenix(PluginUUID, _mappedIDs);
         }
 
-        public async Task<bool> DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (_mappedIDs.Count == 0) return false;
+            if (_mappedIDs.Count == 0) return;
             // TODO will block
 
             var containsAMD = devices.Any(dev => dev.DeviceType == DeviceType.AMD);
             var containsNVIDIA = devices.Any(dev => dev.DeviceType == DeviceType.NVIDIA);
 
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return false;
+            if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-            var Success = false;
+
             if (containsAMD)
             {
-                Success = await MapDeviceCrossRefference(devices, minerBinPath, "-list -amd");
+                await MapDeviceCrossRefference(devices, minerBinPath, "-list -amd");
             }
             if (containsNVIDIA)
             {
-                Success = await MapDeviceCrossRefference(devices, minerBinPath, "-list -nvidia");
+                await MapDeviceCrossRefference(devices, minerBinPath, "-list -nvidia");
             }
-            return Success;
+
         }
 
-        private async Task<bool> MapDeviceCrossRefference(IEnumerable<BaseDevice> devices, string minerBinPath, string parameters)
+        private async Task MapDeviceCrossRefference(IEnumerable<BaseDevice> devices, string minerBinPath, string parameters)
         {
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, parameters);
             var mappedDevs = DevicesListParser.ParsePhoenixOutput(output, devices);
@@ -140,7 +140,6 @@ namespace Phoenix
                 var indexID = kvp.Value;
                 _mappedIDs[uuid] = indexID;
             }
-            return mappedDevs.Count != 0;
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

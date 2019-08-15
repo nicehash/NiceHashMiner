@@ -141,12 +141,12 @@ namespace GMinerPlugin
             return isSupported && isDriverSupported;
         }
 
-        public async Task<bool> DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            if (_mappedDeviceIds.Count == 0) return false;
+            if (_mappedDeviceIds.Count == 0) return;
             // TODO will block
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return false;
+            if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--list_devices");
             var mappedDevs = DevicesListParser.ParseGMinerOutput(output, devices.ToList());
@@ -157,7 +157,6 @@ namespace GMinerPlugin
                 var indexID = kvp.Value;
                 _mappedDeviceIds[uuid] = indexID;
             }
-            return mappedDevs.Count != 0;
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
