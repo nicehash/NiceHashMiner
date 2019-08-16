@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SRBMiner
 {
-    public class SRBMinerPlugin : PluginBase
+    public class SRBMinerPlugin : PluginBase, IDevicesCrossReference
     {
         public SRBMinerPlugin()
         {
@@ -38,14 +38,18 @@ namespace SRBMiner
 
         public override string PluginUUID => "85f507c0-b2ba-11e9-8e4e-bb1e2c6e76b4";
 
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
+
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
             // Get AMD GCN2+
             var amdGpus = devices.Where(dev => dev is AMDDevice gpu && Checkers.IsGcn2(gpu)).Cast<AMDDevice>();
 
-            foreach (var gpu in amdGpus)
+            int indexAMD = -1;
+            foreach (var gpu in amdGpus.Where(gpu => gpu is AMDDevice))
             {
+                _mappedDeviceIds[gpu.UUID] = ++indexAMD;
                 var algorithms = GetSupportedAlgorithms(gpu);
                 if (algorithms.Count > 0) supported.Add(gpu, algorithms);
             }
@@ -63,20 +67,6 @@ namespace SRBMiner
             return filteredAlgorithms;
         }
 
-        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
-        {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
-            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "SRBMiner-CN.exe", "WinIo64.sys" });
-        }
-
-        public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
-        {
-            // no new version
-            return false;
-        }
-
         public override bool CanGroup(MiningPair a, MiningPair b)
         {
             var canGroup = base.CanGroup(a, b);
@@ -90,7 +80,39 @@ namespace SRBMiner
 
         protected override MinerBase CreateMinerBase()
         {
-            return new SRBMiner(PluginUUID);
+            return new SRBMiner(PluginUUID, _mappedDeviceIds);
+        }
+
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
+        {
+            if (_mappedDeviceIds.Count == 0) return;
+            // TODO will block
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--listdevices");
+            var mappedDevs = DevicesListParser.ParseSRBMinerOutput(output, devices.ToList());
+
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                _mappedDeviceIds[uuid] = indexID;
+            }
+        }
+
+        public override IEnumerable<string> CheckBinaryPackageMissingFiles()
+        {
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return Enumerable.Empty<string>();
+            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "SRBMiner-CN.exe", "WinIo64.sys" });
+        }
+
+        public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
+        {
+            // no new version
+            return false;
         }
     }
 }
