@@ -35,9 +35,10 @@ namespace LolMinerBeam
         {
             switch (algorithmType)
             {
-                case AlgorithmType.Beam: return "BEAM";
+                case AlgorithmType.Beam: return "BEAM-I";
                 case AlgorithmType.GrinCuckarood29: return "GRIN-AD29";
                 case AlgorithmType.GrinCuckatoo31: return "GRIN-AT31";
+                case AlgorithmType.BeamV2: return "BEAM-II";
                 default: return "";
             }
         }
@@ -64,6 +65,9 @@ namespace LolMinerBeam
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
                 var totalSpeed = summary.Session.Performance_Summary;
 
+                var totalPowerUsage = 0;
+                var perDevicePowerInfo = new Dictionary<string, int>();
+
                 var apiDevices = summary.GPUs;
 
 
@@ -80,6 +84,8 @@ namespace LolMinerBeam
 
                 ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
                 ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+                ad.PowerUsageTotal = totalPowerUsage;
+                ad.PowerUsagePerDevice = perDevicePowerInfo;
             }
             catch (Exception e)
             {
@@ -135,7 +141,7 @@ namespace LolMinerBeam
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.5");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.6");
             var binPath = Path.Combine(pluginRootBins, "lolMiner.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);

@@ -175,6 +175,14 @@ namespace NanoMiner
             return CreateCommandLine(_username);
         }
 
+        // TODO this is only temp until miner or backend gets fixed
+        private static string StripUsername(string username)
+        {
+            var btc = username.Split('$').FirstOrDefault();
+                if (btc != null) return btc;
+            return username;
+        }
+
         private string CreateCommandLine(string username)
         {
             _apiPort = GetAvaliablePort();
@@ -196,7 +204,7 @@ namespace NanoMiner
 
             var devs = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
 
-            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\ndevices={devs}\r\npool1={url}";
+            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={StripUsername(username)}\r\ndevices={devs}\r\npool1={url}";
             try
             {
                 File.WriteAllText(Path.Combine(paths.Item2, $"config_nh_{devs}.ini"), configString);

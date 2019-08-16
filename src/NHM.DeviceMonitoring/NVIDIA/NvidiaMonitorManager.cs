@@ -4,9 +4,6 @@ using NVIDIA.NVAPI;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NHM.DeviceMonitoring.NVIDIA
 {
@@ -19,12 +16,12 @@ namespace NHM.DeviceMonitoring.NVIDIA
         {
             // Enumerate NVAPI handles and map to busid
             var idHandles = InitNvapi();
-            if (!useNvmlFallback)
+            if (!useNvmlFallback && !tryAddNvmlToEnvPathCalled)
             {
                 Logger.Info(Tag, "tryAddNvmlToEnvPath");
                 tryAddNvmlToEnvPath();
             }
-            else
+            else if(!tryAddNvmlToEnvPathCalled)
             {
                 Logger.Info(Tag, "tryAddNvmlToEnvPathFallback");
                 tryAddNvmlToEnvPathFallback();
@@ -36,7 +33,7 @@ namespace NHM.DeviceMonitoring.NVIDIA
                 var uuid = pair.Key;
                 var busID = pair.Value;
 
-               var nvmlHandle = new nvmlDevice();
+                var nvmlHandle = new nvmlDevice();
                 if (nvmlInit)
                 {
                     var nvmlRet = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(uuid, ref nvmlHandle);
@@ -107,6 +104,22 @@ namespace NHM.DeviceMonitoring.NVIDIA
                 var ret = NvmlNativeMethods.nvmlInit();
                 if (ret != nvmlReturn.Success)
                     throw new Exception($"NVML init failed with code {ret}");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.Error("NVML", e.Message);
+                return false;
+            }
+        }
+
+        public static bool ShutdownNvml()
+        {
+            try
+            {
+                var ret = NvmlNativeMethods.nvmlShutdown();
+                if (ret != nvmlReturn.Success)
+                    throw new Exception($"NVML shutdown failed with code {ret}");
                 return true;
             }
             catch (Exception e)
