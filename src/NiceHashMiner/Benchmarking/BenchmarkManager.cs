@@ -48,6 +48,18 @@ namespace NiceHashMiner.Benchmarking
             }
         }
 
+        private static bool _startMiningOnFinish;
+
+        public static bool StartMiningOnFinish
+        {
+            get
+            {
+                // _benchForm for WinForms, field for WPF
+                return _benchForm?.StartMiningOnFinish ?? _startMiningOnFinish;
+            }
+            set => _startMiningOnFinish = value;
+        }
+
         public static bool InBenchmark
         {
             get => _inBenchmark;
@@ -55,7 +67,7 @@ namespace NiceHashMiner.Benchmarking
             {
                 _inBenchmark = value;
                 // If starting mining after, don't update for STOPPED status
-                if (value || (!_benchForm?.StartMiningOnFinish ?? true))
+                if (value || StartMiningOnFinish)
                 {
                     NiceHashStats.StateChanged();
                 }
@@ -184,6 +196,11 @@ namespace NiceHashMiner.Benchmarking
         public static void Start(BenchmarkPerformanceType perfType, IBenchmarkForm form)
         {
             _benchForm = form;
+            Start(perfType);
+        }
+
+        public static void Start(BenchmarkPerformanceType perfType)
+        {
             _hasFailedAlgorithms = false;
             lock (_runningBenchmarkThreads)
             lock (_statusCheckAlgos)

@@ -1,9 +1,13 @@
-﻿using NHM.Common.Algorithm;
+﻿using NHM.Common.Enums;
+using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Mining;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using MessageBox = System.Windows.MessageBox;
 
 namespace NHM.Wpf.ViewModels
 {
@@ -104,6 +108,11 @@ namespace NHM.Wpf.ViewModels
 
         #endregion
 
+        public bool InBenchmark => BenchmarkManager.InBenchmark;
+
+        public string StartStopButtonLabel =>
+            InBenchmark ? Translations.Tr("St_op benchmark") : Translations.Tr("Start _benchmark");
+
         public BenchmarkViewModel()
         {
             SelectedAlgos = new ObservableCollection<AlgorithmContainer>();
@@ -112,6 +121,40 @@ namespace NHM.Wpf.ViewModels
         public void CommitBenchmarks()
         {
             ConfigManager.CommitBenchmarks();
+        }
+
+        public void StartBenchmark()
+        {
+            if (Devices?.All(d => !d.Enabled) ?? true)
+            {
+                MessageBox.Show(NiceHashMiner.Translations.Tr("No device has been selected there is nothing to benchmark"),
+                    NiceHashMiner.Translations.Tr("No device selected"),
+                    MessageBoxButton.OK);
+                return;
+            }
+
+            BenchmarkManager.CalcBenchDevAlgoQueue();
+
+            if (!BenchmarkManager.HasWork)
+            {
+                MessageBox.Show(Translations.Tr("Current benchmark settings are already executed. There is nothing to do."),
+                    Translations.Tr("Nothing to benchmark"),
+                    MessageBoxButton.OK);
+                return;
+            }
+
+            // Set pending status
+            foreach (var devAlgoTuple in BenchmarkManager.BenchDevAlgoQueue)
+            {
+                foreach (var algo in devAlgoTuple.Item2) algo.SetBenchmarkPending();
+            }
+
+            BenchmarkManager.Start(BenchmarkPerformanceType.Standard);
+        }
+
+        public void StopBenchmark()
+        {
+            BenchmarkManager.Stop();
         }
     }
 }

@@ -36,5 +36,13 @@ namespace NHM.Wpf.Windows
             _vm.CommitBenchmarks();
             Close();
         }
+
+        private void StartStopButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (_vm.InBenchmark)
+                _vm.StopBenchmark();
+            else
+                _vm.StartBenchmark();
+        }
     }
 }
