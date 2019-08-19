@@ -16,6 +16,7 @@
     <Grid>
         <Grid.Resources>
             <converters:HashrateConverter x:Key="HashConv" />
+            <converters:EnumToBoolConverter x:Key="EnumConv" />
         </Grid.Resources>
 
         <Grid.RowDefinitions>
@@ -73,9 +74,15 @@
         </ListView>
 
         <StackPanel Grid.Column="1" Grid.Row="0" Margin="10">
-            <RadioButton>_Quick (can be inaccurate)</RadioButton>
-            <RadioButton IsChecked="True">_Standard</RadioButton>
-            <RadioButton>_Precise (will take longer)</RadioButton>
+            <RadioButton IsChecked="{Binding PerfType, Converter={StaticResource EnumConv}, ConverterParameter=Quick}">
+                _Quick (can be inaccurate)
+            </RadioButton>
+            <RadioButton IsChecked="{Binding PerfType, Converter={StaticResource EnumConv}, ConverterParameter=Standard}">
+                _Standard
+            </RadioButton>
+            <RadioButton IsChecked="{Binding PerfType, Converter={StaticResource EnumConv}, ConverterParameter=Precise}">
+                _Precise (will take longer)
+            </RadioButton>
         </StackPanel>
 
         <Expander Grid.Column="2"
@@ -114,10 +121,14 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <StackPanel Margin="10">
-                <RadioButton IsChecked="True">Benchmark Selected Unbenchmarked Algorithms</RadioButton>
-                <RadioButton>Benchmark All Selected Algorithms</RadioButton>
+                <RadioButton IsChecked="{Binding AlgoSelection, Converter={StaticResource EnumConv}, ConverterParameter=SelectedUnbenchmarkedAlgorithms}">
+                    Benchmark Selected Unbenchmarked Algorithms
+                </RadioButton>
+                <RadioButton IsChecked="{Binding AlgoSelection, Converter={StaticResource EnumConv}, ConverterParameter=AllAlgorithms}">
+                    Benchmark All Selected Algorithms
+                </RadioButton>
             </StackPanel>
-            <CheckBox Grid.Column="1" Margin="0,10,0,0">Start mining after benchmark</CheckBox>
+            <CheckBox Grid.Column="1" Margin="0,10,0,0" IsChecked="{Binding StartMiningAfterBench}">Start mining after benchmark</CheckBox>
         </Grid>
 
         <Grid Grid.Row="3"

@@ -120,6 +120,33 @@ namespace NHM.Wpf.ViewModels
         public string StartStopButtonLabel =>
             InBenchmark ? Translations.Tr("St_op benchmark") : Translations.Tr("Start _benchmark");
 
+        public bool StartMiningAfterBench
+        {
+            get => BenchmarkManager.StartMiningOnFinish;
+            set => BenchmarkManager.StartMiningOnFinish = value;
+        }
+
+        public AlgorithmBenchmarkSettingsType AlgoSelection
+        {
+            get => BenchmarkManager.Selection;
+            set
+            {
+                BenchmarkManager.Selection = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private BenchmarkPerformanceType _perfType = BenchmarkPerformanceType.Standard;
+        public BenchmarkPerformanceType PerfType
+        {
+            get => _perfType;
+            set
+            {
+                _perfType = value;
+                OnPropertyChanged();
+            }
+        }
+
         public BenchmarkViewModel()
         {
             SelectedAlgos = new ObservableCollection<BenchAlgo>();
@@ -174,7 +201,7 @@ namespace NHM.Wpf.ViewModels
                 foreach (var algo in devAlgoTuple.Item2) algo.SetBenchmarkPending();
             }
 
-            BenchmarkManager.Start(BenchmarkPerformanceType.Standard);
+            BenchmarkManager.Start(PerfType);
             _dotTimer.Start();
         }
 
