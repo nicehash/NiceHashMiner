@@ -18,19 +18,19 @@ namespace MiniZ
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://miniz.ch/usage/#command-line-arguments | https://miniz.ch/download/#latest-version current v1.53
+            // https://miniz.ch/usage/#command-line-arguments | https://miniz.ch/download/#latest-version current v1.5p
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/miniZ.zip",
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/miniZ_v1.5p_cuda10_win-x64.zip",
                     "https://miniz.ch/?smd_process_download=1&download_id=2682", // original
                 }
             };
         }
         public override string PluginUUID => "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(1,0);
+        public override Version Version => new Version(1,1);
 
         public override string Name => "MiniZ";
 
@@ -76,6 +76,7 @@ namespace MiniZ
             {
                 new Algorithm(PluginUUID, AlgorithmType.ZHash),
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
+                new Algorithm(PluginUUID, AlgorithmType.BeamV2)
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
             return filteredAlgorithms;

@@ -7,14 +7,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
-using System.Globalization;
-using System.Net;
 
 namespace MiniZ
 {
@@ -35,6 +32,8 @@ namespace MiniZ
                     return "144,5";
                 case AlgorithmType.Beam:
                     return "150,5";
+                case AlgorithmType.BeamV2:
+                    return "150,5,3";
                 default:
                     return "";
             }
