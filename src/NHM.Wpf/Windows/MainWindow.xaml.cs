@@ -36,8 +36,10 @@ namespace NHM.Wpf.Windows
 
         private void BenchButton_Click(object sender, RoutedEventArgs e)
         {
-            var bench = new BenchmarkWindow(AvailableDevices.Devices);
-            bench.ShowDialog();
+            using (var bench = new BenchmarkWindow(AvailableDevices.Devices))
+            {
+                bench.ShowDialog();
+            }
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)

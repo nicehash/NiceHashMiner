@@ -14,7 +14,7 @@ using MessageBox = System.Windows.MessageBox;
 
 namespace NHM.Wpf.ViewModels
 {
-    public class BenchmarkViewModel : BaseVM, IDisposable
+    public class BenchmarkViewModel : BaseVM
     {
         private readonly Timer _dotTimer = new Timer(1000);
 
@@ -56,6 +56,8 @@ namespace NHM.Wpf.ViewModels
                     _selectedDev.PropertyChanged -= SelectedDevOnPropertyChanged;
 
                 _selectedDev = value;
+
+                DisposeBenchAlgos();
                 SelectedAlgos.Clear();
 
                 OnPropertyChanged();
@@ -182,9 +184,19 @@ namespace NHM.Wpf.ViewModels
             _dotTimer.Stop();
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
             BenchmarkManager.InBenchmarkChanged -= BenchmarkManagerOnInBenchmarkChanged;
+            DisposeBenchAlgos();
+        }
+
+        private void DisposeBenchAlgos()
+        {
+            if (SelectedAlgos == null) return;
+            foreach (var algo in SelectedAlgos)
+            {
+                algo.Dispose();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using NHM.Wpf.ViewModels;
+﻿using System;
+using NHM.Wpf.ViewModels;
 using NHM.Wpf.Windows.Common;
 using NHM.Wpf.Windows.Settings.Pages;
 using NiceHashMiner.Mining;
@@ -10,7 +11,7 @@ namespace NHM.Wpf.Windows
     /// <summary>
     /// Interaction logic for BenchmarkWindow.xaml
     /// </summary>
-    public partial class BenchmarkWindow : Window, ISettingsPage
+    public partial class BenchmarkWindow : Window, ISettingsPage, IDisposable
     {
         private readonly BenchmarkViewModel _vm;
 
@@ -43,6 +44,11 @@ namespace NHM.Wpf.Windows
                 _vm.StopBenchmark();
             else
                 _vm.StartBenchmark();
+        }
+
+        public void Dispose()
+        {
+            _vm.Dispose();
         }
     }
 }
