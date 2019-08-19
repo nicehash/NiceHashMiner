@@ -210,7 +210,7 @@ namespace NiceHashMiner
                 errorWarningProvider2.SetError(linkLabelAdminPrivs, Tr("Disabled NVIDIA power mode settings due to insufficient permissions. If you want to use this feature you need to run as Administrator."));
                 linkLabelAdminPrivs.Click += (s, e) =>
                 {
-                    var dialogResult = MessageBox.Show(Tr("Click yes if you with to run {0} as Administrator.", NHMProductInfo.Name),
+                    var dialogResult = MessageBox.Show(Tr("Click yes if you wish to run {0} as Administrator.", NHMProductInfo.Name),
                     Tr("Run as Administrator"),
                     MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                     if (dialogResult == DialogResult.Yes)
