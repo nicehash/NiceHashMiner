@@ -73,7 +73,7 @@
             </ListView.View>
         </ListView>
 
-        <StackPanel Grid.Column="1" Grid.Row="0" Margin="10">
+        <StackPanel Grid.Column="1" Grid.Row="0" Margin="10" IsEnabled="{Binding NotInBenchmark}">
             <RadioButton IsChecked="{Binding PerfType, Converter={StaticResource EnumConv}, ConverterParameter=Quick}">
                 _Quick (can be inaccurate)
             </RadioButton>
@@ -120,7 +120,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <StackPanel Margin="10">
+            <StackPanel Margin="10" IsEnabled="{Binding NotInBenchmark}">
                 <RadioButton IsChecked="{Binding AlgoSelection, Converter={StaticResource EnumConv}, ConverterParameter=SelectedUnbenchmarkedAlgorithms}">
                     Benchmark Selected Unbenchmarked Algorithms
                 </RadioButton>
@@ -156,7 +156,7 @@
             </GroupBox>
 
             <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0">
-                <Button Width="80" Margin="10,0" Click="CloseButton_OnClick">_Close</Button>
+                <Button Width="80" Margin="10,0" Click="CloseButton_OnClick" IsEnabled="{Binding NotInBenchmark}">_Close</Button>
                 <Button Width="120" Content="{Binding StartStopButtonLabel}" Click="StartStopButton_OnClick" />
             </StackPanel>
         </Grid>

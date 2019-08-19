@@ -117,6 +117,8 @@ namespace NHM.Wpf.ViewModels
 
         public bool InBenchmark => BenchmarkManager.InBenchmark;
 
+        public bool NotInBenchmark => !InBenchmark;
+
         public string StartStopButtonLabel =>
             InBenchmark ? Translations.Tr("St_op benchmark") : Translations.Tr("Start _benchmark");
 
@@ -159,6 +161,7 @@ namespace NHM.Wpf.ViewModels
         private void BenchmarkManagerOnInBenchmarkChanged(object sender, bool e)
         {
             OnPropertyChanged(nameof(InBenchmark));
+            OnPropertyChanged(nameof(NotInBenchmark));
             OnPropertyChanged(nameof(StartStopButtonLabel));
         }
 
