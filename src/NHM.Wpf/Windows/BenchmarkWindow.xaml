@@ -59,15 +59,15 @@
                     <GridViewColumn Header="Enabled">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding Enabled}" />
+                                <CheckBox IsChecked="{Binding Algo.Enabled}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding AlgorithmName}" />
-                    <GridViewColumn Header="Miner" DisplayMemberBinding="{Binding MinerBaseTypeName}" />
-                    <GridViewColumn Header="Speed" DisplayMemberBinding="{Binding AnnotatedSpeeds, Converter={StaticResource HashConv}}" />
-                    <GridViewColumn Header="Ratio (BTC/GH/Day)" DisplayMemberBinding="{Binding CurPayingRatio}" />
-                    <GridViewColumn Header="Profit (BTC/Day)" DisplayMemberBinding="{Binding CurPayingRateStr}" />
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Algo.AlgorithmName}" />
+                    <GridViewColumn Header="Miner" DisplayMemberBinding="{Binding Algo.MinerBaseTypeName}" />
+                    <GridViewColumn Header="Speed" DisplayMemberBinding="{Binding StatusString}" />
+                    <GridViewColumn Header="Ratio (BTC/GH/Day)" DisplayMemberBinding="{Binding Algo.CurPayingRatio}" />
+                    <GridViewColumn Header="Profit (BTC/Day)" DisplayMemberBinding="{Binding Algo.CurPayingRateStr}" />
                 </GridView>
             </ListView.View>
         </ListView>

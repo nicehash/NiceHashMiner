@@ -34,6 +34,7 @@ namespace NiceHashMiner.Benchmarking
         public static event EventHandler<StepUpEventArgs> OnStepUp;
         public static event EventHandler<AlgoStatusEventArgs> OnAlgoStatusUpdate;
         public static event EventHandler<bool> OnBenchmarkEnd;
+        public static event EventHandler<bool> InBenchmarkChanged;
 
         public static BenchmarkSelection Selection { get; set; }
 
@@ -71,6 +72,8 @@ namespace NiceHashMiner.Benchmarking
                 {
                     NiceHashStats.StateChanged();
                 }
+
+                InBenchmarkChanged?.Invoke(null, value);
             }
         }
 

@@ -55,7 +55,9 @@ namespace NiceHashMiner.Benchmarking
                     if (_stopBenchmark.IsCancellationRequested) break;
                     currentAlgorithm = _benchmarkAlgorithmQueue.Dequeue();
                     BenchmarkManager.AddToStatusCheck(Device, currentAlgorithm);
+                    currentAlgorithm.InBenchmark = true;
                     await BenchmarkAlgorithm(currentAlgorithm);
+                    currentAlgorithm.InBenchmark = false;
                     await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS);
                     if (_stopBenchmark.IsCancellationRequested) break;
                     currentAlgorithm.IsReBenchmark = false;
@@ -109,6 +111,8 @@ namespace NiceHashMiner.Benchmarking
             {
                 // add new failed list
                 _benchmarkFailedAlgo.Add(algo.AlgorithmName);
+                algo.SetError(result.ErrorMessage);
+                algo.ClearBenchmarkPending();
                 BenchmarkManager.SetCurrentStatus(Device, algo, result.ErrorMessage);
             }
         }

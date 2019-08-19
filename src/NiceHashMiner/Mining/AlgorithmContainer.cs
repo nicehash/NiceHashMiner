@@ -218,7 +218,41 @@ namespace NiceHashMiner.Mining
 
         public string BenchmarkStatus { get; set; }
 
-        public bool IsBenchmarkPending { get; private set; }
+        private bool _benchmarkPending;
+        public bool IsBenchmarkPending
+        {
+            get => _benchmarkPending;
+            private set
+            {
+                _benchmarkPending = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _inBenchmark;
+        public bool InBenchmark
+        {
+            get => _inBenchmark;
+            set
+            {
+                _inBenchmark = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool BenchmarkErred => ErrorMessage != null;
+
+        private string _errorMessage;
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set
+            {
+                _errorMessage = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(BenchmarkErred));
+            }
+        }
 
         public void ClearSpeeds()
         {
@@ -287,13 +321,14 @@ namespace NiceHashMiner.Mining
 
         public void SetBenchmarkPending()
         {
-            IsBenchmarkPending = true;
+            SetBenchmarkPendingNoMsg();
             BenchmarkStatus = Translations.Tr("Waiting benchmark");
         }
 
         public void SetBenchmarkPendingNoMsg()
         {
             IsBenchmarkPending = true;
+            ErrorMessage = null;
         }
 
         private bool IsPendingString()
@@ -334,6 +369,11 @@ namespace NiceHashMiner.Mining
                 return BenchmarkStatus;
             }
             return Translations.Tr("none");
+        }
+
+        public void SetError(string message)
+        {
+            ErrorMessage = message;
         }
 
         #endregion

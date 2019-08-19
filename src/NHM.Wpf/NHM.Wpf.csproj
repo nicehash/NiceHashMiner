@@ -83,6 +83,7 @@
     <Compile Include="ViewModels\Converters\TranslatingConverter.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\Models\BaseCommand.cs" />
+    <Compile Include="ViewModels\Models\BenchAlgo.cs" />
     <Compile Include="ViewModels\Models\DeviceData.cs" />
     <Compile Include="ViewModels\Models\LoadProgress.cs" />
     <Compile Include="ViewModels\Models\MiningData.cs" />

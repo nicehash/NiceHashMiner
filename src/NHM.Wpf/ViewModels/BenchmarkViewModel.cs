@@ -1,4 +1,5 @@
-﻿using NHM.Common.Enums;
+﻿using System;
+using NHM.Common.Enums;
 using NiceHashMiner.Benchmarking;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Mining;
@@ -6,13 +7,17 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Timers;
 using System.Windows;
+using NHM.Wpf.ViewModels.Models;
 using MessageBox = System.Windows.MessageBox;
 
 namespace NHM.Wpf.ViewModels
 {
-    public class BenchmarkViewModel : BaseVM
+    public class BenchmarkViewModel : BaseVM, IDisposable
     {
+        private readonly Timer _dotTimer = new Timer(1000);
+
         #region ListView selection
 
         private IEnumerable<ComputeDevice> _devices;
@@ -29,14 +34,14 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        public ObservableCollection<AlgorithmContainer> SelectedAlgos { get; }
+        public ObservableCollection<BenchAlgo> SelectedAlgos { get; }
 
         /// <summary>
         /// True iff a device is selected and enabled
         /// </summary>
         public bool AlgosEnabled => SelectedDev?.Enabled ?? false;
 
-        public bool SideBarEnabled => SelectedAlgo?.Enabled ?? false;
+        public bool SideBarEnabled => SelectedAlgo?.Algo.Enabled ?? false;
 
         private ComputeDevice _selectedDev;
         public ComputeDevice SelectedDev
@@ -63,14 +68,14 @@ namespace NHM.Wpf.ViewModels
 
                 foreach (var algo in _selectedDev.AlgorithmSettings)
                 {
-                    SelectedAlgos.Add(algo);
+                    SelectedAlgos.Add(new BenchAlgo(algo));
                 }
             }
         }
 
-        private AlgorithmContainer _selectedAlgo;
+        private BenchAlgo _selectedAlgo;
 
-        public AlgorithmContainer SelectedAlgo
+        public BenchAlgo SelectedAlgo
         {
             get => _selectedAlgo;
             set
@@ -79,7 +84,7 @@ namespace NHM.Wpf.ViewModels
 
                 // Remove old handler
                 if (_selectedAlgo != null)
-                    _selectedAlgo.PropertyChanged -= SelectedAlgoOnPropertyChanged;
+                    _selectedAlgo.Algo.PropertyChanged -= SelectedAlgoOnPropertyChanged;
 
                 _selectedAlgo = value;
 
@@ -89,13 +94,13 @@ namespace NHM.Wpf.ViewModels
                 if (_selectedAlgo == null) return;
 
                 // Add new handler
-                _selectedAlgo.PropertyChanged += SelectedAlgoOnPropertyChanged;
+                _selectedAlgo.Algo.PropertyChanged += SelectedAlgoOnPropertyChanged;
             }
         }
 
         private void SelectedAlgoOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(_selectedAlgo.Enabled))
+            if (e.PropertyName == nameof(_selectedAlgo.Algo.Enabled))
                 OnPropertyChanged(nameof(SideBarEnabled));
         }
 
@@ -115,7 +120,25 @@ namespace NHM.Wpf.ViewModels
 
         public BenchmarkViewModel()
         {
-            SelectedAlgos = new ObservableCollection<AlgorithmContainer>();
+            SelectedAlgos = new ObservableCollection<BenchAlgo>();
+
+            _dotTimer.Elapsed += DotTimerOnElapsed;
+
+            BenchmarkManager.InBenchmarkChanged += BenchmarkManagerOnInBenchmarkChanged;
+        }
+
+        private void BenchmarkManagerOnInBenchmarkChanged(object sender, bool e)
+        {
+            OnPropertyChanged(nameof(InBenchmark));
+            OnPropertyChanged(nameof(StartStopButtonLabel));
+        }
+
+        private void DotTimerOnElapsed(object sender, ElapsedEventArgs e)
+        {
+            foreach (var (_, algo) in BenchmarkManager.GetStatusCheckAlgos())
+            {
+                SelectedAlgos?.FirstOrDefault(a => a.Algo == algo)?.IncrementTicker();
+            }
         }
 
         public void CommitBenchmarks()
@@ -150,11 +173,18 @@ namespace NHM.Wpf.ViewModels
             }
 
             BenchmarkManager.Start(BenchmarkPerformanceType.Standard);
+            _dotTimer.Start();
         }
 
         public void StopBenchmark()
         {
             BenchmarkManager.Stop();
+            _dotTimer.Stop();
+        }
+
+        public void Dispose()
+        {
+            BenchmarkManager.InBenchmarkChanged -= BenchmarkManagerOnInBenchmarkChanged;
         }
     }
 }
