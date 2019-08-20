@@ -6,31 +6,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WildRig
+namespace XMRig
 {
-    internal class JsonApiResponse
+    public static class BenchmarkHelpers
     {
-        public Hashrate hashrate { get; set; }
-    }
-
-    internal class Hashrate
-    {
-        public List<List<int>> threads { get; set; }
-    }
-
-    internal static class BenchmarkHelpers
-    {
-        public static Tuple<double, bool> TryGetHashrateAfter(this string s, string after) {
-            if (!s.Contains(after))
+        public static Tuple<double, bool> TryGetHashrateAfter(this string s, string contains) {
+            if (!s.Contains(contains))
             {
                 return Tuple.Create(0d, false); ;
             }
+            s = s.Substring(s.IndexOf(contains));
+            var splittedString = s.Split(' ');
 
-            var afterString = s.GetStringAfter(after).ToLower();
-            var na = afterString.Substring(0, 4);
-
-            if (na.Contains("n/a")) return Tuple.Create(0d, false);
-
+            var afterString = splittedString[2].ToLower();
             var numString = new string(afterString
                 .ToCharArray()
                 .SkipWhile(c => !char.IsDigit(c))
@@ -39,13 +27,10 @@ namespace WildRig
 
             if (!double.TryParse(numString, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
             {
-                return Tuple.Create(0d, false); ;
+                return Tuple.Create(0d, false);
             }
 
-            var afterNumString = afterString.GetStringAfter(numString);
-            var splitedString = afterNumString.Split(' ');
-            var postfixString = splitedString.LastOrDefault();
-
+            var postfixString = splittedString[5];
             for (var i = 0; i < postfixString.Length - 1; ++i)
             {
                 var c = postfixString[i];
@@ -79,5 +64,4 @@ namespace WildRig
             {'Y', pow10(24)},
         };
     }
-
 }
