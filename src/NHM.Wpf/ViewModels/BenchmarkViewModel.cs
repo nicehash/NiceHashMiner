@@ -27,7 +27,34 @@ namespace NHM.Wpf.ViewModels
             get => _devices;
             set
             {
+                // Remove old handlers
+                if (_devices != null)
+                {
+                    foreach (var dev in _devices)
+                    {
+                        dev.PropertyChanged -= UpdateBenchPending;
+                        foreach (var algo in dev.AlgorithmSettings)
+                        {
+                            algo.PropertyChanged -= UpdateBenchPending;
+                        }
+                    }
+                }
+
                 _devices = value;
+
+                // Add new handlers
+                if (_devices != null)
+                {
+                    foreach (var dev in _devices)
+                    {
+                        dev.PropertyChanged += UpdateBenchPending;
+                        foreach (var algo in dev.AlgorithmSettings)
+                        {
+                            algo.PropertyChanged += UpdateBenchPending;
+                        }
+                    }
+                }
+
                 SelectedDev = null;
                 SelectedAlgo = null;
                 OnPropertyChanged();
@@ -149,6 +176,32 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
+        private int _benchesPending;
+        public int BenchesPending
+        {
+            get => _benchesPending;
+            set
+            {
+                _benchesPending = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Progress));
+            }
+        }
+
+        private int _benchesCompleted;
+        public int BenchesCompleted
+        {
+            get => _benchesCompleted;
+            set
+            {
+                _benchesCompleted = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Progress));
+            }
+        }
+
+        public double Progress => (double) BenchesCompleted * 100 / Math.Max(1, BenchesPending);
+
         public BenchmarkViewModel()
         {
             SelectedAlgos = new ObservableCollection<BenchAlgo>();
@@ -156,6 +209,26 @@ namespace NHM.Wpf.ViewModels
             _dotTimer.Elapsed += DotTimerOnElapsed;
 
             BenchmarkManager.InBenchmarkChanged += BenchmarkManagerOnInBenchmarkChanged;
+            BenchmarkManager.OnStepUp += BenchmarkManagerOnOnStepUp;
+
+            UpdateBenchPending();
+        }
+
+        private void BenchmarkManagerOnOnStepUp(object sender, StepUpEventArgs e)
+        {
+            BenchesPending = e.AlgorithmCount;
+            BenchesCompleted = e.CurrentIndex;
+        }
+
+        private void UpdateBenchPending(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SelectedAlgo.Algo.Enabled) || e.PropertyName == nameof(SelectedDev.Enabled))
+                UpdateBenchPending();
+        }
+
+        private void UpdateBenchPending()
+        {
+            BenchesPending = BenchmarkManager.CalcBenchDevAlgoQueue();
         }
 
         private void BenchmarkManagerOnInBenchmarkChanged(object sender, bool e)
@@ -217,7 +290,21 @@ namespace NHM.Wpf.ViewModels
         protected override void Dispose(bool disposing)
         {
             BenchmarkManager.InBenchmarkChanged -= BenchmarkManagerOnInBenchmarkChanged;
+            BenchmarkManager.OnStepUp -= BenchmarkManagerOnOnStepUp;
+
             DisposeBenchAlgos();
+
+            if (Devices != null)
+            {
+                foreach (var dev in Devices)
+                {
+                    dev.PropertyChanged -= UpdateBenchPending;
+                    foreach (var algo in dev.AlgorithmSettings)
+                    {
+                        algo.PropertyChanged -= UpdateBenchPending;
+                    }
+                }
+            }
         }
 
         private void DisposeBenchAlgos()

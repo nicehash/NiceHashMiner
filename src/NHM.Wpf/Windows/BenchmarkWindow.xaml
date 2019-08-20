@@ -147,11 +147,11 @@
             <GroupBox Header="Benchmark progress status:" Grid.RowSpan="2">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Margin="5,5,0,5">Benchmark step (</TextBlock>
-                    <TextBlock Margin="0,5">0</TextBlock>
+                    <TextBlock Margin="0,5" Text="{Binding BenchesCompleted}" />
                     <TextBlock Margin="0,5">/</TextBlock>
-                    <TextBlock Margin="0,5">20</TextBlock>
+                    <TextBlock Margin="0,5" Text="{Binding BenchesPending}" />
                     <TextBlock Margin="0,5,5,5">)</TextBlock>
-                    <ProgressBar Width="220" />
+                    <ProgressBar Width="220" Value="{Binding Progress, Mode=OneWay}" />
                 </StackPanel>
             </GroupBox>
 
