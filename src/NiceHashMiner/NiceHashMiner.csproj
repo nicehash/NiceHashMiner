@@ -569,6 +569,10 @@
       <Project>{fa68227d-27a2-4058-8d36-005fadafecc0}</Project>
       <Name>WildRig</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\XMRig\XMRig.csproj">
+      <Project>{bc3548d5-5463-4731-accd-a5db35270807}</Project>
+      <Name>XMRig</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj">
       <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
       <Name>XmrStak</Name>

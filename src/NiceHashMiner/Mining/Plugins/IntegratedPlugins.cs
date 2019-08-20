@@ -182,6 +182,15 @@ namespace NiceHashMiner.Mining.Plugins
     }
 #endif
 
+#if INTEGRATE_XMRig_PLUGIN
+    class XMRigIntegratedPlugin : XMRig.XMRigPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "XMRig";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
 #if INTEGRATE_MiniZ_PLUGIN
     class MiniZIntegratedPlugin : MiniZ.MiniZPlugin, IntegratedPlugin
     {
