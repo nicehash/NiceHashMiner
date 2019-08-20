@@ -102,7 +102,7 @@ namespace ATI.ADL
     /// This structure is used to store information about Overdrive N capabilities
     /// \nosubgrouping
     ////////////////////////////////////////////////////////////////////////////////////////////
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 2)]
     internal struct ADLODNCapabilitiesX2
     {
         /// Number of levels which describe the minimum to maximum clock ranges.

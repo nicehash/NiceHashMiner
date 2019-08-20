@@ -53,9 +53,10 @@ namespace NHM.DeviceMonitoring
                     Logger.Info(TEST_TAG, $"unable to get capabilities");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 // TODO log
+                Logger.Info(TEST_TAG, e.Message);
             }
         }
 
