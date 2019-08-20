@@ -32,10 +32,10 @@ namespace NHM.Wpf.ViewModels
                 {
                     foreach (var dev in _devices)
                     {
-                        dev.PropertyChanged -= UpdateBenchPending;
+                        dev.PropertyChanged -= OnDevPropertyChanged;
                         foreach (var algo in dev.AlgorithmSettings)
                         {
-                            algo.PropertyChanged -= UpdateBenchPending;
+                            algo.PropertyChanged -= OnAlgoPropertyChanged;
                         }
                     }
                 }
@@ -47,10 +47,10 @@ namespace NHM.Wpf.ViewModels
                 {
                     foreach (var dev in _devices)
                     {
-                        dev.PropertyChanged += UpdateBenchPending;
+                        dev.PropertyChanged += OnDevPropertyChanged;
                         foreach (var algo in dev.AlgorithmSettings)
                         {
-                            algo.PropertyChanged += UpdateBenchPending;
+                            algo.PropertyChanged += OnAlgoPropertyChanged;
                         }
                     }
                 }
@@ -78,10 +78,6 @@ namespace NHM.Wpf.ViewModels
             {
                 if (value == _selectedDev) return;
 
-                // Remove old handler
-                if (_selectedDev != null)
-                    _selectedDev.PropertyChanged -= SelectedDevOnPropertyChanged;
-
                 _selectedDev = value;
 
                 DisposeBenchAlgos();
@@ -91,9 +87,6 @@ namespace NHM.Wpf.ViewModels
                 OnPropertyChanged(nameof(AlgosEnabled));
 
                 if (_selectedDev == null) return;
-
-                // Add new handler
-                _selectedDev.PropertyChanged += SelectedDevOnPropertyChanged;
 
                 foreach (var algo in _selectedDev.AlgorithmSettings)
                 {
@@ -111,33 +104,11 @@ namespace NHM.Wpf.ViewModels
             {
                 if (value == _selectedAlgo) return;
 
-                // Remove old handler
-                if (_selectedAlgo != null)
-                    _selectedAlgo.Algo.PropertyChanged -= SelectedAlgoOnPropertyChanged;
-
                 _selectedAlgo = value;
 
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(SideBarEnabled));
-
-                if (_selectedAlgo == null) return;
-
-                // Add new handler
-                _selectedAlgo.Algo.PropertyChanged += SelectedAlgoOnPropertyChanged;
             }
-        }
-
-        private void SelectedAlgoOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(_selectedAlgo.Algo.Enabled))
-                OnPropertyChanged(nameof(SideBarEnabled));
-        }
-
-        private void SelectedDevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // Forward device enabled change notification to AlgosEnabled
-            if (e.PropertyName == nameof(_selectedDev.Enabled))
-                OnPropertyChanged(nameof(AlgosEnabled));
         }
 
         #endregion
@@ -220,10 +191,22 @@ namespace NHM.Wpf.ViewModels
             BenchesCompleted = e.CurrentIndex;
         }
 
-        private void UpdateBenchPending(object sender, PropertyChangedEventArgs e)
+        private void OnAlgoPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(SelectedAlgo.Algo.Enabled) || e.PropertyName == nameof(SelectedDev.Enabled))
+            if (e.PropertyName == nameof(SelectedAlgo.Algo.Enabled))
+            {
                 UpdateBenchPending();
+                OnPropertyChanged(nameof(SideBarEnabled));
+            }
+        }
+
+        private void OnDevPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(SelectedDev.Enabled))
+            {
+                UpdateBenchPending();
+                OnPropertyChanged(nameof(AlgosEnabled));
+            }
         }
 
         private void UpdateBenchPending()
@@ -294,14 +277,16 @@ namespace NHM.Wpf.ViewModels
 
             DisposeBenchAlgos();
 
+            // Since devs and algos live for the life of the program, the handlers need to be removed
+            // or this instance will never get GC'd
             if (Devices != null)
             {
                 foreach (var dev in Devices)
                 {
-                    dev.PropertyChanged -= UpdateBenchPending;
+                    dev.PropertyChanged -= OnDevPropertyChanged;
                     foreach (var algo in dev.AlgorithmSettings)
                     {
-                        algo.PropertyChanged -= UpdateBenchPending;
+                        algo.PropertyChanged -= OnAlgoPropertyChanged;
                     }
                 }
             }
