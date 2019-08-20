@@ -173,6 +173,13 @@ namespace NHM.Wpf.ViewModels
 
         public double Progress => (double) BenchesCompleted * 100 / Math.Max(1, BenchesPending);
 
+        // The ending stuff needs to happen in the window code behind so just forward here
+        public event EventHandler<BenchEndEventArgs> OnBenchEnd
+        {
+            add => BenchmarkManager.OnBenchmarkEnd += value;
+            remove => BenchmarkManager.OnBenchmarkEnd -= value;
+        }
+
         public BenchmarkViewModel()
         {
             SelectedAlgos = new ObservableCollection<BenchAlgo>();
@@ -219,6 +226,7 @@ namespace NHM.Wpf.ViewModels
             OnPropertyChanged(nameof(InBenchmark));
             OnPropertyChanged(nameof(NotInBenchmark));
             OnPropertyChanged(nameof(StartStopButtonLabel));
+            if (!e) BenchesCompleted = 0;
         }
 
         private void DotTimerOnElapsed(object sender, ElapsedEventArgs e)

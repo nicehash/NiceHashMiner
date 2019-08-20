@@ -33,7 +33,7 @@ namespace NiceHashMiner.Benchmarking
 
         public static event EventHandler<StepUpEventArgs> OnStepUp;
         public static event EventHandler<AlgoStatusEventArgs> OnAlgoStatusUpdate;
-        public static event EventHandler<bool> OnBenchmarkEnd;
+        public static event EventHandler<BenchEndEventArgs> OnBenchmarkEnd;
         public static event EventHandler<bool> InBenchmarkChanged;
 
         public static BenchmarkSelection Selection { get; set; }
@@ -292,7 +292,7 @@ namespace NiceHashMiner.Benchmarking
         {
             InBenchmark = false;
             EthlargementIntegratedPlugin.Instance.Stop();
-            OnBenchmarkEnd?.Invoke(null, _hasFailedAlgorithms);
+            OnBenchmarkEnd?.Invoke(null, new BenchEndEventArgs(_hasFailedAlgorithms, StartMiningOnFinish));
         }
 
         public static void ClearQueue()
@@ -393,6 +393,18 @@ namespace NiceHashMiner.Benchmarking
             Device = dev;
             Algorithm = algo;
             Status = status;
+        }
+    }
+
+    public class BenchEndEventArgs : EventArgs
+    {
+        public bool DidAlgosFail { get; }
+        public bool StartMining { get; }
+
+        public BenchEndEventArgs(bool algosFailed, bool startMining)
+        {
+            DidAlgosFail = algosFailed;
+            StartMining = startMining;
         }
     }
 }

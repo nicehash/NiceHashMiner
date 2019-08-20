@@ -271,7 +271,7 @@ namespace NiceHashMiner.Forms
             return true;
         }
 
-        public void EndBenchmark(object sender, bool hasFailedAlgos)
+        public void EndBenchmark(object sender, BenchEndEventArgs e)
         {
             if (ApplicationStateManager.BurnCalled) {
                 return;
@@ -284,7 +284,7 @@ namespace NiceHashMiner.Forms
 
                 BenchmarkStoppedGuiSettings();
                 // check if all ok
-                if (!hasFailedAlgos && StartMiningOnFinish == false)
+                if (!e.DidAlgosFail && StartMiningOnFinish == false)
                 {
                     MessageBox.Show(
                         Translations.Tr("All benchmarks have been successful"),

@@ -5,6 +5,7 @@ using NHM.Wpf.Windows.Settings.Pages;
 using NiceHashMiner.Mining;
 using System.Collections.Generic;
 using System.Windows;
+using NiceHashMiner.Benchmarking;
 
 namespace NHM.Wpf.Windows
 {
@@ -28,8 +29,28 @@ namespace NHM.Wpf.Windows
             }
 
             _vm.Devices = devices;
+            _vm.OnBenchEnd += OnBenchEnd;
 
             WindowUtils.Translate(this);
+        }
+
+        private void OnBenchEnd(object sender, BenchEndEventArgs e)
+        {
+            if (!e.StartMining)
+            {
+                MessageBox.Show(
+                    !e.DidAlgosFail
+                        ? Translations.Tr("All benchmarks have been successful")
+                        : Translations.Tr("Not all benchmarks finished successfully."),
+                    Translations.Tr("Benchmark finished report"),
+                    MessageBoxButton.OK);
+            }
+            else
+            {
+                // MainWindow will look for this result and start mining if it's true
+                DialogResult = true;
+                Close();
+            }
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
@@ -48,6 +69,7 @@ namespace NHM.Wpf.Windows
 
         public void Dispose()
         {
+            _vm.OnBenchEnd -= OnBenchEnd;
             _vm.Dispose();
         }
     }
