@@ -6,45 +6,45 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WildRig
+namespace MiniZ
 {
+    [Serializable]
+    internal class Result
+    {
+        public uint gpuid { get; set; }
+        public uint cudaid { get; set; }
+        public string busid { get; set; }
+        public uint gpu_status { get; set; }
+        public int temperature { get; set; }
+        public uint gpu_power_usage { get; set; }
+        public uint speed_sps { get; set; }
+    }
+
+    [Serializable]
     internal class JsonApiResponse
     {
-        public Hashrate hashrate { get; set; }
+        public object error { get; set; }
+        public List<Result> result { get; set; }
     }
-
-    internal class Hashrate
-    {
-        public List<List<int>> threads { get; set; }
-    }
-
     internal static class BenchmarkHelpers
     {
-        public static Tuple<double, bool> TryGetHashrateAfter(this string s, string after) {
+        public static Tuple<double, bool> TryGetHashrateAfter(this string s, string after)
+        {
             if (!s.Contains(after))
             {
                 return Tuple.Create(0d, false); ;
             }
 
-            var afterString = s.GetStringAfter(after).ToLower();
-            var na = afterString.Substring(0, 4);
+            var hashrateString = s.Substring(s.IndexOf(after) + 3);
+            var hashrateArray = hashrateString.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+            var hashrateResult = hashrateArray.Split('(').FirstOrDefault();
 
-            if (na.Contains("n/a")) return Tuple.Create(0d, false);
-
-            var numString = new string(afterString
-                .ToCharArray()
-                .SkipWhile(c => !char.IsDigit(c))
-                .TakeWhile(c => char.IsDigit(c) || c == '.')
-                .ToArray());
-
-            if (!double.TryParse(numString, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
+            if (!double.TryParse(hashrateResult, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
             {
                 return Tuple.Create(0d, false); ;
             }
 
-            var afterNumString = afterString.GetStringAfter(numString);
-            var splitedString = afterNumString.Split(' ');
-            var postfixString = splitedString.LastOrDefault();
+            var postfixString = hashrateArray.GetStringAfter(")");
 
             for (var i = 0; i < postfixString.Length - 1; ++i)
             {
@@ -79,5 +79,4 @@ namespace WildRig
             {'Y', pow10(24)},
         };
     }
-
 }

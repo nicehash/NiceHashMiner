@@ -72,7 +72,7 @@ namespace GMinerPlugin
                 new MinerOption
                 {
                     Type = MinerOptionType.OptionWithSingleParameter,
-                    ID = "gminer_intensity",
+                    ID = "gminer_logfile",
                     LongName = "--logfile"
                 }
             },
