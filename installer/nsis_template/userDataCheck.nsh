@@ -12,11 +12,11 @@ Var showCleanUninstallInstallPage
   StrCpy $showCleanUninstallInstallPage "0"
   !ifndef BUILD_UNINSTALLER
     # check if we have general_settings with installer
-    IfFileExists "$LOCALAPPDATA\Programs\NiceHashMiner\configs" 0 +2
+    IfFileExists "$LOCALAPPDATA\Programs\${BASE_NAME}\configs" 0 +2
     StrCpy $showCleanUninstallInstallPage "1"
   !else
     # check if we have settings folder with uninstaller
-    IfFileExists "$LOCALAPPDATA\Programs\NiceHashMiner\*" 0 +2
+    IfFileExists "$LOCALAPPDATA\Programs\${BASE_NAME}\*" 0 +2
     StrCpy $showCleanUninstallInstallPage "1"
   !endif
 !macroend

@@ -3,7 +3,8 @@
 
 !define APP_FILENAME "${BASE_NAME}"
 !define PRODUCT_NAME "${BASE_NAME}"
-!define PRODUCT_FILENAME "${BASE_NAME}"
+# restore to "${BASE_NAME}" after old platform is dead
+!define PRODUCT_FILENAME "NiceHashMiner"
 
 !define REQUEST_EXECUTION_LEVEL "user"
 !define COMPRESS "auto"
