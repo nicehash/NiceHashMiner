@@ -16,7 +16,7 @@ namespace XMRig
 {
     public class XMRig : MinerBase
     {
-        private const double DevFee = 5.0;
+        private double DevFee = 5.0;
         private int _apiPort;
         protected readonly HttpClient _httpClient = new HttpClient();
 
@@ -126,6 +126,26 @@ namespace XMRig
 
         protected override void Init()
         {
+            if (_extraLaunchParameters.Contains("--donate-level="))
+            {
+                var splittedELP = _extraLaunchParameters.Split(' ');
+                try
+                {
+                    foreach (var elp in splittedELP)
+                    {
+                        if (elp.Contains("--donate-level="))
+                        {
+                            var parsedDevFee = elp.Split('=')[1];
+                            double.TryParse(parsedDevFee, out var devFee);
+                            DevFee = devFee;
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(_logGroup, $"Init failed: {e.Message}");
+                }
+            }
         }
 
         private string CreateCommandLine(string username)
