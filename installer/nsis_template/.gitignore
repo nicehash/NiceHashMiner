@@ -1,0 +1,7 @@
+*.exe
+dist
+.vscode
+
+# ignore generated file
+generatedFile.nsh
+packageDefsGenerated.nsh

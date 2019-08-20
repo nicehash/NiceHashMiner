@@ -288,3 +288,6 @@ _LOCAL_RELEASES
 Debug*
 Release*
 *.exe
+
+# installer
+installer/nhmpacker/

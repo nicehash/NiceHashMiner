@@ -10,37 +10,47 @@ namespace InstallerHelper
 {
     class Program
     {
-        static string GenerateVariableTemplate()
+        static Tuple<string, string> GenerateVariableTemplate(string path)
         {
-            string VERSION = "1.9.2.11";
+            var assembly = Assembly.LoadFrom(path);
+            var assemblyData = assembly.CustomAttributes;
 
+            string VERSION = assemblyData.Where(data => data.AttributeType == typeof(AssemblyFileVersionAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
+
+
+            string BASE_NAME = assemblyData.Where(data => data.AttributeType == typeof(AssemblyTitleAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
+            string COMPANY_NAME = assemblyData.Where(data => data.AttributeType == typeof(AssemblyCompanyAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString();
+            string APP_DESCRIPTION = assemblyData.Where(data => data.AttributeType == typeof(AssemblyDescriptionAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
+            string COPYRIGHT = assemblyData.Where(data => data.AttributeType == typeof(AssemblyCopyrightAttribute)).FirstOrDefault()?.ConstructorArguments.FirstOrDefault().Value.ToString(); ;
+
+            string BASE_BRAND_NAME = "NiceHash Miner";
+            string TRADEMARK = "NICEHASH ®";
+            
             string APP_ID = "com.nicehash.nhm";
             string APP_GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
 
-            string BASE_NAME = "NiceHashMiner";
-            string BASE_BRAND_NAME = "NiceHash Miner";
-            string COMPANY_NAME = "H-BIT d.o.o.";
-            string APP_DESCRIPTION = BASE_NAME + " - Client for NiceHash.com";
-
-            string TRADEMARK = "NICEHASH ®";
-            string COPYRIGHT = "Copyright © 2018 H-BIT d.o.o.";
+            if(BASE_NAME == "NiceHashMinerLegacy")
+            {
+                APP_ID = "com.nicehash.nhml";
+                APP_GUID = "6722ab0a-4f1d-4703-8169-dede20aad630";
+            }
 
             string NSIS_GENERATED_FILE_TEMPLATE =
             "########################################\n" +
             "## This is generated file\n" +
-            "## Date: REPLACE_DATE\n\n" +
+            $"## Date: {DateTime.Now.ToString()}\n\n" +
 
             "; Product and version\n" +
-            "!define BASE_NAME \"REPLACE_BASE_NAME\"\n" +
-            "!define BASE_BRAND_NAME \"REPLACE_BASE_BRAND_NAME\"\n" +
-            "!define VERSION \"REPLACE_VERSION\"\n\n" +
+            $"!define BASE_NAME \"{BASE_NAME}\"\n" +
+            $"!define BASE_BRAND_NAME \"{BASE_BRAND_NAME}\"\n" +
+            $"!define VERSION \"{VERSION}\"\n\n" +
 
-            "!define COMPANY_NAME \"REPLACE_COMPANY_NAME\"\n" +
-            "!define APP_ID \"REPLACE_APP_ID\"\n" +
+            $"!define COMPANY_NAME \"{COMPANY_NAME}\"\n" +
+            $"!define APP_ID \"{APP_ID}\"\n" +
             "; TODO check if this needs to be always re-generated(UUID-v5 is used in electron-builder)\n" +
             "; TODO this is uuid4 and check if we need to generate this\n" +
-            "!define APP_GUID \"REPLACE_APP_GUID\"\n" +
-            "!define APP_DESCRIPTION \"REPLACE_APP_DESCRIPTION\"\n\n" +
+            $"!define APP_GUID \"{APP_GUID}\"\n" +
+            $"!define APP_DESCRIPTION \"{APP_DESCRIPTION}\"\n\n" +
 
             "!macro addVersionInfo\n" +
             ";--------------------------------\n" +
@@ -50,46 +60,41 @@ namespace InstallerHelper
              "VIAddVersionKey \"ProductName\" \"${PRODUCT_NAME}\"\n" +
              "; VIAddVersionKey \"Comments\" \"Do we need this?\"\n" +
              "VIAddVersionKey \"CompanyName\" \"${COMPANY_NAME}\"\n" +
-             "VIAddVersionKey \"LegalTrademarks\" \"REPLACE_TRADEMARK\"\n" +
-             "VIAddVersionKey \"LegalCopyright\"  \"REPLACE_COPYRIGHT\"\n" +
+             $"VIAddVersionKey \"LegalTrademarks\" \"{TRADEMARK}\"\n" +
+             $"VIAddVersionKey \"LegalCopyright\"  \"{COPYRIGHT}\"\n" +
              "VIAddVersionKey \"FileDescription\" \"${APP_DESCRIPTION}\"\n" +
-              "VIAddVersionKey \"FileVersion\" \"${VERSION}\"\n\n" +
+             "VIAddVersionKey \"FileVersion\" \"${VERSION}\"\n\n" +
 
             ";--------------------------------\n" +
             "!macroend\n";
 
-            var finalString = NSIS_GENERATED_FILE_TEMPLATE;
-            finalString = finalString.Replace("REPLACE_DATE", DateTime.Now.ToString());
-            finalString = finalString.Replace("REPLACE_BASE_NAME", BASE_NAME);
-            finalString = finalString.Replace("REPLACE_BASE_BRAND_NAME", BASE_BRAND_NAME);
-            finalString = finalString.Replace("REPLACE_VERSION", VERSION);
-            finalString = finalString.Replace("REPLACE_COMPANY_NAME", COMPANY_NAME);
-            finalString = finalString.Replace("REPLACE_APP_ID", APP_ID);
-            finalString = finalString.Replace("REPLACE_APP_GUID", APP_GUID);
-            finalString = finalString.Replace("REPLACE_APP_DESCRIPTION", APP_DESCRIPTION);
-            finalString = finalString.Replace("REPLACE_TRADEMARK", TRADEMARK);
-            finalString = finalString.Replace("REPLACE_COPYRIGHT", COPYRIGHT);
-            return finalString;
+            return new Tuple<string, string>(NSIS_GENERATED_FILE_TEMPLATE, VERSION);
         }
-
 
         static void Main(string[] args)
         {
-            var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            var pluginPackagesFolder = Path.Combine(exePath, "_files_to_pack");
-
-            if (Directory.Exists(pluginPackagesFolder))
+            if (args.Length == 0)
             {
-                Console.WriteLine("Deleting old installer files");
-                Directory.Delete(pluginPackagesFolder, true);
-            }
-            if (!Directory.Exists(pluginPackagesFolder))
+                Console.WriteLine("Please enter NiceHashMiner.exe path!");
+            } else
             {
-                Directory.CreateDirectory(pluginPackagesFolder);
-            }
+                var exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                var pluginPackagesFolder = Path.Combine(exePath, "_files_to_pack");
 
-            var generatedTemplate = GenerateVariableTemplate();
-            File.WriteAllText(Path.Combine(pluginPackagesFolder, "packageDefsGenerated.nsh"), generatedTemplate);
+                if (Directory.Exists(pluginPackagesFolder))
+                {
+                    Console.WriteLine("Deleting old installer files");
+                    Directory.Delete(pluginPackagesFolder, true);
+                }
+                if (!Directory.Exists(pluginPackagesFolder))
+                {
+                    Directory.CreateDirectory(pluginPackagesFolder);
+                }
+
+                var (generatedTemplate, version) = GenerateVariableTemplate(args[0]);
+                File.WriteAllText(Path.Combine(pluginPackagesFolder, "packageDefsGenerated.nsh"), generatedTemplate);
+                File.WriteAllText(Path.Combine(pluginPackagesFolder, "version.txt"), version);
+            }
         }
     }
 }
