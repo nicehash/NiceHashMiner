@@ -529,6 +529,10 @@
       <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
       <Name>MinerPlugin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\MiniZ\MiniZ.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_MiniZ_PLUGIN'))">
+      <Project>{780221d3-fe59-4957-b33f-42f7727c72dc}</Project>
+      <Name>MiniZ</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\NanoMiner\NanoMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NanoMiner_PLUGIN'))">
       <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
       <Name>NanoMiner</Name>
