@@ -82,6 +82,12 @@ namespace NiceHashMiner.Mining.Plugins
                 #if INTEGRATE_SRBMiner_PLUGIN
                 new SRBMinerIntegratedPlugin(),
                 #endif
+                #if INTEGRATE_XMRig_PLUGIN
+                new XMRigIntegratedPlugin(),
+                #endif
+                #if INTEGRATE_MiniZ_PLUGIN
+                new MiniZIntegratedPlugin(),
+                #endif
 
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,

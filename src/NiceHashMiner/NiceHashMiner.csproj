@@ -529,6 +529,10 @@
       <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
       <Name>MinerPlugin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\MiniZ\MiniZ.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_MiniZ_PLUGIN'))">
+      <Project>{780221d3-fe59-4957-b33f-42f7727c72dc}</Project>
+      <Name>MiniZ</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\NanoMiner\NanoMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NanoMiner_PLUGIN'))">
       <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
       <Name>NanoMiner</Name>
@@ -564,6 +568,10 @@
     <ProjectReference Include="..\Miners\WildRig\WildRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_WildRig_PLUGIN'))">
       <Project>{fa68227d-27a2-4058-8d36-005fadafecc0}</Project>
       <Name>WildRig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\XMRig\XMRig.csproj">
+      <Project>{bc3548d5-5463-4731-accd-a5db35270807}</Project>
+      <Name>XMRig</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj">
       <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>
