@@ -182,6 +182,15 @@ namespace NiceHashMiner.Mining.Plugins
     }
 #endif
 
+#if INTEGRATE_SRBMiner_PLUGIN
+    class SRBMinerIntegratedPlugin : SRBMiner.SRBMinerPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "SRBMiner";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
 #if INTEGRATE_XMRig_PLUGIN
     class XMRigIntegratedPlugin : XMRig.XMRigPlugin, IntegratedPlugin
     {
