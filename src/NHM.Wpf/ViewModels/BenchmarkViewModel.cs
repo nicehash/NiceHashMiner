@@ -174,11 +174,7 @@ namespace NHM.Wpf.ViewModels
         public double Progress => (double) BenchesCompleted * 100 / Math.Max(1, BenchesPending);
 
         // The ending stuff needs to happen in the window code behind so just forward here
-        public event EventHandler<BenchEndEventArgs> OnBenchEnd
-        {
-            add => BenchmarkManager.OnBenchmarkEnd += value;
-            remove => BenchmarkManager.OnBenchmarkEnd -= value;
-        }
+        public event EventHandler<BenchEndEventArgs> OnBenchEnd;
 
         public BenchmarkViewModel()
         {
@@ -188,8 +184,17 @@ namespace NHM.Wpf.ViewModels
 
             BenchmarkManager.InBenchmarkChanged += BenchmarkManagerOnInBenchmarkChanged;
             BenchmarkManager.OnStepUp += BenchmarkManagerOnOnStepUp;
+            BenchmarkManager.OnBenchmarkEnd += BenchmarkManagerOnBenchmarkEnd;
 
             UpdateBenchPending();
+        }
+
+        private void BenchmarkManagerOnBenchmarkEnd(object sender, BenchEndEventArgs e)
+        {
+            _dotTimer.Stop();
+            UpdateBenchPending();
+
+            OnBenchEnd?.Invoke(this, e);
         }
 
         private void BenchmarkManagerOnOnStepUp(object sender, StepUpEventArgs e)
@@ -218,6 +223,7 @@ namespace NHM.Wpf.ViewModels
 
         private void UpdateBenchPending()
         {
+            BenchesCompleted = 0;
             BenchesPending = BenchmarkManager.CalcBenchDevAlgoQueue();
         }
 
