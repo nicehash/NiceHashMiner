@@ -288,6 +288,7 @@ namespace NHM.Wpf.ViewModels
         {
             BenchmarkManager.InBenchmarkChanged -= BenchmarkManagerOnInBenchmarkChanged;
             BenchmarkManager.OnStepUp -= BenchmarkManagerOnOnStepUp;
+            BenchmarkManager.OnBenchmarkEnd -= BenchmarkManagerOnBenchmarkEnd;
 
             DisposeBenchAlgos();
 
