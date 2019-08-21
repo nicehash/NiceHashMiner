@@ -23,7 +23,7 @@ for %%i in (.\nhmpacker\nhm_windows_1.*.exe) do (
 xcopy /s /i .\..\Release %filename%
 copy .\nhm_windows_x.y.z.r-template\EULA.html %filename%
 copy .\nhm_windows_x.y.z.r-template\EULA.rtf %filename% 
-7z a -tzip %filename%.zip .\%filename%\*
+.\nhmpacker\bins_bundle\7z\7z.exe a -tzip %filename%.zip .\%filename%\*
 
 copy .\nhmpacker\nhm_*.exe .\
 
