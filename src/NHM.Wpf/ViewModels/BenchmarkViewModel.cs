@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Timers;
 using System.Windows;
+using System.Windows.Input;
 using NHM.Wpf.ViewModels.Models;
 using MessageBox = System.Windows.MessageBox;
 
@@ -173,6 +174,12 @@ namespace NHM.Wpf.ViewModels
 
         public double Progress => (double) BenchesCompleted * 100 / Math.Max(1, BenchesPending);
 
+        public ICommand EnableAllCommand { get; }
+        public ICommand DisableAllCommand { get; }
+        public ICommand EnableBenchedCommand { get; }
+        public ICommand EnableOnlyThisCommand { get; }
+        public ICommand ClearSpeedsCommand { get; }
+
         // The ending stuff needs to happen in the window code behind so just forward here
         public event EventHandler<BenchEndEventArgs> OnBenchEnd;
 
@@ -188,6 +195,48 @@ namespace NHM.Wpf.ViewModels
             BenchmarkManager.OnBenchmarkEnd += BenchmarkManagerOnBenchmarkEnd;
 
             UpdateBenchPending();
+
+            EnableAllCommand = new BaseCommand(_ => HandleSelectionContext(true, false));
+            DisableAllCommand = new BaseCommand(_ => HandleSelectionContext(false, false));
+            EnableBenchedCommand = new BaseCommand(_ => HandleSelectionContext(true, true));
+            EnableOnlyThisCommand = new BaseCommand(_ => HandleOnlyThisContext());
+            ClearSpeedsCommand = new BaseCommand(_ => HandleClearContext());
+        }
+
+        private void HandleSelectionContext(bool enabled, bool benchedOnly)
+        {
+            if (SelectedAlgos == null) return;
+
+            var en = benchedOnly ? SelectedAlgos.Where(a => !a.Algo.BenchmarkNeeded) : SelectedAlgos;
+
+            foreach (var algo in en)
+            {
+                algo.Algo.Enabled = enabled;
+            }
+        }
+
+        private void HandleOnlyThisContext()
+        {
+            if (SelectedAlgos == null) return;
+
+            foreach (var algo in SelectedAlgos)
+            {
+                if (algo == SelectedAlgo)
+                {
+                    algo.Algo.Enabled = true;
+                    if (algo.Algo.BenchmarkNeeded)
+                        algo.Algo.BenchmarkSpeed = 1;
+                }
+                else
+                {
+                    algo.Algo.Enabled = false;
+                }
+            }
+        }
+
+        private void HandleClearContext()
+        {
+            SelectedAlgo?.Algo.ClearSpeeds();
         }
 
         private void BenchmarkManagerOnBenchmarkEnd(object sender, BenchEndEventArgs e)

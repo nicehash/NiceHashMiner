@@ -73,6 +73,16 @@
                     <GridViewColumn Header="Profit (BTC/Day)" DisplayMemberBinding="{Binding Algo.CurPayingRateStr}" />
                 </GridView>
             </ListView.View>
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Enable All Algorithms" Command="{Binding EnableAllCommand}" />
+                    <MenuItem Header="Disable All Algorithms" Command="{Binding DisableAllCommand}" />
+                    <MenuItem Header="Enable Only This" Command="{Binding EnableOnlyThisCommand}" />
+                    <MenuItem Header="Enable Benchmarked Only" Command="{Binding EnableBenchedCommand}" />
+                    <Separator />
+                    <MenuItem Header="Clear Algorithm Speed" Command="{Binding ClearSpeedsCommand}"></MenuItem>
+                </ContextMenu>
+            </ListView.ContextMenu>
         </ListView>
 
         <StackPanel Grid.Column="1" Grid.Row="0" Margin="10" IsEnabled="{Binding NotInBenchmark}">
