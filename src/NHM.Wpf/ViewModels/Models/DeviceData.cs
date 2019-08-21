@@ -62,6 +62,17 @@ namespace NHM.Wpf.ViewModels.Models
             StartStopCommand = new BaseCommand(StartStopClick);
 
             Dev.PropertyChanged += DevOnPropertyChanged;
+
+            foreach (var algo in Dev.AlgorithmSettings)
+            {
+                algo.PropertyChanged += AlgoOnPropertyChanged;
+            }
+        }
+
+        private void AlgoOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(AlgorithmContainer.Enabled) || e.PropertyName == nameof(AlgorithmContainer.BenchmarkNeeded))
+                OnPropertyChanged(nameof(AlgoOptions));
         }
 
         private void DevOnPropertyChanged(object sender, PropertyChangedEventArgs e)
