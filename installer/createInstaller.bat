@@ -1,5 +1,3 @@
-#!/bin/bash
-
 if exist .\nhmpacker\_files_to_pack (
     echo "Folder already exists, deleting."
     rmdir /s /q .\nhmpacker\_files_to_pack
@@ -29,7 +27,15 @@ copy .\nhm_windows_x.y.z.r-template\EULA.rtf %filename%
 
 copy .\nhmpacker\nhm_*.exe .\
 
-
 rmdir /s /q .\nhmpacker\_files_to_pack
 rmdir /s /q %filename%
 del .\nhmpacker\nhm_*.exe
+
+if exist %filename%_release_files (
+    echo "Folder already exists, deleting."
+    rmdir /s /q %filename%_release_files
+)
+mkdir %filename%_release_files
+copy nhm_windows_*.* .\%filename%_release_files\
+del nhm_windows_*.exe
+del nhm_windows_*.7z
