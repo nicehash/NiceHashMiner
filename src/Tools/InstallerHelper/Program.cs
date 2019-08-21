@@ -92,7 +92,7 @@ namespace InstallerHelper
                 }
 
                 var (generatedTemplate, version) = GenerateVariableTemplate(args[0]);
-                File.WriteAllText(Path.Combine(pluginPackagesFolder, "packageDefsGenerated.nsh"), generatedTemplate);
+                File.WriteAllText(Path.Combine(pluginPackagesFolder, "packageDefsGenerated.nsh"), generatedTemplate, new UTF8Encoding(true));
                 File.WriteAllText(Path.Combine(pluginPackagesFolder, "version.txt"), version);
             }
         }
