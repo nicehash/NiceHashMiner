@@ -6,8 +6,9 @@
         xmlns:local="clr-namespace:NHM.Wpf.Windows"
         xmlns:forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
         mc:Ignorable="d"
-        Title="EulaWindow" Height="450" Width="800" 
-        Icon="/NHM.Wpf;component/Resources/logo.ico" 
+        Title="NiceHash Miner Terms Of Use" 
+        Height="450" Width="800" 
+        Icon="../Resources/logo.ico" 
         Topmost="True"
         Closing="EulaWindow_OnClosing">
     <Grid>

@@ -5,7 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NHM.Wpf.Windows"
         mc:Ignorable="d"
-        Title="_3rdPartyTosWindow" Height="299.334" Width="427.901" WindowStyle="ToolWindow">
+        Title="Disclaimer on usage of 3rd party software" 
+        Icon="../Resources/logo.ico"
+        Height="299.334" Width="427.901" 
+        WindowStyle="ToolWindow">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />

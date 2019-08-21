@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NHM.Wpf.Windows"
         mc:Ignorable="d"
-        Title="ChooseLanguageWindow" Height="150" Width="400" WindowStyle="ToolWindow"
+        Title="Choose Language" 
+        Height="150" Width="400" WindowStyle="ToolWindow"
         Icon="../Resources/logo.ico"
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Closing="ChooseLanguageWindow_OnClosing">
