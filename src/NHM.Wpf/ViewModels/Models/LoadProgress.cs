@@ -1,8 +1,9 @@
 ﻿using System;
+using NHM.Common;
 
 namespace NHM.Wpf.ViewModels.Models
 {
-    public class LoadProgress : BaseVM, IProgress<(string mess, double perc)>
+    public class LoadProgress : NotifyChangedBase, IProgress<(string mess, double perc)>
     {
         private bool _isInstalling;
 

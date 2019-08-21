@@ -105,6 +105,7 @@ namespace NHM.Wpf.ViewModels
         public double FiatBalance => ExchangeRateApi.ConvertFromBtc(BtcBalance);
 
         public MainVM()
+            : base(ApplicationStateManager.Title)
         {
             _updateTimer = new Timer(1000);
             _updateTimer.Elapsed += UpdateTimerOnElapsed;

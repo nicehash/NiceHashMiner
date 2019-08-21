@@ -177,6 +177,7 @@ namespace NHM.Wpf.ViewModels
         public event EventHandler<BenchEndEventArgs> OnBenchEnd;
 
         public BenchmarkViewModel()
+            : base(Translations.Tr("Benchmark"))
         {
             SelectedAlgos = new ObservableCollection<BenchAlgo>();
 

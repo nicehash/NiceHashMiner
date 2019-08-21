@@ -4,7 +4,7 @@ using System;
 
 namespace NHM.Wpf.ViewModels
 {
-    public class StartupLoadingVM : BaseVM, IStartupLoader
+    public class StartupLoadingVM : NotifyChangedBase, IStartupLoader
     {
         public LoadProgress PrimaryProgress { get; } = new LoadProgress();
         public LoadProgress SecondaryProgress { get; } = new LoadProgress();

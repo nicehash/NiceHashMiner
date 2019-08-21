@@ -16,6 +16,7 @@
         }
 
         public PluginVM()
+            : base(Translations.Tr("Plugins"))
         {
             _listVM = new PluginListVM();
 

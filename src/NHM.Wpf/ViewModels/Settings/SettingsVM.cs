@@ -26,6 +26,7 @@ namespace NHM.Wpf.ViewModels.Settings
         public bool RestartRequired => DefaultsSet || ConfigManager.IsRestartNeeded();
 
         public SettingsVM()
+            : base(Translations.Tr("Settings"))
         {
             ConfigManager.CreateBackup();
 
