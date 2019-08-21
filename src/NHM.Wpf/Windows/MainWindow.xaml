@@ -8,7 +8,9 @@
         xmlns:validators="clr-namespace:NHM.Wpf.ViewModels.Validators"
         xmlns:converters="clr-namespace:NHM.Wpf.ViewModels.Converters"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="450" Width="1000"
+        Title="{Binding Title}" 
+        Icon="../Resources/logo.ico"
+        Height="450" Width="1000"
         StateChanged="MainWindow_OnStateChanged"
         Loaded="MainWindow_OnLoaded">
     <Window.DataContext>

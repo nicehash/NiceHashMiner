@@ -4,7 +4,7 @@ using System;
 
 namespace NHM.Wpf.ViewModels
 {
-    public class StartupLoadingVM : NotifyChangedBase, IStartupLoader
+    public class StartupLoadingVM : BaseVM, IStartupLoader
     {
         public LoadProgress PrimaryProgress { get; } = new LoadProgress();
         public LoadProgress SecondaryProgress { get; } = new LoadProgress();
@@ -46,5 +46,9 @@ namespace NHM.Wpf.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        public StartupLoadingVM()
+            : base(Translations.Tr("Loading"))
+        { }
     }
 }

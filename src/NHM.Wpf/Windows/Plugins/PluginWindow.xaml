@@ -7,7 +7,9 @@
         xmlns:vm="clr-namespace:NHM.Wpf.ViewModels"
         xmlns:plugins="clr-namespace:NHM.Wpf.ViewModels.Plugins"
         mc:Ignorable="d"
-        Title="PluginWindow" Height="450" Width="800">
+        Title="{Binding Title}" 
+        Icon="../../Resources/logo.ico" 
+        Height="450" Width="800">
     <Window.DataContext>
         <plugins:PluginVM />
     </Window.DataContext>
