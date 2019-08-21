@@ -38,15 +38,10 @@ namespace NHM.Wpf.ViewModels.Settings
         protected virtual void Config_PropertyChanged(object sender, PropertyChangedEventArgs e)
         { }
 
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing)
         {
             Config.PropertyChanged -= Config_PropertyChanged;
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            base.Dispose(disposing);
         }
     }
 }

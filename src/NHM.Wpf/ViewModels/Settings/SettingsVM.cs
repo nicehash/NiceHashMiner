@@ -81,8 +81,10 @@ namespace NHM.Wpf.ViewModels.Settings
             // TODO
         }
 
-        public void Dispose()
+        protected override void Dispose(bool disposing)
         {
+            base.Dispose(disposing);
+
             foreach (var vm in AllPageVMs())
             {
                 vm?.Dispose();

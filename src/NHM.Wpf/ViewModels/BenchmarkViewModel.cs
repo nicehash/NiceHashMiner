@@ -306,6 +306,8 @@ namespace NHM.Wpf.ViewModels
                     }
                 }
             }
+
+            base.Dispose(disposing);
         }
 
         private void DisposeBenchAlgos()
