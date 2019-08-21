@@ -291,3 +291,5 @@ Release*
 
 # installer
 installer/nhmpacker/
+installer/*.7z
+installer/*.exe
