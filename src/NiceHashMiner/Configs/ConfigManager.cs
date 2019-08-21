@@ -53,6 +53,23 @@ namespace NiceHashMiner.Configs
             }
         }
 
+        private static void RestoreBackupArchive(Version backupVersion)
+        {
+            try
+            {
+                var backupZipPath = Paths.RootPath("backups", $"configs_{backupVersion.ToString()}.zip");
+                if (File.Exists(backupZipPath))
+                {
+                    Directory.Delete(Paths.ConfigsPath(), true);
+                    ZipFile.ExtractToDirectory(backupZipPath, Paths.ConfigsPath());
+                }          
+            }
+            catch (Exception e)
+            {
+                Logger.Error(Tag, $"Error while creating backup archive: {e.Message}");
+            }
+        }
+
         private static void TryMigrate()
         {
             try
@@ -76,11 +93,14 @@ namespace NiceHashMiner.Configs
             // init defaults
             GeneralConfig.SetDefaults();
             GeneralConfig.hwid = ApplicationStateManager.RigID;
+
+            var asmVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            RestoreBackupArchive(asmVersion);
+
             // load file if it exist
             var fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);
             if (fromFile != null)
             {
-                var asmVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
                 if (fromFile.ConfigFileVersion != null && asmVersion.CompareTo(fromFile.ConfigFileVersion) != 0)
                 {
                     Logger.Info(Tag, "Config file is differs from version of NiceHashMiner... Creating backup archive");
