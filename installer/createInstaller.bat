@@ -10,8 +10,7 @@ if exist .\nhmpacker\_files_to_pack (
 mkdir .\nhmpacker\_files_to_pack\assets
 xcopy /s /i nsis_template .\nhmpacker\_files_to_pack\nsis
 xcopy /s /i .\..\Release .\nhmpacker\_files_to_pack\bins
-copy .\nhm_windows_x.y.z.r-template\EULA.html \nhmpacker\_files_to_pack\assets\EULA.html
-copy .\nhm_windows_x.y.z.r-template\EULA.rtf \nhmpacker\_files_to_pack\assets\EULA.rtf
+copy .\nhm_windows_x.y.z.r-template\EULA.* .\nhmpacker\_files_to_pack\assets
 
 .\..\src\Tools\InstallerHelper\bin\Release\InstallerHelper.exe %CD%\nhmpacker\_files_to_pack\bins\NiceHashMiner.exe
 copy .\..\src\Tools\InstallerHelper\bin\Release\_files_to_pack\version.txt .\nhmpacker\_files_to_pack\version.txt
