@@ -22,6 +22,7 @@ namespace NHM.Wpf.Windows
     public partial class MainWindow : Window
     {
         private readonly MainVM _vm;
+        private bool _miningStoppedOnClose;
 
         public MainWindow()
         {
@@ -166,9 +167,18 @@ namespace NHM.Wpf.Windows
             Process.Start(Links.NhmPayingFaq);
         }
 
+        // Without this contrived way of closing, the application could terminate 
+        // before the async method is finished (thus mining not actually stopped)
         private async void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
+            // Only ever try to prevent closing once
+            if (_miningStoppedOnClose) return;
+
+            _miningStoppedOnClose = true;
+            e.Cancel = true;
+            IsEnabled = false;
             await _vm.StopMining();
+            Close();
         }
     }
 }
