@@ -115,7 +115,11 @@ namespace NHM.Wpf.Windows
 
             startup.CanClose = true;
 
+            // If owner is still set to this when close is called, 
+            // it will minimize the main window for some reason
+            startup.Owner = null;
             startup.Close();
+
             IsEnabled = true;
         }
 
