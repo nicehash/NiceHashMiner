@@ -32,6 +32,11 @@ namespace NHM.Common
             return new Hashrate(tuple.Item2, tuple.Item1);
         }
 
+        public static Hashrate operator +(Hashrate left, Hashrate right)
+        {
+            return new Hashrate(left.Value + right.Value, left.Algo);
+        }
+
         public override string ToString()
         {
             return ToString(" ");

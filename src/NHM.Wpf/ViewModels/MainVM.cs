@@ -11,12 +11,16 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Data;
 
 namespace NHM.Wpf.ViewModels
 {
     public class MainVM : BaseVM
     {
         private readonly Timer _updateTimer;
+
+        // For syncing mining data listview collection
+        private readonly object _lock = new object();
 
         private IEnumerable<DeviceData> _devices;
         public IEnumerable<DeviceData> Devices
@@ -29,8 +33,8 @@ namespace NHM.Wpf.ViewModels
             }
         }
 
-        private IEnumerable<MiningData> _miningDevs;
-        public IEnumerable<MiningData> MiningDevs
+        private ObservableCollection<IMiningData> _miningDevs;
+        public ObservableCollection<IMiningData> MiningDevs
         {
             get => _miningDevs;
             set
@@ -141,7 +145,9 @@ namespace NHM.Wpf.ViewModels
             await ApplicationStateManager.InitializeManagersAndMiners(sl);
 
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData) d));
-            MiningDevs = new ObservableCollection<MiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
+            MiningDevs = new ObservableCollection<IMiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
+
+            BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
 
             MiningStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
 
@@ -159,15 +165,44 @@ namespace NHM.Wpf.ViewModels
                 case NotifyCollectionChangedAction.Replace:
                     foreach (var stat in e.NewItems.OfType<MiningStats.DeviceMiningStats>())
                     {
-                        var miningDev = MiningDevs.FirstOrDefault(d => d.Dev.Uuid == stat.DeviceUUID);
-                        if (miningDev != null) miningDev.Stats = stat;
+                        // Update this device row
+                        var miningDev = MiningDevs.OfType<MiningData>().FirstOrDefault(d => d.Dev.Uuid == stat.DeviceUUID);
+                        if (miningDev == null) continue;
+
+                        miningDev.Stats = stat;
+
+                        // Check for existing total row
+                        var totalRow = MiningDevs.OfType<TotalMiningData>().FirstOrDefault(d => d.StateName == miningDev.StateName);
+                        if (totalRow != null)
+                        {
+                            totalRow.AddDevice(miningDev);
+                            continue;
+                        }
+
+                        // Else add new total row
+                        totalRow = new TotalMiningData(miningDev);
+                        lock (_lock)
+                        {
+                            MiningDevs.Add(totalRow);
+                        }
                     }
 
                     break;
                 case NotifyCollectionChangedAction.Reset:
+                    var toRemove = new List<TotalMiningData>();
+
                     foreach (var miningDev in MiningDevs)
                     {
-                        miningDev.Stats = null;
+                        if (miningDev is MiningData data)
+                            data.Stats = null;
+                        else if (miningDev is TotalMiningData total)
+                            toRemove.Add(total);
+                    }
+
+                    foreach (var remove in toRemove)
+                    {
+                        MiningDevs.Remove(remove);
+                        remove.Dispose();
                     }
 
                     break;

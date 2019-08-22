@@ -157,7 +157,7 @@
 
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Device" DisplayMemberBinding="{Binding Dev.FullName}" />
+                        <GridViewColumn Header="Device" DisplayMemberBinding="{Binding Name}" />
                         <GridViewColumn Header="Speeds" DisplayMemberBinding="{Binding Speeds, Converter={StaticResource HashConv}}" />
                         <GridViewColumn Header="{Binding MBtcPerTime}" DisplayMemberBinding="{Binding Payrate, StringFormat=F3}" />
                         <GridViewColumn Header="{Binding CurrencyPerTime}" DisplayMemberBinding="{Binding FiatPayrate, StringFormat=F2}" />

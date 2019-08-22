@@ -12,9 +12,11 @@ namespace NHM.Wpf.ViewModels.Models
     /// <summary>
     /// Wrapper for <see cref="ComputeDevice"/> and <see cref="MiningStats.DeviceMiningStats"/> to convert for mining stats ListView
     /// </summary>
-    public class MiningData : NotifyChangedBase
+    public class MiningData : NotifyChangedBase, IMiningData
     {
         public ComputeDevice Dev { get; }
+
+        public string Name => Dev.FullName;
 
         private MiningStats.DeviceMiningStats _stats;
         public MiningStats.DeviceMiningStats Stats
@@ -37,7 +39,7 @@ namespace NHM.Wpf.ViewModels.Models
 
         public double Hashrate => Stats?.Speeds?.Count > 0 ? Stats.Speeds[0].speed : 0;
 
-        public IEnumerable<Hashrate> Speeds => Stats?.Speeds?.Select(s => (Hashrate)s);
+        public IEnumerable<Hashrate> Speeds => Stats?.Speeds?.Select(s => (Hashrate) s);
 
         public double Payrate => (Stats?.TotalPayingRate() ?? 0) * 1000;
 
