@@ -14,6 +14,7 @@ namespace NiceHashMiner.Stats
         private static double _usdBtcRate = -1;
 
         public static event EventHandler<string> CurrencyChanged;
+        public static event EventHandler ExchangeChanged;
 
         public static double UsdBtcRate
         {
@@ -28,6 +29,8 @@ namespace NiceHashMiner.Stats
                 }
             }
         }
+
+        public static double SelectedCurrBtcRate => ConvertToActiveCurrency(UsdBtcRate);
 
         private static string _activeDisplayCurrency = "USD";
         public static string ActiveDisplayCurrency
@@ -58,6 +61,8 @@ namespace NiceHashMiner.Stats
             {
                 ExchangesFiat.AddOrUpdate(key, newExchanges[key], (k, v) => newExchanges[k]);
             }
+
+            ExchangeChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static double ConvertToActiveCurrency(double amount)

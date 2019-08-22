@@ -5,9 +5,12 @@ using NHM.Wpf.Windows.Plugins;
 using NiceHashMiner;
 using NiceHashMiner.Mining;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using NiceHashMiner.Configs;
+using NiceHashMiner.Utils;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace NHM.Wpf.Windows
@@ -94,6 +97,8 @@ namespace NHM.Wpf.Windows
 
         private void StatsHyperlink_OnClick(object sender, RoutedEventArgs e)
         {
+            if (ConfigManager.CredentialsSettings.IsCredentialsValid == false) return;
+            ApplicationStateManager.VisitMiningStatsPage();
         }
 
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -144,6 +149,16 @@ namespace NHM.Wpf.Windows
         private async void StopButton_OnClick(object sender, RoutedEventArgs e)
         {
             await _vm.StopMining();
+        }
+
+        private void HelpButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(Links.NhmHelp);
+        }
+
+        private void ExchangeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            Process.Start(Links.NhmPayingFaq);
         }
     }
 }

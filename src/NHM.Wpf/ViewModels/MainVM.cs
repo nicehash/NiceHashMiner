@@ -75,8 +75,11 @@ namespace NHM.Wpf.ViewModels
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(CurrencyPerTime));
                 OnPropertyChanged(nameof(ProfitPerTime));
+                OnPropertyChanged(nameof(ExchangeTooltip));
             }
         }
+
+        public string ExchangeTooltip => $"1 BTC = {ExchangeRateApi.SelectedCurrBtcRate:F2} {Currency}";
 
         public string CurrencyPerTime => $"{Currency}{PerTime}";
 
@@ -114,6 +117,10 @@ namespace NHM.Wpf.ViewModels
             {
                 Currency = curr;
                 OnPropertyChanged(nameof(FiatBalance));
+            };
+            ExchangeRateApi.ExchangeChanged += (_, __) =>
+            {
+                OnPropertyChanged(nameof(ExchangeTooltip));
             };
 
             ApplicationStateManager.DisplayBTCBalance += UpdateBalance;

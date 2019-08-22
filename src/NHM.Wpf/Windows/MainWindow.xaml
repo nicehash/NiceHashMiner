@@ -176,7 +176,7 @@
             <Button Content="Start All" IsEnabled="{Binding State.AnyDeviceStopped}" Click="StartButton_OnClick" Margin="0,2" />
             <Button Content="Stop All" IsEnabled="{Binding State.AnyDeviceRunning}" Click="StopButton_OnClick" Margin="0,2" />
             <Button Content="Plugins" IsEnabled="{Binding State.IsNotBenchmarkingOrMining}" Click="PluginButton_Click" Margin="0,2" />
-            <Button Content="Help" Margin="0,2" />
+            <Button Content="Help" Click="HelpButton_OnClick" Margin="0,2" />
         </StackPanel>
 
         <!-- Bottom StatusBar -->
@@ -212,7 +212,12 @@
             </StatusBarItem>
             <Separator/>
             <StatusBarItem>
-                <Image Source="../Resources/NHM_Cash_Register_Bitcoin_transparent.png" Width="34" />
+                <Button Background="Transparent" 
+                        BorderBrush="Transparent" 
+                        ToolTip="{Binding ExchangeTooltip}"
+                        Click="ExchangeButton_OnClick">
+                    <Image Source="../Resources/NHM_Cash_Register_Bitcoin_transparent.png" Width="34" />
+                </Button>
             </StatusBarItem>
         </StatusBar>
 
