@@ -147,7 +147,8 @@ namespace NHM.Wpf.ViewModels
 
             _updateTimer.Start();
 
-            // TODO auto-start mining
+            if (ConfigManager.GeneralConfig.AutoStartMining)
+                await StartMining();
         }
 
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
