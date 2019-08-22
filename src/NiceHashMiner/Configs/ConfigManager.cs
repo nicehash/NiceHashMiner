@@ -53,7 +53,7 @@ namespace NiceHashMiner.Configs
             }
         }
 
-        private static void RestoreBackupArchive(Version backupVersion)
+        private static bool RestoreBackupArchive(Version backupVersion)
         {
             try
             {
@@ -62,12 +62,14 @@ namespace NiceHashMiner.Configs
                 {
                     Directory.Delete(Paths.ConfigsPath(), true);
                     ZipFile.ExtractToDirectory(backupZipPath, Paths.ConfigsPath());
+                    return true;
                 }          
             }
             catch (Exception e)
             {
                 Logger.Error(Tag, $"Error while creating backup archive: {e.Message}");
             }
+            return false;
         }
 
         private static void TryMigrate()
@@ -95,7 +97,6 @@ namespace NiceHashMiner.Configs
             GeneralConfig.hwid = ApplicationStateManager.RigID;
 
             var asmVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
-            RestoreBackupArchive(asmVersion);
 
             // load file if it exist
             var fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);
@@ -105,8 +106,12 @@ namespace NiceHashMiner.Configs
                 {
                     Logger.Info(Tag, "Config file is differs from version of NiceHashMiner... Creating backup archive");
                     CreateBackupArchive(fromFile.ConfigFileVersion);
+                    if (RestoreBackupArchive(asmVersion))//check if we have backup version
+                    {
+                        fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);
+                    }
                 }
-                if (fromFile.ConfigFileVersion != null)
+                if (fromFile?.ConfigFileVersion != null)
                 {
                     // set config loaded from file
                     _isGeneralConfigFileInit = true;
@@ -120,7 +125,10 @@ namespace NiceHashMiner.Configs
             }
             else
             {
-                GeneralConfigFileCommit();
+                if (!RestoreBackupArchive(asmVersion)) // if there is no backup we create a new config
+                {
+                    GeneralConfigFileCommit();
+                }
             }
         }
 
