@@ -5,6 +5,7 @@ using NHM.Wpf.Windows.Plugins;
 using NiceHashMiner;
 using NiceHashMiner.Mining;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
@@ -159,6 +160,11 @@ namespace NHM.Wpf.Windows
         private void ExchangeButton_OnClick(object sender, RoutedEventArgs e)
         {
             Process.Start(Links.NhmPayingFaq);
+        }
+
+        private async void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            await _vm.StopMining();
         }
     }
 }

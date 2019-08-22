@@ -12,7 +12,8 @@
         Icon="../Resources/logo.ico"
         Height="450" Width="1000"
         StateChanged="MainWindow_OnStateChanged"
-        Loaded="MainWindow_OnLoaded">
+        Loaded="MainWindow_OnLoaded"
+        Closing="MainWindow_OnClosing">
     <Window.DataContext>
         <viewModels:MainVM />
     </Window.DataContext>
