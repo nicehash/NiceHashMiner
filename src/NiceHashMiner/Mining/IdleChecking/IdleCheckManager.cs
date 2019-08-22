@@ -1,13 +1,28 @@
-﻿using NHM.Common.Enums;
+﻿using NHM.Common;
+using NHM.Common.Enums;
+using NiceHashMiner.Configs;
 using System;
+using System.ComponentModel;
 
 namespace NiceHashMiner.Mining.IdleChecking
 {
-    internal static class IdleCheckManager
+    public static class IdleCheckManager
     {
         private static IdleChecker _checker;
 
-        public static void StartIdleCheck(IdleCheckType type, EventHandler<IdleChangedEventArgs> evnt)
+        static IdleCheckManager()
+        {
+            IdleMiningSettings.Instance.PropertyChanged += IdleSettingsOnPropertyChanged;
+        }
+
+        private static void IdleSettingsOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(IdleMiningSettings.IdleCheckType) || 
+                e.PropertyName == nameof(IdleMiningSettings.StartMiningWhenIdle))
+                StartIdleCheck();
+        }
+
+        internal static void StartIdleCheck(IdleCheckType type, EventHandler<IdleChangedEventArgs> evnt)
         {
             _checker?.Dispose();
 
@@ -18,6 +33,32 @@ namespace NiceHashMiner.Mining.IdleChecking
 
             _checker.IdleStatusChanged += evnt;
             _checker.StartChecking();
+        }
+
+        public static void StartIdleCheck()
+        {
+            if (!ConfigManager.GeneralConfig.StartMiningWhenIdle) return;
+            StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleTick);
+        }
+
+        private static void IdleTick(object sender, IdleChangedEventArgs e)
+        {
+            if (MiningState.Instance.MiningManuallyStarted || !ConfigManager.GeneralConfig.StartMiningWhenIdle)
+                return;
+
+            if (e.IsIdle)
+            {
+                if (ApplicationStateManager.IsInMainForm)
+                {
+                    Logger.Info("IDLECHECK", "Entering idling state");
+                    ApplicationStateManager.StartAllAvailableDevices();
+                }
+            }
+            else if (MiningState.Instance.IsCurrentlyMining)
+            {
+                ApplicationStateManager.StopAllDevice();
+                Logger.Info("IDLECHECK", "Resumed from idling");
+            }
         }
     }
 }

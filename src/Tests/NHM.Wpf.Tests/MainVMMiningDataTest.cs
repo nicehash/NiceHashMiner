@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHM.Common.Enums;
-using NHM.Wpf.ViewModels;
+using NHM.Wpf.ViewModels.Models;
 using NiceHashMiner.Configs;
-using NiceHashMiner.Configs.Data;
-using NiceHashMiner.Devices;
 using NiceHashMiner.Mining;
 using NiceHashMiner.Stats;
+using System.Collections.Generic;
 
 namespace NHM.Wpf.Tests
 {
@@ -34,7 +31,7 @@ namespace NHM.Wpf.Tests
                 PowerUsageDeviceReading = 280.435
             };
 
-            var data = new MainVM.MiningData(new ComputeDevice(null, 0, ""));
+            var data = new MiningData(new ComputeDevice(null, 0, ""));
             data.Stats = stats;
 
             Assert.AreEqual(speed, data.Hashrate);

@@ -361,6 +361,9 @@ namespace NiceHashMiner
                 NiceHashStats.StateChanged();
             }
         }
+
+        public static bool IsInMainForm => CurrentForm == CurrentFormState.Main;
+
         public static bool IsInBenchmarkForm() {
             return CurrentForm == CurrentFormState.Benchmark;
         }

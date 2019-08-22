@@ -53,6 +53,8 @@ namespace NiceHashMiner
             private set => _boolProps.Set(nameof(IsCurrentlyMining), value);
         }
 
+        public bool MiningManuallyStarted { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged(String info)
@@ -68,6 +70,7 @@ namespace NiceHashMiner
             IsNotBenchmarkingOrMining = !AnyDeviceRunning;
             IsCurrentlyMining = AnyDeviceRunning;
             IsDemoMining = !ConfigManager.CredentialsSettings.IsCredentialsValid && IsCurrentlyMining;
+            if (IsNotBenchmarkingOrMining) MiningManuallyStarted = false;
         }
     }
 }

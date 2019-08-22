@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
+using NiceHashMiner.Mining.IdleChecking;
 
 namespace NHM.Wpf.ViewModels
 {
@@ -150,6 +151,8 @@ namespace NHM.Wpf.ViewModels
             BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
 
             MiningStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
+
+            IdleCheckManager.StartIdleCheck();
 
             _updateTimer.Start();
 

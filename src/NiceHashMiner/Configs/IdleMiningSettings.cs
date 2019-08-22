@@ -1,17 +1,36 @@
-﻿using NHM.Common.Enums;
+﻿using NHM.Common;
+using NHM.Common.Enums;
 
 namespace NiceHashMiner.Configs
 {
-    public class IdleMiningSettings
+    public class IdleMiningSettings : NotifyChangedBase
     {
         public static IdleMiningSettings Instance { get; } = new IdleMiningSettings();
 
         private IdleMiningSettings()
-        {}
+        { }
 
-        public bool StartMiningWhenIdle { get; set; } = false;
+        private bool _startMiningWhenIdle;
+        public bool StartMiningWhenIdle
+        {
+            get => _startMiningWhenIdle;
+            set
+            {
+                _startMiningWhenIdle = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public IdleCheckType IdleCheckType { get; set; } = IdleCheckType.SessionLock;
+        private IdleCheckType _idleCheckType = IdleCheckType.SessionLock;
+        public IdleCheckType IdleCheckType
+        {
+            get => _idleCheckType;
+            set
+            {
+                _idleCheckType = value;
+                OnPropertyChanged();
+            }
+        }
         public int IdleCheckTypeIndex
         {
             get => (int)IdleCheckType;

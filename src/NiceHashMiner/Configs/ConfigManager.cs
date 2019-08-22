@@ -1,13 +1,13 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.IO.Compression;
-using System.Collections.Generic;
-using MinerPluginToolkitV1.Configs;
-using NiceHashMiner.Configs.Data;
-using NiceHashMiner.Mining;
+﻿using MinerPluginToolkitV1.Configs;
 using NHM.Common;
 using NHM.Common.Enums;
+using NiceHashMiner.Configs.Data;
+using NiceHashMiner.Mining;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
 
 namespace NiceHashMiner.Configs
 {
@@ -15,7 +15,7 @@ namespace NiceHashMiner.Configs
     {
         private const string Tag = "ConfigManager";
 
-        public static GeneralConfig GeneralConfig = new GeneralConfig();
+        public static GeneralConfig GeneralConfig { get; private set; } = new GeneralConfig();
         
         // extra composed settings
         public static RunAtStartup RunAtStartup = RunAtStartup.Instance;
