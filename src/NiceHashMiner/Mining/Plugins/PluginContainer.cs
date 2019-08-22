@@ -205,6 +205,23 @@ namespace NiceHashMiner.Mining.Plugins
                 }
 
                 //check for version mismatch
+                CheckVersionMismatch();
+            }
+            catch (Exception e)
+            {
+                SetAsBroken(this);
+                Logger.Error(LogTag, $"InitPluginContainer error: {e.Message}");
+                return false;
+            }
+
+
+            return true;
+        }
+
+        private void CheckVersionMismatch()
+        {
+            try
+            {
                 var versionFilePath = Paths.MinerPluginsPath(PluginUUID, "version.txt");
                 if (File.Exists(versionFilePath))
                 {
@@ -219,18 +236,17 @@ namespace NiceHashMiner.Mining.Plugins
                 }
                 else
                 {
+                    if (!Directory.Exists(Paths.MinerPluginsPath(PluginUUID)))
+                    {
+                        Directory.CreateDirectory(Paths.MinerPluginsPath(PluginUUID));
+                    }
                     File.WriteAllText(versionFilePath, Version.ToString());
                 }
             }
-            catch (Exception e)
+            catch(Exception e)
             {
-                SetAsBroken(this);
-                Logger.Error(LogTag, $"InitPluginContainer error: {e.Message}");
-                return false;
+                Logger.Error(LogTag, $"Version mismatch check error: {e.Message}");
             }
-
-
-            return true;
         }
 
         private bool _initInternalsCalled = false;
