@@ -60,6 +60,17 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => false;
     }
 
+#if INTEGRATE_CpuMinerOpt_PLUGIN
+
+    class CPUMinerOptIntegratedPlugin : CpuMinerOpt.CPUMinerPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "cpuminer-opt";
+
+        public bool Is3rdParty => false;
+    }
+#endif
+
+
 #if INTEGRATE_Ethminer_PLUGIN
     class EthminerIntegratedPlugin : Ethminer.EthminerPlugin, IntegratedPlugin
     {

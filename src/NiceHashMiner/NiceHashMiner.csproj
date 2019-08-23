@@ -498,6 +498,10 @@
       <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
       <Name>ClaymoreDual14</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\CPUMinerOpt\CPUMinerOpt.csproj">
+      <Project>{bce045f8-ceaa-48a6-b10b-8f539f68d7b6}</Project>
+      <Name>CPUMinerOpt</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\CryptoDredge\CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
       <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
       <Name>CryptoDredge</Name>
