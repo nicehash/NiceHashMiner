@@ -10,7 +10,8 @@
         mc:Ignorable="d"
         Title="{Binding Title}" 
         Icon="../Resources/logo.ico"
-        Height="600" Width="900">
+        Height="600" Width="900"
+        Closing="Window_Closing">
     <Window.DataContext>
         <viewModels:BenchmarkViewModel />
     </Window.DataContext>
@@ -107,20 +108,20 @@
                 <StackPanel Width="210">
                     <control:SettingsContainer Title="Benchmark Speed (H/s):"
                                                Description="Fine tune algorithm ratios by manually settings benchmark speeds for each algorithm.">
-                        <TextBox Text="{Binding SelectedAlgo.BenchmarkSpeed}" />
+                        <TextBox Text="{Binding SelectedAlgo.Algo.BenchmarkSpeed}" />
                     </control:SettingsContainer>
                     <control:SettingsContainer Title="Secondary Benchmark Speed (H/s):"
                                                Description="Speed for the secondary algorithm when using dual mining."
-                                               IsEnabled="{Binding SelectedAlgo.IsDual}">
-                        <TextBox Text="{Binding SelectedAlgo.SecondaryBenchmarkSpeed}" />
+                                               IsEnabled="{Binding SelectedAlgo.Algo.IsDual}">
+                        <TextBox Text="{Binding SelectedAlgo.Algo.SecondaryBenchmarkSpeed}" />
                     </control:SettingsContainer>
                     <control:SettingsContainer Title="Power Usage (W):"
                                                Description="The power used by this algorithm in Watts\nAlgorithm profits will deduct power costs when this and electricity cost are above 0.">
-                        <TextBox Text="{Binding SelectedAlgo.PowerUsage}" />
+                        <TextBox Text="{Binding SelectedAlgo.Algo.PowerUsage}" />
                     </control:SettingsContainer>
                     <control:SettingsContainer Title="Extra Launch Parameters:"
                                                Description="Additional launch parameters when launching miner and this algorithm.">
-                        <TextBox TextWrapping="Wrap" />
+                        <TextBox TextWrapping="Wrap" Text="{Binding SelectedAlgo.Algo.ExtraLaunchParameters}" />
                     </control:SettingsContainer>
                 </StackPanel>
             </ScrollViewer>

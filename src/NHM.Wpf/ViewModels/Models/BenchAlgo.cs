@@ -45,7 +45,7 @@ namespace NHM.Wpf.ViewModels.Models
         private void AlgoOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == nameof(Algo.InBenchmark) || e.PropertyName == nameof(Algo.IsBenchmarkPending) ||
-                e.PropertyName == nameof(Algo.BenchmarkErred))
+                e.PropertyName == nameof(Algo.BenchmarkErred) || e.PropertyName == nameof(Algo.Speeds))
                 OnPropertyChanged(nameof(StatusString));
         }
 

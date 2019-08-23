@@ -58,7 +58,6 @@ namespace NHM.Wpf.Windows
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
         {
-            _vm.CommitBenchmarks();
             Close();
         }
 
@@ -74,6 +73,11 @@ namespace NHM.Wpf.Windows
         {
             _vm.OnBenchEnd -= OnBenchEnd;
             _vm.Dispose();
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _vm.CommitBenchmarks();
         }
     }
 }
