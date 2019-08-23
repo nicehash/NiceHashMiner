@@ -29,7 +29,7 @@ namespace NiceHashMiner
         {
             try
             {
-                var allSteps = 14;
+                var allSteps = 15;
                 var currentStep = 0;
                 var nextProgPerc = new Func<int>(() =>
                 {
@@ -170,6 +170,22 @@ namespace NiceHashMiner
                     loadingControl.ShowSecondProgressBar = false;
                     if (ExitApplication.IsCancellationRequested) return;
                 }
+
+                // STEP
+                // Update miner plugin binaries
+                var hasPluginMinerUpdate = MinerPluginsManager.HasMinerUpdates();
+                if (hasPluginMinerUpdate)
+                {
+                    loadingControl.LoadTitleTextSecond = Tr("Updating Miner Binaries");
+                    loadingControl.ShowSecondProgressBar = true;
+
+                    progress?.Report((Tr("Updating Miner Binaries..."), nextProgPerc()));
+                    await MinerPluginsManager.UpdateMinersBins(progressDownload, ExitApplication.Token);
+                    loadingControl.ShowSecondProgressBar = false;
+                    if (ExitApplication.IsCancellationRequested) return;
+                }
+
+
                 // re-check after download we should have all miner files
                 var missingMinerBins = MinerPluginsManager.GetMissingMiners().Count > 0;
                 if (missingMinerBins)

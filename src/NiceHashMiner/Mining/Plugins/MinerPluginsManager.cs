@@ -201,6 +201,29 @@ namespace NiceHashMiner.Mining.Plugins
                 var hasUrls = urls.Count() > 0;
                 if (hasMissingFiles && hasUrls && !plugin.IsBroken)
                 {
+                    Logger.Info("MinerPluginsManager", $"Downloading missing files for {plugin.PluginUUID}-{plugin.Name}");
+                    var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
+                    var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
+                    await DownloadInternalBins(plugin.PluginUUID, urls.ToList(), downloadProgress, unzipProgress, stop);
+                }
+            }
+        }
+
+        public static async Task UpdateMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
+        {
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
+                .ToArray();
+
+            foreach (var plugin in checkPlugins)
+            {
+                var urls = plugin.GetMinerBinsUrls();
+                var hasUrls = urls.Count() > 0;
+                var versionMismatch = plugin.IsVersionMismatch;
+                if (versionMismatch && hasUrls && !plugin.IsBroken)
+                {
+                    Logger.Info("MinerPluginsManager", $"Version mismatch for {plugin.PluginUUID}-{plugin.Name}. Downloading...");
                     var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
                     var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
                     await DownloadInternalBins(plugin.PluginUUID, urls.ToList(), downloadProgress, unzipProgress, stop);
@@ -222,6 +245,18 @@ namespace NiceHashMiner.Mining.Plugins
                 ret.AddRange(plugin.CheckBinaryPackageMissingFiles());
             }
             return ret;
+        }
+
+        public static bool HasMinerUpdates()
+        {
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
+                .Where(p => p.IsVersionMismatch)
+                .ToArray();
+
+
+            return checkPlugins.Count() > 0;
         }
 
         private static void RemovePluginAlgorithms(string pluginUUID)

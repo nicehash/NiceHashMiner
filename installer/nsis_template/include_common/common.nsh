@@ -61,13 +61,38 @@ Name "${PRODUCT_NAME}"
   !endif
 !macroend
 
-# this will delete the user data and registry keys, but will leave device settings/benchmarks 
+# this will delete all but configs, backups, internals and miner_plugins
 !macro deleteUserData_KeepNonGeneralSettings
-  Rename "$INSTDIR\configs\General.json" "$PLUGINSDIR\General.json"
+  CreateDirectory "$PLUGINSDIR\configs" 
+  CreateDirectory "$PLUGINSDIR\backups" 
+  CreateDirectory "$PLUGINSDIR\internals" 
+  CreateDirectory "$PLUGINSDIR\miner_plugins" 
+
+  CopyFiles "$INSTDIR\configs\*.*" "$PLUGINSDIR\configs"
+  CopyFiles "$INSTDIR\backups\*.*" "$PLUGINSDIR\backups"
+  CopyFiles "$INSTDIR\internals\*.*" "$PLUGINSDIR\internals"
+  CopyFiles "$INSTDIR\miner_plugins\*.*" "$PLUGINSDIR\miner_plugins"
+
   RMDir /R $INSTDIR # Remembering, of course, that you should do this with care
   CreateDirectory $INSTDIR 
-  CreateDirectory "$INSTDIR\configs"
-  Rename "$PLUGINSDIR\General.json" "$INSTDIR\configs\General.json"
+
+  CreateDirectory "$INSTDIR\configs" 
+  CreateDirectory "$INSTDIR\backups" 
+  CreateDirectory "$INSTDIR\internals" 
+  CreateDirectory "$INSTDIR\miner_plugins" 
+
+  CopyFiles "$PLUGINSDIR\configs\*.*" "$INSTDIR\configs"
+  CopyFiles "$PLUGINSDIR\backups\*.*" "$INSTDIR\backups"
+  CopyFiles "$PLUGINSDIR\internals\*.*" "$INSTDIR\internals"
+  CopyFiles "$PLUGINSDIR\miner_plugins\*.*" "$INSTDIR\miner_plugins"
+
+  RMDir /R "$PLUGINSDIR\configs"
+  RMDir /R "$PLUGINSDIR\backups"
+  RMDir /R "$PLUGINSDIR\internals"
+  RMDir /R "$PLUGINSDIR\miner_plugins"
+
+  SetOutPath $INSTDIR
+
   DeleteRegKey HKCU "SOFTWARE\Nicehash"
 !macroend
 
