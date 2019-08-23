@@ -18,20 +18,20 @@ namespace TTMiner
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
-            // https://bitcointalk.org/index.php?topic=5025783.0 current 3.0.1
+            // https://bitcointalk.org/index.php?topic=5025783.0 current 3.0.5
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12/TT-Miner-3.0.1.zip",
-                    "https://tradeproject.de/download/Miner/TT-Miner-3.0.1.zip" // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/TT-Miner-3.0.5.zip",
+                    "https://tradeproject.de/download/Miner/TT-Miner-3.0.5.zip" // original
                 }
             };
         }
 
         public override string PluginUUID => "f1945a30-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(2, 3);
         public override string Name => "TTMiner";
         public override string Author => "stanko@nicehash.com";
 
@@ -89,6 +89,8 @@ namespace TTMiner
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
+            if (ids.Count() == 0) return false;
+            if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 3) return true; //improvement on all supported algorithms
             return false;
         }
     }
