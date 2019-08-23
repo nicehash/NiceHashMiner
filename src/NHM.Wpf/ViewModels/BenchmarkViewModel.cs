@@ -119,7 +119,7 @@ namespace NHM.Wpf.ViewModels
         public bool NotInBenchmark => !InBenchmark;
 
         public string StartStopButtonLabel =>
-            InBenchmark ? Translations.Tr("St_op benchmark") : Translations.Tr("Start _benchmark");
+            InBenchmark ? Translations.Tr("Stop benchmark") : Translations.Tr("Start benchmark");
 
         public bool StartMiningAfterBench
         {

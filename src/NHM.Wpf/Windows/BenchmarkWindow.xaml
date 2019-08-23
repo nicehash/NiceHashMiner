@@ -170,7 +170,9 @@
 
             <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" FlowDirection="RightToLeft" Margin="0">
                 <Button Width="80" Margin="10,0" Click="CloseButton_OnClick" IsEnabled="{Binding NotInBenchmark}">_Close</Button>
-                <Button Width="120" Content="{Binding StartStopButtonLabel}" Click="StartStopButton_OnClick" />
+                <Button Width="120" Click="StartStopButton_OnClick">
+                    <TextBlock Text="{Binding StartStopButtonLabel}" />
+                </Button>
             </StackPanel>
         </Grid>
     </Grid>
