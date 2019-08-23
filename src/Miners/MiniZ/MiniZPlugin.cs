@@ -23,14 +23,14 @@ namespace MiniZ
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/miniZ_v1.5p_cuda10_win-x64.zip",
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/miniZ.zip",
                     "https://miniz.ch/?smd_process_download=1&download_id=2682", // original
                 }
             };
         }
         public override string PluginUUID => "59bba2c0-b1ef-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(1,1);
+        public override Version Version => new Version(1,2);
 
         public override string Name => "MiniZ";
 
