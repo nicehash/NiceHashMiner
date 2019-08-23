@@ -1,6 +1,5 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.Common.Enums;
 using System;
@@ -15,17 +14,14 @@ using System.Globalization;
 using NHM.Common;
 using System.IO;
 
-namespace CPUMinerBase
+namespace CpuMinerOpt
 {
-    public class CpuMiner : MinerBase, IAfterStartMining
+    public class CpuMiner : MinerBase
     {
-        // cpuminer can mine only one algorithm at a given time
-        private AlgorithmType _algorithmType;
-
         // command line parts
         private ulong _affinityMask = 0;
-        private string _extraLaunchParameters = "";
         private int _apiPort;
+        private double DevFee = 0d;
 
         public CpuMiner(string uuid) : base(uuid)
         {}
@@ -34,10 +30,15 @@ namespace CPUMinerBase
         {
             switch (algorithmType)
             {
-                case AlgorithmType.Lyra2Z: return "lyra2z";
+                case AlgorithmType.Lyra2Z:
+                    return "lyra2z";
+                case AlgorithmType.Lyra2REv3:
+                    return "lyra2rev3";
+                case AlgorithmType.X16R:
+                    return "x16r";
+                default:
+                    return "";
             }
-            // TODO throw exception
-            return "";
         }
 
         public async override Task<ApiData> GetMinerStatsDataAsync()
@@ -45,6 +46,9 @@ namespace CPUMinerBase
             var summaryApiResult = await ApiDataHelpers.GetApiDataAsync(_apiPort, ApiDataHelpers.GetHttpRequestNhmAgentString("summary"), _logGroup);
             double totalSpeed = 0;
             int totalPower = 0;
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var perDevicePowerInfo = new Dictionary<string, int>();
+
             if (!string.IsNullOrEmpty(summaryApiResult))
             {
                 // TODO return empty
@@ -57,7 +61,9 @@ namespace CPUMinerBase
                         if (pair.Length != 2) continue;
                         if (pair[0] == "KHS")
                         {
-                            totalSpeed = double.Parse(pair[1], CultureInfo.InvariantCulture) * 1000; // HPS
+                            var currentSpeed = double.Parse(pair[1], CultureInfo.InvariantCulture) * 1000; // HPS
+                            totalSpeed += currentSpeed;
+                            perDeviceSpeedInfo.Add(_miningPairs.FirstOrDefault()?.Device.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentSpeed * (1 - DevFee * 0.01)) });
                         }
                     }
                 }
@@ -68,32 +74,19 @@ namespace CPUMinerBase
             }
             var ad = new ApiData();
             ad.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed) };
+            ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
             ad.PowerUsageTotal = totalPower;
-            // cpuMiner is single device so no need for API
+            ad.PowerUsagePerDevice = perDevicePowerInfo;
 
             return ad;
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            // determine benchmark time 
-            // settup times
-            var benchmarkTime = 20; // in seconds
-            switch (benchmarkType)
-            {
-                case BenchmarkPerformanceType.Quick:
-                    benchmarkTime = 20;
-                    break;
-                case BenchmarkPerformanceType.Standard:
-                    benchmarkTime = 60;
-                    break;
-                case BenchmarkPerformanceType.Precise:
-                    benchmarkTime = 120;
-                    break;
-            }
+
+            var benchmarkTime = MinerPluginToolkitV1.Configs.MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
             var algo = AlgorithmName(_algorithmType);
-
             var commandLine = $"--algo={algo} --benchmark --time-limit {benchmarkTime} {_extraLaunchParameters}";
 
             var binPathBinCwdPair = GetBinAndCwdPaths();
@@ -103,12 +96,44 @@ namespace CPUMinerBase
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
             // TODO benchmark process add after benchmark
 
-            // make sure this is culture invariant
-            // TODO implement fallback average, final benchmark 
+            double benchHashesSum = 0;
+            double benchHashResult = 0;
+            int benchIters = 0;
+            var foundBench = false;
+
             bp.CheckData = (string data) => {
-                if (double.TryParse(data, out var parsedSpeed))
-                    return new BenchmarkResult {AlgorithmTypeSpeeds= new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, parsedSpeed) } ,Success = true };
-                return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, 0d) }, Success = false };
+                if(!data.Contains("Total:")) return new BenchmarkResult{AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, 0) }, Success = false };
+                var hashrateFoundPairAvg = MinerToolkit.TryGetHashrateAfter(data, "H, ");
+                var hashrateAvg = hashrateFoundPairAvg.Item1;
+                var foundAvg = hashrateFoundPairAvg.Item2;
+                if (!foundAvg)
+                {
+                    var hashrateFoundPair = MinerToolkit.TryGetHashrateAfter(data, "Benchmark: ");
+                    var hashrate = hashrateFoundPair.Item1;
+                    foundBench = hashrateFoundPair.Item2;
+                    if (foundBench && hashrate != 0)
+                    {
+                        benchHashResult = hashrate * (1 - DevFee * 0.01);
+
+                        return new BenchmarkResult
+                        {
+                            AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                            Success = benchHashResult != 0
+                        };
+                    }                
+                }
+
+                // sum and return
+                benchHashesSum += hashrateAvg;
+                benchIters++;
+
+                benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee * 0.01);
+
+                return new BenchmarkResult
+                {
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = foundBench
+                };
             };
 
             var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
@@ -121,12 +146,31 @@ namespace CPUMinerBase
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
             var pluginRootBins = Path.Combine(pluginRoot, "bins");
-            var binPath = Path.Combine(pluginRootBins, "cpuminer.exe");
+            var binPath = "";
+            if (_miningPairs != null)
+            {
+                var intelCPU = _miningPairs.Where(pair => pair.Device.DeviceType == DeviceType.CPU)?.Where(pair => pair.Device.Name.ToLower().Contains("core"));
+                var amdCPU = _miningPairs.Where(pair => pair.Device.DeviceType == DeviceType.CPU)?.Where(pair => pair.Device.Name.ToLower().Contains("ryzen"));
+                if (intelCPU.Count() > 0)
+                {
+                    binPath = Path.Combine(pluginRootBins, "cpuminer-avx2.exe");
+                }
+                else // it can only be AMD
+                {
+                    binPath = Path.Combine(pluginRootBins, "cpuminer-zen.exe");
+                }
+            }
+
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
         }
 
         protected override string MiningCreateCommandLine()
+        {
+            return CreateCommandLine(_username);
+        }
+
+        private string CreateCommandLine(string username)
         {
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
@@ -134,33 +178,17 @@ namespace CPUMinerBase
             var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
-            var commandLine = $"--algo={algo} --url={url} --user={_username} --api-bind={_apiPort} {_extraLaunchParameters}";
+            var commandLine = $"--algo={algo} --url={url} --user={username} --api-bind={_apiPort} {_extraLaunchParameters}";
             return commandLine;
         }
 
         protected override void Init()
         {
-            var singleType = MinerToolkit.GetAlgorithmSingleType(_miningPairs);
-            _algorithmType = singleType.Item1;
-            bool ok = singleType.Item2;
-            if (!ok)
-            {
-                Logger.Info(_logGroup, "Initialization of miner failed. Algorithm not found!");
-                throw new InvalidOperationException("Invalid mining initialization");
-            }
-
             var cpuDevice = _miningPairs.Select(kvp => kvp.Device).FirstOrDefault();
             if (cpuDevice is CPUDevice cpu)
             {
                 // TODO affinity mask stuff
                 //_affinityMask
-            }
-            var miningPairsList = _miningPairs.ToList();
-            if (MinerOptionsPackage != null)
-            {
-                var generalParams = Parser.Parse(miningPairsList, MinerOptionsPackage.GeneralOptions);
-                var temperatureParams = Parser.Parse(miningPairsList, MinerOptionsPackage.TemperatureOptions);
-                _extraLaunchParameters = $"{generalParams} {temperatureParams}".Trim();
             }
         }
 

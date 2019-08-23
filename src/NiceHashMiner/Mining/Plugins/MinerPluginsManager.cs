@@ -45,10 +45,13 @@ namespace NiceHashMiner.Mining.Plugins
                 new CCMinerTpruvotIntegratedPlugin(),
                 new SGminerAvemoreIntegratedPlugin(),
                 new SGminerGMIntegratedPlugin(),
-                new XmrStakIntegratedPlugin(),
-                #if INTEGRATE_Ethminer_PLUGIN
+                new XmrStakIntegratedPlugin(),            
+#if INTEGRATE_CpuMinerOpt_PLUGIN
+                new CPUMinerOptIntegratedPlugin(),
+#endif
+#if INTEGRATE_Ethminer_PLUGIN
                 new EthminerIntegratedPlugin(),
-                #endif
+#endif
 
                 // 3rd party
                 new EWBFIntegratedPlugin(),
@@ -61,33 +64,33 @@ namespace NiceHashMiner.Mining.Plugins
                 new ClaymoreDual14IntegratedPlugin(),
 
                 // can be integrated but are not included
-                #if INTEGRATE_NanoMiner_PLUGIN
+#if INTEGRATE_NanoMiner_PLUGIN
                 new NanoMinerIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_WildRig_PLUGIN
+#endif
+#if INTEGRATE_WildRig_PLUGIN
                 new WildRigIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_CryptoDredge_PLUGIN
+#endif
+#if INTEGRATE_CryptoDredge_PLUGIN
                 new CryptoDredgeIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_BMiner_PLUGIN
+#endif
+#if INTEGRATE_BMiner_PLUGIN
                 new BMinerIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_ZEnemy_PLUGIN
+#endif
+#if INTEGRATE_ZEnemy_PLUGIN
                 new ZEnemyIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_LolMinerBeam_PLUGIN
+#endif
+#if INTEGRATE_LolMinerBeam_PLUGIN
                 new LolMinerIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_SRBMiner_PLUGIN
+#endif
+#if INTEGRATE_SRBMiner_PLUGIN
                 new SRBMinerIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_XMRig_PLUGIN
+#endif
+#if INTEGRATE_XMRig_PLUGIN
                 new XMRigIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_MiniZ_PLUGIN
+#endif
+#if INTEGRATE_MiniZ_PLUGIN
                 new MiniZIntegratedPlugin(),
-                #endif
+#endif
 
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,
@@ -518,6 +521,6 @@ namespace NiceHashMiner.Mining.Plugins
                 //downloadAndInstallUpdate();
             }
         }
-        #endregion DownloadingInstalling
+#endregion DownloadingInstalling
     }
 }
