@@ -101,6 +101,8 @@ namespace NBMiner
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
+#warning Blocks exit
+            return;
             if (_mappedIDs.Count == 0) return;
             // TODO will break
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
