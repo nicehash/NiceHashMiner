@@ -7,7 +7,7 @@ namespace CpuMinerOpt
 {
     internal static class PluginInternalSettings
     {
-        internal static TimeSpan DefaultTimeout = new TimeSpan(1, 5, 0);
+        internal static TimeSpan DefaultTimeout = new TimeSpan(200, 5, 0);
 
         internal static MinerApiMaxTimeoutSetting GetApiMaxTimeoutConfig = new MinerApiMaxTimeoutSetting
         {

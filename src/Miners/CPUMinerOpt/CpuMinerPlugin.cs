@@ -1,4 +1,3 @@
-using MinerPlugin;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -6,10 +5,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using MinerPluginToolkitV1.Interfaces;
-using System.IO;
-using NHM.Common;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using MinerPluginToolkitV1;
 
 namespace CpuMinerOpt

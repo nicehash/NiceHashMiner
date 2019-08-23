@@ -1,6 +1,5 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using MinerPluginToolkitV1.ExtraLaunchParameters;
 using NHM.Common.Enums;
 using System;
 using System.Linq;
@@ -8,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using static NHM.Common.StratumServiceHelpers;
-using NHM.Common.Device;
 using System.Collections.Generic;
 using System.Globalization;
 using NHM.Common;
@@ -16,10 +14,11 @@ using System.IO;
 
 namespace CpuMinerOpt
 {
+#warning This implementation doesn't support mutiple CPU sockets
     public class CpuMiner : MinerBase
     {
         // command line parts
-        private ulong _affinityMask = 0;
+        //private ulong _affinityMask = 0; implement and use after MinerPluginToolkit supports start mining override
         private int _apiPort;
         private double DevFee = 0d;
 
@@ -149,8 +148,8 @@ namespace CpuMinerOpt
             var binPath = "";
             if (_miningPairs != null)
             {
-                var intelCPU = _miningPairs.Where(pair => pair.Device.DeviceType == DeviceType.CPU)?.Where(pair => pair.Device.Name.ToLower().Contains("core"));
-                var amdCPU = _miningPairs.Where(pair => pair.Device.DeviceType == DeviceType.CPU)?.Where(pair => pair.Device.Name.ToLower().Contains("ryzen"));
+#warning Implement in CPUDevice instruction set support checks. For now assume avx2
+                var intelCPU = _miningPairs.Where(pair => pair.Device.Name.ToLower().Contains("core") || pair.Device.Name.ToLower().Contains("intel"));
                 if (intelCPU.Count() > 0)
                 {
                     binPath = Path.Combine(pluginRootBins, "cpuminer-avx2.exe");
@@ -185,22 +184,22 @@ namespace CpuMinerOpt
         protected override void Init()
         {
             var cpuDevice = _miningPairs.Select(kvp => kvp.Device).FirstOrDefault();
-            if (cpuDevice is CPUDevice cpu)
-            {
-                // TODO affinity mask stuff
-                //_affinityMask
-            }
+            //if (cpuDevice is CPUDevice cpu)
+            //{
+            //    // TODO affinity mask stuff
+            //    //_affinityMask
+            //}
         }
 
-        public void AfterStartMining()
-        {
-            int pid = _miningProcess?.Id  ?? - 1;
-            // TODO C# can have this shorter
-            if (_affinityMask != 0 && pid != -1)
-            {
-                var okMsg = ProcessHelpers.AdjustAffinity(pid, _affinityMask);
-                Logger.Info(_logGroup, $"Adjust Affinity returned: {okMsg.Item2}");
-            }
-        }
+        //public void AfterStartMining()
+        //{
+        //    int pid = _miningProcess?.Id  ?? - 1;
+        //    // TODO C# can have this shorter
+        //    if (_affinityMask != 0 && pid != -1)
+        //    {
+        //        var okMsg = ProcessHelpers.AdjustAffinity(pid, _affinityMask);
+        //        Logger.Info(_logGroup, $"Adjust Affinity returned: {okMsg.Item2}");
+        //    }
+        //}
     }
 }
