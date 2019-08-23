@@ -39,12 +39,16 @@ namespace NHM.Wpf.Windows
             WindowUtils.Translate(this);
         }
 
-        private void BenchButton_Click(object sender, RoutedEventArgs e)
+        private async void BenchButton_Click(object sender, RoutedEventArgs e)
         {
+            bool startMining;
+
             using (var bench = new BenchmarkWindow(AvailableDevices.Devices))
             {
-                bench.ShowDialog();
+                startMining = bench.ShowDialog() ?? false;
             }
+
+            if (startMining) await _vm.StartMining();
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
