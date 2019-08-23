@@ -7,24 +7,24 @@ namespace NHM.DeviceMonitoring
     {
         private object locked;
 
-        public bool HasLock { get; private set; }
+        public bool HasAcquiredLock { get; private set; }
 
         public TryLock(object obj)
         {
             if (Monitor.TryEnter(obj))
             {
-                HasLock = true;
+                HasAcquiredLock = true;
                 locked = obj;
             }
         }
 
         public void Dispose()
         {
-            if (HasLock)
+            if (HasAcquiredLock)
             {
                 Monitor.Exit(locked);
                 locked = null;
-                HasLock = false;
+                HasAcquiredLock = false;
             }
         }
     }
