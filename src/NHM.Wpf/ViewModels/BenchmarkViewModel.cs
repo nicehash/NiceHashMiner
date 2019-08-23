@@ -69,7 +69,7 @@ namespace NHM.Wpf.ViewModels
         /// </summary>
         public bool AlgosEnabled => SelectedDev?.Enabled ?? false;
 
-        public bool SideBarEnabled => SelectedAlgo?.Algo.Enabled ?? false;
+        public bool SideBarEnabled => (SelectedAlgo?.Algo.Enabled ?? false) && NotInBenchmark;
 
         private ComputeDevice _selectedDev;
         public ComputeDevice SelectedDev
@@ -281,6 +281,7 @@ namespace NHM.Wpf.ViewModels
         {
             OnPropertyChanged(nameof(InBenchmark));
             OnPropertyChanged(nameof(NotInBenchmark));
+            OnPropertyChanged(nameof(SideBarEnabled));
             OnPropertyChanged(nameof(StartStopButtonLabel));
             if (!e) BenchesCompleted = 0;
         }
