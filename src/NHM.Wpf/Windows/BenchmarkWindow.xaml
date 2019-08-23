@@ -62,7 +62,8 @@
                     <GridViewColumn Header="Enabled">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <CheckBox IsChecked="{Binding Algo.Enabled}" />
+                                <CheckBox IsChecked="{Binding Algo.Enabled}" 
+                                          IsEnabled="{Binding DataContext.NotInBenchmark, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
