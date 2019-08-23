@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
+using NHM.Common.Device;
 
 namespace MiniZ
 {
@@ -80,14 +81,14 @@ namespace MiniZ
 
                 var results = resp.result;
 
-                var gpus = _miningPairs.Select(pair => pair.Device);
+                var gpus = _miningPairs.Select(pair => pair.Device).Cast<CUDADevice>();
                 var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
                 var perDevicePowerInfo = new Dictionary<string, int>();
                 var totalSpeed = 0d;
                 var totalPowerUsage = 0;
                 foreach (var gpu in gpus)
                 {
-                    var currentDevStats = results.Where(r => r.cudaid == gpu.ID).FirstOrDefault();
+                    var currentDevStats = results.Where(r => int.Parse(r.busid.Split(':')[1]) == gpu.PCIeBusID).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed_sps;
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed_sps * (1 - DevFee * 0.01)) });
