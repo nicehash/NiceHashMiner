@@ -339,7 +339,7 @@ namespace NiceHashMiner.Forms.Components
                         langKey = "Load (%)";
                         break;
                     case 1:
-                        langKey = "Temp (C)";
+                        langKey = "Temp (°C)";
                         break;
                     case 2:
                         langKey = "RPM";

@@ -195,6 +195,12 @@
     <Compile Include="Forms\Form_Benchmark.Designer.cs">
       <DependentUpon>Form_Benchmark.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Form_ChooseUpdate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_ChooseUpdate.Designer.cs">
+      <DependentUpon>Form_ChooseUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Form_Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -384,6 +390,9 @@
     <EmbeddedResource Include="Forms\Form_3rdParty_TOS.resx">
       <DependentUpon>Form_3rdParty_TOS.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_ChooseUpdate.resx">
+      <DependentUpon>Form_ChooseUpdate.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_Main.resx">
       <DependentUpon>Form_Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -489,6 +498,10 @@
       <Project>{F28ECF66-1FD8-4A75-9E2B-D49F7036DE72}</Project>
       <Name>ClaymoreDual14</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\CPUMinerOpt\CPUMinerOpt.csproj">
+      <Project>{bce045f8-ceaa-48a6-b10b-8f539f68d7b6}</Project>
+      <Name>CPUMinerOpt</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\CryptoDredge\CryptoDredge.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CryptoDredge_PLUGIN'))">
       <Project>{27c2f4a0-af83-40f7-b1c8-79344578f3ec}</Project>
       <Name>CryptoDredge</Name>
@@ -529,6 +542,10 @@
       <Project>{ad369259-fe29-4832-bd46-12a6d4b181c5}</Project>
       <Name>MinerPlugin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Miners\MiniZ\MiniZ.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_MiniZ_PLUGIN'))">
+      <Project>{780221d3-fe59-4957-b33f-42f7727c72dc}</Project>
+      <Name>MiniZ</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Miners\NanoMiner\NanoMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_NanoMiner_PLUGIN'))">
       <Project>{1b657592-641e-42ec-bc44-abcae62ef1fd}</Project>
       <Name>NanoMiner</Name>
@@ -564,6 +581,10 @@
     <ProjectReference Include="..\Miners\WildRig\WildRig.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_WildRig_PLUGIN'))">
       <Project>{fa68227d-27a2-4058-8d36-005fadafecc0}</Project>
       <Name>WildRig</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Miners\XMRig\XMRig.csproj">
+      <Project>{bc3548d5-5463-4731-accd-a5db35270807}</Project>
+      <Name>XMRig</Name>
     </ProjectReference>
     <ProjectReference Include="..\Miners\XmrStak\XmrStak.csproj">
       <Project>{436fa350-a15c-433b-881b-6892b34a4c0d}</Project>

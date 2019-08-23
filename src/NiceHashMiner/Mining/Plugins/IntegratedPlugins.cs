@@ -60,6 +60,17 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => false;
     }
 
+#if INTEGRATE_CpuMinerOpt_PLUGIN
+
+    class CPUMinerOptIntegratedPlugin : CpuMinerOpt.CPUMinerPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "cpuminer-opt";
+
+        public bool Is3rdParty => false;
+    }
+#endif
+
+
 #if INTEGRATE_Ethminer_PLUGIN
     class EthminerIntegratedPlugin : Ethminer.EthminerPlugin, IntegratedPlugin
     {
@@ -177,6 +188,33 @@ namespace NiceHashMiner.Mining.Plugins
     class LolMinerIntegratedPlugin : LolMinerBeam.LolMinerBeamPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "LolMinerBeam";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
+#if INTEGRATE_SRBMiner_PLUGIN
+    class SRBMinerIntegratedPlugin : SRBMiner.SRBMinerPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "SRBMiner";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
+#if INTEGRATE_XMRig_PLUGIN
+    class XMRigIntegratedPlugin : XMRig.XMRigPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "XMRig";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
+#if INTEGRATE_MiniZ_PLUGIN
+    class MiniZIntegratedPlugin : MiniZ.MiniZPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "MiniZ";
 
         public bool Is3rdParty => true;
     }

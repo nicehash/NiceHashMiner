@@ -79,6 +79,7 @@ namespace MinerPluginToolkitV1
                     CreateNoWindow = true,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
+                    RedirectStandardError = true,
                     WorkingDirectory = workingDirectory,
                 };
 
@@ -102,6 +103,10 @@ namespace MinerPluginToolkitV1
                     };
                     ct.Token.Register(() => getDevicesHandleStop("from cancel token"));
                     output = await getDevicesHandle.StandardOutput.ReadToEndAsync();
+                    if (output == "")
+                    {
+                        output = await getDevicesHandle.StandardError.ReadToEndAsync();
+                    }
                     getDevicesHandleStop("after read to end");
                 }
             }

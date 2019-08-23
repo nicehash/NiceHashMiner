@@ -3221,7 +3221,7 @@
       "ru": "{0}: Файл {1} не найден!\n\nУбедитесь, пожалуйста, что этот файл доступен и что ваш антивирус не блокирует приложение.\nОбратитесь, пожалуйста, к разделу \"My anti-virus is blocking the application\" \nв разделе решения проблем ({2}).\n\nМожет понадобиться повторная загрузка {3}.",
       "zh_cn": "{0}：文件{1}未找到！\n\n请确认文件可访问并确认杀毒软件没有阻挡此程序。\n请参照Troubleshooting章节中的\"My anti-virus is blocking the application\"小节({2})。\n\n您可能需要重新下载{3}。"
     },
-    "Click yes if you with to run {0} as Administrator.": {
+    "Click yes if you wish to run {0} as Administrator.": {
       "ru": "Нажмите Да, если вы запустили {0} с правами администратора."
     },
     "Show GPU PCIe Bus IDs": {
