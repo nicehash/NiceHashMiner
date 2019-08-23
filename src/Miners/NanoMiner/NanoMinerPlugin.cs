@@ -17,19 +17,19 @@ namespace NanoMiner
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases current v1.5.2
+            // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases current v1.5.3
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nanopool/nanominer/releases/download/v1.5.2/nanominer-windows-1.5.2.zip", // original
+                    "https://github.com/nanopool/nanominer/releases/download/v1.5.3/nanominer-windows-1.5.3.zip", // original
                 }
             };
         }
 
         public override string PluginUUID => "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(2, 3);
 
         public override string Name => "NanoMiner";
 
@@ -94,12 +94,9 @@ namespace NanoMiner
             return new NanoMiner(PluginUUID, _mappedIDs);
         }
 
-#warning "nanominer -d command is broken."
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            // v1.5.2 the mappings get screwed on mixed rigs
-            const bool skipDCommandIsBroken = true;
-            if (_mappedIDs.Count == 0 || skipDCommandIsBroken) return;
+            if (_mappedIDs.Count == 0) return;
             // TODO will break
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
