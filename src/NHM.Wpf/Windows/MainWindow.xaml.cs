@@ -42,17 +42,22 @@ namespace NHM.Wpf.Windows
         private async void BenchButton_Click(object sender, RoutedEventArgs e)
         {
             bool startMining;
+            ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Benchmark;
 
             using (var bench = new BenchmarkWindow(AvailableDevices.Devices))
             {
                 startMining = bench.ShowDialog() ?? false;
             }
 
+            ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Main;
+
             if (startMining) await _vm.StartMining();
         }
 
         private void SettingsButton_Click(object sender, RoutedEventArgs e)
         {
+            ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Settings;
+
             using (var settings = new SettingsWindow())
             {
                 settings.ShowDialog();
@@ -71,11 +76,15 @@ namespace NHM.Wpf.Windows
                     Close();
                 }
             }
+
+            ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Main;
         }
 
         private void PluginButton_Click(object sender, RoutedEventArgs e)
         {
+            ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Plugins;
             var plugin = new PluginWindow();
+            ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Main;
             plugin.ShowDialog();
         }
 
