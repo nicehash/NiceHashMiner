@@ -36,21 +36,24 @@ namespace NHM.Wpf.Windows
 
         private void OnBenchEnd(object sender, BenchEndEventArgs e)
         {
-            if (!e.StartMining)
+            Dispatcher.Invoke(() =>
             {
-                MessageBox.Show(
-                    !e.DidAlgosFail
-                        ? Translations.Tr("All benchmarks have been successful")
-                        : Translations.Tr("Not all benchmarks finished successfully."),
-                    Translations.Tr("Benchmark finished report"),
-                    MessageBoxButton.OK);
-            }
-            else
-            {
-                // MainWindow will look for this result and start mining if it's true
-                DialogResult = true;
-                Close();
-            }
+                if (!e.StartMining)
+                {
+                    MessageBox.Show(
+                        !e.DidAlgosFail
+                            ? Translations.Tr("All benchmarks have been successful")
+                            : Translations.Tr("Not all benchmarks finished successfully."),
+                        Translations.Tr("Benchmark finished report"),
+                        MessageBoxButton.OK);
+                }
+                else
+                {
+                    // MainWindow will look for this result and start mining if it's true
+                    DialogResult = true;
+                    Close();
+                }
+            });
         }
 
         private void CloseButton_OnClick(object sender, RoutedEventArgs e)
