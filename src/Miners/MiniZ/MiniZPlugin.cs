@@ -14,6 +14,7 @@ namespace MiniZ
 {
     public class MiniZPlugin : PluginBase
     {
+        // TODO CROSS REFF ko developerji fixanjo svoj --cuda-info output
         public MiniZPlugin()
         {
             // set default internal settings
