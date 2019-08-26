@@ -109,7 +109,7 @@ namespace NVIDIA.NVAPI
     [StructLayout(LayoutKind.Sequential)]
     internal struct NvPhysicalGpuHandle
     {
-        private readonly IntPtr ptr;
+        public readonly IntPtr ptr;
     }
     [StructLayout(LayoutKind.Sequential, Pack = 8)]
     internal struct NvPState

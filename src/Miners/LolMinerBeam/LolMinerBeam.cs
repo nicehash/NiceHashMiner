@@ -19,6 +19,7 @@ namespace LolMinerBeam
     {
         private string _devices;
         private int _apiPort;
+        private double DevFee = 1d;
 
         // the order of intializing devices is the order how the API responds
         private Dictionary<int, string> _initOrderMirrorApiOrderUUIDs = new Dictionary<int, string>();
@@ -35,23 +36,10 @@ namespace LolMinerBeam
         {
             switch (algorithmType)
             {
-                case AlgorithmType.Beam: return "BEAM-I";
                 case AlgorithmType.GrinCuckarood29: return "GRIN-AD29";
                 case AlgorithmType.GrinCuckatoo31: return "GRIN-AT31";
                 case AlgorithmType.BeamV2: return "BEAM-II";
                 default: return "";
-            }
-        }
-
-        private double DevFee
-        {
-            get
-            {
-                switch (_algorithmType)
-                {
-                    case AlgorithmType.Beam: return 1.0;
-                    default: return 0;
-                }
             }
         }
 
@@ -70,14 +58,11 @@ namespace LolMinerBeam
 
                 var apiDevices = summary.GPUs;
 
-
-                // the devices have ordered ids by -d parameter, so -d 4,2 => 4=0;2=1
-                foreach (var kvp in _initOrderMirrorApiOrderUUIDs)
+                foreach(var pair in _miningPairs)
                 {
-                    var gpuID = kvp.Key;
-                    var gpuUUID = kvp.Value;
-
-                    var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuID).FirstOrDefault(); //todo index == ID ????
+                    var gpuUUID = pair.Device.UUID;
+                    var gpuID = _mappedIDs[gpuUUID];
+                    var currentStats = summary.GPUs.Where(devStats => devStats.Index == gpuID).FirstOrDefault();
                     if (currentStats == null) continue;
                     perDeviceSpeedInfo.Add(gpuUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentStats.Performance * (1 - DevFee * 0.01)) });
                 }
@@ -141,7 +126,7 @@ namespace LolMinerBeam
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.6");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "0.8.8");
             var binPath = Path.Combine(pluginRootBins, "lolMiner.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);

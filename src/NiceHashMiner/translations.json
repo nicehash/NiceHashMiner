@@ -123,7 +123,11 @@
       "zh_cn": "否 (&N)"
     },
     "&OK": {
+      "ru": "&ОК",
       "zh_cn": "确认 (&O)"
+    },
+    "&Plugins": {
+      "ru": "&Дополнения"
     },
     "&Precise (will take longer)": {
       "bg": "&Прецизен (отнема повече време)",
@@ -385,7 +389,7 @@
       "pl": "Czas (w milisekundach) przez który {0} czeka przed przełączeniem górnika.",
       "pt": "Quantidade de tempo (em milissegundos) que {0} aguardará antes de reiniciar o minerador.",
       "ro": "Timp (în milisecunde) în care {0} așteaptă înainte de repornirea minerului.",
-      "ru": "Количество времени в миллисекундах, которое {0} будет ждать перед перезапуском майнера.",
+      "ru": "Время в миллисекундах, которое {0} будет ждать перед перезапуском майнера.",
       "zh_cn": "切换算法时，{0}自中止到重启挖矿程序之间等待的延迟（毫秒）。"
     },
     "Amount of time (in seconds) for {0} benchmarking the {1}": {
@@ -395,7 +399,7 @@
       "pl": "Czas (w sekundach) na {0} pomiar {1}",
       "pt": "Quantidade de tempo (em segundos) para {0} benchmarking o {1}",
       "ro": "Timp (în secunde) pentru {0} a rula benchmark {1}",
-      "ru": "Количество времени в секундах для {0} бенчмарка {1}",
+      "ru": "Время в секундах для {0} бенчмарка {1}",
       "zh_cn": "设备 {0} 执行算法 {1} 基准测试的时间（秒）"
     },
     "Are you sure you want to copy settings from {0} to {1}?": {
@@ -587,8 +591,12 @@
       "ru": "Бразилия - Сан-Паулу",
       "zh_cn": "巴西 - 圣保罗"
     },
-    "CDev#{0}": {},
-    "CPU#{0}": {},
+    "CDev#{0}": {
+      "ru": "CDev#{0}"
+    },
+    "CPU#{0}": {
+      "ru": "CPU#{0}"
+    },
     "CURRENTLY MINING NOT PROFITABLE.": {
       "bg": "В МОМЕНТА РАБОТАТА НЕ НОСИ ВЪЗВРЪЩАЕМОСТ.",
       "es": "EL MINADO NO ES RENTABLE ACTUALMENTE.",
@@ -813,7 +821,7 @@
       "pl": "Kopiowanie ustawień dla benchmarków, algorytmów itd. ...",
       "pt": "Copiar configurações de (Benchmarks, parametros de algoritimo, ...)",
       "ro": "Copiază Setări De La (Benchmark, parametrii algoritm, ...)",
-      "ru": "Скопировать настройки из (Бенчмарк, параметры алгоритмов, …)",
+      "ru": "Скопировать настройки из (бенчмарков, параметров алгоритмов, …)",
       "zh_cn": "从（基准测试，算法参数）复制配置"
     },
     "Copy tuning settings only": {
@@ -878,7 +886,9 @@
       "ru": "Устройство",
       "zh_cn": "设备"
     },
-    "Device Monitoring:": {},
+    "Device Monitoring:": {
+      "ru": "Мониторинг устройств:"
+    },
     "Devices/Algorithms": {
       "bg": "Устройства/Алгоритми",
       "es": "Dispositivos/Algoritmos",
@@ -939,8 +949,12 @@
       "ru": "Отключить устройство",
       "zh_cn": "禁用设备"
     },
-    "Disable Device Status Monitoring": {},
-    "Disable Device Power Mode Settings": {},
+    "Disable Device Status Monitoring": {
+      "ru": "Откл. мониторинг статуса устройств"
+    },
+    "Disable Device Power Mode Settings": {
+      "ru": "Откл. настройки питания устройств"
+    },
     "Disable Windows Error Reporting": {
       "bg": "Изкл. журнала за грешки на Windows",
       "es": "Desactivar reportes de errores de Windows",
@@ -984,7 +998,9 @@
       "ru": "Валюта:",
       "zh_cn": "显示货币:"
     },
-    "Double-click to restore...": {},
+    "Double-click to restore...": {
+      "ru": "Двойной щелчок для восстановления…"
+    },
     "Downloading miners": {
       "bg": "Сваляне на изчислителни програми",
       "es": "Descargando mineros",
@@ -1002,7 +1018,7 @@
       "pl": "Zaawansowane ustawienia są dla zaawansowanych ludzi.\r\n\r\nJeśli {0} zawiesza się przez zły konfig możesz to naprawić kasując plik 'config.json'.\r\n\r\nKontynuować edycję ustawień?",
       "pt": "Editar configurações adicionais é para usuários avançados.\r\n\r\nSe {0} crashar devido a uma configuração errada, você pode restaurar a original excluindo o arquivo 'config.json'.\r\n\r\nContinuar editando as configurações?",
       "ro": "Editarea setărilor adiționale este pentru utilizatori avansați.\r\n\r\nDacă {0} se blochează din cauza unei valori eronate de configurare puteți să reveniți prin ștergerea fișierului 'config.json'.\r\n\r\nContinuați cu editarea setărilor?",
-      "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается, в связи с плохой конфигурацией, вы можете сбросить её удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
+      "ru": "Редактирование дополнительных настроек для продвинутых пользователей.\r\n\r\nЕсли работа {0} аварийно завершается в связи с плохой конфигурацией, вы можете сбросить её удалением файла 'config.json'.\r\n\r\nПродолжить редактирование настроек?",
       "zh_cn": "编辑进阶设置适用于资深用户。\r\n\r如遇 {0} 因配置不当而奔溃，您可以通过删除“config.json”文件来恢复正确的配置。是否继续编辑进阶设置？"
     },
     "Electricity Cost (/KWh):": {
@@ -1246,8 +1262,12 @@
       "ru": "Использовать определённую технологию для CPU.",
       "zh_cn": "强制启用某些CPU指令集扩展。"
     },
-    "Form Windows Always On Top": {},
-    "GPU#{0}": {},
+    "Form Windows Always On Top": {
+      "ru": "Отображать поверх всех окон"
+    },
+    "GPU#{0}": {
+      "ru": "GPU#{0}"
+    },
     "General": {
       "bg": "Общи",
       "it": "Generali",
@@ -1320,7 +1340,7 @@
       "ru": "H/s"
     },
     "H/s (Secondary)": {
-      "ru": "H/s (контрольная)"
+      "ru": "H/s (вторичная)"
     },
     "Help me choose my Bitcoin wallet": {
       "bg": "Как да избера Bitcoin портфейл",
@@ -1339,7 +1359,7 @@
       "pl": "Ukryj konsole górników",
       "pt": "Ocultar Janela de Mineração",
       "ro": "Ascunde Ferestre Mineri",
-      "ru": "Скрывать окна майнинга",
+      "ru": "Скрывать окна майнеров",
       "zh_cn": "隐藏挖矿窗口"
     },
     "Hour": {
@@ -1390,7 +1410,10 @@
       "zh_cn": "重要！ 新版本 v{0} 已发布。\r\n点击此处下载。"
     },
     "Idle Check Method:": {
-      "ru": "Метод проверки простоя"
+      "ru": "Метод проверки простоя:"
+    },
+    "Idle Mining:": {
+      "ru": "Майнинг при простое:"
     },
     "Idle When No Internet Access": {
       "bg": "Спиране на работа при липса на интернет достъп",
@@ -1398,7 +1421,7 @@
       "pl": "Zatrzymaj kiedy brak internetu",
       "pt": "Inativo Quando não Tiver Acesso a Internet",
       "ro": "Inactiv Fără Acces Internet",
-      "ru": "Простаивать, когда нет интернета",
+      "ru": "Простаивать, если нет интернета",
       "zh_cn": "断网时停止挖矿"
     },
     "If enabled {0} will stop mining without internet connectivity": {
@@ -1423,7 +1446,9 @@
       "ru": "Если включено, {0} будет использовать API-ключ, который вы предоставите, \nчтобы уведомить вас, когда прибыльность снизилась ниже вашей прибыльности. \nСм. инструкции по настройке этой функции.",
       "zh_cn": "IF This Than That，简称IFTTT。 开启此选项后，NiceHash{0}会在收益跌至设定阈值以下时通过您的API密钥来发送提醒。\n预知配置此功能的详细信息，请参见帮助文档。"
     },
-    "If 'MineRegardlessOfProfit' is unchecked, {0} will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.": {},
+    "If 'MineRegardlessOfProfit' is unchecked, {0} will stop mining \nif the estimated profit falls below the set amount (in selected fiat currency). Negative values are allowed.": {
+      "ru": "Если 'Майнить несмотря на прибыль' выключено, {0} остановит майнинг, когда ожидаемая прибыль\nупадёт ниже указанного значения (в выбранной валюте). Допускаются отрицательные значения."
+    },
     "India - Chennai": {
       "ru": "Индия - Ченнаи",
       "zh_cn": "印度 - 金奈"
@@ -1649,6 +1674,9 @@
       "ru": "Интервал запросов API [с]:",
       "zh_cn": "矿工API请求间隔 [秒]:"
     },
+    "Miner Plugins": {
+      "ru": "Дополнения майнеров"
+    },
     "Miner Restart Delay [ms]:": {
       "es": "Retraso reinicio de minero[ms]:",
       "it": "Ritardo riavvio del miner [ms]:",
@@ -1676,6 +1704,9 @@
       "ru": "Майнеры:",
       "zh_cn": "挖矿程序:"
     },
+    "Mine Regardless Of Profit": {
+      "ru": "Майнить несмотря на прибыль"
+    },
     "Minimize Mining Windows": {
       "bg": "Минимизиране на изчисл. програма",
       "es": "Minimizar las ventanas de minería",
@@ -1683,7 +1714,7 @@
       "pl": "Minimalizuj konsole górników",
       "pt": "Minimizar Windows Mineração",
       "ro": "Minimizează Ferestrele Minerilor",
-      "ru": "Минимизировать окна майнинга",
+      "ru": "Сворачивать окна",
       "zh_cn": "最小化挖矿窗口"
     },
     "Minimize To Tray": {
@@ -1693,7 +1724,7 @@
       "pl": "Minimalizuj do ikony",
       "pt": "Minimizar para Bandeja",
       "ro": "Minimizare În Tray",
-      "ru": "Свернуть в трей",
+      "ru": "Сворачивать в трей",
       "zh_cn": "最小化至托盘"
     },
     "Minimum Idle [s]:": {
@@ -1722,7 +1753,7 @@
       "pl": "Urządzenie {0}:",
       "pt": "Dispositivos para Mineração {0}:",
       "ro": "Dispozitive Minare {0}:",
-      "ru": "Устройства {0}:",
+      "ru": "Устройства майнинга {0}:",
       "zh_cn": "挖矿设备{0}:"
     },
     "Misc:": {
@@ -1991,6 +2022,9 @@
       "ru": "Подождите, пожалуйста, около {0} секунд…",
       "zh_cn": "请等待约{0}秒..."
     },
+    "Plugins:": {
+      "ru": "Дополнения:"
+    },
     "Power": {
       "ru": "Мощность"
     },
@@ -2147,10 +2181,10 @@
       "zh_cn": "正在重启 {0}"
     },
     "Run Ethlargement": {
-      "ru": "Запустить Ethlargement"
+      "ru": "Старт Ethlargement"
     },
     "Run Ethlargement for Dagger algorithms when supported GPUs are present.\nRequires running NHML as admin and enabling 3rd-party miners.": {
-      "ru": "Запустите Ethlargement для алгоритмов Dagger, когда присутствуют поддерживаемые видеокарты.\nТребует запуска от имени администратора и включения сторонних майнеров."
+      "ru": "Запускать Ethlargement для алгоритмов Dagger, когда присутствуют поддерживаемые видеокарты.\nТребует запуска от имени администратора и включения сторонних майнеров."
     },
     "Run With Windows": {
       "bg": "Стартирайте с Windows",
@@ -2159,7 +2193,7 @@
       "pl": "Uruchom z Windows",
       "pt": "Executar com o Windows",
       "ro": "Rulează cu Windows",
-      "ru": "Запуск с Windows",
+      "ru": "Запускать с Windows",
       "zh_cn": "开机自动启动"
     },
     "Run script when CUDA GPU is lost": {
@@ -2167,7 +2201,7 @@
       "it": "Esegui script se persa una GPU CUDA",
       "pl": "Uruchom skrypt po utracie GPU CUDA",
       "ro": "Rulează un script când se pierde un GOU",
-      "ru": "Запуск скрипта при потере CUDA GPU",
+      "ru": "Скрипт при потере CUDA GPU",
       "zh_cn": "CUDA GPU停止响应后执行脚本"
     },
     "S&ettings": {
@@ -2197,14 +2231,14 @@
       "pl": "Zmierzone tempo dodatkowe",
       "pt": "Velocidade de Benchmark Secundária",
       "ro": "Viteză Secundară Benchmark",
-      "ru": "Средняя контрольная скорость",
+      "ru": "Вторичная скорость бенчмарка",
       "zh_cn": "第二测得速率"
     },
     "Secondary Speed": {
-      "ru": "Доп. скорость:"
+      "ru": "Вторичная скорость:"
     },
     "Secondary speed for {0} was running at a hashrate of {1}, but was benchmarked at {2}. Would you like to take the new value?": {
-      "ru": "Контрольная скорость работы для {0} — {1}, но результат бенчмарка был {2}. Хотите принять новое значение?"
+      "ru": "Вторичная скорость работы для {0} — {1}, но результат бенчмарка был {2}. Хотите принять новое значение?"
     },
     "Select device first": {
       "bg": "Първо изберете устройство",
@@ -2437,7 +2471,7 @@
       "pl": "Tempo:",
       "pt": "Velocidade:",
       "ro": "Viteză:",
-      "ru": "Скор:",
+      "ru": "Скорость:",
       "zh_cn": "速率:"
     },
     "Speeds": {
@@ -2449,7 +2483,7 @@
       "pl": "Tempo dla dodatkowego algorytmu w trybie  dual mining.",
       "pt": "Velocidade para o algoritmo secundário ao usar mineração dois algoritimos.",
       "ro": "Viteza pentru al doilea algoritm când folosiți minarea dual-algoritm.",
-      "ru": "Скорость дополнительного алгоритма при использовании двойного майнинга.",
+      "ru": "Скорость вторичного алгоритма при использовании двойного майнинга.",
       "zh_cn": "手动调整（双重挖矿时）第二算法的基准测试测得速率。"
     },
     "St&op": {
@@ -2491,7 +2525,7 @@
       "pl": "Kop podczas bezczynności",
       "pt": "Iniciar Mineração Quando Inativo",
       "ro": "Pornește Minarea Când Inactiv",
-      "ru": "Запуск майнинга при простое",
+      "ru": "Майнить при простое",
       "zh_cn": "系统空闲时自动开启挖矿"
     },
     "Start mining after benchmark": {
@@ -2536,7 +2570,7 @@
       "it": "Invia &hardware",
       "pl": "Zgłoś swój &sprzęt",
       "pt": "Enviar &hardware",
-      "ru": "Отп&равить оборудование",
+      "ru": "Отп&равить данные об оборудовании",
       "zh_cn": "提交硬件信息 (&h)"
     },
     "Submit Benchmark Result": {
@@ -2548,6 +2582,9 @@
       "ro": "Trimite Rezultat Benchmark",
       "ru": "Отправить результаты бенчмарка",
       "zh_cn": "提交基准测试结果"
+    },
+    "Switching:": {
+      "ru": "Переключение:"
     },
     "Switch Maximum [s]:": {
       "es": "Cambiar máximo [s]:",
@@ -2627,7 +2664,7 @@
       "ru": "Конечное значение dcri для тюнинга"
     },
     "The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0.": {
-      "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину затрат на электроэнергию,\nесли стоимость электроэнергии и потребление мощности больше 0."
+      "ru": "Мощность в Ваттах, используемая этим алгоритмом. Прибыль алгоритма будет уменьшена на величину\nзатрат на электроэнергию, если стоимость электроэнергии и потребление мощности больше 0."
     },
     "There are missing files from last Miners Initialization. Please make sure that your anti-virus is not blocking the application. {0} might not work properly without missing files. Click Yes to reinitialize {0} to try to fix this issue.": {
       "bg": "Липсват файлове от последната инициализация на изчислителните програми. Уверете се, че вашата антивирусна програма не блокира приложението. {0} няма да работи коректно без липсващите файлове. Изберете 'Yes', за да инициализирате повторно {0} и да опитате да поправите този проблем.",
@@ -2697,7 +2734,7 @@
       "zh_cn": "用于识别该计算机。"
     },
     "Total": {
-      "ru": "Итого"
+      "ru": "Всего"
     },
     "Tuning Enabled": {
       "ru": "Тюнинг включён"
@@ -2748,7 +2785,7 @@
       "zh_cn": "建议更新AMD驱动程序"
     },
     "Upper bound for the randomly chosen profit check interval.\nProfit may be checked multiple times before a switch is allowed, so don't set too high.": {
-      "ru": "Верхняя граница случайно выбранного интервала проверки прибыли.\nПрибыль может быть проверена несколько раз, прежде чем переключение будет разрешено, поэтому не указывайте слишком высокое значение."
+      "ru": "Верхняя граница случайно выбранного интервала проверки прибыли.\nПрибыль может быть проверена несколько раз, прежде чем переключение\nбудет разрешено, поэтому не указывайте слишком высокое значение."
     },
     "Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility.": {
       "bg": "Използване на софтуер със затворен код, разработен от трети лица, с цел по-висока доходност. Използвайте на собствена отговорност.",
@@ -2835,7 +2872,9 @@
       "ru": "Биткоин-адрес пользователя для майнинга.",
       "zh_cn": "比特币提现地址。用于分发挖矿所得。"
     },
-    "V_ID_{0}": {},
+    "V_ID_{0}": {
+      "ru": "V_ID_{0}"
+    },
     "Visit us @ www.nicehash.com": {
       "bg": "Посетете ни на www.nicehash.com",
       "es": "Visítanos @ www.nicehash.com",
@@ -2843,7 +2882,7 @@
       "pl": "Odwiedź nas na www.nicehash.com",
       "pt": "Visite o site @ www.nicehash.com",
       "ro": "Vizitează-ne @ www.nicehash.com",
-      "ru": "Посетите нас @ www.nicehash.com",
+      "ru": "Посетите нас на www.nicehash.com",
       "zh_cn": "访问我们的网站 @ www.nicehash.com"
     },
     "Waiting benchmark": {
@@ -2882,7 +2921,7 @@
       "it": "Attenzione! L'algoritmo {0} sta riportando 0 parti accettate. Disabilita questo algoritmo in Impostazioni/Benchmark e segnala questo problema a https://github.com/nicehash/NiceHashMiner/issues!",
       "pl": "Uwaga! Algorytm {0} raportuje 0 shares accepted. Wyłącz ten algorytm w ustawieniach lub benchmarkach i napisz raport na https://github.com/nicehash/NiceHashMiner/issues (prosimy)",
       "ro": "Avertizare! Algoritmul {0} raportează 0 share acceptate. Vă rugăm să dezactivați acest algoritm în Benchmark/Setări și să raportați această problemă la https://github.com/nicehash/NiceHashMiner/issues!",
-      "ru": "Предупреждение! Алгоритм {0} сообщает 0 принятых шар. Отключите, пожалуйста, этот алгоритм в Бенчмарке/Настройках и сообщите о данной проблеме на support-ru@nicehash.com!",
+      "ru": "Предупреждение! Алгоритм {0} сообщает 0 принятых шар. Отключите, пожалуйста, этот алгоритм в Бенчмарке/Настройках и напишите об этой проблеме в https://github.com/nicehash/NiceHashMiner/issues!",
       "zh_cn": "警告！算法{0}报告其计算所得并没有被矿池服务器接受。请在基准测试/设置中禁用此算法并前往问题反馈页面汇报此问题 https://github.com/nicehash/NiceHashMiner/issues！"
     },
     "Warning! Video Controller not operating correctly": {
@@ -2948,7 +2987,7 @@
       "pl": "Kiedy Kop podczas bezczynności jest zaznaczone, MinIdleSeconds określa ile sekund\nkomputer ma czekać zanim zacznie kopać.",
       "pt": "Quando StartMiningWhenIdle está marcado, MinIdleSeconds fala \nquantos segundos o computador precisa estar ocioso antes da mineração iniciar.",
       "ro": "Când StartMiningWhenIdle este bifat, MinIdleSeconds spune\ncâte secunde calculatorul trebuie să fie nefolosit înainte de începerea minării.",
-      "ru": "Когда \"Запуск майнинга при простое\" отмечено, \"Минимальный простой\" указывает\nсколько секунд компьютер должен простаивать, прежде чем начнется майнинг.",
+      "ru": "Когда \"Запуск майнинга при простое\" отмечено, \"Минимальный простой\" указывает\nсколько секунд компьютер должен простаивать, прежде чем начнётся майнинг.",
       "zh_cn": "如选择“系统空闲时自动开启挖矿”，在此处设置计算机在开始挖矿之前\n至少需要处于空闲状态的时间（秒）。"
     },
     "When checked it disables all default optimization settings, making mining potentially more stable but significantly slower (especially for AMD cards).": {
@@ -2961,7 +3000,9 @@
       "ru": "Если отмечено, отключает все настройки оптимизации по умолчанию, делая майнинг\nпотенциально более стабильным, но значительно медленнее (особенно для карт AMD).",
       "zh_cn": "选中此复选框将禁用所有默认优化配置。这将使得挖矿更为稳定但速度更慢（尤其对于AMD设备）。"
     },
-    "When checked, {0} Form Windows will be set as Top Most and will be covered only by other Top Most Windows.": {},
+    "When checked, {0} Form Windows will be set as Top Most and will be covered only by other Top Most Windows.": {
+      "ru": "Если отмечено, окна {0} будут рисоваться поверх всех остальных\nи могут быть перекрыты только другими подобными окнами."
+    },
     "When checked, {0} will automatically start mining when launched.": {
       "bg": "Когато тази опция е маркирана, {0} автоматично ще започне изчисления с пускането на програмата.",
       "es": "Si está marcada, {0} empezará a minar al abrirse.",
@@ -2969,7 +3010,7 @@
       "pl": "Spowoduje automatyczny start kopania po uruchomieniu programu {0}.",
       "pt": "Quando marcado, o {0} iniciará automaticamente a mineração quando iniciado.",
       "ro": "Când bifați, {0} o să mineze automat la pornire.",
-      "ru": "Если отмечено, {0} будет автоматически \nначинать майнинг при запуске программы.",
+      "ru": "Если отмечено, {0} будет автоматически\nначинать майнинг при запуске программы.",
       "zh_cn": "选择此处以在程序开启后自动开始挖矿。"
     },
     "When checked, {0} will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated.": {
@@ -2981,6 +3022,9 @@
       "ru": "Если отмечено, {0} изменит все поддерживаемые NVidia GPU в статус P0. Это немного\nувеличит производительность на некоторых алгоритмах. Требуются права администратора.",
       "zh_cn": "若选择此复选框，{0} Legacy将会把所有受支持的NVIDIA图形处理器调整到P0状态。\n这将略微增强部分算法的执行速率。\n开启此功能需要管理员权限。"
     },
+	"When checked, {0} will mine regardless of profit.": {
+      "ru": "Если отмечено, {0} будет майнить независимо от прибыли."
+    },
     "When checked, {0} will minimize to tray.": {
       "bg": "Когато тази опция е маркирана, {0} ще се минимизира като икона в статус лентата.",
       "es": "Si está marcada, {0} se minimizará a la bandeja (Tray).",
@@ -2991,8 +3035,12 @@
       "ru": "Если отмечено, {0} будет сворачиваться в трей.",
       "zh_cn": "选择此处使{0} Legacy最小化至托盘。"
     },
-    "When checked, {0} will not attempt to set device power mode settings (currently NVIDIA only).": {},
-    "When checked, {0} will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {},
+    "When checked, {0} will not attempt to set device power mode settings (currently NVIDIA only).": {
+      "ru": "Если отмечено, {0} не будет пытаться управлять настройками питания устройства (пока только для NVIDIA)."
+    },
+    "When checked, {0} will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage).": {
+      "ru": "Если отмечено, {0} не будет запрашивать статус устройств CPU, AMD и NVIDIA (температуру, нагрузку, скорость кулера и потребление мощности)."
+    },
     "When checked, {0} will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system.": {
       "bg": "Когато тази опция е активна, {0} ще изпълни OnGPUsLost.bat в случай, че се изгуби връзката с поне един CUDA GPU.\nПо подразбиране скриптът рестартира системата.",
       "it": "Quando spuntato, {0} eseguirà OnGPUsLost.bat nel caso in cui almeno una GPU CUDA viene disconnessa,\nnormalmente lo script dovrebbe riavviare l’intero sistema.",
@@ -3149,7 +3197,7 @@
       "pl": "{0} wyłaczy się. To nowe okno ustawień jest w fazie beta i {0} potrzebuje restartu aby działać.",
       "pt": "{0} will exit now. This new settings dialog is still in beta and {0} needs to restart to take effect.",
       "ro": "{0} se va închide acum. Acest nou dialog de setări este încă în beta și {0} trebuie repornit pentru a avea efect.",
-      "ru": "Работа {0} завершится. Этот новое диалоговое окно ещё тестируется и {0} нужен перезапуск для результата.",
+      "ru": "Работа {0} завершится. Этот новое диалоговое окно ещё тестируется и {0} требует перезапуска для результата.",
       "zh_cn": "{0} 现在将退出。此新版设置对话还处于测试阶段，{0} 需重启方可生效。"
     },
     "{0} {1}": {},
@@ -3173,10 +3221,18 @@
       "ru": "{0}: Файл {1} не найден!\n\nУбедитесь, пожалуйста, что этот файл доступен и что ваш антивирус не блокирует приложение.\nОбратитесь, пожалуйста, к разделу \"My anti-virus is blocking the application\" \nв разделе решения проблем ({2}).\n\nМожет понадобиться повторная загрузка {3}.",
       "zh_cn": "{0}：文件{1}未找到！\n\n请确认文件可访问并确认杀毒软件没有阻挡此程序。\n请参照Troubleshooting章节中的\"My anti-virus is blocking the application\"小节({2})。\n\n您可能需要重新下载{3}。"
     },
-    "Click yes if you wish to run {0} as Administrator.": {},
-    "Show GPU PCIe Bus IDs": {},
-    "When checked, GPUs PCIe bus IDs will be visible in the device name dashboard.": {},
-    "Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {}
+    "Click yes if you wish to run {0} as Administrator.": {
+      "ru": "Нажмите Да, если вы запустили {0} с правами администратора."
+    },
+    "Show GPU PCIe Bus IDs": {
+      "ru": "Показывать PCIe Bus ID для GPU"
+    },
+    "When checked, GPUs PCIe bus IDs will be visible in the device name dashboard.": {
+      "ru": "Если отмечено, PCIe Bus ID для GPU будет отображаться на панели названий устройств."
+    },
+    "Invalid Bitcoin address! {0} will start mining in DEMO mode. In the DEMO mode, you can test run the miner and be able see how much you can earn using your computer. Would you like to continue in DEMO mode?\n\nDISCLAIMER: YOU WILL NOT EARN ANYTHING DURING DEMO MODE!": {
+      "ru": "Неверный адрес Биткоин! {0} начнёт майнинг в режиме ДЕМО. В этом режиме вы можете протестировать майнер и посмотреть сколько вы можете заработать, используя свой компьютер. Продолжить в режиме ДЕМО?\n\nВНИМАНИЕ: ВЫ НИЧЕГО НЕ ЗАРАБОТАЕТЕ В РЕЖИМЕ ДЕМО!"
+    }
   }
 }
 

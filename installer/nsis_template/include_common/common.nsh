@@ -63,35 +63,12 @@ Name "${PRODUCT_NAME}"
 
 # this will delete all but configs, backups, internals and miner_plugins
 !macro deleteUserData_KeepNonGeneralSettings
-  CreateDirectory "$PLUGINSDIR\configs" 
-  CreateDirectory "$PLUGINSDIR\backups" 
-  CreateDirectory "$PLUGINSDIR\internals" 
-  CreateDirectory "$PLUGINSDIR\miner_plugins" 
+  Delete "$INSTDIR\*.*"
 
-  CopyFiles "$INSTDIR\configs\*.*" "$PLUGINSDIR\configs"
-  CopyFiles "$INSTDIR\backups\*.*" "$PLUGINSDIR\backups"
-  CopyFiles "$INSTDIR\internals\*.*" "$PLUGINSDIR\internals"
-  CopyFiles "$INSTDIR\miner_plugins\*.*" "$PLUGINSDIR\miner_plugins"
-
-  RMDir /R $INSTDIR # Remembering, of course, that you should do this with care
-  CreateDirectory $INSTDIR 
-
-  CreateDirectory "$INSTDIR\configs" 
-  CreateDirectory "$INSTDIR\backups" 
-  CreateDirectory "$INSTDIR\internals" 
-  CreateDirectory "$INSTDIR\miner_plugins" 
-
-  CopyFiles "$PLUGINSDIR\configs\*.*" "$INSTDIR\configs"
-  CopyFiles "$PLUGINSDIR\backups\*.*" "$INSTDIR\backups"
-  CopyFiles "$PLUGINSDIR\internals\*.*" "$INSTDIR\internals"
-  CopyFiles "$PLUGINSDIR\miner_plugins\*.*" "$INSTDIR\miner_plugins"
-
-  RMDir /R "$PLUGINSDIR\configs"
-  RMDir /R "$PLUGINSDIR\backups"
-  RMDir /R "$PLUGINSDIR\internals"
-  RMDir /R "$PLUGINSDIR\miner_plugins"
-
-  SetOutPath $INSTDIR
+  RMDir /R "$INSTDIR\NVIDIA"
+  RMDir /R "$INSTDIR\OpenCL"
+  RMDir /R "$INSTDIR\logs"
+  RMDir /R "$INSTDIR\common"
 
   DeleteRegKey HKCU "SOFTWARE\Nicehash"
 !macroend

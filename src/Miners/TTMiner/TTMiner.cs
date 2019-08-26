@@ -19,7 +19,7 @@ namespace TTMiner
     {
         private int _apiPort;
         private string _devices;
-
+        private double DevFee = 1d;
         // TODO figure out how to fix API workaround without this started time
         private DateTime _started;
 
@@ -37,14 +37,6 @@ namespace TTMiner
                     default:
                         return "";
                 }
-            }
-        }
-
-        private double DevFee
-        {
-            get
-            {
-                return 1.0;
             }
         }
 
@@ -73,7 +65,7 @@ namespace TTMiner
                 var hashrate = hashrateFoundPair.Item1;
                 var found = hashrateFoundPair.Item2;
 
-                if (data.Contains("l-shr") && data.Contains("GPU[") && found && hashrate > 0)
+                if (data.Contains("GPU[") && found && hashrate > 0)
                 {
                     benchHashes += hashrate;
                     benchIters++;

@@ -11,7 +11,7 @@ LangString performUpgradeOrCleanInstall ${LANG_ENGLISH} "Perform upgrade or clea
 
 #### clean install/uninstall options 
 LangString cleanInstall ${LANG_ENGLISH} "Detected ${PRODUCT_NAME} settings on the system. Do you want to preserve device settings, benchmarks and mining settings?"
-LangString cleanInstallKeep ${LANG_ENGLISH} "Keep the old settings (this will remove all miner files, BTC address, logs,...)"
+LangString cleanInstallKeep ${LANG_ENGLISH} "Keep the old settings (this will keep backups, configs, internals and miner_plugins)"
 LangString cleanInstallCleanup ${LANG_ENGLISH} "Clean installation (removes all user settings and miner files)"
 
 

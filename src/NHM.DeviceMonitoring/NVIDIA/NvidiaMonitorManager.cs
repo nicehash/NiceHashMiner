@@ -10,46 +10,78 @@ namespace NHM.DeviceMonitoring.NVIDIA
     internal static class NvidiaMonitorManager
     {
         private const string Tag = "NvidiaMonitorManager";
-        private static bool tryAddNvmlToEnvPathCalled = false;
+        private static bool _tryAddNvmlToEnvPathCalled = false;
 
-        public static List<NvapiNvmlInfo> Init(Dictionary<string, int> nvidiaUUIDAndBusIds, bool useNvmlFallback)
+        internal static bool InitalNVMLInitSuccess = false;
+
+        internal static Dictionary<string, int> _nvidiaUUIDAndBusIds;
+
+
+        internal static void Init(Dictionary<string, int> nvidiaUUIDAndBusIds, bool useNvmlFallback)
+        {
+            TryAddNvmlToEnvPath(useNvmlFallback);
+            _nvidiaUUIDAndBusIds = nvidiaUUIDAndBusIds;
+            InitalNVMLInitSuccess = InitNvml();
+            LogNvidiaMonitorManagerState();
+        }
+
+        internal static void LogNvidiaMonitorManagerState()
         {
             // Enumerate NVAPI handles and map to busid
             var idHandles = InitNvapi();
-            if (!useNvmlFallback && !tryAddNvmlToEnvPathCalled)
-            {
-                Logger.Info(Tag, "tryAddNvmlToEnvPath");
-                tryAddNvmlToEnvPath();
-            }
-            else if(!tryAddNvmlToEnvPathCalled)
-            {
-                Logger.Info(Tag, "tryAddNvmlToEnvPathFallback");
-                tryAddNvmlToEnvPathFallback();
-            }
-            var nvmlInit = InitNvml();
-            var ret = new List<NvapiNvmlInfo>();
-            foreach (var pair in nvidiaUUIDAndBusIds)
+            foreach (var pair in _nvidiaUUIDAndBusIds)
             {
                 var uuid = pair.Key;
                 var busID = pair.Value;
 
-                var nvmlHandle = new nvmlDevice();
-                if (nvmlInit)
+                
+                var nvmlResultStr = "InitalNVMLInitSuccess==FALSE";
+                if (InitalNVMLInitSuccess)
                 {
+                    var nvmlHandle = new nvmlDevice();
                     var nvmlRet = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(uuid, ref nvmlHandle);
-                    Logger.Info(Tag, "NVML HANDLE:" + $"{(nvmlRet == nvmlReturn.Success ? nvmlHandle.Pointer.ToString() : $"Failed with code ret {ret}")}");
+                    if (nvmlRet != nvmlReturn.Success)
+                    {
+                        nvmlResultStr = $"Failed with code ret {nvmlRet}";
+                    }
+                    else
+                    {
+                        nvmlResultStr = nvmlHandle.Pointer.ToString();
+                    }
                 }
-                idHandles.TryGetValue(busID, out var handle);
-                var info = new NvapiNvmlInfo
+                var nvapiResultStr = "NVAPI found no handle";
+                var nvHandle = new NvPhysicalGpuHandle();
+                if (idHandles.TryGetValue(busID, out nvHandle))
                 {
-                    UUID = uuid,
-                    BusID = busID,
-                    nvHandle = handle,
-                    nvmlHandle = nvmlHandle
-                };
-                ret.Add(info);
+                    nvapiResultStr = nvHandle.ptr.ToString();
+                }
+                Logger.Info($"{Tag}.Init", $"UUID({uuid})-BusID({busID}): NVML_HANDLE({nvmlResultStr}) NVAPI_HANDLE({nvapiResultStr})");
             }
-            return ret;
+        }
+
+        private static void TryAddNvmlToEnvPath(bool useNvmlFallback)
+        {
+            if (_tryAddNvmlToEnvPathCalled) return;
+            _tryAddNvmlToEnvPathCalled = true; // call this ONLY ONCE AND NEVER AGAIN
+
+            // default path
+            var nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
+                               "\\NVIDIA Corporation\\NVSMI";
+            var nvmlRootPathTag = "DEFAULT";
+            if (useNvmlFallback)
+            {
+                nvmlRootPath = Paths.RootPath("NVIDIA");
+                nvmlRootPathTag = "FALLBACK";
+            }
+
+            Logger.Info(Tag, $"Adding NVML to PATH. {nvmlRootPathTag} path='{nvmlRootPath}'");
+            if (Directory.Exists(nvmlRootPath))
+            {
+                // Add to env so it can find nvml.dll
+                var pathVar = Environment.GetEnvironmentVariable("PATH");
+                pathVar += ";" + nvmlRootPath;
+                Environment.SetEnvironmentVariable("PATH", pathVar);
+            }
         }
 
         private static Dictionary<int, NvPhysicalGpuHandle> InitNvapi()
@@ -97,7 +129,7 @@ namespace NHM.DeviceMonitoring.NVIDIA
             return idHandles;
         }
 
-        private static bool InitNvml()
+        internal static bool InitNvml()
         {
             try
             {
@@ -108,12 +140,12 @@ namespace NHM.DeviceMonitoring.NVIDIA
             }
             catch (Exception e)
             {
-                Logger.Error("NVML", e.Message);
+                Logger.Error(Tag, e.Message);
                 return false;
             }
         }
 
-        public static bool ShutdownNvml()
+        internal static bool ShutdownNvml()
         {
             try
             {
@@ -124,38 +156,36 @@ namespace NHM.DeviceMonitoring.NVIDIA
             }
             catch (Exception e)
             {
-                Logger.Error("NVML", e.Message);
+                Logger.Error(Tag, e.Message);
                 return false;
             }
         }
 
-        private static void tryAddNvmlToEnvPath()
+        #region NVML RESTART 
+        private static object _restartLock = new object();
+        internal static bool IsNVMLRestarting
         {
-            if (tryAddNvmlToEnvPathCalled) return;
-            tryAddNvmlToEnvPathCalled = true; // call this ONLY ONCE AND NEVER AGAIN
-            var nvmlRootPath = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles) +
-                               "\\NVIDIA Corporation\\NVSMI";
-            if (Directory.Exists(nvmlRootPath))
+            get
             {
-                // Add to env so it can find nvml.dll
-                var pathVar = Environment.GetEnvironmentVariable("PATH");
-                pathVar += ";" + nvmlRootPath;
-                Environment.SetEnvironmentVariable("PATH", pathVar);
+                using (var tryLock = new TryLock(_restartLock))
+                {
+                    return !tryLock.HasAcquiredLock;
+                }
             }
         }
 
-        private static void tryAddNvmlToEnvPathFallback()
+        internal static void AttemptRestartNVML()
         {
-            if (tryAddNvmlToEnvPathCalled) return;
-            tryAddNvmlToEnvPathCalled = true; // call this ONLY ONCE AND NEVER AGAIN
-            var nvmlRootPath = Paths.RootPath("NVIDIA");
-            if (Directory.Exists(nvmlRootPath))
+            using (var tryLock = new TryLock(_restartLock))
             {
-                // Add to env so it can find nvml.dll
-                var pathVar = Environment.GetEnvironmentVariable("PATH");
-                pathVar += ";" + nvmlRootPath;
-                Environment.SetEnvironmentVariable("PATH", pathVar);
+                if (!tryLock.HasAcquiredLock) return;
+                Logger.Info(Tag, $"Attempting to restart NVML");
+                // restart
+                var shutdownRet = ShutdownNvml();
+                var initRet = InitNvml();
+                LogNvidiaMonitorManagerState();
             }
         }
+        #endregion NVML RESTART
     }
 }
