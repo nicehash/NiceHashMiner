@@ -20,19 +20,19 @@ namespace GMinerPlugin
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
-            // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases current v1.55
+            // https://bitcointalk.org/index.php?topic=5034735.0 | https://github.com/develsoftware/GMinerRelease/releases current v1.59
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.55/gminer_1_55_windows64.zip", // original
+                    "https://github.com/develsoftware/GMinerRelease/releases/download/1.59/gminer_1_59_windows64.zip", // original
                 }
             };
         }
 
         public override string PluginUUID => "1b7019d0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 5);
+        public override Version Version => new Version(2, 6);
 
         public override string Name => "GMinerCuda9.0+";
 
@@ -103,7 +103,6 @@ namespace GMinerPlugin
             {
                 new Algorithm(PluginUUID, AlgorithmType.ZHash),
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
-                new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares,
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
@@ -118,7 +117,6 @@ namespace GMinerPlugin
             var algorithms = new List<Algorithm>
             {
                 new Algorithm(PluginUUID, AlgorithmType.Beam),
-                new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle) {Enabled = false }, //~5% of invalid nonce shares
                 new Algorithm(PluginUUID, AlgorithmType.BeamV2),
             };
@@ -172,6 +170,11 @@ namespace GMinerPlugin
             try
             {
                 if (ids.Count() == 0) return false;
+                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 6)
+                {
+                    // improved performance for BEAM2 for nvidia cards
+                    if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.BeamV2) return true;
+                }
                 if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 3) {
                     // improved performance for Equihash 144,5 and Equihash 192,7 on RTX cards
                     if (device.Name.Contains("RTX") && ids.FirstOrDefault() == AlgorithmType.ZHash) return true;

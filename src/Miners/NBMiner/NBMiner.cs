@@ -27,12 +27,8 @@ namespace NBMiner
             {
                 switch (_algorithmType)
                 {
-                    case AlgorithmType.GrinCuckaroo29:
-                        return "cuckaroo";
                     case AlgorithmType.GrinCuckatoo31:
                         return "cuckatoo";
-                    case AlgorithmType.DaggerHashimoto:
-                        return "ethash";
                     case AlgorithmType.CuckooCycle:
                         return "cuckoo_ae";
                     case AlgorithmType.GrinCuckarood29:
@@ -42,14 +38,12 @@ namespace NBMiner
                 }
             }
         }
-
         private double DevFee
         {
             get
             {
                 switch (_algorithmType)
                 {
-                    case AlgorithmType.GrinCuckaroo29:
                     case AlgorithmType.GrinCuckatoo31:
                     case AlgorithmType.CuckooCycle:
                     case AlgorithmType.GrinCuckarood29:
