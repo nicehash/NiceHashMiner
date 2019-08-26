@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW // NEW PRODUCTION
-[assembly: AssemblyTitle("NiceHashMiner")]
-[assembly: AssemblyDescription("NiceHashMiner is simple to use mining tool")]
-[assembly: AssemblyProduct("NiceHashMiner")]
+[assembly: AssemblyTitle("NiceHash Miner")]
+[assembly: AssemblyDescription("NiceHash Miner is simple to use mining tool")]
+[assembly: AssemblyProduct("NiceHash Miner")]
 #else  // OLD PRODUCTION
 [assembly: AssemblyTitle("NiceHashMinerLegacy")]
 [assembly: AssemblyDescription("NiceHashMinerLegacy is simple to use mining tool")]
@@ -42,9 +42,9 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW // NEW PRODUCTION
-[assembly: AssemblyVersion("1.9.2.12")]
-[assembly: AssemblyFileVersion("1.9.2.12")]
+[assembly: AssemblyVersion("1.9.2.13")]
+[assembly: AssemblyFileVersion("1.9.2.13")]
 #else  // OLD PRODUCTION 
-[assembly: AssemblyVersion("1.9.1.12")]
-[assembly: AssemblyFileVersion("1.9.1.12")]
+[assembly: AssemblyVersion("1.9.1.13")]
+[assembly: AssemblyFileVersion("1.9.1.13")]
 #endif
