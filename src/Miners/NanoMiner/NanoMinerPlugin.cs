@@ -97,7 +97,6 @@ namespace NanoMiner
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedIDs.Count == 0) return;
-            // TODO will break
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
