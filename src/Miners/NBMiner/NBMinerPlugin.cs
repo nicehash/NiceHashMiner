@@ -20,19 +20,19 @@ namespace NBMiner
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
-            // https://github.com/NebuTech/NBMiner/releases/ current 24.2
+            // https://github.com/NebuTech/NBMiner/releases/ current 24.4
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v24.2/NBMiner_24.2_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v24.4/NBMiner_24.4_Win.zip", // original
                 }
             };
         }
 
         public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(2, 3);
         public override string Name => "NBMiner";
 
         public override string Author => "Dillon Newell";
@@ -86,7 +86,6 @@ namespace NBMiner
         {
             var algorithms = new List<Algorithm>
             {
-                new Algorithm(PluginUUID, AlgorithmType.GrinCuckaroo29),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                 new Algorithm(PluginUUID, AlgorithmType.CuckooCycle),
                 new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
@@ -102,6 +101,8 @@ namespace NBMiner
 
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
+#warning Blocks exit
+            return;
             if (_mappedIDs.Count == 0) return;
             // TODO will break
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
@@ -136,7 +137,7 @@ namespace NBMiner
                     // v24.2 https://github.com/NebuTech/NBMiner/releases/tag/v24.2
                     // Slightliy improve RTX2060 Grin29 performance under win10
                     var isRTX2060 = device.Name.Contains("RTX") && device.Name.Contains("2060");
-                    var isGrin29 = ids.FirstOrDefault() == AlgorithmType.GrinCuckaroo29 || ids.FirstOrDefault() == AlgorithmType.GrinCuckarood29;
+                    var isGrin29 = ids.FirstOrDefault() == AlgorithmType.GrinCuckarood29;
                     return isRTX2060 && isGrin29;
                 }
             }

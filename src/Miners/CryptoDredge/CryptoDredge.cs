@@ -12,6 +12,9 @@ using NHM.Common;
 using System.Collections.Generic;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.CCMinerCommon;
+using System.Net.Sockets;
+using System.Text;
+using NHM.Common.Device;
 
 namespace CryptoDredge
 {
@@ -40,43 +43,124 @@ namespace CryptoDredge
             {
                 switch (_algorithmType)
                 {
-                    case AlgorithmType.Lyra2REv3:
-                    case AlgorithmType.X16R: return 1.0;
                     case AlgorithmType.MTP: return 2.0;
                     default: return 1.0;
                 }
             }
         }
 
-#warning get API data doens't work
-        public async override Task<ApiData> GetMinerStatsDataAsync()
+        private struct IdPowerHash
         {
-            var ret = await CCMinerAPIHelpers.GetMinerStatsDataAsync(_apiPort, _algorithmType, _miningPairs, _logGroup, DevFee);
-            return ret;
+            public int id;
+            public int power;
+            public double speed;
         }
 
-        private struct HashFound
+        public async override Task<ApiData> GetMinerStatsDataAsync()
         {
-            public double hashrate;
-            public bool found;
+            var api = new ApiData();
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var perDevicePowerInfo = new Dictionary<string, int>();
+            var totalSpeed = 0d;
+            var totalPowerUsage = 0;
+
+            try
+            {
+                var result = await ApiDataHelpers.GetApiDataAsync(_apiPort, "summary", _logGroup);
+                if (result == "") return api;
+
+                //total speed
+                if (!string.IsNullOrEmpty(result))
+                {
+                    try
+                    {
+                        var summaryOptvals = result.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                        foreach (var optvalPairs in summaryOptvals)
+                        {
+                            var pair = optvalPairs.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                            if (pair.Length != 2) continue;
+                            if (pair[0] == "KHS")
+                            {
+                                totalSpeed = double.Parse(pair[1], CultureInfo.InvariantCulture) * 1000; // HPS
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
+                    }
+                }
+
+                var threadsApiResult = await ApiDataHelpers.GetApiDataAsync(_apiPort, "threads", _logGroup);
+                if (!string.IsNullOrEmpty(threadsApiResult))
+                {
+                    try
+                    {
+                        var gpus = threadsApiResult.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                        var apiDevices = new List<IdPowerHash>();
+
+                        foreach (var gpu in gpus)
+                        {
+                            var gpuOptvalPairs = gpu.Split(new char[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                            var gpuData = new IdPowerHash();
+                            foreach (var optvalPairs in gpuOptvalPairs)
+                            {
+                                var optval = optvalPairs.Split(new char[] { '=' }, StringSplitOptions.RemoveEmptyEntries);
+                                if (optval.Length != 2) continue;
+                                if (optval[0] == "GPU")
+                                {
+                                    gpuData.id = int.Parse(optval[1], CultureInfo.InvariantCulture);
+                                }
+                                if (optval[0] == "POWER")
+                                {
+                                    gpuData.power = int.Parse(optval[1], CultureInfo.InvariantCulture);
+                                }
+                                if (optval[0] == "KHS")
+                                {
+                                    gpuData.speed = double.Parse(optval[1], CultureInfo.InvariantCulture) * 1000; // HPS
+                                }
+                            }
+                            apiDevices.Add(gpuData);
+                        }
+
+                        foreach (var miningPair in _miningPairs)
+                        {
+                            var deviceUUID = miningPair.Device.UUID;
+                            var deviceID = miningPair.Device.ID;
+
+                            var apiDevice = apiDevices.Find(apiDev => apiDev.id == deviceID);
+                            if (apiDevice.Equals(default(IdPowerHash))) continue;
+                            perDeviceSpeedInfo.Add(deviceUUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, apiDevice.speed * (1 - DevFee * 0.01)) });
+                            perDevicePowerInfo.Add(deviceUUID, apiDevice.power);
+                            totalPowerUsage += apiDevice.power;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
+            }
+
+            api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+            api.PowerUsageTotal = totalPowerUsage;
+            api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+            api.PowerUsagePerDevice = perDevicePowerInfo;
+
+            return api;
         }
 
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
-            var numOfGpus = 2; //MUST BE SET CORRECTLY OTHERWISE BENCHMARKING WON't WORK (all cards are combined currently)
-            var avgRet = 0.0;
-            var counter = 0;
-            var maxCheck = 0;
-            var after = "Avr";
-
             // determine benchmark time 
             // settup times
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 20, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
-            var algo = AlgorithmName(_algorithmType);
-
-            var commandLine = $"--algo {algo} --url {url} --user {MinerToolkit.DemoUserBTC} --api-bind 0 --no-watchdog --device {_devices} {_extraLaunchParameters}";
+            var commandLine = MiningCreateCommandLine();
 
             var binPathBinCwdPair = GetBinAndCwdPaths();
             var binPath = binPathBinCwdPair.Item1;
@@ -84,51 +168,32 @@ namespace CryptoDredge
             Logger.Info(_logGroup, $"Benchmarking started with command: {commandLine}");
             var bp = new BenchmarkProcess(binPath, binCwd, commandLine, GetEnvironmentVariables());
 
+            double benchHashesSum = 0;
+            double benchHashResult = 0;
+            int benchIters = 0;
             bp.CheckData = (string data) =>
             {
-                var s = data;
-                var ret = new HashFound();
-                ret.hashrate = default(double);
-                ret.found = false;
+                if (!data.Contains("Accepted")) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
 
-                if (s.Contains(after))
+                var hashrateFoundPair = BenchmarkHelpers.TryGetHashrate(data);
+                var hashrate = hashrateFoundPair.Item1;
+                var found = hashrateFoundPair.Item2;
+                if (!found) return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) }, Success = false };
+
+                // sum and return
+                benchHashesSum += hashrate;
+                benchIters++;
+
+                benchHashResult = (benchHashesSum / benchIters) * (1 - DevFee * 0.01);
+
+                return new BenchmarkResult
                 {
-                    var afterString = s.GetStringAfter(after).ToLower();
-                    var afterStringArray = afterString.Split(' ');
-                    var hashRate = afterStringArray[1];
-                    var numString = new string(hashRate
-                        .ToCharArray()
-                        .SkipWhile(c => !char.IsDigit(c))
-                        .TakeWhile(c => char.IsDigit(c) || c == ',')
-                        .ToArray());
-
-                    numString.Replace(',', '.');
-                    if (!double.TryParse(numString, NumberStyles.Float, CultureInfo.InvariantCulture, out var hash))
-                    {
-                        return new BenchmarkResult {AlgorithmTypeSpeeds= new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, ret.hashrate) }, Success = ret.found};
-                    }
-
-                    counter++;
-                    if (hashRate.Contains("kh"))
-                        avgRet += hash * 1000;
-                    else if (hashRate.Contains("mh"))
-                        avgRet += hash * 1000000;
-                    else if (hashRate.Contains("gh"))
-                        avgRet += hash * 1000000000;
-                    else
-                        avgRet += hash;
-
-                    maxCheck--;
-                    if (maxCheck == 0)
-                    {
-                        ret.hashrate = avgRet / counter;
-                        ret.found = true;
-                    }
-                }
-                return new BenchmarkResult { AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, ret.hashrate) }, Success = ret.found };
+                    AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
+                    Success = false //TODO not sure what to set here
+                };
             };
 
-            var benchmarkTimeout = TimeSpan.FromSeconds(300);
+            var benchmarkTimeout = TimeSpan.FromSeconds(benchmarkTime + 5);
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
@@ -137,7 +202,7 @@ namespace CryptoDredge
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "CryptoDredge_0.20.2");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "CryptoDredge_0.21.0");
             var binPath = Path.Combine(pluginRootBins, "CryptoDredge.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);

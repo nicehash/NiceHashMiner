@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MinerPluginToolkitV1.Configs;
+using NHM.Common.Device;
 
 namespace MiniZ
 {
@@ -22,8 +23,12 @@ namespace MiniZ
         private string _devices;
         private bool firstStart = true;
 
-        public MiniZ(string uuid) : base(uuid){}
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
+        public MiniZ(string uuid, Dictionary<string, int> mappedDeviceIds) : base(uuid)
+        {
+            _mappedDeviceIds = mappedDeviceIds;
+        }
         protected virtual string AlgorithmName(AlgorithmType algorithmType)
         {
             switch (algorithmType)
@@ -59,6 +64,11 @@ namespace MiniZ
                 return api;
             }
 
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var perDevicePowerInfo = new Dictionary<string, int>();
+            var totalSpeed = 0d;
+            var totalPowerUsage = 0;
+
             try
             {
                 JsonApiResponse resp = null;
@@ -80,31 +90,27 @@ namespace MiniZ
 
                 var results = resp.result;
 
-                var gpus = _miningPairs.Select(pair => pair.Device);
-                var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
-                var perDevicePowerInfo = new Dictionary<string, int>();
-                var totalSpeed = 0d;
-                var totalPowerUsage = 0;
+                var gpus = _miningPairs.Select(pair => pair.Device).Cast<CUDADevice>();
+
                 foreach (var gpu in gpus)
                 {
-                    var currentDevStats = results.Where(r => r.cudaid == gpu.ID).FirstOrDefault();
+                    var currentDevStats = results.Where(r => int.Parse(r.busid.Split(':')[1], System.Globalization.NumberStyles.HexNumber) == gpu.PCIeBusID).FirstOrDefault();
                     if (currentDevStats == null) continue;
                     totalSpeed += currentDevStats.speed_sps;
                     perDeviceSpeedInfo.Add(gpu.UUID, new List<AlgorithmTypeSpeedPair>() { new AlgorithmTypeSpeedPair(_algorithmType, currentDevStats.speed_sps * (1 - DevFee * 0.01)) });
                     totalPowerUsage += (int)currentDevStats.gpu_power_usage;
                     perDevicePowerInfo.Add(gpu.UUID, (int)currentDevStats.gpu_power_usage);
-
                 }
-                api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
-                api.PowerUsageTotal = totalPowerUsage;
-                api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-                api.PowerUsagePerDevice = perDevicePowerInfo;
             }
             catch (Exception e)
             {
                 Logger.Error(_logGroup, $"Error occured while getting API stats: {e.Message}");
             }
 
+            api.AlgorithmSpeedsTotal = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, totalSpeed * (1 - DevFee * 0.01)) };
+            api.PowerUsageTotal = totalPowerUsage;
+            api.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+            api.PowerUsagePerDevice = perDevicePowerInfo;
             return api;
         }
 
@@ -114,9 +120,8 @@ namespace MiniZ
             // settup times
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 30, 60, 120 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
 
-            var deviceIDs = string.Join("", _miningPairs.Select(pair => $"{pair.Device.DeviceType.ToString()}{pair.Device.ID}"));
             var algoName = AlgorithmName(_algorithmType);
-            var logfileName = $"{deviceIDs}_{algoName}_bench.txt";
+            var logfileName = $"{_devices}_{algoName}_bench.txt";
 
             var commandLine = CreateCommandLine(DemoUser.BTC) + $" --nocolor --logfile {logfileName}";
             var binPathBinCwdPair = GetBinAndCwdPaths();
@@ -177,9 +182,18 @@ namespace MiniZ
             return t;
         }
 
+        protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // sort by _mappedDeviceIds
+            pairsList.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
+            return pairsList;
+        }
+
         protected override void Init()
         {
-            _devices = string.Join(",", _miningPairs.Select(p => p.Device.ID));
+            var mappedDevIDs = _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]);
+            _devices = string.Join(",", mappedDevIDs);
         }
 
         protected override string MiningCreateCommandLine()

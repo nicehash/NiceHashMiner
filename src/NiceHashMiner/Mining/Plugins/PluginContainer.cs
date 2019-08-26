@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace NiceHashMiner.Mining.Plugins
 {
@@ -137,6 +138,7 @@ namespace NiceHashMiner.Mining.Plugins
         public bool IsBroken { get; private set; } = false;
         public bool IsCompatible { get; private set; } = false;
         public bool IsInitialized { get; private set; } = false;
+        public bool IsVersionMismatch { get; private set; } = false;
         // algos from and for the plugin
         public Dictionary<BaseDevice, IReadOnlyList<Algorithm>> _cachedAlgorithms { get; } = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
         // algos for NiceHashMiner Client
@@ -201,6 +203,9 @@ namespace NiceHashMiner.Mining.Plugins
                         .ToList();
                     _cachedNiceHashMinerAlgorithms[deviceUUID] = algos;
                 }
+
+                //check for version mismatch
+                CheckVersionMismatch();
             }
             catch (Exception e)
             {
@@ -208,7 +213,40 @@ namespace NiceHashMiner.Mining.Plugins
                 Logger.Error(LogTag, $"InitPluginContainer error: {e.Message}");
                 return false;
             }
+
+
             return true;
+        }
+
+        private void CheckVersionMismatch()
+        {
+            try
+            {
+                var versionFilePath = Paths.MinerPluginsPath(PluginUUID, "version.txt");
+                if (File.Exists(versionFilePath))
+                {
+                    var versionString = File.ReadAllText(versionFilePath);
+                    Version.TryParse(versionString, out var fileVersion);
+                    if (Version != fileVersion)
+                    {
+                        IsVersionMismatch = true;
+
+                        File.Delete(versionFilePath);
+                    }
+                }
+                else
+                {
+                    if (!Directory.Exists(Paths.MinerPluginsPath(PluginUUID)))
+                    {
+                        Directory.CreateDirectory(Paths.MinerPluginsPath(PluginUUID));
+                    }
+                    File.WriteAllText(versionFilePath, Version.ToString());
+                }
+            }
+            catch(Exception e)
+            {
+                Logger.Error(LogTag, $"Version mismatch check error: {e.Message}");
+            }
         }
 
         private bool _initInternalsCalled = false;

@@ -18,17 +18,17 @@ namespace LolMinerBeam
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
-            // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 current 0.8.6
+            // https://github.com/Lolliedieb/lolMiner-releases/releases | https://bitcointalk.org/index.php?topic=4724735.0 current 0.8.8
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/0.8.6/lolMiner_v086_Win64.zip", // original source
+                    "https://github.com/Lolliedieb/lolMiner-releases/releases/download/0.8.8/lolMiner_v088_Win64.zip", // original source
                 }
             };
         }
 
-        public override Version Version => new Version(2, 3);
+        public override Version Version => new Version(2, 4);
 
         public override string Name => "LolMinerBeam";
 
@@ -85,7 +85,6 @@ namespace LolMinerBeam
             {
                 algorithms = new List<Algorithm>
                 {
-                    new Algorithm(PluginUUID, AlgorithmType.Beam),
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31),
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29),
                     new Algorithm(PluginUUID, AlgorithmType.BeamV2),
@@ -96,7 +95,6 @@ namespace LolMinerBeam
                 // NVIDIA OpenCL backend stability is questionable
                 algorithms = new List<Algorithm>
                 {
-                    new Algorithm(PluginUUID, AlgorithmType.Beam) { Enabled = false },
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckatoo31) { Enabled = false },
                     new Algorithm(PluginUUID, AlgorithmType.GrinCuckarood29) { Enabled = false },
                     new Algorithm(PluginUUID, AlgorithmType.BeamV2) { Enabled = false },
@@ -139,7 +137,11 @@ namespace LolMinerBeam
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            //no new version available
+            if (ids.Count() == 0) return false;
+            if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 4)
+            {
+                if (device.DeviceType == DeviceType.NVIDIA && ids.FirstOrDefault() == AlgorithmType.BeamV2) return true;
+            }
             return false;
         }
     }

@@ -61,7 +61,7 @@ namespace NanoMiner
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "nanominer-windows-1.5.2");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "nanominer-windows-1.5.3");
             var binPath = Path.Combine(pluginRootBins, "nanominer.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
@@ -175,14 +175,6 @@ namespace NanoMiner
             return CreateCommandLine(_username);
         }
 
-        // TODO this is only temp until miner or backend gets fixed
-        private static string StripUsername(string username)
-        {
-            var btc = username.Split('$').FirstOrDefault();
-                if (btc != null) return btc;
-            return username;
-        }
-
         private string CreateCommandLine(string username)
         {
             _apiPort = GetAvaliablePort();
@@ -204,7 +196,7 @@ namespace NanoMiner
 
             var devs = string.Join(",", _miningPairs.Select(p => _mappedIDs[p.Device.UUID]));
 
-            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={StripUsername(username)}\r\ndevices={devs}\r\npool1={url}";
+            configString += $"webPort={_apiPort}\r\nwatchdog=false\n\r\n\r[{algo}]\r\nwallet={username}\r\nrigName=\r\ndevices={devs}\r\npool1={url}";
             try
             {
                 File.WriteAllText(Path.Combine(paths.Item2, $"config_nh_{devs}.ini"), configString);

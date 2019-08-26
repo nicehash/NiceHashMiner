@@ -16,17 +16,17 @@ namespace CryptoDredge
         public CryptoDredgePlugin()
         {
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://github.com/technobyl/CryptoDredge/releases | https://cryptodredge.org/ | https://bitcointalk.org/index.php?topic=4807821.0 current 0.20.2_cuda_10.1
+            // https://github.com/technobyl/CryptoDredge/releases | https://cryptodredge.org/ | https://bitcointalk.org/index.php?topic=4807821.0 current 0.21.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/technobyl/CryptoDredge/releases/download/v0.20.2/CryptoDredge_0.20.2_cuda_10.1_windows.zip", // original source
+                    "https://github.com/technobyl/CryptoDredge/releases/download/v0.21.0/CryptoDredge_0.21.0_cuda_10.1_windows.zip", // original source
                 }
             };
         }
 
-        public override Version Version => new Version(2, 1);
+        public override Version Version => new Version(2, 2);
         public override string Name => "CryptoDredge";
 
         public override string Author => "domen.kirnkrefl@nicehash.com";

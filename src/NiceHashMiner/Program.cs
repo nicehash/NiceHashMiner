@@ -12,6 +12,7 @@ using log4net.Core;
 using NHM.Common;
 using NHM.Common.Enums;
 using System.Net;
+using static NiceHashMiner.Translations;
 
 namespace NiceHashMiner
 {
@@ -54,6 +55,27 @@ namespace NiceHashMiner
             // #1 first initialize config
             ConfigManager.InitializeConfig();
 
+            // PRODUCTION NEW
+#if (TESTNET || TESTNETDEV || PRODUCTION_NEW)
+            // on new production we allow only one instance
+            try
+            {
+                var current = Process.GetCurrentProcess();
+                foreach (var process in Process.GetProcessesByName(current.ProcessName))
+                {
+                    if (process.Id != current.Id)
+                    {
+                        // already running instance, return from Main
+                        MessageBox.Show(Tr("{0} can run only one instance at a time.", NHMProductInfo.Name),
+                        Tr("{0} Already Running", NHMProductInfo.Name),
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
+            }
+            catch { }
+#else
+            // PRODUCTION OLD
             // #2 check if multiple instances are allowed
             if (ConfigManager.GeneralConfig.AllowMultipleInstances == false)
             {
@@ -71,6 +93,7 @@ namespace NiceHashMiner
                 }
                 catch { }
             }
+#endif
 
 
             // TODO set logging level

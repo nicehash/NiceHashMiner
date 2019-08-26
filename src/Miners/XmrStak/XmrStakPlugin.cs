@@ -23,19 +23,19 @@ namespace XmrStak
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
-            // https://github.com/nicehash/xmr-stak/releases (fork of https://github.com/fireice-uk/xmr-stak/releases) current nhm-2.10.6
+            // https://github.com/nicehash/xmr-stak/releases (fork of https://github.com/fireice-uk/xmr-stak/releases) current nhm-2.10.7
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.6/xmr-stak_2.10.6_718de8d.7z", // nh fork of original
+                    "https://github.com/nicehash/xmr-stak/releases/download/nhm-2.10.7/xmr-stak_2.10.7_73102cc.7z", // nh fork of original
                 }
             };
         }
 
         public override string PluginUUID => "3d4e56b0-7238-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 1);
+        public override Version Version => new Version(2, 2);
         public override string Name => "XmrStak";
 
         public override string Author => "stanko@nicehash.com";

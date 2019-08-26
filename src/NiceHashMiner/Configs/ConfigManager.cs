@@ -53,6 +53,25 @@ namespace NiceHashMiner.Configs
             }
         }
 
+        private static bool RestoreBackupArchive(Version backupVersion)
+        {
+            try
+            {
+                var backupZipPath = Paths.RootPath("backups", $"configs_{backupVersion.ToString()}.zip");
+                if (File.Exists(backupZipPath))
+                {
+                    Directory.Delete(Paths.ConfigsPath(), true);
+                    ZipFile.ExtractToDirectory(backupZipPath, Paths.ConfigsPath());
+                    return true;
+                }          
+            }
+            catch (Exception e)
+            {
+                Logger.Error(Tag, $"Error while creating backup archive: {e.Message}");
+            }
+            return false;
+        }
+
         private static void TryMigrate()
         {
             try
@@ -76,17 +95,23 @@ namespace NiceHashMiner.Configs
             // init defaults
             GeneralConfig.SetDefaults();
             GeneralConfig.hwid = ApplicationStateManager.RigID;
+
+            var asmVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
             // load file if it exist
             var fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);
             if (fromFile != null)
             {
-                var asmVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
                 if (fromFile.ConfigFileVersion != null && asmVersion.CompareTo(fromFile.ConfigFileVersion) != 0)
                 {
                     Logger.Info(Tag, "Config file is differs from version of NiceHashMiner... Creating backup archive");
                     CreateBackupArchive(fromFile.ConfigFileVersion);
+                    if (RestoreBackupArchive(asmVersion))//check if we have backup version
+                    {
+                        fromFile = InternalConfigs.ReadFileSettings<GeneralConfig>(GeneralConfigPath);
+                    }
                 }
-                if (fromFile.ConfigFileVersion != null)
+                if (fromFile?.ConfigFileVersion != null)
                 {
                     // set config loaded from file
                     _isGeneralConfigFileInit = true;
@@ -100,7 +125,10 @@ namespace NiceHashMiner.Configs
             }
             else
             {
-                GeneralConfigFileCommit();
+                if (!RestoreBackupArchive(asmVersion)) // if there is no backup we create a new config
+                {
+                    GeneralConfigFileCommit();
+                }
             }
         }
 

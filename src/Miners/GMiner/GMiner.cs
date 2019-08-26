@@ -43,8 +43,6 @@ namespace GMinerPlugin
                     return "144_5";
                 case AlgorithmType.Beam:
                     return "beamhashI";
-                case AlgorithmType.GrinCuckaroo29:
-                    return "cuckaroo29";
                 case AlgorithmType.GrinCuckatoo31:
                     return "grin31";
                 case AlgorithmType.CuckooCycle:

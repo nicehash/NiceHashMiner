@@ -1,6 +1,7 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 using MinerPluginToolkitV1.Interfaces;
+using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -18,18 +19,18 @@ namespace ZEnemy
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
-            // https://bitcointalk.org/index.php?topic=3378390.0 current 2-00-cuda10.0 // TODO update
+            // https://bitcointalk.org/index.php?topic=3378390.0 current 2-1-cuda10.1 // TODO update
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.10/z-enemy.2-00-cuda10.0.zip",
-                    "https://mega.nz/#!8HZQHQwS!EPOBklGAYsHV6zOHMe3t_F8SkLE8kX7iZV4OcTwxxL4" // original source
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/z-enemy.zip",
+                    "https://mega.nz/#!dCxxWYDB!p_hB7TWebB1ysOMkf5mv0OU1Awb9iEJ7vjPk6Niu-aY" // original source
                 }
             };
         }
 
-        public override Version Version => new Version(2, 1);
+        public override Version Version => new Version(2, 2);
 
         public override string Name => "ZEnemy";
 
@@ -78,7 +79,19 @@ namespace ZEnemy
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            //no new version available
+            try
+            {
+                if (ids.Count() == 0) return false;
+                if (benchmarkedPluginVersion.Major == 2 && benchmarkedPluginVersion.Minor < 2)
+                {
+                    // v2.1 https://bitcointalk.org/index.php?topic=3378390.0
+                    if (ids.FirstOrDefault() == AlgorithmType.X16R) return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(PluginUUID, $"ShouldReBenchmarkAlgorithmOnDevice {e.Message}");
+            }
             return false;
         }
     }
