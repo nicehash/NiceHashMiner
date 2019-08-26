@@ -4,7 +4,7 @@ using NHM.Common;
 using NHM.Common.Enums;
 using NVIDIA.NVAPI;
 using System;
-using System.Diagnostics;
+using System.Linq;
 
 namespace NHM.DeviceMonitoring
 {
@@ -26,50 +26,28 @@ namespace NHM.DeviceMonitoring
         }
 
         public static object _lock = new object();
-
-        private static readonly TimeSpan _delayedLogging = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan _delayedLogging = TimeSpan.FromSeconds(30);
 
         public int BusID { get; private set; }
-        private NvPhysicalGpuHandle _nvHandle; // For NVAPI
-        private nvmlDevice _nvmlDevice; // For NVML
-        private const int GpuCorePState = 0; // memcontroller = 1, videng = 2
-        private uint _minPowerLimit;
-        private uint _defaultPowerLimit;
-        private uint _maxPowerLimit;
 
-        public bool PowerLimitsEnabled { get; private set; }
+        private readonly DeviceMonitorWatchdog _deviceMonitorWatchdog;
 
-        internal DeviceMonitorNVIDIA(NvapiNvmlInfo info)
+        private string LogTag => $"DeviceMonitorNVIDIA-uuid({UUID})-busid({BusID})";
+
+        internal DeviceMonitorNVIDIA(string uuid, int busID, TimeSpan firstMaxTimeoutAfterNvmlRestart)
         {
-            UUID = info.UUID;
-            BusID = info.BusID;
-            _nvHandle = info.nvHandle;
-            _nvmlDevice = info.nvmlHandle;
+            UUID = uuid;
+            BusID = busID;
+            _deviceMonitorWatchdog = new DeviceMonitorWatchdog(firstMaxTimeoutAfterNvmlRestart);
+            // recovery backoff attempts
+            for (int i = 0; i < 20; i++) _deviceMonitorWatchdog.AppendTimeoutTimeSpan(firstMaxTimeoutAfterNvmlRestart);
+            for (int i = 0; i < 20; i++) _deviceMonitorWatchdog.AppendTimeoutTimeSpan(TimeSpan.FromMinutes(1)); // attempt on minute
+            for (int i = 0; i < 10; i++) _deviceMonitorWatchdog.AppendTimeoutTimeSpan(TimeSpan.FromHours(1)); // attempt on hour
+            for (int i = 0; i < 1; i++) _deviceMonitorWatchdog.AppendTimeoutTimeSpan(TimeSpan.FromDays(1)); // attempt after a day and stop after
+
 
             try
             {
-                var powerInfo = new NvGPUPowerInfo
-                {
-                    Version = NVAPI.GPU_POWER_INFO_VER,
-                    Entries = new NvGPUPowerInfoEntry[4]
-                };
-
-                var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesGetInfo(_nvHandle, ref powerInfo);
-                if (ret != NvStatus.OK)
-                    throw new Exception(ret.ToString());
-
-                Debug.Assert(powerInfo.Entries.Length == 4);
-
-                if (powerInfo.Entries[0].MinPower == 0 || powerInfo.Entries[0].MaxPower == 0)
-                {
-                    throw new Exception("Power control not available!");
-                }
-
-                _minPowerLimit = powerInfo.Entries[0].MinPower;
-                _maxPowerLimit = powerInfo.Entries[0].MaxPower;
-                _defaultPowerLimit = powerInfo.Entries[0].DefPower;
-
-                PowerLimitsEnabled = true;
                 // set to high by default
                 var defaultLevel = PowerLevel.High;
                 if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
@@ -77,7 +55,7 @@ namespace NHM.DeviceMonitoring
                     var success = SetPowerTarget(defaultLevel);
                     if (!success)
                     {
-                        Logger.Info("NVML", $"Cannot set power target ({defaultLevel.ToString()}) for device with BusID={BusID}");
+                        Logger.Info(LogTag, $"Cannot set power target ({defaultLevel.ToString()}) for device with BusID={BusID}");
                     }
                 }
                 else
@@ -87,79 +65,79 @@ namespace NHM.DeviceMonitoring
             }
             catch (Exception e)
             {
-                Logger.Error("NVML", $"Getting power info failed with message \"{e.Message}\", disabling power setting");
-                PowerLimitsEnabled = false;
+                Logger.Error(LogTag, $"Getting power info failed with message \"{e.Message}\", disabling power setting");
             }
         }
 
-        public void ResetHandles(NvapiNvmlInfo info)
+        // 
+        private nvmlDevice GetNvmlDevice()
         {
-            _nvHandle = info.nvHandle;
-            _nvmlDevice = info.nvmlHandle;
-
-            try
+            var nvmlHandle = new nvmlDevice();
+            var nvmlRet = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(UUID, ref nvmlHandle);
+            if (nvmlRet != nvmlReturn.Success)
             {
-                var powerInfo = new NvGPUPowerInfo
-                {
-                    Version = NVAPI.GPU_POWER_INFO_VER,
-                    Entries = new NvGPUPowerInfoEntry[4]
-                };
-
-                var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesGetInfo(_nvHandle, ref powerInfo);
-                if (ret != NvStatus.OK)
-                    throw new Exception(ret.ToString());
-
-                Debug.Assert(powerInfo.Entries.Length == 4);
-
-                if (powerInfo.Entries[0].MinPower == 0 || powerInfo.Entries[0].MaxPower == 0)
-                {
-                    throw new Exception("Power control not available!");
-                }
-
-                _minPowerLimit = powerInfo.Entries[0].MinPower;
-                _maxPowerLimit = powerInfo.Entries[0].MaxPower;
-                _defaultPowerLimit = powerInfo.Entries[0].DefPower;
+                throw new NvmlException("nvmlDeviceGetHandleByUUID", nvmlRet);
             }
-            catch (Exception e)
-            {
-                Logger.Error("NVML", $"Getting power info failed with message \"{e.Message}\", disabling power setting");
-                PowerLimitsEnabled = false;
-            }
+            return nvmlHandle;
         }
 
+        private NvPhysicalGpuHandle? GetNvPhysicalGpuHandle()
+        {
+            if (NVAPI.NvAPI_EnumPhysicalGPUs == null)
+            {
+                Logger.DebugDelayed("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable", TimeSpan.FromMinutes(5));
+                return null;
+            }
+            if (NVAPI.NvAPI_GPU_GetBusID == null)
+            {
+                Logger.DebugDelayed("NVAPI", "NvAPI_GPU_GetBusID unavailable", TimeSpan.FromMinutes(5));
+                return null;
+            }
+
+
+            var handles = new NvPhysicalGpuHandle[NVAPI.MAX_PHYSICAL_GPUS];
+            var status = NVAPI.NvAPI_EnumPhysicalGPUs(handles, out _);
+            if (status != NvStatus.OK)
+            {
+                Logger.DebugDelayed("NVAPI", $"Enum physical GPUs failed with status: {status}", TimeSpan.FromMinutes(5));
+            }
+            else
+            {
+                foreach (var handle in handles)
+                {
+                    var idStatus = NVAPI.NvAPI_GPU_GetBusID(handle, out var id);
+
+                    if (idStatus == NvStatus.EXPECTED_PHYSICAL_GPU_HANDLE) continue;
+
+                    if (idStatus != NvStatus.OK)
+                    {
+                        Logger.DebugDelayed("NVAPI", "Bus ID get failed with status: " + idStatus, TimeSpan.FromMinutes(5));
+                    }
+                    else if (id == BusID)
+                    {
+                        Logger.DebugDelayed("NVAPI", "Found handle for busid " + id, TimeSpan.FromMinutes(5));
+                        return handle;
+                    }
+                }
+            }
+            return null;
+        }
 
         public float Load
         {
             get
             {
-                var load = -1;
+                var execRet = ExecNvmlProcedure(-1f, nameof(Load), () => {
+                    var nvmlDevice = GetNvmlDevice();
+                    var rates = new nvmlUtilization();
+                    var ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(nvmlDevice, ref rates);
+                    if (ret != nvmlReturn.Success)
+                        throw new NvmlException($"nvmlDeviceGetUtilizationRates", ret);
 
-                using (var tryLock = new TryLock(_lock))
-                {
-                    if(tryLock.HasLock)
-                    {
-                        try
-                        {
-                            var rates = new nvmlUtilization();
-                            var ret = NvmlNativeMethods.nvmlDeviceGetUtilizationRates(_nvmlDevice, ref rates);
-                            if (ret != nvmlReturn.Success)
-                                throw new Exception($"NVML get load failed with code: {ret}");
-
-                            load = (int)rates.gpu;
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.ErrorDelayed("NVML", e.ToString(), _delayedLogging);
-                            DeviceMonitorManager.TryRestartNVIDIAMonitoring();
-                        }
-                    }
-                    else
-                    {
-                        Logger.Error("NVML", "Load locked");
-                    }
-                }
-
-                return load;
+                    var load = (int)rates.gpu;
+                    return load;
+                });
+                return execRet;
             }
         }
 
@@ -167,63 +145,60 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                var temp = -1f;
-                using (var tryLock = new TryLock(_lock))
-                {
-                    if (tryLock.HasLock)
-                    {
-                        try
-                        {
-                            var utemp = 0u;
-                            var ret = NvmlNativeMethods.nvmlDeviceGetTemperature(_nvmlDevice, nvmlTemperatureSensors.Gpu,
-                                ref utemp);
-                            if (ret != nvmlReturn.Success)
-                                throw new Exception($"NVML get temp failed with code: {ret}");
+                var execRet = ExecNvmlProcedure(-1f, nameof(Temp), () => {
+                    var nvmlDevice = GetNvmlDevice();
+                    var utemp = 0u;
+                    var ret = NvmlNativeMethods.nvmlDeviceGetTemperature(nvmlDevice, nvmlTemperatureSensors.Gpu,  ref utemp);
+                    if (ret != nvmlReturn.Success)
+                        throw new NvmlException($"nvmlDeviceGetTemperature", ret);
 
-                            temp = utemp;
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.ErrorDelayed("NVML", e.ToString(), _delayedLogging);
-                            DeviceMonitorManager.TryRestartNVIDIAMonitoring();
-                        }
-                    }
-                    else
-                    {
-                        Logger.Error("NVML", "Temp locked");
-                    }
-                }
-
-                return temp;
+                    var temp = (float)utemp;
+                    return temp;
+                });
+                return execRet;
             }
         }
 
+        // TODO NVAPI replace with NVML if possible
         public int FanSpeed
         {
             get
             {
+                if (!NVAPI.IsAvailable)
+                {
+                    Logger.ErrorDelayed(LogTag, $"FanSpeed NVAPI.IsAvailable==FALSE", TimeSpan.FromMinutes(5));
+                    return -1;
+                }
+                if (NVAPI.NvAPI_GPU_GetTachReading == null)
+                {
+                    Logger.ErrorDelayed(LogTag, $"FanSpeed NVAPI.NvAPI_GPU_GetTachReading == null", TimeSpan.FromMinutes(5));
+                    return -1;
+                }
                 var fanSpeed = -1;
                 using (var tryLock = new TryLock(_lock))
                 {
-                    if (tryLock.HasLock)
+                    if (!tryLock.HasAcquiredLock)
                     {
-                        if (NVAPI.NvAPI_GPU_GetTachReading != null)
-                        {
-                            var result = NVAPI.NvAPI_GPU_GetTachReading(_nvHandle, out fanSpeed);
-                            if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
-                            {
-                                // GPUs without fans are not uncommon, so don't treat as error and just return -1
-                                Logger.ErrorDelayed("NVAPI", $"Tach get failed with status: {result}", _delayedLogging);
-                                DeviceMonitorManager.TryRestartNVIDIAMonitoring();
-                                return -1;
-                            }
-                        }
+                        Logger.Error(LogTag, "FanSpeed Already Locked");
+                        return -1;
                     }
-                    else
+                    // we got the lock
+                    var nvHandle = GetNvPhysicalGpuHandle();
+                    if (!nvHandle.HasValue)
                     {
-                        Logger.Error("NVML", "FanSpeed locked");
+                        Logger.ErrorDelayed(LogTag, $"FanSpeed nvHandle == null", TimeSpan.FromMinutes(5));
+                        return -1;
+                    }
+                    var result = NVAPI.NvAPI_GPU_GetTachReading(nvHandle.Value, out fanSpeed);
+                    if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
+                    {
+                        // GPUs without fans are not uncommon, so don't treat as error and just return -1
+                        Logger.ErrorDelayed("NVAPI", $"Tach get failed with status: {result}", _delayedLogging);
+                        // if NVAPI fails... we could re-init this as well probably
+                        return -1;
                     }
                 }
+
                 return fanSpeed;
             }
         }
@@ -232,32 +207,16 @@ namespace NHM.DeviceMonitoring
         {
             get
             {
-                using (var tryLock = new TryLock(_lock))
-                {
-                    if (tryLock.HasLock)
-                    {
-                        try
-                        {
-                            var power = 0u;
-                            var ret = NvmlNativeMethods.nvmlDeviceGetPowerUsage(_nvmlDevice, ref power);
-                            if (ret != nvmlReturn.Success)
-                                throw new Exception($"NVML power get failed with status: {ret}");
+                var execRet = ExecNvmlProcedure(-1d, nameof(PowerUsage), () => {
+                    var nvmlDevice = GetNvmlDevice();
+                    var power = 0u;
+                    var nvmlRet = NvmlNativeMethods.nvmlDeviceGetPowerUsage(nvmlDevice, ref power);
+                    if (nvmlRet != nvmlReturn.Success)
+                        throw new NvmlException($"nvmlDeviceGetPowerUsage", nvmlRet);
 
-                            return power * 0.001;
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.ErrorDelayed("NVML", e.ToString(), _delayedLogging);
-                            DeviceMonitorManager.TryRestartNVIDIAMonitoring();
-                        }
-                    }
-                    else
-                    {
-                        Logger.Error("NVML", "PowerUsage locked");
-                    }
-                }
-
-                return -1;
+                    return power * 0.001;
+                });
+                return execRet;
             }
         }
 
@@ -276,119 +235,141 @@ namespace NHM.DeviceMonitoring
             }
         }
 
-        // TODO monitor recovery
-        private bool SetTdp(double tdpPerc, uint defaultLimit)
+        private bool SetTdp(nvmlDevice nvmlDevice, double tdpPerc, uint defaultLimit)
         {
+            // TODO we limit to 100%
             uint currentLimit = (uint)(tdpPerc * (double)defaultLimit) / 100;
-            var ret = NvmlNativeMethods.nvmlDeviceSetPowerManagementLimit(_nvmlDevice, currentLimit);
+            var ret = NvmlNativeMethods.nvmlDeviceSetPowerManagementLimit(nvmlDevice, currentLimit);
             if (ret != nvmlReturn.Success)
-                throw new Exception($"NVML nvmlDeviceGetPowerManagementLimitConstraints failed with status: {ret}");
+                throw new NvmlException("nvmlDeviceSetPowerManagementLimit", ret);
             
             return true;
         }
 
         private bool SetTdpSimple(PowerLevel level)
         {
-            try
-            {
+            var execRet = ExecNvmlProcedure(false, $"{nameof(SetTdpSimple)}({level})", () => {
+                var nvmlDevice = GetNvmlDevice();
                 uint minLimit = 0;
                 uint maxLimit = 0;
-                var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(_nvmlDevice, ref minLimit, ref maxLimit);
+                var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(nvmlDevice, ref minLimit, ref maxLimit);
                 if (ret != nvmlReturn.Success)
-                    throw new Exception($"NVML nvmlDeviceGetPowerManagementLimitConstraints failed with status: {ret}");
+                    throw new NvmlException($"nvmlDeviceGetPowerManagementLimitConstraints", ret);
 
                 uint defaultLimit = 0;
-                ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(_nvmlDevice, ref defaultLimit);
+                ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(nvmlDevice, ref defaultLimit);
                 if (ret != nvmlReturn.Success)
-                    throw new Exception($"NVML nvmlDeviceGetPowerManagementDefaultLimit failed with status: {ret}");
+                    throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
 
                 var limit = minLimit + (defaultLimit - minLimit) * GetUintFromPowerLevel(level) / 2;
                 var tdpPerc = (limit * 100.0 / defaultLimit);
-                return SetTdp(tdpPerc, defaultLimit);
-            }
-            catch (Exception e)
+                return SetTdp(nvmlDevice, tdpPerc, defaultLimit);
+            });
+            return execRet;
+        }
+
+        private bool SetTdpPercentage(double tdpPerc)
+        {
+            var execRet = ExecNvmlProcedure(false, $"{nameof(SetTdpPercentage)}({tdpPerc})", () => {
+                var nvmlDevice = GetNvmlDevice();
+                uint defaultLimit = 0;
+                var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(nvmlDevice, ref defaultLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
+
+                return SetTdp(nvmlDevice, tdpPerc, defaultLimit);
+            });
+            return execRet;
+        }
+
+        private T ExecNvmlProcedure<T>(T failReturn, string tag, Func<T> nvmlExecFun)
+        {
+            if (!NvidiaMonitorManager.InitalNVMLInitSuccess)
             {
-                Logger.ErrorDelayed("NVML", e.ToString(), _delayedLogging);
-                return false;
+                Logger.ErrorDelayed(LogTag, $"{tag} InitalNVMLInitSuccess==FALSE", TimeSpan.FromMinutes(5));
+                return failReturn;
+            }
+            if (NvidiaMonitorManager.IsNVMLRestarting)
+            {
+                Logger.ErrorDelayed(LogTag, $"Skipping {tag} NVML IsRestarting", TimeSpan.FromSeconds(5));
+                return failReturn;
+            }
+            using (var tryLock = new TryLock(_lock))
+            {
+                if (!tryLock.HasAcquiredLock)
+                {
+                    Logger.Error(LogTag, $"{tag} Already Locked");
+                    return failReturn;
+                }
+                // we got the lock
+                try
+                {
+                    var execRet = nvmlExecFun();
+                    _deviceMonitorWatchdog.Reset(); // if nvmlExecFun doesn't throw we mark this as success
+                    return execRet;
+                }
+                catch (Exception e)
+                {
+                    Logger.ErrorDelayed(LogTag, e.ToString(), TimeSpan.FromSeconds(30));
+                    if (e is NvmlException ne && !SkipNvmlErrorRecovery(ne.ReturnCode))
+                    {
+                        if (_deviceMonitorWatchdog.IsAttemptErrorRecoveryPermanentlyDisabled())
+                        {
+                            Logger.ErrorDelayed(LogTag, $"{tag} Will NOT RESTART NVML. Recovery for this device is permanently disabled.", TimeSpan.FromSeconds(30));
+                            return failReturn;
+                        }
+                        _deviceMonitorWatchdog.SetErrorTime();
+                        var shouldAttemptRestartNvml = _deviceMonitorWatchdog.ShouldAttemptErrorRecovery();
+                        if (shouldAttemptRestartNvml)
+                        {
+                            _deviceMonitorWatchdog.UpdateTickError();
+                            Logger.Info(LogTag, $"{tag} Will call NVML restart");
+                            NvidiaMonitorManager.AttemptRestartNVML();
+                        }
+                    }
+                }
+                return failReturn;
             }
         }
 
-        // nvPercent in thousands of percent, e.g. 100000 for 100%
-        private bool SetPowerTarget(uint nvPercent)
+        private static nvmlReturn[] _skipRecoveryNvmlErrors = new nvmlReturn[] {
+            nvmlReturn.Success,
+            nvmlReturn.DriverNotLoaded,
+            nvmlReturn.FunctionNotFound,
+            nvmlReturn.NotSupported,
+            nvmlReturn.NoPermission,
+            // check these two
+            //nvmlReturn.GPUIsLost, // ????
+            //nvmlReturn.ResetRequired, // ????
+        };
+
+        private static bool SkipNvmlErrorRecovery(nvmlReturn error)
         {
-            if (!PowerLimitsEnabled) return false;
-            if (NVAPI.NvAPI_DLL_ClientPowerPoliciesSetStatus == null)
-            {
-                Logger.InfoDelayed("NVAPI", "Missing power set delegate, disabling power", _delayedLogging);
-                PowerLimitsEnabled = false;
-                return false;
-            }
-
-            // Value of 0 corresponds to not touching anything
-            if (nvPercent == uint.MinValue)
-            {
-                PowerTarget = nvPercent;
-                return true;
-            }
-
-            // Check if given value is within bounds
-            if (nvPercent < _minPowerLimit)
-                throw new PowerOutOfRangeException(_minPowerLimit);
-            if (nvPercent > _maxPowerLimit)
-                throw new PowerOutOfRangeException(_maxPowerLimit);
-
-            var status = new NvGPUPowerStatus
-            {
-                Flags = 1,
-                Entries = new NvGPUPowerStatusEntry[4]
-            };
-            status.Entries[0].Power = nvPercent;  // percent * 1000
-            status.Version = NVAPI.GPU_POWER_STATUS_VER;
-
-            try
-            {
-                var ret = NVAPI.NvAPI_DLL_ClientPowerPoliciesSetStatus(_nvHandle, ref status);
-                if (ret != NvStatus.OK)
-                    throw new Exception($"NVAPI failed with return {ret}");
-            }
-            catch (Exception e)
-            {
-                Logger.InfoDelayed("NVAPI", e.Message, _delayedLogging);
-                return false;
-            }
-
-            PowerTarget = nvPercent;
-
-            return true;
+            return _skipRecoveryNvmlErrors.Contains(error);
         }
 
         public bool SetPowerTarget(PowerLevel level)
         {
-            PowerLevel = level;
-            if(SetTdpSimple(level)) return true;
-
-            switch (level)
-            {
-                case PowerLevel.Low:
-                    PowerLevel = level;
-                    return SetPowerTarget(_minPowerLimit);
-                case PowerLevel.Medium:
-                    PowerLevel = level;
-                    return SetPowerTarget((uint)Math.Round((_minPowerLimit + _defaultPowerLimit) / 2d));
-                case PowerLevel.High:
-                    PowerLevel = level;
-                    return SetPowerTarget(_defaultPowerLimit);
+            if (DeviceMonitorManager.DisableDevicePowerModeSettings) {
+                Logger.ErrorDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
+                return false;
             }
 
-            return false;
+            PowerLevel = level;
+            return SetTdpSimple(level);
         }
 
         // percent is in hundreds, e.g. 100%
         public bool SetPowerTarget(double percent)
         {
+            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
+            {
+                Logger.ErrorDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
+                return false;
+            }
+            // TODO this Custom thingh shouild be changed so each mode has a custom setting
             PowerLevel = PowerLevel.Custom;
-            return SetPowerTarget((uint)Math.Round(percent * 1000));
+            return SetTdpPercentage(percent);
         }
     }
-
 }
