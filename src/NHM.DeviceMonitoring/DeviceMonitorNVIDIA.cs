@@ -351,7 +351,7 @@ namespace NHM.DeviceMonitoring
         public bool SetPowerTarget(PowerLevel level)
         {
             if (DeviceMonitorManager.DisableDevicePowerModeSettings) {
-                Logger.ErrorDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
+                Logger.InfoDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
                 return false;
             }
 
@@ -364,7 +364,7 @@ namespace NHM.DeviceMonitoring
         {
             if (DeviceMonitorManager.DisableDevicePowerModeSettings)
             {
-                Logger.ErrorDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
+                Logger.InfoDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
                 return false;
             }
             // TODO this Custom thingh shouild be changed so each mode has a custom setting
