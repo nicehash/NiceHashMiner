@@ -456,7 +456,6 @@ namespace NiceHashMiner
                     return;
                 }
             }
-            FormHelpers.TranslateFormControls(this);
             InitMainConfigGuiData();
             // TODO check this later
             IdleCheckManager.StartIdleCheck(ConfigManager.GeneralConfig.IdleCheckType, IdleCheck);
