@@ -7,10 +7,11 @@ using NHM.Common.Enums;
 using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
+using System.Threading.Tasks;
 
 namespace TTMiner
 {
-    public class TTMinerPlugin : PluginBase
+    public class TTMinerPlugin : PluginBase, IDevicesCrossReference
     {
         public TTMinerPlugin()
         {
@@ -31,9 +32,16 @@ namespace TTMiner
 
         public override string PluginUUID => "f1945a30-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 3);
+        public override Version Version => new Version(2, 4);
         public override string Name => "TTMiner";
         public override string Author => "stanko@nicehash.com";
+
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
+
+        protected override MinerBase CreateMinerBase()
+        {
+            return new TTMiner(PluginUUID, _mappedDeviceIds);
+        }
 
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
@@ -49,6 +57,7 @@ namespace TTMiner
 
             foreach (var gpu in cudaGpus)
             {
+                _mappedDeviceIds[gpu.UUID] = gpu.ID; //lazy init -> TT-Miner sorts devices as we do
                 var algos = GetSupportedAlgorithms(gpu).ToList();
                 if (algos.Count > 0) supported.Add(gpu, algos);
             }
@@ -67,9 +76,21 @@ namespace TTMiner
             return filteredAlgorithms;
         }
 
-        protected override MinerBase CreateMinerBase()
+        public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
-            return new TTMiner(PluginUUID);
+            if (_mappedDeviceIds.Count == 0) return;
+            var miner = CreateMiner() as IBinAndCwdPathsGettter;
+            if (miner == null) return;
+            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-list");
+            var mappedDevs = DevicesListParser.ParseTTMinerOutput(output, devices.ToList());
+
+            foreach (var kvp in mappedDevs)
+            {
+                var uuid = kvp.Key;
+                var indexID = kvp.Value;
+                _mappedDeviceIds[uuid] = indexID;
+            }
         }
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()

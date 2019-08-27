@@ -31,6 +31,10 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             if (algorithmTypes.Count() > 0) firstAlgoType = algorithmTypes[0];
             if (algorithmTypes.Count() > 1) secondAlgoType = algorithmTypes[1];
 
+            var totalSpeed = new List<AlgorithmTypeSpeedPair>();
+            var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
+            var perDevicePowerInfo = new Dictionary<string, int>();
+
             JsonApiResponse resp = null;
             try
             {
@@ -54,9 +58,6 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
                         var primaryTotalSpeed = 0d;
                         var secondaryTotalSpeed = 0d;
 
-                        var perDeviceSpeedInfo = new Dictionary<string, IReadOnlyList<AlgorithmTypeSpeedPair>>();
-                        var perDevicePowerInfo = new Dictionary<string, int>();
-
                         for (int i = 0; i < miningDevices.Count(); i++)
                         {
                             var dev = miningDevices[i];
@@ -78,17 +79,11 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
                             perDevicePowerInfo.Add(uuid, -1);
                         }
 
-                        var totalSpeed = new List<AlgorithmTypeSpeedPair>();
                         totalSpeed.Add(new AlgorithmTypeSpeedPair(firstAlgoType, primaryTotalSpeed * (1 - DevFee * 0.01)));
                         if (isDual)
                         {
                             totalSpeed.Add(new AlgorithmTypeSpeedPair(secondAlgoType, secondaryTotalSpeed * (1 - DualDevFee * 0.01)));
-                        }
-
-                        ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
-                        ad.PowerUsagePerDevice = perDevicePowerInfo;
-                        ad.AlgorithmSpeedsTotal = totalSpeed;
-                        ad.PowerUsageTotal = -1;
+                        } 
                     }
                 }
             }
@@ -96,6 +91,10 @@ namespace MinerPluginToolkitV1.ClaymoreCommon
             {
                 Logger.Error(logGroup, $"Error occured while getting API stats: {e.Message}");
             }
+            ad.AlgorithmSpeedsPerDevice = perDeviceSpeedInfo;
+            ad.PowerUsagePerDevice = perDevicePowerInfo;
+            ad.AlgorithmSpeedsTotal = totalSpeed;
+            ad.PowerUsageTotal = -1;
             return ad;
         }
 

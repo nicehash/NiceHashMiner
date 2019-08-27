@@ -23,6 +23,7 @@ namespace TTMiner
         // TODO figure out how to fix API workaround without this started time
         private DateTime _started;
 
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
         private string AlgoName
         {
@@ -40,8 +41,10 @@ namespace TTMiner
             }
         }
 
-        public TTMiner(string uuid) : base(uuid)
-        {}
+        public TTMiner(string uuid, Dictionary<string, int> mappedDeviceIds) : base(uuid)
+        {
+            _mappedDeviceIds = mappedDeviceIds;
+        }
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
@@ -120,9 +123,18 @@ namespace TTMiner
             return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
         }
 
+        protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // sort by _mappedDeviceIds
+            pairsList.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
+            return pairsList;
+        }
+
         protected override void Init()
         {
-            _devices = string.Join(" ", _miningPairs.Select(p => p.Device.ID));
+            var mappedDevIDs = _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]);
+            _devices = string.Join(" ", mappedDevIDs);
         }
 
         public void AfterStartMining()
