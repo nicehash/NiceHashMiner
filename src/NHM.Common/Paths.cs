@@ -14,6 +14,7 @@ namespace NHM.Common
             Root = rootPath;
         }
 
+        // TODO deprecate this one
         public static string MinerPluginsPath()
         {
             return RootPath("miner_plugins");
