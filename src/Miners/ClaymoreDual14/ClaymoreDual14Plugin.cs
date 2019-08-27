@@ -19,23 +19,22 @@ namespace ClaymoreDual14
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
-            // https://bitcointalk.org/index.php?topic=1433925.0 current v14.7
+            // https://bitcointalk.org/index.php?topic=1433925.0 current v15.0
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/Claymore.s.Dual.Ethereum.AMD+NVIDIA.GPU.Miner.v14.7.7z",
-                    "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?ngYyTARY" // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/Claymore.s.Dual.Ethereum.AMD+NVIDIA.GPU.Miner.v15.0.zip",
+                    "https://mega.nz/#F!O4YA2JgD!n2b4iSHQDruEsYUvTQP5_w?64RGzCIb" // original
                 }
             };
         }
 
         public override string PluginUUID => "78d0bd8b-4d8f-4b7e-b393-e8ac6a83ae76";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(2, 1);
 
-        public override string Name => "ClaymoreDual14+";
+        public override string Name => "ClaymoreDual";
 
         public override string Author => "domen.kirnkrefl@nicehash.com";
 
@@ -101,6 +100,10 @@ namespace ClaymoreDual14
 #pragma warning restore 0618
             };
             var filteredAlgorithms = Filters.FilterInsufficientRamAlgorithmsList(gpu.GpuRam, algorithms);
+            if(gpu is AMDDevice amd && (amd.Codename.ToLower().Contains("gfx10") || amd.Name.ToLower().Contains("navi")))
+            {
+                filteredAlgorithms = filteredAlgorithms.Where(algo => algo.IDs.Count == 1).ToList();
+            }
             return filteredAlgorithms;
         }
 
@@ -151,16 +154,6 @@ namespace ClaymoreDual14
 
         public override bool ShouldReBenchmarkAlgorithmOnDevice(BaseDevice device, Version benchmarkedPluginVersion, params AlgorithmType[] ids)
         {
-            // error/bug in v1.0
-            // because the previous miner plugin mapped wrong GPU indexes rebench everything
-            try
-            {
-                var reBench = benchmarkedPluginVersion.Major == 1 && benchmarkedPluginVersion.Minor < 2;
-                return reBench;
-            }
-            catch (Exception)
-            {
-            }
             return false;
         }
     }
