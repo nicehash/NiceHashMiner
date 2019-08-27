@@ -13,6 +13,8 @@
         ${StdUtils.ExecShellAsUser} $0 "$launchLink" "open" ""
       ${endif}
     FunctionEnd
+    !define MUI_FINISHPAGE_TEXT_LARGE
+    !define MUI_FINISHPAGE_TEXT "${APP_FILENAME} has been installed on your computer.$\r$\nClick Finish to close Setup.$\r$\nWARNING: Miner software is recognized as malicious by Anti-Virus software, use it at your own risk.$\r$\nWhite-list '$INSTDIR' to ensure binaries don't get deleted."
     !define MUI_FINISHPAGE_RUN
     !define MUI_FINISHPAGE_RUN_FUNCTION "StartApp"
     !insertmacro MUI_PAGE_LICENSE "assets\license.rtf"
