@@ -28,7 +28,7 @@ namespace XMRig
 
         public override string PluginUUID => "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(1, 1);
+        public override Version Version => new Version(1, 2);
 
         public override string Name => "XMRig";
 
@@ -45,8 +45,9 @@ namespace XMRig
             {
                 new Algorithm(PluginUUID, AlgorithmType.CryptoNightR)
             };
+            var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();
 
-            foreach(var cpu in devices) supported.Add(cpu, algorithms);
+            foreach (var cpu in cpus) supported.Add(cpu, algorithms);
 
             return supported;
         }
