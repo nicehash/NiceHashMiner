@@ -8,6 +8,8 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 
+
+// TODO move this to NHM.Common and depricate MinerPluginToolkitV1.Configs, keep in for a while (e.g. next 10 versions)
 namespace MinerPluginToolkitV1.Configs
 {
     /// <summary>

@@ -280,7 +280,6 @@ namespace NiceHashMiner.Mining.Plugins
                 foreach (var old in oldPlugins)
                 {
                     PluginContainer.RemovePluginContainer(old);
-                    old.RemoveAlgorithmsFromDevices();
                 }
                 RemovePluginAlgorithms(pluginUUID);
 
@@ -518,6 +517,7 @@ namespace NiceHashMiner.Mining.Plugins
                 // if there is an old plugin installed remove it
                 if (Directory.Exists(pluginPath))
                 {
+                    // TODO consider saving the internal settings when updating the miner plugin
                     Directory.Delete(pluginPath, true);
                 }
                 //downloadAndInstallUpdate($"Loaded {loadedPlugins} PLUGIN");
@@ -525,15 +525,14 @@ namespace NiceHashMiner.Mining.Plugins
                 // add or update plugins
                 foreach (var pluginUUID in loadedPlugins)
                 {
-                    var externalPlugin = MinerPluginHost.MinerPlugin[pluginUUID];
+                    var newExternalPlugin = MinerPluginHost.MinerPlugin[pluginUUID];
                     // remove old
                     var oldPlugins = PluginContainer.PluginContainers.Where(p => p.PluginUUID == pluginUUID).ToArray();
                     foreach (var old in oldPlugins)
                     {
                         PluginContainer.RemovePluginContainer(old);
-                        old.RemoveAlgorithmsFromDevices();
                     }
-                    var newPlugin = PluginContainer.Create(externalPlugin);
+                    var newPlugin = PluginContainer.Create(newExternalPlugin);
                     var success = newPlugin.InitPluginContainer();
                     // TODO after add or remove plugins we should clean up the device settings
                     if (success)

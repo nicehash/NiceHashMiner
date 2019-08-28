@@ -25,8 +25,7 @@ namespace NHM.DeviceMonitoring
             }
         }
 
-        public static object _lock = new object();
-        private static readonly TimeSpan _delayedLogging = TimeSpan.FromSeconds(30);
+        private object _lock = new object();
 
         public int BusID { get; private set; }
 
@@ -69,20 +68,26 @@ namespace NHM.DeviceMonitoring
             }
         }
 
-        // 
+        // cache nvmlDevice handles as these calls are expensive
+        private nvmlDevice? _nvmlDevice;
         private nvmlDevice GetNvmlDevice()
         {
+            if (_nvmlDevice.HasValue) return _nvmlDevice.Value;
             var nvmlHandle = new nvmlDevice();
             var nvmlRet = NvmlNativeMethods.nvmlDeviceGetHandleByUUID(UUID, ref nvmlHandle);
             if (nvmlRet != nvmlReturn.Success)
             {
                 throw new NvmlException("nvmlDeviceGetHandleByUUID", nvmlRet);
             }
+            _nvmlDevice = nvmlHandle;
             return nvmlHandle;
         }
 
+        // cache NvPhysicalGpuHandle handles as these calls are expensive
+        private NvPhysicalGpuHandle? _NvPhysicalGpuHandle;
         private NvPhysicalGpuHandle? GetNvPhysicalGpuHandle()
         {
+            if (_NvPhysicalGpuHandle.HasValue) return _NvPhysicalGpuHandle.Value;
             if (NVAPI.NvAPI_EnumPhysicalGPUs == null)
             {
                 Logger.DebugDelayed("NVAPI", "NvAPI_EnumPhysicalGPUs unavailable", TimeSpan.FromMinutes(5));
@@ -116,6 +121,7 @@ namespace NHM.DeviceMonitoring
                     else if (id == BusID)
                     {
                         Logger.DebugDelayed("NVAPI", "Found handle for busid " + id, TimeSpan.FromMinutes(5));
+                        _NvPhysicalGpuHandle = handle;
                         return handle;
                     }
                 }
@@ -193,8 +199,8 @@ namespace NHM.DeviceMonitoring
                     if (result != NvStatus.OK && result != NvStatus.NOT_SUPPORTED)
                     {
                         // GPUs without fans are not uncommon, so don't treat as error and just return -1
-                        Logger.ErrorDelayed("NVAPI", $"Tach get failed with status: {result}", _delayedLogging);
-                        // if NVAPI fails... we could re-init this as well probably
+                        Logger.ErrorDelayed("NVAPI", $"Tach get failed with status: {result}", TimeSpan.FromSeconds(30));
+                        // if NVAPI fails... check if we could re-init this as well??
                         return -1;
                     }
                 }
@@ -282,6 +288,7 @@ namespace NHM.DeviceMonitoring
             return execRet;
         }
 
+        // NVML is thread-safe according to the documentation
         private T ExecNvmlProcedure<T>(T failReturn, string tag, Func<T> nvmlExecFun)
         {
             if (!NvidiaMonitorManager.InitalNVMLInitSuccess)
@@ -294,42 +301,33 @@ namespace NHM.DeviceMonitoring
                 Logger.ErrorDelayed(LogTag, $"Skipping {tag} NVML IsRestarting", TimeSpan.FromSeconds(5));
                 return failReturn;
             }
-            using (var tryLock = new TryLock(_lock))
+            try
             {
-                if (!tryLock.HasAcquiredLock)
+                var execRet = nvmlExecFun();
+                _deviceMonitorWatchdog.Reset(); // if nvmlExecFun doesn't throw we mark this as success
+                return execRet;
+            }
+            catch (Exception e)
+            {
+                Logger.ErrorDelayed(LogTag, e.ToString(), TimeSpan.FromSeconds(30));
+                if (e is NvmlException ne && !SkipNvmlErrorRecovery(ne.ReturnCode))
                 {
-                    Logger.Error(LogTag, $"{tag} Already Locked");
-                    return failReturn;
-                }
-                // we got the lock
-                try
-                {
-                    var execRet = nvmlExecFun();
-                    _deviceMonitorWatchdog.Reset(); // if nvmlExecFun doesn't throw we mark this as success
-                    return execRet;
-                }
-                catch (Exception e)
-                {
-                    Logger.ErrorDelayed(LogTag, e.ToString(), TimeSpan.FromSeconds(30));
-                    if (e is NvmlException ne && !SkipNvmlErrorRecovery(ne.ReturnCode))
+                    if (_deviceMonitorWatchdog.IsAttemptErrorRecoveryPermanentlyDisabled())
                     {
-                        if (_deviceMonitorWatchdog.IsAttemptErrorRecoveryPermanentlyDisabled())
-                        {
-                            Logger.ErrorDelayed(LogTag, $"{tag} Will NOT RESTART NVML. Recovery for this device is permanently disabled.", TimeSpan.FromSeconds(30));
-                            return failReturn;
-                        }
-                        _deviceMonitorWatchdog.SetErrorTime();
-                        var shouldAttemptRestartNvml = _deviceMonitorWatchdog.ShouldAttemptErrorRecovery();
-                        if (shouldAttemptRestartNvml)
-                        {
-                            _deviceMonitorWatchdog.UpdateTickError();
-                            Logger.Info(LogTag, $"{tag} Will call NVML restart");
-                            NvidiaMonitorManager.AttemptRestartNVML();
-                        }
+                        Logger.ErrorDelayed(LogTag, $"{tag} Will NOT RESTART NVML. Recovery for this device is permanently disabled.", TimeSpan.FromSeconds(30));
+                        return failReturn;
+                    }
+                    _deviceMonitorWatchdog.SetErrorTime();
+                    var shouldAttemptRestartNvml = _deviceMonitorWatchdog.ShouldAttemptErrorRecovery();
+                    if (shouldAttemptRestartNvml)
+                    {
+                        _deviceMonitorWatchdog.UpdateTickError();
+                        Logger.Info(LogTag, $"{tag} Will call NVML restart");
+                        NvidiaMonitorManager.AttemptRestartNVML();
                     }
                 }
-                return failReturn;
             }
+            return failReturn;
         }
 
         private static nvmlReturn[] _skipRecoveryNvmlErrors = new nvmlReturn[] {
@@ -351,7 +349,7 @@ namespace NHM.DeviceMonitoring
         public bool SetPowerTarget(PowerLevel level)
         {
             if (DeviceMonitorManager.DisableDevicePowerModeSettings) {
-                Logger.ErrorDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
+                Logger.InfoDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
                 return false;
             }
 
@@ -364,7 +362,7 @@ namespace NHM.DeviceMonitoring
         {
             if (DeviceMonitorManager.DisableDevicePowerModeSettings)
             {
-                Logger.ErrorDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
+                Logger.InfoDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
                 return false;
             }
             // TODO this Custom thingh shouild be changed so each mode has a custom setting

@@ -59,9 +59,20 @@ namespace NiceHashMiner
             }
             Helpers.VisitUrlLink(url);
         }
-#endregion
 
-#region BtcBalance and fiat balance
+        public static string GetNewVersionUpdaterUrl()
+        {
+            var template = Links.UpdaterUrlTemplate;
+            var url = "";
+            if (OnlineVersion != null)
+            {
+                url = template.Replace("{VERSION_TAG}", OnlineVersion);
+            }
+            return url;
+        }
+        #endregion
+
+        #region BtcBalance and fiat balance
 
         public static double BtcBalance { get; private set; }
 
