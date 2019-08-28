@@ -43,22 +43,28 @@
 * ClaymoreDual
 * GMiner
 * Phoenix
+* LolMiner
+* NanoMiner
 
 ### NVIDIA
 
 * CCMiner
 * NBMiner
 * T-Rex
-* TTMiner
+* TT-Miner
+* CryptoDredge
+* MiniZ
+* Z-Enemy
 
 ### AMD
 
 * SGMiner
 * TeamRedMiner
+* WildRig
 
 ### CPU
 
-* /
+* XMRig
 
 ## Background Services
 
