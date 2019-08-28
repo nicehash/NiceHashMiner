@@ -1,4 +1,4 @@
-Check here first, then open an [Issue](https://github.com/NiceHash/NiceHashMinerLegacy/issues) if you still need help (also search for your issue to see if it has been posted before). Provide log files.
+Check the below fixes first, then open an [Issue](https://github.com/NiceHash/NiceHashMinerLegacy/issues) if you still need help (also search for your issue to see if it has been posted before). Provide log files.
 
 * [Missing/corrupt .dll errors](#dllerrors)
   * [OpenCL.dll](#opencl)
