@@ -37,7 +37,7 @@
 
 ### All devices
 
-* [Xmr-Stak](https://github.com/nicehash/NiceHashMinerLegacy/wiki/Xmr-Stak)
+* [Xmr-Stak](./PluginDocs/XmrStak.md)
 
 ### NVIDIA and AMD
 

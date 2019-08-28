@@ -45,7 +45,7 @@ The program that is trying to launch depends on the Universal C Runtime, which i
 
 ## <a name="bench"></a> Benchmark won't complete
 
-First, try running the benchmark on "Precise". If it still doesn't complete, manually benchmark the troublesome algorithm.
+First, try running the benchmark on "Precise". If it still doesn't complete, [manually benchmark](./Advanced/ManualBenchmarking.md) the troublesome algorithm.
 
 ## <a name="lag"></a> NiceHash Miner Legacy is making Windows laggy
 
