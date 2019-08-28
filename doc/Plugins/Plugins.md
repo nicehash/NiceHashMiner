@@ -1,3 +1,5 @@
+# Plugins
+
 <ul>
 <li><a href="#plugin">What is a Plugin?</a></li>
 <li><a href="#toolkit">What is MinerPluginToolkitV1 used for?</a></li>
