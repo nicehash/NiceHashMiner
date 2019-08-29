@@ -72,26 +72,8 @@ namespace NiceHashMiner.Configs
             return false;
         }
 
-        private static void TryMigrate()
-        {
-            try
-            {
-                var dirPath = Paths.ConfigsPath();
-                var benchmarks = Directory.GetFiles(dirPath, "*.json", SearchOption.TopDirectoryOnly).Where(path => path.Contains("benchmark_") && !path.Contains("_OLD"));
-                foreach (var benchFile in benchmarks)
-                {
-                    File.Move(benchFile, benchFile.Replace("benchmark_", "device_settings_"));
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(Tag, $"Error while trying to migrate: {e.Message}");
-            }
-        }
-
         public static void InitializeConfig()
         {
-            TryMigrate();
             // init defaults
             GeneralConfig.SetDefaults();
             GeneralConfig.hwid = ApplicationStateManager.RigID;
@@ -125,10 +107,7 @@ namespace NiceHashMiner.Configs
             }
             else
             {
-                if (!RestoreBackupArchive(asmVersion)) // if there is no backup we create a new config
-                {
-                    GeneralConfigFileCommit();
-                }
+                GeneralConfigFileCommit();
             }
         }
 
