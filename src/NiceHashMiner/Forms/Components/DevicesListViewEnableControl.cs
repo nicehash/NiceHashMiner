@@ -61,6 +61,7 @@ namespace NiceHashMiner.Forms.Components
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW
             NiceHashStats.OnDeviceUpdate += UpdateDevices;
 #endif
+            FormHelpers.TranslateFormControls(this);
         }
 
         public void SetAlgorithmsListView(AlgorithmsListView algorithmsListView)
