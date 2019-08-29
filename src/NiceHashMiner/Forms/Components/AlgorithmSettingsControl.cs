@@ -42,7 +42,7 @@ namespace NiceHashMiner.Forms.Components
         public void InitLocale(ToolTip toolTip1)
         {
             field_PowerUsage.InitLocale(toolTip1,
-                Translations.Tr("Power Usage (W):"),
+                Translations.Tr("Power Usage (W)") + ":",
                 Translations.Tr("The power used by this algorithm in Watts.\n Algorithm profits will deduct power costs when this and electricity cost are above 0."));
             fieldBoxBenchmarkSpeed.InitLocale(toolTip1,
                 Translations.Tr("Benchmark Speed") + ":",
@@ -50,7 +50,6 @@ namespace NiceHashMiner.Forms.Components
             secondaryFieldBoxBenchmarkSpeed.InitLocale(toolTip1,
                 Translations.Tr("Secondary Benchmark Speed") + ":",
                 Translations.Tr("Speed for the secondary algorithm when using dual algo mining."));
-            groupBoxExtraLaunchParameters.Text = Translations.Tr("Extra Launch Parameters");
             toolTip1.SetToolTip(groupBoxExtraLaunchParameters,
                 Translations.Tr("Additional launch parameters when launching miner and this algorithm."));
             toolTip1.SetToolTip(pictureBox1, Translations.Tr("Additional launch parameters when launching miner and this algorithm."));
