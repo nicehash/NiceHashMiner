@@ -112,55 +112,18 @@ namespace MinerPluginToolkitV1.Configs
         }
 
         /// <summary>
-        /// InitMinerSystemEnvironmentVariablesSettings checks if there is MinerSystemEnvironmentVariables json file and returns file settings from it
-        /// If there is no file, the new one is generated with default settings
+        /// InitInternalSetting initialize and returns a given setting of type T where T must implement IInternalSetting <see cref="IInternalSetting"/>.
+        /// If file doesn't exist or UseUserSettings equals false, the new file is generated with settings from parameter <paramref name="setting"/> to file <paramref name="settingFileName"/>.
+        /// If file exist and UseUserSettings equals true, it will read and parse settings from the file <paramref name="settingFileName"/>.
         /// </summary>
         /// <param name="pluginRoot">Represents root path of plugin</param>
-        /// <param name="defaultSettings">Represents default settings to write if there are no custom settings available</param>
-        public static MinerSystemEnvironmentVariables InitMinerSystemEnvironmentVariablesSettings(string pluginRoot, MinerSystemEnvironmentVariables defaultSettings)
-        {
-            return InitInternalSetting(pluginRoot, defaultSettings, "MinerSystemEnvironmentVariables.json");
-        }
-
-        /// <summary>
-        /// InitInternalsHelper checks if there is MinerOptionsPackage json file and returns MinerOptionsPackage <see cref="MinerOptionsPackage"/> from it
-        /// If file doesn't exist or UseUserSettings equals false, the new file is generated with settings from parameter <paramref name="minerOptionsPackage"/> 
-        /// </summary>
-        /// <param name="pluginRoot">Represents root path of plugin</param>
-        /// <param name="minerOptionsPackage">Represents MinerOptionsPackage that will be written to file if the file doesn't exist and UseUserSettings equals false</param>
-        public static MinerOptionsPackage InitInternalsHelper(string pluginRoot, MinerOptionsPackage minerOptionsPackage)
-        {
-            return InitInternalSetting(pluginRoot, minerOptionsPackage, "MinerOptionsPackage.json");
-        }
-
-        /// <summary>
-        /// InitMinerReservedPorts checks if there is MinerReservedPorts json file and returns MinerReservedPorts <see cref="MinerReservedPorts"/> from it
-        /// If file doesn't exist or UseUserSettings equals false, the new file is generated with settings from parameter <paramref name="minerReservedPorts"/> 
-        /// </summary>
-        /// <param name="pluginRoot">Represents root path of plugin</param>
-        /// <param name="minerReservedPorts">Represents MinerReservedPorts that will be written to file if the file doesn't exist and UseUserSettings equals false</param>
+        /// <param name="setting">Represents setting of type T that will be written to file if the file doesn't exist and UseUserSettings equals false</param>
+        /// <param name="settingFileName">Represents file name user for reading and writing the <paramref name="setting"/></param>
         /// <returns></returns>
-        public static MinerReservedPorts InitMinerReservedPorts(string pluginRoot, MinerReservedPorts minerReservedPorts)
-        {
-            return InitInternalSetting(pluginRoot, minerReservedPorts, "MinerReservedPorts.json");
-        }
-
-        // TODO document
-        public static MinerApiMaxTimeoutSetting InitMinerApiMaxTimeoutSetting(string pluginRoot, MinerApiMaxTimeoutSetting minerApiMaxTimeoutSetting)
-        {
-            return InitInternalSetting(pluginRoot, minerApiMaxTimeoutSetting, "MinerApiMaxTimeoutSetting.json");
-        }
-
-        // TODO document
-        public static MinerBenchmarkTimeSettings InitMinerBenchmarkTimeSettings(string pluginRoot, MinerBenchmarkTimeSettings minerBenchmarkTimeSettings)
-        {
-            return InitInternalSetting(pluginRoot, minerBenchmarkTimeSettings, "MinerBenchmarkTimeSettings.json");
-        }
-
-        public static T InitInternalSetting<T>(string pluginRoot, T setting, string settingName) where T : class, IInternalSetting
+        public static T InitInternalSetting<T>(string pluginRoot, T setting, string settingFileName) where T : class, IInternalSetting
         {
             var pluginRootIntenrals = Path.Combine(pluginRoot, "internals");
-            var settingPath = Path.Combine(pluginRootIntenrals, settingName);
+            var settingPath = Path.Combine(pluginRootIntenrals, settingFileName);
             var settingPackage = ReadFileSettings<T>(settingPath);
             if (settingPackage != null && settingPackage.UseUserSettings)
             {
