@@ -18,6 +18,7 @@ namespace NiceHashMiner.Forms
         public Form_ChooseUpdate()
         {
             InitializeComponent();
+            Icon = Properties.Resources.logo;
             FormHelpers.TranslateFormControls(this);
             ProgressBarVisible = false;
             progressBar1.Width = this.Width;

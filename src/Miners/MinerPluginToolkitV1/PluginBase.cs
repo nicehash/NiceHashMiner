@@ -61,20 +61,20 @@ namespace MinerPluginToolkitV1
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), PluginUUID);
 
-            var readFromFileEnvSysVars = InternalConfigs.InitMinerSystemEnvironmentVariablesSettings(pluginRoot, MinerSystemEnvironmentVariables);
+            var readFromFileEnvSysVars = InternalConfigs.InitInternalSetting(pluginRoot, MinerSystemEnvironmentVariables, "MinerSystemEnvironmentVariables.json");
             if (readFromFileEnvSysVars != null) MinerSystemEnvironmentVariables = readFromFileEnvSysVars;
 
-            var fileMinerOptionsPackage = InternalConfigs.InitInternalsHelper(pluginRoot, MinerOptionsPackage);
+            var fileMinerOptionsPackage = InternalConfigs.InitInternalSetting(pluginRoot, MinerOptionsPackage, "MinerOptionsPackage.json");
             if (fileMinerOptionsPackage != null) MinerOptionsPackage = fileMinerOptionsPackage;
 
-            var fileMinerReservedPorts = InternalConfigs.InitMinerReservedPorts(pluginRoot, MinerReservedApiPorts);
+            var fileMinerReservedPorts = InternalConfigs.InitInternalSetting(pluginRoot, MinerReservedApiPorts, "MinerReservedPorts.json");
             if (fileMinerReservedPorts != null) MinerReservedApiPorts = fileMinerReservedPorts;
 
-            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitMinerApiMaxTimeoutSetting(pluginRoot, GetApiMaxTimeoutConfig);
+            var fileMinerApiMaxTimeoutSetting = InternalConfigs.InitInternalSetting(pluginRoot, GetApiMaxTimeoutConfig, "MinerApiMaxTimeoutSetting.json");
             if (fileMinerApiMaxTimeoutSetting != null) GetApiMaxTimeoutConfig = fileMinerApiMaxTimeoutSetting;
 
-            var fileMinerBenchmarkTimeSetting = InternalConfigs.InitMinerBenchmarkTimeSettings(pluginRoot, MinerBenchmarkTimeSettings);
-            if (fileMinerBenchmarkTimeSetting != null) MinerBenchmarkTimeSettings = fileMinerBenchmarkTimeSetting;
+            var fileMinerBenchmarkTimeSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinerBenchmarkTimeSettings, "MinerBenchmarkTimeSettings.json");
+            if (fileMinerBenchmarkTimeSettings != null) MinerBenchmarkTimeSettings = fileMinerBenchmarkTimeSettings;
 
             var fileMinersBinsUrlsSettings = InternalConfigs.InitInternalSetting(pluginRoot, MinersBinsUrlsSettings, "MinersBinsUrlsSettings.json");
             if (fileMinersBinsUrlsSettings != null) MinersBinsUrlsSettings = fileMinersBinsUrlsSettings;
@@ -111,7 +111,7 @@ namespace MinerPluginToolkitV1
         #endregion IBinaryPackageMissingFilesChecker
 
         #region IMinerBinsSource
-        public IEnumerable<string> GetMinerBinsUrlsForPlugin()
+        public virtual IEnumerable<string> GetMinerBinsUrlsForPlugin()
         {
             if (MinersBinsUrlsSettings == null || MinersBinsUrlsSettings.Urls == null) return Enumerable.Empty<string>();
             return MinersBinsUrlsSettings.Urls;

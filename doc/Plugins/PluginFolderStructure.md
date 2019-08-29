@@ -17,11 +17,11 @@ In each plugin folder there will be **bins** and **internals** folder.<br>
 
 Internal settings are configs implemented by **MinerPluginToolkitV1**.<br>
 Currently following settings are implemented:
-- [Miner System Environment Variables](MinerSystemEnvironmentVariables.md)
-- [Miner Options Package](ExtraLaunchParameters.md)
-- [Miner Reserved Ports](MinerReservedPorts.md)
-- [Miner Api Max Timeout Setting](MinerApiMaxTimeoutSettings.md)
-- [Miner Benchmark Time Settings](MinerBenchmarkTimeSettings.md)
+- [Miner System Environment Variables](./InternalSettings/MinerSystemEnvironmentVariables.md)
+- [Miner Options Package](./InternalSettings/ExtraLaunchParameters.md)
+- [Miner Reserved Ports](./InternalSettings/MinerReservedPorts.md)
+- [Miner Api Max Timeout Setting](./InternalSettings/MinerApiMaxTimeoutSettings.md)
+- [Miner Benchmark Time Settings](./InternalSettings/MinerBenchmarkTimeSettings.md)
 
 Each of them resides in its own *JSON* file.
 
