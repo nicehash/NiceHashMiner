@@ -166,7 +166,7 @@ namespace MinerPluginToolkitV1
         /// <summary>
         /// Provides available port for miner API binding
         /// </summary>
-        public int GetAvaliablePort()
+        public virtual int GetAvaliablePort()
         {
             Dictionary<string, List<int>> reservedPorts = null;
             if (MinerReservedApiPorts != null && MinerReservedApiPorts.UseUserSettings)
@@ -188,7 +188,7 @@ namespace MinerPluginToolkitV1
         /// <summary>
         /// Sets <see cref="DesiredRunningState"/> to Start if not already so. Then creates a miningProcess and awaits for stop token. Also handles restarts of miningProcess in case of errors.
         /// </summary>
-        public void StartMining()
+        public virtual void StartMining()
         {
             lock(_lock)
             {
