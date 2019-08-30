@@ -102,13 +102,16 @@ namespace ATI.ADL
     /// This structure is used to store information about Overdrive N capabilities
     /// \nosubgrouping
     ////////////////////////////////////////////////////////////////////////////////////////////
-    [StructLayout(LayoutKind.Sequential, Pack = 2)]
+    [StructLayout(LayoutKind.Sequential)]
     internal struct ADLODNCapabilitiesX2
     {
         /// Number of levels which describe the minimum to maximum clock ranges.
         /// The 1st level indicates the minimum clocks, and the 2nd level
         /// indicates the maximum clocks.
         public int iMaximumNumberOfPerformanceLevels;
+        /// bit vector, which tells what are the features are supported.
+        /// \ref: ADLODNFEATURECONTROL
+        public int iFlags;
         /// Contains the hard limits of the sclk range.  Overdrive
         /// clocks cannot be set outside this range.
         public ADLODNParameterRange sEngineClockRange;
