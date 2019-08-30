@@ -43,7 +43,6 @@ namespace NiceHashMiner.Forms.Components
         public DevicesListViewSpeedControl()
         {
             InitializeComponent();
-
             SaveToGeneralConfig = false;
 
             _diagTimer.Interval = 2000;
@@ -73,8 +72,6 @@ namespace NiceHashMiner.Forms.Components
         public override void InitLocale()
         {
             base.InitLocale();
-
-            speedHeader.Text = Translations.Tr("Speeds");
         }
 
         protected override void ListViewDevicesItemChecked(object sender, ItemCheckedEventArgs e)

@@ -176,7 +176,7 @@ namespace NiceHashMiner.Forms.Components
         {
             if (algorithm != null)
             {
-                algorithm.BenchmarkStatus = status;
+                algorithm.BenchmarkStatus = Translations.Tr(status);
                 // gui update only if same as selected
                 if (_computeDevice != null && computeDevice.Uuid == _computeDevice.Uuid)
                 {
