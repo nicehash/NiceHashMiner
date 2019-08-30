@@ -74,6 +74,18 @@ namespace ATI.ADL
     }
 
     #region Overdrive
+
+    ///////////////////////////////////////////////////////////////////////////
+    // ADLODNControlType Enumeration
+    ///////////////////////////////////////////////////////////////////////////
+    enum ADLODNControlType : int
+    {
+        ODNControlType_Current = 0,
+        ODNControlType_Default,
+        ODNControlType_Auto,
+        ODNControlType_Manual
+    };
+
     /////////////////////////////////////////////////////////////////////////////////////////////
     ///\brief Structure containing information about Overdrive N clock range
     ///
