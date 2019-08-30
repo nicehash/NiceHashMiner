@@ -9,7 +9,7 @@ using System.Linq;
 namespace NHM.DeviceMonitoring
 {
     internal class DeviceMonitorNVIDIA : DeviceMonitor,
-        IFanSpeed, ILoad, IPowerUsage, ITemp,
+        IFanSpeedRPM, ILoad, IPowerUsage, ITemp,
         IPowerTarget, IPowerLevel, ISetPowerLevel, ISetPowerTargetPercentage
     {
         public class PowerOutOfRangeException : ArgumentOutOfRangeException
@@ -166,7 +166,7 @@ namespace NHM.DeviceMonitoring
         }
 
         // TODO NVAPI replace with NVML if possible
-        public int FanSpeed
+        public int FanSpeedRPM
         {
             get
             {

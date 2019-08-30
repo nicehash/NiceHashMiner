@@ -9,7 +9,7 @@ using NHM.Common;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeed, ILoad, IPowerUsage, ITemp
+    internal class DeviceMonitorAMD : DeviceMonitor, IFanSpeedRPM, ILoad, IPowerUsage, ITemp
     {
         public int BusID { get; private set; }
         private readonly int _adapterIndex; // For ADL
@@ -60,7 +60,7 @@ namespace NHM.DeviceMonitoring
             }
         }
 
-        public int FanSpeed
+        public int FanSpeedRPM
         {
             get
             {
