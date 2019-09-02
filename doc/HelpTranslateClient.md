@@ -2,7 +2,7 @@
 
 If you would like a client to be translated to your language or would like to add/modify existing translations there is an easy way to do it.
 
-In the <a href="../../src/NiceHashMiner">NiceHashMiner</a> directory exists `translations.json` file, containing all available translations.
+In the <a href="./../src/NiceHashMiner">NiceHashMiner</a> directory exists `translations.json` file, containing all available translations.
 
 So if you would like to just modify existing translation find the one in the file and modify it.<br>
 To add a new translation for existing language, find an existing english translation and add a new one in the following format: `language_code: "Translated text"`.
