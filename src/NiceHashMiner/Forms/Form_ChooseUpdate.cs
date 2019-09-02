@@ -53,7 +53,11 @@ namespace NiceHashMiner.Forms
                 var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr($"Downloading updater: %{perc}"), perc)));
 
                 var url = ApplicationStateManager.GetNewVersionUpdaterUrl();
-                var downloadRootPath = Path.GetTempPath();
+                var downloadRootPath = Path.Combine(Paths.Root, "updaters");
+                if (!Directory.Exists(downloadRootPath))
+                {
+                    Directory.CreateDirectory(downloadRootPath);
+                }
                 var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, $"nhm_windows_updater_{ApplicationStateManager.OnlineVersion}", downloadProgress, ApplicationStateManager.ExitApplication.Token);
                 if (!success || ApplicationStateManager.ExitApplication.Token.IsCancellationRequested) return;
 
