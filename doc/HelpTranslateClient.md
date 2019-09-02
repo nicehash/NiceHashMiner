@@ -45,4 +45,6 @@ If you would like to see your language as supported translation in the client yo
 ```
 2) Translate at least the most the most seen translations (Main, Settings, Benchmark windows).
 
-3) Create a pull request so we can check it out and accept it as supported translations
+<br>
+
+**In all cases you have to create a pull request so we can check the changes and accept them or inform you of what should be changed.**
