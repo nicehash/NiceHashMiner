@@ -50,31 +50,13 @@ namespace NiceHashMiner.Forms
             }
 
             // special cases
-            if (c is ComboBox comboBox)
-            {
-
-                for (var i = 0; i < comboBox.Items.Count; i++)
-                {
-                    if (comboBox.Items[i] is string text)
-                    {
-                        comboBox.Items[i] = Translations.Tr(text);
-                    }
-                }
-            }
             if (c is ListView listView)
             {
                 for (var i = 0; i < listView.Columns.Count; i++)
                 {
                     listView.Columns[i].Text = Translations.Tr(listView.Columns[i].Text);
                 }
-            }
-            if (c is TabControl tabControl)
-            {
-                for (var i = 0; i < tabControl.TabPages.Count; i++)
-                {
-                    tabControl.TabPages[i].Text = Translations.Tr(tabControl.TabPages[i].Text);
-                }
-            }
+            }         
             if(c is DataGridView dataGridView)
             {
                 for(var i =0; i< dataGridView.ColumnCount; i++)

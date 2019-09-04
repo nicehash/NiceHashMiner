@@ -108,12 +108,14 @@ namespace NiceHashMiner.Mining.Plugins
     }
 #endif
 
+#if INTEGRATE_TTMiner_PLUGIN
     class TTMinerIntegratedPlugin : TTMiner.TTMinerPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "TTMiner";
 
         public bool Is3rdParty => true;
     }
+#endif
 
     class TRexIntegratedPlugin : TRex.TRexPlugin, IntegratedPlugin
     {
@@ -159,12 +161,14 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => true;
     }
 
+#if INTEGRATE_EWBF_PLUGIN
     class EWBFIntegratedPlugin : EWBF.EwbfPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "Ewbf";
 
         public bool Is3rdParty => true;
     }
+#endif
 
 #if INTEGRATE_CryptoDredge_PLUGIN
     class CryptoDredgeIntegratedPlugin : CryptoDredge.CryptoDredgePlugin, IntegratedPlugin

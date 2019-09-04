@@ -515,7 +515,7 @@
       <Project>{842790e0-4d0d-4dba-acb3-56a863974342}</Project>
       <Name>Ethminer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\EWBF\EWBF.csproj">
+    <ProjectReference Include="..\Miners\EWBF\EWBF.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_EWBF_PLUGIN'))">
       <Project>{8b382c65-fc83-43bd-ae16-f06c26a24786}</Project>
       <Name>EWBF</Name>
     </ProjectReference>
@@ -575,7 +575,7 @@
       <Project>{1b00711a-2ca2-49c0-a9fd-8bf9e478e3b0}</Project>
       <Name>TRex</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\TTMiner\TTMiner.csproj">
+    <ProjectReference Include="..\Miners\TTMiner\TTMiner.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_TTMiner_PLUGIN'))">
       <Project>{06e84bad-4317-41e0-ad59-31e70db4c12c}</Project>
       <Name>TTMiner</Name>
     </ProjectReference>
