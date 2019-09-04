@@ -243,52 +243,55 @@ namespace NiceHashMiner.Mining
             MinimumProfit = config.MinimumProfit;
 
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW
-            var tdpSimpleDefault = TDPSimpleType.HIGH;
-            var tdpSettings = config.TDPSettings;
-            if (tdpSettings != null && DeviceMonitor is ITDP tdp)
+            if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
             {
-                tdp.SettingType = config.TDPSettings.SettingType;
-                switch (config.TDPSettings.SettingType)
+                var tdpSimpleDefault = TDPSimpleType.HIGH;
+                var tdpSettings = config.TDPSettings;
+                if (tdpSettings != null && DeviceMonitor is ITDP tdp)
                 {
-                    case TDPSettingType.UNSUPPORTED:
-                    case TDPSettingType.DISABLED:
-                        break;
-                    case TDPSettingType.SIMPLE:
-                        if (config.TDPSettings.Simple.HasValue)
-                        {
-                            tdp.SetTDPSimple(config.TDPSettings.Simple.Value);
-                        }
-                        else
-                        {
-                            tdp.SetTDPSimple(tdpSimpleDefault); // fallback
-                        }
-                        break;
-                    case TDPSettingType.PERCENTAGE:
-                        if (config.TDPSettings.Percentage.HasValue)
-                        {
-                            // config values are from 0.0% to 100.0%
-                            tdp.SetTDPPercentage(config.TDPSettings.Percentage.Value / 100);
-                        }
-                        else
-                        {
-                            tdp.SetTDPSimple(tdpSimpleDefault); // fallback
-                        }
-                        break;
-                    case TDPSettingType.RAW:
-                        if (config.TDPSettings.Raw.HasValue)
-                        {
-                            tdp.SetTDPRaw(config.TDPSettings.Raw.Value);
-                        }
-                        else
-                        {
-                            tdp.SetTDPSimple(tdpSimpleDefault); // fallback
-                        }
-                        break;
+                    tdp.SettingType = config.TDPSettings.SettingType;
+                    switch (config.TDPSettings.SettingType)
+                    {
+                        case TDPSettingType.UNSUPPORTED:
+                        case TDPSettingType.DISABLED:
+                            break;
+                        case TDPSettingType.SIMPLE:
+                            if (config.TDPSettings.Simple.HasValue)
+                            {
+                                tdp.SetTDPSimple(config.TDPSettings.Simple.Value);
+                            }
+                            else
+                            {
+                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                            }
+                            break;
+                        case TDPSettingType.PERCENTAGE:
+                            if (config.TDPSettings.Percentage.HasValue)
+                            {
+                                // config values are from 0.0% to 100.0%
+                                tdp.SetTDPPercentage(config.TDPSettings.Percentage.Value / 100);
+                            }
+                            else
+                            {
+                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                            }
+                            break;
+                        case TDPSettingType.RAW:
+                            if (config.TDPSettings.Raw.HasValue)
+                            {
+                                tdp.SetTDPRaw(config.TDPSettings.Raw.Value);
+                            }
+                            else
+                            {
+                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                            }
+                            break;
+                    }
                 }
-            }
-            else if (DeviceMonitor is ITDP tdpDefault)
-            {
-                tdpDefault.SetTDPSimple(tdpSimpleDefault); // set default high
+                else if (DeviceMonitor is ITDP tdpDefault)
+                {
+                    tdpDefault.SetTDPSimple(tdpSimpleDefault); // set default high
+                }
             }
 #endif
 
@@ -316,18 +319,25 @@ namespace NiceHashMiner.Mining
             var TDPSettings = new DeviceTDPSettings { SettingType = TDPSettingType.UNSUPPORTED };
             if(DeviceMonitor is ITDP tdp)
             {
-                TDPSettings.SettingType = tdp.SettingType;
-                if (TDPSettings.SettingType == TDPSettingType.SIMPLE)
+                if (DeviceMonitorManager.DisableDevicePowerModeSettings)
                 {
-                    TDPSettings.Simple = tdp.TDPSimple;
+                    TDPSettings.SettingType = TDPSettingType.DISABLED;
                 }
-                if (TDPSettings.SettingType == TDPSettingType.PERCENTAGE)
+                else
                 {
-                    TDPSettings.Percentage = tdp.TDPPercentage * 100;
-                }
-                if (TDPSettings.SettingType == TDPSettingType.RAW)
-                {
-                    TDPSettings.Raw = tdp.TDPRaw;
+                    TDPSettings.SettingType = tdp.SettingType;
+                    if (TDPSettings.SettingType == TDPSettingType.SIMPLE)
+                    {
+                        TDPSettings.Simple = tdp.TDPSimple;
+                    }
+                    if (TDPSettings.SettingType == TDPSettingType.PERCENTAGE)
+                    {
+                        TDPSettings.Percentage = tdp.TDPPercentage * 100;
+                    }
+                    if (TDPSettings.SettingType == TDPSettingType.RAW)
+                    {
+                        TDPSettings.Raw = tdp.TDPRaw;
+                    }
                 }
             }
             var ret = new DeviceConfig
