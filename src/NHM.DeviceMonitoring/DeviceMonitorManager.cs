@@ -30,9 +30,10 @@ namespace NHM.DeviceMonitoring
                 {
                     var amdBusIdAndUuids = amds.ToDictionary(amd => amd.PCIeBusID, amd => amd.UUID);
                     var (_, amdInfos) = QueryAdl.TryQuery(amdBusIdAndUuids);
-                    foreach (var amdInfo in amdInfos)
+                    foreach (var amd in amds)
                     {
-                        ret.Add(new DeviceMonitorAMD(amdInfo));
+                        var currentAmdInfos = amdInfos.Where(info => info.BusID == amd.PCIeBusID);
+                        ret.Add(new DeviceMonitorAMD(amd.UUID, amd.PCIeBusID, currentAmdInfos.ToArray()));
                     }
                 }
                 if (nvidias.Count > 0)
