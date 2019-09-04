@@ -116,6 +116,7 @@
     <Compile Include="Benchmarking\BenchmarkStartSettings.cs" />
     <Compile Include="BUILD_TAG.cs" />
     <Compile Include="Configs\CredentialsSettings.cs" />
+    <Compile Include="Configs\Data\DeviceTDPSettings.cs" />
     <Compile Include="Configs\Data\PluginAlgorithmConfig.cs" />
     <Compile Include="Configs\IdleMiningSettings.cs" />
     <Compile Include="Configs\MiningProfitSettings.cs" />
