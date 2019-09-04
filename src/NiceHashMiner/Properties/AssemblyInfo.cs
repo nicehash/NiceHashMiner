@@ -42,9 +42,9 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW // NEW PRODUCTION
-[assembly: AssemblyVersion("1.9.2.13")]
-[assembly: AssemblyFileVersion("1.9.2.13")]
+[assembly: AssemblyVersion("1.9.2.14")]
+[assembly: AssemblyFileVersion("1.9.2.14")]
 #else  // OLD PRODUCTION 
-[assembly: AssemblyVersion("1.9.1.13")]
-[assembly: AssemblyFileVersion("1.9.1.13")]
+[assembly: AssemblyVersion("1.9.1.14")]
+[assembly: AssemblyFileVersion("1.9.1.14")]
 #endif
