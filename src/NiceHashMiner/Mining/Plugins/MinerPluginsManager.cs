@@ -60,7 +60,9 @@ namespace NiceHashMiner.Mining.Plugins
                 new PhoenixIntegratedPlugin(),
                 new TeamRedMinerIntegratedPlugin(),
                 new TRexIntegratedPlugin(),
+#if INTEGRATE_TTMiner_PLUGIN
                 new TTMinerIntegratedPlugin(),
+#endif
                 new ClaymoreDual14IntegratedPlugin(),
 
                 // can be integrated but are not included
