@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace NHM.DeviceMonitoring
 {
     internal class RangeCalculator
@@ -36,6 +38,21 @@ namespace NHM.DeviceMonitoring
             var stepValue = CalcStepValue(value);
             var perc = (stepValue - Min) / (double)(Max - Min);
             return perc;
+        }
+
+
+        // returns percentage in 0.0 to 1.0 range
+        public static double CalculatePercentage(double value, double min, double max)
+        {
+            var perc = (value - min) / (max - min);
+            return perc;
+        }
+
+        // percentage should be in 0.0 to 1.0 range
+        public static double CalculateValue(double percentage, double min, double max)
+        {
+            var value = (percentage * (max - min)) + min;
+            return value;
         }
     }
 }
