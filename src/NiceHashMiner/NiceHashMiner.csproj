@@ -514,7 +514,7 @@
       <Project>{842790e0-4d0d-4dba-acb3-56a863974342}</Project>
       <Name>Ethminer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\EWBF\EWBF.csproj">
+    <ProjectReference Include="..\Miners\EWBF\EWBF.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_EWBF_PLUGIN'))">
       <Project>{8b382c65-fc83-43bd-ae16-f06c26a24786}</Project>
       <Name>EWBF</Name>
     </ProjectReference>
