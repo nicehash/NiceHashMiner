@@ -45,7 +45,7 @@ namespace NiceHashMiner.Mining.Plugins
                 new CCMinerTpruvotIntegratedPlugin(),
                 new SGminerAvemoreIntegratedPlugin(),
                 new SGminerGMIntegratedPlugin(),
-                new XmrStakIntegratedPlugin(),            
+                new XmrStakIntegratedPlugin(),
 #if INTEGRATE_CpuMinerOpt_PLUGIN
                 new CPUMinerOptIntegratedPlugin(),
 #endif
@@ -53,8 +53,10 @@ namespace NiceHashMiner.Mining.Plugins
                 new EthminerIntegratedPlugin(),
 #endif
 
-                // 3rd party
+// 3rd party
+#if INTEGRATE_EWBF_PLUGIN
                 new EWBFIntegratedPlugin(),
+#endif
                 new GMinerIntegratedPlugin(),
                 new NBMinerIntegratedPlugin(),
                 new PhoenixIntegratedPlugin(),
