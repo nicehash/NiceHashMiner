@@ -3,9 +3,9 @@ namespace NHM.DeviceMonitoring
 {
     internal class RangeCalculator
     {
-        public int Max { get; set; } = 100;
-        public int Min { get; set; } = 0;
-        public int Step { get; set; } = 1;
+        public double Max { get; set; } = 100;
+        public double Min { get; set; } = 0;
+        public double Step { get; set; } = 1;
 
         public double PercentageStep => (double)Step / (Max - Min);
 
@@ -14,7 +14,7 @@ namespace NHM.DeviceMonitoring
 
 
         // calculates the nearest valid step value
-        public int CalcStepValue(double value)
+        public double CalcStepValue(double value)
         {
             var vPartMod = value % Step;
             var vPartStepPerc = vPartMod / Step;
@@ -24,14 +24,14 @@ namespace NHM.DeviceMonitoring
             return (int)vStep;
         }
 
-        public int CalcValue(double perc)
+        public double CalcValue(double perc)
         {
             var value = (perc * (Max - Min)) + Min;
             var stepValue = CalcStepValue(value);
             return stepValue;
         }
 
-        public double CalcPercentage(int value)
+        public double CalcPercentage(double value)
         {
             var stepValue = CalcStepValue(value);
             var perc = (stepValue - Min) / (double)(Max - Min);
