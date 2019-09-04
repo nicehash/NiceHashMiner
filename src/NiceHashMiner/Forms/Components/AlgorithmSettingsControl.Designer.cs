@@ -65,7 +65,7 @@
             this.field_PowerUsage.AutoSize = true;
             this.field_PowerUsage.BackColor = System.Drawing.Color.Transparent;
             this.field_PowerUsage.EntryText = "";
-            this.field_PowerUsage.LabelText = "Power Usage (W):";
+            this.field_PowerUsage.LabelText = "Power Usage (W)";
             this.field_PowerUsage.Location = new System.Drawing.Point(3, 3);
             this.field_PowerUsage.Name = "field_PowerUsage";
             this.field_PowerUsage.Size = new System.Drawing.Size(220, 47);
@@ -102,7 +102,7 @@
             this.groupBoxExtraLaunchParameters.Size = new System.Drawing.Size(217, 95);
             this.groupBoxExtraLaunchParameters.TabIndex = 14;
             this.groupBoxExtraLaunchParameters.TabStop = false;
-            this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters:";
+            this.groupBoxExtraLaunchParameters.Text = "Extra Launch Parameters";
             // 
             // pictureBox1
             // 

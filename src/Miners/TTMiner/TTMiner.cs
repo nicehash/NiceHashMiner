@@ -64,16 +64,20 @@ namespace TTMiner
 
             bp.CheckData = (data) =>
             {
-                var hashrateFoundPair = data.ToLower().TryGetHashrateAfter("]:");
-                var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
-
-                if (data.Contains("GPU[") && found && hashrate > 0)
+                if (data.Contains("GPU[") && data.Contains("last:"))
                 {
-                    benchHashes += hashrate;
-                    benchIters++;
-                    benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+                    var hashrateFoundPair = data.ToLower().TryGetHashrateAfter("]:");
+                    var hashrate = hashrateFoundPair.Item1;
+                    var found = hashrateFoundPair.Item2;
+
+                    if (found && hashrate > 0)
+                    {
+                        benchHashes += hashrate;
+                        benchIters++;
+                        benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+                    }
                 }
+                
                 return new BenchmarkResult
                 {
                     AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
