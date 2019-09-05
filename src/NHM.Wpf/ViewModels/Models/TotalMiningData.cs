@@ -1,13 +1,15 @@
-﻿using System;
+﻿using NHM.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NHM.Common;
 
 namespace NHM.Wpf.ViewModels.Models
 {
+    /// <summary>
+    /// Implementation of <see cref="IMiningData"/> that takes multuple <see cref="MiningData"/> objects
+    /// and displays total information (for total rows of mining stats ListView).
+    /// </summary>
     public class TotalMiningData : NotifyChangedBase, IMiningData, IDisposable
     {
         private readonly HashSet<MiningData> _datas;

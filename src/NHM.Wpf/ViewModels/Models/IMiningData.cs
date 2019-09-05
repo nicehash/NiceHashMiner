@@ -1,12 +1,11 @@
-﻿using System;
+﻿using NHM.Common;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NHM.Common;
 
 namespace NHM.Wpf.ViewModels.Models
 {
+    /// <summary>
+    /// Contract for object that can show info on mining status ListView.
+    /// </summary>
     public interface IMiningData
     {
         string Name { get; }

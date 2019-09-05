@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NHM.Common;
+﻿using NHM.Common;
 using NiceHashMiner.Mining;
 using NiceHashMiner.Utils;
+using System;
+using System.ComponentModel;
 
 namespace NHM.Wpf.ViewModels.Models
 {
     /// <summary>
-    /// Wraps Algorithm for bench GUI purposes
+    /// Wraps <see cref="AlgorithmContainer"/> for bench GUI purposes
     /// </summary>
     public class BenchAlgo : NotifyChangedBase, IDisposable
     {
         public AlgorithmContainer Algo { get; }
 
+        /// <summary>
+        /// Property that will be shown in speed column. 
+        /// </summary>
         public string StatusString
         {
             get

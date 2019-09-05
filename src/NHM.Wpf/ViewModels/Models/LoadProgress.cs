@@ -3,6 +3,9 @@ using NHM.Common;
 
 namespace NHM.Wpf.ViewModels.Models
 {
+    /// <summary>
+    /// A notify-changed friendly implementation of <see cref="IProgress{T}"/> with message and percentage.
+    /// </summary>
     public class LoadProgress : NotifyChangedBase, IProgress<(string mess, double perc)>
     {
         private bool _isInstalling;

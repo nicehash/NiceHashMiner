@@ -1,13 +1,12 @@
-﻿using System;
+﻿using NiceHashMiner;
+using NiceHashMiner.Configs;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using NiceHashMiner;
-using NiceHashMiner.Configs;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
-    public class SettingsVM : BaseVM, IDisposable
+    public class SettingsVM : BaseVM
     {
         private SettingsBaseVM _selectedPageVM;
         public SettingsBaseVM SelectedPageVM
