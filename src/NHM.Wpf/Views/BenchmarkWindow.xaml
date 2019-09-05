@@ -1,12 +1,12 @@
-﻿<Window x:Class="NHM.Wpf.Windows.BenchmarkWindow"
+﻿<Window x:Class="NHM.Wpf.Views.BenchmarkWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NHM.Wpf"
         xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
-        xmlns:control="clr-namespace:NHM.Wpf.Windows.Settings.Controls"
         xmlns:converters="clr-namespace:NHM.Wpf.ViewModels.Converters"
+        xmlns:controls="clr-namespace:NHM.Wpf.Views.Settings.Controls"
         mc:Ignorable="d"
         Title="{Binding Title}" 
         Icon="../Resources/logo.ico"
@@ -106,23 +106,23 @@
                   Margin="0">
             <ScrollViewer VerticalScrollBarVisibility="Auto" IsEnabled="{Binding SideBarEnabled}">
                 <StackPanel Width="210">
-                    <control:SettingsContainer Title="Benchmark Speed (H/s):"
+                    <controls:SettingsContainer Title="Benchmark Speed (H/s):"
                                                Description="Fine tune algorithm ratios by manually settings benchmark speeds for each algorithm.">
                         <TextBox Text="{Binding SelectedAlgo.Algo.BenchmarkSpeed}" />
-                    </control:SettingsContainer>
-                    <control:SettingsContainer Title="Secondary Benchmark Speed (H/s):"
+                    </controls:SettingsContainer>
+                    <controls:SettingsContainer Title="Secondary Benchmark Speed (H/s):"
                                                Description="Speed for the secondary algorithm when using dual mining."
                                                IsEnabled="{Binding SelectedAlgo.Algo.IsDual}">
                         <TextBox Text="{Binding SelectedAlgo.Algo.SecondaryBenchmarkSpeed}" />
-                    </control:SettingsContainer>
-                    <control:SettingsContainer Title="Power Usage (W):"
+                    </controls:SettingsContainer>
+                    <controls:SettingsContainer Title="Power Usage (W):"
                                                Description="The power used by this algorithm in Watts\nAlgorithm profits will deduct power costs when this and electricity cost are above 0.">
                         <TextBox Text="{Binding SelectedAlgo.Algo.PowerUsage}" />
-                    </control:SettingsContainer>
-                    <control:SettingsContainer Title="Extra Launch Parameters:"
+                    </controls:SettingsContainer>
+                    <controls:SettingsContainer Title="Extra Launch Parameters:"
                                                Description="Additional launch parameters when launching miner and this algorithm.">
                         <TextBox TextWrapping="Wrap" Text="{Binding SelectedAlgo.Algo.ExtraLaunchParameters}" />
-                    </control:SettingsContainer>
+                    </controls:SettingsContainer>
                 </StackPanel>
             </ScrollViewer>
         </Expander>

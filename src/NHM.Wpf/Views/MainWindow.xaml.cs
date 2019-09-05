@@ -1,20 +1,21 @@
-﻿using NHM.Common;
-using NHM.Wpf.ViewModels;
-using NHM.Wpf.Windows.Common;
-using NHM.Wpf.Windows.Plugins;
-using NiceHashMiner;
-using NiceHashMiner.Mining;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using NHM.Common;
+using NHM.Wpf.ViewModels;
+using NHM.Wpf.Views.Common;
+using NHM.Wpf.Views.Plugins;
+using NHM.Wpf.Views.Settings;
+using NiceHashMiner;
 using NiceHashMiner.Configs;
+using NiceHashMiner.Mining;
 using NiceHashMiner.Utils;
 using MessageBox = System.Windows.Forms.MessageBox;
 
-namespace NHM.Wpf.Windows
+namespace NHM.Wpf.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

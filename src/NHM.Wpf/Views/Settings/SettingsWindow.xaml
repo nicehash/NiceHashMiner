@@ -1,10 +1,10 @@
-﻿<Window x:Class="NHM.Wpf.Windows.SettingsWindow"
+﻿<Window x:Class="NHM.Wpf.Views.Settings.SettingsWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NHM.Wpf.Windows.Settings.Pages"
         xmlns:vm="clr-namespace:NHM.Wpf.ViewModels.Settings"
+        xmlns:pages="clr-namespace:NHM.Wpf.Views.Settings.Pages"
         mc:Ignorable="d"
         Title="{Binding Title}" 
         Icon="../../Resources/logo.ico" 
@@ -53,22 +53,22 @@
                 <ScrollViewer Margin="10">
                     <ScrollViewer.Resources>
                         <DataTemplate DataType="{x:Type vm:GeneralSettingsVM}">
-                            <local:GeneralPage />
+                            <pages:GeneralPage />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:MiningGeneralVM}">
-                            <local:MiningPage />
+                            <pages:MiningPage />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:ProfitabilitySettingsVM}">
-                            <local:ProfitabilityPage />
+                            <pages:ProfitabilityPage />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:AdvancedGeneralVM}">
-                            <local:AdvancedPage />
+                            <pages:AdvancedPage />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:AdvancedSwitchingVM}">
-                            <local:AdvancedSwitchingPage />
+                            <pages:AdvancedSwitchingPage />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type vm:AdvancedMiningVM}">
-                            <local:AdvancedMiningPage />
+                            <pages:AdvancedMiningPage />
                         </DataTemplate>
                     </ScrollViewer.Resources>
                     <ContentControl Content="{Binding SelectedPageVM}"/>

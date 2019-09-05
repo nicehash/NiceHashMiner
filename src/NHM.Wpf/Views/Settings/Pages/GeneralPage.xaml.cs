@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using NHM.Wpf.Windows.Common;
+using NHM.Wpf.Views.Common;
 
-namespace NHM.Wpf.Windows.Settings.Pages
+namespace NHM.Wpf.Views.Settings.Pages
 {
     /// <summary>
     /// Interaction logic for GeneralPage.xaml

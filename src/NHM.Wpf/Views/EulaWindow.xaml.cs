@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Forms;
 
-namespace NHM.Wpf.Windows
+namespace NHM.Wpf.Views
 {
     /// <summary>
     /// Interaction logic for EulaWindow.xaml

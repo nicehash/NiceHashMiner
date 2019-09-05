@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace NHM.Wpf.Windows.Plugins.Controls
+namespace NHM.Wpf.Views.Plugins.Controls
 {
     /// <summary>
     /// Interaction logic for InlineDataDisplay.xaml

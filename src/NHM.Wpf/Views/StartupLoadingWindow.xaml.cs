@@ -1,9 +1,9 @@
-﻿using NHM.Common;
-using NHM.Wpf.ViewModels;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows;
+using NHM.Common;
+using NHM.Wpf.ViewModels;
 
-namespace NHM.Wpf.Windows
+namespace NHM.Wpf.Views
 {
     /// <summary>
     /// Interaction logic for StartupLoadingWindow.xaml

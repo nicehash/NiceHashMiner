@@ -1,8 +1,8 @@
-﻿using NHM.Wpf.ViewModels.Models;
+﻿using System.Windows;
+using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Plugins;
-using System.Windows;
 
-namespace NHM.Wpf.Windows.Plugins
+namespace NHM.Wpf.Views.Plugins
 {
     /// <summary>
     /// Interaction logic for PluginWindow.xaml

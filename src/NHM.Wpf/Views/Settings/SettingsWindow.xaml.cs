@@ -1,14 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Configuration;
 using System.Linq;
-using NHM.Wpf.ViewModels.Settings;
 using System.Windows;
-using NHM.Wpf.Windows.Common;
+using NHM.Wpf.ViewModels.Settings;
+using NHM.Wpf.Views.Common;
 using NiceHashMiner;
-using NiceHashMiner.Configs;
 
-namespace NHM.Wpf.Windows
+namespace NHM.Wpf.Views.Settings
 {
     /// <summary>
     /// Interaction logic for SettingsWindow.xaml

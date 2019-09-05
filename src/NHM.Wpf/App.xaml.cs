@@ -1,7 +1,6 @@
 ﻿using log4net.Core;
 using NHM.Common;
 using NHM.Common.Enums;
-using NHM.Wpf.Windows;
 using NiceHashMiner;
 using NiceHashMiner.Configs;
 using NiceHashMiner.Stats;
@@ -14,6 +13,7 @@ using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
+using NHM.Wpf.Views;
 
 namespace NHM.Wpf
 {

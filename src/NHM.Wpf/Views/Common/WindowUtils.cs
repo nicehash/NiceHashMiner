@@ -1,12 +1,11 @@
-﻿using NHM.Wpf.ViewModels.Settings;
-using NHM.Wpf.Windows.Settings.Controls;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using static NHM.Wpf.Translations;
+using NHM.Wpf.ViewModels.Settings;
+using NHM.Wpf.Views.Settings.Controls;
 
-namespace NHM.Wpf.Windows.Common
+namespace NHM.Wpf.Views.Common
 {
     public static class WindowUtils
     {
@@ -34,7 +33,7 @@ namespace NHM.Wpf.Windows.Common
         public static void Translate(ContentControl c)
         {
             if (c.Content is string s)
-                c.Content = Tr(s);
+                c.Content = Translations.Tr(s);
             else if (c.Content is UIElement u)
                 Translate(u);
         }
@@ -51,7 +50,7 @@ namespace NHM.Wpf.Windows.Common
                 foreach (var col in dg.Columns)
                 {
                     if (col.Header is string s)
-                        col.Header = Tr(s);
+                        col.Header = Translations.Tr(s);
                 }
             }
             else if (i is ListView lv && lv.View is GridView gv)
@@ -59,7 +58,7 @@ namespace NHM.Wpf.Windows.Common
                 foreach (var col in gv.Columns)
                 {
                     if (col.Header is string s)
-                        col.Header = Tr(s);
+                        col.Header = Translations.Tr(s);
                 }
             }
         }
@@ -71,8 +70,8 @@ namespace NHM.Wpf.Windows.Common
                 Translate(child);
             }
 
-            sc.Title = Tr(sc.Title);
-            sc.Description = Tr(sc.Description);
+            sc.Title = Translations.Tr(sc.Title);
+            sc.Description = Translations.Tr(sc.Description);
         }
 
         public static void Translate(TextBlock tb)
@@ -86,7 +85,7 @@ namespace NHM.Wpf.Windows.Common
         public static void Translate(Inline il)
         {
             if (il is Run run)
-                run.Text = Tr(run.Text);
+                run.Text = Translations.Tr(run.Text);
             else if (il is Span sp)
             {
                 foreach (var inline in EnumInlines(sp.Inlines))
@@ -138,7 +137,7 @@ namespace NHM.Wpf.Windows.Common
 
         public static void Translate(SettingsBaseVM sb)
         {
-            sb.Name = Tr(sb.Name);
+            sb.Name = Translations.Tr(sb.Name);
 
             foreach (var child in sb.Children)
             {

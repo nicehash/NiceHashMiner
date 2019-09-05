@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Plugins;
 
-namespace NHM.Wpf.Windows.Plugins.Controls
+namespace NHM.Wpf.Views.Plugins.Controls
 {
     /// <summary>
     /// Interaction logic for PluginEntry.xaml

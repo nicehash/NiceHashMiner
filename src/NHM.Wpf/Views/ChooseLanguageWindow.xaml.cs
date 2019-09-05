@@ -1,10 +1,10 @@
-﻿using NHM.Wpf.Annotations;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using NHM.Wpf.Properties;
 
-namespace NHM.Wpf.Windows
+namespace NHM.Wpf.Views
 {
     /// <summary>
     /// Interaction logic for ChooseLanguageWindow.xaml

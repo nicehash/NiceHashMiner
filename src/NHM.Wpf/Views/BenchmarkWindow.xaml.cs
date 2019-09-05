@@ -1,13 +1,13 @@
 ﻿using System;
-using NHM.Wpf.ViewModels;
-using NHM.Wpf.Windows.Common;
-using NHM.Wpf.Windows.Settings.Pages;
-using NiceHashMiner.Mining;
 using System.Collections.Generic;
 using System.Windows;
+using NHM.Wpf.ViewModels;
+using NHM.Wpf.Views.Common;
+using NHM.Wpf.Views.Settings.Pages;
 using NiceHashMiner.Benchmarking;
+using NiceHashMiner.Mining;
 
-namespace NHM.Wpf.Windows
+namespace NHM.Wpf.Views
 {
     /// <summary>
     /// Interaction logic for BenchmarkWindow.xaml
