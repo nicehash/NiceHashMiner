@@ -29,7 +29,7 @@ namespace NHM.Wpf.Views
         {
             InitializeComponent();
 
-            _vm = WindowUtils.AssertViewModel<MainVM>(this);
+            _vm = this.AssertViewModel<MainVM>();
 
             Translations.LanguageChanged += TranslationsOnLanguageChanged;
             TranslationsOnLanguageChanged(null, null);
@@ -120,10 +120,10 @@ namespace NHM.Wpf.Views
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
             IsEnabled = false;
-            var startup = new StartupLoadingWindow();
-            startup.Owner = this;
-            startup.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            startup.CanClose = false;
+            var startup = new StartupLoadingWindow
+            {
+                Owner = this, WindowStartupLocation = WindowStartupLocation.CenterOwner, CanClose = false
+            };
             startup.Show();
 
             await _vm.InitializeNhm(startup.StartupLoader);
@@ -136,29 +136,6 @@ namespace NHM.Wpf.Views
             startup.Close();
 
             IsEnabled = true;
-        }
-
-        private static async Task FakeLoad(IStartupLoader loader)
-        {
-            for (var i = 0; i <= 100; i++)
-            {
-                loader.PrimaryProgress.Report(("Load", i));
-                await Task.Delay(10);
-                if (i == 60)
-                {
-                    loader.SecondaryVisible = true;
-                    loader.SecondaryTitle = "Downloading miners...";
-                    for (var j = 0; j <= 100; j++)
-                    {
-                        loader.SecondaryProgress.Report(("Sec load", j));
-                        await Task.Delay(10);
-                    }
-                }
-                else
-                {
-                    loader.SecondaryVisible = false;
-                }
-            }
         }
 
         private async void StartButton_OnClick(object sender, RoutedEventArgs e)

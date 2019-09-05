@@ -22,13 +22,7 @@ namespace NHM.Wpf.Views.Settings
         {
             InitializeComponent();
 
-            if (DataContext is SettingsVM vm)
-                _vm = vm;
-            else
-            {
-                _vm = new SettingsVM();
-                DataContext = _vm;
-            }
+            _vm = this.AssertViewModel<SettingsVM>();
 
             Translations.LanguageChanged += Translations_LanguageChanged;
             Translations_LanguageChanged(null, null);

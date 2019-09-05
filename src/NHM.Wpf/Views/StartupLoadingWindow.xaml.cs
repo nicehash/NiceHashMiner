@@ -2,6 +2,7 @@
 using System.Windows;
 using NHM.Common;
 using NHM.Wpf.ViewModels;
+using NHM.Wpf.Views.Common;
 
 namespace NHM.Wpf.Views
 {
@@ -17,16 +18,7 @@ namespace NHM.Wpf.Views
         {
             InitializeComponent();
 
-            if (DataContext is StartupLoadingVM vm)
-            {
-                StartupLoader = vm;
-            }
-            else
-            {
-                vm = new StartupLoadingVM();
-                DataContext = vm;
-                StartupLoader = vm;
-            }
+            StartupLoader = this.AssertViewModel<StartupLoadingVM>();
         }
 
         private void StartupLoadingWindow_OnClosing(object sender, CancelEventArgs e)

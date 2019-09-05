@@ -9,7 +9,7 @@ namespace NHM.Wpf.Views.Common
 {
     public static class WindowUtils
     {
-        public static T AssertViewModel<T>(FrameworkElement fe) where T : class, new()
+        public static T AssertViewModel<T>(this FrameworkElement fe) where T : class, new()
         {
             if (!(fe.DataContext is T vm))
             {

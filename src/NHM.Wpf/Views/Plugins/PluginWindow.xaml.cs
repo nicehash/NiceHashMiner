@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using NHM.Wpf.ViewModels.Models;
 using NHM.Wpf.ViewModels.Plugins;
+using NHM.Wpf.Views.Common;
 
 namespace NHM.Wpf.Views.Plugins
 {
@@ -15,13 +16,7 @@ namespace NHM.Wpf.Views.Plugins
         {
             InitializeComponent();
 
-            if (DataContext is PluginVM vm)
-                _vm = vm;
-            else
-            {
-                _vm = new PluginVM();
-                DataContext = _vm;
-            }
+            _vm = this.AssertViewModel<PluginVM>();
         }
 
         private void PluginEntry_OnDetailsClick(object sender, PluginEventArgs e)

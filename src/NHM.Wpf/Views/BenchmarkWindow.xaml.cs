@@ -20,13 +20,7 @@ namespace NHM.Wpf.Views
         {
             InitializeComponent();
 
-            if (DataContext is BenchmarkViewModel vm)
-                _vm = vm;
-            else
-            {
-                _vm = new BenchmarkViewModel();
-                DataContext = _vm;
-            }
+            _vm = this.AssertViewModel<BenchmarkViewModel>();
 
             _vm.Devices = devices;
             _vm.OnBenchEnd += OnBenchEnd;
@@ -36,7 +30,7 @@ namespace NHM.Wpf.Views
 
         private void OnBenchEnd(object sender, BenchEndEventArgs e)
         {
-            Dispatcher.Invoke(() =>
+            Dispatcher?.Invoke(() =>
             {
                 if (!e.StartMining)
                 {

@@ -16,6 +16,7 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <!-- RichTextBox here is the WinForms control hosted. The WPF equivalent doesn't auto-detect URLs. -->
         <WindowsFormsHost>
             <forms:RichTextBox x:Name="EulaRtb" 
                                DetectUrls="True" 
