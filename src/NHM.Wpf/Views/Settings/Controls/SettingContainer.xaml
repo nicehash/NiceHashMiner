@@ -13,6 +13,13 @@
         <ResourceDictionary Source="../../Common/Styles.xaml" />
     </UserControl.Resources>
 
+    <!-- The data binding in this control is complicated. We are mixing between bindings to the control itself
+         (e.g. whether to show the checkbox, and name/detail textblocks) as well as bindings of the content
+         that is declared by the consuming View. -->
+    <!-- Do not mess with the bindings here without checking the control still works in all consuming Views. -->
+
+    <!-- ANY consuming View that wants to use data binding for the contents needs to implement ISettingsPage. -->
+
     <StackPanel Margin="10"
                 DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsContainer}}}">
         <StackPanel.Resources>
@@ -28,6 +35,7 @@
                       Visibility="{Binding Enabled, Converter={StaticResource BoolToVis}}"
                       IsEnabled="True" 
                       Content="{Binding Title}"/>
+            <!-- ConverterParameter=1 inverses the conversion result (i.e. this TextBlock will be visible when the above CheckBox is not -->
             <TextBlock Text="{Binding Title}"
                        Visibility="{Binding Enabled, Converter={StaticResource BoolToVis}, ConverterParameter=1}" />
         </StackPanel>

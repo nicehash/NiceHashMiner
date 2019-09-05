@@ -24,6 +24,8 @@ namespace NHM.Wpf.ViewModels.Plugins
 
         public bool InstallButtonEnabled => (Plugin.Installed || Plugin.Supported) && !Load.IsInstalling;
 
+        // Load is shared between the listing and detail page. This allows navigating to details and back
+        // while maintaining the progress.
         public LoadProgress Load { get; }
 
         protected readonly Dictionary<string, List<string>> FilteredSupportedAlgorithms;
@@ -56,8 +58,6 @@ namespace NHM.Wpf.ViewModels.Plugins
 
         public async Task InstallRemovePlugin()
         {
-            // TODO Placeholder
-
             if (Load.IsInstalling) return;
 
             if (Plugin.Installed)

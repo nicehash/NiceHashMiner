@@ -4,6 +4,9 @@ using System.Windows.Data;
 
 namespace NHM.Wpf.ViewModels.Converters
 {
+    /// <summary>
+    /// Converts various number types to a string with no decimals, or "N/A" if value is below 0.
+    /// </summary>
     public class DoubleToStringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

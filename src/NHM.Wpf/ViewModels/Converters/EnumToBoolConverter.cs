@@ -10,10 +10,7 @@ namespace NHM.Wpf.ViewModels.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(parameter is string parameterString))
-                return DependencyProperty.UnsetValue;
-
-            if (Enum.IsDefined(value.GetType(), value) == false)
+            if (!(parameter is string parameterString) || value == null || !Enum.IsDefined(value.GetType(), value))
                 return DependencyProperty.UnsetValue;
 
             var parameterValue = Enum.Parse(value.GetType(), parameterString);

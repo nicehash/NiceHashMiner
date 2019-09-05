@@ -4,7 +4,11 @@ using System.Windows.Data;
 
 namespace NHM.Wpf.ViewModels.Converters
 {
-    // Helper class for type-safe conversions
+    /// <summary>
+    /// Helper class for type-safe value conversion.
+    /// </summary>
+    /// <typeparam name="TIn">Input type for <see cref="IValueConverter.Convert"/></typeparam>
+    /// <typeparam name="TOut">Output type for <see cref="IValueConverter.Convert"/></typeparam>
     public abstract class ConverterBase<TIn, TOut> : IValueConverter
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)

@@ -18,7 +18,6 @@
 
     <Grid>
         <Grid.Resources>
-            <converters:HashrateConverter x:Key="HashConv" />
             <converters:EnumToBoolConverter x:Key="EnumConv" />
         </Grid.Resources>
 
