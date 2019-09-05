@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace NHM.Wpf.ViewModels.Converters
@@ -13,13 +14,13 @@ namespace NHM.Wpf.ViewModels.Converters
     {
         object IValueConverter.Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is TIn t)) return null;
+            if (!(value is TIn t)) return DependencyProperty.UnsetValue;
             return Convert(t, parameter as string);
         }
 
         object IValueConverter.ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(value is TOut t)) return null;
+            if (!(value is TOut t)) return DependencyProperty.UnsetValue;
             return ConvertBack(t, parameter as string);
         }
 

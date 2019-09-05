@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using NHM.Common;
-using NHM.Common.Enums;
-using NiceHashMiner.Utils;
+﻿using NHM.Common;
+using System.Collections.Generic;
 
 namespace NHM.Wpf.ViewModels.Converters
 {

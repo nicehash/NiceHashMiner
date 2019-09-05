@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 
 namespace NHM.Wpf.ViewModels.Converters
@@ -26,7 +27,7 @@ namespace NHM.Wpf.ViewModels.Converters
                     d = i;
                     break;
                 default:
-                    throw new ArgumentException();
+                    return DependencyProperty.UnsetValue;
             }
 
             return d < 0 ? Translations.Tr("N/A") : d.ToString("F0");
