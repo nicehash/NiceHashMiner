@@ -27,8 +27,8 @@ namespace NiceHashMiner
 
         private class LoaderConverter : IStartupLoader
         {
-            public IProgress<(string, double)> PrimaryProgress { get; }
-            public IProgress<(string, double)> SecondaryProgress { get; }
+            public IProgress<(string, int)> PrimaryProgress { get; }
+            public IProgress<(string, int)> SecondaryProgress { get; }
             public string PrimaryTitle { get; set; }
             public string SecondaryTitle { get; set; }
             public bool SecondaryVisible { get; set; }
@@ -63,7 +63,7 @@ namespace NiceHashMiner
                 // STEP
                 // Checking System Memory
                 loader.PrimaryProgress.Report((Tr("Checking System Specs"), nextProgPerc()));
-                await Task.Run(SystemSpecs.QueryWin32_OperatingSystemDataAndLog);
+                await Task.Run(() => SystemSpecs.QueryWin32_OperatingSystemDataAndLog());
 
                 // TODO extract in function
                 #region Device Detection
@@ -112,8 +112,7 @@ namespace NiceHashMiner
                         cudaCount++;
                         nameCount = $"GPU#{cudaCount}";
                     }
-                    var cd = new ComputeDevice(cDev, index++, nameCount);
-                    AvailableDevices.AddDevice(cd);
+                    AvailableDevices.AddDevice(new ComputeDevice(cDev, index++, nameCount));
                 }
                 AvailableDevices.UncheckCpuIfGpu();
                 FailedRamCheck = SystemSpecs.CheckRam(AvailableDevices.AvailGpus, AvailableDevices.AvailNvidiaGpuRam, AvailableDevices.AvailAmdGpuRam);
@@ -190,7 +189,7 @@ namespace NiceHashMiner
                     loader.PrimaryProgress.Report((Tr("Downloading Miner Binaries..."), nextProgPerc()));
                     await MinerPluginsManager.DownloadMissingMinersBins(loader.SecondaryProgress, ExitApplication.Token);
                     //await MinersDownloader.MinersDownloadManager.DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(progressDownload, ExitApplication.Token);
-                    loader.SecondaryVisible = false;
+                    loadingControl.ShowSecondProgressBar = false;
                     if (ExitApplication.IsCancellationRequested) return;
                 }
 
@@ -225,13 +224,13 @@ namespace NiceHashMiner
 
                 // STEP
                 // VC_REDIST check
-                loader.PrimaryProgress.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
+                progress?.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
                 VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
 
                 // STEP
                 if (FirewallRules.RunFirewallRulesOnStartup)
                 {
-                    loader.PrimaryProgress.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
+                    progress?.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
                     if (FirewallRules.IsFirewallRulesOutdated())
                     {
                         // requires UAC
@@ -241,12 +240,12 @@ namespace NiceHashMiner
                 }
                 else
                 {
-                    loader.PrimaryProgress.Report((Tr("Skipping Firewall Rules..."), nextProgPerc()));
+                    progress?.Report((Tr("Skipping Firewall Rules..."), nextProgPerc()));
                 }
 
                 // STEP
                 // Cross reference plugin indexes
-                loader.PrimaryProgress.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
+                progress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
             }

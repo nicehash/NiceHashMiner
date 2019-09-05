@@ -28,7 +28,7 @@ namespace NHM.MinersDownloader
                    | SecurityProtocolType.Ssl3;
         }
 
-        public static Task<(bool success, string downloadedFilePath)> DownloadFileAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<double> progress, CancellationToken stop)
+        public static Task<(bool success, string downloadedFilePath)> DownloadFileAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
         {
 
             // TODO switch for mega upload
@@ -63,7 +63,7 @@ namespace NHM.MinersDownloader
             return Path.Combine(downloadFileRootPath, $"{fileNameNoExtension}.{fileExtension}");
         }
 
-        public static async Task<(bool success, string downloadedFilePath)> DownloadFileWebClientAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<double> progress, CancellationToken stop)
+        public static async Task<(bool success, string downloadedFilePath)> DownloadFileWebClientAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
         {
             var downloadFileLocation = GetDownloadFilePath(downloadFileRootPath, fileNameNoExtension, GetFileExtension(url));
             var downloadStatus = false;
@@ -101,7 +101,7 @@ namespace NHM.MinersDownloader
         }
 
         // #2 download the file
-        internal static async Task<(bool success, string downloadedFilePath)> DownlaodWithMyDownloaderAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<double> progress, CancellationToken stop)
+        internal static async Task<(bool success, string downloadedFilePath)> DownlaodWithMyDownloaderAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
         {
             // these extensions must be here otherwise it will not downlaod
             var extensions = new List<IExtension>();
@@ -136,7 +136,7 @@ namespace NHM.MinersDownloader
                 var labelDownloaded =
                     $"{downloader.Transfered / 1024d / 1024d:0.00} MB / {downloader.FileSize / 1024d / 1024d:0.00} MB";
 
-                var progPerc = (((double)downloader.Transfered / downloader.FileSize) * 100);
+                var progPerc = (int)(((double)downloader.Transfered / downloader.FileSize) * 100);
                 var progMessage = $"{speedString}   {percString}   {labelDownloaded}";
                 progress?.Report(progPerc);
 
@@ -196,7 +196,7 @@ namespace NHM.MinersDownloader
         {
             return url.Contains("/#F!");
         }
-        internal static Task<(bool success, string downloadedFilePath)> DownlaodWithMegaAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<double> progress, CancellationToken stop)
+        internal static Task<(bool success, string downloadedFilePath)> DownlaodWithMegaAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
         {
             if (IsMegaURLFolder(url))
             {
@@ -207,18 +207,19 @@ namespace NHM.MinersDownloader
 
 
         // non folder
-        internal static async Task<(bool success, string downloadedFilePath)> DownlaodWithMegaFileAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<double> progress, CancellationToken stop)
+        internal static async Task<(bool success, string downloadedFilePath)> DownlaodWithMegaFileAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
         {
             var client = new MegaApiClient();
             var downloadFileLocation = "";
             try
             {
                 client.LoginAnonymous();
-                var fileLink = new Uri(url);
-                var node = await client.GetNodeFromLinkAsync(fileLink);
+                Uri fileLink = new Uri(url);
+                INodeInfo node = await client.GetNodeFromLinkAsync(fileLink);
                 Console.WriteLine($"Downloading {node.Name}");
+                var doubleProgress = new Progress<double>((p) => progress?.Report((int)p));
                 downloadFileLocation = GetDownloadFilePath(downloadFileRootPath, fileNameNoExtension, GetFileExtension(node.Name));
-                await client.DownloadFileAsync(fileLink, downloadFileLocation, progress, stop);
+                await client.DownloadFileAsync(fileLink, downloadFileLocation, doubleProgress, stop);
             }
             catch(Exception e)
             {
@@ -233,7 +234,7 @@ namespace NHM.MinersDownloader
             return (success, downloadFileLocation);
         }
 
-        internal static async Task<(bool success, string downloadedFilePath)> DownlaodWithMegaFromFolderAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<double> progress, CancellationToken stop)
+        internal static async Task<(bool success, string downloadedFilePath)> DownlaodWithMegaFromFolderAsync(string url, string downloadFileRootPath, string fileNameNoExtension, IProgress<int> progress, CancellationToken stop)
         {
             var client = new MegaApiClient();
             var downloadFileLocation = "";
@@ -248,8 +249,9 @@ namespace NHM.MinersDownloader
                 var nodes = await client.GetNodesFromLinkAsync(folderLink);
                 var node = nodes.FirstOrDefault(n => n.Id == id);
                 //Console.WriteLine($"Downloading {node.Name}");
+                var doubleProgress = new Progress<double>((p) => progress?.Report((int)p));
                 downloadFileLocation = GetDownloadFilePath(downloadFileRootPath, fileNameNoExtension, GetFileExtension(node.Name));
-                await client.DownloadFileAsync(node, downloadFileLocation, progress, stop);
+                await client.DownloadFileAsync(node, downloadFileLocation, doubleProgress, stop);
             }
             catch (Exception e)
             {

@@ -74,7 +74,7 @@ namespace NHM.Wpf.ViewModels.Plugins
 
         private async Task InstallOrUpdateAsync()
         {
-            var progressConverter = new Progress<Tuple<MinerPluginsManager.ProgressState, double>>(status =>
+            var progressConverter = new Progress<Tuple<MinerPluginsManager.ProgressState, int>>(status =>
             {
                 var (state, progress) = status;
 

@@ -294,13 +294,13 @@ namespace NiceHashMiner
                 loadingControl.Location = location;
                 loadingControl.BringToFront();
 
-                var progress = new Progress<(string loadMessageText, double perc)>(p =>
+                var progress = new Progress<(string loadMessageText, int perc)>(p =>
                 {
                     loadingControl.Progress = (int) p.perc;
                     loadingControl.LoadMessageText = p.loadMessageText;
                 });
 
-                var progressDownload = new Progress<(string loadMessageText, double perc)>(p =>
+                var progressDownload = new Progress<(string loadMessageText, int perc)>(p =>
                 {
                     loadingControl.ProgressSecond = (int) p.perc;
                     loadingControl.LoadMessageTextSecond = p.loadMessageText;
