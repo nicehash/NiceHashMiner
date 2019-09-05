@@ -6,7 +6,7 @@ namespace NHM.Wpf.ViewModels.Models
     /// <summary>
     /// A notify-changed friendly implementation of <see cref="IProgress{T}"/> with message and percentage.
     /// </summary>
-    public class LoadProgress : NotifyChangedBase, IProgress<(string mess, double perc)>
+    public class LoadProgress : NotifyChangedBase, IProgress<(string mess, int perc)>
     {
         private bool _isInstalling;
 
@@ -20,9 +20,9 @@ namespace NHM.Wpf.ViewModels.Models
             }
         }
 
-        private double _installProgress;
+        private int _installProgress;
 
-        public double Progress
+        public int Progress
         {
             get => _installProgress;
             set
@@ -44,7 +44,7 @@ namespace NHM.Wpf.ViewModels.Models
             }
         }
 
-        public void Report((string mess, double perc) value)
+        public void Report((string mess, int perc) value)
         {
             Progress = value.perc;
             Status = value.mess;

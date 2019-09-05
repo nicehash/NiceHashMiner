@@ -12,8 +12,8 @@ namespace NHM.Wpf.ViewModels
         public LoadProgress PrimaryProgress { get; } = new LoadProgress();
         public LoadProgress SecondaryProgress { get; } = new LoadProgress();
 
-        IProgress<(string, double)> IStartupLoader.PrimaryProgress => PrimaryProgress;
-        IProgress<(string, double)> IStartupLoader.SecondaryProgress => SecondaryProgress;
+        IProgress<(string, int)> IStartupLoader.PrimaryProgress => PrimaryProgress;
+        IProgress<(string, int)> IStartupLoader.SecondaryProgress => SecondaryProgress;
 
         private static readonly string PlaceholderTitle = Translations.Tr("Loading, please wait...");
 

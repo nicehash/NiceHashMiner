@@ -4,8 +4,8 @@ namespace NHM.Common
 {
     public interface IStartupLoader
     {
-        IProgress<(string, double)> PrimaryProgress { get; }
-        IProgress<(string, double)> SecondaryProgress { get; }
+        IProgress<(string, int)> PrimaryProgress { get; }
+        IProgress<(string, int)> SecondaryProgress { get; }
 
         string PrimaryTitle { get; set; }
         string SecondaryTitle { get; set; }

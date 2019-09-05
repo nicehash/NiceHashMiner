@@ -33,7 +33,7 @@ namespace NiceHashMiner
             public string SecondaryTitle { get; set; }
             public bool SecondaryVisible { get; set; }
 
-            public LoaderConverter(IProgress<(string, double)> prog, IProgress<(string, double)> prog2)
+            public LoaderConverter(IProgress<(string, int)> prog, IProgress<(string, int)> prog2)
             {
                 PrimaryProgress = prog;
                 SecondaryProgress = prog2;
@@ -41,8 +41,8 @@ namespace NiceHashMiner
         }
 
         public static Task InitializeManagersAndMiners(StartupLoadingControl loadingControl,
-            IProgress<(string loadMessageText, double prog)> progress,
-            IProgress<(string loadMessageText, double prog)> progressDownload)
+            IProgress<(string loadMessageText, int prog)> progress,
+            IProgress<(string loadMessageText, int prog)> progressDownload)
         {
             return InitializeManagersAndMiners(new LoaderConverter(progress, progressDownload));
         }
@@ -189,7 +189,7 @@ namespace NiceHashMiner
                     loader.PrimaryProgress.Report((Tr("Downloading Miner Binaries..."), nextProgPerc()));
                     await MinerPluginsManager.DownloadMissingMinersBins(loader.SecondaryProgress, ExitApplication.Token);
                     //await MinersDownloader.MinersDownloadManager.DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(progressDownload, ExitApplication.Token);
-                    loadingControl.ShowSecondProgressBar = false;
+                    loader.SecondaryVisible = false;
                     if (ExitApplication.IsCancellationRequested) return;
                 }
 
@@ -198,12 +198,12 @@ namespace NiceHashMiner
                 var hasPluginMinerUpdate = MinerPluginsManager.HasMinerUpdates();
                 if (hasPluginMinerUpdate)
                 {
-                    loadingControl.LoadTitleTextSecond = Tr("Updating Miner Binaries");
-                    loadingControl.ShowSecondProgressBar = true;
+                    loader.SecondaryTitle = Tr("Updating Miner Binaries");
+                    loader.SecondaryVisible = true;
 
-                    progress?.Report((Tr("Updating Miner Binaries..."), nextProgPerc()));
-                    await MinerPluginsManager.UpdateMinersBins(progressDownload, ExitApplication.Token);
-                    loadingControl.ShowSecondProgressBar = false;
+                    loader.PrimaryProgress.Report((Tr("Updating Miner Binaries..."), nextProgPerc()));
+                    await MinerPluginsManager.UpdateMinersBins(loader.SecondaryProgress, ExitApplication.Token);
+                    loader.SecondaryVisible = false;
                     if (ExitApplication.IsCancellationRequested) return;
                 }
 
@@ -224,13 +224,13 @@ namespace NiceHashMiner
 
                 // STEP
                 // VC_REDIST check
-                progress?.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
+                loader.PrimaryProgress.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
                 VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
 
                 // STEP
                 if (FirewallRules.RunFirewallRulesOnStartup)
                 {
-                    progress?.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
+                    loader.PrimaryProgress.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
                     if (FirewallRules.IsFirewallRulesOutdated())
                     {
                         // requires UAC
@@ -240,12 +240,12 @@ namespace NiceHashMiner
                 }
                 else
                 {
-                    progress?.Report((Tr("Skipping Firewall Rules..."), nextProgPerc()));
+                    loader.PrimaryProgress.Report((Tr("Skipping Firewall Rules..."), nextProgPerc()));
                 }
 
                 // STEP
                 // Cross reference plugin indexes
-                progress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
+                loader.PrimaryProgress.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
             }
