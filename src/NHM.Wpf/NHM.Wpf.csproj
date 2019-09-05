@@ -286,7 +286,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Resources\Eula.rtf" />
-    <None Include="TODO.md" />
+    <None Include="README.md" />
     <None Include="translations.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
