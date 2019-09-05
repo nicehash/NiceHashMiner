@@ -54,20 +54,10 @@ namespace NHM.Wpf.ViewModels.Settings
             return vm.Children.Aggregate(en, (current, child) => current.Concat(AllChildVMs(child)));
         }
 
-        public bool SetDefaults()
+        public void SetDefaults()
         {
-            var result = MessageBox.Show(
-                Translations.Tr(
-                    "Are you sure you would like to set everything back to defaults? This will restart {0} automatically.",
-                    NHMProductInfo.Name),
-                Translations.Tr("Set default settings?"),
-                MessageBoxButton.YesNo, MessageBoxImage.Warning);
-
-            if (result != MessageBoxResult.Yes) return false;
-
             ConfigManager.GeneralConfig.SetDefaults();
             DefaultsSet = true;
-            return true;
         }
 
         public void Save()

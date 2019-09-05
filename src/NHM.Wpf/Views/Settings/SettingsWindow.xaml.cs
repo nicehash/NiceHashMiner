@@ -60,8 +60,17 @@ namespace NHM.Wpf.Views.Settings
 
         private void DefaultsButton_OnClick(object sender, RoutedEventArgs e)
         {
-            var confirm = _vm.SetDefaults();
-            if (confirm) Close();
+            var result = MessageBox.Show(
+                Translations.Tr(
+                    "Are you sure you would like to set everything back to defaults? This will restart {0} automatically.",
+                    NHMProductInfo.Name),
+                Translations.Tr("Set default settings?"),
+                MessageBoxButton.YesNo, MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes) return;
+
+            _vm.SetDefaults();
+            Close();
         }
 
         private void SettingsWindow_OnClosing(object sender, CancelEventArgs e)
