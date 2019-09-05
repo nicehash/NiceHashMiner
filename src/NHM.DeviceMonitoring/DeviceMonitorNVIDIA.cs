@@ -29,21 +29,6 @@ namespace NHM.DeviceMonitoring
             for (int i = 0; i < 20; i++) _deviceMonitorWatchdog.AppendTimeoutTimeSpan(TimeSpan.FromMinutes(1)); // attempt on minute
             for (int i = 0; i < 10; i++) _deviceMonitorWatchdog.AppendTimeoutTimeSpan(TimeSpan.FromHours(1)); // attempt on hour
             for (int i = 0; i < 1; i++) _deviceMonitorWatchdog.AppendTimeoutTimeSpan(TimeSpan.FromDays(1)); // attempt after a day and stop after
-
-            try
-            {
-                // set to high by default
-                var defaultLevel = TDPSimpleType.HIGH;
-                var success = SetTDPSimple(defaultLevel);
-                if (!success)
-                {
-                    Logger.Info(LogTag, $"Cannot set power target ({defaultLevel.ToString()}) for device with BusID={BusID}");
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(LogTag, $"Getting power info failed with message \"{e.Message}\", disabling power setting");
-            }
         }
 
         // cache nvmlDevice handles as these calls are expensive
