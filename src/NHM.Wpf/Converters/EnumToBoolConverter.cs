@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace NHM.Wpf.ViewModels.Converters
+namespace NHM.Wpf.Converters
 {
     // For use with radio buttons
     public class EnumToBoolConverter : IValueConverter

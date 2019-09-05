@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace NHM.Wpf.ViewModels.Converters
+namespace NHM.Wpf.Converters
 {
     /// <summary>
     /// Special converter for use with nullable bools that returns true if bool is null, otherwise bool value.

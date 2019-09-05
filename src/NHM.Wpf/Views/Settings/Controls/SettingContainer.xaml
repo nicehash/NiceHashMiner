@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:conv="clr-namespace:NHM.Wpf.ViewModels.Converters"
              xmlns:local="clr-namespace:NHM.Wpf.Views.Settings.Controls"
              xmlns:Pages="clr-namespace:NHM.Wpf.Views.Settings.Pages"
+             xmlns:converters="clr-namespace:NHM.Wpf.Converters"
              x:Class="NHM.Wpf.Views.Settings.Controls.SettingsContainer"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
@@ -23,8 +23,8 @@
     <StackPanel Margin="10"
                 DataContext="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:SettingsContainer}}}">
         <StackPanel.Resources>
-            <conv:NulBoolToVisibilityConverter x:Key="BoolToVis" />
-            <conv:NulBoolToBoolConverter x:Key="NulBoolToBool" />
+            <converters:NulBoolToVisibilityConverter x:Key="BoolToVis" />
+            <converters:NulBoolToBoolConverter x:Key="NulBoolToBool" />
         </StackPanel.Resources>
 
         <StackPanel Orientation="Horizontal">

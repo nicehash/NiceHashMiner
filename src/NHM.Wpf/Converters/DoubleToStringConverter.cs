@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace NHM.Wpf.ViewModels.Converters
+namespace NHM.Wpf.Converters
 {
     /// <summary>
     /// Converts various number types to a string with no decimals, or "N/A" if value is below 0.

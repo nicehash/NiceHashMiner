@@ -1,7 +1,7 @@
-﻿using NHM.Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using NHM.Common;
 
-namespace NHM.Wpf.ViewModels.Converters
+namespace NHM.Wpf.Converters
 {
     public class HashrateConverter : ConverterBase<IEnumerable<Hashrate>, string>
     {

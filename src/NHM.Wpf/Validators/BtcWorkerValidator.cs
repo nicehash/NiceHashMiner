@@ -1,8 +1,8 @@
-﻿using NiceHashMiner;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows.Controls;
+using NiceHashMiner;
 
-namespace NHM.Wpf.ViewModels.Validators
+namespace NHM.Wpf.Validators
 {
     // These classes are used for the BTC and workername textboxes for validation.
 

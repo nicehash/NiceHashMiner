@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace NHM.Wpf.ViewModels.Converters
+namespace NHM.Wpf.Converters
 {
     public class TranslatingConverter : IValueConverter
     {

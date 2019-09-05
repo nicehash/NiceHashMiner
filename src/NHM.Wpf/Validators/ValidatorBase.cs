@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
 
-namespace NHM.Wpf.ViewModels.Validators
+namespace NHM.Wpf.Validators
 {
     /// <summary>
     /// Type-safe helper base class for a <see cref="ValidationRule"/> implementation.
