@@ -447,6 +447,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = NHMProductInfo.Name;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
+            this.Load += new System.EventHandler(this.Form_Main_Load);
             this.Shown += new System.EventHandler(this.Form_Main_Shown);
             this.ResizeEnd += new System.EventHandler(this.Form_Main_ResizeEnd);
             this.Resize += new System.EventHandler(this.Form1_Resize);

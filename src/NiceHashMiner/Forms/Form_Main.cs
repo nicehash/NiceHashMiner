@@ -760,5 +760,11 @@ namespace NiceHashMiner
                 }
             });
         }
+
+        private void Form_Main_Load(object sender, EventArgs e)
+        {
+            var form_TDP = new Form_TDPSettings();
+            form_TDP.Show();
+        }
     }
 }
