@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Configs;
+﻿#define SHOW_TDP_SETTINGS
+using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Interfaces.DataVisualizer;
 using NiceHashMiner.Mining;
@@ -329,6 +330,10 @@ namespace NiceHashMiner
                     ApplicationStateManager.StopAllDevice();
                 }
             }
+#if SHOW_TDP_SETTINGS
+            var form_TDP = new Form_TDPSettings();
+            form_TDP.Show();
+#endif
         }
 
         private void UpdateGlobalRate(double totalRate)
@@ -759,12 +764,6 @@ namespace NiceHashMiner
                     labelWarningNotProfitableOrNoIntenret.Visible = false;
                 }
             });
-        }
-
-        private void Form_Main_Load(object sender, EventArgs e)
-        {
-            var form_TDP = new Form_TDPSettings();
-            form_TDP.Show();
         }
     }
 }
