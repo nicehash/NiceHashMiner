@@ -67,6 +67,8 @@ namespace NHM.Wpf.ViewModels
 
         public MiningState State => MiningState.Instance;
 
+        #region Currency-related properties
+
         private string PerTime => $"/{TimeFactor.UnitType}";
 
         private string _currency = ExchangeRateApi.ActiveDisplayCurrency;
@@ -112,6 +114,8 @@ namespace NHM.Wpf.ViewModels
 
         public double FiatBalance => ExchangeRateApi.ConvertFromBtc(BtcBalance);
 
+        #endregion
+
         public MainVM()
             : base(ApplicationStateManager.Title)
         {
@@ -148,6 +152,7 @@ namespace NHM.Wpf.ViewModels
             Devices = new ObservableCollection<DeviceData>(AvailableDevices.Devices.Select(d => (DeviceData) d));
             MiningDevs = new ObservableCollection<IMiningData>(AvailableDevices.Devices.Select(d => new MiningData(d)));
 
+            // This will sync updating of MiningDevs from different threads. Without this, NotifyCollectionChanged doesn't work.
             BindingOperations.EnableCollectionSynchronization(MiningDevs, _lock);
 
             MiningStats.DevicesMiningStats.CollectionChanged += DevicesMiningStatsOnCollectionChanged;
@@ -160,6 +165,7 @@ namespace NHM.Wpf.ViewModels
                 await StartMining();
         }
 
+        // This complicated callback will add in total rows to mining stats ListView if they are needed.
         private void DevicesMiningStatsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
@@ -232,6 +238,7 @@ namespace NHM.Wpf.ViewModels
 
         public async Task StopMining()
         {
+            // TODO same as StartMining comment
             await Task.Run(() => { ApplicationStateManager.StopAllDevice(); });
         }
     }

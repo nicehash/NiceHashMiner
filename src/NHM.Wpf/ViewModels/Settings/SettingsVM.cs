@@ -1,8 +1,6 @@
-﻿using NiceHashMiner;
-using NiceHashMiner.Configs;
+﻿using NiceHashMiner.Configs;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
@@ -42,11 +40,13 @@ namespace NHM.Wpf.ViewModels.Settings
             SelectedPageVM = PageVMs[0];
         }
 
+        // Recursively enumerate all VMs and their children
         private IEnumerable<SettingsBaseVM> AllPageVMs()
         {
             return PageVMs.SelectMany(AllChildVMs);
         }
 
+        // Recursively enumerate all children of a VM
         private static IEnumerable<SettingsBaseVM> AllChildVMs(SettingsBaseVM vm)
         {
             var en = Enumerable.Empty<SettingsBaseVM>();

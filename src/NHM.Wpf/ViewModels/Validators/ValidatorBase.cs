@@ -3,6 +3,10 @@ using System.Windows.Controls;
 
 namespace NHM.Wpf.ViewModels.Validators
 {
+    /// <summary>
+    /// Type-safe helper base class for a <see cref="ValidationRule"/> implementation.
+    /// </summary>
+    /// <typeparam name="T">The input type for validation.</typeparam>
     public abstract class ValidatorBase<T> : ValidationRule
     {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo)

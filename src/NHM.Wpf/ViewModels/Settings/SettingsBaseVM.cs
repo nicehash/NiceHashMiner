@@ -1,12 +1,14 @@
-﻿using System;
+﻿using NiceHashMiner.Configs.Data;
+using NiceHashMiner.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
-using NiceHashMiner.Configs.Data;
-using NiceHashMiner.Utils;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
-    public class SettingsBaseVM : BaseVM, IDisposable
+    /// <summary>
+    /// Base ViewModel for all settings pages.
+    /// </summary>
+    public class SettingsBaseVM : BaseVM
     {
         public bool RestartRequired { get; protected set; }
 
@@ -23,6 +25,8 @@ namespace NHM.Wpf.ViewModels.Settings
             }
         }
 
+        // Not all page VMs will have children, but all need to have this property so it can be bound to
+        // from the TreeView
         public IReadOnlyList<SettingsBaseVM> Children { get; }
 
         public GeneralConfig Config { get; }

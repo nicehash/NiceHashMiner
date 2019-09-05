@@ -4,6 +4,9 @@ using System;
 
 namespace NHM.Wpf.ViewModels
 {
+    /// <summary>
+    /// ViewModel for startup loading bar popup.
+    /// </summary>
     public class StartupLoadingVM : BaseVM, IStartupLoader
     {
         public LoadProgress PrimaryProgress { get; } = new LoadProgress();

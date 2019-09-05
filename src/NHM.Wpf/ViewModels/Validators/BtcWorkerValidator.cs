@@ -4,6 +4,8 @@ using System.Windows.Controls;
 
 namespace NHM.Wpf.ViewModels.Validators
 {
+    // These classes are used for the BTC and workername textboxes for validation.
+
     public class BtcAddressValidator : ValidatorBase<string>
     {
         public override ValidationResult Validate(string value, CultureInfo cultureInfo)

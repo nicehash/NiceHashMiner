@@ -1,24 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NiceHashMiner.Configs.Data;
+﻿using NiceHashMiner.Configs.Data;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
+    /// <summary>
+    /// Simple container implementation of <see cref="SettingsBaseVM"/> that can act as a folder in the TreeView.
+    /// </summary>
+    /// <remarks>The first child VM passed will be used when the container itself is clicked.</remarks>
     public class SettingsContainerVM : SettingsBaseVM
     {
         private SettingsContainerVM(GeneralConfig confObj, string name, params SettingsBaseVM[] children) 
             : base(confObj, name, children)
         { }
-
-        //public static SettingsContainerVM MiningContainer(object confObj)
-        //{
-        //    return new SettingsContainerVM(confObj,
-        //        "Mining",
-        //        new MiningGeneralVM(confObj));
-        //}
 
         public static SettingsContainerVM AdvancedContainer(GeneralConfig settingsObj)
         {

@@ -5,7 +5,10 @@ using System.Linq;
 
 namespace NHM.Wpf.ViewModels
 {
-    public class BaseVM : NotifyChangedBase, IDisposable
+    /// <summary>
+    /// Base ViewModel class with optional title.
+    /// </summary>
+    public abstract class BaseVM : NotifyChangedBase, IDisposable
     {
         public string Title { get; }
 
@@ -17,6 +20,7 @@ namespace NHM.Wpf.ViewModels
         protected BaseVM()
         { }
 
+        // Quick helper method for type-safe enum enumeration
         protected static IEnumerable<T> GetEnumValues<T>() where T : struct
         {
             return Enum.GetValues(typeof(T)).Cast<T>();

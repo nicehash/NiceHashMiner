@@ -174,6 +174,7 @@ namespace NHM.Wpf.ViewModels
 
         public double Progress => (double) BenchesCompleted * 100 / Math.Max(1, BenchesPending);
 
+        // Right-click context menu commands
         public ICommand EnableAllCommand { get; }
         public ICommand DisableAllCommand { get; }
         public ICommand EnableBenchedCommand { get; }
@@ -202,6 +203,8 @@ namespace NHM.Wpf.ViewModels
             EnableOnlyThisCommand = new BaseCommand(_ => HandleOnlyThisContext());
             ClearSpeedsCommand = new BaseCommand(_ => HandleClearContext());
         }
+
+        #region Context menu command handlers
 
         private void HandleSelectionContext(bool enabled, bool benchedOnly)
         {
@@ -238,6 +241,8 @@ namespace NHM.Wpf.ViewModels
         {
             SelectedAlgo?.Algo.ClearSpeeds();
         }
+
+        #endregion
 
         private void BenchmarkManagerOnBenchmarkEnd(object sender, BenchEndEventArgs e)
         {
@@ -340,6 +345,8 @@ namespace NHM.Wpf.ViewModels
             BenchmarkManager.InBenchmarkChanged -= BenchmarkManagerOnInBenchmarkChanged;
             BenchmarkManager.OnStepUp -= BenchmarkManagerOnOnStepUp;
             BenchmarkManager.OnBenchmarkEnd -= BenchmarkManagerOnBenchmarkEnd;
+
+            _dotTimer.Dispose();
 
             DisposeBenchAlgos();
 
