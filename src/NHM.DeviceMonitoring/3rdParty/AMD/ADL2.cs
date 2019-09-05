@@ -148,6 +148,10 @@ namespace ATI.ADL
         /// Contains the hard limits of the Fan range.  Overdrive
         /// clocks cannot be set outside this range.
         public ADLODNParameterRange minimumPerformanceClock;
+        /// Contains the hard limits of the throttleNotification
+        public ADLODNParameterRange throttleNotificaion;
+        /// Contains the hard limits of the Auto Systemclock
+        public ADLODNParameterRange autoSystemClock;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////
