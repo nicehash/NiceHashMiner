@@ -81,7 +81,7 @@ namespace NiceHashMiner.Mining
         {
             DeviceMonitor = deviceMonitor;
         }
-        protected DeviceMonitor DeviceMonitor { get; private set; }
+        public DeviceMonitor DeviceMonitor { get; private set; }
 
         #region Getters
 
@@ -252,19 +252,6 @@ namespace NiceHashMiner.Mining
                     tdp.SettingType = config.TDPSettings.SettingType;
                     switch (config.TDPSettings.SettingType)
                     {
-                        case TDPSettingType.UNSUPPORTED:
-                        case TDPSettingType.DISABLED:
-                            break;
-                        case TDPSettingType.SIMPLE:
-                            if (config.TDPSettings.Simple.HasValue)
-                            {
-                                tdp.SetTDPSimple(config.TDPSettings.Simple.Value);
-                            }
-                            else
-                            {
-                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
-                            }
-                            break;
                         case TDPSettingType.PERCENTAGE:
                             if (config.TDPSettings.Percentage.HasValue)
                             {
@@ -280,6 +267,21 @@ namespace NiceHashMiner.Mining
                             if (config.TDPSettings.Raw.HasValue)
                             {
                                 tdp.SetTDPRaw(config.TDPSettings.Raw.Value);
+                            }
+                            else
+                            {
+                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                            }
+                            break;
+                        // here we decide to not allow per GPU disable state, default fallback is SIMPLE setting
+                        case TDPSettingType.UNSUPPORTED:
+                        case TDPSettingType.DISABLED:
+                        case TDPSettingType.SIMPLE:
+                        default:
+                            tdp.SettingType = TDPSettingType.SIMPLE;
+                            if (config.TDPSettings.Simple.HasValue)
+                            {
+                                tdp.SetTDPSimple(config.TDPSettings.Simple.Value);
                             }
                             else
                             {
