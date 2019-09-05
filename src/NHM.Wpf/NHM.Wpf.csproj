@@ -78,13 +78,13 @@
     <Compile Include="Translations.cs" />
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
-    <Compile Include="ViewModels\Converters\ConverterBase.cs" />
-    <Compile Include="ViewModels\Converters\DoubleToStringConverter.cs" />
-    <Compile Include="ViewModels\Converters\EnumToBoolConverter.cs" />
-    <Compile Include="ViewModels\Converters\HashrateConverter.cs" />
-    <Compile Include="ViewModels\Converters\NulBoolToBoolConverter.cs" />
-    <Compile Include="ViewModels\Converters\NulBoolToVisibilityConverter.cs" />
-    <Compile Include="ViewModels\Converters\TranslatingConverter.cs" />
+    <Compile Include="Converters\ConverterBase.cs" />
+    <Compile Include="Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Converters\EnumToBoolConverter.cs" />
+    <Compile Include="Converters\HashrateConverter.cs" />
+    <Compile Include="Converters\NulBoolToBoolConverter.cs" />
+    <Compile Include="Converters\NulBoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\TranslatingConverter.cs" />
     <Compile Include="ViewModels\MainVM.cs" />
     <Compile Include="ViewModels\Models\BaseCommand.cs" />
     <Compile Include="ViewModels\Models\BenchAlgo.cs" />
@@ -109,8 +109,8 @@
     <Compile Include="ViewModels\Settings\SettingsContainerVM.cs" />
     <Compile Include="ViewModels\Settings\SettingsVM.cs" />
     <Compile Include="ViewModels\StartupLoadingVM.cs" />
-    <Compile Include="ViewModels\Validators\BtcWorkerValidator.cs" />
-    <Compile Include="ViewModels\Validators\ValidatorBase.cs" />
+    <Compile Include="Validators\BtcWorkerValidator.cs" />
+    <Compile Include="Validators\ValidatorBase.cs" />
     <Compile Include="Views\3rdPartyTosWindow.xaml.cs">
       <DependentUpon>3rdPartyTosWindow.xaml</DependentUpon>
     </Compile>
