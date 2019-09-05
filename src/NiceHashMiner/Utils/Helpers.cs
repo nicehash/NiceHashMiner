@@ -120,6 +120,7 @@ namespace NiceHashMiner.Utils
                 //case AlgorithmType.Equihash:
                 case AlgorithmType.ZHash:
                 case AlgorithmType.Beam:
+                case AlgorithmType.BeamV2:
                     return "Sol/s";
                 case AlgorithmType.GrinCuckaroo29:
                 case AlgorithmType.GrinCuckatoo31:

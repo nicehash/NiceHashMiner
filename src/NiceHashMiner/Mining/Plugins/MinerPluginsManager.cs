@@ -46,39 +46,54 @@ namespace NiceHashMiner.Mining.Plugins
                 new SGminerAvemoreIntegratedPlugin(),
                 new SGminerGMIntegratedPlugin(),
                 new XmrStakIntegratedPlugin(),
-                #if INTEGRATE_Ethminer_PLUGIN
+#if INTEGRATE_CpuMinerOpt_PLUGIN
+                new CPUMinerOptIntegratedPlugin(),
+#endif
+#if INTEGRATE_Ethminer_PLUGIN
                 new EthminerIntegratedPlugin(),
-                #endif
+#endif
 
-                // 3rd party
+// 3rd party
+#if INTEGRATE_EWBF_PLUGIN
                 new EWBFIntegratedPlugin(),
+#endif
                 new GMinerIntegratedPlugin(),
                 new NBMinerIntegratedPlugin(),
                 new PhoenixIntegratedPlugin(),
                 new TeamRedMinerIntegratedPlugin(),
                 new TRexIntegratedPlugin(),
+#if INTEGRATE_TTMiner_PLUGIN
                 new TTMinerIntegratedPlugin(),
+#endif
                 new ClaymoreDual14IntegratedPlugin(),
 
-                // can be integrated but are not included
-                #if INTEGRATE_NanoMiner_PLUGIN
+#if INTEGRATE_NanoMiner_PLUGIN
                 new NanoMinerIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_WildRig_PLUGIN
+#endif
+#if INTEGRATE_WildRig_PLUGIN
                 new WildRigIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_CryptoDredge_PLUGIN
+#endif
+#if INTEGRATE_CryptoDredge_PLUGIN
                 new CryptoDredgeIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_BMiner_PLUGIN
+#endif
+#if INTEGRATE_BMiner_PLUGIN
                 new BMinerIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_ZEnemy_PLUGIN
+#endif
+#if INTEGRATE_ZEnemy_PLUGIN
                 new ZEnemyIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_LolMinerBeam_PLUGIN
+#endif
+#if INTEGRATE_LolMinerBeam_PLUGIN
                 new LolMinerIntegratedPlugin(),
-                #endif
+#endif
+#if INTEGRATE_SRBMiner_PLUGIN
+                new SRBMinerIntegratedPlugin(),
+#endif
+#if INTEGRATE_XMRig_PLUGIN
+                new XMRigIntegratedPlugin(),
+#endif
+#if INTEGRATE_MiniZ_PLUGIN
+                new MiniZIntegratedPlugin(),
+#endif
 
                 // service plugin
                 EthlargementIntegratedPlugin.Instance,
@@ -191,9 +206,32 @@ namespace NiceHashMiner.Mining.Plugins
                 var hasUrls = urls.Any();
                 if (hasMissingFiles && hasUrls && !plugin.IsBroken)
                 {
-                    var downloadProgress = new Progress<double>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
-                    var unzipProgress = new Progress<double>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
-                    await DownloadInternalBins(plugin.PluginUUID, urls, downloadProgress, unzipProgress, stop);
+                    Logger.Info("MinerPluginsManager", $"Downloading missing files for {plugin.PluginUUID}-{plugin.Name}");
+                    var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
+                    var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
+                    await DownloadInternalBins(plugin.PluginUUID, urls.ToList(), downloadProgress, unzipProgress, stop);
+                }
+            }
+        }
+
+        public static async Task UpdateMinersBins(IProgress<(string loadMessageText, int prog)> progress, CancellationToken stop)
+        {
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
+                .ToArray();
+
+            foreach (var plugin in checkPlugins)
+            {
+                var urls = plugin.GetMinerBinsUrls();
+                var hasUrls = urls.Count() > 0;
+                var versionMismatch = plugin.IsVersionMismatch;
+                if (versionMismatch && hasUrls && !plugin.IsBroken)
+                {
+                    Logger.Info("MinerPluginsManager", $"Version mismatch for {plugin.PluginUUID}-{plugin.Name}. Downloading...");
+                    var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Downloading {0} %", $"{plugin.Name} {perc}"), perc)));
+                    var unzipProgress = new Progress<int>(perc => progress?.Report((Translations.Tr("Unzipping {0} %", $"{plugin.Name} {perc}"), perc)));
+                    await DownloadInternalBins(plugin.PluginUUID, urls.ToList(), downloadProgress, unzipProgress, stop);
                 }
             }
         }
@@ -214,6 +252,18 @@ namespace NiceHashMiner.Mining.Plugins
             return ret;
         }
 
+        public static bool HasMinerUpdates()
+        {
+            var checkPlugins = PluginContainer.PluginContainers
+                .Where(p => p.IsCompatible)
+                .Where(p => p.Enabled)
+                .Where(p => p.IsVersionMismatch)
+                .ToArray();
+
+
+            return checkPlugins.Count() > 0;
+        }
+
         private static void RemovePluginAlgorithms(string pluginUUID)
         {
             foreach (var dev in AvailableDevices.Devices)
@@ -232,7 +282,6 @@ namespace NiceHashMiner.Mining.Plugins
                 foreach (var old in oldPlugins)
                 {
                     PluginContainer.RemovePluginContainer(old);
-                    old.RemoveAlgorithmsFromDevices();
                 }
                 RemovePluginAlgorithms(pluginUUID);
 
@@ -470,6 +519,7 @@ namespace NiceHashMiner.Mining.Plugins
                 // if there is an old plugin installed remove it
                 if (Directory.Exists(pluginPath))
                 {
+                    // TODO consider saving the internal settings when updating the miner plugin
                     Directory.Delete(pluginPath, true);
                 }
                 //downloadAndInstallUpdate($"Loaded {loadedPlugins} PLUGIN");
@@ -477,15 +527,14 @@ namespace NiceHashMiner.Mining.Plugins
                 // add or update plugins
                 foreach (var pluginUUID in loadedPlugins)
                 {
-                    var externalPlugin = MinerPluginHost.MinerPlugin[pluginUUID];
+                    var newExternalPlugin = MinerPluginHost.MinerPlugin[pluginUUID];
                     // remove old
                     var oldPlugins = PluginContainer.PluginContainers.Where(p => p.PluginUUID == pluginUUID).ToArray();
                     foreach (var old in oldPlugins)
                     {
                         PluginContainer.RemovePluginContainer(old);
-                        old.RemoveAlgorithmsFromDevices();
                     }
-                    var newPlugin = PluginContainer.Create(externalPlugin);
+                    var newPlugin = PluginContainer.Create(newExternalPlugin);
                     var success = newPlugin.InitPluginContainer();
                     // TODO after add or remove plugins we should clean up the device settings
                     if (success)
@@ -508,6 +557,6 @@ namespace NiceHashMiner.Mining.Plugins
                 //downloadAndInstallUpdate();
             }
         }
-        #endregion DownloadingInstalling
+#endregion DownloadingInstalling
     }
 }

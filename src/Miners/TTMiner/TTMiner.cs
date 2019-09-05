@@ -19,10 +19,11 @@ namespace TTMiner
     {
         private int _apiPort;
         private string _devices;
-
+        private double DevFee = 1d;
         // TODO figure out how to fix API workaround without this started time
         private DateTime _started;
 
+        protected readonly Dictionary<string, int> _mappedDeviceIds = new Dictionary<string, int>();
 
         private string AlgoName
         {
@@ -40,16 +41,10 @@ namespace TTMiner
             }
         }
 
-        private double DevFee
+        public TTMiner(string uuid, Dictionary<string, int> mappedDeviceIds) : base(uuid)
         {
-            get
-            {
-                return 1.0;
-            }
+            _mappedDeviceIds = mappedDeviceIds;
         }
-
-        public TTMiner(string uuid) : base(uuid)
-        {}
 
         public override async Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
@@ -69,16 +64,20 @@ namespace TTMiner
 
             bp.CheckData = (data) =>
             {
-                var hashrateFoundPair = data.ToLower().TryGetHashrateAfter("]:");
-                var hashrate = hashrateFoundPair.Item1;
-                var found = hashrateFoundPair.Item2;
-
-                if (data.Contains("LastShare") && data.Contains("GPU[") && found && hashrate > 0)
+                if (data.Contains("GPU[") && data.Contains("last:"))
                 {
-                    benchHashes += hashrate;
-                    benchIters++;
-                    benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+                    var hashrateFoundPair = data.ToLower().TryGetHashrateAfter("]:");
+                    var hashrate = hashrateFoundPair.Item1;
+                    var found = hashrateFoundPair.Item2;
+
+                    if (found && hashrate > 0)
+                    {
+                        benchHashes += hashrate;
+                        benchIters++;
+                        benchHashResult = (benchHashes / benchIters) * (1 - DevFee * 0.01);
+                    }
                 }
+                
                 return new BenchmarkResult
                 {
                     AlgorithmTypeSpeeds = new List<AlgorithmTypeSpeedPair> { new AlgorithmTypeSpeedPair(_algorithmType, benchHashResult) },
@@ -128,9 +127,18 @@ namespace TTMiner
             return await ClaymoreAPIHelpers.GetMinerStatsDataAsync(_apiPort, miningDevices, _logGroup, DevFee, 0.0, algorithmTypes);
         }
 
+        protected override IEnumerable<MiningPair> GetSortedMiningPairs(IEnumerable<MiningPair> miningPairs)
+        {
+            var pairsList = miningPairs.ToList();
+            // sort by _mappedDeviceIds
+            pairsList.Sort((a, b) => _mappedDeviceIds[a.Device.UUID].CompareTo(_mappedDeviceIds[b.Device.UUID]));
+            return pairsList;
+        }
+
         protected override void Init()
         {
-            _devices = string.Join(" ", _miningPairs.Select(p => p.Device.ID));
+            var mappedDevIDs = _miningPairs.Select(p => _mappedDeviceIds[p.Device.UUID]);
+            _devices = string.Join(" ", mappedDevIDs);
         }
 
         public void AfterStartMining()

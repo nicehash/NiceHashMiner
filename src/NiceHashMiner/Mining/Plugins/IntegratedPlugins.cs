@@ -60,6 +60,17 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => false;
     }
 
+#if INTEGRATE_CpuMinerOpt_PLUGIN
+
+    class CPUMinerOptIntegratedPlugin : CpuMinerOpt.CPUMinerPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "cpuminer-opt";
+
+        public bool Is3rdParty => false;
+    }
+#endif
+
+
 #if INTEGRATE_Ethminer_PLUGIN
     class EthminerIntegratedPlugin : Ethminer.EthminerPlugin, IntegratedPlugin
     {
@@ -74,7 +85,7 @@ namespace NiceHashMiner.Mining.Plugins
 
     class ClaymoreDual14IntegratedPlugin : ClaymoreDual14.ClaymoreDual14Plugin, IntegratedPlugin
     {
-        public override string PluginUUID => "ClaymoreDual14+";
+        public override string PluginUUID => "ClaymoreDual";
 
         public bool Is3rdParty => true;
     }
@@ -97,12 +108,14 @@ namespace NiceHashMiner.Mining.Plugins
     }
 #endif
 
+#if INTEGRATE_TTMiner_PLUGIN
     class TTMinerIntegratedPlugin : TTMiner.TTMinerPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "TTMiner";
 
         public bool Is3rdParty => true;
     }
+#endif
 
     class TRexIntegratedPlugin : TRex.TRexPlugin, IntegratedPlugin
     {
@@ -148,12 +161,14 @@ namespace NiceHashMiner.Mining.Plugins
         public bool Is3rdParty => true;
     }
 
+#if INTEGRATE_EWBF_PLUGIN
     class EWBFIntegratedPlugin : EWBF.EwbfPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "Ewbf";
 
         public bool Is3rdParty => true;
     }
+#endif
 
 #if INTEGRATE_CryptoDredge_PLUGIN
     class CryptoDredgeIntegratedPlugin : CryptoDredge.CryptoDredgePlugin, IntegratedPlugin
@@ -177,6 +192,33 @@ namespace NiceHashMiner.Mining.Plugins
     class LolMinerIntegratedPlugin : LolMinerBeam.LolMinerBeamPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "LolMinerBeam";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
+#if INTEGRATE_SRBMiner_PLUGIN
+    class SRBMinerIntegratedPlugin : SRBMiner.SRBMinerPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "SRBMiner";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
+#if INTEGRATE_XMRig_PLUGIN
+    class XMRigIntegratedPlugin : XMRig.XMRigPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "XMRig";
+
+        public bool Is3rdParty => true;
+    }
+#endif
+
+#if INTEGRATE_MiniZ_PLUGIN
+    class MiniZIntegratedPlugin : MiniZ.MiniZPlugin, IntegratedPlugin
+    {
+        public override string PluginUUID => "MiniZ";
 
         public bool Is3rdParty => true;
     }

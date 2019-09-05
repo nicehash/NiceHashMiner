@@ -43,7 +43,6 @@ namespace NiceHashMiner.Forms.Components
         public DevicesListViewSpeedControl()
         {
             InitializeComponent();
-
             SaveToGeneralConfig = false;
 
             _diagTimer.Interval = 2000;
@@ -73,8 +72,6 @@ namespace NiceHashMiner.Forms.Components
         public override void InitLocale()
         {
             base.InitLocale();
-
-            speedHeader.Text = Translations.Tr("Speeds");
         }
 
         protected override void ListViewDevicesItemChecked(object sender, ItemCheckedEventArgs e)
@@ -339,7 +336,7 @@ namespace NiceHashMiner.Forms.Components
                         langKey = "Load (%)";
                         break;
                     case 1:
-                        langKey = "Temp (C)";
+                        langKey = "Temp (°C)";
                         break;
                     case 2:
                         langKey = "RPM";

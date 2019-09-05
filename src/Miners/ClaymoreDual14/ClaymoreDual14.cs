@@ -28,7 +28,7 @@ namespace ClaymoreDual14
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "Claymore's Dual Ethereum AMD+NVIDIA GPU Miner v14.7");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "Claymore's Dual Ethereum AMD+NVIDIA GPU Miner v15.0");
             var binPath = Path.Combine(pluginRootBins, "EthDcrMiner64.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);

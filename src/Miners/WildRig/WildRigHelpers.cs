@@ -63,7 +63,7 @@ namespace WildRig
                     }
                 }
             }
-            return Tuple.Create(hash, true); ;
+            return Tuple.Create(hash, true);
         }
 
         private static int pow10(int power) => (int)Math.Pow(10, power);
