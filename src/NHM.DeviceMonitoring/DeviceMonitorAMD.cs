@@ -308,7 +308,11 @@ namespace NHM.DeviceMonitoring
                 level = TDPSimpleType.HIGH;
                 percentage = PowerLevelToTDPPercentage(level);
             }
-            return SetTdpADL(true, percentage.Value);
+            Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
+            var execRet = SetTdpADL(true, percentage.Value);
+            if (execRet) TDPSimple = level;
+            Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
+            return execRet;
         }
         #endregion ITDP
     }
