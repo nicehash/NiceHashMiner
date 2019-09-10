@@ -307,8 +307,7 @@ namespace NiceHashMiner
                     loadingControl.ProgressSecond = (int) p.perc;
                     loadingControl.LoadMessageTextSecond = p.loadMessageText;
                 });
-                //await ApplicationStateManager.InitializeManagersAndMiners(loadingControl, progress, progressDownload); // TODO_NiceHashMiner passing loadingControl has no effect???
-                await ApplicationStateManager.InitializeManagersAndMiners(progress, progressDownload);
+                await ApplicationStateManager.InitializeManagersAndMiners(loadingControl);
             }
             devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
 

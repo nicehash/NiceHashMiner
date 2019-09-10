@@ -38,15 +38,6 @@ namespace NHMCore
             }
         }
 
-        // TODO_NiceHashMiner broken in old client
-        //using NHMCore.Forms.Components;
-        public static Task InitializeManagersAndMiners(//StartupLoadingControl loadingControl,
-            IProgress<(string loadMessageText, int prog)> progress,
-            IProgress<(string loadMessageText, int prog)> progressDownload)
-        {
-            return InitializeManagersAndMiners(new LoaderConverter(progress, progressDownload));
-        }
-
         public static async Task InitializeManagersAndMiners(IStartupLoader loader)
         {
             try
