@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="3rdParty\ADL.cs" />
+    <Compile Include="3rdParty\AMD\ADL.cs" />
+    <Compile Include="3rdParty\AMD\ADL2.cs" />
+    <Compile Include="3rdParty\AMD\AMDDelegateContainer.cs" />
     <Compile Include="3rdParty\NVAPI.cs" />
     <Compile Include="3rdParty\PInvokeDelegateFactory.cs" />
     <Compile Include="AMD\AmdBusIDInfo.cs" />
@@ -55,18 +57,19 @@
     <Compile Include="DeviceMonitorNVIDIA.cs" />
     <Compile Include="DeviceMonitor.cs" />
     <Compile Include="DeviceMonitorWatchdog.cs" />
-    <Compile Include="IFanSpeed.cs" />
+    <Compile Include="IFanSpeedRPM.cs" />
     <Compile Include="ILoad.cs" />
-    <Compile Include="IPowerLevel.cs" />
+    <Compile Include="TDP\ITDP.cs" />
     <Compile Include="IPowerTarget.cs" />
     <Compile Include="IPowerUsage.cs" />
-    <Compile Include="ISetPowerLevel.cs" />
-    <Compile Include="ISetPowerTargetPercentage.cs" />
     <Compile Include="ITemp.cs" />
     <Compile Include="NVIDIA\NvapiException.cs" />
     <Compile Include="NVIDIA\NvidiaMonitorManager.cs" />
     <Compile Include="NVIDIA\NvmlException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RangeCalculator.cs" />
+    <Compile Include="TDP\TDPSettingType.cs" />
+    <Compile Include="TDP\TDPSimpleType.cs" />
     <Compile Include="TryLock.cs" />
   </ItemGroup>
   <ItemGroup>

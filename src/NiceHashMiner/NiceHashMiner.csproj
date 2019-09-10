@@ -188,6 +188,12 @@
     <Compile Include="Forms\Form_Settings.Designer.cs">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Form_TDPSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Form_TDPSettings.Designer.cs">
+      <DependentUpon>Form_TDPSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\IconEx.cs" />
     <Compile Include="Forms\LoginForm.cs">
       <SubType>Form</SubType>
@@ -293,6 +299,9 @@
     <EmbeddedResource Include="Forms\Form_Settings.resx">
       <DependentUpon>Form_Settings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_TDPSettings.resx">
+      <DependentUpon>Form_TDPSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MinerFileNotFoundDialog.resx">
       <DependentUpon>MinerFileNotFoundDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -346,6 +355,10 @@
     <ProjectReference Include="..\Miners\Ethlargement\Ethlargement.csproj">
       <Project>{5f994ad1-02a2-4a00-90ca-5cd5943fd24a}</Project>
       <Name>Ethlargement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
+      <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
+      <Name>NHM.DeviceMonitoring</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHM.MinersDownloader\NHM.MinersDownloader.csproj">
       <Project>{6bdc0b57-e7d9-43e1-8534-55ae8a1b12ed}</Project>

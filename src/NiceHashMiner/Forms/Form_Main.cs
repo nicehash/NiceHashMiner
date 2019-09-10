@@ -1,4 +1,5 @@
-﻿using NHMCore;
+//#define SHOW_TDP_SETTINGS
+using NHMCore;
 using NHMCore.Configs;
 using NiceHashMiner.Forms;
 using NHMCore.Interfaces.DataVisualizer;
@@ -331,6 +332,10 @@ namespace NiceHashMiner
                     ApplicationStateManager.StopAllDevice();
                 }
             }
+#if SHOW_TDP_SETTINGS
+            var form_TDP = new Form_TDPSettings();
+            form_TDP.Show();
+#endif
         }
 
         private void UpdateGlobalRate(double totalRate)
@@ -341,7 +346,7 @@ namespace NiceHashMiner
             var displayTimeUnit = Tr(ConfigManager.GeneralConfig.TimeUnit.ToString());
 
             toolStripStatusLabelBTCDayText.Text = scaleBTC ? $"mBTC/{displayTimeUnit}" : $"BTC/{displayTimeUnit}";
-            toolStripStatusLabelGlobalRateValue.Text = totalDisplayRate.ToString(scaleBTC ? "F5" : "F6", CultureInfo.InvariantCulture);
+            toolStripStatusLabelGlobalRateValue.Text = totalDisplayRate.ToString(scaleBTC ? "F5" : "F8", CultureInfo.InvariantCulture);
 
             var timeFactorRate = ExchangeRateApi
                 .ConvertToActiveCurrency((totalRate * factorTimeUnit * ExchangeRateApi.GetUsdExchangeRate()));
