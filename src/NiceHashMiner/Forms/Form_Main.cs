@@ -1,4 +1,4 @@
-﻿#define SHOW_TDP_SETTINGS
+﻿//#define SHOW_TDP_SETTINGS
 using NiceHashMiner.Configs;
 using NiceHashMiner.Forms;
 using NiceHashMiner.Interfaces.DataVisualizer;
