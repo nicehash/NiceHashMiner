@@ -14,6 +14,7 @@ using System.Reflection;
 using System.Threading;
 using System.Windows;
 using NHM.Wpf.Views;
+using NHMCore.Utils;
 
 namespace NHM.Wpf
 {
@@ -72,6 +73,12 @@ namespace NHM.Wpf
             
             // Init logger
             Logger.ConfigureWithFile(ConfigManager.GeneralConfig.LogToFile, Level.Info, ConfigManager.GeneralConfig.LogMaxFileSize);
+
+            if (ConfigManager.GeneralConfig.DebugConsole)
+            {
+                PInvokeHelpers.AllocConsole();
+                Logger.ConfigureConsoleLogging(Level.Info);
+            }
 
             if (!pathSet)
             {
