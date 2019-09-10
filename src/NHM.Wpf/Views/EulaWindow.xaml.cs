@@ -16,7 +16,7 @@ namespace NHM.Wpf.Views
         {
             InitializeComponent();
 
-            EulaRtb.Rtf = Properties.Resources.Eula;
+            EulaRtb.Rtf = NHMCore.Properties.Resources.Eula;
         }
 
         private void EulaRtb_OnLinkClicked(object sender, LinkClickedEventArgs e)
