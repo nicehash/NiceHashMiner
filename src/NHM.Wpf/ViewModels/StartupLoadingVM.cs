@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHMCore;
 using NHM.Wpf.ViewModels.Models;
 using System;
 

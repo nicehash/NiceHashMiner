@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using NHM.Wpf.Views.Common;
+using NHMCore;
 
 namespace NHM.Wpf.Views.Settings.Pages
 {

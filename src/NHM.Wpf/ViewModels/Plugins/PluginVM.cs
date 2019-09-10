@@ -1,4 +1,6 @@
-﻿namespace NHM.Wpf.ViewModels.Plugins
+﻿using NHMCore;
+
+namespace NHM.Wpf.ViewModels.Plugins
 {
     public class PluginVM : BaseVM
     {

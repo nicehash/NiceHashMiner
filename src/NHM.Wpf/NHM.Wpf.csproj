@@ -20,7 +20,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -40,9 +40,6 @@
   <ItemGroup>
     <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
@@ -75,7 +72,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Properties\Annotations.cs" />
-    <Compile Include="Translations.cs" />
     <Compile Include="ViewModels\BaseVM.cs" />
     <Compile Include="ViewModels\BenchmarkViewModel.cs" />
     <Compile Include="Converters\ConverterBase.cs" />
@@ -292,9 +288,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
   </ItemGroup>
   <ItemGroup>
@@ -304,10 +297,6 @@
     <Resource Include="Resources\logo.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Miners\MinerPluginToolkitV1\MinerPluginToolkitV1.csproj">
-      <Project>{847398e0-2e35-4a85-8c70-0b40aa172aba}</Project>
-      <Name>MinerPluginToolkitV1</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>

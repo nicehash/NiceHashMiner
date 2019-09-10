@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using NHMCore;
 
 namespace NHM.Wpf.ViewModels.Plugins
 {

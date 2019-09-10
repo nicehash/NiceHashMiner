@@ -145,7 +145,8 @@ namespace NiceHashMiner
                 }
 
             }
-            Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
+            Translations.LanguageChanged += (s, e) => FormHelpers.TranslateAllOpenForms();
+            Translations.SelectedLanguage = ConfigManager.GeneralConfig.Language;
 
             // if system requirements are not ensured it will fail the program
             var canRun = ApplicationStateManager.SystemRequirementsEnsured();

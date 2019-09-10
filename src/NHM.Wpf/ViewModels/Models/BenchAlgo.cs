@@ -1,4 +1,5 @@
 ﻿using NHM.Common;
+using NHMCore;
 using NHMCore.Mining;
 using NHMCore.Utils;
 using System;

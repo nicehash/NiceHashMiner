@@ -75,9 +75,6 @@
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -307,7 +304,6 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="app.config" />
     <None Include="OnGPUsLost.bat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -351,29 +347,13 @@
       <Project>{5f994ad1-02a2-4a00-90ca-5cd5943fd24a}</Project>
       <Name>Ethlargement</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NHM.DeviceDetection\NHM.DeviceDetection.csproj">
-      <Project>{9b4e5761-4c68-41f8-86bb-26f3382c6189}</Project>
-      <Name>NHM.DeviceDetection</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.DeviceMonitoring\NHM.DeviceMonitoring.csproj">
-      <Project>{9c50c5cf-4f75-4533-80aa-1ea23b05377e}</Project>
-      <Name>NHM.DeviceMonitoring</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NHM.MinersDownloader\NHM.MinersDownloader.csproj">
       <Project>{6bdc0b57-e7d9-43e1-8534-55ae8a1b12ed}</Project>
       <Name>NHM.MinersDownloader</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NHM.UUID\NHM.UUID.csproj">
-      <Project>{ee6160cc-8c19-4ad8-bb1e-c295347203ee}</Project>
-      <Name>NHM.UUID</Name>
-    </ProjectReference>
     <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHM.Extensions\NHM.Extensions.csproj">
-      <Project>{12564275-9741-4341-868d-8762448884d0}</Project>
-      <Name>NHM.Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHMCore\NHMCore.csproj">
       <Project>{43dcaf38-d0c4-4335-983d-650f78461eb2}</Project>

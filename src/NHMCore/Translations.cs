@@ -24,19 +24,47 @@ namespace NHMCore
             public string Name { get; set; }
         }
 
+        public static event EventHandler LanguageChanged;
+
+        private static Dictionary<string, Dictionary<string, string>> _entries;
+
+        // transform so it is possible to switch from any language
+        private static readonly Dictionary<string, Dictionary<string, string>> TransformedEntries;
+        private static List<Language> _availableLanguages;
+
+
+        private static string _selectedLanguage = "en";
+        public static string SelectedLanguage
+        {
+            get => _selectedLanguage;
+            set
+            {
+                if (value == _selectedLanguage) return;
+
+                if (_availableLanguages.All(l => l.Code != value)) return;
+
+                _selectedLanguage = value;
+                LanguageChanged?.Invoke(null, EventArgs.Empty);
+            }
+        }
+
         static Translations()
         {
+            TransformedEntries = new Dictionary<string, Dictionary<string, string>>();
+            _availableLanguages = new List<Language>();
+            _entries = new Dictionary<string, Dictionary<string, string>>();
+
             // always have english
             var enMetaData = new Language
             {
                 Code = "en",
                 Name = "English",
             };
-            _availableLanguages = new List<Language>();
 
             // try init
             TryInitTranslations();
-            bool flag = false;
+
+            var flag = false;
             foreach(var lang in _availableLanguages)
             {
                 if (lang.Code == "en")
@@ -50,17 +78,10 @@ namespace NHMCore
             }
         }
 
-        private static string _selectedLanguage = "en";
-        private static Dictionary<string, Dictionary<string, string>> _entries = new Dictionary<string, Dictionary<string, string>>();
-        
-        // transform so it is possible to switch from any language
-        private static Dictionary<string, Dictionary<string, string>> _transformedEntries = new Dictionary<string, Dictionary<string, string>>();
-        public static List<Language> _availableLanguages = new List<Language>();
-
         private static void TryInitTranslations()
         {
             // file in binary root path
-            var transFilePath = "translations.json";
+            const string transFilePath = "translations.json";
             try
             {
                 var translations = JsonConvert.DeserializeObject<TranslationFile>(File.ReadAllText(transFilePath, Encoding.UTF8));
@@ -97,7 +118,7 @@ namespace NHMCore
                                 var translatedText = kvp.Value;
                                 trToOther[langCode] = translatedText;
                             }
-                            _transformedEntries[trKey] = trToOther;
+                            TransformedEntries[trKey] = trToOther;
                         }
                     }
                 }
@@ -105,18 +126,6 @@ namespace NHMCore
             catch (Exception e)
             {
                 Logger.Error("NICEHASH", $"Lang error: {e.Message}");
-            }
-        }
-
-        public static void SetLanguage(string langCode)
-        {
-            foreach(var lang in _availableLanguages)
-            {
-                if (lang.Code == langCode)
-                {
-                    _selectedLanguage = lang.Code;
-                    break;
-                }
             }
         }
 
@@ -158,6 +167,16 @@ namespace NHMCore
             return 0;
         }
 
+        public static int GetCurrentIndex()
+        {
+            return GetLanguageIndexFromCode(_selectedLanguage);
+        }
+
+        public static string Tr(object obj)
+        {
+            return obj == null ? "" : Tr(obj.ToString());
+        }
+
         // Tr Short for translate
         public static string Tr(string text)
         {
@@ -168,16 +187,16 @@ namespace NHMCore
             {
                 return _entries[text][_selectedLanguage];
             }
-            var containsTransformed = _transformedEntries.ContainsKey(text);
+            var containsTransformed = TransformedEntries.ContainsKey(text);
             // check transformed entry
-            if (containsTransformed && _transformedEntries[text].ContainsKey(_selectedLanguage))
+            if (containsTransformed && TransformedEntries[text].ContainsKey(_selectedLanguage))
             {
-                return _transformedEntries[text][_selectedLanguage];
+                return TransformedEntries[text][_selectedLanguage];
             }
             // check transformed entry en
-            if (containsTransformed && _transformedEntries[text].ContainsKey("en"))
+            if (containsTransformed && TransformedEntries[text].ContainsKey("en"))
             {
-                return _transformedEntries[text]["en"];
+                return TransformedEntries[text]["en"];
             }
             // didn't find text with language key so just return the text 
             return text;

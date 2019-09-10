@@ -1,4 +1,5 @@
-﻿using NHMCore.Configs;
+﻿using NHMCore;
+using NHMCore.Configs;
 using System.Collections.Generic;
 using System.Linq;
 

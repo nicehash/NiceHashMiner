@@ -488,7 +488,7 @@ namespace NiceHashMiner.Forms
             if (result == DialogResult.Yes)
             {
                 SetDefaults = true;
-                SetLanguage("en");
+                Translations.SelectedLanguage = "en";
                 ConfigManager.GeneralConfig.SetDefaults();
                 InitializeGeneralTabFieldValuesReferences();
                 InitializeGeneralTabTranslations();

@@ -1,6 +1,4 @@
-﻿// TODO_NiceHashMiner
-//using NHMCore.Forms; // broken set callback or something
-
+﻿
 namespace NHMCore.Configs
 {
     public class TranslationsSettings
@@ -17,8 +15,8 @@ namespace NHMCore.Configs
                 if (Language != newLang)
                 {
                     Language = newLang;
-                    Translations.SetLanguage(Language);
-                    //FormHelpers.TranslateAllOpenForms(); // TODO_NiceHashMiner broken
+
+                    Translations.SelectedLanguage = Language;
                 }
             }
         }

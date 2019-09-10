@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using NHM.Wpf.ViewModels.Settings;
 using NHM.Wpf.Views.Settings.Controls;
+using NHMCore;
 
 namespace NHM.Wpf.Views.Common
 {
