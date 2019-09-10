@@ -7,6 +7,7 @@ using NiceHashMiner.Configs;
 using NiceHashMiner.Configs.Data;
 using System.Collections.Generic;
 using System.Linq;
+using NHM.DeviceMonitoring.TDP;
 
 namespace NiceHashMiner.Mining
 {
@@ -96,7 +97,7 @@ namespace NiceHashMiner.Mining
         {
             DeviceMonitor = deviceMonitor;
         }
-        protected DeviceMonitor DeviceMonitor { get; private set; }
+        public DeviceMonitor DeviceMonitor { get; private set; }
 
         #region Getters
 
@@ -109,13 +110,16 @@ namespace NiceHashMiner.Mining
                 return 0;
             }
         }
-        public PowerLevel PowerLevel
+
+#warning "This property requires change of protocol. Currently it is disabled on the backend."
+        public TDPSimpleType TDPSimple
         {
             get
             {
-                if (ConfigManager.GeneralConfig.DisableDevicePowerModeSettings) return PowerLevel.Disabled;
-                if (DeviceMonitor != null && DeviceMonitor is IPowerLevel get) return get.PowerLevel;
-                return PowerLevel.Unsupported;
+                //if (ConfigManager.GeneralConfig.DisableDevicePowerModeSettings) return TDPSimple.Disabled;
+                //if (DeviceMonitor != null && DeviceMonitor is ITDP get) return get.TDPSimple;
+                //return TDPSimple.Unsupported;
+                return (TDPSimpleType)(-1);
             }
         }
 
@@ -139,7 +143,7 @@ namespace NiceHashMiner.Mining
         {
             get
             {
-                if (!ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IFanSpeed get) return get.FanSpeed;
+                if (!ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring && DeviceMonitor != null && DeviceMonitor is IFanSpeedRPM get) return get.FanSpeedRPM;
                 return -1;
             }
         }
@@ -156,7 +160,7 @@ namespace NiceHashMiner.Mining
         {
             get
             {
-                var canSet = !ConfigManager.GeneralConfig.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ISetPowerLevel;
+                var canSet = !ConfigManager.GeneralConfig.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ITDP;
                 return canSet;
             }
         }
@@ -164,11 +168,11 @@ namespace NiceHashMiner.Mining
 
         #region Setters
 
-        public bool SetPowerMode(PowerLevel level)
+        public bool SetPowerMode(TDPSimpleType level)
         {
-            if (!ConfigManager.GeneralConfig.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ISetPowerLevel set)
+            if (!ConfigManager.GeneralConfig.DisableDevicePowerModeSettings && DeviceMonitor != null && DeviceMonitor is ITDP set)
             {
-                return set.SetPowerTarget(level);
+                return set.SetTDPSimple(level);
             }
             return false;
         }
@@ -249,15 +253,57 @@ namespace NiceHashMiner.Mining
             MinimumProfit = config.MinimumProfit;
 
 #if TESTNET || TESTNETDEV || PRODUCTION_NEW
-            if (config.PowerLevel != PowerLevel.Unsupported && config.PowerLevel != PowerLevel.Custom && DeviceMonitor is ISetPowerLevel setPowerLevel)
+            if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
             {
-                //PowerLevel = config.PowerLevel;
-                setPowerLevel.SetPowerTarget(config.PowerLevel);
-            }
-            if (config.PowerLevel == PowerLevel.Custom && DeviceMonitor is ISetPowerTargetPercentage setPowerTargetPercentage)
-            {
-                //PowerTarget = config.PowerTarget;
-                setPowerTargetPercentage.SetPowerTarget(config.PowerTarget);
+                var tdpSimpleDefault = TDPSimpleType.HIGH;
+                var tdpSettings = config.TDPSettings;
+                if (tdpSettings != null && DeviceMonitor is ITDP tdp)
+                {
+                    tdp.SettingType = config.TDPSettings.SettingType;
+                    switch (config.TDPSettings.SettingType)
+                    {
+                        case TDPSettingType.PERCENTAGE:
+                            if (config.TDPSettings.Percentage.HasValue)
+                            {
+                                // config values are from 0.0% to 100.0%
+                                tdp.SetTDPPercentage(config.TDPSettings.Percentage.Value / 100);
+                            }
+                            else
+                            {
+                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                            }
+                            break;
+                        case TDPSettingType.RAW:
+                            if (config.TDPSettings.Raw.HasValue)
+                            {
+                                tdp.SetTDPRaw(config.TDPSettings.Raw.Value);
+                            }
+                            else
+                            {
+                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                            }
+                            break;
+                        // here we decide to not allow per GPU disable state, default fallback is SIMPLE setting
+                        case TDPSettingType.UNSUPPORTED:
+                        case TDPSettingType.DISABLED:
+                        case TDPSettingType.SIMPLE:
+                        default:
+                            tdp.SettingType = TDPSettingType.SIMPLE;
+                            if (config.TDPSettings.Simple.HasValue)
+                            {
+                                tdp.SetTDPSimple(config.TDPSettings.Simple.Value);
+                            }
+                            else
+                            {
+                                tdp.SetTDPSimple(tdpSimpleDefault); // fallback
+                            }
+                            break;
+                    }
+                }
+                else if (DeviceMonitor is ITDP tdpDefault)
+                {
+                    tdpDefault.SetTDPSimple(tdpSimpleDefault); // set default high
+                }
             }
 #endif
 
@@ -282,14 +328,37 @@ namespace NiceHashMiner.Mining
 
         public DeviceConfig GetDeviceConfig()
         {
+            var TDPSettings = new DeviceTDPSettings { SettingType = TDPSettingType.UNSUPPORTED };
+            if(DeviceMonitor is ITDP tdp)
+            {
+                if (DeviceMonitorManager.DisableDevicePowerModeSettings)
+                {
+                    TDPSettings.SettingType = TDPSettingType.DISABLED;
+                }
+                else
+                {
+                    TDPSettings.SettingType = tdp.SettingType;
+                    if (TDPSettings.SettingType == TDPSettingType.SIMPLE)
+                    {
+                        TDPSettings.Simple = tdp.TDPSimple;
+                    }
+                    if (TDPSettings.SettingType == TDPSettingType.PERCENTAGE)
+                    {
+                        TDPSettings.Percentage = tdp.TDPPercentage * 100;
+                    }
+                    if (TDPSettings.SettingType == TDPSettingType.RAW)
+                    {
+                        TDPSettings.Raw = tdp.TDPRaw;
+                    }
+                }
+            }
             var ret = new DeviceConfig
             {
                 DeviceName = Name,
                 DeviceUUID = Uuid,
                 Enabled = Enabled,
                 MinimumProfit = MinimumProfit,
-                PowerLevel = PowerLevel,
-                PowerTarget = PowerTarget
+                TDPSettings = TDPSettings,
             };
             // init algo settings
             foreach (var algo in AlgorithmSettings)

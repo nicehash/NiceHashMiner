@@ -5,26 +5,12 @@ using NHM.Common.Enums;
 using NVIDIA.NVAPI;
 using System;
 using System.Linq;
+using NHM.DeviceMonitoring.TDP;
 
 namespace NHM.DeviceMonitoring
 {
-    internal class DeviceMonitorNVIDIA : DeviceMonitor,
-        IFanSpeed, ILoad, IPowerUsage, ITemp,
-        IPowerTarget, IPowerLevel, ISetPowerLevel, ISetPowerTargetPercentage
+    internal class DeviceMonitorNVIDIA : DeviceMonitor, IFanSpeedRPM, ILoad, IPowerUsage, ITemp, ITDP
     {
-        public class PowerOutOfRangeException : ArgumentOutOfRangeException
-        {
-            /// <summary>
-            /// The next closest power limit that can be set
-            /// </summary>
-            public double ClosestValue;
-
-            public PowerOutOfRangeException(double closest)
-            {
-                ClosestValue = closest;
-            }
-        }
-
         private object _lock = new object();
 
         public int BusID { get; private set; }
@@ -43,29 +29,6 @@ namespace NHM.DeviceMonitoring
             for (int i = 0; i < 20; i++) _deviceMonitorWatchdog.AppendTimeoutTimeSpan(TimeSpan.FromMinutes(1)); // attempt on minute
             for (int i = 0; i < 10; i++) _deviceMonitorWatchdog.AppendTimeoutTimeSpan(TimeSpan.FromHours(1)); // attempt on hour
             for (int i = 0; i < 1; i++) _deviceMonitorWatchdog.AppendTimeoutTimeSpan(TimeSpan.FromDays(1)); // attempt after a day and stop after
-
-
-            try
-            {
-                // set to high by default
-                var defaultLevel = PowerLevel.High;
-                if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
-                {
-                    var success = SetPowerTarget(defaultLevel);
-                    if (!success)
-                    {
-                        Logger.Info(LogTag, $"Cannot set power target ({defaultLevel.ToString()}) for device with BusID={BusID}");
-                    }
-                }
-                else
-                {
-                    PowerLevel = PowerLevel.Disabled;
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.Error(LogTag, $"Getting power info failed with message \"{e.Message}\", disabling power setting");
-            }
         }
 
         // cache nvmlDevice handles as these calls are expensive
@@ -166,7 +129,7 @@ namespace NHM.DeviceMonitoring
         }
 
         // TODO NVAPI replace with NVML if possible
-        public int FanSpeed
+        public int FanSpeedRPM
         {
             get
             {
@@ -224,68 +187,6 @@ namespace NHM.DeviceMonitoring
                 });
                 return execRet;
             }
-        }
-
-        public uint PowerTarget { get; private set; }
-
-        public PowerLevel PowerLevel { get; private set; } = PowerLevel.High;
-
-        private static uint GetUintFromPowerLevel(PowerLevel powerLevel)
-        {
-            switch (powerLevel)
-            {
-                case PowerLevel.Low: return 0;
-                case PowerLevel.Medium: return 1;
-                case PowerLevel.High: return 2;
-                default: throw new Exception("GetUintFromPowerLevel - Unknown PowerLevel");
-            }
-        }
-
-        private bool SetTdp(nvmlDevice nvmlDevice, double tdpPerc, uint defaultLimit)
-        {
-            // TODO we limit to 100%
-            uint currentLimit = (uint)(tdpPerc * (double)defaultLimit) / 100;
-            var ret = NvmlNativeMethods.nvmlDeviceSetPowerManagementLimit(nvmlDevice, currentLimit);
-            if (ret != nvmlReturn.Success)
-                throw new NvmlException("nvmlDeviceSetPowerManagementLimit", ret);
-            
-            return true;
-        }
-
-        private bool SetTdpSimple(PowerLevel level)
-        {
-            var execRet = ExecNvmlProcedure(false, $"{nameof(SetTdpSimple)}({level})", () => {
-                var nvmlDevice = GetNvmlDevice();
-                uint minLimit = 0;
-                uint maxLimit = 0;
-                var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(nvmlDevice, ref minLimit, ref maxLimit);
-                if (ret != nvmlReturn.Success)
-                    throw new NvmlException($"nvmlDeviceGetPowerManagementLimitConstraints", ret);
-
-                uint defaultLimit = 0;
-                ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(nvmlDevice, ref defaultLimit);
-                if (ret != nvmlReturn.Success)
-                    throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
-
-                var limit = minLimit + (defaultLimit - minLimit) * GetUintFromPowerLevel(level) / 2;
-                var tdpPerc = (limit * 100.0 / defaultLimit);
-                return SetTdp(nvmlDevice, tdpPerc, defaultLimit);
-            });
-            return execRet;
-        }
-
-        private bool SetTdpPercentage(double tdpPerc)
-        {
-            var execRet = ExecNvmlProcedure(false, $"{nameof(SetTdpPercentage)}({tdpPerc})", () => {
-                var nvmlDevice = GetNvmlDevice();
-                uint defaultLimit = 0;
-                var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(nvmlDevice, ref defaultLimit);
-                if (ret != nvmlReturn.Success)
-                    throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
-
-                return SetTdp(nvmlDevice, tdpPerc, defaultLimit);
-            });
-            return execRet;
         }
 
         // NVML is thread-safe according to the documentation
@@ -346,28 +247,173 @@ namespace NHM.DeviceMonitoring
             return _skipRecoveryNvmlErrors.Contains(error);
         }
 
-        public bool SetPowerTarget(PowerLevel level)
+        private bool ExecNvmlSetTDP(string calledFrom, double percentage)
         {
-            if (DeviceMonitorManager.DisableDevicePowerModeSettings) {
-                Logger.InfoDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
-                return false;
-            }
+            var execRet = ExecNvmlProcedure(false, calledFrom, () => {
+                var nvmlDevice = GetNvmlDevice();
+                uint minLimit = 0;
+                uint maxLimit = 0;
+                var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(nvmlDevice, ref minLimit, ref maxLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new NvmlException($"nvmlDeviceGetPowerManagementLimitConstraints", ret);
 
-            PowerLevel = level;
-            return SetTdpSimple(level);
+                uint defaultLimit = 0;
+                ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(nvmlDevice, ref defaultLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
+
+                // We limit 100% to the default as max
+                var limit = RangeCalculator.CalculateValue(percentage, minLimit, defaultLimit);
+                var setLimit = (uint)limit;
+                ret = NvmlNativeMethods.nvmlDeviceSetPowerManagementLimit(nvmlDevice, setLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new NvmlException("nvmlDeviceSetPowerManagementLimit", ret);
+
+                return true;
+            });
+
+            return execRet;
         }
 
-        // percent is in hundreds, e.g. 100%
-        public bool SetPowerTarget(double percent)
+        #region ITDP
+        public TDPSettingType SettingType { get; set;  } = TDPSettingType.SIMPLE;
+
+        public TDPSimpleType TDPSimple { get; private set; } = TDPSimpleType.HIGH;
+
+        public double TDPPercentage
+        {
+            get
+            {
+                var execRet = ExecNvmlProcedure(-1d, $"{nameof(TDPPercentage)}", () => {
+                    var nvmlDevice = GetNvmlDevice();
+                    uint minLimit = 0;
+                    uint maxLimit = 0;
+                    var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(nvmlDevice, ref minLimit, ref maxLimit);
+                    if (ret != nvmlReturn.Success)
+                        throw new NvmlException($"nvmlDeviceGetPowerManagementLimitConstraints", ret);
+
+                    uint defaultLimit = 0;
+                    ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(nvmlDevice, ref defaultLimit);
+                    if (ret != nvmlReturn.Success)
+                        throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
+
+                    uint currentLimit = 0;
+                    ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimit(nvmlDevice, ref currentLimit);
+                    if (ret != nvmlReturn.Success)
+                        throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
+
+                    // We limit 100% to the default as max
+                    var tdpPerc = RangeCalculator.CalculatePercentage(currentLimit, minLimit, defaultLimit);
+                    return tdpPerc; // 0.0d - 1.0d
+                });
+                return execRet;
+            }
+        }
+
+        public double TDPRaw
+        {
+            get
+            {
+                var execRet = ExecNvmlProcedure(-1d, $"{nameof(TDPRaw)}", () => {
+                    var nvmlDevice = GetNvmlDevice();
+                    uint currentLimit = 0;
+                    var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimit(nvmlDevice, ref currentLimit);
+                    if (ret != nvmlReturn.Success)
+                        throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
+
+                    return (double)currentLimit;
+                });
+                return execRet;
+            }
+        }
+
+        private static double? PowerLevelToTDPPercentage(TDPSimpleType level)
+        {
+            switch (level)
+            {
+                case TDPSimpleType.LOW: return 0.5d; // 50%
+                case TDPSimpleType.MEDIUM: return 0.8d; // 80%
+                case TDPSimpleType.HIGH: return 1.0d; // 100%
+            }
+            return null;
+        }
+        public bool SetTDPSimple(TDPSimpleType level)
         {
             if (DeviceMonitorManager.DisableDevicePowerModeSettings)
             {
-                Logger.InfoDelayed(LogTag, $"SetPowerTarget Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
+                Logger.InfoDelayed(LogTag, $"SetTDPSimple Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
                 return false;
             }
-            // TODO this Custom thingh shouild be changed so each mode has a custom setting
-            PowerLevel = PowerLevel.Custom;
-            return SetTdpPercentage(percent);
+            var percentage = PowerLevelToTDPPercentage(level);
+            if (!percentage.HasValue)
+            {
+                Logger.Error(LogTag, $"SetTDPSimple unkown PowerLevel {level}. Defaulting to {TDPSimpleType.HIGH}");
+                level = TDPSimpleType.HIGH;
+                percentage = PowerLevelToTDPPercentage(level);
+            }
+            Logger.Info(LogTag, $"SetTDPSimple setting PowerLevel to {level}.");
+            var execRet = ExecNvmlSetTDP($"{nameof(SetTDPSimple)}({level})", percentage.Value);
+            if (execRet) TDPSimple = level;
+            Logger.Info(LogTag, $"SetTDPSimple {execRet}.");
+            return execRet;
         }
+
+        public bool SetTDPPercentage(double percentage)
+        {
+            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
+            {
+                Logger.InfoDelayed(LogTag, $"SetTDPPercentage Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
+                return false;
+            }
+            if (percentage < 0.0d)
+            {
+                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 0.0d");
+                percentage = 0.0d;
+            }
+            if (percentage > 1.0d)
+            {
+                Logger.Error(LogTag, $"SetTDPPercentage {percentage} out of bounds. Setting to 1.0d");
+                percentage = 1.0d;
+            }
+
+            Logger.Info(LogTag, $"SetTDPPercentage setting to {percentage}.");
+            var execRet = ExecNvmlSetTDP($"{nameof(SetTDPPercentage)}({percentage})", percentage);
+            Logger.Info(LogTag, $"SetTDPPercentage {execRet}.");
+            return execRet;
+        }
+
+        public bool SetTDPRaw(double raw)
+        {
+            if (DeviceMonitorManager.DisableDevicePowerModeSettings)
+            {
+                Logger.InfoDelayed(LogTag, $"SetTDPRaw Disabled DeviceMonitorManager.DisableDevicePowerModeSettings==true", TimeSpan.FromSeconds(30));
+                return false;
+            }
+            var execRet = ExecNvmlProcedure(false, $"{nameof(SetTDPRaw)}({raw})", () => {
+                var nvmlDevice = GetNvmlDevice();
+                uint minLimit = 0;
+                uint maxLimit = 0;
+                var ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementLimitConstraints(nvmlDevice, ref minLimit, ref maxLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new NvmlException($"nvmlDeviceGetPowerManagementLimitConstraints", ret);
+
+                uint defaultLimit = 0;
+                ret = NvmlNativeMethods.nvmlDeviceGetPowerManagementDefaultLimit(nvmlDevice, ref defaultLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new NvmlException($"nvmlDeviceGetPowerManagementDefaultLimit", ret);
+
+                // We limit 100% to the default as max
+                var limit = Math.Max((uint)raw, minLimit);
+                var setLimit = Math.Min(limit, defaultLimit);
+                ret = NvmlNativeMethods.nvmlDeviceSetPowerManagementLimit(nvmlDevice, setLimit);
+                if (ret != nvmlReturn.Success)
+                    throw new NvmlException("nvmlDeviceSetPowerManagementLimit", ret);
+
+                return true;
+            });
+
+            return execRet;
+        }
+        #endregion ITDP
     }
 }
