@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Utils;
+using NHMCore.Mining;
+using NHMCore.Utils;
+
+using NHMCore;
 
 namespace NiceHashMiner.Forms.Components
 {

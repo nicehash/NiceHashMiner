@@ -98,9 +98,9 @@
       <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
       <Name>NHM.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NiceHashMiner\NiceHashMiner.csproj">
-      <Project>{a70b0aee-15c4-49e1-9dc9-b936a1ebc2b5}</Project>
-      <Name>NiceHashMiner</Name>
+    <ProjectReference Include="..\..\NHMCore\NHMCore.csproj">
+      <Project>{43dcaf38-d0c4-4335-983d-650f78461eb2}</Project>
+      <Name>NHMCore</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

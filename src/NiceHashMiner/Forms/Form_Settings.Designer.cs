@@ -261,7 +261,7 @@
             // 
             // pictureBox_ElectricityCost
             // 
-            this.pictureBox_ElectricityCost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ElectricityCost.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_ElectricityCost.Location = new System.Drawing.Point(131, 101);
             this.pictureBox_ElectricityCost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_ElectricityCost.Name = "pictureBox_ElectricityCost";
@@ -290,7 +290,7 @@
             // 
             // pictureBox_TimeUnit
             // 
-            this.pictureBox_TimeUnit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_TimeUnit.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_TimeUnit.Location = new System.Drawing.Point(303, 50);
             this.pictureBox_TimeUnit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_TimeUnit.Name = "pictureBox_TimeUnit";
@@ -321,7 +321,7 @@
             // 
             // pictureBox_MinProfit
             // 
-            this.pictureBox_MinProfit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MinProfit.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_MinProfit.Location = new System.Drawing.Point(131, 51);
             this.pictureBox_MinProfit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinProfit.Name = "pictureBox_MinProfit";
@@ -378,7 +378,7 @@
             // 
             // pictureBox5
             // 
-            this.pictureBox5.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox5.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox5.Location = new System.Drawing.Point(-58, 59);
             this.pictureBox5.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox5.Name = "pictureBox5";
@@ -389,7 +389,7 @@
             // 
             // pictureBox_displayCurrency
             // 
-            this.pictureBox_displayCurrency.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_displayCurrency.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_displayCurrency.Location = new System.Drawing.Point(178, 71);
             this.pictureBox_displayCurrency.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_displayCurrency.Name = "pictureBox_displayCurrency";
@@ -400,7 +400,7 @@
             // 
             // pictureBox_Language
             // 
-            this.pictureBox_Language.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_Language.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_Language.Location = new System.Drawing.Point(178, 16);
             this.pictureBox_Language.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_Language.Name = "pictureBox_Language";
@@ -543,7 +543,7 @@
             // 
             // pictureBox_ShowGPUPCIeBusIDs
             // 
-            this.pictureBox_ShowGPUPCIeBusIDs.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ShowGPUPCIeBusIDs.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_ShowGPUPCIeBusIDs.Location = new System.Drawing.Point(222, 244);
             this.pictureBox_ShowGPUPCIeBusIDs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_ShowGPUPCIeBusIDs.Name = "pictureBox_ShowGPUPCIeBusIDs";
@@ -565,7 +565,7 @@
             // 
             // pictureBox_WindowAlwaysOnTop
             // 
-            this.pictureBox_WindowAlwaysOnTop.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_WindowAlwaysOnTop.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_WindowAlwaysOnTop.Location = new System.Drawing.Point(222, 221);
             this.pictureBox_WindowAlwaysOnTop.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_WindowAlwaysOnTop.Name = "pictureBox_WindowAlwaysOnTop";
@@ -587,7 +587,7 @@
             // 
             // pictureBox_RunAtStartup
             // 
-            this.pictureBox_RunAtStartup.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_RunAtStartup.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_RunAtStartup.Location = new System.Drawing.Point(222, 64);
             this.pictureBox_RunAtStartup.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_RunAtStartup.Name = "pictureBox_RunAtStartup";
@@ -620,7 +620,7 @@
             // 
             // pictureBox_AllowMultipleInstances
             // 
-            this.pictureBox_AllowMultipleInstances.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_AllowMultipleInstances.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_AllowMultipleInstances.Location = new System.Drawing.Point(222, 42);
             this.pictureBox_AllowMultipleInstances.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_AllowMultipleInstances.Name = "pictureBox_AllowMultipleInstances";
@@ -631,7 +631,7 @@
             // 
             // pictureBox_ShowInternetConnectionWarning
             // 
-            this.pictureBox_ShowInternetConnectionWarning.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ShowInternetConnectionWarning.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_ShowInternetConnectionWarning.Location = new System.Drawing.Point(222, 198);
             this.pictureBox_ShowInternetConnectionWarning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_ShowInternetConnectionWarning.Name = "pictureBox_ShowInternetConnectionWarning";
@@ -675,7 +675,7 @@
             // 
             // pictureBox_DisableWindowsErrorReporting
             // 
-            this.pictureBox_DisableWindowsErrorReporting.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_DisableWindowsErrorReporting.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_DisableWindowsErrorReporting.Location = new System.Drawing.Point(222, 175);
             this.pictureBox_DisableWindowsErrorReporting.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_DisableWindowsErrorReporting.Name = "pictureBox_DisableWindowsErrorReporting";
@@ -686,7 +686,7 @@
             // 
             // pictureBox_ShowDriverVersionWarning
             // 
-            this.pictureBox_ShowDriverVersionWarning.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_ShowDriverVersionWarning.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_ShowDriverVersionWarning.Location = new System.Drawing.Point(222, 154);
             this.pictureBox_ShowDriverVersionWarning.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_ShowDriverVersionWarning.Name = "pictureBox_ShowDriverVersionWarning";
@@ -697,7 +697,7 @@
             // 
             // pictureBox_AutoScaleBTCValues
             // 
-            this.pictureBox_AutoScaleBTCValues.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_AutoScaleBTCValues.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_AutoScaleBTCValues.Location = new System.Drawing.Point(222, 131);
             this.pictureBox_AutoScaleBTCValues.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_AutoScaleBTCValues.Name = "pictureBox_AutoScaleBTCValues";
@@ -708,7 +708,7 @@
             // 
             // pictureBox_Use3rdPartyMiners
             // 
-            this.pictureBox_Use3rdPartyMiners.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_Use3rdPartyMiners.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_Use3rdPartyMiners.Location = new System.Drawing.Point(222, 109);
             this.pictureBox_Use3rdPartyMiners.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_Use3rdPartyMiners.Name = "pictureBox_Use3rdPartyMiners";
@@ -719,7 +719,7 @@
             // 
             // pictureBox_AutoStartMining
             // 
-            this.pictureBox_AutoStartMining.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_AutoStartMining.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_AutoStartMining.Location = new System.Drawing.Point(222, 19);
             this.pictureBox_AutoStartMining.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_AutoStartMining.Name = "pictureBox_AutoStartMining";
@@ -730,7 +730,7 @@
             // 
             // pictureBox_MinimizeToTray
             // 
-            this.pictureBox_MinimizeToTray.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MinimizeToTray.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_MinimizeToTray.Location = new System.Drawing.Point(222, 87);
             this.pictureBox_MinimizeToTray.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinimizeToTray.Name = "pictureBox_MinimizeToTray";
@@ -814,7 +814,7 @@
             // 
             // pictureBox_DisableDevicePowerModeSettings
             // 
-            this.pictureBox_DisableDevicePowerModeSettings.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_DisableDevicePowerModeSettings.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_DisableDevicePowerModeSettings.Location = new System.Drawing.Point(222, 42);
             this.pictureBox_DisableDevicePowerModeSettings.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_DisableDevicePowerModeSettings.Name = "pictureBox_DisableDevicePowerModeSettings";
@@ -836,7 +836,7 @@
             // 
             // pictureBox_DisableDeviceStatusMonitoring
             // 
-            this.pictureBox_DisableDeviceStatusMonitoring.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_DisableDeviceStatusMonitoring.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_DisableDeviceStatusMonitoring.Location = new System.Drawing.Point(222, 19);
             this.pictureBox_DisableDeviceStatusMonitoring.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_DisableDeviceStatusMonitoring.Name = "pictureBox_DisableDeviceStatusMonitoring";
@@ -894,7 +894,7 @@
             // 
             // pictureBox_DebugConsole
             // 
-            this.pictureBox_DebugConsole.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_DebugConsole.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_DebugConsole.Location = new System.Drawing.Point(130, 42);
             this.pictureBox_DebugConsole.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_DebugConsole.Name = "pictureBox_DebugConsole";
@@ -905,7 +905,7 @@
             // 
             // pictureBox_LogMaxFileSize
             // 
-            this.pictureBox_LogMaxFileSize.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_LogMaxFileSize.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_LogMaxFileSize.Location = new System.Drawing.Point(318, 19);
             this.pictureBox_LogMaxFileSize.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_LogMaxFileSize.Name = "pictureBox_LogMaxFileSize";
@@ -916,7 +916,7 @@
             // 
             // pictureBox_LogToFile
             // 
-            this.pictureBox_LogToFile.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_LogToFile.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_LogToFile.Location = new System.Drawing.Point(130, 19);
             this.pictureBox_LogToFile.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_LogToFile.Name = "pictureBox_LogToFile";
@@ -968,7 +968,7 @@
             // 
             // pictureBox_IdleWhenNoInternetAccess
             // 
-            this.pictureBox_IdleWhenNoInternetAccess.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_IdleWhenNoInternetAccess.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_IdleWhenNoInternetAccess.Location = new System.Drawing.Point(198, 19);
             this.pictureBox_IdleWhenNoInternetAccess.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_IdleWhenNoInternetAccess.Name = "pictureBox_IdleWhenNoInternetAccess";
@@ -979,7 +979,7 @@
             // 
             // pictureBox_StartMiningWhenIdle
             // 
-            this.pictureBox_StartMiningWhenIdle.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_StartMiningWhenIdle.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_StartMiningWhenIdle.Location = new System.Drawing.Point(144, 42);
             this.pictureBox_StartMiningWhenIdle.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_StartMiningWhenIdle.Name = "pictureBox_StartMiningWhenIdle";
@@ -1001,7 +1001,7 @@
             // 
             // pictureBox_MinIdleSeconds
             // 
-            this.pictureBox_MinIdleSeconds.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MinIdleSeconds.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_MinIdleSeconds.Location = new System.Drawing.Point(344, 72);
             this.pictureBox_MinIdleSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinIdleSeconds.Name = "pictureBox_MinIdleSeconds";
@@ -1030,7 +1030,7 @@
             // 
             // pictureBox_IdleType
             // 
-            this.pictureBox_IdleType.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_IdleType.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_IdleType.Location = new System.Drawing.Point(159, 70);
             this.pictureBox_IdleType.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_IdleType.Name = "pictureBox_IdleType";
@@ -1076,7 +1076,7 @@
             // 
             // pictureBox_RunScriptOnCUDA_GPU_Lost
             // 
-            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_RunScriptOnCUDA_GPU_Lost.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Location = new System.Drawing.Point(200, 18);
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_RunScriptOnCUDA_GPU_Lost.Name = "pictureBox_RunScriptOnCUDA_GPU_Lost";
@@ -1098,7 +1098,7 @@
             // 
             // pictureBox_NVIDIAP0State
             // 
-            this.pictureBox_NVIDIAP0State.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_NVIDIAP0State.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_NVIDIAP0State.Location = new System.Drawing.Point(120, 45);
             this.pictureBox_NVIDIAP0State.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_NVIDIAP0State.Name = "pictureBox_NVIDIAP0State";
@@ -1120,7 +1120,7 @@
             // 
             // pictureBox_RunEthlargement
             // 
-            this.pictureBox_RunEthlargement.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_RunEthlargement.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_RunEthlargement.Location = new System.Drawing.Point(120, 69);
             this.pictureBox_RunEthlargement.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_RunEthlargement.Name = "pictureBox_RunEthlargement";
@@ -1160,7 +1160,7 @@
             // 
             // pictureBox_SwitchProfitabilityThreshold
             // 
-            this.pictureBox_SwitchProfitabilityThreshold.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_SwitchProfitabilityThreshold.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_SwitchProfitabilityThreshold.Location = new System.Drawing.Point(157, 72);
             this.pictureBox_SwitchProfitabilityThreshold.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_SwitchProfitabilityThreshold.Name = "pictureBox_SwitchProfitabilityThreshold";
@@ -1207,7 +1207,7 @@
             // 
             // pictureBox_SwitchMaxSeconds
             // 
-            this.pictureBox_SwitchMaxSeconds.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_SwitchMaxSeconds.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_SwitchMaxSeconds.Location = new System.Drawing.Point(347, 25);
             this.pictureBox_SwitchMaxSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_SwitchMaxSeconds.Name = "pictureBox_SwitchMaxSeconds";
@@ -1218,7 +1218,7 @@
             // 
             // pictureBox_SwitchMinSeconds
             // 
-            this.pictureBox_SwitchMinSeconds.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_SwitchMinSeconds.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_SwitchMinSeconds.Location = new System.Drawing.Point(163, 25);
             this.pictureBox_SwitchMinSeconds.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_SwitchMinSeconds.Name = "pictureBox_SwitchMinSeconds";
@@ -1282,7 +1282,7 @@
             // 
             // pictureBox_MinimizeMiningWindows
             // 
-            this.pictureBox_MinimizeMiningWindows.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MinimizeMiningWindows.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_MinimizeMiningWindows.Location = new System.Drawing.Point(164, 131);
             this.pictureBox_MinimizeMiningWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinimizeMiningWindows.Name = "pictureBox_MinimizeMiningWindows";
@@ -1304,7 +1304,7 @@
             // 
             // pictureBox_HideMiningWindows
             // 
-            this.pictureBox_HideMiningWindows.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_HideMiningWindows.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_HideMiningWindows.Location = new System.Drawing.Point(164, 109);
             this.pictureBox_HideMiningWindows.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_HideMiningWindows.Name = "pictureBox_HideMiningWindows";
@@ -1315,7 +1315,7 @@
             // 
             // pictureBox_MinerRestartDelayMS
             // 
-            this.pictureBox_MinerRestartDelayMS.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MinerRestartDelayMS.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_MinerRestartDelayMS.Location = new System.Drawing.Point(156, 20);
             this.pictureBox_MinerRestartDelayMS.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinerRestartDelayMS.Name = "pictureBox_MinerRestartDelayMS";
@@ -1326,7 +1326,7 @@
             // 
             // pictureBox_APIBindPortStart
             // 
-            this.pictureBox_APIBindPortStart.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_APIBindPortStart.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_APIBindPortStart.Location = new System.Drawing.Point(341, 21);
             this.pictureBox_APIBindPortStart.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_APIBindPortStart.Name = "pictureBox_APIBindPortStart";
@@ -1337,7 +1337,7 @@
             // 
             // pictureBox_MinerAPIQueryInterval
             // 
-            this.pictureBox_MinerAPIQueryInterval.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MinerAPIQueryInterval.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_MinerAPIQueryInterval.Location = new System.Drawing.Point(162, 63);
             this.pictureBox_MinerAPIQueryInterval.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MinerAPIQueryInterval.Name = "pictureBox_MinerAPIQueryInterval";
@@ -1434,7 +1434,7 @@
             // 
             // pictureBox_UseIFTTT
             // 
-            this.pictureBox_UseIFTTT.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_UseIFTTT.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_UseIFTTT.Location = new System.Drawing.Point(83, 15);
             this.pictureBox_UseIFTTT.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_UseIFTTT.Name = "pictureBox_UseIFTTT";
@@ -1589,7 +1589,7 @@
             // 
             // pictureBox_MineRegardlessOfProfit
             // 
-            this.pictureBox_MineRegardlessOfProfit.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox_MineRegardlessOfProfit.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox_MineRegardlessOfProfit.Location = new System.Drawing.Point(201, 22);
             this.pictureBox_MineRegardlessOfProfit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             this.pictureBox_MineRegardlessOfProfit.Name = "pictureBox_MineRegardlessOfProfit";

@@ -1,8 +1,9 @@
 ﻿using System;
 using NHM.Common.Enums;
-using NiceHashMiner.Benchmarking;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Mining;
+using NHMCore;
+using NHMCore.Benchmarking;
+using NHMCore.Configs;
+using NHMCore.Mining;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -308,8 +309,8 @@ namespace NHM.Wpf.ViewModels
         {
             if (Devices?.All(d => !d.Enabled) ?? true)
             {
-                MessageBox.Show(NiceHashMiner.Translations.Tr("No device has been selected there is nothing to benchmark"),
-                    NiceHashMiner.Translations.Tr("No device selected"),
+                MessageBox.Show(Translations.Tr("No device has been selected there is nothing to benchmark"),
+                    Translations.Tr("No device selected"),
                     MessageBoxButton.OK);
                 return;
             }

@@ -2,8 +2,8 @@
 using System.Diagnostics;
 using System.Drawing;
 using System.Windows.Forms;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Utils;
+using NHMCore.Configs;
+using NHMCore.Utils;
 
 namespace NiceHashMiner.Forms
 {
@@ -13,7 +13,7 @@ namespace NiceHashMiner.Forms
         {
             InitializeComponent();
             CenterToScreen();
-            Icon = Properties.Resources.logo;
+            Icon = NHMCore.Properties.Resources.logo;
             Text += " v" + Application.ProductVersion;
             FormHelpers.TranslateFormControls(this);
         }

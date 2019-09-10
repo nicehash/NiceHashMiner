@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows.Controls;
-using NiceHashMiner;
+using NHMCore;
 
 namespace NHM.Wpf.Validators
 {

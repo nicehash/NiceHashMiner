@@ -1,10 +1,11 @@
-﻿using NiceHashMiner.Configs;
+﻿using NHMCore;
+using NHMCore.Configs;
 using NiceHashMiner.Forms;
-using NiceHashMiner.Interfaces.DataVisualizer;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Mining.IdleChecking;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Switching;
+using NHMCore.Interfaces.DataVisualizer;
+using NHMCore.Mining;
+using NHMCore.Mining.IdleChecking;
+using NHMCore.Stats;
+using NHMCore.Switching;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -12,13 +13,13 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using static NiceHashMiner.Translations; // consider using static
+using static NHMCore.Translations; // consider using static
 
 namespace NiceHashMiner
 {
     using NiceHashMiner.Forms.Components;
-    using NiceHashMiner.Mining.Plugins;
-    using NiceHashMiner.Utils;
+    using NHMCore.Mining.Plugins;
+    using NHMCore.Utils;
     using NHM.Common;
     using NHM.Common.Enums;
     using System.IO;
@@ -42,7 +43,7 @@ namespace NiceHashMiner
         {
             InitializeComponent();
             CenterToScreen();
-            Icon = Properties.Resources.logo;
+            Icon = NHMCore.Properties.Resources.logo;
             errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
             labelWarningNotProfitableOrNoIntenret.Visible = false;
             InitElevationWarning();
@@ -64,7 +65,7 @@ namespace NiceHashMiner
 
             Text = ApplicationStateManager.Title;
 
-            notifyIcon1.Icon = Properties.Resources.logo;
+            notifyIcon1.Icon = NHMCore.Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
                                "\n" + Tr("Double-click to restore...");
 
@@ -305,7 +306,8 @@ namespace NiceHashMiner
                     loadingControl.ProgressSecond = (int) p.perc;
                     loadingControl.LoadMessageTextSecond = p.loadMessageText;
                 });
-                await ApplicationStateManager.InitializeManagersAndMiners(loadingControl, progress, progressDownload);
+                //await ApplicationStateManager.InitializeManagersAndMiners(loadingControl, progress, progressDownload); // TODO_NiceHashMiner passing loadingControl has no effect???
+                await ApplicationStateManager.InitializeManagersAndMiners(progress, progressDownload);
             }
             devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
 

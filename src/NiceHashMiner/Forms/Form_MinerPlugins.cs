@@ -1,14 +1,14 @@
 ﻿using NiceHashMiner.Forms.Components;
-using NiceHashMiner.Mining.Plugins;
+using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Threading;
-using NiceHashMiner.Configs;
-using static NiceHashMiner.Translations;
-using static NiceHashMiner.Mining.Plugins.MinerPluginsManager;
+using NHMCore.Configs;
+using static NHMCore.Translations;
+using static NHMCore.Mining.Plugins.MinerPluginsManager;
 
 namespace NiceHashMiner.Forms
 {
@@ -19,7 +19,7 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
             flowLayoutPanelPluginsLV.Controls.Clear();
             CenterToScreen();
-            Icon = Properties.Resources.logo;
+            Icon = NHMCore.Properties.Resources.logo;
             this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
             FormHelpers.TranslateFormControls(this);
 

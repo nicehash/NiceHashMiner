@@ -1,4 +1,4 @@
-﻿using NiceHashMiner.Configs;
+﻿using NHMCore.Configs;
 using System;
 using System.Windows.Forms;
 using NHM.Common.Enums;

@@ -2,11 +2,11 @@
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using NiceHashMiner.Benchmarking;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Interfaces;
-using NiceHashMiner.Properties;
+using NHMCore;
+using NHMCore.Benchmarking;
+using NHMCore.Configs;
+using NHMCore.Mining;
+using NHMCore.Interfaces;
 using NHM.Common.Enums;
 using Timer = System.Windows.Forms.Timer;
 
@@ -32,7 +32,7 @@ namespace NiceHashMiner.Forms
             bool autostart = false)
         {
             InitializeComponent();
-            Icon = Resources.logo;
+            Icon = NHMCore.Properties.Resources.logo;
             this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
 
             // clear prev pending statuses

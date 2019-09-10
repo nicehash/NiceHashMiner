@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Configs;
+﻿using NHMCore;
+using NHMCore.Configs;
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -12,14 +13,14 @@ namespace NiceHashMiner.Forms
         {
             InitializeComponent();
             CenterToScreen();
-            Icon = Properties.Resources.logo;
+            Icon = NHMCore.Properties.Resources.logo;
             InitializeTosComponent();
             FormHelpers.TranslateFormControls(this);
         }
 
         private void InitializeTosComponent()
         {
-            richTextBoxToS.Rtf = Properties.Resources.Eula;
+            richTextBoxToS.Rtf = NHMCore.Properties.Resources.Eula;
             richTextBoxToS.ReadOnly = true;
             richTextBoxToS.DetectUrls = true;
             richTextBoxToS.HideSelection = true;

@@ -1,4 +1,4 @@
-﻿using NiceHashMiner.Utils;
+﻿using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +19,7 @@ namespace NiceHashMiner.Forms
         {
             InitializeComponent();
             CenterToScreen();
-            Icon = Properties.Resources.logo;
+            Icon = NHMCore.Properties.Resources.logo;
             webBrowser1.Navigate(Links.Login);
             webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
             //webBrowser1.SizeChanged += WebBrowser1_SizeChanged;

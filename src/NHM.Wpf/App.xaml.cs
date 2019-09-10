@@ -1,9 +1,9 @@
 ﻿using log4net.Core;
 using NHM.Common;
 using NHM.Common.Enums;
-using NiceHashMiner;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Stats;
+using NHMCore;
+using NHMCore.Configs;
+using NHMCore.Stats;
 using System;
 using System.Diagnostics;
 using System.Globalization;

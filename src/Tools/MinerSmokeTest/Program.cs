@@ -1,5 +1,5 @@
 ﻿using log4net.Core;
-using NiceHashMiner;
+using NHMCore;
 using NHM.Common;
 using System;
 using System.Collections.Generic;
