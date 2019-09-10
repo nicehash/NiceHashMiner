@@ -103,6 +103,7 @@ namespace NiceHashMiner
             if (ConfigManager.GeneralConfig.DebugConsole)
             {
                 PInvokeHelpers.AllocConsole();
+                Logger.ConfigureConsoleLogging(Level.Info);
             }
 
             // init active display currency after config load
