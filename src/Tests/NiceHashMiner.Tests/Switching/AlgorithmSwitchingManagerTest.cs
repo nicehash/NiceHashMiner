@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NiceHashMiner.Switching;
+using NHMCore.Switching;
 using NHM.Common.Enums;
 
 namespace NiceHashMiner.Tests.Switching

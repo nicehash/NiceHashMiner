@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NiceHashMiner.Benchmarking;
+using NHMCore.Benchmarking;
 using System;
 using System.Collections.Generic;
 

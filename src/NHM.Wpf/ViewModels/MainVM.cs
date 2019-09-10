@@ -1,10 +1,10 @@
 ﻿using NHM.Common;
 using NHM.Wpf.ViewModels.Models;
-using NiceHashMiner;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Switching;
+using NHMCore;
+using NHMCore.Configs;
+using NHMCore.Mining;
+using NHMCore.Stats;
+using NHMCore.Switching;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
-using NiceHashMiner.Mining.IdleChecking;
+using NHMCore.Mining.IdleChecking;
 
 namespace NHM.Wpf.ViewModels
 {

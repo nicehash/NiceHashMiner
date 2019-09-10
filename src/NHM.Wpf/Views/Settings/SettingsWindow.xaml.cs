@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows;
 using NHM.Wpf.ViewModels.Settings;
 using NHM.Wpf.Views.Common;
-using NiceHashMiner;
+using NHMCore;
 
 namespace NHM.Wpf.Views.Settings
 {

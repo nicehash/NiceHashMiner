@@ -1,13 +1,14 @@
 ﻿using Newtonsoft.Json;
+using NHM.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using NHM.Common;
 
 namespace NHM.Wpf
 {
+    // TODO MERGE with NHMCore
     public static class Translations
     {
         [Serializable]

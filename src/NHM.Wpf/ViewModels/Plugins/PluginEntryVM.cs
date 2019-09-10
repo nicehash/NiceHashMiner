@@ -1,5 +1,5 @@
 ﻿using NHM.Wpf.ViewModels.Models;
-using NiceHashMiner.Mining.Plugins;
+using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

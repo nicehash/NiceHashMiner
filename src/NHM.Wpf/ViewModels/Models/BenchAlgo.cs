@@ -1,6 +1,6 @@
 ﻿using NHM.Common;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Utils;
+using NHMCore.Mining;
+using NHMCore.Utils;
 using System;
 using System.ComponentModel;
 

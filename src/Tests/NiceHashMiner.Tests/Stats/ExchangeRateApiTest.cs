@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Stats;
+using NHMCore.Configs;
+using NHMCore.Stats;
 using System;
 using System.Collections.Generic;
 

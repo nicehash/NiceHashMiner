@@ -1,9 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NHM.Common.Enums;
 using NHM.Wpf.ViewModels.Models;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Stats;
+using NHMCore.Configs;
+using NHMCore.Mining;
+using NHMCore.Stats;
 using System.Collections.Generic;
 
 namespace NHM.Wpf.Tests
