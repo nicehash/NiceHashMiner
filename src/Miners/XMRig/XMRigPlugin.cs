@@ -16,7 +16,7 @@ namespace XMRig
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://github.com/xmrig/xmrig current 3.1.0
+            // https://github.com/xmrig/xmrig current 3.1.1
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
