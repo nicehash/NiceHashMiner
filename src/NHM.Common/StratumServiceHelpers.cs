@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
 using System;
+#if CUSTOM_ENDPOINTS
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+#endif
 
 namespace NHM.Common
 {
