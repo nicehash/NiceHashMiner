@@ -173,9 +173,7 @@
     <Compile Include="Mining\Plugins\PluginPackageInfoCR.cs" />
     <Compile Include="Stats\ExchangeRateAPI.cs" />
     <Compile Include="Stats\NiceHashSocket.cs" />
-    <Compile Include="Stats\NiceHashStats_shared.cs" />
-    <Compile Include="Stats\NiceHashStats_production_new.cs" />
-    <Compile Include="Stats\NiceHashStats_production_old.cs" />
+    <Compile Include="Stats\NiceHashStats.cs" />
     <Compile Include="Stats\StatusCodes.cs" />
     <Compile Include="Stats\TimeFactor.cs" />
     <Compile Include="StratumService.cs" />
