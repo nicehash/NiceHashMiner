@@ -1,8 +1,4 @@
-﻿#if !ENABLE_EXTERNAL_PLUGINS && (TESTNET || TESTNETDEV || PRODUCTION_NEW) 
-#define ENABLE_EXTERNAL_PLUGINS
-#endif
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,11 +18,8 @@ namespace NHMCore.Mining.Plugins
 {
     public static class MinerPluginsManager
     {
-#if ENABLE_EXTERNAL_PLUGINS
+#warning "NO MORE ENABLE_EXTERNAL_PLUGINS. IntegratedPluginsOnly should be removed and deleted AND EXTERNAL PLUGINS SHOULD BE ALWAYS ENABLED"
         public static bool IntegratedPluginsOnly => false;
-#else
-        public static bool IntegratedPluginsOnly => true;
-#endif
 
         static MinerPluginsManager()
         {

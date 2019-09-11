@@ -55,28 +55,7 @@ namespace NiceHashMiner
             // #1 first initialize config
             ConfigManager.InitializeConfig();
 
-//            // PRODUCTION NEW
-//#if (TESTNET || TESTNETDEV || PRODUCTION_NEW)
-//            // TODO disable this as it breaks restart functionality
-//            //// on new production we allow only one instance
-//            //try
-//            //{
-//            //    var current = Process.GetCurrentProcess();
-//            //    foreach (var process in Process.GetProcessesByName(current.ProcessName))
-//            //    {
-//            //        if (process.Id != current.Id)
-//            //        {
-//            //            // already running instance, return from Main
-//            //            MessageBox.Show(Tr("{0} can run only one instance at a time.", NHMProductInfo.Name),
-//            //            Tr("{0} Already Running", NHMProductInfo.Name),
-//            //            MessageBoxButtons.OK, MessageBoxIcon.Error);
-//            //            return;
-//            //        }
-//            //    }
-//            //}
-//            //catch { }
-//#else
-//            // PRODUCTION OLD
+#warning "TODO Ensure that there is only a single instance running at time. Currenly the restart is broken if we close on multiple instances"
             // #2 check if multiple instances are allowed
             if (ConfigManager.GeneralConfig.AllowMultipleInstances == false)
             {
@@ -94,7 +73,6 @@ namespace NiceHashMiner
                 }
                 catch { }
             }
-//#endif
 
 
             // TODO set logging level
@@ -159,11 +137,12 @@ namespace NiceHashMiner
                 ConfigManager.GeneralConfigFileCommit();
             }
 
-            // PRODUCTION
-#if !(TESTNET || TESTNETDEV || PRODUCTION_NEW)
+#warning "Login form feature is missing (only discontinued old platform supports it)"
+#if false
             // if no BTC address show login/register form
             if (ConfigManager.GeneralConfig.BitcoinAddress.Trim() == "") Application.Run(new EnterBTCDialogSwitch());
 #endif
+
             Application.Run(new Form_Main());
         }
     }

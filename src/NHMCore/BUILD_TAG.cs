@@ -9,8 +9,6 @@ namespace NHMCore
         private static readonly string BuildTag = "TESTNET";
 #elif TESTNETDEV
         private static readonly string BuildTag = "TESTNETDEV";
-#elif PRODUCTION_NEW
-        private static readonly string BuildTag = "PRODUCTION_NEW";
 #else
         private static readonly string BuildTag = "PRODUCTION";
 #endif

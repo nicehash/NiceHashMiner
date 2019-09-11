@@ -8,14 +8,10 @@ namespace NHMCore.Stats.Models
         public string version { get; set; } = "";
         public int protocol { get; set; }
 
-        // Or maybe use omit emtpy 
-        // TESTNET
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
         public string btc { get; set; } = "";
         public string worker { get; set; } = "";
         public string group { get; set; } = "";
         public string rig { get; set; } = "";
-#endif
     }
 #pragma warning restore 649, IDE1006
 }

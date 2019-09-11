@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace NHMCore.Stats.Models
 {
-    // TESTNET || TESTNETDEV || PRODUCTION_NEW
 #pragma warning disable 649, IDE1006
     class MinerStatusMessage
     {

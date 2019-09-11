@@ -1,16 +1,12 @@
 ﻿using NHMCore.Utils;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms
 {
+#warning This is old production and is currently broken
     public partial class LoginForm : Form
     {
         public string Btc { get; private set; } = "";
@@ -20,7 +16,8 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
             CenterToScreen();
             Icon = NHMCore.Properties.Resources.logo;
-            webBrowser1.Navigate(Links.Login);
+#warning broken!!!
+            webBrowser1.Navigate("BROKEN"/*Links.Login*/);
             webBrowser1.DocumentCompleted += WebBrowser1_DocumentCompleted;
             //webBrowser1.SizeChanged += WebBrowser1_SizeChanged;
             FormHelpers.TranslateFormControls(this);

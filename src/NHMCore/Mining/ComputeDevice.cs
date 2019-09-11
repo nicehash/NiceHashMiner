@@ -252,7 +252,6 @@ namespace NHMCore.Mining
             Enabled = config.Enabled;
             MinimumProfit = config.MinimumProfit;
 
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             if (!DeviceMonitorManager.DisableDevicePowerModeSettings)
             {
                 var tdpSimpleDefault = TDPSimpleType.HIGH;
@@ -305,7 +304,6 @@ namespace NHMCore.Mining
                     tdpDefault.SetTDPSimple(tdpSimpleDefault); // set default high
                 }
             }
-#endif
 
             if (config.PluginAlgorithmSettings == null) return;
             PluginAlgorithmSettings = config.PluginAlgorithmSettings;
