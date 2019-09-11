@@ -1,10 +1,12 @@
-﻿using Newtonsoft.Json;
-using NHM.Common.Enums;
+﻿using NHM.Common.Enums;
 using System;
+#if CUSTOM_ENDPOINTS
+using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+#endif
 
 namespace NHM.Common
 {
@@ -138,13 +140,7 @@ namespace NHM.Common
                    + "stratum-test." + miningLocation
                    + ".nicehash.com:"
                    + port;
-#elif PRODUCTION_NEW
-            return prefix
-                   + name
-                   + "." + miningLocation
-                   + "-new.nicehash.com:"
-                   + port;
-#else
+#else // PRODUCTION_NEW
             return prefix
                    + name
                    + "." + miningLocation
