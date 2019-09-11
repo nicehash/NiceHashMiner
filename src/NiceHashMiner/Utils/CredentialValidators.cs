@@ -8,6 +8,9 @@ namespace NiceHashMiner.Utils
     {
         public static bool ValidateBitcoinAddress(string address)
         {
+#if TESTNET || TESTNETDEV
+            return true;
+#else
             try
             {
                 if (address.Length < 26 || address.Length > 35) return false;
@@ -20,6 +23,7 @@ namespace NiceHashMiner.Utils
             {
                 return false;
             }
+#endif
         }
 
         public static bool ValidateWorkerName(string workername)

@@ -31,12 +31,9 @@ namespace NHM.Common
         {
             // Console.WriteLine does nothing on x64 while debugging with VS, so use Debug. Console.WriteLine works when run from .exe
             var fallbackLogLine = $"[{DateTime.Now.ToLongTimeString()}] [{grp}] {text}";
-#if DEBUG
+
+            // Console.WriteLine doesn't write to debug console, while this writes to debug console and log file just fine
             System.Diagnostics.Debug.WriteLine(fallbackLogLine);
-#endif
-#if !DEBUG
-            Console.WriteLine(fallbackLogLine);
-#endif
 
             if (!_isInitSucceess) return;
             if (!Enabled) return;
@@ -193,22 +190,43 @@ namespace NHM.Common
             return appender;
         }
 
-        //public static IAppender CreateConsoleAppender()
-        //{
-        //    var layout = new PatternLayout
-        //    {
-        //        ConversionPattern = "[%date{yyyy-MM-dd HH:mm:ss}] [%level] %message%newline"
-        //    };
-        //    layout.ActivateOptions();
+        public static void ConfigureConsoleLogging(Level logLevel)
+        {
+            try
+            {
+                // TODO broken on netstandard
+#if NET45
+                var h = (Hierarchy)LogManager.GetRepository();
+                h.Root.Level = logLevel;
 
-        //    var consoleAppender = new ConsoleAppender
-        //    {
-        //        Name = "ConsoleAppender",
-        //        Layout = layout
-        //    };
-        //    consoleAppender.ActivateOptions();
+                h.Root.AddAppender(CreateConsoleAppender());
+                h.Configured = true;
+#endif
 
-        //    return consoleAppender;
-        //}
+                _isInitSucceess = true;
+            }
+            catch
+            {
+                _isInitSucceess = false;
+            }
+        }
+
+        public static IAppender CreateConsoleAppender()
+        {
+            var layout = new PatternLayout
+            {
+                ConversionPattern = "[%date{yyyy-MM-dd HH:mm:ss}] [%level] %message%newline"
+            };
+            layout.ActivateOptions();
+
+            var consoleAppender = new ConsoleAppender
+            {
+                Name = "ConsoleAppender",
+                Layout = layout
+            };
+            consoleAppender.ActivateOptions();
+            Logger.Info("LOGGER", "CREATED APPENDER");
+            return consoleAppender;
+        }
     }
 }

@@ -14,6 +14,7 @@ using WebSocketSharp;
 using static NiceHashMiner.Stats.StatusCodes;
 using NiceHashMiner.Utils;
 using NiceHashMiner.Mining;
+using NHM.DeviceMonitoring.TDP;
 
 namespace NiceHashMiner.Stats
 {
@@ -154,7 +155,7 @@ namespace NiceHashMiner.Stats
                 case "mining.set.power_mode":
                     executed = true;
                     throwIfWeCannotHanldeRPC();
-                    SetPowerMode((string) message.device, (PowerLevel) message.power_mode);
+                    SetPowerMode((string) message.device, (TDPSimpleType) message.power_mode);
                     return null;
             }
             
@@ -373,7 +374,7 @@ namespace NiceHashMiner.Stats
         }
 #endregion Stop
 
-        private static void SetPowerMode(string device, PowerLevel level)
+        private static void SetPowerMode(string device, TDPSimpleType level)
         {
             var devs = device == "*" ? 
                 AvailableDevices.Devices : 
@@ -466,7 +467,7 @@ namespace NiceHashMiner.Stats
                     array.Add((int) Math.Round(device.PowerUsage));
 
                     // Power mode
-                    array.Add((int)device.PowerLevel);
+                    array.Add((int)device.TDPSimple);
 
                     // Intensity mode
                     array.Add(0);

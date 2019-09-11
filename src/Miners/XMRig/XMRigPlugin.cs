@@ -16,19 +16,19 @@ namespace XMRig
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://github.com/xmrig/xmrig current 3.1.0
+            // https://github.com/xmrig/xmrig current 3.1.1
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/xmrig/xmrig/releases/download/v3.1.0/xmrig-3.1.0-msvc-win64.zip" // original
+                    "https://github.com/xmrig/xmrig/releases/download/v3.1.1/xmrig-3.1.1-msvc-win64.zip" // original
                 }
             };
         }
 
         public override string PluginUUID => "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(1, 2);
+        public override Version Version => new Version(1, 3);
 
         public override string Name => "XMRig";
 

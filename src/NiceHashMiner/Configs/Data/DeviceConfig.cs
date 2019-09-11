@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using NHM.Common.Enums;
 
 namespace NiceHashMiner.Configs.Data
@@ -13,10 +14,8 @@ namespace NiceHashMiner.Configs.Data
 
         public bool Enabled = true;
         public double MinimumProfit = 0;
-        public uint PowerTarget = uint.MinValue;
-        public PowerLevel PowerLevel = PowerLevel.High;
-        // TODO check last set power mode if it works
 
+        public DeviceTDPSettings TDPSettings;
 
         //public int TimeLimit { get; set; }
 
