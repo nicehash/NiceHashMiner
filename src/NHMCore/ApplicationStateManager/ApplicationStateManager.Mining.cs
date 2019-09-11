@@ -6,7 +6,6 @@ using NHMCore.Mining;
 using NHMCore.Stats;
 using NHM.Common;
 using NHMCore.Configs;
-using NHMCore.Utils;
 
 namespace NHMCore
 {
@@ -17,28 +16,8 @@ namespace NHMCore
             if (MiningState.Instance.IsDemoMining) {
                 return DemoUser.BTC;
             }
-
-            var (btc, worker, _unused) = ConfigManager.GeneralConfig.GetCredentials();
-
-            // TESTNET
-#if (TESTNET || TESTNETDEV || PRODUCTION_NEW)
-#if SEND_STRATUM_WORKERNAME
-            if (worker.Length > 0 && CredentialValidators.ValidateWorkerName(worker))
-            {
-                return $"{btc}.{worker}${RigID}";
-            }
-#endif
-
+            var btc = ConfigManager.GeneralConfig.BitcoinAddress.Trim();
             return $"{btc}${RigID}";
-#else
-            // PRODUCTION
-            if (worker.Length > 0 && CredentialValidators.ValidateWorkerName(worker))
-            {
-                return $"{btc}.{worker}";
-            }
-
-            return $"{btc}";
-#endif
         }
 
         private static void UpdateDevicesToMine()
