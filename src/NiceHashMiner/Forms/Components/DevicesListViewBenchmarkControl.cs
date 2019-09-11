@@ -1,5 +1,6 @@
-﻿using NiceHashMiner.Mining;
-using NiceHashMiner.Interfaces;
+﻿using NHMCore;
+using NHMCore.Mining;
+using NHMCore.Interfaces;
 using System;
 using System.Drawing;
 using System.Windows.Forms;

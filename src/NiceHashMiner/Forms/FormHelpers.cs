@@ -1,5 +1,6 @@
-﻿using NiceHashMiner.Interfaces.DataVisualizer;
-using NiceHashMiner.Interfaces.StateSetters;
+﻿using NHMCore;
+using NHMCore.Interfaces.DataVisualizer;
+using NHMCore.Interfaces.StateSetters;
 using System;
 using System.Collections.Generic;
 using System.Linq;

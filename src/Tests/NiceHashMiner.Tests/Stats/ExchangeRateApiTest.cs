@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Configs.Data;
-using NiceHashMiner.Stats;
+using NHMCore.Configs;
+using NHMCore.Stats;
 using System;
 using System.Collections.Generic;
 
@@ -25,11 +24,8 @@ namespace NiceHashMiner.Tests.Stats
         [ClassInitialize]
         public static void Initialize(TestContext context)
         {
-            ConfigManager.GeneralConfig = new GeneralConfig
-            {
-                DisplayCurrency = Currency,
-                KwhPrice = KwhPrice
-            };
+            ConfigManager.GeneralConfig.DisplayCurrency = Currency;
+            ConfigManager.GeneralConfig.KwhPrice = KwhPrice;
 
             // Add exchange info
             ExchangeRateApi.UsdBtcRate = UsdBtcRate;

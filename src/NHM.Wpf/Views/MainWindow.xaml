@@ -1,0 +1,254 @@
+﻿<Window x:Class="NHM.Wpf.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        xmlns:viewModels="clr-namespace:NHM.Wpf.ViewModels"
+        xmlns:validators="clr-namespace:NHM.Wpf.Validators"
+        xmlns:converters="clr-namespace:NHM.Wpf.Converters"
+        mc:Ignorable="d"
+        Title="{Binding Title}" 
+        Icon="../Resources/logo.ico"
+        Height="450" Width="1000"
+        StateChanged="MainWindow_OnStateChanged"
+        Loaded="MainWindow_OnLoaded"
+        Closing="MainWindow_OnClosing">
+    <Window.DataContext>
+        <viewModels:MainVM />
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <!-- Auto-sizing is finicky here since the NH logo spans the last two columns.
+                 Best results are setting last column to width of button stack panel (75 + 20 for margins)
+                 and second column to image width (250 + 20 for magins) minus last column width. -->
+            <ColumnDefinition Width="175" />
+            <ColumnDefinition Width="95" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Top settings stack panel -->
+        <StackPanel Margin="10">
+            <StackPanel.Resources>
+                <ResourceDictionary Source="Common/Styles.xaml" />
+            </StackPanel.Resources>
+
+            <StackPanel IsEnabled="{Binding State.IsNotBenchmarkingOrMining}">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Service Location:" Margin="0,0,10,0" />
+                    <ComboBox Width="160" ItemsSource="{Binding ServiceLocations}" SelectedIndex="{Binding ServiceLocationIndex}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Bitcoin Address:" Margin="0,0,10,0" />
+                    <TextBox Width="250" Style="{StaticResource InvalidTextBox}">
+                        <TextBox.Text>
+                            <Binding Path="BtcAddress">
+                                <Binding.ValidationRules>
+                                    <validators:BtcAddressValidator />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" Margin="5">
+                    <TextBlock Text="Worker Name:" Margin="0,0,10,0" />
+                    <TextBox Width="75" Style="{StaticResource InvalidTextBox}">
+                        <TextBox.Text>
+                            <Binding Path="WorkerName">
+                                <Binding.ValidationRules>
+                                    <validators:WorkerValidator />
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
+                </StackPanel>
+            </StackPanel>
+
+            <TextBlock Margin="5,0">
+                <Hyperlink Click="StatsHyperlink_OnClick">
+                    Check my stats online!
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Grid to contain device and mining views -->
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,10,0,10">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.Resources>
+                <converters:DoubleToStringConverter x:Key="DToStr" />
+                <converters:TranslatingConverter x:Key="TrConv" />
+                <converters:HashrateConverter x:Key="HashConv" />
+                <BooleanToVisibilityConverter x:Key="BoolToVis" />
+
+                <!-- Resource will be used by mining stats ListView for grouping -->
+                <CollectionViewSource x:Key="GrpSrc" Source="{Binding MiningDevs}" IsLiveGroupingRequested="True">
+                    <CollectionViewSource.GroupDescriptions>
+                        <!-- Use StateName as grouping property (will return state if not mining, or mining info if it is) -->
+                        <PropertyGroupDescription PropertyName="StateName" />
+                    </CollectionViewSource.GroupDescriptions>
+                </CollectionViewSource>
+            </Grid.Resources>
+
+            <!-- Device status DataGrid -->
+            <DataGrid ItemsSource="{Binding Devices}" 
+                      AutoGenerateColumns="False" 
+                      CanUserResizeRows="False"
+                      SelectionMode="Single"
+                      IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Enabled">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox HorizontalAlignment="Center" IsChecked="{Binding Enabled, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding Dev.FullName}" Header="Device"/>
+                    <DataGridTextColumn Binding="{Binding Dev.State, Converter={StaticResource TrConv}}" Header="Status"/>
+                    <DataGridTextColumn Binding="{Binding Dev.Temp, Converter={StaticResource DToStr}}" Header="Temp (C)"/>
+                    <DataGridTextColumn Binding="{Binding Dev.Load, Converter={StaticResource DToStr}}" Header="Load (%)"/>
+                    <DataGridTextColumn Binding="{Binding Dev.FanSpeed, Converter={StaticResource DToStr}}" Header="RPM"/>
+                    <DataGridTemplateColumn Header="Start/Stop">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Command="{Binding StartStopCommand}" Content="{Binding ButtonLabel}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Binding="{Binding AlgoOptions}" Header="Algorithms/Enabled/Benchmarked"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <!-- Mining stats ListView -->
+            <ListView Grid.Row="1"
+                      ItemsSource="{Binding Source={StaticResource GrpSrc}}"
+                      Visibility="{Binding State.AnyDeviceRunning, Converter={StaticResource BoolToVis}}">
+                <!-- This ridiculously nested block defines how the group headers will look -->
+                <ListView.GroupStyle>
+                    <GroupStyle>
+                        <GroupStyle.ContainerStyle>
+                            <Style TargetType="GroupItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="GroupItem">
+                                            <Expander IsExpanded="True">
+                                                <Expander.Header>
+                                                    <TextBlock Text="{Binding Name, Converter={StaticResource TrConv}}" />
+                                                </Expander.Header>
+                                                <Expander.Content>
+                                                    <ItemsPresenter />
+                                                </Expander.Content>
+                                            </Expander>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </GroupStyle.ContainerStyle>
+                    </GroupStyle>
+                </ListView.GroupStyle>
+
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Device" DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn Header="Speeds" DisplayMemberBinding="{Binding Speeds, Converter={StaticResource HashConv}}" />
+                        <GridViewColumn Header="{Binding MBtcPerTime}" DisplayMemberBinding="{Binding Payrate, StringFormat=F3}" />
+                        <GridViewColumn Header="{Binding CurrencyPerTime}" DisplayMemberBinding="{Binding FiatPayrate, StringFormat=F2}" />
+                        <GridViewColumn Header="Power Usage (W)" DisplayMemberBinding="{Binding PowerUsage, StringFormat=F2}" />
+                        <GridViewColumn Header="Power Cost" DisplayMemberBinding="{Binding PowerCost, StringFormat=F2}" />
+                        <GridViewColumn Header="{Binding ProfitPerTime}" DisplayMemberBinding="{Binding Profit, StringFormat=F2}" />
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+
+        <!-- Right button StackPanel -->
+        <StackPanel Grid.Row="1" Grid.Column="2" Width="75" Margin="10">
+            <Button Content="Benchmark" IsEnabled="{Binding State.IsNotBenchmarkingOrMining}" Click="BenchButton_Click" Margin="0,0,0,2" />
+            <Button Content="Settings" IsEnabled="{Binding State.IsNotBenchmarkingOrMining}" Click="SettingsButton_Click" Margin="0,2" />
+            <Button Content="Start All" IsEnabled="{Binding State.AnyDeviceStopped}" Click="StartButton_OnClick" Margin="0,2" />
+            <Button Content="Stop All" IsEnabled="{Binding State.AnyDeviceRunning}" Click="StopButton_OnClick" Margin="0,2" />
+            <Button Content="Plugins" IsEnabled="{Binding State.IsNotBenchmarkingOrMining}" Click="PluginButton_Click" Margin="0,2" />
+            <Button Content="Help" Click="HelpButton_OnClick" Margin="0,2" />
+        </StackPanel>
+
+        <!-- Bottom StatusBar -->
+        <StatusBar Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Height="21" VerticalAlignment="Bottom">
+            <StatusBar.Resources>
+                <Style TargetType="TextBlock" x:Key="StatusBarLabel">
+                    <Setter Property="FontSize" Value="10" />
+                </Style>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource StatusBarLabel}" x:Key="StatusBarDataLabel">
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="Margin" Value="10,0,5,0" />
+                </Style>
+            </StatusBar.Resources>
+
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Global rate:" Style="{StaticResource StatusBarLabel}" />
+                    <TextBlock Text="{Binding GlobalRate, StringFormat=F8}" Style="{StaticResource StatusBarDataLabel}" />
+                    <TextBlock Text="{Binding BtcPerTime}" Style="{StaticResource StatusBarLabel}" />
+                    <TextBlock Text="{Binding GlobalRateFiat, StringFormat=F2}" Style="{StaticResource StatusBarDataLabel}" />
+                    <TextBlock Text="{Binding CurrencyPerTime}" Style="{StaticResource StatusBarLabel}" />
+                </StackPanel>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Balance:" Style="{StaticResource StatusBarLabel}" />
+                    <TextBlock Text="{Binding BtcBalance, StringFormat=F8}" Style="{StaticResource StatusBarDataLabel}" />
+                    <TextBlock Text="BTC" Style="{StaticResource StatusBarLabel}" />
+                    <TextBlock Text="{Binding FiatBalance, StringFormat=F2}" Style="{StaticResource StatusBarDataLabel}" />
+                    <TextBlock Text="{Binding Currency}" Style="{StaticResource StatusBarLabel}" />
+                </StackPanel>
+            </StatusBarItem>
+            <Separator/>
+            <StatusBarItem>
+                <Button Background="Transparent" 
+                        BorderBrush="Transparent" 
+                        ToolTip="{Binding ExchangeTooltip}"
+                        Click="ExchangeButton_OnClick">
+                    <Image Source="../Resources/NHM_Cash_Register_Bitcoin_transparent.png" Width="34" />
+                </Button>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- NiceHash logo -->
+        <Image Grid.Row="0"
+               Grid.Column="1"
+               Grid.ColumnSpan="2"
+               Margin="10"
+               VerticalAlignment="Top" 
+               Source="../Resources/NHM_logo_big_light.png" 
+               HorizontalAlignment="Right" 
+               Width="250"/>
+
+        <!-- Instantiation of taskbar icon for minimize to tray -->
+        <!-- Since this isn't visible setting the grid spot doesn't matter, but it stops XAML complaining -->
+        <tb:TaskbarIcon Grid.Row="0"
+                        Grid.Column="0"
+                        ToolTipText="NiceHash Miner" 
+                        TrayMouseDoubleClick="TaskbarIcon_OnTrayMouseDoubleClick"
+                        IconSource="../Resources/logo.ico">
+            <tb:TaskbarIcon.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Start (Placeholder)" />
+                    <Separator />
+                    <MenuItem Header="Close" Click="CloseMenuItem_OnClick" />
+                </ContextMenu>
+            </tb:TaskbarIcon.ContextMenu>
+        </tb:TaskbarIcon>
+    </Grid>
+</Window>

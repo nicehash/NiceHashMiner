@@ -1,11 +1,12 @@
-﻿//#define SHOW_TDP_SETTINGS
-using NiceHashMiner.Configs;
+//#define SHOW_TDP_SETTINGS
+using NHMCore;
+using NHMCore.Configs;
 using NiceHashMiner.Forms;
-using NiceHashMiner.Interfaces.DataVisualizer;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Mining.IdleChecking;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Switching;
+using NHMCore.Interfaces.DataVisualizer;
+using NHMCore.Mining;
+using NHMCore.Mining.IdleChecking;
+using NHMCore.Stats;
+using NHMCore.Switching;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -13,13 +14,13 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using static NiceHashMiner.Translations; // consider using static
+using static NHMCore.Translations; // consider using static
 
 namespace NiceHashMiner
 {
     using NiceHashMiner.Forms.Components;
-    using NiceHashMiner.Mining.Plugins;
-    using NiceHashMiner.Utils;
+    using NHMCore.Mining.Plugins;
+    using NHMCore.Utils;
     using NHM.Common;
     using NHM.Common.Enums;
     using System.IO;
@@ -43,7 +44,7 @@ namespace NiceHashMiner
         {
             InitializeComponent();
             CenterToScreen();
-            Icon = Properties.Resources.logo;
+            Icon = NHMCore.Properties.Resources.logo;
             errorWarningProvider2.Icon = new IconEx(IconEx.SystemIcons.Warning, new Size(16, 16)).Icon; // SystemIcons.Warning;
             labelWarningNotProfitableOrNoIntenret.Visible = false;
             InitElevationWarning();
@@ -65,7 +66,7 @@ namespace NiceHashMiner
 
             Text = ApplicationStateManager.Title;
 
-            notifyIcon1.Icon = Properties.Resources.logo;
+            notifyIcon1.Icon = NHMCore.Properties.Resources.logo;
             notifyIcon1.Text = Application.ProductName + " v" + Application.ProductVersion +
                                "\n" + Tr("Double-click to restore...");
 
@@ -236,7 +237,7 @@ namespace NiceHashMiner
             ExchangeRateApi.ActiveDisplayCurrency = ConfigManager.GeneralConfig.DisplayCurrency;
 
             // init factor for Time Unit
-            TimeFactor.UpdateTimeUnit(ConfigManager.GeneralConfig.TimeUnit);
+            TimeFactor.UnitType = ConfigManager.GeneralConfig.TimeUnit;
 
             toolStripStatusLabelBalanceDollarValue.Text = "(" + ExchangeRateApi.ActiveDisplayCurrency + ")";
             toolStripStatusLabelBalanceText.Text = RatesAndStatsStates.Instance.LabelBalanceText;
@@ -297,16 +298,16 @@ namespace NiceHashMiner
 
                 var progress = new Progress<(string loadMessageText, int perc)>(p =>
                 {
-                    loadingControl.Progress = p.perc;
+                    loadingControl.Progress = (int) p.perc;
                     loadingControl.LoadMessageText = p.loadMessageText;
                 });
 
                 var progressDownload = new Progress<(string loadMessageText, int perc)>(p =>
                 {
-                    loadingControl.ProgressSecond = p.perc;
+                    loadingControl.ProgressSecond = (int) p.perc;
                     loadingControl.LoadMessageTextSecond = p.loadMessageText;
                 });
-                await ApplicationStateManager.InitializeManagersAndMiners(loadingControl, progress, progressDownload);
+                await ApplicationStateManager.InitializeManagersAndMiners(loadingControl);
             }
             devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
 
@@ -703,7 +704,9 @@ namespace NiceHashMiner
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (ConfigManager.GeneralConfig.MinimizeToTray && !_exitCalled)
+            if (e.CloseReason == CloseReason.UserClosing && 
+                ConfigManager.GeneralConfig.MinimizeToTray && 
+                !_exitCalled)
             {
                 notifyIcon1.Visible = true;
                 Hide();

@@ -2,14 +2,15 @@
 using NHM.Common.Enums;
 using NHM.MinersDownloader;
 using NiceHashMiner.Forms.Components;
-using NiceHashMiner.Mining;
+using NHMCore;
+using NHMCore.Mining;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using static NiceHashMiner.Mining.Plugins.MinerPluginsManager;
+using static NHMCore.Mining.Plugins.MinerPluginsManager;
 
 namespace NiceHashMiner.Forms
 {
@@ -18,7 +19,7 @@ namespace NiceHashMiner.Forms
         public Form_ChooseUpdate()
         {
             InitializeComponent();
-            Icon = Properties.Resources.logo;
+            Icon = NHMCore.Properties.Resources.logo;
             FormHelpers.TranslateFormControls(this);
             ProgressBarVisible = false;
             progressBar1.Width = this.Width;

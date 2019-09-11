@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{56653651-3BF1-4A89-A20C-3178C06A29A3}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>NHM.Wpf</RootNamespace>
+    <AssemblyName>NHM.Wpf</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Hardcodet.Wpf.TaskbarNotification, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Hardcodet.NotifyIcon.Wpf.1.0.8\lib\net451\Hardcodet.Wpf.TaskbarNotification.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ViewModels\BaseVM.cs" />
+    <Compile Include="ViewModels\BenchmarkViewModel.cs" />
+    <Compile Include="Converters\ConverterBase.cs" />
+    <Compile Include="Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Converters\EnumToBoolConverter.cs" />
+    <Compile Include="Converters\HashrateConverter.cs" />
+    <Compile Include="Converters\NulBoolToBoolConverter.cs" />
+    <Compile Include="Converters\NulBoolToVisibilityConverter.cs" />
+    <Compile Include="Converters\TranslatingConverter.cs" />
+    <Compile Include="ViewModels\MainVM.cs" />
+    <Compile Include="ViewModels\Models\BaseCommand.cs" />
+    <Compile Include="ViewModels\Models\BenchAlgo.cs" />
+    <Compile Include="ViewModels\Models\DeviceData.cs" />
+    <Compile Include="ViewModels\Models\IMiningData.cs" />
+    <Compile Include="ViewModels\Models\LoadProgress.cs" />
+    <Compile Include="ViewModels\Models\MiningData.cs" />
+    <Compile Include="ViewModels\Models\PluginEventArgs.cs" />
+    <Compile Include="ViewModels\Models\TotalMiningData.cs" />
+    <Compile Include="ViewModels\Plugins\IPluginPageVM.cs" />
+    <Compile Include="ViewModels\Plugins\PluginDetailVM.cs" />
+    <Compile Include="ViewModels\Plugins\PluginEntryVM.cs" />
+    <Compile Include="ViewModels\Plugins\PluginListVM.cs" />
+    <Compile Include="ViewModels\Plugins\PluginVM.cs" />
+    <Compile Include="ViewModels\Settings\AdvancedGeneralVM.cs" />
+    <Compile Include="ViewModels\Settings\AdvancedMiningVM.cs" />
+    <Compile Include="ViewModels\Settings\AdvancedSwitchingVM.cs" />
+    <Compile Include="ViewModels\Settings\GeneralSettingsVM.cs" />
+    <Compile Include="ViewModels\Settings\MiningGeneralVM.cs" />
+    <Compile Include="ViewModels\Settings\ProfitabilitySettingsVM.cs" />
+    <Compile Include="ViewModels\Settings\SettingsBaseVM.cs" />
+    <Compile Include="ViewModels\Settings\SettingsContainerVM.cs" />
+    <Compile Include="ViewModels\Settings\SettingsVM.cs" />
+    <Compile Include="ViewModels\StartupLoadingVM.cs" />
+    <Compile Include="Validators\BtcWorkerValidator.cs" />
+    <Compile Include="Validators\ValidatorBase.cs" />
+    <Compile Include="Views\3rdPartyTosWindow.xaml.cs">
+      <DependentUpon>3rdPartyTosWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\BenchmarkWindow.xaml.cs">
+      <DependentUpon>BenchmarkWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ChooseLanguageWindow.xaml.cs">
+      <DependentUpon>ChooseLanguageWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Common\WindowUtils.cs" />
+    <Compile Include="Views\EulaWindow.xaml.cs">
+      <DependentUpon>EulaWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Plugins\Controls\InlineDataDisplay.xaml.cs">
+      <DependentUpon>InlineDataDisplay.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Plugins\Controls\PluginInstallProgress.xaml.cs">
+      <DependentUpon>PluginInstallProgress.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Plugins\PluginDetail.xaml.cs">
+      <DependentUpon>PluginDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Plugins\Controls\PluginEntry.xaml.cs">
+      <DependentUpon>PluginEntry.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Plugins\PluginList.xaml.cs">
+      <DependentUpon>PluginList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Plugins\PluginWindow.xaml.cs">
+      <DependentUpon>PluginWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\Controls\SettingContainer.xaml.cs">
+      <DependentUpon>SettingContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\Pages\AdvancedMiningPage.xaml.cs">
+      <DependentUpon>AdvancedMiningPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\Pages\AdvancedPage.xaml.cs">
+      <DependentUpon>AdvancedPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\Pages\AdvancedSwitchingPage.xaml.cs">
+      <DependentUpon>AdvancedSwitchingPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\Pages\GeneralPage.xaml.cs">
+      <DependentUpon>GeneralPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\Pages\ISettingsPage.cs" />
+    <Compile Include="Views\Settings\Pages\MiningPage.xaml.cs">
+      <DependentUpon>MiningPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\Pages\ProfitabilityPage.xaml.cs">
+      <DependentUpon>ProfitabilityPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Settings\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Views\StartupLoadingWindow.xaml.cs">
+      <DependentUpon>StartupLoadingWindow.xaml</DependentUpon>
+    </Compile>
+    <Page Include="Views\3rdPartyTosWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\BenchmarkWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ChooseLanguageWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Common\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\EulaWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Plugins\Controls\InlineDataDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Plugins\Controls\PluginInstallProgress.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Plugins\PluginDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Plugins\Controls\PluginEntry.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Plugins\PluginList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Plugins\PluginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\Controls\SettingContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\Pages\AdvancedMiningPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\Pages\AdvancedPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\Pages\AdvancedSwitchingPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\Pages\GeneralPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\Pages\MiningPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\Pages\ProfitabilityPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Settings\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\StartupLoadingWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="README.md" />
+    <None Include="translations.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NHM_Cash_Register_Bitcoin_transparent.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\NHM_logo_big_light.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NHM.Common\NHM.Common.csproj">
+      <Project>{279a5b29-3799-43fa-9734-e462e046ba81}</Project>
+      <Name>NHM.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHMCore\NHMCore.csproj">
+      <Project>{43dcaf38-d0c4-4335-983d-650f78461eb2}</Project>
+      <Name>NHMCore</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

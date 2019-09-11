@@ -1,4 +1,6 @@
-﻿namespace NiceHashMiner.Forms
+﻿using NHMCore;
+
+namespace NiceHashMiner.Forms
 {
     partial class EnterBTCDialogSwitch
     {

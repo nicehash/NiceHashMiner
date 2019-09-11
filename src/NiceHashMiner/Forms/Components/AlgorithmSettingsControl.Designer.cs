@@ -106,7 +106,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::NiceHashMiner.Properties.Resources.info_black_18;
+            this.pictureBox1.Image = global::NHMCore.Properties.Resources.info_black_18;
             this.pictureBox1.Location = new System.Drawing.Point(193, 0);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(18, 18);

@@ -210,16 +210,16 @@ namespace MinerPluginToolkitV1
             var isNeverHideMiningWindow = IsNeverHideMiningWindow(environmentVariables);
             var hideMiningWindow = HideMiningWindows && !isNeverHideMiningWindow;
             var minimizeMiningWindow = MinimizeMiningWindows || (HideMiningWindows && isNeverHideMiningWindow);
-            if (hideMiningWindow)
-            {
-                miningHandle.StartInfo.CreateNoWindow = true;
-                miningHandle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                miningHandle.StartInfo.UseShellExecute = true && IsUseShellExecute(environmentVariables);
-            }
-            else if(minimizeMiningWindow)
+            if (minimizeMiningWindow)
             {
                 miningHandle.StartInfo.CreateNoWindow = false;
                 miningHandle.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
+                miningHandle.StartInfo.UseShellExecute = true && IsUseShellExecute(environmentVariables);
+            }
+            else if (hideMiningWindow)
+            {
+                miningHandle.StartInfo.CreateNoWindow = true;
+                miningHandle.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                 miningHandle.StartInfo.UseShellExecute = true && IsUseShellExecute(environmentVariables);
             }
 

@@ -1,0 +1,42 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style TargetType="Border" x:Key="BorderDefaultStyle">
+        <Setter Property="BorderBrush" Value="#FF888888" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="1" />
+    </Style>
+
+    <!-- TextBlocks do not fade when disabled by default, this style will add that behaviour -->
+    <!-- Since this style does not have a key, it will be used automatically on any TextBlock in 
+         files that import this dictionary -->
+    <Style TargetType="{x:Type TextBlock}">
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Style used for title TextBlocks (e.g. names of settings in settings window) -->
+    <Style TargetType="TextBlock" x:Key="TitleTextBlockStyle" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+
+    <!-- Style used for detail TextBlocks (e.g. details of settings) -->
+    <Style TargetType="TextBlock" x:Key="DetailTextBlockStyle" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Setter Property="FontWeight" Value="Light" />
+        <Setter Property="FontSize" Value="10" />
+    </Style>
+
+    <!-- TextBoxes using this style will show a tooltip with error info when validation fails (BTC address, worker name, etc.) -->
+    <Style TargetType="TextBox" x:Key="InvalidTextBox">
+        <Style.Triggers>
+            <Trigger Property="Validation.HasError" Value="True">
+                <Setter Property="ToolTip"
+                        Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)/ErrorContent}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+</ResourceDictionary>

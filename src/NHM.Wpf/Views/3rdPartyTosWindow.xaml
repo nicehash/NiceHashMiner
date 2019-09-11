@@ -1,0 +1,22 @@
+﻿<Window x:Class="NHM.Wpf.Views._3rdPartyTosWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Disclaimer on usage of 3rd party software" 
+        Icon="../Resources/logo.ico"
+        Height="299.334" Width="427.901" 
+        WindowStyle="ToolWindow">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Margin="10" TextWrapping="Wrap">We have integrated 3rd party mining software that should speed up your mining and give you more stable mining experience - this could potentially result in more earnings over a shorter period of time even after developer's fee is deducted. However, since this is 3rd party software that is fully closed-source, we have no chance to inspect it in any way. NiceHash can not vouch for using that software and is refusing to take any responsibility for any damage caused, security breaches, loss of data or funds, system or hardware error, and other issues. By agreeing to this disclaimer you take full responsibility for using these closed-source miners as they are.</TextBlock>
+        <DockPanel Grid.Row="1" Margin="60,10">
+            <Button Width="80" Click="AgreeButton_OnClick">I agree</Button>
+            <Button DockPanel.Dock="Right" Width="80" HorizontalAlignment="Right" Click="RefuseButton_OnClick">I refuse</Button>
+        </DockPanel>
+    </Grid>
+</Window>

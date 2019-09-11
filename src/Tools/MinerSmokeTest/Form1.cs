@@ -1,7 +1,7 @@
-﻿using NiceHashMiner;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Mining.Grouping;
+﻿using NHMCore;
+using NHMCore.Mining;
+using NHMCore.Configs;
+using NHMCore.Mining.Grouping;
 using NHM.Common.Enums;
 using System;
 using System.Linq;
@@ -11,8 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NHM.Common;
 using MinerPlugin;
-using NiceHashMiner.Mining.Plugins;
-using NiceHashMiner.Utils;
+using NHMCore.Mining.Plugins;
+using NHMCore.Utils;
 
 namespace MinerSmokeTest
 {
@@ -100,7 +100,7 @@ namespace MinerSmokeTest
             {
                 var deviceEnabled = checkbox.Value != null && (bool)checkbox.Value;
                 checkbox.Value = !deviceEnabled;
-                device.SetEnabled(!deviceEnabled);
+                device.Enabled = !deviceEnabled;
             }
             var algorithms = device.AlgorithmSettings;
             foreach (var algo in algorithms)
@@ -180,7 +180,7 @@ namespace MinerSmokeTest
                     try
                     {
                         var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = algorithm.Algorithm } };
-                        var miner = NiceHashMiner.Mining.Miner.CreateMinerForMining(pair, "");
+                        var miner = NHMCore.Mining.Miner.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);
 
@@ -246,7 +246,7 @@ namespace MinerSmokeTest
                     try
                     {
                         var pair = new List<MiningPair> { new MiningPair { Device = device.BaseDevice, Algorithm = algorithm.Algorithm } };
-                        var miner = NiceHashMiner.Mining.Miner.CreateMinerForMining(pair, "");
+                        var miner = NHMCore.Mining.Miner.CreateMinerForMining(pair, "");
                         //var miningSetup = new MiningSetup(pair);
                         //miner.InitMiningSetup(miningSetup);
 

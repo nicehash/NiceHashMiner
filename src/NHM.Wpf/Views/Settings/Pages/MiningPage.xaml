@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="NHM.Wpf.Views.Settings.Pages.MiningPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:settings="clr-namespace:NHM.Wpf.ViewModels.Settings"
+             xmlns:controls="clr-namespace:NHM.Wpf.Views.Settings.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance Type=settings:MiningGeneralVM}">
+    <StackPanel>
+        <controls:SettingsContainer Title="Autostart Mining" 
+                                    Enabled="{Binding Config.AutoStartMining}"
+                                    Description="When checked, NiceHash Miner Legacy will automatically start mining when launched." />
+        <controls:SettingsContainer Title="Hide Mining Windows" 
+                                    Enabled="{Binding Config.HideMiningWindows}"
+                                    Description="When checked, sgminer, ccminer, cpuminer and ethminer console windows will be hidden.">
+            <controls:SettingsContainer Title="Minimize Mining Windows" 
+                                        Enabled="{Binding Config.MinimizeMiningWindows}"
+                                        Description="When checked, mining windows will start minimized."/>
+        </controls:SettingsContainer>
+        <controls:SettingsContainer Title="Enable 3rd Party Miners" 
+                                    Enabled="{Binding Enable3rdPartyCheck}"
+                                    Description="Use 3rd party closed-source mining software for higher profitability. Usage is on your own responsibility." />
+        <controls:SettingsContainer Title="Start Mining When Idle" 
+                                    Enabled="{Binding Config.StartMiningWhenIdle}"
+                                    Description="Automatically start mining when computer is idle and stop mining when computer is being used.">
+            <controls:SettingsContainer Title="Idle Detection Method"
+                                        Description="Change the method used to detect when the system is idle.">
+                <ComboBox ItemsSource="{Binding IdleTypes}" SelectedItem="{Binding Config.IdleCheckType}" />
+            </controls:SettingsContainer>
+            <controls:SettingsContainer Title="Minimum Idle [s]:"
+                                        Description="When StartMiningWhenIdle is checked, MinIdleSeconds tells how\nmany seconds computer has to be idle before mining starts.">
+                <TextBox Text="{Binding Config.MinIdleSeconds}" />
+            </controls:SettingsContainer>
+        </controls:SettingsContainer>
+        <controls:SettingsContainer Title="Idle When No Internet Access" 
+                                    Enabled="{Binding Config.IdleWhenNoInternetAccess}"
+                                    Description="If enabled NiceHash Miner Legacy will stop mining without internet connectivity" />
+    </StackPanel>
+</UserControl>

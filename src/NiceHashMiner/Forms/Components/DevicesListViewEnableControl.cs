@@ -1,10 +1,11 @@
-﻿using NiceHashMiner.Configs;
-using NiceHashMiner.Mining;
+﻿using NHMCore.Configs;
+using NHMCore.Mining;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Stats.Models;
+using NHMCore;
+using NHMCore.Stats;
+using NHMCore.Stats.Models;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -119,7 +120,7 @@ namespace NiceHashMiner.Forms.Components
         {
             if (e.Item.Tag is ComputeDevice cDevice)
             {
-                cDevice.SetEnabled(e.Item.Checked);
+                cDevice.Enabled = e.Item.Checked;
 
                 if (SaveToGeneralConfig)
                 {

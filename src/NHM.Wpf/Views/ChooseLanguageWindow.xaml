@@ -1,0 +1,19 @@
+﻿<Window x:Class="NHM.Wpf.Views.ChooseLanguageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Choose Language" 
+        Height="150" Width="400" WindowStyle="ToolWindow"
+        Icon="../Resources/logo.ico"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}"
+        Closing="ChooseLanguageWindow_OnClosing">
+    <Grid HorizontalAlignment="Center">
+        <StackPanel>
+            <TextBlock Margin="5">Choose a default language for NiceHash Miner:</TextBlock>
+            <ComboBox Margin="5" Width="200" ItemsSource="{Binding LangNames}" SelectedIndex="{Binding SelectedLangIndex}" />
+            <Button Margin="5" Width="80" Click="OkButton_OnClick">OK</Button>
+        </StackPanel>
+    </Grid>
+</Window>

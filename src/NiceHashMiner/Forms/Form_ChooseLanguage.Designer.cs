@@ -1,4 +1,6 @@
-﻿namespace NiceHashMiner.Forms {
+﻿using NHMCore;
+
+namespace NiceHashMiner.Forms {
     partial class Form_ChooseLanguage {
         /// <summary>
         /// Required designer variable.
