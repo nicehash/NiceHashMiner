@@ -2,7 +2,7 @@
 
 namespace NiceHashMiner
 {
-    public static class TextBoxKeyPressEvents
+    internal static class TextBoxKeyPressEvents
     {
         public static void TextBoxIntsOnly_KeyPress(object sender, KeyPressEventArgs e)
         {
