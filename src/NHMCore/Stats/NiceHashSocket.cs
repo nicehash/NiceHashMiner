@@ -23,12 +23,7 @@ namespace NHMCore.Stats
         private readonly LoginMessage _login = new LoginMessage
         {
             version = "NHML/" + Application.ProductVersion,
-            // TESTNET
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             protocol = 3
-#else
-            protocol = 1
-#endif
         };
         
         public event EventHandler OnConnectionEstablished;
@@ -44,14 +39,12 @@ namespace NHMCore.Stats
         {
             NHSmaData.InitializeIfNeeded();
             _connectionAttempted = true;
-            // TESTNET
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
+            
             _login.rig = ApplicationStateManager.RigID;
 
             if (btc != null) _login.btc = btc;
             if (worker != null) _login.worker = worker;
             if (group != null) _login.group = group;
-#endif
 
             try
             {
@@ -129,15 +122,13 @@ namespace NHMCore.Stats
         // Don't call SendData on UI threads, since it will block the thread for a bit if a reconnect is needed
         public bool SendData(string data, bool recurs = false)
         {
-            //TESTNET
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             // skip sending if no btc set send only login
             if (CredentialValidators.ValidateBitcoinAddress(_login.btc) == false && data.Contains("{\"method\":\"login\"") == false)
             {
                 NHM.Common.Logger.Info("SOCKET", "Skipping SendData no BTC address");
                 return false;
             }
-#endif
+
             try
             {
                 // Make sure connection is open

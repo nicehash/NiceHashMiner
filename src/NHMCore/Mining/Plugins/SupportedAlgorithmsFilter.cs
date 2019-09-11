@@ -18,14 +18,7 @@ namespace NHMCore.Mining.Plugins
             [JsonProperty("filtered_algorithms")]
             public List<List<AlgorithmType>> FilteredAlgorithms = new List<List<AlgorithmType>>
             {
-                // new platform
-#if (TESTNET || TESTNETDEV || PRODUCTION_NEW)
                 new List<AlgorithmType> { AlgorithmType.MTP },
-#else
-                // old platform
-                new List<AlgorithmType> { AlgorithmType.GrinCuckarood29 },
-                new List<AlgorithmType> { AlgorithmType.BeamV2 },
-#endif
             };
         }
 

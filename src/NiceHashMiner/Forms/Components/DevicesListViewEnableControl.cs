@@ -58,10 +58,7 @@ namespace NiceHashMiner.Forms.Components
             // intialize ListView callbacks
             listViewDevices.ItemChecked += ListViewDevicesItemChecked;
             //listViewDevices.CheckBoxes = false;
-            // TESTNET
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             NiceHashStats.OnDeviceUpdate += UpdateDevices;
-#endif
             FormHelpers.TranslateFormControls(this);
         }
 

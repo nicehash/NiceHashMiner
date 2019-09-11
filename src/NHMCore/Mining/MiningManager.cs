@@ -44,29 +44,6 @@ namespace NHMCore.Mining
             _switchingManager = new AlgorithmSwitchingManager();
             _switchingManager.SmaCheck += SwichMostProfitableGroupUpMethod;
         }
-
-        // For OLD PRODUCTION
-        public static List<int> GetActiveMinersIndexes()
-        {
-            var minerIDs = new List<int>();
-            if (!IsCurrentlyIdle)
-            {
-                _semaphore.Wait();
-                try
-                {
-                    foreach (var miner in _runningMiners.Values)
-                    {
-                        minerIDs.AddRange(miner.DevIndexes);
-                    }
-                }
-                finally
-                {
-                    _semaphore.Release();
-                }
-            }
-
-            return minerIDs;
-        }
         
         private static void OnInternetCheck(object sender, bool isConnectedToInternet)
         {

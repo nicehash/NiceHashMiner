@@ -38,7 +38,6 @@ namespace NHMCore.Mining
 
         public bool IsRunning { get; protected set; } = false;
         public string GroupKey { get; protected set; } = "";
-        public List<int> DevIndexes { get; private set; } = new List<int>();
 
         CancellationTokenSource EndMiner { get; } = new CancellationTokenSource();
         protected bool _isEnded { get; private set; }
@@ -59,18 +58,6 @@ namespace NHMCore.Mining
 
             MiningPairs = miningPairs;
             IsInit = MiningPairs != null && MiningPairs.Count > 0;
-            if (IsInit)
-            {
-                foreach (var pair in miningPairs)
-                {
-                    // for OLD PRODUCTION we still need these indexes get rid of this when possible
-                    var cDev = AvailableDevices.GetDeviceWithUuidOrB64Uuid(pair.Device.UUID);
-                    var index = cDev?.Index ?? -1;
-                    if (index < 0) continue;
-                    DevIndexes.Add(index);
-                }
-            }
-
             GroupKey = groupKey;
 
             MinerDeviceName = plugin.PluginUUID;

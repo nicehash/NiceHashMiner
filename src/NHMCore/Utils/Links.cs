@@ -6,30 +6,23 @@
         public const string VisitUrl = "https://test.nicehash.com";
         public const string CheckStats = "https://test.nicehash.com/mining/stats";
         public const string Register = "NO_URL";
-        public const string Login = "NO_URL";
+        //public const string Login = "NO_URL";
         public const string PluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
         public const string NhmPayingFaq = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid"; // ADD TESTNET
 #elif TESTNETDEV
         public const string VisitUrl = "https://test-dev.nicehash.com";
         public const string CheckStats = "https://test-dev.nicehash.com/mining/stats";
         public const string Register = "NO_URL";
-        public const string Login = "NO_URL";
+        //public const string Login = "NO_URL";
         public const string PluginsJsonApiUrl = "https://miner-plugins-test-dev.nicehash.com/api/plugins";
         public const string NhmPayingFaq = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";  // ADD TESTNETDEV
-#elif PRODUCTION_NEW
+#else
         public const string VisitUrl = "https://nicehash.com";
         public const string CheckStats = "https://nicehash.com/my/mining/stats";
         public const string Register = "https://nicehash.com/my/register";
-        public const string Login = "NO_URL";
+        //public const string Login = "NO_URL";
         public const string PluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
         public const string NhmPayingFaq = "https://www.nicehash.com/support/mining-help/earnings-and-payments/when-and-how-do-you-get-paid";
-#else
-        public const string VisitUrl = "https://old.nicehash.com";
-        public const string CheckStats = "https://old.nicehash.com/index.jsp?p=miners&addr=";
-        public const string Register = "https://old.nicehash.com/register";
-        public const string Login = "https://old.nicehash.com/login-app?back";
-        public const string PluginsJsonApiUrl = "https://miner-plugins.nicehash.com/api/plugins";
-        public const string NhmPayingFaq = "https://old.nicehash.com/help/when-and-how-do-you-get-paid";
 #endif
         // add version
         public const string VisitReleasesUrl = "https://github.com/NiceHash/NiceHashMiner/releases/";

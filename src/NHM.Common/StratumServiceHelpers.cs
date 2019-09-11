@@ -140,7 +140,7 @@ namespace NHM.Common
                    + "stratum-test." + miningLocation
                    + ".nicehash.com:"
                    + port;
-#else // PRODUCTION_NEW
+#else 
             return prefix
                    + name
                    + "." + miningLocation

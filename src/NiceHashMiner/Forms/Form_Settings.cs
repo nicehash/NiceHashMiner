@@ -78,16 +78,7 @@ namespace NiceHashMiner.Forms
             textBox_MinProfit.DataBindings.Add("Enabled", MiningProfitSettings.Instance, nameof(MiningProfitSettings.IsMinimumProfitProfitEnabled), false, DataSourceUpdateMode.OnPropertyChanged);
 
             checkBox_DisableDeviceStatusMonitoring.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableDeviceStatusMonitoring));
-
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW
             checkBox_DisableDevicePowerModeSettings.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DisableDevicePowerModeSettings));
-#else
-            checkBox_DisableDevicePowerModeSettings.Enabled = false;
-            checkBox_DisableDevicePowerModeSettings.Checked = true;
-            checkBox_DisableDevicePowerModeSettings.Visible = false;
-            pictureBox_DisableDevicePowerModeSettings.Visible = false;
-            groupBoxDeviceMonitoring.Height = (int)(groupBoxDeviceMonitoring.Height * 0.7);
-#endif
 
             // idle mining
             checkBox_IdleWhenNoInternetAccess.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.IdleWhenNoInternetAccess));

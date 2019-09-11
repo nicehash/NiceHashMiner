@@ -10,8 +10,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("NiceHash Miner is simple to use mining tool")]
 [assembly: AssemblyProduct("NiceHash Miner")]
 
-[assembly: AssemblyCompany("H-BIT, d.o.o")]
-[assembly: AssemblyCopyright("H-BIT, d.o.o ©  2019")]
+[assembly: AssemblyCompany("H-BIT, d.o.o.")]
+[assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2019")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
