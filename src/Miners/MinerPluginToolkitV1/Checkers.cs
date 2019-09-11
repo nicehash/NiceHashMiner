@@ -11,9 +11,11 @@ namespace MinerPluginToolkitV1
         /// </summary>
         public static bool IsGcn4(AMDDevice dev)
         {
-            if (dev.Name.Contains("Vega")  || dev.InfSection.ToLower().Contains("r7500") || dev.InfSection.ToLower().Contains("vega"))
+            if (dev.Name.Contains("Vega") || dev.InfSection.ToLower().Contains("r7500") || dev.InfSection.ToLower().Contains("vega"))
                 return true;
             if (dev.InfSection.ToLower().Contains("polaris"))
+                return true;
+            if (dev.Name.ToLower().Contains("navi"))
                 return true;
 
             return false;
