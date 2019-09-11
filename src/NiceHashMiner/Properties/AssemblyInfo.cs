@@ -5,15 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW // NEW PRODUCTION
+
 [assembly: AssemblyTitle("NiceHash Miner")]
 [assembly: AssemblyDescription("NiceHash Miner is simple to use mining tool")]
 [assembly: AssemblyProduct("NiceHash Miner")]
-#else  // OLD PRODUCTION
-[assembly: AssemblyTitle("NiceHashMinerLegacy")]
-[assembly: AssemblyDescription("NiceHashMinerLegacy is simple to use mining tool")]
-[assembly: AssemblyProduct("NiceHashMinerLegacy")]
-#endif
+
 [assembly: AssemblyCompany("H-BIT, d.o.o")]
 [assembly: AssemblyCopyright("H-BIT, d.o.o ©  2019")]
 [assembly: AssemblyConfiguration("")]
@@ -41,10 +37,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-#if TESTNET || TESTNETDEV || PRODUCTION_NEW // NEW PRODUCTION
 [assembly: AssemblyVersion("1.9.2.14")]
 [assembly: AssemblyFileVersion("1.9.2.14")]
-#else  // OLD PRODUCTION 
-[assembly: AssemblyVersion("1.9.1.14")]
-[assembly: AssemblyFileVersion("1.9.1.14")]
-#endif
