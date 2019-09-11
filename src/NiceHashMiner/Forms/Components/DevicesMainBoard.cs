@@ -7,12 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NiceHashMiner.Interfaces.DataVisualizer;
-using NiceHashMiner.Interfaces.StateSetters;
-using NiceHashMiner.Mining;
+using NHMCore.Interfaces.DataVisualizer;
+using NHMCore.Interfaces.StateSetters;
+using NHMCore.Mining;
+using NHMCore;
 using NHM.Common.Enums;
 
-using static NiceHashMiner.Translations;
+using static NHMCore.Translations;
 
 namespace NiceHashMiner.Forms.Components
 {

@@ -1,5 +1,5 @@
-﻿using NiceHashMiner.Configs.Data;
-using NiceHashMiner.Utils;
+﻿using NHMCore.Configs.Data;
+using NHMCore.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
 

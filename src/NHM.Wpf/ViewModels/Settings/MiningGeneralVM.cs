@@ -1,5 +1,5 @@
 ﻿using NHM.Common.Enums;
-using NiceHashMiner.Configs.Data;
+using NHMCore.Configs.Data;
 using System;
 using System.Collections.Generic;
 

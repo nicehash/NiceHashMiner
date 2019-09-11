@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NiceHashMiner.Switching;
+using NHMCore.Switching;
 using NHM.Common.Enums;
 
 namespace NiceHashMiner.Tests.Switching

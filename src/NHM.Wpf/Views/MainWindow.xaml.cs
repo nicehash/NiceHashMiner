@@ -9,10 +9,10 @@ using NHM.Wpf.ViewModels;
 using NHM.Wpf.Views.Common;
 using NHM.Wpf.Views.Plugins;
 using NHM.Wpf.Views.Settings;
-using NiceHashMiner;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Utils;
+using NHMCore;
+using NHMCore.Configs;
+using NHMCore.Mining;
+using NHMCore.Utils;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace NHM.Wpf.Views

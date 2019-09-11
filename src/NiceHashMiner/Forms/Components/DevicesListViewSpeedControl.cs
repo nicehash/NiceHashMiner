@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using NHM.Common.Enums;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Interfaces;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Utils;
+using NHMCore.Configs;
+using NHMCore.Mining;
+using NHMCore.Interfaces;
+using NHMCore.Stats;
+using NHMCore.Utils;
+using NHMCore;
 
 namespace NiceHashMiner.Forms.Components
 {

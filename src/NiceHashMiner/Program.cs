@@ -1,18 +1,18 @@
-﻿using NiceHashMiner.Configs;
+﻿using NHMCore;
+using NHMCore.Configs;
 using NiceHashMiner.Forms;
-using NiceHashMiner.Utils;
+using NHMCore.Utils;
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using NiceHashMiner.Stats;
+using NHMCore.Stats;
 using log4net.Core;
 using NHM.Common;
 using NHM.Common.Enums;
 using System.Net;
-using static NiceHashMiner.Translations;
 
 namespace NiceHashMiner
 {
@@ -24,7 +24,7 @@ namespace NiceHashMiner
         [STAThread]
         static void Main(string[] argv)
         {
-            BUILD_TAG.ASSERT_COMPATIBLE_BUILDS();
+            NHMCore.BUILD_TAG.ASSERT_COMPATIBLE_BUILDS();
             // Set working directory to exe
             var pathSet = false;
             var path = Path.GetDirectoryName(Application.ExecutablePath);
@@ -145,7 +145,8 @@ namespace NiceHashMiner
                 }
 
             }
-            Translations.SetLanguage(ConfigManager.GeneralConfig.Language);
+            Translations.LanguageChanged += (s, e) => FormHelpers.TranslateAllOpenForms();
+            Translations.SelectedLanguage = ConfigManager.GeneralConfig.Language;
 
             // if system requirements are not ensured it will fail the program
             var canRun = ApplicationStateManager.SystemRequirementsEnsured();

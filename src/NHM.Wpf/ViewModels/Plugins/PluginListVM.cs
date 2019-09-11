@@ -1,4 +1,4 @@
-﻿using NiceHashMiner.Mining.Plugins;
+﻿using NHMCore.Mining.Plugins;
 using System.Collections.ObjectModel;
 
 namespace NHM.Wpf.ViewModels.Plugins

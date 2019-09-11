@@ -1,5 +1,5 @@
 ﻿using NHM.Common.Enums;
-using NiceHashMiner.Configs.Data;
+using NHMCore.Configs.Data;
 using System.Collections.Generic;
 
 namespace NHM.Wpf.ViewModels.Settings

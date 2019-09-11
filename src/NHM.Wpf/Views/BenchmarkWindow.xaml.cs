@@ -4,8 +4,9 @@ using System.Windows;
 using NHM.Wpf.ViewModels;
 using NHM.Wpf.Views.Common;
 using NHM.Wpf.Views.Settings.Pages;
-using NiceHashMiner.Benchmarking;
-using NiceHashMiner.Mining;
+using NHMCore;
+using NHMCore.Benchmarking;
+using NHMCore.Mining;
 
 namespace NHM.Wpf.Views
 {

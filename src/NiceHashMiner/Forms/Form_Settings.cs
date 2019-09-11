@@ -3,12 +3,14 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using NHM.Common.Enums;
-using NiceHashMiner.Configs;
-using NiceHashMiner.Interfaces.DataVisualizer;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Mining.Plugins;
-using NiceHashMiner.Utils;
-using static NiceHashMiner.Translations;
+using NHMCore;
+using NHMCore.Configs;
+using NHMCore.Interfaces.DataVisualizer;
+using NHMCore.Mining;
+using NHMCore.Mining.Plugins;
+using NHMCore.Utils;
+using static NHMCore.Translations;
+using static NHMCore.ApplicationStateManager;
 
 namespace NiceHashMiner.Forms
 {
@@ -28,7 +30,7 @@ namespace NiceHashMiner.Forms
             InitializeComponent();
             ApplicationStateManager.SubscribeStateDisplayer(this);
 
-            Icon = Properties.Resources.logo;
+            Icon = NHMCore.Properties.Resources.logo;
             this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
 
             // backup settings
@@ -486,7 +488,7 @@ namespace NiceHashMiner.Forms
             if (result == DialogResult.Yes)
             {
                 SetDefaults = true;
-                SetLanguage("en");
+                Translations.SelectedLanguage = "en";
                 ConfigManager.GeneralConfig.SetDefaults();
                 InitializeGeneralTabFieldValuesReferences();
                 InitializeGeneralTabTranslations();
@@ -548,6 +550,7 @@ namespace NiceHashMiner.Forms
             // update logic
             var is3rdPartyEnabled = ConfigManager.GeneralConfig.Use3rdPartyMiners == Use3rdPartyMiners.YES;
             checkBox_RunEthlargement.Enabled = Helpers.IsElevated && is3rdPartyEnabled;
+            // TODO_NiceHashMiner GUI coupling logic. Fix inside NHMCore
             EthlargementIntegratedPlugin.Instance.ServiceEnabled = ConfigManager.GeneralConfig.UseEthlargement && Helpers.IsElevated && is3rdPartyEnabled;
             // re-init update plugins
             MinerPluginsManager.InitIntegratedPlugins();

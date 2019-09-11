@@ -1,8 +1,8 @@
 ﻿using NHM.Common;
 using NHM.Common.Enums;
-using NiceHashMiner.Mining;
-using NiceHashMiner.Stats;
-using NiceHashMiner.Utils;
+using NHMCore.Mining;
+using NHMCore.Stats;
+using NHMCore.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;

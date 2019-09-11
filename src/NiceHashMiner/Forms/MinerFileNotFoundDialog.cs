@@ -1,4 +1,5 @@
-﻿using NiceHashMiner.Forms;
+﻿using NHMCore;
+using NiceHashMiner.Forms;
 using System;
 using System.Windows.Forms;
 

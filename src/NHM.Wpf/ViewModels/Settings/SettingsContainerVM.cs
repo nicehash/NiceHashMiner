@@ -1,4 +1,4 @@
-﻿using NiceHashMiner.Configs.Data;
+﻿using NHMCore.Configs.Data;
 
 namespace NHM.Wpf.ViewModels.Settings
 {
