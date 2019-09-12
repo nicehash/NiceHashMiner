@@ -286,16 +286,16 @@ namespace NiceHashMiner.Forms
                         statusText = Tr("Pending Install");
                         break;
                     case PluginInstallProgressState.DownloadingMiner:
-                        statusText = Tr("Downloading Miner: {0} %", progress);
+                        statusText = Tr("Downloading Miner: {0} %", $"{progress:F2}");
                         break;
                     case PluginInstallProgressState.DownloadingPlugin:
-                        statusText = Tr("Downloading Plugin: {0} %", progress);
+                        statusText = Tr("Downloading Plugin: {0} %", $"{progress:F2}");
                         break;
                     case PluginInstallProgressState.ExtractingMiner:
-                        statusText = Tr("Extracting Miner: {0} %", progress);
+                        statusText = Tr("Extracting Miner: {0} %", $"{progress:F2}");
                         break;
                     case PluginInstallProgressState.ExtractingPlugin:
-                        statusText = Tr("Extracting Plugin: {0} %", progress);
+                        statusText = Tr("Extracting Plugin: {0} %", $"{progress:F2}");
                         break;
                     default:
                         statusText = Tr("Pending Install");
