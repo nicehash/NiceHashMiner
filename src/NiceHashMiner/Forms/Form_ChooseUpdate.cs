@@ -1,16 +1,8 @@
 ﻿using NHM.Common;
-using NHM.Common.Enums;
-using NHM.MinersDownloader;
-using NiceHashMiner.Forms.Components;
 using NHMCore;
-using NHMCore.Mining;
+using NHMCore.Utils;
 using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
 using System.Windows.Forms;
-using static NHMCore.Mining.Plugins.MinerPluginsManager;
 
 namespace NiceHashMiner.Forms
 {
@@ -53,24 +45,7 @@ namespace NiceHashMiner.Forms
                 IProgress<(string loadMessageText, int prog)> progress = progressDownload;
                 var downloadProgress = new Progress<int>(perc => progress?.Report((Translations.Tr($"Downloading updater: %{perc}"), perc)));
 
-                var url = ApplicationStateManager.GetNewVersionUpdaterUrl();
-                var downloadRootPath = Path.Combine(Paths.Root, "updaters");
-                if (!Directory.Exists(downloadRootPath))
-                {
-                    Directory.CreateDirectory(downloadRootPath);
-                }
-                var (success, downloadedFilePath) = await MinersDownloadManager.DownloadFileWebClientAsync(url, downloadRootPath, $"nhm_windows_updater_{ApplicationStateManager.OnlineVersion}", downloadProgress, ApplicationStateManager.ExitApplication.Token);
-                if (!success || ApplicationStateManager.ExitApplication.Token.IsCancellationRequested) return;
-
-                // stop devices
-                ApplicationStateManager.StopAllDevice();
-
-                using (var updater = new Process())
-                {
-                    updater.StartInfo.UseShellExecute = false;
-                    updater.StartInfo.FileName = downloadedFilePath;
-                    updater.Start();
-                }
+                await UpdateHelpers.DownloadUpdaterAsync(downloadProgress);
             }
             catch (Exception ex)
             {
