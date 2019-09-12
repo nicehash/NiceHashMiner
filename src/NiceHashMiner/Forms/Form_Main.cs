@@ -22,16 +22,12 @@ namespace NiceHashMiner
     using NHMCore.Mining.Plugins;
     using NHMCore.Utils;
     using NHM.Common;
-    using NHM.Common.Enums;
     using System.IO;
 
     public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IMiningProfitabilityDisplayer, INoInternetConnectionDisplayer
     {
         private bool _showWarningNiceHashData;
-
         private bool _exitCalled = false;
-
-        private Form_MinerPlugins _minerPluginsForm;
 
         //private bool _isDeviceDetectionInitialized = false;
 
@@ -653,9 +649,11 @@ namespace NiceHashMiner
 
         private void ButtonPlugins_Click(object sender, EventArgs e)
         {
-            if (_minerPluginsForm == null) _minerPluginsForm = new Form_MinerPlugins();
-            SetChildFormCenter(_minerPluginsForm);
-            _minerPluginsForm.ShowDialog();
+            using (var minerPluginsForm = new Form_MinerPlugins())
+            {
+                SetChildFormCenter(minerPluginsForm);
+                minerPluginsForm.ShowDialog();
+            }
         }
 
         private void NotifyIcon1_MouseClick(object sender, MouseEventArgs e)

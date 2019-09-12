@@ -5,12 +5,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using NHMCore;
+using static NHMCore.Translations;
 
 namespace NHM.Wpf.ViewModels.Plugins
 {
     public class PluginEntryVM : BaseVM
     {
         public PluginPackageInfoCR Plugin { get; }
+        private IProgress<Tuple<PluginInstallProgressState, int>> Progress;
 
         public string InstallString
         {
@@ -33,7 +35,12 @@ namespace NHM.Wpf.ViewModels.Plugins
 
         public PluginEntryVM(PluginPackageInfoCR plugin)
             : this(plugin, new LoadProgress())
-        { }
+        {}
+
+        protected override void Dispose(bool disposing)
+        {
+            MinerPluginsManager.InstallRemoveProgress(Plugin.PluginUUID, Progress);
+        }
 
         protected PluginEntryVM(PluginPackageInfoCR plugin, LoadProgress load)
         {
@@ -49,6 +56,39 @@ namespace NHM.Wpf.ViewModels.Plugins
 
             Load = load;
             Load.PropertyChanged += Install_PropertyChanged;
+
+            Progress = new Progress<Tuple<PluginInstallProgressState, int>>(status =>
+            {
+                var (state, progress) = status;
+
+                string statusText;
+
+                switch (state)
+                {
+                    case PluginInstallProgressState.Pending:
+                        statusText = Tr("Pending Install");
+                        break;
+                    case PluginInstallProgressState.DownloadingMiner:
+                        statusText = Tr("Downloading Miner: {0} %", $"{progress:F2}");
+                        break;
+                    case PluginInstallProgressState.DownloadingPlugin:
+                        statusText = Tr("Downloading Plugin: {0} %", $"{progress:F2}");
+                        break;
+                    case PluginInstallProgressState.ExtractingMiner:
+                        statusText = Tr("Extracting Miner: {0} %", $"{progress:F2}");
+                        break;
+                    case PluginInstallProgressState.ExtractingPlugin:
+                        statusText = Tr("Extracting Plugin: {0} %", $"{progress:F2}");
+                        break;
+                    default:
+                        statusText = Tr("Pending Install");
+                        break;
+                }
+
+                Load.IsInstalling = state < PluginInstallProgressState.FailedDownloadingPlugin;
+                Load.Report((statusText, progress));
+            });
+            MinerPluginsManager.InstallAddProgress(plugin.PluginUUID, Progress);
         }
 
         private void Install_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -67,50 +107,10 @@ namespace NHM.Wpf.ViewModels.Plugins
             }
             else
             {
-                await InstallOrUpdateAsync();
+                await MinerPluginsManager.DownloadAndInstall(Plugin.PluginUUID, Progress);
             }
 
             OnPropertyChanged(nameof(InstallString));
-        }
-
-        private async Task InstallOrUpdateAsync()
-        {
-            var progressConverter = new Progress<Tuple<MinerPluginsManager.ProgressState, int>>(status =>
-            {
-                var (state, progress) = status;
-
-                string statusText;
-
-                switch (state)
-                {
-                    case MinerPluginsManager.ProgressState.DownloadingMiner:
-                        statusText = $"Downloading Miner: {progress:F2} %";
-                        break;
-
-                    case MinerPluginsManager.ProgressState.DownloadingPlugin:
-                        statusText = $"Downloading Plugin: {progress:F2} %";
-                        break;
-
-                    case MinerPluginsManager.ProgressState.ExtractingMiner:
-                        statusText = $"Extracting Miner: {progress:F2} %";
-                        break;
-
-                    case MinerPluginsManager.ProgressState.ExtractingPlugin:
-                        statusText = $"Extracting Plugin: {progress:F2} %";
-                        break;
-                    default:
-                        statusText = "";
-                        break;
-                }
-
-                Load.Report((statusText, progress));
-            });
-
-            Load.IsInstalling = true;
-
-            await MinerPluginsManager.DownloadAndInstall(Plugin, progressConverter, default);
-
-            Load.IsInstalling = false;
         }
     }
 }

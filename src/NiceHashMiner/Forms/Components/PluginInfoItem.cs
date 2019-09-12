@@ -132,6 +132,7 @@ namespace NiceHashMiner.Forms.Components
             }
             set
             {
+                if (progressBar1.Visible == value) return;
                 progressBar1.Value = 0;
                 progressBar1.Visible = value;
             }
@@ -169,6 +170,7 @@ namespace NiceHashMiner.Forms.Components
             }
             set
             {
+                if (labelStatus.Visible == value) return;
                 labelStatus.Visible = value;
             }
         }

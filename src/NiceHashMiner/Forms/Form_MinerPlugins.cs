@@ -1,26 +1,25 @@
 ﻿using NiceHashMiner.Forms.Components;
-using NHMCore.Mining.Plugins;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Threading;
-using NHMCore.Configs;
+using NHMCore.Mining.Plugins;
 using static NHMCore.Translations;
-using static NHMCore.Mining.Plugins.MinerPluginsManager;
 
 namespace NiceHashMiner.Forms
 {
     public partial class Form_MinerPlugins : Form
     {
+        private Dictionary<string, PluginControlPair> _pluginInfoDetailControls = new Dictionary<string, PluginControlPair>();
+
         public Form_MinerPlugins()
         {
             InitializeComponent();
             flowLayoutPanelPluginsLV.Controls.Clear();
             CenterToScreen();
             Icon = NHMCore.Properties.Resources.logo;
-            this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
+            TopMost = NHMCore.Configs.ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
             FormHelpers.TranslateFormControls(this);
 
             Shown += new EventHandler(FormShown);
@@ -29,53 +28,20 @@ namespace NiceHashMiner.Forms
 
         private void Form_MinerPlugins_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var details = _pluginInfoDetails.Values.Select(pair => pair.Details).Where(detail => detail != null);
-            foreach (var pluginInfoDetails in details)
+            foreach (var kvp in _pluginInfoDetailControls)
             {
-                pluginInfoDetails.Visible = false;
+                var pluginUUID = kvp.Key;
+                var pluginControlPair = kvp.Value;
+                MinerPluginsManager.InstallRemoveProgress(pluginUUID, pluginControlPair.Progress);
             }
         }
-
-        //private PluginInfoDetails pluginInfoDetails1;
-        // save references to details panels
 
         private class PluginControlPair
         {
             public PluginInfoItem Item;
             public PluginInfoDetails Details;
+            public IProgress<Tuple<PluginInstallProgressState, int>> Progress;
         }
-
-        private Dictionary<string, PluginControlPair> _pluginInfoDetails = new Dictionary<string, PluginControlPair>();
-
-        private object _lock = new object();
-        private HashSet<string> _activeTasks = new HashSet<string>();
-        
-        private void AddActiveTask(string uuid)
-        {
-            lock(_lock)
-            {
-                _activeTasks.Add(uuid);
-            }
-        }
-
-        private void RemoveActiveTask(string uuid)
-        {
-            lock (_lock)
-            {
-                _activeTasks.Remove(uuid);
-            }
-        }
-
-        private List<string> GetActiveTasks()
-        {
-            var ret = new List<string>();
-            lock (_lock)
-            {
-                foreach (var uuid in _activeTasks) ret.Add(uuid);
-            }
-            return ret;
-        }
-
 
         private static string PluginInstallRemoveText(PluginPackageInfoCR plugin)
         {
@@ -99,8 +65,8 @@ namespace NiceHashMiner.Forms
 
             //pluginInfoItem.OnPluginInfoItemMouseClick = OnPluginInfoItemMouseClick;
             pluginInfoItem.OnDetailsClick = (s, e) => {
-                if (!_pluginInfoDetails.ContainsKey(plugin.PluginUUID)) return;
-                var detailsPanel = _pluginInfoDetails[plugin.PluginUUID].Details;
+                if (!_pluginInfoDetailControls.ContainsKey(plugin.PluginUUID)) return;
+                var detailsPanel = _pluginInfoDetailControls[plugin.PluginUUID].Details;
                 if (detailsPanel == null) return;
                 detailsPanel.BringToFront();
                 detailsPanel.Visible = true;
@@ -119,14 +85,14 @@ namespace NiceHashMiner.Forms
         {
             pluginInfoDetails.PluginUUID = plugin.PluginUUID;
             pluginInfoDetails.PluginName = plugin.PluginName;
-            pluginInfoDetails.PluginVersion = $"Plugin Version: {plugin.PluginVersion}";
-            pluginInfoDetails.PluginAuthor = $"Plugin Author: {plugin.PluginAuthor}";
-            pluginInfoDetails.Description = $"Plugin Description: {plugin.PluginDescription}";
+            pluginInfoDetails.PluginVersion = Tr("Plugin Version: {0}", plugin.PluginVersion);
+            pluginInfoDetails.PluginAuthor = Tr("Plugin Author: {0}", plugin.PluginAuthor);
+            pluginInfoDetails.Description = Tr("Plugin Description: {0}", plugin.PluginDescription);
             var supportedDevs = plugin.SupportedDevicesAlgorithms
                 .Where(kvp => kvp.Value.Count > 0)
                 .OrderBy(kvp => kvp.Key);
 
-            var supportedDevices = $"Supported Devices: {string.Join(",", supportedDevs.Select(kvp => kvp.Key))}";
+            var supportedDevices = Tr("Supported Devices: {0}", string.Join(", ", supportedDevs.Select(kvp => kvp.Key)));
             pluginInfoDetails.SupportedDevices = supportedDevices;
 
             var supportedDevicesAlgos = supportedDevs.Select(kvp => {
@@ -138,7 +104,7 @@ namespace NiceHashMiner.Forms
             });
             var supportedDevicesAlgorithms = string.Join(Environment.NewLine, supportedDevicesAlgos).Replace("\t", "    ");
 
-            pluginInfoDetails.SupportedDevicesAlgorithms = $"Supported Devices Algorithms:{Environment.NewLine}{supportedDevicesAlgorithms}";
+            pluginInfoDetails.SupportedDevicesAlgorithms = Tr("Supported Devices Algorithms:{0}", Environment.NewLine+supportedDevicesAlgorithms);
 
             pluginInfoDetails.StatusText = "";
 
@@ -168,18 +134,18 @@ namespace NiceHashMiner.Forms
 
             var rankedUUIDs = MinerPluginsManager.RankedPlugins.Select(plugin => plugin.PluginUUID).ToList();
 
-            // update existing that are not in a task
-            var ignoreActive = GetActiveTasks();
-            foreach (var controlsPair in _pluginInfoDetails.Values)
-            {
-                var uuid = controlsPair.Item.PluginUUID;
-                if (ignoreActive.Contains(uuid)) continue;
-                var plugin = MinerPluginsManager.Plugins[uuid];
-                setPluginInfoItem(controlsPair.Item, plugin);
-                setPluginInfoDetails(controlsPair.Details, plugin);
-            }
+            //// update existing that are not in a task
+            //var ignoreActive = GetActiveTasks();
+            //foreach (var controlsPair in _pluginInfoDetails.Values)
+            //{
+            //    var uuid = controlsPair.Item.PluginUUID;
+            //    if (ignoreActive.Contains(uuid)) continue;
+            //    var plugin = MinerPluginsManager.Plugins[uuid];
+            //    setPluginInfoItem(controlsPair.Item, plugin);
+            //    setPluginInfoDetails(controlsPair.Details, plugin);
+            //}
 
-            var newPlugins = MinerPluginsManager.RankedPlugins.Where(plugin => _pluginInfoDetails.ContainsKey(plugin.PluginUUID) == false).ToList();
+            var newPlugins = MinerPluginsManager.RankedPlugins.Where(plugin => _pluginInfoDetailControls.ContainsKey(plugin.PluginUUID) == false).ToList();
             var lastSingleItemRow = rankedUUIDs.Count % 2 == 1;
 
             // create and add new plugins
@@ -190,12 +156,17 @@ namespace NiceHashMiner.Forms
                     Item = new PluginInfoItem(),
                     Details = CreatePluginInfoDetails()
                 };
+                controlsPair.Item.OnButtonCancel = (s1, e1) => MinerPluginsManager.TryCancelInstall(plugin.PluginUUID);
+                controlsPair.Details.OnButtonCancel = (s1, e1) => MinerPluginsManager.TryCancelInstall(plugin.PluginUUID);
+                controlsPair.Progress = CreateProgressForPluginControlPair(controlsPair);
                 // add control pairs
-                _pluginInfoDetails.Add(plugin.PluginUUID, controlsPair);
+                _pluginInfoDetailControls.Add(plugin.PluginUUID, controlsPair);
                 Controls.Add(controlsPair.Details);
                 
                 setPluginInfoItem(controlsPair.Item, plugin);
                 setPluginInfoDetails(controlsPair.Details, plugin);
+                // add append if any exists
+                MinerPluginsManager.InstallAddProgress(plugin.PluginUUID, controlsPair.Progress);
             }
 
             // get row count
@@ -234,7 +205,7 @@ namespace NiceHashMiner.Forms
                 var rowIndex = (item / 2);
                 var isFirst = (item % 2) == 0;
 
-                var controlsPair = _pluginInfoDetails[uuid];
+                var controlsPair = _pluginInfoDetailControls[uuid];
 
                 var row = flowLayoutPanelPluginsLV.Controls[rowIndex] as PluginInfoItemRow;
                 if (row == null) continue; 
@@ -260,8 +231,8 @@ namespace NiceHashMiner.Forms
 
         private async void OnButtonInstallRemoveClick(object sender, string pluginUUID)
         {
-            if (_pluginInfoDetails.ContainsKey(pluginUUID) == false) return;
-            var pluginInfoControlsPair =  _pluginInfoDetails[pluginUUID];
+            if (_pluginInfoDetailControls.ContainsKey(pluginUUID) == false) return;
+            var pluginInfoControlsPair =  _pluginInfoDetailControls[pluginUUID];
 
             var pluginPackageInfo = MinerPluginsManager.Plugins[pluginUUID];
             try
@@ -293,87 +264,72 @@ namespace NiceHashMiner.Forms
 
         private async void OnButtonUpdateClick(object sender, string pluginUUID)
         {
-            if (_pluginInfoDetails.ContainsKey(pluginUUID) == false) return;
-            var pluginInfoControlsPair = _pluginInfoDetails[pluginUUID];
+            if (_pluginInfoDetailControls.ContainsKey(pluginUUID) == false) return;
+            var pluginInfoControlsPair = _pluginInfoDetailControls[pluginUUID];
             
             await InstallOrUpdateAsync(pluginInfoControlsPair, pluginUUID);
         }
 
-        private async Task InstallOrUpdateAsync(PluginControlPair pluginInfoControlsPair, string pluginUUID)
+        private IProgress<Tuple<PluginInstallProgressState, int>> CreateProgressForPluginControlPair(PluginControlPair pluginInfoControlsPair)
         {
             var pluginInfoItem = pluginInfoControlsPair.Item;
             var pluginInfoDetails = pluginInfoControlsPair.Details;
-            // update
-            var cancelInstall = new CancellationTokenSource();
-            var pluginPackageInfo = MinerPluginsManager.Plugins[pluginUUID];
-            try
+
+            var downloadAndInstallUpdate = new Progress<Tuple<PluginInstallProgressState, int>>(statePerc =>
             {
-                AddActiveTask(pluginUUID);
-                pluginInfoItem.OnButtonCancel = (s, e) => cancelInstall.Cancel();
-                pluginInfoItem.SwapInstallRemoveButtonWithCancelButton(true);
-                pluginInfoItem.ProgressBarVisible = true;
-                pluginInfoItem.StatusVisible = true;
-                //pluginInfoItem.ButtonUpdateEnabled = false;
-
-                pluginInfoDetails.OnButtonCancel = (s, e) => cancelInstall.Cancel();
-                pluginInfoDetails.SwapInstallRemoveButtonWithCancelButton(true);
-                pluginInfoDetails.ProgressBarVisible = true;
-                pluginInfoDetails.StatusVisible = true;
-
-                pluginInfoItem.StatusText = "Pending Install";
-                pluginInfoDetails.StatusText = "Pending Install";
-
-
-                var downloadAndInstallUpdate = new Progress<Tuple<ProgressState, int>>(statePerc  =>
+                var state = statePerc.Item1;
+                var progress = statePerc.Item2;
+                var statusText = "";
+                switch (state)
                 {
-                    var state = statePerc.Item1;
-                    var progress = statePerc.Item2;
-                    var statusText = "";
-                    switch (state)
-                    {
-                        case ProgressState.DownloadingMiner:
-                            statusText = $"Downloading Miner: {progress} %";
-                            break;
+                    case PluginInstallProgressState.Pending:
+                        statusText = Tr("Pending Install");
+                        break;
+                    case PluginInstallProgressState.DownloadingMiner:
+                        statusText = Tr("Downloading Miner: {0} %", $"{progress:F2}");
+                        break;
+                    case PluginInstallProgressState.DownloadingPlugin:
+                        statusText = Tr("Downloading Plugin: {0} %", $"{progress:F2}");
+                        break;
+                    case PluginInstallProgressState.ExtractingMiner:
+                        statusText = Tr("Extracting Miner: {0} %", $"{progress:F2}");
+                        break;
+                    case PluginInstallProgressState.ExtractingPlugin:
+                        statusText = Tr("Extracting Plugin: {0} %", $"{progress:F2}");
+                        break;
+                    default:
+                        statusText = Tr("Pending Install");
+                        break;
+                }
 
-                        case ProgressState.DownloadingPlugin:
-                            statusText = $"Downloading Plugin: {progress} %";
-                            break;
+                pluginInfoItem.StatusText = statusText;
+                pluginInfoItem.ProgressBarValue = progress;
 
-                        case ProgressState.ExtractingMiner:
-                            statusText = $"Extracting Miner: {progress} %";
-                            break;
+                pluginInfoDetails.StatusText = statusText;
+                pluginInfoDetails.ProgressBarValue = progress;
 
-                        case ProgressState.ExtractingPlugin:
-                            statusText = $"Extracting Plugin: {progress} %";
-                            break;
+                var installing = state < PluginInstallProgressState.FailedDownloadingPlugin;
+                pluginInfoItem.SwapInstallRemoveButtonWithCancelButton(installing);
+                pluginInfoItem.ProgressBarVisible = installing;
+                pluginInfoItem.StatusVisible = installing;
 
-                    }
-                    // SafeInvoke is not needed inside a Progress 
-                    //FormHelpers.SafeInvoke(pluginInfoItem, () => {
-                        pluginInfoItem.StatusText = statusText;
-                        pluginInfoItem.ProgressBarValue = (int) progress;
-                    //});
-                    //FormHelpers.SafeInvoke(pluginInfoDetails, () => {
-                        pluginInfoDetails.StatusText = statusText;
-                        pluginInfoDetails.ProgressBarValue = (int) progress;
-                    //});
-                });
-                await MinerPluginsManager.DownloadAndInstall(pluginPackageInfo, downloadAndInstallUpdate, cancelInstall.Token);
-                
-            }
-            catch (Exception e)
-            {
-            }
-            finally
-            {
-                pluginInfoItem.ProgressBarVisible = false;
-                pluginInfoDetails.ProgressBarVisible = false;
-                pluginInfoItem.SwapInstallRemoveButtonWithCancelButton(false);
-                pluginInfoDetails.SwapInstallRemoveButtonWithCancelButton(false);
-                setPluginInfoItem(pluginInfoItem, pluginPackageInfo);
-                setPluginInfoDetails(pluginInfoDetails, pluginPackageInfo);
-                RemoveActiveTask(pluginUUID);
-            }
+                pluginInfoDetails.SwapInstallRemoveButtonWithCancelButton(installing);
+                pluginInfoDetails.ProgressBarVisible = installing;
+                pluginInfoDetails.StatusVisible = installing;
+
+                if (state == PluginInstallProgressState.Success)
+                {
+                    var pluginPackageInfo = MinerPluginsManager.Plugins[pluginInfoItem.PluginUUID];
+                    setPluginInfoItem(pluginInfoItem, pluginPackageInfo);
+                    setPluginInfoDetails(pluginInfoDetails, pluginPackageInfo);
+                }
+            });
+            return downloadAndInstallUpdate;
+        }
+
+        private async Task InstallOrUpdateAsync(PluginControlPair pluginInfoControlsPair, string pluginUUID)
+        {
+            await MinerPluginsManager.DownloadAndInstall(pluginUUID, pluginInfoControlsPair.Progress);
         }
     }
 }
