@@ -1,12 +1,4 @@
 //#define SHOW_TDP_SETTINGS
-using NHMCore;
-using NHMCore.Configs;
-using NiceHashMiner.Forms;
-using NHMCore.Interfaces.DataVisualizer;
-using NHMCore.Mining;
-using NHMCore.Mining.IdleChecking;
-using NHMCore.Stats;
-using NHMCore.Switching;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -14,16 +6,29 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using static NHMCore.Translations; // consider using static
+
+using System.IO; // not needed check warning
+using Paths = NHM.Common.Paths; // not needed check warning
+
+using Logger = NHM.Common.Logger;
+
+using NHMCore;
+using NHMCore.Configs;
+using NHMCore.Interfaces.DataVisualizer;
+using NHMCore.Mining;
+using NHMCore.Mining.Plugins;
+using NHMCore.Mining.IdleChecking;
+using NHMCore.Stats;
+using NHMCore.Switching;
+using NHMCore.Utils;
+
+using static NHMCore.Translations;
+
+using NiceHashMiner.Forms;
+using NiceHashMiner.Forms.Components;
 
 namespace NiceHashMiner
 {
-    using NiceHashMiner.Forms.Components;
-    using NHMCore.Mining.Plugins;
-    using NHMCore.Utils;
-    using NHM.Common;
-    using System.IO;
-
     public partial class Form_Main : Form, FormHelpers.ICustomTranslate, IVersionDisplayer, IBalanceBTCDisplayer, IBalanceFiatDisplayer, IGlobalMiningRateDisplayer, IMiningProfitabilityDisplayer, INoInternetConnectionDisplayer
     {
         private bool _showWarningNiceHashData;
@@ -386,6 +391,7 @@ namespace NiceHashMiner
 
         private void LinkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+#warning "This should be inside CORE. And checking if the app is installed should be done via registry checking"
             // check if the NHM was installed
             var root = new DirectoryInfo(Paths.Root);
             var isInstalled = false;

@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace NiceHashMiner
 {
-    // TODO probably remove
+#warning this is not used anymore. But make sure to show missing miners somewhre in the new GUI
     public partial class MinerFileNotFoundDialog : Form
     {
         public bool DisableDetection;

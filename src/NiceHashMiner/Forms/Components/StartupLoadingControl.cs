@@ -17,14 +17,14 @@ namespace NiceHashMiner.Forms.Components
 
             PrimaryProgress = new Progress<(string loadMessageText, int perc)>(p =>
             {
-                this.Progress = (int)p.perc;
-                this.LoadMessageText = p.loadMessageText;
+                Progress = p.perc;
+                LoadMessageText = p.loadMessageText;
             });
 
             SecondaryProgress = new Progress<(string loadMessageText, int perc)>(p =>
             {
-                this.ProgressSecond = (int)p.perc;
-                this.LoadMessageTextSecond = p.loadMessageText;
+                ProgressSecond = p.perc;
+                LoadMessageTextSecond = p.loadMessageText;
             });
 
             FormHelpers.TranslateFormControls(this);
@@ -82,7 +82,7 @@ namespace NiceHashMiner.Forms.Components
             {
                 if (_secondProgressVisible == value) return;
                 _secondProgressVisible = value;
-                this.Height = _secondProgressVisible ? _visibleHeight : _hiddenHeight;
+                Height = _secondProgressVisible ? _visibleHeight : _hiddenHeight;
             }
         }
 

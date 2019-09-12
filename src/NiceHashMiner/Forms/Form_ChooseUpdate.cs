@@ -1,8 +1,8 @@
-﻿using NHM.Common;
+﻿using System;
+using System.Windows.Forms;
+using NHM.Common;
 using NHMCore;
 using NHMCore.Utils;
-using System;
-using System.Windows.Forms;
 
 namespace NiceHashMiner.Forms
 {

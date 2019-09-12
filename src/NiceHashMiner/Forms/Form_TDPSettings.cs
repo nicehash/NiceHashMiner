@@ -1,8 +1,8 @@
-﻿using NHM.DeviceMonitoring.TDP;
-using NHMCore.Mining;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using NHM.DeviceMonitoring.TDP;
+using NHMCore.Mining;
 
 namespace NiceHashMiner.Forms
 {

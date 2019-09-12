@@ -9,8 +9,8 @@ using NHMCore.Interfaces.DataVisualizer;
 using NHMCore.Mining;
 using NHMCore.Mining.Plugins;
 using NHMCore.Utils;
+
 using static NHMCore.Translations;
-using static NHMCore.ApplicationStateManager;
 
 namespace NiceHashMiner.Forms
 {

@@ -1,18 +1,18 @@
-﻿using NHMCore;
-using NHMCore.Configs;
-using NiceHashMiner.Forms;
-using NHMCore.Utils;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using NHMCore.Stats;
-using log4net.Core;
+using System.Net;
 using NHM.Common;
 using NHM.Common.Enums;
-using System.Net;
+using NHMCore;
+using NHMCore.Configs;
+using NHMCore.Utils;
+using NHMCore.Stats;
+using log4net.Core;
+using NiceHashMiner.Forms;
 
 namespace NiceHashMiner
 {

@@ -4,14 +4,13 @@ using System.Linq;
 using System.Windows.Forms;
 using NHMCore;
 using NHMCore.Benchmarking;
-using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Interfaces;
+using NHM.Common;
 using NHM.Common.Enums;
 using Timer = System.Windows.Forms.Timer;
 
 using BenchmarkSelection = NHM.Common.Enums.AlgorithmBenchmarkSettingsType;
-using NHM.Common;
 
 namespace NiceHashMiner.Forms
 {
@@ -33,7 +32,7 @@ namespace NiceHashMiner.Forms
         {
             InitializeComponent();
             Icon = NHMCore.Properties.Resources.logo;
-            this.TopMost = ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
+            this.TopMost = NHMCore.Configs.ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
 
             // clear prev pending statuses
             foreach (var dev in AvailableDevices.Devices)
