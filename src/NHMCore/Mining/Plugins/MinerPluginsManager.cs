@@ -13,6 +13,7 @@ using NHM.Common.Enums;
 using NHM.MinersDownloader;
 using NHMCore.Utils;
 using System.Globalization;
+using System.Collections.Concurrent;
 
 namespace NHMCore.Mining.Plugins
 {
@@ -297,6 +298,7 @@ namespace NHMCore.Mining.Plugins
             }       
         }
 
+#warning "blocking method!!! Make it non blocking and change where it gets called"
         public static void CrossReferenceInstalledWithOnline()
         {
             // first go over the installed plugins
@@ -413,17 +415,6 @@ namespace NHMCore.Mining.Plugins
 
 #region DownloadingInstalling
 
-        // TODO refactor ProgressState this tells us in what kind of a state the installation is
-        public enum ProgressState
-        {
-            Started,
-            DownloadingPlugin,
-            ExtractingPlugin,
-            DownloadingMiner,
-            ExtractingMiner,
-            // TODO loading
-        }
-
         public static async Task DownloadInternalBins(string pluginUUID, List<string> urls, IProgress<int> downloadProgress, IProgress<int> unzipProgress, CancellationToken stop)
         {
             var installingPluginBinsPath = Path.Combine(Paths.MinerPluginsPath(), pluginUUID, "bins");
@@ -462,13 +453,64 @@ namespace NHMCore.Mining.Plugins
             }
         }
 
-        public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, IProgress<Tuple<ProgressState, int>> progress, CancellationToken stop)
-        {
-            var downloadPluginProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.DownloadingPlugin, perc)));
-            var zipProgressPluginChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.ExtractingPlugin, perc)));
-            var downloadMinerProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.DownloadingMiner, perc)));
-            var zipProgressMinerChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(ProgressState.ExtractingMiner, perc)));
+        private static ConcurrentDictionary<string, MinerPluginInstallTask> MinerPluginInstallTasks = new ConcurrentDictionary<string, MinerPluginInstallTask>();
 
+        public static void InstallAddProgress(string pluginUUID, IProgress<Tuple<PluginInstallProgressState, int>> progress)
+        {
+            if (MinerPluginInstallTasks.TryGetValue(pluginUUID, out var installTask))
+            {
+                installTask.AddProgress(progress);
+            }
+        }
+
+        public static void InstallRemoveProgress(string pluginUUID, IProgress<Tuple<PluginInstallProgressState, int>> progress)
+        {
+            if (MinerPluginInstallTasks.TryGetValue(pluginUUID, out var installTask))
+            {
+                installTask.RemoveProgress(progress);
+            }
+        }
+
+        public static void TryCancelInstall(string pluginUUID)
+        {
+            if (MinerPluginInstallTasks.TryGetValue(pluginUUID, out var installTask))
+            {
+                installTask.TryCancelInstall();
+            }
+        }
+
+        public static async Task DownloadAndInstall(string pluginUUID, IProgress<Tuple<PluginInstallProgressState, int>> progress)
+        {
+            // TODO skip install if alredy in progress
+            var addSuccess = false;
+            using (var minerInstall = new MinerPluginInstallTask())
+            {
+                try
+                {
+                    var pluginPackageInfo = Plugins[pluginUUID];
+                    addSuccess = MinerPluginInstallTasks.TryAdd(pluginUUID, minerInstall);
+                    progress?.Report(Tuple.Create(PluginInstallProgressState.Pending, 0));
+                    minerInstall.AddProgress(progress);
+                    await DownloadAndInstall(pluginPackageInfo, minerInstall, minerInstall.CancelInstallToken);
+                }
+                finally
+                {
+                    if (addSuccess)
+                    {
+                        MinerPluginInstallTasks.TryRemove(pluginUUID, out var _);
+                    }
+                }
+            }
+        }
+
+        public static async Task DownloadAndInstall(PluginPackageInfoCR plugin, IProgress<Tuple<PluginInstallProgressState, int>> progress, CancellationToken stop)
+        {
+            var downloadPluginProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(PluginInstallProgressState.DownloadingPlugin, perc)));
+            var zipProgressPluginChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(PluginInstallProgressState.ExtractingPlugin, perc)));
+            var downloadMinerProgressChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(PluginInstallProgressState.DownloadingMiner, perc)));
+            var zipProgressMinerChangedEventHandler = new Progress<int>(perc => progress?.Report(Tuple.Create(PluginInstallProgressState.ExtractingMiner, perc)));
+
+            var finalState = PluginInstallProgressState.Pending;
             const string installingPrefix = "installing_";
             var installingPluginPath = Path.Combine(Paths.MinerPluginsPath(), $"{installingPrefix}{plugin.PluginUUID}");
             try
@@ -478,31 +520,52 @@ namespace NHMCore.Mining.Plugins
                 Directory.CreateDirectory(installingPluginPath);
 
                 // download plugin dll
+                progress?.Report(Tuple.Create(PluginInstallProgressState.PendingDownloadingPlugin, 0));
                 var downloadPluginResult = await MinersDownloadManager.DownloadFileAsync(plugin.PluginPackageURL, installingPluginPath, "plugin", downloadPluginProgressChangedEventHandler, stop);
                 var pluginPackageDownloaded = downloadPluginResult.downloadedFilePath;
                 var downloadPluginOK = downloadPluginResult.success;
-                if (!downloadPluginOK || stop.IsCancellationRequested) return;
+                if (!downloadPluginOK || stop.IsCancellationRequested)
+                {
+                    finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedDownloadingPlugin;
+                    return;
+                }
                 // unzip 
+                progress?.Report(Tuple.Create(PluginInstallProgressState.PendingExtractingPlugin, 0));
                 var unzipPluginOK = await ArchiveHelpers.ExtractFileAsync(pluginPackageDownloaded, installingPluginPath, zipProgressPluginChangedEventHandler, stop);
-                if (!unzipPluginOK || stop.IsCancellationRequested) return;
+                if (!unzipPluginOK || stop.IsCancellationRequested)
+                {
+                    finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedExtractingPlugin;
+                    return;
+                }
                 File.Delete(pluginPackageDownloaded);
 
-                // download plugin dll
+                // download plugin binary
+                progress?.Report(Tuple.Create(PluginInstallProgressState.PendingDownloadingMiner, 0));
                 var downloadMinerBinsResult = await MinersDownloadManager.DownloadFileAsync(plugin.MinerPackageURL, installingPluginPath, "miner_bins", downloadMinerProgressChangedEventHandler, stop);
                 var binsPackageDownloaded = downloadMinerBinsResult.downloadedFilePath;
                 var downloadMinerBinsOK = downloadMinerBinsResult.success;
-                if (!downloadMinerBinsOK || stop.IsCancellationRequested) return;
+                if (!downloadMinerBinsOK || stop.IsCancellationRequested)
+                {
+                    finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedDownloadingMiner;
+                    return;
+                }
                 // unzip 
+                progress?.Report(Tuple.Create(PluginInstallProgressState.PendingExtractingMiner, 0));
                 var binsUnzipPath = Path.Combine(installingPluginPath, "bins");
                 var unzipMinerBinsOK = await ArchiveHelpers.ExtractFileAsync(binsPackageDownloaded, binsUnzipPath, zipProgressMinerChangedEventHandler, stop);
-                if (!unzipMinerBinsOK || stop.IsCancellationRequested) return;
+                if (!unzipMinerBinsOK || stop.IsCancellationRequested)
+                {
+                    finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedExtractingMiner;
+                    return;
+                }
                 File.Delete(binsPackageDownloaded);
 
-
+                // TODO from here on add the failed plugin load state and success state
                 var loadedPlugins = MinerPluginHost.LoadPlugin(installingPluginPath);
                 if (loadedPlugins.Count() == 0)
                 {
                     //downloadAndInstallUpdate($"Loaded ZERO PLUGINS");
+                    finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedPluginLoad;
                     Directory.Delete(installingPluginPath, true);
                     return;
                 }
@@ -543,11 +606,17 @@ namespace NHMCore.Mining.Plugins
                 }
                 // cross reference local and online list
                 CrossReferenceInstalledWithOnline();
+                finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.Success;
             }
             catch (Exception e)
             {
                 Logger.Error("MinerPluginsManager", $"Installation of {plugin.PluginName}_{plugin.PluginVersion}_{plugin.PluginUUID} failed: ${e.Message}");
                 //downloadAndInstallUpdate();
+                finalState = stop.IsCancellationRequested ? PluginInstallProgressState.Canceled : PluginInstallProgressState.FailedUnknown;
+            }
+            finally
+            {
+                progress?.Report(Tuple.Create(finalState, 0));
             }
         }
 #endregion DownloadingInstalling

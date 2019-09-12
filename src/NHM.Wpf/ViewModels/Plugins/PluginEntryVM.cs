@@ -75,7 +75,7 @@ namespace NHM.Wpf.ViewModels.Plugins
 
         private async Task InstallOrUpdateAsync()
         {
-            var progressConverter = new Progress<Tuple<MinerPluginsManager.ProgressState, int>>(status =>
+            var progressConverter = new Progress<Tuple<PluginInstallProgressState, int>>(status =>
             {
                 var (state, progress) = status;
 
@@ -83,19 +83,19 @@ namespace NHM.Wpf.ViewModels.Plugins
 
                 switch (state)
                 {
-                    case MinerPluginsManager.ProgressState.DownloadingMiner:
+                    case PluginInstallProgressState.DownloadingMiner:
                         statusText = $"Downloading Miner: {progress:F2} %";
                         break;
 
-                    case MinerPluginsManager.ProgressState.DownloadingPlugin:
+                    case PluginInstallProgressState.DownloadingPlugin:
                         statusText = $"Downloading Plugin: {progress:F2} %";
                         break;
 
-                    case MinerPluginsManager.ProgressState.ExtractingMiner:
+                    case PluginInstallProgressState.ExtractingMiner:
                         statusText = $"Extracting Miner: {progress:F2} %";
                         break;
 
-                    case MinerPluginsManager.ProgressState.ExtractingPlugin:
+                    case PluginInstallProgressState.ExtractingPlugin:
                         statusText = $"Extracting Plugin: {progress:F2} %";
                         break;
                     default:
