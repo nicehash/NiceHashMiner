@@ -1,11 +1,11 @@
 using NHMCore.Configs;
 using NHMCore.Mining;
 using NHMCore.Stats;
+using NHMCore.Utils;
 using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using NHMCore.Utils;
 using System.Threading;
 
 namespace NHMCore

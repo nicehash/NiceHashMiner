@@ -2,12 +2,12 @@
 using NHM.Common.Device;
 using NHM.Common.Enums;
 using NHM.DeviceMonitoring;
+using NHM.DeviceMonitoring.TDP;
 using NHM.UUID;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
 using System.Collections.Generic;
 using System.Linq;
-using NHM.DeviceMonitoring.TDP;
 
 namespace NHMCore.Mining
 {

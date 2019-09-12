@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using NHM.Common.Enums;
 
 namespace NHMCore.Configs.Data
 {
