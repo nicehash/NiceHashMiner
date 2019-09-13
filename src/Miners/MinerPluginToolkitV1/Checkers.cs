@@ -11,14 +11,16 @@ namespace MinerPluginToolkitV1
         /// </summary>
         public static bool IsGcn4(AMDDevice dev)
         {
-            if (dev.Name.Contains("Vega") || dev.InfSection.ToLower().Contains("r7500") || dev.InfSection.ToLower().Contains("vega"))
-                return true;
-            if (dev.InfSection.ToLower().Contains("polaris"))
-                return true;
-            if (dev.Name.ToLower().Contains("navi"))
-                return true;
+            var oldCodeNames = new List<string> {
+                /*Gen1*/ "oland", "cape verde", "pitcairn", "tahiti",
+                /*Gen2*/"bonaire", "hawaii", "temash", "kabini", "liverpool", "durango", "kaveri", "godavari", "mullins", "beema", "carrizo-L",
+                /*Gen3*/"tonga", "fiji", "carrizo", "bristol ridge", "stoney ridge"
+            };
 
-            return false;
+            if (oldCodeNames.Contains(dev.InfSection.ToLower()))
+                return false;
+
+            return true;
         }
 
         /// <summary>
