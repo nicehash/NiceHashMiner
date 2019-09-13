@@ -18,7 +18,6 @@ namespace NHMCore.Benchmarking
 
         private bool _startMiningAfterBenchmark;
         private readonly Queue<AlgorithmContainer> _benchmarkAlgorithmQueue;
-        private readonly int _benchmarkAlgorithmsCount; 
         private readonly List<string> _benchmarkFailedAlgo = new List<string>();
         private readonly BenchmarkPerformanceType _performanceType;
 
@@ -36,7 +35,6 @@ namespace NHMCore.Benchmarking
             _benchmarkAlgorithmQueue = algorithms;
             _performanceType = performance;
 
-            _benchmarkAlgorithmsCount = _benchmarkAlgorithmQueue.Count;
             _powerHelper = new PowerHelper(device);
         }
 
@@ -60,7 +58,6 @@ namespace NHMCore.Benchmarking
                     currentAlgorithm.InBenchmark = false;
                     await Task.Delay(ConfigManager.GeneralConfig.MinerRestartDelayMS);
                     if (_stopBenchmark.IsCancellationRequested) break;
-                    currentAlgorithm.IsReBenchmark = false;
                     BenchmarkManager.StepUpBenchmarkStepProgress();
                     ConfigManager.CommitBenchmarksForDevice(Device);
                 }

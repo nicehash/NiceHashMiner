@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using NHMCore;
+using NHMCore.Configs;
 using NHMCore.Benchmarking;
 using NHMCore.Mining;
 using NHMCore.Interfaces;

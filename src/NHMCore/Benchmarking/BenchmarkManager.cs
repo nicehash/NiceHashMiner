@@ -10,8 +10,6 @@ using NHMCore.Stats;
 
 namespace NHMCore.Benchmarking
 {
-    // alias enum
-    using BenchmarkSelection = AlgorithmBenchmarkSettingsType;
     public static class BenchmarkManager
     {
         private static bool _inBenchmark;
@@ -36,7 +34,7 @@ namespace NHMCore.Benchmarking
         public static event EventHandler<BenchEndEventArgs> OnBenchmarkEnd;
         public static event EventHandler<bool> InBenchmarkChanged;
 
-        public static BenchmarkSelection Selection { get; set; }
+        public static AlgorithmBenchmarkSettingsType Selection { get; set; }
 
         public static IReadOnlyList<Tuple<ComputeDevice, Queue<AlgorithmContainer>>> BenchDevAlgoQueue
         {
@@ -90,7 +88,7 @@ namespace NHMCore.Benchmarking
 
         static BenchmarkManager()
         {
-            Selection = BenchmarkSelection.SelectedUnbenchmarkedAlgorithms;
+            Selection = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
             _benchDevAlgoStatus = new Dictionary<string, BenchmarkSettingsStatus>();
             _benchDevAlgoQueue = new List<Tuple<ComputeDevice, Queue<AlgorithmContainer>>>();
             _statusCheckAlgos = new Dictionary<ComputeDevice, AlgorithmContainer>();
@@ -110,11 +108,6 @@ namespace NHMCore.Benchmarking
                     yield return new Tuple<ComputeDevice, AlgorithmContainer>(kvp.Key, kvp.Value);
                 }
             }
-        }
-
-        public static IEnumerable<int> GetBenchmarkingDevices()
-        {
-            return BenchDevAlgoQueue.Select(t => t.Item1).Select(d => d.Index);
         }
 
 #endregion
@@ -178,14 +171,14 @@ namespace NHMCore.Benchmarking
             var isBenchmarked = !algorithm.BenchmarkNeeded;
             switch (Selection)
             {
-                case BenchmarkSelection.SelectedUnbenchmarkedAlgorithms when !isBenchmarked &&
+                case AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms when !isBenchmarked &&
                                                                                          algorithm.Enabled:
                     return true;
-                case BenchmarkSelection.UnbenchmarkedAlgorithms when !isBenchmarked:
+                case AlgorithmBenchmarkSettingsType.UnbenchmarkedAlgorithms when !isBenchmarked:
                     return true;
-                case BenchmarkSelection.ReBecnhSelectedAlgorithms when algorithm.Enabled:
+                case AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms when algorithm.Enabled:
                     return true;
-                case BenchmarkSelection.AllAlgorithms:
+                case AlgorithmBenchmarkSettingsType.AllAlgorithms:
                     return true;
             }
 

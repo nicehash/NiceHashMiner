@@ -51,8 +51,9 @@ namespace NHMCore.Mining
         public DeviceState State
         {
             get => _state;
-            set
+            internal set
             {
+                if (_state == value) return;
                 _state = value;
                 MiningState.Instance.CalculateDevicesStateChange();
                 OnPropertyChanged();
