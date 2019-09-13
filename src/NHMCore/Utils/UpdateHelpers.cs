@@ -1,4 +1,5 @@
-﻿using NHM.Common;
+﻿using Microsoft.Win32;
+using NHM.Common;
 using NHM.MinersDownloader;
 using System;
 using System.Diagnostics;
@@ -35,6 +36,17 @@ namespace NHMCore.Utils
             {
                 Logger.Error("UpdateHelpers", $"Updating failed: {ex.Message}");
             }
+        }
+
+        public static bool IsNHMInstalled()
+        {
+            var isInstalled = false;
+            #warning if the app GUID changes so should this value
+            if (Registry.CurrentUser.OpenSubKey(@"Software\8abad8e2-b957-48ed-92ba-4339c2a40e78", false) != null)
+            {
+                isInstalled = true;
+            }
+            return isInstalled;
         }
     }
 }

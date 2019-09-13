@@ -391,18 +391,7 @@ namespace NiceHashMiner
 
         private void LinkLabelNewVersion_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-#warning "This should be inside CORE. And checking if the app is installed should be done via registry checking"
-            // check if the NHM was installed
-            var root = new DirectoryInfo(Paths.Root);
-            var isInstalled = false;
-            foreach (var file in root.GetFiles("*.exe"))
-            {
-                if (file.Name == "Uninstall NiceHashMiner.exe")
-                {
-                    isInstalled = true;
-                }
-            }
-            // end of installation checking
+            var isInstalled = UpdateHelpers.IsNHMInstalled();
             if (!isInstalled)
             {
                 ApplicationStateManager.VisitNewVersionUrl();
