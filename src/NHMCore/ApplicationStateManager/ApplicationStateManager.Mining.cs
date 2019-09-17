@@ -1,16 +1,11 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using NHM.Common;
 using NHM.Common.Enums;
 using NHMCore.Benchmarking;
-using NHMCore.Configs;
 using NHMCore.Mining;
-using NHMCore.Utils;
-
+using NHMCore.Stats;
+using NHM.Common;
+using NHMCore.Configs;
 
 namespace NHMCore
 {
@@ -25,73 +20,15 @@ namespace NHMCore
             return $"{btc}${RigID}";
         }
 
-        private static ConcurrentQueue<(ComputeDevice, DeviceState)> UpdateDevicesToMineStates { get; set; } = new ConcurrentQueue<(ComputeDevice, DeviceState)>();
-
-        private static void StartMiningOnDevices(params ComputeDevice[] startDevices)
+        private static void UpdateDevicesToMine()
         {
-            if (startDevices == null || startDevices.Length == 0) return;
-
-            foreach (var startDevice in startDevices)
-            {
-                startDevice.IsPendingChange = true;
-                UpdateDevicesToMineStates.Enqueue((startDevice, DeviceState.Mining));
-            }
-            _UpdateDevicesToMineTaskDelayed.ExecuteDelayed(CancellationToken.None);
-        }
-
-        private static void StopMiningOnDevices(params ComputeDevice[] stopDevices)
-        {
-            if (stopDevices == null || stopDevices.Length == 0) return;
-
-            foreach (var stopDevice in stopDevices)
-            {
-                stopDevice.IsPendingChange = true;
-                UpdateDevicesToMineStates.Enqueue((stopDevice, DeviceState.Stopped));
-            }
-            _UpdateDevicesToMineTaskDelayed.ExecuteDelayed(CancellationToken.None);
-        }
-
-        private static DelayedSingleExecActionTask _UpdateDevicesToMineTaskDelayed = new DelayedSingleExecActionTask
-            (
-            async () => await UpdateDevicesToMineTask(),
-            TimeSpan.FromMilliseconds(100)
-            );
-
-        private static async Task UpdateDevicesToMineTask()
-        {
-            // drain queue 
-            var _updateDeviceStates = new Dictionary<ComputeDevice, DeviceState>();
-            while (UpdateDevicesToMineStates.TryDequeue(out var pair))
-            {
-                var (device, state) = pair;
-                _updateDeviceStates[device] = state;
-            }
-            // and update states
-            foreach (var newState in _updateDeviceStates)
-            {
-                var device = newState.Key;
-                var setState = newState.Value;
-                device.State = setState; // THIS TRIGERS STATE CHANGE
-            }
-            var devicesToMine = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining).ToList();
-            foreach (var newState in _updateDeviceStates)
-            {
-                var device = newState.Key;
-                var setState = newState.Value;
-                //devicesToMine.Con
-            }
-
+            var allDevs = AvailableDevices.Devices;
+            var devicesToMine = allDevs.Where(dev => dev.State == DeviceState.Mining).ToList();
             if (devicesToMine.Count > 0) {
                 StartMining();
-                await MiningManager.UpdateMiningSession(devicesToMine, GetUsername());
+                MiningManager.UpdateMiningSession(devicesToMine, GetUsername());
             } else {
-                await StopMining();
-            }
-            // TODO implement and cleat devicePending state changed
-            foreach (var newState in _updateDeviceStates)
-            {
-                var device = newState.Key;
-                device.IsPendingChange = false;
+                StopMining(false);
             }
         }
 
@@ -137,129 +74,164 @@ namespace NHMCore
         }
 
         // TODO add check for any enabled algorithms
-        public static (bool started, string failReason) StartAllAvailableDevices()
+        public static (bool started, string failReason) StartAllAvailableDevices(bool isRpcCall = false)
         {
-            // TODO consider trying to start the error state devices as well
-            var devicesToStart = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Stopped);
+            var allDevs = AvailableDevices.Devices;
+            var devicesToStart = allDevs.Where(dev => dev.State == DeviceState.Stopped);
             if (devicesToStart.Count() == 0) {
                 return (false, "there are no new devices to start");
             }
-
             // TODO for now no partial success so if one fails send back that everything fails
             var started = true;
             var failReason = "";
 
-            foreach (var startDevice in devicesToStart)
-            {
-                var (deviceStarted, deviceFailReason) = StartDevice(startDevice);
-                started &= deviceStarted;
-                if (!deviceStarted)
-                {
-                    failReason += $"{startDevice.Name} {deviceFailReason};";
-                }
-            }
-
-            return (started, failReason);
-        }
-
-        public static bool StartSingleDevicePublic(ComputeDevice device)
-        {
-            if (device.IsPendingChange) return false;
-            StartDevice(device);
-            return true;
-        }
-
-        internal static (bool started, string failReason) StartDevice(ComputeDevice device, bool skipBenchmark = false)
-        {
-            // we can only start a device it is already stopped
-            if (device.State == DeviceState.Disabled)
-            {
-                return (false, "Device is disabled");
-            }
-
-            if (device.State != DeviceState.Stopped && !skipBenchmark)
-            {
-                return (false, "Device already started");
-            }
-
-            var started = true;
-            var failReason = "";
-            var allAlgorithmsDisabled = !device.AnyAlgorithmEnabled();
-            var isAllZeroPayingState = device.AllEnabledAlgorithmsZeroPaying();
-            // check if device has any benchmakrs
-            var needBenchmarkOrRebench = device.AnyEnabledAlgorithmsNeedBenchmarking();
-            if (allAlgorithmsDisabled)
-            {
-                device.State = DeviceState.Error;
-                started = false;
-                failReason = "Cannot start a device with all disabled algoirhtms";
-            }
-            else if (needBenchmarkOrRebench && !skipBenchmark)
-            {
-                BenchmarkManager.StartBenchmarForDevice(device, new BenchmarkStartSettings
+            // TODO we have a BUG HERE if device enabled with all disabled algorithms
+            var devicesToBenchmark = devicesToStart.Where(dev => dev.AllEnabledAlgorithmsWithoutBenchmarks() && dev.AnyAlgorithmEnabled());
+            var devicesToReBenchmark = devicesToStart.Where(dev => dev.HasEnabledAlgorithmsWithReBenchmark() && !devicesToBenchmark.Contains(dev));
+            foreach (var dev in devicesToBenchmark) {
+                dev.State = DeviceState.Benchmarking;
+                BenchmarkManager.StartBenchmarForDevice(dev, new BenchmarkStartSettings
                 {
                     StartMiningAfterBenchmark = true,
                     BenchmarkPerformanceType = BenchmarkPerformanceType.Standard,
                     BenchmarkOption = BenchmarkOption.ZeroOrReBenchOnly
                 });
             }
-            else if (isAllZeroPayingState)
+            foreach (var dev in devicesToReBenchmark)
+            {
+                dev.State = DeviceState.Benchmarking;
+                BenchmarkManager.StartBenchmarForDevice(dev, new BenchmarkStartSettings
+                {
+                    StartMiningAfterBenchmark = true,
+                    BenchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+                    BenchmarkOption = BenchmarkOption.ReBecnhOnly
+                });
+            }
+
+            var devicesInErrorState = devicesToStart.Where(dev => !dev.AnyAlgorithmEnabled() || dev.AllEnabledAlgorithmsZeroPaying()).ToList();
+            var devicesInErrorStateUUIDs = devicesInErrorState.Select(dev => dev.Uuid);
+            foreach (var dev in devicesInErrorState)
+            {
+                dev.State = DeviceState.Error;
+            }
+
+            // TODO check count
+            var devicesToMine = devicesToStart.Where(dev => !dev.AllEnabledAlgorithmsWithoutBenchmarks() && !devicesInErrorStateUUIDs.Contains(dev.Uuid)).ToList();
+            foreach (var dev in devicesToMine) {
+                dev.State = DeviceState.Mining;
+            }
+            UpdateDevicesToMine();
+            if (!isRpcCall) {
+                NiceHashStats.StateChanged();
+            }
+            RefreshDeviceListView?.Invoke(null, null);
+
+            return (started, "");
+        }
+
+        public static (bool started, string failReason) StartDevice(ComputeDevice device, bool skipBenhcmakrk = false)
+        {
+            // we can only start a device it is already stopped
+            if (device.State != DeviceState.Stopped && !skipBenhcmakrk)
+            {
+                return (false, "Device already started");
+            }
+
+            var started = true;
+            var failReason = "";
+            var isErrorState = !device.AnyAlgorithmEnabled();
+            var isAllZeroPayingState = device.AllEnabledAlgorithmsZeroPaying();
+            // check if device has any benchmakrs
+            var needsBenchmark = device.AllEnabledAlgorithmsWithoutBenchmarks();
+            var needsReBenchmark = device.HasEnabledAlgorithmsWithReBenchmark();
+            if (isErrorState || isAllZeroPayingState)
             {
                 device.State = DeviceState.Error;
                 started = false;
-                failReason = "No enabled algorithm is profitable";
+                failReason = isAllZeroPayingState ? "No enabled algorithm is profitable" : "Cannot start a device with all disabled algoirhtms";
+            }
+            else if (needsBenchmark && !skipBenhcmakrk)
+            {
+                device.State = DeviceState.Benchmarking;
+                BenchmarkManager.StartBenchmarForDevice(device, new BenchmarkStartSettings {
+                    StartMiningAfterBenchmark = true,
+                    BenchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+                    BenchmarkOption = BenchmarkOption.ZeroOnly
+                });
+            }
+            else if (needsReBenchmark && !skipBenhcmakrk)
+            {
+                device.State = DeviceState.Benchmarking;
+                BenchmarkManager.StartBenchmarForDevice(device, new BenchmarkStartSettings
+                {
+                    StartMiningAfterBenchmark = true,
+                    BenchmarkPerformanceType = BenchmarkPerformanceType.Standard,
+                    BenchmarkOption = BenchmarkOption.ReBecnhOnly
+                });
             }
             else
             {
-                StartMiningOnDevices(device);
+                device.State = DeviceState.Mining;
+                UpdateDevicesToMine();
             }
 
             RefreshDeviceListView?.Invoke(null, null);
+            NiceHashStats.StateChanged();
 
             return (started, failReason);
         }
 
         public static (bool stopped, string failReason) StopAllDevice() {
+            var allDevs = AvailableDevices.Devices;
             // TODO when starting and stopping we are not taking Pending and Error states into account
-            var devicesToStop = AvailableDevices.Devices.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
-            if (devicesToStop.Count() == 0)
-            {
+            var devicesToStop = allDevs.Where(dev => dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking);
+            if (devicesToStop.Count() == 0) {
                 return (false, "No new devices to stop");
             }
+            var devicesToStopBenchmarking = devicesToStop.Where(dev => dev.State == DeviceState.Benchmarking);
+            if (devicesToStopBenchmarking.Count() > 0) {
+                BenchmarkManager.StopBenchmarForDevices(devicesToStopBenchmarking);
+            }
+            var devicesToStopMining = devicesToStop.Where(dev => dev.State == DeviceState.Mining);
+            if (devicesToStopMining.Count() > 0) {
+                foreach (var stopDevice in devicesToStopMining) {
+                    stopDevice.State = DeviceState.Stopped;
+                }
+                UpdateDevicesToMine();
+            }
 
+            // TODO for now no partial success so if one fails send back that everything fails
             var stopped = true;
             var failReason = "";
-            foreach (var stopDevice in devicesToStop)
-            {
-                var (deviceStopped, deviceFailReason) = StopDevice(stopDevice);
-                stopped &= deviceStopped;
-                if (!deviceStopped)
-                {
-                    failReason += $"{stopDevice.Name} {deviceFailReason};";
-                }
-            }
+            //// try to stop all
+            //foreach (var dev in devicesToStop) {
+            //    var (success, msg) = StopDevice(dev, false);
+            //    if (!success) {
+            //        stopped = false;
+            //        failReason = msg;
+            //    }
+            //}
+            NiceHashStats.StateChanged();
+            StopMining(true);
             return (stopped, failReason);
         }
 
-        public static bool StopSingleDevicePublic(ComputeDevice device)
+        public static (bool stopped, string failReason) StopDevice(ComputeDevice device, bool refreshStateChange = true)
         {
-            if (device.IsPendingChange) return false;
-            StopDevice(device);
-            return true;
-        }
-
-        internal static (bool stopped, string failReason) StopDevice(ComputeDevice device)
-        {
-            // we can only stop a device it is mining or benchmarking
+            // we can only start a device it is already stopped
             switch (device.State)
             {
                 case DeviceState.Stopped:
                     return (false, $"Device {device.Uuid} already stopped");
                 case DeviceState.Benchmarking:
-                    BenchmarkManager.StopBenchmarForDevice(device); // TODO benchmarking is in a Task
+                    device.State = DeviceState.Stopped;
+                    BenchmarkManager.StopBenchmarForDevice(device);
+                    if (refreshStateChange) NiceHashStats.StateChanged();
                     return (true, "");
                 case DeviceState.Mining:
-                    StopMiningOnDevices(device);
+                    device.State = DeviceState.Stopped;
+                    UpdateDevicesToMine();
+                    if (refreshStateChange) NiceHashStats.StateChanged();
                     return (true, "");
                 default:
                     return (false, $"Cannot handle state {device.State.ToString()} for device {device.Uuid}");

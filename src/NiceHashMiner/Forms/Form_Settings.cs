@@ -39,6 +39,23 @@ namespace NiceHashMiner.Forms
             // Initialize tabs
             InitializeGeneralTab();
 
+            // initialization calls 
+            InitializeDevicesTab();
+            // link algorithm list with algorithm settings control
+            algorithmSettingsControl1.Enabled = false;
+            algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
+            //algorithmsListView1.RemoveRatioRates();
+
+
+            // set first device selected {
+            if (AvailableDevices.Devices.Count > 0)
+            {
+                _selectedComputeDevice = AvailableDevices.Devices[0];
+                algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+                groupBoxAlgorithmSettings.Text = string.Format(Tr("Algorithm settings for {0} :"),
+                    _selectedComputeDevice.Name);
+            }
+
             checkBox_DebugConsole.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.DebugConsole));
             checkBox_AutoStartMining.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.AutoStartMining));
             checkBox_HideMiningWindows.DataBindings.Add("Checked", ConfigManager.GeneralConfig, nameof(ConfigManager.GeneralConfig.HideMiningWindows));
@@ -213,6 +230,8 @@ namespace NiceHashMiner.Forms
 
             SetToolTip(Tr("When checked, {0} will mine regardless of profit.", NHMProductInfo.Name),
                             checkBox_MineRegardlessOfProfit, pictureBox_MineRegardlessOfProfit);
+
+            algorithmSettingsControl1.InitLocale(toolTip1);
         }
 
         private void SetToolTip(string text, params Control[] controls)
@@ -297,6 +316,14 @@ namespace NiceHashMiner.Forms
                 textBox_ElectricityCost.Text = ConfigManager.GeneralConfig.KwhPrice.ToString("0.0000");
             }
 
+            // set custom control referances
+            {
+                // here we want all devices
+                devicesListViewEnableControl1.SetComputeDevices(AvailableDevices.Devices.ToList());
+                devicesListViewEnableControl1.SetAlgorithmsListView(algorithmsListView1);
+                devicesListViewEnableControl1.SaveToGeneralConfig = true;
+            }
+
             // Add language selections list
             {
                 var langs = GetAvailableLanguagesNames();
@@ -337,6 +364,21 @@ namespace NiceHashMiner.Forms
         }
 
 #endregion //Tab General
+
+#region Tab Devices
+
+        private void InitializeDevicesTab()
+        {
+            InitializeDevicesCallbacks();
+        }
+
+        private void InitializeDevicesCallbacks()
+        {
+            devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
+            minDeviceProfitField.Leave += MinDeviceProfitFieldLeft;
+        }
+
+        #endregion //Tab Devices
 
         #endregion // Initializations
 
@@ -391,6 +433,36 @@ namespace NiceHashMiner.Forms
 
 #endregion //Tab General
 
+
+#region Tab Device
+
+        private void DevicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            algorithmSettingsControl1.Deselect();
+            // show algorithms
+            _selectedComputeDevice =
+                AvailableDevices.GetCurrentlySelectedComputeDevice(e.ItemIndex, ShowUniqueDeviceList);
+            algorithmsListView1.SetAlgorithms(_selectedComputeDevice, _selectedComputeDevice.Enabled);
+            groupBoxAlgorithmSettings.Text = string.Format(Tr("Algorithm settings for {0} :"),
+                _selectedComputeDevice.Name);
+            minDeviceProfitField.Enabled = true;
+            minDeviceProfitField.EntryText = _selectedComputeDevice.MinimumProfit.ToString("F2").Replace(',', '.');
+        }
+
+        private void MinDeviceProfitFieldLeft(object sender, EventArgs e)
+        {
+            if (_selectedComputeDevice != null && 
+                double.TryParse(minDeviceProfitField.EntryText, out var min))
+            {
+                if (min < 0) min = 0;
+
+                _selectedComputeDevice.MinimumProfit = min;
+            }
+        }
+
+#endregion //Tab Device
+
+
         private void ToolTip1_Popup(object sender, PopupEventArgs e)
         {
             toolTip1.ToolTipTitle = Tr("Explanation");
@@ -440,6 +512,15 @@ namespace NiceHashMiner.Forms
         }
 
 #endregion Form Callbacks
+
+        private void TabControlGeneral_Selected(object sender, TabControlEventArgs e)
+        {
+            // set first device selected {
+            if (AvailableDevices.Devices.Count > 0)
+            {
+                algorithmSettingsControl1.Deselect();
+            }
+        }
 
         private void CheckBox_Use3rdPartyMiners_CheckedChanged(object sender, EventArgs e)
         {

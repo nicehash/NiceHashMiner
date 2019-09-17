@@ -69,9 +69,8 @@ namespace NiceHashMiner.Forms.Components
         }
 
         public static object[] GetRowData(ComputeDevice d) {
-
-            var deviceState = d.State;
-            object[] rowData = { d.Enabled, d.GetFullName(), stateStr(deviceState), numStr((int)d.Temp), numStr((int)d.Load), numStr(d.FanSpeed), buttonLabel(deviceState), getAlgosStats(d) };
+            
+            object[] rowData = { d.Enabled, d.GetFullName(), stateStr(d.State), numStr((int)d.Temp), numStr((int)d.Load), numStr(d.FanSpeed), buttonLabel(d.State), getAlgosStats(d) };
             return rowData;
         }
 
@@ -114,10 +113,10 @@ namespace NiceHashMiner.Forms.Components
                     if (dev == null) return;
                     if (dev.State == DeviceState.Stopped) {
                         button.Value = Tr("Starting");
-                        ApplicationStateManager.StartSingleDevicePublic(dev);
+                        ApplicationStateManager.StartDevice(dev);
                     } else if (dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking) {
                         button.Value = Tr("Stopping");
-                        ApplicationStateManager.StopSingleDevicePublic(dev);
+                        ApplicationStateManager.StopDevice(dev);
                     }
                     Console.WriteLine("DataGridViewButtonCell button");
                     break;
@@ -173,14 +172,13 @@ namespace NiceHashMiner.Forms.Components
                 {
                     var tagUUID = (string)row.Tag;
                     var dev = AvailableDevices.Devices.FirstOrDefault(d => d.Uuid == tagUUID);
-                    var deviceState = dev.State;
                     SetRowColumnItemValue(row, Column.Enabled, dev.Enabled);
                     SetRowColumnItemValue(row, Column.Name, dev.GetFullName());
-                    SetRowColumnItemValue(row, Column.Status, stateStr(deviceState));
+                    SetRowColumnItemValue(row, Column.Status, stateStr(dev.State));
                     SetRowColumnItemValue(row, Column.Temperature, numStr((int)dev.Temp));
                     SetRowColumnItemValue(row, Column.Load, numStr((int)dev.Load));
                     SetRowColumnItemValue(row, Column.RPM, numStr(dev.FanSpeed));
-                    SetRowColumnItemValue(row, Column.StartStop, buttonLabel(deviceState));
+                    SetRowColumnItemValue(row, Column.StartStop, buttonLabel(dev.State));
                     SetRowColumnItemValue(row, Column.AlgorithmsOptions, getAlgosStats(dev));
                 }
             });

@@ -111,8 +111,8 @@
     <Compile Include="ApplicationStateManager\MiningState.cs" />
     <Compile Include="ApplicationStateManager\RatesAndStatsStates.cs" />
     <Compile Include="Benchmarking\BenchHelpers\PowerHelper.cs" />
+    <Compile Include="Benchmarking\BenchmarkHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkingAnalyzer.cs" />
-    <Compile Include="Benchmarking\BenchmarkingComputeDeviceHandler.cs" />
     <Compile Include="Benchmarking\BenchmarkManager.cs" />
     <Compile Include="Benchmarking\BenchmarkOption.cs" />
     <Compile Include="Benchmarking\BenchmarkStartSettings.cs" />

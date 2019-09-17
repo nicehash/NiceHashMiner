@@ -4,7 +4,7 @@ using NHMCore.Mining;
 
 namespace NHMCore.Benchmarking.BenchHelpers
 {
-    public class PowerHelper : IDisposable
+    public class PowerHelper
     {
         private Timer _timer;
 
@@ -28,7 +28,7 @@ namespace NHMCore.Benchmarking.BenchHelpers
                     _timer.Interval = value;
             }
         }
-
+        public bool IsRunning => _timer?.Enabled ?? false;
         public double LoadThreshold = 30;
 
         public PowerHelper(ComputeDevice dev)
@@ -56,11 +56,28 @@ namespace NHMCore.Benchmarking.BenchHelpers
             }
         }
 
+        public double EndAndReset()
+        {
+            _timer.Stop();
+            var power = CalculatePower();
+            _timer.Start();
+
+            return power;
+        }
+
         public double Stop()
         {
             _timer.Stop();
 
             return CalculatePower();
+        }
+
+        public double End()
+        {
+            var power = Stop();
+            _timer.Dispose();
+
+            return power;
         }
 
         private double CalculatePower()
@@ -72,11 +89,6 @@ namespace NHMCore.Benchmarking.BenchHelpers
             _started = false;
 
             return power;
-        }
-
-        public void Dispose()
-        {
-            _timer?.Dispose();
         }
     }
 }

@@ -16,7 +16,6 @@ using NHM.DeviceMonitoring.TDP;
 
 // static imports
 using static NHMCore.Stats.StatusCodes;
-using System.Threading;
 
 namespace NHMCore.Stats
 {
@@ -349,10 +348,6 @@ namespace NHMCore.Stats
             {
                 formState = ". Rig is in plugins form";
             }
-            if (ApplicationStateManager.IsInUpdateForm())
-            {
-                formState = ". Rig is in update form";
-            }
             // throw if pending
             if (rigStatusPending)
             {
@@ -462,7 +457,7 @@ namespace NHMCore.Stats
             if (allDisabled) {
                 throw new RpcException("All devices are disabled cannot start", ErrorCode.DisabledDevice);
             }
-            var (success, msg) = ApplicationStateManager.StartAllAvailableDevices();
+            var (success, msg) = ApplicationStateManager.StartAllAvailableDevices(true);
             if (!success) {
                 throw new RpcException(msg, ErrorCode.RedundantRpc);
             }
@@ -665,7 +660,6 @@ namespace NHMCore.Stats
         private static void SendExecuted(ExecutedInfo info, int? id, int code = 0, string message = null)
         {
             // First set status
-            NHM.Common.Logger.Debug("SOCKET", "SendExecuted-SendMinerStatus(false);");
             SendMinerStatus(false);
             // Then executed
             var data = new ExecutedCall(id ?? -1, code, message).Serialize();
@@ -677,23 +671,10 @@ namespace NHMCore.Stats
             }
         }
 
-        #endregion
+#endregion
 
-        // execute after 1seconds. Finish execution on last event after 1seconds
-        private static DelayedSingleExecActionTask _minerStateChangeStatusSendDelay = new DelayedSingleExecActionTask
-            (
-            StateChangedExec,
-            TimeSpan.FromSeconds(1)
-            );
-
-        public static void NotifyStateChangedTask()
+        public static void StateChanged()
         {
-            _minerStateChangeStatusSendDelay.ExecuteDelayed(CancellationToken.None);
-        }
-
-        public static void StateChangedExec()
-        {
-            NHM.Common.Logger.Debug("SOCKET", "StateChangedExec-SendMinerStatus(false);");
             SendMinerStatus(false);
         }
     }

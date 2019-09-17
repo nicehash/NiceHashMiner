@@ -53,6 +53,7 @@ namespace NHMCore
 
             // finally refresh state
             RefreshDeviceListView?.Invoke(null, null);
+            NiceHashStats.StateChanged();
         }
     }
 }

@@ -67,9 +67,6 @@ namespace NiceHashMiner.Forms.Components
             return value <= 0 ? "" : value.ToString();
         }
 
-
-        public bool IsInBenchmark { get; set; } = false;
-
         public void SetCurrentlySelected(ListViewItem lvi, ComputeDevice computeDevice)
         {
             // should not happen ever
@@ -81,7 +78,7 @@ namespace NiceHashMiner.Forms.Components
                 _selected = true;
                 _currentlySelectedAlgorithm = algorithm;
                 _currentlySelectedLvi = lvi;
-                Enabled = lvi.Checked && !IsInBenchmark;
+                Enabled = lvi.Checked;
 
                 groupBoxSelectedAlgorithmSettings.Text = string.Format(
                     Translations.Tr("Selected Algorithm: {0}"),
@@ -197,5 +194,19 @@ namespace NiceHashMiner.Forms.Components
         }
 
         #endregion
+
+        //private void buttonBenchmark_Click(object sender, EventArgs e) {
+        //    var device = new List<ComputeDevice>();
+        //    device.Add(_computeDevice);
+        //    var BenchmarkForm = new Form_Benchmark(
+        //                BenchmarkPerformanceType.Standard,
+        //                false, _currentlySelectedAlgorithm.NiceHashID);
+        //    BenchmarkForm.ShowDialog();
+        //    fieldBoxBenchmarkSpeed.EntryText = _currentlySelectedAlgorithm.BenchmarkSpeed.ToString();
+        //    // update lvi speed
+        //    if (_currentlySelectedLvi != null) {
+        //        _currentlySelectedLvi.SubItems[2].Text = Helpers.FormatSpeedOutput(_currentlySelectedAlgorithm.BenchmarkSpeed);
+        //    }
+        //}
     }
 }

@@ -10,8 +10,12 @@ using NHMCore.Stats;
 
 namespace NHMCore.Benchmarking
 {
+    // alias enum
+    using BenchmarkSelection = AlgorithmBenchmarkSettingsType;
     public static class BenchmarkManager
     {
+        private static bool _inBenchmark;
+
         private static int _benchmarkCurrentIndex;
 
         private static bool _hasFailedAlgorithms;
@@ -20,6 +24,8 @@ namespace NHMCore.Benchmarking
         private static readonly Dictionary<string, BenchmarkSettingsStatus> _benchDevAlgoStatus;
 
         private static readonly Dictionary<ComputeDevice, AlgorithmContainer> _statusCheckAlgos;
+
+        private static readonly List<BenchmarkHandler> _runningBenchmarkThreads;
 
         private static IBenchmarkForm _benchForm;
 
@@ -30,7 +36,7 @@ namespace NHMCore.Benchmarking
         public static event EventHandler<BenchEndEventArgs> OnBenchmarkEnd;
         public static event EventHandler<bool> InBenchmarkChanged;
 
-        public static AlgorithmBenchmarkSettingsType Selection { get; set; }
+        public static BenchmarkSelection Selection { get; set; }
 
         public static IReadOnlyList<Tuple<ComputeDevice, Queue<AlgorithmContainer>>> BenchDevAlgoQueue
         {
@@ -55,14 +61,18 @@ namespace NHMCore.Benchmarking
             set => _startMiningOnFinish = value;
         }
 
-        public static bool IsBenchmarking => BenchmarkingComputeDeviceHandler.IsBenchmarking;
-
-        // TODO what the hell is with the setter?
         public static bool InBenchmark
         {
-            get => IsBenchmarking;
+            get => _inBenchmark;
             private set
             {
+                _inBenchmark = value;
+                // If starting mining after, don't update for STOPPED status
+                if (value || StartMiningOnFinish)
+                {
+                    NiceHashStats.StateChanged();
+                }
+
                 InBenchmarkChanged?.Invoke(null, value);
             }
         }
@@ -80,10 +90,11 @@ namespace NHMCore.Benchmarking
 
         static BenchmarkManager()
         {
-            Selection = AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms;
+            Selection = BenchmarkSelection.SelectedUnbenchmarkedAlgorithms;
             _benchDevAlgoStatus = new Dictionary<string, BenchmarkSettingsStatus>();
             _benchDevAlgoQueue = new List<Tuple<ComputeDevice, Queue<AlgorithmContainer>>>();
             _statusCheckAlgos = new Dictionary<ComputeDevice, AlgorithmContainer>();
+            _runningBenchmarkThreads = new List<BenchmarkHandler>();
         }
 
 #region Public get helpers
@@ -99,6 +110,11 @@ namespace NHMCore.Benchmarking
                     yield return new Tuple<ComputeDevice, AlgorithmContainer>(kvp.Key, kvp.Value);
                 }
             }
+        }
+
+        public static IEnumerable<int> GetBenchmarkingDevices()
+        {
+            return BenchDevAlgoQueue.Select(t => t.Item1).Select(d => d.Index);
         }
 
 #endregion
@@ -162,14 +178,14 @@ namespace NHMCore.Benchmarking
             var isBenchmarked = !algorithm.BenchmarkNeeded;
             switch (Selection)
             {
-                case AlgorithmBenchmarkSettingsType.SelectedUnbenchmarkedAlgorithms when !isBenchmarked &&
+                case BenchmarkSelection.SelectedUnbenchmarkedAlgorithms when !isBenchmarked &&
                                                                                          algorithm.Enabled:
                     return true;
-                case AlgorithmBenchmarkSettingsType.UnbenchmarkedAlgorithms when !isBenchmarked:
+                case BenchmarkSelection.UnbenchmarkedAlgorithms when !isBenchmarked:
                     return true;
-                case AlgorithmBenchmarkSettingsType.ReBecnhSelectedAlgorithms when algorithm.Enabled:
+                case BenchmarkSelection.ReBecnhSelectedAlgorithms when algorithm.Enabled:
                     return true;
-                case AlgorithmBenchmarkSettingsType.AllAlgorithms:
+                case BenchmarkSelection.AllAlgorithms:
                     return true;
             }
 
@@ -189,16 +205,25 @@ namespace NHMCore.Benchmarking
         public static void Start(BenchmarkPerformanceType perfType)
         {
             _hasFailedAlgorithms = false;
+            lock (_runningBenchmarkThreads)
             lock (_statusCheckAlgos)
             {
                 _statusCheckAlgos.Clear();
+                _runningBenchmarkThreads.Clear();
 
                 foreach (var pair in BenchDevAlgoQueue)
                 {
-                    BenchmarkingComputeDeviceHandler.BenchmarkDeviceAlgorithms(pair.Item1, pair.Item2, perfType);
+                    var handler = new BenchmarkHandler(pair.Item1, pair.Item2, perfType);
+                    _runningBenchmarkThreads.Add(handler);
                 }
-                InBenchmark = true;
+                // Don't start until list is populated
+                foreach (var thread in _runningBenchmarkThreads)
+                {
+                    thread.Start();
+                }
             }
+
+            InBenchmark = true;
         }
 
         private static bool ShouldBenchmark(AlgorithmContainer algo, BenchmarkOption benchmarkOption)
@@ -223,27 +248,44 @@ namespace NHMCore.Benchmarking
             var perfType = benchmarkStartSettings.BenchmarkPerformanceType;
             var benchmarkOption = benchmarkStartSettings.BenchmarkOption;
             var unbenchmarkedAlgorithms = device.AlgorithmSettings.Where(algo => algo.Enabled && ShouldBenchmark(algo, benchmarkOption)).ToQueue();
-            BenchmarkingComputeDeviceHandler.BenchmarkDeviceAlgorithms(device, unbenchmarkedAlgorithms, perfType, startMiningAfterBenchmark);
+            lock (_runningBenchmarkThreads)
+            lock (_statusCheckAlgos)
+            {
+                var handler = new BenchmarkHandler(device, unbenchmarkedAlgorithms, perfType, startMiningAfterBenchmark);
+                _runningBenchmarkThreads.Add(handler);
+                handler.Start();
+            }
             InBenchmark = true;
         }
 
         public static void StopBenchmarForDevice(ComputeDevice device)
         {
-            BenchmarkingComputeDeviceHandler.StopBenchmarkingDevice(device);
+            lock (_runningBenchmarkThreads)
+            {
+                var handler = _runningBenchmarkThreads.FirstOrDefault(t => t.Device.Uuid == device.Uuid);
+                handler?.InvokeQuit();
+            }
         }
 
         public static void StopBenchmarForDevices(IEnumerable<ComputeDevice> devices)
         {
-            foreach (var device in devices)
+            lock (_runningBenchmarkThreads)
             {
-                BenchmarkingComputeDeviceHandler.StopBenchmarkingDevice(device);
+                foreach (var device in devices) {
+                    var handler = _runningBenchmarkThreads.FirstOrDefault(t => t.Device.Uuid == device.Uuid);
+                    handler?.InvokeQuit();
+                }
             }
         }
 
         public static void Stop()
         {
             InBenchmark = false;
-            BenchmarkingComputeDeviceHandler.StopBenchmarkingAllDevices();
+
+            lock (_runningBenchmarkThreads)
+            {
+                foreach (var handler in _runningBenchmarkThreads) handler.InvokeQuit();
+            }
         }
 
         private static void End()
@@ -279,15 +321,29 @@ namespace NHMCore.Benchmarking
             }
         }
 
+        public static void RemoveFromStatusCheck(ComputeDevice device)
+        {
+            lock (_statusCheckAlgos)
+            {
+                _statusCheckAlgos.Remove(device);
+            }
+        }
+
         public static void EndBenchmarkForDevice(ComputeDevice device, bool failedAlgos, bool startMiningAfterBenchmark = false)
         {
             _hasFailedAlgorithms = failedAlgos || _hasFailedAlgorithms;
-            
-            if (!IsBenchmarking) End(); // TODO this line here can show a popup window
-
-            if (startMiningAfterBenchmark)
+            lock (_runningBenchmarkThreads)
             {
-                ApplicationStateManager.StartDevice(device, true);
+                _runningBenchmarkThreads.RemoveAll(x => x.Device == device);
+
+                if (_runningBenchmarkThreads.Count <= 0)
+                    End();
+
+                if (startMiningAfterBenchmark) {
+                    ApplicationStateManager.StartDevice(device, true);
+                } else {
+                    ApplicationStateManager.StopDevice(device);
+                }
             }
         }
 

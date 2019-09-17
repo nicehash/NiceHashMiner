@@ -11,8 +11,6 @@ using System.Threading;
 namespace NHMCore
 {
     using NHM.UUID;
-    using System.Threading.Tasks;
-
     static partial class ApplicationStateManager
     {
         public static string RigID { get; } = UUID.GetDeviceB64UUID();
@@ -276,9 +274,9 @@ namespace NHMCore
         //    return false;
         //}
 
-        private static async Task<bool> StopMining()
+        private static bool StopMining(bool headless)
         {
-            await MiningManager.StopAllMiners();
+            MiningManager.StopAllMiners();
 
             PInvokeHelpers.AllowMonitorPowerdownAndSleep();
             StopMinerStatsCheckTimer();
@@ -306,7 +304,7 @@ namespace NHMCore
             {
                 return RigStatus.Pending;
             }
-            if (IsInBenchmarkForm() || IsInSettingsForm() || IsInPluginsForm() || IsInUpdateForm())
+            if (IsInBenchmarkForm() || IsInSettingsForm() || IsInPluginsForm())
             {
                 return RigStatus.Pending;
             }
@@ -362,8 +360,7 @@ namespace NHMCore
             Main,
             Benchmark,
             Settings,
-            Plugins,
-            Update
+            Plugins
         }
         private static CurrentFormState _currentForm = CurrentFormState.Main;
         public static CurrentFormState CurrentForm
@@ -371,9 +368,8 @@ namespace NHMCore
             get => _currentForm;
             set
             {
-                if (_currentForm == value) return;
                 _currentForm = value;
-                NiceHashStats.NotifyStateChangedTask();
+                NiceHashStats.StateChanged();
             }
         }
 
@@ -388,11 +384,6 @@ namespace NHMCore
         public static bool IsInPluginsForm()
         {
             return CurrentForm == CurrentFormState.Plugins;
-        }
-
-        public static bool IsInUpdateForm()
-        {
-            return CurrentForm == CurrentFormState.Update;
         }
     }
 }

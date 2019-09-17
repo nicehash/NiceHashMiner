@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using NHMCore;
-using NHMCore.Configs;
 using NHMCore.Benchmarking;
 using NHMCore.Mining;
 using NHMCore.Interfaces;
@@ -32,10 +31,6 @@ namespace NiceHashMiner.Forms
             bool autostart = false)
         {
             InitializeComponent();
-            // link algorithm list with algorithm settings control
-            algorithmSettingsControl1.Enabled = false;
-            algorithmsListView1.ComunicationInterface = algorithmSettingsControl1;
-
             Icon = NHMCore.Properties.Resources.logo;
             this.TopMost = NHMCore.Configs.ConfigManager.GeneralConfig.GUIWindowsAlwaysOnTop;
 
@@ -89,12 +84,6 @@ namespace NiceHashMiner.Forms
         }
 
         #region IBenchmarkCalculation methods
-
-        void FormHelpers.ICustomTranslate.CustomTranslate()
-        {
-            algorithmSettingsControl1.InitLocale(toolTip1);
-            devicesListViewEnableControl1.InitLocale();
-        }
 
         public void CalcBenchmarkDevicesAlgorithmQueue()
         {
@@ -173,6 +162,13 @@ namespace NiceHashMiner.Forms
             if (_dotCount > 3) _dotCount = 1;
             return new string('.', _dotCount);
         }
+        void FormHelpers.ICustomTranslate.CustomTranslate()
+        {
+            // TODO fix locale for benchmark enabled label
+            devicesListViewEnableControl1.InitLocale();
+            //benchmarkOptions1.InitLocale();
+            //algorithmsListView1.InitLocale();
+        }
 
 #region Start/Stop methods
 
@@ -213,7 +209,6 @@ namespace NiceHashMiner.Forms
 
             algorithmsListView1.IsInBenchmark = false;
             devicesListViewEnableControl1.IsInBenchmark = false;
-            algorithmSettingsControl1.IsInBenchmark = false;
 
             CloseBtn.Enabled = true;
         }
@@ -261,8 +256,6 @@ namespace NiceHashMiner.Forms
             CloseBtn.Enabled = false;
             algorithmsListView1.IsInBenchmark = true;
             devicesListViewEnableControl1.IsInBenchmark = true;
-            algorithmSettingsControl1.IsInBenchmark = true;
-            algorithmSettingsControl1.Enabled = false;
             // set benchmark pending status
             foreach (var deviceAlgosTuple in BenchmarkManager.BenchDevAlgoQueue)
             {
@@ -357,7 +350,7 @@ namespace NiceHashMiner.Forms
 
         private void DevicesListView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            algorithmSettingsControl1.Deselect();
+            //algorithmSettingsControl1.Deselect();
             // show algorithms
             var selectedComputeDevice =
                 AvailableDevices.GetCurrentlySelectedComputeDevice(e.ItemIndex, true);
