@@ -22,7 +22,11 @@ namespace NHMCore.Switching
         /// <summary>
         /// True iff there has been at least one SMA update
         /// </summary>
+#if FORCE_MINING
+        public static bool HasData { get => true; private set { } }
+#else
         public static bool HasData { get; private set; }
+#endif
 
         // private static Dictionary<AlgorithmType, List<double>> _recentPaying;
 
@@ -49,8 +53,8 @@ namespace NHMCore.Switching
                     if (cacheDict?.TryGetValue(algo, out paying) ?? false)
                         HasData = true;
 
-#if FILLSMA
-                    paying = 1;
+#if FORCE_MINING
+                    paying = 10000;
 #endif
 
                     _currentPayingRates[algo] = paying;
@@ -65,7 +69,7 @@ namespace NHMCore.Switching
             if (!Initialized) Initialize();
         }
 
-        #region Update Methods
+#region Update Methods
 
         // TODO maybe just swap the dictionaries???
         /// <summary>
@@ -160,9 +164,9 @@ namespace NHMCore.Switching
             Logger.Info(Tag, sb.ToString());
         }
 
-        #endregion
+#endregion
 
-        # region Get Methods
+#region Get Methods
         
         /// <summary>
         /// Attempt to get paying rate for an algorithm
@@ -244,7 +248,7 @@ namespace NHMCore.Switching
             return hasData;
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Helper to ensure initialization
