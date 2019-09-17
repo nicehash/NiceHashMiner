@@ -279,6 +279,9 @@
     <EmbeddedResource Include="Forms\FormEula.resx">
       <DependentUpon>FormEula.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Form_Benchmark.resx">
+      <DependentUpon>Form_Benchmark.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form_ChooseLanguage.resx">
       <DependentUpon>Form_ChooseLanguage.cs</DependentUpon>
     </EmbeddedResource>

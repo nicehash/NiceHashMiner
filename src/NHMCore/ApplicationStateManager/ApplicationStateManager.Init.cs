@@ -242,7 +242,7 @@ namespace NHMCore
             finally
             {
                 isInitFinished = true;
-                NiceHashStats.StateChanged();
+                NiceHashStats.NotifyStateChangedTask();
             }
         }
 

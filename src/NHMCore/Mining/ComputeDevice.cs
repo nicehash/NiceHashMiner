@@ -6,6 +6,7 @@ using NHM.DeviceMonitoring.TDP;
 using NHM.UUID;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
+using NHMCore.Stats;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -51,11 +52,34 @@ namespace NHMCore.Mining
         public DeviceState State
         {
             get => _state;
-            set
+            internal set
             {
+                if (_state == value) return;
                 _state = value;
                 MiningState.Instance.CalculateDevicesStateChange();
                 OnPropertyChanged();
+                NiceHashStats.NotifyStateChangedTask();
+            }
+        }
+
+        private readonly object _lock = new object();
+        private bool _isPendingChange { get; set; } = false;
+        public bool IsPendingChange
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _isPendingChange;
+                }
+            }
+            internal set
+            {
+                lock (_lock)
+                {
+                    if (_isPendingChange == value) return;
+                    _isPendingChange = value;
+                }
             }
         }
 
@@ -407,6 +431,13 @@ namespace NHMCore.Mining
             var ret = isAllZeroPayingState.All(t => t);
             return ret;
         }
+
+        public bool AnyEnabledAlgorithmsNeedBenchmarking()
+        {
+            var reBenchmarks = AlgorithmSettings.Where(algo => algo.Enabled && (algo.IsReBenchmark || algo.BenchmarkNeeded));
+            return reBenchmarks.Any();
+        }
+
         #endregion Checker
     }
 }
