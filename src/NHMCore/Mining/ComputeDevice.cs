@@ -6,6 +6,7 @@ using NHM.DeviceMonitoring.TDP;
 using NHM.UUID;
 using NHMCore.Configs;
 using NHMCore.Configs.Data;
+using NHMCore.Stats;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -57,6 +58,7 @@ namespace NHMCore.Mining
                 _state = value;
                 MiningState.Instance.CalculateDevicesStateChange();
                 OnPropertyChanged();
+                NiceHashStats.NotifyStateChangedTask();
             }
         }
 
@@ -408,6 +410,13 @@ namespace NHMCore.Mining
             var ret = isAllZeroPayingState.All(t => t);
             return ret;
         }
+
+        public bool AnyEnabledAlgorithmsNeedBenchmarking()
+        {
+            var reBenchmarks = AlgorithmSettings.Where(algo => algo.Enabled && (algo.IsReBenchmark || algo.BenchmarkNeeded));
+            return reBenchmarks.Any();
+        }
+
         #endregion Checker
     }
 }

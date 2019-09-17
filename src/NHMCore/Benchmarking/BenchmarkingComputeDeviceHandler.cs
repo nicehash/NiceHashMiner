@@ -159,6 +159,7 @@ namespace NHMCore.Benchmarking
             finally
             {
                 BenchmarkingHandlers.TryRemove(Device, out var _);
+                Device.State = DeviceState.Stopped;
                 BenchmarkManager.EndBenchmarkForDevice(Device, showFailed, startMining);
             }
         }

@@ -63,12 +63,6 @@ namespace NHMCore.Benchmarking
             get => IsBenchmarking;
             private set
             {
-                // If starting mining after, don't update for STOPPED status
-                if (value || StartMiningOnFinish)
-                {
-                    NiceHashStats.StateChanged();
-                }
-
                 InBenchmarkChanged?.Invoke(null, value);
             }
         }
@@ -289,15 +283,11 @@ namespace NHMCore.Benchmarking
         {
             _hasFailedAlgorithms = failedAlgos || _hasFailedAlgorithms;
             
-            if (!IsBenchmarking) End();
+            if (!IsBenchmarking) End(); // TODO this line here can show a popup window
 
             if (startMiningAfterBenchmark)
             {
                 ApplicationStateManager.StartDevice(device, true);
-            }
-            else
-            {
-                ApplicationStateManager.StopDevice(device);
             }
         }
 

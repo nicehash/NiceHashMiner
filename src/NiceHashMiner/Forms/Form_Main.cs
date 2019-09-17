@@ -411,7 +411,7 @@ namespace NiceHashMiner
             using (var updaterForm = new Form_ChooseUpdate())
             {
                 SetChildFormCenter(updaterForm);
-                ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Settings;
+                ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Update;
                 updaterForm.ShowDialog();
                 ApplicationStateManager.CurrentForm = ApplicationStateManager.CurrentFormState.Main;
             }
