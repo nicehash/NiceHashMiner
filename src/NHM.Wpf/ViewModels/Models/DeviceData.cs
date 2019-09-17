@@ -99,11 +99,11 @@ namespace NHM.Wpf.ViewModels.Models
             switch (Dev.State)
             {
                 case DeviceState.Stopped:
-                    ApplicationStateManager.StartDevice(Dev);
+                    ApplicationStateManager.StartSingleDevicePublic(Dev);
                     break;
                 case DeviceState.Mining:
                 case DeviceState.Benchmarking:
-                    ApplicationStateManager.StopDevice(Dev);
+                    ApplicationStateManager.StopSingleDevicePublic(Dev);
                     break;
             }
         }

@@ -114,10 +114,10 @@ namespace NiceHashMiner.Forms.Components
                     if (dev == null) return;
                     if (dev.State == DeviceState.Stopped) {
                         button.Value = Tr("Starting");
-                        ApplicationStateManager.StartDevice(dev);
+                        ApplicationStateManager.StartSingleDevicePublic(dev);
                     } else if (dev.State == DeviceState.Mining || dev.State == DeviceState.Benchmarking) {
                         button.Value = Tr("Stopping");
-                        ApplicationStateManager.StopDevice(dev);
+                        ApplicationStateManager.StopSingleDevicePublic(dev);
                     }
                     Console.WriteLine("DataGridViewButtonCell button");
                     break;

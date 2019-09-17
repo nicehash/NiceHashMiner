@@ -33,6 +33,7 @@ namespace NHMCore
 
             foreach (var startDevice in startDevices)
             {
+                startDevice.IsPendingChange = true;
                 UpdateDevicesToMineStates.Enqueue((startDevice, DeviceState.Mining));
             }
             _UpdateDevicesToMineTaskDelayed.ExecuteDelayed(CancellationToken.None);
@@ -44,6 +45,7 @@ namespace NHMCore
 
             foreach (var stopDevice in stopDevices)
             {
+                stopDevice.IsPendingChange = true;
                 UpdateDevicesToMineStates.Enqueue((stopDevice, DeviceState.Stopped));
             }
             _UpdateDevicesToMineTaskDelayed.ExecuteDelayed(CancellationToken.None);
@@ -86,6 +88,11 @@ namespace NHMCore
                 await StopMining();
             }
             // TODO implement and cleat devicePending state changed
+            foreach (var newState in _updateDeviceStates)
+            {
+                var device = newState.Key;
+                device.IsPendingChange = false;
+            }
         }
 
         private static void RestartMinersIfMining()
@@ -155,7 +162,14 @@ namespace NHMCore
             return (started, failReason);
         }
 
-        public static (bool started, string failReason) StartDevice(ComputeDevice device, bool skipBenchmark = false)
+        public static bool StartSingleDevicePublic(ComputeDevice device)
+        {
+            if (device.IsPendingChange) return false;
+            StartDevice(device);
+            return true;
+        }
+
+        internal static (bool started, string failReason) StartDevice(ComputeDevice device, bool skipBenchmark = false)
         {
             // we can only start a device it is already stopped
             if (device.State == DeviceState.Disabled)
@@ -227,7 +241,14 @@ namespace NHMCore
             return (stopped, failReason);
         }
 
-        public static (bool stopped, string failReason) StopDevice(ComputeDevice device)
+        public static bool StopSingleDevicePublic(ComputeDevice device)
+        {
+            if (device.IsPendingChange) return false;
+            StopDevice(device);
+            return true;
+        }
+
+        internal static (bool stopped, string failReason) StopDevice(ComputeDevice device)
         {
             // we can only stop a device it is mining or benchmarking
             switch (device.State)

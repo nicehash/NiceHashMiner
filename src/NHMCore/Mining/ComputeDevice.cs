@@ -62,6 +62,27 @@ namespace NHMCore.Mining
             }
         }
 
+        private readonly object _lock = new object();
+        private bool _isPendingChange { get; set; } = false;
+        public bool IsPendingChange
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _isPendingChange;
+                }
+            }
+            internal set
+            {
+                lock (_lock)
+                {
+                    if (_isPendingChange == value) return;
+                    _isPendingChange = value;
+                }
+            }
+        }
+
         public string B64Uuid
         {
             get
