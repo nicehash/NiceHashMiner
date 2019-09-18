@@ -11,6 +11,7 @@
         Title="{Binding Title}" 
         Icon="../Resources/logo.ico"
         Height="600" Width="900"
+        MinHeight="400" MinWidth="550"
         Closing="Window_Closing">
     <Window.DataContext>
         <viewModels:BenchmarkViewModel />

@@ -11,6 +11,7 @@
         Title="{Binding Title}" 
         Icon="../Resources/logo.ico"
         Height="450" Width="1000"
+        MinHeight="450" MinWidth="700"
         StateChanged="MainWindow_OnStateChanged"
         Loaded="MainWindow_OnLoaded"
         Closing="MainWindow_OnClosing">
