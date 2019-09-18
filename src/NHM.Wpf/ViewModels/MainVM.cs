@@ -77,6 +77,8 @@ namespace NHM.Wpf.ViewModels
 
         #region Currency-related properties
 
+        // TODO this section getting rather large, maybe good idea to break out into own class
+
         private string _timeUnit = TimeFactor.UnitType.ToString();
 
         private string TimeUnit
@@ -119,14 +121,57 @@ namespace NHM.Wpf.ViewModels
 
         public string MBtcPerTime => $"m{BtcPerTime}";
 
+        private string _scaledBtcPerTime;
+        public string ScaledBtcPerTime
+        {
+            get => _scaledBtcPerTime;
+            set
+            {
+                if (_scaledBtcPerTime == value) return;
+                _scaledBtcPerTime = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _scaledBtc = "BTC";
+        public string ScaledBtc
+        {
+            get => _scaledBtc;
+            set
+            {
+                if (_scaledBtc == value) return;
+                _scaledBtc = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string ProfitPerTime => $"Profit ({CurrencyPerTime})";
 
-        public double GlobalRate => (WorkingMiningDevs?.Sum(d => d.Payrate) ?? 0) / 1000;
+        public double GlobalRate
+        {
+            get
+            {
+                // sum is in mBTC already
+                var sum = WorkingMiningDevs?.Sum(d => d.Payrate) ?? 0;
+                var scale = 1000;
+                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && sum < 100)
+                {
+                    ScaledBtcPerTime = MBtcPerTime;
+                    scale = 1;
+                }
+                else
+                {
+                    ScaledBtcPerTime = BtcPerTime;
+                }
+
+                return sum / scale;
+            }
+        }
 
         public double GlobalRateFiat => WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0;
 
         private double _btcBalance;
-        public double BtcBalance
+        private double BtcBalance
         {
             get => _btcBalance;
             set
@@ -134,6 +179,26 @@ namespace NHM.Wpf.ViewModels
                 _btcBalance = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(FiatBalance));
+                OnPropertyChanged(nameof(ScaledBtcBalance));
+            }
+        }
+
+        public double ScaledBtcBalance
+        {
+            get
+            {
+                var scale = 1;
+                if (ConfigManager.GeneralConfig.AutoScaleBTCValues && _btcBalance < 0.1)
+                {
+                    scale = 1000;
+                    ScaledBtc = "mBTC";
+                }
+                else
+                {
+                    ScaledBtc = "BTC";
+                }
+
+                return _btcBalance * scale;
             }
         }
 

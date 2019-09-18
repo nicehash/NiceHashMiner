@@ -208,7 +208,7 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Global rate:" Style="{StaticResource StatusBarLabel}" />
                     <TextBlock Text="{Binding GlobalRate, StringFormat=F8}" Style="{StaticResource StatusBarDataLabel}" />
-                    <TextBlock Text="{Binding BtcPerTime}" Style="{StaticResource StatusBarLabel}" />
+                    <TextBlock Text="{Binding ScaledBtcPerTime}" Style="{StaticResource StatusBarLabel}" />
                     <TextBlock Text="{Binding GlobalRateFiat, StringFormat=F2}" Style="{StaticResource StatusBarDataLabel}" />
                     <TextBlock Text="{Binding CurrencyPerTime}" Style="{StaticResource StatusBarLabel}" />
                 </StackPanel>
@@ -217,8 +217,8 @@
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Balance:" Style="{StaticResource StatusBarLabel}" />
-                    <TextBlock Text="{Binding BtcBalance, StringFormat=F8}" Style="{StaticResource StatusBarDataLabel}" />
-                    <TextBlock Text="BTC" Style="{StaticResource StatusBarLabel}" />
+                    <TextBlock Text="{Binding ScaledBtcBalance, StringFormat=F8}" Style="{StaticResource StatusBarDataLabel}" />
+                    <TextBlock Text="{Binding ScaledBtc}" Style="{StaticResource StatusBarLabel}" />
                     <TextBlock Text="{Binding FiatBalance, StringFormat=F2}" Style="{StaticResource StatusBarDataLabel}" />
                     <TextBlock Text="{Binding Currency}" Style="{StaticResource StatusBarLabel}" />
                 </StackPanel>
