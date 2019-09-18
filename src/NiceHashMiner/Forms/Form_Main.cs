@@ -7,9 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 
-using System.IO; // not needed check warning
-using Paths = NHM.Common.Paths; // not needed check warning
-
 using Logger = NHM.Common.Logger;
 
 using NHMCore;
