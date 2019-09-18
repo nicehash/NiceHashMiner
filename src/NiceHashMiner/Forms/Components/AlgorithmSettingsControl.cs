@@ -82,9 +82,10 @@ namespace NiceHashMiner.Forms.Components
                 _currentlySelectedLvi = lvi;
                 Enabled = lvi.Checked && !IsInBenchmark;
 
+                var selectedAlgoName = $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})";
                 groupBoxSelectedAlgorithmSettings.Text = string.Format(
-                    Translations.Tr("Selected Algorithm: {0}"),
-                    $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})");
+                    Translations.Tr("Selected Algorithm: {0}"), ""); // keep the translation
+                labelSelectedAlgorithm.Text = selectedAlgoName;
 
                 field_PowerUsage.EntryText = ParseDoubleDefault(algorithm.PowerUsage);
                 var unit = algorithm.IDs[0].GetUnitPerSecond();
@@ -101,6 +102,7 @@ namespace NiceHashMiner.Forms.Components
                 else 
                 {
                     secondaryFieldBoxBenchmarkSpeed.LabelText = Translations.Tr("Secondary Benchmark Speed") + ":";
+                    secondaryFieldBoxBenchmarkSpeed.EntryText = "";
                     secondaryFieldBoxBenchmarkSpeed.Enabled = false;
                 }
                 
