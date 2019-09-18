@@ -21,5 +21,12 @@
         <controls:SettingsContainer Title="Form Windows Always On Top"
                                     Enabled="{Binding Config.GUIWindowsAlwaysOnTop}"
                                     Description="When checked, NiceHash Miner Form Windows will be set as Top Most and will be covered only by other Top Most Windows." />
+        <controls:SettingsContainer Title="Use IFTTT"
+                                    Enabled="{Binding Config.UseIFTTT}"
+                                    Description="If enabled, NiceHash Miner will use the API Key you provide to notify you when profitability has gone below the profitability you have configured.\nSee instructions for details on configuring this functionality.">
+            <controls:SettingsContainer Title="IFTTT API Key">
+                <TextBox Text="{Binding Config.IFTTTKey}" />
+            </controls:SettingsContainer>
+        </controls:SettingsContainer>
     </StackPanel>
 </UserControl>
