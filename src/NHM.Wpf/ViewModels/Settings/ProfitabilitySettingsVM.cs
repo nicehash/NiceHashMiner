@@ -8,6 +8,16 @@ namespace NHM.Wpf.ViewModels.Settings
     {
         public IEnumerable<TimeUnitType> TimeUnits { get; } = GetEnumValues<TimeUnitType>();
 
+        public bool MinProfitEnabled
+        {
+            get => !Config.MineRegardlessOfProfit;
+            set
+            {
+                Config.MineRegardlessOfProfit = !value;
+                OnPropertyChanged();
+            }
+        }
+
         public ProfitabilitySettingsVM(GeneralConfig confObj)
             : base(confObj, "Profitability")
         { }
