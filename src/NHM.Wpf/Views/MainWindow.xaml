@@ -163,11 +163,19 @@
                     <GridView>
                         <GridViewColumn Header="Device" DisplayMemberBinding="{Binding Name}" />
                         <GridViewColumn Header="Speeds" DisplayMemberBinding="{Binding Speeds, Converter={StaticResource HashConv}}" />
-                        <GridViewColumn Header="{Binding MBtcPerTime}" DisplayMemberBinding="{Binding Payrate, StringFormat=F3}" />
-                        <GridViewColumn Header="{Binding CurrencyPerTime}" DisplayMemberBinding="{Binding FiatPayrate, StringFormat=F2}" />
+                        <!-- GridViewColumn Header property does not update with data bindings. So setting content here directly
+                             fixes this problem and headers update properly -->
+                        <GridViewColumn DisplayMemberBinding="{Binding Payrate, StringFormat=F3}">
+                            <GridViewColumnHeader Content="{Binding MBtcPerTime}" />
+                        </GridViewColumn>
+                        <GridViewColumn DisplayMemberBinding="{Binding FiatPayrate, StringFormat=F2}">
+                            <GridViewColumnHeader Content="{Binding CurrencyPerTime}" />
+                        </GridViewColumn>
                         <GridViewColumn Header="Power Usage (W)" DisplayMemberBinding="{Binding PowerUsage, StringFormat=F2}" />
                         <GridViewColumn Header="Power Cost" DisplayMemberBinding="{Binding PowerCost, StringFormat=F2}" />
-                        <GridViewColumn Header="{Binding ProfitPerTime}" DisplayMemberBinding="{Binding Profit, StringFormat=F2}" />
+                        <GridViewColumn DisplayMemberBinding="{Binding Profit, StringFormat=F2}">
+                            <GridViewColumnHeader Content="{Binding ProfitPerTime}" />
+                        </GridViewColumn>
                     </GridView>
                 </ListView.View>
             </ListView>
