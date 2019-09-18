@@ -113,9 +113,9 @@ namespace NHM.Wpf.ViewModels
 
         public string ProfitPerTime => $"Profit ({CurrencyPerTime})";
 
-        public double GlobalRate => MiningDevs?.Sum(d => d.Payrate) ?? 0;
+        public double GlobalRate => (MiningDevs?.OfType<MiningData>().Sum(d => d.Payrate) ?? 0) / 1000;
 
-        public double GlobalRateFiat => MiningDevs?.Sum(d => d.FiatPayrate) ?? 0;
+        public double GlobalRateFiat => MiningDevs?.OfType<MiningData>().Sum(d => d.FiatPayrate) ?? 0;
 
         private double _btcBalance;
         public double BtcBalance
