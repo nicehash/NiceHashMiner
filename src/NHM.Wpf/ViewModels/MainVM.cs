@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
+using NHM.Common.Enums;
 using NHMCore.Mining.IdleChecking;
 
 namespace NHM.Wpf.ViewModels
@@ -44,6 +45,13 @@ namespace NHM.Wpf.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        /// <summary>
+        /// Elements of <see cref="MiningDevs"/> that represent actual devices (i.e. not total rows) and
+        /// are in the mining state.
+        /// </summary>
+        private IEnumerable<MiningData> WorkingMiningDevs =>
+            MiningDevs?.OfType<MiningData>().Where(d => d.Dev.State == DeviceState.Mining);
 
         public IReadOnlyList<string> ServiceLocations => StratumService.MiningLocationNames;
 
@@ -113,9 +121,9 @@ namespace NHM.Wpf.ViewModels
 
         public string ProfitPerTime => $"Profit ({CurrencyPerTime})";
 
-        public double GlobalRate => (MiningDevs?.OfType<MiningData>().Sum(d => d.Payrate) ?? 0) / 1000;
+        public double GlobalRate => (WorkingMiningDevs?.Sum(d => d.Payrate) ?? 0) / 1000;
 
-        public double GlobalRateFiat => MiningDevs?.OfType<MiningData>().Sum(d => d.FiatPayrate) ?? 0;
+        public double GlobalRateFiat => WorkingMiningDevs?.Sum(d => d.FiatPayrate) ?? 0;
 
         private double _btcBalance;
         public double BtcBalance
