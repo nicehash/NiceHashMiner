@@ -1,5 +1,4 @@
 ﻿using NHM.Common.Enums;
-using System;
 #if CUSTOM_ENDPOINTS
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -12,7 +11,7 @@ namespace NHM.Common
 {
     public static class StratumServiceHelpers
     {
-#region CUSTOM_ENDPOINTS
+        #region CUSTOM_ENDPOINTS
 #if CUSTOM_ENDPOINTS
         class StratumTemplateEntry
         {
@@ -73,30 +72,21 @@ namespace NHM.Common
             }
         }
 #endif
-#endregion CUSTOM_ENDPOINTS
+        #endregion CUSTOM_ENDPOINTS
 
-        private static string GetAlgorithmUrlName(AlgorithmType algorithmType)
+        private static (string name, bool ok) GetAlgorithmUrlName(AlgorithmType algorithmType)
         {
-            if (algorithmType < 0)
-            {
-                return "";
-            }
-            const string NOT_FOUND = "NameNotFound type not supported";
-            var name = Enum.GetName(typeof(AlgorithmType), algorithmType) ?? NOT_FOUND;
-            if (name == NOT_FOUND)
-            {
-                return "";
-            }
-            // strip out the _UNUSED
-            name = name.Replace("_UNUSED", "");
-            return name.ToLower();
+            if (algorithmType < 0) return ("", false);
+            var (name, ok) = algorithmType.GetName();
+            // return lowercase
+            return (name.ToLower(), ok);
         }
 
         public static string GetLocationUrl(AlgorithmType algorithmType, string miningLocation, NhmConectionType conectionType)
         {
-            var name = GetAlgorithmUrlName(algorithmType);
-            // if name is empty return
-            if (name == "") return "";
+            var (name, ok) = GetAlgorithmUrlName(algorithmType);
+            // if name is not ok return
+            if (!ok) return "";
 
             var nPort = 3333 + algorithmType;
             var sslPort = 30000 + nPort;

@@ -28,7 +28,7 @@ namespace NHM.Wpf.ViewModels.Models
                 if (Algo.BenchmarkErred)
                     return string.IsNullOrWhiteSpace(Algo.ErrorMessage) ? Translations.Tr("Error") : Algo.ErrorMessage;
                 if (Algo.BenchmarkSpeed > 0)
-                    return Helpers.FormatDualSpeedOutput(Algo.BenchmarkSpeed, Algo.SecondaryBenchmarkSpeed, Algo.IDs);
+                    return Helpers.FormatSpeedOutput(Algo.AnnotatedSpeeds);
 
                 return Translations.Tr("none");
             }

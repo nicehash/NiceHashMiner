@@ -388,7 +388,7 @@ namespace NHMCore.Mining
             }
             if (BenchmarkSpeed > 0)
             {
-                return Helpers.FormatDualSpeedOutput(BenchmarkSpeed, SecondaryBenchmarkSpeed, IDs);
+                return Helpers.FormatSpeedOutput(AnnotatedSpeeds);
             }
             if (!IsPendingString() && !string.IsNullOrEmpty(BenchmarkStatus))
             {

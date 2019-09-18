@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Windows.Forms;
-using NHMCore.Mining;
-using NHMCore.Utils;
-
+using NHM.Common.Enums;
 using NHMCore;
+using NHMCore.Mining;
 
 namespace NiceHashMiner.Forms.Components
 {
@@ -88,13 +87,13 @@ namespace NiceHashMiner.Forms.Components
                     $"{algorithm.AlgorithmName} ({algorithm.MinerBaseTypeName})");
 
                 field_PowerUsage.EntryText = ParseDoubleDefault(algorithm.PowerUsage);
-                var unit = Helpers.GetUnitForAlgorithmType(algorithm.IDs[0]);
+                var unit = algorithm.IDs[0].GetUnitPerSecond();
                 fieldBoxBenchmarkSpeed.LabelText = Translations.Tr("Benchmark Speed") + $" ({unit}):";
                 fieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.BenchmarkSpeed);
                 richTextBoxExtraLaunchParameters.Text = ParseStringDefault(algorithm.ExtraLaunchParameters);
                 if (algorithm.IsDual) 
                 {
-                    var secondaryUnit = Helpers.GetUnitForAlgorithmType(algorithm.IDs[0]);
+                    var secondaryUnit = algorithm.IDs[1].GetUnitPerSecond();
                     secondaryFieldBoxBenchmarkSpeed.LabelText = Translations.Tr("Secondary Benchmark Speed") + $" ({secondaryUnit}):";
                     secondaryFieldBoxBenchmarkSpeed.EntryText = ParseDoubleDefault(algorithm.SecondaryBenchmarkSpeed);
                     secondaryFieldBoxBenchmarkSpeed.Enabled = true;

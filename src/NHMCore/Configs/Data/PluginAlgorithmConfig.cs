@@ -1,7 +1,6 @@
 ﻿using NHM.Common.Enums;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace NHMCore.Configs.Data
 {
@@ -38,8 +37,8 @@ namespace NHMCore.Configs.Data
 
         public string GetAlgorithmStringID()
         {
-            var IDs = GetAlgorithmIDs();
-            var algorithmName = string.Join("+", IDs.Select(type => Enum.GetName(typeof(AlgorithmType), type)));
+            var IDs = GetAlgorithmIDs().ToArray();
+            var algorithmName = IDs.GetNameFromAlgorithmTypes();
             return $"{algorithmName}_{PluginUUID}";
         }
 

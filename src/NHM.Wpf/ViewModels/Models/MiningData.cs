@@ -71,9 +71,8 @@ namespace NHM.Wpf.ViewModels.Models
             {
                 if (Stats == null) return Dev.State.ToString();
 
-                var firstAlgo = Stats.Speeds.Count > 0 ? Stats.Speeds[0].type : AlgorithmType.NONE;
-                var secAlgo = Stats.Speeds.Count > 1 ? Stats.Speeds[1].type : AlgorithmType.NONE;
-                var algoName = Helpers.GetNameFromAlgorithmTypes(firstAlgo, secAlgo);
+                var algorithmTypes = Stats.Speeds.Select(pair => pair.type).ToArray();
+                var algoName = algorithmTypes.GetNameFromAlgorithmTypes();
 
                 return $"{algoName} ({Stats.MinerName})";
             }

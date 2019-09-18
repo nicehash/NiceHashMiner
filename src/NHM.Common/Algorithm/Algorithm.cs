@@ -1,7 +1,6 @@
 ﻿using NHM.Common.Enums;
-using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace NHM.Common.Algorithm
 {
@@ -12,7 +11,7 @@ namespace NHM.Common.Algorithm
             MinerID = minerID;
             IDs = ids;
             Speeds = ids.Select(id => 0d).ToList();
-            AlgorithmName = string.Join("+", IDs.Select(type => Enum.GetName(typeof(AlgorithmType), type)));
+            AlgorithmName = ids.GetNameFromAlgorithmTypes();
         }
         // Identity
         public IReadOnlyList<AlgorithmType> IDs { get; }

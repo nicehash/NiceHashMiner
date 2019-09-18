@@ -6,6 +6,7 @@ using System.Security.Principal;
 using NHM.Common.Enums;
 using System.Linq;
 using NHM.Common;
+using System.Collections.Generic;
 
 namespace NHMCore.Utils
 {
@@ -96,61 +97,20 @@ namespace NHMCore.Utils
             }
         }
 
-        public static string FormatSpeedOutput(double speed, AlgorithmType algorithmType, string separator = " ")
+        public static string FormatSpeedOutput(IEnumerable<Hashrate> hashrates)
         {
-            string ret = "";
-
-            if (speed < 1000)
-                ret = (speed).ToString("F3", CultureInfo.InvariantCulture) + separator;
-            else if (speed < 100000)
-                ret = (speed * 0.001).ToString("F3", CultureInfo.InvariantCulture) + separator + "k";
-            else if (speed < 100000000)
-                ret = (speed * 0.000001).ToString("F3", CultureInfo.InvariantCulture) + separator + "M";
-            else
-                ret = (speed * 0.000000001).ToString("F3", CultureInfo.InvariantCulture) + separator + "G";
-
-            var unit = GetUnitForAlgorithmType(algorithmType);        
-            return ret + unit;
-        }
-
-        public static string GetUnitForAlgorithmType(AlgorithmType algorithmType)
-        {
-            switch (algorithmType)
+            if (hashrates.Count() > 0)
             {
-                //case AlgorithmType.Equihash:
-                case AlgorithmType.ZHash:
-                case AlgorithmType.Beam:
-                case AlgorithmType.BeamV2:
-                    return "Sol/s";
-                case AlgorithmType.GrinCuckaroo29:
-                case AlgorithmType.GrinCuckatoo31:
-                case AlgorithmType.CuckooCycle:
-                case AlgorithmType.GrinCuckarood29:
-                    return "G/s";
-                default:
-                    return "H/s";
-            }
-        }
-
-        public static string GetNameFromAlgorithmTypes(params AlgorithmType[] ids)
-        {
-            var names = ids.Where(id => (int)id > -1).Select(id => Enum.GetName(typeof(AlgorithmType), id));
-            return string.Join("+", names);
-        }
-
-        // TODO disable params for ids
-        public static string FormatDualSpeedOutput(double primarySpeed, double secondarySpeed, params AlgorithmType[] ids)
-        {
-            if (secondarySpeed > 0 && ids.Length > 0)
-            {
-                // TODO second uses first
-                return FormatSpeedOutput(primarySpeed, ids[0]) + " + " + FormatSpeedOutput(secondarySpeed, ids[0]);
-            }
-            else if (ids.Length > 0)
-            {
-                return FormatSpeedOutput(primarySpeed, ids[0]);
+                var hashrateStrings = hashrates.Select(hashrate => hashrate.ToString());
+                return string.Join(" + ", hashrateStrings);
             }
             return "N/A";
+        }
+
+        public static string FormatSpeedOutput(IEnumerable<(AlgorithmType type, double speed)> speedPairs)
+        {
+            var hashrates = speedPairs.Select(pair => new Hashrate(pair.speed, pair.type));
+            return FormatSpeedOutput(hashrates);
         }
 
         // Checking the version using >= will enable forward compatibility, 

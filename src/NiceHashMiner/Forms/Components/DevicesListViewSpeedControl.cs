@@ -382,9 +382,7 @@ namespace NiceHashMiner.Forms.Components
             foreach(var minerStats in minersMiningStats)
             {
                 // get data
-                var algorithmFirstType = minerStats.Speeds.Count > 0 ? minerStats.Speeds[0].type : AlgorithmType.NONE;
-                var algorithmSecondType = minerStats.Speeds.Count > 1 ? minerStats.Speeds[1].type : AlgorithmType.NONE;
-                var algorithmName = Helpers.GetNameFromAlgorithmTypes(algorithmFirstType, algorithmSecondType);
+                var algorithmName = minerStats.Speeds.Select(pair => pair.type).ToArray().GetNameFromAlgorithmTypes();
                 var minerName = minerStats.MinerName;
                 var name = minerName != "" ? $"{algorithmName} ({minerName})" : algorithmName;
                 var firstSpeed = minerStats.Speeds.Count > 0 ? minerStats.Speeds[0].speed : 0d;
@@ -418,18 +416,16 @@ namespace NiceHashMiner.Forms.Components
                         // This is a total row
                         var minerRevenue = minerStats.TotalPayingRate();
                         var minerProfit = minerStats.TotalPayingRateDeductPowerCost(kwhPriceInBtc);
-                        UpdateRowInfo(item, firstSpeed, secondSpeed, algorithmFirstType, minerRevenue, minerProfit, minerStats.PowerCost(kwhPriceInBtc), minerStats.GetPowerUsage());
+                        UpdateRowInfo(item, minerStats.Speeds, minerRevenue, minerProfit, minerStats.PowerCost(kwhPriceInBtc), minerStats.GetPowerUsage());
                     }
                     else if (item.Tag is ComputeDevice dev && minerStats.DeviceUUIDs.Any(uuid => uuid == dev.Uuid))
                     {
                         var deviceStat = devicesMiningStats.Where(stat => stat.DeviceUUID == dev.Uuid).FirstOrDefault();
                         if (deviceStat == null) continue;
                         // This is a dev row
-                        var firstDeviceSpeed = deviceStat.Speeds.Count > 0 ? deviceStat.Speeds[0].speed : 0d;
-                        var secondtDeviceSpeed = deviceStat.Speeds.Count > 1 ? deviceStat.Speeds[1].speed : 0d;
                         var deviceRevenue = deviceStat.TotalPayingRate();
                         var deviceProfit = deviceStat.TotalPayingRateDeductPowerCost(kwhPriceInBtc);
-                        UpdateRowInfo(item, firstDeviceSpeed, secondtDeviceSpeed, algorithmFirstType, deviceRevenue, deviceProfit, deviceStat.PowerCost(kwhPriceInBtc), deviceStat.GetPowerUsage());
+                        UpdateRowInfo(item, deviceStat.Speeds, deviceRevenue, deviceProfit, deviceStat.PowerCost(kwhPriceInBtc), deviceStat.GetPowerUsage());
                     }
                 }
             }
@@ -457,12 +453,12 @@ namespace NiceHashMiner.Forms.Components
             return $"{unit}/{timeUnit}";
         }
         
-        private static void UpdateRowInfo(ListViewItem item, double speed, double secSpeed, AlgorithmType algorithmType, double revenue, double profit,
+        private static void UpdateRowInfo(ListViewItem item, IEnumerable<(AlgorithmType type, double speed)> speedPairs,  double revenue, double profit,
             double power, double powerUsage)
         {
             try
             {
-                item.SubItems[(int)Column.Speeds].Text = Helpers.FormatDualSpeedOutput(speed, secSpeed, algorithmType);
+                item.SubItems[(int)Column.Speeds].Text = Helpers.FormatSpeedOutput(speedPairs);
                 //item.SubItems[SecSpeed].Text = secSpeed > 0 ? Helpers.FormatSpeedOutput(secSpeed) : "";
 
                 var fiat = ExchangeRateApi.ConvertFromBtc(profit * TimeFactor.TimeUnit);

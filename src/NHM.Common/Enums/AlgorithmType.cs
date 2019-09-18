@@ -105,4 +105,48 @@ namespace NHM.Common.Enums
         BeamV2 = 45,
         #endregion // NiceHashAPI
     }
+
+    public static class AlgorithmTypeExtensionMethods
+    {
+#pragma warning disable 0618
+        public static string GetUnitPerSecond(this AlgorithmType algorithmType)
+        {
+            switch (algorithmType)
+            {
+                case AlgorithmType.Equihash:
+                case AlgorithmType.ZHash:
+                case AlgorithmType.Beam:
+                case AlgorithmType.BeamV2:
+                    return "Sol/s";
+                case AlgorithmType.GrinCuckaroo29:
+                case AlgorithmType.GrinCuckatoo31:
+                case AlgorithmType.CuckooCycle:
+                case AlgorithmType.GrinCuckarood29:
+                    return "G/s";
+                default:
+                    return "H/s";
+            }
+        }
+#pragma warning restore 0618
+
+        public static (string name, bool ok) GetName(this AlgorithmType algorithmType)
+        {
+            const string NA = "N/A";
+            var name = Enum.GetName(typeof(AlgorithmType), algorithmType) ?? NA; // get name or not available
+            var ok = name != NA;
+            return (name, ok);
+        }
+
+        public static string GetNameFromAlgorithmTypes(this AlgorithmType[] ids)
+        {
+            var names = new string[ids.Length];
+            for (int i = 0; i < ids.Length; i++)
+            {
+                var (name, _) = ids[i].GetName();
+                // TODO should we check if ok?
+                names[i] = name;
+            }
+            return string.Join("+", names);
+        }
+    }
 }
