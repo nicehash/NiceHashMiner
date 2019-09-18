@@ -10,37 +10,16 @@
              d:DataContext="{d:DesignInstance settings:AdvancedGeneralVM}">
     <StackPanel>
         <controls:SettingsContainer Title="Autoscale BTC Values"
-                                   Enabled="{Binding Config.AutoScaleBTCValues}"
-                                   Description="Check it, if you would like to see the BTC values autoscale to the appropriate scale." />
-        <controls:SettingsContainer Title="Disable Windows Error Reporting"
-                                   Enabled="{Binding Config.DisableWindowsErrorReporting}"
-                                   Description="When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable." />
-        <controls:SettingsContainer Title="NVIDIA P0 State"
-                                   Enabled="{Binding Config.NVIDIAP0State}"
-                                   Description="When checked, NiceHash Miner Legacy will change all supported NVIDIA GPUs to P0 state.\nThis will slightly increase performance on certain algorithms.\nThis feature needs administrator privileges to be activated." />
-        <controls:SettingsContainer Title="Allow Multiple Instances"
-                                   Enabled="{Binding Config.AllowMultipleInstances}"
-                                   Description="When unchecked NiceHash Miner Legacy will allow only one instance running (it will close a new started instance if there is an opened instance running)." />
-        <controls:SettingsContainer Title="Run script when CUDA GPU is lost"
-                                   Enabled="{Binding Config.RunScriptOnCUDA_GPU_Lost}"
-                                   Description="When checked, NiceHash Miner Legacy will run OnGPUsLost.bat in case at least one CUDA GPU is lost,\nby default script should restart whole system." />
-        <controls:SettingsContainer Title="Show Driver Version Warning"
-                                    Enabled="{Binding Config.ShowDriverVersionWarning}"
-                                    Description="When checked, NiceHash Miner would issue a warning if\na less optimal version of a driver is installed." />
+                                    Enabled="{Binding Config.AutoScaleBTCValues}"
+                                    Description="Check it, if you would like to see the BTC values autoscale to the appropriate scale." />
         <controls:SettingsContainer Title="Disable Windows Error Reporting"
                                     Enabled="{Binding Config.DisableWindowsErrorReporting}"
-                                    Description="When checked, in the event of a miner crash,\nNiceHash Miner would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable." />
+                                    Description="When checked, in the event of a miner crash,\nNiceHash Miner Legacy would still be able to restart the miner again as it is not blocked by Windows error message.\nIt is recommended to have this setting checked for uninterrupted mining process because mining programs are not 100% stable." />
+        <controls:SettingsContainer Title="Allow Multiple Instances"
+                                    Enabled="{Binding Config.AllowMultipleInstances}"
+                                    Description="When unchecked NiceHash Miner Legacy will allow only one instance running (it will close a new started instance if there is an opened instance running)." />
         <controls:SettingsContainer Title="Form Windows Always On Top"
                                     Enabled="{Binding Config.GUIWindowsAlwaysOnTop}"
                                     Description="When checked, NiceHash Miner Form Windows will be set as Top Most and will be covered only by other Top Most Windows." />
-        <controls:SettingsContainer Title="Show GPU PCIe Bus IDs"
-                                    Enabled="{Binding Config.ShowGPUPCIeBusIDs}"
-                                    Description="When checked, GPUs PCIe bus IDs will be visible in the device name dashboard." />
-        <controls:SettingsContainer Title="Disable Device Status Monitoring"
-                                    Enabled="{Binding Config.DisableDeviceStatusMonitoring}"
-                                    Description="When checked, NiceHash Miner will not retrive CPU, AMD and NVIDIA device status (Temperature, Load, Fan Speed and Power Usage)." />
-        <controls:SettingsContainer Title="Disable Device Power Mode Settings"
-                                    Enabled="{Binding Config.DisableDevicePowerModeSettings}"
-                                    Description="When checked, NiceHash Miner will not attempt to set device power mode settings (currently NVIDIA only)." />
     </StackPanel>
 </UserControl>
