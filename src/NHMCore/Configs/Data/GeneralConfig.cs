@@ -6,6 +6,7 @@ using NHMCore.Utils;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using NHMCore.Stats;
 
 namespace NHMCore.Configs.Data
 {
@@ -54,7 +55,11 @@ namespace NHMCore.Configs.Data
 
 
 
-        public TimeUnitType TimeUnit { get; set; } = TimeUnitType.Day;
+        public TimeUnitType TimeUnit
+        {
+            get => TimeFactor.UnitType;
+            set => TimeFactor.UnitType = value;
+        }
 
         public int ServiceLocation
         {

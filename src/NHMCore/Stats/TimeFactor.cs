@@ -1,4 +1,5 @@
-﻿using NHM.Common.Enums;
+﻿using System;
+using NHM.Common.Enums;
 
 namespace NHMCore.Stats
 {
@@ -6,7 +7,7 @@ namespace NHMCore.Stats
     {
         public static double TimeUnit { get; private set; }
 
-        private static TimeUnitType _unitType;
+        private static TimeUnitType _unitType = TimeUnitType.Day;
 
         public static TimeUnitType UnitType
         {
@@ -32,7 +33,16 @@ namespace NHMCore.Stats
                         TimeUnit = 365;
                         break;
                 }
+
+                OnUnitTypeChanged?.Invoke(null, value);
             }
+        }
+
+        public static event EventHandler<TimeUnitType> OnUnitTypeChanged;
+
+        public static double ConvertFromDay(double value)
+        {
+            return value * TimeUnit;
         }
     }
 }

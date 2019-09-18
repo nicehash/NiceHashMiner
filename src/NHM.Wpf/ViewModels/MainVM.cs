@@ -69,7 +69,24 @@ namespace NHM.Wpf.ViewModels
 
         #region Currency-related properties
 
-        private string PerTime => $"/{TimeFactor.UnitType}";
+        private string _timeUnit = TimeFactor.UnitType.ToString();
+
+        private string TimeUnit
+        {
+            get => _timeUnit;
+            set
+            {
+                _timeUnit = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(PerTime));
+                OnPropertyChanged(nameof(CurrencyPerTime));
+                OnPropertyChanged(nameof(BtcPerTime));
+                OnPropertyChanged(nameof(MBtcPerTime));
+                OnPropertyChanged(nameof(ProfitPerTime));
+            }
+        }
+
+        private string PerTime => $"/{TimeUnit}";
 
         private string _currency = ExchangeRateApi.ActiveDisplayCurrency;
 
@@ -133,6 +150,8 @@ namespace NHM.Wpf.ViewModels
             };
 
             ApplicationStateManager.DisplayBTCBalance += UpdateBalance;
+
+            TimeFactor.OnUnitTypeChanged += (_, unit) => { TimeUnit = unit.ToString(); };
         }
 
         // TODO I don't like this way, a global refresh and notify would be better
