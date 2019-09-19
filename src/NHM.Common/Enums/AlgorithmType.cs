@@ -132,9 +132,16 @@ namespace NHM.Common.Enums
         public static (string name, bool ok) GetName(this AlgorithmType algorithmType)
         {
             const string NA = "N/A";
-            var name = Enum.GetName(typeof(AlgorithmType), algorithmType) ?? NA; // get name or not available
-            var ok = name != NA;
-            return (name, ok);
+            try
+            {
+                var name = Enum.GetName(typeof(AlgorithmType), algorithmType) ?? NA; // get name or not available
+                var ok = name != NA;
+                return (name, ok);
+            }
+            catch
+            {
+                return (NA, false);
+            }
         }
 
         public static string GetNameFromAlgorithmTypes(this AlgorithmType[] ids)
