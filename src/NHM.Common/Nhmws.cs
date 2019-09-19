@@ -11,7 +11,7 @@ namespace NHM.Common
 #elif TESTNETDEV
         public const string NhmSocketAddress = "https://nhmws-test-dev.nicehash.com/v3/nhml"; 
 #else
-        public const string NhmSocketAddress = "https://nhmws-new.nicehash.com/v3/nhml"; // new platform
+        public const string NhmSocketAddress = "https://nhmws.nicehash.com/v3/nhml";
 #endif
     }
 }
