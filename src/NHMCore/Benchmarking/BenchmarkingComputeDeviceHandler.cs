@@ -26,8 +26,7 @@ namespace NHMCore.Benchmarking
             if (BenchmarkingHandlers.TryGetValue(computeDevice, out var benchmarkHandler))
             {
                 // update algorithms
-                // update
-                Logger.Debug("BenchmarkManager-new", $"Already benchmarking");
+                Logger.Debug("BenchmarkingComputeDeviceHandler", $"Already benchmarking");
                 // TODO UPDATE algorithms and skip creating new task
                 return;
             }
