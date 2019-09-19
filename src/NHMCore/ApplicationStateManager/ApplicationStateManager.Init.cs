@@ -53,7 +53,7 @@ namespace NHMCore
                 });
                 // STEP
                 // Checking System Memory
-                loader.PrimaryProgress.Report((Tr("Checking System Specs"), nextProgPerc()));
+                loader.PrimaryProgress?.Report((Tr("Checking System Specs"), nextProgPerc()));
                 await Task.Run(() => SystemSpecs.QueryWin32_OperatingSystemDataAndLog());
 
                 // TODO extract in function
@@ -76,7 +76,7 @@ namespace NHMCore
                 };
                 var devDetectionProgress = new Progress<DeviceDetectionStep>(step => {
                     var msg = detectionStepMessage(step);
-                    loader.PrimaryProgress.Report((msg, nextProgPerc()));
+                    loader.PrimaryProgress?.Report((msg, nextProgPerc()));
                 });
                 await DeviceDetection.DetectDevices(devDetectionProgress);
                 // add devices
@@ -123,7 +123,7 @@ namespace NHMCore
 
                 // STEP
                 DeviceMonitorManager.DisableDevicePowerModeSettings = ConfigManager.GeneralConfig.DisableDevicePowerModeSettings;
-                loader.PrimaryProgress.Report((Tr("Initializing device monitoring"), nextProgPerc()));
+                loader.PrimaryProgress?.Report((Tr("Initializing device monitoring"), nextProgPerc()));
                 var monitors = await DeviceMonitorManager.GetDeviceMonitors(AvailableDevices.Devices.Select(d => d.BaseDevice), detectionResult.IsDCHDriver);
                 foreach (var monitor in monitors)
                 {
@@ -136,7 +136,7 @@ namespace NHMCore
 
                 // STEP
                 // load plugins
-                loader.PrimaryProgress.Report((Tr("Loading miner plugins..."), nextProgPerc()));
+                loader.PrimaryProgress?.Report((Tr("Loading miner plugins..."), nextProgPerc()));
                 // Plugin Loading
                 MinerPluginsManager.LoadMinerPlugins();
                 // commit again benchmarks after loading plugins
@@ -147,18 +147,18 @@ namespace NHMCore
 
                 // STEP
                 // connect to nhmws
-                loader.PrimaryProgress.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
+                loader.PrimaryProgress?.Report((Tr("Connecting to nhmws..."), nextProgPerc()));
                 // Init ws connection
                 NiceHashStats.StartConnection(Nhmws.NhmSocketAddress);
 
                 // STEP
                 // disable windows error reporting
-                loader.PrimaryProgress.Report((Tr("Setting Windows error reporting..."), nextProgPerc()));
+                loader.PrimaryProgress?.Report((Tr("Setting Windows error reporting..."), nextProgPerc()));
                 Helpers.DisableWindowsErrorReporting(ConfigManager.GeneralConfig.DisableWindowsErrorReporting);
 
                 // STEP
                 // Nvidia p0
-                loader.PrimaryProgress.Report((Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
+                loader.PrimaryProgress?.Report((Tr("Changing all supported NVIDIA GPUs to P0 state..."), nextProgPerc()));
                 if (ConfigManager.GeneralConfig.NVIDIAP0State && AvailableDevices.HasNvidia)
                 {
                     Helpers.SetNvidiaP0State();
@@ -172,7 +172,7 @@ namespace NHMCore
                     loader.SecondaryTitle = Tr("Downloading Miner Binaries");
                     loader.SecondaryVisible = true;
 
-                    loader.PrimaryProgress.Report((Tr("Downloading Miner Binaries..."), nextProgPerc()));
+                    loader.PrimaryProgress?.Report((Tr("Downloading Miner Binaries..."), nextProgPerc()));
                     await MinerPluginsManager.DownloadMissingMinersBins(loader.SecondaryProgress, ExitApplication.Token);
                     //await MinersDownloader.MinersDownloadManager.DownloadAndExtractOpenSourceMinersWithMyDownloaderAsync(progressDownload, ExitApplication.Token);
                     loader.SecondaryVisible = false;
@@ -187,7 +187,7 @@ namespace NHMCore
                     loader.SecondaryTitle = Tr("Updating Miner Binaries");
                     loader.SecondaryVisible = true;
 
-                    loader.PrimaryProgress.Report((Tr("Updating Miner Binaries..."), nextProgPerc()));
+                    loader.PrimaryProgress?.Report((Tr("Updating Miner Binaries..."), nextProgPerc()));
                     await MinerPluginsManager.UpdateMinersBins(loader.SecondaryProgress, ExitApplication.Token);
                     loader.SecondaryVisible = false;
                     if (ExitApplication.IsCancellationRequested) return;
@@ -210,13 +210,13 @@ namespace NHMCore
 
                 // STEP
                 // VC_REDIST check
-                loader.PrimaryProgress.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
+                loader.PrimaryProgress?.Report((Tr("Checking VC_REDIST..."), nextProgPerc()));
                 VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance.InstallVcRedist();
 
                 // STEP
                 if (FirewallRules.RunFirewallRulesOnStartup)
                 {
-                    loader.PrimaryProgress.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
+                    loader.PrimaryProgress?.Report((Tr("Checking Firewall Rules..."), nextProgPerc()));
                     if (FirewallRules.IsFirewallRulesOutdated())
                     {
                         // requires UAC
@@ -226,12 +226,12 @@ namespace NHMCore
                 }
                 else
                 {
-                    loader.PrimaryProgress.Report((Tr("Skipping Firewall Rules..."), nextProgPerc()));
+                    loader.PrimaryProgress?.Report((Tr("Skipping Firewall Rules..."), nextProgPerc()));
                 }
 
                 // STEP
                 // Cross reference plugin indexes
-                loader.PrimaryProgress.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
+                loader.PrimaryProgress?.Report((Tr("Cross referencing miner device IDs..."), nextProgPerc()));
                 // Detected devices cross reference with miner indexes
                 await MinerPluginsManager.DevicesCrossReferenceIDsWithMinerIndexes();
             }
