@@ -27,6 +27,7 @@ namespace InstallerHelper
             string TRADEMARK = "NICEHASH ®";
             
             string APP_ID = "com.nicehash.nhm";
+            #warning "APP_GUID #2 THE APP_GUID MUST BE EQUAL TO THE INSTALLER HELPER ONE. REFACTOR THIS PART"
             string APP_GUID = "8abad8e2-b957-48ed-92ba-4339c2a40e78";
 
             if(BASE_NAME == "NiceHashMinerLegacy")
