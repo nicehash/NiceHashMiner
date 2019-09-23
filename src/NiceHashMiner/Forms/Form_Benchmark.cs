@@ -143,22 +143,6 @@ namespace NiceHashMiner.Forms
 
 #endregion
 
-        private void CopyBenchmarks()
-        {
-            Logger.Debug("CopyBenchmarks", "Checking for benchmarks to copy");
-            foreach (var cDev in AvailableDevices.Devices)
-                // check if copy
-                if (!cDev.Enabled && cDev.BenchmarkCopyUuid != null)
-                {
-                    var copyCdevSettings = AvailableDevices.GetDeviceWithUuid(cDev.BenchmarkCopyUuid);
-                    if (copyCdevSettings != null)
-                    {
-                        Logger.Info("CopyBenchmarks", $"Copy from {cDev.Uuid} to {cDev.BenchmarkCopyUuid}");
-                        cDev.CopyBenchmarkSettingsFrom(copyCdevSettings);
-                    }
-                }
-        }
-
         private void BenchmarkingTimer_Tick(object sender, EventArgs e)
         {
             foreach (var check in BenchmarkManager.GetStatusCheckAlgos())
