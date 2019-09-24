@@ -58,6 +58,8 @@ namespace NiceHashMiner.Forms
             BenchmarkManager.OnStepUp += StepUpBenchmarkStepProgress;
             BenchmarkManager.OnBenchmarkEnd += EndBenchmark;
 
+            BenchmarkManager.DisableLastBenchmarkingFailed = true;
+
             devicesListViewEnableControl1.Enabled = true;
             devicesListViewEnableControl1.SetDeviceSelectionChangedCallback(DevicesListView1_ItemSelectionChanged);
 
@@ -312,6 +314,7 @@ namespace NiceHashMiner.Forms
 
         private void FormBenchmark_New_FormClosing(object sender, FormClosingEventArgs e)
         {
+            BenchmarkManager.DisableLastBenchmarkingFailed = false;
             BenchmarkManager.OnAlgoStatusUpdate -= SetCurrentStatus;
             BenchmarkManager.OnStepUp -= StepUpBenchmarkStepProgress;
             BenchmarkManager.OnBenchmarkEnd -= EndBenchmark;

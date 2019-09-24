@@ -9,6 +9,7 @@ using NHM.Common.Enums;
 using NHMCore.Configs;
 using NHMCore.Utils;
 using NHMCore.Mining.Plugins;
+using NHMCore.Benchmarking;
 
 namespace NHMCore.Mining
 {
@@ -36,6 +37,20 @@ namespace NHMCore.Mining
         /// Used for converting SMA values to BTC/H/Day
         /// </summary>
         protected const double Mult = 0.000000001;
+
+        // so we don't want to go to a benchmark loop when benchmarking fails
+        private bool _lastBenchmarkingFailed = false;
+        public bool LastBenchmarkingFailed
+        {
+            get
+            {
+                return _lastBenchmarkingFailed && !BenchmarkManager.DisableLastBenchmarkingFailed;
+            }
+            set
+            {
+                _lastBenchmarkingFailed = value;
+            }
+        }
 
         #region Identity
 
@@ -195,7 +210,7 @@ namespace NHMCore.Mining
         /// <summary>
         /// Indicates whether this algorithm requires a benchmark
         /// </summary>
-        public virtual bool BenchmarkNeeded => BenchmarkSpeed <= 0;
+        public virtual bool BenchmarkNeeded => BenchmarkSpeed <= 0 && !LastBenchmarkingFailed;
 
         protected void NotifySpeedChanged()
         {
