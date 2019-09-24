@@ -57,7 +57,8 @@
                   Grid.ColumnSpan="2"
                   ItemsSource="{Binding SelectedAlgos}" 
                   SelectedItem="{Binding SelectedAlgo}" 
-                  IsEnabled="{Binding AlgosEnabled, Mode=OneWay}">
+                  IsEnabled="{Binding AlgosEnabled, Mode=OneWay}"
+                  ContextMenuOpening="ContextMenu_OnOpening">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Enabled">
@@ -82,7 +83,7 @@
                     <MenuItem Header="Enable Only This" Command="{Binding EnableOnlyThisCommand}" />
                     <MenuItem Header="Enable Benchmarked Only" Command="{Binding EnableBenchedCommand}" />
                     <Separator />
-                    <MenuItem Header="Clear Algorithm Speed" Command="{Binding ClearSpeedsCommand}"></MenuItem>
+                    <MenuItem Header="Clear Algorithm Speed" Command="{Binding ClearSpeedsCommand}" />
                 </ContextMenu>
             </ListView.ContextMenu>
         </ListView>
