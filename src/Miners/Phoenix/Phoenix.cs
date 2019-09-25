@@ -108,7 +108,7 @@ namespace Phoenix
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "PhoenixMiner_4.5c_Windows");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "PhoenixMiner_4.6c_Windows");
             var binPath = Path.Combine(pluginRootBins, "PhoenixMiner.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);

@@ -436,7 +436,19 @@ namespace Phoenix
                     ShortName = "-tstart",
                     DefaultValue = "0",
                     Delimiter = ","
-                }
+                },
+                /// <summary>
+                /// <n> Level of hardware monitoring: 0 - temperature and fan speed only; 1 - temperature, fan speed, and power;
+                /// 2 - full (include core/memory clocks, voltages, P-states). The default is 1.
+                /// </summary>
+                new MinerOption
+                {
+                    Type = MinerOptionType.OptionWithMultipleParameters,
+                    ID = "phoenix_hstats",
+                    ShortName = "-hstats",
+                    DefaultValue = "2",
+                    Delimiter = ","
+                }                
             }
         };
 

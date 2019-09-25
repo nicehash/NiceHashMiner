@@ -20,20 +20,20 @@ namespace Phoenix
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             MinerSystemEnvironmentVariables = PluginInternalSettings.MinerSystemEnvironmentVariables;
-            // https://bitcointalk.org/index.php?topic=2647654.0 current 4.5c
+            // https://bitcointalk.org/index.php?topic=2647654.0 current 4.6c
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.11/PhoenixMiner_4.5c_Windows.zip",
-                    "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?zN9UxYZa" // original
+                    "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12/PhoenixMiner_4.6c_Windows.7z",
+                    "https://mega.nz/#F!2VskDJrI!lsQsz1CdDe8x5cH3L8QaBw?2ZMgGaJS" // original
                 }
             };
         }
 
         public override string PluginUUID => "ac9c763f-c901-41ef-9df1-c80099c9f942";
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(2, 3);
         public override string Name => "Phoenix";
 
         public override string Author => "domen.kirnkrefl@nicehash.com";
