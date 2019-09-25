@@ -20,19 +20,19 @@ namespace NBMiner
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
-            // https://github.com/NebuTech/NBMiner/releases/ current 24.4
+            // https://github.com/NebuTech/NBMiner/releases/ current 25.2
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/NebuTech/NBMiner/releases/download/v24.4/NBMiner_24.4_Win.zip", // original
+                    "https://github.com/NebuTech/NBMiner/releases/download/v25.2/NBMiner_25.2_Win.zip", // original
                 }
             };
         }
 
         public override string PluginUUID => "6c07f7a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 3);
+        public override Version Version => new Version(2, 4);
         public override string Name => "NBMiner";
 
         public override string Author => "Dillon Newell";
@@ -108,7 +108,7 @@ namespace NBMiner
             var miner = CreateMiner() as IBinAndCwdPathsGettter;
             if (miner == null) return;
             var minerBinPath = miner.GetBinAndCwdPaths().Item1;
-            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json -RUN");
+            var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "--device-info-json --no-watchdog");
             var mappedDevs = DevicesListParser.ParseNBMinerOutput(output, devices.ToList());
 
             foreach (var kvp in mappedDevs)
