@@ -16,19 +16,19 @@ namespace XMRig
         {
             // set default internal settings
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
-            // https://github.com/xmrig/xmrig current 3.1.1
+            // https://github.com/xmrig/xmrig current 3.1.3
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>
                 {
-                    "https://github.com/xmrig/xmrig/releases/download/v3.1.1/xmrig-3.1.1-msvc-win64.zip" // original
+                    "https://github.com/xmrig/xmrig/releases/download/v3.1.3/xmrig-3.1.3-msvc-win64.zip" // original
                 }
             };
         }
 
         public override string PluginUUID => "1046ea50-c261-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(1, 3);
+        public override Version Version => new Version(2, 1);
 
         public override string Name => "XMRig";
 
@@ -41,13 +41,14 @@ namespace XMRig
         public override Dictionary<BaseDevice, IReadOnlyList<Algorithm>> GetSupportedAlgorithms(IEnumerable<BaseDevice> devices)
         {
             var supported = new Dictionary<BaseDevice, IReadOnlyList<Algorithm>>();
-            var algorithms = new List<Algorithm>
-            {
-                new Algorithm(PluginUUID, AlgorithmType.CryptoNightR)
-            };
-            var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();
 
-            foreach (var cpu in cpus) supported.Add(cpu, algorithms);
+            var cpus = devices.Where(dev => dev is CPUDevice).Cast<CPUDevice>();
+            foreach (var cpu in cpus) {
+                supported.Add(cpu, new List<Algorithm>
+                {
+                    new Algorithm(PluginUUID, AlgorithmType.CryptoNightR)
+                });
+            }
 
             return supported;
         }

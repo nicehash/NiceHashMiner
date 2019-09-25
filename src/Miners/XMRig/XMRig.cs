@@ -118,7 +118,7 @@ namespace XMRig
         public override Tuple<string, string> GetBinAndCwdPaths()
         {
             var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "xmrig-3.1.0");
+            var pluginRootBins = Path.Combine(pluginRoot, "bins", "xmrig-3.1.3");
             var binPath = Path.Combine(pluginRootBins, "xmrig.exe");
             var binCwd = pluginRootBins;
             return Tuple.Create(binPath, binCwd);
