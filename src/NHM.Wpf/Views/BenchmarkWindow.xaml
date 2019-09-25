@@ -139,7 +139,7 @@
                 <RadioButton IsChecked="{Binding AlgoSelection, Converter={StaticResource EnumConv}, ConverterParameter=SelectedUnbenchmarkedAlgorithms}">
                     Benchmark Selected Unbenchmarked Algorithms
                 </RadioButton>
-                <RadioButton IsChecked="{Binding AlgoSelection, Converter={StaticResource EnumConv}, ConverterParameter=AllAlgorithms}">
+                <RadioButton IsChecked="{Binding AlgoSelection, Converter={StaticResource EnumConv}, ConverterParameter=ReBecnhSelectedAlgorithms}">
                     Benchmark All Selected Algorithms
                 </RadioButton>
             </StackPanel>
