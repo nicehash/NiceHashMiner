@@ -17,10 +17,10 @@ namespace NHMCore.Mining.Plugins
     {
         public static VC_REDIST_x64_2015_DEPENDENCY_PLUGIN Instance { get; } = new VC_REDIST_x64_2015_DEPENDENCY_PLUGIN();
         VC_REDIST_x64_2015_DEPENDENCY_PLUGIN() { }
-        public string PluginUUID => "VC_REDIST_x64_2015";
+        public string PluginUUID => "VC_REDIST_x64_2015_2019";
 
         public Version Version => new Version(1, 0);
-        public string Name => "VC_REDIST_x64_2015";
+        public string Name => "VC_REDIST_x64_2015_2019";
 
         public string Author => "stanko@nicehash.com";
 
@@ -49,7 +49,7 @@ namespace NHMCore.Mining.Plugins
 
         public string VcRedistBinPath()
         {
-            var binPath = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "bins", "vc_redist.x64.exe");
+            var binPath = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "bins", "VC_redist.x64_2015_2019.exe");
             return binPath;
         }
 
@@ -85,7 +85,7 @@ namespace NHMCore.Mining.Plugins
 
         IEnumerable<string> IMinerBinsSource.GetMinerBinsUrlsForPlugin()
         {
-            yield return "https://github.com/nicehash/NiceHashMinerTest/releases/download/1.9.1.5/vc_redist.x64.exe.7z";
+            yield return "https://github.com/nicehash/MinerDownloads/releases/download/v1.0/VC_redist.x64_2015_2019.7z";
         }
     }
 }
