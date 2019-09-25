@@ -6,9 +6,19 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
+#if TESTNET
+[assembly: AssemblyTitle("NiceHash Miner TESTNET")]
+[assembly: AssemblyDescription("NiceHash Miner is simple to use mining tool")]
+[assembly: AssemblyProduct("NiceHash Miner TESTNET")]
+#elif TESTNETDEV
+[assembly: AssemblyTitle("NiceHash Miner TESTNETDEV")]
+[assembly: AssemblyDescription("NiceHash Miner is simple to use mining tool")]
+[assembly: AssemblyProduct("NiceHash Miner TESTNETDEV")]
+#else
 [assembly: AssemblyTitle("NiceHash Miner")]
 [assembly: AssemblyDescription("NiceHash Miner is simple to use mining tool")]
 [assembly: AssemblyProduct("NiceHash Miner")]
+#endif
 
 [assembly: AssemblyCompany("H-BIT, d.o.o.")]
 [assembly: AssemblyCopyright("H-BIT, d.o.o. ©  2019")]

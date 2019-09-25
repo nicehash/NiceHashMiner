@@ -13,9 +13,13 @@ namespace NHMCore
         private static readonly string BuildTag = "PRODUCTION";
 #endif
 
-        public static void ASSERT_COMPATIBLE_BUILDS()
+        public static void ASSERT_COMPATIBLE_BUILDS(params string[] tags)
         {
             var tagsEqual = BuildTag == NHM.Common.BUILD_TAG.BuildTag;
+            foreach (var tag in tags)
+            {
+                tagsEqual &= tag == BuildTag;
+            }
             if (!tagsEqual)
             {
                 MessageBox.Show($"Build tags differ this build is broken. NHMCore.BUILD_TAG.BuildTag('{BuildTag}') != NHM.Common.BUILD_TAG.BuildTag('{NHM.Common.BUILD_TAG.BuildTag}')",
