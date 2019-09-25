@@ -26,5 +26,10 @@ namespace NHM.Wpf.Views
             DialogResult = false;
             Close();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.SetForceSoftwareRendering(this);
+        }
     }
 }

@@ -6,8 +6,10 @@
         mc:Ignorable="d"
         Title="Disclaimer on usage of 3rd party software" 
         Icon="../Resources/logo.ico"
-        Height="299.334" Width="427.901" 
-        WindowStyle="ToolWindow">
+        Height="299.334" Width="427.901"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="NoResize"
+        Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />

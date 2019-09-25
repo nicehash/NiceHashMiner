@@ -79,5 +79,10 @@ namespace NHM.Wpf.Views.Settings
             Translations.LanguageChanged -= Translations_LanguageChanged;
             _vm.Dispose();
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.SetForceSoftwareRendering(this);
+        }
     }
 }

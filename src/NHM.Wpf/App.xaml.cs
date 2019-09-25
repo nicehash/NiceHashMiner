@@ -105,7 +105,7 @@ namespace NHM.Wpf
 
                 var accepted = eula.ShowDialog();
 
-                if (accepted ?? false)
+                if (accepted.HasValue && eula.AcceptedTos)
                 {
                     ConfigManager.GeneralConfig.agreedWithTOS = ApplicationStateManager.CurrentTosVer;
                 }
@@ -113,6 +113,7 @@ namespace NHM.Wpf
                 {
                     Logger.Error(Tag, "TOS differs AFTER TOS confirmation window");
                     Shutdown();
+                    return;
                 }
             }
 

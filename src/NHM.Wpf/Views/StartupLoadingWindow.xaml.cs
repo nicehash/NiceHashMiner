@@ -25,5 +25,10 @@ namespace NHM.Wpf.Views
         {
             if (!CanClose) e.Cancel = true;
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            WindowUtils.SetForceSoftwareRendering(this);
+        }
     }
 }

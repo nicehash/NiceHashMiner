@@ -119,6 +119,7 @@ namespace NHM.Wpf.Views
 
         private async void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
+            WindowUtils.SetForceSoftwareRendering(this);
             IsEnabled = false;
             var startup = new StartupLoadingWindow
             {

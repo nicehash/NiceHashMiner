@@ -10,7 +10,8 @@
         Topmost="True" ResizeMode="NoResize"
         WindowStyle="None"
         SizeToContent="WidthAndHeight"
-        Closing="StartupLoadingWindow_OnClosing">
+        Closing="StartupLoadingWindow_OnClosing"
+        Loaded="Window_Loaded">
     <Window.DataContext>
         <viewModels:StartupLoadingVM />
     </Window.DataContext>
