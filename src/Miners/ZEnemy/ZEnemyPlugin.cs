@@ -1,6 +1,5 @@
 ﻿using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
@@ -22,6 +21,8 @@ namespace ZEnemy
             // https://bitcointalk.org/index.php?topic=3378390.0 current 2-1-cuda10.1 // TODO update
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "2-1-cuda10.1",
+                ExePath = new List<string> { "z-enemy.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/z-enemy.zip",
@@ -30,7 +31,7 @@ namespace ZEnemy
             };
         }
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "ZEnemy";
 
@@ -71,9 +72,7 @@ namespace ZEnemy
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "vcruntime140.dll", "z-enemy.exe" });
         }
 
