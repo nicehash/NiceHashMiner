@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -89,15 +88,6 @@ namespace TTMiner
             var benchWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, timeout, benchWait, stop);
             return await t;
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
-            var binPath = Path.Combine(pluginRootBins, "TT-Miner.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
 
         protected override string MiningCreateCommandLine()

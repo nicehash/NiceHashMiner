@@ -22,6 +22,8 @@ namespace TTMiner
             // https://bitcointalk.org/index.php?topic=5025783.0 current 3.0.5 // TODO update
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "3.0.5",
+                ExePath = new List<string> { "TT-Miner.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.12b/TT-Miner-3.0.5.zip",
@@ -32,7 +34,7 @@ namespace TTMiner
 
         public override string PluginUUID => "f1945a30-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 5);
+        public override Version Version => new Version(3, 0);
         public override string Name => "TTMiner";
         public override string Author => "stanko@nicehash.com";
 
@@ -79,9 +81,7 @@ namespace TTMiner
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedDeviceIds.Count == 0) return;
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-list");
             var mappedDevs = DevicesListParser.ParseTTMinerOutput(output, devices.ToList());
 
@@ -95,9 +95,7 @@ namespace TTMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nvml.dll", "nvrtc64_92.dll", "nvrtc64_100_0.dll", "nvrtc64_101_0.dll",
                 "nvrtc-builtins64_92.dll", "nvrtc-builtins64_100.dll", "nvrtc-builtins64_101.dll", "TT-SubSystem.dll", "TT-Miner.exe", @"Algos\AlgoEthash.dll", @"Algos\AlgoEthash-C92.dll",
                 @"Algos\AlgoEthash-C100.dll",  @"Algos\AlgoLyra2Rev3-C100.dll", @"Algos\AlgoLyra2Rev3-C92.dll", @"Algos\AlgoLyra2Rev3.dll", @"Algos\AlgoMTP-C100.dll",
