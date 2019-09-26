@@ -1,18 +1,17 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
+using MinerPluginToolkitV1.Configs;
 using Newtonsoft.Json;
-using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using static NHM.Common.StratumServiceHelpers;
-using System.IO;
-using NHM.Common;
 using System.Net.Sockets;
 using System.Text;
-using MinerPluginToolkitV1.Configs;
+using static NHM.Common.StratumServiceHelpers;
+using NHM.Common;
+using NHM.Common.Enums;
 
 namespace EWBF
 {
@@ -163,15 +162,6 @@ namespace EWBF
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "EWBF Equihash miner v0.6");
-            var binPath = Path.Combine(pluginRootBins, "miner.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()

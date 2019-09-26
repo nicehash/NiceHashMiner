@@ -4,7 +4,6 @@ using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 
@@ -19,6 +18,8 @@ namespace EWBF
             // https://bitcointalk.org/index.php?topic=4466962.0 current v0.6
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "v0.6",
+                ExePath = new List<string> { "EWBF Equihash miner v0.6", "miner.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/MinerDownloads/releases/download/1.9.1.5/EWBF.Equihash.miner.v0.6.7z",
@@ -29,7 +30,7 @@ namespace EWBF
 
         public override string PluginUUID => "f7d5dfa0-7236-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "Ewbf";
 
@@ -73,9 +74,7 @@ namespace EWBF
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "miner.exe", "cudart32_91.dll", "cudart64_91.dll" });
         }
 
