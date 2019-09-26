@@ -21,16 +21,18 @@ namespace NHMCore.Mining.Plugins
         public bool Is3rdParty => false;
     }
 #endif
-    #endregion TESTING
+#endregion TESTING
 
-    #region Open Source
+#region Open Source
 
+#if INTEGRATE_CCMinerMTP_PLUGIN
     class CCMinerMTPIntegratedPlugin : CCMinerMTP.CCMinerMTPPlugin, IntegratedPlugin
     {
         public override string PluginUUID => "CCMinerMTP";
 
         public bool Is3rdParty => false;
     }
+#endif
 
     class CCMinerTpruvotIntegratedPlugin : CCMinerTpruvot.CCMinerTpruvotPlugin, IntegratedPlugin
     {
@@ -79,9 +81,9 @@ namespace NHMCore.Mining.Plugins
         public bool Is3rdParty => false;
     }
 #endif
-    #endregion Open Source
+#endregion Open Source
 
-    #region Closed source / 3rd party
+#region Closed source / 3rd party
 
     class ClaymoreDual14IntegratedPlugin : ClaymoreDual14.ClaymoreDual14Plugin, IntegratedPlugin
     {

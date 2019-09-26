@@ -27,15 +27,17 @@ namespace NHMCore.Mining.Plugins
             var integratedPlugins = new List<IntegratedPlugin>
             {
                 // testing 
-                #if INTEGRATE_BrokenMiner_PLUGIN
+#if INTEGRATE_BrokenMiner_PLUGIN
                 new BrokenPluginIntegratedPlugin(),
-                #endif
-                #if INTEGRATE_ExamplePlugin_PLUGIN
+#endif
+#if INTEGRATE_ExamplePlugin_PLUGIN
                 new ExamplePluginIntegratedPlugin(),
-                #endif
+#endif
 
-                // open source
+// open source
+#if INTEGRATE_CCMinerMTP_PLUGIN
                 new CCMinerMTPIntegratedPlugin(),
+#endif
                 new CCMinerTpruvotIntegratedPlugin(),
                 new SGminerAvemoreIntegratedPlugin(),
                 new SGminerGMIntegratedPlugin(),

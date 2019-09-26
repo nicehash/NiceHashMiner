@@ -280,7 +280,7 @@
       <Project>{2271753a-c4ab-4140-8339-08804764719f}</Project>
       <Name>BrokenMiner</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Miners\CCMinerMTP\CCMinerMTP.csproj">
+    <ProjectReference Include="..\Miners\CCMinerMTP\CCMinerMTP.csproj" Condition="$(DefineConstants.Contains('INTEGRATE_CCMinerMTP_PLUGIN'))">
       <Project>{c6e4069b-2305-4cda-9f4e-0b79a8599935}</Project>
       <Name>CCMinerMTP</Name>
     </ProjectReference>
