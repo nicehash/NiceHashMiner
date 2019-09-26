@@ -5,7 +5,6 @@ using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using MinerPluginToolkitV1.Interfaces;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
 
@@ -21,6 +20,8 @@ namespace TeamRedMiner
             // https://github.com/todxx/teamredminer/releases current v0.5.7
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "v0.5.7",
+                ExePath = new List<string> { "teamredminer-v0.5.7-win", "teamredminer.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/todxx/teamredminer/releases/download/0.5.7/teamredminer-v0.5.7-win.zip", // original
@@ -30,7 +31,7 @@ namespace TeamRedMiner
 
         public override string PluginUUID => "abc3e2a0-7237-11e9-b20c-f9f12eb6d835";
 
-        public override Version Version => new Version(2, 2);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "TeamRedMiner";
 
@@ -85,9 +86,7 @@ namespace TeamRedMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "teamredminer.exe" });
         }
 
