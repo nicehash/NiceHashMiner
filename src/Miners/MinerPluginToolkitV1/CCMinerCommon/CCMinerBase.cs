@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using MinerPlugin;
 using NHM.Common.Enums;
 using static NHM.Common.StratumServiceHelpers;
-using System.IO;
 using NHM.Common;
 using MinerPluginToolkitV1.Configs;
 
@@ -109,15 +108,6 @@ namespace MinerPluginToolkitV1.CCMinerCommon
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
-            var binPath = Path.Combine(pluginRootBins, "ccminer.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()
