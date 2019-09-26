@@ -1,4 +1,5 @@
-﻿using MinerPlugin;
+﻿using Microsoft.Win32;
+using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Interfaces;
 using NHM.Common;
@@ -13,10 +14,10 @@ namespace NHMCore.Mining.Plugins
 {
     // ALL CAPS
     // This isn't really a plugin it just a hack to piggyback on the miner plugins downloader and file checker
-    class VC_REDIST_x64_2015_DEPENDENCY_PLUGIN : IMinerPlugin, IntegratedPlugin, IPluginDependency, IBinaryPackageMissingFilesChecker, IMinerBinsSource
+    class VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN : IMinerPlugin, IntegratedPlugin, IPluginDependency, IBinaryPackageMissingFilesChecker, IMinerBinsSource
     {
-        public static VC_REDIST_x64_2015_DEPENDENCY_PLUGIN Instance { get; } = new VC_REDIST_x64_2015_DEPENDENCY_PLUGIN();
-        VC_REDIST_x64_2015_DEPENDENCY_PLUGIN() { }
+        public static VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN Instance { get; } = new VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN();
+        VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN() { }
         public string PluginUUID => "VC_REDIST_x64_2015_2019";
 
         public Version Version => new Version(1, 0);
@@ -47,6 +48,31 @@ namespace NHMCore.Mining.Plugins
         #endregion IMinerPlugin stubs
 
 
+        private bool IsVcRedistInstalled()
+        {
+
+            // x64 - 14.23.27820
+            const int minMajor = 14;
+            const int minMinor = 23;
+            try
+            {
+                using (var vcredist = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64).OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\VisualStudio\14.0\VC\Runtimes\x64"))
+                {
+                    var major = Int32.Parse(vcredist.GetValue("Major")?.ToString());
+                    var minor = Int32.Parse(vcredist.GetValue("Minor")?.ToString());
+                    //var build = vcredist.GetValue("Bld");
+                    if (major < minMajor) return false;
+                    if (minor < minMinor) return false;
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Logger.Error(Name, $"IsVcRedistInstalled {e}");
+            }
+            return false;
+        }
+
         public string VcRedistBinPath()
         {
             var binPath = Path.Combine(Paths.MinerPluginsPath(), PluginUUID, "bins", "VC_redist.x64_2015_2019.exe");
@@ -60,13 +86,18 @@ namespace NHMCore.Mining.Plugins
 
         public void InstallVcRedist()
         {
+            if (IsVcRedistInstalled())
+            {
+                Logger.Error("VC_REDIST_x64_2015_DEPENDENCY_PLUGIN", $"Skipping installation minimum version newer already installed");
+                return;
+            }
             // TODO check if we need to run the insall
             try
             {
                 var startInfo = new ProcessStartInfo
                 {
                     FileName = VcRedistBinPath(),
-                    Arguments = "/q /norestart",
+                    Arguments = "/install /quiet /norestart",
                     UseShellExecute = false,
                     RedirectStandardError = false,
                     RedirectStandardOutput = false,

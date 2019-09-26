@@ -95,7 +95,7 @@ namespace NHMCore.Mining.Plugins
                 EthlargementIntegratedPlugin.Instance,
 
                 // plugin dependencies
-                VC_REDIST_x64_2015_DEPENDENCY_PLUGIN.Instance
+                VC_REDIST_x64_2015_2019_DEPENDENCY_PLUGIN.Instance
             };
             var filteredIntegratedPlugins = integratedPlugins.Where(p => SupportedPluginsFilter.IsSupported(p.PluginUUID)).ToList();
             foreach (var integratedPlugin in filteredIntegratedPlugins)
