@@ -19,7 +19,7 @@ namespace TTMiner
             MinerOptionsPackage = PluginInternalSettings.MinerOptionsPackage;
             DefaultTimeout = PluginInternalSettings.DefaultTimeout;
             GetApiMaxTimeoutConfig = PluginInternalSettings.GetApiMaxTimeoutConfig;
-            // https://bitcointalk.org/index.php?topic=5025783.0 current 3.0.5
+            // https://bitcointalk.org/index.php?topic=5025783.0 current 3.0.5 // TODO update
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
                 Urls = new List<string>

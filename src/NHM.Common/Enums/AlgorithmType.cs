@@ -103,6 +103,9 @@ namespace NHM.Common.Enums
         GrinCuckarood29 = 44,
         //[Obsolete("UNUSED Algorithm")]
         BeamV2 = 45,
+        //[Obsolete("UNUSED Algorithm")]
+#warning "CHECK the NAME AND ENDPOINTS"
+        X16RV2 = 46,
         #endregion // NiceHashAPI
     }
 
