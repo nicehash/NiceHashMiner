@@ -1,18 +1,18 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
-using NHM.Common.Enums;
+using MinerPluginToolkitV1.Configs;
+using Newtonsoft.Json;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using static NHM.Common.StratumServiceHelpers;
 using System.Net.Http;
-using Newtonsoft.Json;
 using System.Linq;
 using System.IO;
-using NHM.Common;
 using System.Collections.Generic;
 using XmrStak.Configs;
-using MinerPluginToolkitV1.Configs;
+using NHM.Common;
+using NHM.Common.Enums;
+using static NHM.Common.StratumServiceHelpers;
 
 namespace XmrStak
 {
@@ -256,15 +256,6 @@ namespace XmrStak
             var benchmarkWait = TimeSpan.FromMilliseconds(500);
             var t = MinerToolkit.WaitBenchmarkResult(bp, benchmarkTimeout, benchmarkWait, stop);
             return await t;
-        }
-
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins");
-            var binPath = Path.Combine(pluginRootBins, "xmr-stak.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
         }
 
         protected override void Init()
