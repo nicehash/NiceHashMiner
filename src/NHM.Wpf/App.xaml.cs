@@ -167,6 +167,17 @@ namespace NHM.Wpf
                 ConfigManager.GeneralConfigFileCommit();
             }
 
+            // Login
+            if (string.IsNullOrEmpty(ConfigManager.GeneralConfig.BitcoinAddress))
+            {
+                var login = new LoginWindow
+                {
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen
+                };
+
+                login.ShowDialog();
+            }
+
             var main = new MainWindow();
             main.Show();
 
