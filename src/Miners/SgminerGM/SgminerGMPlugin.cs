@@ -1,7 +1,6 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -21,6 +20,8 @@ namespace SgminerGM
             // https://github.com/nicehash/sgminer-gm/releases current v5.5.5-8
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "v5.5.5-8",
+                ExePath = new List<string> { "sgminer.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nicehash/sgminer-gm/releases/download/5.5.5-8/sgminer-5.5.5-gm-nicehash-8-windows-amd64.zip",
@@ -30,7 +31,7 @@ namespace SgminerGM
 
         //public override string PluginUUID => "MISSING";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(3, 0);
         public override string Name => "SGminerGM";
 
         public override string Author => "stanko@nicehash.com";
@@ -76,9 +77,7 @@ namespace SgminerGM
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "sgminer.exe" });
         }
 
