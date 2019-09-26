@@ -1,7 +1,6 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
 using MinerPluginToolkitV1.Configs;
-using MinerPluginToolkitV1.Interfaces;
 using NHM.Common.Algorithm;
 using NHM.Common.Device;
 using NHM.Common.Enums;
@@ -21,6 +20,8 @@ namespace SgminerAvemore
             // https://github.com/brian112358/avermore-miner/releases current v1.4.1
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "v1.4.1",
+                ExePath = new List<string> { "avermore-windows", "sgminer.exe" }, 
                 Urls = new List<string>
                 {
                     "https://github.com/brian112358/avermore-miner/releases/download/v1.4.1/avermore-v1.4.1-windows.zip", // original
@@ -30,7 +31,7 @@ namespace SgminerAvemore
 
         //public override string PluginUUID => "MISSING";
 
-        public override Version Version => new Version(2, 0);
+        public override Version Version => new Version(3, 0);
         public override string Name => "SGminerAvemore";
 
         public override string Author => "stanko@nicehash.com";
@@ -75,9 +76,7 @@ namespace SgminerAvemore
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "libcurl.dll", "libeay32.dll", "libidn-11.dll", "librtmp.dll",
                 "libssh2.dll", "pdcurses.dll", "pthreadGC2.dll", "ssleay32.dll", "zlib1.dll", "sgminer.exe"
             });
