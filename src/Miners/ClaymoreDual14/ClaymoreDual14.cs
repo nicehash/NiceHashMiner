@@ -25,15 +25,6 @@ namespace ClaymoreDual14
         // TODO figure out how to fix API workaround without this started time
         private DateTime _started;
 
-        public override Tuple<string, string> GetBinAndCwdPaths()
-        {
-            var pluginRoot = Path.Combine(Paths.MinerPluginsPath(), _uuid);
-            var pluginRootBins = Path.Combine(pluginRoot, "bins", "Claymore's Dual Ethereum AMD+NVIDIA GPU Miner v15.0");
-            var binPath = Path.Combine(pluginRootBins, "EthDcrMiner64.exe");
-            var binCwd = pluginRootBins;
-            return Tuple.Create(binPath, binCwd);
-        }
-
         public async override Task<BenchmarkResult> StartBenchmark(CancellationToken stop, BenchmarkPerformanceType benchmarkType = BenchmarkPerformanceType.Standard)
         {
             var benchmarkTime = MinerBenchmarkTimeSettings.ParseBenchmarkTime(new List<int> { 60, 90, 180 }, MinerBenchmarkTimeSettings, _miningPairs, benchmarkType); // in seconds
