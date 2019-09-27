@@ -20,6 +20,8 @@ namespace NanoMiner
             // https://bitcointalk.org/index.php?topic=5089248.0 | https://github.com/nanopool/nanominer/releases current v1.5.3
             MinersBinsUrlsSettings = new MinersBinsUrlsSettings
             {
+                BinVersion = "v1.5.3",
+                ExePath = new List<string> { "nanominer-windows-1.5.3", "nanominer.exe" },
                 Urls = new List<string>
                 {
                     "https://github.com/nanopool/nanominer/releases/download/v1.5.3/nanominer-windows-1.5.3.zip", // original
@@ -29,7 +31,7 @@ namespace NanoMiner
 
         public override string PluginUUID => "a841b4b0-ae17-11e9-8e4e-bb1e2c6e76b4";
 
-        public override Version Version => new Version(2, 3);
+        public override Version Version => new Version(3, 0);
 
         public override string Name => "NanoMiner";
 
@@ -97,9 +99,7 @@ namespace NanoMiner
         public async Task DevicesCrossReference(IEnumerable<BaseDevice> devices)
         {
             if (_mappedIDs.Count == 0) return;
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return;
-            var minerBinPath = miner.GetBinAndCwdPaths().Item1;
+            var minerBinPath = GetBinAndCwdPaths().Item1;
 
             var output = await DevicesCrossReferenceHelpers.MinerOutput(minerBinPath, "-d");
             var mappedDevs = DevicesListParser.ParseNanoMinerOutput(output, devices.ToList());
@@ -114,9 +114,7 @@ namespace NanoMiner
 
         public override IEnumerable<string> CheckBinaryPackageMissingFiles()
         {
-            var miner = CreateMiner() as IBinAndCwdPathsGettter;
-            if (miner == null) return Enumerable.Empty<string>();
-            var pluginRootBinsPath = miner.GetBinAndCwdPaths().Item2;
+            var pluginRootBinsPath = GetBinAndCwdPaths().Item2;
             return BinaryPackageMissingFilesCheckerHelpers.ReturnMissingFiles(pluginRootBinsPath, new List<string> { "nvrtc64_100_0.dll", "nvrtc-builtins64_100.dll", "service.dll", "nanominer.exe" });
         }
 
