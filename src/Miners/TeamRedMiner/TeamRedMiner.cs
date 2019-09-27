@@ -48,6 +48,8 @@ namespace TeamRedMiner
                         return "mtp";
                     case AlgorithmType.GrinCuckarood29:
                         return "cuckarood29_grin";
+                    case AlgorithmType.X16Rv2:
+                        return "x16rv2";
                     default:
                         return "";
                 }
