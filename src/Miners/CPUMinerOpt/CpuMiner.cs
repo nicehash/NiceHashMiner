@@ -1,16 +1,13 @@
 ﻿using MinerPlugin;
 using MinerPluginToolkitV1;
+using NHM.Common;
 using NHM.Common.Enums;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
-using static NHM.Common.StratumServiceHelpers;
 using System.Collections.Generic;
 using System.Globalization;
-using NHM.Common;
-using System.IO;
 
 namespace CpuMinerOpt
 {
@@ -153,7 +150,7 @@ namespace CpuMinerOpt
             // API port function might be blocking
             _apiPort = GetAvaliablePort();
             // instant non blocking
-            var url = GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
+            var url = StratumServiceHelpers.GetLocationUrl(_algorithmType, _miningLocation, NhmConectionType.STRATUM_TCP);
             var algo = AlgorithmName(_algorithmType);
 
             var commandLine = $"--algo={algo} --url={url} --user={username} --api-bind={_apiPort} {_extraLaunchParameters}";
